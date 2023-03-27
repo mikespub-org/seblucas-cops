@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b2ca6b35ee2005dda8cd69665844f957",
+    "content-hash": "3828e7c5116c3f9ebf5783e80c7c503f",
     "packages": [
         {
             "name": "dimsemenov/magnific-popup",
