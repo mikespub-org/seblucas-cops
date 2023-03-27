@@ -1,20 +1,34 @@
-# COPS
+# COPS for PHP 8.x
+
+## Prerequisites (this fork)
+1. 	PHP 8.x with GD image processing, Libxml, Intl, Json & SQLite3 support (PHP 8.1 or later recommended).
+
+See [CHANGELOG](CHANGELOG.md) for changes compared to upstream repository https://github.com/seblucas/cops from @seblucas
+
+## Installation
+
+Same options as original:
+
+1. Release package
+  - get latest cops-1.x.x.zip file from https://github.com/mikespub-org/seblucas-cops/releases
+
+2. Source code
+  - git clone https://github.com/mikespub-org/seblucas-cops.git  # or download [latest main as zip](https://github.com/mikespub-org/seblucas-cops/archive/refs/heads/main.zip)
+
+3. Docker image
+  - see [docker/Dockerfile.php82](docker/Dockerfile.php82) and [docker-compose.yaml](docker-compose.yaml) (or [docker-compose-dev.yaml](docker-compose-dev.yaml)) as starting point - **not** optimized for size/performance
+
+The rest of the installation process is very similar to the original below. But if you install from source, you don't need to download an old composer 1.x version or install global asset plugins anymore - just use your regular composer 2.x :-)
+
+---
+
+# COPS (original)
 
 COPS stands for Calibre OPDS (and HTML) Php Server.
 
 See : [COPS's home](http://blog.slucas.fr/en/oss/calibre-opds-php-server) for more details.
 
 Don't forget to check the [Wiki](https://github.com/seblucas/cops/wiki).
-
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/seblucas/cops/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/?branch=master)
-
-[![Code Coverage](https://scrutinizer-ci.com/g/seblucas/cops/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/?branch=master)
-
-[![Build Status / Scrutinizer](https://scrutinizer-ci.com/g/seblucas/cops/badges/build.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/build-status/master)
-
-[![Build Status](https://travis-ci.org/seblucas/cops.svg?branch=master)](https://travis-ci.org/seblucas/cops)
-
-[![Selenium Test Status](https://saucelabs.com/browser-matrix/seblucas.svg)](https://saucelabs.com/u/seblucas)
 
 # Why ?
 
@@ -39,11 +53,6 @@ So COPS's main advantages are :
 If you want to use the OPDS feed don't forget to specify feed.php at the end of your URL.
 
 You just have to sync your Calibre directory to your COPS server the way you prefer (Dropbox, Bt Sync, Syncthing, use a directory shared with Nextcloud, ...).
-
-# Prerequisites (this fork)
-1. 	PHP 7.4 or 8.X with GD image processing, Libxml, Intl, Json & SQLite3 support (PHP 8.1 or later recommended).
-
-See [CHANGELOG](CHANGELOG.md) for changes compared to upstream repository https://github.com/seblucas/cops from @seblucas
 
 # Prerequisites
 
