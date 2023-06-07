@@ -10,3 +10,4 @@ parameters:
     excludePaths:
         - vendor/*
         - test/Sauce.php
+        - resources/php-epub-meta/vendor/*
