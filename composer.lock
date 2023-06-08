@@ -4,31 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3828e7c5116c3f9ebf5783e80c7c503f",
+    "content-hash": "b9c385561e5b645413864af9ef5df063",
     "packages": [
         {
-            "name": "dimsemenov/magnific-popup",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dimsemenov/Magnific-Popup.git",
-                "reference": "6b7a8088783cbce01034414c1fd2d8e1889093ae"
-            },
+            "name": "npm-asset/bootstrap",
+            "version": "3.4.1",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dimsemenov/Magnific-Popup/zipball/6b7a8088783cbce01034414c1fd2d8e1889093ae",
-                "reference": "6b7a8088783cbce01034414c1fd2d8e1889093ae",
-                "shasum": ""
+                "type": "tar",
+                "url": "https://registry.npmjs.org/bootstrap/-/bootstrap-3.4.1.tgz"
             },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Light and responsive lightbox script with focus on performance.",
-            "homepage": "http://dimsemenov.com/plugins/magnific-popup/",
-            "support": {
-                "issues": "https://github.com/dimsemenov/Magnific-Popup/issues",
-                "source": "https://github.com/dimsemenov/Magnific-Popup/tree/1.1.0"
-            },
-            "time": "2016-02-20T09:06:30+00:00"
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "npm-asset/dot",
@@ -79,6 +67,18 @@
             ]
         },
         {
+            "name": "npm-asset/magnific-popup",
+            "version": "1.1.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/magnific-popup/-/magnific-popup-1.1.0.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
             "name": "npm-asset/normalize.css",
             "version": "8.0.1",
             "dist": {
@@ -89,6 +89,18 @@
             "license": [
                 "MIT"
             ]
+        },
+        {
+            "name": "npm-asset/typeahead.js",
+            "version": "0.11.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/typeahead.js/-/typeahead.js-0.11.1.tgz"
+            },
+            "require": {
+                "npm-asset/jquery": ">=1.7"
+            },
+            "type": "npm-asset"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -169,98 +181,6 @@
                 }
             ],
             "time": "2023-03-06T14:43:22+00:00"
-        },
-        {
-            "name": "twbs/bootstrap",
-            "version": "v3.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "68b0d231a13201eb14acd3dc84e51543d16e5f7e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/68b0d231a13201eb14acd3dc84e51543d16e5f7e",
-                "reference": "68b0d231a13201eb14acd3dc84e51543d16e5f7e",
-                "shasum": ""
-            },
-            "replace": {
-                "twitter/bootstrap": "self.version"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.4.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jacob Thornton",
-                    "email": "jacobthornton@gmail.com"
-                },
-                {
-                    "name": "Mark Otto",
-                    "email": "markdotto@gmail.com"
-                }
-            ],
-            "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-            "homepage": "https://getbootstrap.com/",
-            "keywords": [
-                "JS",
-                "css",
-                "framework",
-                "front-end",
-                "less",
-                "mobile-first",
-                "responsive",
-                "web"
-            ],
-            "support": {
-                "issues": "https://github.com/twbs/bootstrap/issues",
-                "source": "https://github.com/twbs/bootstrap/tree/v3.4.1"
-            },
-            "time": "2019-02-13T15:55:38+00:00"
-        },
-        {
-            "name": "twitter/typeahead.js",
-            "version": "v0.11.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twitter/typeahead.js.git",
-                "reference": "588440f66559714280628a4f9799f0c4eb880a4a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twitter/typeahead.js/zipball/588440f66559714280628a4f9799f0c4eb880a4a",
-                "reference": "588440f66559714280628a4f9799f0c4eb880a4a",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Twitter Inc.",
-                    "homepage": "https://twitter.com/twitteross"
-                }
-            ],
-            "description": "fast and fully-featured autocomplete library",
-            "homepage": "http://twitter.github.com/typeahead.js",
-            "keywords": [
-                "autocomplete",
-                "typeahead"
-            ],
-            "support": {
-                "issues": "https://github.com/twitter/typeahead.js/issues",
-                "source": "https://github.com/twitter/typeahead.js/tree/v0.11.1"
-            },
-            "time": "2015-04-27T04:02:14+00:00"
         }
     ],
     "packages-dev": [
@@ -3337,12 +3257,12 @@
     "prefer-lowest": false,
     "platform": {
         "ext-gd": "*",
-        "ext-xml": "*",
-        "ext-xmlwriter": "*",
         "ext-intl": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-pdo_sqlite": "*",
-        "ext-mbstring": "*"
+        "ext-xml": "*",
+        "ext-xmlwriter": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
