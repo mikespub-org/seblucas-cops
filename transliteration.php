@@ -76,7 +76,7 @@ function _transliteration_process($string, $unknown = '?', $source_langcode = nu
         // We'll have to examine the chunk byte by byte to ensure that it consists
         // of valid UTF-8 sequences, and to see if any of them might not be
         // normalized.
-    //
+        //
         // Since PHP is not the fastest language on earth, some of this code is a
         // little ugly with inner loop optimizations.
 

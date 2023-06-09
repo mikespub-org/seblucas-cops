@@ -9,6 +9,7 @@
 require(dirname(__FILE__) . "/../epubfs.php");
 require(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
+use SebLucas\EPubMeta\EPub;
 
 class EpubFsTest extends TestCase
 {

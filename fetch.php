@@ -132,7 +132,7 @@ if ($type == 'jpg' || $type == 'png') {
 // -DC- File is a full path
 //$dir = $config['calibre_internal_directory'];
 //if (empty($config['calibre_internal_directory'])) {
-    //    $dir = Base::getDbDirectory();
+//    $dir = Base::getDbDirectory();
 //}
 $dir = '';
 
