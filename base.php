@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+use SebLucas\Template\doT;
+
 require 'config.php';
 /** @var array $config */
 

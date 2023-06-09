@@ -6,6 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 use PHPUnit\Framework\TestCase;
+use SebLucas\Template\doT;
 
 class ConfigTest extends TestCase
 {
