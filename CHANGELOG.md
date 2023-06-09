@@ -5,11 +5,15 @@ x.x.x - TODO
   * Upgrade npm-asset/jquery 1.12.4 to 3.7.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.3.x - 202306xx Fix EPUB 3 TOC + replace other npm asset dependencies
+1.3.4 - 20230609 Fix EPUB 3 TOC, replace other npm assets and use namespace in PHP resources
   * Fix TOC for EPUB 3 files in resources/php-epub-meta for epubreader
   * Switch from dimsemenov/magnific-popup 1.1.0 to npm-asset/magnific-popup 1.1.0 (last updated in 2016)
   * Switch from twitter/typeahead.js 0.11.1 to npm-asset/typeahead.js 0.11.1 (last updated in 2015)
   * Switch from twbs/bootstrap 3.4.1 to npm-asset/bootstrap 3.4.1
+  * Use PHP namespace in resources/dot-php: SebLucas\Template
+  * Use PHP namespace in resources/epub-loader: Marsender\EPubLoader
+  * Use PHP namespace in resources/php-epub-meta: SebLucas\EPubMeta
+  * Use PHP namespace in resources/tbszip: SebLucas\TbsZip
 
 1.3.3 - 20230327 Update npm asset dependencies
   * Fix link to typeahead.css for bootstrap2 templates
