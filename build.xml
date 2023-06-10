@@ -91,6 +91,7 @@
                 <exclude name="config_local.php" />
                 <exclude name="composer*" />
                 <exclude name="cops.sublime*" />
+                <exclude name="*.cache" />
             </fileset>
         </zip>
 
