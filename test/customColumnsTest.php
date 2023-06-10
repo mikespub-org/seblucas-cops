@@ -875,6 +875,8 @@ class CustomColumnTest extends TestCase
 
         [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("1")->getQuery();
         Book::getEntryArray($query, $params, 1);
+
+        $this->markTestIncomplete();
     }
 
     public function testGetURI()

@@ -33,7 +33,7 @@ class PageMultiDatabaseTest extends TestCase
         $this->assertEquals("One book", $currentPage->entryArray [1]->title);
         $this->assertEquals("1 book", $currentPage->entryArray [1]->content);
         $this->assertEquals(1, $currentPage->entryArray [1]->numberOfElement);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     /**
@@ -61,7 +61,7 @@ class PageMultiDatabaseTest extends TestCase
         $this->assertEquals("11 books", $currentPage->entryArray [0]->content);
         $this->assertEquals("One book", $currentPage->entryArray [1]->title);
         $this->assertEquals("1 book", $currentPage->entryArray [1]->content);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         $config['cops_max_item_per_page'] = -1;
     }

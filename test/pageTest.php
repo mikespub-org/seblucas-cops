@@ -55,7 +55,7 @@ class PageTest extends TestCase
         $this->assertEquals("Recent additions", $currentPage->entryArray [7]->title);
         $this->assertEquals("50 most recent books", $currentPage->entryArray [7]->content);
         $this->assertEquals(50, $currentPage->entryArray [7]->numberOfElement);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageIndexWithIgnored()
@@ -78,7 +78,7 @@ class PageTest extends TestCase
         $this->assertEquals("Alphabetical index of the 15 books", $currentPage->entryArray [1]->content);
         $this->assertEquals("Recent additions", $currentPage->entryArray [2]->title);
         $this->assertEquals("50 most recent books", $currentPage->entryArray [2]->content);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         $config ['cops_ignored_categories'] = [];
     }
@@ -180,7 +180,7 @@ class PageTest extends TestCase
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("SeriesLike", $currentPage->entryArray [0]->title);
         $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('custom', null);
     }
@@ -201,7 +201,7 @@ class PageTest extends TestCase
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("tag1", $currentPage->entryArray [0]->title);
         $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('custom', null);
     }
@@ -222,7 +222,7 @@ class PageTest extends TestCase
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("other", $currentPage->entryArray [0]->title);
         $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('custom', null);
     }
@@ -242,7 +242,7 @@ class PageTest extends TestCase
         $this->assertEquals("SeriesLike", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
 
         setURLParam('custom', null);
     }
@@ -262,7 +262,7 @@ class PageTest extends TestCase
         $this->assertEquals("tag1", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
 
         setURLParam('custom', null);
     }
@@ -283,7 +283,7 @@ class PageTest extends TestCase
         $this->assertEquals("other", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("A Study in Scarlet", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
 
         setURLParam('custom', null);
     }
@@ -304,7 +304,7 @@ class PageTest extends TestCase
         $this->assertEquals("Authors", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         $config['cops_author_split_first_letter'] = "1";
     }
@@ -324,7 +324,7 @@ class PageTest extends TestCase
         $this->assertCount(5, $currentPage->entryArray);
         $this->assertEquals("C", $currentPage->entryArray [0]->title);
         $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageAuthorsFirstLetter()
@@ -340,7 +340,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("1 author starting with C", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageAuthorsDetail_FirstPage()
@@ -362,7 +362,7 @@ class PageTest extends TestCase
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertEquals(4, $currentPage->getMaxPage());
         $this->assertCount(2, $currentPage->entryArray);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getPrevLink());
 
@@ -389,7 +389,7 @@ class PageTest extends TestCase
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertEquals(2, $currentPage->getMaxPage());
         $this->assertCount(3, $currentPage->entryArray);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getNextLink());
 
@@ -415,7 +415,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
         $this->assertFalse($currentPage->IsPaginated());
 
         unset($_SERVER['QUERY_STRING']);
@@ -438,7 +438,7 @@ class PageTest extends TestCase
         $this->assertCount(15, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertEquals("Alice's Adventures in Wonderland", $currentPage->entryArray [1]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
 
         $config['cops_titles_split_first_letter'] = 1;
     }
@@ -458,7 +458,7 @@ class PageTest extends TestCase
         $this->assertCount(9, $currentPage->entryArray);
         $this->assertEquals("A", $currentPage->entryArray [0]->title);
         $this->assertEquals("C", $currentPage->entryArray [1]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageAllBooksByLetter()
@@ -474,7 +474,7 @@ class PageTest extends TestCase
         $this->assertEquals("3 books starting with C", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("The Call of the Wild", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageAllSeries()
@@ -490,7 +490,7 @@ class PageTest extends TestCase
         $this->assertEquals("Series", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("D'Artagnan Romances", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageSeriesDetail()
@@ -505,7 +505,7 @@ class PageTest extends TestCase
         $this->assertEquals("Sherlock Holmes", $currentPage->title);
         $this->assertCount(7, $currentPage->entryArray);
         $this->assertEquals("A Study in Scarlet", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageAllPublishers()
@@ -521,7 +521,7 @@ class PageTest extends TestCase
         $this->assertEquals("Publishers", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
         $this->assertEquals("D. Appleton and Company", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPagePublishersDetail()
@@ -537,7 +537,7 @@ class PageTest extends TestCase
         $this->assertEquals("Strand Magazine", $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("The Return of Sherlock Holmes", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageAllTags()
@@ -553,7 +553,7 @@ class PageTest extends TestCase
         $this->assertEquals("Tags", $currentPage->title);
         $this->assertCount(11, $currentPage->entryArray);
         $this->assertEquals("Action & Adventure", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageTagDetail()
@@ -569,7 +569,7 @@ class PageTest extends TestCase
         $this->assertEquals("Fiction", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageAllLanguages()
@@ -586,7 +586,7 @@ class PageTest extends TestCase
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("English", $currentPage->entryArray [0]->title);
         $this->assertEquals("French", $currentPage->entryArray [1]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageLanguageDetail()
@@ -602,7 +602,7 @@ class PageTest extends TestCase
         $this->assertEquals("English", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageAllRatings()
@@ -618,7 +618,7 @@ class PageTest extends TestCase
         $this->assertEquals("Ratings", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("2 stars", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageRatingDetail()
@@ -634,7 +634,7 @@ class PageTest extends TestCase
         $this->assertEquals("5 stars", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageRecent()
@@ -650,7 +650,7 @@ class PageTest extends TestCase
         $this->assertEquals("Recent additions", $currentPage->title);
         $this->assertCount(15, $currentPage->entryArray);
         $this->assertEquals("La curée", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageRecent_WithFacets_IncludedTag()
@@ -667,7 +667,7 @@ class PageTest extends TestCase
         $this->assertEquals("Recent additions", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("Twenty Years After", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
 
         setURLParam('tag', null);
     }
@@ -686,7 +686,7 @@ class PageTest extends TestCase
         $this->assertEquals("Recent additions", $currentPage->title);
         $this->assertCount(13, $currentPage->entryArray);
         $this->assertEquals("La curée", $currentPage->entryArray [0]->title);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
 
         setURLParam('tag', null);
     }
@@ -703,7 +703,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("The Return of Sherlock Holmes", $currentPage->title);
         $this->assertCount(0, $currentPage->entryArray);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageSearch_WithOnlyBooksReturned()
@@ -722,7 +722,7 @@ class PageTest extends TestCase
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Search result for *alice* in books", $currentPage->entryArray [0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray [0]->content);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageSearch_WithAuthorsIgnored()
@@ -742,7 +742,7 @@ class PageTest extends TestCase
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Search result for *car* in books", $currentPage->entryArray [0]->title);
         $this->assertEquals("1 book", $currentPage->entryArray [0]->content);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         $config ['cops_ignored_categories'] = [];
     }
@@ -765,7 +765,7 @@ class PageTest extends TestCase
         $this->assertEquals("1 book", $currentPage->entryArray [0]->content);
         $this->assertEquals("Search result for *car* in authors", $currentPage->entryArray [1]->title);
         $this->assertEquals("1 author", $currentPage->entryArray [1]->content);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     /**
@@ -786,7 +786,7 @@ class PageTest extends TestCase
         if ($count > 0) {
             $this->assertEquals($content, $currentPage->entryArray [0]->content);
         }
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function providerAccentuatedCharacters()
@@ -823,7 +823,7 @@ class PageTest extends TestCase
         if ($count > 0) {
             $this->assertEquals($content, $currentPage->entryArray [0]->content);
         }
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         $config ['cops_normalized_search'] = "0";
         Base::clearDb();
@@ -857,7 +857,7 @@ class PageTest extends TestCase
         $this->assertEquals("Search result for *Lewis Carroll* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('scope', null);
     }
@@ -877,7 +877,7 @@ class PageTest extends TestCase
         $this->assertEquals("Search result for *Carroll, Lewis* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('scope', null);
     }
@@ -897,7 +897,7 @@ class PageTest extends TestCase
         $this->assertEquals("Search result for *car* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('scope', null);
     }
@@ -917,7 +917,7 @@ class PageTest extends TestCase
         $this->assertEquals("Search result for *hol* in series", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Sherlock Holmes", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('scope', null);
     }
@@ -936,7 +936,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Search result for *hol* in books", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
-        $this->assertTrue($currentPage->ContainsBook());
+        $this->assertTrue($currentPage->containsBook());
 
         setURLParam('scope', null);
     }
@@ -956,7 +956,7 @@ class PageTest extends TestCase
         $this->assertEquals("Search result for *millan* in publishers", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("Macmillan and Co. London", $currentPage->entryArray [0]->title);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('scope', null);
     }
@@ -975,7 +975,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Search result for *fic* in tags", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
-        $this->assertFalse($currentPage->ContainsBook());
+        $this->assertFalse($currentPage->containsBook());
 
         setURLParam('scope', null);
     }

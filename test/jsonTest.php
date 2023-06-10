@@ -84,4 +84,66 @@ class JsonTest extends TestCase
         $this->assertCount(3, $test ["tags"]);
         $this->assertCount(3, $test ["datas"]);
     }
+
+    public function testGetJson()
+    {
+        $page = Base::PAGE_ALL_RECENT_BOOKS;
+
+        setURLParam('page', $page);
+        $test = JSONRenderer::getJson();
+
+        $this->assertEquals("Recent additions", $test["title"]);
+        $this->assertCount(15, $test["entries"]);
+        $this->assertEquals("La curée", $test["entries"][0]["title"]);
+
+        setURLParam('page', null);
+    }
+
+    public function testGetJsonSearch()
+    {
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $query = "fic";
+
+        setURLParam('page', $page);
+        setURLParam('query', $query);
+        setURLParam('search', 1);
+        $test = JSONRenderer::getJson();
+        $check = [
+            [
+                'class' => 'tt-header',
+                'title' => '2 tags',
+                'navlink' => 'phpunit?page=9&query=fic&db=&scope=tag',
+            ],
+            [
+                'class' => '',
+                'title' => 'Fiction',
+                'navlink' => 'phpunit?page=12&id=1',
+            ],
+            [
+                'class' => '',
+                'title' => 'Science Fiction',
+                'navlink' => 'phpunit?page=12&id=7',
+            ],
+        ];
+        $this->assertEquals($check, $test);
+
+        setURLParam('page', null);
+        setURLParam('query', null);
+        setURLParam('search', null);
+    }
+
+    public function testGetJsonComplete()
+    {
+        $page = Base::PAGE_ALL_RECENT_BOOKS;
+
+        setURLParam('page', $page);
+        $test = JSONRenderer::getJson(true);
+
+        $this->assertEquals("Recent additions", $test["title"]);
+        $this->assertCount(15, $test["entries"]);
+        $this->assertEquals("La curée", $test["entries"][0]["title"]);
+        $this->assertCount(4, $test["c"]);
+
+        setURLParam('page', null);
+    }
 }
