@@ -20,3 +20,6 @@ resources/tbszip/stuffs/
 resources/php-epub-meta/assets/
 resources/php-epub-meta/test/
 tools/
+clover.xml
+coverage/
+*.cache

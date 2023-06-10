@@ -17,3 +17,4 @@
 .pnp.*
 .editorconfig
 .gitattributes
+*.cache
