@@ -8,26 +8,24 @@
 
 class CustomColumnTypeText extends CustomColumnType
 {
-    private static $type;
-
     protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_TEXT)
     {
-        self::$type = $datatype;
-
         switch ($datatype) {
             case self::CUSTOM_TYPE_TEXT:
                 parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
-                break;
+                return;
+            case self::CUSTOM_TYPE_CSV:
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_CSV);
+                return;
             case self::CUSTOM_TYPE_ENUM:
                 parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM);
-                break;
+                return;
             case self::CUSTOM_TYPE_SERIES:
                 parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES);
-                break;
+                return;
             default:
                 throw new UnexpectedValueException();
         }
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
     }
 
     /**
@@ -106,8 +104,11 @@ class CustomColumnTypeText extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        switch (self::$type) {
+        switch ($this->datatype) {
             case self::CUSTOM_TYPE_TEXT:
+                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
+                break;
+            case self::CUSTOM_TYPE_CSV:
                 $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
                 break;
             case self::CUSTOM_TYPE_ENUM:
@@ -122,6 +123,16 @@ class CustomColumnTypeText extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = $this->getDb()->query($query);
+        // handle case where we have several values, e.g. array of text for type 2 (csv)
+        if ($this->datatype === self::CUSTOM_TYPE_CSV) {
+            $idArray = [];
+            $nameArray = [];
+            while ($post = $result->fetchObject()) {
+                array_push($idArray, $post->id);
+                array_push($nameArray, $post->name);
+            }
+            return new CustomColumn(implode(",", $idArray), implode(",", $nameArray), $this);
+        }
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }

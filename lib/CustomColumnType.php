@@ -13,7 +13,8 @@ abstract class CustomColumnType extends Base
 {
     public const ALL_CUSTOMS_ID       = "cops:custom";
 
-    public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2
+    public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
+    public const CUSTOM_TYPE_CSV       = "csv";         // type 2 (internal)
     public const CUSTOM_TYPE_COMMENT   = "comments";    // type 3
     public const CUSTOM_TYPE_SERIES    = "series";      // type 4
     public const CUSTOM_TYPE_ENUM      = "enumeration"; // type 5
@@ -126,6 +127,7 @@ abstract class CustomColumnType extends Base
         $ptitle = $this->getTitle();
         $pid = $this->getAllCustomsId();
         $pcontent = $this->getDescription();
+        // @checkme convert "csv" back to "text" here?
         $pcontentType = $this->datatype;
         $plinkArray = [new LinkNavigation($this->getUriAllCustoms())];
         $pclass = "";
@@ -163,9 +165,13 @@ abstract class CustomColumnType extends Base
      */
     private static function getDatatypeByCustomID($customId)
     {
-        $result = parent::getDb()->prepare('SELECT datatype FROM custom_columns WHERE id = ?');
+        $result = parent::getDb()->prepare('SELECT datatype, is_multiple FROM custom_columns WHERE id = ?');
         $result->execute([$customId]);
         if ($post = $result->fetchObject()) {
+            // handle case where we have several values, e.g. array of text for type 2 (csv)
+            if ($post->datatype === "text" && $post->is_multiple === 1) {
+                return "csv";
+            }
             return $post->datatype;
         }
         return null;
@@ -190,6 +196,8 @@ abstract class CustomColumnType extends Base
         switch ($datatype) {
             case self::CUSTOM_TYPE_TEXT:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId);
+            case self::CUSTOM_TYPE_CSV:
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::CUSTOM_TYPE_CSV);
             case self::CUSTOM_TYPE_SERIES:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId);
             case self::CUSTOM_TYPE_ENUM:
