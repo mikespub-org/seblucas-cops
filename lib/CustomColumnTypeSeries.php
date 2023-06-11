@@ -85,12 +85,12 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
-            return new CustomColumn($post->id, $post->name . " [" . $post->extra . "]", $this);
+            return new CustomColumn($post->id, $post->value . " [" . $post->extra . "]", $this);
         }
         return new CustomColumn(null, "", $this);
     }
