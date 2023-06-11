@@ -77,7 +77,7 @@ class CustomColumnTest extends TestCase
 
         $this->assertEquals(6, $coltype->customId);
         $this->assertEquals("custom_02", $coltype->columnTitle);
-        $this->assertEquals("text", $coltype->datatype);
+        $this->assertEquals("csv", $coltype->datatype);
         $this->assertEquals("CustomColumnTypeText", get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
@@ -416,7 +416,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:6", $currentPage->entryArray[4]->id);
         $this->assertEquals("Custom column example 02 (csv)", $currentPage->entryArray[4]->content);
         $this->assertEquals(3, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("text", $currentPage->entryArray[4]->contentType);
+        $this->assertEquals("csv", $currentPage->entryArray[4]->contentType);
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(6)->getCount());
     }
 
@@ -838,45 +838,83 @@ class CustomColumnTest extends TestCase
         Base::clearDb();
 
         [$query, $params] = CustomColumnType::createByLookup("custom_01")->getCustom("1")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(5, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_01"], true);
+        $this->assertEquals("sample_text", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_02")->getCustom("3")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(4, $entryArray);
+        // handle case where we have several values, e.g. array of text for type 2 (csv)
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_02"], true);
+        $this->assertEquals("a,c", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_03")->getCustom("3")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] =  Book::getEntryArray($query, $params, 1);
+        $this->assertCount(1, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_03"], true);
+        $this->assertEquals("<div><p>simple test no formatting</p></div>", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_04")->getCustom("4")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(2, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_04"], true);
+        $this->assertEquals("GroupA [1]", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_05")->getCustom("6")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(6, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_05"], true);
+        $this->assertEquals("val05", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_06")->getCustom("2016-04-24")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(6, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_06"], true);
+        $this->assertEquals("2016-04-24", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_07")->getCustom("11.0")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(2, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_07"], true);
+        $this->assertEquals("11", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_08")->getCustom("-2")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(3, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_08"], true);
+        $this->assertEquals("-2", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_09")->getCustom("0")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(12, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_09"], true);
+        $this->assertEquals("Not Set", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_09")->getCustom("1")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$query, $params] = CustomColumnType::createByLookup("custom_09")->getCustom("2")->getQuery();
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(4, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_09"], true);
+        $this->assertEquals("1 Star", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("-1")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(9, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
+        $this->assertEquals("Not Set", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("0")->getQuery();
-        Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(6, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
+        $this->assertEquals("No", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("1")->getQuery();
-        Book::getEntryArray($query, $params, 1);
-
-        $this->markTestIncomplete();
+        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        $this->assertCount(7, $entryArray);
+        $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
+        $this->assertEquals("Yes", $custom[0]['htmlvalue']);
     }
 
     public function testGetURI()
