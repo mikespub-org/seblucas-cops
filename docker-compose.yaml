@@ -2,8 +2,12 @@ services:
   web:
     image: mikespub/seblucas-cops:web
     build:
-      context: . 
-      dockerfile: docker/Dockerfile.php82
+      context: .
+      dockerfile: docker/Dockerfile.alpine
       target: build
+    #environment:
+    #  - PORT=80
     ports:
-      - '8080:80'
+      - "8080:80"
+    volumes:
+      - ./config_local.php:/app/config_local.php

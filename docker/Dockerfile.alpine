@@ -1,0 +1,25 @@
+FROM php:8.2-cli-alpine AS build
+RUN apk add --no-cache freetype-dev libjpeg-turbo-dev libpng-dev zlib-dev libwebp-dev \
+    icu-dev \
+    libzip-dev \
+	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
+	&& docker-php-ext-install -j$(nproc) gd \
+	&& docker-php-ext-configure intl \
+	&& docker-php-ext-install intl \
+	&& docker-php-ext-install zip
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
+COPY . /app
+RUN composer install --no-dev -o -d /app
+
+ENV PORT=80
+EXPOSE $PORT
+
+CMD ["sh", "-c", "php -S 0.0.0.0:$PORT -t /app"]
+
+FROM build as dev-envs
+RUN composer update -o -d /app
+#RUN apk --no-cache add nodejs yarn
+#RUN yarn

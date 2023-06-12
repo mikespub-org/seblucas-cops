@@ -3,8 +3,10 @@ services:
     image: mikespub/seblucas-cops:dev
     build:
       context: . 
-      dockerfile: docker/Dockerfile.php82
+      dockerfile: docker/Dockerfile.alpine
       target: dev-envs
+    #environment:
+    #  - PORT=80
     ports:
       - '8080:80'
     volumes:
