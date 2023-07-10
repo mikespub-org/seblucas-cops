@@ -374,7 +374,7 @@ class Book extends Base
 
     public function GetMostInterestingDataToSendToKindle()
     {
-        $bestFormatForKindle = ['EPUB', 'PDF', 'AZW3', 'MOBI'];
+        $bestFormatForKindle = ['EPUB', 'PDF', 'AZW3'];
         $bestRank = -1;
         $bestData = null;
         foreach ($this->getDatas() as $data) {
