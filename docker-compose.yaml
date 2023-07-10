@@ -5,6 +5,11 @@ services:
       context: .
       dockerfile: docker/Dockerfile.alpine
       target: build
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
+      tags:
+        - "mikespub/seblucas-cops:latest"
     #environment:
     #  - PORT=80
     ports:

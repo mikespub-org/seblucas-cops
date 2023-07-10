@@ -327,7 +327,7 @@ $config['cops_basic_authentication'] = null;
  * 'bootstrap'
  * 'bootstrap2'
  */
-$config['cops_template'] = 'bootstrap2';
+$config['cops_template'] = 'default';
 
 /*
  * Which style is used by default :
