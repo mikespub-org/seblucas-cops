@@ -826,6 +826,8 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
     {
         $result = [];
 
+        $columns = CustomColumnType::checkCustomColumnList($columns);
+
         foreach ($columns as $lookup) {
             $col = CustomColumnType::createByLookup($lookup);
             if (!is_null($col)) {

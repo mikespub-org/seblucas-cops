@@ -12,6 +12,7 @@
 abstract class CustomColumnType extends Base
 {
     public const ALL_CUSTOMS_ID       = "cops:custom";
+    public const ALL_WILDCARD         = ["*"];
 
     public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
     public const CUSTOM_TYPE_CSV       = "csv";         // type 2 (internal)
@@ -25,10 +26,10 @@ abstract class CustomColumnType extends Base
     public const CUSTOM_TYPE_BOOL      = "bool";        // type 10
     public const CUSTOM_TYPE_COMPOSITE = "composite";   // type 11 + 12
 
-    /** @var array[integer]CustomColumnType  */
+    /** @var array<int, CustomColumnType>  */
     private static $customColumnCacheID = [];
 
-    /** @var array[string]CustomColumnType  */
+    /** @var array<string, CustomColumnType>  */
     private static $customColumnCacheLookup = [];
 
     /** @var integer the id of this column */
@@ -272,6 +273,36 @@ abstract class CustomColumnType extends Base
             return $post->name;
         }
         return "";
+    }
+
+    /**
+     * Check the list of custom columns requested (and expand the wildcard if needed)
+     *
+     * @param array<string> $columnList
+     * @return array<string>
+     */
+    public static function checkCustomColumnList($columnList)
+    {
+        if ($columnList === self::ALL_WILDCARD) {
+            $columnList = array_keys(self::getAllCustomColumns());
+        }
+        return $columnList;
+    }
+
+    /**
+     * Get all defined custom columns from the database
+     *
+     * @return array<string, array>
+     */
+    public static function getAllCustomColumns()
+    {
+        $result = parent::getDb()->prepare('SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns');
+        $result->execute();
+        $columns = [];
+        while ($post = $result->fetchObject()) {
+            $columns[$post->label] = (array) $post;
+        }
+        return $columns;
     }
 
     /**

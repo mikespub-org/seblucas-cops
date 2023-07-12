@@ -353,6 +353,14 @@ class BookTest extends TestCase
         $this->assertEquals("EPUB", $data->format);
     }
 
+    public function testGetAllCustomColumnValues()
+    {
+        $book = Book::getBookById(17);
+        $data = $book->getCustomColumnValues(["*"], true);
+
+        $this->assertCount(3, $data);
+    }
+
     public function testGetDataById()
     {
         global $config;

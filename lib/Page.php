@@ -146,6 +146,7 @@ class Page
                     array_push($this->entryArray, $languages);
                 }
             }
+            $config['cops_calibre_custom_column'] = CustomColumnType::checkCustomColumnList($config['cops_calibre_custom_column']);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customColumn = CustomColumnType::createByLookup($lookup);
                 if (!is_null($customColumn) && $customColumn->isSearchable()) {

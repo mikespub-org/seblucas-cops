@@ -164,6 +164,24 @@ class PageTest extends TestCase
         $config['cops_calibre_custom_column'] = [];
     }
 
+    public function testPageIndexWithCustomColumn_All()
+    {
+        global $config;
+        $page = Base::PAGE_INDEX;
+        $query = null;
+        $qid = null;
+        $n = "1";
+
+        $config['cops_calibre_custom_column'] = ["*"];
+
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
+
+        $this->assertCount(11, $currentPage->entryArray);
+
+        $config['cops_calibre_custom_column'] = [];
+    }
+
     public function testPageAllCustom_Type4()
     {
         $page = Base::PAGE_ALL_CUSTOMS;
