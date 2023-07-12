@@ -5,7 +5,9 @@ x.x.x - TODO
   * Upgrade npm-asset/jquery 1.12.4 to 3.7.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.3.x - 202306xx Fix custom columns for series and csv text + add tests
+1.3.5 - 20230712 Send EPUB, fix custom columns, support wildcard + add tests
+  * Replace offering to email MOBI with EPUB - see pull request #6 from @dunxd
+  * Use wildcard to get all custom columns : ["*"]
   * Update tests for custom columns
   * Fix multiple values of custom columns for csv text
   * Fix display value of custom columns for series
