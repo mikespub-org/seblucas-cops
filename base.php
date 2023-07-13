@@ -11,11 +11,11 @@ use SebLucas\Template\doT;
 require 'config.php';
 /** @var array $config */
 
-define('VERSION', '1.3.5');
-define('DB', 'db');
-define('TEMPLATE_DIR', 'templates/');
 date_default_timezone_set($config['default_timezone']);
 
+const COPS_VERSION = '1.3.5';
+const COPS_DB_PARAM = 'db';
+const COPS_TEMPLATE_DIR = 'templates/';
 const CONFIG_COPS_TEMPLATE = 'cops_template';
 
 function useServerSideRendering()
@@ -28,11 +28,11 @@ function serverSideRender($data)
 {
     // Get the templates
     $theme = getCurrentTemplate();
-    $header = file_get_contents(TEMPLATE_DIR . $theme . '/header.html');
-    $footer = file_get_contents(TEMPLATE_DIR . $theme . '/footer.html');
-    $main = file_get_contents(TEMPLATE_DIR . $theme . '/main.html');
-    $bookdetail = file_get_contents(TEMPLATE_DIR . $theme . '/bookdetail.html');
-    $page = file_get_contents(TEMPLATE_DIR . $theme . '/page.html');
+    $header = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/header.html');
+    $footer = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/footer.html');
+    $main = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/main.html');
+    $bookdetail = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/bookdetail.html');
+    $page = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/page.html');
 
     // Generate the function for the template
     $template = new doT();
@@ -117,7 +117,7 @@ function getCurrentCss()
     global $config;
     $style = getCurrentOption('style');
     if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
-        return TEMPLATE_DIR . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
+        return COPS_TEMPLATE_DIR . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
     }
     return 'templates/' . $config[CONFIG_COPS_TEMPLATE] . '/styles/style-' . $config[CONFIG_COPS_TEMPLATE] . '.css';
 }
@@ -134,7 +134,7 @@ function getCurrentTemplate()
 
 function getUrlWithVersion($url)
 {
-    return $url . '?v=' . VERSION;
+    return $url . '?v=' . COPS_VERSION;
 }
 
 function xml2xhtml($xml)

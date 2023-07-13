@@ -11,8 +11,8 @@ class LinkNavigation extends Link
     public function __construct($phref, $prel = null, $ptitle = null)
     {
         parent::__construct($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        if (!is_null(GetUrlParam(DB))) {
-            $this->href = addURLParameter($this->href, DB, GetUrlParam(DB));
+        if (!is_null(getURLParam(COPS_DB_PARAM))) {
+            $this->href = addURLParameter($this->href, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
         }
         if (!preg_match("#^\?(.*)#", $this->href) && !empty($this->href)) {
             $this->href = "?" . $this->href;

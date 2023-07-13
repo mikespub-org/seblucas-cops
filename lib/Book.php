@@ -214,8 +214,8 @@ class Book extends Base
     public function getDetailUrl()
     {
         $urlParam = $this->getUri();
-        if (!is_null(GetUrlParam(DB))) {
-            $urlParam = addURLParameter($urlParam, DB, GetUrlParam(DB));
+        if (!is_null(getURLParam(COPS_DB_PARAM))) {
+            $urlParam = addURLParameter($urlParam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
         }
         return 'index.php' . $urlParam;
     }

@@ -58,8 +58,8 @@ if (php_sapi_name() === 'cli') {
 
 $idData = getURLParam('data', null);
 $add = 'data=' . $idData . '&';
-if (!is_null(GetUrlParam(DB))) {
-    $add .= DB . '=' . GetUrlParam(DB) . '&';
+if (!is_null(getURLParam(COPS_DB_PARAM))) {
+    $add .= COPS_DB_PARAM . '=' . getURLParam(COPS_DB_PARAM) . '&';
 }
 $myBook = Book::getBookByDataId($idData);
 

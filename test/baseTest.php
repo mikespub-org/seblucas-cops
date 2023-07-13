@@ -52,7 +52,7 @@ class BaseTest extends TestCase
         $template = new doT();
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => $config['cops_title_default'],
-                  "version"               => VERSION,
+                  "version"               => COPS_VERSION,
                   "opds_url"              => $config['cops_full_url'] . "feed.php",
                   "customHeader"          => "",
                   "template"              => $templateName,

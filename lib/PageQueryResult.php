@@ -60,7 +60,7 @@ class PageQueryResult extends Page
 
     public function doSearchByCategory()
     {
-        $database = GetUrlParam(DB);
+        $database = getURLParam(COPS_DB_PARAM);
         $out = [];
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
         $dbArray = [""];
@@ -75,10 +75,10 @@ class PageQueryResult extends Page
             if (Base::noDatabaseSelected()) {
                 array_push($this->entryArray, new Entry(
                     $key,
-                    DB . ":query:{$d}",
+                    COPS_DB_PARAM . ":query:{$d}",
                     " ",
                     "text",
-                    [ new LinkNavigation("?" . DB . "={$d}")],
+                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$d}")],
                     "tt-header"
                 ));
                 Base::getDb($d);
@@ -109,7 +109,7 @@ class PageQueryResult extends Page
                     // str_format (localize("publisherword", count($array))
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$key}"), $this->query),
-                        DB . ":query:{$d}:{$key}",
+                        COPS_DB_PARAM . ":query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
                         [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")],
@@ -160,10 +160,10 @@ class PageQueryResult extends Page
                 [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $i, 1);
                 array_push($this->entryArray, new Entry(
                     $key,
-                    DB . ":query:{$i}",
+                    COPS_DB_PARAM . ":query:{$i}",
                     str_format(localize("bookword", $totalNumber), $totalNumber),
                     "text",
-                    [ new LinkNavigation("?" . DB . "={$i}&page=9&query=" . $this->query)],
+                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$i}&page=9&query=" . $this->query)],
                     "",
                     $totalNumber
                 ));

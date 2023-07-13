@@ -147,8 +147,8 @@ class Data extends Base
         global $config;
 
         $database = "";
-        if (!is_null(GetUrlParam(DB))) {
-            $database = GetUrlParam(DB) . "/";
+        if (!is_null(getURLParam(COPS_DB_PARAM))) {
+            $database = getURLParam(COPS_DB_PARAM) . "/";
         }
 
         $prefix = "download";
@@ -228,8 +228,8 @@ class Data extends Base
                 $urlParam = self::handleThumbnailLink($urlParam, $height);
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
-            if (!is_null(GetUrlParam(DB))) {
-                $urlParam = addURLParameter($urlParam, DB, GetUrlParam(DB));
+            if (!is_null(getURLParam(COPS_DB_PARAM))) {
+                $urlParam = addURLParameter($urlParam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
             }
             if ($config['cops_thumbnail_handling'] != "1" &&
                 !empty($config['cops_thumbnail_handling']) &&

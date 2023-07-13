@@ -78,7 +78,7 @@ class JSONRenderer
     {
         global $config;
         $out = self::getBookContentArray($book);
-        $database = GetUrlParam(DB);
+        $database = getURLParam(COPS_DB_PARAM);
 
         $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
         $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml();
@@ -153,7 +153,7 @@ class JSONRenderer
         global $config;
         $out = $in;
 
-        $out ["c"] = ["version" => VERSION, "i18n" => [
+        $out ["c"] = ["version" => COPS_VERSION, "i18n" => [
                            "coverAlt" => localize("i18n.coversection"),
                            "authorsTitle" => localize("authors.title"),
                            "bookwordTitle" => localize("bookword.title"),
@@ -206,7 +206,7 @@ class JSONRenderer
         $search = getURLParam("search");
         $qid = getURLParam("id");
         $n = getURLParam("n", "1");
-        $database = GetUrlParam(DB);
+        $database = getURLParam(COPS_DB_PARAM);
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
@@ -223,7 +223,7 @@ class JSONRenderer
         if (!is_null($currentPage->book)) {
             $out ["book"] = self::getFullBookContentArray($currentPage->book);
         }
-        $out ["databaseId"] = GetUrlParam(DB, "");
+        $out ["databaseId"] = getURLParam(COPS_DB_PARAM, "");
         $out ["databaseName"] = Base::getDbName();
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
@@ -260,16 +260,16 @@ class JSONRenderer
             $out ["containsBook"] = 1;
         }
 
-        $out["abouturl"] = "index.php" . addURLParameter("?page=" . Base::PAGE_ABOUT, DB, $database);
+        $out["abouturl"] = "index.php" . addURLParameter("?page=" . Base::PAGE_ABOUT, COPS_DB_PARAM, $database);
 
         if ($page == Base::PAGE_ABOUT) {
-            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . VERSION . "</h1>", file_get_contents('about.html'));
+            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . COPS_VERSION . "</h1>", file_get_contents('about.html'));
             $out ["fullhtml"] = $temp;
         }
 
         $out ["homeurl"] = "index.php";
         if ($page != Base::PAGE_INDEX && !is_null($database)) {
-            $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter("", DB, $database);
+            $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter("", COPS_DB_PARAM, $database);
         }
 
         return $out;

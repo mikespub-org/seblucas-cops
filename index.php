@@ -25,7 +25,7 @@ $page     = getURLParam('page', Base::PAGE_INDEX);
 $query    = getURLParam('query');
 $qid      = getURLParam('id');
 $n        = getURLParam('n', '1');
-$database = GetUrlParam(DB);
+$database = getURLParam(COPS_DB_PARAM);
 
 
 // Access the database ASAP to be sure it's readable, redirect if that's not the case.
@@ -42,7 +42,7 @@ if ($config ['cops_fetch_protect'] == '1') {
 header('Content-Type:text/html;charset=utf-8');
 
 $data = ['title'                 => $config['cops_title_default'],
-              'version'               => VERSION,
+              'version'               => COPS_VERSION,
               'opds_url'              => $config['cops_full_url'] . 'feed.php',
               'customHeader'          => '',
               'template'              => getCurrentTemplate(),

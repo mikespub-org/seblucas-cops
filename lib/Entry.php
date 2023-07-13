@@ -76,8 +76,8 @@ class Entry
             }
         }
 
-        if (!is_null(GetUrlParam(DB))) {
-            $this->id = str_replace("cops:", "cops:" . GetUrlParam(DB) . ":", $this->id);
+        if (!is_null(getURLParam(COPS_DB_PARAM))) {
+            $this->id = str_replace("cops:", "cops:" . getURLParam(COPS_DB_PARAM) . ":", $this->id);
         }
     }
 }

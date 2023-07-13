@@ -105,7 +105,7 @@ class Page
                     "cops:{$i}:catalog",
                     str_format(localize("bookword", $nBooks), $nBooks),
                     "text",
-                    [ new LinkNavigation("?" . DB . "={$i}")],
+                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$i}")],
                     "",
                     $nBooks
                 ));

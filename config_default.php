@@ -181,7 +181,7 @@ $config['cops_books_filter'] = [];
  * to add as an array containing the lookup names configured in Calibre
  *
  * For example : ["genre", "mycolumn"];
- * 
+ *
  * To select all Calibre custom columns you can use wildcard : ["*"];
  *
  * Note that the composite custom columns are not supported
@@ -193,7 +193,7 @@ $config['cops_calibre_custom_column'] = [];
  * to add as an array containing the lookup names configured in Calibre
  *
  * For example : ["genre", "mycolumn"];
- * 
+ *
  * To select all Calibre custom columns you can use wildcard : ["*"];
  *
  * Note that the composite custom columns are not supported
@@ -205,7 +205,7 @@ $config['cops_calibre_custom_column_list'] = [];
  * to add as an array containing the lookup names configured in Calibre
  *
  * For example : ["genre", "mycolumn"];
- * 
+ *
  * To select all Calibre custom columns you can use wildcard : ["*"];
  *
  * Note that the composite custom columns are not supported

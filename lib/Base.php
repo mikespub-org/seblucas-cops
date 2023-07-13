@@ -53,7 +53,7 @@ abstract class Base
 
     public static function noDatabaseSelected()
     {
-        return self::isMultipleDatabaseEnabled() && is_null(GetUrlParam(DB));
+        return self::isMultipleDatabaseEnabled() && is_null(getURLParam(COPS_DB_PARAM));
     }
 
     public static function getDbList()
@@ -81,7 +81,7 @@ abstract class Base
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = GetUrlParam(DB, 0);
+                $database = getURLParam(COPS_DB_PARAM, 0);
             }
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
                 self::error($database);
@@ -97,7 +97,7 @@ abstract class Base
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = GetUrlParam(DB, 0);
+                $database = getURLParam(COPS_DB_PARAM, 0);
             }
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
                 self::error($database);
@@ -114,7 +114,7 @@ abstract class Base
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = GetUrlParam(DB, 0);
+                $database = getURLParam(COPS_DB_PARAM, 0);
             }
             $array = array_values($config['image_directory']);
             return  $array[$database];

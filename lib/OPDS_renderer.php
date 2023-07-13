@@ -61,8 +61,8 @@ class OPDSRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $urlparam = "?query={searchTerms}";
-        if (!is_null(GetUrlParam(DB))) {
-            $urlparam = addURLParameter($urlparam, DB, GetUrlParam(DB));
+        if (!is_null(getURLParam(COPS_DB_PARAM))) {
+            $urlparam = addURLParameter($urlparam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
         }
         $urlparam = str_replace("%7B", "{", $urlparam);
         $urlparam = str_replace("%7D", "}", $urlparam);
@@ -98,8 +98,8 @@ class OPDSRenderer
         self::getXmlStream()->startElement("id");
         if ($page->idPage) {
             $idPage = $page->idPage;
-            if (!is_null(GetUrlParam(DB))) {
-                $idPage = str_replace("cops:", "cops:" . GetUrlParam(DB) . ":", $idPage);
+            if (!is_null(getURLParam(COPS_DB_PARAM))) {
+                $idPage = str_replace("cops:", "cops:" . getURLParam(COPS_DB_PARAM) . ":", $idPage);
             }
             self::getXmlStream()->text($idPage);
         } else {
@@ -128,8 +128,8 @@ class OPDSRenderer
         $link = new LinkNavigation("?" . getQueryString(), "self");
         self::renderLink($link);
         $urlparam = "?";
-        if (!is_null(GetUrlParam(DB))) {
-            $urlparam = addURLParameter($urlparam, DB, GetUrlParam(DB));
+        if (!is_null(getURLParam(COPS_DB_PARAM))) {
+            $urlparam = addURLParameter($urlparam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
         }
         if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
             // Good and compliant way of handling search
