@@ -82,22 +82,12 @@ if (!empty($config['cops_mail_configuration']["smtp.port"])) {
 $mail->From = $config['cops_mail_configuration']["address.from"];
 $mail->FromName = $config['cops_title_default'];
 
-# Limit sending to 5 email addresses
-$emailAddresses = explode(";", $emailDest);
-if(count($emailAddresses) <= 5){
-    foreach ($emailAddresses as $emailAddress) {
-        if (empty($emailAddress)) {
-            continue;
-        }
-        if (!filter_var($emailAddress, FILTER_VALIDATE_EMAIL)) {
-            echo  $emailAddress . " is an unsupported email address. Update the email address on the settings page.";
-            exit;
-        }
-        $mail->AddAddress($emailAddress);
-    }
-} else {
-    echo "You can send to a maximum of 5 email addresses. Please update your email address list.";
+# Validate emailDest
+if (!filter_var($emailDest, FILTER_VALIDATE_EMAIL)) {
+    echo  $emailAddress . " is an unsupported email address. Update the email address on the settings page.";
     exit;
+} else {
+    $mail->AddAddress($emailAddress);
 }
 
 $mail->AddAttachment($data->getLocalPath());
