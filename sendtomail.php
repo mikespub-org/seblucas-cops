@@ -84,10 +84,10 @@ $mail->FromName = $config['cops_title_default'];
 
 # Validate emailDest
 if (!filter_var($emailDest, FILTER_VALIDATE_EMAIL)) {
-    echo  $emailAddress . " is an unsupported email address. Update the email address on the settings page.";
+    echo  $emailDest . " is an unsupported email address. Update the email address on the settings page.";
     exit;
 } else {
-    $mail->AddAddress($emailAddress);
+    $mail->AddAddress($emailDest);
 }
 
 $mail->AddAttachment($data->getLocalPath());
