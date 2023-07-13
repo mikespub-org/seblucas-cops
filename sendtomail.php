@@ -82,11 +82,12 @@ if (!empty($config['cops_mail_configuration']["smtp.port"])) {
 $mail->From = $config['cops_mail_configuration']["address.from"];
 $mail->FromName = $config['cops_title_default'];
 
-foreach (explode(";", $emailDest) as $emailAddress) {
-    if (empty($emailAddress)) {
-        continue;
-    }
-    $mail->AddAddress($emailAddress);
+# Validate emailDest
+if (!filter_var($emailDest, FILTER_VALIDATE_EMAIL)) {
+    echo  $emailDest . " is an unsupported email address. Update the email address on the settings page.";
+    exit;
+} else {
+    $mail->AddAddress($emailDest);
 }
 
 $mail->AddAttachment($data->getLocalPath());
