@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = null, $ptitle = null)

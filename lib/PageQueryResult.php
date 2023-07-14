@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class PageQueryResult extends Page
 {
     public const SCOPE_TAG = "tag";

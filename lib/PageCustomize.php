@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class PageCustomize extends Page
 {
     private function isChecked($key, $testedValue = 1)

@@ -8,6 +8,8 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Base;
+use SebLucas\Cops\Page;
 
 class PageMultiDatabaseTest extends TestCase
 {

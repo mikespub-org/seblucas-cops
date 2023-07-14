@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class CustomColumnTypeBool extends CustomColumnType
 {
     // PHP pre 5.6 does not support const arrays

@@ -6,7 +6,10 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 use SebLucas\EPubMeta\EPub;
+use Exception;
 
 // Silly thing because PHP forbid string concatenation in class const
 define('SQL_BOOKS_LEFT_JOIN', 'left outer join comments on comments.book = books.id

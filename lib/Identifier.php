@@ -7,6 +7,8 @@
  * @author     SenorSmartyPants <senorsmartypants@gmail.com>
  */
 
+namespace SebLucas\Cops;
+
 class Identifier
 {
     public $id;

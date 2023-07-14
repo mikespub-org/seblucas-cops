@@ -6,6 +6,10 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
+use Exception;
+
 /**
  * A single calibre custom column
  */

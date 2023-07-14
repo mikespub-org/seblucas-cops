@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class Page
 {
     public $title;
@@ -196,7 +198,7 @@ class Page
         if (count($this->entryArray) == 0) {
             return false;
         }
-        if (get_class($this->entryArray [0]) == "EntryBook") {
+        if (get_class($this->entryArray [0]) == EntryBook::class) {
             return true;
         }
         return false;

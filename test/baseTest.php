@@ -10,6 +10,7 @@ require_once(dirname(__FILE__) . "/../base.php");
 require_once(dirname(__FILE__) . "/config_test.php");
 //require_once(dirname(__FILE__) . "/../base.php");
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Base;
 use SebLucas\Template\doT;
 
 class BaseTest extends TestCase

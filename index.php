@@ -7,6 +7,8 @@
  *
  */
 
+use SebLucas\Cops\Base;
+use SebLucas\Cops\JSONRenderer;
 use SebLucas\Template\doT;
 
 require_once dirname(__FILE__) . '/config.php';

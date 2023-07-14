@@ -6,6 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  *
  */
+use SebLucas\Cops\Base;
+use SebLucas\Cops\OPDSRenderer;
+use SebLucas\Cops\Page;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';

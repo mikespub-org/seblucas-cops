@@ -6,6 +6,10 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
+use DateTime;
+
 class CustomColumnTypeDate extends CustomColumnType
 {
     protected function __construct($pcustomId)

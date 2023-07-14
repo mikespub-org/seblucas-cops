@@ -6,6 +6,10 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
+use UnexpectedValueException;
+
 class CustomColumnTypeInteger extends CustomColumnType
 {
     protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_INT)

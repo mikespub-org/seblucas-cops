@@ -8,6 +8,7 @@
 
 require(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Book;
 use SebLucas\EPubMeta\EPub;
 
 class EpubReaderTest extends TestCase

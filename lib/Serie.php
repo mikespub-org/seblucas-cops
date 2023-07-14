@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class Serie extends Base
 {
     public const ALL_SERIES_ID = "cops:series";
@@ -62,11 +64,11 @@ where series.id = series and book = ?');
 
     public static function getAllSeries()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SERIES_COLUMNS, [], "Serie");
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SERIES_COLUMNS, [], self::class);
     }
 
     public static function getAllSeriesByQuery($query)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SERIES_COLUMNS, ['%' . $query . '%'], "Serie");
+        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SERIES_COLUMNS, ['%' . $query . '%'], self::class);
     }
 }

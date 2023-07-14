@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class CustomColumnTypeFloat extends CustomColumnType
 {
     protected function __construct($pcustomId)

@@ -8,6 +8,9 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Base;
+use SebLucas\Cops\OPDSRenderer;
+use SebLucas\Cops\Page;
 
 define("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
 define("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");

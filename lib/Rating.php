@@ -6,6 +6,8 @@
  * @author     Michael Pfitzner
  */
 
+namespace SebLucas\Cops;
+
 class Rating extends Base
 {
     public const ALL_RATING_ID = "cops:rating";

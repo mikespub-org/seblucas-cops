@@ -6,6 +6,8 @@
  * @author     At Libitum <eljarec@yahoo.com>
  */
 
+namespace SebLucas\Cops;
+
 class Publisher extends Base
 {
     public const ALL_PUBLISHERS_ID = "cops:publishers";
@@ -64,11 +66,11 @@ from publishers where id = ?');
 
     public static function getAllPublishers()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_PUBLISHERS, self::PUBLISHERS_COLUMNS, [], "Publisher");
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_PUBLISHERS, self::PUBLISHERS_COLUMNS, [], self::class);
     }
 
     public static function getAllPublishersByQuery($query)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_PUBLISHERS_FOR_SEARCH, self::PUBLISHERS_COLUMNS, ['%' . $query . '%'], "Publisher");
+        return Base::getEntryArrayWithBookNumber(self::SQL_PUBLISHERS_FOR_SEARCH, self::PUBLISHERS_COLUMNS, ['%' . $query . '%'], self::class);
     }
 }

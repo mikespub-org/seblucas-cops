@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class Tag extends Base
 {
     public const ALL_TAGS_ID = "cops:tags";
@@ -57,7 +59,7 @@ class Tag extends Base
             $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
         }
 
-        return Base::getEntryArrayWithBookNumber($sql, self::TAG_COLUMNS, [], "Tag");
+        return Base::getEntryArrayWithBookNumber($sql, self::TAG_COLUMNS, [], self::class);
     }
 
     public static function getAllTagsByQuery($query, $n, $database = null, $numberPerPage = null)

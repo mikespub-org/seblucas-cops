@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class CustomColumnTypeRating extends CustomColumnType
 {
     protected function __construct($pcustomId)

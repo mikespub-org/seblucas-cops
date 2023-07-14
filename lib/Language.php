@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class Language extends Base
 {
     public const ALL_LANGUAGES_ID = "cops:languages";

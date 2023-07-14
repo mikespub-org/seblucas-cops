@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class Author extends Base
 {
     public const ALL_AUTHORS_ID = "cops:authors";
@@ -85,7 +87,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
 
     public static function getEntryArray($query, $params)
     {
-        return Base::getEntryArrayWithBookNumber($query, self::AUTHOR_COLUMNS, $params, "Author");
+        return Base::getEntryArrayWithBookNumber($query, self::AUTHOR_COLUMNS, $params, self::class);
     }
 
     public static function getAuthorById($authorId)

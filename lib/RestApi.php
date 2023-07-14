@@ -9,9 +9,6 @@
 
 namespace SebLucas\Cops;
 
-use Base;
-use CustomColumnType;
-use JSONRenderer;
 use Exception;
 
 /**

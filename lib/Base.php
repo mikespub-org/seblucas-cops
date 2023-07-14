@@ -6,6 +6,11 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
+use Exception;
+use PDO;
+
 abstract class Base
 {
     public const PAGE_INDEX = "index";

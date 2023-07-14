@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 require_once dirname(__FILE__) . '/../base.php';
 
 class JSONRenderer

@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class Link
 {
     public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";

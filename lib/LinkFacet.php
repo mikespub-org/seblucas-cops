@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 class LinkFacet extends Link
 {
     public function __construct($phref, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false)

@@ -6,7 +6,10 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops;
+
 require_once dirname(__FILE__) . '/../base.php';
+use XMLWriter;
 
 class OPDSRenderer
 {
@@ -214,7 +217,7 @@ class OPDSRenderer
             self::renderLink($link);
         }
 
-        if (get_class($entry) != "EntryBook") {
+        if (get_class($entry) != EntryBook::class) {
             return;
         }
 
