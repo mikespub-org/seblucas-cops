@@ -5,6 +5,15 @@ x.x.x - TODO
   * Upgrade npm-asset/jquery 1.12.4 to 3.7.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
+1.4.x - 202307xx Use namespace in PHP lib
+  * Use PHP namespace in lib: SebLucas\Cops
+
+1.3.6 - 20230714 Add REST API, limit email address, clean up constants + fix book test
+  * Add REST API endpoint (basic)
+  * Limit sending to a single email address - see pull request #7 from @dunxd
+  * Clean up global base constants
+  * Fix kindle book text
+
 1.3.5 - 20230712 Send EPUB, fix custom columns, support wildcard + add tests
   * Replace offering to email MOBI with EPUB - see pull request #6 from @dunxd
   * Use wildcard to get all custom columns : ["*"]

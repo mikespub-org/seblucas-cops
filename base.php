@@ -13,7 +13,7 @@ require 'config.php';
 
 date_default_timezone_set($config['default_timezone']);
 
-const COPS_VERSION = '1.3.5';
+const COPS_VERSION = '1.3.6';
 const COPS_DB_PARAM = 'db';
 const COPS_TEMPLATE_DIR = 'templates/';
 const CONFIG_COPS_TEMPLATE = 'cops_template';
