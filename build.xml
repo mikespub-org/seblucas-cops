@@ -79,9 +79,9 @@
                 <exclude name="vendor/npm-asset/bootstrap/js/**" />
                 <exclude name="vendor/npm-asset/bootstrap/less/**" />
                 <exclude name="vendor/npm-asset/bootstrap/nuget/**" />
-                <exclude name="vendor/npm-asset/typeahead.js/doc/**" />
-                <exclude name="vendor/npm-asset/typeahead.js/src/**" />
-                <exclude name="vendor/npm-asset/typeahead.js/test/**" />
+                <exclude name="vendor/npm-asset/corejs-typeahead/doc/**" />
+                <exclude name="vendor/npm-asset/corejs-typeahead/src/**" />
+                <exclude name="vendor/npm-asset/corejs-typeahead/test/**" />
                 <exclude name="*.phar" />
                 <exclude name="*.zip" />
                 <exclude name="*.xml" />

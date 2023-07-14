@@ -64,7 +64,7 @@
     <script>
         $(document).ready(function()
         {
-            $('#loginForm').submit(function()
+            $('#loginForm').on("submit", function()
             {
               var username = $('#user').val();
               var password = $('#password').val();

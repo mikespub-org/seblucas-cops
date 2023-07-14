@@ -25,17 +25,17 @@
         "ext-xmlwriter": "*",
         "npm-asset/bootstrap": "~3.4",
         "npm-asset/dot": "~1.1",
-        "npm-asset/jquery": "~1.12",
+        "npm-asset/jquery": "~3.7",
         "npm-asset/js-cookie": "~2.2",
         "npm-asset/lru-fast": "~0.2",
         "npm-asset/magnific-popup": "~1.1",
         "npm-asset/normalize.css": "~8.0",
-        "npm-asset/typeahead.js": "~0.11",
+        "npm-asset/corejs-typeahead": "~1.3",
         "phpmailer/phpmailer": "~6.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "~9.5",
-        "sauce/sausage": "~0.18",
+        "phpunit/phpunit": "~9.6",
+        "sauce/sausage": "dev-php8x",
         "phing/phing": "~2.17"
     },
     "autoload": {
@@ -45,6 +45,10 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/IMrahulpai/sausage"
         }
     ],
     "config": {

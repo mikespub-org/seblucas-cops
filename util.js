@@ -344,7 +344,7 @@ updatePage = function (data) {
         source: copsTypeahead.ttAdapter()
     });
 
-    $('input[name=query]').bind('typeahead:selected', function(obj, datum) {
+    $('input[name=query]').on('typeahead:selected', function(obj, datum) {
         if (isPushStateEnabled) {
             navigateTo (datum.navlink);
         } else {
@@ -470,11 +470,11 @@ window.onpopstate = function(event) {
     updatePage (data);
 };
 
-$(document).keydown(function(e){
-    if (e.keyCode === 37 && $("#prevLink").length > 0) {
+$(document).on("keydown", function(e){
+    if (e.which === 37 && $("#prevLink").length > 0) {
         navigateTo ($("#prevLink").attr('href'));
     }
-    if (e.keyCode === 39  && $("#nextLink").length > 0) {
+    if (e.which === 39  && $("#nextLink").length > 0) {
         navigateTo ($("#nextLink").attr('href'));
     }
 });

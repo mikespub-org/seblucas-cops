@@ -2,10 +2,12 @@
 
 x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
-  * Upgrade npm-asset/jquery 1.12.4 to 3.7.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.4.x - 202307xx Use namespace in PHP lib
+1.4.x - 202307xx Use namespace in PHP lib, upgrade jquery npm asset + sausage package
+  * Switch from npm-asset/typeahead.js 0.11.0 to npm-asset/corejs-typeahead 1.3.3
+  * Upgrade sauce/sausage 0.18.0 to dev-php8x = PHP 8 compatible fork from https://github.com/IMrahulpai/sausage
+  * Upgrade npm-asset/jquery 1.12.4 to 3.7.0
   * Use PHP namespace in lib: SebLucas\Cops
 
 1.3.6 - 20230714 Add REST API, limit email address, clean up constants + fix book test
