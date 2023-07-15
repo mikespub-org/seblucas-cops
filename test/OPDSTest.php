@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Pages\Page;
 
-define("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
+define("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_2.rng");
 define("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
 define("JING_JAR", dirname(__FILE__) . "/jing.jar");
 define("OPDSVALIDATOR_JAR", dirname(__FILE__) . "/OPDSValidator.jar");
@@ -57,7 +57,7 @@ class OpdsTest extends TestCase
         $oldcwd = getcwd(); // Save the old working directory
         chdir("test");
         $path = "";
-        $res = system($path . 'java -jar "' . OPDSVALIDATOR_JAR . '" "' . $feed . '"');
+        $res = system($path . 'java -jar "' . OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '"');
         chdir($oldcwd);
         if ($res != '') {
             echo 'OPDS validation error: '.$res;

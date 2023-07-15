@@ -4,7 +4,9 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.4.x - 202307xx Use namespace in PHP lib, upgrade jquery npm asset + sausage package
+1.4.x - 202307xx Use namespaces in PHP lib, upgrade jquery npm asset + sausage package
+  * Update OPDSValidator, jing and tests for OPDS 1.2 (last updated in 2018)
+  * Add namespace hierarchy, move page constants + make Calibre classes a bit more generic
   * Switch from npm-asset/typeahead.js 0.11.0 to npm-asset/corejs-typeahead 1.3.3
   * Upgrade sauce/sausage 0.18.0 to dev-php8x = PHP 8 compatible fork from https://github.com/IMrahulpai/sausage
   * Upgrade npm-asset/jquery 1.12.4 to 3.7.0
