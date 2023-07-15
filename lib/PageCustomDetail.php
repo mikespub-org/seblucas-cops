@@ -11,6 +11,8 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\CustomColumn;
 
+use function SebLucas\Cops\Request\getURLParam;
+
 class PageCustomDetail extends Page
 {
     public function InitializeContent()

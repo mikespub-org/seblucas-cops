@@ -10,6 +10,11 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Request\getUrlWithVersion;
+use function SebLucas\Cops\Request\getURLParam;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 class Entry
 {
     public $title;

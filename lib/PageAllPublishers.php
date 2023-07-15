@@ -10,6 +10,8 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Publisher;
 
+use function SebLucas\Cops\Language\localize;
+
 class PageAllPublishers extends Page
 {
     public function InitializeContent()

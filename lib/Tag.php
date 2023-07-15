@@ -12,6 +12,9 @@ use SebLucas\Cops\Output\Entry;
 use SebLucas\Cops\Output\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\str_format;
+
 class Tag extends Base
 {
     public const PAGE_ID = Page::ALL_TAGS_ID;

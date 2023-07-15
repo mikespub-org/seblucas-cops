@@ -9,6 +9,12 @@
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\EPubMeta\EPub;
 
+use function SebLucas\Cops\Request\getURLParam;
+use function SebLucas\Cops\Request\initURLParam;
+use function SebLucas\Cops\Request\notFound;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */

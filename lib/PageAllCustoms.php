@@ -10,6 +10,8 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\CustomColumnType;
 
+use function SebLucas\Cops\Request\getURLParam;
+
 class PageAllCustoms extends Page
 {
     public function InitializeContent()

@@ -11,6 +11,9 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Rating;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\str_format;
+
 class PageRatingDetail extends Page
 {
     public function InitializeContent()

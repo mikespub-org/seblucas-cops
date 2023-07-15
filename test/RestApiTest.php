@@ -15,6 +15,9 @@ use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Request\getURLParam;
+use function SebLucas\Cops\Request\setURLParam;
+
 class RestApiTest extends TestCase
 {
     public static $script;

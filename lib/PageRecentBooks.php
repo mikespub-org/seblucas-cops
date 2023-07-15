@@ -10,6 +10,8 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 
+use function SebLucas\Cops\Language\localize;
+
 class PageRecentBooks extends Page
 {
     public function InitializeContent()

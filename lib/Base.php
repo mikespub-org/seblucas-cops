@@ -13,6 +13,15 @@ use SebLucas\Cops\Output\LinkNavigation;
 use Exception;
 use PDO;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\normAndUp;
+use function SebLucas\Cops\Language\str_format;
+use function SebLucas\Cops\Language\useNormAndUp;
+use function SebLucas\Cops\Request\getCurrentOption;
+use function SebLucas\Cops\Request\getURLParam;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 abstract class Base
 {
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
@@ -124,7 +133,9 @@ abstract class Base
                 if (is_readable(self::getDbFileName($database))) {
                     self::$db = new PDO('sqlite:'. self::getDbFileName($database));
                     if (useNormAndUp()) {
-                        self::$db->sqliteCreateFunction('normAndUp', 'normAndUp', 1);
+                        self::$db->sqliteCreateFunction('normAndUp', function ($s) {
+                            return normAndUp($s);
+                        }, 1);
                     }
                 } else {
                     self::error($database);

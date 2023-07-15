@@ -21,6 +21,13 @@ use SebLucas\Cops\Output\Entry;
 use SebLucas\Cops\Output\EntryBook;
 use SebLucas\Cops\Output\LinkNavigation;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\str_format;
+use function SebLucas\Cops\Request\getCurrentOption;
+use function SebLucas\Cops\Request\getQueryString;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 class Page
 {
     public const INDEX = "index";

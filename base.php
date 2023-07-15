@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-use SebLucas\Template\doT;
+namespace SebLucas\Cops\Config;
 
 require 'config.php';
 /** @var array $config */
@@ -16,7 +16,15 @@ date_default_timezone_set($config['default_timezone']);
 const COPS_VERSION = '1.3.6';
 const COPS_DB_PARAM = 'db';
 const COPS_TEMPLATE_DIR = 'templates/';
-const CONFIG_COPS_TEMPLATE = 'cops_template';
+const COPS_TEMPLATE = 'cops_template';
+
+namespace SebLucas\Cops\Request;
+
+use SebLucas\Template\doT;
+
+use const SebLucas\Cops\Config\COPS_TEMPLATE_DIR;
+use const SebLucas\Cops\Config\COPS_TEMPLATE;
+use const SebLucas\Cops\Config\COPS_VERSION;
 
 function useServerSideRendering()
 {
@@ -95,6 +103,26 @@ function setURLParam($name, $value)
     $urlParams[$name] = $value;
 }
 
+function addURLParameter($urlParams, $paramName, $paramValue)
+{
+    if (empty($urlParams)) {
+        $urlParams = '';
+    }
+    $start = '';
+    if (preg_match('#^\?(.*)#', $urlParams, $matches)) {
+        $start = '?';
+        $urlParams = $matches[1];
+    }
+    $params = [];
+    parse_str($urlParams, $params);
+    if (empty($paramValue) && strval($paramValue) !== "0") {
+        unset($params[$paramName]);
+    } else {
+        $params[$paramName] = $paramValue;
+    }
+    return $start . http_build_query($params);
+}
+
 function getCurrentOption($option)
 {
     global $config;
@@ -119,7 +147,7 @@ function getCurrentCss()
     if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
         return COPS_TEMPLATE_DIR . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
     }
-    return 'templates/' . $config[CONFIG_COPS_TEMPLATE] . '/styles/style-' . $config[CONFIG_COPS_TEMPLATE] . '.css';
+    return 'templates/' . $config[COPS_TEMPLATE] . '/styles/style-' . $config[COPS_TEMPLATE] . '.css';
 }
 
 function getCurrentTemplate()
@@ -129,13 +157,17 @@ function getCurrentTemplate()
     if (!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
         return $template;
     }
-    return $config[CONFIG_COPS_TEMPLATE];
+    return $config[COPS_TEMPLATE];
 }
 
 function getUrlWithVersion($url)
 {
     return $url . '?v=' . COPS_VERSION;
 }
+
+namespace SebLucas\Cops\Format;
+
+use DOMDocument;
 
 function xml2xhtml($xml)
 {
@@ -217,6 +249,8 @@ function html2xhtml($html)
     libxml_use_internal_errors(false);
     return $output;
 }
+
+namespace SebLucas\Cops\Language;
 
 /**
  * This method is a direct copy-paste from
@@ -365,26 +399,6 @@ function localize($phrase, $count=-1, $reset=false)
         return $translations[$phrase];
     }
     return $phrase;
-}
-
-function addURLParameter($urlParams, $paramName, $paramValue)
-{
-    if (empty($urlParams)) {
-        $urlParams = '';
-    }
-    $start = '';
-    if (preg_match('#^\?(.*)#', $urlParams, $matches)) {
-        $start = '?';
-        $urlParams = $matches[1];
-    }
-    $params = [];
-    parse_str($urlParams, $params);
-    if (empty($paramValue) && strval($paramValue) !== "0") {
-        unset($params[$paramName]);
-    } else {
-        $params[$paramName] = $paramValue;
-    }
-    return $start . http_build_query($params);
 }
 
 function useNormAndUp()

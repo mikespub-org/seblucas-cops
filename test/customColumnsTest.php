@@ -23,6 +23,8 @@ use SebLucas\Cops\Calibre\CustomColumnTypeText;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Request\setURLParam;
+
 class CustomColumnTest extends TestCase
 {
     public function testColumnType01()

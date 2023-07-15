@@ -13,6 +13,9 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Output\Link;
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Request\getURLParam;
+use function SebLucas\Cops\Request\setURLParam;
+
 /*
 Publishers:
 id:2 (2 books)   Macmillan and Co. London:   Lewis Caroll

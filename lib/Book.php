@@ -17,6 +17,15 @@ use SebLucas\Cops\Pages\PageQueryResult;
 use SebLucas\EPubMeta\EPub;
 use Exception;
 
+use function SebLucas\Cops\Format\html2xhtml;
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\str_format;
+use function SebLucas\Cops\Request\addURLParameter;
+use function SebLucas\Cops\Request\getCurrentOption;
+use function SebLucas\Cops\Request\getURLParam;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 // Silly thing because PHP forbid string concatenation in class const
 define('SQL_BOOKS_LEFT_JOIN', 'left outer join comments on comments.book = books.id
                                 left outer join books_ratings_link on books_ratings_link.book = books.id

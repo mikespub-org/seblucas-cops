@@ -12,6 +12,18 @@ use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Template\doT;
 
+use function SebLucas\Cops\Request\addURLParameter;
+use function SebLucas\Cops\Request\getCurrentCss;
+use function SebLucas\Cops\Request\getCurrentTemplate;
+use function SebLucas\Cops\Request\getQueryString;
+use function SebLucas\Cops\Request\getURLParam;
+use function SebLucas\Cops\Request\initURLParam;
+use function SebLucas\Cops\Request\serverSideRender;
+use function SebLucas\Cops\Request\useServerSideRendering;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_VERSION;
+
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */

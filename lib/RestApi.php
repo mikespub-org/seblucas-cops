@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Pages\Page;
 use Exception;
 
+use function SebLucas\Cops\Request\setURLParam;
+
 /**
  * Basic REST API routing to JSON Renderer
  */

@@ -8,6 +8,11 @@
 
 namespace SebLucas\Cops\Output;
 
+use function SebLucas\Cops\Request\addURLParameter;
+use function SebLucas\Cops\Request\getURLParam;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = null, $ptitle = null)

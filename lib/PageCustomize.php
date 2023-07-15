@@ -10,6 +10,12 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Output\Entry;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Request\useServerSideRendering;
+
+use function SebLucas\Cops\Request\getCurrentOption;
+use function SebLucas\Cops\Request\getCurrentTemplate;
+
 class PageCustomize extends Page
 {
     private function isChecked($key, $testedValue = 1)

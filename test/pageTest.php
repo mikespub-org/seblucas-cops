@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Language\useNormAndUp;
+use function SebLucas\Cops\Request\setURLParam;
+
 class PageTest extends TestCase
 {
     public static function setUpBeforeClass(): void

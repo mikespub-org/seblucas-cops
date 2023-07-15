@@ -10,6 +10,8 @@
 
 use SebLucas\Cops\Output\RestApi;
 
+use function SebLucas\Cops\Request\initURLParam;
+
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */

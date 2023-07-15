@@ -11,6 +11,9 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Output\Entry;
 use SebLucas\Cops\Output\LinkNavigation;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\str_format;
+
 class CustomColumnTypeEnumeration extends CustomColumnType
 {
     protected function __construct($pcustomId)

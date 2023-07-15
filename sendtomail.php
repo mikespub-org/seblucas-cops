@@ -8,6 +8,8 @@ require_once dirname(__FILE__) . '/base.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 
+use function SebLucas\Cops\Language\localize;
+
 function checkConfiguration()
 {
     global $config;

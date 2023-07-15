@@ -10,6 +10,11 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Output\Link;
 
+use function SebLucas\Cops\Request\addURLParameter;
+use function SebLucas\Cops\Request\getURLParam;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 class Data
 {
     public $id;

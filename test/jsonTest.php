@@ -14,6 +14,8 @@ use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Request\setURLParam;
+
 class JsonTest extends TestCase
 {
     public static function setUpBeforeClass(): void

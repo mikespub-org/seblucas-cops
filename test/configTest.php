@@ -8,6 +8,13 @@
 use PHPUnit\Framework\TestCase;
 use SebLucas\Template\doT;
 
+use function SebLucas\Cops\Request\addURLParameter;
+use function SebLucas\Cops\Request\getCurrentCss;
+use function SebLucas\Cops\Request\getQueryString;
+use function SebLucas\Cops\Request\useServerSideRendering;
+
+use const SebLucas\Cops\Config\COPS_VERSION;
+
 class ConfigTest extends TestCase
 {
     public function testCheckConfigurationCalibreDirectory()

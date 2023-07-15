@@ -5,6 +5,8 @@
  * Transliteration processing functions.
  */
 
+namespace SebLucas\Cops\Language;
+
 /**
  * Transliterates UTF-8 encoded text to US-ASCII.
  *

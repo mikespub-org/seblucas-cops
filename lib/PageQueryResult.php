@@ -17,6 +17,15 @@ use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Output\Entry;
 use SebLucas\Cops\Output\LinkNavigation;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\normAndUp;
+use function SebLucas\Cops\Language\str_format;
+use function SebLucas\Cops\Language\useNormAndUp;
+use function SebLucas\Cops\Request\getCurrentOption;
+use function SebLucas\Cops\Request\getURLParam;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+
 class PageQueryResult extends Page
 {
     public const SCOPE_TAG = "tag";

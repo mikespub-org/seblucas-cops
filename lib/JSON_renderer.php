@@ -13,6 +13,15 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Pages\Page;
 
+use function SebLucas\Cops\Language\localize;
+use function SebLucas\Cops\Language\str_format;
+use function SebLucas\Cops\Request\addURLParameter;
+use function SebLucas\Cops\Request\getURLParam;
+use function SebLucas\Cops\Request\useServerSideRendering;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_VERSION;
+
 require_once dirname(__FILE__) . '/../base.php';
 
 class JSONRenderer
