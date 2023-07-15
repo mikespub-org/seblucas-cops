@@ -6,7 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Pages;
+
+use SebLucas\Cops\Calibre\Book;
 
 class PageRecentBooks extends Page
 {

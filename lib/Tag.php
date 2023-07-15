@@ -6,7 +6,11 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
+
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Pages\Page;
 
 class Tag extends Base
 {
@@ -25,7 +29,7 @@ class Tag extends Base
 
     public function getUri()
     {
-        return "?page=".parent::PAGE_TAG_DETAIL."&id=$this->id";
+        return "?page=".Page::TAG_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
@@ -36,7 +40,7 @@ class Tag extends Base
     public static function getCount()
     {
         // str_format (localize("tags.alphabetical", count(array))
-        return parent::getCountGeneric("tags", self::ALL_TAGS_ID, parent::PAGE_ALL_TAGS);
+        return parent::getCountGeneric("tags", self::ALL_TAGS_ID, Page::ALL_TAGS);
     }
 
     public static function getTagById($tagId)

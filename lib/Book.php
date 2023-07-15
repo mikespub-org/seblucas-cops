@@ -6,8 +6,14 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\EntryBook;
+use SebLucas\Cops\Output\Link;
+use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageQueryResult;
 use SebLucas\EPubMeta\EPub;
 use Exception;
 
@@ -211,7 +217,7 @@ class Book extends Base
 
     public function getUri()
     {
-        return '?page='.parent::PAGE_BOOK_DETAIL.'&id=' . $this->id;
+        return '?page='.Page::BOOK_DETAIL.'&id=' . $this->id;
     }
 
     public function getDetailUrl()
@@ -346,9 +352,33 @@ class Book extends Base
     public function getDatas()
     {
         if (is_null($this->datas)) {
-            $this->datas = Data::getDataByBook($this);
+            $this->datas = self::getDataByBook($this);
         }
         return $this->datas;
+    }
+
+    public static function getDataByBook($book)
+    {
+        global $config;
+
+        $out = [];
+
+        $sql = 'select id, format, name from data where book = ?';
+
+        $ignored_formats = $config['cops_ignored_formats'];
+        if (count($ignored_formats) > 0) {
+            $sql .= " and format not in ('"
+            . implode("','", $ignored_formats)
+            . "')";
+        }
+
+        $result = parent::getDb()->prepare($sql);
+        $result->execute([$book->id]);
+
+        while ($post = $result->fetchObject()) {
+            array_push($out, new Data($post, $book));
+        }
+        return $out;
     }
 
     /* End of other class (author, series, tag, ...) initialization and accessors */
@@ -647,7 +677,7 @@ class Book extends Base
             self::ALL_BOOKS_ID,
             str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
             'text',
-            [new LinkNavigation('?page='.parent::PAGE_ALL_BOOKS)],
+            [new LinkNavigation('?page='.Page::ALL_BOOKS)],
             '',
             $nBooks
         );
@@ -658,7 +688,7 @@ class Book extends Base
                 self::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $config['cops_recentbooks_limit']),
                 'text',
-                [ new LinkNavigation('?page='.parent::PAGE_ALL_RECENT_BOOKS)],
+                [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS)],
                 '',
                 $config['cops_recentbooks_limit']
             );
@@ -785,7 +815,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
                 Book::getEntryIdByLetter($post->title),
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.parent::PAGE_ALL_BOOKS_LETTER.'&id='. rawurlencode($post->title))],
+                [new LinkNavigation('?page='.Page::ALL_BOOKS_LETTER.'&id='. rawurlencode($post->title))],
                 '',
                 $post->count
             ));

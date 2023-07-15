@@ -6,9 +6,11 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
 
-class Data extends Base
+use SebLucas\Cops\Output\Link;
+
+class Data
 {
     public $id;
     public $name;
@@ -171,26 +173,7 @@ class Data extends Base
 
     public static function getDataByBook($book)
     {
-        global $config;
-
-        $out = [];
-
-        $sql = 'select id, format, name from data where book = ?';
-
-        $ignored_formats = $config['cops_ignored_formats'];
-        if (count($ignored_formats) > 0) {
-            $sql .= " and format not in ('"
-            . implode("','", $ignored_formats)
-            . "')";
-        }
-
-        $result = parent::getDb()->prepare($sql);
-        $result->execute([$book->id]);
-
-        while ($post = $result->fetchObject()) {
-            array_push($out, new Data($post, $book));
-        }
-        return $out;
+        return Book::getDataByBook($book);
     }
 
     public static function handleThumbnailLink($urlParam, $height)

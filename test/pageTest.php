@@ -8,8 +8,8 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Base;
-use SebLucas\Cops\Page;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Pages\Page;
 
 class PageTest extends TestCase
 {
@@ -23,7 +23,7 @@ class PageTest extends TestCase
     public function testPageIndex()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -63,7 +63,7 @@ class PageTest extends TestCase
     public function testPageIndexWithIgnored()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -88,7 +88,7 @@ class PageTest extends TestCase
     public function testPageIndexWithCustomColumn_Type1()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -109,7 +109,7 @@ class PageTest extends TestCase
     public function testPageIndexWithCustomColumn_Type2()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -130,7 +130,7 @@ class PageTest extends TestCase
     public function testPageIndexWithCustomColumn_Type4()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -151,7 +151,7 @@ class PageTest extends TestCase
     public function testPageIndexWithCustomColumn_ManyTypes()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -169,7 +169,7 @@ class PageTest extends TestCase
     public function testPageIndexWithCustomColumn_All()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -186,7 +186,7 @@ class PageTest extends TestCase
 
     public function testPageAllCustom_Type4()
     {
-        $page = Base::PAGE_ALL_CUSTOMS;
+        $page = Page::ALL_CUSTOMS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -207,7 +207,7 @@ class PageTest extends TestCase
 
     public function testPageAllCustom_Type2()
     {
-        $page = Base::PAGE_ALL_CUSTOMS;
+        $page = Page::ALL_CUSTOMS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -228,7 +228,7 @@ class PageTest extends TestCase
 
     public function testPageAllCustom_Type1()
     {
-        $page = Base::PAGE_ALL_CUSTOMS;
+        $page = Page::ALL_CUSTOMS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -249,7 +249,7 @@ class PageTest extends TestCase
 
     public function testPageCustomDetail_Type4()
     {
-        $page = Base::PAGE_CUSTOM_DETAIL;
+        $page = Page::CUSTOM_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -269,7 +269,7 @@ class PageTest extends TestCase
 
     public function testPageCustomDetail_Type2()
     {
-        $page = Base::PAGE_CUSTOM_DETAIL;
+        $page = Page::CUSTOM_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -289,7 +289,7 @@ class PageTest extends TestCase
 
     public function testPageCustomDetail_Type1()
     {
-        $page = Base::PAGE_CUSTOM_DETAIL;
+        $page = Page::CUSTOM_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -311,7 +311,7 @@ class PageTest extends TestCase
     public function testPageAllAuthors_WithFullName()
     {
         global $config;
-        $page = Base::PAGE_ALL_AUTHORS;
+        $page = Page::ALL_AUTHORS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -332,7 +332,7 @@ class PageTest extends TestCase
     public function testPageAllAuthors_SplittedByFirstLetter()
     {
         global $config;
-        $page = Base::PAGE_ALL_AUTHORS;
+        $page = Page::ALL_AUTHORS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -349,7 +349,7 @@ class PageTest extends TestCase
 
     public function testPageAuthorsFirstLetter()
     {
-        $page = Base::PAGE_AUTHORS_FIRST_LETTER;
+        $page = Page::AUTHORS_FIRST_LETTER;
         $query = null;
         $qid = "C";
         $n = "1";
@@ -366,11 +366,11 @@ class PageTest extends TestCase
     public function testPageAuthorsDetail_FirstPage()
     {
         global $config;
-        $page = Base::PAGE_AUTHOR_DETAIL;
+        $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
 
         $config['cops_max_item_per_page'] = 2;
 
@@ -393,11 +393,11 @@ class PageTest extends TestCase
     public function testPageAuthorsDetail_LastPage()
     {
         global $config;
-        $page = Base::PAGE_AUTHOR_DETAIL;
+        $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
 
         // Last page
         $config['cops_max_item_per_page'] = 5;
@@ -421,11 +421,11 @@ class PageTest extends TestCase
     public function testPageAuthorsDetail_NoPagination()
     {
         global $config;
-        $page = Base::PAGE_AUTHOR_DETAIL;
+        $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
 
         // No pagination
         $config['cops_max_item_per_page'] = -1;
@@ -444,7 +444,7 @@ class PageTest extends TestCase
     public function testPageAllBooks_WithFullName()
     {
         global $config;
-        $page = Base::PAGE_ALL_BOOKS;
+        $page = Page::ALL_BOOKS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -466,7 +466,7 @@ class PageTest extends TestCase
     public function testPageAllBooks_SplittedByFirstLetter()
     {
         global $config;
-        $page = Base::PAGE_ALL_BOOKS;
+        $page = Page::ALL_BOOKS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -483,7 +483,7 @@ class PageTest extends TestCase
 
     public function testPageAllBooksByLetter()
     {
-        $page = Base::PAGE_ALL_BOOKS_LETTER;
+        $page = Page::ALL_BOOKS_LETTER;
         $query = null;
         $qid = "C";
         $n = "1";
@@ -499,7 +499,7 @@ class PageTest extends TestCase
 
     public function testPageAllSeries()
     {
-        $page = Base::PAGE_ALL_SERIES;
+        $page = Page::ALL_SERIES;
         $query = null;
         $qid = null;
         $n = "1";
@@ -515,7 +515,7 @@ class PageTest extends TestCase
 
     public function testPageSeriesDetail()
     {
-        $page = Base::PAGE_SERIE_DETAIL;
+        $page = Page::SERIE_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -530,7 +530,7 @@ class PageTest extends TestCase
 
     public function testPageAllPublishers()
     {
-        $page = Base::PAGE_ALL_PUBLISHERS;
+        $page = Page::ALL_PUBLISHERS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -546,7 +546,7 @@ class PageTest extends TestCase
 
     public function testPagePublishersDetail()
     {
-        $page = Base::PAGE_PUBLISHER_DETAIL;
+        $page = Page::PUBLISHER_DETAIL;
         $query = null;
         $qid = "6";
         $n = "1";
@@ -562,7 +562,7 @@ class PageTest extends TestCase
 
     public function testPageAllTags()
     {
-        $page = Base::PAGE_ALL_TAGS;
+        $page = Page::ALL_TAGS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -578,7 +578,7 @@ class PageTest extends TestCase
 
     public function testPageTagDetail()
     {
-        $page = Base::PAGE_TAG_DETAIL;
+        $page = Page::TAG_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -594,7 +594,7 @@ class PageTest extends TestCase
 
     public function testPageAllLanguages()
     {
-        $page = Base::PAGE_ALL_LANGUAGES;
+        $page = Page::ALL_LANGUAGES;
         $query = null;
         $qid = null;
         $n = "1";
@@ -611,7 +611,7 @@ class PageTest extends TestCase
 
     public function testPageLanguageDetail()
     {
-        $page = Base::PAGE_LANGUAGE_DETAIL;
+        $page = Page::LANGUAGE_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -627,7 +627,7 @@ class PageTest extends TestCase
 
     public function testPageAllRatings()
     {
-        $page = Base::PAGE_ALL_RATINGS;
+        $page = Page::ALL_RATINGS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -643,7 +643,7 @@ class PageTest extends TestCase
 
     public function testPageRatingDetail()
     {
-        $page = Base::PAGE_RATING_DETAIL;
+        $page = Page::RATING_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -659,7 +659,7 @@ class PageTest extends TestCase
 
     public function testPageRecent()
     {
-        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $page = Page::ALL_RECENT_BOOKS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -675,7 +675,7 @@ class PageTest extends TestCase
 
     public function testPageRecent_WithFacets_IncludedTag()
     {
-        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $page = Page::ALL_RECENT_BOOKS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -694,7 +694,7 @@ class PageTest extends TestCase
 
     public function testPageRecent_WithFacets_ExcludedTag()
     {
-        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $page = Page::ALL_RECENT_BOOKS;
         $query = null;
         $qid = null;
         $n = "1";
@@ -713,7 +713,7 @@ class PageTest extends TestCase
 
     public function testPageBookDetail()
     {
-        $page = Base::PAGE_BOOK_DETAIL;
+        $page = Page::BOOK_DETAIL;
         $query = null;
         $qid = "2";
         $n = "1";
@@ -729,7 +729,7 @@ class PageTest extends TestCase
     public function testPageSearch_WithOnlyBooksReturned()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $query = "alice";
         $qid = null;
         $n = "1";
@@ -748,7 +748,7 @@ class PageTest extends TestCase
     public function testPageSearch_WithAuthorsIgnored()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
         $query = "car";
         $qid = null;
@@ -770,7 +770,7 @@ class PageTest extends TestCase
     public function testPageSearch_WithTwoCategories()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
         $query = "car";
         $qid = null;
@@ -794,7 +794,7 @@ class PageTest extends TestCase
     public function testPageSearch_WithAccentuatedCharacters($query, $count, $content)
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = null;
         $n = "1";
 
@@ -826,7 +826,7 @@ class PageTest extends TestCase
     public function testPageSearch_WithNormalizedSearch_Book($query, $count, $content)
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = null;
         $n = "1";
         $config ['cops_normalized_search'] = "1";
@@ -865,7 +865,7 @@ class PageTest extends TestCase
     public function testAuthorSearch_ByName()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $query = "Lewis Carroll";
         setURLParam('scope', "author");
         $qid = null;
@@ -885,7 +885,7 @@ class PageTest extends TestCase
     public function testAuthorSearch_BySort()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $query = "Carroll, Lewis";
         setURLParam('scope', "author");
         $qid = null;
@@ -904,7 +904,7 @@ class PageTest extends TestCase
 
     public function testPageSearchScopeAuthors()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = null;
         $n = "1";
         setURLParam('scope', "author");
@@ -924,7 +924,7 @@ class PageTest extends TestCase
 
     public function testPageSearchScopeSeries()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = null;
         $n = "1";
         setURLParam('scope', "series");
@@ -944,7 +944,7 @@ class PageTest extends TestCase
 
     public function testPageSearchScopeBooks()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = null;
         $n = "1";
         setURLParam('scope', "book");
@@ -963,7 +963,7 @@ class PageTest extends TestCase
 
     public function testPageSearchScopePublishers()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = null;
         $n = "1";
         setURLParam('scope', "publisher");
@@ -983,7 +983,7 @@ class PageTest extends TestCase
 
     public function testPageSearchScopeTags()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = null;
         $n = "1";
         setURLParam('scope', "tag");

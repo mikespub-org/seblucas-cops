@@ -1,6 +1,6 @@
 <?php
 
-use SebLucas\Cops\Book;
+use SebLucas\Cops\Calibre\Book;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';

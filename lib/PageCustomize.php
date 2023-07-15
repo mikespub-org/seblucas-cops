@@ -6,7 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Pages;
+
+use SebLucas\Cops\Output\Entry;
 
 class PageCustomize extends Page
 {

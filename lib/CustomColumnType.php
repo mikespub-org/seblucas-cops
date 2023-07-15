@@ -6,8 +6,11 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Pages\Page;
 use Exception;
 
 /**
@@ -61,7 +64,7 @@ abstract class CustomColumnType extends Base
      */
     public function getUri($id)
     {
-        return "?page=" . parent::PAGE_CUSTOM_DETAIL . "&custom={$this->customId}&id={$id}";
+        return "?page=" . Page::CUSTOM_DETAIL . "&custom={$this->customId}&id={$id}";
     }
 
     /**
@@ -71,7 +74,7 @@ abstract class CustomColumnType extends Base
      */
     public function getUriAllCustoms()
     {
-        return "?page=" . parent::PAGE_ALL_CUSTOMS . "&custom={$this->customId}";
+        return "?page=" . Page::ALL_CUSTOMS . "&custom={$this->customId}";
     }
 
     /**

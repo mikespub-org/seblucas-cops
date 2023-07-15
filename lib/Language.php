@@ -6,7 +6,11 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
+
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Pages\Page;
 
 class Language extends Base
 {
@@ -23,7 +27,7 @@ class Language extends Base
 
     public function getUri()
     {
-        return "?page=".parent::PAGE_LANGUAGE_DETAIL."&id=$this->id";
+        return "?page=".Page::LANGUAGE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
@@ -43,7 +47,7 @@ class Language extends Base
     public static function getCount()
     {
         // str_format (localize("languages.alphabetical", count(array))
-        return parent::getCountGeneric("languages", self::ALL_LANGUAGES_ID, parent::PAGE_ALL_LANGUAGES);
+        return parent::getCountGeneric("languages", self::ALL_LANGUAGES_ID, Page::ALL_LANGUAGES);
     }
 
     public static function getLanguageById($languageId)

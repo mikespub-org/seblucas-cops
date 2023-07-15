@@ -8,8 +8,8 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Base;
-use SebLucas\Cops\Page;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Pages\Page;
 
 class PageMultiDatabaseTest extends TestCase
 {
@@ -19,7 +19,7 @@ class PageMultiDatabaseTest extends TestCase
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         Base::clearDb();
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -47,7 +47,7 @@ class PageMultiDatabaseTest extends TestCase
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         Base::clearDb();
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $query = "art";
         $qid = null;
         $n = "1";

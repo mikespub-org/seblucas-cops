@@ -6,11 +6,13 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+use SebLucas\Cops\Output\JSONRenderer;
+
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Base;
-use SebLucas\Cops\Book;
-use SebLucas\Cops\JSONRenderer;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Pages\Page;
 
 class JsonTest extends TestCase
 {
@@ -90,7 +92,7 @@ class JsonTest extends TestCase
 
     public function testGetJson()
     {
-        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $page = Page::ALL_RECENT_BOOKS;
 
         setURLParam('page', $page);
         $test = JSONRenderer::getJson();
@@ -104,7 +106,7 @@ class JsonTest extends TestCase
 
     public function testGetJsonSearch()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $query = "fic";
 
         setURLParam('page', $page);
@@ -137,7 +139,7 @@ class JsonTest extends TestCase
 
     public function testGetJsonComplete()
     {
-        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $page = Page::ALL_RECENT_BOOKS;
 
         setURLParam('page', $page);
         $test = JSONRenderer::getJson(true);

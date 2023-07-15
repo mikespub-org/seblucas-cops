@@ -6,10 +6,60 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Pages;
+
+use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\Language;
+use SebLucas\Cops\Calibre\Publisher;
+use SebLucas\Cops\Calibre\Rating;
+use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\EntryBook;
+use SebLucas\Cops\Output\LinkNavigation;
 
 class Page
 {
+    public const INDEX = "index";
+    public const ALL_AUTHORS = "1";
+    public const AUTHORS_FIRST_LETTER = "2";
+    public const AUTHOR_DETAIL = "3";
+    public const ALL_BOOKS = "4";
+    public const ALL_BOOKS_LETTER = "5";
+    public const ALL_SERIES = "6";
+    public const SERIE_DETAIL = "7";
+    public const OPENSEARCH = "8";
+    public const OPENSEARCH_QUERY = "9";
+    public const ALL_RECENT_BOOKS = "10";
+    public const ALL_TAGS = "11";
+    public const TAG_DETAIL = "12";
+    public const BOOK_DETAIL = "13";
+    public const ALL_CUSTOMS = "14";
+    public const CUSTOM_DETAIL = "15";
+    public const ABOUT = "16";
+    public const ALL_LANGUAGES = "17";
+    public const LANGUAGE_DETAIL = "18";
+    public const CUSTOMIZE = "19";
+    public const ALL_PUBLISHERS = "20";
+    public const PUBLISHER_DETAIL = "21";
+    public const ALL_RATINGS = "22";
+    public const RATING_DETAIL = "23";
+    /**
+    public const ALL_AUTHORS_ID = "cops:authors";
+    public const ALL_BOOKS_UUID = 'urn:uuid';
+    public const ALL_BOOKS_ID = 'cops:books';
+    public const ALL_RECENT_BOOKS_ID = 'cops:recentbooks';
+    public const ALL_CUSTOMS_ID       = "cops:custom";
+    public const ALL_LANGUAGES_ID = "cops:languages";
+    public const ALL_PUBLISHERS_ID = "cops:publishers";
+    public const ALL_RATING_ID = "cops:rating";
+    public const ALL_SERIES_ID = "cops:series";
+    public const ALL_TAGS_ID = "cops:tags";
+     */
+
     public $title;
     public $subtitle = "";
     public $authorName = "";
@@ -29,49 +79,49 @@ class Page
     public static function getPage($pageId, $id, $query, $n)
     {
         switch ($pageId) {
-            case Base::PAGE_ALL_AUTHORS :
+            case Page::ALL_AUTHORS :
                 return new PageAllAuthors($id, $query, $n);
-            case Base::PAGE_AUTHORS_FIRST_LETTER :
+            case Page::AUTHORS_FIRST_LETTER :
                 return new PageAllAuthorsLetter($id, $query, $n);
-            case Base::PAGE_AUTHOR_DETAIL :
+            case Page::AUTHOR_DETAIL :
                 return new PageAuthorDetail($id, $query, $n);
-            case Base::PAGE_ALL_TAGS :
+            case Page::ALL_TAGS :
                 return new PageAllTags($id, $query, $n);
-            case Base::PAGE_TAG_DETAIL :
+            case Page::TAG_DETAIL :
                 return new PageTagDetail($id, $query, $n);
-            case Base::PAGE_ALL_LANGUAGES :
+            case Page::ALL_LANGUAGES :
                 return new PageAllLanguages($id, $query, $n);
-            case Base::PAGE_LANGUAGE_DETAIL :
+            case Page::LANGUAGE_DETAIL :
                 return new PageLanguageDetail($id, $query, $n);
-            case Base::PAGE_ALL_CUSTOMS :
+            case Page::ALL_CUSTOMS :
                 return new PageAllCustoms($id, $query, $n);
-            case Base::PAGE_CUSTOM_DETAIL :
+            case Page::CUSTOM_DETAIL :
                 return new PageCustomDetail($id, $query, $n);
-            case Base::PAGE_ALL_RATINGS :
+            case Page::ALL_RATINGS :
                 return new PageAllRating($id, $query, $n);
-            case Base::PAGE_RATING_DETAIL :
+            case Page::RATING_DETAIL :
                 return new PageRatingDetail($id, $query, $n);
-            case Base::PAGE_ALL_SERIES :
+            case Page::ALL_SERIES :
                 return new PageAllSeries($id, $query, $n);
-            case Base::PAGE_ALL_BOOKS :
+            case Page::ALL_BOOKS :
                 return new PageAllBooks($id, $query, $n);
-            case Base::PAGE_ALL_BOOKS_LETTER:
+            case Page::ALL_BOOKS_LETTER:
                 return new PageAllBooksLetter($id, $query, $n);
-            case Base::PAGE_ALL_RECENT_BOOKS :
+            case Page::ALL_RECENT_BOOKS :
                 return new PageRecentBooks($id, $query, $n);
-            case Base::PAGE_SERIE_DETAIL :
+            case Page::SERIE_DETAIL :
                 return new PageSerieDetail($id, $query, $n);
-            case Base::PAGE_OPENSEARCH_QUERY :
+            case Page::OPENSEARCH_QUERY :
                 return new PageQueryResult($id, $query, $n);
-            case Base::PAGE_BOOK_DETAIL :
+            case Page::BOOK_DETAIL :
                 return new PageBookDetail($id, $query, $n);
-            case Base::PAGE_ALL_PUBLISHERS:
+            case Page::ALL_PUBLISHERS:
                 return new PageAllPublishers($id, $query, $n);
-            case Base::PAGE_PUBLISHER_DETAIL :
+            case Page::PUBLISHER_DETAIL :
                 return new PagePublisherDetail($id, $query, $n);
-            case Base::PAGE_ABOUT :
+            case Page::ABOUT :
                 return new PageAbout($id, $query, $n);
-            case Base::PAGE_CUSTOMIZE :
+            case Page::CUSTOMIZE :
                 return new PageCustomize($id, $query, $n);
             default:
                 $page = new Page($id, $query, $n);

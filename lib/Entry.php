@@ -6,7 +6,16 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Output;
+
+use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\Language;
+use SebLucas\Cops\Calibre\Publisher;
+use SebLucas\Cops\Calibre\Rating;
+use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Calibre\Tag;
 
 class Entry
 {

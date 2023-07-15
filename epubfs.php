@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-use SebLucas\Cops\Book;
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\EPubMeta\EPub;
 
 require_once dirname(__FILE__) . '/config.php';

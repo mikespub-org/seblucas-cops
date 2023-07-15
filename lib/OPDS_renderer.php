@@ -6,7 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Output;
+
+use SebLucas\Cops\Pages\Page;
 
 require_once dirname(__FILE__) . '/../base.php';
 use XMLWriter;
@@ -136,7 +138,7 @@ class OPDSRenderer
         }
         if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
             // Good and compliant way of handling search
-            $urlparam = addURLParameter($urlparam, "page", Base::PAGE_OPENSEARCH);
+            $urlparam = addURLParameter($urlparam, "page", Page::OPENSEARCH);
             $link = new Link("feed.php" . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed

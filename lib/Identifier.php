@@ -7,7 +7,7 @@
  * @author     SenorSmartyPants <senorsmartypants@gmail.com>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
 
 class Identifier
 {

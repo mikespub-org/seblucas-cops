@@ -6,11 +6,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+use SebLucas\Cops\Output\OPDSRenderer;
+
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Base;
-use SebLucas\Cops\OPDSRenderer;
-use SebLucas\Cops\Page;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Pages\Page;
 
 define("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
 define("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
@@ -74,7 +75,7 @@ class OpdsTest extends TestCase
     public function testPageIndex()
     {
         global $config;
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = null;
         $n = "1";
@@ -131,14 +132,14 @@ class OpdsTest extends TestCase
     public function providerPage()
     {
         return [
-            [Base::PAGE_OPENSEARCH, "car"],
-            [Base::PAGE_ALL_AUTHORS, null],
-            [Base::PAGE_ALL_SERIES, null],
-            [Base::PAGE_ALL_TAGS, null],
-            [Base::PAGE_ALL_PUBLISHERS, null],
-            [Base::PAGE_ALL_LANGUAGES, null],
-            [Base::PAGE_ALL_RECENT_BOOKS, null],
-            [Base::PAGE_ALL_BOOKS, null],
+            [Page::OPENSEARCH, "car"],
+            [Page::ALL_AUTHORS, null],
+            [Page::ALL_SERIES, null],
+            [Page::ALL_TAGS, null],
+            [Page::ALL_PUBLISHERS, null],
+            [Page::ALL_LANGUAGES, null],
+            [Page::ALL_RECENT_BOOKS, null],
+            [Page::ALL_BOOKS, null],
         ];
     }
 
@@ -148,7 +149,7 @@ class OpdsTest extends TestCase
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         Base::clearDb();
-        $page = Base::PAGE_INDEX;
+        $page = Page::INDEX;
         $query = null;
         $qid = "1";
         $n = "1";
@@ -185,11 +186,11 @@ class OpdsTest extends TestCase
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         Base::clearDb();
-        $page = Base::PAGE_AUTHOR_DETAIL;
+        $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1";
+        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1";
         $_GET ["db"] = "0";
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
@@ -209,11 +210,11 @@ class OpdsTest extends TestCase
     public function testPageAuthorsDetail()
     {
         global $config;
-        $page = Base::PAGE_AUTHOR_DETAIL;
+        $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
 
         $config['cops_max_item_per_page'] = 2;
 
@@ -246,11 +247,11 @@ class OpdsTest extends TestCase
     public function testPageAuthorsDetail_WithFacets()
     {
         global $config;
-        $page = Base::PAGE_AUTHOR_DETAIL;
+        $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
         $_GET["tag"] = "Short Stories";
 
         $config['cops_books_filter'] = ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"];
@@ -271,11 +272,11 @@ class OpdsTest extends TestCase
     public function testPageAuthorsDetail_WithoutAnyId()
     {
         global $config;
-        $page = Base::PAGE_AUTHOR_DETAIL;
+        $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
 
 

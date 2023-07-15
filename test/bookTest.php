@@ -8,10 +8,10 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Base;
-use SebLucas\Cops\Book;
-use SebLucas\Cops\Link;
-use SebLucas\Cops\Page;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Output\Link;
+use SebLucas\Cops\Pages\Page;
 
 /*
 Publishers:
@@ -497,7 +497,7 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearch_Tag()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = getURLParam("id");
         $query = "fic";
         $n = getURLParam("n", "1");
@@ -516,7 +516,7 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearch_BookAndAuthor()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = getURLParam("id");
         $query = "car";
         $n = getURLParam("n", "1");
@@ -537,7 +537,7 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearch_AuthorAndSeries()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = getURLParam("id");
         $query = "art";
         $n = getURLParam("n", "1");
@@ -558,7 +558,7 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearch_Publisher()
     {
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = getURLParam("id");
         $query = "Macmillan";
         $n = getURLParam("n", "1");
@@ -578,7 +578,7 @@ class BookTest extends TestCase
     public function testTypeaheadSearchWithIgnored_SingleCategory()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = getURLParam("id");
         $query = "car";
         $n = getURLParam("n", "1");
@@ -599,7 +599,7 @@ class BookTest extends TestCase
     public function testTypeaheadSearchWithIgnored_MultipleCategory()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = getURLParam("id");
         $query = "art";
         $n = getURLParam("n", "1");
@@ -620,7 +620,7 @@ class BookTest extends TestCase
     public function testTypeaheadSearchMultiDatabase()
     {
         global $config;
-        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $page = Page::OPENSEARCH_QUERY;
         $qid = getURLParam("id");
         $query = "art";
         $n = getURLParam("n", "1");

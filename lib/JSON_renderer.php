@@ -6,7 +6,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Output;
+
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Pages\Page;
 
 require_once dirname(__FILE__) . '/../base.php';
 
@@ -203,7 +208,7 @@ class JSONRenderer
     public static function getJson($complete = false)
     {
         global $config;
-        $page = getURLParam("page", Base::PAGE_INDEX);
+        $page = getURLParam("page", Page::INDEX);
         $query = getURLParam("query");
         $search = getURLParam("search");
         $qid = getURLParam("id");
@@ -262,15 +267,15 @@ class JSONRenderer
             $out ["containsBook"] = 1;
         }
 
-        $out["abouturl"] = "index.php" . addURLParameter("?page=" . Base::PAGE_ABOUT, COPS_DB_PARAM, $database);
+        $out["abouturl"] = "index.php" . addURLParameter("?page=" . Page::ABOUT, COPS_DB_PARAM, $database);
 
-        if ($page == Base::PAGE_ABOUT) {
+        if ($page == Page::ABOUT) {
             $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . COPS_VERSION . "</h1>", file_get_contents('about.html'));
             $out ["fullhtml"] = $temp;
         }
 
         $out ["homeurl"] = "index.php";
-        if ($page != Base::PAGE_INDEX && !is_null($database)) {
+        if ($page != Page::INDEX && !is_null($database)) {
             $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter("", COPS_DB_PARAM, $database);
         }
 

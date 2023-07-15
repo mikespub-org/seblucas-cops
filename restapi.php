@@ -8,7 +8,7 @@
  *
  */
 
-use SebLucas\Cops\RestApi;
+use SebLucas\Cops\Output\RestApi;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';

@@ -6,7 +6,11 @@
  * @author     Michael Pfitzner
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
+
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Pages\Page;
 
 class Rating extends Base
 {
@@ -25,7 +29,7 @@ class Rating extends Base
 
     public function getUri()
     {
-        return "?page=".parent::PAGE_RATING_DETAIL."&id=$this->id";
+        return "?page=".Page::RATING_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
@@ -36,7 +40,7 @@ class Rating extends Base
     public static function getCount()
     {
         // str_format (localize("ratings", count(array))
-        return parent::getCountGeneric("ratings", self::ALL_RATING_ID, parent::PAGE_ALL_RATINGS, "ratings");
+        return parent::getCountGeneric("ratings", self::ALL_RATING_ID, Page::ALL_RATINGS, "ratings");
     }
 
     public static function getAllRatings()

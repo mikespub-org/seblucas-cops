@@ -6,7 +6,11 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
+
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Pages\Page;
 
 class Author extends Base
 {
@@ -30,7 +34,7 @@ class Author extends Base
 
     public function getUri()
     {
-        return "?page=".parent::PAGE_AUTHOR_DETAIL."&id=$this->id";
+        return "?page=".Page::AUTHOR_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
@@ -46,7 +50,7 @@ class Author extends Base
     public static function getCount()
     {
         // str_format (localize("authors.alphabetical", count(array))
-        return parent::getCountGeneric("authors", self::ALL_AUTHORS_ID, parent::PAGE_ALL_AUTHORS);
+        return parent::getCountGeneric("authors", self::ALL_AUTHORS_ID, Page::ALL_AUTHORS);
     }
 
     public static function getAllAuthorsByFirstLetter()
@@ -62,7 +66,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
                 Author::getEntryIdByLetter($post->title),
                 str_format(localize("authorword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode($post->title))],
+                [ new LinkNavigation("?page=".Page::AUTHORS_FIRST_LETTER."&id=". rawurlencode($post->title))],
                 "",
                 $post->count
             ));

@@ -6,7 +6,16 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Pages;
+
+use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\Publisher;
+use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\LinkNavigation;
 
 class PageQueryResult extends Page
 {
@@ -64,7 +73,7 @@ class PageQueryResult extends Page
     {
         $database = getURLParam(COPS_DB_PARAM);
         $out = [];
-        $pagequery = Base::PAGE_OPENSEARCH_QUERY;
+        $pagequery = Page::OPENSEARCH_QUERY;
         $dbArray = [""];
         $d = $database;
         $query = $this->query;

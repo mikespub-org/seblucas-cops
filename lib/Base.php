@@ -6,38 +6,15 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Output\LinkNavigation;
 use Exception;
 use PDO;
 
 abstract class Base
 {
-    public const PAGE_INDEX = "index";
-    public const PAGE_ALL_AUTHORS = "1";
-    public const PAGE_AUTHORS_FIRST_LETTER = "2";
-    public const PAGE_AUTHOR_DETAIL = "3";
-    public const PAGE_ALL_BOOKS = "4";
-    public const PAGE_ALL_BOOKS_LETTER = "5";
-    public const PAGE_ALL_SERIES = "6";
-    public const PAGE_SERIE_DETAIL = "7";
-    public const PAGE_OPENSEARCH = "8";
-    public const PAGE_OPENSEARCH_QUERY = "9";
-    public const PAGE_ALL_RECENT_BOOKS = "10";
-    public const PAGE_ALL_TAGS = "11";
-    public const PAGE_TAG_DETAIL = "12";
-    public const PAGE_BOOK_DETAIL = "13";
-    public const PAGE_ALL_CUSTOMS = "14";
-    public const PAGE_CUSTOM_DETAIL = "15";
-    public const PAGE_ABOUT = "16";
-    public const PAGE_ALL_LANGUAGES = "17";
-    public const PAGE_LANGUAGE_DETAIL = "18";
-    public const PAGE_CUSTOMIZE = "19";
-    public const PAGE_ALL_PUBLISHERS = "20";
-    public const PAGE_PUBLISHER_DETAIL = "21";
-    public const PAGE_ALL_RATINGS = "22";
-    public const PAGE_RATING_DETAIL = "23";
-
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     private static $db = null;

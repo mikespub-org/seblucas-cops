@@ -7,8 +7,9 @@
  *
  */
 
-use SebLucas\Cops\Base;
-use SebLucas\Cops\JSONRenderer;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Pages\Page;
 use SebLucas\Template\doT;
 
 require_once dirname(__FILE__) . '/config.php';
@@ -23,7 +24,7 @@ if (preg_match('/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chun
 
 initURLParam();
 
-$page     = getURLParam('page', Base::PAGE_INDEX);
+$page     = getURLParam('page', Page::INDEX);
 $query    = getURLParam('query');
 $qid      = getURLParam('id');
 $n        = getURLParam('n', '1');

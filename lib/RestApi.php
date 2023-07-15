@@ -7,8 +7,10 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Pages\Page;
 use Exception;
 
 /**
@@ -25,30 +27,30 @@ class RestApi
      * @var array
      */
     public static $routes = [
-        Base::PAGE_INDEX => "/index",
-        Base::PAGE_ALL_AUTHORS => "/authors",
-        Base::PAGE_AUTHORS_FIRST_LETTER => "/authors_l/{id}",
-        Base::PAGE_AUTHOR_DETAIL => "/authors/{id}",
-        Base::PAGE_ALL_BOOKS => "/books",
-        Base::PAGE_ALL_BOOKS_LETTER => "/books_l/{id}",
-        Base::PAGE_BOOK_DETAIL => "/books/{id}",
-        Base::PAGE_ALL_SERIES => "/series",
-        Base::PAGE_SERIE_DETAIL => "/series/{id}",
-        //Base::PAGE_OPENSEARCH => "/search",
-        Base::PAGE_OPENSEARCH_QUERY => "/search/{query}",  // @todo scope
-        Base::PAGE_ALL_RECENT_BOOKS => "/recent",
-        Base::PAGE_ALL_TAGS => "/tags",
-        Base::PAGE_TAG_DETAIL => "/tags/{id}",
-        Base::PAGE_ALL_CUSTOMS => "/custom/{custom}",
-        Base::PAGE_CUSTOM_DETAIL => "/custom/{custom}/{id}",
-        Base::PAGE_ABOUT => "/about",
-        Base::PAGE_ALL_LANGUAGES => "/languages",
-        Base::PAGE_LANGUAGE_DETAIL => "/languages/{id}",
-        Base::PAGE_CUSTOMIZE => "/customize",
-        Base::PAGE_ALL_PUBLISHERS => "/publishers",
-        Base::PAGE_PUBLISHER_DETAIL => "/publishers/{id}",
-        Base::PAGE_ALL_RATINGS => "/ratings",
-        Base::PAGE_RATING_DETAIL => "/ratings/{id}",
+        Page::INDEX => "/index",
+        Page::ALL_AUTHORS => "/authors",
+        Page::AUTHORS_FIRST_LETTER => "/authors_l/{id}",
+        Page::AUTHOR_DETAIL => "/authors/{id}",
+        Page::ALL_BOOKS => "/books",
+        Page::ALL_BOOKS_LETTER => "/books_l/{id}",
+        Page::BOOK_DETAIL => "/books/{id}",
+        Page::ALL_SERIES => "/series",
+        Page::SERIE_DETAIL => "/series/{id}",
+        //Page::OPENSEARCH => "/search",
+        Page::OPENSEARCH_QUERY => "/search/{query}",  // @todo scope
+        Page::ALL_RECENT_BOOKS => "/recent",
+        Page::ALL_TAGS => "/tags",
+        Page::TAG_DETAIL => "/tags/{id}",
+        Page::ALL_CUSTOMS => "/custom/{custom}",
+        Page::CUSTOM_DETAIL => "/custom/{custom}/{id}",
+        Page::ABOUT => "/about",
+        Page::ALL_LANGUAGES => "/languages",
+        Page::LANGUAGE_DETAIL => "/languages/{id}",
+        Page::CUSTOMIZE => "/customize",
+        Page::ALL_PUBLISHERS => "/publishers",
+        Page::PUBLISHER_DETAIL => "/publishers/{id}",
+        Page::ALL_RATINGS => "/ratings",
+        Page::RATING_DETAIL => "/ratings/{id}",
     ];
 
     /**

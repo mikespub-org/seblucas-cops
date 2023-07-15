@@ -6,9 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  *
  */
-use SebLucas\Cops\Base;
-use SebLucas\Cops\OPDSRenderer;
-use SebLucas\Cops\Page;
+use SebLucas\Cops\Output\OPDSRenderer;
+use SebLucas\Cops\Pages\Page;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
@@ -17,11 +16,11 @@ require_once dirname(__FILE__) . '/base.php';
 initURLParam();
 
 header('Content-Type:application/xml');
-$page = getURLParam('page', Base::PAGE_INDEX);
+$page = getURLParam('page', Page::INDEX);
 $query = getURLParam('query');
 $n = getURLParam('n', '1');
 if ($query) {
-    $page = Base::PAGE_OPENSEARCH_QUERY;
+    $page = Page::OPENSEARCH_QUERY;
 }
 $qid = getURLParam('id');
 
@@ -35,7 +34,7 @@ if ($config ['cops_fetch_protect'] == '1') {
 $OPDSRender = new OPDSRenderer();
 
 switch ($page) {
-    case Base::PAGE_OPENSEARCH :
+    case Page::OPENSEARCH :
         echo $OPDSRender->getOpenSearch();
         return;
     default:

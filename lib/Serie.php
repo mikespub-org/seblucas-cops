@@ -6,7 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
+
+use SebLucas\Cops\Pages\Page;
 
 class Serie extends Base
 {
@@ -26,7 +28,7 @@ class Serie extends Base
 
     public function getUri()
     {
-        return "?page=".parent::PAGE_SERIE_DETAIL."&id=$this->id";
+        return "?page=".Page::SERIE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
@@ -37,7 +39,7 @@ class Serie extends Base
     public static function getCount()
     {
         // str_format (localize("series.alphabetical", count(array))
-        return parent::getCountGeneric("series", self::ALL_SERIES_ID, parent::PAGE_ALL_SERIES);
+        return parent::getCountGeneric("series", self::ALL_SERIES_ID, Page::ALL_SERIES);
     }
 
     public static function getSerieByBookId($bookId)

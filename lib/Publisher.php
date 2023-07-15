@@ -6,7 +6,9 @@
  * @author     At Libitum <eljarec@yahoo.com>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Calibre;
+
+use SebLucas\Cops\Pages\Page;
 
 class Publisher extends Base
 {
@@ -27,7 +29,7 @@ class Publisher extends Base
 
     public function getUri()
     {
-        return "?page=".parent::PAGE_PUBLISHER_DETAIL."&id=$this->id";
+        return "?page=".Page::PUBLISHER_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
@@ -38,7 +40,7 @@ class Publisher extends Base
     public static function getCount()
     {
         // str_format (localize("publishers.alphabetical", count(array))
-        return parent::getCountGeneric("publishers", self::ALL_PUBLISHERS_ID, parent::PAGE_ALL_PUBLISHERS);
+        return parent::getCountGeneric("publishers", self::ALL_PUBLISHERS_ID, Page::ALL_PUBLISHERS);
     }
 
     public static function getPublisherByBookId($bookId)

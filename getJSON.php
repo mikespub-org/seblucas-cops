@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  *
  */
-use SebLucas\Cops\JSONRenderer;
+use SebLucas\Cops\Output\JSONRenderer;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';

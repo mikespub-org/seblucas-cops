@@ -6,7 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Output;
+
+use SebLucas\Cops\Calibre\Book;
 
 class EntryBook extends Entry
 {
