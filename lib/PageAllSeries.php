@@ -16,6 +16,6 @@ class PageAllSeries extends Page
     {
         $this->title = localize("series.title");
         $this->entryArray = Serie::getAllSeries();
-        $this->idPage = Serie::ALL_SERIES_ID;
+        $this->idPage = Serie::PAGE_ID;
     }
 }

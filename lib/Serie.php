@@ -12,8 +12,11 @@ use SebLucas\Cops\Pages\Page;
 
 class Serie extends Base
 {
-    public const ALL_SERIES_ID = "cops:series";
-    public const SERIES_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
+    public const PAGE_ID = Page::ALL_SERIES_ID;
+    public const PAGE_ALL = Page::ALL_SERIES;
+    public const PAGE_DETAIL = Page::SERIE_DETAIL;
+    public const SQL_TABLE = "series";
+    public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
     public const SQL_ALL_SERIES = "select {0} from series, books_series_link where series.id = series group by series.id, series.name, series.sort order by series.sort";
     public const SQL_SERIES_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? group by series.id, series.name, series.sort order by series.sort";
 
@@ -28,18 +31,18 @@ class Serie extends Base
 
     public function getUri()
     {
-        return "?page=".Page::SERIE_DETAIL."&id=$this->id";
+        return "?page=".self::PAGE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
     {
-        return self::ALL_SERIES_ID.":".$this->id;
+        return self::PAGE_ID.":".$this->id;
     }
 
     public static function getCount()
     {
         // str_format (localize("series.alphabetical", count(array))
-        return parent::getCountGeneric("series", self::ALL_SERIES_ID, Page::ALL_SERIES);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
     }
 
     public static function getSerieByBookId($bookId)
@@ -66,11 +69,11 @@ where series.id = series and book = ?');
 
     public static function getAllSeries()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SERIES_COLUMNS, [], self::class);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SQL_COLUMNS, [], self::class);
     }
 
     public static function getAllSeriesByQuery($query)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SERIES_COLUMNS, ['%' . $query . '%'], self::class);
+        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SQL_COLUMNS, ['%' . $query . '%'], self::class);
     }
 }

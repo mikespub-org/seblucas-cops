@@ -14,9 +14,12 @@ use SebLucas\Cops\Pages\Page;
 
 class Author extends Base
 {
-    public const ALL_AUTHORS_ID = "cops:authors";
-
-    public const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
+    public const PAGE_ID = Page::ALL_AUTHORS_ID;
+    public const PAGE_ALL = Page::ALL_AUTHORS;
+    public const PAGE_LETTER = Page::AUTHORS_FIRST_LETTER;
+    public const PAGE_DETAIL = Page::AUTHOR_DETAIL;
+    public const SQL_TABLE = "authors";
+    public const SQL_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
     public const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
     public const SQL_AUTHORS_FOR_SEARCH = "select {0} from authors, books_authors_link where author = authors.id and (upper (authors.sort) like ? or upper (authors.name) like ?) group by authors.id, authors.name, authors.sort order by sort";
     public const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
@@ -34,23 +37,23 @@ class Author extends Base
 
     public function getUri()
     {
-        return "?page=".Page::AUTHOR_DETAIL."&id=$this->id";
+        return "?page=".self::PAGE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
     {
-        return self::ALL_AUTHORS_ID.":".$this->id;
+        return self::PAGE_ID.":".$this->id;
     }
 
     public static function getEntryIdByLetter($startingLetter)
     {
-        return self::ALL_AUTHORS_ID.":letter:".$startingLetter;
+        return self::PAGE_ID.":letter:".$startingLetter;
     }
 
     public static function getCount()
     {
         // str_format (localize("authors.alphabetical", count(array))
-        return parent::getCountGeneric("authors", self::ALL_AUTHORS_ID, Page::ALL_AUTHORS);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
     }
 
     public static function getAllAuthorsByFirstLetter()
@@ -66,7 +69,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
                 Author::getEntryIdByLetter($post->title),
                 str_format(localize("authorword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation("?page=".Page::AUTHORS_FIRST_LETTER."&id=". rawurlencode($post->title))],
+                [ new LinkNavigation("?page=".self::PAGE_LETTER."&id=". rawurlencode($post->title))],
                 "",
                 $post->count
             ));
@@ -91,12 +94,12 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
 
     public static function getEntryArray($query, $params)
     {
-        return Base::getEntryArrayWithBookNumber($query, self::AUTHOR_COLUMNS, $params, self::class);
+        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, $params, self::class);
     }
 
     public static function getAuthorById($authorId)
     {
-        $result = parent::getDb()->prepare('select ' . self::AUTHOR_COLUMNS . ' from authors where id = ?');
+        $result = parent::getDb()->prepare('select ' . self::SQL_COLUMNS . ' from authors where id = ?');
         $result->execute([$authorId]);
         $post = $result->fetchObject();
         return new Author($post);

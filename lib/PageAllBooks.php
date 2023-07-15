@@ -20,6 +20,6 @@ class PageAllBooks extends Page
         } else {
             [$this->entryArray, $this->totalNumber] = Book::getBooks($this->n);
         }
-        $this->idPage = Book::ALL_BOOKS_ID;
+        $this->idPage = Book::PAGE_ID;
     }
 }

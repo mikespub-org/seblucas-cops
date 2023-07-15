@@ -12,8 +12,11 @@ use SebLucas\Cops\Pages\Page;
 
 class Publisher extends Base
 {
-    public const ALL_PUBLISHERS_ID = "cops:publishers";
-    public const PUBLISHERS_COLUMNS = "publishers.id as id, publishers.name as name, count(*) as count";
+    public const PAGE_ID = Page::ALL_PUBLISHERS_ID;
+    public const PAGE_ALL = Page::ALL_PUBLISHERS;
+    public const PAGE_DETAIL = Page::PUBLISHER_DETAIL;
+    public const SQL_TABLE = "publishers";
+    public const SQL_COLUMNS = "publishers.id as id, publishers.name as name, count(*) as count";
     public const SQL_ALL_PUBLISHERS = "select {0} from publishers, books_publishers_link where publishers.id = publisher group by publishers.id, publishers.name order by publishers.name";
     public const SQL_PUBLISHERS_FOR_SEARCH = "select {0} from publishers, books_publishers_link where publishers.id = publisher and upper (publishers.name) like ? group by publishers.id, publishers.name order by publishers.name";
 
@@ -29,18 +32,18 @@ class Publisher extends Base
 
     public function getUri()
     {
-        return "?page=".Page::PUBLISHER_DETAIL."&id=$this->id";
+        return "?page=".self::PAGE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
     {
-        return self::ALL_PUBLISHERS_ID.":".$this->id;
+        return self::PAGE_ID.":".$this->id;
     }
 
     public static function getCount()
     {
         // str_format (localize("publishers.alphabetical", count(array))
-        return parent::getCountGeneric("publishers", self::ALL_PUBLISHERS_ID, Page::ALL_PUBLISHERS);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
     }
 
     public static function getPublisherByBookId($bookId)
@@ -68,11 +71,11 @@ from publishers where id = ?');
 
     public static function getAllPublishers()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_PUBLISHERS, self::PUBLISHERS_COLUMNS, [], self::class);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_PUBLISHERS, self::SQL_COLUMNS, [], self::class);
     }
 
     public static function getAllPublishersByQuery($query)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_PUBLISHERS_FOR_SEARCH, self::PUBLISHERS_COLUMNS, ['%' . $query . '%'], self::class);
+        return Base::getEntryArrayWithBookNumber(self::SQL_PUBLISHERS_FOR_SEARCH, self::SQL_COLUMNS, ['%' . $query . '%'], self::class);
     }
 }

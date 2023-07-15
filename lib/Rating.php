@@ -14,9 +14,11 @@ use SebLucas\Cops\Pages\Page;
 
 class Rating extends Base
 {
-    public const ALL_RATING_ID = "cops:rating";
-
-    public const RATING_COLUMNS = "ratings.id as id, ratings.rating as rating, count(*) as count";
+    public const PAGE_ID = Page::ALL_RATING_ID;
+    public const PAGE_ALL = Page::ALL_RATINGS;
+    public const PAGE_DETAIL = Page::RATING_DETAIL;
+    public const SQL_TABLE = "ratings";
+    public const SQL_COLUMNS = "ratings.id as id, ratings.rating as rating, count(*) as count";
     public const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id group by ratings.id order by ratings.rating";
     public $id;
     public $name;
@@ -29,18 +31,18 @@ class Rating extends Base
 
     public function getUri()
     {
-        return "?page=".Page::RATING_DETAIL."&id=$this->id";
+        return "?page=".self::PAGE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
     {
-        return self::ALL_RATING_ID.":".$this->id;
+        return self::PAGE_ID.":".$this->id;
     }
 
     public static function getCount()
     {
         // str_format (localize("ratings", count(array))
-        return parent::getCountGeneric("ratings", self::ALL_RATING_ID, Page::ALL_RATINGS, "ratings");
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, "ratings");
     }
 
     public static function getAllRatings()
@@ -50,7 +52,7 @@ class Rating extends Base
 
     public static function getEntryArray($query, $params)
     {
-        [, $result] = parent::executeQuery($query, self::RATING_COLUMNS, "", $params, -1);
+        [, $result] = parent::executeQuery($query, self::SQL_COLUMNS, "", $params, -1);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $ratingObj = new Rating($post->id, $post->rating);

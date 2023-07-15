@@ -73,10 +73,12 @@ require('Identifier.php');
 
 class Book extends Base
 {
-    public const ALL_BOOKS_UUID = 'urn:uuid';
-    public const ALL_BOOKS_ID = 'cops:books';
-    public const ALL_RECENT_BOOKS_ID = 'cops:recentbooks';
-    public const BOOK_COLUMNS = 'books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating';
+    public const PAGE_ID = Page::ALL_BOOKS_ID;
+    public const PAGE_ALL = Page::ALL_BOOKS;
+    public const PAGE_LETTER = Page::ALL_BOOKS_LETTER;
+    public const PAGE_DETAIL = Page::BOOK_DETAIL;
+    public const SQL_TABLE = "books";
+    public const SQL_COLUMNS = 'books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating';
 
     public const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     public const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
@@ -197,7 +199,7 @@ class Book extends Base
     {
         global $config;
 
-        $res = self::BOOK_COLUMNS;
+        $res = self::SQL_COLUMNS;
         if (!empty($config['calibre_database_field_cover'])) {
             $res = str_replace('has_cover,', 'has_cover, ' . $config['calibre_database_field_cover'] . ',', $res);
         }
@@ -207,17 +209,17 @@ class Book extends Base
 
     public function getEntryId()
     {
-        return self::ALL_BOOKS_UUID.':'.$this->uuid;
+        return Page::ALL_BOOKS_UUID.':'.$this->uuid;
     }
 
     public static function getEntryIdByLetter($startingLetter)
     {
-        return self::ALL_BOOKS_ID.':letter:'.$startingLetter;
+        return self::PAGE_ID.':letter:'.$startingLetter;
     }
 
     public function getUri()
     {
-        return '?page='.Page::BOOK_DETAIL.'&id=' . $this->id;
+        return '?page='.self::PAGE_DETAIL.'&id=' . $this->id;
     }
 
     public function getDetailUrl()
@@ -674,10 +676,10 @@ class Book extends Base
         $result = [];
         $entry = new Entry(
             localize('allbooks.title'),
-            self::ALL_BOOKS_ID,
+            self::PAGE_ID,
             str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
             'text',
-            [new LinkNavigation('?page='.Page::ALL_BOOKS)],
+            [new LinkNavigation('?page='.self::PAGE_ALL)],
             '',
             $nBooks
         );
@@ -685,7 +687,7 @@ class Book extends Base
         if ($config['cops_recentbooks_limit'] > 0) {
             $entry = new Entry(
                 localize('recent.title'),
-                self::ALL_RECENT_BOOKS_ID,
+                Page::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $config['cops_recentbooks_limit']),
                 'text',
                 [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS)],
@@ -815,7 +817,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
                 Book::getEntryIdByLetter($post->title),
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.Page::ALL_BOOKS_LETTER.'&id='. rawurlencode($post->title))],
+                [new LinkNavigation('?page='.self::PAGE_LETTER.'&id='. rawurlencode($post->title))],
                 '',
                 $post->count
             ));

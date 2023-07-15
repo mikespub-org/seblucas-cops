@@ -14,8 +14,11 @@ use SebLucas\Cops\Pages\Page;
 
 class Tag extends Base
 {
-    public const ALL_TAGS_ID = "cops:tags";
-    public const TAG_COLUMNS = "tags.id as id, tags.name as name, count(*) as count";
+    public const PAGE_ID = Page::ALL_TAGS_ID;
+    public const PAGE_ALL = Page::ALL_TAGS;
+    public const PAGE_DETAIL = Page::TAG_DETAIL;
+    public const SQL_TABLE = "tags";
+    public const SQL_COLUMNS = "tags.id as id, tags.name as name, count(*) as count";
     public const SQL_ALL_TAGS = "select {0} from tags, books_tags_link where tags.id = tag group by tags.id, tags.name order by tags.name";
 
     public $id;
@@ -29,18 +32,18 @@ class Tag extends Base
 
     public function getUri()
     {
-        return "?page=".Page::TAG_DETAIL."&id=$this->id";
+        return "?page=".self::PAGE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
     {
-        return self::ALL_TAGS_ID.":".$this->id;
+        return self::PAGE_ID.":".$this->id;
     }
 
     public static function getCount()
     {
         // str_format (localize("tags.alphabetical", count(array))
-        return parent::getCountGeneric("tags", self::ALL_TAGS_ID, Page::ALL_TAGS);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
     }
 
     public static function getTagById($tagId)
@@ -63,7 +66,7 @@ class Tag extends Base
             $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
         }
 
-        return Base::getEntryArrayWithBookNumber($sql, self::TAG_COLUMNS, [], self::class);
+        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, [], self::class);
     }
 
     public static function getAllTagsByQuery($query, $n, $database = null, $numberPerPage = null)

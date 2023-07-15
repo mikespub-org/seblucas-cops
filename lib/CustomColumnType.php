@@ -18,7 +18,10 @@ use Exception;
  */
 abstract class CustomColumnType extends Base
 {
-    public const ALL_CUSTOMS_ID       = "cops:custom";
+    public const PAGE_ID = Page::ALL_CUSTOMS_ID;
+    public const PAGE_ALL = Page::ALL_CUSTOMS;
+    public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
+    public const SQL_TABLE = "custom_columns";
     public const ALL_WILDCARD         = ["*"];
 
     public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
@@ -64,7 +67,7 @@ abstract class CustomColumnType extends Base
      */
     public function getUri($id)
     {
-        return "?page=" . Page::CUSTOM_DETAIL . "&custom={$this->customId}&id={$id}";
+        return "?page=" . self::PAGE_DETAIL . "&custom={$this->customId}&id={$id}";
     }
 
     /**
@@ -74,7 +77,7 @@ abstract class CustomColumnType extends Base
      */
     public function getUriAllCustoms()
     {
-        return "?page=" . Page::ALL_CUSTOMS . "&custom={$this->customId}";
+        return "?page=" . self::PAGE_ALL . "&custom={$this->customId}";
     }
 
     /**
@@ -85,7 +88,7 @@ abstract class CustomColumnType extends Base
      */
     public function getEntryId($id)
     {
-        return self::ALL_CUSTOMS_ID . ":" . $this->customId . ":" . $id;
+        return self::PAGE_ID . ":" . $this->customId . ":" . $id;
     }
 
     /**
@@ -95,7 +98,7 @@ abstract class CustomColumnType extends Base
      */
     public function getAllCustomsId()
     {
-        return self::ALL_CUSTOMS_ID . ":" . $this->customId;
+        return self::PAGE_ID . ":" . $this->customId;
     }
 
     /**

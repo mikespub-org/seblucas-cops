@@ -20,6 +20,6 @@ class PageAllAuthors extends Page
         } else {
             $this->entryArray = Author::getAllAuthors();
         }
-        $this->idPage = Author::ALL_AUTHORS_ID;
+        $this->idPage = Author::PAGE_ID;
     }
 }

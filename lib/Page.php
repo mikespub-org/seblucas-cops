@@ -47,7 +47,6 @@ class Page
     public const PUBLISHER_DETAIL = "21";
     public const ALL_RATINGS = "22";
     public const RATING_DETAIL = "23";
-    /**
     public const ALL_AUTHORS_ID = "cops:authors";
     public const ALL_BOOKS_UUID = 'urn:uuid';
     public const ALL_BOOKS_ID = 'cops:books';
@@ -58,7 +57,6 @@ class Page
     public const ALL_RATING_ID = "cops:rating";
     public const ALL_SERIES_ID = "cops:series";
     public const ALL_TAGS_ID = "cops:tags";
-     */
 
     public $title;
     public $subtitle = "";

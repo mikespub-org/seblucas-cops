@@ -14,8 +14,11 @@ use SebLucas\Cops\Pages\Page;
 
 class Language extends Base
 {
-    public const ALL_LANGUAGES_ID = "cops:languages";
-
+    public const PAGE_ID = Page::ALL_LANGUAGES_ID;
+    public const PAGE_ALL = Page::ALL_LANGUAGES;
+    public const PAGE_DETAIL = Page::LANGUAGE_DETAIL;
+    public const SQL_TABLE = "languages";
+    public const SQL_COLUMNS = "languages.id as id, languages.lang_code as lang_code, count(*) as count";
     public $id;
     public $lang_code;
 
@@ -27,12 +30,12 @@ class Language extends Base
 
     public function getUri()
     {
-        return "?page=".Page::LANGUAGE_DETAIL."&id=$this->id";
+        return "?page=".self::PAGE_DETAIL."&id=$this->id";
     }
 
     public function getEntryId()
     {
-        return self::ALL_LANGUAGES_ID.":".$this->id;
+        return self::PAGE_ID.":".$this->id;
     }
 
     public static function getLanguageString($code)
@@ -47,7 +50,7 @@ class Language extends Base
     public static function getCount()
     {
         // str_format (localize("languages.alphabetical", count(array))
-        return parent::getCountGeneric("languages", self::ALL_LANGUAGES_ID, Page::ALL_LANGUAGES);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
     }
 
     public static function getLanguageById($languageId)
@@ -64,7 +67,7 @@ class Language extends Base
 
     public static function getAllLanguages()
     {
-        $result = parent::getDb()->query('select languages.id as id, languages.lang_code as lang_code, count(*) as count
+        $result = parent::getDb()->query('select ' . self::SQL_COLUMNS . '
 from languages, books_languages_link
 where languages.id = books_languages_link.lang_code
 group by languages.id, books_languages_link.lang_code

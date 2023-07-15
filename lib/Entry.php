@@ -8,14 +8,7 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\CustomColumnType;
-use SebLucas\Cops\Calibre\Language;
-use SebLucas\Cops\Calibre\Publisher;
-use SebLucas\Cops\Calibre\Rating;
-use SebLucas\Cops\Calibre\Serie;
-use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Pages\Page;
 
 class Entry
 {
@@ -30,16 +23,16 @@ class Entry
     private static $updated = null;
 
     public static $icons = [
-        Author::ALL_AUTHORS_ID           => 'images/author.png',
-        Serie::ALL_SERIES_ID             => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
-        Tag::ALL_TAGS_ID                 => 'images/tag.png',
-        Language::ALL_LANGUAGES_ID       => 'images/language.png',
-        CustomColumnType::ALL_CUSTOMS_ID => 'images/custom.png',
-        Rating::ALL_RATING_ID            => 'images/rating.png',
+        Page::ALL_AUTHORS_ID             => 'images/author.png',
+        Page::ALL_SERIES_ID              => 'images/serie.png',
+        Page::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
+        Page::ALL_TAGS_ID                => 'images/tag.png',
+        Page::ALL_LANGUAGES_ID           => 'images/language.png',
+        Page::ALL_CUSTOMS_ID             => 'images/custom.png',
+        Page::ALL_RATING_ID              => 'images/rating.png',
         "cops:books$"                    => 'images/allbook.png',
         "cops:books:letter"              => 'images/allbook.png',
-        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png',
+        Page::ALL_PUBLISHERS_ID          => 'images/publisher.png',
     ];
 
     public function getUpdatedTime()
