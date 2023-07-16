@@ -18,22 +18,26 @@ $.ajaxSetup({
     cache: false
 });
 
-var copsTypeahead = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    limit: 30,
-    remote: {
-                url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
-                replace: function (url, query) {
-                    if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
-                        return url.replace('%QUERY', query).replace('&db=%DB', "");
+if (typeof Bloodhound === 'undefined') {
+    console.log('INFO: Bloodhound module not loaded!');
+} else {
+    var copsTypeahead = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        limit: 30,
+        remote: {
+                    url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
+                    replace: function (url, query) {
+                        if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
+                            return url.replace('%QUERY', query).replace('&db=%DB', "");
+                        }
+                        return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
                     }
-                    return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
                 }
-            }
-});
+    });
 
-copsTypeahead.initialize();
+    copsTypeahead.initialize();
+}
 
 var DEBUG = false;
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
