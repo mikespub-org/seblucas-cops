@@ -8,7 +8,6 @@
 
 require_once(dirname(__FILE__) . "/../base.php");
 require_once(dirname(__FILE__) . "/config_test.php");
-//require_once(dirname(__FILE__) . "/../base.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Template\doT;
@@ -22,6 +21,7 @@ use function SebLucas\Cops\Request\getCurrentCss;
 use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\serverSideRender;
 use function SebLucas\Cops\Request\useServerSideRendering;
+use function SebLucas\Cops\Request\verifyLogin;
 
 use const SebLucas\Cops\Config\COPS_VERSION;
 
@@ -82,6 +82,7 @@ class BaseTest extends TestCase
     public function providerTemplate()
     {
         return [
+            ["bootstrap2"],
             ["bootstrap"],
             ["default"],
         ];

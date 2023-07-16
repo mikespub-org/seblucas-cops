@@ -6,8 +6,11 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops\Output\EPubReader;
+
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\EPubMeta\EPub;
+use Exception;
 
 use function SebLucas\Cops\Request\getURLParam;
 use function SebLucas\Cops\Request\initURLParam;

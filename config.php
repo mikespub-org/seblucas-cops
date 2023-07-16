@@ -13,6 +13,8 @@ if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !==
 }
 /** @var array $config */
 
+use function SebLucas\Cops\Request\verifyLogin;
+
 $remote_user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
 // Clean username, only allow a-z, A-Z, 0-9, -_ chars
 $remote_user = preg_replace('/[^a-zA-Z0-9_-]/', '', $remote_user);

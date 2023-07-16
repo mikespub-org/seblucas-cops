@@ -1,5 +1,7 @@
 <?php
 
+namespace SebLucas\Cops\Mail;
+
 use SebLucas\Cops\Calibre\Book;
 
 require_once dirname(__FILE__) . '/config.php';

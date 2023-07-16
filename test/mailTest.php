@@ -10,6 +10,9 @@ require_once(dirname(__FILE__) . "/config_test.php");
 require_once(dirname(__FILE__) . "/../sendtomail.php");
 use PHPUnit\Framework\TestCase;
 
+use function SebLucas\Cops\Mail\checkConfiguration;
+use function SebLucas\Cops\Mail\checkRequest;
+
 class MailTest extends TestCase
 {
     public function testCheckConfigurationOk()

@@ -12,6 +12,8 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\EPubMeta\EPub;
 
+use function SebLucas\Cops\Output\EPubReader\getComponentContent;
+
 class EpubFsTest extends TestCase
 {
     private static $book;

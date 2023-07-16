@@ -1,5 +1,7 @@
 <?php
 
+namespace SebLucas\Cops\Request;
+
 function verifyLogin()
 {
     global $config;

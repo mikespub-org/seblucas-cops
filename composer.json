@@ -39,7 +39,8 @@
         "phing/phing": "~2.17"
     },
     "autoload": {
-        "classmap": ["lib/", "resources/"]
+        "classmap": ["lib/", "resources/"],
+        "exclude-from-classmap": ["resources/php-epub-meta/test/", "resources/php-epub-meta/vendor/"]
     },
     "repositories": [
         {
