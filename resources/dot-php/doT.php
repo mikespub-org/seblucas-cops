@@ -104,12 +104,20 @@ class doT
 
         //return @create_function('$it', $func);
         return function ($it) use ($func) {
-            return eval($func);
+            try {
+                return eval($func);
+            } catch (\Throwable $e) {
+                return $e->getMessage();
+            }
         };
     }
 
     public function execute($data)
     {
-        return ($this->functionCode)($data);
+        try {
+            return ($this->functionCode)($data);
+        } catch (\Throwable $e) {
+            return $e->getMessage();
+        }
     }
 }
