@@ -20,6 +20,7 @@ use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 use SebLucas\Cops\Calibre\CustomColumnTypeRating;
 use SebLucas\Cops\Calibre\CustomColumnTypeSeries;
 use SebLucas\Cops\Calibre\CustomColumnTypeText;
+use SebLucas\Cops\Output\EntryBook;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 
@@ -786,7 +787,7 @@ class CustomColumnTest extends TestCase
         $currentPage = Page::getPage(Page::CUSTOM_DETAIL, "0", null, "1");
         $currentPage->InitializeContent();
 
-        /* @var EntryBook[] $entries */
+        /** @var EntryBook[] $entries */
         $entries = $currentPage->entryArray;
 
         $this->assertCount(6, $entries);

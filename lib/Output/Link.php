@@ -8,6 +8,9 @@
 
 namespace SebLucas\Cops\Output;
 
+use function SebLucas\Cops\Request\getURLParam;
+
+use const SebLucas\Cops\Config\COPS_DB_PARAM;
 use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class Link
@@ -45,5 +48,18 @@ class Link
     {
         $parts = explode('/', $_SERVER["SCRIPT_NAME"] ??  "/" . self::$endpoint);
         return $parts[count($parts) - 1];
+    }
+
+    public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
+    {
+        $database ??= getURLParam(COPS_DB_PARAM);
+        if (!empty($database)) {
+            $params ??= [];
+            $params[COPS_DB_PARAM] = $database;
+        }
+        if (!empty($params)) {
+            return COPS_ENDPOINTS[$endpoint] . "?" . http_build_query($params);
+        }
+        return COPS_ENDPOINTS[$endpoint];
     }
 }
