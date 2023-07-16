@@ -41,6 +41,31 @@ class Entry
         Page::ALL_PUBLISHERS_ID          => 'images/publisher.png',
     ];
 
+    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "", $pcount = 0)
+    {
+        global $config;
+        $this->title = $ptitle;
+        $this->id = $pid;
+        $this->content = $pcontent;
+        $this->contentType = $pcontentType;
+        $this->linkArray = $plinkArray;
+        $this->className = $pclass;
+        $this->numberOfElement = $pcount;
+
+        if ($config['cops_show_icons'] == 1) {
+            foreach (self::$icons as $reg => $image) {
+                if (preg_match("/" . $reg . "/", $pid)) {
+                    array_push($this->linkArray, new Link(getUrlWithVersion($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
+                    break;
+                }
+            }
+        }
+
+        if (!is_null(getURLParam(COPS_DB_PARAM))) {
+            $this->id = str_replace("cops:", "cops:" . getURLParam(COPS_DB_PARAM) . ":", $this->id);
+        }
+    }
+
     public function getUpdatedTime()
     {
         if (!is_null($this->localUpdated)) {
@@ -66,28 +91,27 @@ class Entry
         return "#";
     }
 
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "", $pcount = 0)
+    public function getThumbnail()
     {
-        global $config;
-        $this->title = $ptitle;
-        $this->id = $pid;
-        $this->content = $pcontent;
-        $this->contentType = $pcontentType;
-        $this->linkArray = $plinkArray;
-        $this->className = $pclass;
-        $this->numberOfElement = $pcount;
+        foreach ($this->linkArray as $link) {
+            /** @var $link LinkNavigation */
 
-        if ($config['cops_show_icons'] == 1) {
-            foreach (self::$icons as $reg => $image) {
-                if (preg_match("/" . $reg . "/", $pid)) {
-                    array_push($this->linkArray, new Link(getUrlWithVersion($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
-                    break;
-                }
+            if ($link->rel == Link::OPDS_THUMBNAIL_TYPE) {
+                return $link->hrefXhtml();
             }
         }
+        return null;
+    }
 
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $this->id = str_replace("cops:", "cops:" . getURLParam(COPS_DB_PARAM) . ":", $this->id);
+    public function getImage()
+    {
+        foreach ($this->linkArray as $link) {
+            /** @var $link LinkNavigation */
+
+            if ($link->rel == Link::OPDS_IMAGE_TYPE) {
+                return $link->hrefXhtml();
+            }
         }
+        return null;
     }
 }
