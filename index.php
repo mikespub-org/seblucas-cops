@@ -81,9 +81,9 @@ if (useServerSideRendering()) {
     $data = JSONRenderer::getJson(true);
 
     if (!function_exists('str_format')) {
-        function str_format($format)
+        function str_format($format, ...$args)
         {
-            return \SebLucas\Cops\Language\str_format($format);
+            return \SebLucas\Cops\Language\str_format($format, ...$args);
         }
     }
 
