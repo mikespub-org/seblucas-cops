@@ -22,8 +22,6 @@ use function SebLucas\Cops\Request\useServerSideRendering;
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
 use const SebLucas\Cops\Config\COPS_VERSION;
 
-require_once dirname(__FILE__) . '/../base.php';
-
 class JSONRenderer
 {
     /**

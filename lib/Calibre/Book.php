@@ -78,8 +78,6 @@ define('SQL_BOOKS_RECENT', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
 define('SQL_BOOKS_BY_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort');
 
-require('Identifier.php');
-
 class Book extends Base
 {
     public const PAGE_ID = Page::ALL_BOOKS_ID;

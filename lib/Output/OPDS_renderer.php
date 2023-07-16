@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Pages\Page;
+use XMLWriter;
 
 use function SebLucas\Cops\Language\localize;
 use function SebLucas\Cops\Request\addURLParameter;
@@ -16,9 +17,6 @@ use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\getURLParam;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
-
-require_once dirname(__FILE__) . '/../base.php';
-use XMLWriter;
 
 class OPDSRenderer
 {
