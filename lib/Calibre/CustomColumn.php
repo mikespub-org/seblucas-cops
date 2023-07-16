@@ -13,13 +13,13 @@ namespace SebLucas\Cops\Calibre;
  */
 class CustomColumn extends Base
 {
-    /* @var string|integer the ID of the value */
+    /** @var string|integer the ID of the value */
     public $valueID;
-    /* @var string the (string) representation of the value */
+    /** @var string the (string) representation of the value */
     public $value;
-    /* @var CustomColumnType the custom column that contains the value */
+    /** @var CustomColumnType the custom column that contains the value */
     public $customColumnType;
-    /* @var string the value encoded for HTML displaying */
+    /** @var string the value encoded for HTML displaying */
     public $htmlvalue;
 
     /**

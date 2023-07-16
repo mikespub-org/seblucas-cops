@@ -24,6 +24,7 @@ use function SebLucas\Cops\Request\useServerSideRendering;
 use function SebLucas\Cops\Request\verifyLogin;
 
 use const SebLucas\Cops\Config\COPS_VERSION;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class BaseTest extends TestCase
 {
@@ -66,13 +67,13 @@ class BaseTest extends TestCase
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => $config['cops_title_default'],
                   "version"               => COPS_VERSION,
-                  "opds_url"              => $config['cops_full_url'] . "feed.php",
+                  "opds_url"              => $config['cops_full_url'] . COPS_ENDPOINTS["feed"],
                   "customHeader"          => "",
                   "template"              => $templateName,
                   "server_side_rendering" => useServerSideRendering(),
                   "current_css"           => getCurrentCss(),
                   "favico"                => $config['cops_icon'],
-                  "getjson_url"           => "getJSON.php?" . addURLParameter(getQueryString(), "complete", 1)];
+                  "getjson_url"           => COPS_ENDPOINTS["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);

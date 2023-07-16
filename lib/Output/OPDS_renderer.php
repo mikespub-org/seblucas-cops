@@ -17,9 +17,11 @@ use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\getURLParam;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class OPDSRenderer
 {
+    public static $endpoint = COPS_ENDPOINTS["feed"];
     private $xmlStream = null;
     private $updated = null;
 
@@ -76,7 +78,7 @@ class OPDSRenderer
         }
         $urlparam = str_replace("%7B", "{", $urlparam);
         $urlparam = str_replace("%7D", "}", $urlparam);
-        $xml->writeAttribute("template", $config['cops_full_url'] . 'feed.php' . $urlparam);
+        $xml->writeAttribute("template", $config['cops_full_url'] . self::$endpoint . $urlparam);
         $xml->endElement();
         $xml->startElement("Query");
         $xml->writeAttribute("role", "example");
@@ -144,13 +146,13 @@ class OPDSRenderer
         if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
             // Good and compliant way of handling search
             $urlparam = addURLParameter($urlparam, "page", Page::OPENSEARCH);
-            $link = new Link("feed.php" . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
+            $link = new Link(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $urlparam = addURLParameter($urlparam, "query", "{searchTerms}");
             $urlparam = str_replace("%7B", "{", $urlparam);
             $urlparam = str_replace("%7D", "}", $urlparam);
-            $link = new Link($config['cops_full_url'] . 'feed.php' . $urlparam, "application/atom+xml", "search", "Search here");
+            $link = new Link($config['cops_full_url'] . self::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
         }
         self::renderLink($link);
         if ($page->containsBook() && !is_null($config['cops_books_filter']) && count($config['cops_books_filter']) > 0) {
@@ -234,7 +236,7 @@ class OPDSRenderer
             self::getXmlStream()->text($author->name);
             self::getXmlStream()->endElement();
             self::getXmlStream()->startElement("uri");
-            self::getXmlStream()->text("feed.php" . $author->getUri());
+            self::getXmlStream()->text(self::$endpoint . $author->getUri());
             self::getXmlStream()->endElement();
             self::getXmlStream()->endElement();
         }

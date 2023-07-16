@@ -78,7 +78,7 @@ class Page
     public $book;
     public $totalNumber = -1;
 
-    /* @var Entry[] */
+    /** @var Entry[] */
     public $entryArray = [];
 
     public static function getPage($pageId, $id, $query, $n)

@@ -16,6 +16,8 @@ use SebLucas\Cops\Pages\Page;
 use function SebLucas\Cops\Request\getURLParam;
 use function SebLucas\Cops\Request\setURLParam;
 
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+
 /*
 Publishers:
 id:2 (2 books)   Macmillan and Co. London:   Lewis Caroll
@@ -213,7 +215,7 @@ class BookTest extends TestCase
 
         $this->assertEquals("The Return of Sherlock Holmes", $book->getTitle());
         $this->assertEquals("urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f", $book->getEntryId());
-        $this->assertEquals("index.php?page=13&id=2", $book->getDetailUrl());
+        $this->assertEquals(COPS_ENDPOINTS["index"] . "?page=13&id=2", $book->getDetailUrl());
         $this->assertEquals("Arthur Conan Doyle", $book->getAuthorsName());
         $this->assertEquals("Fiction, Mystery & Detective, Short Stories", $book->getTagsName());
         $this->assertEquals('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment(false));
@@ -287,7 +289,7 @@ class BookTest extends TestCase
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
-                $this->assertEquals("fetch.php?data=1&type=epub&id=2", $link->href);
+                $this->assertEquals(COPS_ENDPOINTS["fetch"] . "?data=1&type=epub&id=2", $link->href);
                 return;
             }
         }
@@ -391,7 +393,7 @@ class BookTest extends TestCase
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $this->assertEquals("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $epub->getHtmlLink());
         $config['cops_use_url_rewriting'] = "0";
-        $this->assertEquals("fetch.php?data=20&type=epub&id=17", $epub->getHtmlLink());
+        $this->assertEquals(COPS_ENDPOINTS["fetch"] . "?data=20&type=epub&id=17", $epub->getHtmlLink());
     }
 
     public function testGetFilePath_Cover()

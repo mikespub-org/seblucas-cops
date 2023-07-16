@@ -21,6 +21,7 @@ use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 abstract class Base
 {
@@ -121,7 +122,7 @@ abstract class Base
     private static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            header("location: checkconfig.php?err=1");
+            header("location: " . COPS_ENDPOINTS["check"] . "?err=1");
         }
         throw new Exception("Database <{$database}> not found.");
     }
@@ -193,12 +194,12 @@ abstract class Base
 
     public static function getEntryArrayWithBookNumber($query, $columns, $params, $category)
     {
-        /* @var $result PDOStatement */
+        /** @var \PDOStatement $result */
 
         [, $result] = self::executeQuery($query, $columns, "", $params, -1);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            /* @var $instance Author|Tag|Serie|Publisher */
+            /** @var Author|Tag|Serie|Publisher $instance */
 
             $instance = new $category($post);
             if (property_exists($post, "sort")) {

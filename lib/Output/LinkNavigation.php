@@ -25,7 +25,7 @@ class LinkNavigation extends Link
             $this->href = "?" . $this->href;
         }
         if (preg_match("/(bookdetail|getJSON).php/", parent::getScriptName())) {
-            $this->href = "index.php" . $this->href;
+            $this->href = parent::$endpoint . $this->href;
         } else {
             $this->href = parent::getScriptName() . $this->href;
         }

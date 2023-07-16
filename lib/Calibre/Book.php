@@ -25,6 +25,7 @@ use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 // Silly thing because PHP forbid string concatenation in class const
 define('SQL_BOOKS_LEFT_JOIN', 'left outer join comments on comments.book = books.id
@@ -110,6 +111,7 @@ class Book extends Base
 
     public const BAD_SEARCH = 'QQQQQ';
 
+    public static $endpoint = COPS_ENDPOINTS["index"];
     public $id;
     public $title;
     public $timestamp;
@@ -235,7 +237,7 @@ class Book extends Base
         if (!is_null(getURLParam(COPS_DB_PARAM))) {
             $urlParam = addURLParameter($urlParam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
         }
-        return 'index.php' . $urlParam;
+        return self::$endpoint . $urlParam;
     }
 
     public function getTitle()
@@ -646,7 +648,7 @@ class Book extends Base
         }
 
         foreach ($this->getAuthors() as $author) {
-            /* @var $author Author */
+            /** @var Author $author */
             array_push($linkArray, new LinkNavigation($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name)));
         }
 
@@ -810,7 +812,7 @@ where data.book = books.id and data.id = ?');
 
     public static function getAllBooks()
     {
-        /* @var $result PDOStatement */
+        /** @var \PDOStatement $result */
 
         [, $result] = parent::executeQuery('select {0}
 from books
@@ -839,8 +841,8 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
 
     public static function getEntryArray($query, $params, $n, $database = null, $numberPerPage = null)
     {
-        /* @var $totalNumber integer */
-        /* @var $result PDOStatement */
+        /** @var integer $totalNumber */
+        /** @var \PDOStatement $result */
         [$totalNumber, $result] = parent::executeQuery($query, self::getBookColumns(), self::getFilterString(), $params, $n, $database, $numberPerPage);
 
         $entryArray = [];

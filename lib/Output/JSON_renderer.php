@@ -21,9 +21,12 @@ use function SebLucas\Cops\Request\useServerSideRendering;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
 use const SebLucas\Cops\Config\COPS_VERSION;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class JSONRenderer
 {
+    public static $endpoint = COPS_ENDPOINTS["index"];
+
     /**
      * @param Book $book
      * @return array
@@ -110,7 +113,7 @@ class JSONRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db={$database}";
+                $tab ["readerUrl"] = COPS_ENDPOINTS["read"] . "?data={$data->id}&db={$database}";
             }
             array_push($out ["datas"], $tab);
         }
@@ -192,9 +195,9 @@ class JSONRenderer
                            "sortorderDesc" => localize("search.sortorder.desc"),
                            "customizeEmail" => localize("customize.email")],
                        "url" => [
-                           "detailUrl" => "index.php?page=13&id={0}&db={1}",
-                           "coverUrl" => "fetch.php?id={0}&db={1}",
-                           "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"],
+                           "detailUrl" => COPS_ENDPOINTS["index"] . "?page=13&id={0}&db={1}",
+                           "coverUrl" => COPS_ENDPOINTS["fetch"] . "?id={0}&db={1}",
+                           "thumbnailUrl" => COPS_ENDPOINTS["fetch"] . "?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"],
                        "config" => [
                            "use_fancyapps" => $config ["cops_use_fancyapps"],
                            "max_item_per_page" => $config['cops_max_item_per_page'],
@@ -274,14 +277,14 @@ class JSONRenderer
             $out ["containsBook"] = 1;
         }
 
-        $out["abouturl"] = "index.php" . addURLParameter("?page=" . Page::ABOUT, COPS_DB_PARAM, $database);
+        $out["abouturl"] = self::$endpoint . addURLParameter("?page=" . Page::ABOUT, COPS_DB_PARAM, $database);
 
         if ($page == Page::ABOUT) {
             $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . COPS_VERSION . "</h1>", file_get_contents('about.html'));
             $out ["fullhtml"] = $temp;
         }
 
-        $out ["homeurl"] = "index.php";
+        $out ["homeurl"] = self::$endpoint;
         if ($page != Page::INDEX && !is_null($database)) {
             $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter("", COPS_DB_PARAM, $database);
         }

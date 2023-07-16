@@ -18,6 +18,7 @@ use function SebLucas\Cops\Request\getUrlWithVersion;
 use function SebLucas\Cops\Request\initURLParam;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
@@ -59,7 +60,7 @@ $book->initSpineComponent();
             }, $book->contents())) . '];'; ?>
           },
           getComponent: function (componentId) {
-            return { url: "epubfs.php?<?php echo $add ?>comp="  + componentId };
+            return { url: "<?php echo COPS_ENDPOINTS["epubfs"] . "?" . $add ?>comp="  + componentId };
           },
           getMetaData: function(key) {
             return {

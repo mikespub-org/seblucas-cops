@@ -14,6 +14,7 @@ use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\useServerSideRendering;
 
 use const SebLucas\Cops\Config\COPS_VERSION;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class ConfigTest extends TestCase
 {
@@ -138,13 +139,13 @@ class ConfigTest extends TestCase
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => $config['cops_title_default'],
             "version"               => COPS_VERSION,
-            "opds_url"              => $config['cops_full_url'] . "feed.php",
+            "opds_url"              => $config['cops_full_url'] . COPS_ENDPOINTS["feed"],
             "customHeader"          => "",
             "template"              => $config["cops_template"],
             "server_side_rendering" => useServerSideRendering(),
             "current_css"           => getCurrentCss(),
             "favico"                => $config['cops_icon'],
-            "getjson_url"           => "getJSON.php?" . addURLParameter(getQueryString(), "complete", 1)];
+            "getjson_url"           => COPS_ENDPOINTS["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
 
         $head = $tpl($data);
 

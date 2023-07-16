@@ -22,6 +22,7 @@ class Entry
     public $content;
     public $numberOfElement;
     public $contentType;
+    /** @var Link[] */
     public $linkArray;
     public $localUpdated;
     public $className;
@@ -54,7 +55,7 @@ class Entry
     public function getNavLink()
     {
         foreach ($this->linkArray as $link) {
-            /* @var $link LinkNavigation */
+            /** @var $link LinkNavigation */
 
             if ($link->type != Link::OPDS_NAVIGATION_TYPE) {
                 continue;

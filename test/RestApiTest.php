@@ -92,7 +92,7 @@ class RestApiTest extends TestCase
     public function testGetScriptName(): void
     {
         $script = $_SERVER["SCRIPT_NAME"];
-        $_SERVER["SCRIPT_NAME"] = RestApi::$endpoint;
+        $_SERVER["SCRIPT_NAME"] = "/" . RestApi::$endpoint;
 
         $expected = "restapi.php";
         $test = RestApi::getScriptName();
@@ -104,7 +104,7 @@ class RestApiTest extends TestCase
     public function testReplaceLinks(): void
     {
         $script = $_SERVER["SCRIPT_NAME"];
-        $_SERVER["SCRIPT_NAME"] =  RestApi::$endpoint;
+        $_SERVER["SCRIPT_NAME"] =  "/" . RestApi::$endpoint;
         $links = [
             "restapi.php?page=index" => "restapi.php/index",
             "restapi.php?page=1" => "restapi.php/authors",

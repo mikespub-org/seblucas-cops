@@ -111,11 +111,11 @@ class OpdsTest extends TestCase
     {
         $qid = null;
         $n = "1";
-        $_SERVER['QUERY_STRING'] = "?page={$page}";
+        $_SERVER['QUERY_STRING'] = "page={$page}";
         if (!empty($query)) {
             $_SERVER['QUERY_STRING'] .= "&query={$query}";
         }
-        $_SERVER['REQUEST_URI'] = "feed.php" . $_SERVER['QUERY_STRING'];
+        $_SERVER['REQUEST_URI'] = OPDSRenderer::$endpoint . "?" . $_SERVER['QUERY_STRING'];
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();

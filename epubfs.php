@@ -17,6 +17,7 @@ use function SebLucas\Cops\Request\initURLParam;
 use function SebLucas\Cops\Request\notFound;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
@@ -47,7 +48,7 @@ function getComponentContent($book, $component, $add)
         if (!$comp) {
             return $method . "'#'" . $end;
         }
-        $out = $method . "'epubfs.php?" . $add . 'comp=' . $comp . $hash . "'" . $end;
+        $out = $method . "'" . COPS_ENDPOINTS["epubfs"] . "?" . $add . 'comp=' . $comp . $hash . "'" . $end;
         if ($end) {
             return $out;
         }

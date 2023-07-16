@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Output;
 
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+
 class Link
 {
     public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
@@ -16,6 +18,7 @@ class Link
     public const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
     public const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
+    public static $endpoint = COPS_ENDPOINTS["index"];
     public $href;
     public $type;
     public $rel;
@@ -38,9 +41,9 @@ class Link
         return $this->href;
     }
 
-    public function getScriptName()
+    public static function getScriptName()
     {
-        $parts = explode('/', $_SERVER["SCRIPT_NAME"]);
+        $parts = explode('/', $_SERVER["SCRIPT_NAME"] ??  "/" . self::$endpoint);
         return $parts[count($parts) - 1];
     }
 }

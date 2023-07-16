@@ -14,9 +14,11 @@ use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getURLParam;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class Data
 {
+    public static $endpoint = COPS_ENDPOINTS["fetch"];
     public $id;
     public $name;
     public $format;
@@ -186,7 +188,7 @@ class Data
         global $config;
 
         if (is_null($height)) {
-            if (preg_match('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
+            if (preg_match('/' . COPS_ENDPOINTS["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
                 $height = $config['cops_opds_thumbnail_height'];
             } else {
                 $height = $config['cops_html_thumbnail_height'];
@@ -226,7 +228,7 @@ class Data
                 $rel == Link::OPDS_THUMBNAIL_TYPE) {
                 return new Link($config['cops_thumbnail_handling'], $mime, $rel, $title);
             } else {
-                return new Link("fetch.php?" . $urlParam, $mime, $rel, $title);
+                return new Link(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
             }
         } else {
             return new Link(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);

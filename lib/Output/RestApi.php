@@ -15,6 +15,8 @@ use Exception;
 
 use function SebLucas\Cops\Request\setURLParam;
 
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+
 /**
  * Basic REST API routing to JSON Renderer
  */
@@ -22,7 +24,7 @@ class RestApi
 {
     /** @var array $config */
 
-    public static $endpoint = "/restapi.php";
+    public static $endpoint = COPS_ENDPOINTS["restapi"];
 
     /**
      * Summary of routes
@@ -154,7 +156,7 @@ class RestApi
      */
     public static function getScriptName()
     {
-        $script = explode("/", $_SERVER["SCRIPT_NAME"] ?? self::$endpoint);
+        $script = explode("/", $_SERVER["SCRIPT_NAME"] ?? "/" . self::$endpoint);
         $link = array_pop($script);
         return $link;
     }

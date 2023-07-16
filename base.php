@@ -17,6 +17,16 @@ const COPS_VERSION = '1.3.6';
 const COPS_DB_PARAM = 'db';
 const COPS_TEMPLATE_DIR = 'templates/';
 const COPS_TEMPLATE = 'cops_template';
+const COPS_ENDPOINTS = [
+    "index" => "index.php",
+    "feed" => "feed.php",
+    "json" => "getJSON.php",
+    "fetch" => "fetch.php",
+    "read" => "epubreader.php",
+    "epubfs" => "epubfs.php",
+    "restapi" => "restapi.php",
+    "check" => "checkconfig.php",
+];
 
 namespace SebLucas\Cops\Request;
 

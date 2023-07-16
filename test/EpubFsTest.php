@@ -14,6 +14,8 @@ use SebLucas\EPubMeta\EPub;
 
 use function SebLucas\Cops\Output\EPubReader\getComponentContent;
 
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+
 class EpubFsTest extends TestCase
 {
     private static $book;
@@ -38,7 +40,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
             $src = $matches [1];
         }
-        $this->assertEquals('epubfs.php?data=20&amp;comp=images~SLASH~cover.png', $src);
+        $this->assertEquals(COPS_ENDPOINTS["epubfs"] . '?data=20&amp;comp=images~SLASH~cover.png', $src);
     }
 
     public function testUrlHref()
@@ -49,13 +51,13 @@ class EpubFsTest extends TestCase
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
             $src = $matches [1];
         }
-        $this->assertEquals('epubfs.php?data=20&amp;comp=images~SLASH~logo~DASH~feedbooks~DASH~tiny.png', $src);
+        $this->assertEquals(COPS_ENDPOINTS["epubfs"] . '?data=20&amp;comp=images~SLASH~logo~DASH~feedbooks~DASH~tiny.png', $src);
 
         $href = "";
         if (preg_match("/href\=\'(.*?)\'/", $data, $matches)) {
             $href = $matches [1];
         }
-        $this->assertEquals('epubfs.php?data=20&amp;comp=css~SLASH~title.css', $href);
+        $this->assertEquals(COPS_ENDPOINTS["epubfs"] . '?data=20&amp;comp=css~SLASH~title.css', $href);
     }
 
     public function testImportCss()
@@ -66,7 +68,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/import \'(.*?)\'/", $data, $matches)) {
             $import = $matches [1];
         }
-        $this->assertEquals('epubfs.php?data=20&amp;comp=css~SLASH~page.css', $import);
+        $this->assertEquals(COPS_ENDPOINTS["epubfs"] . '?data=20&amp;comp=css~SLASH~page.css', $import);
     }
 
     public function testUrlInCss()
@@ -77,7 +79,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/url\s*\(\'(.*?)\'\)/", $data, $matches)) {
             $src = $matches [1];
         }
-        $this->assertEquals('epubfs.php?data=20&comp=fonts~SLASH~times.ttf', $src);
+        $this->assertEquals(COPS_ENDPOINTS["epubfs"] . '?data=20&comp=fonts~SLASH~times.ttf', $src);
     }
 
     public function testDirectLink()
@@ -88,7 +90,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/href\='(.*?)' title=\"Direct Link\"/", $data, $matches)) {
             $src = $matches [1];
         }
-        $this->assertEquals('epubfs.php?data=20&amp;comp=main2.xml', $src);
+        $this->assertEquals(COPS_ENDPOINTS["epubfs"] . '?data=20&amp;comp=main2.xml', $src);
     }
 
     public function testDirectLinkWithAnchor()
@@ -99,7 +101,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/href\='(.*?)' title=\"Direct Link with anchor\"/", $data, $matches)) {
             $src = $matches [1];
         }
-        $this->assertEquals('epubfs.php?data=20&amp;comp=main2.xml#anchor', $src);
+        $this->assertEquals(COPS_ENDPOINTS["epubfs"] . '?data=20&amp;comp=main2.xml#anchor', $src);
     }
 
     public function testAnchorOnly()

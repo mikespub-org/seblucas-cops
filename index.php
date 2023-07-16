@@ -23,6 +23,7 @@ use function SebLucas\Cops\Request\useServerSideRendering;
 
 use const SebLucas\Cops\Config\COPS_DB_PARAM;
 use const SebLucas\Cops\Config\COPS_VERSION;
+use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
@@ -30,7 +31,7 @@ require_once dirname(__FILE__) . '/base.php';
 
 // If we detect that an OPDS reader try to connect try to redirect to feed.php
 if (preg_match('/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $_SERVER['HTTP_USER_AGENT'])) {
-    header('location: feed.php');
+    header('location: ' . COPS_ENDPOINTS["feed"]);
     exit();
 }
 
@@ -58,13 +59,13 @@ header('Content-Type:text/html;charset=utf-8');
 
 $data = ['title'                 => $config['cops_title_default'],
               'version'               => COPS_VERSION,
-              'opds_url'              => $config['cops_full_url'] . 'feed.php',
+              'opds_url'              => $config['cops_full_url'] . COPS_ENDPOINTS["feed"],
               'customHeader'          => '',
               'template'              => getCurrentTemplate(),
               'server_side_rendering' => useServerSideRendering(),
               'current_css'           => getCurrentCss(),
               'favico'                => $config['cops_icon'],
-              'getjson_url'           => 'getJSON.php?' . addURLParameter(getQueryString(), 'complete', 1)];
+              'getjson_url'           => COPS_ENDPOINTS["json"] . '?' . addURLParameter(getQueryString(), 'complete', 1)];
 if (preg_match('/Kindle/', $_SERVER['HTTP_USER_AGENT'])) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
 }
