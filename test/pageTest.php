@@ -12,6 +12,7 @@ use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Pages\Page;
 
 use function SebLucas\Cops\Language\useNormAndUp;
+use function SebLucas\Cops\Request\getUrlWithVersion;
 use function SebLucas\Cops\Request\setURLParam;
 
 class PageTest extends TestCase
@@ -38,6 +39,11 @@ class PageTest extends TestCase
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
         $this->assertEquals("Alphabetical index of the 6 authors", $currentPage->entryArray [0]->content);
+        if ($config['cops_show_icons'] == 1) {
+            $this->assertEquals(getUrlWithVersion("images/author.png"), $currentPage->entryArray [0]->getThumbnail());
+        } else {
+            $this->assertNull($currentPage->entryArray [0]->getThumbnail());
+        }
         $this->assertEquals(6, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("Series", $currentPage->entryArray [1]->title);
         $this->assertEquals("Alphabetical index of the 4 series", $currentPage->entryArray [1]->content);

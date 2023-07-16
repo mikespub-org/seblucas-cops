@@ -30,27 +30,19 @@ class EntryBook extends Entry
         $this->localUpdated = $pbook->timestamp;
     }
 
+    /**
+     * @deprecated 1.4.0 use getThumbnail() instead
+     */
     public function getCoverThumbnail()
     {
-        foreach ($this->linkArray as $link) {
-            /** @var $link LinkNavigation */
-
-            if ($link->rel == Link::OPDS_THUMBNAIL_TYPE) {
-                return $link->hrefXhtml();
-            }
-        }
-        return null;
+        return $this->getThumbnail();
     }
 
+    /**
+     * @deprecated 1.4.0 use getImage() instead
+     */
     public function getCover()
     {
-        foreach ($this->linkArray as $link) {
-            /** @var $link LinkNavigation */
-
-            if ($link->rel == Link::OPDS_IMAGE_TYPE) {
-                return $link->hrefXhtml();
-            }
-        }
-        return null;
+        return $this->getImage();
     }
 }
