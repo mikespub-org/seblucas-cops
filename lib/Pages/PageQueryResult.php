@@ -14,8 +14,8 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
-use SebLucas\Cops\Output\Entry;
-use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\LinkNavigation;
 
 use function SebLucas\Cops\Language\localize;
 use function SebLucas\Cops\Language\normAndUp;

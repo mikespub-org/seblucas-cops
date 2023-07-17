@@ -8,6 +8,10 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Model\LinkFacet;
+use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 

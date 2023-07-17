@@ -20,7 +20,7 @@ use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 use SebLucas\Cops\Calibre\CustomColumnTypeRating;
 use SebLucas\Cops\Calibre\CustomColumnTypeSeries;
 use SebLucas\Cops\Calibre\CustomColumnTypeText;
-use SebLucas\Cops\Output\EntryBook;
+use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 

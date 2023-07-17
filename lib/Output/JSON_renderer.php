@@ -11,6 +11,9 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
 use function SebLucas\Cops\Language\localize;

@@ -10,7 +10,7 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Output\Link;
+use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Pages\Page;
 
 use function SebLucas\Cops\Request\getURLParam;

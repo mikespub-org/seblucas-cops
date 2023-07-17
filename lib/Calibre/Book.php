@@ -8,10 +8,10 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Output\Entry;
-use SebLucas\Cops\Output\EntryBook;
-use SebLucas\Cops\Output\Link;
-use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageQueryResult;
 use SebLucas\EPubMeta\EPub;
