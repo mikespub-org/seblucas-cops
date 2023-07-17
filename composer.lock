@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kiwilan/php-opds.git",
-                "reference": "77e6f149f0eb878917871ac02a4effb068359688"
+                "reference": "f7723713e16016d1c9db54800a96c14503575f9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/77e6f149f0eb878917871ac02a4effb068359688",
-                "reference": "77e6f149f0eb878917871ac02a4effb068359688",
+                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/f7723713e16016d1c9db54800a96c14503575f9e",
+                "reference": "f7723713e16016d1c9db54800a96c14503575f9e",
                 "shasum": ""
             },
             "require": {
@@ -68,7 +68,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-10T15:58:54+00:00"
+            "time": "2023-07-17T15:47:14+00:00"
         },
         {
             "name": "npm-asset/bootstrap",
