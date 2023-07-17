@@ -15,7 +15,7 @@ use Kiwilan\Opds\OpdsVersionEnum;
 use Kiwilan\Opds\Entries\OpdsEntry;
 use Kiwilan\Opds\Entries\OpdsEntryBook;
 use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
-use SebLucas\Cops\Output\EntryBook;
+use SebLucas\Cops\Model\EntryBook;
 use DateTime;
 
 class KiwilanOPDS
