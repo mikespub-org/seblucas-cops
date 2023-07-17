@@ -8,8 +8,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Output\Entry;
-use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use Exception;
 

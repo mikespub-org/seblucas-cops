@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Output\Entry;
+use SebLucas\Cops\Model\Entry;
 
 use function SebLucas\Cops\Language\localize;
 use function SebLucas\Cops\Request\useServerSideRendering;

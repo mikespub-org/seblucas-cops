@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Output\Link;
+use SebLucas\Cops\Model\Link;
 
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getURLParam;

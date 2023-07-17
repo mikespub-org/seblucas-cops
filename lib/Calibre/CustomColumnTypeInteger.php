@@ -8,8 +8,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Output\Entry;
-use SebLucas\Cops\Output\LinkNavigation;
+use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\LinkNavigation;
 use UnexpectedValueException;
 
 use function SebLucas\Cops\Language\localize;
