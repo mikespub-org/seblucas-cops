@@ -44,7 +44,7 @@ class PageCustomize extends Page
     private function getTemplateList()
     {
         $result = [];
-        foreach (glob("templates/*") as $filename) {
+        foreach (glob("templates/*", GLOB_ONLYDIR) as $filename) {
             if (preg_match('/templates\/(.*)/', $filename, $m)) {
                 array_push($result, $m [1]);
             }
