@@ -1,8 +1,4 @@
 <?php
-header('Content-Type: text/html;charset=utf-8');
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="und" lang="">
-<?php
 /**
  * COPS (Calibre OPDS PHP Server) epub reader
  *
@@ -11,12 +7,11 @@ header('Content-Type: text/html;charset=utf-8');
  */
 
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\EPubMeta\EPub;
-
 use SebLucas\Cops\Config;
+use SebLucas\EPubMeta\EPub;
+use SebLucas\Template\doT;
 
 use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\getUrlWithVersion;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
@@ -32,59 +27,26 @@ $myBook = Book::getBookByDataId($idData);
 $book = new EPub($myBook->getFilePath('EPUB', $idData));
 $book->initSpineComponent();
 
+$components = implode(', ', array_map(function ($comp) {
+    return "'" . $comp . "'";
+}, $book->components()));
+$contents = implode(', ', array_map(function ($content) {
+    return "{title: '" . addslashes($content['title']) . "', src: '". $content['src'] . "'}";
+}, $book->contents()));
+
 $endpoint = Config::ENDPOINT["epubfs"];
 
-?>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="imagetoolbar" content="no" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>COPS's Epub Reader</title>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monocore.js") ?>"></script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monoctrl.js") ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monocore.css") ?>" media="screen" />
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monoctrl.css") ?>" media="screen" />
-    <script type="text/javascript">
-        Monocle.DEBUG = true;
-        var bookData = {
-          getComponents: function() {
-            <?php echo 'return [' . implode(', ', array_map(function ($comp) {
-                return "'" . $comp . "'";
-            }, $book->components())) . '];'; ?>
-          },
-          getContents: function() {
-            <?php echo 'return [' . implode(', ', array_map(function ($content) {
-                return "{title: '" . addslashes($content['title']) . "', src: '". $content['src'] . "'}";
-            }, $book->contents())) . '];'; ?>
-          },
-          getComponent: function (componentId) {
-            return { url: "<?php echo $endpoint . "?" . $add ?>comp="  + componentId };
-          },
-          getMetaData: function(key) {
-            return {
-              title: "<?php echo $myBook->title ?>",
-              creator: "Inventive Labs"
-            }[key];
-          }
-        }
+$data = [
+    'title'      => $myBook->title,
+    'version'    => Config::VERSION,
+    'components' => $components,
+    'contents'   => $contents,
+    'link'       => $endpoint . "?" . $add .  "comp=",
+];
 
-    </script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("styles/cops-monocle.js") ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("styles/cops-monocle.css") ?>" media="screen" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-</head>
-<body>
-  <div id="readerBg">
-      <div class="board"></div>
-      <div class="jacket"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-  </div>
-  <div id="readerCntr">
-      <div id="reader"></div>
-  </div>
-</body>
-</html>
+header('Content-Type: text/html;charset=utf-8');
+
+$filecontent = file_get_contents('templates/epubreader.html');
+$template = new doT();
+$dot = $template->template($filecontent, null);
+echo($dot($data));
