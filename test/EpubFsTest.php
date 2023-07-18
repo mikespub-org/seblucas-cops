@@ -11,9 +11,8 @@ require(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Config;
+use SebLucas\Cops\Output\EPubReader;
 use SebLucas\EPubMeta\EPub;
-
-use function SebLucas\Cops\Output\EPubReader\getComponentContent;
 
 class EpubFsTest extends TestCase
 {
@@ -25,7 +24,7 @@ class EpubFsTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $idData = 20;
-        self::$add = "data=$idData&";
+        self::$add = "data=$idData";
         $myBook = Book::getBookByDataId($idData);
 
         self::$book = new EPub($myBook->getFilePath("EPUB", $idData));
@@ -36,7 +35,7 @@ class EpubFsTest extends TestCase
 
     public function testUrlImage()
     {
-        $data = getComponentContent(self::$book, "cover.xml", self::$add);
+        $data = EPubReader::getComponentContent(self::$book, "cover.xml", self::$add);
 
         $src = "";
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
@@ -48,7 +47,7 @@ class EpubFsTest extends TestCase
     public function testUrlHref()
     {
         global $config;
-        $data = getComponentContent(self::$book, "title.xml", self::$add);
+        $data = EPubReader::getComponentContent(self::$book, "title.xml", self::$add);
 
         $src = "";
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
@@ -65,7 +64,7 @@ class EpubFsTest extends TestCase
 
     public function testImportCss()
     {
-        $data = getComponentContent(self::$book, "css~SLASH~title.css", self::$add);
+        $data = EPubReader::getComponentContent(self::$book, "css~SLASH~title.css", self::$add);
 
         $import = "";
         if (preg_match("/import \'(.*?)\'/", $data, $matches)) {
@@ -76,7 +75,7 @@ class EpubFsTest extends TestCase
 
     public function testUrlInCss()
     {
-        $data = getComponentContent(self::$book, "css~SLASH~main.css", self::$add);
+        $data = EPubReader::getComponentContent(self::$book, "css~SLASH~main.css", self::$add);
 
         $src = "";
         if (preg_match("/url\s*\(\'(.*?)\'\)/", $data, $matches)) {
@@ -87,7 +86,7 @@ class EpubFsTest extends TestCase
 
     public function testDirectLink()
     {
-        $data = getComponentContent(self::$book, "main10.xml", self::$add);
+        $data = EPubReader::getComponentContent(self::$book, "main10.xml", self::$add);
 
         $src = "";
         if (preg_match("/href\='(.*?)' title=\"Direct Link\"/", $data, $matches)) {
@@ -98,7 +97,7 @@ class EpubFsTest extends TestCase
 
     public function testDirectLinkWithAnchor()
     {
-        $data = getComponentContent(self::$book, "main10.xml", self::$add);
+        $data = EPubReader::getComponentContent(self::$book, "main10.xml", self::$add);
 
         $src = "";
         if (preg_match("/href\='(.*?)' title=\"Direct Link with anchor\"/", $data, $matches)) {
@@ -109,7 +108,7 @@ class EpubFsTest extends TestCase
 
     public function testAnchorOnly()
     {
-        $data = getComponentContent(self::$book, "main10.xml", self::$add);
+        $data = EPubReader::getComponentContent(self::$book, "main10.xml", self::$add);
 
         $src = "";
         if (preg_match("/href\='(.*?)' title=\"Link to anchor\"/", $data, $matches)) {
