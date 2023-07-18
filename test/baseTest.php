@@ -10,6 +10,7 @@ require_once(dirname(__FILE__) . "/../base.php");
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Config;
 use SebLucas\Template\doT;
 
 use function SebLucas\Cops\Language\getAcceptLanguages;
@@ -22,9 +23,6 @@ use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\serverSideRender;
 use function SebLucas\Cops\Request\useServerSideRendering;
 use function SebLucas\Cops\Request\verifyLogin;
-
-use const SebLucas\Cops\Config\COPS_VERSION;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class BaseTest extends TestCase
 {
@@ -66,14 +64,14 @@ class BaseTest extends TestCase
         $template = new doT();
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => $config['cops_title_default'],
-                  "version"               => COPS_VERSION,
-                  "opds_url"              => $config['cops_full_url'] . COPS_ENDPOINTS["feed"],
+                  "version"               => Config::VERSION,
+                  "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
                   "customHeader"          => "",
                   "template"              => $templateName,
                   "server_side_rendering" => useServerSideRendering(),
                   "current_css"           => getCurrentCss(),
                   "favico"                => $config['cops_icon'],
-                  "getjson_url"           => COPS_ENDPOINTS["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
+                  "getjson_url"           => Config::ENDPOINT["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);

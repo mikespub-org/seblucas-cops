@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
@@ -23,9 +24,6 @@ use function SebLucas\Cops\Language\str_format;
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 // Silly thing because PHP forbid string concatenation in class const
 define('SQL_BOOKS_LEFT_JOIN', 'left outer join comments on comments.book = books.id
@@ -111,7 +109,7 @@ class Book extends Base
 
     public const BAD_SEARCH = 'QQQQQ';
 
-    public static $endpoint = COPS_ENDPOINTS["index"];
+    public static $endpoint = Config::ENDPOINT["index"];
     public $id;
     public $title;
     public $timestamp;
@@ -234,8 +232,8 @@ class Book extends Base
     public function getDetailUrl()
     {
         $urlParam = $this->getUri();
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $urlParam = addURLParameter($urlParam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
+        if (!is_null(getURLParam('db'))) {
+            $urlParam = addURLParameter($urlParam, 'db', getURLParam('db'));
         }
         return self::$endpoint . $urlParam;
     }

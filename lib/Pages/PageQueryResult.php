@@ -24,8 +24,6 @@ use function SebLucas\Cops\Language\useNormAndUp;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-
 class PageQueryResult extends Page
 {
     public const SCOPE_TAG = "tag";
@@ -80,7 +78,7 @@ class PageQueryResult extends Page
 
     public function doSearchByCategory()
     {
-        $database = getURLParam(COPS_DB_PARAM);
+        $database = getURLParam('db');
         $out = [];
         $pagequery = Page::OPENSEARCH_QUERY;
         $dbArray = [""];
@@ -95,10 +93,10 @@ class PageQueryResult extends Page
             if (Base::noDatabaseSelected()) {
                 array_push($this->entryArray, new Entry(
                     $key,
-                    COPS_DB_PARAM . ":query:{$d}",
+                    "db:query:{$d}",
                     " ",
                     "text",
-                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$d}")],
+                    [ new LinkNavigation("?db={$d}")],
                     "tt-header"
                 ));
                 Base::getDb($d);
@@ -129,7 +127,7 @@ class PageQueryResult extends Page
                     // str_format (localize("publisherword", count($array))
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$key}"), $this->query),
-                        COPS_DB_PARAM . ":query:{$d}:{$key}",
+                        "db:query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
                         [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")],
@@ -180,10 +178,10 @@ class PageQueryResult extends Page
                 [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $i, 1);
                 array_push($this->entryArray, new Entry(
                     $key,
-                    COPS_DB_PARAM . ":query:{$i}",
+                    "db:query:{$i}",
                     str_format(localize("bookword", $totalNumber), $totalNumber),
                     "text",
-                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$i}&page=9&query=" . $this->query)],
+                    [ new LinkNavigation("?db={$i}&page=9&query=" . $this->query)],
                     "",
                     $totalNumber
                 ));

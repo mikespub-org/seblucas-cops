@@ -13,28 +13,26 @@ header('Content-Type: text/html;charset=utf-8');
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\EPubMeta\EPub;
 
+use SebLucas\Cops\Config;
+
 use function SebLucas\Cops\Request\getURLParam;
 use function SebLucas\Cops\Request\getUrlWithVersion;
-use function SebLucas\Cops\Request\initURLParam;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
-initURLParam();
-
 $idData = (int)getURLParam('data', null);
 $add = 'data=' . $idData . '&';
-if (!is_null(getURLParam(COPS_DB_PARAM))) {
-    $add .= COPS_DB_PARAM . '=' . getURLParam(COPS_DB_PARAM) . '&';
+if (!is_null(getURLParam('db'))) {
+    $add .= 'db=' . getURLParam('db') . '&';
 }
 $myBook = Book::getBookByDataId($idData);
 
 $book = new EPub($myBook->getFilePath('EPUB', $idData));
 $book->initSpineComponent();
+
+$endpoint = Config::ENDPOINT["epubfs"];
 
 ?>
 <head>
@@ -60,7 +58,7 @@ $book->initSpineComponent();
             }, $book->contents())) . '];'; ?>
           },
           getComponent: function (componentId) {
-            return { url: "<?php echo COPS_ENDPOINTS["epubfs"] . "?" . $add ?>comp="  + componentId };
+            return { url: "<?php echo $endpoint . "?" . $add ?>comp="  + componentId };
           },
           getMetaData: function(key) {
             return {

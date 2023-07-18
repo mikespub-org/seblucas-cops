@@ -8,17 +8,15 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Config;
 use SebLucas\Cops\Model\Link;
 
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getURLParam;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
-
 class Data
 {
-    public static $endpoint = COPS_ENDPOINTS["fetch"];
+    public static $endpoint = Config::ENDPOINT["fetch"];
     public $id;
     public $name;
     public $format;
@@ -158,8 +156,8 @@ class Data
         global $config;
 
         $database = "";
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $database = getURLParam(COPS_DB_PARAM) . "/";
+        if (!is_null(getURLParam('db'))) {
+            $database = getURLParam('db') . "/";
         }
 
         $prefix = "download";
@@ -188,7 +186,7 @@ class Data
         global $config;
 
         if (is_null($height)) {
-            if (preg_match('/' . COPS_ENDPOINTS["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
+            if (preg_match('/' . Config::ENDPOINT["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
                 $height = $config['cops_opds_thumbnail_height'];
             } else {
                 $height = $config['cops_html_thumbnail_height'];
@@ -220,8 +218,8 @@ class Data
                 $urlParam = self::handleThumbnailLink($urlParam, $height);
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
-            if (!is_null(getURLParam(COPS_DB_PARAM))) {
-                $urlParam = addURLParameter($urlParam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
+            if (!is_null(getURLParam('db'))) {
+                $urlParam = addURLParameter($urlParam, 'db', getURLParam('db'));
             }
             if ($config['cops_thumbnail_handling'] != "1" &&
                 !empty($config['cops_thumbnail_handling']) &&

@@ -10,21 +10,18 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Config;
 use SebLucas\Cops\Pages\Page;
 use Exception;
 
 use function SebLucas\Cops\Request\setURLParam;
-
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 /**
  * Basic REST API routing to JSON Renderer
  */
 class RestApi
 {
-    /** @var array $config */
-
-    public static $endpoint = COPS_ENDPOINTS["restapi"];
+    public static $endpoint = Config::ENDPOINT["restapi"];
 
     /**
      * Summary of routes

@@ -8,10 +8,9 @@
 
 namespace SebLucas\Cops\Model;
 
-use function SebLucas\Cops\Request\getURLParam;
+use SebLucas\Cops\Config;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+use function SebLucas\Cops\Request\getURLParam;
 
 class Link
 {
@@ -21,7 +20,7 @@ class Link
     public const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
     public const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
-    public static $endpoint = COPS_ENDPOINTS["index"];
+    public static $endpoint = Config::ENDPOINT["index"];
     public $href;
     public $type;
     public $rel;
@@ -52,14 +51,14 @@ class Link
 
     public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
     {
-        $database ??= getURLParam(COPS_DB_PARAM);
+        $database ??= getURLParam('db');
         if (!empty($database)) {
             $params ??= [];
-            $params[COPS_DB_PARAM] = $database;
+            $params['db'] = $database;
         }
         if (!empty($params)) {
-            return COPS_ENDPOINTS[$endpoint] . "?" . http_build_query($params);
+            return Config::ENDPOINT[$endpoint] . "?" . http_build_query($params);
         }
-        return COPS_ENDPOINTS[$endpoint];
+        return Config::ENDPOINT[$endpoint];
     }
 }

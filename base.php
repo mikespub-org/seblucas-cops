@@ -6,35 +6,33 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops\Config;
+namespace SebLucas\Cops;
 
 require 'config.php';
 /** @var array $config */
 
 date_default_timezone_set($config['default_timezone']);
 
-const COPS_VERSION = '1.3.6';
-const COPS_DB_PARAM = 'db';
-const COPS_TEMPLATE_DIR = 'templates/';
-const COPS_TEMPLATE = 'cops_template';
-const COPS_ENDPOINTS = [
-    "index" => "index.php",
-    "feed" => "feed.php",
-    "json" => "getJSON.php",
-    "fetch" => "fetch.php",
-    "read" => "epubreader.php",
-    "epubfs" => "epubfs.php",
-    "restapi" => "restapi.php",
-    "check" => "checkconfig.php",
-];
+class Config
+{
+    public const VERSION = '1.3.6';
+    public const ENDPOINT = [
+        "index" => "index.php",
+        "feed" => "feed.php",
+        "json" => "getJSON.php",
+        "fetch" => "fetch.php",
+        "read" => "epubreader.php",
+        "epubfs" => "epubfs.php",
+        "restapi" => "restapi.php",
+        "check" => "checkconfig.php",
+        "opds" => "opds.php",
+    ];
+}
 
 namespace SebLucas\Cops\Request;
 
+use SebLucas\Cops\Config;
 use SebLucas\Template\doT;
-
-use const SebLucas\Cops\Config\COPS_TEMPLATE_DIR;
-use const SebLucas\Cops\Config\COPS_TEMPLATE;
-use const SebLucas\Cops\Config\COPS_VERSION;
 
 function useServerSideRendering()
 {
@@ -46,11 +44,11 @@ function serverSideRender($data)
 {
     // Get the templates
     $theme = getCurrentTemplate();
-    $header = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/header.html');
-    $footer = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/footer.html');
-    $main = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/main.html');
-    $bookdetail = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/bookdetail.html');
-    $page = file_get_contents(COPS_TEMPLATE_DIR . $theme . '/page.html');
+    $header = file_get_contents('templates/' . $theme . '/header.html');
+    $footer = file_get_contents('templates/' . $theme . '/footer.html');
+    $main = file_get_contents('templates/' . $theme . '/main.html');
+    $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
+    $page = file_get_contents('templates/' . $theme . '/page.html');
 
     // Generate the function for the template
     $template = new doT();
@@ -100,7 +98,12 @@ function initURLParam()
 
 function getURLParam($name, $default = null)
 {
+    static $initialized = false;
     global $urlParams;
+    if (!$initialized) {
+        initURLParam();
+        $initialized = true;
+    }
     if (!empty($urlParams) && isset($urlParams[$name]) && $urlParams[$name] != '') {
         return $urlParams[$name];
     }
@@ -133,6 +136,14 @@ function addURLParameter($urlParams, $paramName, $paramValue)
     return $start . http_build_query($params);
 }
 
+function addDbParameter($urlParams)
+{
+    if (!is_null(getURLParam('db'))) {
+        $urlParams = addURLParameter($urlParams, 'db', getURLParam('db'));
+    }
+    return $urlParams;
+}
+
 function getCurrentOption($option)
 {
     global $config;
@@ -155,9 +166,9 @@ function getCurrentCss()
     global $config;
     $style = getCurrentOption('style');
     if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
-        return COPS_TEMPLATE_DIR . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
+        return 'templates/' . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
     }
-    return 'templates/' . $config[COPS_TEMPLATE] . '/styles/style-' . $config[COPS_TEMPLATE] . '.css';
+    return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
 }
 
 function getCurrentTemplate()
@@ -167,12 +178,12 @@ function getCurrentTemplate()
     if (!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
         return $template;
     }
-    return $config[COPS_TEMPLATE];
+    return $config['cops_template'];
 }
 
 function getUrlWithVersion($url)
 {
-    return $url . '?v=' . COPS_VERSION;
+    return $url . '?v=' . Config::VERSION;
 }
 
 namespace SebLucas\Cops\Format;

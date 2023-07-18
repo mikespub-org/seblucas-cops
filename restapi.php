@@ -10,8 +10,6 @@
 
 use SebLucas\Cops\Output\RestApi;
 
-use function SebLucas\Cops\Request\initURLParam;
-
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
@@ -19,8 +17,6 @@ require_once dirname(__FILE__) . '/base.php';
 // override splitting authors and books by first letter here?
 $config['cops_author_split_first_letter'] = '0';
 $config['cops_titles_split_first_letter'] = '0';
-
-initURLParam();
 
 header('Content-Type:application/json;charset=utf-8');
 

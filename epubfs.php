@@ -12,24 +12,20 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\EPubMeta\EPub;
 use Exception;
 
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\initURLParam;
-use function SebLucas\Cops\Request\notFound;
+use SebLucas\Cops\Config;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+use function SebLucas\Cops\Request\getURLParam;
+use function SebLucas\Cops\Request\notFound;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
-/** @var array $config */
-
-initURLParam();
 
 function getComponentContent($book, $component, $add)
 {
     $data = $book->component($component);
+    $endpoint = Config::ENDPOINT["epubfs"];
 
-    $callback = function ($m) use ($book, $component, $add) {
+    $callback = function ($m) use ($book, $component, $add, $endpoint) {
         $method = $m[1];
         $path = $m[2];
         $end = '';
@@ -48,7 +44,7 @@ function getComponentContent($book, $component, $add)
         if (!$comp) {
             return $method . "'#'" . $end;
         }
-        $out = $method . "'" . COPS_ENDPOINTS["epubfs"] . "?" . $add . 'comp=' . $comp . $hash . "'" . $end;
+        $out = $method . "'" . $endpoint . "?" . $add . 'comp=' . $comp . $hash . "'" . $end;
         if ($end) {
             return $out;
         }
@@ -69,8 +65,8 @@ if (php_sapi_name() === 'cli') {
 
 $idData = getURLParam('data', null);
 $add = 'data=' . $idData . '&';
-if (!is_null(getURLParam(COPS_DB_PARAM))) {
-    $add .= COPS_DB_PARAM . '=' . getURLParam(COPS_DB_PARAM) . '&';
+if (!is_null(getURLParam('db'))) {
+    $add .= 'db=' . getURLParam('db') . '&';
 }
 $myBook = Book::getBookByDataId($idData);
 

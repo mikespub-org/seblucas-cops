@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use Exception;
@@ -19,9 +20,6 @@ use function SebLucas\Cops\Language\str_format;
 use function SebLucas\Cops\Language\useNormAndUp;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 abstract class Base
 {
@@ -45,7 +43,7 @@ abstract class Base
 
     public static function noDatabaseSelected()
     {
-        return self::isMultipleDatabaseEnabled() && is_null(getURLParam(COPS_DB_PARAM));
+        return self::isMultipleDatabaseEnabled() && is_null(getURLParam('db'));
     }
 
     public static function getDbList()
@@ -73,7 +71,7 @@ abstract class Base
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = getURLParam(COPS_DB_PARAM, 0);
+                $database = getURLParam('db', 0);
             }
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
                 self::error($database);
@@ -89,7 +87,7 @@ abstract class Base
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = getURLParam(COPS_DB_PARAM, 0);
+                $database = getURLParam('db', 0);
             }
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
                 self::error($database);
@@ -106,7 +104,7 @@ abstract class Base
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = getURLParam(COPS_DB_PARAM, 0);
+                $database = getURLParam('db', 0);
             }
             $array = array_values($config['image_directory']);
             return  $array[$database];
@@ -122,7 +120,7 @@ abstract class Base
     private static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            header("location: " . COPS_ENDPOINTS["check"] . "?err=1");
+            header("location: " . Config::ENDPOINT["check"] . "?err=1");
         }
         throw new Exception("Database <{$database}> not found.");
     }

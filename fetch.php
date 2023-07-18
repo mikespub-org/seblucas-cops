@@ -8,16 +8,11 @@
 use SebLucas\Cops\Calibre\Book;
 
 use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\initURLParam;
 use function SebLucas\Cops\Request\notFound;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
-
-initURLParam();
 
 global $config;
 
@@ -80,7 +75,7 @@ switch ($type) {
         if (isset($config['cops_thumbnail_cache_directory']) && $config['cops_thumbnail_cache_directory'] !== '') {
             $thumbnailCacheFullpath = $config['cops_thumbnail_cache_directory'];
             //if multiple databases, add a subfolder with the database ID
-            $thumbnailCacheFullpath .= !is_null(getURLParam(COPS_DB_PARAM)) ? 'db-' . getURLParam(COPS_DB_PARAM) . DIRECTORY_SEPARATOR : '';
+            $thumbnailCacheFullpath .= !is_null(getURLParam('db')) ? 'db-' . getURLParam('db') . DIRECTORY_SEPARATOR : '';
             //when there are lots of thumbnails, it's better to save files in subfolders, so if the book's uuid is
             //"01234567-89ab-cdef-0123-456789abcdef", we will save the thumbnail in .../0/12/34567-89ab-cdef-0123-456789abcdef-...
             $thumbnailCacheFullpath .= substr($book->uuid, 0, 1) . DIRECTORY_SEPARATOR . substr($book->uuid, 1, 2) . DIRECTORY_SEPARATOR;

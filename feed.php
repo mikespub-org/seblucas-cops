@@ -10,13 +10,10 @@ use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Pages\Page;
 
 use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\initURLParam;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
-
-initURLParam();
 
 header('Content-Type:application/xml');
 $page = getURLParam('page', Page::INDEX);

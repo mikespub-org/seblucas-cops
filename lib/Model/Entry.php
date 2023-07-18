@@ -13,8 +13,6 @@ use SebLucas\Cops\Pages\Page;
 use function SebLucas\Cops\Request\getUrlWithVersion;
 use function SebLucas\Cops\Request\getURLParam;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-
 class Entry
 {
     public $title;
@@ -61,8 +59,8 @@ class Entry
             }
         }
 
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $this->id = str_replace("cops:", "cops:" . getURLParam(COPS_DB_PARAM) . ":", $this->id);
+        if (!is_null(getURLParam('db'))) {
+            $this->id = str_replace("cops:", "cops:" . getURLParam('db') . ":", $this->id);
         }
     }
 

@@ -14,14 +14,11 @@ use SebLucas\Cops\Calibre\Base;
 use function SebLucas\Cops\Request\getCurrentCss;
 use function SebLucas\Cops\Request\getURLParam;
 use function SebLucas\Cops\Request\getUrlWithVersion;
-use function SebLucas\Cops\Request\initURLParam;
 use function SebLucas\Cops\Request\useServerSideRendering;
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
-
-initURLParam();
 
 $err   = getURLParam('err', -1);
 $full  = getURLParam('full');

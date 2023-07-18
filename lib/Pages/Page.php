@@ -26,8 +26,6 @@ use function SebLucas\Cops\Language\str_format;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getQueryString;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-
 class Page
 {
     public const INDEX = "index";
@@ -162,7 +160,7 @@ class Page
                     "cops:{$i}:catalog",
                     str_format(localize("bookword", $nBooks), $nBooks),
                     "text",
-                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$i}")],
+                    [ new LinkNavigation("?db={$i}")],
                     "",
                     $nBooks
                 ));

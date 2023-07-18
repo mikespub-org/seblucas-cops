@@ -11,15 +11,13 @@ namespace SebLucas\Cops\Model;
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getURLParam;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-
 class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = null, $ptitle = null)
     {
         parent::__construct($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $this->href = addURLParameter($this->href, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
+        if (!is_null(getURLParam('db'))) {
+            $this->href = addURLParameter($this->href, 'db', getURLParam('db'));
         }
         if (!preg_match("#^\?(.*)#", $this->href) && !empty($this->href)) {
             $this->href = "?" . $this->href;

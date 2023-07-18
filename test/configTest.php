@@ -6,15 +6,13 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Config;
 use SebLucas\Template\doT;
 
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentCss;
 use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\useServerSideRendering;
-
-use const SebLucas\Cops\Config\COPS_VERSION;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class ConfigTest extends TestCase
 {
@@ -66,7 +64,7 @@ class ConfigTest extends TestCase
         $this->assertTrue(is_int((int)$config['cops_author_split_first_letter']));
     }
 
-    public function estCheckConfigurationTitlesSplitFirstLetter()
+    public function testCheckConfigurationTitlesSplitFirstLetter()
     {
         global $config;
         $this->assertTrue(is_int((int)$config['cops_titles_split_first_letter']));
@@ -138,14 +136,14 @@ class ConfigTest extends TestCase
         $template = new doT();
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => $config['cops_title_default'],
-            "version"               => COPS_VERSION,
-            "opds_url"              => $config['cops_full_url'] . COPS_ENDPOINTS["feed"],
+            "version"               => Config::VERSION,
+            "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
             "customHeader"          => "",
             "template"              => $config["cops_template"],
             "server_side_rendering" => useServerSideRendering(),
             "current_css"           => getCurrentCss(),
             "favico"                => $config['cops_icon'],
-            "getjson_url"           => COPS_ENDPOINTS["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
+            "getjson_url"           => Config::ENDPOINT["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
 
         $head = $tpl($data);
 

@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Config;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkFacet;
@@ -20,12 +21,9 @@ use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\getURLParam;
 
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
-
 class OPDSRenderer
 {
-    public static $endpoint = COPS_ENDPOINTS["feed"];
+    public static $endpoint = Config::ENDPOINT["feed"];
     private $xmlStream = null;
     private $updated = null;
 
@@ -77,8 +75,8 @@ class OPDSRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $urlparam = "?query={searchTerms}";
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $urlparam = addURLParameter($urlparam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
+        if (!is_null(getURLParam('db'))) {
+            $urlparam = addURLParameter($urlparam, 'db', getURLParam('db'));
         }
         $urlparam = str_replace("%7B", "{", $urlparam);
         $urlparam = str_replace("%7D", "}", $urlparam);
@@ -114,8 +112,8 @@ class OPDSRenderer
         self::getXmlStream()->startElement("id");
         if ($page->idPage) {
             $idPage = $page->idPage;
-            if (!is_null(getURLParam(COPS_DB_PARAM))) {
-                $idPage = str_replace("cops:", "cops:" . getURLParam(COPS_DB_PARAM) . ":", $idPage);
+            if (!is_null(getURLParam('db'))) {
+                $idPage = str_replace("cops:", "cops:" . getURLParam('db') . ":", $idPage);
             }
             self::getXmlStream()->text($idPage);
         } else {
@@ -144,8 +142,8 @@ class OPDSRenderer
         $link = new LinkNavigation("?" . getQueryString(), "self");
         self::renderLink($link);
         $urlparam = "?";
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $urlparam = addURLParameter($urlparam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
+        if (!is_null(getURLParam('db'))) {
+            $urlparam = addURLParameter($urlparam, 'db', getURLParam('db'));
         }
         if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
             // Good and compliant way of handling search
