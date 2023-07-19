@@ -10,7 +10,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 
-use function SebLucas\Cops\Language\localize;
 use function SebLucas\Cops\Request\getCurrentOption;
 
 class PageAllAuthors extends Page

@@ -12,9 +12,6 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use UnexpectedValueException;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class CustomColumnTypeInteger extends CustomColumnType
 {
     protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_INT)

@@ -11,9 +11,6 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class CustomColumnTypeBool extends CustomColumnType
 {
     // PHP pre 5.6 does not support const arrays

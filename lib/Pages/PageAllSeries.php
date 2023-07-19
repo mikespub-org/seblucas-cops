@@ -10,8 +10,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Serie;
 
-use function SebLucas\Cops\Language\localize;
-
 class PageAllSeries extends Page
 {
     public function InitializeContent()

@@ -15,7 +15,7 @@ use SebLucas\Template\doT;
 
 use function SebLucas\Cops\Language\getAcceptLanguages;
 use function SebLucas\Cops\Language\getLangAndTranslationFile;
-use function SebLucas\Cops\Language\localize;
+
 use function SebLucas\Cops\Language\normalizeUtf8String;
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentCss;

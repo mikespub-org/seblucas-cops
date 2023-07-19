@@ -186,112 +186,115 @@ function getUrlWithVersion($url)
     return $url . '?v=' . Config::VERSION;
 }
 
-namespace SebLucas\Cops\Format;
+namespace SebLucas\Cops\Output;
 
 use DOMDocument;
 
-function xml2xhtml($xml)
+class Format
 {
-    return preg_replace_callback('#<(\w+)([^>]*)\s*/>#s', function ($m) {
-        $xhtml_tags = ['br', 'hr', 'input', 'frame', 'img', 'area', 'link', 'col', 'base', 'basefont', 'param'];
-        if (in_array($m[1], $xhtml_tags)) {
-            return '<' . $m[1] . $m[2] . ' />';
-        } else {
-            return '<' . $m[1] . $m[2] . '></' . $m[1] . '>';
+    /**
+     * This method is a direct copy-paste from
+     * http://tmont.com/blargh/2010/1/string-format-in-php
+     */
+    public static function str_format($format)
+    {
+        $args = func_get_args();
+        $format = array_shift($args);
+
+        preg_match_all('/(?=\{)\{(\d+)\}(?!\})/', $format, $matches, PREG_OFFSET_CAPTURE);
+        $offset = 0;
+        foreach ($matches[1] as $data) {
+            $i = $data[0];
+            $format = substr_replace($format, @$args[(int)$i], $offset + $data[1] - 1, 2 + strlen($i));
+            $offset += strlen(@$args[(int)$i]) - 2 - strlen($i);
         }
-    }, $xml);
-}
 
-function display_xml_error($error)
-{
-    $return = '';
-    $return .= str_repeat('-', $error->column) . "^\n";
-
-    switch ($error->level) {
-        case LIBXML_ERR_WARNING:
-            $return .= 'Warning ' . $error->code . ': ';
-            break;
-        case LIBXML_ERR_ERROR:
-            $return .= 'Error ' . $error->code . ': ';
-            break;
-        case LIBXML_ERR_FATAL:
-            $return .= 'Fatal Error ' . $error->code . ': ';
-            break;
+        return $format;
     }
 
-    $return .= trim($error->message) .
-               "\n  Line: " . $error->line .
-               "\n  Column: " . $error->column;
-
-    if ($error->file) {
-        $return .= "\n  File: " . $error->file;
+    public static function xml2xhtml($xml)
+    {
+        return preg_replace_callback('#<(\w+)([^>]*)\s*/>#s', function ($m) {
+            $xhtml_tags = ['br', 'hr', 'input', 'frame', 'img', 'area', 'link', 'col', 'base', 'basefont', 'param'];
+            if (in_array($m[1], $xhtml_tags)) {
+                return '<' . $m[1] . $m[2] . ' />';
+            } else {
+                return '<' . $m[1] . $m[2] . '></' . $m[1] . '>';
+            }
+        }, $xml);
     }
 
-    return "$return\n\n--------------------------------------------\n\n";
-}
+    public static function display_xml_error($error)
+    {
+        $return = '';
+        $return .= str_repeat('-', $error->column) . "^\n";
 
-function are_libxml_errors_ok()
-{
-    $errors = libxml_get_errors();
-
-    foreach ($errors as $error) {
-        if ($error->code == 801) {
-            return false;
+        switch ($error->level) {
+            case LIBXML_ERR_WARNING:
+                $return .= 'Warning ' . $error->code . ': ';
+                break;
+            case LIBXML_ERR_ERROR:
+                $return .= 'Error ' . $error->code . ': ';
+                break;
+            case LIBXML_ERR_FATAL:
+                $return .= 'Fatal Error ' . $error->code . ': ';
+                break;
         }
-    }
-    return true;
-}
 
-function html2xhtml($html)
-{
-    $doc = new DOMDocument();
-    libxml_use_internal_errors(true);
+        $return .= trim($error->message) .
+                "\n  Line: " . $error->line .
+                "\n  Column: " . $error->column;
 
-    $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' .
-                        $html  . '</body></html>'); // Load the HTML
-    $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
-    $output = xml2xhtml($output);
-    if (preg_match('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
-        $output = $matches [1]; // Remove <html><body>
-    }
-    /*
-    // In case of error with summary, use it to debug
-    $errors = libxml_get_errors();
+        if ($error->file) {
+            $return .= "\n  File: " . $error->file;
+        }
 
-    foreach ($errors as $error) {
-        $output .= display_xml_error($error);
-    }
-    */
-
-    if (!are_libxml_errors_ok()) {
-        $output = 'HTML code not valid.';
+        return "$return\n\n--------------------------------------------\n\n";
     }
 
-    libxml_use_internal_errors(false);
-    return $output;
+    public static function are_libxml_errors_ok()
+    {
+        $errors = libxml_get_errors();
+
+        foreach ($errors as $error) {
+            if ($error->code == 801) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static function html2xhtml($html)
+    {
+        $doc = new DOMDocument();
+        libxml_use_internal_errors(true);
+
+        $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' .
+                            $html  . '</body></html>'); // Load the HTML
+        $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
+        $output = self::xml2xhtml($output);
+        if (preg_match('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
+            $output = $matches [1]; // Remove <html><body>
+        }
+        /*
+        // In case of error with summary, use it to debug
+        $errors = libxml_get_errors();
+
+        foreach ($errors as $error) {
+            $output .= self::display_xml_error($error);
+        }
+        */
+
+        if (!self::are_libxml_errors_ok()) {
+            $output = 'HTML code not valid.';
+        }
+
+        libxml_use_internal_errors(false);
+        return $output;
+    }
 }
 
 namespace SebLucas\Cops\Language;
-
-/**
- * This method is a direct copy-paste from
- * http://tmont.com/blargh/2010/1/string-format-in-php
- */
-function str_format($format)
-{
-    $args = func_get_args();
-    $format = array_shift($args);
-
-    preg_match_all('/(?=\{)\{(\d+)\}(?!\})/', $format, $matches, PREG_OFFSET_CAPTURE);
-    $offset = 0;
-    foreach ($matches[1] as $data) {
-        $i = $data[0];
-        $format = substr_replace($format, @$args[(int)$i], $offset + $data[1] - 1, 2 + strlen($i));
-        $offset += strlen(@$args[(int)$i]) - 2 - strlen($i);
-    }
-
-    return $format;
-}
 
 /**
  * Get all accepted languages from the browser and put them in a sorted array
@@ -431,7 +434,7 @@ function useNormAndUp()
 function normalizeUtf8String($s)
 {
     include_once 'transliteration.php';
-    return _transliteration_process($s);
+    return Transliteration::process($s);
 }
 
 function normAndUp($s)

@@ -10,7 +10,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Model\Entry;
 
-use function SebLucas\Cops\Language\localize;
 use function SebLucas\Cops\Request\useServerSideRendering;
 
 use function SebLucas\Cops\Request\getCurrentOption;

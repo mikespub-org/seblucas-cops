@@ -11,9 +11,6 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class CustomColumnTypeFloat extends CustomColumnType
 {
     protected function __construct($pcustomId)

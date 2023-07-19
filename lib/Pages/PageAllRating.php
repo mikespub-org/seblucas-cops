@@ -10,8 +10,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Rating;
 
-use function SebLucas\Cops\Language\localize;
-
 class PageAllRating extends Page
 {
     public function InitializeContent()

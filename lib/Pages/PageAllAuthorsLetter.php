@@ -10,9 +10,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class PageAllAuthorsLetter extends Page
 {
     public function InitializeContent()

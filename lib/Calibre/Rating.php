@@ -12,9 +12,6 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class Rating extends Base
 {
     public const PAGE_ID = Page::ALL_RATING_ID;

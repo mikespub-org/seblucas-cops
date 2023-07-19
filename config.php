@@ -29,3 +29,17 @@ if (!verifyLogin()) {
     echo 'This site is password protected';
     exit;
 }
+
+if (!function_exists('str_format')) {
+    function str_format($format, ...$args)
+    {
+        return \SebLucas\Cops\Output\Format::str_format($format, ...$args);
+    }
+}
+
+if (!function_exists('localize')) {
+    function localize($phrase, $count=-1, $reset=false)
+    {
+        return \SebLucas\Cops\Language\localize($phrase, $count, $reset);
+    }
+}

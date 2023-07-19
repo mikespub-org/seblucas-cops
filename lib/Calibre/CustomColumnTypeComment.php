@@ -8,9 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class CustomColumnTypeComment extends CustomColumnType
 {
     protected function __construct($pcustomId)

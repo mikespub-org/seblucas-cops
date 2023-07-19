@@ -9,6 +9,7 @@
 
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Config;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Template\doT;
@@ -73,13 +74,6 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 if (useServerSideRendering()) {
     // Get the data
     $data = JSONRenderer::getJson(true);
-
-    if (!function_exists('str_format')) {
-        function str_format($format, ...$args)
-        {
-            return \SebLucas\Cops\Language\str_format($format, ...$args);
-        }
-    }
 
     echo serverSideRender($data);
 }

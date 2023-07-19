@@ -21,8 +21,6 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getQueryString;
 

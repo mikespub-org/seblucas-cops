@@ -14,9 +14,8 @@ use SebLucas\Cops\Model\LinkNavigation;
 use Exception;
 use PDO;
 
-use function SebLucas\Cops\Language\localize;
 use function SebLucas\Cops\Language\normAndUp;
-use function SebLucas\Cops\Language\str_format;
+
 use function SebLucas\Cops\Language\useNormAndUp;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;

@@ -12,9 +12,6 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use DateTime;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class CustomColumnTypeDate extends CustomColumnType
 {
     protected function __construct($pcustomId)

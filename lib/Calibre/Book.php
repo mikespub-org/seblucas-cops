@@ -13,14 +13,12 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageQueryResult;
 use SebLucas\EPubMeta\EPub;
 use Exception;
 
-use function SebLucas\Cops\Format\html2xhtml;
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
@@ -472,7 +470,7 @@ class Book extends Base
             $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
         //if (preg_match('/<\/(div|p|a|span)>/', $this->comment)) {
-        return $addition . html2xhtml($this->comment);
+        return $addition . Format::html2xhtml($this->comment);
         //} else {
         //    return $addition . htmlspecialchars($this->comment);
         //}

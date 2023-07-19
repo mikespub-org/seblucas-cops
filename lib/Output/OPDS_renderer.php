@@ -16,7 +16,6 @@ use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 
-use function SebLucas\Cops\Language\localize;
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\getURLParam;

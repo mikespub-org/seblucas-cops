@@ -10,8 +10,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Tag;
 
-use function SebLucas\Cops\Language\localize;
-
 class PageAllTags extends Page
 {
     public function InitializeContent()
