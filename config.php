@@ -40,6 +40,6 @@ if (!function_exists('str_format')) {
 if (!function_exists('localize')) {
     function localize($phrase, $count=-1, $reset=false)
     {
-        return \SebLucas\Cops\Language\localize($phrase, $count, $reset);
+        return \SebLucas\Cops\Language\Translation::localize($phrase, $count, $reset);
     }
 }

@@ -14,12 +14,10 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 
-use function SebLucas\Cops\Language\normAndUp;
-
-use function SebLucas\Cops\Language\useNormAndUp;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
 
@@ -42,8 +40,8 @@ class PageQueryResult extends Page
         $n = $this->n;
         $numberPerPage = null;
         $queryNormedAndUp = trim($this->query);
-        if (useNormAndUp()) {
-            $queryNormedAndUp = normAndUp($this->query);
+        if (Translation::useNormAndUp()) {
+            $queryNormedAndUp = Translation::normAndUp($this->query);
         }
         if ($limit) {
             $n = 1;

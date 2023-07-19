@@ -296,158 +296,150 @@ class Format
 
 namespace SebLucas\Cops\Language;
 
-/**
- * Get all accepted languages from the browser and put them in a sorted array
- * languages id are normalized : fr-fr -> fr_FR
- * @return array of languages
- */
-function getAcceptLanguages()
+class Translation
 {
-    $langs = [];
+    /**
+     * Get all accepted languages from the browser and put them in a sorted array
+     * languages id are normalized : fr-fr -> fr_FR
+     * @return array of languages
+     */
+    public static function getAcceptLanguages()
+    {
+        $langs = [];
 
-    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-        // break up string into pieces (languages and q factors)
-        $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-        if (preg_match('/^(\w{2})-\w{2}$/', $accept, $matches)) {
-            // Special fix for IE11 which send fr-FR and nothing else
-            $accept = $accept . ',' . $matches[1] . ';q=0.8';
-        }
-        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept, $lang_parse);
+        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            // break up string into pieces (languages and q factors)
+            $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+            if (preg_match('/^(\w{2})-\w{2}$/', $accept, $matches)) {
+                // Special fix for IE11 which send fr-FR and nothing else
+                $accept = $accept . ',' . $matches[1] . ';q=0.8';
+            }
+            preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept, $lang_parse);
 
-        if (count($lang_parse[1])) {
-            $langs = [];
-            foreach ($lang_parse[1] as $lang) {
-                // Format the language code (not standard among browsers)
-                if (strlen($lang) == 5) {
-                    $lang = str_replace('-', '_', $lang);
-                    $splitted = preg_split('/_/', $lang);
-                    $lang = $splitted[0] . '_' . strtoupper($splitted[1]);
+            if (count($lang_parse[1])) {
+                $langs = [];
+                foreach ($lang_parse[1] as $lang) {
+                    // Format the language code (not standard among browsers)
+                    if (strlen($lang) == 5) {
+                        $lang = str_replace('-', '_', $lang);
+                        $splitted = preg_split('/_/', $lang);
+                        $lang = $splitted[0] . '_' . strtoupper($splitted[1]);
+                    }
+                    array_push($langs, $lang);
                 }
-                array_push($langs, $lang);
-            }
-            // create a list like "en" => 0.8
-            $langs = array_combine($langs, $lang_parse[4]);
+                // create a list like "en" => 0.8
+                $langs = array_combine($langs, $lang_parse[4]);
 
-            // set default to 1 for any without q factor
-            foreach ($langs as $lang => $val) {
-                if ($val === '') {
-                    $langs[$lang] = 1;
+                // set default to 1 for any without q factor
+                foreach ($langs as $lang => $val) {
+                    if ($val === '') {
+                        $langs[$lang] = 1;
+                    }
+                }
+
+                // sort list based on value
+                arsort($langs, SORT_NUMERIC);
+            }
+        }
+
+        return $langs;
+    }
+
+    /**
+     * Find the best translation file possible based on the accepted languages
+     * @return array of language and language file
+     */
+    public static function getLangAndTranslationFile()
+    {
+        global $config;
+        $langs = [];
+        $lang = 'en';
+        if (!empty($config['cops_language'])) {
+            $lang = $config['cops_language'];
+        } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            $langs = self::getAcceptLanguages();
+        }
+        //echo var_dump($langs);
+        $lang_file = null;
+        foreach ($langs as $language => $val) {
+            $temp_file = dirname(__FILE__). '/lang/Localization_' . $language . '.json';
+            if (file_exists($temp_file)) {
+                $lang = $language;
+                $lang_file = $temp_file;
+                break;
+            }
+        }
+        if (empty($lang_file)) {
+            $lang_file = dirname(__FILE__). '/lang/Localization_' . $lang . '.json';
+        }
+        return [$lang, $lang_file];
+    }
+
+    /**
+     * This method is based on this page
+     * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
+     */
+    public static function localize($phrase, $count=-1, $reset=false)
+    {
+        global $config;
+        if ($count == 0) {
+            $phrase .= '.none';
+        }
+        if ($count == 1) {
+            $phrase .= '.one';
+        }
+        if ($count > 1) {
+            $phrase .= '.many';
+        }
+
+        /* Static keyword is used to ensure the file is loaded only once */
+        static $translations = null;
+        if ($reset) {
+            $translations = null;
+        }
+        /* If no instance of $translations has occured load the language file */
+        if (is_null($translations)) {
+            $lang_file_en = null;
+            [$lang, $lang_file] = self::getLangAndTranslationFile();
+            if ($lang != 'en') {
+                $lang_file_en = dirname(__FILE__). '/lang/' . 'Localization_en.json';
+            }
+
+            $lang_file_content = file_get_contents($lang_file);
+            /* Load the language file as a JSON object and transform it into an associative array */
+            $translations = json_decode($lang_file_content, true);
+
+            /* Clean the array of all unfinished translations */
+            foreach (array_keys($translations) as $key) {
+                if (preg_match('/^##TODO##/', $key)) {
+                    unset($translations [$key]);
                 }
             }
-
-            // sort list based on value
-            arsort($langs, SORT_NUMERIC);
-        }
-    }
-
-    return $langs;
-}
-
-/**
- * Find the best translation file possible based on the accepted languages
- * @return array of language and language file
- */
-function getLangAndTranslationFile()
-{
-    global $config;
-    $langs = [];
-    $lang = 'en';
-    if (!empty($config['cops_language'])) {
-        $lang = $config['cops_language'];
-    } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-        $langs = getAcceptLanguages();
-    }
-    //echo var_dump($langs);
-    $lang_file = null;
-    foreach ($langs as $language => $val) {
-        $temp_file = dirname(__FILE__). '/lang/Localization_' . $language . '.json';
-        if (file_exists($temp_file)) {
-            $lang = $language;
-            $lang_file = $temp_file;
-            break;
-        }
-    }
-    if (empty($lang_file)) {
-        $lang_file = dirname(__FILE__). '/lang/Localization_' . $lang . '.json';
-    }
-    return [$lang, $lang_file];
-}
-
-/**
- * This method is based on this page
- * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
- */
-function localize($phrase, $count=-1, $reset=false)
-{
-    global $config;
-    if ($count == 0) {
-        $phrase .= '.none';
-    }
-    if ($count == 1) {
-        $phrase .= '.one';
-    }
-    if ($count > 1) {
-        $phrase .= '.many';
-    }
-
-    /* Static keyword is used to ensure the file is loaded only once */
-    static $translations = null;
-    if ($reset) {
-        $translations = null;
-    }
-    /* If no instance of $translations has occured load the language file */
-    if (is_null($translations)) {
-        $lang_file_en = null;
-        [$lang, $lang_file] = getLangAndTranslationFile();
-        if ($lang != 'en') {
-            $lang_file_en = dirname(__FILE__). '/lang/' . 'Localization_en.json';
-        }
-
-        $lang_file_content = file_get_contents($lang_file);
-        /* Load the language file as a JSON object and transform it into an associative array */
-        $translations = json_decode($lang_file_content, true);
-
-        /* Clean the array of all unfinished translations */
-        foreach (array_keys($translations) as $key) {
-            if (preg_match('/^##TODO##/', $key)) {
-                unset($translations [$key]);
+            if (!is_null($lang_file_en)) {
+                $lang_file_content = file_get_contents($lang_file_en);
+                $translations_en = json_decode($lang_file_content, true);
+                $translations = array_merge($translations_en, $translations);
             }
         }
-        if (!is_null($lang_file_en)) {
-            $lang_file_content = file_get_contents($lang_file_en);
-            $translations_en = json_decode($lang_file_content, true);
-            $translations = array_merge($translations_en, $translations);
+        if (array_key_exists($phrase, $translations)) {
+            return $translations[$phrase];
         }
+        return $phrase;
     }
-    if (array_key_exists($phrase, $translations)) {
-        return $translations[$phrase];
+
+    public static function useNormAndUp()
+    {
+        global $config;
+        return $config ['cops_normalized_search'] == '1';
     }
-    return $phrase;
-}
 
-function useNormAndUp()
-{
-    global $config;
-    return $config ['cops_normalized_search'] == '1';
-}
+    public static function normalizeUtf8String($s)
+    {
+        return Transliteration::process($s);
+    }
 
-function normalizeUtf8String($s)
-{
-    include_once 'transliteration.php';
-    return Transliteration::process($s);
-}
-
-function normAndUp($s)
-{
-    return mb_strtoupper(normalizeUtf8String($s), 'UTF-8');
-}
-
-function dd($m, $e = false)
-{
-    echo '<pre>';
-    print_r($m);
-    echo '</pre>';
-    if ($e) {
-        exit;
+    public static function normAndUp($s)
+    {
+        return mb_strtoupper(self::normalizeUtf8String($s), 'UTF-8');
     }
 }

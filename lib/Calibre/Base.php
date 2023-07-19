@@ -9,14 +9,12 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Config;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use Exception;
 use PDO;
 
-use function SebLucas\Cops\Language\normAndUp;
-
-use function SebLucas\Cops\Language\useNormAndUp;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
 
@@ -130,9 +128,9 @@ abstract class Base
             try {
                 if (is_readable(self::getDbFileName($database))) {
                     self::$db = new PDO('sqlite:'. self::getDbFileName($database));
-                    if (useNormAndUp()) {
+                    if (Translation::useNormAndUp()) {
                         self::$db->sqliteCreateFunction('normAndUp', function ($s) {
-                            return normAndUp($s);
+                            return Translation::normAndUp($s);
                         }, 1);
                     }
                 } else {
@@ -221,7 +219,7 @@ abstract class Base
     {
         $totalResult = -1;
 
-        if (useNormAndUp()) {
+        if (Translation::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
             $columns = preg_replace("/upper/", "normAndUp", $columns);
         }

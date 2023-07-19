@@ -11,12 +11,9 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Config;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Template\doT;
 
-use function SebLucas\Cops\Language\getAcceptLanguages;
-use function SebLucas\Cops\Language\getLangAndTranslationFile;
-
-use function SebLucas\Cops\Language\normalizeUtf8String;
 use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentCss;
 use function SebLucas\Cops\Request\getQueryString;
@@ -118,7 +115,7 @@ class BaseTest extends TestCase
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        [$lang, $lang_file] = getLangAndTranslationFile();
+        [$lang, $lang_file] = Translation::getLangAndTranslationFile();
         $this->assertEquals($result, $lang);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
@@ -144,7 +141,7 @@ class BaseTest extends TestCase
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $langs = array_keys(getAcceptLanguages());
+        $langs = array_keys(Translation::getAcceptLanguages());
         $this->assertEquals($result, $langs[0]);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
@@ -254,7 +251,7 @@ class BaseTest extends TestCase
     {
         $this->assertEquals(
             "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn",
-            normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
+            Translation::normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
         );
     }
 

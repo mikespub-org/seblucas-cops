@@ -9,9 +9,9 @@
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Pages\Page;
 
-use function SebLucas\Cops\Language\useNormAndUp;
 use function SebLucas\Cops\Request\getUrlWithVersion;
 use function SebLucas\Cops\Request\setURLParam;
 
@@ -840,7 +840,7 @@ class PageTest extends TestCase
         $n = "1";
         $config ['cops_normalized_search'] = "1";
         Base::clearDb();
-        if (!useNormAndUp()) {
+        if (!Translation::useNormAndUp()) {
             $this->markTestIncomplete();
         }
 
