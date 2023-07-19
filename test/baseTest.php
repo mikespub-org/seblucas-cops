@@ -6,18 +6,17 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/../base.php");
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Config;
+use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Template\doT;
 
-use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentCss;
 use function SebLucas\Cops\Request\getQueryString;
-use function SebLucas\Cops\Request\serverSideRender;
 use function SebLucas\Cops\Request\useServerSideRendering;
 use function SebLucas\Cops\Request\verifyLogin;
 
@@ -32,9 +31,9 @@ class BaseTest extends TestCase
 
     public function testAddURLParameter()
     {
-        $this->assertEquals("?db=0", addURLParameter("?", "db", "0"));
-        $this->assertEquals("?key=value&db=0", addURLParameter("?key=value", "db", "0"));
-        $this->assertEquals("?key=value&otherKey=&db=0", addURLParameter("?key=value&otherKey", "db", "0"));
+        $this->assertEquals("?db=0", Format::addURLParam("?", "db", "0"));
+        $this->assertEquals("?key=value&db=0", Format::addURLParam("?key=value", "db", "0"));
+        $this->assertEquals("?key=value&otherKey=&db=0", Format::addURLParam("?key=value&otherKey", "db", "0"));
     }
 
     /**
@@ -44,7 +43,7 @@ class BaseTest extends TestCase
     public function testServerSideRender($template)
     {
         $_COOKIE["template"] = $template;
-        $this->assertNull(serverSideRender(null));
+        $this->assertNull(Format::serverSideRender(null));
 
         unset($_COOKIE['template']);
     }
@@ -68,7 +67,7 @@ class BaseTest extends TestCase
                   "server_side_rendering" => useServerSideRendering(),
                   "current_css"           => getCurrentCss(),
                   "favico"                => $config['cops_icon'],
-                  "getjson_url"           => Config::ENDPOINT["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
+                  "getjson_url"           => JSONRenderer::getCurrentUrl(getQueryString())];
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);
@@ -258,7 +257,6 @@ class BaseTest extends TestCase
     public function testLoginEnabledWithoutCreds()
     {
         global $config;
-        require_once __DIR__.'/../verifyLogin.php';
         $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
         $this->assertFalse(verifyLogin());
     }
@@ -266,7 +264,6 @@ class BaseTest extends TestCase
     public function testLoginEnabledAndLoggingIn()
     {
         global $config;
-        require_once __DIR__.'/../verifyLogin.php';
         $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
         $_SERVER['PHP_AUTH_USER'] = 'xxx';
         $_SERVER['PHP_AUTH_PW'] = 'secret';

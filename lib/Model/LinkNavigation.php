@@ -8,17 +8,14 @@
 
 namespace SebLucas\Cops\Model;
 
-use function SebLucas\Cops\Request\addURLParameter;
-use function SebLucas\Cops\Request\getURLParam;
+use SebLucas\Cops\Output\Format;
 
 class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = null, $ptitle = null)
     {
         parent::__construct($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        if (!is_null(getURLParam('db'))) {
-            $this->href = addURLParameter($this->href, 'db', getURLParam('db'));
-        }
+        $this->href = Format::addDatabaseParam($this->href);
         if (!preg_match("#^\?(.*)#", $this->href) && !empty($this->href)) {
             $this->href = "?" . $this->href;
         }

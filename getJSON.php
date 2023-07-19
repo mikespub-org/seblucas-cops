@@ -9,7 +9,6 @@
 use SebLucas\Cops\Output\JSONRenderer;
 
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
 header('Content-Type:application/json;charset=utf-8');

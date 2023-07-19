@@ -13,10 +13,10 @@ use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkFacet;
 use SebLucas\Cops\Model\LinkNavigation;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 
-use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\getURLParam;
 
@@ -74,9 +74,7 @@ class OPDSRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $urlparam = "?query={searchTerms}";
-        if (!is_null(getURLParam('db'))) {
-            $urlparam = addURLParameter($urlparam, 'db', getURLParam('db'));
-        }
+        $urlparam = Format::addDatabaseParam($urlparam);
         $urlparam = str_replace("%7B", "{", $urlparam);
         $urlparam = str_replace("%7D", "}", $urlparam);
         $xml->writeAttribute("template", $config['cops_full_url'] . self::$endpoint . $urlparam);
@@ -141,16 +139,14 @@ class OPDSRenderer
         $link = new LinkNavigation("?" . getQueryString(), "self");
         self::renderLink($link);
         $urlparam = "?";
-        if (!is_null(getURLParam('db'))) {
-            $urlparam = addURLParameter($urlparam, 'db', getURLParam('db'));
-        }
+        $urlparam = Format::addDatabaseParam($urlparam);
         if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
             // Good and compliant way of handling search
-            $urlparam = addURLParameter($urlparam, "page", Page::OPENSEARCH);
+            $urlparam = Format::addURLParam($urlparam, "page", Page::OPENSEARCH);
             $link = new Link(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed
-            $urlparam = addURLParameter($urlparam, "query", "{searchTerms}");
+            $urlparam = Format::addURLParam($urlparam, "query", "{searchTerms}");
             $urlparam = str_replace("%7B", "{", $urlparam);
             $urlparam = str_replace("%7D", "}", $urlparam);
             $link = new Link($config['cops_full_url'] . self::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
@@ -159,7 +155,7 @@ class OPDSRenderer
         if ($page->containsBook() && !is_null($config['cops_books_filter']) && count($config['cops_books_filter']) > 0) {
             $Urlfilter = getURLParam("tag", "");
             foreach ($config['cops_books_filter'] as $lib => $filter) {
-                $link = new LinkFacet("?" . addURLParameter(getQueryString(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter);
+                $link = new LinkFacet("?" . Format::addURLParam(getQueryString(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter);
                 self::renderLink($link);
             }
         }

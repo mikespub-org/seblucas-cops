@@ -32,41 +32,11 @@ class Config
 namespace SebLucas\Cops\Request;
 
 use SebLucas\Cops\Config;
-use SebLucas\Template\doT;
 
 function useServerSideRendering()
 {
     global $config;
     return preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
-}
-
-function serverSideRender($data)
-{
-    // Get the templates
-    $theme = getCurrentTemplate();
-    $header = file_get_contents('templates/' . $theme . '/header.html');
-    $footer = file_get_contents('templates/' . $theme . '/footer.html');
-    $main = file_get_contents('templates/' . $theme . '/main.html');
-    $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
-    $page = file_get_contents('templates/' . $theme . '/page.html');
-
-    // Generate the function for the template
-    $template = new doT();
-    $dot = $template->template($page, ['bookdetail' => $bookdetail,
-                                              'header' => $header,
-                                              'footer' => $footer,
-                                              'main' => $main]);
-    // If there is a syntax error in the function created
-    // $dot will be equal to FALSE
-    if (!$dot) {
-        return false;
-    }
-    // Execute the template
-    if (!empty($data)) {
-        return $dot($data);
-    }
-
-    return null;
 }
 
 function getQueryString()
@@ -116,34 +86,6 @@ function setURLParam($name, $value)
     $urlParams[$name] = $value;
 }
 
-function addURLParameter($urlParams, $paramName, $paramValue)
-{
-    if (empty($urlParams)) {
-        $urlParams = '';
-    }
-    $start = '';
-    if (preg_match('#^\?(.*)#', $urlParams, $matches)) {
-        $start = '?';
-        $urlParams = $matches[1];
-    }
-    $params = [];
-    parse_str($urlParams, $params);
-    if (empty($paramValue) && strval($paramValue) !== "0") {
-        unset($params[$paramName]);
-    } else {
-        $params[$paramName] = $paramValue;
-    }
-    return $start . http_build_query($params);
-}
-
-function addDbParameter($urlParams)
-{
-    if (!is_null(getURLParam('db'))) {
-        $urlParams = addURLParameter($urlParams, 'db', getURLParam('db'));
-    }
-    return $urlParams;
-}
-
 function getCurrentOption($option)
 {
     global $config;
@@ -186,9 +128,28 @@ function getUrlWithVersion($url)
     return $url . '?v=' . Config::VERSION;
 }
 
+function verifyLogin()
+{
+    global $config;
+    if (isset($config['cops_basic_authentication']) &&
+      is_array($config['cops_basic_authentication'])) {
+        if (!isset($_SERVER['PHP_AUTH_USER']) ||
+          (isset($_SERVER['PHP_AUTH_USER']) &&
+            ($_SERVER['PHP_AUTH_USER'] != $config['cops_basic_authentication']['username'] ||
+              $_SERVER['PHP_AUTH_PW'] != $config['cops_basic_authentication']['password']))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Template\doT;
 use DOMDocument;
+
+use function SebLucas\Cops\Request\getURLParam;
+use function SebLucas\Cops\Request\getCurrentTemplate;
 
 class Format
 {
@@ -210,6 +171,64 @@ class Format
         }
 
         return $format;
+    }
+
+    public static function addURLParam($urlParams, $paramName, $paramValue)
+    {
+        if (empty($urlParams)) {
+            $urlParams = '';
+        }
+        $start = '';
+        if (preg_match('#^\?(.*)#', $urlParams, $matches)) {
+            $start = '?';
+            $urlParams = $matches[1];
+        }
+        $params = [];
+        parse_str($urlParams, $params);
+        if (empty($paramValue) && strval($paramValue) !== "0") {
+            unset($params[$paramName]);
+        } else {
+            $params[$paramName] = $paramValue;
+        }
+        return $start . http_build_query($params);
+    }
+
+    public static function addDatabaseParam($urlParams)
+    {
+        $database = getURLParam('db');
+        if (!is_null($database)) {
+            $urlParams = self::addURLParam($urlParams, 'db', $database);
+        }
+        return $urlParams;
+    }
+
+    public static function serverSideRender($data)
+    {
+        // Get the templates
+        $theme = getCurrentTemplate();
+        $header = file_get_contents('templates/' . $theme . '/header.html');
+        $footer = file_get_contents('templates/' . $theme . '/footer.html');
+        $main = file_get_contents('templates/' . $theme . '/main.html');
+        $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
+        $page = file_get_contents('templates/' . $theme . '/page.html');
+
+        // Generate the function for the template
+        $template = new doT();
+        $dot = $template->template($page, ['bookdetail' => $bookdetail,
+                                                  'header' => $header,
+                                                  'footer' => $footer,
+                                                  'main' => $main]);
+        // If there is a syntax error in the function created
+        // $dot will be equal to FALSE
+        if (!$dot) {
+            return false;
+        }
+        // Execute the template
+        if (!empty($data)) {
+            return $dot($data);
+        }
+
+        return null;
     }
 
     public static function xml2xhtml($xml)

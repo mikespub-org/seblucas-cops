@@ -12,7 +12,6 @@ use SebLucas\Cops\Pages\Page;
 use function SebLucas\Cops\Request\getURLParam;
 
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
 header('Content-Type:application/xml');

@@ -19,7 +19,6 @@ use SebLucas\Cops\Pages\PageQueryResult;
 use SebLucas\EPubMeta\EPub;
 use Exception;
 
-use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentOption;
 use function SebLucas\Cops\Request\getURLParam;
 
@@ -230,9 +229,7 @@ class Book extends Base
     public function getDetailUrl()
     {
         $urlParam = $this->getUri();
-        if (!is_null(getURLParam('db'))) {
-            $urlParam = addURLParameter($urlParam, 'db', getURLParam('db'));
-        }
+        $urlParam = Format::addDatabaseParam($urlParam);
         return self::$endpoint . $urlParam;
     }
 

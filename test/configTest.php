@@ -7,9 +7,9 @@
  */
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Config;
+use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Template\doT;
 
-use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentCss;
 use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\useServerSideRendering;
@@ -143,7 +143,7 @@ class ConfigTest extends TestCase
             "server_side_rendering" => useServerSideRendering(),
             "current_css"           => getCurrentCss(),
             "favico"                => $config['cops_icon'],
-            "getjson_url"           => Config::ENDPOINT["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
+            "getjson_url"           => JSONRenderer::getCurrentUrl(getQueryString())];
 
         $head = $tpl($data);
 

@@ -22,7 +22,7 @@ $user_config_file = 'config_local.' . $remote_user . '.php';
 if (file_exists(dirname(__FILE__) . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
     require dirname(__FILE__) . '/' . $user_config_file;
 }
-require_once 'verifyLogin.php';
+require_once dirname(__FILE__) . '/base.php';
 if (!verifyLogin()) {
     header('WWW-Authenticate: Basic realm="COPS Authentication"');
     header('HTTP/1.0 401 Unauthorized');

@@ -10,8 +10,8 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Config;
 use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Output\Format;
 
-use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getURLParam;
 
 class Data
@@ -193,7 +193,7 @@ class Data
             }
         }
         if ($config['cops_thumbnail_handling'] != "1") {
-            $urlParam = addURLParameter($urlParam, "height", $height);
+            $urlParam = Format::addURLParam($urlParam, "height", $height);
         }
 
         return $urlParam;
@@ -203,24 +203,22 @@ class Data
     {
         global $config;
 
-        $urlParam = addURLParameter("", "data", $idData);
+        $urlParam = Format::addURLParam("", "data", $idData);
         if ($view) {
-            $urlParam = addURLParameter($urlParam, "view", 1);
+            $urlParam = Format::addURLParam($urlParam, "view", 1);
         }
 
         if (Base::useAbsolutePath() ||
             $rel == Link::OPDS_THUMBNAIL_TYPE ||
             ($type == "epub" && $config['cops_update_epub-metadata'])) {
             if ($type != "jpg") {
-                $urlParam = addURLParameter($urlParam, "type", $type);
+                $urlParam = Format::addURLParam($urlParam, "type", $type);
             }
             if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
                 $urlParam = self::handleThumbnailLink($urlParam, $height);
             }
-            $urlParam = addURLParameter($urlParam, "id", $book->id);
-            if (!is_null(getURLParam('db'))) {
-                $urlParam = addURLParameter($urlParam, 'db', getURLParam('db'));
-            }
+            $urlParam = Format::addURLParam($urlParam, "id", $book->id);
+            $urlParam = Format::addDatabaseParam($urlParam);
             if ($config['cops_thumbnail_handling'] != "1" &&
                 !empty($config['cops_thumbnail_handling']) &&
                 $rel == Link::OPDS_THUMBNAIL_TYPE) {

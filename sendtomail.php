@@ -5,7 +5,6 @@ namespace SebLucas\Cops\Mail;
 use SebLucas\Cops\Calibre\Book;
 
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
 use PHPMailer\PHPMailer\PHPMailer;

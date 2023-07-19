@@ -14,16 +14,13 @@ use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Template\doT;
 
-use function SebLucas\Cops\Request\addURLParameter;
 use function SebLucas\Cops\Request\getCurrentCss;
 use function SebLucas\Cops\Request\getCurrentTemplate;
 use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\serverSideRender;
 use function SebLucas\Cops\Request\useServerSideRendering;
 
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
 // If we detect that an OPDS reader try to connect try to redirect to feed.php
@@ -60,7 +57,7 @@ $data = ['title'                 => $config['cops_title_default'],
               'server_side_rendering' => useServerSideRendering(),
               'current_css'           => getCurrentCss(),
               'favico'                => $config['cops_icon'],
-              'getjson_url'           => Config::ENDPOINT["json"] . '?' . addURLParameter(getQueryString(), 'complete', 1)];
+              'getjson_url'           => JSONRenderer::getCurrentUrl(getQueryString())];
 if (preg_match('/Kindle/', $_SERVER['HTTP_USER_AGENT'])) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
 }
@@ -75,7 +72,7 @@ if (useServerSideRendering()) {
     // Get the data
     $data = JSONRenderer::getJson(true);
 
-    echo serverSideRender($data);
+    echo Format::serverSideRender($data);
 }
 ?>
 </body>

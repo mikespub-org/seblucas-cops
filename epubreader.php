@@ -12,7 +12,6 @@ use function SebLucas\Cops\Request\getURLParam;
 use function SebLucas\Cops\Request\notFound;
 
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
 $idData = (int) getURLParam('data', null);

@@ -15,9 +15,10 @@ use SebLucas\Cops\Config;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 
-use function SebLucas\Cops\Request\addURLParameter;
+use function SebLucas\Cops\Request\getQueryString;
 use function SebLucas\Cops\Request\getURLParam;
 use function SebLucas\Cops\Request\useServerSideRendering;
 
@@ -213,6 +214,12 @@ class JSONRenderer
         return $out;
     }
 
+    public static function getCurrentUrl($queryString = null)
+    {
+        $queryString ??= getQueryString();
+        return Config::ENDPOINT["json"] . '?' . Format::addURLParam($queryString, 'complete', 1);
+    }
+
     public static function getJson($complete = false)
     {
         global $config;
@@ -275,7 +282,7 @@ class JSONRenderer
             $out ["containsBook"] = 1;
         }
 
-        $out["abouturl"] = self::$endpoint . addURLParameter("?page=" . Page::ABOUT, 'db', $database);
+        $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
 
         if ($page == Page::ABOUT) {
             $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));
@@ -284,7 +291,7 @@ class JSONRenderer
 
         $out ["homeurl"] = self::$endpoint;
         if ($page != Page::INDEX && !is_null($database)) {
-            $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter("", 'db', $database);
+            $out ["homeurl"] = $out ["homeurl"] .  "?" . Format::addURLParam("", 'db', $database);
         }
 
         return $out;
