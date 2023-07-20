@@ -15,6 +15,7 @@ use Kiwilan\Opds\OpdsVersionEnum;
 use Kiwilan\Opds\Entries\OpdsEntry;
 use Kiwilan\Opds\Entries\OpdsEntryBook;
 use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use DateTime;
 
@@ -113,7 +114,7 @@ class KiwilanOPDS
         return $opdsEntry;
     }
 
-    public function getOpenSearch()
+    public function getOpenSearch($request)
     {
         $opds = Opds::make(
             config: $this->getOpdsConfig(),
@@ -129,7 +130,13 @@ class KiwilanOPDS
         return $opds->response(true);
     }
 
-    public function render($page)
+    /**
+     * Summary of render
+     * @param mixed $page
+     * @param Request $request
+     * @return string
+     */
+    public function render($page, $request)
     {
         $title = $page->title;
         $feeds = [];

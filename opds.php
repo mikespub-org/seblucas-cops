@@ -7,33 +7,27 @@
  * @author     mikespub
  *
  */
+use SebLucas\Cops\Input\Request;
 //use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
 use SebLucas\Cops\Pages\Page;
 
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\initURLParam;
-
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
-
-initURLParam();
-
-header('Content-Type:application/xml');
-$page = getURLParam('page', Page::INDEX);
+$request = new Request();
+$page = $request->get('page', Page::INDEX);
 // @checkme set page based on path info here
 $path = $_SERVER["PATH_INFO"] ?? "";
 if ($page == Page::INDEX && $path == "/search") {
     $page = Page::OPENSEARCH;
 }
-$query = getURLParam('query');  // 'q' by default for php-opds
-$n = getURLParam('n', '1');
+$query = $request->get('query');  // 'q' by default for php-opds
+$n = $request->get('n', '1');
 if ($query) {
     $page = Page::OPENSEARCH_QUERY;
 }
-$qid = getURLParam('id');
+$qid = $request->get('id');
 
 if ($config ['cops_fetch_protect'] == '1') {
     session_start();
@@ -42,15 +36,17 @@ if ($config ['cops_fetch_protect'] == '1') {
     }
 }
 
+header('Content-Type:application/xml');
+
 $OPDSRender = new OPDSRenderer();
 
 switch ($page) {
     case Page::OPENSEARCH :
-        echo $OPDSRender->getOpenSearch();
+        echo $OPDSRender->getOpenSearch($request);
         return;
     default:
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
-        echo $OPDSRender->render($currentPage);
+        echo $OPDSRender->render($currentPage, $request);
         return;
 }
