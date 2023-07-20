@@ -6,13 +6,16 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Input;
 
 require 'config.php';
 /** @var array $config */
 
 date_default_timezone_set($config['default_timezone']);
 
+/**
+ * Summary of Config
+ */
 class Config
 {
     public const VERSION = '1.3.6';
@@ -29,127 +32,199 @@ class Config
     ];
 }
 
-namespace SebLucas\Cops\Request;
-
-use SebLucas\Cops\Config;
-
-function useServerSideRendering()
+/**
+ * Summary of Request
+ */
+class Request
 {
-    global $config;
-    return preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
-}
+    /**
+     * Summary of urlParams
+     * @var array
+     */
+    public $urlParams = [];
 
-function getQueryString()
-{
-    if (isset($_SERVER['QUERY_STRING'])) {
-        return $_SERVER['QUERY_STRING'];
+    public function __construct()
+    {
+        $this->init();
     }
-    return "";
-}
 
-function notFound()
-{
-    header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
-    header('Status: 404 Not Found');
+    /**
+     * Summary of useServerSideRendering
+     * @return bool|int
+     */
+    public function render()
+    {
+        global $config;
+        return preg_match('/' . $config['cops_server_side_render'] . '/', self::agent());
+    }
 
-    $_SERVER['REDIRECT_STATUS'] = 404;
-}
+    /**
+     * Summary of query
+     * @return mixed
+     */
+    public function query()
+    {
+        if (isset($_SERVER['QUERY_STRING'])) {
+            return $_SERVER['QUERY_STRING'];
+        }
+        return "";
+    }
 
-$urlParams = [];
-function initURLParam()
-{
-    global $urlParams;
-    if (!empty($_GET)) {
-        foreach ($_GET as $name => $value) {
-            $urlParams[$name] = $_GET[$name];
+    /**
+     * Summary of agent
+     * @return mixed
+     */
+    public function agent()
+    {
+        if (isset($_SERVER['HTTP_USER_AGENT'])) {
+            return $_SERVER['HTTP_USER_AGENT'];
+        }
+        return "";
+    }
+
+    /**
+     * Summary of init
+     * @return void
+     */
+    public function init()
+    {
+        $this->urlParams = [];
+        if (!empty($_GET)) {
+            foreach ($_GET as $name => $value) {
+                $this->urlParams[$name] = $_GET[$name];
+            }
         }
     }
-}
 
-function getURLParam($name, $default = null)
-{
-    static $initialized = false;
-    global $urlParams;
-    if (!$initialized) {
-        initURLParam();
-        $initialized = true;
-    }
-    if (!empty($urlParams) && isset($urlParams[$name]) && $urlParams[$name] != '') {
-        return $urlParams[$name];
-    }
-    return $default;
-}
-
-function setURLParam($name, $value)
-{
-    global $urlParams;
-    $urlParams[$name] = $value;
-}
-
-function getCurrentOption($option)
-{
-    global $config;
-    if (isset($_COOKIE[$option])) {
-        if (isset($config ['cops_' . $option]) && is_array($config ['cops_' . $option])) {
-            return explode(',', $_COOKIE[$option]);
-        } elseif (!preg_match('/[^A-Za-z0-9\-_.@]/', $_COOKIE[$option])) {
-            return $_COOKIE[$option];
+    /**
+     * Summary of get
+     * @param mixed $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get($name, $default = null)
+    {
+        if (!empty($this->urlParams) && isset($this->urlParams[$name]) && $this->urlParams[$name] != '') {
+            return $this->urlParams[$name];
         }
-    }
-    if (isset($config ['cops_' . $option])) {
-        return $config ['cops_' . $option];
+        return $default;
     }
 
-    return '';
-}
-
-function getCurrentCss()
-{
-    global $config;
-    $style = getCurrentOption('style');
-    if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
-        return 'templates/' . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
+    /**
+     * Summary of set
+     * @param mixed $name
+     * @param mixed $value
+     * @return void
+     */
+    public function set($name, $value)
+    {
+        $this->urlParams[$name] = $value;
     }
-    return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
-}
 
-function getCurrentTemplate()
-{
-    global $config;
-    $template = getCurrentOption('template');
-    if (!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
-        return $template;
-    }
-    return $config['cops_template'];
-}
-
-function getUrlWithVersion($url)
-{
-    return $url . '?v=' . Config::VERSION;
-}
-
-function verifyLogin()
-{
-    global $config;
-    if (isset($config['cops_basic_authentication']) &&
-      is_array($config['cops_basic_authentication'])) {
-        if (!isset($_SERVER['PHP_AUTH_USER']) ||
-          (isset($_SERVER['PHP_AUTH_USER']) &&
-            ($_SERVER['PHP_AUTH_USER'] != $config['cops_basic_authentication']['username'] ||
-              $_SERVER['PHP_AUTH_PW'] != $config['cops_basic_authentication']['password']))) {
-            return false;
+    /**
+     * Summary of option
+     * @param mixed $option
+     * @return mixed
+     */
+    public function option($option)
+    {
+        global $config;
+        if (isset($_COOKIE[$option])) {
+            if (isset($config ['cops_' . $option]) && is_array($config ['cops_' . $option])) {
+                return explode(',', $_COOKIE[$option]);
+            } elseif (!preg_match('/[^A-Za-z0-9\-_.@]/', $_COOKIE[$option])) {
+                return $_COOKIE[$option];
+            }
         }
+        if (isset($config ['cops_' . $option])) {
+            return $config ['cops_' . $option];
+        }
+
+        return '';
     }
-    return true;
+
+    /**
+     * Summary of style
+     * @return string
+     */
+    public function style()
+    {
+        global $config;
+        $style = self::option('style');
+        if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
+            return 'templates/' . self::template() . '/styles/style-' . self::option('style') . '.css';
+        }
+        return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
+    }
+
+    /**
+     * Summary of template
+     * @return mixed
+     */
+    public function template()
+    {
+        global $config;
+        $template = self::option('template');
+        if (!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
+            return $template;
+        }
+        return $config['cops_template'];
+    }
+
+    /**
+     * Summary of verifyLogin
+     * @return bool
+     */
+    public static function verifyLogin($serverVars = null)
+    {
+        global $config;
+        $serverVars ??= $_SERVER;
+        if (isset($config['cops_basic_authentication']) &&
+          is_array($config['cops_basic_authentication'])) {
+            if (!isset($serverVars['PHP_AUTH_USER']) ||
+              (isset($serverVars['PHP_AUTH_USER']) &&
+                ($serverVars['PHP_AUTH_USER'] != $config['cops_basic_authentication']['username'] ||
+                  $serverVars['PHP_AUTH_PW'] != $config['cops_basic_authentication']['password']))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Summary of notFound
+     * @return void
+     */
+    public static function notFound()
+    {
+        header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+        header('Status: 404 Not Found');
+
+        $_SERVER['REDIRECT_STATUS'] = 404;
+    }
+
+    /**
+     * Summary of build
+     * @param array $params
+     * @param ?array $server
+     * @param ?array $cookie
+     * @param ?array $config
+     * @return Request
+     */
+    public static function build($params, $server = null, $cookie = null, $config = null)
+    {
+        // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
+        $request = new self();
+        $request->urlParams = $params;
+        return $request;
+    }
 }
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Template\doT;
 use DOMDocument;
-
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\getCurrentTemplate;
 
 class Format
 {
@@ -193,19 +268,27 @@ class Format
         return $start . http_build_query($params);
     }
 
-    public static function addDatabaseParam($urlParams)
+    public static function addDatabaseParam($urlParams, $database)
     {
-        $database = getURLParam('db');
         if (!is_null($database)) {
             $urlParams = self::addURLParam($urlParams, 'db', $database);
         }
         return $urlParams;
     }
 
-    public static function serverSideRender($data)
+    public static function addVersion($url)
+    {
+        if (str_contains($url, '?')) {
+            $url .= '&v=' . Config::VERSION;
+        } else {
+            $url .= '?v=' . Config::VERSION;
+        }
+        return $url;
+    }
+
+    public static function serverSideRender($data, $theme = 'default')
     {
         // Get the templates
-        $theme = getCurrentTemplate();
         $header = file_get_contents('templates/' . $theme . '/header.html');
         $footer = file_get_contents('templates/' . $theme . '/footer.html');
         $main = file_get_contents('templates/' . $theme . '/main.html');

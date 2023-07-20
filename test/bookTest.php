@@ -10,12 +10,10 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Pages\Page;
-
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\setURLParam;
 
 /*
 Publishers:
@@ -386,11 +384,19 @@ class BookTest extends TestCase
         $config['cops_use_url_rewriting'] = "1";
         $config['cops_provide_kepub'] = "1";
         $_SERVER["HTTP_USER_AGENT"] = "Kobo";
+        $book = Book::getBookById(17);
+        $book->updateForKepub = true;
+        $epub = $book->getDataById(20);
         $this->assertEquals("download/20/Carroll%2C%20Lewis%20-%20Alice%27s%20Adventures%20in%20Wonderland.kepub.epub", $epub->getHtmlLink());
         $this->assertEquals("download/17/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi", $mobi->getHtmlLink());
+
         $config['cops_provide_kepub'] = "0";
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
+        $book = Book::getBookById(17);
+        $book->updateForKepub = false;
+        $epub = $book->getDataById(20);
         $this->assertEquals("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $epub->getHtmlLink());
+
         $config['cops_use_url_rewriting'] = "0";
         $this->assertEquals(Config::ENDPOINT["fetch"] . "?data=20&type=epub&id=17", $epub->getHtmlLink());
     }
@@ -399,21 +405,21 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Base::getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, false));
+        $this->assertEquals(Base::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, false));
     }
 
     public function testGetFilePath_Epub()
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Base::getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, false));
+        $this->assertEquals(Base::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, false));
     }
 
     public function testGetFilePath_Mobi()
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Base::getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, false));
+        $this->assertEquals(Base::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, false));
     }
 
     public function testGetDataFormat_EPUB()
@@ -501,32 +507,32 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearch_Tag()
     {
+        $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = getURLParam("id");
+        $qid = $request->get("id");
         $query = "fic";
-        $n = getURLParam("n", "1");
-        setURLParam('search', 1);
+        $n = $request->get("n", "1");
+        $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("2 tags", $currentPage->entryArray[0]->content);
         $this->assertEquals("Fiction", $currentPage->entryArray[1]->title);
         $this->assertEquals("Science Fiction", $currentPage->entryArray[2]->title);
-
-        setURLParam('search', null);
     }
 
     public function testTypeaheadSearch_BookAndAuthor()
     {
+        $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = getURLParam("id");
+        $qid = $request->get("id");
         $query = "car";
-        $n = getURLParam("n", "1");
-        setURLParam('search', 1);
+        $n = $request->get("n", "1");
+        $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(4, $currentPage->entryArray);
@@ -535,19 +541,18 @@ class BookTest extends TestCase
 
         $this->assertEquals("1 author", $currentPage->entryArray[2]->content);
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray[3]->title);
-
-        setURLParam('search', null);
     }
 
     public function testTypeaheadSearch_AuthorAndSeries()
     {
+        $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = getURLParam("id");
+        $qid = $request->get("id");
         $query = "art";
-        $n = getURLParam("n", "1");
-        setURLParam('search', 1);
+        $n = $request->get("n", "1");
+        $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
@@ -556,84 +561,82 @@ class BookTest extends TestCase
 
         $this->assertEquals("2 series", $currentPage->entryArray[2]->content);
         $this->assertEquals("D'Artagnan Romances", $currentPage->entryArray[3]->title);
-
-        setURLParam('search', null);
     }
 
     public function testTypeaheadSearch_Publisher()
     {
+        $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = getURLParam("id");
+        $qid = $request->get("id");
         $query = "Macmillan";
-        $n = getURLParam("n", "1");
-        setURLParam('search', 1);
+        $n = $request->get("n", "1");
+        $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("2 publishers", $currentPage->entryArray[0]->content);
         $this->assertEquals("Macmillan and Co. London", $currentPage->entryArray[1]->title);
         $this->assertEquals("Macmillan Publishers USA", $currentPage->entryArray[2]->title);
-
-        setURLParam('search', null);
     }
 
     public function testTypeaheadSearchWithIgnored_SingleCategory()
     {
         global $config;
+        $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = getURLParam("id");
+        $qid = $request->get("id");
         $query = "car";
-        $n = getURLParam("n", "1");
-        setURLParam('search', 1);
+        $n = $request->get("n", "1");
+        $request->set('search', 1);
 
         $config ['cops_ignored_categories'] = ["author"];
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
         $this->assertEquals("A Study in Scarlet", $currentPage->entryArray[1]->title);
 
-        setURLParam('search', null);
         $config ['cops_ignored_categories'] = [];
     }
 
     public function testTypeaheadSearchWithIgnored_MultipleCategory()
     {
         global $config;
+        $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = getURLParam("id");
+        $qid = $request->get("id");
         $query = "art";
-        $n = getURLParam("n", "1");
-        setURLParam('search', 1);
+        $n = $request->get("n", "1");
+        $request->set('search', 1);
 
         $config ['cops_ignored_categories'] = ["series"];
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
         $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
 
-        setURLParam('search', null);
         $config ['cops_ignored_categories'] = [];
     }
 
     public function testTypeaheadSearchMultiDatabase()
     {
         global $config;
+        $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = getURLParam("id");
+        $qid = $request->get("id");
         $query = "art";
-        $n = getURLParam("n", "1");
-        setURLParam('search', 1);
-        setURLParam('multi', 1);
+        $n = $request->get("n", "1");
+        $request->set('search', 1);
+        $request->set('multi', 1);
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
             "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
@@ -643,8 +646,6 @@ class BookTest extends TestCase
         $this->assertEquals("One book", $currentPage->entryArray[3]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[4]->content);
 
-        setURLParam('search', null);
-        setURLParam('multi', null);
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }

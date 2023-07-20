@@ -9,16 +9,12 @@
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Template\doT;
-
-use function SebLucas\Cops\Request\getCurrentCss;
-use function SebLucas\Cops\Request\getQueryString;
-use function SebLucas\Cops\Request\useServerSideRendering;
-use function SebLucas\Cops\Request\verifyLogin;
 
 class BaseTest extends TestCase
 {
@@ -43,7 +39,7 @@ class BaseTest extends TestCase
     public function testServerSideRender($template)
     {
         $_COOKIE["template"] = $template;
-        $this->assertNull(Format::serverSideRender(null));
+        $this->assertNull(Format::serverSideRender(null, $template));
 
         unset($_COOKIE['template']);
     }
@@ -55,6 +51,7 @@ class BaseTest extends TestCase
     public function testGenerateHeader($templateName)
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
+        $request = new Request();
         global $config;
         $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
@@ -64,10 +61,10 @@ class BaseTest extends TestCase
                   "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
                   "customHeader"          => "",
                   "template"              => $templateName,
-                  "server_side_rendering" => useServerSideRendering(),
-                  "current_css"           => getCurrentCss(),
+                  "server_side_rendering" => $request->render(),
+                  "current_css"           => $request->style(),
                   "favico"                => $config['cops_icon'],
-                  "getjson_url"           => JSONRenderer::getCurrentUrl(getQueryString())];
+                  "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);
@@ -182,7 +179,7 @@ class BaseTest extends TestCase
 
     public function testCheckDatabaseAvailability_1()
     {
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
     }
 
     public function testCheckDatabaseAvailability_2()
@@ -193,7 +190,7 @@ class BaseTest extends TestCase
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         Base::clearDb();
 
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -214,7 +211,7 @@ class BaseTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Database <1> not found.');
 
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -235,7 +232,7 @@ class BaseTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Database <0> not found.');
 
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -258,7 +255,7 @@ class BaseTest extends TestCase
     {
         global $config;
         $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
-        $this->assertFalse(verifyLogin());
+        $this->assertFalse(Request::verifyLogin());
     }
 
     public function testLoginEnabledAndLoggingIn()
@@ -267,6 +264,6 @@ class BaseTest extends TestCase
         $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
         $_SERVER['PHP_AUTH_USER'] = 'xxx';
         $_SERVER['PHP_AUTH_PW'] = 'secret';
-        $this->assertTrue(verifyLogin());
+        $this->assertTrue(Request::verifyLogin($_SERVER));
     }
 }

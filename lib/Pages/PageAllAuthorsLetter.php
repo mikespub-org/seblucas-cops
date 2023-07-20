@@ -15,7 +15,7 @@ class PageAllAuthorsLetter extends Page
     public function InitializeContent()
     {
         $this->idPage = Author::getEntryIdByLetter($this->idGet);
-        $this->entryArray = Author::getAuthorsByStartingLetter($this->idGet);
+        $this->entryArray = Author::getAuthorsByStartingLetter($this->idGet, $this->getDatabaseId());
         $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("authorword", count($this->entryArray)), count($this->entryArray)), $this->idGet);
     }
 }

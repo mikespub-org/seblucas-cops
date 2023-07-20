@@ -11,16 +11,13 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
-
-use function SebLucas\Cops\Request\getQueryString;
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\useServerSideRendering;
 
 class JSONRenderer
 {
@@ -94,7 +91,7 @@ class JSONRenderer
     {
         global $config;
         $out = self::getBookContentArray($book);
-        $database = getURLParam('db');
+        $database = $book->getDatabaseId();
 
         $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
         $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml();
@@ -149,12 +146,13 @@ class JSONRenderer
 
     public static function getContentArrayTypeahead($page)
     {
+        /** @var Page $page */
         $out = [];
         foreach ($page->entryArray as $entry) {
             if ($entry instanceof EntryBook) {
                 array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
             } else {
-                if (empty($entry->className) xor Base::noDatabaseSelected()) {
+                if (empty($entry->className) xor Base::noDatabaseSelected($page->getDatabaseId())) {
                     array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
                 } else {
                     array_push($out, ["class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink()]);
@@ -164,7 +162,7 @@ class JSONRenderer
         return $out;
     }
 
-    public static function addCompleteArray($in)
+    public static function addCompleteArray($in, $request)
     {
         global $config;
         $out = $in;
@@ -201,36 +199,41 @@ class JSONRenderer
                            "use_fancyapps" => $config ["cops_use_fancyapps"],
                            "max_item_per_page" => $config['cops_max_item_per_page'],
                            "kindleHack"        => "",
-                           "server_side_rendering" => useServerSideRendering(),
+                           "server_side_rendering" => $request->render(),
                            "html_tag_filter" => $config['cops_html_tag_filter']]];
         if ($config['cops_thumbnail_handling'] == "1") {
             $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
         } elseif (!empty($config['cops_thumbnail_handling'])) {
             $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
         }
-        if (preg_match("/./", $_SERVER['HTTP_USER_AGENT'])) {
+        if (preg_match("/./", $request->agent())) {
             $out ["c"]["config"]["kindleHack"] = 'style="text-decoration: none !important;"';
         }
         return $out;
     }
 
-    public static function getCurrentUrl($queryString = null)
+    public static function getCurrentUrl($queryString)
     {
-        $queryString ??= getQueryString();
         return Config::ENDPOINT["json"] . '?' . Format::addURLParam($queryString, 'complete', 1);
     }
 
-    public static function getJson($complete = false)
+    /**
+     * Summary of getJson
+     * @param Request $request
+     * @param bool $complete
+     * @return array
+     */
+    public static function getJson($request, $complete = false)
     {
         global $config;
-        $page = getURLParam("page", Page::INDEX);
-        $query = getURLParam("query");
-        $search = getURLParam("search");
-        $qid = getURLParam("id");
-        $n = getURLParam("n", "1");
-        $database = getURLParam('db');
+        $page = $request->get("page", Page::INDEX);
+        $query = $request->get("query");
+        $search = $request->get("search");
+        $qid = $request->get("id");
+        $n = $request->get("n", "1");
+        $database = $request->get('db');
 
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         if ($search) {
@@ -243,10 +246,14 @@ class JSONRenderer
             array_push($entries, self::getContentArray($entry));
         }
         if (!is_null($currentPage->book)) {
+            // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
+            if ($config['cops_provide_kepub'] == "1" && preg_match("/Kobo/", $request->agent())) {
+                $currentPage->book->updateForKepub = true;
+            }
             $out ["book"] = self::getFullBookContentArray($currentPage->book);
         }
-        $out ["databaseId"] = getURLParam('db', "");
-        $out ["databaseName"] = Base::getDbName();
+        $out ["databaseId"] = $database ?? "";
+        $out ["databaseName"] = Base::getDbName($database);
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
@@ -273,8 +280,8 @@ class JSONRenderer
             $out ["maxPage"] = $currentPage->getMaxPage();
             $out ["currentPage"] = $currentPage->n;
         }
-        if (!is_null(getURLParam("complete")) || $complete) {
-            $out = self::addCompleteArray($out);
+        if (!is_null($request->get("complete")) || $complete) {
+            $out = self::addCompleteArray($out, $request);
         }
 
         $out ["containsBook"] = 0;

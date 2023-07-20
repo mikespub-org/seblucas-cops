@@ -14,20 +14,20 @@ use UnexpectedValueException;
 
 class CustomColumnTypeText extends CustomColumnType
 {
-    protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_TEXT)
+    protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_TEXT, $database = null)
     {
         switch ($datatype) {
             case self::CUSTOM_TYPE_TEXT:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT, $database);
                 return;
             case self::CUSTOM_TYPE_CSV:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_CSV);
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_CSV, $database);
                 return;
             case self::CUSTOM_TYPE_ENUM:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM);
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM, $database);
                 return;
             case self::CUSTOM_TYPE_SERIES:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES);
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES, $database);
                 return;
             default:
                 throw new UnexpectedValueException();
@@ -92,7 +92,7 @@ class CustomColumnTypeText extends CustomColumnType
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
-            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
 
             array_push($entryArray, $entry);
         }

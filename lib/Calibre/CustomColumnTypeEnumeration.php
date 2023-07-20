@@ -13,9 +13,9 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class CustomColumnTypeEnumeration extends CustomColumnType
 {
-    protected function __construct($pcustomId)
+    protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM);
+        parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM, $database);
     }
 
     /**
@@ -57,7 +57,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
 
     public function getCustom($id)
     {
-        $result = $this->getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
+        $result = $this->getDb($this->databaseId)->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
         $result->execute([$id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
@@ -70,13 +70,13 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
-            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
 
             array_push($entryArray, $entry);
         }
@@ -93,7 +93,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }

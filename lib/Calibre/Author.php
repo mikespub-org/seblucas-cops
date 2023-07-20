@@ -50,18 +50,18 @@ class Author extends Base
         return self::PAGE_ID.":letter:".$startingLetter;
     }
 
-    public static function getCount()
+    public static function getCount($database = null)
     {
         // str_format (localize("authors.alphabetical", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
     }
 
-    public static function getAllAuthorsByFirstLetter()
+    public static function getAllAuthorsByFirstLetter($database = null, $numberPerPage = null)
     {
         [, $result] = parent::executeQuery("select {0}
 from authors
 group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", "", [], -1);
+order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", "", [], -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
@@ -70,6 +70,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
                 str_format(localize("authorword", $post->count), $post->count),
                 "text",
                 [ new LinkNavigation("?page=".self::PAGE_LETTER."&id=". rawurlencode($post->title))],
+                $database,
                 "",
                 $post->count
             ));
@@ -77,37 +78,37 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public static function getAuthorsByStartingLetter($letter)
+    public static function getAuthorsByStartingLetter($letter, $database = null)
     {
-        return self::getEntryArray(self::SQL_AUTHORS_BY_FIRST_LETTER, [$letter . "%"]);
+        return self::getEntryArray(self::SQL_AUTHORS_BY_FIRST_LETTER, [$letter . "%"], $database);
     }
 
-    public static function getAuthorsForSearch($query)
+    public static function getAuthorsForSearch($query, $database = null)
     {
-        return self::getEntryArray(self::SQL_AUTHORS_FOR_SEARCH, [$query . "%", $query . "%"]);
+        return self::getEntryArray(self::SQL_AUTHORS_FOR_SEARCH, [$query . "%", $query . "%"], $database);
     }
 
-    public static function getAllAuthors()
+    public static function getAllAuthors($database = null)
     {
-        return self::getEntryArray(self::SQL_ALL_AUTHORS, []);
+        return self::getEntryArray(self::SQL_ALL_AUTHORS, [], $database);
     }
 
-    public static function getEntryArray($query, $params)
+    public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, $params, self::class);
+        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, $params, self::class, $database, $numberPerPage);
     }
 
-    public static function getAuthorById($authorId)
+    public static function getAuthorById($authorId, $database = null)
     {
-        $result = parent::getDb()->prepare('select ' . self::SQL_COLUMNS . ' from authors where id = ?');
+        $result = parent::getDb($database)->prepare('select ' . self::SQL_COLUMNS . ' from authors where id = ?');
         $result->execute([$authorId]);
         $post = $result->fetchObject();
         return new Author($post);
     }
 
-    public static function getAuthorByBookId($bookId)
+    public static function getAuthorByBookId($bookId, $database = null)
     {
-        $result = parent::getDb()->prepare('select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
+        $result = parent::getDb($database)->prepare('select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
 where author = authors.id
 and book = ? order by books_authors_link.id');
         $result->execute([$bookId]);

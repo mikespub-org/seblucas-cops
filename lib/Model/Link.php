@@ -8,9 +8,7 @@
 
 namespace SebLucas\Cops\Model;
 
-use SebLucas\Cops\Config;
-
-use function SebLucas\Cops\Request\getURLParam;
+use SebLucas\Cops\Input\Config;
 
 class Link
 {
@@ -51,7 +49,6 @@ class Link
 
     public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
     {
-        $database ??= getURLParam('db');
         if (!empty($database)) {
             $params ??= [];
             $params['db'] = $database;

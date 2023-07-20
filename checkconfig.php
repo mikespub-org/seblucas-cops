@@ -10,17 +10,15 @@
  */
 
 use SebLucas\Cops\Calibre\Base;
-
-use function SebLucas\Cops\Request\getCurrentCss;
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\getUrlWithVersion;
-use function SebLucas\Cops\Request\useServerSideRendering;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\Format;
 
 require_once dirname(__FILE__) . '/config.php';
 /** @var array $config */
 
-$err   = getURLParam('err', -1);
-$full  = getURLParam('full');
+$request = new Request();
+$err   = $request->get('err', -1);
+$full  = $request->get('full');
 $error = null;
 switch ($err) {
     case 1:
@@ -33,7 +31,7 @@ switch ($err) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>COPS Configuration Check</title>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss()) ?>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<?php echo Format::addVersion($request->style()) ?>" media="screen" />
 </head>
 <body>
 <div class="container">
@@ -158,7 +156,7 @@ if (class_exists('Normalizer', $autoload = false)) {
             <h2>Check if the rendering will be done on client side or server side</h2>
             <h4>
             <?php
-if (useServerSideRendering()) {
+if ($request->render()) {
     echo 'Server side rendering';
 } else {
     echo 'Client side rendering';

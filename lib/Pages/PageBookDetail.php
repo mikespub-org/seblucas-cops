@@ -14,7 +14,7 @@ class PageBookDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->book = Book::getBookById($this->idGet);
+        $this->book = Book::getBookById($this->idGet, $this->getDatabaseId());
         $this->title = $this->book->title;
     }
 }

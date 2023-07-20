@@ -10,16 +10,11 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Model\Entry;
 
-use function SebLucas\Cops\Request\useServerSideRendering;
-
-use function SebLucas\Cops\Request\getCurrentOption;
-use function SebLucas\Cops\Request\getCurrentTemplate;
-
 class PageCustomize extends Page
 {
     private function isChecked($key, $testedValue = 1)
     {
-        $value = getCurrentOption($key);
+        $value = $this->request->option($key);
         if (is_array($value)) {
             if (in_array($testedValue, $value)) {
                 return "checked='checked'";
@@ -34,7 +29,7 @@ class PageCustomize extends Page
 
     private function isSelected($key, $value)
     {
-        if (getCurrentOption($key) == $value) {
+        if ($this->request->option($key) == $value) {
             return "selected='selected'";
         }
         return "";
@@ -54,7 +49,7 @@ class PageCustomize extends Page
     private function getStyleList()
     {
         $result = [];
-        foreach (glob("templates/" . getCurrentTemplate() . "/styles/style-*.css") as $filename) {
+        foreach (glob("templates/" . $this->request->template() . "/styles/style-*.css") as $filename) {
             if (preg_match('/styles\/style-(.*?)\.css/', $filename, $m)) {
                 array_push($result, $m [1]);
             }
@@ -74,8 +69,9 @@ class PageCustomize extends Page
                                    PageQueryResult::SCOPE_RATING,
                                    "language"];
 
+        $database = $this->getDatabaseId();
         $content = "";
-        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent())) {
             $content .= "<select id='template' onchange='updateCookie (this); window.location=$(\".headleft\").attr(\"href\");'>";
 
             foreach ($this-> getTemplateList() as $filename) {
@@ -92,11 +88,12 @@ class PageCustomize extends Page
             "",
             $content,
             "text",
-            []
+            [],
+            $database
         ));
 
         $content = "";
-        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent())) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
             foreach ($this-> getStyleList() as $filename) {
                 $content .= "<option value='{$filename}' " . $this->isSelected("style", $filename) . ">{$filename}</option>";
@@ -112,33 +109,37 @@ class PageCustomize extends Page
             "",
             $content,
             "text",
-            []
+            [],
+            $database
         ));
-        if (!useServerSideRendering()) {
+        if (!$this->request->render()) {
             $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $this->isChecked("use_fancyapps") . ' />';
             array_push($this->entryArray, new Entry(
                 localize("customize.fancybox"),
                 "",
                 $content,
                 "text",
-                []
+                [],
+                $database
             ));
         }
-        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
+        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . $this->getNumberPerPage() . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
         array_push($this->entryArray, new Entry(
             localize("customize.paging"),
             "",
             $content,
             "text",
-            []
+            [],
+            $database
         ));
-        $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . getCurrentOption("email") . '" />';
+        $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . $this->request->option("email") . '" />';
         array_push($this->entryArray, new Entry(
             localize("customize.email"),
             "",
             $content,
             "text",
-            []
+            [],
+            $database
         ));
         $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $this->isChecked("html_tag_filter") . ' />';
         array_push($this->entryArray, new Entry(
@@ -146,7 +147,8 @@ class PageCustomize extends Page
             "",
             $content,
             "text",
-            []
+            [],
+            $database
         ));
         $content = "";
         foreach ($ignoredBaseArray as $key) {
@@ -159,7 +161,8 @@ class PageCustomize extends Page
             "",
             $content,
             "text",
-            []
+            [],
+            $database
         ));
     }
 }

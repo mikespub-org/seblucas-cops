@@ -12,10 +12,10 @@ use SebLucas\Cops\Output\Format;
 
 class LinkFacet extends Link
 {
-    public function __construct($phref, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false)
+    public function __construct($phref, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false, $database = null)
     {
         parent::__construct($phref, Link::OPDS_PAGING_TYPE, "http://opds-spec.org/facet", $ptitle, $pfacetGroup, $pactiveFacet);
-        $this->href = Format::addDatabaseParam($this->href);
+        $this->href = Format::addDatabaseParam($this->href, $database);
         $this->href = parent::getScriptName() . $this->href;
     }
 }

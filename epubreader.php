@@ -6,20 +6,19 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\EPubReader;
-
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\notFound;
 
 require_once dirname(__FILE__) . '/config.php';
 /** @var array $config */
 
-$idData = (int) getURLParam('data', null);
+$request = new Request();
+$idData = (int) $request->get('data', null);
 if (empty($idData)) {
-    notFound();
+    $request->notFound();
     exit;
 }
 
 header('Content-Type: text/html;charset=utf-8');
 
-echo EPubReader::getReader($idData);
+echo EPubReader::getReader($idData, $request);

@@ -8,7 +8,8 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkFacet;
@@ -17,14 +18,13 @@ use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 
-use function SebLucas\Cops\Request\getQueryString;
-use function SebLucas\Cops\Request\getURLParam;
-
 class OPDSRenderer
 {
     public static $endpoint = Config::ENDPOINT["feed"];
     private $xmlStream = null;
     private $updated = null;
+    /** @var Request */
+    protected $request;
 
     private function getUpdatedTime()
     {
@@ -44,9 +44,15 @@ class OPDSRenderer
         return $this->xmlStream;
     }
 
-    public function getOpenSearch()
+    /**
+     * Summary of getOpenSearch
+     * @param Request $request
+     * @return string
+     */
+    public function getOpenSearch($request)
     {
         global $config;
+        $database = $request->get('db');
         $xml = new XMLWriter();
         $xml->openMemory();
         $xml->setIndent(true);
@@ -74,7 +80,7 @@ class OPDSRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $urlparam = "?query={searchTerms}";
-        $urlparam = Format::addDatabaseParam($urlparam);
+        $urlparam = Format::addDatabaseParam($urlparam, $database);
         $urlparam = str_replace("%7B", "{", $urlparam);
         $urlparam = str_replace("%7D", "}", $urlparam);
         $xml->writeAttribute("template", $config['cops_full_url'] . self::$endpoint . $urlparam);
@@ -88,9 +94,10 @@ class OPDSRenderer
         return $xml->outputMemory(true);
     }
 
-    private function startXmlDocument($page)
+    private function startXmlDocument($page, $request)
     {
         global $config;
+        $database = $request->get('db');
         self::getXmlStream()->startDocument('1.0', 'UTF-8');
         self::getXmlStream()->startElement("feed");
         self::getXmlStream()->writeAttribute("xmlns", "http://www.w3.org/2005/Atom");
@@ -109,8 +116,8 @@ class OPDSRenderer
         self::getXmlStream()->startElement("id");
         if ($page->idPage) {
             $idPage = $page->idPage;
-            if (!is_null(getURLParam('db'))) {
-                $idPage = str_replace("cops:", "cops:" . getURLParam('db') . ":", $idPage);
+            if (!is_null($request->get('db'))) {
+                $idPage = str_replace("cops:", "cops:" . $request->get('db') . ":", $idPage);
             }
             self::getXmlStream()->text($idPage);
         } else {
@@ -136,11 +143,11 @@ class OPDSRenderer
         self::getXmlStream()->endElement();
         $link = new LinkNavigation("", "start", "Home");
         self::renderLink($link);
-        $link = new LinkNavigation("?" . getQueryString(), "self");
+        $link = new LinkNavigation("?" . $request->query(), "self");
         self::renderLink($link);
         $urlparam = "?";
-        $urlparam = Format::addDatabaseParam($urlparam);
-        if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
+        $urlparam = Format::addDatabaseParam($urlparam, $database);
+        if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             $urlparam = Format::addURLParam($urlparam, "page", Page::OPENSEARCH);
             $link = new Link(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
@@ -153,9 +160,9 @@ class OPDSRenderer
         }
         self::renderLink($link);
         if ($page->containsBook() && !is_null($config['cops_books_filter']) && count($config['cops_books_filter']) > 0) {
-            $Urlfilter = getURLParam("tag", "");
+            $Urlfilter = $request->get("tag", "");
             foreach ($config['cops_books_filter'] as $lib => $filter) {
-                $link = new LinkFacet("?" . Format::addURLParam(getQueryString(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter);
+                $link = new LinkFacet("?" . Format::addURLParam($request->query(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter, $database);
                 self::renderLink($link);
             }
         }
@@ -260,10 +267,16 @@ class OPDSRenderer
         }
     }
 
-    public function render($page)
+    /**
+     * Summary of render
+     * @param mixed $page
+     * @param Request $request
+     * @return string
+     */
+    public function render($page, $request)
     {
         global $config;
-        self::startXmlDocument($page);
+        self::startXmlDocument($page, $request);
         if ($page->isPaginated()) {
             self::getXmlStream()->startElement("opensearch:totalResults");
             self::getXmlStream()->text($page->totalNumber);

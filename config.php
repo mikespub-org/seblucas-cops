@@ -13,7 +13,7 @@ if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !==
 }
 /** @var array $config */
 
-use function SebLucas\Cops\Request\verifyLogin;
+use SebLucas\Cops\Input\Request;
 
 $remote_user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
 // Clean username, only allow a-z, A-Z, 0-9, -_ chars
@@ -23,7 +23,7 @@ if (file_exists(dirname(__FILE__) . '/' . $user_config_file) && (php_sapi_name()
     require dirname(__FILE__) . '/' . $user_config_file;
 }
 require_once dirname(__FILE__) . '/base.php';
-if (!verifyLogin()) {
+if (!Request::verifyLogin()) {
     header('WWW-Authenticate: Basic realm="COPS Authentication"');
     header('HTTP/1.0 401 Unauthorized');
     echo 'This site is password protected';

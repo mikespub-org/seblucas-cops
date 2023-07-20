@@ -12,10 +12,10 @@ use SebLucas\Cops\Output\Format;
 
 class LinkNavigation extends Link
 {
-    public function __construct($phref, $prel = null, $ptitle = null)
+    public function __construct($phref, $prel = null, $ptitle = null, $database = null)
     {
         parent::__construct($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        $this->href = Format::addDatabaseParam($this->href);
+        $this->href = Format::addDatabaseParam($this->href, $database);
         if (!preg_match("#^\?(.*)#", $this->href) && !empty($this->href)) {
             $this->href = "?" . $this->href;
         }

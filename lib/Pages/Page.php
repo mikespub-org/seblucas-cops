@@ -17,12 +17,10 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
-
-use function SebLucas\Cops\Request\getCurrentOption;
-use function SebLucas\Cops\Request\getQueryString;
 
 class Page
 {
@@ -77,71 +75,110 @@ class Page
     /** @var Entry[] */
     public $entryArray = [];
 
-    public static function getPage($pageId, $id, $query, $n)
+    /** @var Request */
+    protected $request = null;
+    protected $numberPerPage = -1;
+    protected $ignoredCategories = [];
+    protected $databaseId = null;
+
+    public static function getPageForRequest($request)
+    {
+        $page = $request->get("page", Page::INDEX);
+        $query = $request->get("query");
+        $id = $request->get("id");
+        $n = $request->get("n", "1");
+        return self::getPage($page, $id, $query, $n);
+    }
+
+    public static function getPage($pageId, $id, $query, $n, $request = null)
     {
         switch ($pageId) {
             case Page::ALL_AUTHORS :
-                return new PageAllAuthors($id, $query, $n);
+                return new PageAllAuthors($id, $query, $n, $request);
             case Page::AUTHORS_FIRST_LETTER :
-                return new PageAllAuthorsLetter($id, $query, $n);
+                return new PageAllAuthorsLetter($id, $query, $n, $request);
             case Page::AUTHOR_DETAIL :
-                return new PageAuthorDetail($id, $query, $n);
+                return new PageAuthorDetail($id, $query, $n, $request);
             case Page::ALL_TAGS :
-                return new PageAllTags($id, $query, $n);
+                return new PageAllTags($id, $query, $n, $request);
             case Page::TAG_DETAIL :
-                return new PageTagDetail($id, $query, $n);
+                return new PageTagDetail($id, $query, $n, $request);
             case Page::ALL_LANGUAGES :
-                return new PageAllLanguages($id, $query, $n);
+                return new PageAllLanguages($id, $query, $n, $request);
             case Page::LANGUAGE_DETAIL :
-                return new PageLanguageDetail($id, $query, $n);
+                return new PageLanguageDetail($id, $query, $n, $request);
             case Page::ALL_CUSTOMS :
-                return new PageAllCustoms($id, $query, $n);
+                return new PageAllCustoms($id, $query, $n, $request);
             case Page::CUSTOM_DETAIL :
-                return new PageCustomDetail($id, $query, $n);
+                return new PageCustomDetail($id, $query, $n, $request);
             case Page::ALL_RATINGS :
-                return new PageAllRating($id, $query, $n);
+                return new PageAllRating($id, $query, $n, $request);
             case Page::RATING_DETAIL :
-                return new PageRatingDetail($id, $query, $n);
+                return new PageRatingDetail($id, $query, $n, $request);
             case Page::ALL_SERIES :
-                return new PageAllSeries($id, $query, $n);
+                return new PageAllSeries($id, $query, $n, $request);
             case Page::ALL_BOOKS :
-                return new PageAllBooks($id, $query, $n);
+                return new PageAllBooks($id, $query, $n, $request);
             case Page::ALL_BOOKS_LETTER:
-                return new PageAllBooksLetter($id, $query, $n);
+                return new PageAllBooksLetter($id, $query, $n, $request);
             case Page::ALL_RECENT_BOOKS :
-                return new PageRecentBooks($id, $query, $n);
+                return new PageRecentBooks($id, $query, $n, $request);
             case Page::SERIE_DETAIL :
-                return new PageSerieDetail($id, $query, $n);
+                return new PageSerieDetail($id, $query, $n, $request);
             case Page::OPENSEARCH_QUERY :
-                return new PageQueryResult($id, $query, $n);
+                return new PageQueryResult($id, $query, $n, $request);
             case Page::BOOK_DETAIL :
-                return new PageBookDetail($id, $query, $n);
+                return new PageBookDetail($id, $query, $n, $request);
             case Page::ALL_PUBLISHERS:
-                return new PageAllPublishers($id, $query, $n);
+                return new PageAllPublishers($id, $query, $n, $request);
             case Page::PUBLISHER_DETAIL :
-                return new PagePublisherDetail($id, $query, $n);
+                return new PagePublisherDetail($id, $query, $n, $request);
             case Page::ABOUT :
-                return new PageAbout($id, $query, $n);
+                return new PageAbout($id, $query, $n, $request);
             case Page::CUSTOMIZE :
-                return new PageCustomize($id, $query, $n);
+                return new PageCustomize($id, $query, $n, $request);
             default:
-                $page = new Page($id, $query, $n);
+                $page = new Page($id, $query, $n, $request);
                 $page->idPage = "cops:catalog";
                 return $page;
         }
     }
 
-    public function __construct($pid, $pquery, $pn)
+    public function __construct($pid, $pquery, $pn, $request = null)
     {
         global $config;
 
         $this->idGet = $pid;
         $this->query = $pquery;
         $this->n = $pn;
+        $this->setRequest($request ?? new Request());
         $this->favicon = $config['cops_icon'];
         $this->authorName = $config['cops_author_name'] ?: 'Sébastien Lucas';
         $this->authorUri = $config['cops_author_uri'] ?: 'http://blog.slucas.fr';
         $this->authorEmail = $config['cops_author_email'] ?: 'sebastien@slucas.fr';
+    }
+
+    public function setRequest($request)
+    {
+        $this->request = $request;
+        $this->numberPerPage = $this->request->option("max_item_per_page");
+        $this->ignoredCategories = $this->request->option('ignored_categories');
+        $this->databaseId = $this->request->get('db');
+    }
+
+    public function getNumberPerPage()
+    {
+        return $this->numberPerPage;
+    }
+
+    public function getIgnoredCategories()
+    {
+        return $this->ignoredCategories;
+    }
+
+    public function getDatabaseId()
+    {
+        return $this->databaseId;
     }
 
     public function InitializeContent()
@@ -149,7 +186,7 @@ class Page
         global $config;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
-        if (Base::noDatabaseSelected()) {
+        if (Base::noDatabaseSelected($this->databaseId)) {
             $i = 0;
             foreach (Base::getDbNameList() as $key) {
                 $nBooks = Book::getBookCount($i);
@@ -159,6 +196,7 @@ class Page
                     str_format(localize("bookword", $nBooks), $nBooks),
                     "text",
                     [ new LinkNavigation("?db={$i}")],
+                    null,
                     "",
                     $nBooks
                 ));
@@ -166,34 +204,34 @@ class Page
                 Base::clearDb();
             }
         } else {
-            if (!in_array(PageQueryResult::SCOPE_AUTHOR, getCurrentOption('ignored_categories'))) {
+            if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
                 array_push($this->entryArray, Author::getCount());
             }
-            if (!in_array(PageQueryResult::SCOPE_SERIES, getCurrentOption('ignored_categories'))) {
+            if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
                 $series = Serie::getCount();
                 if (!is_null($series)) {
                     array_push($this->entryArray, $series);
                 }
             }
-            if (!in_array(PageQueryResult::SCOPE_PUBLISHER, getCurrentOption('ignored_categories'))) {
+            if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
                 $publisher = Publisher::getCount();
                 if (!is_null($publisher)) {
                     array_push($this->entryArray, $publisher);
                 }
             }
-            if (!in_array(PageQueryResult::SCOPE_TAG, getCurrentOption('ignored_categories'))) {
+            if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
                 $tags = Tag::getCount();
                 if (!is_null($tags)) {
                     array_push($this->entryArray, $tags);
                 }
             }
-            if (!in_array(PageQueryResult::SCOPE_RATING, getCurrentOption('ignored_categories'))) {
+            if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
                 $rating = Rating::getCount();
                 if (!is_null($rating)) {
                     array_push($this->entryArray, $rating);
                 }
             }
-            if (!in_array("language", getCurrentOption('ignored_categories'))) {
+            if (!in_array("language", $this->ignoredCategories)) {
                 $languages = Language::getCount();
                 if (!is_null($languages)) {
                     array_push($this->entryArray, $languages);
@@ -201,30 +239,30 @@ class Page
             }
             $config['cops_calibre_custom_column'] = CustomColumnType::checkCustomColumnList($config['cops_calibre_custom_column']);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
-                $customColumn = CustomColumnType::createByLookup($lookup);
+                $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
                 if (!is_null($customColumn) && $customColumn->isSearchable()) {
                     array_push($this->entryArray, $customColumn->getCount());
                 }
             }
-            $this->entryArray = array_merge($this->entryArray, Book::getCount());
+            $this->entryArray = array_merge($this->entryArray, Book::getCount($this->getDatabaseId()));
 
             if (Base::isMultipleDatabaseEnabled()) {
-                $this->title =  Base::getDbName();
+                $this->title =  Base::getDbName($this->getDatabaseId());
             }
         }
     }
 
     public function isPaginated()
     {
-        return (getCurrentOption("max_item_per_page") != -1 &&
+        return ($this->getNumberPerPage() != -1 &&
                 $this->totalNumber != -1 &&
-                $this->totalNumber > getCurrentOption("max_item_per_page"));
+                $this->totalNumber > $this->getNumberPerPage());
     }
 
     public function getNextLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . getQueryString());
-        if (($this->n) * getCurrentOption("max_item_per_page") < $this->totalNumber) {
+        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . $this->request->query());
+        if (($this->n) * $this->getNumberPerPage() < $this->totalNumber) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
         }
         return null;
@@ -232,7 +270,7 @@ class Page
 
     public function getPrevLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . getQueryString());
+        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . $this->request->query());
         if ($this->n > 1) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n - 1), "previous", localize("paging.previous.alternate"));
         }
@@ -241,7 +279,7 @@ class Page
 
     public function getMaxPage()
     {
-        return ceil($this->totalNumber / getCurrentOption("max_item_per_page"));
+        return ceil($this->totalNumber / $this->numberPerPage);
     }
 
     public function containsBook()

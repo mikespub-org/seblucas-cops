@@ -5,20 +5,20 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
-
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\notFound;
 
 require_once dirname(__FILE__) . '/config.php';
 /** @var array $config */
 
 global $config;
 
+$request = new Request();
+
 if ($config['cops_fetch_protect'] == '1') {
     session_start();
     if (!isset($_SESSION['connected'])) {
-        notFound();
+        $request->notFound();
         return;
     }
 }
@@ -31,19 +31,20 @@ $expires = 60*60*24*14;
 header('Pragma: public');
 header('Cache-Control: max-age=' . $expires);
 header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
-$bookId   = getURLParam('id', null);
-$type     = getURLParam('type', 'jpg');
-$idData   = getURLParam('data', null);
-$viewOnly = getURLParam('view', false);
+$bookId   = $request->get('id', null);
+$type     = $request->get('type', 'jpg');
+$idData   = $request->get('data', null);
+$viewOnly = $request->get('view', false);
+$database = $request->get('db');
 
 if (is_null($bookId)) {
-    $book = Book::getBookByDataId($idData);
+    $book = Book::getBookByDataId($idData, $database);
 } else {
-    $book = Book::getBookById($bookId);
+    $book = Book::getBookById($bookId, $database);
 }
 
 if (!$book) {
-    notFound();
+    $request->notFound();
     return;
 }
 
@@ -55,7 +56,7 @@ if ($book && ($type == 'jpg' || $type == 'png' || empty($config['calibre_interna
         $file = $book->getFilePath($type, $idData);
     }
     if (is_null($file) || !file_exists($file)) {
-        notFound();
+        $request->notFound();
         return;
     }
 }
@@ -74,14 +75,14 @@ switch ($type) {
         if (isset($config['cops_thumbnail_cache_directory']) && $config['cops_thumbnail_cache_directory'] !== '') {
             $thumbnailCacheFullpath = $config['cops_thumbnail_cache_directory'];
             //if multiple databases, add a subfolder with the database ID
-            $thumbnailCacheFullpath .= !is_null(getURLParam('db')) ? 'db-' . getURLParam('db') . DIRECTORY_SEPARATOR : '';
+            $thumbnailCacheFullpath .= !is_null($database) ? 'db-' . $database . DIRECTORY_SEPARATOR : '';
             //when there are lots of thumbnails, it's better to save files in subfolders, so if the book's uuid is
             //"01234567-89ab-cdef-0123-456789abcdef", we will save the thumbnail in .../0/12/34567-89ab-cdef-0123-456789abcdef-...
             $thumbnailCacheFullpath .= substr($book->uuid, 0, 1) . DIRECTORY_SEPARATOR . substr($book->uuid, 1, 2) . DIRECTORY_SEPARATOR;
             //check if cache folder exists or create it
             if (file_exists($thumbnailCacheFullpath) || mkdir($thumbnailCacheFullpath, 0700, true)) {
                 //we name the thumbnail from the book's uuid and it's dimensions (width and/or height)
-                $thumbnailCacheName = substr($book->uuid, 3) . '-' . getURLParam('width') . 'x' . getURLParam('height') . '.' . $type;
+                $thumbnailCacheName = substr($book->uuid, 3) . '-' . $request->get('width') . 'x' . $request->get('height') . '.' . $type;
                 $thumbnailCacheFullpath = $thumbnailCacheFullpath . $thumbnailCacheName;
             } else {
                 //error creating the folder, so we don't cache
@@ -95,8 +96,8 @@ switch ($type) {
             return;
         }
 
-        $width = getURLParam('width');
-        $height = getURLParam('height');
+        $width = $request->get('width');
+        $height = $request->get('height');
         if ($book->getThumbnail($width, $height, $thumbnailCacheFullpath, $type)) {
             //if we don't cache the thumbnail, imagejpeg() in $book->getThumbnail() already return the image data
             if ($thumbnailCacheFullpath === null) {
@@ -118,6 +119,9 @@ switch ($type) {
 // absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
 $file = $book->getFilePath($type, $idData, false);
 if (!$viewOnly && $type == 'epub' && $config['cops_update_epub-metadata']) {
+    if ($config['cops_provide_kepub'] == '1'  && preg_match('/Kobo/', $request->agent())) {
+        $book->updateForKepub = true;
+    }
     $book->getUpdatedEpub($idData);
     return;
 }

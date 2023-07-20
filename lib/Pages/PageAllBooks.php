@@ -10,17 +10,15 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 
-use function SebLucas\Cops\Request\getCurrentOption;
-
 class PageAllBooks extends Page
 {
     public function InitializeContent()
     {
         $this->title = localize("allbooks.title");
-        if (getCurrentOption("titles_split_first_letter") == 1) {
-            $this->entryArray = Book::getAllBooks();
+        if ($this->request->option("titles_split_first_letter") == 1) {
+            $this->entryArray = Book::getAllBooks($this->getDatabaseId(), $this->request);
         } else {
-            [$this->entryArray, $this->totalNumber] = Book::getBooks($this->n);
+            [$this->entryArray, $this->totalNumber] = Book::getBooks($this->n, $this->getDatabaseId(), $this->getNumberPerPage());
         }
         $this->idPage = Book::PAGE_ID;
     }

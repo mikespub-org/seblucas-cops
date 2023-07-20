@@ -6,13 +6,10 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Template\doT;
-
-use function SebLucas\Cops\Request\getCurrentCss;
-use function SebLucas\Cops\Request\getQueryString;
-use function SebLucas\Cops\Request\useServerSideRendering;
 
 class ConfigTest extends TestCase
 {
@@ -131,6 +128,7 @@ class ConfigTest extends TestCase
         $style = 'bootstrap';
 
         $config["cops_template"] = $style;
+        $request = new Request();
 
         $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $config["cops_template"] . '/file.html');
         $template = new doT();
@@ -140,10 +138,10 @@ class ConfigTest extends TestCase
             "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
             "customHeader"          => "",
             "template"              => $config["cops_template"],
-            "server_side_rendering" => useServerSideRendering(),
-            "current_css"           => getCurrentCss(),
+            "server_side_rendering" => $request->render(),
+            "current_css"           => $request->style(),
             "favico"                => $config['cops_icon'],
-            "getjson_url"           => JSONRenderer::getCurrentUrl(getQueryString())];
+            "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
 
         $head = $tpl($data);
 

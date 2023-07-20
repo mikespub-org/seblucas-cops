@@ -10,11 +10,10 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\CustomColumnType;
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 use Exception;
-
-use function SebLucas\Cops\Request\setURLParam;
 
 /**
  * Basic REST API routing to JSON Renderer
@@ -25,7 +24,7 @@ class RestApi
 
     /**
      * Summary of routes
-     * @var array
+     * @var array<string, string>
      */
     public static $routes = [
         Page::INDEX => "/index",
@@ -56,7 +55,7 @@ class RestApi
 
     /**
      * Summary of extra
-     * @var array
+     * @var array<string, array>
      */
     public static $extra = [
         "/custom" => [self::class, 'getCustomColumns'],
@@ -67,9 +66,10 @@ class RestApi
 
     /**
      * Summary of getPathInfo
+     * @param Request $request
      * @return string
      */
-    public static function getPathInfo()
+    public static function getPathInfo($request)
     {
         return $_SERVER["PATH_INFO"] ?? "/index";
     }
@@ -77,16 +77,17 @@ class RestApi
     /**
      * Summary of matchPathInfo
      * @param string $path
+     * @param Request $request
      * @throws Exception if the $path is not found in $routes or $extra
      * @return array|void
      */
-    public static function matchPathInfo($path)
+    public static function matchPathInfo($path, $request)
     {
         $params = [];
 
         // handle extra functions
         if (array_key_exists($path, self::$extra)) {
-            echo json_encode(call_user_func(self::$extra[$path]), JSON_UNESCAPED_SLASHES);
+            echo json_encode(call_user_func(self::$extra[$path], $request), JSON_UNESCAPED_SLASHES);
             exit;
         }
 
@@ -129,29 +130,33 @@ class RestApi
     /**
      * Summary of setParams
      * @param mixed $params
-     * @return void
+     * @param Request $request
+     * @return Request
      */
-    public static function setParams($params)
+    public static function setParams($params, $request)
     {
         foreach ($params as $param => $value) {
-            setURLParam($param, $value);
+            $request->set($param, $value);
         }
+        return $request;
     }
 
     /**
      * Summary of getJson
-     * @return mixed
+     * @param Request $request
+     * @return array
      */
-    public static function getJson()
+    public static function getJson($request)
     {
-        return JSONRenderer::getJson();
+        return JSONRenderer::getJson($request);
     }
 
     /**
      * Summary of getScriptName
+     * @param Request $request
      * @return string
      */
-    public static function getScriptName()
+    public static function getScriptName($request)
     {
         $script = explode("/", $_SERVER["SCRIPT_NAME"] ?? "/" . self::$endpoint);
         $link = array_pop($script);
@@ -161,11 +166,12 @@ class RestApi
     /**
      * Summary of replaceLinks
      * @param string $output
+     * @param Request $request
      * @return string
      */
-    public static function replaceLinks($output)
+    public static function replaceLinks($output, $request)
     {
-        $link = self::getScriptName();
+        $link = self::getScriptName($request);
         $endpoint = $link;
 
         $search = [];
@@ -201,30 +207,32 @@ class RestApi
 
     /**
      * Summary of getOutput
+     * @param Request $request
      * @param mixed $result
      * @return string
      */
-    public static function getOutput($result = null)
+    public static function getOutput($request, $result = null)
     {
         if (!isset($result)) {
-            $path = self::getPathInfo();
-            $params = self::matchPathInfo($path);
-            self::setParams($params);
-            $result = self::getJson();
+            $path = self::getPathInfo($request);
+            $params = self::matchPathInfo($path, $request);
+            $request = self::setParams($params, $request);
+            $result = self::getJson($request);
         }
         $output = json_encode($result);
 
-        return self::replaceLinks($output);
+        return self::replaceLinks($output, $request);
     }
 
     /**
      * Summary of getCustomColumns
+     * @param Request $request
      * @return array
      */
-    public static function getCustomColumns()
+    public static function getCustomColumns($request)
     {
         $columns = CustomColumnType::getAllCustomColumns();
-        $endpoint = self::getScriptName();
+        $endpoint = self::getScriptName($request);
         $result = ["title" => "Custom Columns", "entries" => []];
         foreach ($columns as $title => $column) {
             $column["navlink"] = $endpoint . "/custom/" . $column["id"];
@@ -235,9 +243,10 @@ class RestApi
 
     /**
      * Summary of getDatabases
+     * @param Request $request
      * @return array
      */
-    public static function getDatabases()
+    public static function getDatabases($request)
     {
         global $config;
 
@@ -252,9 +261,10 @@ class RestApi
 
     /**
      * Summary of getOpenApi
+     * @param Request $request
      * @return array
      */
-    public static function getOpenApi()
+    public static function getOpenApi($request)
     {
         $result = ["openapi" => "3.1.0", "info" => ["title" => "COPS REST API", "version" => "1.0.0"], "paths" => []];
         return $result;
@@ -262,9 +272,10 @@ class RestApi
 
     /**
      * Summary of getRoutes
+     * @param Request $request
      * @return array
      */
-    public static function getRoutes()
+    public static function getRoutes($request)
     {
         $result = ["title" => "Routes", "entries" => []];
         foreach (self::$routes as $page => $route) {

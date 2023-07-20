@@ -13,9 +13,9 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class CustomColumnTypeFloat extends CustomColumnType
 {
-    protected function __construct($pcustomId)
+    protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT);
+        parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT, $database);
     }
 
     /**
@@ -44,13 +44,13 @@ class CustomColumnTypeFloat extends CustomColumnType
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
-            $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+            $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
 
             array_push($entryArray, $entry);
         }
@@ -71,7 +71,7 @@ class CustomColumnTypeFloat extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }

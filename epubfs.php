@@ -8,11 +8,9 @@
 
 namespace SebLucas\Cops\Output\EPubReader;
 
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\EPubReader;
 use Exception;
-
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\notFound;
 
 require_once dirname(__FILE__) . '/config.php';
 
@@ -20,19 +18,20 @@ if (php_sapi_name() === 'cli') {
     return;
 }
 
-$idData = (int) getURLParam('data', null);
+$request = new Request();
+$idData = (int) $request->get('data', null);
 if (empty($idData)) {
-    notFound();
+    $request->notFound();
     return;
 }
-$component = getURLParam('comp', null);
+$component = $request->get('comp', null);
 if (empty($component)) {
-    notFound();
+    $request->notFound();
     return;
 }
 
 try {
-    $data = EPubReader::getContent($idData, $component);
+    $data = EPubReader::getContent($idData, $component, $request);
 
     $expires = 60*60*24*14;
     header('Pragma: public');
@@ -42,5 +41,5 @@ try {
     echo $data;
 } catch (Exception $e) {
     error_log($e);
-    notFound();
+    $request->notFound();
 }

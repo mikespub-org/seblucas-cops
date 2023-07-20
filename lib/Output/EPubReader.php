@@ -10,11 +10,11 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\Template\doT;
-
-use function SebLucas\Cops\Request\getURLParam;
 
 /**
  * EPub Reader based on Monocle
@@ -24,6 +24,13 @@ class EPubReader
     public static $endpoint = Config::ENDPOINT["epubfs"];
     public static $template = "templates/epubreader.html";
 
+    /**
+     * Summary of getComponentContent
+     * @param EPub $book
+     * @param string $component
+     * @param string $add
+     * @return string|null
+     */
     public static function getComponentContent($book, $component, $add)
     {
         $data = $book->component($component);
@@ -67,15 +74,15 @@ class EPubReader
      * Summary of getContent
      * @param integer $idData
      * @param string $component
+     * @param Request $request
      * @return string
      */
-    public static function getContent($idData, $component)
+    public static function getContent($idData, $component, $request)
     {
+        /** @var Book */
         $book = Book::getBookByDataId($idData);
         $add = 'data=' . $idData;
-        if (!is_null(getURLParam('db'))) {
-            $add .= '&db=' . getURLParam('db');
-        }
+        $add = Format::addDatabaseParam($add, $book->getDatabaseId());
 
         $epub = new EPub($book->getFilePath('EPUB', $idData));
         $epub->initSpineComponent();
@@ -90,15 +97,14 @@ class EPubReader
     /**
      * Summary of getReader
      * @param integer $idData
+     * @param Request $request
      * @return string
      */
-    public static function getReader($idData)
+    public static function getReader($idData, $request)
     {
         $book = Book::getBookByDataId($idData);
         $add = 'data=' . $idData;
-        if (!is_null(getURLParam('db'))) {
-            $add .= '&db=' . getURLParam('db');
-        }
+        $add = Format::addDatabaseParam($add, $book->getDatabaseId());
 
         $epub = new EPub($book->getFilePath('EPUB', $idData));
         $epub->initSpineComponent();

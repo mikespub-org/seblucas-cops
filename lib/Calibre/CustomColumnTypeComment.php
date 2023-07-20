@@ -10,9 +10,9 @@ namespace SebLucas\Cops\Calibre;
 
 class CustomColumnTypeComment extends CustomColumnType
 {
-    protected function __construct($pcustomId)
+    protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT);
+        parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT, $database);
     }
 
     /**
@@ -60,7 +60,7 @@ class CustomColumnTypeComment extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value, $this);
         }

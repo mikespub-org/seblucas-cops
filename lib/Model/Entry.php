@@ -8,10 +8,8 @@
 
 namespace SebLucas\Cops\Model;
 
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
-
-use function SebLucas\Cops\Request\getUrlWithVersion;
-use function SebLucas\Cops\Request\getURLParam;
 
 class Entry
 {
@@ -25,6 +23,7 @@ class Entry
     public $localUpdated;
     public $className;
     private static $updated = null;
+    protected $databaseId;
 
     public static $icons = [
         Page::ALL_AUTHORS_ID             => 'images/author.png',
@@ -39,7 +38,7 @@ class Entry
         Page::ALL_PUBLISHERS_ID          => 'images/publisher.png',
     ];
 
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "", $pcount = 0)
+    public function __construct($ptitle, $pid, $pcontent, $pcontentType = "text", $plinkArray = [], $database = null, $pclass = "", $pcount = 0)
     {
         global $config;
         $this->title = $ptitle;
@@ -53,14 +52,14 @@ class Entry
         if ($config['cops_show_icons'] == 1) {
             foreach (self::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $pid)) {
-                    array_push($this->linkArray, new Link(getUrlWithVersion($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
+                    array_push($this->linkArray, new Link(Format::addVersion($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
                     break;
                 }
             }
         }
 
-        if (!is_null(getURLParam('db'))) {
-            $this->id = str_replace("cops:", "cops:" . getURLParam('db') . ":", $this->id);
+        if (!is_null($database)) {
+            $this->id = str_replace("cops:", "cops:" . $database . ":", $this->id);
         }
     }
 

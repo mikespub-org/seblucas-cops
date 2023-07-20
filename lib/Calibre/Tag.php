@@ -40,15 +40,15 @@ class Tag extends Base
         return self::PAGE_ID.":".$this->id;
     }
 
-    public static function getCount()
+    public static function getCount($database = null)
     {
         // str_format (localize("tags.alphabetical", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
     }
 
-    public static function getTagById($tagId)
+    public static function getTagById($tagId, $database = null)
     {
-        $result = parent::getDb()->prepare('select id, name  from tags where id = ?');
+        $result = parent::getDb($database)->prepare('select id, name  from tags where id = ?');
         $result->execute([$tagId]);
         if ($post = $result->fetchObject()) {
             return new Tag($post);
@@ -56,7 +56,7 @@ class Tag extends Base
         return null;
     }
 
-    public static function getAllTags()
+    public static function getAllTags($database = null, $numberPerPage = null)
     {
         global $config;
 
@@ -66,7 +66,7 @@ class Tag extends Base
             $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
         }
 
-        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, [], self::class);
+        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, [], self::class, $database, $numberPerPage);
     }
 
     public static function getAllTagsByQuery($query, $n, $database = null, $numberPerPage = null)
@@ -82,7 +82,8 @@ class Tag extends Base
                 $tag->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation($tag->getUri())]
+                [ new LinkNavigation($tag->getUri())],
+                $database
             ));
         }
         return [$entryArray, $totalNumber];

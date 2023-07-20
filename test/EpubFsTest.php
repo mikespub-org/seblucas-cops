@@ -10,7 +10,7 @@ require(dirname(__FILE__) . "/../epubfs.php");
 require(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Config;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\EPubMeta\EPub;
 

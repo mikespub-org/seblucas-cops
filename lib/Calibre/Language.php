@@ -47,15 +47,15 @@ class Language extends Base
         return $string;
     }
 
-    public static function getCount()
+    public static function getCount($database = null)
     {
         // str_format (localize("languages.alphabetical", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL);
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
     }
 
-    public static function getLanguageById($languageId)
+    public static function getLanguageById($languageId, $database = null)
     {
-        $result = parent::getDb()->prepare('select id, lang_code  from languages where id = ?');
+        $result = parent::getDb($database)->prepare('select id, lang_code  from languages where id = ?');
         $result->execute([$languageId]);
         if ($post = $result->fetchObject()) {
             return new Language($post->id, Language::getLanguageString($post->lang_code));
@@ -65,9 +65,9 @@ class Language extends Base
 
 
 
-    public static function getAllLanguages()
+    public static function getAllLanguages($database = null)
     {
-        $result = parent::getDb()->query('select ' . self::SQL_COLUMNS . '
+        $result = parent::getDb($database)->query('select ' . self::SQL_COLUMNS . '
 from languages, books_languages_link
 where languages.id = books_languages_link.lang_code
 group by languages.id, books_languages_link.lang_code
@@ -81,6 +81,7 @@ order by languages.lang_code');
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
                 [ new LinkNavigation($language->getUri())],
+                $database,
                 "",
                 $post->count
             ));

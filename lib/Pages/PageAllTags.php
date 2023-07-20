@@ -15,7 +15,7 @@ class PageAllTags extends Page
     public function InitializeContent()
     {
         $this->title = localize("tags.title");
-        $this->entryArray = Tag::getAllTags();
+        $this->entryArray = Tag::getAllTags($this->getDatabaseId());
         $this->idPage = Tag::PAGE_ID;
     }
 }

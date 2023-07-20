@@ -13,9 +13,9 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class CustomColumnTypeRating extends CustomColumnType
 {
-    protected function __construct($pcustomId)
+    protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_RATING);
+        parent::__construct($pcustomId, self::CUSTOM_TYPE_RATING, $database);
     }
 
     /**
@@ -69,7 +69,7 @@ class CustomColumnTypeRating extends CustomColumnType
     {
         $queryFormat = "SELECT coalesce({0}.value, 0) AS value, count(*) AS count FROM books  LEFT JOIN {1} ON  books.id = {1}.book LEFT JOIN {0} ON {0}.id = {1}.value GROUP BY coalesce({0}.value, -1)";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName());
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
 
         $countArray = [0 => 0, 2 => 0, 4 => 0, 6 => 0, 8 => 0, 10 => 0];
         while ($row = $result->fetchObject()) {
@@ -84,7 +84,7 @@ class CustomColumnTypeRating extends CustomColumnType
             $entryid = $this->getEntryId($i * 2);
             $content = str_format(localize("bookword", $count), $count);
             $linkarray = [new LinkNavigation($this->getUri($i * 2))];
-            $entry = new Entry($name, $entryid, $content, $this->datatype, $linkarray, "", $count);
+            $entry = new Entry($name, $entryid, $content, $this->datatype, $linkarray, $this->getDatabaseId(), "", $count);
             array_push($entryArray, $entry);
         }
 
@@ -101,7 +101,7 @@ class CustomColumnTypeRating extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $post->value / 2), $post->value / 2), $this);
         }

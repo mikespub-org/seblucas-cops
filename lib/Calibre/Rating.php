@@ -39,20 +39,20 @@ class Rating extends Base
         return self::PAGE_ID.":".$this->id;
     }
 
-    public static function getCount()
+    public static function getCount($database = null)
     {
         // str_format (localize("ratings", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, "ratings");
+        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
-    public static function getAllRatings()
+    public static function getAllRatings($database = null)
     {
-        return self::getEntryArray(self::SQL_ALL_RATINGS, []);
+        return self::getEntryArray(self::SQL_ALL_RATINGS, [], $database);
     }
 
-    public static function getEntryArray($query, $params)
+    public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)
     {
-        [, $result] = parent::executeQuery($query, self::SQL_COLUMNS, "", $params, -1);
+        [, $result] = parent::executeQuery($query, self::SQL_COLUMNS, "", $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $ratingObj = new Rating($post->id, $post->rating);
@@ -64,6 +64,7 @@ class Rating extends Base
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
                 [ new LinkNavigation($ratingObj->getUri())],
+                $database,
                 "",
                 $post->count
             ));
@@ -71,9 +72,9 @@ class Rating extends Base
         return $entryArray;
     }
 
-    public static function getRatingById($ratingId)
+    public static function getRatingById($ratingId, $database = null)
     {
-        $result = parent::getDb()->prepare('select rating from ratings where id = ?');
+        $result = parent::getDb($database)->prepare('select rating from ratings where id = ?');
         $result->execute([$ratingId]);
         return new Rating($ratingId, $result->fetchColumn());
     }

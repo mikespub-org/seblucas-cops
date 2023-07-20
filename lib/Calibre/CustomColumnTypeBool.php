@@ -20,9 +20,9 @@ class CustomColumnTypeBool extends CustomColumnType
         +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
     ];
 
-    protected function __construct($pcustomId)
+    protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL);
+        parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL, $database);
     }
 
     /**
@@ -60,14 +60,14 @@ class CustomColumnTypeBool extends CustomColumnType
     {
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
-            $entry = new Entry(localize($this->BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+            $entry = new Entry(localize($this->BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
 
             array_push($entryArray, $entry);
         }
@@ -84,7 +84,7 @@ class CustomColumnTypeBool extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->boolvalue, localize($this->BOOLEAN_NAMES[$post->boolvalue]), $this);
         } else {
