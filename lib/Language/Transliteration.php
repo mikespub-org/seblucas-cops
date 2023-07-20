@@ -9,6 +9,8 @@ namespace SebLucas\Cops\Language;
 
 class Transliteration
 {
+    public const BASE_DIR = './resources/transliteration-data';
+
     /**
      * Transliterates UTF-8 encoded text to US-ASCII.
      *
@@ -182,7 +184,7 @@ class Transliteration
         $bank = $ord >> 8;
 
         if (!isset($map[$bank][$langcode])) {
-            $file = './resources/transliteration-data/' . sprintf('x%02x', $bank) . '.php';
+            $file = self::BASE_DIR . '/' . sprintf('x%02x', $bank) . '.php';
             if (file_exists($file)) {
                 $base = [];
                 $variant = [];
