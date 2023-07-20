@@ -25,7 +25,7 @@ class EntryBook extends Entry
      */
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook)
     {
-        parent::__construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
+        parent::__construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook->getDatabaseId());
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
     }

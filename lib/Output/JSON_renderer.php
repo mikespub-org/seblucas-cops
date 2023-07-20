@@ -11,24 +11,17 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
-
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-use function SebLucas\Cops\Request\addURLParameter;
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\useServerSideRendering;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_VERSION;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class JSONRenderer
 {
-    public static $endpoint = COPS_ENDPOINTS["index"];
+    public static $endpoint = Config::ENDPOINT["index"];
 
     /**
      * @param Book $book
@@ -98,7 +91,7 @@ class JSONRenderer
     {
         global $config;
         $out = self::getBookContentArray($book);
-        $database = getURLParam(COPS_DB_PARAM);
+        $database = $book->getDatabaseId();
 
         $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
         $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml();
@@ -116,7 +109,7 @@ class JSONRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = COPS_ENDPOINTS["read"] . "?data={$data->id}&db={$database}";
+                $tab ["readerUrl"] = Config::ENDPOINT["read"] . "?data={$data->id}&db={$database}";
             }
             array_push($out ["datas"], $tab);
         }
@@ -153,12 +146,13 @@ class JSONRenderer
 
     public static function getContentArrayTypeahead($page)
     {
+        /** @var Page $page */
         $out = [];
         foreach ($page->entryArray as $entry) {
             if ($entry instanceof EntryBook) {
                 array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
             } else {
-                if (empty($entry->className) xor Base::noDatabaseSelected()) {
+                if (empty($entry->className) xor Base::noDatabaseSelected($page->getDatabaseId())) {
                     array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
                 } else {
                     array_push($out, ["class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink()]);
@@ -168,12 +162,12 @@ class JSONRenderer
         return $out;
     }
 
-    public static function addCompleteArray($in)
+    public static function addCompleteArray($in, $request)
     {
         global $config;
         $out = $in;
 
-        $out ["c"] = ["version" => COPS_VERSION, "i18n" => [
+        $out ["c"] = ["version" => Config::VERSION, "i18n" => [
                            "coverAlt" => localize("i18n.coversection"),
                            "authorsTitle" => localize("authors.title"),
                            "bookwordTitle" => localize("bookword.title"),
@@ -198,37 +192,48 @@ class JSONRenderer
                            "sortorderDesc" => localize("search.sortorder.desc"),
                            "customizeEmail" => localize("customize.email")],
                        "url" => [
-                           "detailUrl" => COPS_ENDPOINTS["index"] . "?page=13&id={0}&db={1}",
-                           "coverUrl" => COPS_ENDPOINTS["fetch"] . "?id={0}&db={1}",
-                           "thumbnailUrl" => COPS_ENDPOINTS["fetch"] . "?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"],
+                           "detailUrl" => self::$endpoint . "?page=13&id={0}&db={1}",
+                           "coverUrl" => Config::ENDPOINT["fetch"] . "?id={0}&db={1}",
+                           "thumbnailUrl" => Config::ENDPOINT["fetch"] . "?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"],
                        "config" => [
                            "use_fancyapps" => $config ["cops_use_fancyapps"],
                            "max_item_per_page" => $config['cops_max_item_per_page'],
                            "kindleHack"        => "",
-                           "server_side_rendering" => useServerSideRendering(),
+                           "server_side_rendering" => $request->render(),
                            "html_tag_filter" => $config['cops_html_tag_filter']]];
         if ($config['cops_thumbnail_handling'] == "1") {
             $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
         } elseif (!empty($config['cops_thumbnail_handling'])) {
             $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
         }
-        if (preg_match("/./", $_SERVER['HTTP_USER_AGENT'])) {
+        if (preg_match("/./", $request->agent())) {
             $out ["c"]["config"]["kindleHack"] = 'style="text-decoration: none !important;"';
         }
         return $out;
     }
 
-    public static function getJson($complete = false)
+    public static function getCurrentUrl($queryString)
+    {
+        return Config::ENDPOINT["json"] . '?' . Format::addURLParam($queryString, 'complete', 1);
+    }
+
+    /**
+     * Summary of getJson
+     * @param Request $request
+     * @param bool $complete
+     * @return array
+     */
+    public static function getJson($request, $complete = false)
     {
         global $config;
-        $page = getURLParam("page", Page::INDEX);
-        $query = getURLParam("query");
-        $search = getURLParam("search");
-        $qid = getURLParam("id");
-        $n = getURLParam("n", "1");
-        $database = getURLParam(COPS_DB_PARAM);
+        $page = $request->get("page", Page::INDEX);
+        $query = $request->get("query");
+        $search = $request->get("search");
+        $qid = $request->get("id");
+        $n = $request->get("n", "1");
+        $database = $request->get('db');
 
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
 
         if ($search) {
@@ -241,10 +246,14 @@ class JSONRenderer
             array_push($entries, self::getContentArray($entry));
         }
         if (!is_null($currentPage->book)) {
+            // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
+            if ($config['cops_provide_kepub'] == "1" && preg_match("/Kobo/", $request->agent())) {
+                $currentPage->book->updateForKepub = true;
+            }
             $out ["book"] = self::getFullBookContentArray($currentPage->book);
         }
-        $out ["databaseId"] = getURLParam(COPS_DB_PARAM, "");
-        $out ["databaseName"] = Base::getDbName();
+        $out ["databaseId"] = $database ?? "";
+        $out ["databaseName"] = Base::getDbName($database);
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
@@ -271,8 +280,8 @@ class JSONRenderer
             $out ["maxPage"] = $currentPage->getMaxPage();
             $out ["currentPage"] = $currentPage->n;
         }
-        if (!is_null(getURLParam("complete")) || $complete) {
-            $out = self::addCompleteArray($out);
+        if (!is_null($request->get("complete")) || $complete) {
+            $out = self::addCompleteArray($out, $request);
         }
 
         $out ["containsBook"] = 0;
@@ -280,16 +289,16 @@ class JSONRenderer
             $out ["containsBook"] = 1;
         }
 
-        $out["abouturl"] = self::$endpoint . addURLParameter("?page=" . Page::ABOUT, COPS_DB_PARAM, $database);
+        $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
 
         if ($page == Page::ABOUT) {
-            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . COPS_VERSION . "</h1>", file_get_contents('about.html'));
+            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));
             $out ["fullhtml"] = $temp;
         }
 
         $out ["homeurl"] = self::$endpoint;
         if ($page != Page::INDEX && !is_null($database)) {
-            $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter("", COPS_DB_PARAM, $database);
+            $out ["homeurl"] = $out ["homeurl"] .  "?" . Format::addURLParam("", 'db', $database);
         }
 
         return $out;

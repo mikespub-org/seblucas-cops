@@ -15,9 +15,9 @@ class PageLanguageDetail extends Page
 {
     public function InitializeContent()
     {
-        $language = Language::getLanguageById($this->idGet);
+        $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());
         $this->idPage = $language->getEntryId();
         $this->title = $language->lang_code;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByLanguage($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByLanguage($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

@@ -15,9 +15,9 @@ class PageTagDetail extends Page
 {
     public function InitializeContent()
     {
-        $tag = Tag::getTagById($this->idGet);
+        $tag = Tag::getTagById($this->idGet, $this->getDatabaseId());
         $this->idPage = $tag->getEntryId();
         $this->title = $tag->name;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByTag($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByTag($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

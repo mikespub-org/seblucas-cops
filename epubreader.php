@@ -1,8 +1,4 @@
 <?php
-header('Content-Type: text/html;charset=utf-8');
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="und" lang="">
-<?php
 /**
  * COPS (Calibre OPDS PHP Server) epub reader
  *
@@ -10,83 +6,19 @@ header('Content-Type: text/html;charset=utf-8');
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-use SebLucas\Cops\Calibre\Book;
-use SebLucas\EPubMeta\EPub;
-
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\getUrlWithVersion;
-use function SebLucas\Cops\Request\initURLParam;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\EPubReader;
 
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
-initURLParam();
-
-$idData = (int)getURLParam('data', null);
-$add = 'data=' . $idData . '&';
-if (!is_null(getURLParam(COPS_DB_PARAM))) {
-    $add .= COPS_DB_PARAM . '=' . getURLParam(COPS_DB_PARAM) . '&';
+$request = new Request();
+$idData = (int) $request->get('data', null);
+if (empty($idData)) {
+    $request->notFound();
+    exit;
 }
-$myBook = Book::getBookByDataId($idData);
 
-$book = new EPub($myBook->getFilePath('EPUB', $idData));
-$book->initSpineComponent();
+header('Content-Type: text/html;charset=utf-8');
 
-?>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="imagetoolbar" content="no" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>COPS's Epub Reader</title>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monocore.js") ?>"></script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monoctrl.js") ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monocore.css") ?>" media="screen" />
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monoctrl.css") ?>" media="screen" />
-    <script type="text/javascript">
-        Monocle.DEBUG = true;
-        var bookData = {
-          getComponents: function() {
-            <?php echo 'return [' . implode(', ', array_map(function ($comp) {
-                return "'" . $comp . "'";
-            }, $book->components())) . '];'; ?>
-          },
-          getContents: function() {
-            <?php echo 'return [' . implode(', ', array_map(function ($content) {
-                return "{title: '" . addslashes($content['title']) . "', src: '". $content['src'] . "'}";
-            }, $book->contents())) . '];'; ?>
-          },
-          getComponent: function (componentId) {
-            return { url: "<?php echo COPS_ENDPOINTS["epubfs"] . "?" . $add ?>comp="  + componentId };
-          },
-          getMetaData: function(key) {
-            return {
-              title: "<?php echo $myBook->title ?>",
-              creator: "Inventive Labs"
-            }[key];
-          }
-        }
-
-    </script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("styles/cops-monocle.js") ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("styles/cops-monocle.css") ?>" media="screen" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-</head>
-<body>
-  <div id="readerBg">
-      <div class="board"></div>
-      <div class="jacket"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-      <div class="dummyPage"></div>
-  </div>
-  <div id="readerCntr">
-      <div id="reader"></div>
-  </div>
-</body>
-</html>
+echo EPubReader::getReader($idData, $request);

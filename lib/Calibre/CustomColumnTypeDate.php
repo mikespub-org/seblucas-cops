@@ -12,14 +12,11 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use DateTime;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class CustomColumnTypeDate extends CustomColumnType
 {
-    protected function __construct($pcustomId)
+    protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_DATE);
+        parent::__construct($pcustomId, self::CUSTOM_TYPE_DATE, $database);
     }
 
     /**
@@ -50,7 +47,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -60,7 +57,7 @@ class CustomColumnTypeDate extends CustomColumnType
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = [new LinkNavigation($this->getUri($id))];
 
-            $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+            $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
 
             array_push($entryArray, $entry);
         }
@@ -82,7 +79,7 @@ class CustomColumnTypeDate extends CustomColumnType
         $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = $this->getDb()->query($query);
+        $result = $this->getDb($this->databaseId)->query($query);
         if ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
 

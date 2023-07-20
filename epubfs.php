@@ -8,93 +8,38 @@
 
 namespace SebLucas\Cops\Output\EPubReader;
 
-use SebLucas\Cops\Calibre\Book;
-use SebLucas\EPubMeta\EPub;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\EPubReader;
 use Exception;
 
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\initURLParam;
-use function SebLucas\Cops\Request\notFound;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
-
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
-/** @var array $config */
-
-initURLParam();
-
-function getComponentContent($book, $component, $add)
-{
-    $data = $book->component($component);
-
-    $callback = function ($m) use ($book, $component, $add) {
-        $method = $m[1];
-        $path = $m[2];
-        $end = '';
-        if (preg_match('/^src\s*:/', $method)) {
-            $end = ')';
-        }
-        if (preg_match('/^#/', $path)) {
-            return $method . "'" . $path . "'" . $end;
-        }
-        $hash = '';
-        if (preg_match('/^(.+)#(.+)$/', $path, $matches)) {
-            $path = $matches[1];
-            $hash = '#' . $matches[2];
-        }
-        $comp = $book->getComponentName($component, $path);
-        if (!$comp) {
-            return $method . "'#'" . $end;
-        }
-        $out = $method . "'" . COPS_ENDPOINTS["epubfs"] . "?" . $add . 'comp=' . $comp . $hash . "'" . $end;
-        if ($end) {
-            return $out;
-        }
-        return str_replace('&', '&amp;', $out);
-    };
-
-    $data = preg_replace_callback("/(src=)[\"']([^:]*?)[\"']/", $callback, $data);
-    $data = preg_replace_callback("/(href=)[\"']([^:]*?)[\"']/", $callback, $data);
-    $data = preg_replace_callback("/(\@import\s+)[\"'](.*?)[\"'];/", $callback, $data);
-    $data = preg_replace_callback('/(src\s*:\s*url\()(.*?)\)/', $callback, $data);
-
-    return $data;
-}
 
 if (php_sapi_name() === 'cli') {
     return;
 }
 
-$idData = getURLParam('data', null);
-$add = 'data=' . $idData . '&';
-if (!is_null(getURLParam(COPS_DB_PARAM))) {
-    $add .= COPS_DB_PARAM . '=' . getURLParam(COPS_DB_PARAM) . '&';
+$request = new Request();
+$idData = (int) $request->get('data', null);
+if (empty($idData)) {
+    $request->notFound();
+    return;
 }
-$myBook = Book::getBookByDataId($idData);
-
-$book = new EPub($myBook->getFilePath('EPUB', $idData));
-
-$book->initSpineComponent();
-
-if (!isset($_GET['comp'])) {
-    notFound();
+$component = $request->get('comp', null);
+if (empty($component)) {
+    $request->notFound();
     return;
 }
 
-$component = $_GET['comp'];
-
 try {
-    $data = getComponentContent($book, $component, $add);
+    $data = EPubReader::getContent($idData, $component, $request);
 
     $expires = 60*60*24*14;
     header('Pragma: public');
     header('Cache-Control: maxage='.$expires);
     header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
-    header('Content-Type: ' . $book->componentContentType($component));
+
     echo $data;
 } catch (Exception $e) {
     error_log($e);
-    notFound();
+    $request->notFound();
 }

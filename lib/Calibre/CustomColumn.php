@@ -85,11 +85,12 @@ class CustomColumn extends Base
      *
      * @param integer $customId the id of the customColumn
      * @param integer $id the id of the chosen value
+     * @param mixed $database
      * @return CustomColumn|null
      */
-    public static function createCustom($customId, $id)
+    public static function createCustom($customId, $id, $database = null)
     {
-        $columnType = CustomColumnType::createByCustomID($customId);
+        $columnType = CustomColumnType::createByCustomID($customId, $database);
 
         return $columnType->getCustom($id);
     }

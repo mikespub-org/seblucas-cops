@@ -4,7 +4,11 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.4.x - 202307xx Use namespaces in PHP lib, upgrade jquery npm asset + sausage package
+1.4.x - 202307xx Clean-up
+
+1.4.0 - 20230721 Use namespaces in PHP lib, upgrade jquery npm asset + sausage package
+  * Split off new Input\Request, Language\Translation, Output\Format and Output\EPubReader classes
+  * Pass database and/or request param in static method calls to remove dependency on global $_GET
   * Update OPDSValidator, jing and tests for OPDS 1.2 (last updated in 2018)
   * Add namespace hierarchy, move page constants + make Calibre classes a bit more generic
   * Switch from npm-asset/typeahead.js 0.11.0 to npm-asset/corejs-typeahead 1.3.3

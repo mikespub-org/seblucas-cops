@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Pages;
 
-use function SebLucas\Cops\Language\localize;
-
 class PageAbout extends Page
 {
     public function InitializeContent()

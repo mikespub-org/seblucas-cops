@@ -10,14 +10,12 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Tag;
 
-use function SebLucas\Cops\Language\localize;
-
 class PageAllTags extends Page
 {
     public function InitializeContent()
     {
         $this->title = localize("tags.title");
-        $this->entryArray = Tag::getAllTags();
+        $this->entryArray = Tag::getAllTags($this->getDatabaseId());
         $this->idPage = Tag::PAGE_ID;
     }
 }
