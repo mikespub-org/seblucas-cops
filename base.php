@@ -19,7 +19,7 @@ date_default_timezone_set($config['default_timezone']);
  */
 class Config
 {
-    public const VERSION = '1.3.6';
+    public const VERSION = '1.4.0';
     public const ENDPOINT = [
         "index" => "index.php",
         "feed" => "feed.php",
