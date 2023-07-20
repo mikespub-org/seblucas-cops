@@ -6,25 +6,15 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/../base.php");
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Template\doT;
-
-use function SebLucas\Cops\Language\getAcceptLanguages;
-use function SebLucas\Cops\Language\getLangAndTranslationFile;
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\normalizeUtf8String;
-use function SebLucas\Cops\Request\addURLParameter;
-use function SebLucas\Cops\Request\getCurrentCss;
-use function SebLucas\Cops\Request\getQueryString;
-use function SebLucas\Cops\Request\serverSideRender;
-use function SebLucas\Cops\Request\useServerSideRendering;
-use function SebLucas\Cops\Request\verifyLogin;
-
-use const SebLucas\Cops\Config\COPS_VERSION;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 class BaseTest extends TestCase
 {
@@ -37,9 +27,9 @@ class BaseTest extends TestCase
 
     public function testAddURLParameter()
     {
-        $this->assertEquals("?db=0", addURLParameter("?", "db", "0"));
-        $this->assertEquals("?key=value&db=0", addURLParameter("?key=value", "db", "0"));
-        $this->assertEquals("?key=value&otherKey=&db=0", addURLParameter("?key=value&otherKey", "db", "0"));
+        $this->assertEquals("?db=0", Format::addURLParam("?", "db", "0"));
+        $this->assertEquals("?key=value&db=0", Format::addURLParam("?key=value", "db", "0"));
+        $this->assertEquals("?key=value&otherKey=&db=0", Format::addURLParam("?key=value&otherKey", "db", "0"));
     }
 
     /**
@@ -49,7 +39,7 @@ class BaseTest extends TestCase
     public function testServerSideRender($template)
     {
         $_COOKIE["template"] = $template;
-        $this->assertNull(serverSideRender(null));
+        $this->assertNull(Format::serverSideRender(null, $template));
 
         unset($_COOKIE['template']);
     }
@@ -61,19 +51,20 @@ class BaseTest extends TestCase
     public function testGenerateHeader($templateName)
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
+        $request = new Request();
         global $config;
         $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => $config['cops_title_default'],
-                  "version"               => COPS_VERSION,
-                  "opds_url"              => $config['cops_full_url'] . COPS_ENDPOINTS["feed"],
+                  "version"               => Config::VERSION,
+                  "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
                   "customHeader"          => "",
                   "template"              => $templateName,
-                  "server_side_rendering" => useServerSideRendering(),
-                  "current_css"           => getCurrentCss(),
+                  "server_side_rendering" => $request->render(),
+                  "current_css"           => $request->style(),
                   "favico"                => $config['cops_icon'],
-                  "getjson_url"           => COPS_ENDPOINTS["json"] . "?" . addURLParameter(getQueryString(), "complete", 1)];
+                  "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);
@@ -120,7 +111,7 @@ class BaseTest extends TestCase
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        [$lang, $lang_file] = getLangAndTranslationFile();
+        [$lang, $lang_file] = Translation::getLangAndTranslationFile();
         $this->assertEquals($result, $lang);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
@@ -146,7 +137,7 @@ class BaseTest extends TestCase
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $langs = array_keys(getAcceptLanguages());
+        $langs = array_keys(Translation::getAcceptLanguages());
         $this->assertEquals($result, $langs[0]);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
@@ -188,7 +179,7 @@ class BaseTest extends TestCase
 
     public function testCheckDatabaseAvailability_1()
     {
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
     }
 
     public function testCheckDatabaseAvailability_2()
@@ -199,7 +190,7 @@ class BaseTest extends TestCase
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         Base::clearDb();
 
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -220,7 +211,7 @@ class BaseTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Database <1> not found.');
 
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -241,7 +232,7 @@ class BaseTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Database <0> not found.');
 
-        $this->assertTrue(Base::checkDatabaseAvailability());
+        $this->assertTrue(Base::checkDatabaseAvailability(null));
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -256,25 +247,23 @@ class BaseTest extends TestCase
     {
         $this->assertEquals(
             "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn",
-            normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
+            Translation::normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
         );
     }
 
     public function testLoginEnabledWithoutCreds()
     {
         global $config;
-        require_once __DIR__.'/../verifyLogin.php';
         $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
-        $this->assertFalse(verifyLogin());
+        $this->assertFalse(Request::verifyLogin());
     }
 
     public function testLoginEnabledAndLoggingIn()
     {
         global $config;
-        require_once __DIR__.'/../verifyLogin.php';
         $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
         $_SERVER['PHP_AUTH_USER'] = 'xxx';
         $_SERVER['PHP_AUTH_PW'] = 'secret';
-        $this->assertTrue(verifyLogin());
+        $this->assertTrue(Request::verifyLogin($_SERVER));
     }
 }

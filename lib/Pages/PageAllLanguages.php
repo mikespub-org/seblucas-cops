@@ -10,14 +10,12 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Language;
 
-use function SebLucas\Cops\Language\localize;
-
 class PageAllLanguages extends Page
 {
     public function InitializeContent()
     {
         $this->title = localize("languages.title");
-        $this->entryArray = Language::getAllLanguages();
+        $this->entryArray = Language::getAllLanguages($this->getDatabaseId());
         $this->idPage = Language::PAGE_ID;
     }
 }

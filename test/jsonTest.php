@@ -12,12 +12,13 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
-
-use function SebLucas\Cops\Request\setURLParam;
 
 class JsonTest extends TestCase
 {
+    private static $request;
+
     public static function setUpBeforeClass(): void
     {
         global $config;
@@ -26,6 +27,7 @@ class JsonTest extends TestCase
         $config['cops_calibre_custom_column_list'] = [];
         $config['cops_calibre_custom_column_preview'] = [];
         Base::clearDb();
+        self::$request = new Request();
     }
 
     public function testCompleteArray()
@@ -34,7 +36,8 @@ class JsonTest extends TestCase
 
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $test = [];
-        $test = JSONRenderer::addCompleteArray($test);
+        $request = new Request();
+        $test = JSONRenderer::addCompleteArray($test, $request);
         $this->assertArrayHasKey("c", $test);
         $this->assertArrayHasKey("version", $test ["c"]);
         $this->assertArrayHasKey("i18n", $test ["c"]);
@@ -46,14 +49,14 @@ class JsonTest extends TestCase
         // The thumbnails should be the same as the covers
         $config['cops_thumbnail_handling'] = "1";
         $test = [];
-        $test = JSONRenderer::addCompleteArray($test);
+        $test = JSONRenderer::addCompleteArray($test, $request);
 
         $this->assertTrue($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
         $config['cops_thumbnail_handling'] = "/images.png";
         $test = [];
-        $test = JSONRenderer::addCompleteArray($test);
+        $test = JSONRenderer::addCompleteArray($test, $request);
 
         $this->assertEquals("/images.png", $test ["c"]["url"]["thumbnailUrl"]);
     }
@@ -96,14 +99,14 @@ class JsonTest extends TestCase
     {
         $page = Page::ALL_RECENT_BOOKS;
 
-        setURLParam('page', $page);
-        $test = JSONRenderer::getJson();
+        self::$request->set('page', $page);
+        $test = JSONRenderer::getJson(self::$request);
 
         $this->assertEquals("Recent additions", $test["title"]);
         $this->assertCount(15, $test["entries"]);
         $this->assertEquals("La curée", $test["entries"][0]["title"]);
 
-        setURLParam('page', null);
+        self::$request->set('page', null);
     }
 
     public function testGetJsonSearch()
@@ -111,10 +114,10 @@ class JsonTest extends TestCase
         $page = Page::OPENSEARCH_QUERY;
         $query = "fic";
 
-        setURLParam('page', $page);
-        setURLParam('query', $query);
-        setURLParam('search', 1);
-        $test = JSONRenderer::getJson();
+        self::$request->set('page', $page);
+        self::$request->set('query', $query);
+        self::$request->set('search', 1);
+        $test = JSONRenderer::getJson(self::$request);
         $check = [
             [
                 'class' => 'tt-header',
@@ -134,23 +137,23 @@ class JsonTest extends TestCase
         ];
         $this->assertEquals($check, $test);
 
-        setURLParam('page', null);
-        setURLParam('query', null);
-        setURLParam('search', null);
+        self::$request->set('page', null);
+        self::$request->set('query', null);
+        self::$request->set('search', null);
     }
 
     public function testGetJsonComplete()
     {
         $page = Page::ALL_RECENT_BOOKS;
 
-        setURLParam('page', $page);
-        $test = JSONRenderer::getJson(true);
+        self::$request->set('page', $page);
+        $test = JSONRenderer::getJson(self::$request, true);
 
         $this->assertEquals("Recent additions", $test["title"]);
         $this->assertCount(15, $test["entries"]);
         $this->assertEquals("La curée", $test["entries"][0]["title"]);
         $this->assertCount(4, $test["c"]);
 
-        setURLParam('page', null);
+        self::$request->set('page', null);
     }
 }

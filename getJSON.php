@@ -6,16 +6,14 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  *
  */
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\JSONRenderer;
 
-use function SebLucas\Cops\Request\initURLParam;
-
 require_once dirname(__FILE__) . '/config.php';
-require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
 
-initURLParam();
+$request = new Request();
 
 header('Content-Type:application/json;charset=utf-8');
 
-echo json_encode(JSONRenderer::getJson());
+echo json_encode(JSONRenderer::getJson($request));

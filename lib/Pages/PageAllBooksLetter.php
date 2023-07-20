@@ -10,14 +10,11 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\str_format;
-
 class PageAllBooksLetter extends Page
 {
     public function InitializeContent()
     {
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByStartingLetter($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByStartingLetter($this->idGet, $this->n, $this->getDatabaseId());
         $this->idPage = Book::getEntryIdByLetter($this->idGet);
 
         $count = $this->totalNumber;

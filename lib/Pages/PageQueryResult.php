@@ -14,17 +14,9 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
-
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\normAndUp;
-use function SebLucas\Cops\Language\str_format;
-use function SebLucas\Cops\Language\useNormAndUp;
-use function SebLucas\Cops\Request\getCurrentOption;
-use function SebLucas\Cops\Request\getURLParam;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
 
 class PageQueryResult extends Page
 {
@@ -37,16 +29,16 @@ class PageQueryResult extends Page
 
     private function useTypeahead()
     {
-        return !is_null(getURLParam("search"));
+        return !is_null($this->request->get("search"));
     }
 
-    private function searchByScope($scope, $limit = false)
+    private function searchByScope($scope, $limit = false, $database = null)
     {
         $n = $this->n;
         $numberPerPage = null;
         $queryNormedAndUp = trim($this->query);
-        if (useNormAndUp()) {
-            $queryNormedAndUp = normAndUp($this->query);
+        if (Translation::useNormAndUp()) {
+            $queryNormedAndUp = Translation::normAndUp($this->query);
         }
         if ($limit) {
             $n = 1;
@@ -54,51 +46,52 @@ class PageQueryResult extends Page
         }
         switch ($scope) {
             case self::SCOPE_BOOK :
-                $array = Book::getBooksByStartingLetter('%' . $queryNormedAndUp, $n, null, $numberPerPage);
+                $array = Book::getBooksByStartingLetter('%' . $queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp);
+                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $database);
                 break;
             case self::SCOPE_SERIES :
-                $array = Serie::getAllSeriesByQuery($queryNormedAndUp);
+                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $database);
                 break;
             case self::SCOPE_TAG :
-                $array = Tag::getAllTagsByQuery($queryNormedAndUp, $n, null, $numberPerPage);
+                $array = Tag::getAllTagsByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             case self::SCOPE_PUBLISHER :
-                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp);
+                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $database);
                 break;
             default:
                 $array = Book::getBooksByQuery(
                     ["all" => "%" . $queryNormedAndUp . "%"],
-                    $n
+                    $n,
+                    $database
                 );
         }
 
         return $array;
     }
 
-    public function doSearchByCategory()
+    public function doSearchByCategory($database = null)
     {
-        $database = getURLParam(COPS_DB_PARAM);
         $out = [];
         $pagequery = Page::OPENSEARCH_QUERY;
         $dbArray = [""];
         $d = $database;
         $query = $this->query;
         // Special case when no databases were chosen, we search on all databases
-        if (Base::noDatabaseSelected()) {
+        if (Base::noDatabaseSelected($database)) {
             $dbArray = Base::getDbNameList();
             $d = 0;
         }
         foreach ($dbArray as $key) {
-            if (Base::noDatabaseSelected()) {
+            if (Base::noDatabaseSelected($database)) {
                 array_push($this->entryArray, new Entry(
                     $key,
-                    COPS_DB_PARAM . ":query:{$d}",
+                    "db:query:{$d}",
                     " ",
                     "text",
-                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$d}")],
+                    [ new LinkNavigation("?db={$d}")],
+                    null,
                     "tt-header"
                 ));
                 Base::getDb($d);
@@ -108,10 +101,10 @@ class PageQueryResult extends Page
                             PageQueryResult::SCOPE_SERIES,
                             PageQueryResult::SCOPE_TAG,
                             PageQueryResult::SCOPE_PUBLISHER] as $key) {
-                if (in_array($key, getCurrentOption('ignored_categories'))) {
+                if (in_array($key, $this->getIgnoredCategories())) {
                     continue;
                 }
-                $array = $this->searchByScope($key, true);
+                $array = $this->searchByScope($key, true, $database);
 
                 $i = 0;
                 if (count($array) == 2 && is_array($array [0])) {
@@ -129,15 +122,16 @@ class PageQueryResult extends Page
                     // str_format (localize("publisherword", count($array))
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$key}"), $this->query),
-                        COPS_DB_PARAM . ":query:{$d}:{$key}",
+                        "db:query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
                         [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")],
-                        Base::noDatabaseSelected() ? "" : "tt-header",
+                        $database,
+                        Base::noDatabaseSelected($database) ? "" : "tt-header",
                         $total
                     ));
                 }
-                if (!Base::noDatabaseSelected() && $this->useTypeahead()) {
+                if (!Base::noDatabaseSelected($database) && $this->useTypeahead()) {
                     foreach ($array as $entry) {
                         array_push($this->entryArray, $entry);
                         $i++;
@@ -148,7 +142,7 @@ class PageQueryResult extends Page
                 }
             }
             $d++;
-            if (Base::noDatabaseSelected()) {
+            if (Base::noDatabaseSelected($database)) {
                 Base::clearDb();
             }
         }
@@ -157,7 +151,8 @@ class PageQueryResult extends Page
 
     public function InitializeContent()
     {
-        $scope = getURLParam("scope");
+        $scope = $this->request->get("scope");
+        $ignoredCategories = $this->getIgnoredCategories();
         if (empty($scope)) {
             $this->title = str_format(localize("search.result"), $this->query);
         } else {
@@ -169,21 +164,23 @@ class PageQueryResult extends Page
             // str_format (localize ("search.result.publisher"), $this->query)
             $this->title = str_format(localize("search.result.{$scope}"), $this->query);
         }
+        $database = $this->getDatabaseId();
 
         $crit = "%" . $this->query . "%";
 
         // Special case when we are doing a search and no database is selected
-        if (Base::noDatabaseSelected() && !$this->useTypeahead()) {
+        if (Base::noDatabaseSelected($database) && !$this->useTypeahead()) {
             $i = 0;
             foreach (Base::getDbNameList() as $key) {
                 Base::clearDb();
-                [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $i, 1);
+                [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $i, 1, $ignoredCategories);
                 array_push($this->entryArray, new Entry(
                     $key,
-                    COPS_DB_PARAM . ":query:{$i}",
+                    "db:query:{$i}",
                     str_format(localize("bookword", $totalNumber), $totalNumber),
                     "text",
-                    [ new LinkNavigation("?" . COPS_DB_PARAM . "={$i}&page=9&query=" . $this->query)],
+                    [ new LinkNavigation("?db={$i}&page=9&query=" . $this->query)],
+                    $database,
                     "",
                     $totalNumber
                 ));
@@ -192,11 +189,11 @@ class PageQueryResult extends Page
             return;
         }
         if (empty($scope)) {
-            $this->doSearchByCategory();
+            $this->doSearchByCategory($database);
             return;
         }
 
-        $array = $this->searchByScope($scope);
+        $array = $this->searchByScope($scope, false, $database);
         if (count($array) == 2 && is_array($array [0])) {
             [$this->entryArray, $this->totalNumber] = $array;
         } else {

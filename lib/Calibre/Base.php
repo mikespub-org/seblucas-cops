@@ -8,46 +8,76 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use Exception;
 use PDO;
-
-use function SebLucas\Cops\Language\localize;
-use function SebLucas\Cops\Language\normAndUp;
-use function SebLucas\Cops\Language\str_format;
-use function SebLucas\Cops\Language\useNormAndUp;
-use function SebLucas\Cops\Request\getCurrentOption;
-use function SebLucas\Cops\Request\getURLParam;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
 
 abstract class Base
 {
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     private static $db = null;
+    protected $databaseId = null;
 
+    /**
+     * Summary of getDatabaseId
+     * @return mixed
+     */
+    public function getDatabaseId()
+    {
+        return $this->databaseId;
+    }
+
+    /**
+     * Summary of setDatabaseId
+     * @param mixed $database
+     * @return void
+     */
+    public function setDatabaseId($database = null)
+    {
+        $this->databaseId = $database;
+    }
+
+    /**
+     * Summary of isMultipleDatabaseEnabled
+     * @return bool
+     */
     public static function isMultipleDatabaseEnabled()
     {
         global $config;
         return is_array($config['calibre_directory']);
     }
 
-    public static function useAbsolutePath()
+    /**
+     * Summary of useAbsolutePath
+     * @param mixed $database
+     * @return bool
+     */
+    public static function useAbsolutePath($database)
     {
         global $config;
-        $path = self::getDbDirectory();
+        $path = self::getDbDirectory($database);
         return preg_match('/^\//', $path) || // Linux /
                preg_match('/^\w\:/', $path); // Windows X:
     }
 
-    public static function noDatabaseSelected()
+    /**
+     * Summary of noDatabaseSelected
+     * @param mixed $database
+     * @return bool
+     */
+    public static function noDatabaseSelected($database)
     {
-        return self::isMultipleDatabaseEnabled() && is_null(getURLParam(COPS_DB_PARAM));
+        return self::isMultipleDatabaseEnabled() && is_null($database);
     }
 
+    /**
+     * Summary of getDbList
+     * @return array
+     */
     public static function getDbList()
     {
         global $config;
@@ -58,6 +88,10 @@ abstract class Base
         }
     }
 
+    /**
+     * Summary of getDbNameList
+     * @return array
+     */
     public static function getDbNameList()
     {
         global $config;
@@ -68,14 +102,19 @@ abstract class Base
         }
     }
 
-    public static function getDbName($database = null)
+    /**
+     * Summary of getDbName
+     * @param mixed $database
+     * @return string
+     */
+    public static function getDbName($database)
     {
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = getURLParam(COPS_DB_PARAM, 0);
+                $database = 0;
             }
-            if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
+            if (!preg_match('/^\d+$/', $database)) {
                 self::error($database);
             }
             $array = array_keys($config['calibre_directory']);
@@ -84,14 +123,19 @@ abstract class Base
         return "";
     }
 
-    public static function getDbDirectory($database = null)
+    /**
+     * Summary of getDbDirectory
+     * @param mixed $database
+     * @return string
+     */
+    public static function getDbDirectory($database)
     {
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = getURLParam(COPS_DB_PARAM, 0);
+                $database = 0;
             }
-            if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
+            if (!preg_match('/^\d+$/', $database)) {
                 self::error($database);
             }
             $array = array_values($config['calibre_directory']);
@@ -101,12 +145,17 @@ abstract class Base
     }
 
     // -DC- Add image directory
-    public static function getImgDirectory($database = null)
+    /**
+     * Summary of getImgDirectory
+     * @param mixed $database
+     * @return string
+     */
+    public static function getImgDirectory($database)
     {
         global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
-                $database = getURLParam(COPS_DB_PARAM, 0);
+                $database = 0;
             }
             $array = array_values($config['image_directory']);
             return  $array[$database];
@@ -114,28 +163,44 @@ abstract class Base
         return $config['image_directory'];
     }
 
-    public static function getDbFileName($database = null)
+    /**
+     * Summary of getDbFileName
+     * @param mixed $database
+     * @return string
+     */
+    public static function getDbFileName($database)
     {
         return self::getDbDirectory($database) .'metadata.db';
     }
 
+    /**
+     * Summary of error
+     * @param mixed $database
+     * @throws \Exception
+     * @return never
+     */
     private static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            header("location: " . COPS_ENDPOINTS["check"] . "?err=1");
+            header("location: " . Config::ENDPOINT["check"] . "?err=1");
         }
         throw new Exception("Database <{$database}> not found.");
     }
 
+    /**
+     * Summary of getDb
+     * @param mixed $database
+     * @return \PDO
+     */
     public static function getDb($database = null)
     {
         if (is_null(self::$db)) {
             try {
                 if (is_readable(self::getDbFileName($database))) {
                     self::$db = new PDO('sqlite:'. self::getDbFileName($database));
-                    if (useNormAndUp()) {
+                    if (Translation::useNormAndUp()) {
                         self::$db->sqliteCreateFunction('normAndUp', function ($s) {
-                            return normAndUp($s);
+                            return Translation::normAndUp($s);
                         }, 1);
                     }
                 } else {
@@ -148,35 +213,59 @@ abstract class Base
         return self::$db;
     }
 
-    public static function checkDatabaseAvailability()
+    /**
+     * Summary of checkDatabaseAvailability
+     * @param mixed $database
+     * @return bool
+     */
+    public static function checkDatabaseAvailability($database)
     {
-        if (self::noDatabaseSelected()) {
+        if (self::noDatabaseSelected($database)) {
             for ($i = 0; $i < count(self::getDbList()); $i++) {
                 self::getDb($i);
                 self::clearDb();
             }
         } else {
-            self::getDb();
+            self::getDb($database);
         }
         return true;
     }
 
+    /**
+     * Summary of clearDb
+     * @return void
+     */
     public static function clearDb()
     {
         self::$db = null;
     }
 
+    /**
+     * Summary of executeQuerySingle
+     * @param mixed $query
+     * @param mixed $database
+     * @return mixed
+     */
     public static function executeQuerySingle($query, $database = null)
     {
         return self::getDb($database)->query($query)->fetchColumn();
     }
 
-    public static function getCountGeneric($table, $id, $pageId, $numberOfString = null)
+    /**
+     * Summary of getCountGeneric
+     * @param mixed $table
+     * @param mixed $id
+     * @param mixed $pageId
+     * @param mixed $database
+     * @param mixed $numberOfString
+     * @return Entry|null
+     */
+    public static function getCountGeneric($table, $id, $pageId, $database = null, $numberOfString = null)
     {
         if (!$numberOfString) {
             $numberOfString = $table . ".alphabetical";
         }
-        $count = self::executeQuerySingle('select count(*) from ' . $table);
+        $count = self::executeQuerySingle('select count(*) from ' . $table, $database);
         if ($count == 0) {
             return null;
         }
@@ -186,17 +275,28 @@ abstract class Base
             str_format(localize($numberOfString, $count), $count),
             "text",
             [ new LinkNavigation("?page=".$pageId)],
+            $database,
             "",
             $count
         );
         return $entry;
     }
 
-    public static function getEntryArrayWithBookNumber($query, $columns, $params, $category)
+    /**
+     * Summary of getEntryArrayWithBookNumber
+     * @param mixed $query
+     * @param mixed $columns
+     * @param mixed $params
+     * @param mixed $category
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     * @return array
+     */
+    public static function getEntryArrayWithBookNumber($query, $columns, $params, $category, $database = null, $numberPerPage = null)
     {
         /** @var \PDOStatement $result */
 
-        [, $result] = self::executeQuery($query, $columns, "", $params, -1);
+        [, $result] = self::executeQuery($query, $columns, "", $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             /** @var Author|Tag|Serie|Publisher $instance */
@@ -213,6 +313,7 @@ abstract class Base
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
                 [ new LinkNavigation($instance->getUri())],
+                $database,
                 "",
                 $post->count
             ));
@@ -220,17 +321,29 @@ abstract class Base
         return $entryArray;
     }
 
+    /**
+     * Summary of executeQuery
+     * @param mixed $query
+     * @param mixed $columns
+     * @param mixed $filter
+     * @param mixed $params
+     * @param mixed $n
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     * @return array
+     */
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
         $totalResult = -1;
 
-        if (useNormAndUp()) {
+        if (Translation::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
             $columns = preg_replace("/upper/", "normAndUp", $columns);
         }
 
         if (is_null($numberPerPage)) {
-            $numberPerPage = getCurrentOption("max_item_per_page");
+            global $config;
+            $numberPerPage = $config['cops_max_item_per_page'];
         }
 
         if ($numberPerPage != -1 && $n != -1) {

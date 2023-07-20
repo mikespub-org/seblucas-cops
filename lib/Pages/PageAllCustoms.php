@@ -10,14 +10,12 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\CustomColumnType;
 
-use function SebLucas\Cops\Request\getURLParam;
-
 class PageAllCustoms extends Page
 {
     public function InitializeContent()
     {
-        $customId = getURLParam("custom", null);
-        $columnType = CustomColumnType::createByCustomID($customId);
+        $customId = $this->request->get("custom", null);
+        $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
 
         $this->title = $columnType->getTitle();
         $this->entryArray = $columnType->getAllCustomValues();

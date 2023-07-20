@@ -8,23 +8,21 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Link;
-
-use function SebLucas\Cops\Request\addURLParameter;
-use function SebLucas\Cops\Request\getURLParam;
-
-use const SebLucas\Cops\Config\COPS_DB_PARAM;
-use const SebLucas\Cops\Config\COPS_ENDPOINTS;
+use SebLucas\Cops\Output\Format;
 
 class Data
 {
-    public static $endpoint = COPS_ENDPOINTS["fetch"];
+    public static $endpoint = Config::ENDPOINT["fetch"];
     public $id;
     public $name;
     public $format;
     public $realFormat;
     public $extension;
     public $book;
+    protected $databaseId;
+    public $updateForKepub = false;
 
     public static $mimetypes = [
         'aac'   => 'audio/aac',
@@ -66,7 +64,7 @@ class Data
         'zip'   => 'application/zip',
     ];
 
-    public function __construct($post, $book = null)
+    public function __construct($post, $book = null, $database = null)
     {
         $this->id = $post->id;
         $this->name = $post->name;
@@ -74,6 +72,11 @@ class Data
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
         $this->book = $book;
+        $this->databaseId = $database;
+        // this is set on book in JSONRenderer now
+        if ($book->updateForKepub && $this->isEpubValidOnKobo()) {
+            $this->updateForKepub = true;
+        }
     }
 
     public function isKnownType()
@@ -158,8 +161,8 @@ class Data
         global $config;
 
         $database = "";
-        if (!is_null(getURLParam(COPS_DB_PARAM))) {
-            $database = getURLParam(COPS_DB_PARAM) . "/";
+        if (!is_null($this->databaseId)) {
+            $database = $this->databaseId . "/";
         }
 
         $prefix = "download";
@@ -168,9 +171,8 @@ class Data
         }
         $href = $prefix . "/" . $this->id . "/" . $database;
 
-        if ($config['cops_provide_kepub'] == "1" &&
-            $this->isEpubValidOnKobo() &&
-            preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
+        // this is set on book in JSONRenderer now
+        if ($this->updateForKepub) {
             $href .= rawurlencode($this->getUpdatedFilenameKepub());
         } else {
             $href .= rawurlencode($this->getFilename());
@@ -188,14 +190,14 @@ class Data
         global $config;
 
         if (is_null($height)) {
-            if (preg_match('/' . COPS_ENDPOINTS["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
+            if (preg_match('/' . Config::ENDPOINT["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
                 $height = $config['cops_opds_thumbnail_height'];
             } else {
                 $height = $config['cops_html_thumbnail_height'];
             }
         }
         if ($config['cops_thumbnail_handling'] != "1") {
-            $urlParam = addURLParameter($urlParam, "height", $height);
+            $urlParam = Format::addURLParam($urlParam, "height", $height);
         }
 
         return $urlParam;
@@ -204,25 +206,24 @@ class Data
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $height = null, $view = false)
     {
         global $config;
+        /** @var Book $book */
 
-        $urlParam = addURLParameter("", "data", $idData);
+        $urlParam = Format::addURLParam("", "data", $idData);
         if ($view) {
-            $urlParam = addURLParameter($urlParam, "view", 1);
+            $urlParam = Format::addURLParam($urlParam, "view", 1);
         }
 
-        if (Base::useAbsolutePath() ||
+        if (Base::useAbsolutePath($book->getDatabaseId()) ||
             $rel == Link::OPDS_THUMBNAIL_TYPE ||
             ($type == "epub" && $config['cops_update_epub-metadata'])) {
             if ($type != "jpg") {
-                $urlParam = addURLParameter($urlParam, "type", $type);
+                $urlParam = Format::addURLParam($urlParam, "type", $type);
             }
             if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
                 $urlParam = self::handleThumbnailLink($urlParam, $height);
             }
-            $urlParam = addURLParameter($urlParam, "id", $book->id);
-            if (!is_null(getURLParam(COPS_DB_PARAM))) {
-                $urlParam = addURLParameter($urlParam, COPS_DB_PARAM, getURLParam(COPS_DB_PARAM));
-            }
+            $urlParam = Format::addURLParam($urlParam, "id", $book->id);
+            $urlParam = Format::addDatabaseParam($urlParam, $book->getDatabaseId());
             if ($config['cops_thumbnail_handling'] != "1" &&
                 !empty($config['cops_thumbnail_handling']) &&
                 $rel == Link::OPDS_THUMBNAIL_TYPE) {

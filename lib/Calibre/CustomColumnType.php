@@ -51,12 +51,13 @@ abstract class CustomColumnType extends Base
     /** @var null|Entry[] */
     private $customValues = null;
 
-    protected function __construct($pcustomId, $pdatatype)
+    protected function __construct($pcustomId, $pdatatype, $database = null)
     {
-        $this->columnTitle = self::getTitleByCustomID($pcustomId);
+        $this->columnTitle = self::getTitleByCustomID($pcustomId, $database);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
         $this->customValues = null;
+        $this->databaseId = $database;
     }
 
     /**
@@ -118,7 +119,7 @@ abstract class CustomColumnType extends Base
      */
     public function getDatabaseDescription()
     {
-        $result = $this->getDb()->prepare('SELECT display FROM custom_columns WHERE id = ?');
+        $result = $this->getDb($this->databaseId)->prepare('SELECT display FROM custom_columns WHERE id = ?');
         $result->execute([$this->customId]);
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
@@ -141,10 +142,11 @@ abstract class CustomColumnType extends Base
         // @checkme convert "csv" back to "text" here?
         $pcontentType = $this->datatype;
         $plinkArray = [new LinkNavigation($this->getUriAllCustoms())];
+        $database = $this->getDatabaseId();
         $pclass = "";
         $pcount = $this->getDistinctValueCount();
 
-        return new Entry($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass, $pcount);
+        return new Entry($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $database, $pclass, $pcount);
     }
 
     /**
@@ -174,9 +176,9 @@ abstract class CustomColumnType extends Base
      * @param integer $customId
      * @return string|null
      */
-    private static function getDatatypeByCustomID($customId)
+    private static function getDatatypeByCustomID($customId, $database = null)
     {
-        $result = parent::getDb()->prepare('SELECT datatype, is_multiple FROM custom_columns WHERE id = ?');
+        $result = parent::getDb($database)->prepare('SELECT datatype, is_multiple FROM custom_columns WHERE id = ?');
         $result->execute([$customId]);
         if ($post = $result->fetchObject()) {
             // handle case where we have several values, e.g. array of text for type 2 (csv)
@@ -195,36 +197,36 @@ abstract class CustomColumnType extends Base
      * @return CustomColumnType|null
      * @throws Exception If the $customId is not found or the datatype is unknown
      */
-    public static function createByCustomID($customId)
+    public static function createByCustomID($customId, $database = null)
     {
         // Reuse already created CustomColumns for performance
         if (array_key_exists($customId, self::$customColumnCacheID)) {
             return self::$customColumnCacheID[$customId];
         }
 
-        $datatype = self::getDatatypeByCustomID($customId);
+        $datatype = self::getDatatypeByCustomID($customId, $database);
 
         switch ($datatype) {
             case self::CUSTOM_TYPE_TEXT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::CUSTOM_TYPE_TEXT, $database);
             case self::CUSTOM_TYPE_CSV:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::CUSTOM_TYPE_CSV);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::CUSTOM_TYPE_CSV, $database);
             case self::CUSTOM_TYPE_SERIES:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId, $database);
             case self::CUSTOM_TYPE_ENUM:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId, $database);
             case self::CUSTOM_TYPE_COMMENT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId, $database);
             case self::CUSTOM_TYPE_DATE:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId, $database);
             case self::CUSTOM_TYPE_FLOAT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId, $database);
             case self::CUSTOM_TYPE_INT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, self::CUSTOM_TYPE_INT, $database);
             case self::CUSTOM_TYPE_RATING:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId, $database);
             case self::CUSTOM_TYPE_BOOL:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId, $database);
             case self::CUSTOM_TYPE_COMPOSITE:
                 return null; //TODO Currently not supported
             default:
@@ -238,14 +240,14 @@ abstract class CustomColumnType extends Base
      * @param string $lookup the lookup-name of the custom column
      * @return CustomColumnType|null
      */
-    public static function createByLookup($lookup)
+    public static function createByLookup($lookup, $database = null)
     {
         // Reuse already created CustomColumns for performance
         if (array_key_exists($lookup, self::$customColumnCacheLookup)) {
             return self::$customColumnCacheLookup[$lookup];
         }
 
-        $result = parent::getDb()->prepare('SELECT id FROM custom_columns WHERE label = ?');
+        $result = parent::getDb($database)->prepare('SELECT id FROM custom_columns WHERE label = ?');
         $result->execute([$lookup]);
         if ($post = $result->fetchObject()) {
             return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id);
@@ -275,9 +277,9 @@ abstract class CustomColumnType extends Base
      * @param integer $customId
      * @return string
      */
-    protected static function getTitleByCustomID($customId)
+    protected static function getTitleByCustomID($customId, $database = null)
     {
-        $result = parent::getDb()->prepare('SELECT name FROM custom_columns WHERE id = ?');
+        $result = parent::getDb($database)->prepare('SELECT name FROM custom_columns WHERE id = ?');
         $result->execute([$customId]);
         if ($post = $result->fetchObject()) {
             return $post->name;
@@ -291,10 +293,10 @@ abstract class CustomColumnType extends Base
      * @param array<string> $columnList
      * @return array<string>
      */
-    public static function checkCustomColumnList($columnList)
+    public static function checkCustomColumnList($columnList, $database = null)
     {
         if ($columnList === self::ALL_WILDCARD) {
-            $columnList = array_keys(self::getAllCustomColumns());
+            $columnList = array_keys(self::getAllCustomColumns($database));
         }
         return $columnList;
     }
@@ -304,9 +306,9 @@ abstract class CustomColumnType extends Base
      *
      * @return array<string, array>
      */
-    public static function getAllCustomColumns()
+    public static function getAllCustomColumns($database = null)
     {
-        $result = parent::getDb()->prepare('SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns');
+        $result = parent::getDb($database)->prepare('SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns');
         $result->execute();
         $columns = [];
         while ($post = $result->fetchObject()) {

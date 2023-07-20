@@ -15,9 +15,9 @@ class PageAuthorDetail extends Page
 {
     public function InitializeContent()
     {
-        $author = Author::getAuthorById($this->idGet);
+        $author = Author::getAuthorById($this->idGet, $this->getDatabaseId());
         $this->idPage = $author->getEntryId();
         $this->title = $author->name;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByAuthor($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByAuthor($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

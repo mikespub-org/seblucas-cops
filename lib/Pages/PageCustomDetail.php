@@ -10,17 +10,16 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\CustomColumn;
-
-use function SebLucas\Cops\Request\getURLParam;
+use SebLucas\Cops\Request;
 
 class PageCustomDetail extends Page
 {
     public function InitializeContent()
     {
-        $customId = getURLParam("custom", null);
-        $custom = CustomColumn::createCustom($customId, $this->idGet);
+        $customId = $this->request->get("custom", null);
+        $custom = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $this->idPage = $custom->getEntryId();
         $this->title = $custom->value;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByCustom($custom, $this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByCustom($custom, $this->idGet, $this->n, $this->getDatabaseId());
     }
 }

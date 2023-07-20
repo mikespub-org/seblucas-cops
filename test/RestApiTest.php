@@ -12,11 +12,9 @@ use SebLucas\Cops\Output\RestApi;
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
-
-use function SebLucas\Cops\Request\getURLParam;
-use function SebLucas\Cops\Request\setURLParam;
 
 class RestApiTest extends TestCase
 {
@@ -37,14 +35,16 @@ class RestApiTest extends TestCase
 
     public function testGetPathInfo(): void
     {
+        $request = new Request();
         $expected = "/index";
-        $test = RestApi::getPathInfo();
+        $test = RestApi::getPathInfo($request);
         $this->assertEquals($expected, $test);
 
         $_SERVER["PATH_INFO"] = "/books/2";
+        $request = new Request();
 
         $expected = "/books/2";
-        $test = RestApi::getPathInfo();
+        $test = RestApi::getPathInfo($request);
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);
@@ -53,10 +53,11 @@ class RestApiTest extends TestCase
     public function testMatchPathInfo(): void
     {
         $_SERVER["PATH_INFO"] = "/books/2";
-        $path = RestApi::getPathInfo();
+        $request = new Request();
+        $path = RestApi::getPathInfo($request);
 
         $expected = ["page" => Page::BOOK_DETAIL, "id" => 2];
-        $test = RestApi::matchPathInfo($path);
+        $test = RestApi::matchPathInfo($path, $request);
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);
@@ -65,27 +66,27 @@ class RestApiTest extends TestCase
     public function testSetParams(): void
     {
         $_SERVER["PATH_INFO"] = "/books/2";
-        $path = RestApi::getPathInfo();
-        $params = RestApi::matchPathInfo($path);
-        RestApi::setParams($params);
+        $request = new Request();
+        $path = RestApi::getPathInfo($request);
+        $params = RestApi::matchPathInfo($path, $request);
+        $request = RestApi::setParams($params, $request);
 
         $expected = Page::BOOK_DETAIL;
-        $test = getURLParam("page");
+        $test = $request->get("page");
         $this->assertEquals($expected, $test);
 
         $expected = 2;
-        $test = getURLParam("id");
+        $test = $request->get("id");
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);
-        setURLParam("page", null);
-        setURLParam("id", null);
     }
 
     public function testGetJson(): void
     {
-        $expected = JSONRenderer::getJson();
-        $test = RestApi::getJson();
+        $request = new Request();
+        $expected = JSONRenderer::getJson($request);
+        $test = RestApi::getJson($request);
         $this->assertEquals($expected, $test);
     }
 
@@ -93,9 +94,10 @@ class RestApiTest extends TestCase
     {
         $script = $_SERVER["SCRIPT_NAME"];
         $_SERVER["SCRIPT_NAME"] = "/" . RestApi::$endpoint;
+        $request = new Request();
 
         $expected = "restapi.php";
-        $test = RestApi::getScriptName();
+        $test = RestApi::getScriptName($request);
         $this->assertEquals($expected, $test);
 
         $_SERVER["SCRIPT_NAME"] = $script;
@@ -105,6 +107,7 @@ class RestApiTest extends TestCase
     {
         $script = $_SERVER["SCRIPT_NAME"];
         $_SERVER["SCRIPT_NAME"] =  "/" . RestApi::$endpoint;
+        $request = new Request();
         $links = [
             "restapi.php?page=index" => "restapi.php/index",
             "restapi.php?page=1" => "restapi.php/authors",
@@ -134,7 +137,7 @@ class RestApiTest extends TestCase
         $output = json_encode(array_keys($links));
 
         $expected = json_encode(array_values($links), JSON_UNESCAPED_SLASHES);
-        $test = RestApi::replaceLinks($output);
+        $test = RestApi::replaceLinks($output, $request);
         $this->assertEquals($expected, $test);
 
         $_SERVER["SCRIPT_NAME"] = $script;
@@ -142,36 +145,41 @@ class RestApiTest extends TestCase
 
     public function testGetOutput(): void
     {
+        $request = new Request();
         $expected = true;
-        $test = RestApi::getOutput();
+        $test = RestApi::getOutput($request);
         $this->assertEquals($expected, str_starts_with($test, '{"title":"COPS",'));
     }
 
     public function testGetCustomColumns(): void
     {
+        $request = new Request();
         $expected = "Custom Columns";
-        $test = RestApi::getCustomColumns();
+        $test = RestApi::getCustomColumns($request);
         $this->assertEquals($expected, $test["title"]);
     }
 
     public function testGetDatabases(): void
     {
+        $request = new Request();
         $expected = "Databases";
-        $test = RestApi::getDatabases();
+        $test = RestApi::getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
     }
 
     public function testGetOpenApi(): void
     {
+        $request = new Request();
         $expected = "3.1.0";
-        $test = RestApi::getOpenApi();
+        $test = RestApi::getOpenApi($request);
         $this->assertEquals($expected, $test["openapi"]);
     }
 
     public function testGetRoutes(): void
     {
+        $request = new Request();
         $expected = "Routes";
-        $test = RestApi::getRoutes();
+        $test = RestApi::getRoutes($request);
         $this->assertEquals($expected, $test["title"]);
     }
 }
