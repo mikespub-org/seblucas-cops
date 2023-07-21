@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e9c7731b9913374c9b6a77e9a036fd0",
+    "content-hash": "7b782df91982fdab4c012712e36f79ca",
     "packages": [
         {
             "name": "npm-asset/bootstrap",
@@ -3259,6 +3259,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "ext-dom": "*",
         "ext-gd": "*",
         "ext-intl": "*",
         "ext-json": "*",
