@@ -18,7 +18,7 @@ class PageAllBooks extends Page
         if ($this->request->option("titles_split_first_letter") == 1) {
             $this->entryArray = Book::getAllBooks($this->getDatabaseId(), $this->request);
         } else {
-            [$this->entryArray, $this->totalNumber] = Book::getBooks($this->n, $this->getDatabaseId(), $this->getNumberPerPage());
+            [$this->entryArray, $this->totalNumber] = Book::getBooks($this->n, $this->getDatabaseId(), $this->getNumberPerPage(), $this->request);
         }
         $this->idPage = Book::PAGE_ID;
     }

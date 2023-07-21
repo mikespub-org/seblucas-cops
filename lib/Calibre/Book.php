@@ -24,11 +24,11 @@ use Exception;
 define('SQL_BOOKS_LEFT_JOIN', 'left outer join comments on comments.book = books.id
                                 left outer join books_ratings_link on books_ratings_link.book = books.id
                                 left outer join ratings on books_ratings_link.rating = ratings.id ');
-define('SQL_BOOKS_ALL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . ' order by books.sort ');
+define('SQL_BOOKS_ALL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ');
 define('SQL_BOOKS_BY_PUBLISHER', 'select {0} from books_publishers_link, books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     where books_publishers_link.book = books.id and publisher = ? {1} order by publisher');
 define('SQL_BOOKS_BY_FIRST_LETTER', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where upper (books.sort) like ? order by books.sort');
+                                                    where upper (books.sort) like ? {1} order by books.sort');
 define('SQL_BOOKS_BY_AUTHOR', 'select {0} from books_authors_link, books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     left outer join books_series_link on books_series_link.book = books.id
                                                     where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc');
@@ -816,6 +816,7 @@ where data.book = books.id and data.id = ?');
 
         [, $result] = parent::executeQuery('select {0}
 from books
+where 1=1 {1}
 group by substr (upper (sort), 1, 1)
 order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, count(*) as count', self::getFilterString($request), [], -1, $database);
 
@@ -835,9 +836,9 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public static function getBooksByStartingLetter($letter, $n, $database = null, $numberPerPage = null)
+    public static function getBooksByStartingLetter($letter, $n, $database = null, $numberPerPage = null, $request = null)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n, $database, $numberPerPage);
+        return self::getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n, $database, $numberPerPage, $request);
     }
 
     public static function getEntryArray($query, $params, $n, $database = null, $numberPerPage = null, $request = null)
@@ -848,7 +849,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $book = new Book($post);
+            $book = new Book($post, $database);
             array_push($entryArray, $book->getEntry());
         }
         return [$entryArray, $totalNumber];
