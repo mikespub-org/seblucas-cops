@@ -23,7 +23,7 @@ if (file_exists(dirname(__FILE__) . '/' . $user_config_file) && (php_sapi_name()
     require dirname(__FILE__) . '/' . $user_config_file;
 }
 require_once dirname(__FILE__) . '/base.php';
-if (!Request::verifyLogin()) {
+if (!Request::verifyLogin($_SERVER)) {
     header('WWW-Authenticate: Basic realm="COPS Authentication"');
     header('HTTP/1.0 401 Unauthorized');
     echo 'This site is password protected';
@@ -38,8 +38,11 @@ if (!function_exists('str_format')) {
 }
 
 if (!function_exists('localize')) {
+    $translator = new \SebLucas\Cops\Language\Translation($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null);
+
     function localize($phrase, $count=-1, $reset=false)
     {
-        return \SebLucas\Cops\Language\Translation::localize($phrase, $count, $reset);
+        global $translator;
+        return $translator->localize($phrase, $count, $reset);
     }
 }
