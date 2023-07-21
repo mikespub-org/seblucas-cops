@@ -24,10 +24,11 @@ class Tag extends Base
     public $id;
     public $name;
 
-    public function __construct($post)
+    public function __construct($post, $database = null)
     {
         $this->id = $post->id;
         $this->name = $post->name;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -51,7 +52,7 @@ class Tag extends Base
         $result = parent::getDb($database)->prepare('select id, name  from tags where id = ?');
         $result->execute([$tagId]);
         if ($post = $result->fetchObject()) {
-            return new Tag($post);
+            return new Tag($post, $database);
         }
         return null;
     }
@@ -76,13 +77,13 @@ class Tag extends Base
         [$totalNumber, $result] = parent::executeQuery($sql, $columns, "", ['%' . $query . '%'], $n, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $tag = new Tag($post);
+            $tag = new Tag($post, $database);
             array_push($entryArray, new Entry(
                 $tag->name,
                 $tag->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation($tag->getUri())],
+                [ new LinkNavigation($tag->getUri(), null, null, $database)],
                 $database
             ));
         }

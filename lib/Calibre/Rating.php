@@ -23,10 +23,11 @@ class Rating extends Base
     public $id;
     public $name;
 
-    public function __construct($pid, $pname)
+    public function __construct($pid, $pname, $database = null)
     {
         $this->id = $pid;
         $this->name = $pname;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -55,7 +56,7 @@ class Rating extends Base
         [, $result] = parent::executeQuery($query, self::SQL_COLUMNS, "", $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $ratingObj = new Rating($post->id, $post->rating);
+            $ratingObj = new Rating($post->id, $post->rating, $database);
             $rating=$post->rating/2;
             $rating = str_format(localize("ratingword", $rating), $rating);
             array_push($entryArray, new Entry(
@@ -63,7 +64,7 @@ class Rating extends Base
                 $ratingObj->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation($ratingObj->getUri())],
+                [ new LinkNavigation($ratingObj->getUri(), null, null, $database)],
                 $database,
                 "",
                 $post->count
@@ -76,6 +77,6 @@ class Rating extends Base
     {
         $result = parent::getDb($database)->prepare('select rating from ratings where id = ?');
         $result->execute([$ratingId]);
-        return new Rating($ratingId, $result->fetchColumn());
+        return new Rating($ratingId, $result->fetchColumn(), $database);
     }
 }

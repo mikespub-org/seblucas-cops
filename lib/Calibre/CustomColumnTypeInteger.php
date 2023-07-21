@@ -58,7 +58,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
+            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id), null, null, $this->databaseId)];
 
             $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
 

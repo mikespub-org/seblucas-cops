@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -42,6 +43,7 @@ class JSONRenderer
                   "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
             }
         }
+        $database = $book->getDatabaseId();
 
         $publisher = $book->getPublisher();
         if (is_null($publisher)) {
@@ -49,7 +51,7 @@ class JSONRenderer
             $pu = "";
         } else {
             $pn = $publisher->name;
-            $link = new LinkNavigation($publisher->getUri());
+            $link = new LinkNavigation($publisher->getUri(), null, null, $database);
             $pu = $link->hrefXhtml();
         }
 
@@ -61,7 +63,7 @@ class JSONRenderer
         } else {
             $sn = $serie->name;
             $scn = str_format(localize("content.series.data"), $book->seriesIndex, $serie->name);
-            $link = new LinkNavigation($serie->getUri());
+            $link = new LinkNavigation($serie->getUri(), null, null, $database);
             $su = $link->hrefXhtml();
         }
         $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list'], true);
@@ -115,12 +117,12 @@ class JSONRenderer
         }
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
-            $link = new LinkNavigation($author->getUri());
+            $link = new LinkNavigation($author->getUri(), null, null, $database);
             array_push($out ["authors"], ["name" => $author->name, "url" => $link->hrefXhtml()]);
         }
         $out ["tags"] = [];
         foreach ($book->getTags() as $tag) {
-            $link = new LinkNavigation($tag->getUri());
+            $link = new LinkNavigation($tag->getUri(), null, null, $database);
             array_push($out ["tags"], ["name" => $tag->name, "url" => $link->hrefXhtml()]);
         }
 
@@ -136,6 +138,7 @@ class JSONRenderer
 
     public static function getContentArray($entry)
     {
+        /** @var Entry|EntryBook $entry */
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
             $out ["book"] = self::getBookContentArray($entry->book);

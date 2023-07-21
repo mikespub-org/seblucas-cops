@@ -55,7 +55,7 @@ class CustomColumnTypeDate extends CustomColumnType
             $id = $date->format("Y-m-d");
 
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($id))];
+            $entryPLinkArray = [new LinkNavigation($this->getUri($id), null, null, $this->databaseId)];
 
             $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
 

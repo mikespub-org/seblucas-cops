@@ -24,10 +24,11 @@ class Publisher extends Base
     public $id;
     public $name;
 
-    public function __construct($post)
+    public function __construct($post, $database = null)
     {
         $this->id = $post->id;
         $this->name = $post->name;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -53,7 +54,7 @@ from books_publishers_link, publishers
 where publishers.id = publisher and book = ?');
         $result->execute([$bookId]);
         if ($post = $result->fetchObject()) {
-            return new Publisher($post);
+            return new Publisher($post, $database);
         }
         return null;
     }
@@ -64,7 +65,7 @@ where publishers.id = publisher and book = ?');
 from publishers where id = ?');
         $result->execute([$publisherId]);
         if ($post = $result->fetchObject()) {
-            return new Publisher($post);
+            return new Publisher($post, $database);
         }
         return null;
     }

@@ -35,6 +35,7 @@ class CustomColumn extends Base
         $this->value = $pvalue;
         $this->customColumnType = $pcustomColumnType;
         $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value);
+        //$this->databaseId = $this->customColumnType->getDatabaseId();
     }
 
     /**

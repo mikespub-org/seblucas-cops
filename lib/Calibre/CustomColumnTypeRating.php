@@ -83,7 +83,7 @@ class CustomColumnTypeRating extends CustomColumnType
             $name = str_format(localize("customcolumn.stars", $i), $i);
             $entryid = $this->getEntryId($i * 2);
             $content = str_format(localize("bookword", $count), $count);
-            $linkarray = [new LinkNavigation($this->getUri($i * 2))];
+            $linkarray = [new LinkNavigation($this->getUri($i * 2), null, null, $this->databaseId)];
             $entry = new Entry($name, $entryid, $content, $this->datatype, $linkarray, $this->getDatabaseId(), "", $count);
             array_push($entryArray, $entry);
         }

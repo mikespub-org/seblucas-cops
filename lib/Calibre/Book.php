@@ -246,7 +246,7 @@ class Book extends Base
     public function getAuthors()
     {
         if (is_null($this->authors)) {
-            $this->authors = Author::getAuthorByBookId($this->id);
+            $this->authors = Author::getAuthorByBookId($this->id, $this->databaseId);
         }
         return $this->authors;
     }
@@ -268,7 +268,7 @@ class Book extends Base
     public function getPublisher()
     {
         if (is_null($this->publisher)) {
-            $this->publisher = Publisher::getPublisherByBookId($this->id);
+            $this->publisher = Publisher::getPublisherByBookId($this->id, $this->databaseId);
         }
         return $this->publisher;
     }
@@ -279,7 +279,7 @@ class Book extends Base
     public function getSerie()
     {
         if (is_null($this->serie)) {
-            $this->serie = Serie::getSerieByBookId($this->id);
+            $this->serie = Serie::getSerieByBookId($this->id, $this->databaseId);
         }
         return $this->serie;
     }
@@ -290,7 +290,7 @@ class Book extends Base
     public function getLanguages()
     {
         $lang = [];
-        $result = parent::getDb()->prepare('select languages.lang_code
+        $result = parent::getDb($this->databaseId)->prepare('select languages.lang_code
                 from books_languages_link, languages
                 where books_languages_link.lang_code = languages.id
                 and book = ?
@@ -310,14 +310,14 @@ class Book extends Base
         if (is_null($this->tags)) {
             $this->tags = [];
 
-            $result = parent::getDb()->prepare('select tags.id as id, name
+            $result = parent::getDb($this->databaseId)->prepare('select tags.id as id, name
                 from books_tags_link, tags
                 where tag = tags.id
                 and book = ?
                 order by name');
             $result->execute([$this->id]);
             while ($post = $result->fetchObject()) {
-                array_push($this->tags, new Tag($post));
+                array_push($this->tags, new Tag($post, $this->databaseId));
             }
         }
         return $this->tags;
@@ -338,13 +338,13 @@ class Book extends Base
         if (is_null($this->identifiers)) {
             $this->identifiers = [];
 
-            $result = parent::getDb()->prepare('select type, val, id
+            $result = parent::getDb($this->databaseId)->prepare('select type, val, id
                 from identifiers
                 where book = ?
                 order by type');
             $result->execute([$this->id]);
             while ($post = $result->fetchObject()) {
-                array_push($this->identifiers, new Identifier($post));
+                array_push($this->identifiers, new Identifier($post, $this->databaseId));
             }
         }
         return $this->identifiers;
@@ -623,6 +623,7 @@ class Book extends Base
 
     public function getLinkArray()
     {
+        $database = $this->getDatabaseId();
         $linkArray = [];
 
         if ($this->hasCover) {
@@ -647,12 +648,12 @@ class Book extends Base
 
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
-            array_push($linkArray, new LinkNavigation($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name)));
+            array_push($linkArray, new LinkNavigation($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name, $database)));
         }
 
         $serie = $this->getSerie();
         if (!is_null($serie)) {
-            array_push($linkArray, new LinkNavigation($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name)));
+            array_push($linkArray, new LinkNavigation($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name, $database)));
         }
 
         return $linkArray;
@@ -686,7 +687,7 @@ class Book extends Base
             self::PAGE_ID,
             str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
             'text',
-            [new LinkNavigation('?page='.self::PAGE_ALL)],
+            [new LinkNavigation('?page='.self::PAGE_ALL, null, null, $database)],
             $database,
             '',
             $nBooks
@@ -698,7 +699,7 @@ class Book extends Base
                 Page::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $config['cops_recentbooks_limit']),
                 'text',
-                [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS)],
+                [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS, null, null, $database)],
                 $database,
                 '',
                 $config['cops_recentbooks_limit']
@@ -827,7 +828,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
                 Book::getEntryIdByLetter($post->title),
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.self::PAGE_LETTER.'&id='. rawurlencode($post->title))],
+                [new LinkNavigation('?page='.self::PAGE_LETTER.'&id='. rawurlencode($post->title), null, null, $database)],
                 $database,
                 '',
                 $post->count

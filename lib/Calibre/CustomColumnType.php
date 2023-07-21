@@ -141,8 +141,8 @@ abstract class CustomColumnType extends Base
         $pcontent = $this->getDescription();
         // @checkme convert "csv" back to "text" here?
         $pcontentType = $this->datatype;
-        $plinkArray = [new LinkNavigation($this->getUriAllCustoms())];
         $database = $this->getDatabaseId();
+        $plinkArray = [new LinkNavigation($this->getUriAllCustoms(), null, null, $database)];
         $pclass = "";
         $pcount = $this->getDistinctValueCount();
 

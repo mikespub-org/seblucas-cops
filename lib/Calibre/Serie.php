@@ -23,10 +23,11 @@ class Serie extends Base
     public $id;
     public $name;
 
-    public function __construct($post)
+    public function __construct($post, $database = null)
     {
         $this->id = $post->id;
         $this->name = $post->name;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -52,7 +53,7 @@ from books_series_link, series
 where series.id = series and book = ?');
         $result->execute([$bookId]);
         if ($post = $result->fetchObject()) {
-            return new Serie($post);
+            return new Serie($post, $database);
         }
         return null;
     }
@@ -62,7 +63,7 @@ where series.id = series and book = ?');
         $result = parent::getDb($database)->prepare('select id, name  from series where id = ?');
         $result->execute([$serieId]);
         if ($post = $result->fetchObject()) {
-            return new Serie($post);
+            return new Serie($post, $database);
         }
         return null;
     }

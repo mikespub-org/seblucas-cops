@@ -22,10 +22,11 @@ class Language extends Base
     public $id;
     public $lang_code;
 
-    public function __construct($pid, $plang_code)
+    public function __construct($pid, $plang_code, $database = null)
     {
         $this->id = $pid;
         $this->lang_code = $plang_code;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -58,7 +59,7 @@ class Language extends Base
         $result = parent::getDb($database)->prepare('select id, lang_code  from languages where id = ?');
         $result->execute([$languageId]);
         if ($post = $result->fetchObject()) {
-            return new Language($post->id, Language::getLanguageString($post->lang_code));
+            return new Language($post->id, Language::getLanguageString($post->lang_code), $database);
         }
         return null;
     }
@@ -74,13 +75,13 @@ group by languages.id, books_languages_link.lang_code
 order by languages.lang_code');
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $language = new Language($post->id, $post->lang_code);
+            $language = new Language($post->id, $post->lang_code, $database);
             array_push($entryArray, new Entry(
                 Language::getLanguageString($language->lang_code),
                 $language->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation($language->getUri())],
+                [ new LinkNavigation($language->getUri(), null, null, $database)],
                 $database,
                 "",
                 $post->count

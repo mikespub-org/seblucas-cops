@@ -205,34 +205,34 @@ class Page
             }
         } else {
             if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
-                array_push($this->entryArray, Author::getCount());
+                array_push($this->entryArray, Author::getCount($this->databaseId));
             }
             if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
-                $series = Serie::getCount();
+                $series = Serie::getCount($this->databaseId);
                 if (!is_null($series)) {
                     array_push($this->entryArray, $series);
                 }
             }
             if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
-                $publisher = Publisher::getCount();
+                $publisher = Publisher::getCount($this->databaseId);
                 if (!is_null($publisher)) {
                     array_push($this->entryArray, $publisher);
                 }
             }
             if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
-                $tags = Tag::getCount();
+                $tags = Tag::getCount($this->databaseId);
                 if (!is_null($tags)) {
                     array_push($this->entryArray, $tags);
                 }
             }
             if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
-                $rating = Rating::getCount();
+                $rating = Rating::getCount($this->databaseId);
                 if (!is_null($rating)) {
                     array_push($this->entryArray, $rating);
                 }
             }
             if (!in_array("language", $this->ignoredCategories)) {
-                $languages = Language::getCount();
+                $languages = Language::getCount($this->databaseId);
                 if (!is_null($languages)) {
                     array_push($this->entryArray, $languages);
                 }

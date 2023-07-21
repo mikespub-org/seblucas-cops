@@ -28,11 +28,12 @@ class Author extends Base
     public $name;
     public $sort;
 
-    public function __construct($post)
+    public function __construct($post, $database = null)
     {
         $this->id = $post->id;
         $this->name = str_replace("|", ",", $post->name);
         $this->sort = $post->sort;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -69,7 +70,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
                 Author::getEntryIdByLetter($post->title),
                 str_format(localize("authorword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation("?page=".self::PAGE_LETTER."&id=". rawurlencode($post->title))],
+                [ new LinkNavigation("?page=".self::PAGE_LETTER."&id=". rawurlencode($post->title), null, null, $database)],
                 $database,
                 "",
                 $post->count
@@ -103,7 +104,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         $result = parent::getDb($database)->prepare('select ' . self::SQL_COLUMNS . ' from authors where id = ?');
         $result->execute([$authorId]);
         $post = $result->fetchObject();
-        return new Author($post);
+        return new Author($post, $database);
     }
 
     public static function getAuthorByBookId($bookId, $database = null)
@@ -114,7 +115,7 @@ and book = ? order by books_authors_link.id');
         $result->execute([$bookId]);
         $authorArray = [];
         while ($post = $result->fetchObject()) {
-            array_push($authorArray, new Author($post));
+            array_push($authorArray, new Author($post, $database));
         }
         return $authorArray;
     }

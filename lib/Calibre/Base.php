@@ -274,7 +274,7 @@ abstract class Base
             $id,
             str_format(localize($numberOfString, $count), $count),
             "text",
-            [ new LinkNavigation("?page=".$pageId)],
+            [ new LinkNavigation("?page=".$pageId, null, null, $database)],
             $database,
             "",
             $count
@@ -312,7 +312,7 @@ abstract class Base
                 $instance->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation($instance->getUri())],
+                [ new LinkNavigation($instance->getUri(), null, null, $database)],
                 $database,
                 "",
                 $post->count

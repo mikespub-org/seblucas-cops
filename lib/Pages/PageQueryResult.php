@@ -170,21 +170,23 @@ class PageQueryResult extends Page
 
         // Special case when we are doing a search and no database is selected
         if (Base::noDatabaseSelected($database) && !$this->useTypeahead()) {
-            $i = 0;
+            $pagequery = Page::OPENSEARCH_QUERY;
+            $query = $this->query;
+            $d = 0;
             foreach (Base::getDbNameList() as $key) {
                 Base::clearDb();
-                [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $i, 1, $ignoredCategories);
+                [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $d, 1, $ignoredCategories);
                 array_push($this->entryArray, new Entry(
                     $key,
-                    "db:query:{$i}",
+                    "db:query:{$d}",
                     str_format(localize("bookword", $totalNumber), $totalNumber),
                     "text",
-                    [ new LinkNavigation("?db={$i}&page=9&query=" . $this->query)],
+                    [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}")],
                     $database,
                     "",
                     $totalNumber
                 ));
-                $i++;
+                $d++;
             }
             return;
         }
