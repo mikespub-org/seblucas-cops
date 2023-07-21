@@ -648,12 +648,12 @@ class Book extends Base
 
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
-            array_push($linkArray, new LinkNavigation($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name, $database)));
+            array_push($linkArray, new LinkNavigation($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
         }
 
         $serie = $this->getSerie();
         if (!is_null($serie)) {
-            array_push($linkArray, new LinkNavigation($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name, $database)));
+            array_push($linkArray, new LinkNavigation($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
         }
 
         return $linkArray;
