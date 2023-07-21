@@ -60,6 +60,42 @@ class Request
     }
 
     /**
+     * Summary of language
+     * @return mixed
+     */
+    public function language()
+    {
+        return $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
+    }
+
+    /**
+     * Summary of path
+     * @return mixed
+     */
+    public function path()
+    {
+        return $_SERVER['PATH_INFO'] ?? null;
+    }
+
+    /**
+     * Summary of script
+     * @return mixed
+     */
+    public function script()
+    {
+        return $_SERVER['SCRIPT_NAME'] ?? null;
+    }
+
+    /**
+     * Summary of uri
+     * @return mixed
+     */
+    public function uri()
+    {
+        return $_SERVER['REQUEST_URI'] ?? null;
+    }
+
+    /**
      * Summary of init
      * @return void
      */
@@ -96,6 +132,66 @@ class Request
     public function set($name, $value)
     {
         $this->urlParams[$name] = $value;
+    }
+
+    /**
+     * Summary of post
+     * @param mixed $name
+     * @return mixed
+     */
+    public function post($name)
+    {
+        return $_POST[$name] ?? null;
+    }
+
+    /**
+     * Summary of request
+     * @param mixed $name
+     * @return mixed
+     */
+    public function request($name)
+    {
+        return $_REQUEST[$name] ?? null;
+    }
+
+    /**
+     * Summary of server
+     * @param mixed $name
+     * @return mixed
+     */
+    public function server($name)
+    {
+        return $_SERVER[$name] ?? null;
+    }
+
+    /**
+     * Summary of session
+     * @param mixed $name
+     * @return mixed
+     */
+    public function session($name)
+    {
+        return $_SESSION[$name] ?? null;
+    }
+
+    /**
+     * Summary of cookie
+     * @param mixed $name
+     * @return mixed
+     */
+    public function cookie($name)
+    {
+        return $_COOKIE[$name] ?? null;
+    }
+
+    /**
+     * Summary of files
+     * @param mixed $name
+     * @return mixed
+     */
+    public function files($name)
+    {
+        return $_FILES[$name] ?? null;
     }
 
     /**

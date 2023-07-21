@@ -54,7 +54,7 @@ $data = ['title'                 => $config['cops_title_default'],
               'current_css'           => $request->style(),
               'favico'                => $config['cops_icon'],
               'getjson_url'           => JSONRenderer::getCurrentUrl($request->query())];
-if (preg_match('/Kindle/', $_SERVER['HTTP_USER_AGENT'])) {
+if (preg_match('/Kindle/', $request->agent())) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
 }
 $headcontent = file_get_contents('templates/' . $request->template() . '/file.html');

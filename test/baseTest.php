@@ -90,7 +90,8 @@ class BaseTest extends TestCase
     public function testLocalizeFr()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
-        $this->assertEquals("Auteurs", localize("authors.title", -1, true));
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $this->assertEquals("Auteurs", $translator->localize("authors.title", -1, true));
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
@@ -99,7 +100,8 @@ class BaseTest extends TestCase
     public function testLocalizeUnknown()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "aa";
-        $this->assertEquals("Authors", localize("authors.title", -1, true));
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $this->assertEquals("Authors", $translator->localize("authors.title", -1, true));
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
@@ -111,7 +113,8 @@ class BaseTest extends TestCase
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        [$lang, $lang_file] = Translation::getLangAndTranslationFile();
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        [$lang, $lang_file] = $translator->getLangAndTranslationFile();
         $this->assertEquals($result, $lang);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
@@ -137,7 +140,8 @@ class BaseTest extends TestCase
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $langs = array_keys(Translation::getAcceptLanguages());
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $langs = array_keys($translator->getAcceptLanguages($acceptLanguage));
         $this->assertEquals($result, $langs[0]);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";

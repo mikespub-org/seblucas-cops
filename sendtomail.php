@@ -3,6 +3,7 @@
 namespace SebLucas\Cops\Mail;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Input\Request;
 
 require_once dirname(__FILE__) . '/config.php';
 /** @var array $config */
@@ -44,8 +45,9 @@ if ($error = checkConfiguration()) {
     exit;
 }
 
-$idData = (int)$_REQUEST["data"];
-$emailDest = $_REQUEST["email"];
+$request = new Request();
+$idData = (int) $request->post("data");
+$emailDest = $request->post("email");
 if ($error = checkRequest($idData, $emailDest)) {
     echo $error;
     exit;

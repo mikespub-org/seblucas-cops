@@ -71,7 +71,7 @@ class RestApi
      */
     public static function getPathInfo($request)
     {
-        return $_SERVER["PATH_INFO"] ?? "/index";
+        return $request->path() ?? "/index";
     }
 
     /**
@@ -158,7 +158,7 @@ class RestApi
      */
     public static function getScriptName($request)
     {
-        $script = explode("/", $_SERVER["SCRIPT_NAME"] ?? "/" . self::$endpoint);
+        $script = explode("/", $request->script() ?? "/" . self::$endpoint);
         $link = array_pop($script);
         return $link;
     }
