@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
 class Rating extends Base
@@ -18,15 +16,15 @@ class Rating extends Base
     public const PAGE_ALL = Page::ALL_RATINGS;
     public const PAGE_DETAIL = Page::RATING_DETAIL;
     public const SQL_TABLE = "ratings";
-    public const SQL_COLUMNS = "ratings.id as id, ratings.rating as rating, count(*) as count";
+    public const SQL_COLUMNS = "ratings.id as id, ratings.rating as name, count(*) as count";
     public const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id group by ratings.id order by ratings.rating";
     public $id;
     public $name;
 
-    public function __construct($pid, $pname, $database = null)
+    public function __construct($post, $database = null)
     {
-        $this->id = $pid;
-        $this->name = $pname;
+        $this->id = $post->id;
+        $this->name = $post->name;
         $this->databaseId = $database;
     }
 
@@ -38,6 +36,11 @@ class Rating extends Base
     public function getEntryId()
     {
         return self::PAGE_ID.":".$this->id;
+    }
+
+    public function getTitle()
+    {
+        return str_format(localize("ratingword", $this->name/2), $this->name/2);
     }
 
     public static function getCount($database = null)
@@ -56,27 +59,19 @@ class Rating extends Base
         [, $result] = parent::executeQuery($query, self::SQL_COLUMNS, "", $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $ratingObj = new Rating($post->id, $post->rating, $database);
-            $rating=$post->rating/2;
-            $rating = str_format(localize("ratingword", $rating), $rating);
-            array_push($entryArray, new Entry(
-                $rating,
-                $ratingObj->getEntryId(),
-                str_format(localize("bookword", $post->count), $post->count),
-                "text",
-                [ new LinkNavigation($ratingObj->getUri(), null, null, $database)],
-                $database,
-                "",
-                $post->count
-            ));
+            $rating = new Rating($post, $database);
+            array_push($entryArray, $rating->getEntry($post->count));
         }
         return $entryArray;
     }
 
     public static function getRatingById($ratingId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select rating from ratings where id = ?');
+        $result = parent::getDb($database)->prepare('select ratings.id as id, ratings.rating as name from ratings where ratings.id = ?');
         $result->execute([$ratingId]);
-        return new Rating($ratingId, $result->fetchColumn(), $database);
+        if ($post = $result->fetchObject()) {
+            return new Rating($post, $database);
+        }
+        return null;
     }
 }

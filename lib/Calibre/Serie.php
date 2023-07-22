@@ -60,7 +60,7 @@ where series.id = series and book = ?');
 
     public static function getSerieById($serieId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select id, name  from series where id = ?');
+        $result = parent::getDb($database)->prepare('select series.id as id, series.name as name from series where series.id = ?');
         $result->execute([$serieId]);
         if ($post = $result->fetchObject()) {
             return new Serie($post, $database);

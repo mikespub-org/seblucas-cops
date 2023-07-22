@@ -51,6 +51,16 @@ class Author extends Base
         return self::PAGE_ID.":letter:".$startingLetter;
     }
 
+    public function getTitle()
+    {
+        return $this->sort;
+    }
+
+    public function getContent($count = 0)
+    {
+        return str_format(localize("authorword", $count), $count);
+    }
+
     public static function getCount($database = null)
     {
         // str_format (localize("authors.alphabetical", count(array))
@@ -103,8 +113,10 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     {
         $result = parent::getDb($database)->prepare('select ' . self::SQL_COLUMNS . ' from authors where id = ?');
         $result->execute([$authorId]);
-        $post = $result->fetchObject();
-        return new Author($post, $database);
+        if ($post = $result->fetchObject()) {
+            return new Author($post, $database);
+        }
+        return null;
     }
 
     public static function getAuthorByBookId($bookId, $database = null)

@@ -66,7 +66,7 @@ abstract class CustomColumnType extends Base
      * @param string|integer $id the id of the value to show
      * @return string
      */
-    public function getUri($id)
+    public function getUri($id = null)
     {
         return "?page=" . self::PAGE_DETAIL . "&custom={$this->customId}&id={$id}";
     }
@@ -87,7 +87,7 @@ abstract class CustomColumnType extends Base
      * @param string|integer $id the id of the value to show
      * @return string
      */
-    public function getEntryId($id)
+    public function getEntryId($id = null)
     {
         return self::PAGE_ID . ":" . $this->customId . ":" . $id;
     }
@@ -107,9 +107,38 @@ abstract class CustomColumnType extends Base
      *
      * @return string
      */
+    public function getName()
+    {
+        return $this->columnTitle;
+    }
+
     public function getTitle()
     {
         return $this->columnTitle;
+    }
+
+    public function getContentType()
+    {
+        return $this->datatype;
+    }
+
+    public function getLinkArray($id = null)
+    {
+        return [ new LinkNavigation($this->getUri($id), null, null, $this->getDatabaseId()) ];
+    }
+
+    /**
+     * The description used in the index page
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        $desc = $this->getDatabaseDescription();
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
+        return $desc;
     }
 
     /**
@@ -250,7 +279,7 @@ abstract class CustomColumnType extends Base
         $result = parent::getDb($database)->prepare('SELECT id FROM custom_columns WHERE label = ?');
         $result->execute([$lookup]);
         if ($post = $result->fetchObject()) {
-            return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id);
+            return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id, $database);
         }
         return self::$customColumnCacheLookup[$lookup] = null;
     }
@@ -342,13 +371,6 @@ abstract class CustomColumnType extends Base
      * @return Entry[]|null
      */
     abstract protected function getAllCustomValuesFromDatabase();
-
-    /**
-     * The description used in the index page
-     *
-     * @return string
-     */
-    abstract public function getDescription();
 
     /**
      * Find the value of this column for a specific book

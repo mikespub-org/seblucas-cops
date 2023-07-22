@@ -660,7 +660,7 @@ class Book extends Base
     }
 
 
-    public function getEntry()
+    public function getEntry($count = 0)
     {
         return new EntryBook(
             $this->getTitle(),

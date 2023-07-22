@@ -155,11 +155,7 @@ class JSONRenderer
             if ($entry instanceof EntryBook) {
                 array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
             } else {
-                if (empty($entry->className) xor Base::noDatabaseSelected($page->getDatabaseId())) {
-                    array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
-                } else {
-                    array_push($out, ["class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink()]);
-                }
+                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
             }
         }
         return $out;

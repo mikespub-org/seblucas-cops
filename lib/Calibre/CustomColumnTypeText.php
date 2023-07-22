@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use UnexpectedValueException;
 
 class CustomColumnTypeText extends CustomColumnType
@@ -89,23 +87,10 @@ class CustomColumnTypeText extends CustomColumnType
         $result = $this->getDb()->query($query);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id), null, null, $this->databaseId)];
-
-            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $customcolumn = new CustomColumn($post->id, $post->name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
-    }
-
-    public function getDescription()
-    {
-        $desc = $this->getDatabaseDescription();
-        if ($desc === null || empty($desc)) {
-            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
-        }
-        return $desc;
     }
 
     public function getCustomByBook($book)

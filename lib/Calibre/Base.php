@@ -17,8 +17,12 @@ use PDO;
 
 abstract class Base
 {
+    public const PAGE_ID = "cops:base";
+    public const PAGE_DETAIL = 0;
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
+    public $id;
+    public $name;
     private static $db = null;
     protected $databaseId = null;
 
@@ -39,6 +43,50 @@ abstract class Base
     public function setDatabaseId($database = null)
     {
         $this->databaseId = $database;
+    }
+
+    public function getUri()
+    {
+        return "?page=".static::PAGE_DETAIL."&id=$this->id";
+    }
+
+    public function getEntryId()
+    {
+        return static::PAGE_ID.":".$this->id;
+    }
+
+    public function getTitle()
+    {
+        return $this->name;
+    }
+
+    public function getContent($count = 0)
+    {
+        return str_format(localize("bookword", $count), $count);
+    }
+
+    public function getContentType()
+    {
+        return "text";
+    }
+
+    public function getLinkArray()
+    {
+        return [ new LinkNavigation($this->getUri(), null, null, $this->getDatabaseId()) ];
+    }
+
+    public function getEntry($count = 0)
+    {
+        return new Entry(
+            $this->getTitle(),
+            $this->getEntryId(),
+            $this->getContent($count),
+            $this->getContentType(),
+            $this->getLinkArray(),
+            $this->getDatabaseId(),
+            $this::class,
+            $count
+        );
     }
 
     /**
@@ -299,24 +347,10 @@ abstract class Base
         [, $result] = self::executeQuery($query, $columns, "", $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            /** @var Author|Tag|Serie|Publisher $instance */
+            /** @var Author|Tag|Serie|Publisher|Language|Rating $instance */
 
-            $instance = new $category($post);
-            if (property_exists($post, "sort")) {
-                $title = $post->sort;
-            } else {
-                $title = $post->name;
-            }
-            array_push($entryArray, new Entry(
-                $title,
-                $instance->getEntryId(),
-                str_format(localize("bookword", $post->count), $post->count),
-                "text",
-                [ new LinkNavigation($instance->getUri(), null, null, $database)],
-                $database,
-                "",
-                $post->count
-            ));
+            $instance = new $category($post, $database);
+            array_push($entryArray, $instance->getEntry($post->count));
         }
         return $entryArray;
     }

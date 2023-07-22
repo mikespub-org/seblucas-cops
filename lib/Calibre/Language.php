@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
 class Language extends Base
@@ -18,14 +16,15 @@ class Language extends Base
     public const PAGE_ALL = Page::ALL_LANGUAGES;
     public const PAGE_DETAIL = Page::LANGUAGE_DETAIL;
     public const SQL_TABLE = "languages";
-    public const SQL_COLUMNS = "languages.id as id, languages.lang_code as lang_code, count(*) as count";
+    public const SQL_COLUMNS = "languages.id as id, languages.lang_code as name, count(*) as count";
+    public const SQL_ALL_LANGUAGES = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code group by languages.id, books_languages_link.lang_code order by languages.lang_code";
     public $id;
-    public $lang_code;
+    public $name;
 
-    public function __construct($pid, $plang_code, $database = null)
+    public function __construct($post, $database = null)
     {
-        $this->id = $pid;
-        $this->lang_code = $plang_code;
+        $this->id = $post->id;
+        $this->name = $post->name;
         $this->databaseId = $database;
     }
 
@@ -37,6 +36,11 @@ class Language extends Base
     public function getEntryId()
     {
         return self::PAGE_ID.":".$this->id;
+    }
+
+    public function getTitle()
+    {
+        return self::getLanguageString($this->name);
     }
 
     public static function getLanguageString($code)
@@ -56,36 +60,22 @@ class Language extends Base
 
     public static function getLanguageById($languageId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select id, lang_code  from languages where id = ?');
+        $result = parent::getDb($database)->prepare('select languages.id as id, languages.lang_code as name from languages where languages.id = ?');
         $result->execute([$languageId]);
         if ($post = $result->fetchObject()) {
-            return new Language($post->id, Language::getLanguageString($post->lang_code), $database);
+            return new Language($post, $database);
         }
         return null;
     }
 
-
-
     public static function getAllLanguages($database = null)
     {
-        $result = parent::getDb($database)->query('select ' . self::SQL_COLUMNS . '
-from languages, books_languages_link
-where languages.id = books_languages_link.lang_code
-group by languages.id, books_languages_link.lang_code
-order by languages.lang_code');
+        $query = str_format(self::SQL_ALL_LANGUAGES, self::SQL_COLUMNS);
+        $result = parent::getDb($database)->query($query);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $language = new Language($post->id, $post->lang_code, $database);
-            array_push($entryArray, new Entry(
-                Language::getLanguageString($language->lang_code),
-                $language->getEntryId(),
-                str_format(localize("bookword", $post->count), $post->count),
-                "text",
-                [ new LinkNavigation($language->getUri(), null, null, $database)],
-                $database,
-                "",
-                $post->count
-            ));
+            $language = new Language($post, $database);
+            array_push($entryArray, $language->getEntry($post->count));
         }
         return $entryArray;
     }

@@ -46,15 +46,6 @@ class CustomColumnTypeComment extends CustomColumnType
         return null;
     }
 
-    public function getDescription()
-    {
-        $desc = $this->getDatabaseDescription();
-        if ($desc === null || empty($desc)) {
-            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
-        }
-        return $desc;
-    }
-
     public function getCustomByBook($book)
     {
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = {1}";

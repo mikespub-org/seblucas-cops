@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 
 class CustomColumnTypeBool extends CustomColumnType
 {
@@ -64,12 +63,9 @@ class CustomColumnTypeBool extends CustomColumnType
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id), null, null, $this->databaseId)];
-
-            $entry = new Entry(localize($this->BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $name = localize($this->BOOLEAN_NAMES[$post->id]);
+            $customcolumn = new CustomColumn($post->id, $name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
     }

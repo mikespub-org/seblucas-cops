@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 
 class CustomColumnTypeEnumeration extends CustomColumnType
 {
@@ -73,19 +72,16 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         $result = $this->getDb($this->databaseId)->query($query);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id), null, null, $this->databaseId)];
-
-            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $customcolumn = new CustomColumn($post->id, $post->name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
     }
 
     public function getDescription()
     {
-        return str_format(localize("customcolumn.description.enum", $this->getDistinctValueCount()), $this->getDistinctValueCount());
+        $count = $this->getDistinctValueCount();
+        return str_format(localize("customcolumn.description.enum", $count), $count);
     }
 
     public function getCustomByBook($book)

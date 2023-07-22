@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use DateTime;
 
 class CustomColumnTypeDate extends CustomColumnType
@@ -53,25 +52,13 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
             $id = $date->format("Y-m-d");
+            $name = $date->format(localize("customcolumn.date.format"));
 
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($id), null, null, $this->databaseId)];
-
-            $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $customcolumn = new CustomColumn($id, $name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
 
         return $entryArray;
-    }
-
-    public function getDescription()
-    {
-        $desc = $this->getDatabaseDescription();
-        if ($desc === null || empty($desc)) {
-            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
-        }
-        return $desc;
     }
 
     public function getCustomByBook($book)

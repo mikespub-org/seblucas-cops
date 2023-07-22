@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
 class Tag extends Base
@@ -49,7 +47,7 @@ class Tag extends Base
 
     public static function getTagById($tagId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select id, name  from tags where id = ?');
+        $result = parent::getDb($database)->prepare('select tags.id as id, tags.name as name from tags where tags.id = ?');
         $result->execute([$tagId]);
         if ($post = $result->fetchObject()) {
             return new Tag($post, $database);
@@ -78,14 +76,7 @@ class Tag extends Base
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $tag = new Tag($post, $database);
-            array_push($entryArray, new Entry(
-                $tag->name,
-                $tag->getEntryId(),
-                str_format(localize("bookword", $post->count), $post->count),
-                "text",
-                [ new LinkNavigation($tag->getUri(), null, null, $database)],
-                $database
-            ));
+            array_push($entryArray, $tag->getEntry($post->count));
         }
         return [$entryArray, $totalNumber];
     }

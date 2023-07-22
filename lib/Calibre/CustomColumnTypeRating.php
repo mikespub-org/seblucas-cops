@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 
 class CustomColumnTypeRating extends CustomColumnType
 {
@@ -78,12 +77,13 @@ class CustomColumnTypeRating extends CustomColumnType
 
         $entryArray = [];
 
+        // @todo align with other custom columns
         for ($i = 0; $i <= 5; $i++) {
             $count = $countArray[$i * 2];
             $name = str_format(localize("customcolumn.stars", $i), $i);
             $entryid = $this->getEntryId($i * 2);
-            $content = str_format(localize("bookword", $count), $count);
-            $linkarray = [new LinkNavigation($this->getUri($i * 2), null, null, $this->databaseId)];
+            $content = $this->getContent($count);
+            $linkarray = $this->getLinkArray($i * 2);
             $entry = new Entry($name, $entryid, $content, $this->datatype, $linkarray, $this->getDatabaseId(), "", $count);
             array_push($entryArray, $entry);
         }

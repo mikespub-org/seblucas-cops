@@ -49,14 +49,12 @@ class BaseTest extends TestCase
         $html = new DOMDocument();
         $html->loadHTML("<html><head></head><body>" . $output . "</body></html>");
         $errors = libxml_get_errors();
-        foreach ($errors as $error)
-        {
+        foreach ($errors as $error) {
             // ignore invalid tags from HTML5 which libxml doesn't know about
             if ($error->code == 801) {
                 continue;
             }
             $this->fail("Error parsing output for server-side rendering of template " . $template . "\n" . $error->message . "\n" . $output);
-            return;
         }
         libxml_clear_errors();
         libxml_use_internal_errors($old);

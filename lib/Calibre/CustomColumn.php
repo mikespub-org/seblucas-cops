@@ -13,8 +13,6 @@ namespace SebLucas\Cops\Calibre;
  */
 class CustomColumn extends Base
 {
-    /** @var string|integer the ID of the value */
-    public $valueID;
     /** @var string the (string) representation of the value */
     public $value;
     /** @var CustomColumnType the custom column that contains the value */
@@ -31,11 +29,11 @@ class CustomColumn extends Base
      */
     public function __construct($pid, $pvalue, $pcustomColumnType)
     {
-        $this->valueID = $pid;
+        $this->id = $pid;
         $this->value = $pvalue;
         $this->customColumnType = $pcustomColumnType;
         $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value);
-        //$this->databaseId = $this->customColumnType->getDatabaseId();
+        $this->databaseId = $this->customColumnType->getDatabaseId();
     }
 
     /**
@@ -45,7 +43,7 @@ class CustomColumn extends Base
      */
     public function getUri()
     {
-        return $this->customColumnType->getUri($this->valueID);
+        return $this->customColumnType->getUri($this->id);
     }
 
     /**
@@ -55,7 +53,17 @@ class CustomColumn extends Base
      */
     public function getEntryId()
     {
-        return $this->customColumnType->getEntryId($this->valueID);
+        return $this->customColumnType->getEntryId($this->id);
+    }
+
+    public function getTitle()
+    {
+        return $this->value;
+    }
+
+    public function getLinkArray()
+    {
+        return $this->customColumnType->getLinkArray($this->id);
     }
 
     /**
@@ -68,7 +76,7 @@ class CustomColumn extends Base
      */
     public function getQuery()
     {
-        return $this->customColumnType->getQuery($this->valueID);
+        return $this->customColumnType->getQuery($this->id);
     }
 
     /**
@@ -104,7 +112,7 @@ class CustomColumn extends Base
     public function toArray()
     {
         return [
-            'valueID'          => $this->valueID,
+            'valueID'          => $this->id,
             'value'            => $this->value,
             'customColumnType' => (array)$this->customColumnType,
             'htmlvalue'        => $this->htmlvalue,

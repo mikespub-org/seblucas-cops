@@ -61,8 +61,7 @@ where publishers.id = publisher and book = ?');
 
     public static function getPublisherById($publisherId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select id, name
-from publishers where id = ?');
+        $result = parent::getDb($database)->prepare('select publishers.id as id, publishers.name as name from publishers where publishers.id = ?');
         $result->execute([$publisherId]);
         if ($post = $result->fetchObject()) {
             return new Publisher($post, $database);
