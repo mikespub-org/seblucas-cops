@@ -27,6 +27,13 @@ use SebLucas\Cops\Pages\Page;
 
 class CustomColumnTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        global $config;
+
+        $config['cops_show_not_set_filter'] = [];
+    }
+
     public function testColumnType01()
     {
         global $config;

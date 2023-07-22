@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-
 class CustomColumnTypeBool extends CustomColumnType
 {
     // PHP pre 5.6 does not support const arrays
@@ -36,8 +34,8 @@ class CustomColumnTypeBool extends CustomColumnType
 
     public function getQuery($id)
     {
-        if ($id == -1) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", $this->getTableName());
+        if ($id == -1 || $id === '') {
+            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 0) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());

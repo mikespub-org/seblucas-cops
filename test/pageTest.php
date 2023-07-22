@@ -20,6 +20,7 @@ class PageTest extends TestCase
     {
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        $config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];
         Base::clearDb();
         $_GET = [];
     }
@@ -214,9 +215,11 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Type4", $currentPage->title);
-        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("SeriesLike", $currentPage->entryArray [0]->title);
         $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("Not Set", $currentPage->entryArray [2]->title);
+        $this->assertEquals(12, $currentPage->entryArray [2]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -234,9 +237,11 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Type2", $currentPage->title);
-        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("tag1", $currentPage->entryArray [0]->title);
         $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("Not Set", $currentPage->entryArray [3]->title);
+        $this->assertEquals(11, $currentPage->entryArray [3]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -254,9 +259,11 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Type1", $currentPage->title);
-        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("other", $currentPage->entryArray [0]->title);
         $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("Not Set", $currentPage->entryArray [2]->title);
+        $this->assertEquals(12, $currentPage->entryArray [2]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -528,8 +535,11 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Series", $currentPage->title);
-        $this->assertCount(4, $currentPage->entryArray);
+        $this->assertCount(5, $currentPage->entryArray);
         $this->assertEquals("D'Artagnan Romances", $currentPage->entryArray [0]->title);
+        $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("No series", $currentPage->entryArray [4]->title);
+        $this->assertEquals(4, $currentPage->entryArray [4]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -596,8 +606,11 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Tags", $currentPage->title);
-        $this->assertCount(11, $currentPage->entryArray);
+        $this->assertCount(12, $currentPage->entryArray);
         $this->assertEquals("Action & Adventure", $currentPage->entryArray [0]->title);
+        $this->assertEquals(4, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("No tags", $currentPage->entryArray [11]->title);
+        $this->assertEquals(0, $currentPage->entryArray [11]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -665,8 +678,11 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Ratings", $currentPage->title);
-        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("2 stars", $currentPage->entryArray [0]->title);
+        $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("No star", $currentPage->entryArray [3]->title);
+        $this->assertEquals(9, $currentPage->entryArray [3]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 

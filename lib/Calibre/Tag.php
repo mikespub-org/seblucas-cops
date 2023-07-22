@@ -52,7 +52,7 @@ class Tag extends Base
         if ($post = $result->fetchObject()) {
             return new Tag($post, $database);
         }
-        return null;
+        return new Tag((object)['id' => null, 'name' => localize("tagword.none")], $database);
     }
 
     public static function getAllTags($database = null, $numberPerPage = null)

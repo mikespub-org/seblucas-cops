@@ -350,3 +350,10 @@ $config['cops_style'] = 'default';
  * When empty it will auto detect the language.
  */
 $config['cops_language'] = '';
+
+/*
+ * Show book count for "Not Set" columns in All<Column> pages and filter "Not Set" books in <Column>Detail pages
+ * Use cases: unrated books, or books not tagged, or books without custom lastread date, ...
+ * Note: author, language and publisher are always assumed present and cannot be filtered here
+ */
+$config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];

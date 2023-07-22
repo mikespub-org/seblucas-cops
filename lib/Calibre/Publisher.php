@@ -66,7 +66,7 @@ where publishers.id = publisher and book = ?');
         if ($post = $result->fetchObject()) {
             return new Publisher($post, $database);
         }
-        return null;
+        return new Publisher((object)['id' => null, 'name' => localize("publisherword.none")], $database);
     }
 
     public static function getAllPublishers($database = null, $numberPerPage = null)

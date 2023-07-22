@@ -8,7 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
 use DateTime;
 
 class CustomColumnTypeDate extends CustomColumnType
@@ -30,6 +29,11 @@ class CustomColumnTypeDate extends CustomColumnType
 
     public function getQuery($id)
     {
+        global $config;
+        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
+            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            return [$query, []];
+        }
         $date = new DateTime($id);
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
         return [$query, [$date->format("Y-m-d")]];
@@ -37,6 +41,9 @@ class CustomColumnTypeDate extends CustomColumnType
 
     public function getCustom($id)
     {
+        if (empty($id)) {
+            return new CustomColumn(null, localize("customcolumn.date.unknown"), $this);
+        }
         $date = new DateTime($id);
 
         return new CustomColumn($id, $date->format(localize("customcolumn.date.format")), $this);

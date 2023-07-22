@@ -50,7 +50,7 @@ class CustomColumnTypeRating extends CustomColumnType
 
     public function getQuery($id)
     {
-        if ($id == 0) {
+        if (empty($id)) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return [$query, []];
         } else {

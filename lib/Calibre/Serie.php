@@ -65,7 +65,7 @@ where series.id = series and book = ?');
         if ($post = $result->fetchObject()) {
             return new Serie($post, $database);
         }
-        return null;
+        return new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $database);
     }
 
     public static function getAllSeries($database = null, $numberPerPage = null)

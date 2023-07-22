@@ -8,17 +8,25 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 
 class PageAllCustoms extends Page
 {
     public function InitializeContent()
     {
+        global $config;
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
 
         $this->idPage = $columnType->getAllCustomsId();
         $this->title = $columnType->getTitle();
         $this->entryArray = $columnType->getAllCustomValues();
+        if (in_array("custom", $config['cops_show_not_set_filter'])) {
+            $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
+            [$result,] = Book::getBooksWithoutCustom($columnType, -1, $this->getDatabaseId());
+            array_push($this->entryArray, $instance->getEntry(count($result)));
+        }
     }
 }

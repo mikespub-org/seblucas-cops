@@ -38,6 +38,11 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     public function getQuery($id)
     {
+        global $config;
+        if (empty($id) && strval($id) !== '0' && in_array("custom", $config['cops_show_not_set_filter'])) {
+            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            return [$query, []];
+        }
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }

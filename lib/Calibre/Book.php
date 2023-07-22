@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
@@ -44,7 +43,7 @@ define('SQL_BOOKS_BY_CUSTOM_BOOL_TRUE', 'select {0} from {2}, books ' . SQL_BOOK
                                                     where {2}.book = books.id and {2}.value = 1 {1} order by sort');
 define('SQL_BOOKS_BY_CUSTOM_BOOL_FALSE', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     where {2}.book = books.id and {2}.value = 0 {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_BOOL_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
+define('SQL_BOOKS_BY_CUSTOM_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     where books.id not in (select book from {2}) {1} order by sort');
 define('SQL_BOOKS_BY_CUSTOM_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     left join {2} on {2}.book = books.id
@@ -71,6 +70,8 @@ define('SQL_BOOKS_RECENT', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     where 1=1 {1} order by timestamp desc limit ');
 define('SQL_BOOKS_BY_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort');
+define('SQL_BOOKS_BY_RATING_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
+                                                    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by sort');
 
 class Book extends Base
 {
@@ -92,7 +93,7 @@ class Book extends Base
     public const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
     public const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = SQL_BOOKS_BY_CUSTOM_BOOL_TRUE;
     public const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = SQL_BOOKS_BY_CUSTOM_BOOL_FALSE;
-    public const SQL_BOOKS_BY_CUSTOM_BOOL_NULL = SQL_BOOKS_BY_CUSTOM_BOOL_NULL;
+    public const SQL_BOOKS_BY_CUSTOM_NULL = SQL_BOOKS_BY_CUSTOM_NULL;
     public const SQL_BOOKS_BY_CUSTOM_RATING = SQL_BOOKS_BY_CUSTOM_RATING;
     public const SQL_BOOKS_BY_CUSTOM_RATING_NULL = SQL_BOOKS_BY_CUSTOM_RATING_NULL;
     public const SQL_BOOKS_BY_CUSTOM_DATE = SQL_BOOKS_BY_CUSTOM_DATE;
@@ -101,6 +102,7 @@ class Book extends Base
     public const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     public const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
     public const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
+    public const SQL_BOOKS_BY_RATING_NULL = SQL_BOOKS_BY_RATING_NULL;
 
     public const BAD_SEARCH = 'QQQQQ';
 
@@ -716,7 +718,15 @@ class Book extends Base
 
     public static function getBooksByRating($ratingId, $n, $database = null)
     {
+        if (empty($ratingId)) {
+            return self::getBooksWithoutRating($n, $database);
+        }
         return self::getEntryArray(self::SQL_BOOKS_BY_RATING, [$ratingId], $n, $database);
+    }
+
+    public static function getBooksWithoutRating($n, $database = null)
+    {
+        return self::getEntryArray(self::SQL_BOOKS_BY_RATING_NULL, [], $n, $database);
     }
 
     public static function getBooksByPublisher($publisherId, $n, $database = null)
@@ -726,12 +736,32 @@ class Book extends Base
 
     public static function getBooksBySeries($serieId, $n, $database = null)
     {
+        global $config;
+        if (empty($serieId) && in_array("series", $config['cops_show_not_set_filter'])) {
+            return self::getBooksWithoutSeries($n, $database);
+        }
         return self::getEntryArray(self::SQL_BOOKS_BY_SERIE, [$serieId], $n, $database);
+    }
+
+    public static function getBooksWithoutSeries($n, $database = null)
+    {
+        $query = str_format(self::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", "books_series_link");
+        return self::getEntryArray($query, [], $n, $database);
     }
 
     public static function getBooksByTag($tagId, $n, $database = null)
     {
+        global $config;
+        if (empty($tagId) && in_array("tag", $config['cops_show_not_set_filter'])) {
+            return self::getBooksWithoutTag($n, $database);
+        }
         return self::getEntryArray(self::SQL_BOOKS_BY_TAG, [$tagId], $n, $database);
+    }
+
+    public static function getBooksWithoutTag($n, $database = null)
+    {
+        $query = str_format(self::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", "books_tags_link");
+        return self::getEntryArray($query, [], $n, $database);
     }
 
     public static function getBooksByLanguage($languageId, $n, $database = null)
@@ -749,6 +779,13 @@ class Book extends Base
     {
         [$query, $params] = $customColumn->getQuery($id);
 
+        return self::getEntryArray($query, $params, $n, $database);
+    }
+
+    public static function getBooksWithoutCustom($customColumn, $n, $database = null)
+    {
+        // use null here to reduce conflict with bool and int custom columns
+        [$query, $params] = $customColumn->getQuery(null);
         return self::getEntryArray($query, $params, $n, $database);
     }
 

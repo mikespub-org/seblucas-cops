@@ -65,18 +65,11 @@ class Language extends Base
         if ($post = $result->fetchObject()) {
             return new Language($post, $database);
         }
-        return null;
+        return new Language((object)['id' => null, 'name' => localize("language.title")], $database);
     }
 
     public static function getAllLanguages($database = null)
     {
-        $query = str_format(self::SQL_ALL_LANGUAGES, self::SQL_COLUMNS);
-        $result = parent::getDb($database)->query($query);
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            $language = new Language($post, $database);
-            array_push($entryArray, $language->getEntry($post->count));
-        }
-        return $entryArray;
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_LANGUAGES, self::SQL_COLUMNS, [], self::class, $database);
     }
 }

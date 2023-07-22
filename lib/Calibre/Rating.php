@@ -56,13 +56,7 @@ class Rating extends Base
 
     public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)
     {
-        [, $result] = parent::executeQuery($query, self::SQL_COLUMNS, "", $params, -1, $database, $numberPerPage);
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            $rating = new Rating($post, $database);
-            array_push($entryArray, $rating->getEntry($post->count));
-        }
-        return $entryArray;
+        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, $params, self::class, $database, $numberPerPage);
     }
 
     public static function getRatingById($ratingId, $database = null)
@@ -72,6 +66,6 @@ class Rating extends Base
         if ($post = $result->fetchObject()) {
             return new Rating($post, $database);
         }
-        return null;
+        return new Rating((object)['id' => null, 'name' => 0], $database);
     }
 }
