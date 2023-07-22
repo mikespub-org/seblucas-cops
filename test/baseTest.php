@@ -41,7 +41,41 @@ class BaseTest extends TestCase
         $_COOKIE["template"] = $template;
         $this->assertNull(Format::serverSideRender(null, $template));
 
+        $request = new Request();
+        $data = JSONRenderer::getJson($request, true);
+        $output = Format::serverSideRender($data, $template);
+
+        $old = libxml_use_internal_errors(true);
+        $html = new DOMDocument();
+        $html->loadHTML("<html><head></head><body>" . $output . "</body></html>");
+        $errors = libxml_get_errors();
+        foreach ($errors as $error)
+        {
+            // ignore invalid tags from HTML5 which libxml doesn't know about
+            if ($error->code == 801) {
+                continue;
+            }
+            $this->fail("Error parsing output for server-side rendering of template " . $template . "\n" . $error->message . "\n" . $output);
+            return;
+        }
+        libxml_clear_errors();
+        libxml_use_internal_errors($old);
+
         unset($_COOKIE['template']);
+    }
+
+    public function getTemplateData($request, $templateName)
+    {
+        global $config;
+        return ["title"                 => $config['cops_title_default'],
+                "version"               => Config::VERSION,
+                "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
+                "customHeader"          => "",
+                "template"              => $templateName,
+                "server_side_rendering" => $request->render(),
+                "current_css"           => $request->style(),
+                "favico"                => $config['cops_icon'],
+                "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
     }
 
     /**
@@ -56,15 +90,7 @@ class BaseTest extends TestCase
         $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
-        $data = ["title"                 => $config['cops_title_default'],
-                  "version"               => Config::VERSION,
-                  "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
-                  "customHeader"          => "",
-                  "template"              => $templateName,
-                  "server_side_rendering" => $request->render(),
-                  "current_css"           => $request->style(),
-                  "favico"                => $config['cops_icon'],
-                  "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
+        $data = $this->getTemplateData($request, $templateName);
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);

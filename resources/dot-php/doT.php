@@ -60,9 +60,13 @@ class doT
             $func = $this->resolveDefs($func);
         }
 
-        // @todo this messes up serverside rendering for client-side javascript, e.g. in header template:
+        // single quotes can mess up serverside rendering for client-side javascript, e.g. in header template:
         // <a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' ...
-        $func = preg_replace("/'|\\\/", "\\$&", $func);
+        $replace = [
+            "unsafe" => ["'", '\/'],
+            "encode" => ['~QUOTE~', '~SLASH~'],
+        ];
+        $func = str_replace($replace["unsafe"], $replace["encode"], $func);
 
         // interpolate
         $func = preg_replace_callback("/\{\{=([\s\S]+?)\}\}/", function ($m) use ($me) {
@@ -102,12 +106,11 @@ class doT
 
         $this->functionBody = $func;
 
-        //return @create_function('$it', $func);
-        return function ($it) use ($func) {
+        return function ($it) use ($func, $replace) {
             try {
-                return eval($func);
+                return str_replace($replace["encode"], $replace["unsafe"], eval($func));
             } catch (\Throwable $e) {
-                return $e->getMessage();
+                return $e->getMessage() . ' in ' . $func;
             }
         };
     }
