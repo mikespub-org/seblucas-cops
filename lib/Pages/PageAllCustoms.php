@@ -17,8 +17,8 @@ class PageAllCustoms extends Page
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
 
+        $this->idPage = $columnType->getAllCustomsId();
         $this->title = $columnType->getTitle();
         $this->entryArray = $columnType->getAllCustomValues();
-        $this->idPage = $columnType->getAllCustomsId();
     }
 }

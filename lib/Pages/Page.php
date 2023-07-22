@@ -48,6 +48,8 @@ class Page
     public const PUBLISHER_DETAIL = "21";
     public const ALL_RATINGS = "22";
     public const RATING_DETAIL = "23";
+    public const PAGE_ID = "cops:catalog";
+    public const ABOUT_ID = "cops:about";
     public const ALL_AUTHORS_ID = "cops:authors";
     public const ALL_BOOKS_UUID = 'urn:uuid';
     public const ALL_BOOKS_ID = 'cops:books';
@@ -138,9 +140,7 @@ class Page
             case Page::CUSTOMIZE :
                 return new PageCustomize($id, $query, $n, $request);
             default:
-                $page = new Page($id, $query, $n, $request);
-                $page->idPage = "cops:catalog";
-                return $page;
+                return new Page($id, $query, $n, $request);
         }
     }
 
@@ -184,6 +184,7 @@ class Page
     public function InitializeContent()
     {
         global $config;
+        $this->idPage = self::PAGE_ID;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
         if (Base::noDatabaseSelected($this->databaseId)) {

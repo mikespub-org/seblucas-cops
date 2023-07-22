@@ -14,8 +14,8 @@ class PageAllRating extends Page
 {
     public function InitializeContent()
     {
+        $this->idPage = Rating::PAGE_ID;
         $this->title = localize("ratings.title");
         $this->entryArray = Rating::getAllRatings($this->getDatabaseId());
-        $this->idPage = Rating::PAGE_ID;
     }
 }

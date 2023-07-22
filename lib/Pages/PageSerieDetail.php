@@ -16,8 +16,8 @@ class PageSerieDetail extends Page
     public function InitializeContent()
     {
         $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
-        $this->title = $serie->name;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksBySeries($this->idGet, $this->n, $this->getDatabaseId());
         $this->idPage = $serie->getEntryId();
+        $this->title = $serie->getTitle();
+        [$this->entryArray, $this->totalNumber] = Book::getBooksBySeries($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

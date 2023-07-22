@@ -16,8 +16,8 @@ class PagePublisherDetail extends Page
     public function InitializeContent()
     {
         $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());
-        $this->title = $publisher->name;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByPublisher($this->idGet, $this->n, $this->getDatabaseId());
         $this->idPage = $publisher->getEntryId();
+        $this->title = $publisher->getTitle();
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByPublisher($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

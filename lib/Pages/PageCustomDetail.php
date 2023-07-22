@@ -19,7 +19,7 @@ class PageCustomDetail extends Page
         $customId = $this->request->get("custom", null);
         $custom = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $this->idPage = $custom->getEntryId();
-        $this->title = $custom->value;
+        $this->title = $custom->getTitle();
         [$this->entryArray, $this->totalNumber] = Book::getBooksByCustom($custom, $this->idGet, $this->n, $this->getDatabaseId());
     }
 }

@@ -17,7 +17,7 @@ class PageTagDetail extends Page
     {
         $tag = Tag::getTagById($this->idGet, $this->getDatabaseId());
         $this->idPage = $tag->getEntryId();
-        $this->title = $tag->name;
+        $this->title = $tag->getTitle();
         [$this->entryArray, $this->totalNumber] = Book::getBooksByTag($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

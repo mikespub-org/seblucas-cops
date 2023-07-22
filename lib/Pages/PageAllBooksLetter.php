@@ -14,8 +14,8 @@ class PageAllBooksLetter extends Page
 {
     public function InitializeContent()
     {
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByStartingLetter($this->idGet, $this->n, $this->getDatabaseId(), $this->getNumberPerPage(), $this->request);
         $this->idPage = Book::getEntryIdByLetter($this->idGet);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByStartingLetter($this->idGet, $this->n, $this->getDatabaseId(), $this->getNumberPerPage(), $this->request);
 
         $count = $this->totalNumber;
         if ($count == -1) {
