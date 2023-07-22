@@ -1027,4 +1027,37 @@ class PageTest extends TestCase
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertFalse($currentPage->containsBook());
     }
+
+    public function testPageAbout()
+    {
+        $page = Page::ABOUT;
+        $query = null;
+        $qid = null;
+        $n = "1";
+        $request = new Request();
+
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("About COPS", $currentPage->title);
+        $this->assertCount(0, $currentPage->entryArray);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageCustomize()
+    {
+        $page = Page::CUSTOMIZE;
+        $query = null;
+        $qid = null;
+        $n = "1";
+        $request = new Request();
+
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("Customize COPS UI", $currentPage->title);
+        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertEquals("Template", $currentPage->entryArray [0]->title);
+        $this->assertFalse($currentPage->containsBook());
+    }
 }
