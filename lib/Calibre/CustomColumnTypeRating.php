@@ -59,6 +59,12 @@ class CustomColumnTypeRating extends CustomColumnType
         }
     }
 
+    public function getFilter($id)
+    {
+        // @todo do we want to filter on ratings Id or Value here
+        return ["", []];
+    }
+
     public function getCustom($id)
     {
         return new CustomColumn($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);

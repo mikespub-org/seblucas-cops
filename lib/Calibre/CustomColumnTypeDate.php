@@ -39,6 +39,15 @@ class CustomColumnTypeDate extends CustomColumnType
         return [$query, [$date->format("Y-m-d")]];
     }
 
+    public function getFilter($id)
+    {
+        $date = new DateTime($id);
+        $linkTable = $this->getTableName();
+        $linkColumn = "value";
+        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and date({$linkTable}.{$linkColumn}) = ?)";
+        return [$filter, [$date->format("Y-m-d")]];
+    }
+
     public function getCustom($id)
     {
         if (empty($id)) {

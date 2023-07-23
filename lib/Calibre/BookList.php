@@ -228,7 +228,7 @@ class BookList extends Base
 
     public function getAllBooks()
     {
-        $filter = new Filter($this->request, []);
+        $filter = new Filter($this->request, [], $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 
@@ -269,7 +269,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
 
     public function getEntryArray($query, $params, $n, $numberPerPage = null)
     {
-        $filter = new Filter($this->request, $params);
+        $filter = new Filter($this->request, $params, $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 

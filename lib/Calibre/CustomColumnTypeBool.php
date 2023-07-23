@@ -48,6 +48,25 @@ class CustomColumnTypeBool extends CustomColumnType
         }
     }
 
+    public function getFilter($id)
+    {
+        $linkTable = $this->getTableName();
+        $linkColumn = "value";
+        if ($id == -1 || $id === '') {
+            // @todo is this the right way when filtering?
+            $filter = "not exists (select null from {$linkTable} where {$linkTable}.book = books.id)";
+            return [$filter, []];
+        } elseif ($id == 0) {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = 0)";
+            return [$filter, []];
+        } elseif ($id == 1) {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = 1)";
+            return [$filter, []];
+        } else {
+            return ["", []];
+        }
+    }
+
     public function getCustom($id)
     {
         return new CustomColumn($id, localize($this->BOOLEAN_NAMES[$id]), $this);

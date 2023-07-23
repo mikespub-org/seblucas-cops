@@ -36,6 +36,14 @@ class CustomColumnTypeComment extends CustomColumnType
         return [$query, [$id]];
     }
 
+    public function getFilter($id)
+    {
+        $linkTable = $this->getTableName();
+        $linkColumn = "id";
+        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        return [$filter, [$id]];
+    }
+
     public function getCustom($id)
     {
         return new CustomColumn($id, $id, $this);

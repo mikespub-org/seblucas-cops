@@ -352,6 +352,8 @@ abstract class CustomColumnType extends Base
      */
     abstract public function getQuery($id);
 
+    abstract public function getFilter($id);
+
     /**
      * Get a CustomColumn for a specified (by ID) value
      *

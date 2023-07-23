@@ -16,17 +16,19 @@ class Filter
     protected Request $request;
     protected array $params = [];
     protected string $queryString = "";
+    protected mixed $databaseId;
 
     /**
      * Summary of __construct
      * @param \SebLucas\Cops\Input\Request $request
      * @param array $params
      */
-    public function __construct(Request $request, array $params = [])
+    public function __construct(Request $request, array $params = [], mixed $database = null)
     {
         $this->request = $request;
         $this->params = $params;
         $this->queryString = "";
+        $this->databaseId = $database;
 
         $this->checkForFilters();
     }
@@ -87,6 +89,12 @@ class Filter
         $tagId = $this->request->get('t', null);
         if (!empty($tagId) && preg_match('/^!?\d+$/', $tagId)) {
             $this->addTagIdFilter($tagId);
+        }
+
+        // URL format: ...&c[2]=3&c[3]=other to filter on column 2 = 3 and column 3 = other
+        $customIdArray = $this->request->get('c', null);
+        if (!empty($customIdArray)) {
+            $this->addCustomIdArrayFilters($customIdArray);
         }
     }
 
@@ -172,6 +180,42 @@ class Filter
     public function addTagIdFilter($tagId)
     {
         $this->addLinkedIdFilter($tagId, 'books_tags_link', 'tag');
+    }
+
+    /**
+     * Summary of addCustomIdArrayFilters
+     * @param array $customIdArray
+     * @return void
+     */
+    public function addCustomIdArrayFilters($customIdArray)
+    {
+        foreach ($customIdArray as $customId => $valueId) {
+            if (!preg_match('/^\d+$/', $customId)) {
+                continue;
+            }
+            $this->addCustomIdFilter($customId, $valueId);
+        }
+    }
+
+    /**
+     * Summary of addCustomIdFilter
+     * @param mixed $customId
+     * @param mixed $valueId
+     * @return void
+     */
+    public function addCustomIdFilter($customId, $valueId)
+    {
+        $customType = CustomColumnType::createByCustomID($customId, $this->databaseId);
+        //[$query, $params] = $customType->getQuery($valueId);
+        //return $this->getEntryArray($query, $params, $n);
+        [$filter, $params] = $customType->getFilter($valueId);
+        if (!empty($filter)) {
+            //var_dump([$filter, $params]);
+            $this->queryString .= 'and (' . $filter . ')';
+            foreach ($params as $param) {
+                array_push($this->params, $param);
+            }
+        }
     }
 
     /**

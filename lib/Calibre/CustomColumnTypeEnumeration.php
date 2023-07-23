@@ -57,6 +57,14 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         return [$query, [$id]];
     }
 
+    public function getFilter($id)
+    {
+        $linkTable = $this->getTableLinkName();
+        $linkColumn = $this->getTableLinkColumn();
+        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        return [$filter, [$id]];
+    }
+
     public function getCustom($id)
     {
         $result = $this->getDb($this->databaseId)->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
