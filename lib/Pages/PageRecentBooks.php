@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 
 class PageRecentBooks extends Page
 {
@@ -16,6 +16,7 @@ class PageRecentBooks extends Page
     {
         $this->idPage = parent::ALL_RECENT_BOOKS_ID;
         $this->title = localize("recent.title");
-        $this->entryArray = Book::getAllRecentBooks($this->getDatabaseId(), $this->getNumberPerPage(), $this->request);
+        $booklist = new BookList($this->request);
+        $this->entryArray = $booklist->getAllRecentBooks();
     }
 }

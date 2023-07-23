@@ -254,6 +254,8 @@ class JSONRenderer
                 $currentPage->book->updateForKepub = true;
             }
             $out ["book"] = self::getFullBookContentArray($currentPage->book);
+        } elseif ($page == Page::BOOK_DETAIL) {
+            $page = Page::INDEX;
         }
         $out ["databaseId"] = $database ?? "";
         $out ["databaseName"] = Base::getDbName($database);

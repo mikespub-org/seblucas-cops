@@ -107,11 +107,6 @@ abstract class CustomColumnType extends Base
      *
      * @return string
      */
-    public function getName()
-    {
-        return $this->columnTitle;
-    }
-
     public function getTitle()
     {
         return $this->columnTitle;

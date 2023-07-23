@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Rating;
 
 class PageAllRating extends Page
@@ -21,7 +21,8 @@ class PageAllRating extends Page
         $this->entryArray = Rating::getAllRatings($this->getDatabaseId());
         if (in_array("rating", $config['cops_show_not_set_filter'])) {
             $instance = new Rating((object)['id' => 0, 'name' => 0], $this->getDatabaseId());
-            [$result,] = Book::getBooksWithoutRating(-1, $this->getDatabaseId());
+            $booklist = new BookList($this->request);
+            [$result,] = $booklist->getBooksWithoutRating(-1);
             array_push($this->entryArray, $instance->getEntry(count($result)));
         }
     }

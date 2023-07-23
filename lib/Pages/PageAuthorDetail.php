@@ -9,7 +9,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 
 class PageAuthorDetail extends Page
 {
@@ -20,6 +20,7 @@ class PageAuthorDetail extends Page
         $this->title = $author->name;  // not by getTitle() = $author->sort here
         $this->parentTitle = localize("authors.title");
         $this->parentUri = $author->getParentUri();
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByAuthor($this->idGet, $this->n, $this->getDatabaseId());
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByAuthor($this->idGet, $this->n);
     }
 }

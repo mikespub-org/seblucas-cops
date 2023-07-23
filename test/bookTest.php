@@ -10,6 +10,7 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Link;
@@ -30,11 +31,15 @@ define("COVER_HEIGHT", 600);
 
 class BookTest extends TestCase
 {
+    private static $request;
+
     public static function setUpBeforeClass(): void
     {
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        self::$request = new Request();
         Base::clearDb();
+
         $book = Book::getBookById(2);
         if (!is_dir($book->path)) {
             mkdir($book->path, 0777, true);
@@ -58,12 +63,15 @@ class BookTest extends TestCase
 
     public function testGetBookCount()
     {
-        $this->assertEquals(15, Book::getBookCount());
+        $booklist = new BookList(self::$request);
+        $this->assertEquals(15, $booklist->getBookCount());
     }
 
     public function testGetCount()
     {
-        $entryArray = Book::getCount();
+        $booklist = new BookList(self::$request);
+
+        $entryArray = $booklist->getCount();
         $this->assertEquals(2, count($entryArray));
 
         $entryAllBooks = $entryArray [0];
@@ -77,13 +85,15 @@ class BookTest extends TestCase
     {
         global $config;
         $config['cops_recentbooks_limit'] = 0;
-        $entryArray = Book::getCount();
+        $booklist = new BookList(self::$request);
 
+        $entryArray = $booklist->getCount();
         $this->assertEquals(1, count($entryArray));
 
         $config['cops_recentbooks_limit'] = 2;
-        $entryArray = Book::getCount();
+        $booklist = new BookList(self::$request);
 
+        $entryArray = $booklist->getCount();
         $entryRecentBooks = $entryArray [1];
         $this->assertEquals("2 most recent books", $entryRecentBooks->content);
 
@@ -96,63 +106,79 @@ class BookTest extends TestCase
         global $config;
 
         $config['cops_max_item_per_page'] = 5;
-        [$entryArray, $totalNumber] = Book::getBooksByAuthor(1, 1);
+        $booklist = new BookList(self::$request);
+
+        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, 1);
         $this->assertEquals(5, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
-        [$entryArray, $totalNumber] = Book::getBooksByAuthor(1, 2);
+        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, 2);
         $this->assertEquals(3, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
         $config['cops_max_item_per_page'] = -1;
-        [$entryArray, $totalNumber] = Book::getBooksByAuthor(1, -1);
+        $booklist = new BookList(self::$request);
+
+        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
     public function testGetBooksBySeries()
     {
+        $booklist = new BookList(self::$request);
+
         // All book from the Sherlock Holmes series
-        [$entryArray, $totalNumber] = Book::getBooksBySeries(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksBySeries(1, -1);
         $this->assertEquals(7, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
     public function testGetBooksByPublisher()
     {
+        $booklist = new BookList(self::$request);
+
         // All books from Strand Magazine
-        [$entryArray, $totalNumber] = Book::getBooksByPublisher(6, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByPublisher(6, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
     public function testGetBooksByTag()
     {
+        $booklist = new BookList(self::$request);
+
         // All book with the Fiction tag
-        [$entryArray, $totalNumber] = Book::getBooksByTag(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByTag(1, -1);
         $this->assertEquals(14, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
     public function testGetBooksByLanguage()
     {
+        $booklist = new BookList(self::$request);
+
         // All english book (= all books)
-        [$entryArray, $totalNumber] = Book::getBooksByLanguage(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByLanguage(1, -1);
         $this->assertEquals(14, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
     public function testGetAllBooks()
     {
+        $booklist = new BookList(self::$request);
+
         // All books by first letter
-        $entryArray = Book::getAllBooks();
+        $entryArray = $booklist->getAllBooks();
         $this->assertCount(9, $entryArray);
     }
 
     public function testGetBooksByStartingLetter()
     {
+        $booklist = new BookList(self::$request);
+
         // All books by first letter
-        [$entryArray, $totalNumber] = Book::getBooksByStartingLetter("T", -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByStartingLetter("T", -1);
         $this->assertEquals(-1, $totalNumber);
         $this->assertCount(3, $entryArray);
     }
@@ -170,13 +196,15 @@ class BookTest extends TestCase
         global $config;
 
         $config['cops_recentbooks_limit'] = 2;
+        $booklist = new BookList(self::$request);
 
-        $entryArray = Book::getAllRecentBooks();
+        $entryArray = $booklist->getAllRecentBooks();
         $this->assertCount(2, $entryArray);
 
         $config['cops_recentbooks_limit'] = 50;
+        $booklist = new BookList(self::$request);
 
-        $entryArray = Book::getAllRecentBooks();
+        $entryArray = $booklist->getAllRecentBooks();
         $this->assertCount(15, $entryArray);
     }
 

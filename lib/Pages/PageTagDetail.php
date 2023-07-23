@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Tag;
 
 class PageTagDetail extends Page
@@ -20,6 +20,7 @@ class PageTagDetail extends Page
         $this->title = $tag->getTitle();
         $this->parentTitle = localize("tags.title");
         $this->parentUri = $tag->getParentUri();
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByTag($this->idGet, $this->n, $this->getDatabaseId());
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByTag($this->idGet, $this->n);
     }
 }

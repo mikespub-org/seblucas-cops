@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Publisher;
 
 class PagePublisherDetail extends Page
@@ -20,6 +20,7 @@ class PagePublisherDetail extends Page
         $this->title = $publisher->getTitle();
         $this->parentTitle = localize("publishers.title");
         $this->parentUri = $publisher->getParentUri();
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByPublisher($this->idGet, $this->n, $this->getDatabaseId());
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByPublisher($this->idGet, $this->n);
     }
 }

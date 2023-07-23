@@ -35,13 +35,13 @@ class CustomColumnTypeBool extends CustomColumnType
     public function getQuery($id)
     {
         if ($id == -1 || $id === '') {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 0) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 1) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } else {
             return null;

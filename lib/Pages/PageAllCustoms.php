@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 
@@ -25,7 +25,8 @@ class PageAllCustoms extends Page
         $this->entryArray = $columnType->getAllCustomValues();
         if (in_array("custom", $config['cops_show_not_set_filter'])) {
             $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
-            [$result,] = Book::getBooksWithoutCustom($columnType, -1, $this->getDatabaseId());
+            $booklist = new BookList($this->request);
+            [$result,] = $booklist->getBooksWithoutCustom($columnType, -1);
             array_push($this->entryArray, $instance->getEntry(count($result)));
         }
     }

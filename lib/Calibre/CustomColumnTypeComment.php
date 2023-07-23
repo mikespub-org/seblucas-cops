@@ -29,10 +29,10 @@ class CustomColumnTypeComment extends CustomColumnType
     {
         global $config;
         if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
+        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 

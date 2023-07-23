@@ -9,69 +9,13 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
-use SebLucas\Cops\Pages\PageQueryResult;
 use SebLucas\EPubMeta\EPub;
 use Exception;
-
-// Silly thing because PHP forbid string concatenation in class const
-define('SQL_BOOKS_LEFT_JOIN', 'left outer join comments on comments.book = books.id
-                                left outer join books_ratings_link on books_ratings_link.book = books.id
-                                left outer join ratings on books_ratings_link.rating = ratings.id ');
-define('SQL_BOOKS_ALL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ');
-define('SQL_BOOKS_BY_PUBLISHER', 'select {0} from books_publishers_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_publishers_link.book = books.id and publisher = ? {1} order by publisher');
-define('SQL_BOOKS_BY_FIRST_LETTER', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where upper (books.sort) like ? {1} order by books.sort');
-define('SQL_BOOKS_BY_AUTHOR', 'select {0} from books_authors_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    left outer join books_series_link on books_series_link.book = books.id
-                                                    where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc');
-define('SQL_BOOKS_BY_SERIE', 'select {0} from books_series_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_series_link.book = books.id and series = ? {1} order by series_index');
-define('SQL_BOOKS_BY_TAG', 'select {0} from books_tags_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_tags_link.book = books.id and tag = ? {1} order by sort');
-define('SQL_BOOKS_BY_LANGUAGE', 'select {0} from books_languages_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_languages_link.book = books.id and lang_code = ? {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.{3} = ? {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_BOOL_TRUE', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.value = 1 {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_BOOL_FALSE', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.value = 0 {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books.id not in (select book from {2}) {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    left join {2} on {2}.book = books.id
-                                                    left join {3} on {3}.id = {2}.{4}
-                                                    where {3}.value = ?  order by sort');
-define('SQL_BOOKS_BY_CUSTOM_RATING_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-								                    left join {2} on {2}.book = books.id
-								                    left join {3} on {3}.id = {2}.{4}
-                                                    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_DATE', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and date({2}.value) = ? {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_DIRECT', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.value = ? {1} order by sort');
-define('SQL_BOOKS_BY_CUSTOM_DIRECT_ID', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.id = ? {1} order by sort');
-define('SQL_BOOKS_QUERY', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where (
-                                                    exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
-                                                    exists (select null from tags, books_tags_link where book = books.id and tag = tags.id and tags.name like ?) or
-                                                    exists (select null from series, books_series_link on book = books.id and books_series_link.series = series.id and series.name like ?) or
-                                                    exists (select null from publishers, books_publishers_link where book = books.id and books_publishers_link.publisher = publishers.id and publishers.name like ?) or
-                                                    title like ?) {1} order by books.sort');
-define('SQL_BOOKS_RECENT', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where 1=1 {1} order by timestamp desc limit ');
-define('SQL_BOOKS_BY_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort');
-define('SQL_BOOKS_BY_RATING_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by sort');
 
 class Book extends Base
 {
@@ -82,27 +26,9 @@ class Book extends Base
     public const SQL_TABLE = "books";
     public const SQL_COLUMNS = 'books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating';
 
-    public const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
-    public const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
-    public const SQL_BOOKS_BY_PUBLISHER = SQL_BOOKS_BY_PUBLISHER;
-    public const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
-    public const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
-    public const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
-    public const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
-    public const SQL_BOOKS_BY_LANGUAGE = SQL_BOOKS_BY_LANGUAGE;
-    public const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
-    public const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = SQL_BOOKS_BY_CUSTOM_BOOL_TRUE;
-    public const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = SQL_BOOKS_BY_CUSTOM_BOOL_FALSE;
-    public const SQL_BOOKS_BY_CUSTOM_NULL = SQL_BOOKS_BY_CUSTOM_NULL;
-    public const SQL_BOOKS_BY_CUSTOM_RATING = SQL_BOOKS_BY_CUSTOM_RATING;
-    public const SQL_BOOKS_BY_CUSTOM_RATING_NULL = SQL_BOOKS_BY_CUSTOM_RATING_NULL;
-    public const SQL_BOOKS_BY_CUSTOM_DATE = SQL_BOOKS_BY_CUSTOM_DATE;
-    public const SQL_BOOKS_BY_CUSTOM_DIRECT = SQL_BOOKS_BY_CUSTOM_DIRECT;
-    public const SQL_BOOKS_BY_CUSTOM_DIRECT_ID = SQL_BOOKS_BY_CUSTOM_DIRECT_ID;
-    public const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
-    public const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
-    public const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
-    public const SQL_BOOKS_BY_RATING_NULL = SQL_BOOKS_BY_RATING_NULL;
+    public const SQL_BOOKS_LEFT_JOIN = 'left outer join comments on comments.book = books.id
+    left outer join books_ratings_link on books_ratings_link.book = books.id
+    left outer join ratings on books_ratings_link.rating = ratings.id ';
 
     public const BAD_SEARCH = 'QQQQQ';
 
@@ -198,19 +124,6 @@ class Book extends Base
         }
         $this->rating = $line->rating;
         $this->databaseId = $database;
-    }
-
-    // -DC- Get customisable book columns
-    private static function getBookColumns()
-    {
-        global $config;
-
-        $res = self::SQL_COLUMNS;
-        if (!empty($config['calibre_database_field_cover'])) {
-            $res = str_replace('has_cover,', 'has_cover, ' . $config['calibre_database_field_cover'] . ',', $res);
-        }
-
-        return $res;
     }
 
     public function getEntryId()
@@ -361,58 +274,6 @@ class Book extends Base
             $this->datas = self::getDataByBook($this);
         }
         return $this->datas;
-    }
-
-    public static function getDataByBook($book)
-    {
-        global $config;
-
-        $out = [];
-
-        $sql = 'select id, format, name from data where book = ?';
-
-        $ignored_formats = $config['cops_ignored_formats'];
-        if (count($ignored_formats) > 0) {
-            $sql .= " and format not in ('"
-            . implode("','", $ignored_formats)
-            . "')";
-        }
-
-        $database = $book->getDatabaseId();
-        $result = parent::getDb($database)->prepare($sql);
-        $result->execute([$book->id]);
-
-        while ($post = $result->fetchObject()) {
-            array_push($out, new Data($post, $book));
-        }
-        return $out;
-    }
-
-    /* End of other class (author, series, tag, ...) initialization and accessors */
-
-    public static function getFilterString($request)
-    {
-        if (empty($request)) {
-            return '';
-        }
-        $filter = $request->get('tag', null);
-        if (empty($filter)) {
-            return '';
-        }
-
-        $exists = true;
-        if (preg_match("/^!(.*)$/", $filter, $matches)) {
-            $exists = false;
-            $filter = $matches[1];
-        }
-
-        $result = 'exists (select null from books_tags_link, tags where books_tags_link.book = books.id and books_tags_link.tag = tags.id and tags.name = "' . $filter . '")';
-
-        if (!$exists) {
-            $result = 'not ' . $result;
-        }
-
-        return 'and ' . $result;
     }
 
     public function GetMostInterestingDataToSendToKindle()
@@ -623,6 +484,36 @@ class Book extends Base
         return true;
     }
 
+    /**
+     * The values of all the specified columns
+     *
+     * @param string[] $columns
+     * @return CustomColumn[]
+     */
+    public function getCustomColumnValues($columns, $asArray = false)
+    {
+        $result = [];
+        $database = $this->getDatabaseId();
+
+        $columns = CustomColumnType::checkCustomColumnList($columns, $database);
+
+        foreach ($columns as $lookup) {
+            $col = CustomColumnType::createByLookup($lookup, $database);
+            if (!is_null($col)) {
+                $cust = $col->getCustomByBook($this);
+                if (!is_null($cust)) {
+                    if ($asArray) {
+                        array_push($result, $cust->toArray());
+                    } else {
+                        array_push($result, $cust);
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function getLinkArray()
     {
         $database = $this->getDatabaseId();
@@ -674,119 +565,19 @@ class Book extends Base
         );
     }
 
-    public static function getBookCount($database = null)
-    {
-        return parent::executeQuerySingle('select count(*) from books', $database);
-    }
+    /* End of other class (author, series, tag, ...) initialization and accessors */
 
-    public static function getCount($database = null)
+    // -DC- Get customisable book columns
+    public static function getBookColumns()
     {
         global $config;
-        $nBooks = parent::executeQuerySingle('select count(*) from books', $database);
-        $result = [];
-        $entry = new Entry(
-            localize('allbooks.title'),
-            self::PAGE_ID,
-            str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
-            'text',
-            [new LinkNavigation('?page='.self::PAGE_ALL, null, null, $database)],
-            $database,
-            '',
-            $nBooks
-        );
-        array_push($result, $entry);
-        if ($config['cops_recentbooks_limit'] > 0) {
-            $entry = new Entry(
-                localize('recent.title'),
-                Page::ALL_RECENT_BOOKS_ID,
-                str_format(localize('recent.list'), $config['cops_recentbooks_limit']),
-                'text',
-                [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS, null, null, $database)],
-                $database,
-                '',
-                $config['cops_recentbooks_limit']
-            );
-            array_push($result, $entry);
+
+        $res = self::SQL_COLUMNS;
+        if (!empty($config['calibre_database_field_cover'])) {
+            $res = str_replace('has_cover,', 'has_cover, ' . $config['calibre_database_field_cover'] . ',', $res);
         }
-        return $result;
-    }
 
-    public static function getBooksByAuthor($authorId, $n, $database = null)
-    {
-        return self::getEntryArray(self::SQL_BOOKS_BY_AUTHOR, [$authorId], $n, $database);
-    }
-
-    public static function getBooksByRating($ratingId, $n, $database = null)
-    {
-        if (empty($ratingId)) {
-            return self::getBooksWithoutRating($n, $database);
-        }
-        return self::getEntryArray(self::SQL_BOOKS_BY_RATING, [$ratingId], $n, $database);
-    }
-
-    public static function getBooksWithoutRating($n, $database = null)
-    {
-        return self::getEntryArray(self::SQL_BOOKS_BY_RATING_NULL, [], $n, $database);
-    }
-
-    public static function getBooksByPublisher($publisherId, $n, $database = null)
-    {
-        return self::getEntryArray(self::SQL_BOOKS_BY_PUBLISHER, [$publisherId], $n, $database);
-    }
-
-    public static function getBooksBySeries($serieId, $n, $database = null)
-    {
-        global $config;
-        if (empty($serieId) && in_array("series", $config['cops_show_not_set_filter'])) {
-            return self::getBooksWithoutSeries($n, $database);
-        }
-        return self::getEntryArray(self::SQL_BOOKS_BY_SERIE, [$serieId], $n, $database);
-    }
-
-    public static function getBooksWithoutSeries($n, $database = null)
-    {
-        $query = str_format(self::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", "books_series_link");
-        return self::getEntryArray($query, [], $n, $database);
-    }
-
-    public static function getBooksByTag($tagId, $n, $database = null)
-    {
-        global $config;
-        if (empty($tagId) && in_array("tag", $config['cops_show_not_set_filter'])) {
-            return self::getBooksWithoutTag($n, $database);
-        }
-        return self::getEntryArray(self::SQL_BOOKS_BY_TAG, [$tagId], $n, $database);
-    }
-
-    public static function getBooksWithoutTag($n, $database = null)
-    {
-        $query = str_format(self::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", "books_tags_link");
-        return self::getEntryArray($query, [], $n, $database);
-    }
-
-    public static function getBooksByLanguage($languageId, $n, $database = null)
-    {
-        return self::getEntryArray(self::SQL_BOOKS_BY_LANGUAGE, [$languageId], $n, $database);
-    }
-
-    /**
-     * @param $customColumn CustomColumn
-     * @param $id integer
-     * @param $n integer
-     * @return array
-     */
-    public static function getBooksByCustom($customColumn, $id, $n, $database = null)
-    {
-        [$query, $params] = $customColumn->getQuery($id);
-
-        return self::getEntryArray($query, $params, $n, $database);
-    }
-
-    public static function getBooksWithoutCustom($customColumn, $n, $database = null)
-    {
-        // use null here to reduce conflict with bool and int custom columns
-        [$query, $params] = $customColumn->getQuery(null);
-        return self::getEntryArray($query, $params, $n, $database);
+        return $res;
     }
 
     public static function getBookById($bookId, $database = null)
@@ -818,115 +609,28 @@ where data.book = books.id and data.id = ?');
         return null;
     }
 
-    public static function getBooksByQuery($query, $n, $database = null, $numberPerPage = null, $ignoredCategories = [])
-    {
-        $i = 0;
-        $critArray = [];
-        foreach ([PageQueryResult::SCOPE_AUTHOR,
-                       PageQueryResult::SCOPE_TAG,
-                       PageQueryResult::SCOPE_SERIES,
-                       PageQueryResult::SCOPE_PUBLISHER,
-                       PageQueryResult::SCOPE_BOOK] as $key) {
-            if (in_array($key, $ignoredCategories) ||
-                (!array_key_exists($key, $query) && !array_key_exists('all', $query))) {
-                $critArray[$i] = self::BAD_SEARCH;
-            } else {
-                if (array_key_exists($key, $query)) {
-                    $critArray[$i] = $query[$key];
-                } else {
-                    $critArray[$i] = $query["all"];
-                }
-            }
-            $i++;
-        }
-        return self::getEntryArray(self::SQL_BOOKS_QUERY, $critArray, $n, $database, $numberPerPage);
-    }
-
-    public static function getBooks($n, $database = null, $numberPerPage = null, $request = null)
-    {
-        [$entryArray, $totalNumber] = self::getEntryArray(self::SQL_BOOKS_ALL, [], $n, $database, $numberPerPage, $request);
-        return [$entryArray, $totalNumber];
-    }
-
-    public static function getAllBooks($database = null, $request = null)
-    {
-        /** @var \PDOStatement $result */
-
-        [, $result] = parent::executeQuery('select {0}
-from books
-where 1=1 {1}
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, count(*) as count', self::getFilterString($request), [], -1, $database);
-
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            array_push($entryArray, new Entry(
-                $post->title,
-                Book::getEntryIdByLetter($post->title),
-                str_format(localize('bookword', $post->count), $post->count),
-                'text',
-                [new LinkNavigation('?page='.self::PAGE_LETTER.'&id='. rawurlencode($post->title), null, null, $database)],
-                $database,
-                '',
-                $post->count
-            ));
-        }
-        return $entryArray;
-    }
-
-    public static function getBooksByStartingLetter($letter, $n, $database = null, $numberPerPage = null, $request = null)
-    {
-        return self::getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n, $database, $numberPerPage, $request);
-    }
-
-    public static function getEntryArray($query, $params, $n, $database = null, $numberPerPage = null, $request = null)
-    {
-        /** @var integer $totalNumber */
-        /** @var \PDOStatement $result */
-        [$totalNumber, $result] = parent::executeQuery($query, self::getBookColumns(), self::getFilterString($request), $params, $n, $database, $numberPerPage);
-
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            $book = new Book($post, $database);
-            array_push($entryArray, $book->getEntry());
-        }
-        return [$entryArray, $totalNumber];
-    }
-
-    public static function getAllRecentBooks($database = null, $numberPerPage = null, $request = null)
+    public static function getDataByBook($book)
     {
         global $config;
-        [$entryArray, ] = self::getEntryArray(self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], [], -1, $database, $numberPerPage, $request);
-        return $entryArray;
-    }
 
-    /**
-     * The values of all the specified columns
-     *
-     * @param string[] $columns
-     * @return CustomColumn[]
-     */
-    public function getCustomColumnValues($columns, $asArray = false)
-    {
-        $result = [];
-        $database = $this->getDatabaseId();
+        $out = [];
 
-        $columns = CustomColumnType::checkCustomColumnList($columns, $database);
+        $sql = 'select id, format, name from data where book = ?';
 
-        foreach ($columns as $lookup) {
-            $col = CustomColumnType::createByLookup($lookup, $database);
-            if (!is_null($col)) {
-                $cust = $col->getCustomByBook($this);
-                if (!is_null($cust)) {
-                    if ($asArray) {
-                        array_push($result, $cust->toArray());
-                    } else {
-                        array_push($result, $cust);
-                    }
-                }
-            }
+        $ignored_formats = $config['cops_ignored_formats'];
+        if (count($ignored_formats) > 0) {
+            $sql .= " and format not in ('"
+            . implode("','", $ignored_formats)
+            . "')";
         }
 
-        return $result;
+        $database = $book->getDatabaseId();
+        $result = parent::getDb($database)->prepare($sql);
+        $result->execute([$book->id]);
+
+        while ($post = $result->fetchObject()) {
+            array_push($out, new Data($post, $book));
+        }
+        return $out;
     }
 }

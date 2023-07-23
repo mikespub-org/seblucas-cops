@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -50,6 +50,7 @@ class Page
     public const RATING_DETAIL = "23";
     public const PAGE_ID = "cops:catalog";
     public const ABOUT_ID = "cops:about";
+    public const ERROR_ID = "cops:error";
     public const ALL_AUTHORS_ID = "cops:authors";
     public const ALL_BOOKS_UUID = 'urn:uuid';
     public const ALL_BOOKS_ID = 'cops:books';
@@ -192,7 +193,8 @@ class Page
         if (Base::noDatabaseSelected($this->databaseId)) {
             $i = 0;
             foreach (Base::getDbNameList() as $key) {
-                $nBooks = Book::getBookCount($i);
+                $booklist = new BookList($this->request, $i);
+                $nBooks = $booklist->getBookCount();
                 array_push($this->entryArray, new Entry(
                     $key,
                     "cops:{$i}:catalog",
@@ -247,7 +249,8 @@ class Page
                     array_push($this->entryArray, $customColumn->getCount());
                 }
             }
-            $this->entryArray = array_merge($this->entryArray, Book::getCount($this->getDatabaseId()));
+            $booklist = new BookList($this->request);
+            $this->entryArray = array_merge($this->entryArray, $booklist->getCount());
 
             if (Base::isMultipleDatabaseEnabled()) {
                 $this->title =  Base::getDbName($this->getDatabaseId());

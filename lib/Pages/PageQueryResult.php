@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
@@ -46,7 +46,8 @@ class PageQueryResult extends Page
         }
         switch ($scope) {
             case self::SCOPE_BOOK :
-                $array = Book::getBooksByStartingLetter('%' . $queryNormedAndUp, $n, $database, $numberPerPage);
+                $booklist = new BookList($this->request, $database, $numberPerPage);
+                $array = $booklist->getBooksByStartingLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
                 $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $database);
@@ -61,10 +62,10 @@ class PageQueryResult extends Page
                 $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $database);
                 break;
             default:
-                $array = Book::getBooksByQuery(
+                $booklist = new BookList($this->request, $database, $numberPerPage);
+                $array = $booklist->getBooksByQuery(
                     ["all" => "%" . $queryNormedAndUp . "%"],
-                    $n,
-                    $database
+                    $n
                 );
         }
 
@@ -175,7 +176,8 @@ class PageQueryResult extends Page
             $d = 0;
             foreach (Base::getDbNameList() as $key) {
                 Base::clearDb();
-                [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $d, 1, $ignoredCategories);
+                $booklist = new BookList($this->request, $d, 1);
+                [$array, $totalNumber] = $booklist->getBooksByQuery(["all" => $crit], 1, $ignoredCategories);
                 array_push($this->entryArray, new Entry(
                     $key,
                     "db:query:{$d}",

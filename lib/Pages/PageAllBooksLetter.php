@@ -9,13 +9,15 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 
 class PageAllBooksLetter extends Page
 {
     public function InitializeContent()
     {
         $this->idPage = Book::getEntryIdByLetter($this->idGet);
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByStartingLetter($this->idGet, $this->n, $this->getDatabaseId(), $this->getNumberPerPage(), $this->request);
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByStartingLetter($this->idGet, $this->n);
 
         $count = $this->totalNumber;
         if ($count == -1) {
