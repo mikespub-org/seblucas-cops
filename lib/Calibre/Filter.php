@@ -15,6 +15,7 @@ class Filter
 {
     protected Request $request;
     protected array $params = [];
+    protected string $parentTable = "books";
     protected string $queryString = "";
     protected mixed $databaseId;
 
@@ -23,10 +24,14 @@ class Filter
      * @param \SebLucas\Cops\Input\Request $request
      * @param array $params
      */
-    public function __construct(Request $request, array $params = [], mixed $database = null)
+    public function __construct(Request|array $request, array $params = [], string $parent = "books", mixed $database = null)
     {
+        if (is_array($request)) {
+            $request = Request::build($request);
+        }
         $this->request = $request;
         $this->params = $params;
+        $this->parentTable = $parent;
         $this->queryString = "";
         $this->databaseId = $database;
 
@@ -233,7 +238,11 @@ class Filter
             $linkId = $matches[1];
         }
 
-        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        if ($this->parentTable == "books") {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        } else {
+            $filter = "exists (select null from {$linkTable}, books where {$this->parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        }
 
         if (!$exists) {
             $filter = 'not ' . $filter;

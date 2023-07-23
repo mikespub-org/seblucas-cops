@@ -18,6 +18,14 @@ class PageAllSeries extends Page
         global $config;
         $this->idPage = Serie::PAGE_ID;
         $this->title = localize("series.title");
+        /**
+        $authorId = $this->request->get('a');
+        if (!empty($authorId)) {
+            $this->entryArray = Serie::getAllSeriesByAuthor($authorId, $this->getDatabaseId());
+        } else {
+            $this->entryArray = Serie::getAllSeries($this->getDatabaseId());
+        }
+         */
         $this->entryArray = Serie::getAllSeries($this->getDatabaseId());
         if (in_array("series", $config['cops_show_not_set_filter'])) {
             $instance = new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());

@@ -48,8 +48,11 @@ class Page
     public const PUBLISHER_DETAIL = "21";
     public const ALL_RATINGS = "22";
     public const RATING_DETAIL = "23";
+    public const FILTER = "99";
+    public const ERROR = "100";
     public const PAGE_ID = "cops:catalog";
     public const ABOUT_ID = "cops:about";
+    public const FILTER_ID = "cops:filter";
     public const ERROR_ID = "cops:error";
     public const ALL_AUTHORS_ID = "cops:authors";
     public const ALL_BOOKS_UUID = 'urn:uuid';

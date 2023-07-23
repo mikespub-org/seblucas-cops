@@ -16,8 +16,11 @@ class Tag extends Base
     public const PAGE_ALL = Page::ALL_TAGS;
     public const PAGE_DETAIL = Page::TAG_DETAIL;
     public const SQL_TABLE = "tags";
+    public const SQL_LINK_TABLE = "books_tags_link";
+    public const SQL_LINK_COLUMN = "tag";
+    public const SQL_SORT = "name";
     public const SQL_COLUMNS = "tags.id as id, tags.name as name, count(*) as count";
-    public const SQL_ALL_TAGS = "select {0} from tags, books_tags_link where tags.id = tag group by tags.id, tags.name order by tags.name";
+    public const SQL_ALL_TAGS = "select {0} from tags, books_tags_link where tags.id = tag {1} group by tags.id, tags.name order by tags.name";
 
     public $id;
     public $name;
@@ -65,7 +68,7 @@ class Tag extends Base
             $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
         }
 
-        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, [], self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, "", [], self::class, $database, $numberPerPage);
     }
 
     public static function getAllTagsByQuery($query, $n, $database = null, $numberPerPage = null)

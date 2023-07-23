@@ -16,8 +16,11 @@ class Rating extends Base
     public const PAGE_ALL = Page::ALL_RATINGS;
     public const PAGE_DETAIL = Page::RATING_DETAIL;
     public const SQL_TABLE = "ratings";
+    public const SQL_LINK_TABLE = "books_ratings_link";
+    public const SQL_LINK_COLUMN = "rating";
+    public const SQL_SORT = "rating";
     public const SQL_COLUMNS = "ratings.id as id, ratings.rating as name, count(*) as count";
-    public const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id group by ratings.id order by ratings.rating";
+    public const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id {1} group by ratings.id order by ratings.rating";
     public $id;
     public $name;
 
@@ -56,7 +59,7 @@ class Rating extends Base
 
     public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, $params, self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $database, $numberPerPage);
     }
 
     public static function getRatingById($ratingId, $database = null)

@@ -346,11 +346,11 @@ abstract class Base
      * @param mixed $numberPerPage
      * @return array
      */
-    public static function getEntryArrayWithBookNumber($query, $columns, $params, $category, $database = null, $numberPerPage = null)
+    public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $category, $database = null, $numberPerPage = null)
     {
         /** @var \PDOStatement $result */
 
-        [, $result] = self::executeQuery($query, $columns, "", $params, -1, $database, $numberPerPage);
+        [, $result] = self::executeQuery($query, $columns, $filter, $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             /** @var Author|Tag|Serie|Publisher|Language|Rating $instance */
