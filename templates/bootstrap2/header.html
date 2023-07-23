@@ -7,7 +7,11 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
+      {{? it.parenturl != ""}}
+        <a class="navbar-brand" href="{{=it.parenturl}}">{{=it.fullTitle}}</a>
+      {{??}}
+        <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
+      {{?}}
     </div>
     <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search">
       <div class="input-group">

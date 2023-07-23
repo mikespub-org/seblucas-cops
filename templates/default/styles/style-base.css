@@ -180,6 +180,10 @@ header h1{
     line-height: 100%;
 }
 
+header a{
+    color: white;
+}
+
 .headright {
     float: right;
     /*for ios compatibility*/
