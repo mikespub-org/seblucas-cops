@@ -18,6 +18,8 @@ class PageRatingDetail extends Page
         $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());
         $this->idPage = $rating->getEntryId();
         $this->title = $rating->getTitle();
+        $this->parentTitle = localize("ratings.title");
+        $this->parentUri = $rating->getParentUri();
         [$this->entryArray, $this->totalNumber] = Book::getBooksByRating($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

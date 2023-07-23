@@ -66,6 +66,8 @@ class Page
     public $authorName = "";
     public $authorUri = "";
     public $authorEmail = "";
+    public $parentTitle = "";
+    public $parentUri = "";
     public $idPage;
     public $idGet;
     public $query;

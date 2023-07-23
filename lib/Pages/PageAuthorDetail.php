@@ -18,6 +18,8 @@ class PageAuthorDetail extends Page
         $author = Author::getAuthorById($this->idGet, $this->getDatabaseId());
         $this->idPage = $author->getEntryId();
         $this->title = $author->name;  // not by getTitle() = $author->sort here
+        $this->parentTitle = localize("authors.title");
+        $this->parentUri = $author->getParentUri();
         [$this->entryArray, $this->totalNumber] = Book::getBooksByAuthor($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

@@ -18,6 +18,8 @@ class PageSerieDetail extends Page
         $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
         $this->idPage = $serie->getEntryId();
         $this->title = $serie->getTitle();
+        $this->parentTitle = localize("series.title");
+        $this->parentUri = $serie->getParentUri();
         [$this->entryArray, $this->totalNumber] = Book::getBooksBySeries($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

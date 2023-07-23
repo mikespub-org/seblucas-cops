@@ -23,5 +23,7 @@ class PageAllBooksLetter extends Page
         }
 
         $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("bookword", $count), $count), $this->idGet);
+        $this->parentTitle = "";  // localize("allbooks.title");
+        $this->parentUri = "?page=".Book::PAGE_ALL;
     }
 }

@@ -240,6 +240,10 @@ class JSONRenderer
         }
 
         $out = [ "title" => $currentPage->title];
+        $out ["parentTitle"] = $currentPage->parentTitle;
+        if (!empty($out ["parentTitle"])) {
+            $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
+        }
         $entries = [];
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, self::getContentArray($entry));
@@ -298,6 +302,13 @@ class JSONRenderer
         $out ["homeurl"] = self::$endpoint;
         if ($page != Page::INDEX && !is_null($database)) {
             $out ["homeurl"] = $out ["homeurl"] .  "?" . Format::addURLParam("", 'db', $database);
+        }
+
+        $out ["parenturl"] = "";
+        if (!empty($currentPage->parentUri)) {
+            $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
+        } elseif ($page != Page::INDEX) {
+            $out ["parenturl"] = $out ["homeurl"];
         }
 
         return $out;

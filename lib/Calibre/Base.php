@@ -18,6 +18,7 @@ use PDO;
 abstract class Base
 {
     public const PAGE_ID = "cops:base";
+    public const PAGE_ALL = 0;
     public const PAGE_DETAIL = 0;
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
@@ -48,6 +49,11 @@ abstract class Base
     public function getUri()
     {
         return "?page=".static::PAGE_DETAIL."&id=$this->id";
+    }
+
+    public function getParentUri()
+    {
+        return "?page=".static::PAGE_ALL;
     }
 
     public function getEntryId()

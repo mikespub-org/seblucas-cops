@@ -18,6 +18,8 @@ class PageTagDetail extends Page
         $tag = Tag::getTagById($this->idGet, $this->getDatabaseId());
         $this->idPage = $tag->getEntryId();
         $this->title = $tag->getTitle();
+        $this->parentTitle = localize("tags.title");
+        $this->parentUri = $tag->getParentUri();
         [$this->entryArray, $this->totalNumber] = Book::getBooksByTag($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

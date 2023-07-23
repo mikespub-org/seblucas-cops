@@ -18,6 +18,8 @@ class PageLanguageDetail extends Page
         $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());
         $this->idPage = $language->getEntryId();
         $this->title = $language->getTitle();
+        $this->parentTitle = localize("languages.title");
+        $this->parentUri = $language->getParentUri();
         [$this->entryArray, $this->totalNumber] = Book::getBooksByLanguage($this->idGet, $this->n, $this->getDatabaseId());
     }
 }

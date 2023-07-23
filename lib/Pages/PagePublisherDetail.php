@@ -18,6 +18,8 @@ class PagePublisherDetail extends Page
         $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());
         $this->idPage = $publisher->getEntryId();
         $this->title = $publisher->getTitle();
+        $this->parentTitle = localize("publishers.title");
+        $this->parentUri = $publisher->getParentUri();
         [$this->entryArray, $this->totalNumber] = Book::getBooksByPublisher($this->idGet, $this->n, $this->getDatabaseId());
     }
 }
