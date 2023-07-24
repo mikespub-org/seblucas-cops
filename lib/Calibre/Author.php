@@ -64,6 +64,11 @@ class Author extends Base
         return str_format(localize("authorword", $count), $count);
     }
 
+    public function getSeries()
+    {
+        return Serie::getEntriesByAuthorId($this->id, $this->databaseId);
+    }
+
     public static function getCount($database = null)
     {
         // str_format (localize("authors.alphabetical", count(array))

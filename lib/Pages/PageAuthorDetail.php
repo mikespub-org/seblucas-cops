@@ -22,5 +22,6 @@ class PageAuthorDetail extends Page
         $this->parentUri = $author->getParentUri();
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByAuthor($this->idGet, $this->n);
+        //$seriesArray = $author->getSeries();
     }
 }
