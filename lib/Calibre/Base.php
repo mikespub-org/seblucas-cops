@@ -20,6 +20,15 @@ abstract class Base
     public const PAGE_ID = "cops:base";
     public const PAGE_ALL = 0;
     public const PAGE_DETAIL = 0;
+    public const PAGE_LETTER = 0;
+    public const SQL_TABLE = "bases";
+    public const SQL_LINK_TABLE = "books_bases_link";
+    public const SQL_LINK_COLUMN = "base";
+    public const SQL_SORT = "sort";
+    public const SQL_COLUMNS = "bases.id as id, bases.name as name, bases.sort as sort, count(*) as count";
+    public const SQL_ALL_ROWS = "select {0} from bases, books_bases_link where base = bases.id {1} group by bases.id, bases.name, bases.sort order by sort";
+    public const SQL_ROWS_FOR_SEARCH = "select {0} from bases, books_bases_link where base = bases.id and (upper (bases.sort) like ? or upper (bases.name) like ?) {1} group by bases.id, bases.name, bases.sort order by sort";
+    public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from bases, books_bases_link where base = bases.id and upper (bases.sort) like ? {1} group by bases.id, bases.name, bases.sort order by sort";
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     public $id;
@@ -59,6 +68,11 @@ abstract class Base
     public function getEntryId()
     {
         return static::PAGE_ID.":".$this->id;
+    }
+
+    public static function getEntryIdByLetter($startingLetter)
+    {
+        return static::PAGE_ID.":letter:".$startingLetter;
     }
 
     public function getTitle()
@@ -292,6 +306,48 @@ abstract class Base
     public static function clearDb()
     {
         self::$db = null;
+    }
+
+    public static function getEntryById($database = null)
+    {
+        //return new static((object)['id' => null, 'name' => localize("seriesword.none")], $database);
+    }
+
+    public static function getEntryCount($database = null)
+    {
+        return self::getCountGeneric(static::SQL_TABLE, static::PAGE_ID, static::PAGE_ALL, $database);
+    }
+
+    public static function getAllEntries($database = null, $numberPerPage = null)
+    {
+        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, "", [], static::class, $database, $numberPerPage);
+    }
+
+    public static function getAllEntriesByQuery($query, $n, $database = null, $numberPerPage = null)
+    {
+        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_FOR_SEARCH, static::SQL_COLUMNS, "", ['%' . $query . '%'], static::class, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByStartingLetter($letter, $database = null, $numberPerPage = null)
+    {
+        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_BY_FIRST_LETTER, static::SQL_COLUMNS, "", [$letter . "%"], static::class, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByFilter($request, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, $filterString, $params, static::class, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByAuthorId($authorId, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addAuthorIdFilter($authorId);
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, $filterString, $params, static::class, $database, $numberPerPage);
     }
 
     /**

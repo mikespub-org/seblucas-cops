@@ -32,7 +32,7 @@ class Request
     public function render()
     {
         global $config;
-        return preg_match('/' . $config['cops_server_side_render'] . '/', self::agent());
+        return preg_match('/' . $config['cops_server_side_render'] . '/', $this->agent());
     }
 
     /**
@@ -107,6 +107,17 @@ class Request
                 $this->urlParams[$name] = $_GET[$name];
             }
         }
+    }
+
+    /**
+     * Summary of hasFilter
+     * @return bool
+     */
+    public function hasFilter()
+    {
+        // see list of acceptable filter params in Filter.php
+        $find = array_flip(['a', 'l', 'p', 's', 't', 'c']);
+        return !empty(array_intersect_key($find, $this->urlParams));
     }
 
     /**
@@ -223,9 +234,9 @@ class Request
     public function style()
     {
         global $config;
-        $style = self::option('style');
+        $style = $this->option('style');
         if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
-            return 'templates/' . self::template() . '/styles/style-' . self::option('style') . '.css';
+            return 'templates/' . $this->template() . '/styles/style-' . $this->option('style') . '.css';
         }
         return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
     }
@@ -237,7 +248,7 @@ class Request
     public function template()
     {
         global $config;
-        $template = self::option('template');
+        $template = $this->option('template');
         if (!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
             return $template;
         }

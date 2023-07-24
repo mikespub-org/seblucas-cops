@@ -21,8 +21,10 @@ class Filter
 
     /**
      * Summary of __construct
-     * @param \SebLucas\Cops\Input\Request $request
-     * @param array $params
+     * @param Request|array $request current request or urlParams array
+     * @param array $params initial query params
+     * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
+     * @param mixed $database current database in multiple database setup
      */
     public function __construct(Request|array $request, array $params = [], string $parent = "books", mixed $database = null)
     {
@@ -144,7 +146,7 @@ class Filter
      */
     public function addAuthorIdFilter($authorId)
     {
-        $this->addLinkedIdFilter($authorId, 'books_authors_link', 'author');
+        $this->addLinkedIdFilter($authorId, Author::SQL_LINK_TABLE, Author::SQL_LINK_COLUMN);
     }
 
     /**
@@ -154,7 +156,7 @@ class Filter
      */
     public function addLanguageIdFilter($languageId)
     {
-        $this->addLinkedIdFilter($languageId, 'books_languages_link', 'lang_code');
+        $this->addLinkedIdFilter($languageId, Language::SQL_LINK_TABLE, Language::SQL_LINK_COLUMN);
     }
 
     /**
@@ -164,7 +166,7 @@ class Filter
      */
     public function addPublisherIdFilter($publisherId)
     {
-        $this->addLinkedIdFilter($publisherId, 'books_publishers_link', 'publisher');
+        $this->addLinkedIdFilter($publisherId, Publisher::SQL_LINK_TABLE, Publisher::SQL_LINK_COLUMN);
     }
 
     /**
@@ -174,7 +176,7 @@ class Filter
      */
     public function addSeriesIdFilter($seriesId)
     {
-        $this->addLinkedIdFilter($seriesId, 'books_series_link', 'series');
+        $this->addLinkedIdFilter($seriesId, Serie::SQL_LINK_TABLE, Serie::SQL_LINK_COLUMN);
     }
 
     /**
@@ -184,7 +186,7 @@ class Filter
      */
     public function addTagIdFilter($tagId)
     {
-        $this->addLinkedIdFilter($tagId, 'books_tags_link', 'tag');
+        $this->addLinkedIdFilter($tagId, Tag::SQL_LINK_TABLE, Tag::SQL_LINK_COLUMN);
     }
 
     /**

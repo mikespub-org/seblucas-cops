@@ -19,11 +19,10 @@ class PageAllSeries extends Page
         $this->idPage = Serie::PAGE_ID;
         $this->title = localize("series.title");
         /**
-        $authorId = $this->request->get('a');
-        if (!empty($authorId)) {
-            $this->entryArray = Serie::getAllSeriesByAuthor($authorId, $this->getDatabaseId());
+        if ($this->request->hasFilter()) {
+                $this->entryArray = Serie::getEntriesByFilter($this->request, $this->getDatabaseId());
         } else {
-            $this->entryArray = Serie::getAllSeries($this->getDatabaseId());
+            $this->entryArray = Serie::getAllEntries($this->getDatabaseId());
         }
          */
         $this->entryArray = Serie::getAllSeries($this->getDatabaseId());
