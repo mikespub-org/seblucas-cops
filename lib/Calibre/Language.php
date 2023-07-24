@@ -20,7 +20,7 @@ class Language extends Base
     public const SQL_LINK_COLUMN = "lang_code";
     public const SQL_SORT = "lang_code";
     public const SQL_COLUMNS = "languages.id as id, languages.lang_code as name, count(*) as count";
-    public const SQL_ALL_LANGUAGES = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code {1} group by languages.id, books_languages_link.lang_code order by languages.lang_code";
+    public const SQL_ALL_ROWS = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code {1} group by languages.id, books_languages_link.lang_code order by languages.lang_code";
     public $id;
     public $name;
 
@@ -73,6 +73,6 @@ class Language extends Base
 
     public static function getAllLanguages($database = null)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_LANGUAGES, self::SQL_COLUMNS, "", [], self::class, $database);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $database);
     }
 }

@@ -8,7 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 
 class Serie extends Base
@@ -21,8 +20,8 @@ class Serie extends Base
     public const SQL_LINK_COLUMN = "series";
     public const SQL_SORT = "sort";
     public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
-    public const SQL_ALL_SERIES = "select {0} from series, books_series_link where series.id = series {1} group by series.id, series.name, series.sort order by series.sort";
-    public const SQL_SERIES_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
+    public const SQL_ALL_ROWS = "select {0} from series, books_series_link where series.id = series {1} group by series.id, series.name, series.sort order by series.sort";
+    public const SQL_ROWS_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
 
     public $id;
     public $name;
@@ -74,19 +73,11 @@ where series.id = series and book = ?');
 
     public static function getAllSeries($database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SQL_COLUMNS, "", [], self::class, $database, $numberPerPage);
-    }
-
-    public static function getAllSeriesByAuthor($authorId, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter(["a" => $authorId], [], self::SQL_LINK_TABLE, $database);
-        $filterString = $filter->getFilterString();
-        $params = $filter->getQueryParams();
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SQL_COLUMNS, $filterString, $params, self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $database, $numberPerPage);
     }
 
     public static function getAllSeriesByQuery($query, $database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SQL_COLUMNS, "", ['%' . $query . '%'], self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ROWS_FOR_SEARCH, self::SQL_COLUMNS, "", ['%' . $query . '%'], self::class, $database, $numberPerPage);
     }
 }

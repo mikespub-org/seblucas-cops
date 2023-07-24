@@ -20,7 +20,7 @@ class Rating extends Base
     public const SQL_LINK_COLUMN = "rating";
     public const SQL_SORT = "rating";
     public const SQL_COLUMNS = "ratings.id as id, ratings.rating as name, count(*) as count";
-    public const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id {1} group by ratings.id order by ratings.rating";
+    public const SQL_ALL_ROWS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id {1} group by ratings.id order by ratings.rating";
     public $id;
     public $name;
 
@@ -54,7 +54,7 @@ class Rating extends Base
 
     public static function getAllRatings($database = null)
     {
-        return self::getEntryArray(self::SQL_ALL_RATINGS, [], $database);
+        return self::getEntryArray(self::SQL_ALL_ROWS, [], $database);
     }
 
     public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)

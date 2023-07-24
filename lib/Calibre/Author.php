@@ -23,9 +23,9 @@ class Author extends Base
     public const SQL_LINK_COLUMN = "author";
     public const SQL_SORT = "sort";
     public const SQL_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
-    public const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? {1} group by authors.id, authors.name, authors.sort order by sort";
-    public const SQL_AUTHORS_FOR_SEARCH = "select {0} from authors, books_authors_link where author = authors.id and (upper (authors.sort) like ? or upper (authors.name) like ?) {1} group by authors.id, authors.name, authors.sort order by sort";
-    public const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id {1} group by authors.id, authors.name, authors.sort order by sort";
+    public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? {1} group by authors.id, authors.name, authors.sort order by sort";
+    public const SQL_ROWS_FOR_SEARCH = "select {0} from authors, books_authors_link where author = authors.id and (upper (authors.sort) like ? or upper (authors.name) like ?) {1} group by authors.id, authors.name, authors.sort order by sort";
+    public const SQL_ALL_ROWS = "select {0} from authors, books_authors_link where author = authors.id {1} group by authors.id, authors.name, authors.sort order by sort";
 
     public $id;
     public $name;
@@ -94,17 +94,17 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
 
     public static function getAuthorsByStartingLetter($letter, $database = null)
     {
-        return self::getEntryArray(self::SQL_AUTHORS_BY_FIRST_LETTER, [$letter . "%"], $database);
+        return self::getEntryArray(self::SQL_ROWS_BY_FIRST_LETTER, [$letter . "%"], $database);
     }
 
     public static function getAuthorsForSearch($query, $database = null)
     {
-        return self::getEntryArray(self::SQL_AUTHORS_FOR_SEARCH, [$query . "%", $query . "%"], $database);
+        return self::getEntryArray(self::SQL_ROWS_FOR_SEARCH, [$query . "%", $query . "%"], $database);
     }
 
     public static function getAllAuthors($database = null)
     {
-        return self::getEntryArray(self::SQL_ALL_AUTHORS, [], $database);
+        return self::getEntryArray(self::SQL_ALL_ROWS, [], $database);
     }
 
     public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)

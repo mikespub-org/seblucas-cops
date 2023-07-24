@@ -20,7 +20,7 @@ class Tag extends Base
     public const SQL_LINK_COLUMN = "tag";
     public const SQL_SORT = "name";
     public const SQL_COLUMNS = "tags.id as id, tags.name as name, count(*) as count";
-    public const SQL_ALL_TAGS = "select {0} from tags, books_tags_link where tags.id = tag {1} group by tags.id, tags.name order by tags.name";
+    public const SQL_ALL_ROWS = "select {0} from tags, books_tags_link where tags.id = tag {1} group by tags.id, tags.name order by tags.name";
 
     public $id;
     public $name;
@@ -62,7 +62,7 @@ class Tag extends Base
     {
         global $config;
 
-        $sql = self::SQL_ALL_TAGS;
+        $sql = self::SQL_ALL_ROWS;
         $sortField = $config['calibre_database_field_sort'] ?? '';
         if (!empty($sortField)) {
             $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
