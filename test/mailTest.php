@@ -9,15 +9,13 @@
 require_once(dirname(__FILE__) . "/config_test.php");
 require_once(dirname(__FILE__) . "/../sendtomail.php");
 use PHPUnit\Framework\TestCase;
-
-use function SebLucas\Cops\Mail\checkConfiguration;
-use function SebLucas\Cops\Mail\checkRequest;
+use SebLucas\Cops\Output\Mail;
 
 class MailTest extends TestCase
 {
     public function testCheckConfigurationOk()
     {
-        $this->assertFalse(checkConfiguration());
+        $this->assertFalse(Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationNull()
@@ -25,7 +23,7 @@ class MailTest extends TestCase
         global $config;
         $config['cops_mail_configuration'] = null;
 
-        $this->assertStringStartsWith("NOK", checkConfiguration());
+        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationNotArray()
@@ -33,7 +31,7 @@ class MailTest extends TestCase
         global $config;
         $config['cops_mail_configuration'] = "Test";
 
-        $this->assertStringStartsWith("NOK", checkConfiguration());
+        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationSmtpEmpty()
@@ -42,7 +40,7 @@ class MailTest extends TestCase
         require(dirname(__FILE__) . "/config_test.php");
         $config['cops_mail_configuration']["smtp.host"] = "";
 
-        $this->assertStringStartsWith("NOK", checkConfiguration());
+        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationEmailEmpty()
@@ -51,7 +49,7 @@ class MailTest extends TestCase
         require(dirname(__FILE__) . "/config_test.php");
         $config['cops_mail_configuration']["address.from"] = "";
 
-        $this->assertStringStartsWith("NOK", checkConfiguration());
+        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationEmailNotEmpty()
@@ -79,16 +77,39 @@ class MailTest extends TestCase
 
     public function testCheckRequest()
     {
-        $this->assertFalse(checkRequest(12, "a@a.com"));
+        $this->assertFalse(Mail::checkRequest(12, "a@a.com"));
     }
 
     public function testCheckRequestNoData()
     {
-        $this->assertStringStartsWith("No", checkRequest(null, "a@a.com"));
+        $this->assertStringStartsWith("No", Mail::checkRequest(null, "a@a.com"));
     }
 
     public function testCheckRequestNoEmail()
     {
-        $this->assertStringStartsWith("No", checkRequest(12, null));
+        $this->assertStringStartsWith("No", Mail::checkRequest(12, null));
+    }
+
+    public function testCheckRequestEmailNotValid()
+    {
+        $this->assertStringStartsWith("No", Mail::checkRequest(12, "a@b"));
+    }
+
+    public function testSendMailNotFound()
+    {
+        $this->assertStringStartsWith("No", Mail::sendMail(12, "a@a.com"));
+    }
+
+    public function testSendMailTooBig()
+    {
+        $old = Mail::$maxSize;
+        Mail::$maxSize = 0;
+        $this->assertStringStartsWith("No", Mail::sendMail(20, "a@a.com"));
+        Mail::$maxSize = $old;
+    }
+
+    public function testSendMailSomeday()
+    {
+        $this->assertStringStartsWith("Mailer Error:", Mail::sendMail(20, "a@a.com"));
     }
 }
