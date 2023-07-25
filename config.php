@@ -15,6 +15,8 @@ if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !==
 
 use SebLucas\Cops\Input\Request;
 
+date_default_timezone_set($config['default_timezone']);
+
 $remote_user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
 // Clean username, only allow a-z, A-Z, 0-9, -_ chars
 $remote_user = preg_replace('/[^a-zA-Z0-9_-]/', '', $remote_user);
@@ -22,7 +24,6 @@ $user_config_file = 'config_local.' . $remote_user . '.php';
 if (file_exists(dirname(__FILE__) . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
     require dirname(__FILE__) . '/' . $user_config_file;
 }
-require_once dirname(__FILE__) . '/base.php';
 if (!Request::verifyLogin($_SERVER)) {
     header('WWW-Authenticate: Basic realm="COPS Authentication"');
     header('HTTP/1.0 401 Unauthorized');
