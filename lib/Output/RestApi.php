@@ -65,30 +65,48 @@ class RestApi
     ];
 
     /**
-     * Summary of getPathInfo
+     * Summary of request
+     * @var Request
+     */
+    protected Request $request;
+    public bool $isExtra = false;
+
+    /**
+     * Summary of __construct
      * @param Request $request
+     */
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * Summary of getPathInfo
      * @return string
      */
-    public static function getPathInfo($request)
+    public function getPathInfo()
     {
-        return $request->path() ?? "/index";
+        return $this->request->path() ?? "/index";
     }
 
     /**
      * Summary of matchPathInfo
      * @param string $path
-     * @param Request $request
      * @throws Exception if the $path is not found in $routes or $extra
      * @return array|void
      */
-    public static function matchPathInfo($path, $request)
+    public function matchPathInfo($path)
     {
+        if ($path == '/') {
+            header('Location: ' . $this->request->script() . '/index');
+            exit;
+        }
         $params = [];
 
         // handle extra functions
         if (array_key_exists($path, self::$extra)) {
-            echo json_encode(call_user_func(self::$extra[$path], $request), JSON_UNESCAPED_SLASHES);
-            exit;
+            $this->isExtra = true;
+            return call_user_func(self::$extra[$path], $this->request);
         }
 
         $matches = array_flip(self::$routes);
@@ -130,25 +148,23 @@ class RestApi
     /**
      * Summary of setParams
      * @param mixed $params
-     * @param Request $request
      * @return Request
      */
-    public static function setParams($params, $request)
+    public function setParams($params)
     {
         foreach ($params as $param => $value) {
-            $request->set($param, $value);
+            $this->request->set($param, $value);
         }
-        return $request;
+        return $this->request;
     }
 
     /**
      * Summary of getJson
-     * @param Request $request
      * @return array
      */
-    public static function getJson($request)
+    public function getJson()
     {
-        return JSONRenderer::getJson($request);
+        return JSONRenderer::getJson($this->request);
     }
 
     /**
@@ -166,13 +182,12 @@ class RestApi
     /**
      * Summary of replaceLinks
      * @param string $output
-     * @param Request $request
+     * @param string $endpoint
      * @return string
      */
-    public static function replaceLinks($output, $request)
+    public static function replaceLinks($output, $endpoint)
     {
-        $link = self::getScriptName($request);
-        $endpoint = $link;
+        $link = $endpoint;
 
         $search = [];
         $replace = [];
@@ -207,21 +222,25 @@ class RestApi
 
     /**
      * Summary of getOutput
-     * @param Request $request
      * @param mixed $result
      * @return string
      */
-    public static function getOutput($request, $result = null)
+    public function getOutput($result = null)
     {
         if (!isset($result)) {
-            $path = self::getPathInfo($request);
-            $params = self::matchPathInfo($path, $request);
-            $request = self::setParams($params, $request);
-            $result = self::getJson($request);
+            $path = $this->getPathInfo();
+            $params = $this->matchPathInfo($path);
+            if ($this->isExtra) {
+                $result = $params;
+            } else {
+                $request = $this->setParams($params);
+                $result = $this->getJson();
+            }
         }
-        $output = json_encode($result);
+        $output = json_encode($result, JSON_UNESCAPED_SLASHES);
+        $endpoint = self::getScriptName($this->request);
 
-        return self::replaceLinks($output, $request);
+        return self::replaceLinks($output, $endpoint);
     }
 
     /**
@@ -266,7 +285,23 @@ class RestApi
      */
     public static function getOpenApi($request)
     {
-        $result = ["openapi" => "3.1.0", "info" => ["title" => "COPS REST API", "version" => "1.0.0"], "paths" => []];
+        $result = ["openapi" => "3.1.0", "info" => ["title" => "COPS REST API", "version" => "1.0.1"]];
+        $result["servers"] = [["url" => $request->script(), "description" => "COPS REST API Endpoint"]];
+        $result["paths"] = [];
+        foreach (self::$routes as $page => $route) {
+            $params = [];
+            $found = [];
+            if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
+                foreach ($found[1] as $param) {
+                    $page .= "&{$param}=" . '{' . $param . '}';
+                    array_push($params, ["name" => $param, "in" => "path", "required" => true, "schema" => ["type" => "string"]]);
+                }
+            }
+            $result["paths"][$route] = ["get" => ["summary" => "Route to page=" . $page, "responses" => ["200" => ["description" => "Result of page=" . $page]]]];
+            if (!empty($params)) {
+                $result["paths"][$route]["get"]["parameters"] = $params;
+            }
+        }
         return $result;
     }
 
