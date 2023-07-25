@@ -342,6 +342,7 @@ $config['cops_template'] = 'default';
  * 'eink' (only available for the 'default' template)
  * 'iphone' (only available for the 'default' template)
  * 'iphone7' (only available for the 'default' template)
+ * 'kindle' (only available for the 'default' template)
  */
 $config['cops_style'] = 'default';
 
@@ -350,6 +351,16 @@ $config['cops_style'] = 'default';
  * When empty it will auto detect the language.
  */
 $config['cops_language'] = '';
+
+/*
+ * Set Home page for library
+ * Can be any of the pages defined as constants in lib/Pages/Page.php
+ * e.g. ALL_RECENT_BOOKS to get straight to most recent books
+ *      AUTHORS_FIRST_LETTER to list all authors
+ *      ALL_TAGS to list all tags
+ *      INDEX to use the default
+ */
+$config['cops_home_page'] = 'INDEX';
 
 /*
  * Show book count for "Not Set" columns in All<Column> pages and filter "Not Set" books in <Column>Detail pages

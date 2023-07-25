@@ -19,6 +19,7 @@ class Request
      * @var array
      */
     public $urlParams = [];
+    private $queryString = null;
 
     public function __construct()
     {
@@ -41,10 +42,7 @@ class Request
      */
     public function query()
     {
-        if (isset($_SERVER['QUERY_STRING'])) {
-            return $_SERVER['QUERY_STRING'];
-        }
-        return "";
+        return $this->queryString;
     }
 
     /**
@@ -107,6 +105,7 @@ class Request
                 $this->urlParams[$name] = $_GET[$name];
             }
         }
+        $this->queryString = $_SERVER['QUERY_STRING'] ?? '';
     }
 
     /**
@@ -143,6 +142,7 @@ class Request
     public function set($name, $value)
     {
         $this->urlParams[$name] = $value;
+        $this->queryString = http_build_query($this->urlParams);
     }
 
     /**

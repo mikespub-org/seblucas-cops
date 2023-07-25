@@ -225,7 +225,12 @@ class JSONRenderer
     public static function getJson($request, $complete = false)
     {
         global $config;
-        $page = $request->get("page", Page::INDEX);
+        // Use the configured home page if needed
+        $homepage = Page::INDEX;
+        if (!empty($config['cops_home_page']) && defined('SebLucas\Cops\Pages\Page::' . $config['cops_home_page'])) {
+            $homepage = constant('SebLucas\Cops\Pages\Page::' . $config['cops_home_page']);
+        }
+        $page = $request->get("page", $homepage);
         $query = $request->get("query");
         $search = $request->get("search");
         $qid = $request->get("id");
@@ -295,15 +300,25 @@ class JSONRenderer
         }
 
         $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
+        $out["customizeurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
+        $out["filterurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::FILTER, 'db', $database);
 
         if ($page == Page::ABOUT) {
             $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));
             $out ["fullhtml"] = $temp;
         }
 
-        $out ["homeurl"] = self::$endpoint;
+        // multiple database setup
         if ($page != Page::INDEX && !is_null($database)) {
-            $out ["homeurl"] = $out ["homeurl"] .  "?" . Format::addURLParam("", 'db', $database);
+            if ($homepage != Page::INDEX) {
+                $out ["homeurl"] = self::$endpoint .  "?" . Format::addURLParam("page=" . Page::INDEX, 'db', $database);
+            } else {
+                $out ["homeurl"] = self::$endpoint .  "?" . Format::addURLParam("", 'db', $database);
+            }
+        } elseif ($homepage != Page::INDEX) {
+            $out ["homeurl"] = self::$endpoint . "?page=" . Page::INDEX;
+        } else {
+            $out ["homeurl"] = self::$endpoint;
         }
 
         $out ["parenturl"] = "";

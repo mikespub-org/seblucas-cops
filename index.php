@@ -25,12 +25,20 @@ if (preg_match('/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chun
 }
 
 $request = new Request();
-$page     = $request->get('page', Page::INDEX);
+$page     = $request->get('page');
 $query    = $request->get('query');
 $qid      = $request->get('id');
 $n        = $request->get('n', '1');
 $database = $request->get('db');
 
+// Use the configured home page if needed
+if (!isset($page)) {
+    $page = Page::INDEX;
+    if (!empty($config['cops_home_page']) && defined('SebLucas\Cops\Pages\Page::' . $config['cops_home_page'])) {
+        $page = constant('SebLucas\Cops\Pages\Page::' . $config['cops_home_page']);
+    }
+    $request->set('page', $page);
+}
 
 // Access the database ASAP to be sure it's readable, redirect if that's not the case.
 // It has to be done before any header is sent.
