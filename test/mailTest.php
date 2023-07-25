@@ -7,7 +7,6 @@
  */
 
 require_once(dirname(__FILE__) . "/config_test.php");
-require_once(dirname(__FILE__) . "/../sendtomail.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Output\Mail;
 
