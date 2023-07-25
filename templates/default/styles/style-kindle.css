@@ -1,0 +1,657 @@
+/* 
+ * COPS 4 Kindle from https://github.com/Joduai/cops-kindle
+ * A dedicated COPS (Calibre OPDS) css theme for kindle e-book readers.
+ * Should also work elegantly on other manufacturers e-book readers.
+ */
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+    font-smoothing: antialiased
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: #FFF
+}
+
+body {
+    font-family: "Amazon Ember", Helvetica, Futura, Caecilia, Georgia, Palatino, sans-serif;
+    font-size: 1.6em;
+    line-height: 1.6em;
+    color: #000
+}
+
+img {
+    border: 0;
+    max-width: 100%;
+    height: auto
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+    line-height: 100%
+}
+
+h1 {
+    font-family: "Amazon Ember Bold", Helvetica, Futura, Caecilia, sans-serif
+}
+
+h1 {
+    font-size: 1.8em
+}
+
+h2 {
+    font-size: 1.6em
+}
+
+h3,
+h4,
+h5,
+h6 {
+    font-size: 1.2em;
+    font-weight: normal
+}
+
+a:hover,
+a:focus,
+a:active {
+    outline: none
+}
+
+a {
+    color: #000;
+    text-decoration: none
+}
+
+a:hover {
+    text-decoration: none
+}
+
+.books:hover {
+    background-color: #ececec
+}
+
+.link a:hover {
+    display: inline-block;
+    width: 100%;
+    background-color: #c2c2c2
+}
+
+.mfp-content .bookpopup {
+    position: relative;
+    background: #FFF;
+    padding: 20px;
+    width: auto;
+    max-width: 90%;
+    margin: 20px auto;
+    min-height: 198px
+}
+
+button.mfp-close,
+.mfp-close:active {
+    top: -20px;
+    right: -20px;
+    background: #FFF;
+    border-radius: 20%;
+    font-size: 2.4em;
+    opacity: 1
+}
+
+#email {
+    width: 300px
+}
+
+.filtered {
+    display: none
+}
+
+#filter {
+    clear: both
+}
+
+#filter ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: left;
+    text-transform: none
+}
+
+#filter ul li {
+    cursor: pointer
+}
+
+li {
+    display: inline-block;
+    padding: .2em 1em;
+    margin: 2px;
+    color: black;
+    background-color: white;
+    opacity: 0.5
+}
+
+.filter-include {
+    border-left: thick solid blue;
+    opacity: 1
+}
+
+.filter-include:after {
+    content: " \2713";
+    /* Tick mark */
+}
+
+.filter-exclude {
+    border-right: thick solid red;
+    opacity: 1
+}
+
+.filter-exclude:after {
+    content: " \2717";
+    /* Check mark */
+}
+
+img {
+    margin: 0;
+    padding: 0;
+    border: 0
+}
+
+.container {
+    border: none;
+    width: 100%;
+    margin: 0 auto;
+    position: relative
+}
+
+header {
+    clear: both;
+    color: #000;
+    text-align: center;
+    text-transform: uppercase;
+    display: block;
+    min-height: 120px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #000
+}
+
+.hicon {
+    display: inline-block;
+    text-align: center;
+    margin: 0 2px
+}
+
+.submit {
+    cursor: pointer;
+    background-color: transparent;
+    background-image: none;
+    border-color: transparent;
+    display: table-cell
+}
+
+.hicon64 {
+    font-size: 4em
+}
+
+.hicon32 .fa-search {
+    font-size: 1.6em;
+    vertical-align: middle
+}
+
+.headleft {
+    float: left;
+    padding: 10px;
+    display: block
+}
+
+.headcenter {
+    float: none;
+    margin: auto;
+    text-align: center;
+    height: 70px;
+    display: table
+}
+
+header h1 {
+    font-size: 1.4em;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 100%
+}
+
+.headright {
+    float: right
+}
+
+section {
+    clear: both
+}
+
+article {
+    border-bottom: 1px solid #000
+}
+
+.frontpage h2 {
+    padding: 5px 0 3px 5px
+}
+
+.frontpage h4 {
+    padding: 8px 0 4px 40px;
+    font-style: italic
+}
+
+.frontpage a {
+    padding: 10px;
+    display: block
+}
+
+.frontpage a:hover,
+.frontpage a:active .frontpage a:focus {
+    width: 100%;
+    background-color: #c2c2c2
+}
+
+.books {
+    clear: both;
+    width: 100%;
+    min-height: 100px;
+    position: relative;
+    overflow: auto;
+    padding: 10px 20px 10px 10px;
+    display: table;
+    direction: rtl
+}
+
+section>article.books:first-of-type {
+    padding-top: 20px
+}
+
+.books .cover {
+    width: 20%;
+    min-width: 110px;
+    height: 100%;
+    display: table-cell;
+    float: left;
+    vertical-align: top
+}
+
+.books .cover a {
+    display: block
+}
+
+.cover img {
+    margin: 0;
+    border: 1px solid #000
+}
+
+.bookpopup .cover {
+    max-width: 100%
+}
+
+.bookpopup .cover img {
+    width: auto;
+    max-height: 350px
+}
+
+.books .download,
+.bookpopup .download {
+    margin: 0;
+    width: 15%;
+    min-width: 220px;
+    position: relative;
+    display: table-cell;
+    float: right;
+    vertical-align: top
+}
+
+.download a {
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    text-align: center
+}
+
+.download br {
+    display: none
+}
+
+.download img {
+    vertical-align: middle
+}
+
+.download a {
+    display: block;
+    width: 100%;
+    color: #000;
+    border: 1px solid #000;
+    background: #FFF;
+    margin: 0 0 15px 0;
+    padding: 10px
+}
+
+.download a[title*="Reader"] {
+    display: block
+}
+
+article.books .download a:nth-of-type(even),
+article.bookpopup .download a[title*="Open"] {
+    display: none
+}
+
+.download a .fa-download {
+    float: left
+}
+
+.books a.fancydetail {
+    display: table-cell;
+    padding: 0 5px 0 0;
+    vertical-align: top;
+    direction: ltr;
+    width: 65%;
+    min-width: 65%;
+    max-width: 65%
+}
+
+.books .fullclickpopup {
+    line-height: 100%
+}
+
+.books .fullclickpopup h4 {
+    display: inline;
+    font-style: italic;
+    line-height: 1.2em
+}
+
+.books .fullclickpopup h4+span {
+    font-size: 1.1em
+}
+
+section .bookpopup {
+    padding: 10px 20px;
+    margin-top: 40px
+}
+
+.bookpopup .download {
+    max-width: 260px
+}
+
+.bookpopup h1 {
+    clear: both;
+    margin: 20px 0
+}
+
+.bookpopup h1 a {
+    display: none
+}
+
+.bookpopup h2 {
+    margin: 0 10px
+}
+
+.bookpopup h3 {
+    display: inline-block;
+    margin-top: 5px
+}
+
+.bookpopup h4 {
+    padding: 30px 0;
+    border-top: 1px solid black
+}
+
+.bookpopup h3+a,
+.bookpopup h3+p {
+    font-size: 1.2em
+}
+
+.fullclickpopup {
+    display: block;
+    min-height: 100px
+}
+
+.fullclickpopup h2 {
+    font-size: 1.4em;
+    margin-bottom: 10px
+}
+
+.bookpopup p.popupless {
+    clear: both
+}
+
+.bookpopup>p {
+    padding: 0;
+    margin: 0
+}
+
+.bookpopup>p.popupless:first-of-type {
+    padding-top: 10px;
+    border-top: 1px solid #000
+}
+
+.bookpopup>div:last-child {
+    font-size: 1.3em
+}
+
+.bookpopup>div:last-child * {
+    font-family: inherit !important;
+    font-size: 1em !important;
+    line-height: 1.3em !important
+}
+
+footer {
+    clear: both;
+    overflow: auto;
+    padding: 5px 20px 15px;
+    margin-bottom: 15px;
+    line-height: 1em;
+    position: relative
+}
+
+.footleft {
+    float: left
+}
+
+.footright {
+    float: right
+}
+
+.footcenter {
+    margin: auto;
+    text-align: center;
+    height: 32px;
+    display: table;
+    font-weight: bold;
+    margin-top: -5px
+}
+
+.footcenter p,
+.footcenter a {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 100%
+}
+
+footer a {
+    display: block;
+    padding: 15px
+}
+
+footer:before,
+footer:after {
+    position: absolute;
+    bottom: 0;
+    font-size: 1em;
+    font-style: italic;
+    line-height: 1.2em
+}
+
+footer:before {
+    content: "\63 \6f \70 \73 \20 \6b \69 \6e \64 \6c \65 \20 \74 \68 \65 \6d \65 \20 \62 \79 \20 \67 \69 \74 \68 \75 \62 .\63 \6f \6d /";
+    width: 63%;
+    color: #555;
+    left: 0;
+    text-align: right
+}
+
+footer:after {
+    clear: both;
+    content: "\6A \6F \64 \75 \61 \69";
+    width: 37%;
+    display: block;
+    right: 0;
+    text-align: left;
+    color: #333
+}
+
+/* Aside stuff */
+#tool {
+    width: 100%
+}
+
+#tool>div {
+    float: none !important;
+    width: 45% !important;
+    margin: 10px auto
+}
+
+#tool input[type=text],
+.twitter-typeahead {
+    vertical-align: middle;
+    width: 100%
+}
+
+.tt-hint,
+.tt-query {
+    width: 100%
+}
+
+.stop select {
+    vertical-align: middle;
+    margin: 4px;
+    color: black
+}
+
+#sort {
+    cursor: pointer
+}
+
+#searchForm {
+    display: table;
+    padding: 0 2px
+}
+
+.stop {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%
+}
+
+.tt-dropdown-menu {
+    width: 322px;
+    text-align: left;
+    margin-top: 6px;
+    color: #000066;
+    padding: 4px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    font-size: 50%
+}
+
+.tt-header {
+    border-bottom: 1px solid #CCCCCC;
+    font-weight: bold
+}
+
+.tt-suggestion {
+    padding: 3px 20px;
+    line-height: 14px
+}
+
+.tt-suggestion.tt-cursor {
+    color: #1c1c1c;
+    background-color: #c2c2c2
+}
+
+.tt-suggestion p {
+    margin: 0
+}
+
+#tool div form * {
+    border: none
+}
+
+#tool form input {
+    padding: 5px;
+    border: 1px solid #000
+}
+
+@media only screen and (min-width:1100px) {
+
+    body .container,
+    body .mfp-content {
+        width: 70%;
+        max-width: 1000px;
+        font-size: 60%
+    }
+
+    .download {
+        min-width: 120px
+    }
+
+    .bookpopup .download {
+        min-width: 260px;
+        display: flex;
+        flex-wrap: wrap
+    }
+
+    .bookpopup .download a {
+        flex: 0 50%
+    }
+
+    .bookpopup .download a {
+        display: inline-block !important;
+        padding: 10px 0;
+        overflow: auto
+    }
+
+    .bookpopup .download a .fa-download {
+        float: none
+    }
+
+    .bookpopup .download #mailButton,
+    .bookpopup .download a[title*="Reader"] {
+        flex: 100%
+    }
+
+    .bookpopup .download a:hover {
+        color: #FFF;
+        background: #000
+    }
+
+    .books .download {
+        min-width: 140px
+    }
+}
+
+@media only screen and (max-width:900px) {
+    .books a.fancydetail {
+        width: 55%;
+        min-width: 55%;
+        max-width: 55%
+    }
+}
+
+@media only screen and (max-width:900px) {
+    .books .cover {
+        float: none
+    }
+}
