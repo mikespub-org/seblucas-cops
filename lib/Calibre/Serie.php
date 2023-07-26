@@ -43,6 +43,45 @@ class Serie extends Base
         return self::PAGE_ID.":".$this->id;
     }
 
+    /** Use inherited class methods to get entries from <Whatever> by seriesId (linked via books) */
+
+    public function getBooks()
+    {
+        return Book::getEntriesBySeriesId($this->id, $this->databaseId);
+    }
+
+    public function getAuthors()
+    {
+        return Author::getEntriesBySeriesId($this->id, $this->databaseId);
+    }
+
+    public function getLanguages()
+    {
+        return Language::getEntriesBySeriesId($this->id, $this->databaseId);
+    }
+
+    public function getPublishers()
+    {
+        return Publisher::getEntriesBySeriesId($this->id, $this->databaseId);
+    }
+
+    public function getRatings()
+    {
+        return Rating::getEntriesBySeriesId($this->id, $this->databaseId);
+    }
+
+    public function getSeries()
+    {
+        //return Serie::getEntriesBySeriesId($this->id, $this->databaseId);
+    }
+
+    public function getTags()
+    {
+        return Tag::getEntriesBySeriesId($this->id, $this->databaseId);
+    }
+
+    /** Use inherited class methods to query static SQL_TABLE for this class */
+
     public static function getCount($database = null)
     {
         // str_format (localize("series.alphabetical", count(array))

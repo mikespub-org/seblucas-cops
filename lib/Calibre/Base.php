@@ -313,11 +313,19 @@ abstract class Base
         //return new static((object)['id' => null, 'name' => localize("seriesword.none")], $database);
     }
 
+    /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
+
     public static function getEntryCount($database = null)
     {
         return self::getCountGeneric(static::SQL_TABLE, static::PAGE_ID, static::PAGE_ALL, $database);
     }
 
+    /**
+     * Summary of getAllEntries = same as getAll<Whatever>() in <Whatever> child class
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     * @return array
+     */
     public static function getAllEntries($database = null, $numberPerPage = null)
     {
         return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, "", [], static::class, $database, $numberPerPage);
@@ -336,15 +344,53 @@ abstract class Base
     public static function getEntriesByFilter($request, $database = null, $numberPerPage = null)
     {
         $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
-        $filterString = $filter->getFilterString();
-        $params = $filter->getQueryParams();
-        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, $filterString, $params, static::class, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $database, $numberPerPage);
     }
 
     public static function getEntriesByAuthorId($authorId, $database = null, $numberPerPage = null)
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addAuthorIdFilter($authorId);
+        return self::getFilteredEntries($filter, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByLanguageId($languageId, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addLanguageIdFilter($languageId);
+        return self::getFilteredEntries($filter, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByPublisherId($publisherId, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addPublisherIdFilter($publisherId);
+        return self::getFilteredEntries($filter, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByRatingId($ratingId, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addRatingIdFilter($ratingId);
+        return self::getFilteredEntries($filter, $database, $numberPerPage);
+    }
+
+    public static function getEntriesBySeriesId($seriesId, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addSeriesIdFilter($seriesId);
+        return self::getFilteredEntries($filter, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByTagId($tagId, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addTagIdFilter($tagId);
+        return self::getFilteredEntries($filter, $database, $numberPerPage);
+    }
+
+    public static function getFilteredEntries($filter, $database = null, $numberPerPage = null)
+    {
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
         return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, $filterString, $params, static::class, $database, $numberPerPage);
@@ -409,7 +455,10 @@ abstract class Base
         [, $result] = self::executeQuery($query, $columns, $filter, $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            /** @var Author|Tag|Serie|Publisher|Language|Rating $instance */
+            /** @var Author|Tag|Serie|Publisher|Language|Rating|Book $instance */
+            if ($category == Book::class) {
+                $post->count = 1;
+            }
 
             $instance = new $category($post, $database);
             array_push($entryArray, $instance->getEntry($post->count));

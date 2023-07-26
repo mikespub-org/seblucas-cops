@@ -88,6 +88,11 @@ class Filter
             $this->addPublisherIdFilter($publisherId);
         }
 
+        $ratingId = $this->request->get('r', null);
+        if (!empty($ratingId) && preg_match('/^!?\d+$/', $ratingId)) {
+            $this->addRatingIdFilter($ratingId);
+        }
+
         $seriesId = $this->request->get('s', null);
         if (!empty($seriesId) && preg_match('/^!?\d+$/', $seriesId)) {
             $this->addSeriesIdFilter($seriesId);
@@ -167,6 +172,16 @@ class Filter
     public function addPublisherIdFilter($publisherId)
     {
         $this->addLinkedIdFilter($publisherId, Publisher::SQL_LINK_TABLE, Publisher::SQL_LINK_COLUMN);
+    }
+
+    /**
+     * Summary of addRatingIdFilter
+     * @param mixed $ratingId
+     * @return void
+     */
+    public function addRatingIdFilter($ratingId)
+    {
+        $this->addLinkedIdFilter($ratingId, Rating::SQL_LINK_TABLE, Rating::SQL_LINK_COLUMN);
     }
 
     /**

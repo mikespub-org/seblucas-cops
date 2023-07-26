@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Input\Request;
 
 class PageBookDetail extends Page
 {

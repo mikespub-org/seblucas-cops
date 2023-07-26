@@ -24,8 +24,11 @@ class Book extends Base
     public const PAGE_LETTER = Page::ALL_BOOKS_LETTER;
     public const PAGE_DETAIL = Page::BOOK_DETAIL;
     public const SQL_TABLE = "books";
+    public const SQL_LINK_TABLE = "books";
+    public const SQL_LINK_COLUMN = "id";
     public const SQL_SORT = "sort";
     public const SQL_COLUMNS = 'books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating';
+    public const SQL_ALL_ROWS = BookList::SQL_BOOKS_ALL;
 
     public const SQL_BOOKS_LEFT_JOIN = 'left outer join comments on comments.book = books.id
     left outer join books_ratings_link on books_ratings_link.book = books.id

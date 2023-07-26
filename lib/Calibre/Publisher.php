@@ -44,6 +44,45 @@ class Publisher extends Base
         return self::PAGE_ID.":".$this->id;
     }
 
+    /** Use inherited class methods to get entries from <Whatever> by publisherId (linked via books) */
+
+    public function getBooks()
+    {
+        return Book::getEntriesByPublisherId($this->id, $this->databaseId);
+    }
+
+    public function getAuthors()
+    {
+        return Author::getEntriesByPublisherId($this->id, $this->databaseId);
+    }
+
+    public function getLanguages()
+    {
+        return Language::getEntriesByPublisherId($this->id, $this->databaseId);
+    }
+
+    public function getPublishers()
+    {
+        //return Publisher::getEntriesByPublisherId($this->id, $this->databaseId);
+    }
+
+    public function getRatings()
+    {
+        return Rating::getEntriesByPublisherId($this->id, $this->databaseId);
+    }
+
+    public function getSeries()
+    {
+        return Serie::getEntriesByPublisherId($this->id, $this->databaseId);
+    }
+
+    public function getTags()
+    {
+        return Tag::getEntriesByPublisherId($this->id, $this->databaseId);
+    }
+
+    /** Use inherited class methods to query static SQL_TABLE for this class */
+
     public static function getCount($database = null)
     {
         // str_format (localize("publishers.alphabetical", count(array))

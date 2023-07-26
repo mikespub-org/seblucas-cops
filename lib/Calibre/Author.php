@@ -64,10 +64,44 @@ class Author extends Base
         return str_format(localize("authorword", $count), $count);
     }
 
+    /** Use inherited class methods to get entries from <Whatever> by authorId (linked via books) */
+
+    public function getBooks()
+    {
+        return Book::getEntriesByAuthorId($this->id, $this->databaseId);
+    }
+
+    public function getAuthors()
+    {
+        //return Author::getEntriesByAuthorId($this->id, $this->databaseId);
+    }
+
+    public function getLanguages()
+    {
+        return Language::getEntriesByAuthorId($this->id, $this->databaseId);
+    }
+
+    public function getPublishers()
+    {
+        return Publisher::getEntriesByAuthorId($this->id, $this->databaseId);
+    }
+
+    public function getRatings()
+    {
+        return Rating::getEntriesByAuthorId($this->id, $this->databaseId);
+    }
+
     public function getSeries()
     {
         return Serie::getEntriesByAuthorId($this->id, $this->databaseId);
     }
+
+    public function getTags()
+    {
+        return Tag::getEntriesByAuthorId($this->id, $this->databaseId);
+    }
+
+    /** Use inherited class methods to query static SQL_TABLE for this class */
 
     public static function getCount($database = null)
     {

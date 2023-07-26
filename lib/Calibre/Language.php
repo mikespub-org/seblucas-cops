@@ -46,6 +46,45 @@ class Language extends Base
         return self::getLanguageString($this->name);
     }
 
+    /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */
+
+    public function getBooks()
+    {
+        return Book::getEntriesByLanguageId($this->id, $this->databaseId);
+    }
+
+    public function getAuthors()
+    {
+        return Author::getEntriesByLanguageId($this->id, $this->databaseId);
+    }
+
+    public function getLanguages()
+    {
+        //return Language::getEntriesByLanguageId($this->id, $this->databaseId);
+    }
+
+    public function getPublishers()
+    {
+        return Publisher::getEntriesByLanguageId($this->id, $this->databaseId);
+    }
+
+    public function getRatings()
+    {
+        return Rating::getEntriesByLanguageId($this->id, $this->databaseId);
+    }
+
+    public function getSeries()
+    {
+        return Serie::getEntriesByLanguageId($this->id, $this->databaseId);
+    }
+
+    public function getTags()
+    {
+        return Tag::getEntriesByLanguageId($this->id, $this->databaseId);
+    }
+
+    /** Use inherited class methods to query static SQL_TABLE for this class */
+
     public static function getLanguageString($code)
     {
         $string = localize("languages.".$code);

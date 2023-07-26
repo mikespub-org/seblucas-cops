@@ -267,7 +267,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public function getEntryArray($query, $params, $n, $numberPerPage = null)
+    public function getEntryArray($query, $params, $n)
     {
         $filter = new Filter($this->request, $params, "books", $this->databaseId);
         $filterString = $filter->getFilterString();

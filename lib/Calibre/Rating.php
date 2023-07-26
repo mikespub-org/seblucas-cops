@@ -46,6 +46,45 @@ class Rating extends Base
         return str_format(localize("ratingword", $this->name/2), $this->name/2);
     }
 
+    /** Use inherited class methods to get entries from <Whatever> by ratingId (linked via books) */
+
+    public function getBooks()
+    {
+        return Book::getEntriesByRatingId($this->id, $this->databaseId);
+    }
+
+    public function getAuthors()
+    {
+        return Author::getEntriesByRatingId($this->id, $this->databaseId);
+    }
+
+    public function getLanguages()
+    {
+        return Language::getEntriesByRatingId($this->id, $this->databaseId);
+    }
+
+    public function getPublishers()
+    {
+        return Publisher::getEntriesByRatingId($this->id, $this->databaseId);
+    }
+
+    public function getRatings()
+    {
+        //return Rating::getEntriesByRatingId($this->id, $this->databaseId);
+    }
+
+    public function getSeries()
+    {
+        return Serie::getEntriesByRatingId($this->id, $this->databaseId);
+    }
+
+    public function getTags()
+    {
+        return Tag::getEntriesByRatingId($this->id, $this->databaseId);
+    }
+
+    /** Use inherited class methods to query static SQL_TABLE for this class */
+
     public static function getCount($database = null)
     {
         // str_format (localize("ratings", count(array))
