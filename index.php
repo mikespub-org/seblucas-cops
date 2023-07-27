@@ -25,12 +25,20 @@ if (preg_match('/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chun
 }
 
 $request = new Request();
-$page     = $request->get('page', Page::INDEX);
+$page     = $request->get('page');
 $query    = $request->get('query');
 $qid      = $request->get('id');
 $n        = $request->get('n', '1');
 $database = $request->get('db');
 
+// Use the configured home page if needed
+if (!isset($page)) {
+    $page = Page::INDEX;
+    if (!empty($config['cops_home_page']) && defined('SebLucas\Cops\Pages\Page::' . $config['cops_home_page'])) {
+        $page = constant('SebLucas\Cops\Pages\Page::' . $config['cops_home_page']);
+    }
+    $request->set('page', $page);
+}
 
 // Access the database ASAP to be sure it's readable, redirect if that's not the case.
 // It has to be done before any header is sent.
@@ -54,7 +62,7 @@ $data = ['title'                 => $config['cops_title_default'],
               'current_css'           => $request->style(),
               'favico'                => $config['cops_icon'],
               'getjson_url'           => JSONRenderer::getCurrentUrl($request->query())];
-if (preg_match('/Kindle/', $_SERVER['HTTP_USER_AGENT'])) {
+if (preg_match('/Kindle/', $request->agent())) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
 }
 $headcontent = file_get_contents('templates/' . $request->template() . '/file.html');

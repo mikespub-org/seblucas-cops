@@ -8,14 +8,22 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Tag;
 
 class PageAllTags extends Page
 {
     public function InitializeContent()
     {
-        $this->title = localize("tags.title");
-        $this->entryArray = Tag::getAllTags($this->getDatabaseId());
+        global $config;
         $this->idPage = Tag::PAGE_ID;
+        $this->title = localize("tags.title");
+        $this->entryArray = Tag::getAllTags($this->n, $this->getDatabaseId());
+        if (in_array("tag", $config['cops_show_not_set_filter'])) {
+            $instance = new Tag((object)['id' => null, 'name' => localize("tagword.none")], $this->getDatabaseId());
+            $booklist = new BookList($this->request);
+            [$result,] = $booklist->getBooksWithoutTag(-1);
+            array_push($this->entryArray, $instance->getEntry(count($result)));
+        }
     }
 }

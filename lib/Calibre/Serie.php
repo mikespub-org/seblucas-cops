@@ -16,17 +16,21 @@ class Serie extends Base
     public const PAGE_ALL = Page::ALL_SERIES;
     public const PAGE_DETAIL = Page::SERIE_DETAIL;
     public const SQL_TABLE = "series";
+    public const SQL_LINK_TABLE = "books_series_link";
+    public const SQL_LINK_COLUMN = "series";
+    public const SQL_SORT = "sort";
     public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
-    public const SQL_ALL_SERIES = "select {0} from series, books_series_link where series.id = series group by series.id, series.name, series.sort order by series.sort";
-    public const SQL_SERIES_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? group by series.id, series.name, series.sort order by series.sort";
+    public const SQL_ALL_ROWS = "select {0} from series, books_series_link where series.id = series {1} group by series.id, series.name, series.sort order by series.sort";
+    public const SQL_ROWS_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
 
     public $id;
     public $name;
 
-    public function __construct($post)
+    public function __construct($post, $database = null)
     {
         $this->id = $post->id;
         $this->name = $post->name;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -38,6 +42,45 @@ class Serie extends Base
     {
         return self::PAGE_ID.":".$this->id;
     }
+
+    /** Use inherited class methods to get entries from <Whatever> by seriesId (linked via books) */
+
+    public function getBooks($n = -1)
+    {
+        return Book::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+    }
+
+    public function getAuthors($n = -1)
+    {
+        return Author::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+    }
+
+    public function getLanguages($n = -1)
+    {
+        return Language::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+    }
+
+    public function getPublishers($n = -1)
+    {
+        return Publisher::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+    }
+
+    public function getRatings($n = -1)
+    {
+        return Rating::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+    }
+
+    public function getSeries($n = -1)
+    {
+        //return Serie::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+    }
+
+    public function getTags($n = -1)
+    {
+        return Tag::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+    }
+
+    /** Use inherited class methods to query static SQL_TABLE for this class */
 
     public static function getCount($database = null)
     {
@@ -52,28 +95,28 @@ from books_series_link, series
 where series.id = series and book = ?');
         $result->execute([$bookId]);
         if ($post = $result->fetchObject()) {
-            return new Serie($post);
+            return new Serie($post, $database);
         }
         return null;
     }
 
     public static function getSerieById($serieId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select id, name  from series where id = ?');
+        $result = parent::getDb($database)->prepare('select series.id as id, series.name as name from series where series.id = ?');
         $result->execute([$serieId]);
         if ($post = $result->fetchObject()) {
-            return new Serie($post);
+            return new Serie($post, $database);
         }
-        return null;
+        return new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $database);
     }
 
-    public static function getAllSeries($database = null, $numberPerPage = null)
+    public static function getAllSeries($n = -1, $database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SQL_COLUMNS, [], self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $n, $database, $numberPerPage);
     }
 
-    public static function getAllSeriesByQuery($query, $database = null, $numberPerPage = null)
+    public static function getAllSeriesByQuery($query, $n = -1, $database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SQL_COLUMNS, ['%' . $query . '%'], self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ROWS_FOR_SEARCH, self::SQL_COLUMNS, "", ['%' . $query . '%'], self::class, $n, $database, $numberPerPage);
     }
 }

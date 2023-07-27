@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Rating;
 
 class PageRatingDetail extends Page
@@ -17,7 +17,10 @@ class PageRatingDetail extends Page
     {
         $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());
         $this->idPage = $rating->getEntryId();
-        $this->title =str_format(localize("ratingword", $rating->name/2), $rating->name/2);
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByRating($this->idGet, $this->n, $this->getDatabaseId());
+        $this->title = $rating->getTitle();
+        $this->parentTitle = localize("ratings.title");
+        $this->parentUri = $rating->getParentUri();
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByRating($this->idGet, $this->n);
     }
 }

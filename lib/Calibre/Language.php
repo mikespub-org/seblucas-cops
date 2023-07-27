@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
 class Language extends Base
@@ -18,14 +16,19 @@ class Language extends Base
     public const PAGE_ALL = Page::ALL_LANGUAGES;
     public const PAGE_DETAIL = Page::LANGUAGE_DETAIL;
     public const SQL_TABLE = "languages";
-    public const SQL_COLUMNS = "languages.id as id, languages.lang_code as lang_code, count(*) as count";
+    public const SQL_LINK_TABLE = "books_languages_link";
+    public const SQL_LINK_COLUMN = "lang_code";
+    public const SQL_SORT = "lang_code";
+    public const SQL_COLUMNS = "languages.id as id, languages.lang_code as name, count(*) as count";
+    public const SQL_ALL_ROWS = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code {1} group by languages.id, books_languages_link.lang_code order by languages.lang_code";
     public $id;
-    public $lang_code;
+    public $name;
 
-    public function __construct($pid, $plang_code)
+    public function __construct($post, $database = null)
     {
-        $this->id = $pid;
-        $this->lang_code = $plang_code;
+        $this->id = $post->id;
+        $this->name = $post->name;
+        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -37,6 +40,50 @@ class Language extends Base
     {
         return self::PAGE_ID.":".$this->id;
     }
+
+    public function getTitle()
+    {
+        return self::getLanguageString($this->name);
+    }
+
+    /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */
+
+    public function getBooks($n = -1)
+    {
+        return Book::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+    }
+
+    public function getAuthors($n = -1)
+    {
+        return Author::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+    }
+
+    public function getLanguages($n = -1)
+    {
+        //return Language::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+    }
+
+    public function getPublishers($n = -1)
+    {
+        return Publisher::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+    }
+
+    public function getRatings($n = -1)
+    {
+        return Rating::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+    }
+
+    public function getSeries($n = -1)
+    {
+        return Serie::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+    }
+
+    public function getTags($n = -1)
+    {
+        return Tag::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+    }
+
+    /** Use inherited class methods to query static SQL_TABLE for this class */
 
     public static function getLanguageString($code)
     {
@@ -55,37 +102,16 @@ class Language extends Base
 
     public static function getLanguageById($languageId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select id, lang_code  from languages where id = ?');
+        $result = parent::getDb($database)->prepare('select languages.id as id, languages.lang_code as name from languages where languages.id = ?');
         $result->execute([$languageId]);
         if ($post = $result->fetchObject()) {
-            return new Language($post->id, Language::getLanguageString($post->lang_code));
+            return new Language($post, $database);
         }
-        return null;
+        return new Language((object)['id' => null, 'name' => localize("language.title")], $database);
     }
 
-
-
-    public static function getAllLanguages($database = null)
+    public static function getAllLanguages($n = -1, $database = null)
     {
-        $result = parent::getDb($database)->query('select ' . self::SQL_COLUMNS . '
-from languages, books_languages_link
-where languages.id = books_languages_link.lang_code
-group by languages.id, books_languages_link.lang_code
-order by languages.lang_code');
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            $language = new Language($post->id, $post->lang_code);
-            array_push($entryArray, new Entry(
-                Language::getLanguageString($language->lang_code),
-                $language->getEntryId(),
-                str_format(localize("bookword", $post->count), $post->count),
-                "text",
-                [ new LinkNavigation($language->getUri())],
-                $database,
-                "",
-                $post->count
-            ));
-        }
-        return $entryArray;
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $n, $database);
     }
 }

@@ -121,7 +121,7 @@ class OPDSRenderer
             }
             self::getXmlStream()->text($idPage);
         } else {
-            self::getXmlStream()->text($_SERVER['REQUEST_URI']);
+            self::getXmlStream()->text($request->uri());
         }
         self::getXmlStream()->endElement();
         self::getXmlStream()->startElement("updated");

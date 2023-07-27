@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Language;
 
 class PageLanguageDetail extends Page
@@ -17,7 +17,10 @@ class PageLanguageDetail extends Page
     {
         $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());
         $this->idPage = $language->getEntryId();
-        $this->title = $language->lang_code;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByLanguage($this->idGet, $this->n, $this->getDatabaseId());
+        $this->title = $language->getTitle();
+        $this->parentTitle = localize("languages.title");
+        $this->parentUri = $language->getParentUri();
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByLanguage($this->idGet, $this->n);
     }
 }

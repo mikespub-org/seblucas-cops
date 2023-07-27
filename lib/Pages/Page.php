@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -48,6 +48,12 @@ class Page
     public const PUBLISHER_DETAIL = "21";
     public const ALL_RATINGS = "22";
     public const RATING_DETAIL = "23";
+    public const FILTER = "99";
+    public const ERROR = "100";
+    public const PAGE_ID = "cops:catalog";
+    public const ABOUT_ID = "cops:about";
+    public const FILTER_ID = "cops:filter";
+    public const ERROR_ID = "cops:error";
     public const ALL_AUTHORS_ID = "cops:authors";
     public const ALL_BOOKS_UUID = 'urn:uuid';
     public const ALL_BOOKS_ID = 'cops:books';
@@ -64,6 +70,8 @@ class Page
     public $authorName = "";
     public $authorUri = "";
     public $authorEmail = "";
+    public $parentTitle = "";
+    public $parentUri = "";
     public $idPage;
     public $idGet;
     public $query;
@@ -138,9 +146,7 @@ class Page
             case Page::CUSTOMIZE :
                 return new PageCustomize($id, $query, $n, $request);
             default:
-                $page = new Page($id, $query, $n, $request);
-                $page->idPage = "cops:catalog";
-                return $page;
+                return new Page($id, $query, $n, $request);
         }
     }
 
@@ -184,12 +190,14 @@ class Page
     public function InitializeContent()
     {
         global $config;
+        $this->idPage = self::PAGE_ID;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
         if (Base::noDatabaseSelected($this->databaseId)) {
             $i = 0;
             foreach (Base::getDbNameList() as $key) {
-                $nBooks = Book::getBookCount($i);
+                $booklist = new BookList($this->request, $i);
+                $nBooks = $booklist->getBookCount();
                 array_push($this->entryArray, new Entry(
                     $key,
                     "cops:{$i}:catalog",
@@ -205,34 +213,34 @@ class Page
             }
         } else {
             if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
-                array_push($this->entryArray, Author::getCount());
+                array_push($this->entryArray, Author::getCount($this->databaseId));
             }
             if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
-                $series = Serie::getCount();
+                $series = Serie::getCount($this->databaseId);
                 if (!is_null($series)) {
                     array_push($this->entryArray, $series);
                 }
             }
             if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
-                $publisher = Publisher::getCount();
+                $publisher = Publisher::getCount($this->databaseId);
                 if (!is_null($publisher)) {
                     array_push($this->entryArray, $publisher);
                 }
             }
             if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
-                $tags = Tag::getCount();
+                $tags = Tag::getCount($this->databaseId);
                 if (!is_null($tags)) {
                     array_push($this->entryArray, $tags);
                 }
             }
             if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
-                $rating = Rating::getCount();
+                $rating = Rating::getCount($this->databaseId);
                 if (!is_null($rating)) {
                     array_push($this->entryArray, $rating);
                 }
             }
             if (!in_array("language", $this->ignoredCategories)) {
-                $languages = Language::getCount();
+                $languages = Language::getCount($this->databaseId);
                 if (!is_null($languages)) {
                     array_push($this->entryArray, $languages);
                 }
@@ -244,7 +252,8 @@ class Page
                     array_push($this->entryArray, $customColumn->getCount());
                 }
             }
-            $this->entryArray = array_merge($this->entryArray, Book::getCount($this->getDatabaseId()));
+            $booklist = new BookList($this->request);
+            $this->entryArray = array_merge($this->entryArray, $booklist->getCount());
 
             if (Base::isMultipleDatabaseEnabled()) {
                 $this->title =  Base::getDbName($this->getDatabaseId());
@@ -261,7 +270,7 @@ class Page
 
     public function getNextLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . $this->request->query());
+        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
         if (($this->n) * $this->getNumberPerPage() < $this->totalNumber) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
         }
@@ -270,7 +279,7 @@ class Page
 
     public function getPrevLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . $this->request->query());
+        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
         if ($this->n > 1) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n - 1), "previous", localize("paging.previous.alternate"));
         }

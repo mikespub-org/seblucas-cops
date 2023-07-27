@@ -8,9 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
-
 class CustomColumnTypeBool extends CustomColumnType
 {
     // PHP pre 5.6 does not support const arrays
@@ -37,17 +34,36 @@ class CustomColumnTypeBool extends CustomColumnType
 
     public function getQuery($id)
     {
-        if ($id == -1) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", $this->getTableName());
+        if ($id == -1 || $id === '') {
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 0) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 1) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } else {
             return null;
+        }
+    }
+
+    public function getFilter($id)
+    {
+        $linkTable = $this->getTableName();
+        $linkColumn = "value";
+        if ($id == -1 || $id === '') {
+            // @todo is this the right way when filtering?
+            $filter = "not exists (select null from {$linkTable} where {$linkTable}.book = books.id)";
+            return [$filter, []];
+        } elseif ($id == 0) {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = 0)";
+            return [$filter, []];
+        } elseif ($id == 1) {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = 1)";
+            return [$filter, []];
+        } else {
+            return ["", []];
         }
     }
 
@@ -64,12 +80,9 @@ class CustomColumnTypeBool extends CustomColumnType
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
-
-            $entry = new Entry(localize($this->BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $name = localize($this->BOOLEAN_NAMES[$post->id]);
+            $customcolumn = new CustomColumn($post->id, $name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
     }

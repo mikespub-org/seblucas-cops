@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Serie;
 
 class PageSerieDetail extends Page
@@ -16,8 +16,11 @@ class PageSerieDetail extends Page
     public function InitializeContent()
     {
         $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
-        $this->title = $serie->name;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksBySeries($this->idGet, $this->n, $this->getDatabaseId());
         $this->idPage = $serie->getEntryId();
+        $this->title = $serie->getTitle();
+        $this->parentTitle = localize("series.title");
+        $this->parentUri = $serie->getParentUri();
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksBySeries($this->idGet, $this->n);
     }
 }

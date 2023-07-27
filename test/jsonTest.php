@@ -121,16 +121,16 @@ class JsonTest extends TestCase
         $check = [
             [
                 'class' => 'tt-header',
-                'title' => '2 tags',
+                'title' => 'Search result for *fic* in tags',
                 'navlink' => 'phpunit?page=9&query=fic&db=&scope=tag',
             ],
             [
-                'class' => '',
+                'class' => 'SebLucas\Cops\Calibre\Tag',
                 'title' => 'Fiction',
                 'navlink' => 'phpunit?page=12&id=1',
             ],
             [
-                'class' => '',
+                'class' => 'SebLucas\Cops\Calibre\Tag',
                 'title' => 'Science Fiction',
                 'navlink' => 'phpunit?page=12&id=7',
             ],

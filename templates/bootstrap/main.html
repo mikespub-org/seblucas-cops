@@ -15,14 +15,23 @@
     {{? it.containsBook == 0}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
             <div class="panel panel-default" style="height: 70px;">
-                <div class="panel-heading">
-                    <h2 class="panel-title">
-                        <a href="{{=entry.navlink}}" style="display: block;">{{=htmlspecialchars (entry.title)}}</a>
-                    </h2>
-                </div>
-                <div class="panel-body">
-                    <span class="badge bottomright">{{=entry.number}}</span>
-                </div>
+                {{? it.page == 19}}
+                    <div class="panel-heading">
+                        {{=htmlspecialchars (entry.title)}}
+                    </div>
+                    <div class="panel-body">
+                        {{=entry.content}}
+                    </div>
+                {{??}}
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a href="{{=entry.navlink}}" style="display: block;">{{=htmlspecialchars (entry.title)}}</a>
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        <span class="badge bottomright">{{=entry.number}}</span>
+                    </div>
+                {{?}}
             </div>
         </div>
     {{??}}

@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -42,6 +43,7 @@ class JSONRenderer
                   "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
             }
         }
+        $database = $book->getDatabaseId();
 
         $publisher = $book->getPublisher();
         if (is_null($publisher)) {
@@ -49,7 +51,7 @@ class JSONRenderer
             $pu = "";
         } else {
             $pn = $publisher->name;
-            $link = new LinkNavigation($publisher->getUri());
+            $link = new LinkNavigation($publisher->getUri(), null, null, $database);
             $pu = $link->hrefXhtml();
         }
 
@@ -61,7 +63,7 @@ class JSONRenderer
         } else {
             $sn = $serie->name;
             $scn = str_format(localize("content.series.data"), $book->seriesIndex, $serie->name);
-            $link = new LinkNavigation($serie->getUri());
+            $link = new LinkNavigation($serie->getUri(), null, null, $database);
             $su = $link->hrefXhtml();
         }
         $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list'], true);
@@ -115,12 +117,12 @@ class JSONRenderer
         }
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
-            $link = new LinkNavigation($author->getUri());
+            $link = new LinkNavigation($author->getUri(), null, null, $database);
             array_push($out ["authors"], ["name" => $author->name, "url" => $link->hrefXhtml()]);
         }
         $out ["tags"] = [];
         foreach ($book->getTags() as $tag) {
-            $link = new LinkNavigation($tag->getUri());
+            $link = new LinkNavigation($tag->getUri(), null, null, $database);
             array_push($out ["tags"], ["name" => $tag->name, "url" => $link->hrefXhtml()]);
         }
 
@@ -136,6 +138,7 @@ class JSONRenderer
 
     public static function getContentArray($entry)
     {
+        /** @var Entry|EntryBook $entry */
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
             $out ["book"] = self::getBookContentArray($entry->book);
@@ -152,11 +155,7 @@ class JSONRenderer
             if ($entry instanceof EntryBook) {
                 array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
             } else {
-                if (empty($entry->className) xor Base::noDatabaseSelected($page->getDatabaseId())) {
-                    array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
-                } else {
-                    array_push($out, ["class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink()]);
-                }
+                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
             }
         }
         return $out;
@@ -226,7 +225,12 @@ class JSONRenderer
     public static function getJson($request, $complete = false)
     {
         global $config;
-        $page = $request->get("page", Page::INDEX);
+        // Use the configured home page if needed
+        $homepage = Page::INDEX;
+        if (!empty($config['cops_home_page']) && defined('SebLucas\Cops\Pages\Page::' . $config['cops_home_page'])) {
+            $homepage = constant('SebLucas\Cops\Pages\Page::' . $config['cops_home_page']);
+        }
+        $page = $request->get("page", $homepage);
         $query = $request->get("query");
         $search = $request->get("search");
         $qid = $request->get("id");
@@ -241,6 +245,10 @@ class JSONRenderer
         }
 
         $out = [ "title" => $currentPage->title];
+        $out ["parentTitle"] = $currentPage->parentTitle;
+        if (!empty($out ["parentTitle"])) {
+            $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
+        }
         $entries = [];
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, self::getContentArray($entry));
@@ -251,6 +259,8 @@ class JSONRenderer
                 $currentPage->book->updateForKepub = true;
             }
             $out ["book"] = self::getFullBookContentArray($currentPage->book);
+        } elseif ($page == Page::BOOK_DETAIL) {
+            $page = Page::INDEX;
         }
         $out ["databaseId"] = $database ?? "";
         $out ["databaseName"] = Base::getDbName($database);
@@ -290,15 +300,32 @@ class JSONRenderer
         }
 
         $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
+        $out["customizeurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
+        $out["filterurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::FILTER, 'db', $database);
 
         if ($page == Page::ABOUT) {
             $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));
             $out ["fullhtml"] = $temp;
         }
 
-        $out ["homeurl"] = self::$endpoint;
+        // multiple database setup
         if ($page != Page::INDEX && !is_null($database)) {
-            $out ["homeurl"] = $out ["homeurl"] .  "?" . Format::addURLParam("", 'db', $database);
+            if ($homepage != Page::INDEX) {
+                $out ["homeurl"] = self::$endpoint .  "?" . Format::addURLParam("page=" . Page::INDEX, 'db', $database);
+            } else {
+                $out ["homeurl"] = self::$endpoint .  "?" . Format::addURLParam("", 'db', $database);
+            }
+        } elseif ($homepage != Page::INDEX) {
+            $out ["homeurl"] = self::$endpoint . "?page=" . Page::INDEX;
+        } else {
+            $out ["homeurl"] = self::$endpoint;
+        }
+
+        $out ["parenturl"] = "";
+        if (!empty($currentPage->parentUri)) {
+            $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
+        } elseif ($page != Page::INDEX) {
+            $out ["parenturl"] = $out ["homeurl"];
         }
 
         return $out;

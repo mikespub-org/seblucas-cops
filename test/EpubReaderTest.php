@@ -6,9 +6,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+use SebLucas\Cops\Output\EPubReader;
+
 require(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Input\Request;
 use SebLucas\EPubMeta\EPub;
 
 class EpubReaderTest extends TestCase
@@ -22,6 +25,61 @@ class EpubReaderTest extends TestCase
 
         self::$book = new EPub($myBook->getFilePath("EPUB", $idData));
         self::$book->initSpineComponent();
+    }
+
+    /**
+     * Summary of testGetReader
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testGetReader()
+    {
+        $idData = 20;
+        $request = new Request();
+
+        ob_start();
+        $data = EPubReader::getReader($idData, $request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $html = new DOMDocument();
+        $html->loadHTML($data);
+
+        $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
+        $check = "COPS EPub Reader";
+        $this->assertEquals($check, $title);
+
+        $script = $html->getElementsByTagName('script')->item(2)->nodeValue;
+        $check = 'title: "Alice\'s Adventures in Wonderland"';
+        $this->assertStringContainsString($check, $script);
+    }
+
+    /**
+     * Summary of testGetContent
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testGetContent()
+    {
+        $idData = 20;
+        $component = 'title.xml';
+        $request = new Request();
+
+        ob_start();
+        $data = EPubReader::getContent($idData, $component, $request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $html = new DOMDocument();
+        $html->loadHTML($data);
+
+        $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
+        $check = "Title Page";
+        $this->assertEquals($check, $title);
+
+        $h1 = $html->getElementsByTagName('h1')->item(0)->nodeValue;
+        $check = "Alice's Adventures in Wonderland";
+        $this->assertStringContainsString($check, $h1);
     }
 
     public function testComponents()
