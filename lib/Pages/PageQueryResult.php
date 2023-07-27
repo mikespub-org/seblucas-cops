@@ -63,7 +63,7 @@ class PageQueryResult extends Page
                 break;
             default:
                 $booklist = new BookList($this->request, $database, $numberPerPage);
-                $array = $booklist->getBooksByQuery(
+                $array = $booklist->getBooksByQueryScope(
                     ["all" => "%" . $queryNormedAndUp . "%"],
                     $n
                 );
@@ -177,7 +177,7 @@ class PageQueryResult extends Page
             foreach (Base::getDbNameList() as $key) {
                 Base::clearDb();
                 $booklist = new BookList($this->request, $d, 1);
-                [$array, $totalNumber] = $booklist->getBooksByQuery(["all" => $crit], 1, $ignoredCategories);
+                [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
                 array_push($this->entryArray, new Entry(
                     $key,
                     "db:query:{$d}",

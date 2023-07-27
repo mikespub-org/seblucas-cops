@@ -196,7 +196,7 @@ class BookList extends Base
         return $this->getEntryArray($query, $params, $n);
     }
 
-    public function getBooksByQuery($query, $n, $ignoredCategories = [])
+    public function getBooksByQueryScope($queryScope, $n, $ignoredCategories = [])
     {
         $i = 0;
         $critArray = [];
@@ -206,13 +206,13 @@ class BookList extends Base
                        PageQueryResult::SCOPE_PUBLISHER,
                        PageQueryResult::SCOPE_BOOK] as $key) {
             if (in_array($key, $ignoredCategories) ||
-                (!array_key_exists($key, $query) && !array_key_exists('all', $query))) {
+                (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
                 $critArray[$i] = self::BAD_SEARCH;
             } else {
-                if (array_key_exists($key, $query)) {
-                    $critArray[$i] = $query[$key];
+                if (array_key_exists($key, $queryScope)) {
+                    $critArray[$i] = $queryScope[$key];
                 } else {
-                    $critArray[$i] = $query["all"];
+                    $critArray[$i] = $queryScope["all"];
                 }
             }
             $i++;
