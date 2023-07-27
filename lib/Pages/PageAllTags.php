@@ -18,7 +18,7 @@ class PageAllTags extends Page
         global $config;
         $this->idPage = Tag::PAGE_ID;
         $this->title = localize("tags.title");
-        $this->entryArray = Tag::getAllTags($this->getDatabaseId());
+        $this->entryArray = Tag::getAllTags($this->n, $this->getDatabaseId());
         if (in_array("tag", $config['cops_show_not_set_filter'])) {
             $instance = new Tag((object)['id' => null, 'name' => localize("tagword.none")], $this->getDatabaseId());
             $booklist = new BookList($this->request);

@@ -66,39 +66,39 @@ class Author extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by authorId (linked via books) */
 
-    public function getBooks()
+    public function getBooks($n = -1)
     {
-        return Book::getEntriesByAuthorId($this->id, $this->databaseId);
+        return Book::getEntriesByAuthorId($this->id, $n, $this->databaseId);
     }
 
-    public function getAuthors()
+    public function getAuthors($n = -1)
     {
-        //return Author::getEntriesByAuthorId($this->id, $this->databaseId);
+        //return Author::getEntriesByAuthorId($this->id, $n, $this->databaseId);
     }
 
-    public function getLanguages()
+    public function getLanguages($n = -1)
     {
-        return Language::getEntriesByAuthorId($this->id, $this->databaseId);
+        return Language::getEntriesByAuthorId($this->id, $n, $this->databaseId);
     }
 
-    public function getPublishers()
+    public function getPublishers($n = -1)
     {
-        return Publisher::getEntriesByAuthorId($this->id, $this->databaseId);
+        return Publisher::getEntriesByAuthorId($this->id, $n, $this->databaseId);
     }
 
-    public function getRatings()
+    public function getRatings($n = -1)
     {
-        return Rating::getEntriesByAuthorId($this->id, $this->databaseId);
+        return Rating::getEntriesByAuthorId($this->id, $n, $this->databaseId);
     }
 
-    public function getSeries()
+    public function getSeries($n = -1)
     {
-        return Serie::getEntriesByAuthorId($this->id, $this->databaseId);
+        return Serie::getEntriesByAuthorId($this->id, $n, $this->databaseId);
     }
 
-    public function getTags()
+    public function getTags($n = -1)
     {
-        return Tag::getEntriesByAuthorId($this->id, $this->databaseId);
+        return Tag::getEntriesByAuthorId($this->id, $n, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -131,24 +131,24 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public static function getAuthorsByStartingLetter($letter, $database = null)
+    public static function getAuthorsByStartingLetter($letter, $n = -1, $database = null)
     {
-        return self::getEntryArray(self::SQL_ROWS_BY_FIRST_LETTER, [$letter . "%"], $database);
+        return self::getEntryArray(self::SQL_ROWS_BY_FIRST_LETTER, [$letter . "%"], $n, $database);
     }
 
-    public static function getAuthorsForSearch($query, $database = null)
+    public static function getAuthorsForSearch($query, $n = -1, $database = null)
     {
-        return self::getEntryArray(self::SQL_ROWS_FOR_SEARCH, [$query . "%", $query . "%"], $database);
+        return self::getEntryArray(self::SQL_ROWS_FOR_SEARCH, [$query . "%", $query . "%"], $n, $database);
     }
 
-    public static function getAllAuthors($database = null)
+    public static function getAllAuthors($n = -1, $database = null)
     {
-        return self::getEntryArray(self::SQL_ALL_ROWS, [], $database);
+        return self::getEntryArray(self::SQL_ALL_ROWS, [], $n, $database);
     }
 
-    public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)
+    public static function getEntryArray($query, $params, $n = -1, $database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $n, $database, $numberPerPage);
     }
 
     public static function getAuthorById($authorId, $database = null)

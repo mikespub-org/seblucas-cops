@@ -18,7 +18,7 @@ class PageAllRating extends Page
         global $config;
         $this->idPage = Rating::PAGE_ID;
         $this->title = localize("ratings.title");
-        $this->entryArray = Rating::getAllRatings($this->getDatabaseId());
+        $this->entryArray = Rating::getAllRatings($this->n, $this->getDatabaseId());
         if (in_array("rating", $config['cops_show_not_set_filter'])) {
             $instance = new Rating((object)['id' => 0, 'name' => 0], $this->getDatabaseId());
             $booklist = new BookList($this->request);

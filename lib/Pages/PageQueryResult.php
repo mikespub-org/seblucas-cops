@@ -50,16 +50,16 @@ class PageQueryResult extends Page
                 $array = $booklist->getBooksByStartingLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $database);
+                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $n, $database);
                 break;
             case self::SCOPE_SERIES :
-                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $database);
+                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $n, $database);
                 break;
             case self::SCOPE_TAG :
                 $array = Tag::getAllTagsByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             case self::SCOPE_PUBLISHER :
-                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $database);
+                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $n, $database);
                 break;
             default:
                 $booklist = new BookList($this->request, $database, $numberPerPage);

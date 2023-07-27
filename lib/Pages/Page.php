@@ -270,7 +270,7 @@ class Page
 
     public function getNextLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . $this->request->query());
+        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
         if (($this->n) * $this->getNumberPerPage() < $this->totalNumber) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
         }
@@ -279,7 +279,7 @@ class Page
 
     public function getPrevLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . $this->request->query());
+        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
         if ($this->n > 1) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n - 1), "previous", localize("paging.previous.alternate"));
         }

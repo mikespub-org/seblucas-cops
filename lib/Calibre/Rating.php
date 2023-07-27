@@ -48,39 +48,39 @@ class Rating extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by ratingId (linked via books) */
 
-    public function getBooks()
+    public function getBooks($n = -1)
     {
-        return Book::getEntriesByRatingId($this->id, $this->databaseId);
+        return Book::getEntriesByRatingId($this->id, $n, $this->databaseId);
     }
 
-    public function getAuthors()
+    public function getAuthors($n = -1)
     {
-        return Author::getEntriesByRatingId($this->id, $this->databaseId);
+        return Author::getEntriesByRatingId($this->id, $n, $this->databaseId);
     }
 
-    public function getLanguages()
+    public function getLanguages($n = -1)
     {
-        return Language::getEntriesByRatingId($this->id, $this->databaseId);
+        return Language::getEntriesByRatingId($this->id, $n, $this->databaseId);
     }
 
-    public function getPublishers()
+    public function getPublishers($n = -1)
     {
-        return Publisher::getEntriesByRatingId($this->id, $this->databaseId);
+        return Publisher::getEntriesByRatingId($this->id, $n, $this->databaseId);
     }
 
-    public function getRatings()
+    public function getRatings($n = -1)
     {
-        //return Rating::getEntriesByRatingId($this->id, $this->databaseId);
+        //return Rating::getEntriesByRatingId($this->id, $n, $this->databaseId);
     }
 
-    public function getSeries()
+    public function getSeries($n = -1)
     {
-        return Serie::getEntriesByRatingId($this->id, $this->databaseId);
+        return Serie::getEntriesByRatingId($this->id, $n, $this->databaseId);
     }
 
-    public function getTags()
+    public function getTags($n = -1)
     {
-        return Tag::getEntriesByRatingId($this->id, $this->databaseId);
+        return Tag::getEntriesByRatingId($this->id, $n, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -91,14 +91,14 @@ class Rating extends Base
         return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
-    public static function getAllRatings($database = null)
+    public static function getAllRatings($n = -1, $database = null)
     {
-        return self::getEntryArray(self::SQL_ALL_ROWS, [], $database);
+        return self::getEntryArray(self::SQL_ALL_ROWS, [], $n, $database);
     }
 
-    public static function getEntryArray($query, $params, $database = null, $numberPerPage = null)
+    public static function getEntryArray($query, $params, $n = -1, $database = null, $numberPerPage = null)
     {
-        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $n, $database, $numberPerPage);
     }
 
     public static function getRatingById($ratingId, $database = null)

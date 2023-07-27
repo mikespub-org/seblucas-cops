@@ -48,39 +48,39 @@ class Language extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */
 
-    public function getBooks()
+    public function getBooks($n = -1)
     {
-        return Book::getEntriesByLanguageId($this->id, $this->databaseId);
+        return Book::getEntriesByLanguageId($this->id, $n, $this->databaseId);
     }
 
-    public function getAuthors()
+    public function getAuthors($n = -1)
     {
-        return Author::getEntriesByLanguageId($this->id, $this->databaseId);
+        return Author::getEntriesByLanguageId($this->id, $n, $this->databaseId);
     }
 
-    public function getLanguages()
+    public function getLanguages($n = -1)
     {
-        //return Language::getEntriesByLanguageId($this->id, $this->databaseId);
+        //return Language::getEntriesByLanguageId($this->id, $n, $this->databaseId);
     }
 
-    public function getPublishers()
+    public function getPublishers($n = -1)
     {
-        return Publisher::getEntriesByLanguageId($this->id, $this->databaseId);
+        return Publisher::getEntriesByLanguageId($this->id, $n, $this->databaseId);
     }
 
-    public function getRatings()
+    public function getRatings($n = -1)
     {
-        return Rating::getEntriesByLanguageId($this->id, $this->databaseId);
+        return Rating::getEntriesByLanguageId($this->id, $n, $this->databaseId);
     }
 
-    public function getSeries()
+    public function getSeries($n = -1)
     {
-        return Serie::getEntriesByLanguageId($this->id, $this->databaseId);
+        return Serie::getEntriesByLanguageId($this->id, $n, $this->databaseId);
     }
 
-    public function getTags()
+    public function getTags($n = -1)
     {
-        return Tag::getEntriesByLanguageId($this->id, $this->databaseId);
+        return Tag::getEntriesByLanguageId($this->id, $n, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -110,8 +110,8 @@ class Language extends Base
         return new Language((object)['id' => null, 'name' => localize("language.title")], $database);
     }
 
-    public static function getAllLanguages($database = null)
+    public static function getAllLanguages($n = -1, $database = null)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $database);
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $n, $database);
     }
 }

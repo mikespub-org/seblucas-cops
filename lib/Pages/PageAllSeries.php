@@ -20,12 +20,12 @@ class PageAllSeries extends Page
         $this->title = localize("series.title");
         /**
         if ($this->request->hasFilter()) {
-                $this->entryArray = Serie::getEntriesByFilter($this->request, $this->getDatabaseId());
+                $this->entryArray = Serie::getEntriesByFilter($this->request, $this->n, $this->getDatabaseId());
         } else {
-            $this->entryArray = Serie::getAllEntries($this->getDatabaseId());
+            $this->entryArray = Serie::getAllEntries($this->n, $this->getDatabaseId());
         }
          */
-        $this->entryArray = Serie::getAllSeries($this->getDatabaseId());
+        $this->entryArray = Serie::getAllSeries($this->n, $this->getDatabaseId());
         if (in_array("series", $config['cops_show_not_set_filter'])) {
             $instance = new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());
             $booklist = new BookList($this->request);

@@ -44,39 +44,39 @@ class Tag extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by tagId (linked via books) */
 
-    public function getBooks()
+    public function getBooks($n = -1)
     {
-        return Book::getEntriesByTagId($this->id, $this->databaseId);
+        return Book::getEntriesByTagId($this->id, $n, $this->databaseId);
     }
 
-    public function getAuthors()
+    public function getAuthors($n = -1)
     {
-        return Author::getEntriesByTagId($this->id, $this->databaseId);
+        return Author::getEntriesByTagId($this->id, $n, $this->databaseId);
     }
 
-    public function getLanguages()
+    public function getLanguages($n = -1)
     {
-        return Language::getEntriesByTagId($this->id, $this->databaseId);
+        return Language::getEntriesByTagId($this->id, $n, $this->databaseId);
     }
 
-    public function getPublishers()
+    public function getPublishers($n = -1)
     {
-        return Publisher::getEntriesByTagId($this->id, $this->databaseId);
+        return Publisher::getEntriesByTagId($this->id, $n, $this->databaseId);
     }
 
-    public function getRatings()
+    public function getRatings($n = -1)
     {
-        return Rating::getEntriesByTagId($this->id, $this->databaseId);
+        return Rating::getEntriesByTagId($this->id, $n, $this->databaseId);
     }
 
-    public function getSeries()
+    public function getSeries($n = -1)
     {
-        return Serie::getEntriesByTagId($this->id, $this->databaseId);
+        return Serie::getEntriesByTagId($this->id, $n, $this->databaseId);
     }
 
-    public function getTags()
+    public function getTags($n = -1)
     {
-        //return Tag::getEntriesByTagId($this->id, $this->databaseId);
+        //return Tag::getEntriesByTagId($this->id, $n, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -97,7 +97,7 @@ class Tag extends Base
         return new Tag((object)['id' => null, 'name' => localize("tagword.none")], $database);
     }
 
-    public static function getAllTags($database = null, $numberPerPage = null)
+    public static function getAllTags($n = -1, $database = null, $numberPerPage = null)
     {
         global $config;
 
@@ -107,10 +107,10 @@ class Tag extends Base
             $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
         }
 
-        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, "", [], self::class, $database, $numberPerPage);
+        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, "", [], self::class, $n, $database, $numberPerPage);
     }
 
-    public static function getAllTagsByQuery($query, $n, $database = null, $numberPerPage = null)
+    public static function getAllTagsByQuery($query, $n = -1, $database = null, $numberPerPage = null)
     {
         $columns  = "tags.id as id, tags.name as name, (select count(*) from books_tags_link where tags.id = tag) as count";
         $sql = 'select {0} from tags where upper (tags.name) like ? {1} order by tags.name';

@@ -326,74 +326,74 @@ abstract class Base
      * @param mixed $numberPerPage
      * @return array
      */
-    public static function getAllEntries($database = null, $numberPerPage = null)
+    public static function getAllEntries($n = -1, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, "", [], static::class, $database, $numberPerPage);
+        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, "", [], static::class, $n, $database, $numberPerPage);
     }
 
-    public static function getAllEntriesByQuery($query, $n, $database = null, $numberPerPage = null)
+    public static function getAllEntriesByQuery($query, $n = -1, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_FOR_SEARCH, static::SQL_COLUMNS, "", ['%' . $query . '%'], static::class, $database, $numberPerPage);
+        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_FOR_SEARCH, static::SQL_COLUMNS, "", ['%' . $query . '%'], static::class, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByStartingLetter($letter, $database = null, $numberPerPage = null)
+    public static function getEntriesByStartingLetter($letter, $n = -1, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_BY_FIRST_LETTER, static::SQL_COLUMNS, "", [$letter . "%"], static::class, $database, $numberPerPage);
+        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_BY_FIRST_LETTER, static::SQL_COLUMNS, "", [$letter . "%"], static::class, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByFilter($request, $database = null, $numberPerPage = null)
+    public static function getEntriesByFilter($request, $n = -1, $database = null, $numberPerPage = null)
     {
         $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
-        return self::getFilteredEntries($filter, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByAuthorId($authorId, $database = null, $numberPerPage = null)
+    public static function getEntriesByAuthorId($authorId, $n = -1, $database = null, $numberPerPage = null)
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addAuthorIdFilter($authorId);
-        return self::getFilteredEntries($filter, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByLanguageId($languageId, $database = null, $numberPerPage = null)
+    public static function getEntriesByLanguageId($languageId, $n = -1, $database = null, $numberPerPage = null)
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addLanguageIdFilter($languageId);
-        return self::getFilteredEntries($filter, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByPublisherId($publisherId, $database = null, $numberPerPage = null)
+    public static function getEntriesByPublisherId($publisherId, $n = -1, $database = null, $numberPerPage = null)
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addPublisherIdFilter($publisherId);
-        return self::getFilteredEntries($filter, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByRatingId($ratingId, $database = null, $numberPerPage = null)
+    public static function getEntriesByRatingId($ratingId, $n = -1, $database = null, $numberPerPage = null)
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addRatingIdFilter($ratingId);
-        return self::getFilteredEntries($filter, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesBySeriesId($seriesId, $database = null, $numberPerPage = null)
+    public static function getEntriesBySeriesId($seriesId, $n = -1, $database = null, $numberPerPage = null)
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addSeriesIdFilter($seriesId);
-        return self::getFilteredEntries($filter, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByTagId($tagId, $database = null, $numberPerPage = null)
+    public static function getEntriesByTagId($tagId, $n = -1, $database = null, $numberPerPage = null)
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addTagIdFilter($tagId);
-        return self::getFilteredEntries($filter, $database, $numberPerPage);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
-    public static function getFilteredEntries($filter, $database = null, $numberPerPage = null)
+    public static function getFilteredEntries($filter, $n = -1, $database = null, $numberPerPage = null)
     {
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, $filterString, $params, static::class, $database, $numberPerPage);
+        return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, $filterString, $params, static::class, $n, $database, $numberPerPage);
     }
 
     /**
@@ -444,15 +444,16 @@ abstract class Base
      * @param mixed $columns
      * @param mixed $params
      * @param mixed $category
+     * @param mixed $n
      * @param mixed $database
      * @param mixed $numberPerPage
      * @return array
      */
-    public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $category, $database = null, $numberPerPage = null)
+    public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $category, $n = -1, $database = null, $numberPerPage = null)
     {
         /** @var \PDOStatement $result */
 
-        [, $result] = self::executeQuery($query, $columns, $filter, $params, -1, $database, $numberPerPage);
+        [, $result] = self::executeQuery($query, $columns, $filter, $params, $n, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             /** @var Author|Tag|Serie|Publisher|Language|Rating|Book $instance */

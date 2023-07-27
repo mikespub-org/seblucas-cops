@@ -16,6 +16,6 @@ class PageAllPublishers extends Page
     {
         $this->idPage = Publisher::PAGE_ID;
         $this->title = localize("publishers.title");
-        $this->entryArray = Publisher::getAllPublishers($this->getDatabaseId());
+        $this->entryArray = Publisher::getAllPublishers($this->n, $this->getDatabaseId());
     }
 }
