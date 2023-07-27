@@ -16,13 +16,15 @@ class Identifier
     public $formattedType;
     public $val;
     public $uri;
+    protected $databaseId;
 
-    public function __construct($post)
+    public function __construct($post, $database = null)
     {
         $this->id = $post->id;
         $this->type = strtolower($post->type);
         $this->val = $post->val;
         $this->formatType();
+        $this->databaseId = $database;
     }
 
     public function formatType()

@@ -6,11 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-namespace SebLucas\Cops\Output\EPubReader;
-
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\EPubReader;
-use Exception;
 
 require_once dirname(__FILE__) . '/config.php';
 

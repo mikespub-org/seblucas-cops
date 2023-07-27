@@ -12,49 +12,61 @@ namespace SebLucas\Cops\Language;
 class Translation
 {
     public const BASE_DIR = './lang';
+    protected $acceptLanguageHeader;
+
+    /**
+     * Summary of __construct
+     * @param string $acceptLanguageHeader from $_SERVER['HTTP_ACCEPT_LANGUAGE']
+     */
+    public function __construct($acceptLanguageHeader = null)
+    {
+        $this->acceptLanguageHeader = $acceptLanguageHeader;
+    }
 
     /**
      * Get all accepted languages from the browser and put them in a sorted array
      * languages id are normalized : fr-fr -> fr_FR
+     * @param string $accept from $_SERVER['HTTP_ACCEPT_LANGUAGE']
      * @return array of languages
      */
-    public static function getAcceptLanguages()
+    public function getAcceptLanguages($accept)
     {
         $langs = [];
 
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            // break up string into pieces (languages and q factors)
-            $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-            if (preg_match('/^(\w{2})-\w{2}$/', $accept, $matches)) {
-                // Special fix for IE11 which send fr-FR and nothing else
-                $accept = $accept . ',' . $matches[1] . ';q=0.8';
-            }
-            preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept, $lang_parse);
+        if (empty($accept)) {
+            return $langs;
+        }
 
-            if (count($lang_parse[1])) {
-                $langs = [];
-                foreach ($lang_parse[1] as $lang) {
-                    // Format the language code (not standard among browsers)
-                    if (strlen($lang) == 5) {
-                        $lang = str_replace('-', '_', $lang);
-                        $splitted = preg_split('/_/', $lang);
-                        $lang = $splitted[0] . '_' . strtoupper($splitted[1]);
-                    }
-                    array_push($langs, $lang);
+        // break up string into pieces (languages and q factors)
+        if (preg_match('/^(\w{2})-\w{2}$/', $accept, $matches)) {
+            // Special fix for IE11 which send fr-FR and nothing else
+            $accept = $accept . ',' . $matches[1] . ';q=0.8';
+        }
+        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept, $lang_parse);
+
+        if (count($lang_parse[1])) {
+            $langs = [];
+            foreach ($lang_parse[1] as $lang) {
+                // Format the language code (not standard among browsers)
+                if (strlen($lang) == 5) {
+                    $lang = str_replace('-', '_', $lang);
+                    $splitted = preg_split('/_/', $lang);
+                    $lang = $splitted[0] . '_' . strtoupper($splitted[1]);
                 }
-                // create a list like "en" => 0.8
-                $langs = array_combine($langs, $lang_parse[4]);
-
-                // set default to 1 for any without q factor
-                foreach ($langs as $lang => $val) {
-                    if ($val === '') {
-                        $langs[$lang] = 1;
-                    }
-                }
-
-                // sort list based on value
-                arsort($langs, SORT_NUMERIC);
+                array_push($langs, $lang);
             }
+            // create a list like "en" => 0.8
+            $langs = array_combine($langs, $lang_parse[4]);
+
+            // set default to 1 for any without q factor
+            foreach ($langs as $lang => $val) {
+                if ($val === '') {
+                    $langs[$lang] = 1;
+                }
+            }
+
+            // sort list based on value
+            arsort($langs, SORT_NUMERIC);
         }
 
         return $langs;
@@ -64,15 +76,15 @@ class Translation
      * Find the best translation file possible based on the accepted languages
      * @return array of language and language file
      */
-    public static function getLangAndTranslationFile()
+    public function getLangAndTranslationFile()
     {
         global $config;
         $langs = [];
         $lang = 'en';
         if (!empty($config['cops_language'])) {
             $lang = $config['cops_language'];
-        } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $langs = self::getAcceptLanguages();
+        } elseif (!empty($this->acceptLanguageHeader)) {
+            $langs = $this->getAcceptLanguages($this->acceptLanguageHeader);
         }
         //echo var_dump($langs);
         $lang_file = null;
@@ -94,7 +106,7 @@ class Translation
      * This method is based on this page
      * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
      */
-    public static function localize($phrase, $count=-1, $reset=false)
+    public function localize($phrase, $count=-1, $reset=false)
     {
         global $config;
         if ($count == 0) {
@@ -115,7 +127,7 @@ class Translation
         /* If no instance of $translations has occured load the language file */
         if (is_null($translations)) {
             $lang_file_en = null;
-            [$lang, $lang_file] = self::getLangAndTranslationFile();
+            [$lang, $lang_file] = $this->getLangAndTranslationFile();
             if ($lang != 'en') {
                 $lang_file_en = self::BASE_DIR . '/Localization_en.json';
             }

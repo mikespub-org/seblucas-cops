@@ -16,6 +16,7 @@
     "type": "project",
     "license": "GPL-2.0-or-later",
     "require": {
+        "ext-dom": "*",
         "ext-gd": "*",
         "ext-intl": "*",
         "ext-json": "*",

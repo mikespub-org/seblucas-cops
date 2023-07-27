@@ -6,7 +6,11 @@
     <div title="{{=it.c.i18n.cogAlt}}" class="hicon hicon64 headright"><i class="fas fa-search" id="searchImage"></i></div>
     {{?}}
     <div class="headcenter">
-        <h1>{{=it.title}}</h1>
+        {{? it.parenturl != ""}}
+            <h1><a href="{{=it.parenturl}}" {{=it.c.config.kindleHack}}>{{=it.title}}</a></h1>
+        {{??}}
+            <h1>{{=it.title}}</h1>
+        {{?}}
     </div>
     <div id="tool" {{? it.c.config.server_side_rendering == 0}}style="display: none"{{?}}>
         <div style="float: left; width: 50%">

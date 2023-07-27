@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use DateTime;
 
 class CustomColumnTypeDate extends CustomColumnType
@@ -31,13 +29,30 @@ class CustomColumnTypeDate extends CustomColumnType
 
     public function getQuery($id)
     {
+        global $config;
+        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            return [$query, []];
+        }
         $date = new DateTime($id);
-        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
         return [$query, [$date->format("Y-m-d")]];
+    }
+
+    public function getFilter($id)
+    {
+        $date = new DateTime($id);
+        $linkTable = $this->getTableName();
+        $linkColumn = "value";
+        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and date({$linkTable}.{$linkColumn}) = ?)";
+        return [$filter, [$date->format("Y-m-d")]];
     }
 
     public function getCustom($id)
     {
+        if (empty($id)) {
+            return new CustomColumn(null, localize("customcolumn.date.unknown"), $this);
+        }
         $date = new DateTime($id);
 
         return new CustomColumn($id, $date->format(localize("customcolumn.date.format")), $this);
@@ -53,25 +68,13 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
             $id = $date->format("Y-m-d");
+            $name = $date->format(localize("customcolumn.date.format"));
 
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($id))];
-
-            $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $customcolumn = new CustomColumn($id, $name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
 
         return $entryArray;
-    }
-
-    public function getDescription()
-    {
-        $desc = $this->getDatabaseDescription();
-        if ($desc === null || empty($desc)) {
-            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
-        }
-        return $desc;
     }
 
     public function getCustomByBook($book)

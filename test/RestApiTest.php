@@ -36,15 +36,17 @@ class RestApiTest extends TestCase
     public function testGetPathInfo(): void
     {
         $request = new Request();
+        $apiHandler = new RestApi($request);
         $expected = "/index";
-        $test = RestApi::getPathInfo($request);
+        $test = $apiHandler->getPathInfo();
         $this->assertEquals($expected, $test);
 
         $_SERVER["PATH_INFO"] = "/books/2";
         $request = new Request();
+        $apiHandler = new RestApi($request);
 
         $expected = "/books/2";
-        $test = RestApi::getPathInfo($request);
+        $test = $apiHandler->getPathInfo();
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);
@@ -54,10 +56,24 @@ class RestApiTest extends TestCase
     {
         $_SERVER["PATH_INFO"] = "/books/2";
         $request = new Request();
-        $path = RestApi::getPathInfo($request);
+        $apiHandler = new RestApi($request);
+        $path = $apiHandler->getPathInfo();
 
         $expected = ["page" => Page::BOOK_DETAIL, "id" => 2];
-        $test = RestApi::matchPathInfo($path, $request);
+        $test = $apiHandler->matchPathInfo($path);
+        $this->assertEquals($expected, $test);
+
+        $_SERVER["PATH_INFO"] = "/openapi";
+        $request = new Request();
+        $apiHandler = new RestApi($request);
+        $path = $apiHandler->getPathInfo();
+
+        $expected = RestApi::getOpenApi($request);
+        $test = $apiHandler->matchPathInfo($path);
+        $this->assertEquals($expected, $test);
+
+        $expected = true;
+        $test = $apiHandler->isExtra;
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);
@@ -67,9 +83,10 @@ class RestApiTest extends TestCase
     {
         $_SERVER["PATH_INFO"] = "/books/2";
         $request = new Request();
-        $path = RestApi::getPathInfo($request);
-        $params = RestApi::matchPathInfo($path, $request);
-        $request = RestApi::setParams($params, $request);
+        $apiHandler = new RestApi($request);
+        $path = $apiHandler->getPathInfo();
+        $params = $apiHandler->matchPathInfo($path);
+        $request = $apiHandler->setParams($params);
 
         $expected = Page::BOOK_DETAIL;
         $test = $request->get("page");
@@ -85,8 +102,9 @@ class RestApiTest extends TestCase
     public function testGetJson(): void
     {
         $request = new Request();
+        $apiHandler = new RestApi($request);
         $expected = JSONRenderer::getJson($request);
-        $test = RestApi::getJson($request);
+        $test = $apiHandler->getJson();
         $this->assertEquals($expected, $test);
     }
 
@@ -135,9 +153,10 @@ class RestApiTest extends TestCase
             "restapi.php?page=23&id=1" => "restapi.php/ratings/1",
         ];
         $output = json_encode(array_keys($links));
+        $endpoint = RestApi::getScriptName($request);
 
         $expected = json_encode(array_values($links), JSON_UNESCAPED_SLASHES);
-        $test = RestApi::replaceLinks($output, $request);
+        $test = RestApi::replaceLinks($output, $endpoint);
         $this->assertEquals($expected, $test);
 
         $_SERVER["SCRIPT_NAME"] = $script;
@@ -146,8 +165,9 @@ class RestApiTest extends TestCase
     public function testGetOutput(): void
     {
         $request = new Request();
+        $apiHandler = new RestApi($request);
         $expected = true;
-        $test = RestApi::getOutput($request);
+        $test = $apiHandler->getOutput();
         $this->assertEquals($expected, str_starts_with($test, '{"title":"COPS",'));
     }
 

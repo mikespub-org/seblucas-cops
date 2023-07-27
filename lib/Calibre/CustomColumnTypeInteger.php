@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use UnexpectedValueException;
 
 class CustomColumnTypeInteger extends CustomColumnType
@@ -40,8 +38,21 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     public function getQuery($id)
     {
-        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
+        global $config;
+        if (empty($id) && strval($id) !== '0' && in_array("custom", $config['cops_show_not_set_filter'])) {
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            return [$query, []];
+        }
+        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
+    }
+
+    public function getFilter($id)
+    {
+        $linkTable = $this->getTableName();
+        $linkColumn = "value";
+        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        return [$filter, [$id]];
     }
 
     public function getCustom($id)
@@ -57,23 +68,11 @@ class CustomColumnTypeInteger extends CustomColumnType
         $result = $this->getDb($this->databaseId)->query($query);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
-
-            $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $name = $post->id;
+            $customcolumn = new CustomColumn($post->id, $name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
-    }
-
-    public function getDescription()
-    {
-        $desc = $this->getDatabaseDescription();
-        if ($desc === null || empty($desc)) {
-            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
-        }
-        return $desc;
     }
 
     public function getCustomByBook($book)

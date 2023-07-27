@@ -1,11 +1,15 @@
 # COPS for PHP 8.x
 
-## Prerequisites (this fork)
-1. 	PHP 8.x with GD image processing, Libxml, Intl, Json & SQLite3 support (PHP 8.1 or later recommended).
+## Prerequisites for this fork
+-	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML and XMLWriter support (PHP 8.1 or later recommended).
+
+User support issues remain available at https://github.com/seblucas/cops/issues - please use it if you need help with COPS in general
+
+Pull requests should be against the latest source code at https://github.com/mikespub-org/seblucas-cops/pulls - thanks for any contributions :-)
 
 See [CHANGELOG](CHANGELOG.md) for changes compared to upstream repository https://github.com/seblucas/cops from @seblucas
 
-## Installation
+## Installation of this fork
 
 Same options as original:
 
@@ -16,9 +20,10 @@ Same options as original:
   - git clone https://github.com/mikespub-org/seblucas-cops.git  # or download [latest main as zip](https://github.com/mikespub-org/seblucas-cops/archive/refs/heads/main.zip)
 
 3. Docker image
-  - see [docker/Dockerfile.php82](docker/Dockerfile.php82) and [docker-compose.yaml](docker-compose.yaml) (or [docker-compose-dev.yaml](docker-compose-dev.yaml)) as starting point - **not** optimized for size/performance
+  - see [docker/Dockerfile.alpine](docker/Dockerfile.alpine) and [docker-compose.yaml](docker-compose.yaml) (or [docker-compose-dev.yaml](docker-compose-dev.yaml)) as starting point - **not** optimized for size/performance
+  - a modified Dockerfile for the archived linuxserver/docker-cops version is available at [docker/Dockerfile.linuxserver](docker/Dockerfile.linuxserver)
 
-The rest of the installation process is very similar to the original below. But if you install from source, you don't need to download an old composer 1.x version or install global asset plugins anymore - just use your regular composer 2.x :-)
+The rest of the installation process is very similar to the original below. But if you install from source, just use your regular composer 2.x - you don't need to download an old composer 1.x version or install global asset plugins anymore :-)
 
 ---
 

@@ -9,13 +9,15 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 
 class PageAllBooksLetter extends Page
 {
     public function InitializeContent()
     {
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByStartingLetter($this->idGet, $this->n, $this->getDatabaseId());
         $this->idPage = Book::getEntryIdByLetter($this->idGet);
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByStartingLetter($this->idGet, $this->n);
 
         $count = $this->totalNumber;
         if ($count == -1) {
@@ -23,5 +25,7 @@ class PageAllBooksLetter extends Page
         }
 
         $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("bookword", $count), $count), $this->idGet);
+        $this->parentTitle = "";  // localize("allbooks.title");
+        $this->parentUri = "?page=".Book::PAGE_ALL;
     }
 }

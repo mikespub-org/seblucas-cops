@@ -8,9 +8,8 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
-use SebLucas\Cops\Request;
 
 class PageCustomDetail extends Page
 {
@@ -19,7 +18,10 @@ class PageCustomDetail extends Page
         $customId = $this->request->get("custom", null);
         $custom = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $this->idPage = $custom->getEntryId();
-        $this->title = $custom->value;
-        [$this->entryArray, $this->totalNumber] = Book::getBooksByCustom($custom, $this->idGet, $this->n, $this->getDatabaseId());
+        $this->title = $custom->getTitle();
+        $this->parentTitle = $custom->customColumnType->getTitle();
+        $this->parentUri = $custom->customColumnType->getUriAllCustoms();
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustom($custom, $this->idGet, $this->n);
     }
 }

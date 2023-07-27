@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
-use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
@@ -46,25 +46,26 @@ class PageQueryResult extends Page
         }
         switch ($scope) {
             case self::SCOPE_BOOK :
-                $array = Book::getBooksByStartingLetter('%' . $queryNormedAndUp, $n, $database, $numberPerPage);
+                $booklist = new BookList($this->request, $database, $numberPerPage);
+                $array = $booklist->getBooksByStartingLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $database);
+                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $n, $database);
                 break;
             case self::SCOPE_SERIES :
-                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $database);
+                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $n, $database);
                 break;
             case self::SCOPE_TAG :
                 $array = Tag::getAllTagsByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             case self::SCOPE_PUBLISHER :
-                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $database);
+                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $n, $database);
                 break;
             default:
-                $array = Book::getBooksByQuery(
+                $booklist = new BookList($this->request, $database, $numberPerPage);
+                $array = $booklist->getBooksByQueryScope(
                     ["all" => "%" . $queryNormedAndUp . "%"],
-                    $n,
-                    $database
+                    $n
                 );
         }
 
@@ -170,21 +171,24 @@ class PageQueryResult extends Page
 
         // Special case when we are doing a search and no database is selected
         if (Base::noDatabaseSelected($database) && !$this->useTypeahead()) {
-            $i = 0;
+            $pagequery = Page::OPENSEARCH_QUERY;
+            $query = $this->query;
+            $d = 0;
             foreach (Base::getDbNameList() as $key) {
                 Base::clearDb();
-                [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $i, 1, $ignoredCategories);
+                $booklist = new BookList($this->request, $d, 1);
+                [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
                 array_push($this->entryArray, new Entry(
                     $key,
-                    "db:query:{$i}",
+                    "db:query:{$d}",
                     str_format(localize("bookword", $totalNumber), $totalNumber),
                     "text",
-                    [ new LinkNavigation("?db={$i}&page=9&query=" . $this->query)],
+                    [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}")],
                     $database,
                     "",
                     $totalNumber
                 ));
-                $i++;
+                $d++;
             }
             return;
         }

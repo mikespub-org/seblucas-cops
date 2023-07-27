@@ -10,6 +10,7 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\CustomColumnTypeBool;
 use SebLucas\Cops\Calibre\CustomColumnTypeComment;
@@ -27,6 +28,13 @@ use SebLucas\Cops\Pages\Page;
 
 class CustomColumnTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        global $config;
+
+        $config['cops_show_not_set_filter'] = [];
+    }
+
     public function testColumnType01()
     {
         global $config;
@@ -616,6 +624,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_01", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("cops:custom:8:3", $currentPage->entryArray[0]->id);
+        $this->assertEquals("other_text", $currentPage->entryArray[0]->title);
+        $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=8&id=3", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:8:1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:8:2", $currentPage->entryArray[2]->id);
     }
@@ -635,6 +646,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_02", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("cops:custom:6:1", $currentPage->entryArray[0]->id);
+        $this->assertEquals("a", $currentPage->entryArray[0]->title);
+        $this->assertEquals("6 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=6&id=1", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:6:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:6:3", $currentPage->entryArray[2]->id);
     }
@@ -654,6 +668,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_04", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("cops:custom:4:4", $currentPage->entryArray[0]->id);
+        $this->assertEquals("GroupA", $currentPage->entryArray[0]->title);
+        $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=4&id=4", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:4:5", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:4:6", $currentPage->entryArray[2]->id);
     }
@@ -673,6 +690,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_05", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("cops:custom:5:3", $currentPage->entryArray[0]->id);
+        $this->assertEquals("val01", $currentPage->entryArray[0]->title);
+        $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=5&id=3", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:5:4", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:5:5", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:5:6", $currentPage->entryArray[3]->id);
@@ -693,6 +713,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_06", $currentPage->title);
         $this->assertCount(5, $currentPage->entryArray);
         $this->assertEquals("cops:custom:12:2000-01-01", $currentPage->entryArray[0]->id);
+        $this->assertEquals("2000-01-01", $currentPage->entryArray[0]->title);
+        $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=12&id=2000-01-01", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:12:2000-01-02", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:12:2000-01-03", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:12:2016-04-20", $currentPage->entryArray[3]->id);
@@ -714,6 +737,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_07", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
         $this->assertEquals("cops:custom:14:-99", $currentPage->entryArray[0]->id);
+        $this->assertEquals(-99.0, $currentPage->entryArray[0]->title);
+        $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=14&id=-99", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:14:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:14:0.1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:14:0.2", $currentPage->entryArray[3]->id);
@@ -736,6 +762,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_08", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("cops:custom:10:-2", $currentPage->entryArray[0]->id);
+        $this->assertEquals(-2, $currentPage->entryArray[0]->title);
+        $this->assertEquals("3 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=10&id=-2", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:10:-1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:10:1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:10:2", $currentPage->entryArray[3]->id);
@@ -756,6 +785,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_09", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
         $this->assertEquals("cops:custom:9:0", $currentPage->entryArray[0]->id);
+        $this->assertEquals("No Stars", $currentPage->entryArray[0]->title);
+        $this->assertEquals("12 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=9&id=0", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:9:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:9:4", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:9:6", $currentPage->entryArray[3]->id);
@@ -778,6 +810,9 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_10", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("cops:custom:11:-1", $currentPage->entryArray[0]->id);
+        $this->assertEquals("Not Set", $currentPage->entryArray[0]->title);
+        $this->assertEquals("9 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=11&id=-1", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:11:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:11:1", $currentPage->entryArray[2]->id);
     }
@@ -900,82 +935,84 @@ class CustomColumnTest extends TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"];
         Base::clearDb();
+        $request = new Request();
+        $booklist = new BookList($request);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_01")->getCustom("1")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(5, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_01"], true);
         $this->assertEquals("sample_text", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_02")->getCustom("3")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(4, $entryArray);
         // handle case where we have several values, e.g. array of text for type 2 (csv)
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_02"], true);
         $this->assertEquals("a,c", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_03")->getCustom("3")->getQuery();
-        [$entryArray, $totalNumber] =  Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] =  $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(1, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_03"], true);
         $this->assertEquals("<div><p>simple test no formatting</p></div>", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_04")->getCustom("4")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(2, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_04"], true);
         $this->assertEquals("GroupA [1]", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_05")->getCustom("6")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(6, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_05"], true);
         $this->assertEquals("val05", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_06")->getCustom("2016-04-24")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(6, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_06"], true);
         $this->assertEquals("2016-04-24", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_07")->getCustom("11.0")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(2, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_07"], true);
         $this->assertEquals("11", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_08")->getCustom("-2")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(3, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_08"], true);
         $this->assertEquals("-2", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_09")->getCustom("0")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(12, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_09"], true);
         $this->assertEquals("Not Set", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_09")->getCustom("2")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(4, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_09"], true);
         $this->assertEquals("1 Star", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("-1")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(9, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
         $this->assertEquals("Not Set", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("0")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(6, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
         $this->assertEquals("No", $custom[0]['htmlvalue']);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("1")->getQuery();
-        [$entryArray, $totalNumber] = Book::getEntryArray($query, $params, 1);
+        [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(7, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
         $this->assertEquals("Yes", $custom[0]['htmlvalue']);

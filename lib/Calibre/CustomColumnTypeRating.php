@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 
 class CustomColumnTypeRating extends CustomColumnType
 {
@@ -51,13 +50,19 @@ class CustomColumnTypeRating extends CustomColumnType
 
     public function getQuery($id)
     {
-        if ($id == 0) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
+        if (empty($id)) {
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return [$query, []];
         } else {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_RATING, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return [$query, [$id]];
         }
+    }
+
+    public function getFilter($id)
+    {
+        // @todo do we want to filter on ratings Id or Value here
+        return ["", []];
     }
 
     public function getCustom($id)
@@ -78,12 +83,13 @@ class CustomColumnTypeRating extends CustomColumnType
 
         $entryArray = [];
 
+        // @todo align with other custom columns
         for ($i = 0; $i <= 5; $i++) {
             $count = $countArray[$i * 2];
             $name = str_format(localize("customcolumn.stars", $i), $i);
             $entryid = $this->getEntryId($i * 2);
-            $content = str_format(localize("bookword", $count), $count);
-            $linkarray = [new LinkNavigation($this->getUri($i * 2))];
+            $content = $this->getContent($count);
+            $linkarray = $this->getLinkArray($i * 2);
             $entry = new Entry($name, $entryid, $content, $this->datatype, $linkarray, $this->getDatabaseId(), "", $count);
             array_push($entryArray, $entry);
         }

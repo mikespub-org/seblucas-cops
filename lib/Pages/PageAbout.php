@@ -12,6 +12,7 @@ class PageAbout extends Page
 {
     public function InitializeContent()
     {
+        $this->idPage = self::ABOUT_ID;
         $this->title = localize("about.title");
     }
 }

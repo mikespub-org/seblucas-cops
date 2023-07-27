@@ -36,6 +36,10 @@ header h1{
     line-height: 100%;
 }
 
+header a{
+    color: white;
+}
+
 .download a {
     border-radius: 6px;
     box-shadow:0 0 10px #000;

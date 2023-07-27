@@ -8,9 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
-
 class CustomColumnTypeSeries extends CustomColumnType
 {
     protected function __construct($pcustomId, $database = null)
@@ -51,8 +48,21 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getQuery($id)
     {
-        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
+        global $config;
+        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableLinkName());
+            return [$query, []];
+        }
+        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
+    }
+
+    public function getFilter($id)
+    {
+        $linkTable = $this->getTableLinkName();
+        $linkColumn = $this->getTableLinkColumn();
+        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        return [$filter, [$id]];
     }
 
     public function getCustom($id)
@@ -62,7 +72,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return null;
+        return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -73,19 +83,16 @@ class CustomColumnTypeSeries extends CustomColumnType
         $result = $this->getDb($this->databaseId)->query($query);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
-
-            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, $this->getDatabaseId(), "", $post->count);
-
-            array_push($entryArray, $entry);
+            $customcolumn = new CustomColumn($post->id, $post->name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
     }
 
     public function getDescription()
     {
-        return str_format(localize("customcolumn.description.series", $this->getDistinctValueCount()), $this->getDistinctValueCount());
+        $count = $this->getDistinctValueCount();
+        return str_format(localize("customcolumn.description.series", $count), $count);
     }
 
     public function getCustomByBook($book)

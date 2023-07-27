@@ -17,12 +17,21 @@
         {{~it.entries:entry:i}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
             <div class="panel panel-default">
-                <a href="{{=entry.navlink}}">
-                    <div class="panel-body">
+                {{? it.page == 19}}
+                    <div class="panel-heading">
                         {{=htmlspecialchars (entry.title)}}
-                        <span class="badge pull-right">{{=entry.number}}</span>
                     </div>
-                </a>
+                    <div class="panel-body">
+                        {{=entry.content}}
+                    </div>
+                {{??}}
+                    <a href="{{=entry.navlink}}">
+                        <div class="panel-body">
+                            {{=htmlspecialchars (entry.title)}}
+                            <span class="badge pull-right">{{=entry.number}}</span>
+                        </div>
+                    </a>
+                {{?}}
             </div>
         </div>
         {{~}}

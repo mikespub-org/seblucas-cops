@@ -9,11 +9,6 @@
 
 namespace SebLucas\Cops\Input;
 
-require 'config.php';
-/** @var array $config */
-
-date_default_timezone_set($config['default_timezone']);
-
 /**
  * Summary of Config
  */

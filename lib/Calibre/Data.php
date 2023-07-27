@@ -64,7 +64,7 @@ class Data
         'zip'   => 'application/zip',
     ];
 
-    public function __construct($post, $book = null, $database = null)
+    public function __construct($post, $book = null)
     {
         $this->id = $post->id;
         $this->name = $post->name;
@@ -72,7 +72,7 @@ class Data
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
         $this->book = $book;
-        $this->databaseId = $database;
+        $this->databaseId = $book?->getDatabaseId();
         // this is set on book in JSONRenderer now
         if ($book->updateForKepub && $this->isEpubValidOnKobo()) {
             $this->updateForKepub = true;

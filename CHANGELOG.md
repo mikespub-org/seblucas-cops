@@ -4,7 +4,14 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.4.x - 202307xx Clean-up
+1.4.x - 202307xx Clean-up before next release
+  * Add parent url and customize link in templates
+  * Allow filtering non-book queries on other params in code ('a', 'l', 'p', 'r', 's', 't', 'c') = e.g. get Series for AuthorId
+  * Allow filtering booklist queries on other params in code ('a', 'l', 'p', 'r', 's', 't', 'c') = get books for a combination
+  * Expand OpenAPI document for REST API
+  * Fix cookie javascript code for server-side rendering
+  * Fix tag filter, multi-database navigation and feed link
+  * Split off new Calibre\BookList, Calibre\Filter, Input\Config and Output\Mail classes
 
 1.4.0 - 20230721 Use namespaces in PHP lib, upgrade jquery npm asset + sausage package
   * Split off new Input\Request, Language\Translation, Output\Format and Output\EPubReader classes

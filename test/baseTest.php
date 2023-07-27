@@ -41,7 +41,39 @@ class BaseTest extends TestCase
         $_COOKIE["template"] = $template;
         $this->assertNull(Format::serverSideRender(null, $template));
 
+        $request = new Request();
+        $data = JSONRenderer::getJson($request, true);
+        $output = Format::serverSideRender($data, $template);
+
+        $old = libxml_use_internal_errors(true);
+        $html = new DOMDocument();
+        $html->loadHTML("<html><head></head><body>" . $output . "</body></html>");
+        $errors = libxml_get_errors();
+        foreach ($errors as $error) {
+            // ignore invalid tags from HTML5 which libxml doesn't know about
+            if ($error->code == 801) {
+                continue;
+            }
+            $this->fail("Error parsing output for server-side rendering of template " . $template . "\n" . $error->message . "\n" . $output);
+        }
+        libxml_clear_errors();
+        libxml_use_internal_errors($old);
+
         unset($_COOKIE['template']);
+    }
+
+    public function getTemplateData($request, $templateName)
+    {
+        global $config;
+        return ["title"                 => $config['cops_title_default'],
+                "version"               => Config::VERSION,
+                "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
+                "customHeader"          => "",
+                "template"              => $templateName,
+                "server_side_rendering" => $request->render(),
+                "current_css"           => $request->style(),
+                "favico"                => $config['cops_icon'],
+                "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
     }
 
     /**
@@ -56,15 +88,7 @@ class BaseTest extends TestCase
         $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
-        $data = ["title"                 => $config['cops_title_default'],
-                  "version"               => Config::VERSION,
-                  "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
-                  "customHeader"          => "",
-                  "template"              => $templateName,
-                  "server_side_rendering" => $request->render(),
-                  "current_css"           => $request->style(),
-                  "favico"                => $config['cops_icon'],
-                  "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
+        $data = $this->getTemplateData($request, $templateName);
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);
@@ -90,7 +114,8 @@ class BaseTest extends TestCase
     public function testLocalizeFr()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
-        $this->assertEquals("Auteurs", localize("authors.title", -1, true));
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $this->assertEquals("Auteurs", $translator->localize("authors.title", -1, true));
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
@@ -99,7 +124,8 @@ class BaseTest extends TestCase
     public function testLocalizeUnknown()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "aa";
-        $this->assertEquals("Authors", localize("authors.title", -1, true));
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $this->assertEquals("Authors", $translator->localize("authors.title", -1, true));
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
@@ -111,7 +137,8 @@ class BaseTest extends TestCase
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        [$lang, $lang_file] = Translation::getLangAndTranslationFile();
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        [$lang, $lang_file] = $translator->getLangAndTranslationFile();
         $this->assertEquals($result, $lang);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
@@ -137,7 +164,8 @@ class BaseTest extends TestCase
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $langs = array_keys(Translation::getAcceptLanguages());
+        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $langs = array_keys($translator->getAcceptLanguages($acceptLanguage));
         $this->assertEquals($result, $langs[0]);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";

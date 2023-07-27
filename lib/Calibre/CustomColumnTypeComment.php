@@ -27,8 +27,21 @@ class CustomColumnTypeComment extends CustomColumnType
 
     public function getQuery($id)
     {
-        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
+        global $config;
+        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
+            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            return [$query, []];
+        }
+        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
+    }
+
+    public function getFilter($id)
+    {
+        $linkTable = $this->getTableName();
+        $linkColumn = "id";
+        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        return [$filter, [$id]];
     }
 
     public function getCustom($id)
@@ -44,15 +57,6 @@ class CustomColumnTypeComment extends CustomColumnType
     protected function getAllCustomValuesFromDatabase()
     {
         return null;
-    }
-
-    public function getDescription()
-    {
-        $desc = $this->getDatabaseDescription();
-        if ($desc === null || empty($desc)) {
-            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
-        }
-        return $desc;
     }
 
     public function getCustomByBook($book)
