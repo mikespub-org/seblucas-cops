@@ -8,9 +8,7 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -24,7 +22,7 @@ class FilterTest extends TestCase
     {
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
     }
 
     public function testAuthorFilters()

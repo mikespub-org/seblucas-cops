@@ -10,7 +10,7 @@ use SebLucas\Cops\Output\JSONRenderer;
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
@@ -26,7 +26,7 @@ class JsonTest extends TestCase
         $config['cops_calibre_custom_column'] = [];
         $config['cops_calibre_custom_column_list'] = [];
         $config['cops_calibre_custom_column_preview'] = [];
-        Base::clearDb();
+        Database::clearDb();
         self::$request = new Request();
     }
 

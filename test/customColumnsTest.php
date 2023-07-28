@@ -8,7 +8,7 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
@@ -41,7 +41,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(8);
 
@@ -67,7 +67,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01b"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(16);
 
@@ -93,7 +93,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_02"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(6);
 
@@ -119,7 +119,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_03"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(7);
 
@@ -144,7 +144,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_04"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(4);
 
@@ -170,7 +170,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_05"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(5);
 
@@ -196,7 +196,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_06"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(12);
 
@@ -222,7 +222,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_07"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(14);
 
@@ -248,7 +248,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_08"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(10);
 
@@ -274,7 +274,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_09"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(9);
 
@@ -300,7 +300,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_10"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(11);
 
@@ -326,7 +326,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_11"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(15);
 
@@ -341,7 +341,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_12"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(13);
 
@@ -356,7 +356,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_12"];
-        Base::clearDb();
+        Database::clearDb();
 
         $catch = false;
         try {
@@ -374,7 +374,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_12"];
-        Base::clearDb();
+        Database::clearDb();
 
         $coltype = CustomColumnType::createByLookup("__ERR__");
 
@@ -387,7 +387,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -411,7 +411,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -432,7 +432,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_02"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -453,7 +453,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_03"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -468,7 +468,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_04"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -489,7 +489,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_05"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -510,7 +510,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_06"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -531,7 +531,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_07"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -552,7 +552,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_08"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -573,7 +573,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_09"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -594,7 +594,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_10"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
 
         $currentPage = Page::getPage(Page::INDEX, null, null, "1", $request);
@@ -614,7 +614,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 8);
 
@@ -636,7 +636,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 6);
 
@@ -658,7 +658,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 4);
 
@@ -680,7 +680,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 5);
 
@@ -703,7 +703,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 12);
 
@@ -727,7 +727,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 14);
 
@@ -752,7 +752,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 10);
 
@@ -775,7 +775,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 9);
 
@@ -800,7 +800,7 @@ class CustomColumnTest extends TestCase
         global $config;
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 11);
 
@@ -844,7 +844,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $request->set('custom', 11);
 
@@ -873,7 +873,7 @@ class CustomColumnTest extends TestCase
 
         $config['cops_calibre_custom_column'] = [];
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
     }
 
     public function testRenderCustomColumns()
@@ -885,7 +885,7 @@ class CustomColumnTest extends TestCase
         $config['cops_calibre_custom_column'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"];
         $config['cops_calibre_custom_column_list'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"];
         $config['cops_calibre_custom_column_preview'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"];
-        Base::clearDb();
+        Database::clearDb();
 
         $book = Book::getBookById(223);
         $json = JSONRenderer::getBookContentArray($book);
@@ -934,7 +934,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"];
-        Base::clearDb();
+        Database::clearDb();
         $request = new Request();
         $booklist = new BookList($request);
 
@@ -1024,7 +1024,7 @@ class CustomColumnTest extends TestCase
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $config['cops_calibre_custom_column'] = ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"];
-        Base::clearDb();
+        Database::clearDb();
 
         $custom = CustomColumnType::createByLookup("custom_01")->getCustom("1");
         $this->assertEquals($custom->customColumnType->getQuery("1"), $custom->getQuery());
@@ -1072,6 +1072,6 @@ class CustomColumnTest extends TestCase
 
         $config['cops_calibre_custom_column'] = [];
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
     }
 }

@@ -11,7 +11,7 @@ use SebLucas\Cops\Output\RestApi;
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
@@ -24,7 +24,7 @@ class RestApiTest extends TestCase
     {
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
         self::$script = $_SERVER["SCRIPT_NAME"];
     }
 
