@@ -32,6 +32,13 @@ abstract class Base
     public $name;
     protected $databaseId = null;
 
+    public function __construct($post, $database = null)
+    {
+        $this->id = $post->id;
+        $this->name = $post->name;
+        $this->databaseId = $database;
+    }
+
     /**
      * Summary of getDatabaseId
      * @return mixed
@@ -115,12 +122,18 @@ abstract class Base
         return Database::getDb($database);
     }
 
-    public static function getEntryById($database = null)
-    {
-        //return new static((object)['id' => null, 'name' => localize("seriesword.none")], $database);
-    }
-
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
+
+    public static function getInstanceById($id, $default = null, $category = self::class, $database = null)
+    {
+        $query = 'select ' . static::SQL_COLUMNS . ' from ' . static::SQL_TABLE . ' where id = ?';
+        $result = self::getDb($database)->prepare($query);
+        $result->execute([$id]);
+        if ($post = $result->fetchObject()) {
+            return new $category($post, $database);
+        }
+        return new $category((object)['id' => null, 'name' => $default, 'sort' => $default], $database);
+    }
 
     public static function getEntryCount($database = null)
     {
