@@ -7,7 +7,7 @@
  *
  */
 
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
@@ -42,7 +42,7 @@ if (!isset($page)) {
 
 // Access the database ASAP to be sure it's readable, redirect if that's not the case.
 // It has to be done before any header is sent.
-Base::checkDatabaseAvailability($database);
+Database::checkDatabaseAvailability($database);
 
 if ($config ['cops_fetch_protect'] == '1') {
     session_start();

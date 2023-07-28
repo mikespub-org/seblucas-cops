@@ -9,7 +9,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Language;
@@ -193,9 +193,9 @@ class Page
         $this->idPage = self::PAGE_ID;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
-        if (Base::noDatabaseSelected($this->databaseId)) {
+        if (Database::noDatabaseSelected($this->databaseId)) {
             $i = 0;
-            foreach (Base::getDbNameList() as $key) {
+            foreach (Database::getDbNameList() as $key) {
                 $booklist = new BookList($this->request, $i);
                 $nBooks = $booklist->getBookCount();
                 array_push($this->entryArray, new Entry(
@@ -209,7 +209,7 @@ class Page
                     $nBooks
                 ));
                 $i++;
-                Base::clearDb();
+                Database::clearDb();
             }
         } else {
             if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
@@ -255,8 +255,8 @@ class Page
             $booklist = new BookList($this->request);
             $this->entryArray = array_merge($this->entryArray, $booklist->getCount());
 
-            if (Base::isMultipleDatabaseEnabled()) {
-                $this->title =  Base::getDbName($this->getDatabaseId());
+            if (Database::isMultipleDatabaseEnabled()) {
+                $this->title =  Database::getDbName($this->getDatabaseId());
             }
         }
     }

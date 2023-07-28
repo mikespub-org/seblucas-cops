@@ -67,12 +67,12 @@ class Book extends Base
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp);
         $this->pubdate = $line->pubdate;
-        //$this->path = Base::getDbDirectory() . $line->path;
+        //$this->path = Database::getDbDirectory() . $line->path;
         //$this->relativePath = $line->path;
         // -DC- Init relative or full path
         $this->path = $line->path;
         if (!is_dir($this->path)) {
-            $this->path = Base::getDbDirectory($database) . $line->path;
+            $this->path = Database::getDbDirectory($database) . $line->path;
         }
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment ?? '';
@@ -85,7 +85,7 @@ class Book extends Base
         //}
         if ($this->hasCover) {
             if (!empty($config['calibre_database_field_cover'])) {
-                $imgDirectory = Base::getImgDirectory($database);
+                $imgDirectory = Database::getImgDirectory($database);
                 $this->coverFileName = $line->cover;
                 if (!file_exists($this->coverFileName)) {
                     $this->coverFileName = null;

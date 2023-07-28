@@ -8,7 +8,7 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Format;
@@ -21,7 +21,7 @@ class PageTest extends TestCase
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];
-        Base::clearDb();
+        Database::clearDb();
         $_GET = [];
     }
 
@@ -880,7 +880,7 @@ class PageTest extends TestCase
         $qid = null;
         $n = "1";
         $config ['cops_normalized_search'] = "1";
-        Base::clearDb();
+        Database::clearDb();
         if (!Translation::useNormAndUp()) {
             $this->markTestIncomplete();
         }
@@ -897,7 +897,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
 
         $config ['cops_normalized_search'] = "0";
-        Base::clearDb();
+        Database::clearDb();
     }
 
     public function providerNormalizedSearch()

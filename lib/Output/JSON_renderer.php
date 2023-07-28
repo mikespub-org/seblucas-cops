@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Input\Config;
@@ -263,7 +263,7 @@ class JSONRenderer
             $page = Page::INDEX;
         }
         $out ["databaseId"] = $database ?? "";
-        $out ["databaseName"] = Base::getDbName($database);
+        $out ["databaseName"] = Database::getDbName($database);
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
@@ -272,7 +272,7 @@ class JSONRenderer
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
         }
         $out ["page"] = $page;
-        $out ["multipleDatabase"] = Base::isMultipleDatabaseEnabled() ? 1 : 0;
+        $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
         $out ["entries"] = $entries;
         $out ["isPaginated"] = 0;
         if ($currentPage->isPaginated()) {

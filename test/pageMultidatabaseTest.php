@@ -8,7 +8,7 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Pages\Page;
 
 class PageMultiDatabaseTest extends TestCase
@@ -18,7 +18,7 @@ class PageMultiDatabaseTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        Base::clearDb();
+        Database::clearDb();
         $page = Page::INDEX;
         $query = null;
         $qid = null;
@@ -46,7 +46,7 @@ class PageMultiDatabaseTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        Base::clearDb();
+        Database::clearDb();
         $page = Page::OPENSEARCH_QUERY;
         $query = "art";
         $qid = null;
@@ -78,6 +78,6 @@ class PageMultiDatabaseTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        Base::clearDb();
+        Database::clearDb();
     }
 }

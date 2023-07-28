@@ -8,7 +8,7 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Input\Config;
@@ -38,7 +38,7 @@ class BookTest extends TestCase
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         self::$request = new Request();
-        Base::clearDb();
+        Database::clearDb();
 
         $book = Book::getBookById(2);
         if (!is_dir($book->path)) {
@@ -455,21 +455,21 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Base::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, false));
+        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, false));
     }
 
     public function testGetFilePath_Epub()
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Base::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, false));
+        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, false));
     }
 
     public function testGetFilePath_Mobi()
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Base::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, false));
+        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, false));
     }
 
     public function testGetDataFormat_EPUB()
@@ -697,11 +697,11 @@ class BookTest extends TestCase
         $this->assertEquals("1 book", $currentPage->entryArray[4]->content);
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
     }
 
     public function tearDown(): void
     {
-        Base::clearDb();
+        Database::clearDb();
     }
 }

@@ -103,11 +103,6 @@ class Rating extends Base
 
     public static function getRatingById($ratingId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ratings.id as id, ratings.rating as name from ratings where ratings.id = ?');
-        $result->execute([$ratingId]);
-        if ($post = $result->fetchObject()) {
-            return new Rating($post, $database);
-        }
-        return new Rating((object)['id' => null, 'name' => 0], $database);
+        return self::getInstanceById($ratingId, 0, self::class, $database);
     }
 }

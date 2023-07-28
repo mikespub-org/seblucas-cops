@@ -102,12 +102,7 @@ where series.id = series and book = ?');
 
     public static function getSerieById($serieId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select series.id as id, series.name as name from series where series.id = ?');
-        $result->execute([$serieId]);
-        if ($post = $result->fetchObject()) {
-            return new Serie($post, $database);
-        }
-        return new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $database);
+        return self::getInstanceById($serieId, localize("seriesword.none"), self::class, $database);
     }
 
     public static function getAllSeries($n = -1, $database = null, $numberPerPage = null)

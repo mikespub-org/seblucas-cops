@@ -153,12 +153,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
 
     public static function getAuthorById($authorId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ' . self::SQL_COLUMNS . ' from authors where id = ?');
-        $result->execute([$authorId]);
-        if ($post = $result->fetchObject()) {
-            return new Author($post, $database);
-        }
-        return null;
+        return self::getInstanceById($authorId, null, self::class, $database);
     }
 
     public static function getAuthorByBookId($bookId, $database = null)

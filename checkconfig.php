@@ -9,7 +9,7 @@
  *
  */
 
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 
@@ -166,7 +166,7 @@ if ($request->render()) {
         </article>
 <?php
 $i = 0;
-foreach (Base::getDbList() as $name => $database) {
+foreach (Database::getDbList() as $name => $database) {
     ?>
         <article class="frontpage">
             <h2>Check if Calibre database path is not an URL</h2>
@@ -184,10 +184,10 @@ foreach (Base::getDbList() as $name => $database) {
             <h2>Check if Calibre database file exists and is readable</h2>
             <h4>
             <?php
-    if (is_readable(Base::getDbFileName($i))) {
+    if (is_readable(Database::getDbFileName($i))) {
         echo $name . ' OK';
     } else {
-        echo $name . ' File ' . Base::getDbFileName($i) . ' not found,
+        echo $name . ' File ' . Database::getDbFileName($i) . ' not found,
 Please check
 <ul>
 <li>Value of $config[\'calibre_directory\'] in config_local.php <strong>(Does it end with a \'/\'?)</strong></li>
@@ -200,13 +200,13 @@ Please check
     ?>
             </h4>
         </article>
-    <?php if (is_readable(Base::getDbFileName($i))) { ?>
+    <?php if (is_readable(Database::getDbFileName($i))) { ?>
         <article class="frontpage">
             <h2>Check if Calibre database file can be opened with PHP</h2>
             <h4>
             <?php
     try {
-        $db = new PDO('sqlite:'. Base::getDbFileName($i));
+        $db = new PDO('sqlite:'. Database::getDbFileName($i));
         echo $name . ' OK';
     } catch (Exception $e) {
         echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
@@ -219,7 +219,7 @@ Please check
             <h4>
             <?php
         try {
-            $db = new PDO('sqlite:'. Base::getDbFileName($i));
+            $db = new PDO('sqlite:'. Database::getDbFileName($i));
             $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
             if ($count == 4) {
                 echo $name . ' OK';
@@ -238,12 +238,12 @@ Please check
             <h4>
             <?php
         try {
-            $db = new PDO('sqlite:' . Base::getDbFileName($i));
+            $db = new PDO('sqlite:' . Database::getDbFileName($i));
             $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
             $result->execute();
             while ($post = $result->fetchObject()) {
-                if (!is_file(Base::getDbDirectory($i) . $post->fullpath)) {
-                    echo '<p>' . Base::getDbDirectory($i) . $post->fullpath . '</p>';
+                if (!is_file(Database::getDbDirectory($i) . $post->fullpath)) {
+                    echo '<p>' . Database::getDbDirectory($i) . $post->fullpath . '</p>';
                 }
             }
         } catch (Exception $e) {

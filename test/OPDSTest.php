@@ -10,7 +10,7 @@ use SebLucas\Cops\Output\OPDSRenderer;
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 
@@ -26,7 +26,7 @@ class OpdsTest extends TestCase
     {
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
     }
 
     public static function tearDownAfterClass(): void
@@ -152,7 +152,7 @@ class OpdsTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        Base::clearDb();
+        Database::clearDb();
         $page = Page::INDEX;
         $query = null;
         $qid = "1";
@@ -170,7 +170,7 @@ class OpdsTest extends TestCase
 
         unset($_SERVER['QUERY_STRING']);
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
     }
 
     public function testOpenSearchDescription()
@@ -191,7 +191,7 @@ class OpdsTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        Base::clearDb();
+        Database::clearDb();
         $page = Page::AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
@@ -211,7 +211,7 @@ class OpdsTest extends TestCase
         unset($_SERVER['QUERY_STRING']);
         unset($_GET['db']);
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        Base::clearDb();
+        Database::clearDb();
     }
 
     public function testPageAuthorsDetail()
