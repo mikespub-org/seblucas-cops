@@ -89,12 +89,7 @@ class Tag extends Base
 
     public static function getTagById($tagId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select tags.id as id, tags.name as name from tags where tags.id = ?');
-        $result->execute([$tagId]);
-        if ($post = $result->fetchObject()) {
-            return new Tag($post, $database);
-        }
-        return new Tag((object)['id' => null, 'name' => localize("tagword.none")], $database);
+        return self::getInstanceById($tagId, localize("tagword.none"), self::class, $database);
     }
 
     public static function getAllTags($n = -1, $database = null, $numberPerPage = null)

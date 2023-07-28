@@ -89,7 +89,7 @@ class BookList extends Base
     public function getCount()
     {
         global $config;
-        $nBooks = parent::executeQuerySingle('select count(*) from books', $this->databaseId);
+        $nBooks = $this->getBookCount();
         $result = [];
         $entry = new Entry(
             localize('allbooks.title'),

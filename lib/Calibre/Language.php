@@ -102,12 +102,7 @@ class Language extends Base
 
     public static function getLanguageById($languageId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select languages.id as id, languages.lang_code as name from languages where languages.id = ?');
-        $result->execute([$languageId]);
-        if ($post = $result->fetchObject()) {
-            return new Language($post, $database);
-        }
-        return new Language((object)['id' => null, 'name' => localize("language.title")], $database);
+        return self::getInstanceById($languageId, localize("language.title"), self::class, $database);
     }
 
     public static function getAllLanguages($n = -1, $database = null)

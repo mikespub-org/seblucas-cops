@@ -213,7 +213,7 @@ class Data
             $urlParam = Format::addURLParam($urlParam, "view", 1);
         }
 
-        if (Base::useAbsolutePath($book->getDatabaseId()) ||
+        if (Database::useAbsolutePath($book->getDatabaseId()) ||
             $rel == Link::OPDS_THUMBNAIL_TYPE ||
             ($type == "epub" && $config['cops_update_epub-metadata'])) {
             if ($type != "jpg") {

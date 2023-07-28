@@ -9,7 +9,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
@@ -80,12 +80,12 @@ class PageQueryResult extends Page
         $d = $database;
         $query = $this->query;
         // Special case when no databases were chosen, we search on all databases
-        if (Base::noDatabaseSelected($database)) {
-            $dbArray = Base::getDbNameList();
+        if (Database::noDatabaseSelected($database)) {
+            $dbArray = Database::getDbNameList();
             $d = 0;
         }
         foreach ($dbArray as $key) {
-            if (Base::noDatabaseSelected($database)) {
+            if (Database::noDatabaseSelected($database)) {
                 array_push($this->entryArray, new Entry(
                     $key,
                     "db:query:{$d}",
@@ -95,7 +95,7 @@ class PageQueryResult extends Page
                     null,
                     "tt-header"
                 ));
-                Base::getDb($d);
+                Database::getDb($d);
             }
             foreach ([PageQueryResult::SCOPE_BOOK,
                             PageQueryResult::SCOPE_AUTHOR,
@@ -128,11 +128,11 @@ class PageQueryResult extends Page
                         "text",
                         [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")],
                         $database,
-                        Base::noDatabaseSelected($database) ? "" : "tt-header",
+                        Database::noDatabaseSelected($database) ? "" : "tt-header",
                         $total
                     ));
                 }
-                if (!Base::noDatabaseSelected($database) && $this->useTypeahead()) {
+                if (!Database::noDatabaseSelected($database) && $this->useTypeahead()) {
                     foreach ($array as $entry) {
                         array_push($this->entryArray, $entry);
                         $i++;
@@ -143,8 +143,8 @@ class PageQueryResult extends Page
                 }
             }
             $d++;
-            if (Base::noDatabaseSelected($database)) {
-                Base::clearDb();
+            if (Database::noDatabaseSelected($database)) {
+                Database::clearDb();
             }
         }
         return $out;
@@ -170,12 +170,12 @@ class PageQueryResult extends Page
         $crit = "%" . $this->query . "%";
 
         // Special case when we are doing a search and no database is selected
-        if (Base::noDatabaseSelected($database) && !$this->useTypeahead()) {
+        if (Database::noDatabaseSelected($database) && !$this->useTypeahead()) {
             $pagequery = Page::OPENSEARCH_QUERY;
             $query = $this->query;
             $d = 0;
-            foreach (Base::getDbNameList() as $key) {
-                Base::clearDb();
+            foreach (Database::getDbNameList() as $key) {
+                Database::clearDb();
                 $booklist = new BookList($this->request, $d, 1);
                 [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
                 array_push($this->entryArray, new Entry(
