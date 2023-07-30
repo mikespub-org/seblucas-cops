@@ -98,6 +98,12 @@ abstract class Base
         return [ new LinkNavigation($this->getUri(), null, null, $this->getDatabaseId()) ];
     }
 
+    public function getClassName()
+    {
+        $classParts = explode('\\', $this::class);
+        return end($classParts);
+    }
+
     public function getEntry($count = 0)
     {
         return new Entry(
@@ -107,7 +113,7 @@ abstract class Base
             $this->getContentType(),
             $this->getLinkArray(),
             $this->getDatabaseId(),
-            $this::class,
+            $this->getClassName(),
             $count
         );
     }

@@ -9,6 +9,8 @@
 
 namespace SebLucas\Cops\Input;
 
+use SebLucas\Cops\Calibre\Filter;
+
 /**
  * Summary of Request
  */
@@ -115,7 +117,7 @@ class Request
     public function hasFilter()
     {
         // see list of acceptable filter params in Filter.php
-        $find = array_flip(['a', 'l', 'p', 'r', 's', 't', 'c']);
+        $find = Filter::URL_PARAMS;
         return !empty(array_intersect_key($find, $this->urlParams));
     }
 

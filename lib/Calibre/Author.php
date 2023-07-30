@@ -59,11 +59,6 @@ class Author extends Base
         return $this->sort;
     }
 
-    public function getContent($count = 0)
-    {
-        return str_format(localize("authorword", $count), $count);
-    }
-
     /** Use inherited class methods to get entries from <Whatever> by authorId (linked via books) */
 
     public function getBooks($n = -1)

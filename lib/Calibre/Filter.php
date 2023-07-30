@@ -10,9 +10,21 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Pages\Page;
 
 class Filter
 {
+    public const PAGE_ID = Page::FILTER_ID;
+    public const PAGE_DETAIL = Page::FILTER;
+    public const URL_PARAMS = [
+        'a' => Author::class,
+        'l' => Language::class,
+        'p' => Publisher::class,
+        'r' => Rating::class,
+        's' => Serie::class,
+        't' => Tag::class,
+        'c' => CustomColumnType::class,
+    ];
     protected Request $request;
     protected array $params = [];
     protected string $parentTable = "books";
@@ -255,7 +267,9 @@ class Filter
             $linkId = $matches[1];
         }
 
-        if ($this->parentTable == "books") {
+        if ($this->parentTable == $linkTable) {
+            $filter = "{$linkTable}.{$linkColumn} = ?";
+        } elseif ($this->parentTable == "books") {
             $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
             $filter = "exists (select null from {$linkTable}, books where {$this->parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
@@ -266,5 +280,19 @@ class Filter
         }
 
         $this->addFilter($filter, $linkId);
+    }
+
+    public static function getEntryArray($request, $database = null)
+    {
+        $entryArray = [];
+        foreach (self::URL_PARAMS as $paramName => $className) {
+            $paramValue = $request->get($paramName, null);
+            if (!isset($paramValue)) {
+                continue;
+            }
+            $entries = $className::getEntriesByFilter([$paramName => $paramValue], -1, $database);
+            $entryArray = array_merge($entryArray, $entries);
+        }
+        return $entryArray;
     }
 }

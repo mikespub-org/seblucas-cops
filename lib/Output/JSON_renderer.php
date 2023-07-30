@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
@@ -144,7 +145,7 @@ class JSONRenderer
             $out ["book"] = self::getBookContentArray($entry->book);
             return $out;
         }
-        return [ "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink(), "number" => $entry->numberOfElement ];
+        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink(), "number" => $entry->numberOfElement ];
     }
 
     public static function getContentArrayTypeahead($page)
@@ -302,6 +303,13 @@ class JSONRenderer
         $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
         $out["customizeurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
         $out["filterurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::FILTER, 'db', $database);
+        $out["filters"] = [];
+        if ($request->hasFilter()) {
+            // @todo do something with filters in templates
+            foreach (Filter::getEntryArray($request, $database) as $entry) {
+                array_push($out["filters"], self::getContentArray($entry));
+            }
+        }
 
         if ($page == Page::ABOUT) {
             $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));

@@ -125,12 +125,12 @@ class JsonTest extends TestCase
                 'navlink' => 'phpunit?page=9&query=fic&db=&scope=tag',
             ],
             [
-                'class' => 'SebLucas\Cops\Calibre\Tag',
+                'class' => 'Tag',
                 'title' => 'Fiction',
                 'navlink' => 'phpunit?page=12&id=1',
             ],
             [
-                'class' => 'SebLucas\Cops\Calibre\Tag',
+                'class' => 'Tag',
                 'title' => 'Science Fiction',
                 'navlink' => 'phpunit?page=12&id=7',
             ],
