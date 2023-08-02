@@ -4,6 +4,10 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
+1.4.x - 202308xx TBD
+  * Add option to split titles by publication year
+  * Add Librera reader to detected OPDS compatible readers - see pull request #10 from @dunxd
+
 1.4.1 - 20230728 Clean-up before next release
   * Add parent url and customize link in templates
   * Allow filtering non-book queries on other params in code ('a', 'l', 'p', 'r', 's', 't', 'c') = e.g. get Series for AuthorId

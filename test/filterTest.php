@@ -239,9 +239,10 @@ class FilterTest extends TestCase
 
         $request = Request::build(['c' => [1 => 1]]);
         $entries = Filter::getEntryArray($request);
-        $this->assertCount(0, $entries);
-        // @todo
-        //$this->assertEquals("CustomColumn", $entries[0]->className);
+        $this->assertEquals("Type4", $entries[0]->className);
+        $this->assertEquals("SeriesLike", $entries[0]->title);
+        $this->assertEquals("2 books", $entries[0]->content);
+        $this->assertEquals("phpunit?page=15&custom=1&id=1", $entries[0]->getNavLink());
 
         $request = Request::build(['f' => 'C']);
         $entries = Filter::getEntryArray($request);
