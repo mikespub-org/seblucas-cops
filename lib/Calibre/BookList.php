@@ -22,6 +22,8 @@ class BookList extends Base
     where books_publishers_link.book = books.id and publisher = ? {1} order by publisher';
     public const SQL_BOOKS_BY_FIRST_LETTER = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where upper (books.sort) like ? {1} order by books.sort';
+    public const SQL_BOOKS_BY_PUB_YEAR = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where substr(date(books.pubdate), 1, 4) = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_AUTHOR = 'select {0} from books_authors_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     left outer join books_series_link on books_series_link.book = books.id
     where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc';
@@ -220,13 +222,23 @@ class BookList extends Base
         return $this->getEntryArray(self::SQL_BOOKS_QUERY, $critArray, $n);
     }
 
-    public function getBooks($n)
+    public function getAllBooks($n)
     {
         [$entryArray, $totalNumber] = $this->getEntryArray(self::SQL_BOOKS_ALL, [], $n);
         return [$entryArray, $totalNumber];
     }
 
-    public function getAllBooks()
+    public function getCountByFirstLetter()
+    {
+        return $this->getCountByGroup('substr(upper(books.sort), 1, 1)', Book::PAGE_LETTER, 'letter');
+    }
+
+    public function getCountByPubYear()
+    {
+        return $this->getCountByGroup('substr(date(books.pubdate), 1, 4)', Book::PAGE_YEAR, 'year');
+    }
+
+    public function getCountByGroup($groupField, $page, $label)
     {
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
@@ -236,28 +248,33 @@ class BookList extends Base
         [, $result] = parent::executeQuery('select {0}
 from books
 where 1=1 {1}
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, count(*) as count', $filterString, $params, -1, $this->databaseId);
+group by groupid
+order by groupid', $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
-                $post->title,
-                Book::getEntryIdByLetter($post->title),
+                $post->groupid,
+                Book::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.Book::PAGE_LETTER.'&id='. rawurlencode($post->title), null, null, $this->databaseId)],
+                [new LinkNavigation('?page='.$page.'&id='. rawurlencode($post->groupid), null, null, $this->databaseId)],
                 $this->databaseId,
-                '',
+                ucfirst($label),
                 $post->count
             ));
         }
         return $entryArray;
     }
 
-    public function getBooksByStartingLetter($letter, $n)
+    public function getBooksByFirstLetter($letter, $n)
     {
         return $this->getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n);
+    }
+
+    public function getBooksByPubYear($year, $n)
+    {
+        return $this->getEntryArray(self::SQL_BOOKS_BY_PUB_YEAR, [$year], $n);
     }
 
     public function getAllRecentBooks()

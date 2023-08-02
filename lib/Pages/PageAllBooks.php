@@ -19,9 +19,11 @@ class PageAllBooks extends Page
         $this->title = localize("allbooks.title");
         $booklist = new BookList($this->request);
         if ($this->request->option("titles_split_first_letter") == 1) {
-            $this->entryArray = $booklist->getAllBooks();
+            $this->entryArray = $booklist->getCountByFirstLetter();
+        } elseif (!empty($this->request->option("titles_split_publication_year"))) {
+            $this->entryArray = $booklist->getCountByPubYear();
         } else {
-            [$this->entryArray, $this->totalNumber] = $booklist->getBooks($this->n);
+            [$this->entryArray, $this->totalNumber] = $booklist->getAllBooks($this->n);
         }
     }
 }
