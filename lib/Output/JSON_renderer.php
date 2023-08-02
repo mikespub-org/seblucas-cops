@@ -268,6 +268,7 @@ class JSONRenderer
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
+        $out ["libraryName"] = $config['cops_title_default'];
         $out ["fullTitle"] = $out ["title"];
         if ($out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
