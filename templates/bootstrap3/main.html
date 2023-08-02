@@ -6,27 +6,22 @@
         {{= it.fullhtml}}
     {{?}}
 {{??}}
-<div id="filter">
-    <ul>
-    </ul>
-</div>
 
 {{? it.containsBook == 0}}
-<div class="container-fluid">
-    <div class="row">
+    <!-- Not book data -->
         {{~it.entries:entry:i}}
-        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
-            <div class="panel panel-default">
+        <div class="card">
+            <div class="card-body">
                 {{? it.page == 19}}
-                    <div class="panel-heading">
+                    <h5 class="card-title">
                         {{=htmlspecialchars (entry.title)}}
-                    </div>
-                    <div class="panel-body">
+                    </h5>
+                    <p class="card-text">
                         {{=entry.content}}
-                    </div>
+                    </p>
                 {{??}}
                     <a href="{{=entry.navlink}}">
-                        <div class="panel-body">
+                        <div class="card-text">
                             {{=htmlspecialchars (entry.title)}}
                             <span class="badge pull-right">{{=entry.number}}</span>
                         </div>
@@ -35,8 +30,7 @@
             </div>
         </div>
         {{~}}
-    </div>
-</div>
+    <!-- end Not book data -->
 {{??}}
 <div class="row d-flex">
     {{~it.entries:entry:i}}
