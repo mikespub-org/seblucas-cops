@@ -1,12 +1,14 @@
 <footer>
-    <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Default COPS template">
-          <span class="glyphicon glyphicon-picture"></span><span class="hidden-sm"> Default COPS template</span>
-        </a></li>
-        <li><a href="{{=it.customizeurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.customizeTitle}}">
-          <span class="glyphicon glyphicon-wrench"></span><span class="hidden-sm"> {{=it.c.i18n.customizeTitle}}</span>
-        </a></li>
-        <li><a href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.aboutTitle}}">
-          <span class="glyphicon glyphicon-info-sign"></span><span class="hidden-sm"> {{=it.c.i18n.aboutTitle}}</span>
-        </a></li>
+    <ul class="nav nav-pills justify-content-end bg-body-tertiary" data-bs-theme="dark">
+        <li class="nav-item">
+            <a class="nav-link{{? it.page==19}} active{{?}}" href="{{=it.customizeurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.customizeTitle}}">
+                <span class="hidden-sm"> {{=it.c.i18n.customizeTitle}}</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{{? it.page==16}} active{{?}}" href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.aboutTitle}}">
+                <span class="hidden-sm"> {{=it.c.i18n.aboutTitle}}</span>
+            </a>
+        </li>
+      </ul>
 </footer>
