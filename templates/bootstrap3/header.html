@@ -1,0 +1,30 @@
+<header>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.libraryName}}</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav nav-tabs nav-fill">
+          <li class="nav-item">
+            <a class="nav-link{{? it.page==10}} active{{?}}" href="index.php?page=10">Recent Additions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{? it.page==1}} active{{?}}" href="index.php?page=1">Authors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{? it.page==11}} active{{?}}" href="index.php?page=11">Tags</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{? it.page==6}} active{{?}}" href="index.php?page=6">Series</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+</header>
