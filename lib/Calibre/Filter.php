@@ -87,49 +87,49 @@ class Filter
             $this->addTagNameFilter($tagName);
         }
 
-        $authorId = $this->request->get('a', null);
-        if (!empty($authorId) && preg_match('/^!?\d+$/', $authorId)) {
+        $authorId = $this->request->get('a', null, '/^!?\d+$/');
+        if (!empty($authorId)) {
             $this->addAuthorIdFilter($authorId);
         }
 
-        $languageId = $this->request->get('l', null);
-        if (!empty($languageId) && preg_match('/^!?\d+$/', $languageId)) {
+        $languageId = $this->request->get('l', null, '/^!?\d+$/');
+        if (!empty($languageId)) {
             $this->addLanguageIdFilter($languageId);
         }
 
-        $publisherId = $this->request->get('p', null);
-        if (!empty($publisherId) && preg_match('/^!?\d+$/', $publisherId)) {
+        $publisherId = $this->request->get('p', null, '/^!?\d+$/');
+        if (!empty($publisherId)) {
             $this->addPublisherIdFilter($publisherId);
         }
 
-        $ratingId = $this->request->get('r', null);
-        if (!empty($ratingId) && preg_match('/^!?\d+$/', $ratingId)) {
+        $ratingId = $this->request->get('r', null, '/^!?\d+$/');
+        if (!empty($ratingId)) {
             $this->addRatingIdFilter($ratingId);
         }
 
-        $seriesId = $this->request->get('s', null);
-        if (!empty($seriesId) && preg_match('/^!?\d+$/', $seriesId)) {
+        $seriesId = $this->request->get('s', null, '/^!?\d+$/');
+        if (!empty($seriesId)) {
             $this->addSeriesIdFilter($seriesId);
         }
 
-        $tagId = $this->request->get('t', null);
-        if (!empty($tagId) && preg_match('/^!?\d+$/', $tagId)) {
+        $tagId = $this->request->get('t', null, '/^!?\d+$/');
+        if (!empty($tagId)) {
             $this->addTagIdFilter($tagId);
         }
 
-        $letter = $this->request->get('f', null);
-        if (!empty($letter) && preg_match('/^\w$/', $letter)) {
+        $letter = $this->request->get('f', null, '/^\w$/');
+        if (!empty($letter)) {
             $this->addFirstLetterFilter($letter);
         }
 
-        $year = $this->request->get('y', null);
-        if (!empty($year) && preg_match('/^\d+$/', $year)) {
+        $year = $this->request->get('y', null, '/^\d+$/');
+        if (!empty($year)) {
             $this->addPubYearFilter($year);
         }
 
         // URL format: ...&c[2]=3&c[3]=other to filter on column 2 = 3 and column 3 = other
         $customIdArray = $this->request->get('c', null);
-        if (!empty($customIdArray)) {
+        if (!empty($customIdArray) && is_array($customIdArray)) {
             $this->addCustomIdArrayFilters($customIdArray);
         }
     }

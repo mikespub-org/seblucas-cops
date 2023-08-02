@@ -74,13 +74,15 @@ class BookList extends Base
     public Request $request;
     protected mixed $numberPerPage = null;
     protected array $ignoredCategories = [];
+    protected mixed $orderBy = null;
 
     public function __construct(Request $request, mixed $database = null, mixed $numberPerPage = null)
     {
         $this->request = $request;
-        $this->databaseId = $database ?? $this->request->get('db');
+        $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
+        $this->orderBy = $this->request->get('sort', null, '/^\w+(\s+(asc|desc)|)$/i');
     }
 
     public function getBookCount()
@@ -289,6 +291,14 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
         $filter = new Filter($this->request, $params, "books", $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
+
+        if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
+            if (str_contains($query, 'order by')) {
+                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->orderBy . ' ', $query);
+            } else {
+                $query .= ' order by ' . $this->orderBy . ' ';
+            }
+        }
 
         /** @var integer $totalNumber */
         /** @var \PDOStatement $result */
