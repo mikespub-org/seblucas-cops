@@ -330,8 +330,8 @@ class Filter
             }
             if ($className == CustomColumnType::class) {
                 foreach ($paramValue as $customId => $valueId) {
-                    $customType = CustomColumnType::createByCustomID($customId, $database);
-                    // @todo
+                    $custom = CustomColumn::createCustom($customId, $valueId, $database);
+                    $entryArray = array_merge($entryArray, [ $custom->getCount() ]);
                 }
                 continue;
             }
