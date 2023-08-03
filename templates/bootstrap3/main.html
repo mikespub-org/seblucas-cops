@@ -32,19 +32,19 @@
         {{~}}
     <!-- end Not book data -->
 {{??}}
-<div class="row d-flex">
+<div class="row row-cols-2 row-cols-md-5 g-2">
     {{~it.entries:entry:i}}
-        <div class="col-lg-2 col-sm-3 col-xs-6 books">
+        <div class="card">
             <div class="cover-image">
                 {{? entry.book.hasCover == 1}}
                     <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
-                        <img class ="img-responsive" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+                        <img class ="card-image-top" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
                     </a>
                 {{?}}
             </div>
-            <div class="meta">
-                <p class="title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></p>
-                <div class="author ellipsis">{{=htmlspecialchars (entry.book.authorsName)}}</div>
+            <div class="card-body meta">
+                <h5 class="card-title title ellipsis"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
+                <div class="card-subtitle author ellipsis">{{=htmlspecialchars (entry.book.authorsName)}}</div>
                 {{? entry.book.seriesName != ""}}<div class="series ellipsis"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
                 <!-- custom columns not tested -->
                 {{~entry.book.customcolumns_list :column:column_index}}
@@ -52,7 +52,7 @@
                 {{~}}
             </div>
             <div style="height: 40px;"><!-- reserve space for absolutely positioned bottom download button --></div>
-            <div class="download bottom">
+            <div class="card-footer">
                 <!-- download Split button -->
                 {{? entry.book.preferedData.length > 1}}<div class="btn-group">{{?}}
                     {{~entry.book.preferedData:data:j}}
