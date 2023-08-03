@@ -47,7 +47,7 @@ class PageQueryResult extends Page
         switch ($scope) {
             case self::SCOPE_BOOK :
                 $booklist = new BookList($this->request, $database, $numberPerPage);
-                $array = $booklist->getBooksByStartingLetter('%' . $queryNormedAndUp, $n);
+                $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
                 $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $n, $database);

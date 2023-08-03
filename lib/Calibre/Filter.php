@@ -24,6 +24,8 @@ class Filter
         's' => Serie::class,
         't' => Tag::class,
         'c' => CustomColumnType::class,
+        'f' => BookList::class,
+        'y' => BookList::class,
     ];
     protected Request $request;
     protected array $params = [];
@@ -85,39 +87,49 @@ class Filter
             $this->addTagNameFilter($tagName);
         }
 
-        $authorId = $this->request->get('a', null);
-        if (!empty($authorId) && preg_match('/^!?\d+$/', $authorId)) {
+        $authorId = $this->request->get('a', null, '/^!?\d+$/');
+        if (!empty($authorId)) {
             $this->addAuthorIdFilter($authorId);
         }
 
-        $languageId = $this->request->get('l', null);
-        if (!empty($languageId) && preg_match('/^!?\d+$/', $languageId)) {
+        $languageId = $this->request->get('l', null, '/^!?\d+$/');
+        if (!empty($languageId)) {
             $this->addLanguageIdFilter($languageId);
         }
 
-        $publisherId = $this->request->get('p', null);
-        if (!empty($publisherId) && preg_match('/^!?\d+$/', $publisherId)) {
+        $publisherId = $this->request->get('p', null, '/^!?\d+$/');
+        if (!empty($publisherId)) {
             $this->addPublisherIdFilter($publisherId);
         }
 
-        $ratingId = $this->request->get('r', null);
-        if (!empty($ratingId) && preg_match('/^!?\d+$/', $ratingId)) {
+        $ratingId = $this->request->get('r', null, '/^!?\d+$/');
+        if (!empty($ratingId)) {
             $this->addRatingIdFilter($ratingId);
         }
 
-        $seriesId = $this->request->get('s', null);
-        if (!empty($seriesId) && preg_match('/^!?\d+$/', $seriesId)) {
+        $seriesId = $this->request->get('s', null, '/^!?\d+$/');
+        if (!empty($seriesId)) {
             $this->addSeriesIdFilter($seriesId);
         }
 
-        $tagId = $this->request->get('t', null);
-        if (!empty($tagId) && preg_match('/^!?\d+$/', $tagId)) {
+        $tagId = $this->request->get('t', null, '/^!?\d+$/');
+        if (!empty($tagId)) {
             $this->addTagIdFilter($tagId);
+        }
+
+        $letter = $this->request->get('f', null, '/^\w$/');
+        if (!empty($letter)) {
+            $this->addFirstLetterFilter($letter);
+        }
+
+        $year = $this->request->get('y', null, '/^\d+$/');
+        if (!empty($year)) {
+            $this->addPubYearFilter($year);
         }
 
         // URL format: ...&c[2]=3&c[3]=other to filter on column 2 = 3 and column 3 = other
         $customIdArray = $this->request->get('c', null);
-        if (!empty($customIdArray)) {
+        if (!empty($customIdArray) && is_array($customIdArray)) {
             $this->addCustomIdArrayFilters($customIdArray);
         }
     }
@@ -217,6 +229,28 @@ class Filter
     }
 
     /**
+     * Summary of addFirstLetterFilter
+     * @param mixed $letter
+     * @return void
+     */
+    public function addFirstLetterFilter($letter)
+    {
+        $filter = 'substr(upper(books.sort), 1, 1) = ?';
+        $this->addFilter($filter, $letter);
+    }
+
+    /**
+     * Summary of addPubYearFilter
+     * @param mixed $year
+     * @return void
+     */
+    public function addPubYearFilter($year)
+    {
+        $filter = 'substr(date(books.pubdate), 1, 4) = ?';
+        $this->addFilter($filter, $year);
+    }
+
+    /**
      * Summary of addCustomIdArrayFilters
      * @param array $customIdArray
      * @return void
@@ -240,8 +274,6 @@ class Filter
     public function addCustomIdFilter($customId, $valueId)
     {
         $customType = CustomColumnType::createByCustomID($customId, $this->databaseId);
-        //[$query, $params] = $customType->getQuery($valueId);
-        //return $this->getEntryArray($query, $params, $n);
         [$filter, $params] = $customType->getFilter($valueId);
         if (!empty($filter)) {
             //var_dump([$filter, $params]);
@@ -288,6 +320,19 @@ class Filter
         foreach (self::URL_PARAMS as $paramName => $className) {
             $paramValue = $request->get($paramName, null);
             if (!isset($paramValue)) {
+                continue;
+            }
+            if ($className == BookList::class) {
+                $booklist = new BookList(Request::build([$paramName => $paramValue]), $database);
+                $groupFunc = ($paramName == 'f') ? 'getCountByFirstLetter' : 'getCountByPubYear';
+                $entryArray = array_merge($entryArray, $booklist->$groupFunc());
+                continue;
+            }
+            if ($className == CustomColumnType::class) {
+                foreach ($paramValue as $customId => $valueId) {
+                    $custom = CustomColumn::createCustom($customId, $valueId, $database);
+                    $entryArray = array_merge($entryArray, [ $custom->getCount() ]);
+                }
                 continue;
             }
             $entries = $className::getEntriesByFilter([$paramName => $paramValue], -1, $database);
