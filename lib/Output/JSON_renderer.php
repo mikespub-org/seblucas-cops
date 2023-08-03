@@ -170,7 +170,6 @@ class JSONRenderer
         $out ["c"] = ["version" => Config::VERSION, "i18n" => [
                            "coverAlt" => localize("i18n.coversection"),
                            "authorsTitle" => localize("authors.title"),
-                           "allbooksTitle" => localise("allbooks.title"),
                            "bookwordTitle" => localize("bookword.title"),
                            "recentTitle" => localize("recent.title"),
                            "tagsTitle" => localize("tags.title"),
