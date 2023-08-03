@@ -171,6 +171,7 @@ class JSONRenderer
                            "coverAlt" => localize("i18n.coversection"),
                            "authorsTitle" => localize("authors.title"),
                            "bookwordTitle" => localize("bookword.title"),
+                           "recentTitle" => localize("recent.title"),
                            "tagsTitle" => localize("tags.title"),
                            "linksTitle" => localize("links.title"),
                            "seriesTitle" => localize("series.title"),
