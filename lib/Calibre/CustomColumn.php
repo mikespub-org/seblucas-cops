@@ -66,6 +66,18 @@ class CustomColumn extends Base
         return $this->customColumnType->getLinkArray($this->id);
     }
 
+    public function getClassName()
+    {
+        return $this->customColumnType->getTitle();
+    }
+
+    public function getCount()
+    {
+        [$query, $params] = $this->getQuery();
+        $count = Base::countQuery($query, "", $params, $this->databaseId);
+        return $this->getEntry($count);
+    }
+
     /**
      * Get the query to find all books with this value
      * the returning array has two values:

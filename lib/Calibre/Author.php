@@ -104,7 +104,7 @@ class Author extends Base
         return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
     }
 
-    public static function getAllAuthorsByFirstLetter($database = null, $numberPerPage = null)
+    public static function getCountByFirstLetter($database = null, $numberPerPage = null)
     {
         [, $result] = parent::executeQuery("select {0}
 from authors
@@ -126,7 +126,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public static function getAuthorsByStartingLetter($letter, $n = -1, $database = null)
+    public static function getAuthorsByFirstLetter($letter, $n = -1, $database = null)
     {
         return self::getEntryArray(self::SQL_ROWS_BY_FIRST_LETTER, [$letter . "%"], $n, $database);
     }

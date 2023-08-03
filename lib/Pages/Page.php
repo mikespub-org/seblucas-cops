@@ -48,6 +48,7 @@ class Page
     public const PUBLISHER_DETAIL = "21";
     public const ALL_RATINGS = "22";
     public const RATING_DETAIL = "23";
+    public const ALL_BOOKS_YEAR = "50";
     public const FILTER = "99";
     public const ERROR = "100";
     public const PAGE_ID = "cops:catalog";
@@ -129,6 +130,8 @@ class Page
                 return new PageAllBooks($id, $query, $n, $request);
             case Page::ALL_BOOKS_LETTER:
                 return new PageAllBooksLetter($id, $query, $n, $request);
+            case Page::ALL_BOOKS_YEAR:
+                return new PageAllBooksYear($id, $query, $n, $request);
             case Page::ALL_RECENT_BOOKS :
                 return new PageRecentBooks($id, $query, $n, $request);
             case Page::SERIE_DETAIL :

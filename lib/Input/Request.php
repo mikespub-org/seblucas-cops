@@ -125,12 +125,15 @@ class Request
      * Summary of get
      * @param mixed $name
      * @param mixed $default
+     * @param mixed $pattern
      * @return mixed
      */
-    public function get($name, $default = null)
+    public function get($name, $default = null, $pattern = null)
     {
         if (!empty($this->urlParams) && isset($this->urlParams[$name]) && $this->urlParams[$name] != '') {
-            return $this->urlParams[$name];
+            if (!isset($pattern) || preg_match($pattern, $this->urlParams[$name])) {
+                return $this->urlParams[$name];
+            }
         }
         return $default;
     }

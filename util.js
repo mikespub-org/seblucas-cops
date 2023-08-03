@@ -163,9 +163,9 @@ function getTagList () {
     var tagList = {};
     $(".se").each (function(){
         if ($(this).parents (".filtered").length > 0) { return; }
-        var taglist = $(this).text();
+        var tagtext = $(this).text();
 
-        var tagarray = taglist.split (",");
+        var tagarray = tagtext.split (",");
         for (var i in tagarray) {
             if (!tagarray.hasOwnProperty(i)) {
                 continue;
@@ -226,7 +226,7 @@ function doFilter () {
     }
 
     $(".se").each (function(){
-        var taglist = ", " + $(this).text() + ", ";
+        var tagtext = ", " + $(this).text() + ", ";
         var toBeFiltered = false;
         for (var filter in filterList) {
             if (!filterList.hasOwnProperty(filter)) {
@@ -235,7 +235,7 @@ function doFilter () {
             var onlyThisTag = filterList [filter];
             filter = ', ' + filter + ', ';
             var myreg = new RegExp (filter);
-            if (myreg.test (taglist)) {
+            if (myreg.test (tagtext)) {
                 if (onlyThisTag === false) {
                     toBeFiltered = true;
                 }

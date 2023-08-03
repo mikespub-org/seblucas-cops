@@ -474,6 +474,7 @@ class PageTest extends TestCase
         $request = new Request();
 
         $config['cops_titles_split_first_letter'] = 0;
+        $config['cops_titles_split_publication_year'] = 0;
 
         $currentPage = Page::getPage($page, $qid, $query, $n, $request);
         $currentPage->InitializeContent();
@@ -485,9 +486,10 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
 
         $config['cops_titles_split_first_letter'] = 1;
+        $config['cops_titles_split_publication_year'] = 0;
     }
 
-    public function testPageAllBooks_SplittedByFirstLetter()
+    public function testPageAllBooks_SplitByFirstLetter()
     {
         global $config;
         $page = Page::ALL_BOOKS;
@@ -520,6 +522,48 @@ class PageTest extends TestCase
         $this->assertEquals("3 books starting with C", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("The Call of the Wild", $currentPage->entryArray [0]->title);
+        $this->assertTrue($currentPage->containsBook());
+    }
+
+    public function testPageAllBooks_SplitByPubYear()
+    {
+        global $config;
+        $page = Page::ALL_BOOKS;
+        $query = null;
+        $qid = null;
+        $n = "1";
+        $request = new Request();
+
+        $config['cops_titles_split_first_letter'] = 0;
+        $config['cops_titles_split_publication_year'] = 1;
+
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("All books", $currentPage->title);
+        $this->assertCount(5, $currentPage->entryArray);
+        $this->assertEquals("1872", $currentPage->entryArray [0]->title);
+        $this->assertEquals("1897", $currentPage->entryArray [1]->title);
+        $this->assertFalse($currentPage->containsBook());
+
+        $config['cops_titles_split_first_letter'] = 1;
+        $config['cops_titles_split_publication_year'] = 0;
+    }
+
+    public function testPageAllBooksByYear()
+    {
+        $page = Page::ALL_BOOKS_YEAR;
+        $query = null;
+        $qid = "2006";
+        $n = "1";
+        $request = new Request();
+
+        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("9 books published in 2006", $currentPage->title);
+        $this->assertCount(9, $currentPage->entryArray);
+        $this->assertEquals("The Casebook of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertTrue($currentPage->containsBook());
     }
 

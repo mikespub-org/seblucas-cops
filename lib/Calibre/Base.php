@@ -162,7 +162,7 @@ abstract class Base
         return self::getEntryArrayWithBookNumber(static::SQL_ROWS_FOR_SEARCH, static::SQL_COLUMNS, "", ['%' . $query . '%'], static::class, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByStartingLetter($letter, $n = -1, $database = null, $numberPerPage = null)
+    public static function getEntriesByFirstLetter($letter, $n = -1, $database = null, $numberPerPage = null)
     {
         return self::getEntryArrayWithBookNumber(static::SQL_ROWS_BY_FIRST_LETTER, static::SQL_COLUMNS, "", [$letter . "%"], static::class, $n, $database, $numberPerPage);
     }
@@ -320,9 +320,7 @@ abstract class Base
 
         if ($numberPerPage != -1 && $n != -1) {
             // First check total number of results
-            $result = self::getDb($database)->prepare(str_format($query, "count(*)", $filter));
-            $result->execute($params);
-            $totalResult = $result->fetchColumn();
+            $totalResult = self::countQuery($query, $filter, $params, $database);
 
             // Next modify the query and params
             $query .= " limit ?, ?";
@@ -332,5 +330,21 @@ abstract class Base
         $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         return [$totalResult, $result];
+    }
+
+    /**
+     * Summary of countQuery
+     * @param mixed $query
+     * @param mixed $filter
+     * @param mixed $params
+     * @param mixed $database
+     * @return mixed
+     */
+    public static function countQuery($query, $filter, $params, $database = null)
+    {
+        $result = self::getDb($database)->prepare(str_format($query, "count(*)", $filter));
+        $result->execute($params);
+        $totalResult = $result->fetchColumn();
+        return $totalResult;
     }
 }

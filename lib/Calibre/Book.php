@@ -22,6 +22,7 @@ class Book extends Base
     public const PAGE_ID = Page::ALL_BOOKS_ID;
     public const PAGE_ALL = Page::ALL_BOOKS;
     public const PAGE_LETTER = Page::ALL_BOOKS_LETTER;
+    public const PAGE_YEAR = Page::ALL_BOOKS_YEAR;
     public const PAGE_DETAIL = Page::BOOK_DETAIL;
     public const SQL_TABLE = "books";
     public const SQL_LINK_TABLE = "books";
@@ -138,6 +139,11 @@ class Book extends Base
     public static function getEntryIdByLetter($startingLetter)
     {
         return self::PAGE_ID.':letter:'.$startingLetter;
+    }
+
+    public static function getEntryIdByYear($year)
+    {
+        return self::PAGE_ID.':year:'.$year;
     }
 
     public function getUri()

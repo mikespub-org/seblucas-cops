@@ -17,7 +17,7 @@ class PageAllAuthors extends Page
         $this->idPage = Author::PAGE_ID;
         $this->title = localize("authors.title");
         if ($this->request->option("author_split_first_letter") == 1) {
-            $this->entryArray = Author::getAllAuthorsByFirstLetter($this->getDatabaseId());
+            $this->entryArray = Author::getCountByFirstLetter($this->getDatabaseId());
         } else {
             $this->entryArray = Author::getAllAuthors($this->n, $this->getDatabaseId());
         }
