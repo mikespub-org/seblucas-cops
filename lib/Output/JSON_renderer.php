@@ -170,8 +170,11 @@ class JSONRenderer
         $out ["c"] = ["version" => Config::VERSION, "i18n" => [
                            "coverAlt" => localize("i18n.coversection"),
                            "authorsTitle" => localize("authors.title"),
+                           "allbooksTitle" => localize("allbooks.title"),
                            "bookwordTitle" => localize("bookword.title"),
+                           "recentTitle" => localize("recent.title"),
                            "tagsTitle" => localize("tags.title"),
+                           "tagwordTitle" => localize("tagword.title"),
                            "linksTitle" => localize("links.title"),
                            "seriesTitle" => localize("series.title"),
                            "customizeTitle" => localize("customize.title"),
@@ -185,12 +188,14 @@ class JSONRenderer
                            "permalinkAlt" => localize("permalink.alternate"),
                            "publisherName" => localize("publisher.name"),
                            "pubdateTitle" => localize("pubdate.title"),
-                           "languagesTitle" => localize("language.title"),
+                           "languagesTitle" => localize("languages.title"),
+                           "languageTitle" => localize("language.title"),
                            "contentTitle" => localize("content.summary"),
                            "filterClearAll" => localize("filter.clearall"),
                            "sortorderAsc" => localize("search.sortorder.asc"),
                            "sortorderDesc" => localize("search.sortorder.desc"),
-                           "customizeEmail" => localize("customize.email")],
+                           "customizeEmail" => localize("customize.email"),
+                           "ratingsTitle" => localize("ratings.title")],
                        "url" => [
                            "detailUrl" => self::$endpoint . "?page=13&id={0}&db={1}",
                            "coverUrl" => Config::ENDPOINT["fetch"] . "?id={0}&db={1}",
@@ -268,6 +273,7 @@ class JSONRenderer
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
+        $out ["libraryName"] = $config['cops_title_default'];
         $out ["fullTitle"] = $out ["title"];
         if ($out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
