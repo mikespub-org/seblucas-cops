@@ -15,9 +15,14 @@ class PageAllSeries extends Page
 {
     public function InitializeContent()
     {
-        global $config;
+        $this->getEntries();
         $this->idPage = Serie::PAGE_ID;
         $this->title = localize("series.title");
+    }
+
+    public function getEntries()
+    {
+        global $config;
         /**
         if ($this->request->hasFilter()) {
                 $this->entryArray = Serie::getEntriesByFilter($this->request, $this->n, $this->getDatabaseId());

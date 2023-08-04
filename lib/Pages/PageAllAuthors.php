@@ -14,8 +14,13 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $this->idPage = Author::PAGE_ID;
         $this->title = localize("authors.title");
+    }
+
+    public function getEntries()
+    {
         if ($this->request->option("author_split_first_letter") == 1) {
             $this->entryArray = Author::getCountByFirstLetter($this->getDatabaseId());
         } else {

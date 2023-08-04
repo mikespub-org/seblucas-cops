@@ -153,7 +153,6 @@ class PageQueryResult extends Page
     public function InitializeContent()
     {
         $scope = $this->request->get("scope");
-        $ignoredCategories = $this->getIgnoredCategories();
         if (empty($scope)) {
             $this->title = str_format(localize("search.result"), $this->query);
         } else {
@@ -165,33 +164,19 @@ class PageQueryResult extends Page
             // str_format (localize ("search.result.publisher"), $this->query)
             $this->title = str_format(localize("search.result.{$scope}"), $this->query);
         }
+        $this->getEntries();
+    }
+
+    public function getEntries()
+    {
         $database = $this->getDatabaseId();
-
-        $crit = "%" . $this->query . "%";
-
         // Special case when we are doing a search and no database is selected
         if (Database::noDatabaseSelected($database) && !$this->useTypeahead()) {
-            $pagequery = Page::OPENSEARCH_QUERY;
-            $query = $this->query;
-            $d = 0;
-            foreach (Database::getDbNameList() as $key) {
-                Database::clearDb();
-                $booklist = new BookList($this->request, $d, 1);
-                [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
-                array_push($this->entryArray, new Entry(
-                    $key,
-                    "db:query:{$d}",
-                    str_format(localize("bookword", $totalNumber), $totalNumber),
-                    "text",
-                    [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}")],
-                    $database,
-                    "",
-                    $totalNumber
-                ));
-                $d++;
-            }
+            $this->getDatabaseEntries();
             return;
         }
+
+        $scope = $this->request->get("scope");
         if (empty($scope)) {
             $this->doSearchByCategory($database);
             return;
@@ -202,6 +187,31 @@ class PageQueryResult extends Page
             [$this->entryArray, $this->totalNumber] = $array;
         } else {
             $this->entryArray = $array;
+        }
+    }
+
+    public function getDatabaseEntries()
+    {
+        $ignoredCategories = $this->getIgnoredCategories();
+        $pagequery = Page::OPENSEARCH_QUERY;
+        $query = $this->query;
+        $crit = "%" . $this->query . "%";
+        $d = 0;
+        foreach (Database::getDbNameList() as $key) {
+            Database::clearDb();
+            $booklist = new BookList($this->request, $d, 1);
+            [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
+            array_push($this->entryArray, new Entry(
+                $key,
+                "db:query:{$d}",
+                str_format(localize("bookword", $totalNumber), $totalNumber),
+                "text",
+                [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}")],
+                null,
+                "",
+                $totalNumber
+            ));
+            $d++;
         }
     }
 }

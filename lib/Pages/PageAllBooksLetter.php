@@ -15,17 +15,20 @@ class PageAllBooksLetter extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $this->idPage = Book::getEntryIdByLetter($this->idGet);
-        $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByFirstLetter($this->idGet, $this->n);
-
         $count = $this->totalNumber;
         if ($count == -1) {
             $count = count($this->entryArray);
         }
-
         $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("bookword", $count), $count), $this->idGet);
         $this->parentTitle = "";  // localize("allbooks.title");
         $this->parentUri = "?page=".Book::PAGE_ALL;
+    }
+
+    public function getEntries()
+    {
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByFirstLetter($this->idGet, $this->n);
     }
 }

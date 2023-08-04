@@ -15,11 +15,16 @@ class PageTagDetail extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $tag = Tag::getTagById($this->idGet, $this->getDatabaseId());
         $this->idPage = $tag->getEntryId();
         $this->title = $tag->getTitle();
         $this->parentTitle = localize("tags.title");
         $this->parentUri = $tag->getParentUri();
+    }
+
+    public function getEntries()
+    {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByTag($this->idGet, $this->n);
     }

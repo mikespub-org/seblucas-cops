@@ -15,9 +15,14 @@ class PageAllTags extends Page
 {
     public function InitializeContent()
     {
-        global $config;
+        $this->getEntries();
         $this->idPage = Tag::PAGE_ID;
         $this->title = localize("tags.title");
+    }
+
+    public function getEntries()
+    {
+        global $config;
         $this->entryArray = Tag::getAllTags($this->n, $this->getDatabaseId());
         if (in_array("tag", $config['cops_show_not_set_filter'])) {
             $instance = new Tag((object)['id' => null, 'name' => localize("tagword.none")], $this->getDatabaseId());

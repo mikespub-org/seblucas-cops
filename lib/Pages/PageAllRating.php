@@ -15,9 +15,14 @@ class PageAllRating extends Page
 {
     public function InitializeContent()
     {
-        global $config;
+        $this->getEntries();
         $this->idPage = Rating::PAGE_ID;
         $this->title = localize("ratings.title");
+    }
+
+    public function getEntries()
+    {
+        global $config;
         $this->entryArray = Rating::getAllRatings($this->n, $this->getDatabaseId());
         if (in_array("rating", $config['cops_show_not_set_filter'])) {
             $instance = new Rating((object)['id' => 0, 'name' => 0], $this->getDatabaseId());
