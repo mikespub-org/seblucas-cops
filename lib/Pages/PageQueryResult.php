@@ -50,16 +50,16 @@ class PageQueryResult extends Page
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $n, $database);
+                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             case self::SCOPE_SERIES :
-                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $n, $database);
+                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             case self::SCOPE_TAG :
                 $array = Tag::getAllTagsByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             case self::SCOPE_PUBLISHER :
-                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $n, $database);
+                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
                 break;
             default:
                 $booklist = new BookList($this->request, $database, $numberPerPage);
@@ -111,6 +111,8 @@ class PageQueryResult extends Page
                 if (count($array) == 2 && is_array($array [0])) {
                     $total = $array [1];
                     $array = $array [0];
+                    // show the number of entries here, not the number of books found
+                    //$total = count($array);
                 } else {
                     $total = count($array);
                 }

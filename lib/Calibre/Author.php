@@ -126,19 +126,19 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public static function getAuthorsByFirstLetter($letter, $n = -1, $database = null)
+    public static function getAuthorsByFirstLetter($letter, $n = -1, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArray(self::SQL_ROWS_BY_FIRST_LETTER, [$letter . "%"], $n, $database);
+        return self::getEntryArray(self::SQL_ROWS_BY_FIRST_LETTER, [$letter . "%"], $n, $database, $numberPerPage);
     }
 
-    public static function getAuthorsForSearch($query, $n = -1, $database = null)
+    public static function getAuthorsForSearch($query, $n = -1, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArray(self::SQL_ROWS_FOR_SEARCH, [$query . "%", $query . "%"], $n, $database);
+        return self::getEntryArray(self::SQL_ROWS_FOR_SEARCH, [$query . "%", $query . "%"], $n, $database, $numberPerPage);
     }
 
-    public static function getAllAuthors($n = -1, $database = null)
+    public static function getAllAuthors($n = -1, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArray(self::SQL_ALL_ROWS, [], $n, $database);
+        return self::getEntryArray(self::SQL_ALL_ROWS, [], $n, $database, $numberPerPage);
     }
 
     public static function getEntryArray($query, $params, $n = -1, $database = null, $numberPerPage = null)

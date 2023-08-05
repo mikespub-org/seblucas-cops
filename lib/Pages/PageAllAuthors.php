@@ -25,6 +25,7 @@ class PageAllAuthors extends Page
             $this->entryArray = Author::getCountByFirstLetter($this->getDatabaseId());
         } else {
             $this->entryArray = Author::getAllAuthors($this->n, $this->getDatabaseId());
+            $this->totalNumber = Author::countAllEntries($this->getDatabaseId());
         }
     }
 }

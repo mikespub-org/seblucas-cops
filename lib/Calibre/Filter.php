@@ -276,7 +276,6 @@ class Filter
         $customType = CustomColumnType::createByCustomID($customId, $this->databaseId);
         [$filter, $params] = $customType->getFilter($valueId);
         if (!empty($filter)) {
-            //var_dump([$filter, $params]);
             $this->queryString .= 'and (' . $filter . ')';
             foreach ($params as $param) {
                 array_push($this->params, $param);

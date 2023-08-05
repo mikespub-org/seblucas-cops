@@ -146,6 +146,12 @@ abstract class Base
         return self::getCountGeneric(static::SQL_TABLE, static::PAGE_ID, static::PAGE_ALL, $database);
     }
 
+    public static function countAllEntries($database = null)
+    {
+        $query = 'select {0} from ' . static::SQL_TABLE;
+        return self::countQuery($query, "", [], $database);
+    }
+
     /**
      * Summary of getAllEntries = same as getAll<Whatever>() in <Whatever> child class
      * @param mixed $database
@@ -340,7 +346,7 @@ abstract class Base
      * @param mixed $database
      * @return mixed
      */
-    public static function countQuery($query, $filter, $params, $database = null)
+    public static function countQuery($query, $filter = "", $params = [], $database = null)
     {
         $result = self::getDb($database)->prepare(str_format($query, "count(*)", $filter));
         $result->execute($params);

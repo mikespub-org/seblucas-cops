@@ -22,5 +22,6 @@ class PageAllLanguages extends Page
     public function getEntries()
     {
         $this->entryArray = Language::getAllLanguages($this->n, $this->getDatabaseId());
+        $this->totalNumber = Language::countAllEntries($this->getDatabaseId());
     }
 }
