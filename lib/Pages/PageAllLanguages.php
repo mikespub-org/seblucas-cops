@@ -14,8 +14,14 @@ class PageAllLanguages extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $this->idPage = Language::PAGE_ID;
         $this->title = localize("languages.title");
+    }
+
+    public function getEntries()
+    {
         $this->entryArray = Language::getAllLanguages($this->n, $this->getDatabaseId());
+        $this->totalNumber = Language::countAllEntries($this->getDatabaseId());
     }
 }

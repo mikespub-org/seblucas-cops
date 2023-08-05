@@ -15,8 +15,13 @@ class PageAllBooks extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $this->idPage = Book::PAGE_ID;
         $this->title = localize("allbooks.title");
+    }
+
+    public function getEntries()
+    {
         $booklist = new BookList($this->request);
         if ($this->request->option("titles_split_first_letter") == 1) {
             $this->entryArray = $booklist->getCountByFirstLetter();

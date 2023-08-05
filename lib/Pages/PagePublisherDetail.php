@@ -15,11 +15,16 @@ class PagePublisherDetail extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());
         $this->idPage = $publisher->getEntryId();
         $this->title = $publisher->getTitle();
         $this->parentTitle = localize("publishers.title");
         $this->parentUri = $publisher->getParentUri();
+    }
+
+    public function getEntries()
+    {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByPublisher($this->idGet, $this->n);
     }

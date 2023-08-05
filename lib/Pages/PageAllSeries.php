@@ -15,22 +15,33 @@ class PageAllSeries extends Page
 {
     public function InitializeContent()
     {
-        global $config;
+        $this->getEntries();
         $this->idPage = Serie::PAGE_ID;
         $this->title = localize("series.title");
+    }
+
+    public function getEntries()
+    {
+        global $config;
         /**
         if ($this->request->hasFilter()) {
-                $this->entryArray = Serie::getEntriesByFilter($this->request, $this->n, $this->getDatabaseId());
+            $this->entryArray = Serie::getEntriesByFilter($this->request, $this->n, $this->getDatabaseId());
         } else {
             $this->entryArray = Serie::getAllEntries($this->n, $this->getDatabaseId());
         }
          */
         $this->entryArray = Serie::getAllSeries($this->n, $this->getDatabaseId());
-        if (in_array("series", $config['cops_show_not_set_filter'])) {
-            $instance = new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());
-            $booklist = new BookList($this->request);
-            [$result,] = $booklist->getBooksWithoutSeries(-1);
-            array_push($this->entryArray, $instance->getEntry(count($result)));
+        $this->totalNumber = Serie::countAllEntries($this->getDatabaseId());
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $config['cops_show_not_set_filter'])) {
+            $this->addNotSetEntry();
         }
+    }
+
+    public function addNotSetEntry()
+    {
+        $instance = new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());
+        $booklist = new BookList($this->request);
+        [$result,] = $booklist->getBooksWithoutSeries(-1);
+        array_push($this->entryArray, $instance->getEntry(count($result)));
     }
 }

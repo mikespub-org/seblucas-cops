@@ -15,13 +15,18 @@ class PageAuthorDetail extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $author = Author::getAuthorById($this->idGet, $this->getDatabaseId());
         $this->idPage = $author->getEntryId();
         $this->title = $author->name;  // not by getTitle() = $author->sort here
         $this->parentTitle = localize("authors.title");
         $this->parentUri = $author->getParentUri();
+        //$seriesArray = $author->getSeries();
+    }
+
+    public function getEntries()
+    {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByAuthor($this->idGet, $this->n);
-        //$seriesArray = $author->getSeries();
     }
 }

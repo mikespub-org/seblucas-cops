@@ -59,7 +59,12 @@ class PageCustomize extends Page
 
     public function InitializeContent()
     {
+        $this->getEntries();
         $this->title = localize("customize.title");
+    }
+
+    public function getEntries()
+    {
         $this->entryArray = [];
 
         $ignoredBaseArray = [PageQueryResult::SCOPE_AUTHOR,

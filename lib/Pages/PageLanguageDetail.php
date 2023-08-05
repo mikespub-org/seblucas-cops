@@ -15,11 +15,16 @@ class PageLanguageDetail extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());
         $this->idPage = $language->getEntryId();
         $this->title = $language->getTitle();
         $this->parentTitle = localize("languages.title");
         $this->parentUri = $language->getParentUri();
+    }
+
+    public function getEntries()
+    {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByLanguage($this->idGet, $this->n);
     }

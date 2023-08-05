@@ -178,7 +178,7 @@ abstract class CustomColumnType extends Base
      *
      * @return int
      */
-    protected function getDistinctValueCount()
+    public function getDistinctValueCount()
     {
         return count($this->getAllCustomValues());
     }

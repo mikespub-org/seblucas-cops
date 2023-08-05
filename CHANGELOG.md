@@ -5,6 +5,11 @@ x.x.x - TODO
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
 1.4.x - 202308xx TBD
+  * Add pagination for non-book lists if not already split
+  * Add option to split custom columns of type Date by year
+  * Fix OPDS renderer for HTML content - see pull request seblucas/cops#488 from @cbckly
+  * Add other .title translations to i18n array for use in templates - see pull request #11 from @dunxd
+  * Add sorting of booklist entries with URL param in code
   * Add option to split titles by publication year
   * Add Librera reader to detected OPDS compatible readers - see pull request #10 from @dunxd
 
