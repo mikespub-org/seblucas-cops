@@ -14,7 +14,7 @@
 {{? it.containsBook == 0}}
 <div class="container-fluid">
     <div class="row">
-        {{~it.entries:entry:i}}
+        {{~it.entries:entry:idx}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
             <div class="panel panel-default">
                 {{? it.page == 19}}
@@ -39,7 +39,7 @@
 </div>
 {{??}}
 <div class="row d-flex">
-    {{~it.entries:entry:i}}
+    {{~it.entries:entry:idx}}
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
             <div class="cover-image">
                 {{? entry.book.hasCover == 1}}
@@ -60,23 +60,23 @@
             <div style="height: 40px;"><!-- reserve space for absolutely positioned bottom download button --></div>
             <div class="download bottom">
                 <!-- download Split button -->
-                {{? entry.book.preferedData.length > 1}}<div class="btn-group">{{?}}
-                    {{~entry.book.preferedData:data:j}}
-                        {{? j == 0}}
+                {{? entry.book.preferedCount > 1}}<div class="btn-group">{{?}}
+                    {{~entry.book.preferedData:data:i}}
+                        {{? i == 0}}
                             <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
-                            {{? entry.book.preferedData.length > 1}}
+                            {{? entry.book.preferedCount > 1}}
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
-                                {{? entry.book.preferedData.length > 1}}<ul class="dropdown-menu">{{?}}
+                                {{? entry.book.preferedCount > 1}}<ul class="dropdown-menu">{{?}}
                             {{?}}
                         {{??}}
                             <li><a href="{{=data.url}}">{{=data.name}}</a></li>
-                            {{? entry.book.preferedData.length = j + 1}}</ul>{{?}}
+                            {{? i + 1 == entry.book.preferedCount}}</ul>{{?}}
                         {{?}}
                     {{~}}
-                {{? entry.book.preferedData.length > 1}}</div>{{?}}
+                {{? entry.book.preferedCount > 1}}</div>{{?}}
             </div>
         </div>
     {{~}}

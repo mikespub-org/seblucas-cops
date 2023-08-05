@@ -72,6 +72,7 @@ class JSONRenderer
         return ["id" => $book->id,
                       "hasCover" => $book->hasCover,
                       "preferedData" => $preferedData,
+                      "preferedCount" => count($preferedData),
                       "rating" => $book->getRating(),
                       "publisherName" => $pn,
                       "publisherurl" => $pu,
