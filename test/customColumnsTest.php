@@ -707,6 +707,7 @@ class CustomColumnTest extends TestCase
         $request = new Request();
         $request->set('custom', 12);
 
+        $config['cops_custom_date_split_year'] = '0';
         $currentPage = Page::getPage(Page::ALL_CUSTOMS, null, null, "1", $request);
         $currentPage->InitializeContent();
 
@@ -720,6 +721,20 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:12:2000-01-03", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:12:2016-04-20", $currentPage->entryArray[3]->id);
         $this->assertEquals("cops:custom:12:2016-04-24", $currentPage->entryArray[4]->id);
+
+        $config['cops_custom_date_split_year'] = '1';
+        $currentPage = Page::getPage(Page::ALL_CUSTOMS, null, null, "1", $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("custom_06", $currentPage->title);
+        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertEquals("cops:custom:12:year:2000", $currentPage->entryArray[0]->id);
+        $this->assertEquals("2000", $currentPage->entryArray[0]->title);
+        $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
+        $this->assertEquals("phpunit?page=14&custom=12&year=2000", $currentPage->entryArray[0]->getNavLink());
+        $this->assertEquals("cops:custom:12:year:2016", $currentPage->entryArray[1]->id);
+
+        $config['cops_custom_date_split_year'] = '0';
     }
 
     public function testAllCustomsType07()

@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\LinkNavigation;
 use DateTime;
 
 class CustomColumnTypeDate extends CustomColumnType
@@ -63,6 +65,51 @@ class CustomColumnTypeDate extends CustomColumnType
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue";
         $query = str_format($queryFormat, $this->getTableName());
         $result = $this->getDb($this->databaseId)->query($query);
+
+        $entryArray = [];
+        while ($post = $result->fetchObject()) {
+            $date = new DateTime($post->datevalue);
+            $id = $date->format("Y-m-d");
+            $name = $date->format(localize("customcolumn.date.format"));
+
+            $customcolumn = new CustomColumn($id, $name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
+        }
+
+        return $entryArray;
+    }
+
+    public function getCountByYear()
+    {
+        $queryFormat = "SELECT substr(date(value), 1, 4) AS groupid, count(*) AS count FROM {0} GROUP BY groupid";
+        $query = str_format($queryFormat, $this->getTableName());
+        $result = $this->getDb($this->databaseId)->query($query);
+
+        $entryArray = [];
+        $label = 'year';
+        while ($post = $result->fetchObject()) {
+            array_push($entryArray, new Entry(
+                $post->groupid,
+                $this->getAllCustomsId().':'.$label.':'.$post->groupid,
+                str_format(localize('bookword', $post->count), $post->count),
+                'text',
+                [new LinkNavigation("?page=" . self::PAGE_ALL . "&custom={$this->customId}&year=". rawurlencode($post->groupid), null, null, $this->databaseId)],
+                $this->databaseId,
+                ucfirst($label),
+                $post->count
+            ));
+        }
+
+        return $entryArray;
+    }
+
+    public function getCustomValuesByYear($year)
+    {
+        $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} WHERE substr(date(value), 1, 4) = ? GROUP BY datevalue";
+        $query = str_format($queryFormat, $this->getTableName());
+        $result = $this->getDb($this->databaseId)->prepare($query);
+        $params = [ $year ];
+        $result->execute($params);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {

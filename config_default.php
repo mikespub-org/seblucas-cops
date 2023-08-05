@@ -220,6 +220,13 @@ $config['cops_calibre_custom_column_list'] = [];
 $config['cops_calibre_custom_column_preview'] = [];
 
 /*
+ * split custom columns of type Date by year
+ * 1 : Yes
+ * 0 : No
+ */
+$config['cops_custom_date_split_year'] = '1';
+
+/*
  * Rename .epub to .kepub.epub if downloaded from a Kobo eReader
  * The ebook will then be recognized a Kepub so with chaptered paging, statistics, ...
  * You have to enable URL rewriting if you want to enable kepup.epub download
