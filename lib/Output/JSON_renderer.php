@@ -194,8 +194,8 @@ class JSONRenderer
                            "filterClearAll" => localize("filter.clearall"),
                            "sortorderAsc" => localize("search.sortorder.asc"),
                            "sortorderDesc" => localize("search.sortorder.desc"),
-                           "customizeEmail" => localize("customize.email")],
-                           "ratingsTitle" => localize("ratings.title"),
+                           "customizeEmail" => localize("customize.email"),
+                           "ratingsTitle" => localize("ratings.title")],
                        "url" => [
                            "detailUrl" => self::$endpoint . "?page=13&id={0}&db={1}",
                            "coverUrl" => Config::ENDPOINT["fetch"] . "?id={0}&db={1}",
