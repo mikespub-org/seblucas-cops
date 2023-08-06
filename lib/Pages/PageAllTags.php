@@ -25,6 +25,7 @@ class PageAllTags extends Page
         global $config;
         $this->entryArray = Tag::getAllTags($this->n, $this->getDatabaseId());
         $this->totalNumber = Tag::countAllEntries($this->getDatabaseId());
+        $this->sorted = Tag::SQL_SORT;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();
         }

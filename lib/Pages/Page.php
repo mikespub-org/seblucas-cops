@@ -80,6 +80,7 @@ class Page
     public $n;
     public $book;
     public $totalNumber = -1;
+    public $sorted = "sort";
 
     /** @var Entry[] */
     public $entryArray = [];

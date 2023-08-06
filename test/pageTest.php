@@ -634,7 +634,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Strand Magazine", $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
-        $this->assertEquals("The Return of Sherlock Holmes", $currentPage->entryArray [0]->title);
+        $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertTrue($currentPage->containsBook());
     }
 

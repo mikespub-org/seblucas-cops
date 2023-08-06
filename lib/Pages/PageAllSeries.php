@@ -32,6 +32,7 @@ class PageAllSeries extends Page
          */
         $this->entryArray = Serie::getAllSeries($this->n, $this->getDatabaseId());
         $this->totalNumber = Serie::countAllEntries($this->getDatabaseId());
+        $this->sorted = Serie::SQL_SORT;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();
         }

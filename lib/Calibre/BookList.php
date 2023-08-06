@@ -20,7 +20,7 @@ class BookList extends Base
 {
     public const SQL_BOOKS_ALL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ';
     public const SQL_BOOKS_BY_PUBLISHER = 'select {0} from books_publishers_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_publishers_link.book = books.id and publisher = ? {1} order by publisher';
+    where books_publishers_link.book = books.id and publisher = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_FIRST_LETTER = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where upper (books.sort) like ? {1} order by books.sort';
     public const SQL_BOOKS_BY_PUB_YEAR = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
@@ -31,35 +31,35 @@ class BookList extends Base
     public const SQL_BOOKS_BY_SERIE = 'select {0} from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_series_link.book = books.id and series = ? {1} order by series_index';
     public const SQL_BOOKS_BY_TAG = 'select {0} from books_tags_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_tags_link.book = books.id and tag = ? {1} order by sort';
+    where books_tags_link.book = books.id and tag = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_LANGUAGE = 'select {0} from books_languages_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_languages_link.book = books.id and lang_code = ? {1} order by sort';
+    where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.{3} = ? {1} order by sort';
+    where {2}.book = books.id and {2}.{3} = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = 1 {1} order by sort';
+    where {2}.book = books.id and {2}.value = 1 {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = 0 {1} order by sort';
+    where {2}.book = books.id and {2}.value = 0 {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books.id not in (select book from {2}) {1} order by sort';
+    where books.id not in (select book from {2}) {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_RATING = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     left join {2} on {2}.book = books.id
     left join {3} on {3}.id = {2}.{4}
-    where {3}.value = ?  order by sort';
+    where {3}.value = ?  order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_RATING_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     left join {2} on {2}.book = books.id
     left join {3} on {3}.id = {2}.{4}
-    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by sort';
+    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_DATE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and date({2}.value) = ? {1} order by sort';
+    where {2}.book = books.id and date({2}.value) = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_YEAR = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where {2}.book = books.id and substr(date({2}.value), 1, 4) = ? {1} order by {2}.value';
     public const SQL_BOOKS_BY_CUSTOM_DIRECT = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = ? {1} order by sort';
+    where {2}.book = books.id and {2}.value = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_RANGE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
     public const SQL_BOOKS_BY_CUSTOM_DIRECT_ID = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.id = ? {1} order by sort';
+    where {2}.book = books.id and {2}.id = ? {1} order by books.sort';
     public const SQL_BOOKS_QUERY = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where (
     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
@@ -68,18 +68,18 @@ class BookList extends Base
     exists (select null from publishers, books_publishers_link where book = books.id and books_publishers_link.publisher = publishers.id and publishers.name like ?) or
     title like ?) {1} order by books.sort';
     public const SQL_BOOKS_RECENT = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where 1=1 {1} order by timestamp desc limit ';
+    where 1=1 {1} order by books.timestamp desc limit ';
     public const SQL_BOOKS_BY_RATING = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort';
+    where books_ratings_link.book = books.id and ratings.id = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_RATING_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by sort';
+    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by books.sort';
 
     public const BAD_SEARCH = 'QQQQQ';
 
     public Request $request;
     protected mixed $numberPerPage = null;
     protected array $ignoredCategories = [];
-    protected mixed $orderBy = null;
+    public mixed $orderBy = null;
 
     public function __construct(Request $request, mixed $database = null, mixed $numberPerPage = null)
     {

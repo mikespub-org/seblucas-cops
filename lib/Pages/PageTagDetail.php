@@ -27,5 +27,6 @@ class PageTagDetail extends Page
     {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByTag($this->idGet, $this->n);
+        $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

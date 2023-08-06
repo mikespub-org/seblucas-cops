@@ -25,6 +25,7 @@ class PageAllRating extends Page
         global $config;
         $this->entryArray = Rating::getAllRatings($this->n, $this->getDatabaseId());
         $this->totalNumber = Rating::countAllEntries($this->getDatabaseId());
+        $this->sorted = Rating::SQL_SORT;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("rating", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();
         }

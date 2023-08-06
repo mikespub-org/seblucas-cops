@@ -29,5 +29,6 @@ class PageAllAuthorsLetter extends Page
     {
         $this->entryArray = Author::getAuthorsByFirstLetter($this->idGet, $this->n, $this->getDatabaseId());
         $this->totalNumber = Author::countEntriesByFirstLetter($this->idGet, $this->getDatabaseId());
+        $this->sorted = Author::SQL_SORT;
     }
 }

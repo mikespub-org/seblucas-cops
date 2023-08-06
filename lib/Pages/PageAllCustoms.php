@@ -47,6 +47,7 @@ class PageAllCustoms extends Page
         } else {
             $this->entryArray = $columnType->getAllCustomValues($this->n);
             $this->totalNumber = $columnType->getDistinctValueCount();
+            $this->sorted = "value";
         }
     }
 
@@ -61,10 +62,12 @@ class PageAllCustoms extends Page
         if (empty($year)) {
             // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
             $this->entryArray = $columnType->getCountByYear($columnType::PAGE_DETAIL);
+            $this->sorted = "year";
             return;
         }
         // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
         $this->entryArray = $columnType->getCustomValuesByYear($year);
+        $this->sorted = "value";
         $count = 0;
         foreach ($this->entryArray as $entry) {
             /** @var Entry $entry */
@@ -86,10 +89,12 @@ class PageAllCustoms extends Page
         if (empty($range)) {
             // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
             $this->entryArray = $columnType->getCountByRange($columnType::PAGE_DETAIL);
+            $this->sorted = "range";
             return;
         }
         // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
         $this->entryArray = $columnType->getCustomValuesByRange($range);
+        $this->sorted = "value";
         $count = 0;
         foreach ($this->entryArray as $entry) {
             /** @var Entry $entry */

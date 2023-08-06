@@ -25,10 +25,13 @@ class PageAllBooks extends Page
         $booklist = new BookList($this->request);
         if ($this->request->option("titles_split_first_letter") == 1) {
             $this->entryArray = $booklist->getCountByFirstLetter();
+            $this->sorted = "letter";
         } elseif (!empty($this->request->option("titles_split_publication_year"))) {
             $this->entryArray = $booklist->getCountByPubYear();
+            $this->sorted = "year";
         } else {
             [$this->entryArray, $this->totalNumber] = $booklist->getAllBooks($this->n);
+            $this->sorted = $booklist->orderBy ?? Book::SQL_SORT;
         }
     }
 }

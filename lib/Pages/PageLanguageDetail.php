@@ -27,5 +27,6 @@ class PageLanguageDetail extends Page
     {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByLanguage($this->idGet, $this->n);
+        $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

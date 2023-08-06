@@ -27,5 +27,6 @@ class PagePublisherDetail extends Page
     {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByPublisher($this->idGet, $this->n);
+        $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

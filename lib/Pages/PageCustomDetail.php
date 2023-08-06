@@ -42,6 +42,7 @@ class PageCustomDetail extends Page
                 if (!empty($year)) {
                     [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustomYear($columnType, $year, $this->n);
                     $this->title = $year;
+                    $this->sorted = $booklist->orderBy ?? "value";
                     return;
                 }
             }
@@ -51,10 +52,12 @@ class PageCustomDetail extends Page
                 if (!empty($range)) {
                     [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustomRange($columnType, $range, $this->n);
                     $this->title = $range;
+                    $this->sorted = $booklist->orderBy ?? "value";
                     return;
                 }
             }
         }
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustom($columnType, $this->idGet, $this->n);
+        $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

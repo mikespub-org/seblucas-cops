@@ -23,5 +23,6 @@ class PageAllLanguages extends Page
     {
         $this->entryArray = Language::getAllLanguages($this->n, $this->getDatabaseId());
         $this->totalNumber = Language::countAllEntries($this->getDatabaseId());
+        $this->sorted = Language::SQL_SORT;
     }
 }
