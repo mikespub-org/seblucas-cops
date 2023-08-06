@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageQueryResult;
@@ -51,8 +52,12 @@ class BookList extends Base
     where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by sort';
     public const SQL_BOOKS_BY_CUSTOM_DATE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where {2}.book = books.id and date({2}.value) = ? {1} order by sort';
+    public const SQL_BOOKS_BY_CUSTOM_YEAR = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and substr(date({2}.value), 1, 4) = ? {1} order by {2}.value';
     public const SQL_BOOKS_BY_CUSTOM_DIRECT = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where {2}.book = books.id and {2}.value = ? {1} order by sort';
+    public const SQL_BOOKS_BY_CUSTOM_RANGE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
     public const SQL_BOOKS_BY_CUSTOM_DIRECT_ID = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where {2}.book = books.id and {2}.id = ? {1} order by sort';
     public const SQL_BOOKS_QUERY = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
@@ -181,22 +186,51 @@ class BookList extends Base
     }
 
     /**
-     * @param $customColumn CustomColumn
-     * @param $id integer
-     * @param $n integer
+     * Summary of getBooksByCustom
+     * @param CustomColumnType $columnType
+     * @param integer $id
+     * @param integer $n
      * @return array
      */
-    public function getBooksByCustom($customColumn, $id, $n)
+    public function getBooksByCustom($columnType, $id, $n)
     {
-        [$query, $params] = $customColumn->getQuery($id);
+        [$query, $params] = $columnType->getQuery($id);
 
         return $this->getEntryArray($query, $params, $n);
     }
 
-    public function getBooksWithoutCustom($customColumn, $n)
+    /**
+     * Summary of getBooksByCustomYear
+     * @param CustomColumnTypeDate $columnType
+     * @param mixed $year
+     * @param mixed $n
+     * @return array
+     */
+    public function getBooksByCustomYear($columnType, $year, $n)
+    {
+        [$query, $params] = $columnType->getQueryByYear($year);
+
+        return $this->getEntryArray($query, $params, $n);
+    }
+
+    /**
+     * Summary of getBooksByCustomRange
+     * @param CustomColumnTypeInteger $columnType
+     * @param mixed $range
+     * @param mixed $n
+     * @return array
+     */
+    public function getBooksByCustomRange($columnType, $range, $n)
+    {
+        [$query, $params] = $columnType->getQueryByRange($range);
+
+        return $this->getEntryArray($query, $params, $n);
+    }
+
+    public function getBooksWithoutCustom($columnType, $n)
     {
         // use null here to reduce conflict with bool and int custom columns
-        [$query, $params] = $customColumn->getQuery(null);
+        [$query, $params] = $columnType->getQuery(null);
         return $this->getEntryArray($query, $params, $n);
     }
 
@@ -286,6 +320,13 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
         return $entryArray;
     }
 
+    /**
+     * Summary of getEntryArray
+     * @param mixed $query
+     * @param mixed $params
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getEntryArray($query, $params, $n)
     {
         $filter = new Filter($this->request, $params, "books", $this->databaseId);

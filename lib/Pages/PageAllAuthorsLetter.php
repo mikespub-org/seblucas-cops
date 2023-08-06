@@ -16,8 +16,10 @@ class PageAllAuthorsLetter extends Page
     {
         $this->getEntries();
         $this->idPage = Author::getEntryIdByLetter($this->idGet);
-        // @todo get actual totalNumber
-        $count = count($this->entryArray);
+        $count = $this->totalNumber;
+        if ($count == -1) {
+            $count = count($this->entryArray);
+        }
         $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("authorword", $count), $count), $this->idGet);
         $this->parentTitle = "";  // localize("authors.title");
         $this->parentUri = "?page=".Author::PAGE_ALL;
@@ -26,5 +28,6 @@ class PageAllAuthorsLetter extends Page
     public function getEntries()
     {
         $this->entryArray = Author::getAuthorsByFirstLetter($this->idGet, $this->n, $this->getDatabaseId());
+        $this->totalNumber = Author::countEntriesByFirstLetter($this->idGet, $this->getDatabaseId());
     }
 }

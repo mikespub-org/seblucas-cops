@@ -498,7 +498,7 @@ class Book extends Base
      * The values of all the specified columns
      *
      * @param string[] $columns
-     * @return CustomColumn[]
+     * @return array
      */
     public function getCustomColumnValues($columns, $asArray = false)
     {

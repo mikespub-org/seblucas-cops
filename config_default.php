@@ -223,8 +223,19 @@ $config['cops_calibre_custom_column_preview'] = [];
  * split custom columns of type Date by year
  * 1 : Yes
  * 0 : No
+ * For example for 'last_read' column
  */
 $config['cops_custom_date_split_year'] = '1';
+
+/*
+ * split custom columns of type Integer by range
+ * >1 : Yes using this number of ranges
+ * 1 : Yes using 'max_item_per_page' ranges
+ * 0 : No
+ * For example for 'num_pages' column split into 10 ranges:
+ * $config['cops_custom_integer_split_range'] = 10;
+ */
+$config['cops_custom_integer_split_range'] = 0;
 
 /*
  * Rename .epub to .kepub.epub if downloaded from a Kobo eReader

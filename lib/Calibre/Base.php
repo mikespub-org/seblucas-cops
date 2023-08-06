@@ -152,6 +152,13 @@ abstract class Base
         return self::countQuery($query, "", [], $database);
     }
 
+    public static function countEntriesByFirstLetter($letter, $database = null)
+    {
+        $query = 'select {0} from ' . static::SQL_TABLE . ' where {1}';
+        $filter = 'upper(' . static::SQL_SORT . ') like ?';
+        return self::countQuery($query, $filter, [$letter . "%"], $database);
+    }
+
     /**
      * Summary of getAllEntries = same as getAll<Whatever>() in <Whatever> child class
      * @param mixed $database
@@ -279,7 +286,7 @@ abstract class Base
      * @param mixed $n
      * @param mixed $database
      * @param mixed $numberPerPage
-     * @return array
+     * @return Entry[]
      */
     public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $category, $n = -1, $database = null, $numberPerPage = null)
     {
@@ -308,7 +315,7 @@ abstract class Base
      * @param mixed $n
      * @param mixed $database
      * @param mixed $numberPerPage
-     * @return array
+     * @return array{0: integer, 1: \PDOStatement}
      */
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
@@ -344,7 +351,7 @@ abstract class Base
      * @param mixed $filter
      * @param mixed $params
      * @param mixed $database
-     * @return mixed
+     * @return integer
      */
     public static function countQuery($query, $filter = "", $params = [], $database = null)
     {

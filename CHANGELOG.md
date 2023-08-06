@@ -5,6 +5,7 @@ x.x.x - TODO
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
 1.4.x - 202308xx TBD
+  * Add pagination for custom columns + split by range for Integer
   * Add pagination for non-book lists if not already split
   * Add option to split custom columns of type Date by year
   * Fix OPDS renderer for HTML content - see pull request seblucas/cops#488 from @cbckly

@@ -22,16 +22,6 @@ class CustomColumnTypeBool extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL, $database);
     }
 
-    /**
-     * Get the name of the sqlite table for this column
-     *
-     * @return string
-     */
-    private function getTableName()
-    {
-        return "custom_column_{$this->customId}";
-    }
-
     public function getQuery($id)
     {
         if ($id == -1 || $id === '') {
@@ -72,7 +62,7 @@ class CustomColumnTypeBool extends CustomColumnType
         return new CustomColumn($id, localize($this->BOOLEAN_NAMES[$id]), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase()
+    protected function getAllCustomValuesFromDatabase($n = -1)
     {
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());
@@ -85,6 +75,11 @@ class CustomColumnTypeBool extends CustomColumnType
             array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
+    }
+
+    public function getDistinctValueCount()
+    {
+        return count($this->BOOLEAN_NAMES);
     }
 
     public function getDescription()
