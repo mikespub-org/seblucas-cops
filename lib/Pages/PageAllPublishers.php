@@ -21,8 +21,8 @@ class PageAllPublishers extends Page
 
     public function getEntries()
     {
-        $this->entryArray = Publisher::getAllPublishers($this->n, $this->getDatabaseId());
-        $this->totalNumber = Publisher::countAllEntries($this->getDatabaseId());
+        $this->entryArray = Publisher::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
+        $this->totalNumber = Publisher::countRequestEntries($this->request, $this->getDatabaseId());
         $this->sorted = Publisher::SQL_SORT;
     }
 }

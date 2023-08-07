@@ -23,8 +23,8 @@ class PageAllRating extends Page
     public function getEntries()
     {
         global $config;
-        $this->entryArray = Rating::getAllRatings($this->n, $this->getDatabaseId());
-        $this->totalNumber = Rating::countAllEntries($this->getDatabaseId());
+        $this->entryArray = Rating::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
+        $this->totalNumber = Rating::countRequestEntries($this->request, $this->getDatabaseId());
         $this->sorted = Rating::SQL_SORT;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("rating", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();

@@ -105,11 +105,6 @@ where series.id = series and book = ?');
         return self::getInstanceById($serieId, localize("seriesword.none"), self::class, $database);
     }
 
-    public static function getAllSeries($n = -1, $database = null, $numberPerPage = null)
-    {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $n, $database, $numberPerPage);
-    }
-
     public static function getAllSeriesByQuery($query, $n = -1, $database = null, $numberPerPage = null)
     {
         return Base::getEntryArrayWithBookNumber(self::SQL_ROWS_FOR_SEARCH, self::SQL_COLUMNS, "", ['%' . $query . '%'], self::class, $n, $database, $numberPerPage);

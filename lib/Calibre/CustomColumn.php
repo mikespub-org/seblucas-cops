@@ -74,7 +74,8 @@ class CustomColumn extends Base
     public function getCount()
     {
         [$query, $params] = $this->getQuery();
-        $count = Base::countQuery($query, "", $params, $this->databaseId);
+        $columns = 'count(*)';
+        $count = Base::countQuery($query, $columns, "", $params, $this->databaseId);
         return $this->getEntry($count);
     }
 

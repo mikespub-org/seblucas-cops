@@ -104,9 +104,4 @@ class Language extends Base
     {
         return self::getInstanceById($languageId, localize("language.title"), self::class, $database);
     }
-
-    public static function getAllLanguages($n = -1, $database = null)
-    {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $n, $database);
-    }
 }
