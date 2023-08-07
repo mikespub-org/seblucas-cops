@@ -87,7 +87,25 @@ class BookList extends Base
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
+        $this->setOrderBy();
+    }
+
+    protected function setOrderBy()
+    {
         $this->orderBy = $this->request->get('sort', null, '/^\w+(\s+(asc|desc)|)$/i');
+        //$this->orderBy ??= $this->request->option('sort');
+    }
+
+    protected function getOrderBy()
+    {
+        return match ($this->orderBy) {
+            'title' => 'books.sort',
+            'author' => 'books.author_sort',
+            'pubdate' => 'books.pubdate desc',
+            'rating' => 'ratings.rating desc',
+            'timestamp' => 'books.timestamp desc',
+            default => $this->orderBy,
+        };
     }
 
     public function getBookCount()
@@ -335,9 +353,9 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
 
         if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
             if (str_contains($query, 'order by')) {
-                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->orderBy . ' ', $query);
+                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
-                $query .= ' order by ' . $this->orderBy . ' ';
+                $query .= ' order by ' . $this->getOrderBy() . ' ';
             }
         }
 

@@ -288,9 +288,14 @@ class Page
                 $this->totalNumber > $this->getNumberPerPage());
     }
 
+    public function getCleanQuery()
+    {
+        return preg_replace("/\&n=.*?$/", "", preg_replace("/\&_=\d+/", "", $this->request->query()));
+    }
+
     public function getNextLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
+        $currentUrl = "?" . $this->getCleanQuery();
         if (($this->n) * $this->getNumberPerPage() < $this->totalNumber) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
         }
@@ -299,7 +304,7 @@ class Page
 
     public function getPrevLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
+        $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n > 1) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n - 1), "previous", localize("paging.previous.alternate"));
         }
@@ -309,6 +314,20 @@ class Page
     public function getMaxPage()
     {
         return ceil($this->totalNumber / $this->numberPerPage);
+    }
+
+    public function getSortOptions()
+    {
+        return [
+            'title' => localize("bookword.title"),
+            'timestamp' => localize("recent.title"),
+            'author' => localize("authors.title"),
+            'pubdate' => localize("pubdate.title"),
+            'rating' => localize("ratings.title"),
+            //'series' => localize("series.title"),
+            //'language' => localize("languages.title"),
+            //'publisher' => localize("publishers.title"),
+        ];
     }
 
     public function containsBook()

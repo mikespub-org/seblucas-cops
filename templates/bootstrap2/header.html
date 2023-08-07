@@ -21,8 +21,28 @@
         </div>
       </div>
     </form>     
+    {{? it.containsBook != 0}}
+      <!-- sorted = {{=it.sorted}} - url = {{=str_format(it.sorturl, "pubdate")}} with double qoutes - filters = {{=it.filters}} -->
+    {{?}}
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
+        {{? it.containsBook != 0}}
+        <li><a href="{{=str_format(it.sorturl, "title")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.title}}">
+          <span class="glyphicon glyphicon-font"></span><span class="glyphicon glyphicon-sort-by-alphabet"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "author")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.author}}">
+          <span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-sort-by-alphabet"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "pubdate")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.pubdate}}">
+          <span class="glyphicon glyphicon-calendar"></span><span class="glyphicon glyphicon-sort-by-order-alt"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "rating")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.rating}}">
+          <span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-sort-by-order-alt"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "timestamp")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.timestamp}}">
+          <span class="glyphicon glyphicon-time"></span><span class="glyphicon glyphicon-sort-by-order-alt"></span>
+        </a></li>
+        {{?}}
         <li><a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Default COPS template">
           <span class="glyphicon glyphicon-picture"></span><span class="hidden-sm"> Default COPS template</span>
         </a></li>

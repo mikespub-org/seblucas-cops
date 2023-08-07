@@ -312,6 +312,9 @@ class JSONRenderer
         $out ["containsBook"] = 0;
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
+            // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
+            $out ["sorturl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
+            $out ["sortoptions"] = $currentPage->getSortOptions();
         }
 
         $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
