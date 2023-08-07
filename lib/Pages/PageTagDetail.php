@@ -15,8 +15,13 @@ class PageTagDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $tag = Tag::getTagById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&t=' . $this->idGet;
+            $this->getFilters($tag);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $tag->getEntryId();
         $this->title = $tag->getTitle();
         $this->parentTitle = localize("tags.title");

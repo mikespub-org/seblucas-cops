@@ -15,8 +15,13 @@ class PageLanguageDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&l=' . $this->idGet;
+            $this->getFilters($language);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $language->getEntryId();
         $this->title = $language->getTitle();
         $this->parentTitle = localize("languages.title");

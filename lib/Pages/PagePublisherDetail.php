@@ -15,8 +15,13 @@ class PagePublisherDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&p=' . $this->idGet;
+            $this->getFilters($publisher);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $publisher->getEntryId();
         $this->title = $publisher->getTitle();
         $this->parentTitle = localize("publishers.title");

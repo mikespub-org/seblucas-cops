@@ -15,8 +15,13 @@ class PageSerieDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&s=' . $this->idGet;
+            $this->getFilters($serie);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $serie->getEntryId();
         $this->title = $serie->getTitle();
         $this->parentTitle = localize("series.title");

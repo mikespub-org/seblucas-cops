@@ -138,7 +138,7 @@ class JSONRenderer
         return $out;
     }
 
-    public static function getContentArray($entry)
+    public static function getContentArray($entry, $extraUri = "")
     {
         /** @var Entry|EntryBook $entry */
         if ($entry instanceof EntryBook) {
@@ -146,7 +146,7 @@ class JSONRenderer
             $out ["book"] = self::getBookContentArray($entry->book);
             return $out;
         }
-        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink(), "number" => $entry->numberOfElement ];
+        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($extraUri), "number" => $entry->numberOfElement ];
     }
 
     public static function getContentArrayTypeahead($page)
@@ -263,8 +263,12 @@ class JSONRenderer
             $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
         }
         $entries = [];
+        $extraUri = "";
+        if (!empty($request->get('filter')) && !empty($currentPage->filterUri)) {
+            $extraUri = $currentPage->filterUri;
+        }
         foreach ($currentPage->entryArray as $entry) {
-            array_push($entries, self::getContentArray($entry));
+            array_push($entries, self::getContentArray($entry, $extraUri));
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()

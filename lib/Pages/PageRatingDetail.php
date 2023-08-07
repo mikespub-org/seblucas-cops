@@ -15,8 +15,13 @@ class PageRatingDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&r=' . $this->idGet;
+            $this->getFilters($rating);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $rating->getEntryId();
         $this->title = $rating->getTitle();
         $this->parentTitle = localize("ratings.title");
