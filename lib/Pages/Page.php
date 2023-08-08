@@ -413,6 +413,26 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getTags());
         }
+        /**
+        // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
+        if (!($instance instanceof CustomColumn)) {
+            $columns = CustomColumnType::getAllCustomColumns($this->getDatabaseId());
+            foreach ($columns as $label => $column) {
+                $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());
+                array_push($this->entryArray, new Entry(
+                    $customType->getTitle(),
+                    "",
+                    "TODO",
+                    "text",
+                    [],
+                    $this->getDatabaseId(),
+                    "",
+                    ""
+                ));
+                $entries = $instance->getCustomValues($customType);
+            }
+        }
+         */
     }
 
     public function containsBook()

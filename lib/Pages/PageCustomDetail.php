@@ -23,7 +23,12 @@ class PageCustomDetail extends Page
         $this->idPage = $custom->getEntryId();
         $this->title = $custom->getTitle();
         $this->currentUri = $custom->getUri();
-        $this->getCustomEntries($custom->customColumnType);
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&c[' . $customId . ']=' . $this->idGet;
+            $this->getFilters($custom);
+        } else {
+            $this->getCustomEntries($custom->customColumnType);
+        }
         $this->parentTitle = $custom->customColumnType->getTitle();
         $this->parentUri = $custom->customColumnType->getUriAllCustoms();
     }
