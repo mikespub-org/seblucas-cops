@@ -21,7 +21,7 @@ class PageAllAuthors extends Page
 
     public function getEntries()
     {
-        if ($this->request->option("author_split_first_letter") == 1) {
+        if ($this->request->option("author_split_first_letter") == 1 || $this->request->get('letter')) {
             $this->entryArray = Author::getCountByFirstLetter($this->request, $this->getDatabaseId());
             $this->sorted = "letter";
         } else {

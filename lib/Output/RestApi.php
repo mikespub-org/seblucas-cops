@@ -27,31 +27,34 @@ class RestApi
      * @var array<string, string>
      */
     public static $routes = [
-        Page::INDEX => "/index",
-        Page::ALL_AUTHORS => "/authors",
-        Page::AUTHORS_FIRST_LETTER => "/authors_l/{id}",
-        Page::AUTHOR_DETAIL => "/authors/{id}",
-        Page::ALL_BOOKS => "/books",
-        Page::ALL_BOOKS_LETTER => "/books/letter/{id}",
-        Page::ALL_BOOKS_YEAR => "/books/year/{id}",
-        Page::BOOK_DETAIL => "/books/{id}",
-        Page::ALL_SERIES => "/series",
-        Page::SERIE_DETAIL => "/series/{id}",
-        //Page::OPENSEARCH => "/search",
-        Page::OPENSEARCH_QUERY => "/search/{query}",  // @todo scope
-        Page::ALL_RECENT_BOOKS => "/recent",
-        Page::ALL_TAGS => "/tags",
-        Page::TAG_DETAIL => "/tags/{id}",
-        Page::ALL_CUSTOMS => "/custom/{custom}",
-        Page::CUSTOM_DETAIL => "/custom/{custom}/{id}",
-        Page::ABOUT => "/about",
-        Page::ALL_LANGUAGES => "/languages",
-        Page::LANGUAGE_DETAIL => "/languages/{id}",
-        Page::CUSTOMIZE => "/customize",
-        Page::ALL_PUBLISHERS => "/publishers",
-        Page::PUBLISHER_DETAIL => "/publishers/{id}",
-        Page::ALL_RATINGS => "/ratings",
-        Page::RATING_DETAIL => "/ratings/{id}",
+        "/index" => Page::INDEX,
+        "/authors" => Page::ALL_AUTHORS,
+        "/authors/letter" => Page::ALL_AUTHORS . '&letter=1',
+        "/authors/letter/{id}" => Page::AUTHORS_FIRST_LETTER,
+        "/authors/{id}" => Page::AUTHOR_DETAIL,
+        "/books" => Page::ALL_BOOKS,
+        "/books/letter" => Page::ALL_BOOKS . '&letter=1',
+        "/books/letter/{id}" => Page::ALL_BOOKS_LETTER,
+        "/books/year" => Page::ALL_BOOKS . '&year=1',
+        "/books/year/{id}" => Page::ALL_BOOKS_YEAR,
+        "/books/{id}" => Page::BOOK_DETAIL,
+        "/series" => Page::ALL_SERIES,
+        "/series/{id}" => Page::SERIE_DETAIL,
+        //"/search" => Page::OPENSEARCH,
+        "/search/{query}" => Page::OPENSEARCH_QUERY,  // @todo scope
+        "/recent" => Page::ALL_RECENT_BOOKS,
+        "/tags" => Page::ALL_TAGS,
+        "/tags/{id}" => Page::TAG_DETAIL,
+        "/custom/{custom}" => Page::ALL_CUSTOMS,
+        "/custom/{custom}/{id}" => Page::CUSTOM_DETAIL,
+        "/about" => Page::ABOUT,
+        "/languages" => Page::ALL_LANGUAGES,
+        "/languages/{id}" => Page::LANGUAGE_DETAIL,
+        "/customize" => Page::CUSTOMIZE,
+        "/publishers" => Page::ALL_PUBLISHERS,
+        "/publishers/{id}" => Page::PUBLISHER_DETAIL,
+        "/ratings" => Page::ALL_RATINGS,
+        "/ratings/{id}" => Page::RATING_DETAIL,
     ];
 
     /**
@@ -99,8 +102,7 @@ class RestApi
     public function matchPathInfo($path)
     {
         if ($path == '/') {
-            header('Location: ' . $this->request->script() . '/index');
-            exit;
+            return;
         }
         $params = [];
 
@@ -110,18 +112,20 @@ class RestApi
             return call_user_func(self::$extra[$path], $this->request);
         }
 
-        $matches = array_flip(self::$routes);
-
         // match exact path
-        if (array_key_exists($path, $matches)) {
-            $page = $matches[$path];
-            $params["page"] = $page;
+        if (array_key_exists($path, self::$routes)) {
+            $page = self::$routes[$path];
+            if (str_contains($page, "&")) {
+                parse_str("page=" . $page, $params);
+            } else {
+                $params["page"] = $page;
+            }
             return $params;
         }
 
         // match pattern
         $found = [];
-        foreach ($matches as $route => $page) {
+        foreach (self::$routes as $route => $page) {
             if (!str_contains($route, "{")) {
                 continue;
             }
@@ -129,7 +133,11 @@ class RestApi
             $route = str_replace("}", ">\w+)", $route);
             $pattern = "~$route~";
             if (preg_match($pattern, $path, $found)) {
-                $params["page"] = $page;
+                if (str_contains($page, "&")) {
+                    parse_str("page=" . $page, $params);
+                } else {
+                    $params["page"] = $page;
+                }
                 break;
             }
         }
@@ -192,7 +200,7 @@ class RestApi
 
         $search = [];
         $replace = [];
-        foreach (self::$routes as $page => $route) {
+        foreach (self::$routes as $route => $page) {
             if (!str_contains($route, "{")) {
                 $search[] = $link . "?page=" . $page . '"';
                 $replace[] = $endpoint . $route . '"';
@@ -231,6 +239,10 @@ class RestApi
         if (!isset($result)) {
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
+            if (!isset($params)) {
+                header('Location: ' . $this->request->script() . '/index');
+                exit;
+            }
             if ($this->isExtra) {
                 $result = $params;
             } else {
@@ -286,10 +298,10 @@ class RestApi
      */
     public static function getOpenApi($request)
     {
-        $result = ["openapi" => "3.1.0", "info" => ["title" => "COPS REST API", "version" => "1.0.1"]];
+        $result = ["openapi" => "3.0.3", "info" => ["title" => "COPS REST API", "version" => Config::VERSION]];
         $result["servers"] = [["url" => $request->script(), "description" => "COPS REST API Endpoint"]];
         $result["paths"] = [];
-        foreach (self::$routes as $page => $route) {
+        foreach (self::$routes as $route => $page) {
             $params = [];
             $found = [];
             if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
@@ -314,7 +326,7 @@ class RestApi
     public static function getRoutes($request)
     {
         $result = ["title" => "Routes", "entries" => []];
-        foreach (self::$routes as $page => $route) {
+        foreach (self::$routes as $route => $page) {
             array_push($result["entries"], ["page" => $page, "route" => $route]);
         }
         return $result;

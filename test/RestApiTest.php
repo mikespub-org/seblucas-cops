@@ -129,10 +129,13 @@ class RestApiTest extends TestCase
         $links = [
             "restapi.php?page=index" => "restapi.php/index",
             "restapi.php?page=1" => "restapi.php/authors",
-            "restapi.php?page=2&id=D" => "restapi.php/authors_l/D",
+            "restapi.php?page=1&letter=1" => "restapi.php/authors/letter",
+            "restapi.php?page=2&id=D" => "restapi.php/authors/letter/D",
             "restapi.php?page=3&id=1" => "restapi.php/authors/1",
             "restapi.php?page=4" => "restapi.php/books",
+            "restapi.php?page=4&letter=1" => "restapi.php/books/letter",
             "restapi.php?page=5&id=A" => "restapi.php/books/letter/A",
+            "restapi.php?page=4&year=1" => "restapi.php/books/year",
             "restapi.php?page=50&id=2006" => "restapi.php/books/year/2006",
             "restapi.php?page=6" => "restapi.php/series",
             "restapi.php?page=7&id=1" => "restapi.php/series/1",
@@ -191,7 +194,7 @@ class RestApiTest extends TestCase
     public function testGetOpenApi(): void
     {
         $request = new Request();
-        $expected = "3.1.0";
+        $expected = "3.0.3";
         $test = RestApi::getOpenApi($request);
         $this->assertEquals($expected, $test["openapi"]);
     }
