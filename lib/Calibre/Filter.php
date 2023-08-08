@@ -261,20 +261,20 @@ class Filter
             if (!preg_match('/^\d+$/', $customId)) {
                 continue;
             }
-            $this->addCustomIdFilter($customId, $valueId);
+            $customType = CustomColumnType::createByCustomID($customId, $this->databaseId);
+            $this->addCustomIdFilter($customType, $valueId);
         }
     }
 
     /**
      * Summary of addCustomIdFilter
-     * @param mixed $customId
+     * @param mixed $customType
      * @param mixed $valueId
      * @return void
      */
-    public function addCustomIdFilter($customId, $valueId)
+    public function addCustomIdFilter($customType, $valueId)
     {
-        $customType = CustomColumnType::createByCustomID($customId, $this->databaseId);
-        [$filter, $params] = $customType->getFilter($valueId);
+        [$filter, $params] = $customType->getFilter($valueId, $this->parentTable);
         if (!empty($filter)) {
             $this->queryString .= 'and (' . $filter . ')';
             foreach ($params as $param) {

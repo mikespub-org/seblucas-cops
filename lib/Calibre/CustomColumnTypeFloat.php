@@ -34,11 +34,15 @@ class CustomColumnTypeFloat extends CustomColumnType
         return [$query, [$lower, $upper]];
     }
 
-    public function getFilter($id)
+    public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableName();
         $linkColumn = "value";
-        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        if (!empty($parentTable) && $parentTable != "books") {
+            $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        } else {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        }
         return [$filter, [$id]];
     }
 

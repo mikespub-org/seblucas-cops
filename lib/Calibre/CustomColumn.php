@@ -102,6 +102,43 @@ class CustomColumn extends Base
         return $this->htmlvalue;
     }
 
+    /** Use inherited class methods to get entries from <Whatever> by customType and valueId (linked via books) */
+
+    public function getBooks($n = -1)
+    {
+        return Book::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getAuthors($n = -1)
+    {
+        return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getLanguages($n = -1)
+    {
+        return Language::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getPublishers($n = -1)
+    {
+        return Publisher::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getRatings($n = -1)
+    {
+        return Rating::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getSeries($n = -1)
+    {
+        return Serie::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getTags($n = -1)
+    {
+        return Tag::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
     /**
      * Create an CustomColumn by CustomColumnID and ValueID
      *

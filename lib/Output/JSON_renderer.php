@@ -315,13 +315,13 @@ class JSONRenderer
 
         $out ["containsBook"] = 0;
         $out ["filterurl"] = false;
-        $skipFilterUrl = [Page::AUTHORS_FIRST_LETTER, Page::ALL_BOOKS_LETTER, Page::ALL_BOOKS_YEAR, Page::ALL_RECENT_BOOKS, Page::BOOK_DETAIL, Page::CUSTOM_DETAIL];
+        $skipFilterUrl = [Page::AUTHORS_FIRST_LETTER, Page::ALL_BOOKS_LETTER, Page::ALL_BOOKS_YEAR, Page::ALL_RECENT_BOOKS, Page::BOOK_DETAIL];
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $out ["sorturl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
             $out ["sortoptions"] = $currentPage->getSortOptions();
-            if ($config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
+            if (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
                 $out ["filterurl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
             }
         } elseif (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {

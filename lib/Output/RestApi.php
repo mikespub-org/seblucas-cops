@@ -97,12 +97,12 @@ class RestApi
      * Summary of matchPathInfo
      * @param string $path
      * @throws Exception if the $path is not found in $routes or $extra
-     * @return array|void
+     * @return array|null
      */
     public function matchPathInfo($path)
     {
         if ($path == '/') {
-            return;
+            return null;
         }
         $params = [];
 

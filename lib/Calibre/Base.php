@@ -119,6 +119,12 @@ abstract class Base
         );
     }
 
+    public function getCustomValues($customType)
+    {
+        // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
+        return [];
+    }
+
     /**
      * Summary of getDb
      * @param mixed $database
@@ -287,6 +293,13 @@ abstract class Base
     {
         $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
         $filter->addTagIdFilter($tagId);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
+    }
+
+    public static function getEntriesByCustomValueId($customType, $valueId, $n = -1, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addCustomIdFilter($customType, $valueId);
         return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 

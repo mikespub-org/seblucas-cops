@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Input\Request;
 
@@ -187,6 +188,34 @@ class FilterTest extends TestCase
 
         //$tags = $tag->getTags();
         //$this->assertCount(1, $tags);
+    }
+
+    public function testCustomFilters()
+    {
+        $custom = CustomColumn::createCustom(1, 1);
+        $this->assertEquals("Type4", $custom->customColumnType->getTitle());
+        $this->assertEquals("SeriesLike", $custom->getTitle());
+
+        $books = $custom->getBooks();
+        $this->assertCount(2, $books);
+
+        $authors = $custom->getAuthors();
+        $this->assertCount(2, $authors);
+
+        $languages = $custom->getLanguages();
+        $this->assertCount(1, $languages);
+
+        $publishers = $custom->getPublishers();
+        $this->assertCount(2, $publishers);
+
+        $ratings = $custom->getRatings();
+        $this->assertCount(2, $ratings);
+
+        $series = $custom->getSeries();
+        $this->assertCount(0, $series);
+
+        $tags = $custom->getTags();
+        $this->assertCount(4, $tags);
     }
 
     public function testGetEntryArray()

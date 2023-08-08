@@ -47,11 +47,15 @@ class CustomColumnTypeSeries extends CustomColumnType
         return [$query, [$id]];
     }
 
-    public function getFilter($id)
+    public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableLinkName();
         $linkColumn = $this->getTableLinkColumn();
-        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        if (!empty($parentTable) && $parentTable != "books") {
+            $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        } else {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        }
         return [$filter, [$id]];
     }
 

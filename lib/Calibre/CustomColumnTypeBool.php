@@ -38,10 +38,11 @@ class CustomColumnTypeBool extends CustomColumnType
         }
     }
 
-    public function getFilter($id)
+    public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableName();
         $linkColumn = "value";
+        // @todo support $parentTable if relevant
         if ($id == -1 || $id === '') {
             // @todo is this the right way when filtering?
             $filter = "not exists (select null from {$linkTable} where {$linkTable}.book = books.id)";
