@@ -314,19 +314,25 @@ class JSONRenderer
         }
 
         $out ["containsBook"] = 0;
+        $out ["filterurl"] = false;
+        $skipFilterUrl = [Page::AUTHORS_FIRST_LETTER, Page::ALL_BOOKS_LETTER, Page::ALL_BOOKS_YEAR, Page::ALL_RECENT_BOOKS, Page::BOOK_DETAIL, Page::CUSTOM_DETAIL];
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $out ["sorturl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
             $out ["sortoptions"] = $currentPage->getSortOptions();
+            if ($config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
+                $out ["filterurl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
+            }
+        } elseif (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
+            $out ["filterurl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
         }
 
         $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
         $out["customizeurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
-        $out["filterurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::FILTER, 'db', $database);
-        $out["filters"] = [];
+        $out["filters"] = false;
         if ($request->hasFilter()) {
-            // @todo do something with filters in templates
+            $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
                 array_push($out["filters"], self::getContentArray($entry));
             }
@@ -351,7 +357,11 @@ class JSONRenderer
         }
 
         $out ["parenturl"] = "";
-        if (!empty($currentPage->parentUri)) {
+        if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
+            // if filtered, use the unfiltered uri as parent first
+            $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->currentUri, 'db', $database);
+        } elseif (!empty($currentPage->parentUri)) {
+            // otherwise use the parent uri
             $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
         } elseif ($page != Page::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];

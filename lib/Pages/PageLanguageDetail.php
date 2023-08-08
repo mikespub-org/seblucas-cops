@@ -24,6 +24,7 @@ class PageLanguageDetail extends Page
         }
         $this->idPage = $language->getEntryId();
         $this->title = $language->getTitle();
+        $this->currentUri = $language->getUri();
         $this->parentTitle = localize("languages.title");
         $this->parentUri = $language->getParentUri();
     }

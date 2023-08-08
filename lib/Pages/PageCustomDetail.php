@@ -22,6 +22,7 @@ class PageCustomDetail extends Page
         $custom = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $this->idPage = $custom->getEntryId();
         $this->title = $custom->getTitle();
+        $this->currentUri = $custom->getUri();
         $this->getCustomEntries($custom->customColumnType);
         $this->parentTitle = $custom->customColumnType->getTitle();
         $this->parentUri = $custom->customColumnType->getUriAllCustoms();

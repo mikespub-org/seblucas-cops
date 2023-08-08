@@ -24,6 +24,7 @@ class PagePublisherDetail extends Page
         }
         $this->idPage = $publisher->getEntryId();
         $this->title = $publisher->getTitle();
+        $this->currentUri = $publisher->getUri();
         $this->parentTitle = localize("publishers.title");
         $this->parentUri = $publisher->getParentUri();
     }

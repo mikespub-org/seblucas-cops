@@ -72,6 +72,7 @@ class Page
     public $authorUri = "";
     public $authorEmail = "";
     public $parentTitle = "";
+    public $currentUri = "";
     public $parentUri = "";
     public $idPage;
     public $idGet;

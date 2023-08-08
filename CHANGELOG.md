@@ -5,6 +5,7 @@ x.x.x - TODO
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
 1.4.x - 202308xx TBD
+  * Add optional filter links in bootstrap2 template
   * Add filtering of non-book lists in pages
   * Add sort options for book lists in bootstrap2 template
   * Add pagination for custom columns + split by range for Integer

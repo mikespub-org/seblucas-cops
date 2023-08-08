@@ -24,6 +24,7 @@ class PageRatingDetail extends Page
         }
         $this->idPage = $rating->getEntryId();
         $this->title = $rating->getTitle();
+        $this->currentUri = $rating->getUri();
         $this->parentTitle = localize("ratings.title");
         $this->parentUri = $rating->getParentUri();
     }

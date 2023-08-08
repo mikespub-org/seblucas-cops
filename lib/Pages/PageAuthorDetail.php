@@ -24,6 +24,7 @@ class PageAuthorDetail extends Page
         }
         $this->idPage = $author->getEntryId();
         $this->title = $author->name;  // not by getTitle() = $author->sort here
+        $this->currentUri = $author->getUri();
         $this->parentTitle = localize("authors.title");
         $this->parentUri = $author->getParentUri();
         //$seriesArray = $author->getSeries();
