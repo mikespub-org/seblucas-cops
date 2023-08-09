@@ -13,6 +13,7 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 
@@ -139,14 +140,15 @@ class RestApiTest extends TestCase
             "restapi.php?page=50&id=2006" => "restapi.php/books/year/2006",
             "restapi.php?page=6" => "restapi.php/series",
             "restapi.php?page=7&id=1" => "restapi.php/series/1",
-            //"restapi.php?page=8" => "restapi.php/search,
-            "restapi.php?page=9&query=alice" => "restapi.php/search/alice",  // @todo scope
+            "restapi.php?page=8" => "restapi.php/search",
+            "restapi.php?page=9&query=alice" => "restapi.php/search/alice",
+            "restapi.php?page=9&query=alice&scope=book" => "restapi.php/search/alice/book",
             "restapi.php?page=10" => "restapi.php/recent",
             "restapi.php?page=11" => "restapi.php/tags",
             "restapi.php?page=12&id=1" => "restapi.php/tags/1",
             "restapi.php?page=13&id=2" => "restapi.php/books/2",
             "restapi.php?page=14&custom=1" => "restapi.php/custom/1",
-            "restapi.php?page=15&custom=1&id=2" => "restapi.php?page=15&custom=1&id=2",  // @todo custom + id
+            "restapi.php?page=15&custom=1&id=2" => "restapi.php/custom/1/2",
             "restapi.php?page=16" => "restapi.php/about",
             "restapi.php?page=17" => "restapi.php/languages",
             "restapi.php?page=18&id=1" => "restapi.php/languages/1",
@@ -155,7 +157,19 @@ class RestApiTest extends TestCase
             "restapi.php?page=21&id=1" => "restapi.php/publishers/1",
             "restapi.php?page=22" => "restapi.php/ratings",
             "restapi.php?page=23&id=1" => "restapi.php/ratings/1",
+            "restapi.php?page=22&a=1" => "restapi.php/ratings?a=1",
+            "restapi.php?page=23&id=1&a=1" => "restapi.php/ratings/1?a=1",
         ];
+
+        foreach ($links as $link => $expected) {
+            $params = [];
+            parse_str(parse_url($link, PHP_URL_QUERY), $params);
+            $page = $params["page"];
+            unset($params["page"]);
+            $test = RestApi::$endpoint . Route::link($page, $params);
+            $this->assertEquals($expected, $test);
+        }
+
         $output = json_encode(array_keys($links));
         $endpoint = RestApi::getScriptName($request);
 

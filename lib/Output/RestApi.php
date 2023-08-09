@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Input\Route;
 use Exception;
 
 /**
@@ -21,41 +21,6 @@ use Exception;
 class RestApi
 {
     public static $endpoint = Config::ENDPOINT["restapi"];
-
-    /**
-     * Summary of routes
-     * @var array<string, string>
-     */
-    public static $routes = [
-        "/index" => Page::INDEX,
-        "/authors" => Page::ALL_AUTHORS,
-        "/authors/letter" => Page::ALL_AUTHORS . '&letter=1',
-        "/authors/letter/{id}" => Page::AUTHORS_FIRST_LETTER,
-        "/authors/{id}" => Page::AUTHOR_DETAIL,
-        "/books" => Page::ALL_BOOKS,
-        "/books/letter" => Page::ALL_BOOKS . '&letter=1',
-        "/books/letter/{id}" => Page::ALL_BOOKS_LETTER,
-        "/books/year" => Page::ALL_BOOKS . '&year=1',
-        "/books/year/{id}" => Page::ALL_BOOKS_YEAR,
-        "/books/{id}" => Page::BOOK_DETAIL,
-        "/series" => Page::ALL_SERIES,
-        "/series/{id}" => Page::SERIE_DETAIL,
-        //"/search" => Page::OPENSEARCH,
-        "/search/{query}" => Page::OPENSEARCH_QUERY,  // @todo scope
-        "/recent" => Page::ALL_RECENT_BOOKS,
-        "/tags" => Page::ALL_TAGS,
-        "/tags/{id}" => Page::TAG_DETAIL,
-        "/custom/{custom}" => Page::ALL_CUSTOMS,
-        "/custom/{custom}/{id}" => Page::CUSTOM_DETAIL,
-        "/about" => Page::ABOUT,
-        "/languages" => Page::ALL_LANGUAGES,
-        "/languages/{id}" => Page::LANGUAGE_DETAIL,
-        "/customize" => Page::CUSTOMIZE,
-        "/publishers" => Page::ALL_PUBLISHERS,
-        "/publishers/{id}" => Page::PUBLISHER_DETAIL,
-        "/ratings" => Page::ALL_RATINGS,
-        "/ratings/{id}" => Page::RATING_DETAIL,
-    ];
 
     /**
      * Summary of extra
@@ -104,7 +69,6 @@ class RestApi
         if ($path == '/') {
             return null;
         }
-        $params = [];
 
         // handle extra functions
         if (array_key_exists($path, self::$extra)) {
@@ -112,46 +76,8 @@ class RestApi
             return call_user_func(self::$extra[$path], $this->request);
         }
 
-        // match exact path
-        if (array_key_exists($path, self::$routes)) {
-            $page = self::$routes[$path];
-            if (str_contains($page, "&")) {
-                parse_str("page=" . $page, $params);
-            } else {
-                $params["page"] = $page;
-            }
-            return $params;
-        }
-
-        // match pattern
-        $found = [];
-        foreach (self::$routes as $route => $page) {
-            if (!str_contains($route, "{")) {
-                continue;
-            }
-            $route = str_replace("{", "(?P<", $route);
-            $route = str_replace("}", ">\w+)", $route);
-            $pattern = "~$route~";
-            if (preg_match($pattern, $path, $found)) {
-                if (str_contains($page, "&")) {
-                    parse_str("page=" . $page, $params);
-                } else {
-                    $params["page"] = $page;
-                }
-                break;
-            }
-        }
-        if (empty($found)) {
-            throw new Exception("Invalid route " . htmlspecialchars($path));
-        }
-        // set named params
-        foreach ($found as $param => $value) {
-            if (is_numeric($param)) {
-                continue;
-            }
-            $params[$param] = $value;
-        }
-        return $params;
+        // match path with routes
+        return Route::match($path);
     }
 
     /**
@@ -196,36 +122,8 @@ class RestApi
      */
     public static function replaceLinks($output, $endpoint)
     {
-        $link = $endpoint;
-
-        $search = [];
-        $replace = [];
-        foreach (self::$routes as $route => $page) {
-            if (!str_contains($route, "{")) {
-                $search[] = $link . "?page=" . $page . '"';
-                $replace[] = $endpoint . $route . '"';
-                continue;
-            }
-            $found = [];
-            if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
-                //$search[] = $link . "?page=" . $page . "&id=";
-                //$replace[] = $endpoint . $route . "/";
-                // @todo: restapi.php?page=15&custom=2&id=2
-                if (count($found[1]) > 1) {
-                    continue;
-                }
-                $from = $link . "?page=" . $page;
-                $to = $endpoint . $route;
-                foreach ($found[1] as $param) {
-                    $from .= "&" . $param . "=";
-                    $to = str_replace("{" . $param . "}", "", $to);
-                }
-                $search[] = $from;
-                $replace[] = $to;
-            }
-        }
-
-        $output = str_replace($search, $replace, $output);
+        //$link = $endpoint;
+        $output = Route::replaceLinks($output);
         return $output;
     }
 
@@ -301,16 +199,17 @@ class RestApi
         $result = ["openapi" => "3.0.3", "info" => ["title" => "COPS REST API", "version" => Config::VERSION]];
         $result["servers"] = [["url" => $request->script(), "description" => "COPS REST API Endpoint"]];
         $result["paths"] = [];
-        foreach (self::$routes as $route => $page) {
+        foreach (Route::getRoutes() as $route => $queryParams) {
             $params = [];
             $found = [];
+            $queryString = http_build_query($queryParams);
             if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
                 foreach ($found[1] as $param) {
-                    $page .= "&{$param}=" . '{' . $param . '}';
+                    $queryString .= "&{$param}=" . '{' . $param . '}';
                     array_push($params, ["name" => $param, "in" => "path", "required" => true, "schema" => ["type" => "string"]]);
                 }
             }
-            $result["paths"][$route] = ["get" => ["summary" => "Route to page=" . $page, "responses" => ["200" => ["description" => "Result of page=" . $page]]]];
+            $result["paths"][$route] = ["get" => ["summary" => "Route to " . $queryString, "responses" => ["200" => ["description" => "Result of " . $queryString]]]];
             if (!empty($params)) {
                 $result["paths"][$route]["get"]["parameters"] = $params;
             }
@@ -326,8 +225,8 @@ class RestApi
     public static function getRoutes($request)
     {
         $result = ["title" => "Routes", "entries" => []];
-        foreach (self::$routes as $route => $page) {
-            array_push($result["entries"], ["page" => $page, "route" => $route]);
+        foreach (Route::getRoutes() as $route => $queryParams) {
+            array_push($result["entries"], ["route" => $route, "params" => $queryParams]);
         }
         return $result;
     }
