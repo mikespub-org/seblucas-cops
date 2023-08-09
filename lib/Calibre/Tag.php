@@ -92,19 +92,6 @@ class Tag extends Base
         return self::getInstanceById($tagId, localize("tagword.none"), self::class, $database);
     }
 
-    public static function getAllTags($n = -1, $database = null, $numberPerPage = null)
-    {
-        global $config;
-
-        $sql = self::SQL_ALL_ROWS;
-        $sortField = $config['calibre_database_field_sort'] ?? '';
-        if (!empty($sortField)) {
-            $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
-        }
-
-        return Base::getEntryArrayWithBookNumber($sql, self::SQL_COLUMNS, "", [], self::class, $n, $database, $numberPerPage);
-    }
-
     public static function getAllTagsByQuery($query, $n = -1, $database = null, $numberPerPage = null)
     {
         $columns  = "tags.id as id, tags.name as name, (select count(*) from books_tags_link where tags.id = tag) as count";

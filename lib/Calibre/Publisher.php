@@ -106,11 +106,6 @@ where publishers.id = publisher and book = ?');
         return self::getInstanceById($publisherId, localize("publisherword.none"), self::class, $database);
     }
 
-    public static function getAllPublishers($n = -1, $database = null, $numberPerPage = null)
-    {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_ROWS, self::SQL_COLUMNS, "", [], self::class, $n, $database, $numberPerPage);
-    }
-
     public static function getAllPublishersByQuery($query, $n = -1, $database = null, $numberPerPage = null)
     {
         return Base::getEntryArrayWithBookNumber(self::SQL_ROWS_FOR_SEARCH, self::SQL_COLUMNS, "", ['%' . $query . '%'], self::class, $n, $database, $numberPerPage);

@@ -15,15 +15,27 @@ class PageAllTags extends Page
 {
     public function InitializeContent()
     {
-        global $config;
+        $this->getEntries();
         $this->idPage = Tag::PAGE_ID;
         $this->title = localize("tags.title");
-        $this->entryArray = Tag::getAllTags($this->n, $this->getDatabaseId());
-        if (in_array("tag", $config['cops_show_not_set_filter'])) {
-            $instance = new Tag((object)['id' => null, 'name' => localize("tagword.none")], $this->getDatabaseId());
-            $booklist = new BookList($this->request);
-            [$result,] = $booklist->getBooksWithoutTag(-1);
-            array_push($this->entryArray, $instance->getEntry(count($result)));
+    }
+
+    public function getEntries()
+    {
+        global $config;
+        $this->entryArray = Tag::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
+        $this->totalNumber = Tag::countRequestEntries($this->request, $this->getDatabaseId());
+        $this->sorted = Tag::SQL_SORT;
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", $config['cops_show_not_set_filter'])) {
+            $this->addNotSetEntry();
         }
+    }
+
+    public function addNotSetEntry()
+    {
+        $instance = new Tag((object)['id' => null, 'name' => localize("tagword.none")], $this->getDatabaseId());
+        $booklist = new BookList($this->request);
+        [$result,] = $booklist->getBooksWithoutTag(-1);
+        array_push($this->entryArray, $instance->getEntry(count($result)));
     }
 }

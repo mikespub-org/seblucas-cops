@@ -18,12 +18,19 @@ Same options as original:
 
 2. Source code
   - git clone https://github.com/mikespub-org/seblucas-cops.git  # or download [latest main as zip](https://github.com/mikespub-org/seblucas-cops/archive/refs/heads/main.zip)
+  - run *composer* to install project dependencies
+  ```
+  $ cd seblucas-cops
+  $ composer install --no-dev -o
+  ```
 
 3. Docker image
   - see [docker/Dockerfile.alpine](docker/Dockerfile.alpine) and [docker-compose.yaml](docker-compose.yaml) (or [docker-compose-dev.yaml](docker-compose-dev.yaml)) as starting point - **not** optimized for size/performance
   - a modified Dockerfile for the archived linuxserver/docker-cops version is available at [docker/Dockerfile.linuxserver](docker/Dockerfile.linuxserver)
 
 The rest of the installation process is very similar to the original below. But if you install from source, just use your regular composer 2.x - you don't need to download an old composer 1.x version or install global asset plugins anymore :-)
+
+Notice: for a first-time installation, you still need to copy *[config_local.php.example](config_local.php.example)* to *config_local.php* and customize the calibre directory etc. as needed. Afterwards, if you get an error or blank page the first time you browse to COPS, you can check for common issues by browsing to http://.../checkconfig.php
 
 ---
 
@@ -89,9 +96,11 @@ If you like Docker, you can also try this multiarch docker container from [linux
 ```bash
 git clone https://github.com/seblucas/cops.git # or download lastest zip see below
 cd cops
-wget https://getcomposer.org/composer.phar
-php composer.phar global require "fxp/composer-asset-plugin:~1.1"
-php composer.phar install --no-dev --optimize-autoloader
+# use standard composer 2.x now, no need to install older 1.x version and plugin for PHP 8.x version
+#wget https://getcomposer.org/composer.phar
+#php composer.phar global require "fxp/composer-asset-plugin:~1.1"
+#php composer.phar install --no-dev --optimize-autoloader
+composer install --no-dev --optimize-autoloader
 ```
 
 After that you can use the previous how-to starting at the second step.

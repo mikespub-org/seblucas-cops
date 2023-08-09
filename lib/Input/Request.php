@@ -9,6 +9,8 @@
 
 namespace SebLucas\Cops\Input;
 
+use SebLucas\Cops\Calibre\Filter;
+
 /**
  * Summary of Request
  */
@@ -115,7 +117,7 @@ class Request
     public function hasFilter()
     {
         // see list of acceptable filter params in Filter.php
-        $find = array_flip(['a', 'l', 'p', 'r', 's', 't', 'c']);
+        $find = Filter::URL_PARAMS;
         return !empty(array_intersect_key($find, $this->urlParams));
     }
 
@@ -123,12 +125,15 @@ class Request
      * Summary of get
      * @param mixed $name
      * @param mixed $default
+     * @param mixed $pattern
      * @return mixed
      */
-    public function get($name, $default = null)
+    public function get($name, $default = null, $pattern = null)
     {
         if (!empty($this->urlParams) && isset($this->urlParams[$name]) && $this->urlParams[$name] != '') {
-            return $this->urlParams[$name];
+            if (!isset($pattern) || preg_match($pattern, $this->urlParams[$name])) {
+                return $this->urlParams[$name];
+            }
         }
         return $default;
     }
@@ -249,7 +254,7 @@ class Request
     {
         global $config;
         $template = $this->option('template');
-        if (!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
+        if (!preg_match('/[^A-Za-z0-9\-_]/', $template) && is_dir("templates/{$template}/")) {
             return $template;
         }
         return $config['cops_template'];

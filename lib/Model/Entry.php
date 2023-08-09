@@ -74,7 +74,7 @@ class Entry
         return date(DATE_ATOM, self::$updated);
     }
 
-    public function getNavLink()
+    public function getNavLink($extraUri = "")
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkNavigation */
@@ -83,7 +83,7 @@ class Entry
                 continue;
             }
 
-            return $link->hrefXhtml();
+            return $link->hrefXhtml() . $extraUri;
         }
         return "#";
     }
