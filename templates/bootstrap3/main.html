@@ -9,6 +9,7 @@
 
 {{? it.containsBook == 0}}
     <!-- Not book data -->
+    <div class="row row-cols-2 row-cols-md-5 g-2">
         {{~it.entries:entry:i}}
         <div class="card">
             <div class="card-body">
@@ -20,16 +21,14 @@
                         {{=entry.content}}
                     </p>
                 {{??}}
-                    <a href="{{=entry.navlink}}">
-                        <div class="card-text">
-                            {{=htmlspecialchars (entry.title)}}
-                            <span class="badge pull-right">{{=entry.number}}</span>
-                        </div>
-                    </a>
+                    <a class="stretched-link link-underline link-underline-opacity-0" href="{{=entry.navlink}}">
+                            {{=htmlspecialchars (entry.title)}}&nbsp;
+                            <span class="badge text-bg-secondary rounded-pill">{{=entry.number}}</span></a>
                 {{?}}
             </div>
         </div>
         {{~}}
+    </div>
     <!-- end Not book data -->
 {{??}}
 <div class="row row-cols-2 row-cols-md-5 g-2">
