@@ -8,9 +8,9 @@
         <span class="icon-bar"></span>
       </button>
       {{? it.parenturl != ""}}
-        <a class="navbar-brand headleft" href="{{=it.parenturl}}">{{=it.fullTitle}}</a>
+        <a class="navbar-brand" href="{{=it.parenturl}}">{{=it.fullTitle}}</a>
       {{??}}
-        <a class="navbar-brand headleft" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
+        <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
       {{?}}
       {{? it.filters }}
         <!-- show current filter(s) -->
