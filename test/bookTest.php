@@ -164,23 +164,42 @@ class BookTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
-    public function testGetAllBooks()
+    public function testGetCountByFirstLetter()
     {
         $booklist = new BookList(self::$request);
 
         // All books by first letter
-        $entryArray = $booklist->getAllBooks();
+        $entryArray = $booklist->getCountByFirstLetter();
         $this->assertCount(9, $entryArray);
     }
 
-    public function testGetBooksByStartingLetter()
+    public function testGetBooksByFirstLetter()
     {
         $booklist = new BookList(self::$request);
 
         // All books by first letter
-        [$entryArray, $totalNumber] = $booklist->getBooksByStartingLetter("T", -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByFirstLetter("T", -1);
         $this->assertEquals(-1, $totalNumber);
         $this->assertCount(3, $entryArray);
+    }
+
+    public function testGetCountByPubYear()
+    {
+        $booklist = new BookList(self::$request);
+
+        // All books by first letter
+        $entryArray = $booklist->getCountByPubYear();
+        $this->assertCount(5, $entryArray);
+    }
+
+    public function testGetBooksByPubYear()
+    {
+        $booklist = new BookList(self::$request);
+
+        // All books by first letter
+        [$entryArray, $totalNumber] = $booklist->getBooksByPubYear(2006, -1);
+        $this->assertEquals(-1, $totalNumber);
+        $this->assertCount(9, $entryArray);
     }
 
     public function testGetBookByDataId()

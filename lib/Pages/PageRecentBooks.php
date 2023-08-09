@@ -14,9 +14,15 @@ class PageRecentBooks extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $this->idPage = parent::ALL_RECENT_BOOKS_ID;
         $this->title = localize("recent.title");
+    }
+
+    public function getEntries()
+    {
         $booklist = new BookList($this->request);
         $this->entryArray = $booklist->getAllRecentBooks();
+        $this->sorted = $booklist->orderBy ?? "timestamp desc";
     }
 }

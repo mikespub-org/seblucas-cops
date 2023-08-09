@@ -86,7 +86,6 @@ class Translation
         } elseif (!empty($this->acceptLanguageHeader)) {
             $langs = $this->getAcceptLanguages($this->acceptLanguageHeader);
         }
-        //echo var_dump($langs);
         $lang_file = null;
         foreach ($langs as $language => $val) {
             $temp_file = self::BASE_DIR . '/Localization_' . $language . '.json';

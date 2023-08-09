@@ -15,16 +15,6 @@ class CustomColumnTypeFloat extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT, $database);
     }
 
-    /**
-     * Get the name of the sqlite table for this column
-     *
-     * @return string
-     */
-    private function getTableName()
-    {
-        return "custom_column_{$this->customId}";
-    }
-
     public function getQuery($id)
     {
         global $config;
@@ -36,11 +26,23 @@ class CustomColumnTypeFloat extends CustomColumnType
         return [$query, [$id]];
     }
 
-    public function getFilter($id)
+    public function getQueryByRange($range)
+    {
+        global $config;
+        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_RANGE, "{0}", "{1}", $this->getTableName());
+        [$lower, $upper] = explode('-', $range);
+        return [$query, [$lower, $upper]];
+    }
+
+    public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableName();
         $linkColumn = "value";
-        $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        if (!empty($parentTable) && $parentTable != "books") {
+            $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        } else {
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        }
         return [$filter, [$id]];
     }
 
@@ -49,12 +51,12 @@ class CustomColumnTypeFloat extends CustomColumnType
         return new CustomColumn($id, $id, $this);
     }
 
-    protected function getAllCustomValuesFromDatabase()
+    protected function getAllCustomValuesFromDatabase($n = -1)
     {
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = $this->getPaginatedResult($query, [], $n);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $name = $post->id;

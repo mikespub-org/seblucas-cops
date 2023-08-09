@@ -66,6 +66,19 @@ class CustomColumn extends Base
         return $this->customColumnType->getLinkArray($this->id);
     }
 
+    public function getClassName()
+    {
+        return $this->customColumnType->getTitle();
+    }
+
+    public function getCount()
+    {
+        [$query, $params] = $this->getQuery();
+        $columns = 'count(*)';
+        $count = Base::countQuery($query, $columns, "", $params, $this->databaseId);
+        return $this->getEntry($count);
+    }
+
     /**
      * Get the query to find all books with this value
      * the returning array has two values:
@@ -87,6 +100,43 @@ class CustomColumn extends Base
     public function getHTMLEncodedValue()
     {
         return $this->htmlvalue;
+    }
+
+    /** Use inherited class methods to get entries from <Whatever> by customType and valueId (linked via books) */
+
+    public function getBooks($n = -1)
+    {
+        return Book::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getAuthors($n = -1)
+    {
+        return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getLanguages($n = -1)
+    {
+        return Language::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getPublishers($n = -1)
+    {
+        return Publisher::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getRatings($n = -1)
+    {
+        return Rating::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getSeries($n = -1)
+    {
+        return Serie::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+    }
+
+    public function getTags($n = -1)
+    {
+        return Tag::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
     }
 
     /**

@@ -4,6 +4,19 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
+1.4.x - 202308xx TBD
+  * Add optional filter links in bootstrap2 template
+  * Add filtering of non-book lists in pages
+  * Add sort options for book lists in bootstrap2 template
+  * Add pagination for custom columns + split by range for Integer
+  * Add pagination for non-book lists if not already split
+  * Add option to split custom columns of type Date by year
+  * Fix OPDS renderer for HTML content - see pull request seblucas/cops#488 from @cbckly
+  * Add other .title translations to i18n array for use in templates - see pull request #11 from @dunxd
+  * Add sorting of booklist entries with URL param in code
+  * Add option to split titles by publication year
+  * Add Librera reader to detected OPDS compatible readers - see pull request #10 from @dunxd
+
 1.4.1 - 20230728 Clean-up before next release
   * Add parent url and customize link in templates
   * Allow filtering non-book queries on other params in code ('a', 'l', 'p', 'r', 's', 't', 'c') = e.g. get Series for AuthorId

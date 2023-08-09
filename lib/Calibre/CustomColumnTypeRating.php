@@ -18,16 +18,6 @@ class CustomColumnTypeRating extends CustomColumnType
     }
 
     /**
-     * Get the name of the sqlite table for this column
-     *
-     * @return string
-     */
-    private function getTableName()
-    {
-        return "custom_column_{$this->customId}";
-    }
-
-    /**
      * Get the name of the linking sqlite table for this column
      * (or NULL if there is no linktable)
      *
@@ -70,7 +60,7 @@ class CustomColumnTypeRating extends CustomColumnType
         return new CustomColumn($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase()
+    protected function getAllCustomValuesFromDatabase($n = -1)
     {
         $queryFormat = "SELECT coalesce({0}.value, 0) AS value, count(*) AS count FROM books  LEFT JOIN {1} ON  books.id = {1}.book LEFT JOIN {0} ON {0}.id = {1}.value GROUP BY coalesce({0}.value, -1)";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName());
@@ -95,6 +85,11 @@ class CustomColumnTypeRating extends CustomColumnType
         }
 
         return $entryArray;
+    }
+
+    public function getDistinctValueCount()
+    {
+        return count($this->getAllCustomValues());
     }
 
     public function getDescription()

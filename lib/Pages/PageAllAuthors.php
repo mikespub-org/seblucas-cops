@@ -14,12 +14,20 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent()
     {
+        $this->getEntries();
         $this->idPage = Author::PAGE_ID;
         $this->title = localize("authors.title");
-        if ($this->request->option("author_split_first_letter") == 1) {
-            $this->entryArray = Author::getAllAuthorsByFirstLetter($this->getDatabaseId());
+    }
+
+    public function getEntries()
+    {
+        if ($this->request->option("author_split_first_letter") == 1 || $this->request->get('letter')) {
+            $this->entryArray = Author::getCountByFirstLetter($this->request, $this->getDatabaseId());
+            $this->sorted = "letter";
         } else {
-            $this->entryArray = Author::getAllAuthors($this->n, $this->getDatabaseId());
+            $this->entryArray = Author::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
+            $this->totalNumber = Author::countRequestEntries($this->request, $this->getDatabaseId());
+            $this->sorted = Author::SQL_SORT;
         }
     }
 }
