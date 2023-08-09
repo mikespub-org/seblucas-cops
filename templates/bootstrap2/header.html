@@ -13,8 +13,8 @@
         <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
       {{?}}
     </div>
-    <div class="collapse navbar-collapse">
-    <form id="searchForm" class="navbar-form navbar-form-margin" role="search">
+    
+    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="{{=it.c.i18n.searchAlt}}" name="query">
         <div class="input-group-btn">
@@ -43,6 +43,7 @@
             {{?}}
           {{?}} 
     </form>
+    <div class="collapse navbar-collapse">
         <!-- show sort options -->
         <ul class="nav navbar-nav">
         {{? it.containsBook != 0}}
