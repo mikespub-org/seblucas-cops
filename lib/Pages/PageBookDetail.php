@@ -22,5 +22,6 @@ class PageBookDetail extends Page
         }
         $this->idPage = $this->book->getEntryId();
         $this->title = $this->book->getTitle();
+        $this->currentUri = $this->book->getUri();
     }
 }

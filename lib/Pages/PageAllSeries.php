@@ -23,15 +23,9 @@ class PageAllSeries extends Page
     public function getEntries()
     {
         global $config;
-        /**
-        if ($this->request->hasFilter()) {
-            $this->entryArray = Serie::getEntriesByFilter($this->request, $this->n, $this->getDatabaseId());
-        } else {
-            $this->entryArray = Serie::getAllEntries($this->n, $this->getDatabaseId());
-        }
-         */
-        $this->entryArray = Serie::getAllSeries($this->n, $this->getDatabaseId());
-        $this->totalNumber = Serie::countAllEntries($this->getDatabaseId());
+        $this->entryArray = Serie::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
+        $this->totalNumber = Serie::countRequestEntries($this->request, $this->getDatabaseId());
+        $this->sorted = Serie::SQL_SORT;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();
         }

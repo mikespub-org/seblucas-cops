@@ -15,10 +15,16 @@ class PageRatingDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&r=' . $this->idGet;
+            $this->getFilters($rating);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $rating->getEntryId();
         $this->title = $rating->getTitle();
+        $this->currentUri = $rating->getUri();
         $this->parentTitle = localize("ratings.title");
         $this->parentUri = $rating->getParentUri();
     }
@@ -27,5 +33,6 @@ class PageRatingDetail extends Page
     {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByRating($this->idGet, $this->n);
+        $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

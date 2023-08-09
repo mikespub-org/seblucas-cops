@@ -104,20 +104,27 @@ class Author extends Base
         return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
     }
 
-    public static function getCountByFirstLetter($database = null, $numberPerPage = null)
+    public static function getCountByFirstLetter($request, $database = null, $numberPerPage = null)
     {
+        $filter = new Filter($request, [], self::SQL_LINK_TABLE, $database);
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+
+        $groupField = 'substr(upper(sort), 1, 1)';
+
         [, $result] = parent::executeQuery("select {0}
-from authors
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", "", [], -1, $database, $numberPerPage);
+from authors, books_authors_link
+where books_authors_link.author = authors.id {1}
+group by groupid
+order by groupid", $groupField . " as groupid, count(distinct authors.id) as count", $filterString, $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
-                $post->title,
-                Author::getEntryIdByLetter($post->title),
+                $post->groupid,
+                Author::getEntryIdByLetter($post->groupid),
                 str_format(localize("authorword", $post->count), $post->count),
                 "text",
-                [ new LinkNavigation("?page=".self::PAGE_LETTER."&id=". rawurlencode($post->title), null, null, $database)],
+                [ new LinkNavigation("?page=".self::PAGE_LETTER."&id=". rawurlencode($post->groupid), null, null, $database)],
                 $database,
                 "",
                 $post->count
@@ -126,19 +133,9 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public static function getAuthorsByFirstLetter($letter, $n = -1, $database = null, $numberPerPage = null)
-    {
-        return self::getEntryArray(self::SQL_ROWS_BY_FIRST_LETTER, [$letter . "%"], $n, $database, $numberPerPage);
-    }
-
     public static function getAuthorsForSearch($query, $n = -1, $database = null, $numberPerPage = null)
     {
         return self::getEntryArray(self::SQL_ROWS_FOR_SEARCH, [$query . "%", $query . "%"], $n, $database, $numberPerPage);
-    }
-
-    public static function getAllAuthors($n = -1, $database = null, $numberPerPage = null)
-    {
-        return self::getEntryArray(self::SQL_ALL_ROWS, [], $n, $database, $numberPerPage);
     }
 
     public static function getEntryArray($query, $params, $n = -1, $database = null, $numberPerPage = null)

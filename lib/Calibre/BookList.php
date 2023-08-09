@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageQueryResult;
@@ -19,7 +20,7 @@ class BookList extends Base
 {
     public const SQL_BOOKS_ALL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ';
     public const SQL_BOOKS_BY_PUBLISHER = 'select {0} from books_publishers_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_publishers_link.book = books.id and publisher = ? {1} order by publisher';
+    where books_publishers_link.book = books.id and publisher = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_FIRST_LETTER = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where upper (books.sort) like ? {1} order by books.sort';
     public const SQL_BOOKS_BY_PUB_YEAR = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
@@ -30,31 +31,35 @@ class BookList extends Base
     public const SQL_BOOKS_BY_SERIE = 'select {0} from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_series_link.book = books.id and series = ? {1} order by series_index';
     public const SQL_BOOKS_BY_TAG = 'select {0} from books_tags_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_tags_link.book = books.id and tag = ? {1} order by sort';
+    where books_tags_link.book = books.id and tag = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_LANGUAGE = 'select {0} from books_languages_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_languages_link.book = books.id and lang_code = ? {1} order by sort';
+    where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.{3} = ? {1} order by sort';
+    where {2}.book = books.id and {2}.{3} = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = 1 {1} order by sort';
+    where {2}.book = books.id and {2}.value = 1 {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = 0 {1} order by sort';
+    where {2}.book = books.id and {2}.value = 0 {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books.id not in (select book from {2}) {1} order by sort';
+    where books.id not in (select book from {2}) {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_RATING = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     left join {2} on {2}.book = books.id
     left join {3} on {3}.id = {2}.{4}
-    where {3}.value = ?  order by sort';
+    where {3}.value = ?  order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_RATING_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     left join {2} on {2}.book = books.id
     left join {3} on {3}.id = {2}.{4}
-    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by sort';
+    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by books.sort';
     public const SQL_BOOKS_BY_CUSTOM_DATE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and date({2}.value) = ? {1} order by sort';
+    where {2}.book = books.id and date({2}.value) = ? {1} order by books.sort';
+    public const SQL_BOOKS_BY_CUSTOM_YEAR = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and substr(date({2}.value), 1, 4) = ? {1} order by {2}.value';
     public const SQL_BOOKS_BY_CUSTOM_DIRECT = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = ? {1} order by sort';
+    where {2}.book = books.id and {2}.value = ? {1} order by books.sort';
+    public const SQL_BOOKS_BY_CUSTOM_RANGE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
     public const SQL_BOOKS_BY_CUSTOM_DIRECT_ID = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.id = ? {1} order by sort';
+    where {2}.book = books.id and {2}.id = ? {1} order by books.sort';
     public const SQL_BOOKS_QUERY = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where (
     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
@@ -63,18 +68,18 @@ class BookList extends Base
     exists (select null from publishers, books_publishers_link where book = books.id and books_publishers_link.publisher = publishers.id and publishers.name like ?) or
     title like ?) {1} order by books.sort';
     public const SQL_BOOKS_RECENT = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where 1=1 {1} order by timestamp desc limit ';
+    where 1=1 {1} order by books.timestamp desc limit ';
     public const SQL_BOOKS_BY_RATING = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort';
+    where books_ratings_link.book = books.id and ratings.id = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_RATING_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by sort';
+    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by books.sort';
 
     public const BAD_SEARCH = 'QQQQQ';
 
     public Request $request;
     protected mixed $numberPerPage = null;
     protected array $ignoredCategories = [];
-    protected mixed $orderBy = null;
+    public mixed $orderBy = null;
 
     public function __construct(Request $request, mixed $database = null, mixed $numberPerPage = null)
     {
@@ -82,7 +87,25 @@ class BookList extends Base
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
+        $this->setOrderBy();
+    }
+
+    protected function setOrderBy()
+    {
         $this->orderBy = $this->request->get('sort', null, '/^\w+(\s+(asc|desc)|)$/i');
+        //$this->orderBy ??= $this->request->option('sort');
+    }
+
+    protected function getOrderBy()
+    {
+        return match ($this->orderBy) {
+            'title' => 'books.sort',
+            'author' => 'books.author_sort',
+            'pubdate' => 'books.pubdate desc',
+            'rating' => 'ratings.rating desc',
+            'timestamp' => 'books.timestamp desc',
+            default => $this->orderBy,
+        };
     }
 
     public function getBookCount()
@@ -181,22 +204,51 @@ class BookList extends Base
     }
 
     /**
-     * @param $customColumn CustomColumn
-     * @param $id integer
-     * @param $n integer
+     * Summary of getBooksByCustom
+     * @param CustomColumnType $columnType
+     * @param integer $id
+     * @param integer $n
      * @return array
      */
-    public function getBooksByCustom($customColumn, $id, $n)
+    public function getBooksByCustom($columnType, $id, $n)
     {
-        [$query, $params] = $customColumn->getQuery($id);
+        [$query, $params] = $columnType->getQuery($id);
 
         return $this->getEntryArray($query, $params, $n);
     }
 
-    public function getBooksWithoutCustom($customColumn, $n)
+    /**
+     * Summary of getBooksByCustomYear
+     * @param CustomColumnTypeDate $columnType
+     * @param mixed $year
+     * @param mixed $n
+     * @return array
+     */
+    public function getBooksByCustomYear($columnType, $year, $n)
+    {
+        [$query, $params] = $columnType->getQueryByYear($year);
+
+        return $this->getEntryArray($query, $params, $n);
+    }
+
+    /**
+     * Summary of getBooksByCustomRange
+     * @param CustomColumnTypeInteger $columnType
+     * @param mixed $range
+     * @param mixed $n
+     * @return array
+     */
+    public function getBooksByCustomRange($columnType, $range, $n)
+    {
+        [$query, $params] = $columnType->getQueryByRange($range);
+
+        return $this->getEntryArray($query, $params, $n);
+    }
+
+    public function getBooksWithoutCustom($columnType, $n)
     {
         // use null here to reduce conflict with bool and int custom columns
-        [$query, $params] = $customColumn->getQuery(null);
+        [$query, $params] = $columnType->getQuery(null);
         return $this->getEntryArray($query, $params, $n);
     }
 
@@ -286,6 +338,13 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
         return $entryArray;
     }
 
+    /**
+     * Summary of getEntryArray
+     * @param mixed $query
+     * @param mixed $params
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getEntryArray($query, $params, $n)
     {
         $filter = new Filter($this->request, $params, "books", $this->databaseId);
@@ -294,9 +353,9 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
 
         if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
             if (str_contains($query, 'order by')) {
-                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->orderBy . ' ', $query);
+                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
-                $query .= ' order by ' . $this->orderBy . ' ';
+                $query .= ' order by ' . $this->getOrderBy() . ' ';
             }
         }
 

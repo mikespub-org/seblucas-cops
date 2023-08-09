@@ -15,10 +15,16 @@ class PageAuthorDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $author = Author::getAuthorById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&a=' . $this->idGet;
+            $this->getFilters($author);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $author->getEntryId();
         $this->title = $author->name;  // not by getTitle() = $author->sort here
+        $this->currentUri = $author->getUri();
         $this->parentTitle = localize("authors.title");
         $this->parentUri = $author->getParentUri();
         //$seriesArray = $author->getSeries();
@@ -28,5 +34,6 @@ class PageAuthorDetail extends Page
     {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByAuthor($this->idGet, $this->n);
+        $this->sorted = $booklist->orderBy ?? "series desc";
     }
 }

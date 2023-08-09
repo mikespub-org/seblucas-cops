@@ -25,12 +25,19 @@
                         {{=entry.content}}
                     </div>
                 {{??}}
-                    <a href="{{=entry.navlink}}">
-                        <div class="panel-body">
+                    {{? entry.navlink == "#" && entry.number == ""}}
+                        <!-- fixme: show as separator on larger screens? -->
+                        <div class="panel-heading">
                             {{=htmlspecialchars (entry.title)}}
-                            <span class="badge pull-right">{{=entry.number}}</span>
                         </div>
-                    </a>
+                    {{??}}
+                        <a href="{{=entry.navlink}}">
+                            <div class="panel-body">
+                                {{=htmlspecialchars (entry.title)}}
+                                <span class="badge pull-right">{{=entry.number}}</span>
+                            </div>
+                        </a>
+                    {{?}}
                 {{?}}
             </div>
         </div>

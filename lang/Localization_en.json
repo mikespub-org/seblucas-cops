@@ -99,6 +99,7 @@
     "sort.alternate": "Sort",
     "splitByLetter.book.other": "Other books",
     "splitByLetter.letter": "{0} starting with {1}",
+    "splitByRange.range": "{0} in range {1}",
     "splitByYear.year": "{0} published in {1}",
     "tags.alphabetical.many": "Alphabetical index of the {0} tags",
     "tags.alphabetical.none": "Alphabetical index of absolutely no tags",

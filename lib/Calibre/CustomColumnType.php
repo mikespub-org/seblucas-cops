@@ -50,14 +50,27 @@ abstract class CustomColumnType extends Base
     public $datatype;
     /** @var null|Entry[] */
     private $customValues = null;
+    protected mixed $numberPerPage = -1;
 
-    protected function __construct($pcustomId, $pdatatype, $database = null)
+    protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
     {
+        global $config;
         $this->columnTitle = self::getTitleByCustomID($pcustomId, $database);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
         $this->customValues = null;
         $this->databaseId = $database;
+        $this->numberPerPage = $numberPerPage ?? $config['cops_max_item_per_page'];
+    }
+
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string
+     */
+    protected function getTableName()
+    {
+        return "custom_column_{$this->customId}";
     }
 
     /**
@@ -174,13 +187,55 @@ abstract class CustomColumnType extends Base
     }
 
     /**
+     * Return an entry array for all possible (in the DB used) values of this column
+     * These are the values used in the getUriAllCustoms() page
+     *
+     * @return Entry[]
+     */
+    public function getAllCustomValues($n = -1)
+    {
+        // lazy loading
+        if ($this->customValues == null) {
+            $this->customValues = $this->getAllCustomValuesFromDatabase($n);
+        }
+
+        return $this->customValues;
+    }
+
+    /**
+     * Summary of getPaginatedResult
+     * @param string $query
+     * @param array $params
+     * @param integer $n
+     * @return \PDOStatement
+     */
+    public function getPaginatedResult($query, $params = [], $n = -1)
+    {
+        if ($this->numberPerPage != -1 && $n != -1) {
+            $query .= " LIMIT ?, ?";
+            array_push($params, ($n - 1) * $this->numberPerPage, $this->numberPerPage);
+        }
+
+        if (count($params) > 0) {
+            $result = $this->getDb($this->databaseId)->prepare($query);
+            $result->execute($params);
+        } else {
+            $result = $this->getDb($this->databaseId)->query($query);
+        }
+
+        return $result;
+    }
+
+    /**
      * Get the amount of distinct values for this column
      *
      * @return int
      */
     public function getDistinctValueCount()
     {
-        return count($this->getAllCustomValues());
+        $queryFormat = "SELECT COUNT(DISTINCT value) AS count FROM {0}";
+        $query = str_format($queryFormat, $this->getTableName());
+        return parent::executeQuerySingle($query, $this->databaseId);
     }
 
     /**
@@ -280,22 +335,6 @@ abstract class CustomColumnType extends Base
     }
 
     /**
-     * Return an entry array for all possible (in the DB used) values of this column
-     * These are the values used in the getUriAllCustoms() page
-     *
-     * @return Entry[]
-     */
-    public function getAllCustomValues()
-    {
-        // lazy loading
-        if ($this->customValues == null) {
-            $this->customValues = $this->getAllCustomValuesFromDatabase();
-        }
-
-        return $this->customValues;
-    }
-
-    /**
      * Get the title of a CustomColumn by its customID
      *
      * @param integer $customId
@@ -367,7 +406,7 @@ abstract class CustomColumnType extends Base
      *
      * @return Entry[]|null
      */
-    abstract protected function getAllCustomValuesFromDatabase();
+    abstract protected function getAllCustomValuesFromDatabase($n = -1);
 
     /**
      * Find the value of this column for a specific book

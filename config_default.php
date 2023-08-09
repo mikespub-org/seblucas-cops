@@ -223,8 +223,19 @@ $config['cops_calibre_custom_column_preview'] = [];
  * split custom columns of type Date by year
  * 1 : Yes
  * 0 : No
+ * For example for 'last_read' column
  */
 $config['cops_custom_date_split_year'] = '1';
+
+/*
+ * split custom columns of type Integer by range
+ * >1 : Yes using this number of ranges
+ * 1 : Yes using 'max_item_per_page' ranges
+ * 0 : No
+ * For example for 'num_pages' column split into 10 ranges:
+ * $config['cops_custom_integer_split_range'] = 10;
+ */
+$config['cops_custom_integer_split_range'] = 0;
 
 /*
  * Rename .epub to .kepub.epub if downloaded from a Kobo eReader
@@ -382,3 +393,10 @@ $config['cops_home_page'] = 'INDEX';
  * Note: author, language and publisher are always assumed present and cannot be filtered here
  */
 $config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];
+
+/*
+ * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag on page detail
+ * 1 : Yes (enable)
+ * 0 : No
+ */
+$config['cops_show_filter_links'] = '1';

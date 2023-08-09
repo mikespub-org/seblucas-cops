@@ -138,7 +138,7 @@ class JSONRenderer
         return $out;
     }
 
-    public static function getContentArray($entry)
+    public static function getContentArray($entry, $extraUri = "")
     {
         /** @var Entry|EntryBook $entry */
         if ($entry instanceof EntryBook) {
@@ -146,7 +146,7 @@ class JSONRenderer
             $out ["book"] = self::getBookContentArray($entry->book);
             return $out;
         }
-        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink(), "number" => $entry->numberOfElement ];
+        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($extraUri), "number" => $entry->numberOfElement ];
     }
 
     public static function getContentArrayTypeahead($page)
@@ -263,8 +263,12 @@ class JSONRenderer
             $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
         }
         $entries = [];
+        $extraUri = "";
+        if (!empty($request->get('filter')) && !empty($currentPage->filterUri)) {
+            $extraUri = $currentPage->filterUri;
+        }
         foreach ($currentPage->entryArray as $entry) {
-            array_push($entries, self::getContentArray($entry));
+            array_push($entries, self::getContentArray($entry, $extraUri));
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
@@ -288,6 +292,7 @@ class JSONRenderer
         $out ["page"] = $page;
         $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
         $out ["entries"] = $entries;
+        $out ["sorted"] = $currentPage->sorted;
         $out ["isPaginated"] = 0;
         if ($currentPage->isPaginated()) {
             $prevLink = $currentPage->getPrevLink();
@@ -309,16 +314,25 @@ class JSONRenderer
         }
 
         $out ["containsBook"] = 0;
+        $out ["filterurl"] = false;
+        $skipFilterUrl = [Page::AUTHORS_FIRST_LETTER, Page::ALL_BOOKS_LETTER, Page::ALL_BOOKS_YEAR, Page::ALL_RECENT_BOOKS, Page::BOOK_DETAIL];
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
+            // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
+            $out ["sorturl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
+            $out ["sortoptions"] = $currentPage->getSortOptions();
+            if (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
+                $out ["filterurl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
+            }
+        } elseif (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
+            $out ["filterurl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
         }
 
         $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
         $out["customizeurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
-        $out["filterurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::FILTER, 'db', $database);
-        $out["filters"] = [];
+        $out["filters"] = false;
         if ($request->hasFilter()) {
-            // @todo do something with filters in templates
+            $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
                 array_push($out["filters"], self::getContentArray($entry));
             }
@@ -343,7 +357,11 @@ class JSONRenderer
         }
 
         $out ["parenturl"] = "";
-        if (!empty($currentPage->parentUri)) {
+        if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
+            // if filtered, use the unfiltered uri as parent first
+            $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->currentUri, 'db', $database);
+        } elseif (!empty($currentPage->parentUri)) {
+            // otherwise use the parent uri
             $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
         } elseif ($page != Page::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];

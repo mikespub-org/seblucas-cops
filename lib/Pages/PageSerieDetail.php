@@ -15,10 +15,16 @@ class PageSerieDetail extends Page
 {
     public function InitializeContent()
     {
-        $this->getEntries();
         $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
+        if ($this->request->get('filter')) {
+            $this->filterUri = '&s=' . $this->idGet;
+            $this->getFilters($serie);
+        } else {
+            $this->getEntries();
+        }
         $this->idPage = $serie->getEntryId();
         $this->title = $serie->getTitle();
+        $this->currentUri = $serie->getUri();
         $this->parentTitle = localize("series.title");
         $this->parentUri = $serie->getParentUri();
     }
@@ -27,5 +33,6 @@ class PageSerieDetail extends Page
     {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksBySeries($this->idGet, $this->n);
+        $this->sorted = $booklist->orderBy ?? "series_index";
     }
 }

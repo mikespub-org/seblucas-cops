@@ -72,6 +72,7 @@ class Page
     public $authorUri = "";
     public $authorEmail = "";
     public $parentTitle = "";
+    public $currentUri = "";
     public $parentUri = "";
     public $idPage;
     public $idGet;
@@ -80,6 +81,8 @@ class Page
     public $n;
     public $book;
     public $totalNumber = -1;
+    public $sorted = "sort";
+    public $filterUri = "";
 
     /** @var Entry[] */
     public $entryArray = [];
@@ -287,9 +290,14 @@ class Page
                 $this->totalNumber > $this->getNumberPerPage());
     }
 
+    public function getCleanQuery()
+    {
+        return preg_replace("/\&n=.*?$/", "", preg_replace("/\&_=\d+/", "", $this->request->query()));
+    }
+
     public function getNextLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
+        $currentUrl = "?" . $this->getCleanQuery();
         if (($this->n) * $this->getNumberPerPage() < $this->totalNumber) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
         }
@@ -298,7 +306,7 @@ class Page
 
     public function getPrevLink()
     {
-        $currentUrl = preg_replace("/\&n=.*?$/", "", "?" . preg_replace("/\&_=\d+/", "", $this->request->query()));
+        $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n > 1) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n - 1), "previous", localize("paging.previous.alternate"));
         }
@@ -308,6 +316,123 @@ class Page
     public function getMaxPage()
     {
         return ceil($this->totalNumber / $this->numberPerPage);
+    }
+
+    public function getSortOptions()
+    {
+        return [
+            'title' => localize("bookword.title"),
+            'timestamp' => localize("recent.title"),
+            'author' => localize("authors.title"),
+            'pubdate' => localize("pubdate.title"),
+            'rating' => localize("ratings.title"),
+            //'series' => localize("series.title"),
+            //'language' => localize("languages.title"),
+            //'publisher' => localize("publishers.title"),
+        ];
+    }
+
+    public function getFilters($instance)
+    {
+        $this->entryArray = [];
+        if (!($instance instanceof Author)) {
+            array_push($this->entryArray, new Entry(
+                localize("authors.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $this->entryArray = array_merge($this->entryArray, $instance->getAuthors());
+        }
+        if (!($instance instanceof Language)) {
+            array_push($this->entryArray, new Entry(
+                localize("languages.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $this->entryArray = array_merge($this->entryArray, $instance->getLanguages());
+        }
+        if (!($instance instanceof Publisher)) {
+            array_push($this->entryArray, new Entry(
+                localize("publishers.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $this->entryArray = array_merge($this->entryArray, $instance->getPublishers());
+        }
+        if (!($instance instanceof Rating)) {
+            array_push($this->entryArray, new Entry(
+                localize("ratings.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $this->entryArray = array_merge($this->entryArray, $instance->getRatings());
+        }
+        if (!($instance instanceof Serie)) {
+            array_push($this->entryArray, new Entry(
+                localize("series.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $this->entryArray = array_merge($this->entryArray, $instance->getSeries());
+        }
+        if (!($instance instanceof Tag)) {
+            array_push($this->entryArray, new Entry(
+                localize("tags.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $this->entryArray = array_merge($this->entryArray, $instance->getTags());
+        }
+        /**
+        // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
+        if (!($instance instanceof CustomColumn)) {
+            $columns = CustomColumnType::getAllCustomColumns($this->getDatabaseId());
+            foreach ($columns as $label => $column) {
+                $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());
+                array_push($this->entryArray, new Entry(
+                    $customType->getTitle(),
+                    "",
+                    "TODO",
+                    "text",
+                    [],
+                    $this->getDatabaseId(),
+                    "",
+                    ""
+                ));
+                $entries = $instance->getCustomValues($customType);
+            }
+        }
+         */
     }
 
     public function containsBook()

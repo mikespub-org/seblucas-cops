@@ -91,16 +91,6 @@ class Rating extends Base
         return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
-    public static function getAllRatings($n = -1, $database = null)
-    {
-        return self::getEntryArray(self::SQL_ALL_ROWS, [], $n, $database);
-    }
-
-    public static function getEntryArray($query, $params, $n = -1, $database = null, $numberPerPage = null)
-    {
-        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $n, $database, $numberPerPage);
-    }
-
     public static function getRatingById($ratingId, $database = null)
     {
         return self::getInstanceById($ratingId, 0, self::class, $database);

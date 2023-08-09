@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -118,6 +119,12 @@ abstract class Base
         );
     }
 
+    public function getCustomValues($customType)
+    {
+        // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
+        return [];
+    }
+
     /**
      * Summary of getDb
      * @param mixed $database
@@ -146,20 +153,85 @@ abstract class Base
         return self::getCountGeneric(static::SQL_TABLE, static::PAGE_ID, static::PAGE_ALL, $database);
     }
 
+    /**
+     * Summary of countRequestEntries
+     * @param Request $request
+     * @param mixed $database
+     * @return integer
+     */
+    public static function countRequestEntries($request, $database = null)
+    {
+        if ($request->hasFilter()) {
+            return self::countEntriesByFilter($request, $database);
+        }
+        return self::countAllEntries($database);
+    }
+
     public static function countAllEntries($database = null)
     {
         $query = 'select {0} from ' . static::SQL_TABLE;
-        return self::countQuery($query, "", [], $database);
+        $columns = 'count(*)';
+        return self::countQuery($query, $columns, "", [], $database);
+    }
+
+    public static function countEntriesByFirstLetter($request, $letter, $database = null)
+    {
+        $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
+        $filter->addFilter('upper(' . static::SQL_TABLE . '.' . static::SQL_SORT . ') like ?', $letter . "%");
+        return self::countFilteredEntries($filter, $database);
+        //$query = 'select {0} from ' . static::SQL_TABLE . ' where {1}';
+        //$columns = 'count(*)';
+        //$filter = 'upper(' . static::SQL_SORT . ') like ?';
+        //return self::countQuery($query, $columns, $filter, [$letter . "%"], $database);
+    }
+
+    public static function countEntriesByFilter($request, $database = null)
+    {
+        $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
+        return self::countFilteredEntries($filter, $database);
+    }
+
+    public static function countFilteredEntries($filter, $database = null)
+    {
+        // select {0} from series, books_series_link where series.id = books_series_link.series {1}
+        $query = 'select {0} from ' . static::SQL_TABLE . ', ' . static::SQL_LINK_TABLE . ' where ' . static::SQL_TABLE . '.id = ' . static::SQL_LINK_TABLE . '.' . static::SQL_LINK_COLUMN . ' {1}';
+        // count(distinct series.id)
+        $columns = 'count(distinct ' . static::SQL_TABLE . '.id)';
+        // and (exists (select null from books_authors_link, books where books_series_link.book = books.id and books_authors_link.book = books.id and books_authors_link.author = ?))
+        $filterString = $filter->getFilterString();
+        // [1]
+        $params = $filter->getQueryParams();
+        return self::countQuery($query, $columns, $filterString, $params, $database);
+    }
+
+    /**
+     * Summary of getRequestEntries
+     * @param Request $request
+     * @param mixed $n
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     * @return array<Entry>
+     */
+    public static function getRequestEntries($request, $n = -1, $database = null, $numberPerPage = null)
+    {
+        if ($request->hasFilter()) {
+            return self::getEntriesByFilter($request, $n, $database, $numberPerPage);
+        }
+        return self::getAllEntries($n, $database, $numberPerPage);
     }
 
     /**
      * Summary of getAllEntries = same as getAll<Whatever>() in <Whatever> child class
      * @param mixed $database
      * @param mixed $numberPerPage
-     * @return array
+     * @return array<Entry>
      */
     public static function getAllEntries($n = -1, $database = null, $numberPerPage = null)
     {
+        //$sortField = $config['calibre_database_field_sort'] ?? '';
+        //if (!empty($sortField)) {
+        //    $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
+        //}
         return self::getEntryArrayWithBookNumber(static::SQL_ALL_ROWS, static::SQL_COLUMNS, "", [], static::class, $n, $database, $numberPerPage);
     }
 
@@ -168,9 +240,12 @@ abstract class Base
         return self::getEntryArrayWithBookNumber(static::SQL_ROWS_FOR_SEARCH, static::SQL_COLUMNS, "", ['%' . $query . '%'], static::class, $n, $database, $numberPerPage);
     }
 
-    public static function getEntriesByFirstLetter($letter, $n = -1, $database = null, $numberPerPage = null)
+    public static function getEntriesByFirstLetter($request, $letter, $n = -1, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_BY_FIRST_LETTER, static::SQL_COLUMNS, "", [$letter . "%"], static::class, $n, $database, $numberPerPage);
+        $filter = new Filter($request, [$letter . "%"], static::SQL_LINK_TABLE, $database);
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_BY_FIRST_LETTER, static::SQL_COLUMNS, $filterString, $params, static::class, $n, $database, $numberPerPage);
     }
 
     public static function getEntriesByFilter($request, $n = -1, $database = null, $numberPerPage = null)
@@ -221,6 +296,21 @@ abstract class Base
         return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
     }
 
+    public static function getEntriesByCustomValueId($customType, $valueId, $n = -1, $database = null, $numberPerPage = null)
+    {
+        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
+        $filter->addCustomIdFilter($customType, $valueId);
+        return self::getFilteredEntries($filter, $n, $database, $numberPerPage);
+    }
+
+    /**
+     * Summary of getFilteredEntries
+     * @param mixed $filter
+     * @param mixed $n
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     * @return array<Entry>
+     */
     public static function getFilteredEntries($filter, $n = -1, $database = null, $numberPerPage = null)
     {
         $filterString = $filter->getFilterString();
@@ -279,7 +369,7 @@ abstract class Base
      * @param mixed $n
      * @param mixed $database
      * @param mixed $numberPerPage
-     * @return array
+     * @return array<Entry>
      */
     public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $category, $n = -1, $database = null, $numberPerPage = null)
     {
@@ -308,7 +398,7 @@ abstract class Base
      * @param mixed $n
      * @param mixed $database
      * @param mixed $numberPerPage
-     * @return array
+     * @return array{0: integer, 1: \PDOStatement}
      */
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
@@ -326,7 +416,7 @@ abstract class Base
 
         if ($numberPerPage != -1 && $n != -1) {
             // First check total number of results
-            $totalResult = self::countQuery($query, $filter, $params, $database);
+            $totalResult = self::countQuery($query, 'count(*)', $filter, $params, $database);
 
             // Next modify the query and params
             $query .= " limit ?, ?";
@@ -341,14 +431,15 @@ abstract class Base
     /**
      * Summary of countQuery
      * @param mixed $query
+     * @param mixed $columns
      * @param mixed $filter
      * @param mixed $params
      * @param mixed $database
-     * @return mixed
+     * @return integer
      */
-    public static function countQuery($query, $filter = "", $params = [], $database = null)
+    public static function countQuery($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
     {
-        $result = self::getDb($database)->prepare(str_format($query, "count(*)", $filter));
+        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         $totalResult = $result->fetchColumn();
         return $totalResult;

@@ -77,7 +77,7 @@ class PageCustomize extends Page
         $database = $this->getDatabaseId();
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent())) {
-            $content .= "<select id='template' onchange='updateCookie (this); window.location=$(\".headleft\").attr(\"href\");'>";
+            $content .= "<select id='template' onchange='updateCookie (this); window.location=window.location;'>";
 
             foreach ($this-> getTemplateList() as $filename) {
                 $content .= "<option value='{$filename}' " . $this->isSelected("template", $filename) . ">{$filename}</option>";
@@ -85,7 +85,7 @@ class PageCustomize extends Page
             $content .= '</select>';
         } else {
             foreach ($this-> getTemplateList() as $filename) {
-                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=$(\".headleft\").attr(\"href\");' id='template' name='template' value='{$filename}' " . $this->isChecked("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label>";
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='template' name='template' value='{$filename}' " . $this->isChecked("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label>";
             }
         }
         array_push($this->entryArray, new Entry(
