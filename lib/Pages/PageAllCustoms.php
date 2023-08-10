@@ -39,7 +39,6 @@ class PageAllCustoms extends Page
     public function getCustomEntries($columnType)
     {
         global $config;
-        // @todo paginate and/or split by year
         if ($config['cops_custom_date_split_year'] == 1 && $columnType instanceof CustomColumnTypeDate) {
             $this->getCustomEntriesByYear($columnType);
         } elseif ($config['cops_custom_integer_split_range'] > 0 && $columnType instanceof CustomColumnTypeInteger) {

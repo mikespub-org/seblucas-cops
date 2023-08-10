@@ -106,6 +106,7 @@ class BookList
             'pubdate' => 'books.pubdate desc',
             'rating' => 'ratings.rating desc',
             'timestamp' => 'books.timestamp desc',
+            'count' => 'count desc',
             default => $this->orderBy,
         };
     }
@@ -301,11 +302,15 @@ class BookList
         $params = $filter->getQueryParams();
 
         // @todo check orderBy to sort by count
+        if (!in_array($this->orderBy, ['groupid', 'count'])) {
+            $this->orderBy = 'groupid';
+        }
+        $sortBy = $this->getOrderBy();
         $result = Database::queryFilter('select {0}
 from books
 where 1=1 {1}
 group by groupid
-order by groupid', $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId);
+order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {

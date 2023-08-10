@@ -111,14 +111,17 @@ class Author extends Base
         $params = $filter->getQueryParams();
 
         $groupField = 'substr(upper(sort), 1, 1)';
-        $sorted = $request->getSorted('groupid');
+        $sort = $request->getSorted('groupid');
+        if (!in_array($sort, ['groupid', 'count'])) {
+            $sort = 'groupid';
+        }
+        $sortBy = parent::getSortBy($sort);
 
-        // @todo check $sorted to sort by count
         $result = Database::queryFilter("select {0}
 from authors, books_authors_link
 where books_authors_link.author = authors.id {1}
 group by groupid
-order by groupid", $groupField . " as groupid, count(distinct authors.id) as count", $filterString, $params, -1, $database, $numberPerPage);
+order by $sortBy", $groupField . " as groupid, count(distinct authors.id) as count", $filterString, $params, -1, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(

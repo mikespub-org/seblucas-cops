@@ -72,7 +72,12 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
-        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value ORDER BY value";
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, value';
+        } else {
+            $queryFormat .= ' ORDER BY value';
+        }
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getPaginatedResult($query, [], $n);
@@ -105,6 +110,11 @@ class CustomColumnTypeInteger extends CustomColumnType
         //$queryFormat = "SELECT groupid, MIN(value) AS min_value, MAX(value) AS max_value, COUNT(*) AS count FROM (SELECT value, NTILE({$numtiles}) OVER (ORDER BY value) AS groupid FROM {0}) x GROUP BY groupid";
         // Semi-equal height distribution using CUME_DIST()
         $queryFormat = "SELECT CAST(ROUND(dist * ({$numtiles} - 1), 0) AS INTEGER) AS groupid, MIN(value) AS min_value, MAX(value) AS max_value, COUNT(*) AS count FROM (SELECT value, CUME_DIST() OVER (ORDER BY value) dist FROM {0}) GROUP BY groupid";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, groupid';
+        } else {
+            $queryFormat .= ' ORDER BY groupid';
+        }
         $query = str_format($queryFormat, $this->getTableName());
         $result = Database::query($query, [], $this->databaseId);
 
@@ -141,7 +151,12 @@ class CustomColumnTypeInteger extends CustomColumnType
         }
         $lower = $matches[1];
         $upper = $matches[2];
-        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} WHERE value >= ? AND value <= ? GROUP BY value ORDER BY value";
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} WHERE value >= ? AND value <= ? GROUP BY value";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, value';
+        } else {
+            $queryFormat .= ' ORDER BY value';
+        }
         $query = str_format($queryFormat, $this->getTableName());
         $result = Database::query($query, [$lower, $upper], $this->databaseId);
 

@@ -68,7 +68,12 @@ class CustomColumnTypeDate extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
-        $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue ORDER BY datevalue";
+        $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, datevalue';
+        } else {
+            $queryFormat .= ' ORDER BY datevalue';
+        }
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getPaginatedResult($query, [], $n);
@@ -101,6 +106,11 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getCountByYear($page, $sort = null)
     {
         $queryFormat = "SELECT substr(date(value), 1, 4) AS groupid, count(*) AS count FROM {0} GROUP BY groupid";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, groupid';
+        } else {
+            $queryFormat .= ' ORDER BY groupid';
+        }
         $query = str_format($queryFormat, $this->getTableName());
         $result = Database::query($query, [], $this->databaseId);
 
@@ -134,6 +144,11 @@ class CustomColumnTypeDate extends CustomColumnType
             throw new UnexpectedValueException();
         }
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} WHERE substr(date(value), 1, 4) = ? GROUP BY datevalue";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, datevalue';
+        } else {
+            $queryFormat .= ' ORDER BY datevalue';
+        }
         $query = str_format($queryFormat, $this->getTableName());
         $params = [ $year ];
         $result = Database::query($query, $params, $this->databaseId);
