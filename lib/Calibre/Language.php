@@ -110,4 +110,19 @@ class Language extends Base
     {
         return self::getInstanceById($languageId, localize("language.title"), self::class, $database);
     }
+
+    public static function getLanguagesByBookId($bookId, $database = null)
+    {
+        $lang = [];
+        $query = 'select languages.lang_code
+            from books_languages_link, languages
+            where books_languages_link.lang_code = languages.id
+            and book = ?
+            order by item_order';
+        $result = Database::query($query, [$bookId], $database);
+        while ($post = $result->fetchObject()) {
+            array_push($lang, self::getLanguageString($post->lang_code));
+        }
+        return implode(', ', $lang);
+    }
 }

@@ -91,10 +91,10 @@ class Publisher extends Base
 
     public static function getPublisherByBookId($bookId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select publishers.id as id, name
+        $query = 'select publishers.id as id, name
 from books_publishers_link, publishers
-where publishers.id = publisher and book = ?');
-        $result->execute([$bookId]);
+where publishers.id = publisher and book = ?';
+        $result = Database::query($query, [$bookId], $database);
         if ($post = $result->fetchObject()) {
             return new Publisher($post, $database);
         }

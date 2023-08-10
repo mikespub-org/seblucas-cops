@@ -125,27 +125,16 @@ abstract class Base
         return [];
     }
 
-    /**
-     * Summary of getDb
-     * @param mixed $database
-     * @return \PDO
-     */
-    public static function getDb($database = null)
-    {
-        return Database::getDb($database);
-    }
-
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
 
-    public static function getInstanceById($id, $default = null, $category = self::class, $database = null)
+    public static function getInstanceById($id, $default = null, $className = self::class, $database = null)
     {
         $query = 'select ' . static::SQL_COLUMNS . ' from ' . static::SQL_TABLE . ' where id = ?';
-        $result = self::getDb($database)->prepare($query);
-        $result->execute([$id]);
+        $result = Database::query($query, [$id], $database);
         if ($post = $result->fetchObject()) {
-            return new $category($post, $database);
+            return new $className($post, $database);
         }
-        return new $category((object)['id' => null, 'name' => $default, 'sort' => $default], $database);
+        return new $className((object)['id' => null, 'name' => $default, 'sort' => $default], $database);
     }
 
     public static function getEntryCount($database = null)
@@ -169,9 +158,7 @@ abstract class Base
 
     public static function countAllEntries($database = null)
     {
-        $query = 'select {0} from ' . static::SQL_TABLE;
-        $columns = 'count(*)';
-        return self::countQuery($query, $columns, "", [], $database);
+        return Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
     }
 
     public static function countEntriesByFirstLetter($request, $letter, $database = null)
@@ -201,7 +188,7 @@ abstract class Base
         $filterString = $filter->getFilterString();
         // [1]
         $params = $filter->getQueryParams();
-        return self::countQuery($query, $columns, $filterString, $params, $database);
+        return Database::countFilter($query, $columns, $filterString, $params, $database);
     }
 
     /**
@@ -314,6 +301,7 @@ abstract class Base
      * Summary of getFilteredEntries
      * @param mixed $filter
      * @param mixed $n
+     * @param mixed $sort
      * @param mixed $database
      * @param mixed $numberPerPage
      * @return array<Entry>
@@ -334,17 +322,6 @@ abstract class Base
     }
 
     /**
-     * Summary of executeQuerySingle
-     * @param mixed $query
-     * @param mixed $database
-     * @return mixed
-     */
-    public static function executeQuerySingle($query, $database = null)
-    {
-        return self::getDb($database)->query($query)->fetchColumn();
-    }
-
-    /**
      * Summary of getCountGeneric
      * @param mixed $table
      * @param mixed $id
@@ -358,7 +335,7 @@ abstract class Base
         if (!$numberOfString) {
             $numberOfString = $table . ".alphabetical";
         }
-        $count = self::executeQuerySingle('select count(*) from ' . $table, $database);
+        $count = Database::querySingle('select count(*) from ' . $table, $database);
         if ($count == 0) {
             return null;
         }
@@ -380,67 +357,26 @@ abstract class Base
      * @param mixed $query
      * @param mixed $columns
      * @param mixed $params
-     * @param mixed $category
+     * @param mixed $className
      * @param mixed $n
      * @param mixed $database
      * @param mixed $numberPerPage
      * @return array<Entry>
      */
-    public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $category, $n = -1, $database = null, $numberPerPage = null)
+    public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $className, $n = -1, $database = null, $numberPerPage = null)
     {
-        /** @var \PDOStatement $result */
-
-        [, $result] = self::executeQuery($query, $columns, $filter, $params, $n, $database, $numberPerPage);
+        $result = Database::queryFilter($query, $columns, $filter, $params, $n, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             /** @var Author|Tag|Serie|Publisher|Language|Rating|Book $instance */
-            if ($category == Book::class) {
+            if ($className == Book::class) {
                 $post->count = 1;
             }
 
-            $instance = new $category($post, $database);
+            $instance = new $className($post, $database);
             array_push($entryArray, $instance->getEntry($post->count));
         }
         return $entryArray;
-    }
-
-    /**
-     * Summary of executeQuery
-     * @param mixed $query
-     * @param mixed $columns
-     * @param mixed $filter
-     * @param mixed $params
-     * @param mixed $n
-     * @param mixed $database
-     * @param mixed $numberPerPage
-     * @return array{0: integer, 1: \PDOStatement}
-     */
-    public static function executeQuery($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
-    {
-        $totalResult = -1;
-
-        if (Translation::useNormAndUp()) {
-            $query = preg_replace("/upper/", "normAndUp", $query);
-            $columns = preg_replace("/upper/", "normAndUp", $columns);
-        }
-
-        if (is_null($numberPerPage)) {
-            global $config;
-            $numberPerPage = $config['cops_max_item_per_page'];
-        }
-
-        if ($numberPerPage != -1 && $n != -1) {
-            // First check total number of results
-            $totalResult = self::countQuery($query, 'count(*)', $filter, $params, $database);
-
-            // Next modify the query and params
-            $query .= " limit ?, ?";
-            array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
-        }
-
-        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
-        $result->execute($params);
-        return [$totalResult, $result];
     }
 
     protected static function getSortBy($sort)
@@ -450,23 +386,5 @@ abstract class Base
             'count' => 'count desc',
             default => $sort,
         };
-    }
-
-    /**
-     * Summary of countQuery
-     * @param mixed $query
-     * @param mixed $columns
-     * @param mixed $filter
-     * @param mixed $params
-     * @param mixed $database
-     * @return integer
-     */
-    public static function countQuery($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
-    {
-        $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', '', $query);
-        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
-        $result->execute($params);
-        $totalResult = $result->fetchColumn();
-        return $totalResult;
     }
 }

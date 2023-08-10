@@ -81,4 +81,19 @@ class Identifier
     {
         return $this->uri;
     }
+
+    public static function getIdentifiersByBookId($bookId, $database = null)
+    {
+        $identifiers = [];
+
+        $query = 'select type, val, id
+            from identifiers
+            where book = ?
+            order by type';
+        $result = Database::query($query, [$bookId], $database);
+        while ($post = $result->fetchObject()) {
+            array_push($identifiers, new Identifier($post, $database));
+        }
+        return $identifiers;
+    }
 }

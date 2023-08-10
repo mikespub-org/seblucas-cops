@@ -67,7 +67,7 @@ class CustomColumnTypeBool extends CustomColumnType
     {
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [], $this->databaseId);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -90,10 +90,10 @@ class CustomColumnTypeBool extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = {1}";
-        $query = str_format($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->boolvalue, localize($this->BOOLEAN_NAMES[$post->boolvalue]), $this);
         } else {

@@ -156,8 +156,8 @@ abstract class CustomColumnType extends Base
      */
     public function getDatabaseDescription()
     {
-        $result = $this->getDb($this->databaseId)->prepare('SELECT display FROM custom_columns WHERE id = ?');
-        $result->execute([$this->customId]);
+        $query = 'SELECT display FROM custom_columns WHERE id = ?';
+        $result = Database::query($query, [$this->customId], $this->databaseId);
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
             return (isset($json->description) && !empty($json->description)) ? $json->description : null;
@@ -215,13 +215,7 @@ abstract class CustomColumnType extends Base
             $query .= " LIMIT ?, ?";
             array_push($params, ($n - 1) * $this->numberPerPage, $this->numberPerPage);
         }
-
-        if (count($params) > 0) {
-            $result = $this->getDb($this->databaseId)->prepare($query);
-            $result->execute($params);
-        } else {
-            $result = $this->getDb($this->databaseId)->query($query);
-        }
+        $result = Database::query($query, $params, $this->databaseId);
 
         return $result;
     }
@@ -235,7 +229,7 @@ abstract class CustomColumnType extends Base
     {
         $queryFormat = "SELECT COUNT(DISTINCT value) AS count FROM {0}";
         $query = str_format($queryFormat, $this->getTableName());
-        return parent::executeQuerySingle($query, $this->databaseId);
+        return Database::querySingle($query, $this->databaseId);
     }
 
     /**
@@ -257,8 +251,8 @@ abstract class CustomColumnType extends Base
      */
     private static function getDatatypeByCustomID($customId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('SELECT datatype, is_multiple FROM custom_columns WHERE id = ?');
-        $result->execute([$customId]);
+        $query = 'SELECT datatype, is_multiple FROM custom_columns WHERE id = ?';
+        $result = Database::query($query, [$customId], $database);
         if ($post = $result->fetchObject()) {
             // handle case where we have several values, e.g. array of text for type 2 (csv)
             if ($post->datatype === "text" && $post->is_multiple === 1) {
@@ -326,8 +320,8 @@ abstract class CustomColumnType extends Base
             return self::$customColumnCacheLookup[$lookup];
         }
 
-        $result = parent::getDb($database)->prepare('SELECT id FROM custom_columns WHERE label = ?');
-        $result->execute([$lookup]);
+        $query = 'SELECT id FROM custom_columns WHERE label = ?';
+        $result = Database::query($query, [$lookup], $database);
         if ($post = $result->fetchObject()) {
             return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id, $database);
         }
@@ -342,8 +336,8 @@ abstract class CustomColumnType extends Base
      */
     protected static function getTitleByCustomID($customId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('SELECT name FROM custom_columns WHERE id = ?');
-        $result->execute([$customId]);
+        $query = 'SELECT name FROM custom_columns WHERE id = ?';
+        $result = Database::query($query, [$customId], $database);
         if ($post = $result->fetchObject()) {
             return $post->name;
         }
@@ -371,8 +365,8 @@ abstract class CustomColumnType extends Base
      */
     public static function getAllCustomColumns($database = null)
     {
-        $result = parent::getDb($database)->prepare('SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns');
-        $result->execute();
+        $query = 'SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns';
+        $result = Database::query($query, [], $database);
         $columns = [];
         while ($post = $result->fetchObject()) {
             $columns[$post->label] = (array) $post;

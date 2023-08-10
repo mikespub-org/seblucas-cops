@@ -89,7 +89,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $queryFormat = "SELECT COUNT(DISTINCT date(value)) AS count FROM {0}";
         $query = str_format($queryFormat, $this->getTableName());
-        return parent::executeQuerySingle($query, $this->databaseId);
+        return Database::querySingle($query, $this->databaseId);
     }
 
     /**
@@ -102,7 +102,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $queryFormat = "SELECT substr(date(value), 1, 4) AS groupid, count(*) AS count FROM {0} GROUP BY groupid";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [], $this->databaseId);
 
         $entryArray = [];
         $label = 'year';
@@ -135,9 +135,8 @@ class CustomColumnTypeDate extends CustomColumnType
         }
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} WHERE substr(date(value), 1, 4) = ? GROUP BY datevalue";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb($this->databaseId)->prepare($query);
         $params = [ $year ];
-        $result->execute($params);
+        $result = Database::query($query, $params, $this->databaseId);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -154,10 +153,10 @@ class CustomColumnTypeDate extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = {1}";
-        $query = str_format($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
 

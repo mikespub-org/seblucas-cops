@@ -98,11 +98,26 @@ class Tag extends Base
         return self::getInstanceById($tagId, localize("tagword.none"), self::class, $database);
     }
 
+    public static function getTagsByBookId($bookId, $database = null)
+    {
+        $tags = [];
+        $query = 'select tags.id as id, name
+            from books_tags_link, tags
+            where tag = tags.id
+            and book = ?
+            order by name';
+        $result = Database::query($query, [$bookId], $database);
+        while ($post = $result->fetchObject()) {
+            array_push($tags, new Tag($post, $database));
+        }
+        return $tags;
+    }
+
     public static function getAllTagsByQuery($query, $n = -1, $database = null, $numberPerPage = null)
     {
         $columns  = "tags.id as id, tags.name as name, (select count(*) from books_tags_link where tags.id = tag) as count";
         $sql = 'select {0} from tags where upper (tags.name) like ? {1} order by tags.name';
-        [$totalNumber, $result] = parent::executeQuery($sql, $columns, "", ['%' . $query . '%'], $n, $database, $numberPerPage);
+        [$totalNumber, $result] = Database::queryTotal($sql, $columns, "", ['%' . $query . '%'], $n, $database, $numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $tag = new Tag($post, $database);

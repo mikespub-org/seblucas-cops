@@ -106,7 +106,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         // Semi-equal height distribution using CUME_DIST()
         $queryFormat = "SELECT CAST(ROUND(dist * ({$numtiles} - 1), 0) AS INTEGER) AS groupid, MIN(value) AS min_value, MAX(value) AS max_value, COUNT(*) AS count FROM (SELECT value, CUME_DIST() OVER (ORDER BY value) dist FROM {0}) GROUP BY groupid";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [], $this->databaseId);
 
         $entryArray = [];
         $label = 'range';
@@ -143,8 +143,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         $upper = $matches[2];
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} WHERE value >= ? AND value <= ? GROUP BY value ORDER BY value";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb($this->databaseId)->prepare($query);
-        $result->execute([$lower, $upper]);
+        $result = Database::query($query, [$lower, $upper], $this->databaseId);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -158,10 +157,10 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = {1}";
-        $query = str_format($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }

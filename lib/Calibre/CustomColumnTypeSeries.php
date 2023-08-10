@@ -61,8 +61,8 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getCustom($id)
     {
-        $result = $this->getDb($this->databaseId)->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
-        $result->execute([$id]);
+        $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
+        $result = Database::query($query, [$id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
@@ -91,10 +91,10 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
-        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value . " [" . $post->extra . "]", $this);
         }

@@ -16,7 +16,8 @@ use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageQueryResult;
 
-class BookList extends Base
+//class BookList extends Base
+class BookList
 {
     public const SQL_BOOKS_ALL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ';
     public const SQL_BOOKS_BY_PUBLISHER = 'select {0} from books_publishers_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
@@ -77,6 +78,7 @@ class BookList extends Base
     public const BAD_SEARCH = 'QQQQQ';
 
     public Request $request;
+    protected mixed $databaseId = null;
     protected mixed $numberPerPage = null;
     protected array $ignoredCategories = [];
     public mixed $orderBy = null;
@@ -110,7 +112,7 @@ class BookList extends Base
 
     public function getBookCount()
     {
-        return parent::executeQuerySingle('select count(*) from books', $this->databaseId);
+        return Database::querySingle('select count(*) from books', $this->databaseId);
     }
 
     public function getCount()
@@ -299,8 +301,7 @@ class BookList extends Base
         $params = $filter->getQueryParams();
 
         // @todo check orderBy to sort by count
-        /** @var \PDOStatement $result */
-        [, $result] = parent::executeQuery('select {0}
+        $result = Database::queryFilter('select {0}
 from books
 where 1=1 {1}
 group by groupid
@@ -362,7 +363,7 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
 
         /** @var integer $totalNumber */
         /** @var \PDOStatement $result */
-        [$totalNumber, $result] = parent::executeQuery($query, Book::getBookColumns(), $filterString, $params, $n, $this->databaseId, $this->numberPerPage);
+        [$totalNumber, $result] = Database::queryTotal($query, Book::getBookColumns(), $filterString, $params, $n, $this->databaseId, $this->numberPerPage);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {

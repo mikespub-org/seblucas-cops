@@ -114,7 +114,7 @@ class Author extends Base
         $sorted = $request->getSorted('groupid');
 
         // @todo check $sorted to sort by count
-        [, $result] = parent::executeQuery("select {0}
+        $result = Database::queryFilter("select {0}
 from authors, books_authors_link
 where books_authors_link.author = authors.id {1}
 group by groupid
@@ -156,12 +156,12 @@ order by groupid", $groupField . " as groupid, count(distinct authors.id) as cou
         return self::getInstanceById($authorId, null, self::class, $database);
     }
 
-    public static function getAuthorByBookId($bookId, $database = null)
+    public static function getAuthorsByBookId($bookId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
+        $query = 'select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
 where author = authors.id
-and book = ? order by books_authors_link.id');
-        $result->execute([$bookId]);
+and book = ? order by books_authors_link.id';
+        $result = Database::query($query, [$bookId], $database);
         $authorArray = [];
         while ($post = $result->fetchObject()) {
             array_push($authorArray, new Author($post, $database));

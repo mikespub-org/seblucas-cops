@@ -90,10 +90,10 @@ class Serie extends Base
 
     public static function getSerieByBookId($bookId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select  series.id as id, name
+        $query = 'select  series.id as id, name
 from books_series_link, series
-where series.id = series and book = ?');
-        $result->execute([$bookId]);
+where series.id = series and book = ?';
+        $result = Database::query($query, [$bookId], $database);
         if ($post = $result->fetchObject()) {
             return new Serie($post, $database);
         }

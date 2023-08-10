@@ -171,7 +171,7 @@ class Book extends Base
     public function getAuthors()
     {
         if (is_null($this->authors)) {
-            $this->authors = Author::getAuthorByBookId($this->id, $this->databaseId);
+            $this->authors = Author::getAuthorsByBookId($this->id, $this->databaseId);
         }
         return $this->authors;
     }
@@ -214,17 +214,10 @@ class Book extends Base
      */
     public function getLanguages()
     {
-        $lang = [];
-        $result = parent::getDb($this->databaseId)->prepare('select languages.lang_code
-                from books_languages_link, languages
-                where books_languages_link.lang_code = languages.id
-                and book = ?
-                order by item_order');
-        $result->execute([$this->id]);
-        while ($post = $result->fetchObject()) {
-            array_push($lang, Language::getLanguageString($post->lang_code));
+        if (is_null($this->languages)) {
+            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId);
         }
-        return implode(', ', $lang);
+        return $this->languages;
     }
 
     /**
@@ -233,17 +226,7 @@ class Book extends Base
     public function getTags()
     {
         if (is_null($this->tags)) {
-            $this->tags = [];
-
-            $result = parent::getDb($this->databaseId)->prepare('select tags.id as id, name
-                from books_tags_link, tags
-                where tag = tags.id
-                and book = ?
-                order by name');
-            $result->execute([$this->id]);
-            while ($post = $result->fetchObject()) {
-                array_push($this->tags, new Tag($post, $this->databaseId));
-            }
+            $this->tags = Tag::getTagsByBookId($this->id, $this->databaseId);
         }
         return $this->tags;
     }
@@ -261,16 +244,7 @@ class Book extends Base
     public function getIdentifiers()
     {
         if (is_null($this->identifiers)) {
-            $this->identifiers = [];
-
-            $result = parent::getDb($this->databaseId)->prepare('select type, val, id
-                from identifiers
-                where book = ?
-                order by type');
-            $result->execute([$this->id]);
-            while ($post = $result->fetchObject()) {
-                array_push($this->identifiers, new Identifier($post, $this->databaseId));
-            }
+            $this->identifiers = Identifier::getIdentifiersByBookId($this->id, $this->databaseId);
         }
         return $this->identifiers;
     }
@@ -592,10 +566,10 @@ class Book extends Base
 
     public static function getBookById($bookId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ' . self::getBookColumns() . '
+        $query = 'select ' . self::getBookColumns() . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
-where books.id = ?');
-        $result->execute([$bookId]);
+where books.id = ?';
+        $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             return $book;
@@ -605,10 +579,10 @@ where books.id = ?');
 
     public static function getBookByDataId($dataId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ' . self::getBookColumns() . ', data.name, data.format
+        $query = 'select ' . self::getBookColumns() . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
-where data.book = books.id and data.id = ?');
-        $result->execute([$dataId]);
+where data.book = books.id and data.id = ?';
+        $result = Database::query($query, [$dataId], $database);
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             $data = new Data($post, $book);
@@ -640,8 +614,7 @@ where data.book = books.id and data.id = ?');
         }
 
         $database = $book->getDatabaseId();
-        $result = parent::getDb($database)->prepare($sql);
-        $result->execute([$book->id]);
+        $result = Database::query($sql, [$book->id], $database);
 
         while ($post = $result->fetchObject()) {
             array_push($out, new Data($post, $book));
