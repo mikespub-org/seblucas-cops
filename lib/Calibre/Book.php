@@ -619,6 +619,11 @@ where data.book = books.id and data.id = ?');
         return null;
     }
 
+    /**
+     * Summary of getDataByBook
+     * @param mixed $book
+     * @return array<Data>
+     */
     public static function getDataByBook($book)
     {
         global $config;

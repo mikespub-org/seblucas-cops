@@ -23,6 +23,6 @@ class PageAllPublishers extends Page
     {
         $this->entryArray = Publisher::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
         $this->totalNumber = Publisher::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Publisher::SQL_SORT;
+        $this->sorted = $this->request->getSorted(Publisher::SQL_SORT);
     }
 }

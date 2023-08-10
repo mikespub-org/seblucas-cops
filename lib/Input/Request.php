@@ -260,6 +260,12 @@ class Request
         return $config['cops_template'];
     }
 
+    public function getSorted($default = null)
+    {
+        return $this->get('sort', $default, '/^\w+(\s+(asc|desc)|)$/i');
+        // ?? $this->option('sort');
+    }
+
     /**
      * Summary of verifyLogin
      * @return bool
@@ -294,7 +300,7 @@ class Request
 
     /**
      * Summary of build
-     * @param array $params
+     * @param array $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
      * @param ?array $server
      * @param ?array $cookie
      * @param ?array $config

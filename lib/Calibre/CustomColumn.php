@@ -104,39 +104,39 @@ class CustomColumn extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by customType and valueId (linked via books) */
 
-    public function getBooks($n = -1)
+    public function getBooks($n = -1, $sort = null)
     {
-        return Book::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return Book::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getAuthors($n = -1)
+    public function getAuthors($n = -1, $sort = null)
     {
-        return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getLanguages($n = -1)
+    public function getLanguages($n = -1, $sort = null)
     {
-        return Language::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return Language::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getPublishers($n = -1)
+    public function getPublishers($n = -1, $sort = null)
     {
-        return Publisher::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return Publisher::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getRatings($n = -1)
+    public function getRatings($n = -1, $sort = null)
     {
-        return Rating::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return Rating::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getSeries($n = -1)
+    public function getSeries($n = -1, $sort = null)
     {
-        return Serie::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return Serie::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getTags($n = -1)
+    public function getTags($n = -1, $sort = null)
     {
-        return Tag::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return Tag::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
     /**

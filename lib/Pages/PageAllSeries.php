@@ -25,7 +25,7 @@ class PageAllSeries extends Page
         global $config;
         $this->entryArray = Serie::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
         $this->totalNumber = Serie::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Serie::SQL_SORT;
+        $this->sorted = $this->request->getSorted(Serie::SQL_SORT);
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();
         }
@@ -35,6 +35,7 @@ class PageAllSeries extends Page
     {
         $instance = new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());
         $booklist = new BookList($this->request);
+        $booklist->orderBy = null;
         [$result,] = $booklist->getBooksWithoutSeries(-1);
         array_push($this->entryArray, $instance->getEntry(count($result)));
     }

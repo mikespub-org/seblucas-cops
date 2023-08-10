@@ -192,11 +192,11 @@ abstract class CustomColumnType extends Base
      *
      * @return Entry[]
      */
-    public function getAllCustomValues($n = -1)
+    public function getAllCustomValues($n = -1, $sort = null)
     {
         // lazy loading
         if ($this->customValues == null) {
-            $this->customValues = $this->getAllCustomValuesFromDatabase($n);
+            $this->customValues = $this->getAllCustomValuesFromDatabase($n, $sort);
         }
 
         return $this->customValues;
@@ -406,7 +406,7 @@ abstract class CustomColumnType extends Base
      *
      * @return Entry[]|null
      */
-    abstract protected function getAllCustomValuesFromDatabase($n = -1);
+    abstract protected function getAllCustomValuesFromDatabase($n = -1, $sort = null);
 
     /**
      * Find the value of this column for a specific book

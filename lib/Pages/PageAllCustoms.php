@@ -45,9 +45,9 @@ class PageAllCustoms extends Page
         } elseif ($config['cops_custom_integer_split_range'] > 0 && $columnType instanceof CustomColumnTypeInteger) {
             $this->getCustomEntriesByRange($columnType);
         } else {
-            $this->entryArray = $columnType->getAllCustomValues($this->n);
+            $this->sorted = $this->request->getSorted("value");
+            $this->entryArray = $columnType->getAllCustomValues($this->n, $this->sorted);
             $this->totalNumber = $columnType->getDistinctValueCount();
-            $this->sorted = "value";
         }
     }
 
@@ -61,13 +61,13 @@ class PageAllCustoms extends Page
         $year = $this->request->get("year", null, $columnType::GET_PATTERN);
         if (empty($year)) {
             // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
-            $this->entryArray = $columnType->getCountByYear($columnType::PAGE_DETAIL);
-            $this->sorted = "year";
+            $this->sorted = $this->request->getSorted("year");
+            $this->entryArray = $columnType->getCountByYear($columnType::PAGE_DETAIL, $this->sorted);
             return;
         }
         // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
-        $this->entryArray = $columnType->getCustomValuesByYear($year);
-        $this->sorted = "value";
+        $this->sorted = $this->request->getSorted("value");
+        $this->entryArray = $columnType->getCustomValuesByYear($year, $this->sorted);
         $count = 0;
         foreach ($this->entryArray as $entry) {
             /** @var Entry $entry */
@@ -88,13 +88,13 @@ class PageAllCustoms extends Page
         $range = $this->request->get("range", null, $columnType::GET_PATTERN);
         if (empty($range)) {
             // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
-            $this->entryArray = $columnType->getCountByRange($columnType::PAGE_DETAIL);
-            $this->sorted = "range";
+            $this->sorted = $this->request->getSorted("range");
+            $this->entryArray = $columnType->getCountByRange($columnType::PAGE_DETAIL, $this->sorted);
             return;
         }
         // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
-        $this->entryArray = $columnType->getCustomValuesByRange($range);
-        $this->sorted = "value";
+        $this->sorted = $this->request->getSorted("value");
+        $this->entryArray = $columnType->getCustomValuesByRange($range, $this->sorted);
         $count = 0;
         foreach ($this->entryArray as $entry) {
             /** @var Entry $entry */
@@ -109,6 +109,7 @@ class PageAllCustoms extends Page
     {
         $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
         $booklist = new BookList($this->request);
+        $booklist->orderBy = null;
         [$result,] = $booklist->getBooksWithoutCustom($columnType, -1);
         array_push($this->entryArray, $instance->getEntry(count($result)));
     }

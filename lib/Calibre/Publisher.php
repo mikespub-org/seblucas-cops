@@ -46,39 +46,39 @@ class Publisher extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by publisherId (linked via books) */
 
-    public function getBooks($n = -1)
+    public function getBooks($n = -1, $sort = null)
     {
-        return Book::getEntriesByPublisherId($this->id, $n, $this->databaseId);
+        return Book::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getAuthors($n = -1)
+    public function getAuthors($n = -1, $sort = null)
     {
-        return Author::getEntriesByPublisherId($this->id, $n, $this->databaseId);
+        return Author::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getLanguages($n = -1)
+    public function getLanguages($n = -1, $sort = null)
     {
-        return Language::getEntriesByPublisherId($this->id, $n, $this->databaseId);
+        return Language::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getPublishers($n = -1)
+    public function getPublishers($n = -1, $sort = null)
     {
-        //return Publisher::getEntriesByPublisherId($this->id, $n, $this->databaseId);
+        //return Publisher::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getRatings($n = -1)
+    public function getRatings($n = -1, $sort = null)
     {
-        return Rating::getEntriesByPublisherId($this->id, $n, $this->databaseId);
+        return Rating::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getSeries($n = -1)
+    public function getSeries($n = -1, $sort = null)
     {
-        return Serie::getEntriesByPublisherId($this->id, $n, $this->databaseId);
+        return Serie::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getTags($n = -1)
+    public function getTags($n = -1, $sort = null)
     {
-        return Tag::getEntriesByPublisherId($this->id, $n, $this->databaseId);
+        return Tag::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -101,6 +101,12 @@ where publishers.id = publisher and book = ?');
         return null;
     }
 
+    /**
+     * Summary of getPublisherById
+     * @param mixed $publisherId
+     * @param mixed $database
+     * @return Publisher
+     */
     public static function getPublisherById($publisherId, $database = null)
     {
         return self::getInstanceById($publisherId, localize("publisherword.none"), self::class, $database);

@@ -25,7 +25,7 @@ class PageAllRating extends Page
         global $config;
         $this->entryArray = Rating::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
         $this->totalNumber = Rating::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Rating::SQL_SORT;
+        $this->sorted = $this->request->getSorted(Rating::SQL_SORT);
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("rating", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();
         }
@@ -35,6 +35,7 @@ class PageAllRating extends Page
     {
         $instance = new Rating((object)['id' => 0, 'name' => 0], $this->getDatabaseId());
         $booklist = new BookList($this->request);
+        $booklist->orderBy = null;
         [$result,] = $booklist->getBooksWithoutRating(-1);
         array_push($this->entryArray, $instance->getEntry(count($result)));
     }

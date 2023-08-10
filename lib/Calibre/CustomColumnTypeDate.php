@@ -66,7 +66,7 @@ class CustomColumnTypeDate extends CustomColumnType
         return new CustomColumn($id, $date->format(localize("customcolumn.date.format")), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue ORDER BY datevalue";
         $query = str_format($queryFormat, $this->getTableName());
@@ -95,9 +95,10 @@ class CustomColumnTypeDate extends CustomColumnType
     /**
      * Summary of getCountByYear
      * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
+     * @param mixed $sort
      * @return Entry[]
      */
-    public function getCountByYear($page)
+    public function getCountByYear($page, $sort = null)
     {
         $queryFormat = "SELECT substr(date(value), 1, 4) AS groupid, count(*) AS count FROM {0} GROUP BY groupid";
         $query = str_format($queryFormat, $this->getTableName());
@@ -124,9 +125,10 @@ class CustomColumnTypeDate extends CustomColumnType
     /**
      * Summary of getCustomValuesByYear
      * @param mixed $year
+     * @param mixed $sort
      * @return Entry[]
      */
-    public function getCustomValuesByYear($year)
+    public function getCustomValuesByYear($year, $sort = null)
     {
         if (!preg_match(self::GET_PATTERN, $year)) {
             throw new UnexpectedValueException();

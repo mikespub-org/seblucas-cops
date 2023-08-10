@@ -61,39 +61,39 @@ class Author extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by authorId (linked via books) */
 
-    public function getBooks($n = -1)
+    public function getBooks($n = -1, $sort = null)
     {
-        return Book::getEntriesByAuthorId($this->id, $n, $this->databaseId);
+        return Book::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getAuthors($n = -1)
+    public function getAuthors($n = -1, $sort = null)
     {
-        //return Author::getEntriesByAuthorId($this->id, $n, $this->databaseId);
+        //return Author::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getLanguages($n = -1)
+    public function getLanguages($n = -1, $sort = null)
     {
-        return Language::getEntriesByAuthorId($this->id, $n, $this->databaseId);
+        return Language::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getPublishers($n = -1)
+    public function getPublishers($n = -1, $sort = null)
     {
-        return Publisher::getEntriesByAuthorId($this->id, $n, $this->databaseId);
+        return Publisher::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getRatings($n = -1)
+    public function getRatings($n = -1, $sort = null)
     {
-        return Rating::getEntriesByAuthorId($this->id, $n, $this->databaseId);
+        return Rating::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getSeries($n = -1)
+    public function getSeries($n = -1, $sort = null)
     {
-        return Serie::getEntriesByAuthorId($this->id, $n, $this->databaseId);
+        return Serie::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getTags($n = -1)
+    public function getTags($n = -1, $sort = null)
     {
-        return Tag::getEntriesByAuthorId($this->id, $n, $this->databaseId);
+        return Tag::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -111,7 +111,9 @@ class Author extends Base
         $params = $filter->getQueryParams();
 
         $groupField = 'substr(upper(sort), 1, 1)';
+        $sorted = $request->getSorted('groupid');
 
+        // @todo check $sorted to sort by count
         [, $result] = parent::executeQuery("select {0}
 from authors, books_authors_link
 where books_authors_link.author = authors.id {1}
@@ -143,6 +145,12 @@ order by groupid", $groupField . " as groupid, count(distinct authors.id) as cou
         return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $n, $database, $numberPerPage);
     }
 
+    /**
+     * Summary of getAuthorById
+     * @param mixed $authorId
+     * @param mixed $database
+     * @return Author
+     */
     public static function getAuthorById($authorId, $database = null)
     {
         return self::getInstanceById($authorId, null, self::class, $database);

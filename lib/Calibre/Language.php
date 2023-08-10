@@ -48,39 +48,39 @@ class Language extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */
 
-    public function getBooks($n = -1)
+    public function getBooks($n = -1, $sort = null)
     {
-        return Book::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        return Book::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getAuthors($n = -1)
+    public function getAuthors($n = -1, $sort = null)
     {
-        return Author::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        return Author::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getLanguages($n = -1)
+    public function getLanguages($n = -1, $sort = null)
     {
-        //return Language::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        //return Language::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getPublishers($n = -1)
+    public function getPublishers($n = -1, $sort = null)
     {
-        return Publisher::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        return Publisher::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getRatings($n = -1)
+    public function getRatings($n = -1, $sort = null)
     {
-        return Rating::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        return Rating::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getSeries($n = -1)
+    public function getSeries($n = -1, $sort = null)
     {
-        return Serie::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        return Serie::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getTags($n = -1)
+    public function getTags($n = -1, $sort = null)
     {
-        return Tag::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        return Tag::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -100,6 +100,12 @@ class Language extends Base
         return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
     }
 
+    /**
+     * Summary of getLanguageById
+     * @param mixed $languageId
+     * @param mixed $database
+     * @return Language
+     */
     public static function getLanguageById($languageId, $database = null)
     {
         return self::getInstanceById($languageId, localize("language.title"), self::class, $database);

@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -332,6 +333,11 @@ class Page
         ];
     }
 
+    /**
+     * Summary of getFilters
+     * @param Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @return void
+     */
     public function getFilters($instance)
     {
         $this->entryArray = [];

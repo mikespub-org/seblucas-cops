@@ -51,7 +51,7 @@ class CustomColumnTypeFloat extends CustomColumnType
         return new CustomColumn($id, $id, $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
         $query = str_format($queryFormat, $this->getTableName());

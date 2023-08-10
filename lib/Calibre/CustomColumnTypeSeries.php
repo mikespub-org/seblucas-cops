@@ -69,7 +69,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());

@@ -23,11 +23,11 @@ class PageAllAuthors extends Page
     {
         if ($this->request->option("author_split_first_letter") == 1 || $this->request->get('letter')) {
             $this->entryArray = Author::getCountByFirstLetter($this->request, $this->getDatabaseId());
-            $this->sorted = "letter";
+            $this->sorted = $this->request->getSorted("letter");
         } else {
             $this->entryArray = Author::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
             $this->totalNumber = Author::countRequestEntries($this->request, $this->getDatabaseId());
-            $this->sorted = Author::SQL_SORT;
+            $this->sorted = $this->request->getSorted(Author::SQL_SORT);
         }
     }
 }

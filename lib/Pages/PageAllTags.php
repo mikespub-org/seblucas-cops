@@ -25,7 +25,7 @@ class PageAllTags extends Page
         global $config;
         $this->entryArray = Tag::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
         $this->totalNumber = Tag::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Tag::SQL_SORT;
+        $this->sorted = $this->request->getSorted(Tag::SQL_SORT);
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", $config['cops_show_not_set_filter'])) {
             $this->addNotSetEntry();
         }
@@ -35,6 +35,7 @@ class PageAllTags extends Page
     {
         $instance = new Tag((object)['id' => null, 'name' => localize("tagword.none")], $this->getDatabaseId());
         $booklist = new BookList($this->request);
+        $booklist->orderBy = null;
         [$result,] = $booklist->getBooksWithoutTag(-1);
         array_push($this->entryArray, $instance->getEntry(count($result)));
     }

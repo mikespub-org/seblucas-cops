@@ -70,7 +70,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         return new CustomColumn($id, $id, $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value ORDER BY value";
         $query = str_format($queryFormat, $this->getTableName());
@@ -88,9 +88,10 @@ class CustomColumnTypeInteger extends CustomColumnType
     /**
      * Summary of getCountByRange
      * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
+     * @param mixed $sort
      * @return Entry[]
      */
-    public function getCountByRange($page)
+    public function getCountByRange($page, $sort = null)
     {
         global $config;
         $numtiles = $config['cops_custom_integer_split_range'];
@@ -129,9 +130,10 @@ class CustomColumnTypeInteger extends CustomColumnType
     /**
      * Summary of getCustomValuesByRange
      * @param mixed $range
+     * @param mixed $sort
      * @return Entry[]
      */
-    public function getCustomValuesByRange($range)
+    public function getCustomValuesByRange($range, $sort = null)
     {
         $matches = [];
         if (!preg_match(self::GET_PATTERN, $range, $matches)) {

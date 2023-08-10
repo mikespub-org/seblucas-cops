@@ -92,7 +92,7 @@ class BookList extends Base
 
     protected function setOrderBy()
     {
-        $this->orderBy = $this->request->get('sort', null, '/^\w+(\s+(asc|desc)|)$/i');
+        $this->orderBy = $this->request->getSorted();
         //$this->orderBy ??= $this->request->option('sort');
     }
 
@@ -298,6 +298,7 @@ class BookList extends Base
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 
+        // @todo check orderBy to sort by count
         /** @var \PDOStatement $result */
         [, $result] = parent::executeQuery('select {0}
 from books

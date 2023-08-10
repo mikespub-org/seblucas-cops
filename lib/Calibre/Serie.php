@@ -45,39 +45,39 @@ class Serie extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by seriesId (linked via books) */
 
-    public function getBooks($n = -1)
+    public function getBooks($n = -1, $sort = null)
     {
-        return Book::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+        return Book::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getAuthors($n = -1)
+    public function getAuthors($n = -1, $sort = null)
     {
-        return Author::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+        return Author::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getLanguages($n = -1)
+    public function getLanguages($n = -1, $sort = null)
     {
-        return Language::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+        return Language::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getPublishers($n = -1)
+    public function getPublishers($n = -1, $sort = null)
     {
-        return Publisher::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+        return Publisher::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getRatings($n = -1)
+    public function getRatings($n = -1, $sort = null)
     {
-        return Rating::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+        return Rating::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getSeries($n = -1)
+    public function getSeries($n = -1, $sort = null)
     {
-        //return Serie::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+        //return Serie::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getTags($n = -1)
+    public function getTags($n = -1, $sort = null)
     {
-        return Tag::getEntriesBySeriesId($this->id, $n, $this->databaseId);
+        return Tag::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -100,6 +100,12 @@ where series.id = series and book = ?');
         return null;
     }
 
+    /**
+     * Summary of getSerieById
+     * @param mixed $serieId
+     * @param mixed $database
+     * @return Serie
+     */
     public static function getSerieById($serieId, $database = null)
     {
         return self::getInstanceById($serieId, localize("seriesword.none"), self::class, $database);

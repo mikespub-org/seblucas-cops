@@ -48,39 +48,39 @@ class Rating extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by ratingId (linked via books) */
 
-    public function getBooks($n = -1)
+    public function getBooks($n = -1, $sort = null)
     {
-        return Book::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        return Book::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getAuthors($n = -1)
+    public function getAuthors($n = -1, $sort = null)
     {
-        return Author::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        return Author::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getLanguages($n = -1)
+    public function getLanguages($n = -1, $sort = null)
     {
-        return Language::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        return Language::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getPublishers($n = -1)
+    public function getPublishers($n = -1, $sort = null)
     {
-        return Publisher::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        return Publisher::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getRatings($n = -1)
+    public function getRatings($n = -1, $sort = null)
     {
-        //return Rating::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        //return Rating::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getSeries($n = -1)
+    public function getSeries($n = -1, $sort = null)
     {
-        return Serie::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        return Serie::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
     }
 
-    public function getTags($n = -1)
+    public function getTags($n = -1, $sort = null)
     {
-        return Tag::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        return Tag::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -91,6 +91,12 @@ class Rating extends Base
         return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
+    /**
+     * Summary of getRatingById
+     * @param mixed $ratingId
+     * @param mixed $database
+     * @return Rating
+     */
     public static function getRatingById($ratingId, $database = null)
     {
         return self::getInstanceById($ratingId, 0, self::class, $database);

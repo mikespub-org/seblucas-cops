@@ -63,7 +63,7 @@ class CustomColumnTypeBool extends CustomColumnType
         return new CustomColumn($id, localize($this->BOOLEAN_NAMES[$id]), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());

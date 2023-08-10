@@ -48,7 +48,7 @@ class CustomColumnTypeComment extends CustomColumnType
         return "<div>" . $value . "</div>"; // no htmlspecialchars, this is already HTML
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         return null;
     }
