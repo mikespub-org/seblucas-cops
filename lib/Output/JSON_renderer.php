@@ -180,6 +180,7 @@ class JSONRenderer
                 "tagwordTitle" => localize("tagword.title"),
                 "linksTitle" => localize("links.title"),
                 "seriesTitle" => localize("series.title"),
+                "defaultTemplate" => localize("default.template"),
                 "customizeTitle" => localize("customize.title"),
                 "aboutTitle" => localize("about.title"),
                 "previousAlt" => localize("paging.previous.alternate"),
