@@ -245,13 +245,11 @@ class JSONRenderer
             $homepage = constant('SebLucas\Cops\Pages\Page::' . $config['cops_home_page']);
         }
         $page = $request->get("page", $homepage);
-        $query = $request->get("query");
         $search = $request->get("search");
         $qid = $request->get("id");
-        $n = $request->get("n", "1");
         $database = $request->get('db');
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         if ($search) {

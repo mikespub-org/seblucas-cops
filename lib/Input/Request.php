@@ -311,6 +311,7 @@ class Request
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
         $request = new self();
         $request->urlParams = $params;
+        $request->queryString = http_build_query($request->urlParams);
         return $request;
     }
 }

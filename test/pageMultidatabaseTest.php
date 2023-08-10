@@ -9,6 +9,7 @@
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 
 class PageMultiDatabaseTest extends TestCase
@@ -23,8 +24,9 @@ class PageMultiDatabaseTest extends TestCase
         $query = null;
         $qid = null;
         $n = "1";
+        $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals($config['cops_title_default'], $currentPage->title);
@@ -51,10 +53,12 @@ class PageMultiDatabaseTest extends TestCase
         $query = "art";
         $qid = null;
         $n = "1";
+        $request = new Request();
+        $request->set('query', "art");
 
         // Issue 124
         $config['cops_max_item_per_page'] = $maxItem;
-        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *art*", $currentPage->title);

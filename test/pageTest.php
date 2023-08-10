@@ -29,12 +29,9 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals($config['cops_title_default'], $currentPage->title);
@@ -75,14 +72,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config ['cops_ignored_categories'] = ["author", "series", "tag", "publisher", "language"];
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals($config['cops_title_default'], $currentPage->title);
@@ -101,14 +95,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_calibre_custom_column'] = ["type1"];
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(9, $currentPage->entryArray);
@@ -123,14 +114,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_calibre_custom_column'] = ["type2"];
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(9, $currentPage->entryArray);
@@ -145,14 +133,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_calibre_custom_column'] = ["type4"];
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(9, $currentPage->entryArray);
@@ -167,14 +152,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_calibre_custom_column'] = ["type1", "type2", "type4"];
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(11, $currentPage->entryArray);
@@ -186,14 +168,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_calibre_custom_column'] = ["*"];
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(11, $currentPage->entryArray);
@@ -204,14 +183,11 @@ class PageTest extends TestCase
     public function testPageAllCustom_Type4()
     {
         $page = Page::ALL_CUSTOMS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $request->set('custom', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Type4", $currentPage->title);
@@ -226,14 +202,11 @@ class PageTest extends TestCase
     public function testPageAllCustom_Type2()
     {
         $page = Page::ALL_CUSTOMS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $request->set('custom', 2);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Type2", $currentPage->title);
@@ -248,14 +221,11 @@ class PageTest extends TestCase
     public function testPageAllCustom_Type1()
     {
         $page = Page::ALL_CUSTOMS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $request->set('custom', 3);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Type1", $currentPage->title);
@@ -270,14 +240,12 @@ class PageTest extends TestCase
     public function testPageCustomDetail_Type4()
     {
         $page = Page::CUSTOM_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "1");
 
         $request->set('custom', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("SeriesLike", $currentPage->title);
@@ -289,14 +257,12 @@ class PageTest extends TestCase
     public function testPageCustomDetail_Type2()
     {
         $page = Page::CUSTOM_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "1");
 
         $request->set('custom', 2);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("tag1", $currentPage->title);
@@ -308,15 +274,12 @@ class PageTest extends TestCase
     public function testPageCustomDetail_Type1()
     {
         $page = Page::CUSTOM_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
         $request = new Request();
 
         $request->set('custom', 3);
-        $qid = "2";
+        $request->set('id', "2");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("other", $currentPage->title);
@@ -329,14 +292,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::ALL_AUTHORS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_author_split_first_letter'] = "0";
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Authors", $currentPage->title);
@@ -351,12 +311,9 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::ALL_AUTHORS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Authors", $currentPage->title);
@@ -369,13 +326,11 @@ class PageTest extends TestCase
     public function testPageAuthorsFirstLetter()
     {
         $page = Page::AUTHORS_FIRST_LETTER;
-        $query = null;
-        $qid = "C";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "C");
 
         // Author Lewis Carroll
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("1 author starting with C", $currentPage->title);
@@ -387,17 +342,14 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::AUTHOR_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
         $request = new Request();
+        $request->set('id', "1");
 
         $config['cops_max_item_per_page'] = 2;
 
         // First page
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
@@ -407,7 +359,6 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getPrevLink());
 
-        unset($_SERVER['QUERY_STRING']);
         $config['cops_max_item_per_page'] = -1;
     }
 
@@ -415,17 +366,14 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::AUTHOR_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
         $request = new Request();
+        $request->set('id', "1");
 
         // Last page
         $config['cops_max_item_per_page'] = 5;
-        $n = "2";
+        $request->set('n', "2");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
@@ -435,7 +383,6 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getNextLink());
 
-        unset($_SERVER['QUERY_STRING']);
         // No pagination
         $config['cops_max_item_per_page'] = -1;
     }
@@ -444,39 +391,31 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::AUTHOR_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
-        $_SERVER['QUERY_STRING'] = "page=" . Page::AUTHOR_DETAIL . "&id=1&n=1";
         $request = new Request();
+        $request->set('id', "1");
 
         // No pagination
         $config['cops_max_item_per_page'] = -1;
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertTrue($currentPage->containsBook());
         $this->assertFalse($currentPage->IsPaginated());
-
-        unset($_SERVER['QUERY_STRING']);
     }
 
     public function testPageAllBooks_WithFullName()
     {
         global $config;
         $page = Page::ALL_BOOKS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_titles_split_first_letter'] = 0;
         $config['cops_titles_split_publication_year'] = 0;
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
@@ -493,12 +432,9 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::ALL_BOOKS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
@@ -511,12 +447,10 @@ class PageTest extends TestCase
     public function testPageAllBooksByLetter()
     {
         $page = Page::ALL_BOOKS_LETTER;
-        $query = null;
-        $qid = "C";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "C");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("3 books starting with C", $currentPage->title);
@@ -529,15 +463,12 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::ALL_BOOKS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $config['cops_titles_split_first_letter'] = 0;
         $config['cops_titles_split_publication_year'] = 1;
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
@@ -553,12 +484,10 @@ class PageTest extends TestCase
     public function testPageAllBooksByYear()
     {
         $page = Page::ALL_BOOKS_YEAR;
-        $query = null;
-        $qid = "2006";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "2006");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("9 books published in 2006", $currentPage->title);
@@ -570,12 +499,9 @@ class PageTest extends TestCase
     public function testPageAllSeries()
     {
         $page = Page::ALL_SERIES;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Series", $currentPage->title);
@@ -590,12 +516,10 @@ class PageTest extends TestCase
     public function testPageSeriesDetail()
     {
         $page = Page::SERIE_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "1");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Sherlock Holmes", $currentPage->title);
@@ -607,12 +531,9 @@ class PageTest extends TestCase
     public function testPageAllPublishers()
     {
         $page = Page::ALL_PUBLISHERS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Publishers", $currentPage->title);
@@ -624,12 +545,10 @@ class PageTest extends TestCase
     public function testPagePublishersDetail()
     {
         $page = Page::PUBLISHER_DETAIL;
-        $query = null;
-        $qid = "6";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "6");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Strand Magazine", $currentPage->title);
@@ -641,12 +560,9 @@ class PageTest extends TestCase
     public function testPageAllTags()
     {
         $page = Page::ALL_TAGS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Tags", $currentPage->title);
@@ -661,12 +577,10 @@ class PageTest extends TestCase
     public function testPageTagDetail()
     {
         $page = Page::TAG_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "1");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Fiction", $currentPage->title);
@@ -678,12 +592,9 @@ class PageTest extends TestCase
     public function testPageAllLanguages()
     {
         $page = Page::ALL_LANGUAGES;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Languages", $currentPage->title);
@@ -696,12 +607,10 @@ class PageTest extends TestCase
     public function testPageLanguageDetail()
     {
         $page = Page::LANGUAGE_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "1");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("English", $currentPage->title);
@@ -713,12 +622,9 @@ class PageTest extends TestCase
     public function testPageAllRatings()
     {
         $page = Page::ALL_RATINGS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Ratings", $currentPage->title);
@@ -733,12 +639,10 @@ class PageTest extends TestCase
     public function testPageRatingDetail()
     {
         $page = Page::RATING_DETAIL;
-        $query = null;
-        $qid = "1";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "1");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("5 stars", $currentPage->title);
@@ -750,12 +654,9 @@ class PageTest extends TestCase
     public function testPageRecent()
     {
         $page = Page::ALL_RECENT_BOOKS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
@@ -767,13 +668,10 @@ class PageTest extends TestCase
     public function testPageRecent_WithFacets_IncludedTag()
     {
         $page = Page::ALL_RECENT_BOOKS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $request->set('tag', "Historical");
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
@@ -785,13 +683,10 @@ class PageTest extends TestCase
     public function testPageRecent_WithFacets_ExcludedTag()
     {
         $page = Page::ALL_RECENT_BOOKS;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $request->set('tag', "!Romance");
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
@@ -803,12 +698,10 @@ class PageTest extends TestCase
     public function testPageBookDetail()
     {
         $page = Page::BOOK_DETAIL;
-        $query = null;
-        $qid = "2";
-        $n = "1";
         $request = new Request();
+        $request->set('id', "2");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("The Return of Sherlock Holmes", $currentPage->title);
@@ -820,13 +713,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::OPENSEARCH_QUERY;
-        $query = "alice";
-        $qid = null;
-        $n = "1";
         $request = new Request();
+        $request->set('query', "alice");
 
         // Only books returned
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *alice*", $currentPage->title);
@@ -841,13 +732,11 @@ class PageTest extends TestCase
         global $config;
         $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
-        $query = "car";
-        $qid = null;
-        $n = "1";
         $request = new Request();
+        $request->set('query', "car");
 
         $config ['cops_ignored_categories'] = ["author"];
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *car*", $currentPage->title);
@@ -864,12 +753,10 @@ class PageTest extends TestCase
         global $config;
         $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
-        $query = "car";
-        $qid = null;
-        $n = "1";
         $request = new Request();
+        $request->set('query', "car");
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *car*", $currentPage->title);
@@ -888,11 +775,10 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::OPENSEARCH_QUERY;
-        $qid = null;
-        $n = "1";
         $request = new Request();
+        $request->set('query', $query);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *$query*", $currentPage->title);
@@ -921,16 +807,15 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::OPENSEARCH_QUERY;
-        $qid = null;
-        $n = "1";
         $config ['cops_normalized_search'] = "1";
         Database::clearDb();
         if (!Translation::useNormAndUp()) {
             $this->markTestIncomplete();
         }
         $request = new Request();
+        $request->set('query', $query);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *$query*", $currentPage->title);
@@ -961,13 +846,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::OPENSEARCH_QUERY;
-        $query = "Lewis Carroll";
         $request = new Request();
+        $request->set('query', "Lewis Carroll");
         $request->set('scope', "author");
-        $qid = null;
-        $n = "1";
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *Lewis Carroll* in authors", $currentPage->title);
@@ -980,13 +863,11 @@ class PageTest extends TestCase
     {
         global $config;
         $page = Page::OPENSEARCH_QUERY;
-        $query = "Carroll, Lewis";
         $request = new Request();
+        $request->set('query', "Carroll, Lewis");
         $request->set('scope', "author");
-        $qid = null;
-        $n = "1";
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *Carroll, Lewis* in authors", $currentPage->title);
@@ -998,14 +879,12 @@ class PageTest extends TestCase
     public function testPageSearchScopeAuthors()
     {
         $page = Page::OPENSEARCH_QUERY;
-        $qid = null;
-        $n = "1";
         $request = new Request();
         $request->set('scope', "author");
 
         // Match Lewis Carroll
-        $query = "car";
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $request->set('query', "car");
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *car* in authors", $currentPage->title);
@@ -1017,14 +896,12 @@ class PageTest extends TestCase
     public function testPageSearchScopeSeries()
     {
         $page = Page::OPENSEARCH_QUERY;
-        $qid = null;
-        $n = "1";
         $request = new Request();
         $request->set('scope', "series");
 
         // Match Holmes
-        $query = "hol";
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $request->set('query', "hol");
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *hol* in series", $currentPage->title);
@@ -1036,14 +913,12 @@ class PageTest extends TestCase
     public function testPageSearchScopeBooks()
     {
         $page = Page::OPENSEARCH_QUERY;
-        $qid = null;
-        $n = "1";
         $request = new Request();
         $request->set('scope', "book");
 
         // Match Holmes
-        $query = "hol";
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $request->set('query', "hol");
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *hol* in books", $currentPage->title);
@@ -1054,14 +929,12 @@ class PageTest extends TestCase
     public function testPageSearchScopePublishers()
     {
         $page = Page::OPENSEARCH_QUERY;
-        $qid = null;
-        $n = "1";
         $request = new Request();
         $request->set('scope', "publisher");
 
         // Match Holmes
-        $query = "millan";
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $request->set('query', "millan");
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *millan* in publishers", $currentPage->title);
@@ -1073,14 +946,12 @@ class PageTest extends TestCase
     public function testPageSearchScopeTags()
     {
         $page = Page::OPENSEARCH_QUERY;
-        $qid = null;
-        $n = "1";
         $request = new Request();
         $request->set('scope', "tag");
 
         // Match Holmes
-        $query = "fic";
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $request->set('query', "fic");
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *fic* in tags", $currentPage->title);
@@ -1091,12 +962,9 @@ class PageTest extends TestCase
     public function testPageAbout()
     {
         $page = Page::ABOUT;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("About COPS", $currentPage->title);
@@ -1107,12 +975,9 @@ class PageTest extends TestCase
     public function testPageCustomize()
     {
         $page = Page::CUSTOMIZE;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Customize COPS UI", $currentPage->title);

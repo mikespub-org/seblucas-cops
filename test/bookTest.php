@@ -581,9 +581,10 @@ class BookTest extends TestCase
         $qid = $request->get("id");
         $query = "fic";
         $n = $request->get("n", "1");
+        $request->set('query', "fic");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -599,9 +600,10 @@ class BookTest extends TestCase
         $qid = $request->get("id");
         $query = "car";
         $n = $request->get("n", "1");
+        $request->set('query', "car");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(4, $currentPage->entryArray);
@@ -619,9 +621,10 @@ class BookTest extends TestCase
         $qid = $request->get("id");
         $query = "art";
         $n = $request->get("n", "1");
+        $request->set('query', "art");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
@@ -639,9 +642,10 @@ class BookTest extends TestCase
         $qid = $request->get("id");
         $query = "Macmillan";
         $n = $request->get("n", "1");
+        $request->set('query', "Macmillan");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -658,10 +662,11 @@ class BookTest extends TestCase
         $qid = $request->get("id");
         $query = "car";
         $n = $request->get("n", "1");
+        $request->set('query', "car");
         $request->set('search', 1);
 
         $config ['cops_ignored_categories'] = ["author"];
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
@@ -679,10 +684,11 @@ class BookTest extends TestCase
         $qid = $request->get("id");
         $query = "art";
         $n = $request->get("n", "1");
+        $request->set('query', "art");
         $request->set('search', 1);
 
         $config ['cops_ignored_categories'] = ["series"];
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
@@ -700,12 +706,13 @@ class BookTest extends TestCase
         $qid = $request->get("id");
         $query = "art";
         $n = $request->get("n", "1");
+        $request->set('query', "art");
         $request->set('search', 1);
         $request->set('multi', 1);
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
             "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
