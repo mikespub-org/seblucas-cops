@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -17,7 +18,8 @@ use SebLucas\Cops\Pages\Page;
 use SebLucas\EPubMeta\EPub;
 use Exception;
 
-class Book extends Base
+//class Book extends Base
+class Book
 {
     public const PAGE_ID = Page::ALL_BOOKS_ID;
     public const PAGE_ALL = Page::ALL_BOOKS;
@@ -49,6 +51,7 @@ class Book extends Base
     public $seriesIndex;
     public $comment;
     public $rating;
+    protected $databaseId = null;
     public $datas = null;
     public $authors = null;
     public $publisher = null;
@@ -131,6 +134,11 @@ class Book extends Base
         $this->databaseId = $database;
     }
 
+    public function getDatabaseId()
+    {
+        return $this->databaseId;
+    }
+
     public function getEntryId()
     {
         return Page::ALL_BOOKS_UUID.':'.$this->uuid;
@@ -168,7 +176,7 @@ class Book extends Base
     /**
      * @return Author[]
      */
-    public function getAuthors()
+    public function getAuthors($n = -1, $sort = null)
     {
         if (is_null($this->authors)) {
             $this->authors = Author::getAuthorsByBookId($this->id, $this->databaseId);
@@ -212,7 +220,7 @@ class Book extends Base
     /**
      * @return string
      */
-    public function getLanguages()
+    public function getLanguages($n = -1, $sort = null)
     {
         if (is_null($this->languages)) {
             $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId);
@@ -223,7 +231,7 @@ class Book extends Base
     /**
      * @return Tag[]
      */
-    public function getTags()
+    public function getTags($n = -1, $sort = null)
     {
         if (is_null($this->tags)) {
             $this->tags = Tag::getTagsByBookId($this->id, $this->databaseId);
@@ -477,7 +485,7 @@ class Book extends Base
     public function getCustomColumnValues($columns, $asArray = false)
     {
         $result = [];
-        $database = $this->getDatabaseId();
+        $database = $this->databaseId;
 
         $columns = CustomColumnType::checkCustomColumnList($columns, $database);
 
@@ -500,7 +508,7 @@ class Book extends Base
 
     public function getLinkArray()
     {
-        $database = $this->getDatabaseId();
+        $database = $this->databaseId;
         $linkArray = [];
 
         if ($this->hasCover) {

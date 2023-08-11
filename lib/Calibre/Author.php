@@ -69,11 +69,6 @@ class Author extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by authorId (linked via books) */
 
-    public function getBooks($n = -1, $sort = null)
-    {
-        return Book::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
-    }
-
     public function getAuthors($n = -1, $sort = null)
     {
         //return Author::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);

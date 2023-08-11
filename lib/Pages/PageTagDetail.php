@@ -20,7 +20,7 @@ class PageTagDetail extends Page
             $this->filterUri = '&t=' . $this->idGet;
             $this->getFilters($tag);
         } else {
-            $this->getEntries();
+            $this->getEntries($tag);
         }
         $this->idPage = $tag->getEntryId();
         $this->title = $tag->getTitle();
@@ -29,10 +29,10 @@ class PageTagDetail extends Page
         $this->parentUri = $tag->getParentUri();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByTag($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

@@ -57,11 +57,6 @@ class Rating extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by ratingId (linked via books) */
 
-    public function getBooks($n = -1, $sort = null)
-    {
-        return Book::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
-    }
-
     public function getAuthors($n = -1, $sort = null)
     {
         return Author::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);

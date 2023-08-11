@@ -27,7 +27,7 @@ class PageCustomDetail extends Page
             $this->filterUri = '&c[' . $customId . ']=' . $this->idGet;
             $this->getFilters($custom);
         } else {
-            $this->getCustomEntries($custom->customColumnType);
+            $this->getCustomEntries($custom);
         }
         $this->parentTitle = $custom->getParentTitle();
         $this->parentUri = $custom->getParentUri();
@@ -35,11 +35,12 @@ class PageCustomDetail extends Page
 
     /**
      * Summary of getCustomEntries
-     * @param CustomColumnType $columnType
+     * @param CustomColumn $custom
      * @return void
      */
-    public function getCustomEntries($columnType)
+    public function getCustomEntries($custom)
     {
+        $columnType = $custom->customColumnType;
         $booklist = new BookList($this->request);
         if (empty($this->idGet)) {
             if ($columnType instanceof CustomColumnTypeDate) {
@@ -63,7 +64,7 @@ class PageCustomDetail extends Page
                 }
             }
         }
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustom($columnType, $this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($custom, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

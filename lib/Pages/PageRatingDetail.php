@@ -20,7 +20,7 @@ class PageRatingDetail extends Page
             $this->filterUri = '&r=' . $this->idGet;
             $this->getFilters($rating);
         } else {
-            $this->getEntries();
+            $this->getEntries($rating);
         }
         $this->idPage = $rating->getEntryId();
         $this->title = $rating->getTitle();
@@ -29,10 +29,10 @@ class PageRatingDetail extends Page
         $this->parentUri = $rating->getParentUri();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByRating($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

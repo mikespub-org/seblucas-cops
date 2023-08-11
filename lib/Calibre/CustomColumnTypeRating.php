@@ -56,7 +56,7 @@ class CustomColumnTypeRating extends CustomColumnType
         }
     }
 
-    public function getFilter($id)
+    public function getFilter($id, $parentTable = null)
     {
         // @todo do we want to filter on ratings Id or Value here
         return ["", []];

@@ -169,6 +169,20 @@ class Filter
     }
 
     /**
+     * Summary of addInstanceFilter
+     * @param Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @return void
+     */
+    public function addInstanceFilter($instance)
+    {
+        if ($instance instanceof CustomColumn) {
+            $this->addCustomIdFilter($instance->customColumnType, $instance->id);
+            return;
+        }
+        $this->addLinkedIdFilter($instance->id, $instance->getLinkTable(), $instance->getLinkColumn());
+    }
+
+    /**
      * Summary of addAuthorIdFilter
      * @param mixed $authorId
      * @return void
@@ -268,7 +282,7 @@ class Filter
 
     /**
      * Summary of addCustomIdFilter
-     * @param mixed $customType
+     * @param CustomColumnType $customType
      * @param mixed $valueId
      * @return void
      */

@@ -379,7 +379,7 @@ abstract class CustomColumnType
      */
     abstract public function getQuery($id);
 
-    abstract public function getFilter($id);
+    abstract public function getFilter($id, $parentTable = null);
 
     /**
      * Get a CustomColumn for a specified (by ID) value

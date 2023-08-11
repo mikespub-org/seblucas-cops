@@ -119,6 +119,68 @@ abstract class Base
         );
     }
 
+    /** Use inherited class methods to get entries from <Whatever> by instance (linked via books) */
+
+    public function getLinkTable()
+    {
+        return static::SQL_LINK_TABLE;
+    }
+
+    public function getLinkColumn()
+    {
+        return static::SQL_LINK_COLUMN;
+    }
+
+    public function getBooks($n = -1, $sort = null)
+    {
+        // @todo see if we want to do something special for books, and deal with static:: inheritance
+        //return $this->getEntriesByInstance(Book::class, $n, $sort, $this->databaseId);
+        $booklist = new BookList(null, $this->databaseId);
+        $booklist->orderBy = $sort;
+        [$entryArray, ] = $booklist->getBooksByInstance($this, $n);
+        return $entryArray;
+    }
+
+    public function getEntriesByInstance($className, $n = -1, $sort = null, $database = null, $numberPerPage = null)
+    {
+        //$baselist = new BaseList(null, $className, $database, $numberPerPage);
+        //$baselist->orderBy = $sort;
+        //[$entryArray, ] = $baselist->getEntriesByInstance($this, $n);
+        $filter = new Filter([], [], $className::SQL_LINK_TABLE, $database);
+        $filter->addInstanceFilter($this);
+        return $className::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
+    }
+
+    public function getAuthors($n = -1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Author::class, $n, $sort, $this->databaseId);
+    }
+
+    public function getLanguages($n = -1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Language::class, $n, $sort, $this->databaseId);
+    }
+
+    public function getPublishers($n = -1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Publisher::class, $n, $sort, $this->databaseId);
+    }
+
+    public function getRatings($n = -1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Rating::class, $n, $sort, $this->databaseId);
+    }
+
+    public function getSeries($n = -1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Serie::class, $n, $sort, $this->databaseId);
+    }
+
+    public function getTags($n = -1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Tag::class, $n, $sort, $this->databaseId);
+    }
+
     public function getCustomValues($customType)
     {
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
@@ -129,7 +191,7 @@ abstract class Base
 
     public static function getInstanceById($id, $default = null, $className = self::class, $database = null)
     {
-        $query = 'select ' . static::SQL_COLUMNS . ' from ' . static::SQL_TABLE . ' where id = ?';
+        $query = 'select ' . $className::SQL_COLUMNS . ' from ' . $className::SQL_TABLE . ' where id = ?';
         $result = Database::query($query, [$id], $database);
         if ($post = $result->fetchObject()) {
             return new $className($post, $database);

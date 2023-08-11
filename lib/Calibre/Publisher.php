@@ -53,11 +53,6 @@ class Publisher extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by publisherId (linked via books) */
 
-    public function getBooks($n = -1, $sort = null)
-    {
-        return Book::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);
-    }
-
     public function getAuthors($n = -1, $sort = null)
     {
         return Author::getEntriesByPublisherId($this->id, $n, $sort, $this->databaseId);

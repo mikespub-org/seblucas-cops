@@ -20,7 +20,7 @@ class PageAuthorDetail extends Page
             $this->filterUri = '&a=' . $this->idGet;
             $this->getFilters($author);
         } else {
-            $this->getEntries();
+            $this->getEntries($author);
         }
         $this->idPage = $author->getEntryId();
         $this->title = $author->name;  // not by getTitle() = $author->sort here
@@ -30,10 +30,10 @@ class PageAuthorDetail extends Page
         //$seriesArray = $author->getSeries();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByAuthor($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series desc";
     }
 }

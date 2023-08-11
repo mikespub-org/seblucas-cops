@@ -55,11 +55,6 @@ class Language extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */
 
-    public function getBooks($n = -1, $sort = null)
-    {
-        return Book::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
-    }
-
     public function getAuthors($n = -1, $sort = null)
     {
         return Author::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);

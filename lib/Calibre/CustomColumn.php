@@ -119,11 +119,6 @@ class CustomColumn extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by customType and valueId (linked via books) */
 
-    public function getBooks($n = -1, $sort = null)
-    {
-        return Book::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
-    }
-
     public function getAuthors($n = -1, $sort = null)
     {
         return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);

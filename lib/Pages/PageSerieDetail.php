@@ -20,7 +20,7 @@ class PageSerieDetail extends Page
             $this->filterUri = '&s=' . $this->idGet;
             $this->getFilters($serie);
         } else {
-            $this->getEntries();
+            $this->getEntries($serie);
         }
         $this->idPage = $serie->getEntryId();
         $this->title = $serie->getTitle();
@@ -29,10 +29,10 @@ class PageSerieDetail extends Page
         $this->parentUri = $serie->getParentUri();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksBySeries($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series_index";
     }
 }

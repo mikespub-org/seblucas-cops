@@ -20,7 +20,7 @@ class PageLanguageDetail extends Page
             $this->filterUri = '&l=' . $this->idGet;
             $this->getFilters($language);
         } else {
-            $this->getEntries();
+            $this->getEntries($language);
         }
         $this->idPage = $language->getEntryId();
         $this->title = $language->getTitle();
@@ -29,10 +29,10 @@ class PageLanguageDetail extends Page
         $this->parentUri = $language->getParentUri();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByLanguage($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

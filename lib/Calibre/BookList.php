@@ -42,9 +42,9 @@ class BookList
     protected array $ignoredCategories = [];
     public mixed $orderBy = null;
 
-    public function __construct(Request $request, mixed $database = null, mixed $numberPerPage = null)
+    public function __construct(?Request $request, mixed $database = null, mixed $numberPerPage = null)
     {
-        $this->request = $request;
+        $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
@@ -109,12 +109,15 @@ class BookList
 
     /**
      * Summary of getBooksByInstance
-     * @param Author|Language|Publisher|Rating|Serie|Tag $instance
+     * @param Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
      * @param mixed $n
      * @return array
      */
     public function getBooksByInstance($instance, $n)
     {
+        if ($instance instanceof CustomColumn) {
+            return $this->getBooksByCustom($instance->customColumnType, $instance->id, $n);
+        }
         return $this->getEntryArray($instance::SQL_BOOKLIST, [$instance->id], $n);
     }
 

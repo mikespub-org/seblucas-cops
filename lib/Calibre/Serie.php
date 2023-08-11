@@ -54,11 +54,6 @@ class Serie extends Base
 
     /** Use inherited class methods to get entries from <Whatever> by seriesId (linked via books) */
 
-    public function getBooks($n = -1, $sort = null)
-    {
-        return Book::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
-    }
-
     public function getAuthors($n = -1, $sort = null)
     {
         return Author::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
