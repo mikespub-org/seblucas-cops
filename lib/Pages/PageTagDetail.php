@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\Tag;
 
 class PageTagDetail extends Page
 {
+    protected $className = Tag::class;
+
     public function InitializeContent()
     {
         $tag = Tag::getTagById($this->idGet, $this->getDatabaseId());

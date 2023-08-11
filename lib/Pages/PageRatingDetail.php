@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\Rating;
 
 class PageRatingDetail extends Page
 {
+    protected $className = Rating::class;
+
     public function InitializeContent()
     {
         $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());

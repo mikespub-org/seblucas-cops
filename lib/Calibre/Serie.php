@@ -26,6 +26,7 @@ class Serie extends Base
     where books_series_link.book = books.id and series = ? {1} order by series_index';
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books.id not in (select book from books_series_link) {1} order by books.sort';
+    public const URL_PARAM = "s";
 
     public $id;
     public $name;
@@ -52,45 +53,7 @@ class Serie extends Base
         return localize("series.title");
     }
 
-    /** Use inherited class methods to get entries from <Whatever> by seriesId (linked via books) */
-
-    public function getAuthors($n = -1, $sort = null)
-    {
-        return Author::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1, $sort = null)
-    {
-        return Language::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1, $sort = null)
-    {
-        return Publisher::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getRatings($n = -1, $sort = null)
-    {
-        return Rating::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getSeries($n = -1, $sort = null)
-    {
-        //return Serie::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getTags($n = -1, $sort = null)
-    {
-        return Tag::getEntriesBySeriesId($this->id, $n, $sort, $this->databaseId);
-    }
-
     /** Use inherited class methods to query static SQL_TABLE for this class */
-
-    public static function getCount($database = null)
-    {
-        // str_format (localize("series.alphabetical", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
-    }
 
     public static function getSerieByBookId($bookId, $database = null)
     {
@@ -112,11 +75,6 @@ where series.id = series and book = ?';
      */
     public static function getSerieById($serieId, $database = null)
     {
-        return self::getInstanceById($serieId, localize("seriesword.none"), self::class, $database);
-    }
-
-    public static function getAllSeriesByQuery($query, $n = -1, $database = null, $numberPerPage = null)
-    {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ROWS_FOR_SEARCH, self::SQL_COLUMNS, "", ['%' . $query . '%'], self::class, $n, $database, $numberPerPage);
+        return self::getInstanceById($serieId, localize("seriesword.none"), $database);
     }
 }

@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\Serie;
 
 class PageSerieDetail extends Page
 {
+    protected $className = Serie::class;
+
     public function InitializeContent()
     {
         $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());

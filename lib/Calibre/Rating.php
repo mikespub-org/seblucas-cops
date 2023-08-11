@@ -25,6 +25,8 @@ class Rating extends Base
     where books_ratings_link.book = books.id and ratings.id = ? {1} order by books.sort';
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by books.sort';
+    public const URL_PARAM = "r";
+
     public $id;
     public $name;
 
@@ -55,44 +57,12 @@ class Rating extends Base
         return localize("ratings.title");
     }
 
-    /** Use inherited class methods to get entries from <Whatever> by ratingId (linked via books) */
-
-    public function getAuthors($n = -1, $sort = null)
-    {
-        return Author::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1, $sort = null)
-    {
-        return Language::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1, $sort = null)
-    {
-        return Publisher::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getRatings($n = -1, $sort = null)
-    {
-        //return Rating::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getSeries($n = -1, $sort = null)
-    {
-        return Serie::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getTags($n = -1, $sort = null)
-    {
-        return Tag::getEntriesByRatingId($this->id, $n, $sort, $this->databaseId);
-    }
-
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
     public static function getCount($database = null)
     {
         // str_format (localize("ratings", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
+        return BaseList::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
     /**
@@ -103,6 +73,6 @@ class Rating extends Base
      */
     public static function getRatingById($ratingId, $database = null)
     {
-        return self::getInstanceById($ratingId, 0, self::class, $database);
+        return self::getInstanceById($ratingId, 0, $database);
     }
 }

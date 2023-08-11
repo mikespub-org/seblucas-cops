@@ -11,6 +11,12 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Language;
+use SebLucas\Cops\Calibre\Publisher;
+use SebLucas\Cops\Calibre\Rating;
+use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Link;
@@ -107,19 +113,20 @@ class BookTest extends TestCase
 
         $config['cops_max_item_per_page'] = 5;
         $booklist = new BookList(self::$request);
+        $author = Author::getAuthorById(1);
 
-        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, 1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, 1);
         $this->assertEquals(5, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
-        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, 2);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, 2);
         $this->assertEquals(3, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
         $config['cops_max_item_per_page'] = -1;
         $booklist = new BookList(self::$request);
 
-        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -127,9 +134,10 @@ class BookTest extends TestCase
     public function testGetBooksBySeries()
     {
         $booklist = new BookList(self::$request);
+        $series = Serie::getSerieById(1);
 
         // All book from the Sherlock Holmes series
-        [$entryArray, $totalNumber] = $booklist->getBooksBySeries(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($series, -1);
         $this->assertEquals(7, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -137,9 +145,10 @@ class BookTest extends TestCase
     public function testGetBooksByPublisher()
     {
         $booklist = new BookList(self::$request);
+        $publisher = Publisher::getPublisherById(6);
 
         // All books from Strand Magazine
-        [$entryArray, $totalNumber] = $booklist->getBooksByPublisher(6, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($publisher, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -147,9 +156,10 @@ class BookTest extends TestCase
     public function testGetBooksByTag()
     {
         $booklist = new BookList(self::$request);
+        $tag = Tag::getTagById(1);
 
         // All book with the Fiction tag
-        [$entryArray, $totalNumber] = $booklist->getBooksByTag(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($tag, -1);
         $this->assertEquals(14, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -157,10 +167,22 @@ class BookTest extends TestCase
     public function testGetBooksByLanguage()
     {
         $booklist = new BookList(self::$request);
+        $language = Language::getLanguageById(1);
 
         // All english book (= all books)
-        [$entryArray, $totalNumber] = $booklist->getBooksByLanguage(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($language, -1);
         $this->assertEquals(14, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksByRating()
+    {
+        $booklist = new BookList(self::$request);
+        $rating = Rating::getRatingById(1);
+
+        // All books with 4 stars
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($rating, -1);
+        $this->assertEquals(4, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 

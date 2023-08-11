@@ -279,7 +279,6 @@ class Database
             $query .= " limit ?, ?";
             array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
-
         $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         return [$totalResult, $result];

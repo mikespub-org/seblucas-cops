@@ -90,6 +90,7 @@ class Page
 
     /** @var Request */
     protected $request = null;
+    protected $className = null;
     protected $numberPerPage = -1;
     protected $ignoredCategories = [];
     protected $databaseId = null;

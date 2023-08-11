@@ -12,6 +12,8 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageRecentBooks extends Page
 {
+    //protected $className = Book::class;
+
     public function InitializeContent()
     {
         $this->getEntries();

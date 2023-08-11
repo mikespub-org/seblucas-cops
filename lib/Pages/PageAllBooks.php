@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAllBooks extends Page
 {
+    protected $className = Book::class;
+
     public function InitializeContent()
     {
         $this->getEntries();

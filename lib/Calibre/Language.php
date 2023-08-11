@@ -23,6 +23,8 @@ class Language extends Base
     public const SQL_ALL_ROWS = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code {1} group by languages.id, books_languages_link.lang_code order by languages.lang_code";
     public const SQL_BOOKLIST = 'select {0} from books_languages_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
+    public const URL_PARAM = "l";
+
     public $id;
     public $name;
 
@@ -53,38 +55,6 @@ class Language extends Base
         return localize("languages.title");
     }
 
-    /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */
-
-    public function getAuthors($n = -1, $sort = null)
-    {
-        return Author::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1, $sort = null)
-    {
-        //return Language::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1, $sort = null)
-    {
-        return Publisher::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getRatings($n = -1, $sort = null)
-    {
-        return Rating::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getSeries($n = -1, $sort = null)
-    {
-        return Serie::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getTags($n = -1, $sort = null)
-    {
-        return Tag::getEntriesByLanguageId($this->id, $n, $sort, $this->databaseId);
-    }
-
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
     public static function getLanguageString($code)
@@ -96,12 +66,6 @@ class Language extends Base
         return $string;
     }
 
-    public static function getCount($database = null)
-    {
-        // str_format (localize("languages.alphabetical", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
-    }
-
     /**
      * Summary of getLanguageById
      * @param mixed $languageId
@@ -110,7 +74,7 @@ class Language extends Base
      */
     public static function getLanguageById($languageId, $database = null)
     {
-        return self::getInstanceById($languageId, localize("language.title"), self::class, $database);
+        return self::getInstanceById($languageId, localize("language.title"), $database);
     }
 
     public static function getLanguagesByBookId($bookId, $database = null)

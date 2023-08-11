@@ -17,6 +17,8 @@ use SebLucas\Cops\Model\Entry;
 
 class PageAllCustoms extends Page
 {
+    protected $className = CustomColumnType::class;
+
     public function InitializeContent()
     {
         global $config;
@@ -107,6 +109,7 @@ class PageAllCustoms extends Page
     public function addCustomNotSetEntry($columnType)
     {
         $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
+        // @todo support countWithoutEntries() for CustomColumn
         $booklist = new BookList($this->request);
         $booklist->orderBy = null;
         [$result,] = $booklist->getBooksWithoutCustom($columnType, -1);

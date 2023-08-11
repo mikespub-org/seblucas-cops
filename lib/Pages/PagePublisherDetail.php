@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\Publisher;
 
 class PagePublisherDetail extends Page
 {
+    protected $className = Publisher::class;
+
     public function InitializeContent()
     {
         $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());

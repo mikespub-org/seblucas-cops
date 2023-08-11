@@ -9,8 +9,9 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
@@ -50,16 +51,20 @@ class PageQueryResult extends Page
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList($this->request, Author::class, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
             case self::SCOPE_SERIES :
-                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList($this->request, Serie::class, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case self::SCOPE_TAG :
-                $array = Tag::getAllTagsByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList($this->request, Tag::class, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case self::SCOPE_PUBLISHER :
-                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList($this->request, Publisher::class, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             default:
                 $booklist = new BookList($this->request, $database, $numberPerPage);

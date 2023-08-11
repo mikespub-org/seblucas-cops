@@ -32,6 +32,7 @@ abstract class CustomColumnType
     where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books.id not in (select book from {2}) {1} order by books.sort';
+    public const URL_PARAM = "c";
     public const ALL_WILDCARD         = ["*"];
 
     public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
@@ -375,7 +376,7 @@ abstract class CustomColumnType
      *  - second an array of all PreparedStatement parameters
      *
      * @param string|integer|null $id the id of the searched value
-     * @return array|null
+     * @return array{0: string, 1: array}|null
      */
     abstract public function getQuery($id);
 

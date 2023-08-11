@@ -33,6 +33,8 @@ class BookList
     title like ?) {1} order by books.sort';
     public const SQL_BOOKS_RECENT = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where 1=1 {1} order by books.timestamp desc limit ';
+    public const URL_PARAM_FIRST = "f";
+    public const URL_PARAM_YEAR = "y";
 
     public const BAD_SEARCH = 'QQQQQ';
 
@@ -109,86 +111,26 @@ class BookList
 
     /**
      * Summary of getBooksByInstance
-     * @param Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @param Base|Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
      * @param mixed $n
      * @return array
      */
     public function getBooksByInstance($instance, $n)
     {
-        if ($instance instanceof CustomColumn) {
-            return $this->getBooksByCustom($instance->customColumnType, $instance->id, $n);
+        if (empty($instance->id) && in_array($instance::class, [Rating::class, Serie::class, Tag::class])) {
+            return $this->getBooksWithoutInstance($instance, $n);
         }
-        return $this->getEntryArray($instance::SQL_BOOKLIST, [$instance->id], $n);
-    }
-
-    public function getBooksByAuthor($authorId, $n)
-    {
-        return $this->getEntryArray(Author::SQL_BOOKLIST, [$authorId], $n);
-    }
-
-    public function getBooksByRating($ratingId, $n)
-    {
-        if (empty($ratingId)) {
-            return $this->getBooksWithoutRating($n);
-        }
-        return $this->getEntryArray(Rating::SQL_BOOKLIST, [$ratingId], $n);
-    }
-
-    public function getBooksWithoutRating($n)
-    {
-        return $this->getEntryArray(Rating::SQL_BOOKLIST_NULL, [], $n);
-    }
-
-    public function getBooksByPublisher($publisherId, $n)
-    {
-        return $this->getEntryArray(Publisher::SQL_BOOKLIST, [$publisherId], $n);
-    }
-
-    public function getBooksBySeries($serieId, $n)
-    {
-        global $config;
-        if (empty($serieId) && in_array("series", $config['cops_show_not_set_filter'])) {
-            return $this->getBooksWithoutSeries($n);
-        }
-        return $this->getEntryArray(Serie::SQL_BOOKLIST, [$serieId], $n);
-    }
-
-    public function getBooksWithoutSeries($n)
-    {
-        return $this->getEntryArray(Serie::SQL_BOOKLIST_NULL, [], $n);
-    }
-
-    public function getBooksByTag($tagId, $n)
-    {
-        global $config;
-        if (empty($tagId) && in_array("tag", $config['cops_show_not_set_filter'])) {
-            return $this->getBooksWithoutTag($n);
-        }
-        return $this->getEntryArray(Tag::SQL_BOOKLIST, [$tagId], $n);
-    }
-
-    public function getBooksWithoutTag($n)
-    {
-        return $this->getEntryArray(Tag::SQL_BOOKLIST_NULL, [], $n);
-    }
-
-    public function getBooksByLanguage($languageId, $n)
-    {
-        return $this->getEntryArray(Language::SQL_BOOKLIST, [$languageId], $n);
-    }
-
-    /**
-     * Summary of getBooksByCustom
-     * @param CustomColumnType $columnType
-     * @param integer $id
-     * @param integer $n
-     * @return array
-     */
-    public function getBooksByCustom($columnType, $id, $n)
-    {
-        [$query, $params] = $columnType->getQuery($id);
-
+        [$query, $params] = $instance->getQuery();
         return $this->getEntryArray($query, $params, $n);
+    }
+
+    public function getBooksWithoutInstance($instance, $n)
+    {
+        // in_array("series", $config['cops_show_not_set_filter'])
+        if ($instance instanceof CustomColumn) {
+            return $this->getBooksWithoutCustom($instance->customColumnType, $n);
+        }
+        return $this->getEntryArray($instance::SQL_BOOKLIST_NULL, [], $n);
     }
 
     /**

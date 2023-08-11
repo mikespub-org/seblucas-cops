@@ -18,6 +18,7 @@ class CustomColumn extends Base
     public const PAGE_ID = Page::ALL_CUSTOMS_ID;
     public const PAGE_ALL = Page::ALL_CUSTOMS;
     public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
+
     /** @var string the (string) representation of the value */
     public $value;
     /** @var CustomColumnType the custom column that contains the value */
@@ -86,7 +87,7 @@ class CustomColumn extends Base
         return $this->customColumnType->getTitle();
     }
 
-    public function getCount()
+    public function getCustomCount()
     {
         [$query, $params] = $this->getQuery();
         $columns = 'count(*)';
@@ -100,11 +101,16 @@ class CustomColumn extends Base
      *  - first the query (string)
      *  - second an array of all PreparedStatement parameters
      *
-     * @return array
+     * @return array{0: string, 1: array}
      */
     public function getQuery()
     {
         return $this->customColumnType->getQuery($this->id);
+    }
+
+    public function getFilter($parentTable = null)
+    {
+        return $this->customColumnType->getFilter($this->id, $parentTable);
     }
 
     /**
@@ -115,38 +121,6 @@ class CustomColumn extends Base
     public function getHTMLEncodedValue()
     {
         return $this->htmlvalue;
-    }
-
-    /** Use inherited class methods to get entries from <Whatever> by customType and valueId (linked via books) */
-
-    public function getAuthors($n = -1, $sort = null)
-    {
-        return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1, $sort = null)
-    {
-        return Language::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1, $sort = null)
-    {
-        return Publisher::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getRatings($n = -1, $sort = null)
-    {
-        return Rating::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getSeries($n = -1, $sort = null)
-    {
-        return Serie::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getTags($n = -1, $sort = null)
-    {
-        return Tag::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $sort, $this->databaseId);
     }
 
     /**

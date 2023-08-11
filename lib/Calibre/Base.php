@@ -27,6 +27,8 @@ abstract class Base
     public const SQL_ALL_ROWS = "select {0} from bases, books_bases_link where base = bases.id {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from bases, books_bases_link where base = bases.id and (upper (bases.sort) like ? or upper (bases.name) like ?) {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from bases, books_bases_link where base = bases.id and upper (bases.sort) like ? {1} group by bases.id, bases.name, bases.sort order by sort";
+    public const SQL_BOOKLIST = 'select {0} from books_bases_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books_bases_link.book = books.id and base = ? {1} order by books.sort';
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     public $id;
@@ -121,6 +123,18 @@ abstract class Base
 
     /** Use inherited class methods to get entries from <Whatever> by instance (linked via books) */
 
+    /**
+     * Get the query to find all books with this value
+     * the returning array has two values:
+     *  - first the query (string)
+     *  - second an array of all PreparedStatement parameters
+     * @return array{0: string, 1: array}
+     */
+    public function getQuery()
+    {
+        return [ static::SQL_BOOKLIST, [ $this->id ]];
+    }
+
     public function getLinkTable()
     {
         return static::SQL_LINK_TABLE;
@@ -143,12 +157,9 @@ abstract class Base
 
     public function getEntriesByInstance($className, $n = -1, $sort = null, $database = null, $numberPerPage = null)
     {
-        //$baselist = new BaseList(null, $className, $database, $numberPerPage);
-        //$baselist->orderBy = $sort;
-        //[$entryArray, ] = $baselist->getEntriesByInstance($this, $n);
-        $filter = new Filter([], [], $className::SQL_LINK_TABLE, $database);
-        $filter->addInstanceFilter($this);
-        return $className::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
+        $baselist = new BaseList(null, $className, $database, $numberPerPage);
+        $baselist->orderBy = $sort;
+        return $baselist->getEntriesByInstance($this, $n);
     }
 
     public function getAuthors($n = -1, $sort = null)
@@ -189,8 +200,9 @@ abstract class Base
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
 
-    public static function getInstanceById($id, $default = null, $className = self::class, $database = null)
+    public static function getInstanceById($id, $default = null, $database = null)
     {
+        $className = static::class;
         $query = 'select ' . $className::SQL_COLUMNS . ' from ' . $className::SQL_TABLE . ' where id = ?';
         $result = Database::query($query, [$id], $database);
         if ($post = $result->fetchObject()) {
@@ -199,254 +211,8 @@ abstract class Base
         return new $className((object)['id' => null, 'name' => $default, 'sort' => $default], $database);
     }
 
-    public static function getEntryCount($database = null)
+    public static function getCount($database = null)
     {
-        return self::getCountGeneric(static::SQL_TABLE, static::PAGE_ID, static::PAGE_ALL, $database);
-    }
-
-    /**
-     * Summary of countRequestEntries
-     * @param Request $request
-     * @param mixed $database
-     * @return integer
-     */
-    public static function countRequestEntries($request, $database = null)
-    {
-        if ($request->hasFilter()) {
-            return self::countEntriesByFilter($request, $database);
-        }
-        return self::countAllEntries($database);
-    }
-
-    public static function countAllEntries($database = null)
-    {
-        return Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
-    }
-
-    public static function countEntriesByFirstLetter($request, $letter, $database = null)
-    {
-        $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
-        $filter->addFilter('upper(' . static::SQL_TABLE . '.' . static::SQL_SORT . ') like ?', $letter . "%");
-        return self::countFilteredEntries($filter, $database);
-        //$query = 'select {0} from ' . static::SQL_TABLE . ' where {1}';
-        //$columns = 'count(*)';
-        //$filter = 'upper(' . static::SQL_SORT . ') like ?';
-        //return self::countQuery($query, $columns, $filter, [$letter . "%"], $database);
-    }
-
-    public static function countEntriesByFilter($request, $database = null)
-    {
-        $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
-        return self::countFilteredEntries($filter, $database);
-    }
-
-    public static function countFilteredEntries($filter, $database = null)
-    {
-        // select {0} from series, books_series_link where series.id = books_series_link.series {1}
-        $query = 'select {0} from ' . static::SQL_TABLE . ', ' . static::SQL_LINK_TABLE . ' where ' . static::SQL_TABLE . '.id = ' . static::SQL_LINK_TABLE . '.' . static::SQL_LINK_COLUMN . ' {1}';
-        // count(distinct series.id)
-        $columns = 'count(distinct ' . static::SQL_TABLE . '.id)';
-        // and (exists (select null from books_authors_link, books where books_series_link.book = books.id and books_authors_link.book = books.id and books_authors_link.author = ?))
-        $filterString = $filter->getFilterString();
-        // [1]
-        $params = $filter->getQueryParams();
-        return Database::countFilter($query, $columns, $filterString, $params, $database);
-    }
-
-    /**
-     * Summary of getRequestEntries
-     * @param Request $request
-     * @param mixed $n
-     * @param mixed $database
-     * @param mixed $numberPerPage
-     * @return array<Entry>
-     */
-    public static function getRequestEntries($request, $n = -1, $database = null, $numberPerPage = null)
-    {
-        $sort = $request->getSorted();
-        if ($request->hasFilter()) {
-            return self::getEntriesByFilter($request, $n, $sort, $database, $numberPerPage);
-        }
-        return self::getAllEntries($n, $sort, $database, $numberPerPage);
-    }
-
-    /**
-     * Summary of getAllEntries = same as getAll<Whatever>() in <Whatever> child class
-     * @param mixed $n
-     * @param mixed $sort
-     * @param mixed $database
-     * @param mixed $numberPerPage
-     * @return array<Entry>
-     */
-    public static function getAllEntries($n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $query = static::SQL_ALL_ROWS;
-        if (!empty($sort) && $sort != static::SQL_SORT && str_contains(static::SQL_COLUMNS, ' as ' . $sort)) {
-            if (str_contains($query, 'order by')) {
-                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . static::getSortBy($sort) . ' ', $query);
-            } else {
-                $query .= ' order by ' . static::getSortBy($sort) . ' ';
-            }
-        }
-        return self::getEntryArrayWithBookNumber($query, static::SQL_COLUMNS, "", [], static::class, $n, $database, $numberPerPage);
-    }
-
-    public static function getAllEntriesByQuery($query, $n = -1, $database = null, $numberPerPage = null)
-    {
-        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_FOR_SEARCH, static::SQL_COLUMNS, "", ['%' . $query . '%'], static::class, $n, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByFirstLetter($request, $letter, $n = -1, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter($request, [$letter . "%"], static::SQL_LINK_TABLE, $database);
-        $filterString = $filter->getFilterString();
-        $params = $filter->getQueryParams();
-        return self::getEntryArrayWithBookNumber(static::SQL_ROWS_BY_FIRST_LETTER, static::SQL_COLUMNS, $filterString, $params, static::class, $n, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByFilter($request, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter($request, [], static::SQL_LINK_TABLE, $database);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByAuthorId($authorId, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
-        $filter->addAuthorIdFilter($authorId);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByLanguageId($languageId, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
-        $filter->addLanguageIdFilter($languageId);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByPublisherId($publisherId, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
-        $filter->addPublisherIdFilter($publisherId);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByRatingId($ratingId, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
-        $filter->addRatingIdFilter($ratingId);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    public static function getEntriesBySeriesId($seriesId, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
-        $filter->addSeriesIdFilter($seriesId);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByTagId($tagId, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
-        $filter->addTagIdFilter($tagId);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    public static function getEntriesByCustomValueId($customType, $valueId, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter([], [], static::SQL_LINK_TABLE, $database);
-        $filter->addCustomIdFilter($customType, $valueId);
-        return self::getFilteredEntries($filter, $n, $sort, $database, $numberPerPage);
-    }
-
-    /**
-     * Summary of getFilteredEntries
-     * @param mixed $filter
-     * @param mixed $n
-     * @param mixed $sort
-     * @param mixed $database
-     * @param mixed $numberPerPage
-     * @return array<Entry>
-     */
-    public static function getFilteredEntries($filter, $n = -1, $sort = null, $database = null, $numberPerPage = null)
-    {
-        $filterString = $filter->getFilterString();
-        $params = $filter->getQueryParams();
-        $query = static::SQL_ALL_ROWS;
-        if (!empty($sort) && $sort != static::SQL_SORT && str_contains(static::SQL_COLUMNS, ' as ' . $sort)) {
-            if (str_contains($query, 'order by')) {
-                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $sort . ' ', $query);
-            } else {
-                $query .= ' order by ' . $sort . ' ';
-            }
-        }
-        return self::getEntryArrayWithBookNumber($query, static::SQL_COLUMNS, $filterString, $params, static::class, $n, $database, $numberPerPage);
-    }
-
-    /**
-     * Summary of getCountGeneric
-     * @param mixed $table
-     * @param mixed $id
-     * @param mixed $pageId
-     * @param mixed $database
-     * @param mixed $numberOfString
-     * @return Entry|null
-     */
-    public static function getCountGeneric($table, $id, $pageId, $database = null, $numberOfString = null)
-    {
-        if (!$numberOfString) {
-            $numberOfString = $table . ".alphabetical";
-        }
-        $count = Database::querySingle('select count(*) from ' . $table, $database);
-        if ($count == 0) {
-            return null;
-        }
-        $entry = new Entry(
-            localize($table . ".title"),
-            $id,
-            str_format(localize($numberOfString, $count), $count),
-            "text",
-            [ new LinkNavigation("?page=".$pageId, null, null, $database)],
-            $database,
-            "",
-            $count
-        );
-        return $entry;
-    }
-
-    /**
-     * Summary of getEntryArrayWithBookNumber
-     * @param mixed $query
-     * @param mixed $columns
-     * @param mixed $params
-     * @param mixed $className
-     * @param mixed $n
-     * @param mixed $database
-     * @param mixed $numberPerPage
-     * @return array<Entry>
-     */
-    public static function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $className, $n = -1, $database = null, $numberPerPage = null)
-    {
-        $result = Database::queryFilter($query, $columns, $filter, $params, $n, $database, $numberPerPage);
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            /** @var Author|Tag|Serie|Publisher|Language|Rating|Book $instance */
-            if ($className == Book::class) {
-                $post->count = 1;
-            }
-
-            $instance = new $className($post, $database);
-            array_push($entryArray, $instance->getEntry($post->count));
-        }
-        return $entryArray;
-    }
-
-    protected static function getSortBy($sort)
-    {
-        return match ($sort) {
-            'title' => 'sort',  // or name
-            'count' => 'count desc',
-            default => $sort,
-        };
+        return BaseList::getCountGeneric(static::SQL_TABLE, static::PAGE_ID, static::PAGE_ALL, $database);
     }
 }

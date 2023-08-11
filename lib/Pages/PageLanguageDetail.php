@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\Language;
 
 class PageLanguageDetail extends Page
 {
+    protected $className = Language::class;
+
     public function InitializeContent()
     {
         $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());

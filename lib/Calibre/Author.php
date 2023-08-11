@@ -29,6 +29,7 @@ class Author extends Base
     public const SQL_BOOKLIST = 'select {0} from books_authors_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     left outer join books_series_link on books_series_link.book = books.id
     where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc';
+    public const URL_PARAM = "a";
 
     public $id;
     public $name;
@@ -67,89 +68,7 @@ class Author extends Base
         return localize("authors.title");
     }
 
-    /** Use inherited class methods to get entries from <Whatever> by authorId (linked via books) */
-
-    public function getAuthors($n = -1, $sort = null)
-    {
-        //return Author::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1, $sort = null)
-    {
-        return Language::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1, $sort = null)
-    {
-        return Publisher::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getRatings($n = -1, $sort = null)
-    {
-        return Rating::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getSeries($n = -1, $sort = null)
-    {
-        return Serie::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
-    }
-
-    public function getTags($n = -1, $sort = null)
-    {
-        return Tag::getEntriesByAuthorId($this->id, $n, $sort, $this->databaseId);
-    }
-
     /** Use inherited class methods to query static SQL_TABLE for this class */
-
-    public static function getCount($database = null)
-    {
-        // str_format (localize("authors.alphabetical", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
-    }
-
-    public static function getCountByFirstLetter($request, $database = null, $numberPerPage = null)
-    {
-        $filter = new Filter($request, [], self::SQL_LINK_TABLE, $database);
-        $filterString = $filter->getFilterString();
-        $params = $filter->getQueryParams();
-
-        $groupField = 'substr(upper(sort), 1, 1)';
-        $sort = $request->getSorted('groupid');
-        if (!in_array($sort, ['groupid', 'count'])) {
-            $sort = 'groupid';
-        }
-        $sortBy = parent::getSortBy($sort);
-
-        $result = Database::queryFilter("select {0}
-from authors, books_authors_link
-where books_authors_link.author = authors.id {1}
-group by groupid
-order by $sortBy", $groupField . " as groupid, count(distinct authors.id) as count", $filterString, $params, -1, $database, $numberPerPage);
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            array_push($entryArray, new Entry(
-                $post->groupid,
-                Author::getEntryIdByLetter($post->groupid),
-                str_format(localize("authorword", $post->count), $post->count),
-                "text",
-                [ new LinkNavigation("?page=".self::PAGE_LETTER."&id=". rawurlencode($post->groupid), null, null, $database)],
-                $database,
-                "",
-                $post->count
-            ));
-        }
-        return $entryArray;
-    }
-
-    public static function getAuthorsForSearch($query, $n = -1, $database = null, $numberPerPage = null)
-    {
-        return self::getEntryArray(self::SQL_ROWS_FOR_SEARCH, [$query . "%", $query . "%"], $n, $database, $numberPerPage);
-    }
-
-    public static function getEntryArray($query, $params, $n = -1, $database = null, $numberPerPage = null)
-    {
-        return Base::getEntryArrayWithBookNumber($query, self::SQL_COLUMNS, "", $params, self::class, $n, $database, $numberPerPage);
-    }
 
     /**
      * Summary of getAuthorById
@@ -159,7 +78,7 @@ order by $sortBy", $groupField . " as groupid, count(distinct authors.id) as cou
      */
     public static function getAuthorById($authorId, $database = null)
     {
-        return self::getInstanceById($authorId, null, self::class, $database);
+        return self::getInstanceById($authorId, null, $database);
     }
 
     public static function getAuthorsByBookId($bookId, $database = null)

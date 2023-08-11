@@ -9,9 +9,12 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Language;
+use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllLanguages extends Page
 {
+    protected $className = Language::class;
+
     public function InitializeContent()
     {
         $this->getEntries();
@@ -21,8 +24,9 @@ class PageAllLanguages extends Page
 
     public function getEntries()
     {
-        $this->entryArray = Language::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
-        $this->totalNumber = Language::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = $this->request->getSorted(Language::SQL_SORT);
+        $baselist = new BaseList($this->request, $this->className);
+        $this->entryArray = $baselist->getRequestEntries($this->n);
+        $this->totalNumber = $baselist->countRequestEntries();
+        $this->sorted = $baselist->orderBy;
     }
 }

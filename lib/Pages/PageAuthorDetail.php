@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAuthorDetail extends Page
 {
+    protected $className = Author::class;
+
     public function InitializeContent()
     {
         $author = Author::getAuthorById($this->idGet, $this->getDatabaseId());
@@ -27,7 +29,6 @@ class PageAuthorDetail extends Page
         $this->currentUri = $author->getUri();
         $this->parentTitle = $author->getParentTitle();
         $this->parentUri = $author->getParentUri();
-        //$seriesArray = $author->getSeries();
     }
 
     public function getEntries($instance = null)
