@@ -21,6 +21,10 @@ class Tag extends Base
     public const SQL_SORT = "name";
     public const SQL_COLUMNS = "tags.id as id, tags.name as name, count(*) as count";
     public const SQL_ALL_ROWS = "select {0} from tags, books_tags_link where tags.id = tag {1} group by tags.id, tags.name order by tags.name";
+    public const SQL_BOOKLIST = 'select {0} from books_tags_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books_tags_link.book = books.id and tag = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books.id not in (select book from books_tags_link) {1} order by books.sort';
 
     public $id;
     public $name;
@@ -40,6 +44,11 @@ class Tag extends Base
     public function getEntryId()
     {
         return self::PAGE_ID.":".$this->id;
+    }
+
+    public function getParentTitle()
+    {
+        return localize("tags.title");
     }
 
     /** Use inherited class methods to get entries from <Whatever> by tagId (linked via books) */

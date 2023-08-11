@@ -22,6 +22,8 @@ class Publisher extends Base
     public const SQL_COLUMNS = "publishers.id as id, publishers.name as name, count(*) as count";
     public const SQL_ALL_ROWS = "select {0} from publishers, books_publishers_link where publishers.id = publisher {1} group by publishers.id, publishers.name order by publishers.name";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from publishers, books_publishers_link where publishers.id = publisher and upper (publishers.name) like ? {1} group by publishers.id, publishers.name order by publishers.name";
+    public const SQL_BOOKLIST = 'select {0} from books_publishers_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books_publishers_link.book = books.id and publisher = ? {1} order by books.sort';
 
 
     public $id;
@@ -42,6 +44,11 @@ class Publisher extends Base
     public function getEntryId()
     {
         return self::PAGE_ID.":".$this->id;
+    }
+
+    public function getParentTitle()
+    {
+        return localize("publishers.title");
     }
 
     /** Use inherited class methods to get entries from <Whatever> by publisherId (linked via books) */

@@ -21,6 +21,8 @@ class Language extends Base
     public const SQL_SORT = "lang_code";
     public const SQL_COLUMNS = "languages.id as id, languages.lang_code as name, count(*) as count";
     public const SQL_ALL_ROWS = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code {1} group by languages.id, books_languages_link.lang_code order by languages.lang_code";
+    public const SQL_BOOKLIST = 'select {0} from books_languages_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
     public $id;
     public $name;
 
@@ -44,6 +46,11 @@ class Language extends Base
     public function getTitle()
     {
         return self::getLanguageString($this->name);
+    }
+
+    public function getParentTitle()
+    {
+        return localize("languages.title");
     }
 
     /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */

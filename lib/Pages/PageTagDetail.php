@@ -25,7 +25,7 @@ class PageTagDetail extends Page
         $this->idPage = $tag->getEntryId();
         $this->title = $tag->getTitle();
         $this->currentUri = $tag->getUri();
-        $this->parentTitle = localize("tags.title");
+        $this->parentTitle = $tag->getParentTitle();
         $this->parentUri = $tag->getParentUri();
     }
 

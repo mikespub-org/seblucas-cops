@@ -26,6 +26,9 @@ class Author extends Base
     public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? {1} group by authors.id, authors.name, authors.sort order by sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from authors, books_authors_link where author = authors.id and (upper (authors.sort) like ? or upper (authors.name) like ?) {1} group by authors.id, authors.name, authors.sort order by sort";
     public const SQL_ALL_ROWS = "select {0} from authors, books_authors_link where author = authors.id {1} group by authors.id, authors.name, authors.sort order by sort";
+    public const SQL_BOOKLIST = 'select {0} from books_authors_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    left outer join books_series_link on books_series_link.book = books.id
+    where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc';
 
     public $id;
     public $name;
@@ -57,6 +60,11 @@ class Author extends Base
     public function getTitle()
     {
         return $this->sort;
+    }
+
+    public function getParentTitle()
+    {
+        return localize("authors.title");
     }
 
     /** Use inherited class methods to get entries from <Whatever> by authorId (linked via books) */

@@ -22,6 +22,10 @@ class Serie extends Base
     public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
     public const SQL_ALL_ROWS = "select {0} from series, books_series_link where series.id = series {1} group by series.id, series.name, series.sort order by series.sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
+    public const SQL_BOOKLIST = 'select {0} from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books_series_link.book = books.id and series = ? {1} order by series_index';
+    public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books.id not in (select book from books_series_link) {1} order by books.sort';
 
     public $id;
     public $name;
@@ -41,6 +45,11 @@ class Serie extends Base
     public function getEntryId()
     {
         return self::PAGE_ID.":".$this->id;
+    }
+
+    public function getParentTitle()
+    {
+        return localize("series.title");
     }
 
     /** Use inherited class methods to get entries from <Whatever> by seriesId (linked via books) */

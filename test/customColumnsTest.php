@@ -53,11 +53,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=8", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:8", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=8", $coltype->getUri());
+        $this->assertEquals("cops:custom:8", $coltype->getEntryId());
         $this->assertEquals("custom_01", $coltype->getTitle());
         $this->assertEquals("Custom column example 01 (text)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Custom column example 01 (text)", $coltype->getDescription());
+        $this->assertEquals("Custom column example 01 (text)", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -79,11 +79,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=16", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:16", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=16", $coltype->getUri());
+        $this->assertEquals("cops:custom:16", $coltype->getEntryId());
         $this->assertEquals("custom_01b", $coltype->getTitle());
         $this->assertEquals(null, $coltype->getDatabaseDescription());
-        $this->assertEquals("Custom column 'custom_01b'", $coltype->getDescription());
+        $this->assertEquals("Custom column 'custom_01b'", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -105,11 +105,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=6", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:6", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=6", $coltype->getUri());
+        $this->assertEquals("cops:custom:6", $coltype->getEntryId());
         $this->assertEquals("custom_02", $coltype->getTitle());
         $this->assertEquals("Custom column example 02 (csv)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Custom column example 02 (csv)", $coltype->getDescription());
+        $this->assertEquals("Custom column example 02 (csv)", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -130,11 +130,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("comments", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeComment::class, get_class($coltype));
 
-        $this->assertEquals("?page=14&custom=7", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:7", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=7", $coltype->getUri());
+        $this->assertEquals("cops:custom:7", $coltype->getEntryId());
         $this->assertEquals("custom_03", $coltype->getTitle());
         $this->assertEquals("Custom column example 03 (long_text)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Custom column example 03 (long_text)", $coltype->getDescription());
+        $this->assertEquals("Custom column example 03 (long_text)", $coltype->getContent());
         $this->assertEquals(false, $coltype->isSearchable());
     }
 
@@ -156,11 +156,12 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeSeries::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=4", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:4", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=4", $coltype->getUri());
+        $this->assertEquals("cops:custom:4", $coltype->getEntryId());
         $this->assertEquals("custom_04", $coltype->getTitle());
         $this->assertEquals("Custom column example 04 (series_text)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Alphabetical index of the 3 series", $coltype->getDescription());
+        $count = $coltype->getDistinctValueCount();
+        $this->assertEquals("Alphabetical index of the 3 series", $coltype->getContent($count));
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -182,11 +183,12 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeEnumeration::class, get_class($coltype));
 
         $this->assertCount(4, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=5", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:5", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=5", $coltype->getUri());
+        $this->assertEquals("cops:custom:5", $coltype->getEntryId());
         $this->assertEquals("custom_05", $coltype->getTitle());
         $this->assertEquals("Custom column example 05 (enum)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Alphabetical index of the 4 values", $coltype->getDescription());
+        $count = $coltype->getDistinctValueCount();
+        $this->assertEquals("Alphabetical index of the 4 values", $coltype->getContent($count));
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -208,11 +210,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeDate::class, get_class($coltype));
 
         $this->assertCount(5, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=12", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:12", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=12", $coltype->getUri());
+        $this->assertEquals("cops:custom:12", $coltype->getEntryId());
         $this->assertEquals("custom_06", $coltype->getTitle());
         $this->assertEquals("Custom column example 06 (date)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Custom column example 06 (date)", $coltype->getDescription());
+        $this->assertEquals("Custom column example 06 (date)", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -234,11 +236,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeFloat::class, get_class($coltype));
 
         $this->assertCount(6, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=14", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:14", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=14", $coltype->getUri());
+        $this->assertEquals("cops:custom:14", $coltype->getEntryId());
         $this->assertEquals("custom_07", $coltype->getTitle());
         $this->assertEquals("Custom column example 07 (float)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Custom column example 07 (float)", $coltype->getDescription());
+        $this->assertEquals("Custom column example 07 (float)", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -260,11 +262,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeInteger::class, get_class($coltype));
 
         $this->assertCount(4, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=10", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:10", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=10", $coltype->getUri());
+        $this->assertEquals("cops:custom:10", $coltype->getEntryId());
         $this->assertEquals("custom_08", $coltype->getTitle());
         $this->assertEquals("Custom column example 08 (int)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Custom column example 08 (int)", $coltype->getDescription());
+        $this->assertEquals("Custom column example 08 (int)", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -286,11 +288,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeRating::class, get_class($coltype));
 
         $this->assertCount(6, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=9", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:9", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=9", $coltype->getUri());
+        $this->assertEquals("cops:custom:9", $coltype->getEntryId());
         $this->assertEquals("custom_09", $coltype->getTitle());
         $this->assertEquals("Custom column example 09 (rating)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Index of ratings", $coltype->getDescription());
+        $this->assertEquals("Index of ratings", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
@@ -312,11 +314,11 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(CustomColumnTypeBool::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=11", $coltype->getUriAllCustoms());
-        $this->assertEquals("cops:custom:11", $coltype->getAllCustomsId());
+        $this->assertEquals("?page=14&custom=11", $coltype->getUri());
+        $this->assertEquals("cops:custom:11", $coltype->getEntryId());
         $this->assertEquals("custom_10", $coltype->getTitle());
         $this->assertEquals("Custom column example 10 (bool)", $coltype->getDatabaseDescription());
-        $this->assertEquals("Index of a boolean value", $coltype->getDescription());
+        $this->assertEquals("Index of a boolean value", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
     }
 

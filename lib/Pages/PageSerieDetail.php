@@ -25,7 +25,7 @@ class PageSerieDetail extends Page
         $this->idPage = $serie->getEntryId();
         $this->title = $serie->getTitle();
         $this->currentUri = $serie->getUri();
-        $this->parentTitle = localize("series.title");
+        $this->parentTitle = $serie->getParentTitle();
         $this->parentUri = $serie->getParentUri();
     }
 
