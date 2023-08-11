@@ -78,7 +78,7 @@ class Route
         $params = [];
         $found = [];
         foreach (static::listRoutes() as $route) {
-            if (!str_contains($route, "{")) {
+            if (strpos($route, "{") === false) {
                 continue;
             }
             $match = str_replace(["{", "}"], ["(?P<", ">\w+)"], $route);

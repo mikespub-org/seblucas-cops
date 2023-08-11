@@ -186,7 +186,7 @@ class RestApiTest extends TestCase
         $apiHandler = new RestApi($request);
         $expected = true;
         $test = $apiHandler->getOutput();
-        $this->assertEquals($expected, str_starts_with($test, '{"title":"COPS",'));
+        $this->assertEquals($expected, strncmp($test, '{"title":"COPS",', strlen('{"title":"COPS",')) === 0);
     }
 
     public function testGetCustomColumns(): void

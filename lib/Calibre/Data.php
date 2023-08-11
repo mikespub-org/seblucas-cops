@@ -72,7 +72,7 @@ class Data
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
         $this->book = $book;
-        $this->databaseId = $book?->getDatabaseId();
+        $this->databaseId = ($nullsafeVariable1 = $book) ? $nullsafeVariable1->getDatabaseId() : null;
         // this is set on book in JSONRenderer now
         if ($book->updateForKepub && $this->isEpubValidOnKobo()) {
             $this->updateForKepub = true;

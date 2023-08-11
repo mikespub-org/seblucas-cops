@@ -39,12 +39,25 @@ class BookList
     public const BAD_SEARCH = 'QQQQQ';
 
     public Request $request;
-    protected mixed $databaseId = null;
-    protected mixed $numberPerPage = null;
+    /**
+     * @var mixed
+     */
+    protected $databaseId = null;
+    /**
+     * @var mixed
+     */
+    protected $numberPerPage = null;
     protected array $ignoredCategories = [];
-    public mixed $orderBy = null;
+    /**
+     * @var mixed
+     */
+    public $orderBy = null;
 
-    public function __construct(?Request $request, mixed $database = null, mixed $numberPerPage = null)
+    /**
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     */
+    public function __construct(?Request $request, $database = null, $numberPerPage = null)
     {
         $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
@@ -61,15 +74,22 @@ class BookList
 
     protected function getOrderBy()
     {
-        return match ($this->orderBy) {
-            'title' => 'books.sort',
-            'author' => 'books.author_sort',
-            'pubdate' => 'books.pubdate desc',
-            'rating' => 'ratings.rating desc',
-            'timestamp' => 'books.timestamp desc',
-            'count' => 'count desc',
-            default => $this->orderBy,
-        };
+        switch ($this->orderBy) {
+            case 'title':
+                return 'books.sort';
+            case 'author':
+                return 'books.author_sort';
+            case 'pubdate':
+                return 'books.pubdate desc';
+            case 'rating':
+                return 'ratings.rating desc';
+            case 'timestamp':
+                return 'books.timestamp desc';
+            case 'count':
+                return 'count desc';
+            default:
+                return $this->orderBy;
+        }
     }
 
     public function getBookCount()
@@ -117,7 +137,7 @@ class BookList
      */
     public function getBooksByInstance($instance, $n)
     {
-        if (empty($instance->id) && in_array($instance::class, [Rating::class, Serie::class, Tag::class])) {
+        if (empty($instance->id) && in_array(get_class($instance), [Rating::class, Serie::class, Tag::class])) {
             return $this->getBooksWithoutInstance($instance, $n);
         }
         [$query, $params] = $instance->getQuery();
@@ -272,7 +292,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $params = $filter->getQueryParams();
 
         if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
-            if (str_contains($query, 'order by')) {
+            if (strpos($query, 'order by') !== false) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';

@@ -103,7 +103,7 @@ abstract class Base
 
     public function getClassName()
     {
-        $classParts = explode('\\', $this::class);
+        $classParts = explode('\\', get_class($this));
         return end($classParts);
     }
 

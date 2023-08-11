@@ -65,7 +65,7 @@ class Format
 
     public static function addVersion($url)
     {
-        if (str_contains($url, '?')) {
+        if (strpos($url, '?') !== false) {
             $url .= '&v=' . Config::VERSION;
         } else {
             $url .= '?v=' . Config::VERSION;

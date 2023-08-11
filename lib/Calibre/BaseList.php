@@ -17,12 +17,25 @@ class BaseList
 {
     public Request $request;
     public string $className;
-    protected mixed $databaseId = null;
-    protected mixed $numberPerPage = null;
+    /**
+     * @var mixed
+     */
+    protected $databaseId = null;
+    /**
+     * @var mixed
+     */
+    protected $numberPerPage = null;
     protected array $ignoredCategories = [];
-    public mixed $orderBy = null;
+    /**
+     * @var mixed
+     */
+    public $orderBy = null;
 
-    public function __construct(?Request $request, string $className, mixed $database = null, mixed $numberPerPage = null)
+    /**
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     */
+    public function __construct(?Request $request, string $className, $database = null, $numberPerPage = null)
     {
         $this->request = $request ?? new Request();
         $this->className = $className;
@@ -40,11 +53,14 @@ class BaseList
 
     protected function getOrderBy()
     {
-        return match ($this->orderBy) {
-            'title' => 'sort',  // or name
-            'count' => 'count desc',
-            default => $this->orderBy,
-        };
+        switch ($this->orderBy) {
+            case 'title':
+                return 'sort';
+            case 'count':
+                return 'count desc';
+            default:
+                return $this->orderBy;
+        }
     }
 
     /**
@@ -187,8 +203,8 @@ class BaseList
     public function getAllEntries($n = -1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getColumns(), ' as ' . $this->orderBy)) {
-            if (str_contains($query, 'order by')) {
+        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getColumns(), ' as ' . $this->orderBy) !== false) {
+            if (strpos($query, 'order by') !== false) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';
@@ -289,8 +305,8 @@ class BaseList
     public function getFilteredEntries($filter, $n = -1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getColumns(), ' as ' . $this->orderBy)) {
-            if (str_contains($query, 'order by')) {
+        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getColumns(), ' as ' . $this->orderBy) !== false) {
+            if (strpos($query, 'order by') !== false) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';

@@ -32,7 +32,10 @@ class Filter
     protected array $params = [];
     protected string $parentTable = "books";
     protected string $queryString = "";
-    protected mixed $databaseId;
+    /**
+     * @var mixed
+     */
+    protected $databaseId;
 
     /**
      * Summary of __construct
@@ -41,7 +44,7 @@ class Filter
      * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
      * @param mixed $database current database in multiple database setup
      */
-    public function __construct(Request|array $request, array $params = [], string $parent = "books", mixed $database = null)
+    public function __construct($request, array $params = [], string $parent = "books", $database = null)
     {
         if (is_array($request)) {
             $request = Request::build($request);

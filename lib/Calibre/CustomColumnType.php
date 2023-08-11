@@ -62,7 +62,10 @@ abstract class CustomColumnType
     /** @var null|Entry[] */
     private $customValues = null;
     protected $databaseId = null;
-    protected mixed $numberPerPage = -1;
+    /**
+     * @var mixed
+     */
+    protected $numberPerPage = -1;
 
     protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
     {
