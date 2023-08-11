@@ -16,12 +16,22 @@ use Exception;
 /**
  * A single calibre custom column
  */
-abstract class CustomColumnType extends Base
+abstract class CustomColumnType
 {
     public const PAGE_ID = Page::ALL_CUSTOMS_ID;
     public const PAGE_ALL = Page::ALL_CUSTOMS;
     public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
     public const SQL_TABLE = "custom_columns";
+    public const SQL_BOOKLIST_LINK = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.{3} = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_ID = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.id = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_VALUE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_RANGE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
+    public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books.id not in (select book from {2}) {1} order by books.sort';
     public const ALL_WILDCARD         = ["*"];
 
     public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
@@ -50,6 +60,7 @@ abstract class CustomColumnType extends Base
     public $datatype;
     /** @var null|Entry[] */
     private $customValues = null;
+    protected $databaseId = null;
     protected mixed $numberPerPage = -1;
 
     protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
@@ -63,6 +74,11 @@ abstract class CustomColumnType extends Base
         $this->numberPerPage = $numberPerPage ?? $config['cops_max_item_per_page'];
     }
 
+    public function getDatabaseId()
+    {
+        return $this->databaseId;
+    }
+
     /**
      * Get the name of the sqlite table for this column
      *
@@ -74,35 +90,13 @@ abstract class CustomColumnType extends Base
     }
 
     /**
-     * The URI to show all book swith a specific value in this column
-     *
-     * @param string|integer $id the id of the value to show
-     * @return string
-     */
-    public function getUri($id = null)
-    {
-        return "?page=" . self::PAGE_DETAIL . "&custom={$this->customId}&id={$id}";
-    }
-
-    /**
      * The URI to show all the values of this column
      *
      * @return string
      */
-    public function getUriAllCustoms()
+    public function getUri()
     {
         return "?page=" . self::PAGE_ALL . "&custom={$this->customId}";
-    }
-
-    /**
-     * The EntryID to show all book swith a specific value in this column
-     *
-     * @param string|integer $id the id of the value to show
-     * @return string
-     */
-    public function getEntryId($id = null)
-    {
-        return self::PAGE_ID . ":" . $this->customId . ":" . $id;
     }
 
     /**
@@ -110,7 +104,7 @@ abstract class CustomColumnType extends Base
      *
      * @return string
      */
-    public function getAllCustomsId()
+    public function getEntryId()
     {
         return self::PAGE_ID . ":" . $this->customId;
     }
@@ -130,9 +124,9 @@ abstract class CustomColumnType extends Base
         return $this->datatype;
     }
 
-    public function getLinkArray($id = null)
+    public function getLinkArray()
     {
-        return [ new LinkNavigation($this->getUri($id), null, null, $this->getDatabaseId()) ];
+        return [ new LinkNavigation($this->getUri(), null, null, $this->getDatabaseId()) ];
     }
 
     /**
@@ -140,7 +134,7 @@ abstract class CustomColumnType extends Base
      *
      * @return string
      */
-    public function getDescription()
+    public function getContent($count = 0)
     {
         $desc = $this->getDatabaseDescription();
         if ($desc === null || empty($desc)) {
@@ -173,15 +167,15 @@ abstract class CustomColumnType extends Base
      */
     public function getCount()
     {
+        $pcount = $this->getDistinctValueCount();
         $ptitle = $this->getTitle();
-        $pid = $this->getAllCustomsId();
-        $pcontent = $this->getDescription();
+        $pid = $this->getEntryId();
+        $pcontent = $this->getContent($pcount);
         // @checkme convert "csv" back to "text" here?
         $pcontentType = $this->datatype;
-        $database = $this->getDatabaseId();
-        $plinkArray = [new LinkNavigation($this->getUriAllCustoms(), null, null, $database)];
+        $database = $this->databaseId;
+        $plinkArray = [new LinkNavigation($this->getUri(), null, null, $database)];
         $pclass = "";
-        $pcount = $this->getDistinctValueCount();
 
         return new Entry($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $database, $pclass, $pcount);
     }

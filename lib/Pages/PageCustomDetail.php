@@ -29,8 +29,8 @@ class PageCustomDetail extends Page
         } else {
             $this->getCustomEntries($custom->customColumnType);
         }
-        $this->parentTitle = $custom->customColumnType->getTitle();
-        $this->parentUri = $custom->customColumnType->getUriAllCustoms();
+        $this->parentTitle = $custom->getParentTitle();
+        $this->parentUri = $custom->getParentUri();
     }
 
     /**

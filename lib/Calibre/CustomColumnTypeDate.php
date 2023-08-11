@@ -15,6 +15,10 @@ use UnexpectedValueException;
 
 class CustomColumnTypeDate extends CustomColumnType
 {
+    public const SQL_BOOKLIST = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and date({2}.value) = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_YEAR = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and substr(date({2}.value), 1, 4) = ? {1} order by {2}.value';
     public const GET_PATTERN = '/^(\d+)$/';
 
     protected function __construct($pcustomId, $database)
@@ -26,11 +30,11 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         global $config;
         if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
         $date = new DateTime($id);
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST, "{0}", "{1}", $this->getTableName());
         return [$query, [$date->format("Y-m-d")]];
     }
 
@@ -39,7 +43,7 @@ class CustomColumnTypeDate extends CustomColumnType
         if (!preg_match(self::GET_PATTERN, $year)) {
             throw new UnexpectedValueException();
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_YEAR, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_YEAR, "{0}", "{1}", $this->getTableName());
         return [$query, [$year]];
     }
 
@@ -119,7 +123,7 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
                 $post->groupid,
-                $this->getAllCustomsId().':'.$label.':'.$post->groupid,
+                $this->getEntryId().':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [new LinkNavigation("?page=" . $page . "&custom={$this->customId}&year=". rawurlencode($post->groupid), null, null, $this->databaseId)],

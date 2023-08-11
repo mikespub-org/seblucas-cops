@@ -8,8 +8,12 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use UnexpectedValueException;
+
 class CustomColumnTypeFloat extends CustomColumnType
 {
+    public const GET_PATTERN = '/^(-?[0-9.]+)-(-?[0-9.]+)$/';
+
     protected function __construct($pcustomId, $database)
     {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT, $database);
@@ -19,18 +23,22 @@ class CustomColumnTypeFloat extends CustomColumnType
     {
         global $config;
         if (empty($id) && strval($id) !== '0.0' && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 
     public function getQueryByRange($range)
     {
-        global $config;
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_RANGE, "{0}", "{1}", $this->getTableName());
-        [$lower, $upper] = explode('-', $range);
+        $matches = [];
+        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
+            throw new UnexpectedValueException();
+        }
+        $lower = $matches[1];
+        $upper = $matches[2];
+        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
         return [$query, [$lower, $upper]];
     }
 

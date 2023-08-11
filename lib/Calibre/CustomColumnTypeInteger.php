@@ -34,10 +34,10 @@ class CustomColumnTypeInteger extends CustomColumnType
     {
         global $config;
         if (empty($id) && strval($id) !== '0' && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 
@@ -49,7 +49,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         }
         $lower = $matches[1];
         $upper = $matches[2];
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_RANGE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
         return [$query, [$lower, $upper]];
     }
 
@@ -124,7 +124,7 @@ class CustomColumnTypeInteger extends CustomColumnType
             $range = $post->min_value . "-" . $post->max_value;
             array_push($entryArray, new Entry(
                 $range,
-                $this->getAllCustomsId().':'.$label.':'.$range,
+                $this->getEntryId().':'.$label.':'.$range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [new LinkNavigation("?page=" . $page . "&custom={$this->customId}&range=". rawurlencode($range), null, null, $this->databaseId)],

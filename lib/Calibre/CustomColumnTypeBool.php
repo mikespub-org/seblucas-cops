@@ -10,6 +10,11 @@ namespace SebLucas\Cops\Calibre;
 
 class CustomColumnTypeBool extends CustomColumnType
 {
+    public const SQL_BOOKLIST_TRUE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value = 1 {1} order by books.sort';
+    public const SQL_BOOKLIST_FALSE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value = 0 {1} order by books.sort';
+
     // PHP pre 5.6 does not support const arrays
     private $BOOLEAN_NAMES = [
         -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
@@ -25,13 +30,13 @@ class CustomColumnTypeBool extends CustomColumnType
     public function getQuery($id)
     {
         if ($id == -1 || $id === '') {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 0) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_FALSE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 1) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_TRUE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } else {
             return null;
@@ -83,7 +88,7 @@ class CustomColumnTypeBool extends CustomColumnType
         return count($this->BOOLEAN_NAMES);
     }
 
-    public function getDescription()
+    public function getContent($count = 0)
     {
         return localize("customcolumn.description.bool");
     }

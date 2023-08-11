@@ -8,11 +8,16 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Pages\Page;
+
 /**
  * A CustomColumn with an value
  */
 class CustomColumn extends Base
 {
+    public const PAGE_ID = Page::ALL_CUSTOMS_ID;
+    public const PAGE_ALL = Page::ALL_CUSTOMS;
+    public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
     /** @var string the (string) representation of the value */
     public $value;
     /** @var CustomColumnType the custom column that contains the value */
@@ -36,6 +41,11 @@ class CustomColumn extends Base
         $this->databaseId = $this->customColumnType->getDatabaseId();
     }
 
+    public function getCustomId()
+    {
+        return $this->customColumnType->customId;
+    }
+
     /**
      * Get the URI to show all books with this value
      *
@@ -43,7 +53,12 @@ class CustomColumn extends Base
      */
     public function getUri()
     {
-        return $this->customColumnType->getUri($this->id);
+        return "?page=" . self::PAGE_DETAIL . "&custom={$this->getCustomId()}&id={$this->id}";
+    }
+
+    public function getParentUri()
+    {
+        return $this->customColumnType->getUri();
     }
 
     /**
@@ -53,7 +68,7 @@ class CustomColumn extends Base
      */
     public function getEntryId()
     {
-        return $this->customColumnType->getEntryId($this->id);
+        return self::PAGE_ID . ":" . $this->getCustomId() . ":" . $this->id;
     }
 
     public function getTitle()
@@ -61,9 +76,9 @@ class CustomColumn extends Base
         return $this->value;
     }
 
-    public function getLinkArray()
+    public function getParentTitle()
     {
-        return $this->customColumnType->getLinkArray($this->id);
+        return $this->customColumnType->getTitle();
     }
 
     public function getClassName()

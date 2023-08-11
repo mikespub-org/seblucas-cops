@@ -23,7 +23,7 @@ class PageAllCustoms extends Page
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
 
-        $this->idPage = $columnType->getAllCustomsId();
+        $this->idPage = $columnType->getEntryId();
         $this->title = $columnType->getTitle();
         $this->getCustomEntries($columnType);
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("custom", $config['cops_show_not_set_filter'])) {
@@ -74,7 +74,7 @@ class PageAllCustoms extends Page
         }
         $this->title = str_format(localize("splitByYear.year"), str_format(localize("bookword", $count), $count), $year);
         $this->parentTitle = $columnType->getTitle();
-        $this->parentUri = $columnType->getUriAllCustoms();
+        $this->parentUri = $columnType->getUri();
     }
 
     /**
@@ -101,7 +101,7 @@ class PageAllCustoms extends Page
         }
         $this->title = str_format(localize("splitByRange.range"), str_format(localize("bookword", $count), $count), $range);
         $this->parentTitle = $columnType->getTitle();
-        $this->parentUri = $columnType->getUriAllCustoms();
+        $this->parentUri = $columnType->getUri();
     }
 
     public function addCustomNotSetEntry($columnType)

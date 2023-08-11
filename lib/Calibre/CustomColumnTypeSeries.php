@@ -40,10 +40,10 @@ class CustomColumnTypeSeries extends CustomColumnType
     {
         global $config;
         if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableLinkName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
+        $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
     }
 
@@ -83,9 +83,8 @@ class CustomColumnTypeSeries extends CustomColumnType
         return $entryArray;
     }
 
-    public function getDescription()
+    public function getContent($count = 0)
     {
-        $count = $this->getDistinctValueCount();
         return str_format(localize("customcolumn.description.series", $count), $count);
     }
 
