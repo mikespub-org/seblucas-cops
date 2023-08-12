@@ -8,11 +8,14 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Input\Config;
 
 class PageAllSeries extends Page
 {
+    protected $className = Serie::class;
+
     public function InitializeContent()
     {
         $this->getEntries();
@@ -22,20 +25,12 @@ class PageAllSeries extends Page
 
     public function getEntries()
     {
-        global $config;
-        $this->entryArray = Serie::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
-        $this->totalNumber = Serie::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Serie::SQL_SORT;
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $config['cops_show_not_set_filter'])) {
-            $this->addNotSetEntry();
+        $baselist = new BaseList($this->className, $this->request);
+        $this->entryArray = $baselist->getRequestEntries($this->n);
+        $this->totalNumber = $baselist->countRequestEntries();
+        $this->sorted = $baselist->orderBy;
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", Config::get('show_not_set_filter'))) {
+            array_push($this->entryArray, $baselist->getWithoutEntry());
         }
-    }
-
-    public function addNotSetEntry()
-    {
-        $instance = new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());
-        $booklist = new BookList($this->request);
-        [$result,] = $booklist->getBooksWithoutSeries(-1);
-        array_push($this->entryArray, $instance->getEntry(count($result)));
     }
 }

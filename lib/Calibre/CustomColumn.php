@@ -8,11 +8,17 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Pages\Page;
+
 /**
  * A CustomColumn with an value
  */
 class CustomColumn extends Base
 {
+    public const PAGE_ID = Page::ALL_CUSTOMS_ID;
+    public const PAGE_ALL = Page::ALL_CUSTOMS;
+    public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
+
     /** @var string the (string) representation of the value */
     public $value;
     /** @var CustomColumnType the custom column that contains the value */
@@ -36,6 +42,11 @@ class CustomColumn extends Base
         $this->databaseId = $this->customColumnType->getDatabaseId();
     }
 
+    public function getCustomId()
+    {
+        return $this->customColumnType->customId;
+    }
+
     /**
      * Get the URI to show all books with this value
      *
@@ -43,7 +54,12 @@ class CustomColumn extends Base
      */
     public function getUri()
     {
-        return $this->customColumnType->getUri($this->id);
+        return "?page=" . self::PAGE_DETAIL . "&custom={$this->getCustomId()}&id={$this->id}";
+    }
+
+    public function getParentUri()
+    {
+        return $this->customColumnType->getUri();
     }
 
     /**
@@ -53,7 +69,7 @@ class CustomColumn extends Base
      */
     public function getEntryId()
     {
-        return $this->customColumnType->getEntryId($this->id);
+        return self::PAGE_ID . ":" . $this->getCustomId() . ":" . $this->id;
     }
 
     public function getTitle()
@@ -61,9 +77,9 @@ class CustomColumn extends Base
         return $this->value;
     }
 
-    public function getLinkArray()
+    public function getParentTitle()
     {
-        return $this->customColumnType->getLinkArray($this->id);
+        return $this->customColumnType->getTitle();
     }
 
     public function getClassName()
@@ -71,11 +87,11 @@ class CustomColumn extends Base
         return $this->customColumnType->getTitle();
     }
 
-    public function getCount()
+    public function getCustomCount()
     {
         [$query, $params] = $this->getQuery();
         $columns = 'count(*)';
-        $count = Base::countQuery($query, $columns, "", $params, $this->databaseId);
+        $count = Database::countFilter($query, $columns, "", $params, $this->databaseId);
         return $this->getEntry($count);
     }
 
@@ -85,11 +101,16 @@ class CustomColumn extends Base
      *  - first the query (string)
      *  - second an array of all PreparedStatement parameters
      *
-     * @return array
+     * @return array{0: string, 1: array}
      */
     public function getQuery()
     {
         return $this->customColumnType->getQuery($this->id);
+    }
+
+    public function getFilter($parentTable = null)
+    {
+        return $this->customColumnType->getFilter($this->id, $parentTable);
     }
 
     /**
@@ -100,43 +121,6 @@ class CustomColumn extends Base
     public function getHTMLEncodedValue()
     {
         return $this->htmlvalue;
-    }
-
-    /** Use inherited class methods to get entries from <Whatever> by customType and valueId (linked via books) */
-
-    public function getBooks($n = -1)
-    {
-        return Book::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getAuthors($n = -1)
-    {
-        return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1)
-    {
-        return Language::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1)
-    {
-        return Publisher::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getRatings($n = -1)
-    {
-        return Rating::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getSeries($n = -1)
-    {
-        return Serie::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getTags($n = -1)
-    {
-        return Tag::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
     }
 
     /**

@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -16,50 +17,13 @@ use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageQueryResult;
 
-class BookList extends Base
+class BookList
 {
     public const SQL_BOOKS_ALL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ';
-    public const SQL_BOOKS_BY_PUBLISHER = 'select {0} from books_publishers_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_publishers_link.book = books.id and publisher = ? {1} order by books.sort';
     public const SQL_BOOKS_BY_FIRST_LETTER = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where upper (books.sort) like ? {1} order by books.sort';
     public const SQL_BOOKS_BY_PUB_YEAR = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where substr(date(books.pubdate), 1, 4) = ? {1} order by books.sort';
-    public const SQL_BOOKS_BY_AUTHOR = 'select {0} from books_authors_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    left outer join books_series_link on books_series_link.book = books.id
-    where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc';
-    public const SQL_BOOKS_BY_SERIE = 'select {0} from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_series_link.book = books.id and series = ? {1} order by series_index';
-    public const SQL_BOOKS_BY_TAG = 'select {0} from books_tags_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_tags_link.book = books.id and tag = ? {1} order by books.sort';
-    public const SQL_BOOKS_BY_LANGUAGE = 'select {0} from books_languages_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.{3} = ? {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = 1 {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = 0 {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books.id not in (select book from {2}) {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_RATING = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    left join {2} on {2}.book = books.id
-    left join {3} on {3}.id = {2}.{4}
-    where {3}.value = ?  order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_RATING_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    left join {2} on {2}.book = books.id
-    left join {3} on {3}.id = {2}.{4}
-    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_DATE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and date({2}.value) = ? {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_YEAR = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and substr(date({2}.value), 1, 4) = ? {1} order by {2}.value';
-    public const SQL_BOOKS_BY_CUSTOM_DIRECT = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value = ? {1} order by books.sort';
-    public const SQL_BOOKS_BY_CUSTOM_RANGE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
-    public const SQL_BOOKS_BY_CUSTOM_DIRECT_ID = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and {2}.id = ? {1} order by books.sort';
     public const SQL_BOOKS_QUERY = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where (
     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
@@ -69,21 +33,33 @@ class BookList extends Base
     title like ?) {1} order by books.sort';
     public const SQL_BOOKS_RECENT = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where 1=1 {1} order by books.timestamp desc limit ';
-    public const SQL_BOOKS_BY_RATING = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where books_ratings_link.book = books.id and ratings.id = ? {1} order by books.sort';
-    public const SQL_BOOKS_BY_RATING_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by books.sort';
+    public const URL_PARAM_FIRST = "f";
+    public const URL_PARAM_YEAR = "y";
 
     public const BAD_SEARCH = 'QQQQQ';
 
     public Request $request;
-    protected mixed $numberPerPage = null;
+    /**
+     * @var mixed
+     */
+    protected $databaseId = null;
+    /**
+     * @var mixed
+     */
+    protected $numberPerPage = null;
     protected array $ignoredCategories = [];
-    public mixed $orderBy = null;
+    /**
+     * @var mixed
+     */
+    public $orderBy = null;
 
-    public function __construct(Request $request, mixed $database = null, mixed $numberPerPage = null)
+    /**
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     */
+    public function __construct(?Request $request, $database = null, $numberPerPage = null)
     {
-        $this->request = $request;
+        $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
@@ -92,30 +68,37 @@ class BookList extends Base
 
     protected function setOrderBy()
     {
-        $this->orderBy = $this->request->get('sort', null, '/^\w+(\s+(asc|desc)|)$/i');
+        $this->orderBy = $this->request->getSorted();
         //$this->orderBy ??= $this->request->option('sort');
     }
 
     protected function getOrderBy()
     {
-        return match ($this->orderBy) {
-            'title' => 'books.sort',
-            'author' => 'books.author_sort',
-            'pubdate' => 'books.pubdate desc',
-            'rating' => 'ratings.rating desc',
-            'timestamp' => 'books.timestamp desc',
-            default => $this->orderBy,
-        };
+        switch ($this->orderBy) {
+            case 'title':
+                return 'books.sort';
+            case 'author':
+                return 'books.author_sort';
+            case 'pubdate':
+                return 'books.pubdate desc';
+            case 'rating':
+                return 'ratings.rating desc';
+            case 'timestamp':
+                return 'books.timestamp desc';
+            case 'count':
+                return 'count desc';
+            default:
+                return $this->orderBy;
+        }
     }
 
     public function getBookCount()
     {
-        return parent::executeQuerySingle('select count(*) from books', $this->databaseId);
+        return Database::querySingle('select count(*) from books', $this->databaseId);
     }
 
     public function getCount()
     {
-        global $config;
         $nBooks = $this->getBookCount();
         $result = [];
         $entry = new Entry(
@@ -129,92 +112,44 @@ class BookList extends Base
             $nBooks
         );
         array_push($result, $entry);
-        if ($config['cops_recentbooks_limit'] > 0) {
+        if (Config::get('recentbooks_limit') > 0) {
             $entry = new Entry(
                 localize('recent.title'),
                 Page::ALL_RECENT_BOOKS_ID,
-                str_format(localize('recent.list'), $config['cops_recentbooks_limit']),
+                str_format(localize('recent.list'), Config::get('recentbooks_limit')),
                 'text',
                 [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS, null, null, $this->databaseId)],
                 $this->databaseId,
                 '',
-                $config['cops_recentbooks_limit']
+                Config::get('recentbooks_limit')
             );
             array_push($result, $entry);
         }
         return $result;
     }
 
-    public function getBooksByAuthor($authorId, $n)
-    {
-        return $this->getEntryArray(self::SQL_BOOKS_BY_AUTHOR, [$authorId], $n);
-    }
-
-    public function getBooksByRating($ratingId, $n)
-    {
-        if (empty($ratingId)) {
-            return $this->getBooksWithoutRating($n);
-        }
-        return $this->getEntryArray(self::SQL_BOOKS_BY_RATING, [$ratingId], $n);
-    }
-
-    public function getBooksWithoutRating($n)
-    {
-        return $this->getEntryArray(self::SQL_BOOKS_BY_RATING_NULL, [], $n);
-    }
-
-    public function getBooksByPublisher($publisherId, $n)
-    {
-        return $this->getEntryArray(self::SQL_BOOKS_BY_PUBLISHER, [$publisherId], $n);
-    }
-
-    public function getBooksBySeries($serieId, $n)
-    {
-        global $config;
-        if (empty($serieId) && in_array("series", $config['cops_show_not_set_filter'])) {
-            return $this->getBooksWithoutSeries($n);
-        }
-        return $this->getEntryArray(self::SQL_BOOKS_BY_SERIE, [$serieId], $n);
-    }
-
-    public function getBooksWithoutSeries($n)
-    {
-        $query = str_format(self::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", "books_series_link");
-        return $this->getEntryArray($query, [], $n);
-    }
-
-    public function getBooksByTag($tagId, $n)
-    {
-        global $config;
-        if (empty($tagId) && in_array("tag", $config['cops_show_not_set_filter'])) {
-            return $this->getBooksWithoutTag($n);
-        }
-        return $this->getEntryArray(self::SQL_BOOKS_BY_TAG, [$tagId], $n);
-    }
-
-    public function getBooksWithoutTag($n)
-    {
-        $query = str_format(self::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", "books_tags_link");
-        return $this->getEntryArray($query, [], $n);
-    }
-
-    public function getBooksByLanguage($languageId, $n)
-    {
-        return $this->getEntryArray(self::SQL_BOOKS_BY_LANGUAGE, [$languageId], $n);
-    }
-
     /**
-     * Summary of getBooksByCustom
-     * @param CustomColumnType $columnType
-     * @param integer $id
-     * @param integer $n
+     * Summary of getBooksByInstance
+     * @param Base|Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @param mixed $n
      * @return array
      */
-    public function getBooksByCustom($columnType, $id, $n)
+    public function getBooksByInstance($instance, $n)
     {
-        [$query, $params] = $columnType->getQuery($id);
-
+        if (empty($instance->id) && in_array(get_class($instance), [Rating::class, Serie::class, Tag::class])) {
+            return $this->getBooksWithoutInstance($instance, $n);
+        }
+        [$query, $params] = $instance->getQuery();
         return $this->getEntryArray($query, $params, $n);
+    }
+
+    public function getBooksWithoutInstance($instance, $n)
+    {
+        // in_array("series", Config::get('show_not_set_filter'))
+        if ($instance instanceof CustomColumn) {
+            return $this->getBooksWithoutCustom($instance->customColumnType, $n);
+        }
+        return $this->getEntryArray($instance::SQL_BOOKLIST_NULL, [], $n);
     }
 
     /**
@@ -298,12 +233,16 @@ class BookList extends Base
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 
-        /** @var \PDOStatement $result */
-        [, $result] = parent::executeQuery('select {0}
+        // @todo check orderBy to sort by count
+        if (!in_array($this->orderBy, ['groupid', 'count'])) {
+            $this->orderBy = 'groupid';
+        }
+        $sortBy = $this->getOrderBy();
+        $result = Database::queryFilter('select {0}
 from books
 where 1=1 {1}
 group by groupid
-order by groupid', $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId);
+order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -333,8 +272,7 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
 
     public function getAllRecentBooks()
     {
-        global $config;
-        [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], [], -1);
+        [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . Config::get('recentbooks_limit'), [], -1);
         return $entryArray;
     }
 
@@ -352,7 +290,7 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
         $params = $filter->getQueryParams();
 
         if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
-            if (str_contains($query, 'order by')) {
+            if (strpos($query, 'order by') !== false) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';
@@ -361,7 +299,7 @@ order by groupid', $groupField . ' as groupid, count(*) as count', $filterString
 
         /** @var integer $totalNumber */
         /** @var \PDOStatement $result */
-        [$totalNumber, $result] = parent::executeQuery($query, Book::getBookColumns(), $filterString, $params, $n, $this->databaseId, $this->numberPerPage);
+        [$totalNumber, $result] = Database::queryTotal($query, Book::getBookColumns(), $filterString, $params, $n, $this->databaseId, $this->numberPerPage);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {

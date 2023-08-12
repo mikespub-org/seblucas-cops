@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
+
 class CustomColumnTypeSeries extends CustomColumnType
 {
     protected function __construct($pcustomId, $database = null)
@@ -38,12 +40,11 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableLinkName());
+        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
+        $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
     }
 
@@ -61,15 +62,15 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getCustom($id)
     {
-        $result = $this->getDb($this->databaseId)->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
-        $result->execute([$id]);
+        $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
+        $result = Database::query($query, [$id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
         return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
@@ -83,18 +84,17 @@ class CustomColumnTypeSeries extends CustomColumnType
         return $entryArray;
     }
 
-    public function getDescription()
+    public function getContent($count = 0)
     {
-        $count = $this->getDistinctValueCount();
         return str_format(localize("customcolumn.description.series", $count), $count);
     }
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
-        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value . " [" . $post->extra . "]", $this);
         }

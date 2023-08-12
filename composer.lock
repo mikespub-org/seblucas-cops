@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc3c60586f7e65eb6a851ac031e510bc",
+    "content-hash": "4967b3a5501dc97e1ea72ca41decf841",
     "packages": [
         {
             "name": "kiwilan/php-opds",
@@ -3388,6 +3388,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
+        "php": ">=7.4",
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-intl": "*",
@@ -3395,7 +3396,8 @@
         "ext-mbstring": "*",
         "ext-pdo_sqlite": "*",
         "ext-xml": "*",
-        "ext-xmlwriter": "*"
+        "ext-xmlwriter": "*",
+        "ext-zlib": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

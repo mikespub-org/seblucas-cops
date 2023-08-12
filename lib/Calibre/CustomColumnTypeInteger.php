@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use UnexpectedValueException;
@@ -32,12 +33,11 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && strval($id) !== '0' && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+        if (empty($id) && strval($id) !== '0' && in_array("custom", Config::get('show_not_set_filter'))) {
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 
@@ -49,7 +49,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         }
         $lower = $matches[1];
         $upper = $matches[2];
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_RANGE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
         return [$query, [$lower, $upper]];
     }
 
@@ -70,9 +70,14 @@ class CustomColumnTypeInteger extends CustomColumnType
         return new CustomColumn($id, $id, $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
-        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value ORDER BY value";
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, value';
+        } else {
+            $queryFormat .= ' ORDER BY value';
+        }
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getPaginatedResult($query, [], $n);
@@ -88,14 +93,14 @@ class CustomColumnTypeInteger extends CustomColumnType
     /**
      * Summary of getCountByRange
      * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
+     * @param mixed $sort
      * @return Entry[]
      */
-    public function getCountByRange($page)
+    public function getCountByRange($page, $sort = null)
     {
-        global $config;
-        $numtiles = $config['cops_custom_integer_split_range'];
+        $numtiles = Config::get('custom_integer_split_range');
         if ($numtiles <= 1) {
-            $numtiles = $config['cops_max_item_per_page'];
+            $numtiles = Config::get('max_item_per_page');
         }
         if ($numtiles < 1) {
             $numtiles = 1;
@@ -104,8 +109,13 @@ class CustomColumnTypeInteger extends CustomColumnType
         //$queryFormat = "SELECT groupid, MIN(value) AS min_value, MAX(value) AS max_value, COUNT(*) AS count FROM (SELECT value, NTILE({$numtiles}) OVER (ORDER BY value) AS groupid FROM {0}) x GROUP BY groupid";
         // Semi-equal height distribution using CUME_DIST()
         $queryFormat = "SELECT CAST(ROUND(dist * ({$numtiles} - 1), 0) AS INTEGER) AS groupid, MIN(value) AS min_value, MAX(value) AS max_value, COUNT(*) AS count FROM (SELECT value, CUME_DIST() OVER (ORDER BY value) dist FROM {0}) GROUP BY groupid";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, groupid';
+        } else {
+            $queryFormat .= ' ORDER BY groupid';
+        }
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [], $this->databaseId);
 
         $entryArray = [];
         $label = 'range';
@@ -113,7 +123,7 @@ class CustomColumnTypeInteger extends CustomColumnType
             $range = $post->min_value . "-" . $post->max_value;
             array_push($entryArray, new Entry(
                 $range,
-                $this->getAllCustomsId().':'.$label.':'.$range,
+                $this->getEntryId().':'.$label.':'.$range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [new LinkNavigation("?page=" . $page . "&custom={$this->customId}&range=". rawurlencode($range), null, null, $this->databaseId)],
@@ -129,9 +139,10 @@ class CustomColumnTypeInteger extends CustomColumnType
     /**
      * Summary of getCustomValuesByRange
      * @param mixed $range
+     * @param mixed $sort
      * @return Entry[]
      */
-    public function getCustomValuesByRange($range)
+    public function getCustomValuesByRange($range, $sort = null)
     {
         $matches = [];
         if (!preg_match(self::GET_PATTERN, $range, $matches)) {
@@ -139,10 +150,14 @@ class CustomColumnTypeInteger extends CustomColumnType
         }
         $lower = $matches[1];
         $upper = $matches[2];
-        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} WHERE value >= ? AND value <= ? GROUP BY value ORDER BY value";
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} WHERE value >= ? AND value <= ? GROUP BY value";
+        if (!empty($sort) && $sort == 'count') {
+            $queryFormat .= ' ORDER BY count desc, value';
+        } else {
+            $queryFormat .= ' ORDER BY value';
+        }
         $query = str_format($queryFormat, $this->getTableName());
-        $result = $this->getDb($this->databaseId)->prepare($query);
-        $result->execute([$lower, $upper]);
+        $result = Database::query($query, [$lower, $upper], $this->databaseId);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -156,10 +171,10 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = {1}";
-        $query = str_format($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }

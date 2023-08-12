@@ -13,26 +13,28 @@ use SebLucas\Cops\Calibre\Serie;
 
 class PageSerieDetail extends Page
 {
+    protected $className = Serie::class;
+
     public function InitializeContent()
     {
-        $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
+        $serie = Serie::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&s=' . $this->idGet;
             $this->getFilters($serie);
         } else {
-            $this->getEntries();
+            $this->getEntries($serie);
         }
         $this->idPage = $serie->getEntryId();
         $this->title = $serie->getTitle();
         $this->currentUri = $serie->getUri();
-        $this->parentTitle = localize("series.title");
+        $this->parentTitle = $serie->getParentTitle();
         $this->parentUri = $serie->getParentUri();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksBySeries($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series_index";
     }
 }

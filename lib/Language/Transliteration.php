@@ -173,14 +173,6 @@ class Transliteration
     {
         static $map = [];
 
-        //GL: set language later
-        /*
-        if (!isset($langcode)) {
-        global $language;
-        $langcode = $language->language;
-        }
-        */
-
         $bank = $ord >> 8;
 
         if (!isset($map[$bank][$langcode])) {

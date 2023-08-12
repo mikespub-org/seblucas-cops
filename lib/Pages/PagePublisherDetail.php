@@ -13,26 +13,28 @@ use SebLucas\Cops\Calibre\Publisher;
 
 class PagePublisherDetail extends Page
 {
+    protected $className = Publisher::class;
+
     public function InitializeContent()
     {
-        $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());
+        $publisher = Publisher::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&p=' . $this->idGet;
             $this->getFilters($publisher);
         } else {
-            $this->getEntries();
+            $this->getEntries($publisher);
         }
         $this->idPage = $publisher->getEntryId();
         $this->title = $publisher->getTitle();
         $this->currentUri = $publisher->getUri();
-        $this->parentTitle = localize("publishers.title");
+        $this->parentTitle = $publisher->getParentTitle();
         $this->parentUri = $publisher->getParentUri();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByPublisher($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }
