@@ -109,9 +109,7 @@ class RestApi
      */
     public static function getScriptName($request)
     {
-        $script = explode("/", $request->script() ?? "/" . self::$endpoint);
-        $link = array_pop($script);
-        return $link;
+        return $request->getEndpoint(self::$endpoint);
     }
 
     /**

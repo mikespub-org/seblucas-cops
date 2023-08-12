@@ -209,7 +209,7 @@ class BookTest extends TestCase
     {
         $booklist = new BookList(self::$request);
 
-        // All books by first letter
+        // All books by publication year
         $entryArray = $booklist->getCountByPubYear();
         $this->assertCount(5, $entryArray);
     }
@@ -218,7 +218,7 @@ class BookTest extends TestCase
     {
         $booklist = new BookList(self::$request);
 
-        // All books by first letter
+        // All books by publication year
         [$entryArray, $totalNumber] = $booklist->getBooksByPubYear(2006, -1);
         $this->assertEquals(-1, $totalNumber);
         $this->assertCount(9, $entryArray);
@@ -490,6 +490,18 @@ class BookTest extends TestCase
 
         $config['cops_use_url_rewriting'] = "0";
         $this->assertEquals(Config::ENDPOINT["fetch"] . "?data=20&type=epub&id=17", $epub->getHtmlLink());
+    }
+
+    public function testGetUpdatedEpub()
+    {
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
+        $book = Book::getBookById(17);
+
+        ob_start();
+        $book->getUpdatedEpub(20);
+        $headers = headers_list();
+        $output = ob_get_clean();
+        $this->assertStringStartsWith("Exception : Cannot modify header information", $output);
     }
 
     public function testGetFilePath_Cover()

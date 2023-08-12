@@ -5,6 +5,12 @@ x.x.x - TODO
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
 1.4.x - 202308xx TBD
+  * Move endpoint dependency from LinkNavigation to JSON/OPDS renderer
+  * Update checkconfig.php to better reflect current requirements
+  * Downgrade level set to PHP 7.4 with rector to fix a few compatibility issues
+  * Rebase Calibre\Book and Calibre\CustomColumnType classes
+  * Split off new Calibre\BaseList class and move SQL statements
+  * Add sorting of non-book lists with URL param in code
   * Add optional filter links in bootstrap2 template
   * Add filtering of non-book lists in pages
   * Add sort options for book lists in bootstrap2 template

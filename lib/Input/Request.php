@@ -266,6 +266,17 @@ class Request
         // ?? $this->option('sort');
     }
 
+    public function getEndpoint($default)
+    {
+        $script = explode("/", $this->script() ?? "/" . $default);
+        $link = array_pop($script);
+        // see former LinkNavigation
+        if (preg_match("/(bookdetail|getJSON).php/", $link)) {
+            return $default;
+        }
+        return $link;
+    }
+
     /**
      * Summary of verifyLogin
      * @return bool

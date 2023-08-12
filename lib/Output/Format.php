@@ -73,6 +73,18 @@ class Format
         return $url;
     }
 
+    public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
+    {
+        if (!empty($database)) {
+            $params ??= [];
+            $params['db'] = $database;
+        }
+        if (!empty($params)) {
+            return Config::ENDPOINT[$endpoint] . "?" . http_build_query($params);
+        }
+        return Config::ENDPOINT[$endpoint];
+    }
+
     public static function serverSideRender($data, $theme = 'default')
     {
         // Get the templates

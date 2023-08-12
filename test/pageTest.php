@@ -406,6 +406,25 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->IsPaginated());
     }
 
+    public function testPageAuthorsDetail_Filter()
+    {
+        global $config;
+        $page = Page::AUTHOR_DETAIL;
+        $request = new Request();
+        $request->set('id', "1");
+        $request->set('filter', "1");
+
+        $currentPage = Page::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
+        $this->assertCount(14, $currentPage->entryArray);
+        $this->assertEquals("Languages", $currentPage->entryArray [0]->title);
+        $this->assertEquals("English", $currentPage->entryArray [1]->title);
+        $this->assertEquals("8 books", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
     public function testPageAllBooks_WithFullName()
     {
         global $config;
@@ -528,6 +547,24 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
+    public function testPageSeriesDetail_Filter()
+    {
+        $page = Page::SERIE_DETAIL;
+        $request = new Request();
+        $request->set('id', "1");
+        $request->set('filter', "1");
+
+        $currentPage = Page::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("Sherlock Holmes", $currentPage->title);
+        $this->assertCount(12, $currentPage->entryArray);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray [1]->title);
+        $this->assertEquals("7 books", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
     public function testPageAllPublishers()
     {
         $page = Page::ALL_PUBLISHERS;
@@ -555,6 +592,24 @@ class PageTest extends TestCase
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertTrue($currentPage->containsBook());
+    }
+
+    public function testPagePublishersDetail_Filter()
+    {
+        $page = Page::PUBLISHER_DETAIL;
+        $request = new Request();
+        $request->set('id', "6");
+        $request->set('filter', "1");
+
+        $currentPage = Page::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("Strand Magazine", $currentPage->title);
+        $this->assertCount(14, $currentPage->entryArray);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray [1]->title);
+        $this->assertEquals("8 books", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageAllTags()
@@ -589,6 +644,23 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
+    public function testPageTagDetail_Filter()
+    {
+        $page = Page::TAG_DETAIL;
+        $request = new Request();
+        $request->set('id', "1");
+        $request->set('filter', "1");
+
+        $currentPage = Page::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("Fiction", $currentPage->title);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [1]->title);
+        $this->assertEquals("2 books", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
     public function testPageAllLanguages()
     {
         $page = Page::ALL_LANGUAGES;
@@ -617,6 +689,23 @@ class PageTest extends TestCase
         $this->assertCount(14, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertTrue($currentPage->containsBook());
+    }
+
+    public function testPageLanguageDetail_Filter()
+    {
+        $page = Page::LANGUAGE_DETAIL;
+        $request = new Request();
+        $request->set('id', "1");
+        $request->set('filter', "1");
+
+        $currentPage = Page::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("English", $currentPage->title);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [1]->title);
+        $this->assertEquals("2 books", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageAllRatings()
@@ -649,6 +738,23 @@ class PageTest extends TestCase
         $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertTrue($currentPage->containsBook());
+    }
+
+    public function testPageRatingDetail_Filter()
+    {
+        $page = Page::RATING_DETAIL;
+        $request = new Request();
+        $request->set('id', "1");
+        $request->set('filter', "1");
+
+        $currentPage = Page::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("5 stars", $currentPage->title);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray [1]->title);
+        $this->assertEquals("4 books", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
     }
 
     public function testPageRecent()

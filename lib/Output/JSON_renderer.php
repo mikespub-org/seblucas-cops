@@ -29,7 +29,7 @@ class JSONRenderer
      * @param Book $book
      * @return array
      */
-    public static function getBookContentArray($book)
+    public static function getBookContentArray($book, $endpoint)
     {
         global $config;
         $i = 0;
@@ -53,7 +53,7 @@ class JSONRenderer
         } else {
             $pn = $publisher->name;
             $link = new LinkNavigation($publisher->getUri(), null, null, $database);
-            $pu = $link->hrefXhtml();
+            $pu = $link->hrefXhtml($endpoint);
         }
 
         $serie = $book->getSerie();
@@ -65,7 +65,7 @@ class JSONRenderer
             $sn = $serie->name;
             $scn = str_format(localize("content.series.data"), $book->seriesIndex, $serie->name);
             $link = new LinkNavigation($serie->getUri(), null, null, $database);
-            $su = $link->hrefXhtml();
+            $su = $link->hrefXhtml($endpoint);
         }
         $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list'], true);
 
@@ -91,10 +91,10 @@ class JSONRenderer
      * @param Book $book
      * @return array
      */
-    public static function getFullBookContentArray($book)
+    public static function getFullBookContentArray($book, $endpoint)
     {
         global $config;
-        $out = self::getBookContentArray($book);
+        $out = self::getBookContentArray($book, $endpoint);
         $database = $book->getDatabaseId();
 
         $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
@@ -120,12 +120,12 @@ class JSONRenderer
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
             $link = new LinkNavigation($author->getUri(), null, null, $database);
-            array_push($out ["authors"], ["name" => $author->name, "url" => $link->hrefXhtml()]);
+            array_push($out ["authors"], ["name" => $author->name, "url" => $link->hrefXhtml($endpoint)]);
         }
         $out ["tags"] = [];
         foreach ($book->getTags() as $tag) {
             $link = new LinkNavigation($tag->getUri(), null, null, $database);
-            array_push($out ["tags"], ["name" => $tag->name, "url" => $link->hrefXhtml()]);
+            array_push($out ["tags"], ["name" => $tag->name, "url" => $link->hrefXhtml($endpoint)]);
         }
 
         $out ["identifiers"] = [];
@@ -138,18 +138,18 @@ class JSONRenderer
         return $out;
     }
 
-    public static function getContentArray($entry, $extraUri = "")
+    public static function getContentArray($entry, $endpoint, $extraUri = "")
     {
         /** @var Entry|EntryBook $entry */
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
-            $out ["book"] = self::getBookContentArray($entry->book);
+            $out ["book"] = self::getBookContentArray($entry->book, $endpoint);
             return $out;
         }
-        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($extraUri), "number" => $entry->numberOfElement ];
+        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
     }
 
-    public static function getContentArrayTypeahead($page)
+    public static function getContentArrayTypeahead($page, $endpoint)
     {
         /** @var Page $page */
         $out = [];
@@ -157,13 +157,13 @@ class JSONRenderer
             if ($entry instanceof EntryBook) {
                 array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
             } else {
-                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
+                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink($endpoint)]);
             }
         }
         return $out;
     }
 
-    public static function addCompleteArray($in, $request)
+    public static function addCompleteArray($in, $request, $endpoint)
     {
         global $config;
         $out = $in;
@@ -202,7 +202,7 @@ class JSONRenderer
                 "ratingsTitle" => localize("ratings.title"),
             ],
             "url" => [
-                "detailUrl" => self::$endpoint . "?page=13&id={0}&db={1}",
+                "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
                 "coverUrl" => Config::ENDPOINT["fetch"] . "?id={0}&db={1}",
                 "thumbnailUrl" => Config::ENDPOINT["fetch"] . "?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}",
             ],
@@ -252,8 +252,11 @@ class JSONRenderer
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
+        // adapt endpoint based on $request e.g. for rest api
+        $endpoint = $request->getEndpoint(self::$endpoint);
+
         if ($search) {
-            return self::getContentArrayTypeahead($currentPage);
+            return self::getContentArrayTypeahead($currentPage, $endpoint);
         }
 
         $out = [ "title" => $currentPage->title];
@@ -267,14 +270,14 @@ class JSONRenderer
             $extraUri = $currentPage->filterUri;
         }
         foreach ($currentPage->entryArray as $entry) {
-            array_push($entries, self::getContentArray($entry, $extraUri));
+            array_push($entries, self::getContentArray($entry, $endpoint, $extraUri));
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
             if ($config['cops_provide_kepub'] == "1" && preg_match("/Kobo/", $request->agent())) {
                 $currentPage->book->updateForKepub = true;
             }
-            $out ["book"] = self::getFullBookContentArray($currentPage->book);
+            $out ["book"] = self::getFullBookContentArray($currentPage->book, $endpoint);
         } elseif ($page == Page::BOOK_DETAIL) {
             $page = Page::INDEX;
         }
@@ -299,17 +302,17 @@ class JSONRenderer
             $out ["isPaginated"] = 1;
             $out ["prevLink"] = "";
             if (!is_null($prevLink)) {
-                $out ["prevLink"] = $prevLink->hrefXhtml();
+                $out ["prevLink"] = $prevLink->hrefXhtml($endpoint);
             }
             $out ["nextLink"] = "";
             if (!is_null($nextLink)) {
-                $out ["nextLink"] = $nextLink->hrefXhtml();
+                $out ["nextLink"] = $nextLink->hrefXhtml($endpoint);
             }
             $out ["maxPage"] = $currentPage->getMaxPage();
             $out ["currentPage"] = $currentPage->n;
         }
         if (!is_null($request->get("complete")) || $complete) {
-            $out = self::addCompleteArray($out, $request);
+            $out = self::addCompleteArray($out, $request, $endpoint);
         }
 
         $out ["containsBook"] = 0;
@@ -318,22 +321,22 @@ class JSONRenderer
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
-            $out ["sorturl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
+            $out ["sorturl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
-                $out ["filterurl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
+                $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
             }
         } elseif (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
-            $out ["filterurl"] = self::$endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
+            $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
         }
 
-        $out["abouturl"] = self::$endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
-        $out["customizeurl"] = self::$endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
+        $out["abouturl"] = $endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
+        $out["customizeurl"] = $endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
         $out["filters"] = false;
         if ($request->hasFilter()) {
             $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
-                array_push($out["filters"], self::getContentArray($entry));
+                array_push($out["filters"], self::getContentArray($entry, $endpoint));
             }
         }
 
@@ -345,23 +348,23 @@ class JSONRenderer
         // multiple database setup
         if ($page != Page::INDEX && !is_null($database)) {
             if ($homepage != Page::INDEX) {
-                $out ["homeurl"] = self::$endpoint .  "?" . Format::addURLParam("page=" . Page::INDEX, 'db', $database);
+                $out ["homeurl"] = $endpoint .  "?" . Format::addURLParam("page=" . Page::INDEX, 'db', $database);
             } else {
-                $out ["homeurl"] = self::$endpoint .  "?" . Format::addURLParam("", 'db', $database);
+                $out ["homeurl"] = $endpoint .  "?" . Format::addURLParam("", 'db', $database);
             }
         } elseif ($homepage != Page::INDEX) {
-            $out ["homeurl"] = self::$endpoint . "?page=" . Page::INDEX;
+            $out ["homeurl"] = $endpoint . "?page=" . Page::INDEX;
         } else {
-            $out ["homeurl"] = self::$endpoint;
+            $out ["homeurl"] = $endpoint;
         }
 
         $out ["parenturl"] = "";
         if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
             // if filtered, use the unfiltered uri as parent first
-            $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->currentUri, 'db', $database);
+            $out ["parenturl"] = $endpoint . Format::addURLParam($currentPage->currentUri, 'db', $database);
         } elseif (!empty($currentPage->parentUri)) {
             // otherwise use the parent uri
-            $out ["parenturl"] = self::$endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
+            $out ["parenturl"] = $endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
         } elseif ($page != Page::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];
         }

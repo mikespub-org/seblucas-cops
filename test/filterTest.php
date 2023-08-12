@@ -21,6 +21,8 @@ use SebLucas\Cops\Input\Request;
 
 class FilterTest extends TestCase
 {
+    private static $endpoint = 'phpunit';
+
     public static function setUpBeforeClass(): void
     {
         global $config;
@@ -229,62 +231,62 @@ class FilterTest extends TestCase
         $this->assertEquals("Author", $entries[0]->className);
         $this->assertEquals("Doyle, Arthur Conan", $entries[0]->title);
         $this->assertEquals("8 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=3&id=1", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=3&id=1", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['l' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Language", $entries[0]->className);
         $this->assertEquals("English", $entries[0]->title);
         $this->assertEquals("14 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=18&id=1", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=18&id=1", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['p' => '2']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Publisher", $entries[0]->className);
         $this->assertEquals("Macmillan and Co. London", $entries[0]->title);
         $this->assertEquals("2 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=21&id=2", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=21&id=2", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['r' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Rating", $entries[0]->className);
         $this->assertEquals("5 stars", $entries[0]->title);
         $this->assertEquals("4 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=23&id=1", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=23&id=1", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['s' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Serie", $entries[0]->className);
         $this->assertEquals("Sherlock Holmes", $entries[0]->title);
         $this->assertEquals("7 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=7&id=1", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=7&id=1", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['t' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Tag", $entries[0]->className);
         $this->assertEquals("Fiction", $entries[0]->title);
         $this->assertEquals("14 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=12&id=1", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=12&id=1", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['c' => [1 => 1]]);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Type4", $entries[0]->className);
         $this->assertEquals("SeriesLike", $entries[0]->title);
         $this->assertEquals("2 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=1&id=1", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=15&custom=1&id=1", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['f' => 'C']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Letter", $entries[0]->className);
         $this->assertEquals("C", $entries[0]->title);
         $this->assertEquals("3 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=5&id=C", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=5&id=C", $entries[0]->getNavLink(self::$endpoint));
 
         $request = Request::build(['y' => '2006']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Year", $entries[0]->className);
         $this->assertEquals("2006", $entries[0]->title);
         $this->assertEquals("9 books", $entries[0]->content);
-        $this->assertEquals("phpunit?page=50&id=2006", $entries[0]->getNavLink());
+        $this->assertEquals("phpunit?page=50&id=2006", $entries[0]->getNavLink(self::$endpoint));
     }
 }

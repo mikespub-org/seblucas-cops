@@ -74,7 +74,7 @@ class Entry
         return date(DATE_ATOM, self::$updated);
     }
 
-    public function getNavLink($extraUri = "")
+    public function getNavLink($endpoint = "", $extraUri = "")
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkNavigation */
@@ -83,30 +83,30 @@ class Entry
                 continue;
             }
 
-            return $link->hrefXhtml() . $extraUri;
+            return $link->hrefXhtml($endpoint) . $extraUri;
         }
         return "#";
     }
 
-    public function getThumbnail()
+    public function getThumbnail($endpoint = '')
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkNavigation */
 
             if ($link->rel == Link::OPDS_THUMBNAIL_TYPE) {
-                return $link->hrefXhtml();
+                return $link->hrefXhtml($endpoint);
             }
         }
         return null;
     }
 
-    public function getImage()
+    public function getImage($endpoint = '')
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkNavigation */
 
             if ($link->rel == Link::OPDS_IMAGE_TYPE) {
-                return $link->hrefXhtml();
+                return $link->hrefXhtml($endpoint);
             }
         }
         return null;
