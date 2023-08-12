@@ -8,10 +8,11 @@
 
 namespace SebLucas\EPubMeta;
 
+use SebLucas\TbsZip\clsTbsZip;
+use Marsender\EPubLoader\ZipFile;
 use DOMDocument;
 use Exception;
 use InvalidArgumentException;
-use SebLucas\TbsZip\clsTbsZip;
 use ZipArchive;
 
 use const SebLucas\TbsZip\TBSZIP_DOWNLOAD;
@@ -27,6 +28,9 @@ class EPub
     protected $nav_xpath;
     protected $file;
     protected $meta;
+    /**
+     * @var clsTbsZip|ZipFile
+     */
     protected $zip;
     protected $coverpath='';
     protected $namespaces;

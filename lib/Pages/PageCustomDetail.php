@@ -16,6 +16,8 @@ use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 
 class PageCustomDetail extends Page
 {
+    protected $className = CustomColumn::class;
+
     public function InitializeContent()
     {
         $customId = $this->request->get("custom", null);
@@ -27,19 +29,20 @@ class PageCustomDetail extends Page
             $this->filterUri = '&c[' . $customId . ']=' . $this->idGet;
             $this->getFilters($custom);
         } else {
-            $this->getCustomEntries($custom->customColumnType);
+            $this->getCustomEntries($custom);
         }
-        $this->parentTitle = $custom->customColumnType->getTitle();
-        $this->parentUri = $custom->customColumnType->getUriAllCustoms();
+        $this->parentTitle = $custom->getParentTitle();
+        $this->parentUri = $custom->getParentUri();
     }
 
     /**
      * Summary of getCustomEntries
-     * @param CustomColumnType $columnType
+     * @param CustomColumn $custom
      * @return void
      */
-    public function getCustomEntries($columnType)
+    public function getCustomEntries($custom)
     {
+        $columnType = $custom->customColumnType;
         $booklist = new BookList($this->request);
         if (empty($this->idGet)) {
             if ($columnType instanceof CustomColumnTypeDate) {
@@ -63,7 +66,7 @@ class PageCustomDetail extends Page
                 }
             }
         }
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustom($columnType, $this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($custom, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

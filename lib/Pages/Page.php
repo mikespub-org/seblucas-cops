@@ -11,12 +11,14 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -89,90 +91,80 @@ class Page
 
     /** @var Request */
     protected $request = null;
+    protected $className = null;
     protected $numberPerPage = -1;
     protected $ignoredCategories = [];
     protected $databaseId = null;
 
-    public static function getPageForRequest($request)
-    {
-        $page = $request->get("page", Page::INDEX);
-        $query = $request->get("query");
-        $id = $request->get("id");
-        $n = $request->get("n", "1");
-        return self::getPage($page, $id, $query, $n);
-    }
-
-    public static function getPage($pageId, $id, $query, $n, $request = null)
+    public static function getPage($pageId, $request)
     {
         switch ($pageId) {
             case Page::ALL_AUTHORS :
-                return new PageAllAuthors($id, $query, $n, $request);
+                return new PageAllAuthors($request);
             case Page::AUTHORS_FIRST_LETTER :
-                return new PageAllAuthorsLetter($id, $query, $n, $request);
+                return new PageAllAuthorsLetter($request);
             case Page::AUTHOR_DETAIL :
-                return new PageAuthorDetail($id, $query, $n, $request);
+                return new PageAuthorDetail($request);
             case Page::ALL_TAGS :
-                return new PageAllTags($id, $query, $n, $request);
+                return new PageAllTags($request);
             case Page::TAG_DETAIL :
-                return new PageTagDetail($id, $query, $n, $request);
+                return new PageTagDetail($request);
             case Page::ALL_LANGUAGES :
-                return new PageAllLanguages($id, $query, $n, $request);
+                return new PageAllLanguages($request);
             case Page::LANGUAGE_DETAIL :
-                return new PageLanguageDetail($id, $query, $n, $request);
+                return new PageLanguageDetail($request);
             case Page::ALL_CUSTOMS :
-                return new PageAllCustoms($id, $query, $n, $request);
+                return new PageAllCustoms($request);
             case Page::CUSTOM_DETAIL :
-                return new PageCustomDetail($id, $query, $n, $request);
+                return new PageCustomDetail($request);
             case Page::ALL_RATINGS :
-                return new PageAllRating($id, $query, $n, $request);
+                return new PageAllRating($request);
             case Page::RATING_DETAIL :
-                return new PageRatingDetail($id, $query, $n, $request);
+                return new PageRatingDetail($request);
             case Page::ALL_SERIES :
-                return new PageAllSeries($id, $query, $n, $request);
+                return new PageAllSeries($request);
             case Page::ALL_BOOKS :
-                return new PageAllBooks($id, $query, $n, $request);
+                return new PageAllBooks($request);
             case Page::ALL_BOOKS_LETTER:
-                return new PageAllBooksLetter($id, $query, $n, $request);
+                return new PageAllBooksLetter($request);
             case Page::ALL_BOOKS_YEAR:
-                return new PageAllBooksYear($id, $query, $n, $request);
+                return new PageAllBooksYear($request);
             case Page::ALL_RECENT_BOOKS :
-                return new PageRecentBooks($id, $query, $n, $request);
+                return new PageRecentBooks($request);
             case Page::SERIE_DETAIL :
-                return new PageSerieDetail($id, $query, $n, $request);
+                return new PageSerieDetail($request);
             case Page::OPENSEARCH_QUERY :
-                return new PageQueryResult($id, $query, $n, $request);
+                return new PageQueryResult($request);
             case Page::BOOK_DETAIL :
-                return new PageBookDetail($id, $query, $n, $request);
+                return new PageBookDetail($request);
             case Page::ALL_PUBLISHERS:
-                return new PageAllPublishers($id, $query, $n, $request);
+                return new PageAllPublishers($request);
             case Page::PUBLISHER_DETAIL :
-                return new PagePublisherDetail($id, $query, $n, $request);
+                return new PagePublisherDetail($request);
             case Page::ABOUT :
-                return new PageAbout($id, $query, $n, $request);
+                return new PageAbout($request);
             case Page::CUSTOMIZE :
-                return new PageCustomize($id, $query, $n, $request);
+                return new PageCustomize($request);
             default:
-                return new Page($id, $query, $n, $request);
+                return new Page($request);
         }
     }
 
-    public function __construct($pid, $pquery, $pn, $request = null)
+    public function __construct($request = null)
     {
-        global $config;
-
-        $this->idGet = $pid;
-        $this->query = $pquery;
-        $this->n = $pn;
-        $this->setRequest($request ?? new Request());
-        $this->favicon = $config['cops_icon'];
-        $this->authorName = $config['cops_author_name'] ?: 'Sébastien Lucas';
-        $this->authorUri = $config['cops_author_uri'] ?: 'http://blog.slucas.fr';
-        $this->authorEmail = $config['cops_author_email'] ?: 'sebastien@slucas.fr';
+        $this->setRequest($request);
+        $this->favicon = Config::get('icon');
+        $this->authorName = Config::get('author_name') ?: 'Sébastien Lucas';
+        $this->authorUri = Config::get('author_uri') ?: 'http://blog.slucas.fr';
+        $this->authorEmail = Config::get('author_email') ?: 'sebastien@slucas.fr';
     }
 
     public function setRequest($request)
     {
-        $this->request = $request;
+        $this->request = $request ?? new Request();
+        $this->idGet = $this->request->get('id');
+        $this->query = $this->request->get('query');
+        $this->n = $this->request->get('n', '1');  // use default here
         $this->numberPerPage = $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->get('db');
@@ -195,11 +187,10 @@ class Page
 
     public function InitializeContent()
     {
-        global $config;
         $this->getEntries();
         $this->idPage = self::PAGE_ID;
-        $this->title = $config['cops_title_default'];
-        $this->subtitle = $config['cops_subtitle_default'];
+        $this->title = Config::get('title_default');
+        $this->subtitle = Config::get('subtitle_default');
     }
 
     public function getEntries()
@@ -234,7 +225,6 @@ class Page
 
     public function getTopCountEntries()
     {
-        global $config;
         if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
             array_push($this->entryArray, Author::getCount($this->databaseId));
         }
@@ -262,14 +252,14 @@ class Page
                 array_push($this->entryArray, $rating);
             }
         }
-        if (!in_array("language", $this->ignoredCategories)) {
+        if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
             $languages = Language::getCount($this->databaseId);
             if (!is_null($languages)) {
                 array_push($this->entryArray, $languages);
             }
         }
-        $config['cops_calibre_custom_column'] = CustomColumnType::checkCustomColumnList($config['cops_calibre_custom_column']);
-        foreach ($config['cops_calibre_custom_column'] as $lookup) {
+        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
+        foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 array_push($this->entryArray, $customColumn->getCount());
@@ -332,6 +322,11 @@ class Page
         ];
     }
 
+    /**
+     * Summary of getFilters
+     * @param Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @return void
+     */
     public function getFilters($instance)
     {
         $this->entryArray = [];

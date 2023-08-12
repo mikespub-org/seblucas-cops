@@ -4,9 +4,6 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Mail;
 
 require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
-
-global $config;
 
 if ($error = Mail::checkConfiguration()) {
     echo $error;

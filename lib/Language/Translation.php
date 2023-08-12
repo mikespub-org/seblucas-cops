@@ -9,6 +9,8 @@
 
 namespace SebLucas\Cops\Language;
 
+use SebLucas\Cops\Input\Config;
+
 class Translation
 {
     public const BASE_DIR = './lang';
@@ -78,11 +80,10 @@ class Translation
      */
     public function getLangAndTranslationFile()
     {
-        global $config;
         $langs = [];
         $lang = 'en';
-        if (!empty($config['cops_language'])) {
-            $lang = $config['cops_language'];
+        if (!empty(Config::get('language'))) {
+            $lang = Config::get('language');
         } elseif (!empty($this->acceptLanguageHeader)) {
             $langs = $this->getAcceptLanguages($this->acceptLanguageHeader);
         }
@@ -107,7 +108,6 @@ class Translation
      */
     public function localize($phrase, $count=-1, $reset=false)
     {
-        global $config;
         if ($count == 0) {
             $phrase .= '.none';
         }
@@ -155,8 +155,7 @@ class Translation
 
     public static function useNormAndUp()
     {
-        global $config;
-        return $config ['cops_normalized_search'] == '1';
+        return Config::get('normalized_search') == '1';
     }
 
     public static function normalizeUtf8String($s)

@@ -13,27 +13,28 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAuthorDetail extends Page
 {
+    protected $className = Author::class;
+
     public function InitializeContent()
     {
-        $author = Author::getAuthorById($this->idGet, $this->getDatabaseId());
+        $author = Author::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&a=' . $this->idGet;
             $this->getFilters($author);
         } else {
-            $this->getEntries();
+            $this->getEntries($author);
         }
         $this->idPage = $author->getEntryId();
         $this->title = $author->name;  // not by getTitle() = $author->sort here
         $this->currentUri = $author->getUri();
-        $this->parentTitle = localize("authors.title");
+        $this->parentTitle = $author->getParentTitle();
         $this->parentUri = $author->getParentUri();
-        //$seriesArray = $author->getSeries();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByAuthor($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series desc";
     }
 }

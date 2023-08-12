@@ -16,7 +16,6 @@ use SebLucas\Cops\Pages\Page;
 use SebLucas\Template\doT;
 
 require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
 
 // If we detect that an OPDS reader try to connect try to redirect to feed.php
 if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $_SERVER['HTTP_USER_AGENT'])) {
@@ -34,8 +33,8 @@ $database = $request->get('db');
 // Use the configured home page if needed
 if (!isset($page)) {
     $page = Page::INDEX;
-    if (!empty($config['cops_home_page']) && defined('SebLucas\Cops\Pages\Page::' . $config['cops_home_page'])) {
-        $page = constant('SebLucas\Cops\Pages\Page::' . $config['cops_home_page']);
+    if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\Page::' . Config::get('home_page'))) {
+        $page = constant('SebLucas\Cops\Pages\Page::' . Config::get('home_page'));
     }
     $request->set('page', $page);
 }
@@ -44,7 +43,7 @@ if (!isset($page)) {
 // It has to be done before any header is sent.
 Database::checkDatabaseAvailability($database);
 
-if ($config ['cops_fetch_protect'] == '1') {
+if (Config::get('fetch_protect') == '1') {
     session_start();
     if (!isset($_SESSION['connected'])) {
         $_SESSION['connected'] = 0;
@@ -53,14 +52,14 @@ if ($config ['cops_fetch_protect'] == '1') {
 
 header('Content-Type:text/html;charset=utf-8');
 
-$data = ['title'                 => $config['cops_title_default'],
+$data = ['title'                 => Config::get('title_default'),
               'version'               => Config::VERSION,
-              'opds_url'              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
+              'opds_url'              => Config::get('full_url') . Config::ENDPOINT["feed"],
               'customHeader'          => '',
               'template'              => $request->template(),
               'server_side_rendering' => $request->render(),
               'current_css'           => $request->style(),
-              'favico'                => $config['cops_icon'],
+              'favico'                => Config::get('icon'),
               'getjson_url'           => JSONRenderer::getCurrentUrl($request->query())];
 if (preg_match('/Kindle/', $request->agent())) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';

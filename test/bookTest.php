@@ -11,6 +11,12 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Language;
+use SebLucas\Cops\Calibre\Publisher;
+use SebLucas\Cops\Calibre\Rating;
+use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Link;
@@ -35,8 +41,7 @@ class BookTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        global $config;
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         self::$request = new Request();
         Database::clearDb();
 
@@ -83,43 +88,45 @@ class BookTest extends TestCase
 
     public function testGetCountRecent()
     {
-        global $config;
-        $config['cops_recentbooks_limit'] = 0;
-        $booklist = new BookList(self::$request);
+        Config::set('recentbooks_limit', 0);
+        $request = new Request();
+        $booklist = new BookList($request);
 
         $entryArray = $booklist->getCount();
         $this->assertEquals(1, count($entryArray));
 
-        $config['cops_recentbooks_limit'] = 2;
-        $booklist = new BookList(self::$request);
+        Config::set('recentbooks_limit', 2);
+        $request = new Request();
+        $booklist = new BookList($request);
 
         $entryArray = $booklist->getCount();
         $entryRecentBooks = $entryArray [1];
         $this->assertEquals("2 most recent books", $entryRecentBooks->content);
 
-        $config['cops_recentbooks_limit'] = 50;
+        Config::set('recentbooks_limit', 50);
     }
 
     public function testGetBooksByAuthor()
     {
         // All book by Arthur Conan Doyle
-        global $config;
+        Config::set('max_item_per_page', 5);
+        $request = new Request();
+        $booklist = new BookList($request);
+        $author = Author::getInstanceById(1);
 
-        $config['cops_max_item_per_page'] = 5;
-        $booklist = new BookList(self::$request);
-
-        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, 1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, 1);
         $this->assertEquals(5, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
-        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, 2);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, 2);
         $this->assertEquals(3, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
-        $config['cops_max_item_per_page'] = -1;
-        $booklist = new BookList(self::$request);
+        Config::set('max_item_per_page', -1);
+        $request = new Request();
+        $booklist = new BookList($request);
 
-        [$entryArray, $totalNumber] = $booklist->getBooksByAuthor(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -127,9 +134,10 @@ class BookTest extends TestCase
     public function testGetBooksBySeries()
     {
         $booklist = new BookList(self::$request);
+        $series = Serie::getInstanceById(1);
 
         // All book from the Sherlock Holmes series
-        [$entryArray, $totalNumber] = $booklist->getBooksBySeries(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($series, -1);
         $this->assertEquals(7, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -137,9 +145,10 @@ class BookTest extends TestCase
     public function testGetBooksByPublisher()
     {
         $booklist = new BookList(self::$request);
+        $publisher = Publisher::getInstanceById(6);
 
         // All books from Strand Magazine
-        [$entryArray, $totalNumber] = $booklist->getBooksByPublisher(6, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($publisher, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -147,9 +156,10 @@ class BookTest extends TestCase
     public function testGetBooksByTag()
     {
         $booklist = new BookList(self::$request);
+        $tag = Tag::getInstanceById(1);
 
         // All book with the Fiction tag
-        [$entryArray, $totalNumber] = $booklist->getBooksByTag(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($tag, -1);
         $this->assertEquals(14, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -157,10 +167,22 @@ class BookTest extends TestCase
     public function testGetBooksByLanguage()
     {
         $booklist = new BookList(self::$request);
+        $language = Language::getInstanceById(1);
 
         // All english book (= all books)
-        [$entryArray, $totalNumber] = $booklist->getBooksByLanguage(1, -1);
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($language, -1);
         $this->assertEquals(14, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksByRating()
+    {
+        $booklist = new BookList(self::$request);
+        $rating = Rating::getInstanceById(1);
+
+        // All books with 4 stars
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($rating, -1);
+        $this->assertEquals(4, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
@@ -187,7 +209,7 @@ class BookTest extends TestCase
     {
         $booklist = new BookList(self::$request);
 
-        // All books by first letter
+        // All books by publication year
         $entryArray = $booklist->getCountByPubYear();
         $this->assertCount(5, $entryArray);
     }
@@ -196,7 +218,7 @@ class BookTest extends TestCase
     {
         $booklist = new BookList(self::$request);
 
-        // All books by first letter
+        // All books by publication year
         [$entryArray, $totalNumber] = $booklist->getBooksByPubYear(2006, -1);
         $this->assertEquals(-1, $totalNumber);
         $this->assertCount(9, $entryArray);
@@ -212,16 +234,16 @@ class BookTest extends TestCase
     public function testGetAllRecentBooks()
     {
         // All recent books
-        global $config;
-
-        $config['cops_recentbooks_limit'] = 2;
-        $booklist = new BookList(self::$request);
+        Config::set('recentbooks_limit', 2);
+        $request = new Request();
+        $booklist = new BookList($request);
 
         $entryArray = $booklist->getAllRecentBooks();
         $this->assertCount(2, $entryArray);
 
-        $config['cops_recentbooks_limit'] = 50;
-        $booklist = new BookList(self::$request);
+        Config::set('recentbooks_limit', 50);
+        $request = new Request();
+        $booklist = new BookList($request);
 
         $entryArray = $booklist->getAllRecentBooks();
         $this->assertCount(15, $entryArray);
@@ -330,10 +352,8 @@ class BookTest extends TestCase
 
     public function testBookGetLinkArrayWithUrlRewriting()
     {
-        global $config;
-
+        Config::set('use_url_rewriting', "1");
         $book = Book::getBookById(2);
-        $config['cops_use_url_rewriting'] = "1";
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -347,10 +367,8 @@ class BookTest extends TestCase
 
     public function testBookGetLinkArrayWithoutUrlRewriting()
     {
-        global $config;
-
+        Config::set('use_url_rewriting', "0");
         $book = Book::getBookById(2);
-        $config['cops_use_url_rewriting'] = "0";
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -438,8 +456,6 @@ class BookTest extends TestCase
 
     public function testGetDataById()
     {
-        global $config;
-
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $book = Book::getBookById(17);
         $mobi = $book->getDataById(17);
@@ -450,8 +466,8 @@ class BookTest extends TestCase
         $this->assertEquals("Carroll, Lewis - Alice's Adventures in Wonderland.kepub.epub", $epub->getUpdatedFilenameKepub());
         $this->assertEquals(dirname(__FILE__) . "/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $epub->getLocalPath());
 
-        $config['cops_use_url_rewriting'] = "1";
-        $config['cops_provide_kepub'] = "1";
+        Config::set('use_url_rewriting', "1");
+        Config::set('provide_kepub', "1");
         $_SERVER["HTTP_USER_AGENT"] = "Kobo";
         $book = Book::getBookById(17);
         $book->updateForKepub = true;
@@ -459,15 +475,27 @@ class BookTest extends TestCase
         $this->assertEquals("download/20/Carroll%2C%20Lewis%20-%20Alice%27s%20Adventures%20in%20Wonderland.kepub.epub", $epub->getHtmlLink());
         $this->assertEquals("download/17/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi", $mobi->getHtmlLink());
 
-        $config['cops_provide_kepub'] = "0";
+        Config::set('provide_kepub', "0");
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $book = Book::getBookById(17);
         $book->updateForKepub = false;
         $epub = $book->getDataById(20);
         $this->assertEquals("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $epub->getHtmlLink());
 
-        $config['cops_use_url_rewriting'] = "0";
+        Config::set('use_url_rewriting', "0");
         $this->assertEquals(Config::ENDPOINT["fetch"] . "?data=20&type=epub&id=17", $epub->getHtmlLink());
+    }
+
+    public function testGetUpdatedEpub()
+    {
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
+        $book = Book::getBookById(17);
+
+        ob_start();
+        $book->getUpdatedEpub(20);
+        $headers = headers_list();
+        $output = ob_get_clean();
+        $this->assertStringStartsWith("Exception : Cannot modify header information", $output);
     }
 
     public function testGetFilePath_Cover()
@@ -578,12 +606,10 @@ class BookTest extends TestCase
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = $request->get("id");
-        $query = "fic";
-        $n = $request->get("n", "1");
+        $request->set('query', "fic");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -596,12 +622,10 @@ class BookTest extends TestCase
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = $request->get("id");
-        $query = "car";
-        $n = $request->get("n", "1");
+        $request->set('query', "car");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(4, $currentPage->entryArray);
@@ -616,12 +640,10 @@ class BookTest extends TestCase
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = $request->get("id");
-        $query = "art";
-        $n = $request->get("n", "1");
+        $request->set('query', "art");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
@@ -636,12 +658,10 @@ class BookTest extends TestCase
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = $request->get("id");
-        $query = "Macmillan";
-        $n = $request->get("n", "1");
+        $request->set('query', "Macmillan");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -652,60 +672,51 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearchWithIgnored_SingleCategory()
     {
-        global $config;
+        Config::set('ignored_categories', ["author"]);
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = $request->get("id");
-        $query = "car";
-        $n = $request->get("n", "1");
+        $request->set('query', "car");
         $request->set('search', 1);
 
-        $config ['cops_ignored_categories'] = ["author"];
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
         $this->assertEquals("A Study in Scarlet", $currentPage->entryArray[1]->title);
 
-        $config ['cops_ignored_categories'] = [];
+        Config::set('ignored_categories', []);
     }
 
     public function testTypeaheadSearchWithIgnored_MultipleCategory()
     {
-        global $config;
+        Config::set('ignored_categories', ["series"]);
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = $request->get("id");
-        $query = "art";
-        $n = $request->get("n", "1");
+        $request->set('query', "art");
         $request->set('search', 1);
 
-        $config ['cops_ignored_categories'] = ["series"];
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
         $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
 
-        $config ['cops_ignored_categories'] = [];
+        Config::set('ignored_categories', []);
     }
 
     public function testTypeaheadSearchMultiDatabase()
     {
-        global $config;
+        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+            "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
-        $qid = $request->get("id");
-        $query = "art";
-        $n = $request->get("n", "1");
+        $request->set('query', "art");
         $request->set('search', 1);
         $request->set('multi', 1);
 
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-            "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        $currentPage = Page::getPage($page, $qid, $query, $n, $request);
+        $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
@@ -715,7 +726,7 @@ class BookTest extends TestCase
         $this->assertEquals("One book", $currentPage->entryArray[3]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[4]->content);
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 

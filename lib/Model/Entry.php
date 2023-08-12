@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Model;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 
@@ -40,7 +41,6 @@ class Entry
 
     public function __construct($ptitle, $pid, $pcontent, $pcontentType = "text", $plinkArray = [], $database = null, $pclass = "", $pcount = 0)
     {
-        global $config;
         $this->title = $ptitle;
         $this->id = $pid;
         $this->content = $pcontent;
@@ -49,7 +49,7 @@ class Entry
         $this->className = $pclass;
         $this->numberOfElement = $pcount;
 
-        if ($config['cops_show_icons'] == 1) {
+        if (Config::get('show_icons') == 1) {
             foreach (self::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $pid)) {
                     array_push($this->linkArray, new Link(Format::addVersion($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
@@ -74,7 +74,7 @@ class Entry
         return date(DATE_ATOM, self::$updated);
     }
 
-    public function getNavLink($extraUri = "")
+    public function getNavLink($endpoint = "", $extraUri = "")
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkNavigation */
@@ -83,30 +83,30 @@ class Entry
                 continue;
             }
 
-            return $link->hrefXhtml() . $extraUri;
+            return $link->hrefXhtml($endpoint) . $extraUri;
         }
         return "#";
     }
 
-    public function getThumbnail()
+    public function getThumbnail($endpoint = '')
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkNavigation */
 
             if ($link->rel == Link::OPDS_THUMBNAIL_TYPE) {
-                return $link->hrefXhtml();
+                return $link->hrefXhtml($endpoint);
             }
         }
         return null;
     }
 
-    public function getImage()
+    public function getImage($endpoint = '')
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkNavigation */
 
             if ($link->rel == Link::OPDS_IMAGE_TYPE) {
-                return $link->hrefXhtml();
+                return $link->hrefXhtml($endpoint);
             }
         }
         return null;

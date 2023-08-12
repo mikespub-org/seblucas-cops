@@ -13,26 +13,28 @@ use SebLucas\Cops\Calibre\Rating;
 
 class PageRatingDetail extends Page
 {
+    protected $className = Rating::class;
+
     public function InitializeContent()
     {
-        $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());
+        $rating = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&r=' . $this->idGet;
             $this->getFilters($rating);
         } else {
-            $this->getEntries();
+            $this->getEntries($rating);
         }
         $this->idPage = $rating->getEntryId();
         $this->title = $rating->getTitle();
         $this->currentUri = $rating->getUri();
-        $this->parentTitle = localize("ratings.title");
+        $this->parentTitle = $rating->getParentTitle();
         $this->parentUri = $rating->getParentUri();
     }
 
-    public function getEntries()
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByRating($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

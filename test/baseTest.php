@@ -20,8 +20,7 @@ class BaseTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        global $config;
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -64,15 +63,14 @@ class BaseTest extends TestCase
 
     public function getTemplateData($request, $templateName)
     {
-        global $config;
-        return ["title"                 => $config['cops_title_default'],
+        return ["title"                 => Config::get('title_default'),
                 "version"               => Config::VERSION,
-                "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
+                "opds_url"              => Config::get('full_url') . Config::ENDPOINT["feed"],
                 "customHeader"          => "",
                 "template"              => $templateName,
                 "server_side_rendering" => $request->render(),
                 "current_css"           => $request->style(),
-                "favico"                => $config['cops_icon'],
+                "favico"                => Config::get('icon'),
                 "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
     }
 
@@ -84,7 +82,6 @@ class BaseTest extends TestCase
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $request = new Request();
-        global $config;
         $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
@@ -187,21 +184,19 @@ class BaseTest extends TestCase
 
     public function testBaseFunction()
     {
-        global $config;
-
         $this->assertFalse(Database::isMultipleDatabaseEnabled());
         $this->assertEquals(["" => dirname(__FILE__) . "/BaseWithSomeBooks/"], Database::getDbList());
 
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::isMultipleDatabaseEnabled());
         $this->assertEquals("Some books", Database::getDbName(0));
         $this->assertEquals("One book", Database::getDbName(1));
-        $this->assertEquals($config['calibre_directory'], Database::getDbList());
+        $this->assertEquals(Config::get('calibre_directory'), Database::getDbList());
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -212,15 +207,13 @@ class BaseTest extends TestCase
 
     public function testCheckDatabaseAvailability_2()
     {
-        global $config;
-
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -230,10 +223,8 @@ class BaseTest extends TestCase
      */
     public function testCheckDatabaseAvailability_Exception1()
     {
-        global $config;
-
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/OneBook/"];
+        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/OneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);
@@ -241,7 +232,7 @@ class BaseTest extends TestCase
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -251,10 +242,8 @@ class BaseTest extends TestCase
      */
     public function testCheckDatabaseAvailability_Exception2()
     {
-        global $config;
-
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/SomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/SomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);
@@ -262,7 +251,7 @@ class BaseTest extends TestCase
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -281,17 +270,19 @@ class BaseTest extends TestCase
 
     public function testLoginEnabledWithoutCreds()
     {
-        global $config;
-        $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
+        Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
         $this->assertFalse(Request::verifyLogin());
+
+        Config::set('basic_authentication', null);
     }
 
     public function testLoginEnabledAndLoggingIn()
     {
-        global $config;
-        $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
+        Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
         $_SERVER['PHP_AUTH_USER'] = 'xxx';
         $_SERVER['PHP_AUTH_PW'] = 'secret';
         $this->assertTrue(Request::verifyLogin($_SERVER));
+
+        Config::set('basic_authentication', null);
     }
 }

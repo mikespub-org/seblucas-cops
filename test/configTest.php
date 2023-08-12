@@ -15,137 +15,118 @@ class ConfigTest extends TestCase
 {
     public function testCheckConfigurationCalibreDirectory()
     {
-        global $config;
-        $this->assertTrue(is_string($config["calibre_directory"]));
+        $this->assertTrue(is_string(Config::get('calibre_directory')));
     }
 
     public function testCheckConfigurationOPDSTHumbnailHeight()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_opds_thumbnail_height']));
+        $this->assertTrue(is_int((int)Config::get('opds_thumbnail_height')));
     }
 
     public function testCheckConfigurationHTMLTHumbnailHeight()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_html_thumbnail_height']));
+        $this->assertTrue(is_int((int)Config::get('html_thumbnail_height')));
     }
 
     public function testCheckConfigurationPreferedFormat()
     {
-        global $config;
-        $this->assertTrue(is_array($config["cops_prefered_format"]));
+        $this->assertTrue(is_array(Config::get('prefered_format')));
     }
 
     public function testCheckConfigurationUseUrlRewiting()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_use_url_rewriting']));
+        $this->assertTrue(is_int((int)Config::get('use_url_rewriting')));
     }
 
     public function testCheckConfigurationGenerateInvalidOPDSStream()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_generate_invalid_opds_stream']));
+        $this->assertTrue(is_int((int)Config::get('generate_invalid_opds_stream')));
     }
 
     public function testCheckConfigurationMaxItemPerPage()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_max_item_per_page']));
+        $this->assertTrue(is_int((int)Config::get('max_item_per_page')));
     }
 
     public function testCheckConfigurationAuthorSplitFirstLetter()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_author_split_first_letter']));
+        $this->assertTrue(is_int((int)Config::get('author_split_first_letter')));
     }
 
     public function testCheckConfigurationTitlesSplitFirstLetter()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_titles_split_first_letter']));
+        $this->assertTrue(is_int((int)Config::get('titles_split_first_letter')));
     }
 
     public function testCheckConfigurationCopsUseFancyapps()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_use_fancyapps']));
+        $this->assertTrue(is_int((int)Config::get('use_fancyapps')));
     }
 
     public function testCheckConfigurationCopsBooksFilter()
     {
-        global $config;
-        $this->assertTrue(is_array($config["cops_books_filter"]));
+        $this->assertTrue(is_array(Config::get('books_filter')));
     }
 
     public function testCheckConfigurationCalibreCustomColumn()
     {
-        global $config;
-        $this->assertTrue(is_array($config["cops_calibre_custom_column"]));
+        $this->assertTrue(is_array(Config::get('calibre_custom_column')));
     }
 
     public function testCheckConfigurationCalibreCustomColumnList()
     {
-        global $config;
-        $this->assertTrue(is_array($config["cops_calibre_custom_column_list"]));
+        $this->assertTrue(is_array(Config::get('calibre_custom_column_list')));
     }
 
     public function testCheckConfigurationCalibreCustomColumnPreview()
     {
-        global $config;
-        $this->assertTrue(is_array($config["cops_calibre_custom_column_preview"]));
+        $this->assertTrue(is_array(Config::get('calibre_custom_column_preview')));
     }
 
     public function testCheckConfigurationProvideKepub()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config['cops_provide_kepub']));
+        $this->assertTrue(is_int((int)Config::get('provide_kepub')));
     }
 
     public function testCheckConfigurationMailConfig()
     {
-        global $config;
-        $this->assertTrue(is_array($config["cops_mail_configuration"]));
+        $this->assertTrue(is_array(Config::get('mail_configuration')));
     }
 
     public function testCheckConfiguratioHTMLTagFilter()
     {
-        global $config;
-        $this->assertTrue(is_int((int)$config["cops_html_tag_filter"]));
+        $this->assertTrue(is_int((int)Config::get('html_tag_filter')));
     }
 
     public function testCheckConfigurationIgnoredCategories()
     {
-        global $config;
-        $this->assertTrue(is_array($config["cops_ignored_categories"]));
+        $this->assertTrue(is_array(Config::get('ignored_categories')));
     }
 
     public function testCheckConfigurationTemplate()
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
-        global $config;
-        $style = 'bootstrap';
+        $templateName = 'bootstrap';
 
-        $config["cops_template"] = $style;
+        Config::set('template', $templateName);
         $request = new Request();
 
-        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $config["cops_template"] . '/file.html');
+        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . Config::get('template') . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
-        $data = ["title"                 => $config['cops_title_default'],
+        $data = ["title"                 => Config::get('title_default'),
             "version"               => Config::VERSION,
-            "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
+            "opds_url"              => Config::get('full_url') . Config::ENDPOINT["feed"],
             "customHeader"          => "",
-            "template"              => $config["cops_template"],
+            "template"              => Config::get('template'),
             "server_side_rendering" => $request->render(),
             "current_css"           => $request->style(),
-            "favico"                => $config['cops_icon'],
+            "favico"                => Config::get('icon'),
             "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
 
         $head = $tpl($data);
 
-        $this->assertStringContainsString($style.".min.css", $head);
-        $this->assertStringContainsString($style.".min.js", $head);
+        $this->assertStringContainsString($templateName.".min.css", $head);
+        $this->assertStringContainsString($templateName.".min.js", $head);
     }
 }

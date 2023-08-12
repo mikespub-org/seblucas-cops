@@ -89,7 +89,7 @@ class PageCustomize extends Page
             }
         }
         array_push($this->entryArray, new Entry(
-            "Template",
+            localize("customize.template"),
             "",
             $content,
             "text",

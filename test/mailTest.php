@@ -8,6 +8,7 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Mail;
 
 class MailTest extends TestCase
@@ -19,57 +20,57 @@ class MailTest extends TestCase
 
     public function testCheckConfigurationNull()
     {
-        global $config;
-        $config['cops_mail_configuration'] = null;
+        Config::set('mail_configuration', null);
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationNotArray()
     {
-        global $config;
-        $config['cops_mail_configuration'] = "Test";
+        Config::set('mail_configuration', "Test");
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationSmtpEmpty()
     {
-        global $config;
         require(dirname(__FILE__) . "/config_test.php");
-        $config['cops_mail_configuration']["smtp.host"] = "";
+        $mailConfig = Config::get('mail_configuration');
+        $mailConfig["smtp.host"] = "";
+        Config::set('mail_configuration', $mailConfig);
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationEmailEmpty()
     {
-        global $config;
         require(dirname(__FILE__) . "/config_test.php");
-        $config['cops_mail_configuration']["address.from"] = "";
+        $mailConfig = Config::get('mail_configuration');
+        $mailConfig["address.from"] = "";
+        Config::set('mail_configuration', $mailConfig);
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationEmailNotEmpty()
     {
-        global $config;
         $email = "a";
-        $config['cops_mail_configuration']["address.from"] = $email;
+        $mailConfig = Config::get('mail_configuration');
+        $mailConfig["address.from"] = $email;
+        Config::set('mail_configuration', $mailConfig);
 
-        $this->assertStringContainsString($email, $config['cops_mail_configuration']["address.from"]);
+        //$this->assertStringContainsString($email, $mailConfig["address.from"]);
+        $this->assertFalse(Mail::checkConfiguration());
     }
 
     public function testCheckConfigurationEmailNotValid()
     {
-        global $config;
         $email = "a";
         $this->assertDoesNotMatchRegularExpression('/^.+\@\S+\.\S+$/', $email);
     }
 
     public function testCheckConfigurationEmailValid()
     {
-        global $config;
         $email = "a@a.com";
         $this->assertMatchesRegularExpression('/^.+\@\S+\.\S+$/', $email);
     }

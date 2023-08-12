@@ -17,7 +17,8 @@ use SebLucas\Cops\Pages\Page;
 use SebLucas\EPubMeta\EPub;
 use Exception;
 
-class Book extends Base
+//class Book extends Base
+class Book
 {
     public const PAGE_ID = Page::ALL_BOOKS_ID;
     public const PAGE_ALL = Page::ALL_BOOKS;
@@ -49,6 +50,7 @@ class Book extends Base
     public $seriesIndex;
     public $comment;
     public $rating;
+    protected $databaseId = null;
     public $datas = null;
     public $authors = null;
     public $publisher = null;
@@ -62,8 +64,6 @@ class Book extends Base
 
     public function __construct($line, $database = null)
     {
-        global $config;
-
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp);
@@ -85,7 +85,7 @@ class Book extends Base
         //    $this->hasCover = 0;
         //}
         if ($this->hasCover) {
-            if (!empty($config['calibre_database_field_cover'])) {
+            if (!empty(Config::get('calibre_database_field_cover'))) {
                 $imgDirectory = Database::getImgDirectory($database);
                 $this->coverFileName = $line->cover;
                 if (!file_exists($this->coverFileName)) {
@@ -131,6 +131,11 @@ class Book extends Base
         $this->databaseId = $database;
     }
 
+    public function getDatabaseId()
+    {
+        return $this->databaseId;
+    }
+
     public function getEntryId()
     {
         return Page::ALL_BOOKS_UUID.':'.$this->uuid;
@@ -168,10 +173,10 @@ class Book extends Base
     /**
      * @return Author[]
      */
-    public function getAuthors()
+    public function getAuthors($n = -1, $sort = null)
     {
         if (is_null($this->authors)) {
-            $this->authors = Author::getAuthorByBookId($this->id, $this->databaseId);
+            $this->authors = Author::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->authors;
     }
@@ -193,7 +198,7 @@ class Book extends Base
     public function getPublisher()
     {
         if (is_null($this->publisher)) {
-            $this->publisher = Publisher::getPublisherByBookId($this->id, $this->databaseId);
+            $this->publisher = Publisher::getInstanceByBookId($this->id, $this->databaseId);
         }
         return $this->publisher;
     }
@@ -204,7 +209,7 @@ class Book extends Base
     public function getSerie()
     {
         if (is_null($this->serie)) {
-            $this->serie = Serie::getSerieByBookId($this->id, $this->databaseId);
+            $this->serie = Serie::getInstanceByBookId($this->id, $this->databaseId);
         }
         return $this->serie;
     }
@@ -212,38 +217,21 @@ class Book extends Base
     /**
      * @return string
      */
-    public function getLanguages()
+    public function getLanguages($n = -1, $sort = null)
     {
-        $lang = [];
-        $result = parent::getDb($this->databaseId)->prepare('select languages.lang_code
-                from books_languages_link, languages
-                where books_languages_link.lang_code = languages.id
-                and book = ?
-                order by item_order');
-        $result->execute([$this->id]);
-        while ($post = $result->fetchObject()) {
-            array_push($lang, Language::getLanguageString($post->lang_code));
+        if (is_null($this->languages)) {
+            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId);
         }
-        return implode(', ', $lang);
+        return $this->languages;
     }
 
     /**
      * @return Tag[]
      */
-    public function getTags()
+    public function getTags($n = -1, $sort = null)
     {
         if (is_null($this->tags)) {
-            $this->tags = [];
-
-            $result = parent::getDb($this->databaseId)->prepare('select tags.id as id, name
-                from books_tags_link, tags
-                where tag = tags.id
-                and book = ?
-                order by name');
-            $result->execute([$this->id]);
-            while ($post = $result->fetchObject()) {
-                array_push($this->tags, new Tag($post, $this->databaseId));
-            }
+            $this->tags = Tag::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->tags;
     }
@@ -261,16 +249,7 @@ class Book extends Base
     public function getIdentifiers()
     {
         if (is_null($this->identifiers)) {
-            $this->identifiers = [];
-
-            $result = parent::getDb($this->databaseId)->prepare('select type, val, id
-                from identifiers
-                where book = ?
-                order by type');
-            $result->execute([$this->id]);
-            while ($post = $result->fetchObject()) {
-                array_push($this->identifiers, new Identifier($post, $this->databaseId));
-            }
+            $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->identifiers;
     }
@@ -402,7 +381,6 @@ class Book extends Base
 
     public function getUpdatedEpub($idData)
     {
-        global $config;
         $data = $this->getDataById($idData);
 
         try {
@@ -503,7 +481,7 @@ class Book extends Base
     public function getCustomColumnValues($columns, $asArray = false)
     {
         $result = [];
-        $database = $this->getDatabaseId();
+        $database = $this->databaseId;
 
         $columns = CustomColumnType::checkCustomColumnList($columns, $database);
 
@@ -526,7 +504,7 @@ class Book extends Base
 
     public function getLinkArray()
     {
-        $database = $this->getDatabaseId();
+        $database = $this->databaseId;
         $linkArray = [];
 
         if ($this->hasCover) {
@@ -534,6 +512,7 @@ class Book extends Base
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
+            // @todo set height for thumbnail here depending on opds vs. html
             if ($ext == 'png') {
                 array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", null));
                 array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", null));
@@ -580,11 +559,9 @@ class Book extends Base
     // -DC- Get customisable book columns
     public static function getBookColumns()
     {
-        global $config;
-
         $res = self::SQL_COLUMNS;
-        if (!empty($config['calibre_database_field_cover'])) {
-            $res = str_replace('has_cover,', 'has_cover, ' . $config['calibre_database_field_cover'] . ',', $res);
+        if (!empty(Config::get('calibre_database_field_cover'))) {
+            $res = str_replace('has_cover,', 'has_cover, ' . Config::get('calibre_database_field_cover') . ',', $res);
         }
 
         return $res;
@@ -592,10 +569,10 @@ class Book extends Base
 
     public static function getBookById($bookId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ' . self::getBookColumns() . '
+        $query = 'select ' . self::getBookColumns() . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
-where books.id = ?');
-        $result->execute([$bookId]);
+where books.id = ?';
+        $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             return $book;
@@ -605,10 +582,10 @@ where books.id = ?');
 
     public static function getBookByDataId($dataId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ' . self::getBookColumns() . ', data.name, data.format
+        $query = 'select ' . self::getBookColumns() . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
-where data.book = books.id and data.id = ?');
-        $result->execute([$dataId]);
+where data.book = books.id and data.id = ?';
+        $result = Database::query($query, [$dataId], $database);
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             $data = new Data($post, $book);
@@ -619,15 +596,18 @@ where data.book = books.id and data.id = ?');
         return null;
     }
 
+    /**
+     * Summary of getDataByBook
+     * @param mixed $book
+     * @return array<Data>
+     */
     public static function getDataByBook($book)
     {
-        global $config;
-
         $out = [];
 
         $sql = 'select id, format, name from data where book = ?';
 
-        $ignored_formats = $config['cops_ignored_formats'];
+        $ignored_formats = Config::get('ignored_formats');
         if (count($ignored_formats) > 0) {
             $sql .= " and format not in ('"
             . implode("','", $ignored_formats)
@@ -635,8 +615,7 @@ where data.book = books.id and data.id = ?');
         }
 
         $database = $book->getDatabaseId();
-        $result = parent::getDb($database)->prepare($sql);
-        $result->execute([$book->id]);
+        $result = Database::query($sql, [$book->id], $database);
 
         while ($post = $result->fetchObject()) {
             array_push($out, new Data($post, $book));

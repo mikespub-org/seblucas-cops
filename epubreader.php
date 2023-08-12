@@ -10,7 +10,6 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\EPubReader;
 
 require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
 
 $request = new Request();
 $idData = (int) $request->get('data', null);

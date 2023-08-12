@@ -290,7 +290,7 @@ class clsTbsZip
         foreach ($arr as $k=>$v) {
             if (is_array($v)) {
                 $arr[$k] = $this->DebugArray($v);
-            } elseif (str_starts_with((string) $k, 'p_')) {
+            } elseif (strncmp((string) $k, 'p_', strlen('p_')) === 0) {
                 $arr[$k] = $this->_TxtPos($v);
             }
         }

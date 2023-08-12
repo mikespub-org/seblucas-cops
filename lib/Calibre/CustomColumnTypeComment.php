@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
+
 class CustomColumnTypeComment extends CustomColumnType
 {
     protected function __construct($pcustomId, $database)
@@ -17,12 +19,11 @@ class CustomColumnTypeComment extends CustomColumnType
 
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableName());
+        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_ID, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 
@@ -48,7 +49,7 @@ class CustomColumnTypeComment extends CustomColumnType
         return "<div>" . $value . "</div>"; // no htmlspecialchars, this is already HTML
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         return null;
     }
@@ -60,10 +61,10 @@ class CustomColumnTypeComment extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = {1}";
-        $query = str_format($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value, $this);
         }

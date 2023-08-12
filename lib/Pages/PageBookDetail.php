@@ -12,6 +12,8 @@ use SebLucas\Cops\Calibre\Book;
 
 class PageBookDetail extends Page
 {
+    protected $className = Book::class;
+
     public function InitializeContent()
     {
         $this->book = Book::getBookById($this->idGet, $this->getDatabaseId());

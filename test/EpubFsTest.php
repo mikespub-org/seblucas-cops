@@ -46,7 +46,6 @@ class EpubFsTest extends TestCase
 
     public function testUrlHref()
     {
-        global $config;
         $data = EPubReader::getComponentContent(self::$book, "title.xml", self::$add);
 
         $src = "";

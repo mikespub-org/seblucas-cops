@@ -13,9 +13,8 @@ if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !==
 }
 /** @var array $config */
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-
-date_default_timezone_set($config['default_timezone']);
 
 $remote_user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
 // Clean username, only allow a-z, A-Z, 0-9, -_ chars
@@ -24,6 +23,11 @@ $user_config_file = 'config_local.' . $remote_user . '.php';
 if (file_exists(dirname(__FILE__) . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
     require dirname(__FILE__) . '/' . $user_config_file;
 }
+
+// from here on, we assume that all global $config variables have been loaded
+Config::load($config);
+date_default_timezone_set(Config::get('default_timezone'));
+
 if (!Request::verifyLogin($_SERVER)) {
     header('WWW-Authenticate: Basic realm="COPS Authentication"');
     header('HTTP/1.0 401 Unauthorized');
@@ -40,10 +44,10 @@ if (!function_exists('str_format')) {
 
 if (!function_exists('localize')) {
     $translator = new \SebLucas\Cops\Language\Translation($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null);
+    Config::set('_translator_', $translator);
 
     function localize($phrase, $count=-1, $reset=false)
     {
-        global $translator;
-        return $translator->localize($phrase, $count, $reset);
+        return Config::get('_translator_')->localize($phrase, $count, $reset);
     }
 }
