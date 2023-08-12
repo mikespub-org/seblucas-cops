@@ -17,7 +17,7 @@ class PagePublisherDetail extends Page
 
     public function InitializeContent()
     {
-        $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());
+        $publisher = Publisher::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&p=' . $this->idGet;
             $this->getFilters($publisher);

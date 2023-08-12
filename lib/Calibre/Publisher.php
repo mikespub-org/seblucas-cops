@@ -26,26 +26,6 @@ class Publisher extends Base
     where books_publishers_link.book = books.id and publisher = ? {1} order by books.sort';
     public const URL_PARAM = "p";
 
-    public $id;
-    public $name;
-
-    public function __construct($post, $database = null)
-    {
-        $this->id = $post->id;
-        $this->name = $post->name;
-        $this->databaseId = $database;
-    }
-
-    public function getUri()
-    {
-        return "?page=".self::PAGE_DETAIL."&id=$this->id";
-    }
-
-    public function getEntryId()
-    {
-        return self::PAGE_ID.":".$this->id;
-    }
-
     public function getParentTitle()
     {
         return localize("publishers.title");
@@ -53,7 +33,7 @@ class Publisher extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
-    public static function getPublisherByBookId($bookId, $database = null)
+    public static function getInstanceByBookId($bookId, $database = null)
     {
         $query = 'select publishers.id as id, name
 from books_publishers_link, publishers
@@ -65,14 +45,8 @@ where publishers.id = publisher and book = ?';
         return null;
     }
 
-    /**
-     * Summary of getPublisherById
-     * @param mixed $publisherId
-     * @param mixed $database
-     * @return Publisher
-     */
-    public static function getPublisherById($publisherId, $database = null)
+    public static function getDefaultName()
     {
-        return self::getInstanceById($publisherId, localize("publisherword.none"), $database);
+        return localize("publisherword.none");
     }
 }

@@ -30,7 +30,7 @@ class PageAllAuthorsLetter extends Page
 
     public function getEntries()
     {
-        $baselist = new BaseList($this->request, $this->className);
+        $baselist = new BaseList($this->className, $this->request);
         $this->entryArray = $baselist->getEntriesByFirstLetter($this->idGet, $this->n);
         $this->totalNumber = $baselist->countEntriesByFirstLetter($this->idGet);
         $this->sorted = $baselist->orderBy;

@@ -58,7 +58,7 @@ class Route
     protected static $match = [];
 
     /**
-     * Summary of match
+     * Match pathinfo against routes and return query params
      * @param string $path
      * @throws \Exception if the $path is not found in $routes
      * @return array|null
@@ -172,7 +172,7 @@ class Route
     }
 
     /**
-     * Summary of link
+     * Find route for page with params and return link
      * @param string $page
      * @param array $params
      * @return string

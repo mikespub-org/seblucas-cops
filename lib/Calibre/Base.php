@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 
@@ -49,16 +47,6 @@ abstract class Base
     public function getDatabaseId()
     {
         return $this->databaseId;
-    }
-
-    /**
-     * Summary of setDatabaseId
-     * @param mixed $database
-     * @return void
-     */
-    public function setDatabaseId($database = null)
-    {
-        $this->databaseId = $database;
     }
 
     public function getUri()
@@ -157,7 +145,7 @@ abstract class Base
 
     public function getEntriesByInstance($className, $n = -1, $sort = null, $database = null, $numberPerPage = null)
     {
-        $baselist = new BaseList(null, $className, $database, $numberPerPage);
+        $baselist = new BaseList($className, null, $database, $numberPerPage);
         $baselist->orderBy = $sort;
         return $baselist->getEntriesByInstance($this, $n);
     }
@@ -200,15 +188,23 @@ abstract class Base
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
 
-    public static function getInstanceById($id, $default = null, $database = null)
+    public static function getInstanceById($id, $database = null)
     {
         $className = static::class;
-        $query = 'select ' . $className::SQL_COLUMNS . ' from ' . $className::SQL_TABLE . ' where id = ?';
-        $result = Database::query($query, [$id], $database);
-        if ($post = $result->fetchObject()) {
-            return new $className($post, $database);
+        if (isset($id)) {
+            $query = 'select ' . $className::SQL_COLUMNS . ' from ' . $className::SQL_TABLE . ' where id = ?';
+            $result = Database::query($query, [$id], $database);
+            if ($post = $result->fetchObject()) {
+                return new $className($post, $database);
+            }
         }
+        $default = static::getDefaultName();
         return new $className((object)['id' => null, 'name' => $default, 'sort' => $default], $database);
+    }
+
+    public static function getDefaultName()
+    {
+        return null;
     }
 
     public static function getCount($database = null)

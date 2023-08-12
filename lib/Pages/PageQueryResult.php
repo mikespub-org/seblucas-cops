@@ -27,6 +27,7 @@ class PageQueryResult extends Page
     public const SCOPE_AUTHOR = "author";
     public const SCOPE_BOOK = "book";
     public const SCOPE_PUBLISHER = "publisher";
+    public const SCOPE_LANGUAGE = "language";
 
     private function useTypeahead()
     {
@@ -51,19 +52,19 @@ class PageQueryResult extends Page
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
-                $baselist = new BaseList($this->request, Author::class, $database, $numberPerPage);
+                $baselist = new BaseList(Author::class, $this->request, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
             case self::SCOPE_SERIES :
-                $baselist = new BaseList($this->request, Serie::class, $database, $numberPerPage);
+                $baselist = new BaseList(Serie::class, $this->request, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case self::SCOPE_TAG :
-                $baselist = new BaseList($this->request, Tag::class, $database, $numberPerPage);
+                $baselist = new BaseList(Tag::class, $this->request, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case self::SCOPE_PUBLISHER :
-                $baselist = new BaseList($this->request, Publisher::class, $database, $numberPerPage);
+                $baselist = new BaseList(Publisher::class, $this->request, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             default:

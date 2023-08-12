@@ -17,7 +17,7 @@ class PageSerieDetail extends Page
 
     public function InitializeContent()
     {
-        $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
+        $serie = Serie::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&s=' . $this->idGet;
             $this->getFilters($serie);

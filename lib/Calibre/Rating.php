@@ -27,26 +27,6 @@ class Rating extends Base
     where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by books.sort';
     public const URL_PARAM = "r";
 
-    public $id;
-    public $name;
-
-    public function __construct($post, $database = null)
-    {
-        $this->id = $post->id;
-        $this->name = $post->name;
-        $this->databaseId = $database;
-    }
-
-    public function getUri()
-    {
-        return "?page=".self::PAGE_DETAIL."&id=$this->id";
-    }
-
-    public function getEntryId()
-    {
-        return self::PAGE_ID.":".$this->id;
-    }
-
     public function getTitle()
     {
         return str_format(localize("ratingword", $this->name/2), $this->name/2);
@@ -65,14 +45,8 @@ class Rating extends Base
         return BaseList::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
-    /**
-     * Summary of getRatingById
-     * @param mixed $ratingId
-     * @param mixed $database
-     * @return Rating
-     */
-    public static function getRatingById($ratingId, $database = null)
+    public static function getDefaultName()
     {
-        return self::getInstanceById($ratingId, 0, $database);
+        return 0;
     }
 }

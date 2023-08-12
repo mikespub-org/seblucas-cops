@@ -30,7 +30,7 @@ class FilterTest extends TestCase
 
     public function testAuthorFilters()
     {
-        $author = Author::getAuthorById(1);
+        $author = Author::getInstanceById(1);
         $this->assertEquals("1", $author->id);
 
         $books = $author->getBooks();
@@ -57,7 +57,7 @@ class FilterTest extends TestCase
 
     public function testLanguageFilters()
     {
-        $language = Language::getLanguageById(1);
+        $language = Language::getInstanceById(1);
         $this->assertEquals("1", $language->id);
 
         $books = $language->getBooks();
@@ -84,7 +84,7 @@ class FilterTest extends TestCase
 
     public function testPublisherFilters()
     {
-        $publisher = Publisher::getPublisherById(6);
+        $publisher = Publisher::getInstanceById(6);
         $this->assertEquals("6", $publisher->id);
 
         $books = $publisher->getBooks();
@@ -111,7 +111,7 @@ class FilterTest extends TestCase
 
     public function testRatingFilters()
     {
-        $rating = Rating::getRatingById(1);
+        $rating = Rating::getInstanceById(1);
         $this->assertEquals("1", $rating->id);
 
         $books = $rating->getBooks();
@@ -138,7 +138,7 @@ class FilterTest extends TestCase
 
     public function testSerieFilters()
     {
-        $serie = Serie::getSerieById(1);
+        $serie = Serie::getInstanceById(1);
         $this->assertEquals("1", $serie->id);
 
         $books = $serie->getBooks();
@@ -165,7 +165,7 @@ class FilterTest extends TestCase
 
     public function testTagFilters()
     {
-        $tag = Tag::getTagById(1);
+        $tag = Tag::getInstanceById(1);
         $this->assertEquals("1", $tag->id);
 
         $books = $tag->getBooks();

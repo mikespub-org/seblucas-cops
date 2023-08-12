@@ -25,26 +25,6 @@ class Language extends Base
     where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
     public const URL_PARAM = "l";
 
-    public $id;
-    public $name;
-
-    public function __construct($post, $database = null)
-    {
-        $this->id = $post->id;
-        $this->name = $post->name;
-        $this->databaseId = $database;
-    }
-
-    public function getUri()
-    {
-        return "?page=".self::PAGE_DETAIL."&id=$this->id";
-    }
-
-    public function getEntryId()
-    {
-        return self::PAGE_ID.":".$this->id;
-    }
-
     public function getTitle()
     {
         return self::getLanguageString($this->name);
@@ -66,15 +46,9 @@ class Language extends Base
         return $string;
     }
 
-    /**
-     * Summary of getLanguageById
-     * @param mixed $languageId
-     * @param mixed $database
-     * @return Language
-     */
-    public static function getLanguageById($languageId, $database = null)
+    public static function getDefaultName()
     {
-        return self::getInstanceById($languageId, localize("language.title"), $database);
+        return localize("language.title");
     }
 
     public static function getLanguagesByBookId($bookId, $database = null)

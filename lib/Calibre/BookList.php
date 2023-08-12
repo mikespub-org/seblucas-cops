@@ -16,7 +16,6 @@ use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageQueryResult;
 
-//class BookList extends Base
 class BookList
 {
     public const SQL_BOOKS_ALL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ';

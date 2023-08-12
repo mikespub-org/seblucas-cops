@@ -113,7 +113,7 @@ class BookTest extends TestCase
 
         $config['cops_max_item_per_page'] = 5;
         $booklist = new BookList(self::$request);
-        $author = Author::getAuthorById(1);
+        $author = Author::getInstanceById(1);
 
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, 1);
         $this->assertEquals(5, count($entryArray));
@@ -134,7 +134,7 @@ class BookTest extends TestCase
     public function testGetBooksBySeries()
     {
         $booklist = new BookList(self::$request);
-        $series = Serie::getSerieById(1);
+        $series = Serie::getInstanceById(1);
 
         // All book from the Sherlock Holmes series
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($series, -1);
@@ -145,7 +145,7 @@ class BookTest extends TestCase
     public function testGetBooksByPublisher()
     {
         $booklist = new BookList(self::$request);
-        $publisher = Publisher::getPublisherById(6);
+        $publisher = Publisher::getInstanceById(6);
 
         // All books from Strand Magazine
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($publisher, -1);
@@ -156,7 +156,7 @@ class BookTest extends TestCase
     public function testGetBooksByTag()
     {
         $booklist = new BookList(self::$request);
-        $tag = Tag::getTagById(1);
+        $tag = Tag::getInstanceById(1);
 
         // All book with the Fiction tag
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($tag, -1);
@@ -167,7 +167,7 @@ class BookTest extends TestCase
     public function testGetBooksByLanguage()
     {
         $booklist = new BookList(self::$request);
-        $language = Language::getLanguageById(1);
+        $language = Language::getInstanceById(1);
 
         // All english book (= all books)
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($language, -1);
@@ -178,7 +178,7 @@ class BookTest extends TestCase
     public function testGetBooksByRating()
     {
         $booklist = new BookList(self::$request);
-        $rating = Rating::getRatingById(1);
+        $rating = Rating::getInstanceById(1);
 
         // All books with 4 stars
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($rating, -1);

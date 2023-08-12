@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
 
 class Author extends Base
@@ -31,8 +29,6 @@ class Author extends Base
     where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc';
     public const URL_PARAM = "a";
 
-    public $id;
-    public $name;
     public $sort;
 
     public function __construct($post, $database = null)
@@ -41,21 +37,6 @@ class Author extends Base
         $this->name = str_replace("|", ",", $post->name);
         $this->sort = $post->sort;
         $this->databaseId = $database;
-    }
-
-    public function getUri()
-    {
-        return "?page=".self::PAGE_DETAIL."&id=$this->id";
-    }
-
-    public function getEntryId()
-    {
-        return self::PAGE_ID.":".$this->id;
-    }
-
-    public static function getEntryIdByLetter($startingLetter)
-    {
-        return self::PAGE_ID.":letter:".$startingLetter;
     }
 
     public function getTitle()
@@ -70,18 +51,7 @@ class Author extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
-    /**
-     * Summary of getAuthorById
-     * @param mixed $authorId
-     * @param mixed $database
-     * @return Author
-     */
-    public static function getAuthorById($authorId, $database = null)
-    {
-        return self::getInstanceById($authorId, null, $database);
-    }
-
-    public static function getAuthorsByBookId($bookId, $database = null)
+    public static function getInstancesByBookId($bookId, $database = null)
     {
         $query = 'select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
 where author = authors.id

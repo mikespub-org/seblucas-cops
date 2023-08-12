@@ -352,8 +352,8 @@ class Filter
                 }
                 continue;
             }
-            //$entries = $className::getEntriesByFilter([$paramName => $paramValue], -1, $database);
-            $baselist = new BaseList(Request::build([$paramName => $paramValue]), $className, $database);
+            $req = Request::build([$paramName => $paramValue]);
+            $baselist = new BaseList($className, $req, $database);
             $entries = $baselist->getEntriesByFilter();
             $entryArray = array_merge($entryArray, $entries);
         }

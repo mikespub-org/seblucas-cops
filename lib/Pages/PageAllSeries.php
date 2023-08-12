@@ -26,24 +26,12 @@ class PageAllSeries extends Page
     public function getEntries()
     {
         global $config;
-        $baselist = new BaseList($this->request, $this->className);
+        $baselist = new BaseList($this->className, $this->request);
         $this->entryArray = $baselist->getRequestEntries($this->n);
         $this->totalNumber = $baselist->countRequestEntries();
         $this->sorted = $baselist->orderBy;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $config['cops_show_not_set_filter'])) {
-            $this->addNotSetEntry($baselist);
+            array_push($this->entryArray, $baselist->getWithoutEntry());
         }
-    }
-
-    /**
-     * Summary of addNotSetEntry
-     * @param BaseList $baselist
-     * @return void
-     */
-    public function addNotSetEntry($baselist)
-    {
-        $count = $baselist->countWithoutEntries();
-        $instance = new $this->className((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());
-        array_push($this->entryArray, $instance->getEntry($count));
     }
 }

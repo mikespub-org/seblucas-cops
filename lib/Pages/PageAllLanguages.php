@@ -24,7 +24,7 @@ class PageAllLanguages extends Page
 
     public function getEntries()
     {
-        $baselist = new BaseList($this->request, $this->className);
+        $baselist = new BaseList($this->className, $this->request);
         $this->entryArray = $baselist->getRequestEntries($this->n);
         $this->totalNumber = $baselist->countRequestEntries();
         $this->sorted = $baselist->orderBy;

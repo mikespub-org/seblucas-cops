@@ -255,7 +255,7 @@ class Page
                 array_push($this->entryArray, $rating);
             }
         }
-        if (!in_array("language", $this->ignoredCategories)) {
+        if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
             $languages = Language::getCount($this->databaseId);
             if (!is_null($languages)) {
                 array_push($this->entryArray, $languages);

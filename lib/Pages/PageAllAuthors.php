@@ -24,7 +24,7 @@ class PageAllAuthors extends Page
 
     public function getEntries()
     {
-        $baselist = new BaseList($this->request, $this->className);
+        $baselist = new BaseList($this->className, $this->request);
         if ($this->request->option("author_split_first_letter") == 1 || $this->request->get('letter')) {
             $this->entryArray = $baselist->getCountByFirstLetter();
             $this->sorted = $baselist->orderBy;

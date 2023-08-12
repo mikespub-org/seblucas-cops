@@ -17,7 +17,7 @@ class PageTagDetail extends Page
 
     public function InitializeContent()
     {
-        $tag = Tag::getTagById($this->idGet, $this->getDatabaseId());
+        $tag = Tag::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&t=' . $this->idGet;
             $this->getFilters($tag);

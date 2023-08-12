@@ -35,10 +35,10 @@ class BaseList
      * @param mixed $database
      * @param mixed $numberPerPage
      */
-    public function __construct(?Request $request, string $className, $database = null, $numberPerPage = null)
+    public function __construct(string $className, ?Request $request, $database = null, $numberPerPage = null)
     {
-        $this->request = $request ?? new Request();
         $this->className = $className;
+        $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
@@ -47,7 +47,7 @@ class BaseList
 
     protected function setOrderBy()
     {
-        $this->orderBy = $this->request->getSorted() ?? $this->getSort();
+        $this->orderBy = $this->request->getSorted($this->getSort());
         //$this->orderBy ??= $this->request->option('sort');
     }
 
@@ -70,16 +70,6 @@ class BaseList
     public function getDatabaseId()
     {
         return $this->databaseId;
-    }
-
-    /**
-     * Summary of setDatabaseId
-     * @param mixed $database
-     * @return void
-     */
-    public function setDatabaseId($database = null)
-    {
-        $this->databaseId = $database;
     }
 
     /** Use inherited class methods to get entries from <Whatever> by instance (linked via books) */
@@ -111,14 +101,16 @@ class BaseList
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
 
-    public static function getInstanceById($id, $default = null, $className = self::class, $database = null)
+    public function getInstanceById($id)
     {
-        $query = 'select ' . $className::SQL_COLUMNS . ' from ' . $className::SQL_TABLE . ' where id = ?';
-        $result = Database::query($query, [$id], $database);
-        if ($post = $result->fetchObject()) {
-            return new $className($post, $database);
-        }
-        return new $className((object)['id' => null, 'name' => $default, 'sort' => $default], $database);
+        return $this->className::getInstanceById($id, $this->databaseId);
+    }
+
+    public function getWithoutEntry()
+    {
+        $count = $this->countWithoutEntries();
+        $instance = $this->getInstanceById(null);
+        return $instance->getEntry($count);
     }
 
     public function getEntryCount()

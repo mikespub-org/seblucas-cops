@@ -9,7 +9,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -179,7 +178,7 @@ class Book
     public function getAuthors($n = -1, $sort = null)
     {
         if (is_null($this->authors)) {
-            $this->authors = Author::getAuthorsByBookId($this->id, $this->databaseId);
+            $this->authors = Author::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->authors;
     }
@@ -201,7 +200,7 @@ class Book
     public function getPublisher()
     {
         if (is_null($this->publisher)) {
-            $this->publisher = Publisher::getPublisherByBookId($this->id, $this->databaseId);
+            $this->publisher = Publisher::getInstanceByBookId($this->id, $this->databaseId);
         }
         return $this->publisher;
     }
@@ -212,7 +211,7 @@ class Book
     public function getSerie()
     {
         if (is_null($this->serie)) {
-            $this->serie = Serie::getSerieByBookId($this->id, $this->databaseId);
+            $this->serie = Serie::getInstanceByBookId($this->id, $this->databaseId);
         }
         return $this->serie;
     }
@@ -234,7 +233,7 @@ class Book
     public function getTags($n = -1, $sort = null)
     {
         if (is_null($this->tags)) {
-            $this->tags = Tag::getTagsByBookId($this->id, $this->databaseId);
+            $this->tags = Tag::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->tags;
     }
@@ -252,7 +251,7 @@ class Book
     public function getIdentifiers()
     {
         if (is_null($this->identifiers)) {
-            $this->identifiers = Identifier::getIdentifiersByBookId($this->id, $this->databaseId);
+            $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->identifiers;
     }

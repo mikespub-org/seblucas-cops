@@ -17,7 +17,7 @@ class PageRatingDetail extends Page
 
     public function InitializeContent()
     {
-        $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());
+        $rating = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&r=' . $this->idGet;
             $this->getFilters($rating);

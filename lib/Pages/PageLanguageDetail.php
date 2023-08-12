@@ -17,7 +17,7 @@ class PageLanguageDetail extends Page
 
     public function InitializeContent()
     {
-        $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());
+        $language = Language::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&l=' . $this->idGet;
             $this->getFilters($language);

@@ -82,7 +82,7 @@ class Identifier
         return $this->uri;
     }
 
-    public static function getIdentifiersByBookId($bookId, $database = null)
+    public static function getInstancesByBookId($bookId, $database = null)
     {
         $identifiers = [];
 

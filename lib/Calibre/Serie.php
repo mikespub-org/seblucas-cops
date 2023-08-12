@@ -28,26 +28,6 @@ class Serie extends Base
     where books.id not in (select book from books_series_link) {1} order by books.sort';
     public const URL_PARAM = "s";
 
-    public $id;
-    public $name;
-
-    public function __construct($post, $database = null)
-    {
-        $this->id = $post->id;
-        $this->name = $post->name;
-        $this->databaseId = $database;
-    }
-
-    public function getUri()
-    {
-        return "?page=".self::PAGE_DETAIL."&id=$this->id";
-    }
-
-    public function getEntryId()
-    {
-        return self::PAGE_ID.":".$this->id;
-    }
-
     public function getParentTitle()
     {
         return localize("series.title");
@@ -55,7 +35,7 @@ class Serie extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
-    public static function getSerieByBookId($bookId, $database = null)
+    public static function getInstanceByBookId($bookId, $database = null)
     {
         $query = 'select  series.id as id, name
 from books_series_link, series
@@ -67,14 +47,8 @@ where series.id = series and book = ?';
         return null;
     }
 
-    /**
-     * Summary of getSerieById
-     * @param mixed $serieId
-     * @param mixed $database
-     * @return Serie
-     */
-    public static function getSerieById($serieId, $database = null)
+    public static function getDefaultName()
     {
-        return self::getInstanceById($serieId, localize("seriesword.none"), $database);
+        return localize("seriesword.none");
     }
 }
