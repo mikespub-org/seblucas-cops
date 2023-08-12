@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
@@ -69,13 +70,12 @@ abstract class CustomColumnType
 
     protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
     {
-        global $config;
         $this->columnTitle = self::getTitleByCustomID($pcustomId, $database);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
         $this->customValues = null;
         $this->databaseId = $database;
-        $this->numberPerPage = $numberPerPage ?? $config['cops_max_item_per_page'];
+        $this->numberPerPage = $numberPerPage ?? Config::get('max_item_per_page');
     }
 
     public function getDatabaseId()

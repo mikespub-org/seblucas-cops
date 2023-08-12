@@ -132,9 +132,7 @@ class Data
 
     public function getDataLink($rel, $title = null, $view = false)
     {
-        global $config;
-
-        if ($rel == Link::OPDS_ACQUISITION_TYPE && $config['cops_use_url_rewriting'] == "1") {
+        if ($rel == Link::OPDS_ACQUISITION_TYPE && Config::get('use_url_rewriting') == "1") {
             return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
@@ -158,8 +156,6 @@ class Data
 
     public function getHtmlLinkWithRewriting($title = null, $view = false)
     {
-        global $config;
-
         $database = "";
         if (!is_null($this->databaseId)) {
             $database = $this->databaseId . "/";
@@ -187,16 +183,15 @@ class Data
 
     public static function handleThumbnailLink($urlParam, $height)
     {
-        global $config;
-
+        // @todo remove use of global variable here
         if (is_null($height)) {
             if (preg_match('/' . Config::ENDPOINT["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
-                $height = $config['cops_opds_thumbnail_height'];
+                $height = Config::get('opds_thumbnail_height');
             } else {
-                $height = $config['cops_html_thumbnail_height'];
+                $height = Config::get('html_thumbnail_height');
             }
         }
-        if ($config['cops_thumbnail_handling'] != "1") {
+        if (Config::get('thumbnail_handling') != "1") {
             $urlParam = Format::addURLParam($urlParam, "height", $height);
         }
 
@@ -205,7 +200,6 @@ class Data
 
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $height = null, $view = false)
     {
-        global $config;
         /** @var Book $book */
 
         $urlParam = Format::addURLParam("", "data", $idData);
@@ -215,7 +209,7 @@ class Data
 
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
             $rel == Link::OPDS_THUMBNAIL_TYPE ||
-            ($type == "epub" && $config['cops_update_epub-metadata'])) {
+            ($type == "epub" && Config::get('update_epub-metadata'))) {
             if ($type != "jpg") {
                 $urlParam = Format::addURLParam($urlParam, "type", $type);
             }
@@ -224,10 +218,10 @@ class Data
             }
             $urlParam = Format::addURLParam($urlParam, "id", $book->id);
             $urlParam = Format::addDatabaseParam($urlParam, $book->getDatabaseId());
-            if ($config['cops_thumbnail_handling'] != "1" &&
-                !empty($config['cops_thumbnail_handling']) &&
+            if (Config::get('thumbnail_handling') != "1" &&
+                !empty(Config::get('thumbnail_handling')) &&
                 $rel == Link::OPDS_THUMBNAIL_TYPE) {
-                return new Link($config['cops_thumbnail_handling'], $mime, $rel, $title);
+                return new Link(Config::get('thumbnail_handling'), $mime, $rel, $title);
             } else {
                 return new Link(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
             }

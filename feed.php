@@ -6,12 +6,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  *
  */
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Pages\Page;
 
 require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
 
 $request = new Request();
 $page = $request->get('page', Page::INDEX);
@@ -20,7 +20,7 @@ if ($query) {
     $page = Page::OPENSEARCH_QUERY;
 }
 
-if ($config ['cops_fetch_protect'] == '1') {
+if (Config::get('fetch_protect') == '1') {
     session_start();
     if (!isset($_SESSION['connected'])) {
         $_SESSION['connected'] = 0;

@@ -64,8 +64,6 @@ class Book
 
     public function __construct($line, $database = null)
     {
-        global $config;
-
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp);
@@ -87,7 +85,7 @@ class Book
         //    $this->hasCover = 0;
         //}
         if ($this->hasCover) {
-            if (!empty($config['calibre_database_field_cover'])) {
+            if (!empty(Config::get('calibre_database_field_cover'))) {
                 $imgDirectory = Database::getImgDirectory($database);
                 $this->coverFileName = $line->cover;
                 if (!file_exists($this->coverFileName)) {
@@ -383,7 +381,6 @@ class Book
 
     public function getUpdatedEpub($idData)
     {
-        global $config;
         $data = $this->getDataById($idData);
 
         try {
@@ -515,6 +512,7 @@ class Book
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
+            // @todo set height for thumbnail here depending on opds vs. html
             if ($ext == 'png') {
                 array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", null));
                 array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", null));
@@ -561,11 +559,9 @@ class Book
     // -DC- Get customisable book columns
     public static function getBookColumns()
     {
-        global $config;
-
         $res = self::SQL_COLUMNS;
-        if (!empty($config['calibre_database_field_cover'])) {
-            $res = str_replace('has_cover,', 'has_cover, ' . $config['calibre_database_field_cover'] . ',', $res);
+        if (!empty(Config::get('calibre_database_field_cover'))) {
+            $res = str_replace('has_cover,', 'has_cover, ' . Config::get('calibre_database_field_cover') . ',', $res);
         }
 
         return $res;
@@ -607,13 +603,11 @@ where data.book = books.id and data.id = ?';
      */
     public static function getDataByBook($book)
     {
-        global $config;
-
         $out = [];
 
         $sql = 'select id, format, name from data where book = ?';
 
-        $ignored_formats = $config['cops_ignored_formats'];
+        $ignored_formats = Config::get('ignored_formats');
         if (count($ignored_formats) > 0) {
             $sql .= " and format not in ('"
             . implode("','", $ignored_formats)

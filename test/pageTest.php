@@ -9,6 +9,7 @@
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Format;
@@ -18,27 +19,25 @@ class PageTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        global $config;
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        $config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('show_not_set_filter', ['custom', 'rating', 'series', 'tag']);
         Database::clearDb();
         $_GET = [];
     }
 
     public function testPageIndex()
     {
-        global $config;
         $page = Page::INDEX;
         $request = new Request();
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $this->assertEquals($config['cops_title_default'], $currentPage->title);
+        $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
         $this->assertEquals("Alphabetical index of the 6 authors", $currentPage->entryArray [0]->content);
-        if ($config['cops_show_icons'] == 1) {
+        if (Config::get('show_icons') == 1) {
             $this->assertEquals(Format::addVersion("images/author.png"), $currentPage->entryArray [0]->getThumbnail());
         } else {
             $this->assertNull($currentPage->entryArray [0]->getThumbnail());
@@ -70,16 +69,15 @@ class PageTest extends TestCase
 
     public function testPageIndexWithIgnored()
     {
-        global $config;
         $page = Page::INDEX;
         $request = new Request();
 
-        $config ['cops_ignored_categories'] = ["author", "series", "tag", "publisher", "language"];
+        Config::set('ignored_categories', ["author", "series", "tag", "publisher", "language"]);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $this->assertEquals($config['cops_title_default'], $currentPage->title);
+        $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("Ratings", $currentPage->entryArray [0]->title);
         $this->assertEquals("All books", $currentPage->entryArray [1]->title);
@@ -88,16 +86,15 @@ class PageTest extends TestCase
         $this->assertEquals("50 most recent books", $currentPage->entryArray [2]->content);
         $this->assertFalse($currentPage->containsBook());
 
-        $config ['cops_ignored_categories'] = [];
+        Config::set('ignored_categories', []);
     }
 
     public function testPageIndexWithCustomColumn_Type1()
     {
-        global $config;
         $page = Page::INDEX;
         $request = new Request();
 
-        $config['cops_calibre_custom_column'] = ["type1"];
+        Config::set('calibre_custom_column', ["type1"]);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -107,16 +104,15 @@ class PageTest extends TestCase
         $this->assertEquals("Custom column 'Type1'", $currentPage->entryArray [6]->content);
         $this->assertEquals(2, $currentPage->entryArray [6]->numberOfElement);
 
-        $config['cops_calibre_custom_column'] = [];
+        Config::set('calibre_custom_column', []);
     }
 
     public function testPageIndexWithCustomColumn_Type2()
     {
-        global $config;
         $page = Page::INDEX;
         $request = new Request();
 
-        $config['cops_calibre_custom_column'] = ["type2"];
+        Config::set('calibre_custom_column', ["type2"]);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -126,16 +122,15 @@ class PageTest extends TestCase
         $this->assertEquals("Custom column 'Type2'", $currentPage->entryArray [6]->content);
         $this->assertEquals(3, $currentPage->entryArray [6]->numberOfElement);
 
-        $config['cops_calibre_custom_column'] = [];
+        Config::set('calibre_custom_column', []);
     }
 
     public function testPageIndexWithCustomColumn_Type4()
     {
-        global $config;
         $page = Page::INDEX;
         $request = new Request();
 
-        $config['cops_calibre_custom_column'] = ["type4"];
+        Config::set('calibre_custom_column', ["type4"]);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -145,39 +140,37 @@ class PageTest extends TestCase
         $this->assertEquals("Alphabetical index of the 2 series", $currentPage->entryArray [6]->content);
         $this->assertEquals(2, $currentPage->entryArray [6]->numberOfElement);
 
-        $config['cops_calibre_custom_column'] = [];
+        Config::set('calibre_custom_column', []);
     }
 
     public function testPageIndexWithCustomColumn_ManyTypes()
     {
-        global $config;
         $page = Page::INDEX;
         $request = new Request();
 
-        $config['cops_calibre_custom_column'] = ["type1", "type2", "type4"];
+        Config::set('calibre_custom_column', ["type1", "type2", "type4"]);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(11, $currentPage->entryArray);
 
-        $config['cops_calibre_custom_column'] = [];
+        Config::set('calibre_custom_column', []);
     }
 
     public function testPageIndexWithCustomColumn_All()
     {
-        global $config;
         $page = Page::INDEX;
         $request = new Request();
 
-        $config['cops_calibre_custom_column'] = ["*"];
+        Config::set('calibre_custom_column', ["*"]);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(11, $currentPage->entryArray);
 
-        $config['cops_calibre_custom_column'] = [];
+        Config::set('calibre_custom_column', []);
     }
 
     public function testPageAllCustom_Type4()
@@ -290,11 +283,10 @@ class PageTest extends TestCase
 
     public function testPageAllAuthors_WithFullName()
     {
-        global $config;
         $page = Page::ALL_AUTHORS;
         $request = new Request();
 
-        $config['cops_author_split_first_letter'] = "0";
+        Config::set('author_split_first_letter', "0");
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -304,12 +296,11 @@ class PageTest extends TestCase
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->containsBook());
 
-        $config['cops_author_split_first_letter'] = "1";
+        Config::set('author_split_first_letter', "1");
     }
 
     public function testPageAllAuthors_SplittedByFirstLetter()
     {
-        global $config;
         $page = Page::ALL_AUTHORS;
         $request = new Request();
 
@@ -340,12 +331,11 @@ class PageTest extends TestCase
 
     public function testPageAuthorsDetail_FirstPage()
     {
-        global $config;
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
         $request->set('id', "1");
 
-        $config['cops_max_item_per_page'] = 2;
+        Config::set('max_item_per_page', 2);
 
         // First page
 
@@ -359,18 +349,17 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getPrevLink());
 
-        $config['cops_max_item_per_page'] = -1;
+        Config::set('max_item_per_page', -1);
     }
 
     public function testPageAuthorsDetail_LastPage()
     {
-        global $config;
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
         $request->set('id', "1");
 
         // Last page
-        $config['cops_max_item_per_page'] = 5;
+        Config::set('max_item_per_page', 5);
         $request->set('n', "2");
 
         $currentPage = Page::getPage($page, $request);
@@ -384,18 +373,17 @@ class PageTest extends TestCase
         $this->assertNull($currentPage->getNextLink());
 
         // No pagination
-        $config['cops_max_item_per_page'] = -1;
+        Config::set('max_item_per_page', -1);
     }
 
     public function testPageAuthorsDetail_NoPagination()
     {
-        global $config;
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
         $request->set('id', "1");
 
         // No pagination
-        $config['cops_max_item_per_page'] = -1;
+        Config::set('max_item_per_page', -1);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -408,7 +396,6 @@ class PageTest extends TestCase
 
     public function testPageAuthorsDetail_Filter()
     {
-        global $config;
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
         $request->set('id', "1");
@@ -427,12 +414,11 @@ class PageTest extends TestCase
 
     public function testPageAllBooks_WithFullName()
     {
-        global $config;
         $page = Page::ALL_BOOKS;
         $request = new Request();
 
-        $config['cops_titles_split_first_letter'] = 0;
-        $config['cops_titles_split_publication_year'] = 0;
+        Config::set('titles_split_first_letter', 0);
+        Config::set('titles_split_publication_year', 0);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -443,13 +429,12 @@ class PageTest extends TestCase
         $this->assertEquals("Alice's Adventures in Wonderland", $currentPage->entryArray [1]->title);
         $this->assertTrue($currentPage->containsBook());
 
-        $config['cops_titles_split_first_letter'] = 1;
-        $config['cops_titles_split_publication_year'] = 0;
+        Config::set('titles_split_first_letter', 1);
+        Config::set('titles_split_publication_year', 0);
     }
 
     public function testPageAllBooks_SplitByFirstLetter()
     {
-        global $config;
         $page = Page::ALL_BOOKS;
         $request = new Request();
 
@@ -480,12 +465,11 @@ class PageTest extends TestCase
 
     public function testPageAllBooks_SplitByPubYear()
     {
-        global $config;
         $page = Page::ALL_BOOKS;
         $request = new Request();
 
-        $config['cops_titles_split_first_letter'] = 0;
-        $config['cops_titles_split_publication_year'] = 1;
+        Config::set('titles_split_first_letter', 0);
+        Config::set('titles_split_publication_year', 1);
 
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -496,8 +480,8 @@ class PageTest extends TestCase
         $this->assertEquals("1897", $currentPage->entryArray [1]->title);
         $this->assertFalse($currentPage->containsBook());
 
-        $config['cops_titles_split_first_letter'] = 1;
-        $config['cops_titles_split_publication_year'] = 0;
+        Config::set('titles_split_first_letter', 1);
+        Config::set('titles_split_publication_year', 0);
     }
 
     public function testPageAllBooksByYear()
@@ -817,7 +801,6 @@ class PageTest extends TestCase
 
     public function testPageSearch_WithOnlyBooksReturned()
     {
-        global $config;
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
         $request->set('query', "alice");
@@ -835,13 +818,12 @@ class PageTest extends TestCase
 
     public function testPageSearch_WithAuthorsIgnored()
     {
-        global $config;
         $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
         $request = new Request();
         $request->set('query', "car");
 
-        $config ['cops_ignored_categories'] = ["author"];
+        Config::set('ignored_categories', ["author"]);
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
@@ -851,12 +833,11 @@ class PageTest extends TestCase
         $this->assertEquals("1 book", $currentPage->entryArray [0]->content);
         $this->assertFalse($currentPage->containsBook());
 
-        $config ['cops_ignored_categories'] = [];
+        Config::set('ignored_categories', []);
     }
 
     public function testPageSearch_WithTwoCategories()
     {
-        global $config;
         $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
         $request = new Request();
@@ -879,7 +860,6 @@ class PageTest extends TestCase
      */
     public function testPageSearch_WithAccentuatedCharacters($query, $count, $content)
     {
-        global $config;
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
         $request->set('query', $query);
@@ -911,9 +891,8 @@ class PageTest extends TestCase
      */
     public function testPageSearch_WithNormalizedSearch_Book($query, $count, $content)
     {
-        global $config;
         $page = Page::OPENSEARCH_QUERY;
-        $config ['cops_normalized_search'] = "1";
+        Config::set('normalized_search', "1");
         Database::clearDb();
         if (!Translation::useNormAndUp()) {
             $this->markTestIncomplete();
@@ -931,7 +910,7 @@ class PageTest extends TestCase
         }
         $this->assertFalse($currentPage->containsBook());
 
-        $config ['cops_normalized_search'] = "0";
+        Config::set('normalized_search', "0");
         Database::clearDb();
     }
 
@@ -950,7 +929,6 @@ class PageTest extends TestCase
 
     public function testAuthorSearch_ByName()
     {
-        global $config;
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
         $request->set('query', "Lewis Carroll");
@@ -967,7 +945,6 @@ class PageTest extends TestCase
 
     public function testAuthorSearch_BySort()
     {
-        global $config;
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
         $request->set('query', "Carroll, Lewis");

@@ -51,7 +51,6 @@ class OPDSRenderer
      */
     public function getOpenSearch($request)
     {
-        global $config;
         $database = $request->get('db');
         $xml = new XMLWriter();
         $xml->openMemory();
@@ -75,7 +74,7 @@ class OPDSRenderer
         $xml->writeAttribute("type", "image/x-icon");
         $xml->writeAttribute("width", "16");
         $xml->writeAttribute("height", "16");
-        $xml->text($config['cops_icon']);
+        $xml->text(Config::get('icon'));
         $xml->endElement();
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
@@ -83,7 +82,7 @@ class OPDSRenderer
         $urlparam = Format::addDatabaseParam($urlparam, $database);
         $urlparam = str_replace("%7B", "{", $urlparam);
         $urlparam = str_replace("%7D", "}", $urlparam);
-        $xml->writeAttribute("template", $config['cops_full_url'] . self::$endpoint . $urlparam);
+        $xml->writeAttribute("template", Config::get('full_url') . self::$endpoint . $urlparam);
         $xml->endElement();
         $xml->startElement("Query");
         $xml->writeAttribute("role", "example");
@@ -96,7 +95,6 @@ class OPDSRenderer
 
     private function startXmlDocument($page, $request)
     {
-        global $config;
         $database = $request->get('db');
         $this->getXmlStream()->startDocument('1.0', 'UTF-8');
         $this->getXmlStream()->startElement("feed");
@@ -147,7 +145,7 @@ class OPDSRenderer
         $this->renderLink($link);
         $urlparam = "?";
         $urlparam = Format::addDatabaseParam($urlparam, $database);
-        if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
+        if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             $urlparam = Format::addURLParam($urlparam, "page", Page::OPENSEARCH);
             $link = new Link(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
@@ -156,12 +154,12 @@ class OPDSRenderer
             $urlparam = Format::addURLParam($urlparam, "query", "{searchTerms}");
             $urlparam = str_replace("%7B", "{", $urlparam);
             $urlparam = str_replace("%7D", "}", $urlparam);
-            $link = new Link($config['cops_full_url'] . self::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
+            $link = new Link(Config::get('full_url') . self::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
         }
         $this->renderLink($link);
-        if ($page->containsBook() && !is_null($config['cops_books_filter']) && count($config['cops_books_filter']) > 0) {
+        if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
             $Urlfilter = $request->get("tag", "");
-            foreach ($config['cops_books_filter'] as $lib => $filter) {
+            foreach (Config::get('books_filter') as $lib => $filter) {
                 $link = new LinkFacet("?" . Format::addURLParam($request->query(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter, $database);
                 $this->renderLink($link);
             }
@@ -273,17 +271,16 @@ class OPDSRenderer
      */
     public function render($page, $request)
     {
-        global $config;
         $this->startXmlDocument($page, $request);
         if ($page->isPaginated()) {
             $this->getXmlStream()->startElement("opensearch:totalResults");
             $this->getXmlStream()->text($page->totalNumber);
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->startElement("opensearch:itemsPerPage");
-            $this->getXmlStream()->text($config['cops_max_item_per_page']);
+            $this->getXmlStream()->text(Config::get('max_item_per_page'));
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->startElement("opensearch:startIndex");
-            $this->getXmlStream()->text(($page->n - 1) * $config['cops_max_item_per_page'] + 1);
+            $this->getXmlStream()->text(($page->n - 1) * Config::get('max_item_per_page') + 1);
             $this->getXmlStream()->endElement();
             $prevLink = $page->getPrevLink();
             $nextLink = $page->getNextLink();

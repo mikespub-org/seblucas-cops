@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use UnexpectedValueException;
 
 class CustomColumnTypeText extends CustomColumnType
@@ -55,8 +56,7 @@ class CustomColumnTypeText extends CustomColumnType
 
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
+        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }

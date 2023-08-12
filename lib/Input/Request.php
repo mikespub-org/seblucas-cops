@@ -34,8 +34,7 @@ class Request
      */
     public function render()
     {
-        global $config;
-        return preg_match('/' . $config['cops_server_side_render'] . '/', $this->agent());
+        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent());
     }
 
     /**
@@ -217,16 +216,15 @@ class Request
      */
     public function option($option)
     {
-        global $config;
         if (isset($_COOKIE[$option])) {
-            if (isset($config ['cops_' . $option]) && is_array($config ['cops_' . $option])) {
+            if (!is_null(Config::get($option)) && is_array(Config::get($option))) {
                 return explode(',', $_COOKIE[$option]);
             } elseif (!preg_match('/[^A-Za-z0-9\-_.@]/', $_COOKIE[$option])) {
                 return $_COOKIE[$option];
             }
         }
-        if (isset($config ['cops_' . $option])) {
-            return $config ['cops_' . $option];
+        if (!is_null(Config::get($option))) {
+            return Config::get($option);
         }
 
         return '';
@@ -238,12 +236,11 @@ class Request
      */
     public function style()
     {
-        global $config;
         $style = $this->option('style');
         if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
             return 'templates/' . $this->template() . '/styles/style-' . $this->option('style') . '.css';
         }
-        return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
+        return 'templates/' . Config::get('template') . '/styles/style-' . Config::get('style') . '.css';
     }
 
     /**
@@ -252,12 +249,11 @@ class Request
      */
     public function template()
     {
-        global $config;
         $template = $this->option('template');
         if (!preg_match('/[^A-Za-z0-9\-_]/', $template) && is_dir("templates/{$template}/")) {
             return $template;
         }
-        return $config['cops_template'];
+        return Config::get('template');
     }
 
     public function getSorted($default = null)
@@ -283,14 +279,14 @@ class Request
      */
     public static function verifyLogin($serverVars = null)
     {
-        global $config;
         $serverVars ??= $_SERVER;
-        if (isset($config['cops_basic_authentication']) &&
-          is_array($config['cops_basic_authentication'])) {
+        if (!is_null(Config::get('basic_authentication')) &&
+          is_array(Config::get('basic_authentication'))) {
+            $basicAuth = Config::get('basic_authentication');
             if (!isset($serverVars['PHP_AUTH_USER']) ||
               (isset($serverVars['PHP_AUTH_USER']) &&
-                ($serverVars['PHP_AUTH_USER'] != $config['cops_basic_authentication']['username'] ||
-                  $serverVars['PHP_AUTH_PW'] != $config['cops_basic_authentication']['password']))) {
+                ($serverVars['PHP_AUTH_USER'] != $basicAuth['username'] ||
+                  $serverVars['PHP_AUTH_PW'] != $basicAuth['password']))) {
                 return false;
             }
         }

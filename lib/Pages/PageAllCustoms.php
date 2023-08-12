@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\CustomColumnTypeDate;
 use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 
 class PageAllCustoms extends Page
@@ -21,14 +22,13 @@ class PageAllCustoms extends Page
 
     public function InitializeContent()
     {
-        global $config;
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
 
         $this->idPage = $columnType->getEntryId();
         $this->title = $columnType->getTitle();
         $this->getCustomEntries($columnType);
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("custom", $config['cops_show_not_set_filter'])) {
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("custom", Config::get('show_not_set_filter'))) {
             $this->addCustomNotSetEntry($columnType);
         }
     }
@@ -40,10 +40,9 @@ class PageAllCustoms extends Page
      */
     public function getCustomEntries($columnType)
     {
-        global $config;
-        if ($config['cops_custom_date_split_year'] == 1 && $columnType instanceof CustomColumnTypeDate) {
+        if (Config::get('custom_date_split_year') == 1 && $columnType instanceof CustomColumnTypeDate) {
             $this->getCustomEntriesByYear($columnType);
-        } elseif ($config['cops_custom_integer_split_range'] > 0 && $columnType instanceof CustomColumnTypeInteger) {
+        } elseif (Config::get('custom_integer_split_range') > 0 && $columnType instanceof CustomColumnTypeInteger) {
             $this->getCustomEntriesByRange($columnType);
         } else {
             $this->sorted = $this->request->getSorted("value");

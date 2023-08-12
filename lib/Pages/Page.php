@@ -18,6 +18,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -151,13 +152,11 @@ class Page
 
     public function __construct($request = null)
     {
-        global $config;
-
         $this->setRequest($request);
-        $this->favicon = $config['cops_icon'];
-        $this->authorName = $config['cops_author_name'] ?: 'Sébastien Lucas';
-        $this->authorUri = $config['cops_author_uri'] ?: 'http://blog.slucas.fr';
-        $this->authorEmail = $config['cops_author_email'] ?: 'sebastien@slucas.fr';
+        $this->favicon = Config::get('icon');
+        $this->authorName = Config::get('author_name') ?: 'Sébastien Lucas';
+        $this->authorUri = Config::get('author_uri') ?: 'http://blog.slucas.fr';
+        $this->authorEmail = Config::get('author_email') ?: 'sebastien@slucas.fr';
     }
 
     public function setRequest($request)
@@ -188,11 +187,10 @@ class Page
 
     public function InitializeContent()
     {
-        global $config;
         $this->getEntries();
         $this->idPage = self::PAGE_ID;
-        $this->title = $config['cops_title_default'];
-        $this->subtitle = $config['cops_subtitle_default'];
+        $this->title = Config::get('title_default');
+        $this->subtitle = Config::get('subtitle_default');
     }
 
     public function getEntries()
@@ -227,7 +225,6 @@ class Page
 
     public function getTopCountEntries()
     {
-        global $config;
         if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
             array_push($this->entryArray, Author::getCount($this->databaseId));
         }
@@ -261,8 +258,8 @@ class Page
                 array_push($this->entryArray, $languages);
             }
         }
-        $config['cops_calibre_custom_column'] = CustomColumnType::checkCustomColumnList($config['cops_calibre_custom_column']);
-        foreach ($config['cops_calibre_custom_column'] as $lookup) {
+        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
+        foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 array_push($this->entryArray, $customColumn->getCount());

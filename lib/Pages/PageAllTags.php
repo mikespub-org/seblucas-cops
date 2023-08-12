@@ -9,8 +9,8 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\BaseList;
-use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Input\Config;
 
 class PageAllTags extends Page
 {
@@ -25,12 +25,11 @@ class PageAllTags extends Page
 
     public function getEntries()
     {
-        global $config;
         $baselist = new BaseList($this->className, $this->request);
         $this->entryArray = $baselist->getRequestEntries($this->n);
         $this->totalNumber = $baselist->countRequestEntries();
         $this->sorted = $baselist->orderBy;
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", $config['cops_show_not_set_filter'])) {
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", Config::get('show_not_set_filter'))) {
             array_push($this->entryArray, $baselist->getWithoutEntry());
         }
     }

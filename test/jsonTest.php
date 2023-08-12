@@ -12,6 +12,7 @@ require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 
@@ -21,18 +22,15 @@ class JsonTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        global $config;
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
-        $config['cops_calibre_custom_column'] = [];
-        $config['cops_calibre_custom_column_list'] = [];
-        $config['cops_calibre_custom_column_preview'] = [];
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_custom_column', []);
+        Config::set('calibre_custom_column_list', []);
+        Config::set('calibre_custom_column_preview', []);
         Database::clearDb();
     }
 
     public function testCompleteArray()
     {
-        global $config;
-
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $test = [];
         $request = new Request();
@@ -48,7 +46,7 @@ class JsonTest extends TestCase
         $this->assertFalse($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
-        $config['cops_thumbnail_handling'] = "1";
+        Config::set('thumbnail_handling', "1");
         $test = [];
         $test = JSONRenderer::addCompleteArray($test, $request, self::$endpoint);
 
@@ -56,13 +54,13 @@ class JsonTest extends TestCase
         $this->assertTrue($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
-        $config['cops_thumbnail_handling'] = "/images.png";
+        Config::set('thumbnail_handling', "/images.png");
         $test = [];
         $test = JSONRenderer::addCompleteArray($test, $request, self::$endpoint);
 
         $this->assertEquals("/images.png", $test ["c"]["url"]["thumbnailUrl"]);
 
-        $config['cops_thumbnail_handling'] = "";
+        Config::set('thumbnail_handling', "");
     }
 
     public function testGetBookContentArrayWithoutSeries()
@@ -98,7 +96,6 @@ class JsonTest extends TestCase
 
     public function testGetFullBookContentArray()
     {
-        global $config;
         $book = Book::getBookById(17);
 
         $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
@@ -116,7 +113,7 @@ class JsonTest extends TestCase
         $this->assertEquals("epubreader.php?data=20&db=", $test ["datas"][2]["readerUrl"]);
 
         // use relative path for calibre directory
-        $config['calibre_directory'] = "./test/BaseWithSomeBooks/";
+        Config::set('calibre_directory', "./test/BaseWithSomeBooks/");
         Database::clearDb();
         $book = Book::getBookById(17);
 
@@ -127,7 +124,7 @@ class JsonTest extends TestCase
         // see bookTest for more tests on data links
         $this->assertEquals("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $test ["datas"][2]["url"]);
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 

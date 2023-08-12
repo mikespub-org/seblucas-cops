@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -98,7 +99,6 @@ class BookList
 
     public function getCount()
     {
-        global $config;
         $nBooks = $this->getBookCount();
         $result = [];
         $entry = new Entry(
@@ -112,16 +112,16 @@ class BookList
             $nBooks
         );
         array_push($result, $entry);
-        if ($config['cops_recentbooks_limit'] > 0) {
+        if (Config::get('recentbooks_limit') > 0) {
             $entry = new Entry(
                 localize('recent.title'),
                 Page::ALL_RECENT_BOOKS_ID,
-                str_format(localize('recent.list'), $config['cops_recentbooks_limit']),
+                str_format(localize('recent.list'), Config::get('recentbooks_limit')),
                 'text',
                 [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS, null, null, $this->databaseId)],
                 $this->databaseId,
                 '',
-                $config['cops_recentbooks_limit']
+                Config::get('recentbooks_limit')
             );
             array_push($result, $entry);
         }
@@ -145,7 +145,7 @@ class BookList
 
     public function getBooksWithoutInstance($instance, $n)
     {
-        // in_array("series", $config['cops_show_not_set_filter'])
+        // in_array("series", Config::get('show_not_set_filter'))
         if ($instance instanceof CustomColumn) {
             return $this->getBooksWithoutCustom($instance->customColumnType, $n);
         }
@@ -272,8 +272,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
     public function getAllRecentBooks()
     {
-        global $config;
-        [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], [], -1);
+        [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . Config::get('recentbooks_limit'), [], -1);
         return $entryArray;
     }
 

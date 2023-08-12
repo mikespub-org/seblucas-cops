@@ -31,10 +31,9 @@ class JSONRenderer
      */
     public static function getBookContentArray($book, $endpoint)
     {
-        global $config;
         $i = 0;
         $preferedData = [];
-        foreach ($config['cops_prefered_format'] as $format) {
+        foreach (Config::get('prefered_format') as $format) {
             if ($i == 2) {
                 break;
             }
@@ -67,7 +66,7 @@ class JSONRenderer
             $link = new LinkNavigation($serie->getUri(), null, null, $database);
             $su = $link->hrefXhtml($endpoint);
         }
-        $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list'], true);
+        $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);
 
         return ["id" => $book->id,
                       "hasCover" => $book->hasCover,
@@ -93,12 +92,11 @@ class JSONRenderer
      */
     public static function getFullBookContentArray($book, $endpoint)
     {
-        global $config;
         $out = self::getBookContentArray($book, $endpoint);
         $database = $book->getDatabaseId();
 
         $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
-        $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml();
+        $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, Config::get('html_thumbnail_height') * 2)->hrefXhtml();
         $out ["content"] = $book->getComment(false);
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
@@ -109,7 +107,7 @@ class JSONRenderer
                 "viewUrl" => $data->getViewHtmlLink(),
                 "mail" => 0,
                 "readerUrl" => ""];
-            if (!empty($config['cops_mail_configuration']) && !is_null($dataKindle) && $data->id == $dataKindle->id) {
+            if (!empty(Config::get('mail_configuration')) && !is_null($dataKindle) && $data->id == $dataKindle->id) {
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
@@ -133,7 +131,7 @@ class JSONRenderer
             array_push($out ["identifiers"], ["name" => $ident->formattedType, "url" => $ident->getUri()]);
         }
 
-        $out ["customcolumns_preview"] = $book->getCustomColumnValues($config['cops_calibre_custom_column_preview'], true);
+        $out ["customcolumns_preview"] = $book->getCustomColumnValues(Config::get('calibre_custom_column_preview'), true);
 
         return $out;
     }
@@ -165,7 +163,6 @@ class JSONRenderer
 
     public static function addCompleteArray($in, $request, $endpoint)
     {
-        global $config;
         $out = $in;
 
         $out ["c"] = [
@@ -204,20 +201,20 @@ class JSONRenderer
             "url" => [
                 "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
                 "coverUrl" => Config::ENDPOINT["fetch"] . "?id={0}&db={1}",
-                "thumbnailUrl" => Config::ENDPOINT["fetch"] . "?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}",
+                "thumbnailUrl" => Config::ENDPOINT["fetch"] . "?height=" . Config::get('html_thumbnail_height') . "&id={0}&db={1}",
             ],
             "config" => [
-                "use_fancyapps" => $config ["cops_use_fancyapps"],
-                "max_item_per_page" => $config['cops_max_item_per_page'],
+                "use_fancyapps" => Config::get('use_fancyapps'),
+                "max_item_per_page" => Config::get('max_item_per_page'),
                 "kindleHack"        => "",
                 "server_side_rendering" => $request->render(),
-                "html_tag_filter" => $config['cops_html_tag_filter'],
+                "html_tag_filter" => Config::get('html_tag_filter'),
             ],
         ];
-        if ($config['cops_thumbnail_handling'] == "1") {
+        if (Config::get('thumbnail_handling') == "1") {
             $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
-        } elseif (!empty($config['cops_thumbnail_handling'])) {
-            $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
+        } elseif (!empty(Config::get('thumbnail_handling'))) {
+            $out ["c"]["url"]["thumbnailUrl"] = Config::get('thumbnail_handling');
         }
         if (preg_match("/./", $request->agent())) {
             $out ["c"]["config"]["kindleHack"] = 'style="text-decoration: none !important;"';
@@ -238,11 +235,10 @@ class JSONRenderer
      */
     public static function getJson($request, $complete = false)
     {
-        global $config;
         // Use the configured home page if needed
         $homepage = Page::INDEX;
-        if (!empty($config['cops_home_page']) && defined('SebLucas\Cops\Pages\Page::' . $config['cops_home_page'])) {
-            $homepage = constant('SebLucas\Cops\Pages\Page::' . $config['cops_home_page']);
+        if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\Page::' . Config::get('home_page'))) {
+            $homepage = constant('SebLucas\Cops\Pages\Page::' . Config::get('home_page'));
         }
         $page = $request->get("page", $homepage);
         $search = $request->get("search");
@@ -274,7 +270,7 @@ class JSONRenderer
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
-            if ($config['cops_provide_kepub'] == "1" && preg_match("/Kobo/", $request->agent())) {
+            if (Config::get('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
                 $currentPage->book->updateForKepub = true;
             }
             $out ["book"] = self::getFullBookContentArray($currentPage->book, $endpoint);
@@ -286,7 +282,7 @@ class JSONRenderer
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
-        $out ["libraryName"] = $config['cops_title_default'];
+        $out ["libraryName"] = Config::get('title_default');
         $out ["fullTitle"] = $out ["title"];
         if ($out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
@@ -323,10 +319,10 @@ class JSONRenderer
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $out ["sorturl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
             $out ["sortoptions"] = $currentPage->getSortOptions();
-            if (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
+            if (!empty($qid) && Config::get('show_filter_links') == 1 && !in_array($page, $skipFilterUrl)) {
                 $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
             }
-        } elseif (!empty($qid) && $config['cops_show_filter_links'] == 1 && !in_array($page, $skipFilterUrl)) {
+        } elseif (!empty($qid) && Config::get('show_filter_links') == 1 && !in_array($page, $skipFilterUrl)) {
             $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
         }
 

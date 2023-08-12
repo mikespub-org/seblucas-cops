@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use UnexpectedValueException;
 
 class CustomColumnTypeFloat extends CustomColumnType
@@ -21,8 +22,7 @@ class CustomColumnTypeFloat extends CustomColumnType
 
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && strval($id) !== '0.0' && in_array("custom", $config['cops_show_not_set_filter'])) {
+        if (empty($id) && strval($id) !== '0.0' && in_array("custom", Config::get('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }

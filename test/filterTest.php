@@ -17,6 +17,7 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 
 class FilterTest extends TestCase
@@ -25,8 +26,7 @@ class FilterTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        global $config;
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 

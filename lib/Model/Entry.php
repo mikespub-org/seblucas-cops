@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Model;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 
@@ -40,7 +41,6 @@ class Entry
 
     public function __construct($ptitle, $pid, $pcontent, $pcontentType = "text", $plinkArray = [], $database = null, $pclass = "", $pcount = 0)
     {
-        global $config;
         $this->title = $ptitle;
         $this->id = $pid;
         $this->content = $pcontent;
@@ -49,7 +49,7 @@ class Entry
         $this->className = $pclass;
         $this->numberOfElement = $pcount;
 
-        if ($config['cops_show_icons'] == 1) {
+        if (Config::get('show_icons') == 1) {
             foreach (self::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $pid)) {
                     array_push($this->linkArray, new Link(Format::addVersion($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));

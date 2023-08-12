@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use UnexpectedValueException;
@@ -32,8 +33,7 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && strval($id) !== '0' && in_array("custom", $config['cops_show_not_set_filter'])) {
+        if (empty($id) && strval($id) !== '0' && in_array("custom", Config::get('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
@@ -98,10 +98,9 @@ class CustomColumnTypeInteger extends CustomColumnType
      */
     public function getCountByRange($page, $sort = null)
     {
-        global $config;
-        $numtiles = $config['cops_custom_integer_split_range'];
+        $numtiles = Config::get('custom_integer_split_range');
         if ($numtiles <= 1) {
-            $numtiles = $config['cops_max_item_per_page'];
+            $numtiles = Config::get('max_item_per_page');
         }
         if ($numtiles < 1) {
             $numtiles = 1;

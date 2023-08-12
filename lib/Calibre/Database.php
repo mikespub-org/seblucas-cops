@@ -23,8 +23,7 @@ class Database
      */
     public static function isMultipleDatabaseEnabled()
     {
-        global $config;
-        return is_array($config['calibre_directory']);
+        return is_array(Config::get('calibre_directory'));
     }
 
     /**
@@ -34,7 +33,6 @@ class Database
      */
     public static function useAbsolutePath($database)
     {
-        global $config;
         $path = self::getDbDirectory($database);
         return preg_match('/^\//', $path) || // Linux /
                preg_match('/^\w\:/', $path); // Windows X:
@@ -56,11 +54,10 @@ class Database
      */
     public static function getDbList()
     {
-        global $config;
         if (self::isMultipleDatabaseEnabled()) {
-            return $config['calibre_directory'];
+            return Config::get('calibre_directory');
         } else {
-            return ["" => $config['calibre_directory']];
+            return ["" => Config::get('calibre_directory')];
         }
     }
 
@@ -70,9 +67,8 @@ class Database
      */
     public static function getDbNameList()
     {
-        global $config;
         if (self::isMultipleDatabaseEnabled()) {
-            return array_keys($config['calibre_directory']);
+            return array_keys(Config::get('calibre_directory'));
         } else {
             return [""];
         }
@@ -85,7 +81,6 @@ class Database
      */
     public static function getDbName($database)
     {
-        global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
@@ -93,7 +88,7 @@ class Database
             if (!preg_match('/^\d+$/', $database)) {
                 self::error($database);
             }
-            $array = array_keys($config['calibre_directory']);
+            $array = array_keys(Config::get('calibre_directory'));
             return  $array[$database];
         }
         return "";
@@ -106,7 +101,6 @@ class Database
      */
     public static function getDbDirectory($database)
     {
-        global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
@@ -114,10 +108,10 @@ class Database
             if (!preg_match('/^\d+$/', $database)) {
                 self::error($database);
             }
-            $array = array_values($config['calibre_directory']);
+            $array = array_values(Config::get('calibre_directory'));
             return  $array[$database];
         }
-        return $config['calibre_directory'];
+        return Config::get('calibre_directory');
     }
 
     // -DC- Add image directory
@@ -128,15 +122,14 @@ class Database
      */
     public static function getImgDirectory($database)
     {
-        global $config;
         if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
             }
-            $array = array_values($config['image_directory']);
+            $array = array_values(Config::get('image_directory'));
             return  $array[$database];
         }
-        return $config['image_directory'];
+        return Config::get('image_directory');
     }
 
     /**
@@ -267,8 +260,7 @@ class Database
         }
 
         if (is_null($numberPerPage)) {
-            global $config;
-            $numberPerPage = $config['cops_max_item_per_page'];
+            $numberPerPage = Config::get('max_item_per_page');
         }
 
         if ($numberPerPage != -1 && $n != -1) {
@@ -303,8 +295,7 @@ class Database
         }
 
         if (is_null($numberPerPage)) {
-            global $config;
-            $numberPerPage = $config['cops_max_item_per_page'];
+            $numberPerPage = Config::get('max_item_per_page');
         }
 
         if ($numberPerPage != -1 && $n != -1) {

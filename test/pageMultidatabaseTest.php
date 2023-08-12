@@ -9,6 +9,7 @@
 require_once(dirname(__FILE__) . "/config_test.php");
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 
@@ -16,9 +17,8 @@ class PageMultiDatabaseTest extends TestCase
 {
     public function testPageIndex()
     {
-        global $config;
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::INDEX;
         $query = null;
@@ -29,7 +29,7 @@ class PageMultiDatabaseTest extends TestCase
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $this->assertEquals($config['cops_title_default'], $currentPage->title);
+        $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("Some books", $currentPage->entryArray [0]->title);
         $this->assertEquals("15 books", $currentPage->entryArray [0]->content);
@@ -45,9 +45,8 @@ class PageMultiDatabaseTest extends TestCase
      */
     public function testPageSearchXXX($maxItem)
     {
-        global $config;
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::OPENSEARCH_QUERY;
         $query = "art";
@@ -57,7 +56,7 @@ class PageMultiDatabaseTest extends TestCase
         $request->set('query', "art");
 
         // Issue 124
-        $config['cops_max_item_per_page'] = $maxItem;
+        Config::set('max_item_per_page', $maxItem);
         $currentPage = Page::getPage($page, $request);
         $currentPage->InitializeContent();
 
@@ -69,7 +68,7 @@ class PageMultiDatabaseTest extends TestCase
         $this->assertEquals("1 book", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
 
-        $config['cops_max_item_per_page'] = -1;
+        Config::set('max_item_per_page', -1);
     }
 
     public function providerSearch()

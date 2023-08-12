@@ -176,13 +176,11 @@ class RestApi
      */
     public static function getDatabases($request)
     {
-        global $config;
-
         $result = ["title" => "Databases", "entries" => []];
-        if (is_array($config['calibre_directory'])) {
-            $result["entries"] = $config['calibre_directory'];
+        if (is_array(Config::get('calibre_directory'))) {
+            $result["entries"] = Config::get('calibre_directory');
         } else {
-            array_push($result["entries"], $config['calibre_directory']);
+            array_push($result["entries"], Config::get('calibre_directory'));
         }
         return $result;
     }
