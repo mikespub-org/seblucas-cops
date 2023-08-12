@@ -57,13 +57,13 @@ switch ($err) {
             <h4>
             <?php
     if (defined('PHP_VERSION_ID')) {
-        if (PHP_VERSION_ID >= 50300) {
+        if (PHP_VERSION_ID >= 70400) {
             echo 'OK (' . PHP_VERSION . ')';
         } else {
-            echo 'Please install PHP >= 5.3 (' . PHP_VERSION . ')';
+            echo 'Please install PHP >= 7.4 (' . PHP_VERSION . ')';
         }
     } else {
-        echo 'Please install PHP >= 5.3';
+        echo 'Please install PHP >= 7.4';
     }
 ?>
             </h4>
@@ -75,7 +75,7 @@ switch ($err) {
 if (extension_loaded('gd') && function_exists('gd_info')) {
     echo 'OK';
 } else {
-    echo 'Please install the php5-gd / php7.0-gd extension and make sure it\'s enabled';
+    echo 'Please install the php-gd extension and make sure it\'s enabled';
 }
 ?>
             </h4>
@@ -87,7 +87,7 @@ if (extension_loaded('gd') && function_exists('gd_info')) {
 if (extension_loaded('pdo_sqlite')) {
     echo 'OK';
 } else {
-    echo 'Please install the php5-sqlite / php7.0-sqlite3 extension and make sure it\'s enabled';
+    echo 'Please install the php-sqlite / php-sqlite3 extension and make sure it\'s enabled';
 }
 ?>
             </h4>
@@ -105,13 +105,37 @@ if (extension_loaded('libxml')) {
             </h4>
         </article>
         <article class="frontpage">
+            <h2>Check if DOM is properly installed and loaded</h2>
+            <h4>
+            <?php
+if (extension_loaded('dom')) {
+    echo 'OK';
+} else {
+    echo 'Please install the php-xml extension and make sure DOM is enabled';
+}
+?>
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if XMLWriter is properly installed and loaded</h2>
+            <h4>
+            <?php
+if (extension_loaded('xmlwriter')) {
+    echo 'OK';
+} else {
+    echo 'Please install the php-xml extension and make sure XMLWriter is enabled';
+}
+?>
+            </h4>
+        </article>
+        <article class="frontpage">
             <h2>Check if Json is properly installed and loaded</h2>
             <h4>
             <?php
 if (extension_loaded('json')) {
     echo 'OK';
 } else {
-    echo 'Please install the php5-json / php7.0-json extension and make sure it\'s enabled';
+    echo 'Please install the php-json extension and make sure it\'s enabled';
 }
 ?>
             </h4>
@@ -123,7 +147,7 @@ if (extension_loaded('json')) {
 if (extension_loaded('mbstring')) {
     echo 'OK';
 } else {
-    echo 'Please install the php5-mbstring / php7.0-mbstring extension and make sure it\'s enabled';
+    echo 'Please install the php-mbstring extension and make sure it\'s enabled';
 }
 ?>
             </h4>
@@ -135,7 +159,7 @@ if (extension_loaded('mbstring')) {
 if (extension_loaded('intl')) {
     echo 'OK';
 } else {
-    echo 'Please install the php5-intl / php7.0-intl extension and make sure it\'s enabled';
+    echo 'Please install the php-intl extension and make sure it\'s enabled';
 }
 ?>
             </h4>
@@ -148,6 +172,18 @@ if (class_exists('Normalizer', $autoload = false)) {
     echo 'OK';
 } else {
     echo 'Please make sure intl is enabled in your php.ini';
+}
+?>
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if zlib is properly installed and loaded</h2>
+            <h4>
+            <?php
+if (extension_loaded('zlib')) {
+    echo 'OK';
+} else {
+    echo 'Please make sure zlib is enabled';
 }
 ?>
             </h4>
