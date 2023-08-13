@@ -15,8 +15,10 @@ use Kiwilan\Opds\OpdsVersionEnum;
 use Kiwilan\Opds\Entries\OpdsEntry;
 use Kiwilan\Opds\Entries\OpdsEntryBook;
 use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
-use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Input\Config as CopsConfig;
+use SebLucas\Cops\Input\Request as CopsRequest;
+use SebLucas\Cops\Model\Entry as CopsEntry;
+use SebLucas\Cops\Model\EntryBook as CopsEntryBook;
 use DateTime;
 
 class KiwilanOPDS
@@ -25,6 +27,10 @@ class KiwilanOPDS
     public static $version = OpdsVersionEnum::v1Dot2;
     private $updated = null;
 
+    /**
+     * Summary of getUpdatedTime
+     * @return DateTime
+     */
     private function getUpdatedTime()
     {
         if (is_null($this->updated)) {
@@ -33,14 +39,17 @@ class KiwilanOPDS
         return $this->updated;
     }
 
+    /**
+     * Summary of getOpdsConfig
+     * @return OpdsConfig
+     */
     private function getOpdsConfig()
     {
-        global $config;
         return new OpdsConfig(
-            name: 'Calibre',  // $config['cops_title_default']
-            author: $config['cops_author_name'] ?: 'Sébastien Lucas',
-            authorUrl: $config['cops_author_uri'] ?: 'http://blog.slucas.fr',
-            iconUrl: $config['cops_icon'],
+            name: 'Calibre',  // CopsConfig::get('title_default')
+            author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
+            authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
+            iconUrl: CopsConfig::get('icon'),
             startUrl: self::$endpoint,
             // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
             //searchUrl: self::$endpoint . '?page=8',
@@ -50,6 +59,11 @@ class KiwilanOPDS
         );
     }
 
+    /**
+     * Summary of getOpdsEntryBook
+     * @param CopsEntryBook $entry
+     * @return OpdsEntryBook
+     */
     private function getOpdsEntryBook($entry)
     {
         $authors = [];
@@ -80,13 +94,13 @@ class KiwilanOPDS
         $opdsEntry = new OpdsEntryBook(
             id: $entry->id,
             title: $entry->title,
-            route: $entry->getNavLink(),
+            route: $entry->getNavLink(self::$endpoint),
             summary: OpdsEntryBook::handleContent($entry->content),
             content: $entry->content,
-            media: $entry->getImage(),
+            media: $entry->getImage(self::$endpoint),
             updated: new DateTime($entry->getUpdatedTime()),
             download: $download,
-            mediaThumbnail: $entry->getThumbnail(),
+            mediaThumbnail: $entry->getThumbnail(self::$endpoint),
             categories: $categories,
             authors: $authors,
             published: $published,
@@ -99,14 +113,19 @@ class KiwilanOPDS
         return $opdsEntry;
     }
 
+    /**
+     * Summary of getOpdsEntry
+     * @param CopsEntry $entry
+     * @return OpdsEntry
+     */
     private function getOpdsEntry($entry)
     {
         $opdsEntry = new OpdsEntry(
             id: $entry->id,
             title: $entry->title,
-            route: $entry->getNavLink(),
+            route: $entry->getNavLink(self::$endpoint),
             content: $entry->content,
-            media: $entry->getThumbnail(),
+            media: $entry->getThumbnail(self::$endpoint),
             //updated: $entry->getUpdatedTime(),
             updated: $this->getUpdatedTime(),
         );
@@ -114,6 +133,11 @@ class KiwilanOPDS
         return $opdsEntry;
     }
 
+    /**
+     * Summary of getOpenSearch
+     * @param CopsRequest $request
+     * @return string
+     */
     public function getOpenSearch($request)
     {
         $opds = Opds::make(
@@ -133,7 +157,7 @@ class KiwilanOPDS
     /**
      * Summary of render
      * @param mixed $page
-     * @param Request $request
+     * @param CopsRequest $request
      * @return string
      */
     public function render($page, $request)
@@ -141,7 +165,7 @@ class KiwilanOPDS
         $title = $page->title;
         $feeds = [];
         foreach ($page->entryArray as $entry) {
-            if ($entry instanceof EntryBook) {
+            if ($entry instanceof CopsEntryBook) {
                 array_push($feeds, $this->getOpdsEntryBook($entry));
             } else {
                 array_push($feeds, $this->getOpdsEntry($entry));
