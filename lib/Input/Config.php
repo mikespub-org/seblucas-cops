@@ -28,6 +28,8 @@ class Config
         "check" => "checkconfig.php",
         "opds" => "opds.php",
     ];
+    protected const PREFIX = 'cops_';
+
     /**
      * Summary of values
      * @var array<string, mixed>
@@ -41,6 +43,7 @@ class Config
      */
     public static function load($values)
     {
+        // some phpunit tests re-load the config so we merge here
         self::$values = array_merge(self::$values, $values);
     }
 
@@ -54,10 +57,10 @@ class Config
     public static function get($name, $default = null)
     {
         if (empty(self::$values)) {
-            throw new Exception('Config was not loaded correctly in config.php');
+            throw new Exception('Config was not loaded correctly in config.php or test/config_test.php');
         }
-        if (array_key_exists('cops_' . $name, self::$values)) {
-            return self::$values['cops_' . $name];
+        if (array_key_exists(self::PREFIX . $name, self::$values)) {
+            return self::$values[self::PREFIX . $name];
         }
         return self::$values[$name] ?? $default;
     }
@@ -70,6 +73,15 @@ class Config
      */
     public static function set($name, $value)
     {
-        self::$values['cops_' . $name] = $value;
+        self::$values[self::PREFIX . $name] = $value;
+    }
+
+    /**
+     * Summary of dump
+     * @return array
+     */
+    public static function dump()
+    {
+        return self::$values;
     }
 }

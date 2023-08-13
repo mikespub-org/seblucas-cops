@@ -1,3 +1,9 @@
 [remote "upstream"]
 	url = https://github.com/seblucas/cops.git
 	fetch = +refs/heads/*:refs/remotes/upstream/*
+[remote "tryme"]
+	url = https://github.com/SenorSmartyPants/cops.git
+	fetch = +refs/heads/*:refs/remotes/tryme/*
+[remote "peltos"]
+	url = https://github.com/peltos/cops.git
+	fetch = +refs/heads/*:refs/remotes/peltos/*
