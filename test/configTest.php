@@ -5,6 +5,8 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
+
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -111,7 +113,7 @@ class ConfigTest extends TestCase
         Config::set('template', $templateName);
         $request = new Request();
 
-        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . Config::get('template') . '/file.html');
+        $headcontent = file_get_contents(__DIR__ . '/../templates/' . Config::get('template') . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => Config::get('title_default'),

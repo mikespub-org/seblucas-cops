@@ -11,7 +11,7 @@ namespace Marsender\EPubLoader;
 use Exception;
 use PDO;
 
-require_once(realpath(dirname(__FILE__)) . '/BookInfos.class.php');
+require_once(realpath(__DIR__) . '/BookInfos.class.php');
 
 define('PDO_SUCCES_CODE', '00000');
 
@@ -19,7 +19,7 @@ define('PDO_SUCCES_CODE', '00000');
  * Calibre database sql file that comes unmodified from Calibre project:
  * https://raw.githubusercontent.com/kovidgoyal/calibre/master/resources/metadata_sqlite.sql
  */
-define('CalibreCreateDbSql', realpath(dirname(__FILE__)) . '/metadata_sqlite.sql');
+define('CalibreCreateDbSql', realpath(__DIR__) . '/metadata_sqlite.sql');
 
 /**
  * CalibreDbLoader class allows to open or create a new Calibre database,

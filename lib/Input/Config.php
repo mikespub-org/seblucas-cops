@@ -41,7 +41,7 @@ class Config
      */
     public static function load($values)
     {
-        self::$values = $values;
+        self::$values = array_merge(self::$values, $values);
     }
 
     /**

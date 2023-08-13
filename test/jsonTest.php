@@ -8,7 +8,7 @@
 
 use SebLucas\Cops\Output\JSONRenderer;
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
@@ -22,7 +22,7 @@ class JsonTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Config::set('calibre_custom_column', []);
         Config::set('calibre_custom_column_list', []);
         Config::set('calibre_custom_column_preview', []);
@@ -124,7 +124,7 @@ class JsonTest extends TestCase
         // see bookTest for more tests on data links
         $this->assertEquals("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $test ["datas"][2]["url"]);
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 

@@ -13,21 +13,21 @@ class EPubTest extends TestCase
     protected function setUp(): void
     {
         // sometime I might have accidentally broken the test file
-        if (filesize(realpath(dirname(__FILE__)) . '/test.epub') != 768780) {
+        if (filesize(realpath(__DIR__) . '/test.epub') != 768780) {
             die('test.epub has wrong size, make sure it\'s unmodified');
         }
 
         // we work on a copy to test saving
-        if (!copy(realpath(dirname(__FILE__)) . '/test.epub', realpath(dirname(__FILE__)) . '/test.copy.epub')) {
+        if (!copy(realpath(__DIR__) . '/test.epub', realpath(__DIR__) . '/test.copy.epub')) {
             die('failed to create copy of the test book');
         }
 
-        $this->epub = new EPub(realpath(dirname(__FILE__)) . '/test.copy.epub');
+        $this->epub = new EPub(realpath(__DIR__) . '/test.copy.epub');
     }
 
     public static function tearDownAfterClass(): void
     {
-        unlink(realpath(dirname(__FILE__)) . '/test.copy.epub');
+        unlink(realpath(__DIR__) . '/test.copy.epub');
     }
 
     public function testAuthors()

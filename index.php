@@ -15,7 +15,7 @@ use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Template\doT;
 
-require_once dirname(__FILE__) . '/config.php';
+require_once __DIR__ . '/config.php';
 
 // If we detect that an OPDS reader try to connect try to redirect to feed.php
 if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $_SERVER['HTTP_USER_AGENT'])) {

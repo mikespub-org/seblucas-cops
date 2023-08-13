@@ -10,15 +10,15 @@ namespace Marsender\EPubLoader;
 
 use Exception;
 
-require_once(realpath(dirname(__FILE__)) . '/BookEPub.class.php');
-require_once(realpath(dirname(__FILE__)) . '/ZipFile.class.php');
+require_once(realpath(__DIR__) . '/BookEPub.class.php');
+require_once(realpath(__DIR__) . '/ZipFile.class.php');
 /*
-$fileName = realpath(dirname(dirname(__FILE__))) . '/php-epub-meta/epub.php';
+$fileName = realpath(dirname(__DIR__)) . '/php-epub-meta/epub.php';
 if (file_exists($fileName)) {
     require_once ($fileName);
 }
 else {
-    $fileName = realpath(dirname(dirname(dirname(__FILE__)))) . '/vendor/seblucas/php-epub-meta/lib/EPub.php';
+    $fileName = realpath(dirname(dirname(__DIR__))) . '/vendor/seblucas/php-epub-meta/lib/EPub.php';
     require_once ($fileName);
 }
 */

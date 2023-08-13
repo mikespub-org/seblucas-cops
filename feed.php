@@ -11,7 +11,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Pages\Page;
 
-require_once dirname(__FILE__) . '/config.php';
+require_once __DIR__ . '/config.php';
 
 $request = new Request();
 $page = $request->get('page', Page::INDEX);

@@ -9,7 +9,7 @@
 
 use SebLucas\Cops\Output\RestApi;
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
@@ -24,7 +24,7 @@ class RestApiTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
         self::$script = $_SERVER["SCRIPT_NAME"];
     }

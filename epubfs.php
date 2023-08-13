@@ -9,7 +9,7 @@
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\EPubReader;
 
-require_once dirname(__FILE__) . '/config.php';
+require_once __DIR__ . '/config.php';
 
 if (php_sapi_name() === 'cli') {
     return;

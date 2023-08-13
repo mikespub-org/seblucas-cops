@@ -8,7 +8,7 @@
 
 namespace Marsender\EPubLoader;
 
-require_once(realpath(dirname(__FILE__)) . '/BaseExport.class.php');
+require_once(realpath(__DIR__) . '/BaseExport.class.php');
 
 class CsvExport extends BaseExport
 {
