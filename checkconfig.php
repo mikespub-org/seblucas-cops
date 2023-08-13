@@ -13,7 +13,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 
-require_once dirname(__FILE__) . '/config.php';
+require_once __DIR__ . '/config.php';
 /** @var array $config */
 
 $request = new Request();

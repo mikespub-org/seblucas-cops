@@ -12,7 +12,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\RestApi;
 
-require_once dirname(__FILE__) . '/config.php';
+require_once __DIR__ . '/config.php';
 
 // override splitting authors and books by first letter here?
 Config::set('author_split_first_letter', '0');

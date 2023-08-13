@@ -6,10 +6,10 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once dirname(__FILE__) . '/vendor/autoload.php';
-require dirname(__FILE__) . '/config_default.php';
-if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !== 'cli')) {
-    require dirname(__FILE__) . '/config_local.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/config_default.php';
+if (file_exists(__DIR__ . '/config_local.php') && (php_sapi_name() !== 'cli')) {
+    require __DIR__ . '/config_local.php';
 }
 /** @var array $config */
 
@@ -20,8 +20,8 @@ $remote_user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_
 // Clean username, only allow a-z, A-Z, 0-9, -_ chars
 $remote_user = preg_replace('/[^a-zA-Z0-9_-]/', '', $remote_user);
 $user_config_file = 'config_local.' . $remote_user . '.php';
-if (file_exists(dirname(__FILE__) . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
-    require dirname(__FILE__) . '/' . $user_config_file;
+if (file_exists(__DIR__ . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
+    require __DIR__ . '/' . $user_config_file;
 }
 
 // from here on, we assume that all global $config variables have been loaded
@@ -35,19 +35,5 @@ if (!Request::verifyLogin($_SERVER)) {
     exit;
 }
 
-if (!function_exists('str_format')) {
-    function str_format($format, ...$args)
-    {
-        return \SebLucas\Cops\Output\Format::str_format($format, ...$args);
-    }
-}
-
-if (!function_exists('localize')) {
-    $translator = new \SebLucas\Cops\Language\Translation($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null);
-    Config::set('_translator_', $translator);
-
-    function localize($phrase, $count=-1, $reset=false)
-    {
-        return Config::get('_translator_')->localize($phrase, $count, $reset);
-    }
-}
+// load global functions if necessary
+require_once __DIR__ . '/lib/functions.php';

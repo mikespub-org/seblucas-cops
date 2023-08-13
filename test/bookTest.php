@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
@@ -31,7 +31,7 @@ id:5 (1 book)    Pierson's Magazine:         H. G. Wells
 id:6 (8 books)   Strand Magazine:            Arthur Conan Doyle
 */
 
-define("TEST_THUMBNAIL", dirname(__FILE__) . "/thumbnail.jpg");
+define("TEST_THUMBNAIL", __DIR__ . "/thumbnail.jpg");
 define("COVER_WIDTH", 400);
 define("COVER_HEIGHT", 600);
 
@@ -41,7 +41,7 @@ class BookTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         self::$request = new Request();
         Database::clearDb();
 
@@ -464,7 +464,7 @@ class BookTest extends TestCase
         $this->assertEquals("EPUB", $epub->format);
         $this->assertEquals("Carroll, Lewis - Alice's Adventures in Wonderland.epub", $epub->getUpdatedFilenameEpub());
         $this->assertEquals("Carroll, Lewis - Alice's Adventures in Wonderland.kepub.epub", $epub->getUpdatedFilenameKepub());
-        $this->assertEquals(dirname(__FILE__) . "/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $epub->getLocalPath());
+        $this->assertEquals(__DIR__ . "/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $epub->getLocalPath());
 
         Config::set('use_url_rewriting', "1");
         Config::set('provide_kepub', "1");
@@ -593,7 +593,7 @@ class BookTest extends TestCase
         $data->extension = "ico";
         $data->format = "ICO";
         $data->name = "favicon";
-        $data->book->path = realpath(dirname(__FILE__) . "/../");
+        $data->book->path = realpath(__DIR__ . "/../");
         if (function_exists('finfo_open') === true) {
             //$this->assertEquals("image/x-icon", $data->getMimeType());
             $this->assertEquals("image/vnd.microsoft.icon", $data->getMimeType());
@@ -708,8 +708,8 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearchMultiDatabase()
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-            "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
         $request->set('query', "art");
@@ -726,7 +726,7 @@ class BookTest extends TestCase
         $this->assertEquals("One book", $currentPage->entryArray[3]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[4]->content);
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 

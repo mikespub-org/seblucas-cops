@@ -8,40 +8,40 @@
 
 use SebLucas\Cops\Output\OPDSRenderer;
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 
-define("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_2.rng");
-define("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
-define("JING_JAR", dirname(__FILE__) . "/jing.jar");
-define("OPDSVALIDATOR_JAR", dirname(__FILE__) . "/OPDSValidator.jar");
-define("TEST_FEED", dirname(__FILE__) . "/text.atom");
-
 class OpdsTest extends TestCase
 {
+    public const OPDS_RELAX_NG = __DIR__ . "/opds-relax-ng/opds_catalog_1_2.rng";
+    public const OPENSEARCHDESCRIPTION_RELAX_NG = __DIR__ . "/opds-relax-ng/opensearchdescription.rng";
+    public const JING_JAR = __DIR__ . "/jing.jar";
+    public const OPDSVALIDATOR_JAR = __DIR__ . "/OPDSValidator.jar";
+    public const TEST_FEED = __DIR__ . "/text.atom";
+
     public static function setUpBeforeClass(): void
     {
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
     public static function tearDownAfterClass(): void
     {
-        if (!file_exists(TEST_FEED)) {
+        if (!file_exists(self::TEST_FEED)) {
             return;
         }
-        unlink(TEST_FEED);
+        unlink(self::TEST_FEED);
     }
 
-    public function jingValidateSchema($feed, $relax = OPDS_RELAX_NG)
+    public function jingValidateSchema($feed, $relax = self::OPDS_RELAX_NG)
     {
         $path = "";
         $code = null;
-        $res = system($path . 'java -jar "' . JING_JAR . '" "' . $relax . '" "' . $feed . '"', $code);
+        $res = system($path . 'java -jar "' . self::JING_JAR . '" "' . $relax . '" "' . $feed . '"', $code);
         if ($res != '') {
             echo 'RelaxNG validation error: '.$res;
             return false;
@@ -58,7 +58,7 @@ class OpdsTest extends TestCase
         $oldcwd = getcwd(); // Save the old working directory
         chdir("test");
         $path = "";
-        $res = system($path . 'java -jar "' . OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '"');
+        $res = system($path . 'java -jar "' . self::OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '"');
         chdir($oldcwd);
         if ($res != '') {
             echo 'OPDS validation error: '.$res;
@@ -85,17 +85,17 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->jingValidateSchema(TEST_FEED));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
         $request = new Request();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertFalse($this->jingValidateSchema(TEST_FEED));
-        $this->AssertFalse($this->opdsValidator(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED));
+        $this->AssertFalse($this->opdsValidator(self::TEST_FEED));
 
         unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('generate_invalid_opds_stream', "0");
@@ -116,8 +116,8 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
     }
@@ -138,8 +138,8 @@ class OpdsTest extends TestCase
 
     public function testPageIndexMultipleDatabase()
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::INDEX;
         $request = new Request();
@@ -150,10 +150,10 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -163,14 +163,14 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->getOpenSearch($request));
-        $this->AssertTrue($this->jingValidateSchema(TEST_FEED, OPENSEARCHDESCRIPTION_RELAX_NG));
+        file_put_contents(self::TEST_FEED, $OPDSRender->getOpenSearch($request));
+        $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED, self::OPENSEARCHDESCRIPTION_RELAX_NG));
     }
 
     public function testPageAuthorMultipleDatabase()
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
@@ -182,10 +182,10 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -205,8 +205,8 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         // Second page
 
@@ -216,8 +216,8 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         // No pagination
         Config::set('max_item_per_page', -1);
@@ -237,8 +237,8 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         Config::set('books_filter', []);
     }
@@ -256,8 +256,8 @@ class OpdsTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
     }

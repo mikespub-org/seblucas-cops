@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Mail;
@@ -34,7 +34,8 @@ class MailTest extends TestCase
 
     public function testCheckConfigurationSmtpEmpty()
     {
-        require(dirname(__FILE__) . "/config_test.php");
+        // reload test config
+        require __DIR__ . '/config_test.php';
         $mailConfig = Config::get('mail_configuration');
         $mailConfig["smtp.host"] = "";
         Config::set('mail_configuration', $mailConfig);
@@ -44,7 +45,8 @@ class MailTest extends TestCase
 
     public function testCheckConfigurationEmailEmpty()
     {
-        require(dirname(__FILE__) . "/config_test.php");
+        // reload test config
+        require __DIR__ . '/config_test.php';
         $mailConfig = Config::get('mail_configuration');
         $mailConfig["address.from"] = "";
         Config::set('mail_configuration', $mailConfig);
@@ -61,6 +63,9 @@ class MailTest extends TestCase
 
         //$this->assertStringContainsString($email, $mailConfig["address.from"]);
         $this->assertFalse(Mail::checkConfiguration());
+
+        // reload test config
+        require __DIR__ . '/config_test.php';
     }
 
     public function testCheckConfigurationEmailNotValid()

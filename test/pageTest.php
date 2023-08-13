@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
@@ -19,7 +19,7 @@ class PageTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Config::set('show_not_set_filter', ['custom', 'rating', 'series', 'tag']);
         Database::clearDb();
         $_GET = [];
