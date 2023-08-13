@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
@@ -20,7 +20,7 @@ class BaseTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -82,7 +82,7 @@ class BaseTest extends TestCase
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $request = new Request();
-        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
+        $headcontent = file_get_contents(__DIR__ . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
         $data = $this->getTemplateData($request, $templateName);
@@ -185,10 +185,10 @@ class BaseTest extends TestCase
     public function testBaseFunction()
     {
         $this->assertFalse(Database::isMultipleDatabaseEnabled());
-        $this->assertEquals(["" => dirname(__FILE__) . "/BaseWithSomeBooks/"], Database::getDbList());
+        $this->assertEquals(["" => __DIR__ . "/BaseWithSomeBooks/"], Database::getDbList());
 
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::isMultipleDatabaseEnabled());
@@ -196,7 +196,7 @@ class BaseTest extends TestCase
         $this->assertEquals("One book", Database::getDbName(1));
         $this->assertEquals(Config::get('calibre_directory'), Database::getDbList());
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -207,13 +207,13 @@ class BaseTest extends TestCase
 
     public function testCheckDatabaseAvailability_2()
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -223,8 +223,8 @@ class BaseTest extends TestCase
      */
     public function testCheckDatabaseAvailability_Exception1()
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/OneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/OneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);
@@ -232,7 +232,7 @@ class BaseTest extends TestCase
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -242,8 +242,8 @@ class BaseTest extends TestCase
      */
     public function testCheckDatabaseAvailability_Exception2()
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/SomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/SomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);
@@ -251,7 +251,7 @@ class BaseTest extends TestCase
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        Config::set('calibre_directory', dirname(__FILE__) . "/BaseWithSomeBooks/");
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 

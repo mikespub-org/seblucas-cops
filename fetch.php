@@ -9,7 +9,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 
-require_once dirname(__FILE__) . '/config.php';
+require_once __DIR__ . '/config.php';
 
 $request = new Request();
 

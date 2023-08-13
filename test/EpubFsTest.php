@@ -6,8 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require(dirname(__FILE__) . "/../epubfs.php");
-require(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;

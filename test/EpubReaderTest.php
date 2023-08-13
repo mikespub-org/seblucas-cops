@@ -8,7 +8,7 @@
 
 use SebLucas\Cops\Output\EPubReader;
 
-require(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Request;

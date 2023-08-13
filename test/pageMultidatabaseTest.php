@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
@@ -17,8 +17,8 @@ class PageMultiDatabaseTest extends TestCase
 {
     public function testPageIndex()
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::INDEX;
         $query = null;
@@ -45,8 +45,8 @@ class PageMultiDatabaseTest extends TestCase
      */
     public function testPageSearchXXX($maxItem)
     {
-        Config::set('calibre_directory', ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::OPENSEARCH_QUERY;
         $query = "art";
