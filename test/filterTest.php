@@ -188,8 +188,27 @@ class FilterTest extends TestCase
         $series = $tag->getSeries();
         $this->assertCount(3, $series);
 
-        //$tags = $tag->getTags();
-        //$this->assertCount(1, $tags);
+        // special case if we want to find other tags applied to books where this tag applies
+        $tag->limitSelf = false;
+        $tags = $tag->getTags();
+        $this->assertCount(9, $tags);
+    }
+
+    public function testTagHierarchy()
+    {
+        // for hierarchical tags like Fiction, Fiction.Historical, Fiction.Romance etc.
+        Config::set('calibre_categories_using_hierarchy', ['tags']);
+
+        $tag = Tag::getInstanceById(1);
+        $this->assertEquals("1", $tag->id);
+
+        $children = $tag->getChildCategories();
+        $this->assertCount(0, $children);
+
+        //$siblings = $tag->getSiblingCategories();
+        //$this->assertCount(0, $siblings);
+
+        Config::set('calibre_categories_using_hierarchy', []);
     }
 
     public function testCustomFilters()
@@ -218,6 +237,39 @@ class FilterTest extends TestCase
 
         $tags = $custom->getTags();
         $this->assertCount(4, $tags);
+    }
+
+    public function testCustomHierarchy()
+    {
+        // for hierarchical custom columns like Fiction, Fiction.Historical, Fiction.Romance etc.
+        Config::set('calibre_categories_using_hierarchy', ['Type2']);
+
+        /**
+         * Assuming you add Type2 entries:
+         * 4: tree
+         * 5: tree.more
+         * and rename existing tags:
+         * 1: tree.tag1
+         * 2: tree.more.tag2
+         * 3: tree.more.tag3
+         */
+        $custom = CustomColumn::createCustom(2, 4);
+        $this->assertEquals("Type2", $custom->customColumnType->getTitle());
+        $this->assertEquals("tree", $custom->getTitle());
+
+        $children = $custom->getChildCategories();
+        $this->assertCount(4, $children);
+        $this->assertEquals("cops:custom:2:5", $children[0]->id);
+
+        $custom = CustomColumn::createCustom(2, 3);
+        $this->assertEquals("Type2", $custom->customColumnType->getTitle());
+        $this->assertEquals("tree.more.tag3", $custom->getTitle());
+
+        $parent = $custom->getParentCategory();
+        $this->assertEquals("cops:custom:2:5", $parent->id);
+        $this->assertEquals("tree.more", $parent->title);
+
+        Config::set('calibre_categories_using_hierarchy', []);
     }
 
     public function testGetEntryArray()

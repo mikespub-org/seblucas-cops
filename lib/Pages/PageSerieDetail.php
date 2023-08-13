@@ -17,18 +17,27 @@ class PageSerieDetail extends Page
 
     public function InitializeContent()
     {
-        $serie = Serie::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance = Serie::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&s=' . $this->idGet;
-            $this->getFilters($serie);
+            $this->getFilters($instance);
+            // @todo needs title_sort function in sqlite for series
+            //} elseif ($this->request->get('tree')) {
+            //    $this->getHierarchy($instance);
         } else {
-            $this->getEntries($serie);
+            $this->getEntries($instance);
         }
-        $this->idPage = $serie->getEntryId();
-        $this->title = $serie->getTitle();
-        $this->currentUri = $serie->getUri();
-        $this->parentTitle = $serie->getParentTitle();
-        $this->parentUri = $serie->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
+    }
+
+    public function getHierarchy($instance)
+    {
+        $this->entryArray = $instance->getChildCategories();
+        $this->hierarchy = true;
     }
 
     public function getEntries($instance = null)

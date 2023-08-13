@@ -57,7 +57,7 @@ class BaseList
             case 'title':
                 return 'sort';
             case 'count':
-                return 'count desc';
+                return 'count desc, name';
             default:
                 return $this->orderBy;
         }
@@ -328,6 +328,30 @@ class BaseList
                 $post->count = 1;
             }
 
+            $instance = new $this->className($post, $this->databaseId);
+            array_push($entryArray, $instance->getEntry($post->count));
+        }
+        return $entryArray;
+    }
+
+    /**
+     * Use the Calibre tag browser view to retrieve all tags or series with count
+     * Format: tag_browser_tags(id,name,count,avg_rating,sort)
+     * @param mixed $n
+     * @return Entry[]
+     */
+    public function browseAllEntries($n = -1)
+    {
+        $tableName = 'tag_browser_' . $this->className::CATEGORY;
+        $queryFormat = "SELECT id, name, count FROM {0} ORDER BY {1}";
+        if (!in_array($this->orderBy, ['id', 'name', 'count', 'sort'])) {
+            $this->orderBy = "sort";
+        }
+        $query = str_format($queryFormat, $tableName, $this->getOrderBy());
+
+        $result = Database::queryFilter($query, "", "", [], $n, $this->databaseId, $this->numberPerPage);
+        $entryArray = [];
+        while ($post = $result->fetchObject()) {
             $instance = new $this->className($post, $this->databaseId);
             array_push($entryArray, $instance->getEntry($post->count));
         }

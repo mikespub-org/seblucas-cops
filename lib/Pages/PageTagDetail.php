@@ -17,18 +17,26 @@ class PageTagDetail extends Page
 
     public function InitializeContent()
     {
-        $tag = Tag::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance = Tag::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&t=' . $this->idGet;
-            $this->getFilters($tag);
+            $this->getFilters($instance);
+        } elseif ($this->request->get('tree')) {
+            $this->getHierarchy($instance);
         } else {
-            $this->getEntries($tag);
+            $this->getEntries($instance);
         }
-        $this->idPage = $tag->getEntryId();
-        $this->title = $tag->getTitle();
-        $this->currentUri = $tag->getUri();
-        $this->parentTitle = $tag->getParentTitle();
-        $this->parentUri = $tag->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
+    }
+
+    public function getHierarchy($instance)
+    {
+        $this->entryArray = $instance->getChildCategories();
+        $this->hierarchy = true;
     }
 
     public function getEntries($instance = null)

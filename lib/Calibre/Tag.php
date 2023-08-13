@@ -27,6 +27,7 @@ class Tag extends Base
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books.id not in (select book from books_tags_link) {1} order by books.sort';
     public const URL_PARAM = "t";
+    public const CATEGORY = "tags";
 
     public function getParentTitle()
     {

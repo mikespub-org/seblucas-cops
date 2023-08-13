@@ -85,6 +85,7 @@ class Page
     public $totalNumber = -1;
     public $sorted = "sort";
     public $filterUri = "";
+    public $hierarchy = false;
 
     /** @var Entry[] */
     public $entryArray = [];
@@ -395,7 +396,7 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getSeries());
         }
-        if (!($instance instanceof Tag)) {
+        if (true) {
             array_push($this->entryArray, new Entry(
                 localize("tags.title"),
                 "",
@@ -406,6 +407,10 @@ class Page
                 "",
                 ""
             ));
+            // special case if we want to find other tags applied to books where this tag applies
+            if ($instance instanceof Tag) {
+                $instance->limitSelf = false;
+            }
             $this->entryArray = array_merge($this->entryArray, $instance->getTags());
         }
         /**

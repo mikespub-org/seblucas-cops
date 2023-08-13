@@ -124,6 +124,17 @@ class CustomColumn extends Base
     }
 
     /**
+     * Find related categories for hierarchical custom columns
+     * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
+     * @param mixed $find
+     * @return array
+     */
+    public function getRelatedCategories($find)
+    {
+        return $this->customColumnType->getRelatedCategories($find);
+    }
+
+    /**
      * Create an CustomColumn by CustomColumnID and ValueID
      *
      * @param integer $customId the id of the customColumn

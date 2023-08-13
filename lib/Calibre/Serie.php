@@ -27,6 +27,7 @@ class Serie extends Base
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books.id not in (select book from books_series_link) {1} order by books.sort';
     public const URL_PARAM = "s";
+    public const CATEGORY = "series";
 
     public function getParentTitle()
     {

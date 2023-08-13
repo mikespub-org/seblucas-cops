@@ -273,8 +273,8 @@ class Route
     }
 
     /**
-     * Match rewrite rule for route and return endpoint with params
-     * @param mixed $route
+     * Match rewrite rule for path and return endpoint with params
+     * @param mixed $path
      * @return array
      */
     public static function matchRewrite($path)

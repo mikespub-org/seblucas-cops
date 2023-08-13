@@ -183,7 +183,7 @@ class Filter
             $this->addCustomIdFilter($instance->customColumnType, $instance->id);
             return;
         }
-        $this->addLinkedIdFilter($instance->id, $instance->getLinkTable(), $instance->getLinkColumn());
+        $this->addLinkedIdFilter($instance->id, $instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
     }
 
     /**
@@ -306,18 +306,25 @@ class Filter
      * @param mixed $linkId
      * @param mixed $linkTable
      * @param mixed $linkColumn
+     * @param mixed $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
      * @return void
      */
-    public function addLinkedIdFilter($linkId, $linkTable, $linkColumn)
+    public function addLinkedIdFilter($linkId, $linkTable, $linkColumn, $limitSelf = true)
     {
         $exists = true;
+        $matches = [];
         if (preg_match("/^!(.*)$/", $linkId, $matches)) {
             $exists = false;
             $linkId = $matches[1];
         }
 
         if ($this->parentTable == $linkTable) {
-            $filter = "{$linkTable}.{$linkColumn} = ?";
+            if ($limitSelf) {
+                $filter = "{$linkTable}.{$linkColumn} = ?";
+            } else {
+                // find other tags applied to books where this tag applies
+                $filter = "exists (select null from {$linkTable} as filterself, books where {$this->parentTable}.book = books.id and {$this->parentTable}.{$linkColumn} != filterself.{$linkColumn} and filterself.book = books.id and filterself.{$linkColumn} = ?)";
+            }
         } elseif ($this->parentTable == "books") {
             $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
@@ -351,6 +358,10 @@ class Filter
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);
                 }
                 continue;
+            }
+            // remove negative flag for filter entry here
+            if (preg_match('/^!\d+$/', $paramValue)) {
+                $paramValue = substr($paramValue, 1);
             }
             $req = Request::build([$paramName => $paramValue]);
             $baselist = new BaseList($className, $req, $database);

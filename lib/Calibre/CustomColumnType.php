@@ -231,6 +231,62 @@ abstract class CustomColumnType
     }
 
     /**
+     * Use the Calibre tag browser view to retrieve all custom values with count
+     * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
+     * @param mixed $n
+     * @param mixed $sort
+     * @return Entry[]
+     */
+    public function browseAllCustomValues($n = -1, $sort = null)
+    {
+        $tableName = 'tag_browser_' . $this->getTableName();
+        $queryFormat = "SELECT id, value, count FROM {0} ORDER BY {1}";
+        if (!in_array($sort, ['id', 'value', 'count', 'sort'])) {
+            $sort = "sort";
+        }
+        if ($sort == 'count') {
+            $sort .= ' desc, value';
+        }
+        $query = str_format($queryFormat, $tableName, $sort);
+
+        $result = $this->getPaginatedResult($query, [], $n);
+        $entryArray = [];
+        while ($post = $result->fetchObject()) {
+            $customcolumn = new CustomColumn($post->id, $post->value, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
+        }
+        return $entryArray;
+    }
+
+    /**
+     * Find related categories for hierarchical custom columns
+     * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
+     * @param mixed $find
+     * @return Entry[]
+     */
+    public function getRelatedCategories($find)
+    {
+        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->columnTitle, Config::get('calibre_categories_using_hierarchy'))) {
+            return [];
+        }
+        $tableName = 'tag_browser_' . $this->getTableName();
+        if (strpos($find, '%') === false) {
+            $queryFormat = "SELECT id, value, count FROM {0} WHERE value = ? ORDER BY sort";
+        } else {
+            $queryFormat = "SELECT id, value, count FROM {0} WHERE value LIKE ? ORDER BY sort";
+        }
+        $query = str_format($queryFormat, $tableName);
+        $result = Database::query($query, [$find], $this->databaseId);
+
+        $entryArray = [];
+        while ($post = $result->fetchObject()) {
+            $customcolumn = new CustomColumn($post->id, $post->value, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
+        }
+        return $entryArray;
+    }
+
+    /**
      * Encode a value of this column ready to be displayed in an HTML document
      *
      * @param integer|string $value

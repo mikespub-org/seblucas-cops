@@ -364,6 +364,7 @@ class JSONRenderer
         } elseif ($page != Page::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];
         }
+        $out ["hierarchy"] = $currentPage->hierarchy;
 
         if (Database::KEEP_STATS) {
             $out ["dbstats"] = Database::getDbStatistics();

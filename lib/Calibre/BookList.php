@@ -233,7 +233,7 @@ class BookList
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 
-        // @todo check orderBy to sort by count
+        // check orderBy to sort by count
         if (!in_array($this->orderBy, ['groupid', 'count'])) {
             $this->orderBy = 'groupid';
         }
