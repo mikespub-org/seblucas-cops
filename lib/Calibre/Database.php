@@ -15,7 +15,15 @@ use PDO;
 
 class Database
 {
+    public const KEEP_STATS = false;
     private static $db = null;
+    private static $count = 0;
+    private static $queries = [];
+
+    public static function getDbStatistics()
+    {
+        return ['count' => self::$count, 'queries' => self::$queries];
+    }
 
     /**
      * Summary of isMultipleDatabaseEnabled
@@ -163,6 +171,9 @@ class Database
      */
     public static function getDb($database = null)
     {
+        if (self::KEEP_STATS) {
+            self::$count += 1;
+        }
         if (is_null(self::$db)) {
             try {
                 if (is_readable(self::getDbFileName($database))) {
@@ -217,6 +228,9 @@ class Database
      */
     public static function querySingle($query, $database = null)
     {
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         return self::getDb($database)->query($query)->fetchColumn();
     }
 
@@ -230,6 +244,9 @@ class Database
      */
     public static function query($query, $params = [], $database = null)
     {
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         if (count($params) > 0) {
             $result = self::getDb($database)->prepare($query);
             $result->execute($params);
@@ -252,6 +269,9 @@ class Database
      */
     public static function queryTotal($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         $totalResult = -1;
 
         if (Translation::useNormAndUp()) {
@@ -289,6 +309,9 @@ class Database
      */
     public static function queryFilter($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         if (Translation::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
             $columns = preg_replace("/upper/", "normAndUp", $columns);
@@ -320,6 +343,9 @@ class Database
      */
     public static function countFilter($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
     {
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         // assuming order by ... is at the end of the query here
         $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|).*$/i', '', $query);
         $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));

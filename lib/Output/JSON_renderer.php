@@ -365,6 +365,10 @@ class JSONRenderer
             $out ["parenturl"] = $out ["homeurl"];
         }
 
+        if (Database::KEEP_STATS) {
+            $out ["dbstats"] = Database::getDbStatistics();
+        }
+
         return $out;
     }
 }
