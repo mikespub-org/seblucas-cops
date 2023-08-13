@@ -115,6 +115,8 @@ class MailTest extends TestCase
 
     public function testSendMailSomeday()
     {
-        $this->assertStringStartsWith("Mailer Error:", Mail::sendMail(20, "a@a.com"));
+        // use dryRun to run preSend() but not actually Send()
+        $error = Mail::sendMail(20, "a@a.com", true);
+        $this->assertFalse($error);
     }
 }

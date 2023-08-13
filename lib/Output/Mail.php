@@ -45,7 +45,7 @@ class Mail
         return false;
     }
 
-    public static function sendMail($idData, $emailDest)
+    public static function sendMail($idData, $emailDest, $dryRun = false)
     {
         $book = Book::getBookByDataId($idData);
         $data = $book->getDataById($idData);
@@ -99,6 +99,12 @@ class Mail
         $mail->Body    = "<h1>" . $book->title . "</h1><h2>" . $book->getAuthorsName() . "</h2>" . $book->getComment();
         $mail->AltBody = "Sent by COPS";
 
+        if ($dryRun) {
+            if (!$mail->preSend()) {
+                return 'Mailer Error: ' . $mail->ErrorInfo;
+            }
+            return false;
+        }
         if (!$mail->Send()) {
             return 'Mailer Error: ' . $mail->ErrorInfo;
         }
