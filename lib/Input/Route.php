@@ -21,7 +21,7 @@ class Route
 
     /**
      * Summary of routes
-     * @var array<string, string|array>
+     * @var array<string, mixed>
      */
     protected static $routes = [
         // Format: route => page, or route => [page => page, fixed => 1, ...] with fixed params
@@ -56,6 +56,7 @@ class Route
         "/ratings/{id}" => Page::RATING_DETAIL,
     ];
     // with use_url_rewriting = 1 - basic rewrites only
+    /** @var array<string, mixed> */
     protected static $rewrites = [
         // Format: route => endpoint, or route => [endpoint, [fixed => 1, ...]] with fixed params
         "/download/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
@@ -63,15 +64,18 @@ class Route
         "/download/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
         "/view/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"], ["view" => 1]],
     ];
+    /** @var array<string, mixed> */
     protected static $exact = [];
+    /** @var array<string, mixed> */
     protected static $match = [];
+    /** @var array<string, mixed> */
     protected static $endpoints = [];
 
     /**
      * Match pathinfo against routes and return query params
      * @param string $path
      * @throws \Exception if the $path is not found in $routes
-     * @return array|null
+     * @return array<mixed>|null
      */
     public static function match($path)
     {
@@ -127,7 +131,7 @@ class Route
     /**
      * Get query params for static route
      * @param string $route
-     * @return array
+     * @return array<mixed>
      */
     public static function get($route)
     {
@@ -142,7 +146,7 @@ class Route
      * Set route to page with optional static params
      * @param string $route
      * @param string $page
-     * @param array $params
+     * @param array<mixed> $params
      * @return void
      */
     public static function set($route, $page, $params = [])
@@ -158,7 +162,7 @@ class Route
     /**
      * List routes in reverse order for match
      * @param bool $ordered
-     * @return array
+     * @return array<string>
      */
     public static function listRoutes($ordered = true)
     {
@@ -173,7 +177,7 @@ class Route
 
     /**
      * Get routes and query params
-     * @return array<string, array>
+     * @return array<string, array<mixed>>
      */
     public static function getRoutes()
     {
@@ -187,7 +191,7 @@ class Route
     /**
      * Find route for page with params and return link
      * @param string $page
-     * @param array $params
+     * @param array<mixed> $params
      * @return string
      */
     public static function link($page, $params = [])
@@ -212,6 +216,10 @@ class Route
         return $found;
     }
 
+    /**
+     * Summary of buildMatch
+     * @return void
+     */
     protected static function buildMatch()
     {
         // Use cases:
@@ -223,6 +231,12 @@ class Route
         [static::$match, static::$exact] = static::findMatches(static::getRoutes(), '\?');
     }
 
+    /**
+     * Summary of findMatches
+     * @param array<mixed> $mapping
+     * @param string $prefix
+     * @return array<mixed>
+     */
     protected static function findMatches($mapping, $prefix = '\?')
     {
         $matches = [];
@@ -274,8 +288,8 @@ class Route
 
     /**
      * Match rewrite rule for path and return endpoint with params
-     * @param mixed $path
-     * @return array
+     * @param string $path
+     * @return array<mixed>
      */
     public static function matchRewrite($path)
     {
@@ -316,8 +330,8 @@ class Route
 
     /**
      * Get endpoint and fixed params for rewrite rule
-     * @param mixed $route
-     * @return array
+     * @param string $route
+     * @return array<mixed>
      */
     public static function getRewrite($route)
     {
@@ -333,7 +347,7 @@ class Route
     /**
      * List rewrite rules in reverse order for match
      * @param bool $ordered
-     * @return array
+     * @return array<string>
      */
     public static function listRewrites($ordered = true)
     {
@@ -349,7 +363,7 @@ class Route
     /**
      * Find rewrite rule for endpoint with params and return link
      * @param string $endpoint
-     * @param array $params
+     * @param array<mixed> $params
      * @throws \Exception if the $endpoint is not found in $rewrites
      * @return string
      */
@@ -381,6 +395,10 @@ class Route
         return $found;
     }
 
+    /**
+     * Summary of buildEndpoints
+     * @return void
+     */
     public static function buildEndpoints()
     {
         foreach (static::$rewrites as $route => $map) {
@@ -392,6 +410,11 @@ class Route
         }
     }
 
+    /**
+     * Summary of replaceLinks
+     * @param string $output
+     * @return string|null
+     */
     public static function replaceLinks($output)
     {
         if (empty(static::$match)) {

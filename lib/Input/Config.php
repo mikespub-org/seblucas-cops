@@ -38,7 +38,7 @@ class Config
 
     /**
      * Summary of load
-     * @param array $values
+     * @param array<string, mixed> $values
      * @return void
      */
     public static function load($values)
@@ -78,7 +78,7 @@ class Config
 
     /**
      * Summary of dump
-     * @return array
+     * @return array<string, mixed>
      */
     public static function dump()
     {
