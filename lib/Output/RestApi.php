@@ -20,11 +20,11 @@ use Exception;
  */
 class RestApi
 {
-    public static $endpoint = Config::ENDPOINT["restapi"];
+    public static string $endpoint = Config::ENDPOINT["restapi"];
 
     /**
      * Summary of extra
-     * @var array<string, array>
+     * @var array<string, array<string>>
      */
     public static $extra = [
         "/custom" => [self::class, 'getCustomColumns'],
@@ -62,7 +62,7 @@ class RestApi
      * Summary of matchPathInfo
      * @param string $path
      * @throws Exception if the $path is not found in $routes or $extra
-     * @return array|null
+     * @return array<mixed>|null
      */
     public function matchPathInfo($path)
     {
@@ -95,7 +95,7 @@ class RestApi
 
     /**
      * Summary of getJson
-     * @return array
+     * @return array<string, mixed>
      */
     public function getJson()
     {
@@ -155,7 +155,7 @@ class RestApi
     /**
      * Summary of getCustomColumns
      * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getCustomColumns($request)
     {
@@ -172,7 +172,7 @@ class RestApi
     /**
      * Summary of getDatabases
      * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getDatabases($request)
     {
@@ -188,7 +188,7 @@ class RestApi
     /**
      * Summary of getOpenApi
      * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getOpenApi($request)
     {
@@ -216,7 +216,7 @@ class RestApi
     /**
      * Summary of getRoutes
      * @param Request $request
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getRoutes($request)
     {

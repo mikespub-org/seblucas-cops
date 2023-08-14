@@ -15,8 +15,12 @@ use SebLucas\Cops\Calibre\Book;
 
 class Mail
 {
-    public static $maxSize = 10 * 1024 * 1024;
+    public static int $maxSize = 10 * 1024 * 1024;
 
+    /**
+     * Summary of checkConfiguration
+     * @return bool|string
+     */
     public static function checkConfiguration()
     {
         $mailConfig = Config::get('mail_configuration');
@@ -30,6 +34,12 @@ class Mail
         return false;
     }
 
+    /**
+     * Summary of checkRequest
+     * @param mixed $idData
+     * @param string $emailDest
+     * @return bool|string
+     */
     public static function checkRequest($idData, $emailDest)
     {
         if (empty($idData)) {
@@ -45,6 +55,13 @@ class Mail
         return false;
     }
 
+    /**
+     * Summary of sendMail
+     * @param mixed $idData
+     * @param string $emailDest
+     * @param bool $dryRun
+     * @return bool|string
+     */
     public static function sendMail($idData, $emailDest, $dryRun = false)
     {
         $book = Book::getBookByDataId($idData);
