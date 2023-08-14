@@ -11,7 +11,7 @@ require __DIR__ . '/config_default.php';
 if (file_exists(__DIR__ . '/config_local.php') && (php_sapi_name() !== 'cli')) {
     require __DIR__ . '/config_local.php';
 }
-/** @var array $config */
+/** @var array<mixed> $config */
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
