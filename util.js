@@ -325,7 +325,8 @@ updatePage = function (data) {
     if (Cookies.get('toolbar') === '1') { $("#tool").show (); }
     if (currentData.containsBook === 1) {
         $("#sortForm").show ();
-        if (getCurrentOption ("html_tag_filter") === "1") {
+        // disable html tag filter when dealing with hierarchical tags or custom columns
+        if (getCurrentOption ("html_tag_filter") === "1" && !currentData.hierarchy) {
             $("#filter ul").empty ();
             updateFilters ();
             handleFilterEvents ();

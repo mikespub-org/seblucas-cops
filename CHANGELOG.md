@@ -4,7 +4,9 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.4.x - 202308xx TBD
+1.4.2 - 20230814 Fix OPDS renderer + add sorting & filtering options to bootstrap2
+  * Add optional hierarchical tags and custom columns in bootstrap2 template
+  * Split off new Calibre\Category class + support hierarchical tags and custom columns in code
   * Remove global $config everywhere and replace with Config::get() except in config.php
   * Switch back to bootstrap2 as standard template in config_default.php
   * Move endpoint dependency from LinkNavigation to JSON/OPDS renderer
