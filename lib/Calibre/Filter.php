@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\Page;
 
 class Filter
@@ -29,18 +30,17 @@ class Filter
     ];
 
     protected Request $request;
-    protected array $params = [];
+    /** @var array<mixed> */
+    protected $params = [];
     protected string $parentTable = "books";
     protected string $queryString = "";
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $databaseId;
 
     /**
      * Summary of __construct
-     * @param Request|array $request current request or urlParams array
-     * @param array $params initial query params
+     * @param Request|array<mixed> $request current request or urlParams array
+     * @param array<mixed> $params initial query params
      * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
      * @param mixed $database current database in multiple database setup
      */
@@ -69,7 +69,7 @@ class Filter
 
     /**
      * Summary of getQueryParams
-     * @return array updated query params including filters
+     * @return array<mixed> updated query params including filters
      */
     public function getQueryParams()
     {
@@ -270,7 +270,7 @@ class Filter
 
     /**
      * Summary of addCustomIdArrayFilters
-     * @param array $customIdArray
+     * @param array<mixed> $customIdArray
      * @return void
      */
     public function addCustomIdArrayFilters($customIdArray)
@@ -338,6 +338,12 @@ class Filter
         $this->addFilter($filter, $linkId);
     }
 
+    /**
+     * Summary of getEntryArray
+     * @param Request $request
+     * @param mixed $database
+     * @return array<Entry>
+     */
     public static function getEntryArray($request, $database = null)
     {
         $entryArray = [];

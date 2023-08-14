@@ -29,6 +29,10 @@ class Tag extends Category
     public const URL_PARAM = "t";
     public const CATEGORY = "tags";
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return localize("tags.title");
@@ -36,11 +40,21 @@ class Tag extends Category
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
     public static function getDefaultName()
     {
         return localize("tagword.none");
     }
 
+    /**
+     * Summary of getInstancesByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return array<Tag>
+     */
     public static function getInstancesByBookId($bookId, $database = null)
     {
         $tags = [];

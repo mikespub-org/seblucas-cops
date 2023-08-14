@@ -9,14 +9,25 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Model\Entry;
 
 class CustomColumnTypeComment extends CustomColumnType
 {
+    /**
+     * Summary of __construct
+     * @param mixed $pcustomId
+     * @param mixed $database
+     */
     protected function __construct($pcustomId, $database)
     {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT, $database);
     }
 
+    /**
+     * Summary of getQuery
+     * @param mixed $id
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQuery($id)
     {
         if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
@@ -27,6 +38,12 @@ class CustomColumnTypeComment extends CustomColumnType
         return [$query, [$id]];
     }
 
+    /**
+     * Summary of getFilter
+     * @param mixed $id
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableName();
@@ -39,26 +56,51 @@ class CustomColumnTypeComment extends CustomColumnType
         return [$filter, [$id]];
     }
 
+    /**
+     * Summary of getCustom
+     * @param mixed $id
+     * @return CustomColumn
+     */
     public function getCustom($id)
     {
         return new CustomColumn($id, $id, $this);
     }
 
+    /**
+     * Summary of encodeHTMLValue
+     * @param string $value
+     * @return string
+     */
     public function encodeHTMLValue($value)
     {
         return "<div>" . $value . "</div>"; // no htmlspecialchars, this is already HTML
     }
 
+    /**
+     * Summary of getAllCustomValuesFromDatabase
+     * @param mixed $n
+     * @param mixed $sort
+     * @return null
+     */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         return null;
     }
 
+    /**
+     * Summary of getDistinctValueCount
+     * @return int
+     */
     public function getDistinctValueCount()
     {
         return 0;
     }
 
+    /**
+     * Summary of getCustomByBook
+     * @param Book $book
+     * @return CustomColumn
+     */
     public function getCustomByBook($book)
     {
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = ?";
@@ -71,6 +113,10 @@ class CustomColumnTypeComment extends CustomColumnType
         return new CustomColumn(null, localize("customcolumn.float.unknown"), $this);
     }
 
+    /**
+     * Summary of isSearchable
+     * @return bool
+     */
     public function isSearchable()
     {
         return false;

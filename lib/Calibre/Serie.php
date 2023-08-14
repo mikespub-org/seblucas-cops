@@ -29,6 +29,10 @@ class Serie extends Category
     public const URL_PARAM = "s";
     public const CATEGORY = "series";
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return localize("series.title");
@@ -36,6 +40,12 @@ class Serie extends Category
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getInstanceByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return Serie|null
+     */
     public static function getInstanceByBookId($bookId, $database = null)
     {
         $query = 'select  series.id as id, name
@@ -48,6 +58,10 @@ where series.id = series and book = ?';
         return null;
     }
 
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
     public static function getDefaultName()
     {
         return localize("seriesword.none");

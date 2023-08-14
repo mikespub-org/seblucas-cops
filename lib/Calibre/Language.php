@@ -25,11 +25,19 @@ class Language extends Base
     where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
     public const URL_PARAM = "l";
 
+    /**
+     * Summary of getTitle
+     * @return mixed
+     */
     public function getTitle()
     {
         return self::getLanguageString($this->name);
     }
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return localize("languages.title");
@@ -37,6 +45,11 @@ class Language extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getLanguageString
+     * @param string $code
+     * @return string
+     */
     public static function getLanguageString($code)
     {
         $string = localize("languages.".$code);
@@ -46,11 +59,21 @@ class Language extends Base
         return $string;
     }
 
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
     public static function getDefaultName()
     {
         return localize("language.title");
     }
 
+    /**
+     * Summary of getLanguagesByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return string
+     */
     public static function getLanguagesByBookId($bookId, $database = null)
     {
         $lang = [];

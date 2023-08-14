@@ -18,25 +18,22 @@ class BaseList
 {
     public Request $request;
     public string $className;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $databaseId = null;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $numberPerPage = null;
-    protected array $ignoredCategories = [];
-    /**
-     * @var mixed
-     */
+    /** @var array<string> */
+    protected $ignoredCategories = [];
+    /** @var mixed */
     public $orderBy = null;
 
     /**
+     * @param string $className
+     * @param Request|null $request
      * @param mixed $database
      * @param mixed $numberPerPage
      */
-    public function __construct(string $className, ?Request $request, $database = null, $numberPerPage = null)
+    public function __construct($className, $request, $database = null, $numberPerPage = null)
     {
         $this->className = $className;
         $this->request = $request ?? new Request();
@@ -46,12 +43,20 @@ class BaseList
         $this->setOrderBy();
     }
 
+    /**
+     * Summary of setOrderBy
+     * @return void
+     */
     protected function setOrderBy()
     {
         $this->orderBy = $this->request->getSorted($this->getSort());
         //$this->orderBy ??= $this->request->option('sort');
     }
 
+    /**
+     * Summary of getOrderBy
+     * @return string|null
+     */
     protected function getOrderBy()
     {
         switch ($this->orderBy) {
@@ -75,26 +80,46 @@ class BaseList
 
     /** Use inherited class methods to get entries from <Whatever> by instance (linked via books) */
 
+    /**
+     * Summary of getTable
+     * @return string
+     */
     public function getTable()
     {
         return $this->className::SQL_TABLE;
     }
 
+    /**
+     * Summary of getSort
+     * @return string
+     */
     public function getSort()
     {
         return $this->className::SQL_SORT;
     }
 
+    /**
+     * Summary of getColumns
+     * @return string
+     */
     public function getColumns()
     {
         return $this->className::SQL_COLUMNS;
     }
 
+    /**
+     * Summary of getLinkTable
+     * @return string
+     */
     public function getLinkTable()
     {
         return $this->className::SQL_LINK_TABLE;
     }
 
+    /**
+     * Summary of getLinkColumn
+     * @return string
+     */
     public function getLinkColumn()
     {
         return $this->className::SQL_LINK_COLUMN;
@@ -102,11 +127,20 @@ class BaseList
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
 
+    /**
+     * Summary of getInstanceById
+     * @param mixed $id
+     * @return mixed
+     */
     public function getInstanceById($id)
     {
         return $this->className::getInstanceById($id, $this->databaseId);
     }
 
+    /**
+     * Summary of getWithoutEntry
+     * @return Entry|null
+     */
     public function getWithoutEntry()
     {
         $count = $this->countWithoutEntries();
@@ -114,6 +148,10 @@ class BaseList
         return $instance->getEntry($count);
     }
 
+    /**
+     * Summary of getEntryCount
+     * @return Entry|null
+     */
     public function getEntryCount()
     {
         return self::getCountGeneric($this->getTable(), $this->className::PAGE_ID, $this->className::PAGE_ALL, $this->databaseId);
@@ -121,7 +159,7 @@ class BaseList
 
     /**
      * Summary of countRequestEntries
-     * @return integer
+     * @return int
      */
     public function countRequestEntries()
     {
@@ -131,11 +169,20 @@ class BaseList
         return $this->countAllEntries();
     }
 
+    /**
+     * Summary of countAllEntries
+     * @return int
+     */
     public function countAllEntries()
     {
         return Database::querySingle('select count(*) from ' . $this->getTable(), $this->databaseId);
     }
 
+    /**
+     * Summary of countEntriesByFirstLetter
+     * @param string $letter
+     * @return int
+     */
     public function countEntriesByFirstLetter($letter)
     {
         $filterString = 'upper(' . $this->getTable() . '.' . $this->getSort() . ') like ?';
@@ -145,12 +192,21 @@ class BaseList
         return $this->countFilteredEntries($filter);
     }
 
+    /**
+     * Summary of countEntriesByFilter
+     * @return int
+     */
     public function countEntriesByFilter()
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         return $this->countFilteredEntries($filter);
     }
 
+    /**
+     * Summary of countFilteredEntries
+     * @param Filter $filter
+     * @return int
+     */
     public function countFilteredEntries($filter)
     {
         // select {0} from series, books_series_link where series.id = books_series_link.series {1}
@@ -164,6 +220,10 @@ class BaseList
         return Database::countFilter($query, $columns, $filterString, $params, $this->databaseId);
     }
 
+    /**
+     * Summary of countWithoutEntries
+     * @return int
+     */
     public function countWithoutEntries()
     {
         // @todo see BookList::getBooksWithoutCustom() to support CustomColumn
@@ -207,6 +267,13 @@ class BaseList
         return $this->getEntryArrayWithBookNumber($query, $columns, "", [], $n);
     }
 
+    /**
+     * Summary of getAllEntriesByQuery
+     * @param string $find
+     * @param mixed $n
+     * @param mixed $repeat
+     * @return array<Entry>
+     */
     public function getAllEntriesByQuery($find, $n = -1, $repeat = 1)
     {
         $query = $this->className::SQL_ROWS_FOR_SEARCH;
@@ -216,6 +283,10 @@ class BaseList
         return $this->getEntryArrayWithBookNumber($query, $columns, "", $params, $n);
     }
 
+    /**
+     * Summary of getCountByFirstLetter
+     * @return array<Entry>
+     */
     public function getCountByFirstLetter()
     {
         // substr(upper(authors.sort), 1, 1)
@@ -223,6 +294,13 @@ class BaseList
         return $this->getCountByGroup($groupField, $this->className::PAGE_LETTER, 'letter');
     }
 
+    /**
+     * Summary of getCountByGroup
+     * @param string $groupField
+     * @param string $page
+     * @param string $label
+     * @return array<Entry>
+     */
     public function getCountByGroup($groupField, $page, $label)
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
@@ -259,6 +337,12 @@ class BaseList
         return $entryArray;
     }
 
+    /**
+     * Summary of getEntriesByFirstLetter
+     * @param mixed $letter
+     * @param mixed $n
+     * @return array<Entry>
+     */
     public function getEntriesByFirstLetter($letter, $n = -1)
     {
         $query = $this->className::SQL_ROWS_BY_FIRST_LETTER;
@@ -269,12 +353,23 @@ class BaseList
         return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
     }
 
+    /**
+     * Summary of getEntriesByFilter
+     * @param mixed $n
+     * @return array<Entry>
+     */
     public function getEntriesByFilter($n = -1)
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         return $this->getFilteredEntries($filter, $n);
     }
 
+    /**
+     * Summary of getEntriesByInstance
+     * @param Base|Category $instance
+     * @param mixed $n
+     * @return array<Entry>
+     */
     public function getEntriesByInstance($instance, $n = -1)
     {
         $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
@@ -282,6 +377,13 @@ class BaseList
         return $this->getFilteredEntries($filter, $n);
     }
 
+    /**
+     * Summary of getEntriesByCustomValueId
+     * @param CustomColumnType $customType
+     * @param mixed $valueId
+     * @param mixed $n
+     * @return array<Entry>
+     */
     public function getEntriesByCustomValueId($customType, $valueId, $n = -1)
     {
         $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
@@ -315,6 +417,7 @@ class BaseList
      * Summary of getEntryArrayWithBookNumber
      * @param mixed $query
      * @param mixed $columns
+     * @param mixed $filter
      * @param mixed $params
      * @param mixed $n
      * @return array<Entry>
@@ -335,6 +438,10 @@ class BaseList
         return $entryArray;
     }
 
+    /**
+     * Summary of hasChildCategories
+     * @return bool
+     */
     public function hasChildCategories()
     {
         if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->className::CATEGORY, Config::get('calibre_categories_using_hierarchy'))) {
@@ -347,7 +454,7 @@ class BaseList
      * Use the Calibre tag browser view to retrieve all tags or series with count
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
      * @param mixed $n
-     * @return Entry[]
+     * @return array<Entry>
      */
     public function browseAllEntries($n = -1)
     {

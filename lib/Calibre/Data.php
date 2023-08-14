@@ -14,16 +14,20 @@ use SebLucas\Cops\Output\Format;
 
 class Data
 {
-    public static $endpoint = Config::ENDPOINT["fetch"];
+    public static string $endpoint = Config::ENDPOINT["fetch"];
+    /** @var mixed */
     public $id;
-    public $name;
-    public $format;
-    public $realFormat;
-    public $extension;
+    public string $name;
+    public string $format;
+    public string $realFormat;
+    public string $extension;
+    /** @var Book|null */
     public $book;
+    /** @var mixed */
     protected $databaseId;
-    public $updateForKepub = false;
+    public bool $updateForKepub = false;
 
+    /** @var array<string, string> */
     public static $mimetypes = [
         'aac'   => 'audio/aac',
         'azw'   => 'application/x-mobipocket-ebook',
@@ -64,6 +68,11 @@ class Data
         'zip'   => 'application/zip',
     ];
 
+    /**
+     * Summary of __construct
+     * @param mixed $post
+     * @param Book|null $book
+     */
     public function __construct($post, $book = null)
     {
         $this->id = $post->id;
@@ -79,11 +88,19 @@ class Data
         }
     }
 
+    /**
+     * Summary of isKnownType
+     * @return bool
+     */
     public function isKnownType()
     {
         return array_key_exists($this->extension, self::$mimetypes);
     }
 
+    /**
+     * Summary of getMimeType
+     * @return bool|string
+     */
     public function getMimeType()
     {
         $result = "application/octet-stream";
@@ -100,26 +117,46 @@ class Data
         return $result;
     }
 
+    /**
+     * Summary of isEpubValidOnKobo
+     * @return bool
+     */
     public function isEpubValidOnKobo()
     {
         return $this->format == "EPUB" || $this->format == "KEPUB";
     }
 
+    /**
+     * Summary of getFilename
+     * @return string
+     */
     public function getFilename()
     {
         return $this->name . "." . strtolower($this->format);
     }
 
+    /**
+     * Summary of getUpdatedFilename
+     * @return string
+     */
     public function getUpdatedFilename()
     {
         return $this->book->getAuthorsSort() . " - " . $this->book->title;
     }
 
+    /**
+     * Summary of getUpdatedFilenameEpub
+     * @return string
+     */
     public function getUpdatedFilenameEpub()
     {
         return $this->getUpdatedFilename() . ".epub";
     }
 
+    /**
+     * Summary of getUpdatedFilenameKepub
+     * @return string
+     */
     public function getUpdatedFilenameKepub()
     {
         $str = $this->getUpdatedFilename() . ".kepub.epub";
@@ -130,6 +167,13 @@ class Data
         );
     }
 
+    /**
+     * Summary of getDataLink
+     * @param mixed $rel
+     * @param mixed $title
+     * @param mixed $view
+     * @return Link
+     */
     public function getDataLink($rel, $title = null, $view = false)
     {
         if ($rel == Link::OPDS_ACQUISITION_TYPE && Config::get('use_url_rewriting') == "1") {
@@ -139,21 +183,39 @@ class Data
         return self::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, null, $view);
     }
 
+    /**
+     * Summary of getHtmlLink
+     * @return string
+     */
     public function getHtmlLink()
     {
         return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE)->href;
     }
 
+    /**
+     * Summary of getViewHtmlLink
+     * @return string
+     */
     public function getViewHtmlLink()
     {
         return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE, null, true)->href;
     }
 
+    /**
+     * Summary of getLocalPath
+     * @return string
+     */
     public function getLocalPath()
     {
         return $this->book->path . "/" . $this->getFilename();
     }
 
+    /**
+     * Summary of getHtmlLinkWithRewriting
+     * @param mixed $title
+     * @param mixed $view
+     * @return Link
+     */
     public function getHtmlLinkWithRewriting($title = null, $view = false)
     {
         $database = "";
@@ -176,11 +238,22 @@ class Data
         return new Link($href, $this->getMimeType(), Link::OPDS_ACQUISITION_TYPE, $title);
     }
 
+    /**
+     * Summary of getDataByBook
+     * @param mixed $book
+     * @return array<Data>
+     */
     public static function getDataByBook($book)
     {
         return Book::getDataByBook($book);
     }
 
+    /**
+     * Summary of handleThumbnailLink
+     * @param string $urlParam
+     * @param mixed $height
+     * @return string
+     */
     public static function handleThumbnailLink($urlParam, $height)
     {
         // @todo remove use of global variable here
@@ -198,10 +271,21 @@ class Data
         return $urlParam;
     }
 
+    /**
+     * Summary of getLink
+     * @param Book $book
+     * @param string $type
+     * @param string $mime
+     * @param string $rel
+     * @param string $filename
+     * @param string|null $idData
+     * @param mixed $title
+     * @param mixed $height
+     * @param mixed $view
+     * @return Link
+     */
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $height = null, $view = false)
     {
-        /** @var Book $book */
-
         $urlParam = Format::addURLParam("", "data", $idData);
         if ($view) {
             $urlParam = Format::addURLParam($urlParam, "view", 1);

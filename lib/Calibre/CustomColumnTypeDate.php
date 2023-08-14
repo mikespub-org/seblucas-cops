@@ -22,11 +22,21 @@ class CustomColumnTypeDate extends CustomColumnType
     where {2}.book = books.id and substr(date({2}.value), 1, 4) = ? {1} order by {2}.value';
     public const GET_PATTERN = '/^(\d+)$/';
 
+    /**
+     * Summary of __construct
+     * @param mixed $pcustomId
+     * @param mixed $database
+     */
     protected function __construct($pcustomId, $database)
     {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_DATE, $database);
     }
 
+    /**
+     * Summary of getQuery
+     * @param mixed $id
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQuery($id)
     {
         if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
@@ -38,6 +48,12 @@ class CustomColumnTypeDate extends CustomColumnType
         return [$query, [$date->format("Y-m-d")]];
     }
 
+    /**
+     * Summary of getQueryByYear
+     * @param mixed $year
+     * @throws \UnexpectedValueException
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQueryByYear($year)
     {
         if (!preg_match(self::GET_PATTERN, $year)) {
@@ -47,6 +63,12 @@ class CustomColumnTypeDate extends CustomColumnType
         return [$query, [$year]];
     }
 
+    /**
+     * Summary of getFilter
+     * @param mixed $id
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getFilter($id, $parentTable = null)
     {
         $date = new DateTime($id);
@@ -60,6 +82,11 @@ class CustomColumnTypeDate extends CustomColumnType
         return [$filter, [$date->format("Y-m-d")]];
     }
 
+    /**
+     * Summary of getCustom
+     * @param mixed $id
+     * @return CustomColumn
+     */
     public function getCustom($id)
     {
         if (empty($id)) {
@@ -70,6 +97,12 @@ class CustomColumnTypeDate extends CustomColumnType
         return new CustomColumn($id, $date->format(localize("customcolumn.date.format")), $this);
     }
 
+    /**
+     * Summary of getAllCustomValuesFromDatabase
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
+     */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue";
@@ -94,6 +127,10 @@ class CustomColumnTypeDate extends CustomColumnType
         return $entryArray;
     }
 
+    /**
+     * Summary of getDistinctValueCount
+     * @return mixed
+     */
     public function getDistinctValueCount()
     {
         $queryFormat = "SELECT COUNT(DISTINCT date(value)) AS count FROM {0}";
@@ -105,7 +142,7 @@ class CustomColumnTypeDate extends CustomColumnType
      * Summary of getCountByYear
      * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
      * @param mixed $sort
-     * @return Entry[]
+     * @return array<Entry>
      */
     public function getCountByYear($page, $sort = null)
     {
@@ -140,7 +177,7 @@ class CustomColumnTypeDate extends CustomColumnType
      * Summary of getCustomValuesByYear
      * @param mixed $year
      * @param mixed $sort
-     * @return Entry[]
+     * @return array<Entry>
      */
     public function getCustomValuesByYear($year, $sort = null)
     {
@@ -170,6 +207,11 @@ class CustomColumnTypeDate extends CustomColumnType
         return $entryArray;
     }
 
+    /**
+     * Summary of getCustomByBook
+     * @param Book $book
+     * @return CustomColumn
+     */
     public function getCustomByBook($book)
     {
         $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = ?";
@@ -184,6 +226,10 @@ class CustomColumnTypeDate extends CustomColumnType
         return new CustomColumn(null, localize("customcolumn.date.unknown"), $this);
     }
 
+    /**
+     * Summary of isSearchable
+     * @return bool
+     */
     public function isSearchable()
     {
         return true;

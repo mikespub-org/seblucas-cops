@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\Page;
 
 class Rating extends Base
@@ -27,11 +28,19 @@ class Rating extends Base
     where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by books.sort';
     public const URL_PARAM = "r";
 
+    /**
+     * Summary of getTitle
+     * @return string
+     */
     public function getTitle()
     {
         return str_format(localize("ratingword", $this->name/2), $this->name/2);
     }
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return localize("ratings.title");
@@ -39,12 +48,21 @@ class Rating extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getCount
+     * @param mixed $database
+     * @return Entry|null
+     */
     public static function getCount($database = null)
     {
         // str_format (localize("ratings", count(array))
         return BaseList::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
+    /**
+     * Summary of getDefaultName
+     * @return int
+     */
     public static function getDefaultName()
     {
         return 0;

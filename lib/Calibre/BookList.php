@@ -39,25 +39,21 @@ class BookList
     public const BAD_SEARCH = 'QQQQQ';
 
     public Request $request;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $databaseId = null;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $numberPerPage = null;
-    protected array $ignoredCategories = [];
-    /**
-     * @var mixed
-     */
+    /** @var array<string> */
+    protected $ignoredCategories = [];
+    /** @var string|null */
     public $orderBy = null;
 
     /**
+     * @param Request|null $request
      * @param mixed $database
      * @param mixed $numberPerPage
      */
-    public function __construct(?Request $request, $database = null, $numberPerPage = null)
+    public function __construct($request, $database = null, $numberPerPage = null)
     {
         $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
@@ -66,12 +62,20 @@ class BookList
         $this->setOrderBy();
     }
 
+    /**
+     * Summary of setOrderBy
+     * @return void
+     */
     protected function setOrderBy()
     {
         $this->orderBy = $this->request->getSorted();
         //$this->orderBy ??= $this->request->option('sort');
     }
 
+    /**
+     * Summary of getOrderBy
+     * @return string|null
+     */
     protected function getOrderBy()
     {
         switch ($this->orderBy) {
@@ -92,11 +96,19 @@ class BookList
         }
     }
 
+    /**
+     * Summary of getBookCount
+     * @return mixed
+     */
     public function getBookCount()
     {
         return Database::querySingle('select count(*) from books', $this->databaseId);
     }
 
+    /**
+     * Summary of getCount
+     * @return array<Entry>
+     */
     public function getCount()
     {
         $nBooks = $this->getBookCount();
@@ -132,7 +144,7 @@ class BookList
      * Summary of getBooksByInstance
      * @param Base|Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
      * @param mixed $n
-     * @return array
+     * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByInstance($instance, $n)
     {
@@ -143,6 +155,12 @@ class BookList
         return $this->getEntryArray($query, $params, $n);
     }
 
+    /**
+     * Summary of getBooksByInstanceOrChildren
+     * @param Category $instance
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getBooksByInstanceOrChildren($instance, $n)
     {
         [$query, $params] = $instance->getQuery();
@@ -160,6 +178,12 @@ class BookList
         return $this->getEntryArray($query, $params, $n);
     }
 
+    /**
+     * Summary of getBooksWithoutInstance
+     * @param mixed $instance
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getBooksWithoutInstance($instance, $n)
     {
         // in_array("series", Config::get('show_not_set_filter'))
@@ -174,7 +198,7 @@ class BookList
      * @param CustomColumnTypeDate $columnType
      * @param mixed $year
      * @param mixed $n
-     * @return array
+     * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByCustomYear($columnType, $year, $n)
     {
@@ -188,7 +212,7 @@ class BookList
      * @param CustomColumnTypeInteger $columnType
      * @param mixed $range
      * @param mixed $n
-     * @return array
+     * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByCustomRange($columnType, $range, $n)
     {
@@ -197,6 +221,12 @@ class BookList
         return $this->getEntryArray($query, $params, $n);
     }
 
+    /**
+     * Summary of getBooksWithoutCustom
+     * @param CustomColumnType $columnType
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getBooksWithoutCustom($columnType, $n)
     {
         // use null here to reduce conflict with bool and int custom columns
@@ -204,6 +234,13 @@ class BookList
         return $this->getEntryArray($query, $params, $n);
     }
 
+    /**
+     * Summary of getBooksByQueryScope
+     * @param array<string, string> $queryScope
+     * @param mixed $n
+     * @param array<string> $ignoredCategories
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getBooksByQueryScope($queryScope, $n, $ignoredCategories = [])
     {
         $i = 0;
@@ -228,22 +265,42 @@ class BookList
         return $this->getEntryArray(self::SQL_BOOKS_QUERY, $critArray, $n);
     }
 
+    /**
+     * Summary of getAllBooks
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getAllBooks($n)
     {
         [$entryArray, $totalNumber] = $this->getEntryArray(self::SQL_BOOKS_ALL, [], $n);
         return [$entryArray, $totalNumber];
     }
 
+    /**
+     * Summary of getCountByFirstLetter
+     * @return array<Entry>
+     */
     public function getCountByFirstLetter()
     {
         return $this->getCountByGroup('substr(upper(books.sort), 1, 1)', Book::PAGE_LETTER, 'letter');
     }
 
+    /**
+     * Summary of getCountByPubYear
+     * @return array<Entry>
+     */
     public function getCountByPubYear()
     {
         return $this->getCountByGroup('substr(date(books.pubdate), 1, 4)', Book::PAGE_YEAR, 'year');
     }
 
+    /**
+     * Summary of getCountByGroup
+     * @param string $groupField
+     * @param string $page
+     * @param string $label
+     * @return array<Entry>
+     */
     public function getCountByGroup($groupField, $page, $label)
     {
         $filter = new Filter($this->request, [], "books", $this->databaseId);
@@ -277,16 +334,32 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         return $entryArray;
     }
 
+    /**
+     * Summary of getBooksByFirstLetter
+     * @param mixed $letter
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getBooksByFirstLetter($letter, $n)
     {
         return $this->getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n);
     }
 
+    /**
+     * Summary of getBooksByPubYear
+     * @param mixed $year
+     * @param mixed $n
+     * @return array{0: EntryBook[], 1: integer}
+     */
     public function getBooksByPubYear($year, $n)
     {
         return $this->getEntryArray(self::SQL_BOOKS_BY_PUB_YEAR, [$year], $n);
     }
 
+    /**
+     * Summary of getAllRecentBooks
+     * @return array<EntryBook>
+     */
     public function getAllRecentBooks()
     {
         [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . Config::get('recentbooks_limit'), [], -1);

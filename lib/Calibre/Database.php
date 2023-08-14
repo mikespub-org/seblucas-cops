@@ -16,10 +16,16 @@ use PDO;
 class Database
 {
     public const KEEP_STATS = false;
+    /** @var PDO|null */
     private static $db = null;
-    private static $count = 0;
+    private static int $count = 0;
+    /** @var array<string> */
     private static $queries = [];
 
+    /**
+     * Summary of getDbStatistics
+     * @return array<mixed>
+     */
     public static function getDbStatistics()
     {
         return ['count' => self::$count, 'queries' => self::$queries];
@@ -58,7 +64,7 @@ class Database
 
     /**
      * Summary of getDbList
-     * @return array
+     * @return array<string, string>
      */
     public static function getDbList()
     {
@@ -71,7 +77,7 @@ class Database
 
     /**
      * Summary of getDbNameList
-     * @return array
+     * @return array<string>
      */
     public static function getDbNameList()
     {

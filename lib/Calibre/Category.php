@@ -17,10 +17,17 @@ use SebLucas\Cops\Model\Entry;
 abstract class Category extends Base
 {
     public const CATEGORY = "categories";
+    /** @var mixed */
     public $count;
+    /** @var Category[]|null */
     protected $children = null;
+    /** @var Category|false|null */
     protected $parent = null;
 
+    /**
+     * Summary of hasChildCategories
+     * @return bool
+     */
     public function hasChildCategories()
     {
         if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array(static::CATEGORY, Config::get('calibre_categories_using_hierarchy'))) {
@@ -31,7 +38,7 @@ abstract class Category extends Base
 
     /**
      * Get child instances for hierarchical tags or custom columns
-     * @return array
+     * @return array<Category>
      */
     public function getChildCategories()
     {
@@ -47,7 +54,7 @@ abstract class Category extends Base
     /**
      * Get child entries for hierarchical tags or custom columns
      * @param mixed $expand include all child categories at all levels or only direct children
-     * @return array
+     * @return array<Entry>
      */
     public function getChildEntries($expand = false)
     {
@@ -64,7 +71,7 @@ abstract class Category extends Base
 
     /**
      * Get sibling entries for hierarchical tags or custom columns
-     * @return array
+     * @return array<Entry>
      */
     public function getSiblingEntries()
     {
@@ -83,6 +90,11 @@ abstract class Category extends Base
         return $entryArray;
     }
 
+    /**
+     * Find parent name of hierarchical name
+     * @param string $name
+     * @return string
+     */
     protected static function findParentName($name)
     {
         $parts = explode('.', $name);
@@ -135,7 +147,7 @@ abstract class Category extends Base
      * Find related categories for hierarchical tags or series - @todo needs title_sort function in sqlite for series
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
      * @param mixed $find pattern match or exact match for name, or array of child ids
-     * @return Category[]
+     * @return array<Category>
      */
     public function getRelatedCategories($find)
     {

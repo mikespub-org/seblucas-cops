@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\Page;
 
 /**
@@ -42,6 +43,10 @@ class CustomColumn extends Category
         $this->databaseId = $this->customColumnType->getDatabaseId();
     }
 
+    /**
+     * Summary of getCustomId
+     * @return int|mixed
+     */
     public function getCustomId()
     {
         return $this->customColumnType->customId;
@@ -57,6 +62,10 @@ class CustomColumn extends Category
         return "?page=" . self::PAGE_DETAIL . "&custom={$this->getCustomId()}&id={$this->id}";
     }
 
+    /**
+     * Summary of getParentUri
+     * @return string
+     */
     public function getParentUri()
     {
         return $this->customColumnType->getUri();
@@ -72,21 +81,37 @@ class CustomColumn extends Category
         return self::PAGE_ID . ":" . $this->getCustomId() . ":" . $this->id;
     }
 
+    /**
+     * Summary of getTitle
+     * @return string
+     */
     public function getTitle()
     {
-        return $this->value;
+        return strval($this->value);
     }
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return $this->customColumnType->getTitle();
     }
 
+    /**
+     * Summary of getClassName
+     * @return string
+     */
     public function getClassName()
     {
         return $this->customColumnType->getTitle();
     }
 
+    /**
+     * Summary of getCustomCount
+     * @return Entry
+     */
     public function getCustomCount()
     {
         [$query, $params] = $this->getQuery();
@@ -101,13 +126,18 @@ class CustomColumn extends Category
      *  - first the query (string)
      *  - second an array of all PreparedStatement parameters
      *
-     * @return array{0: string, 1: array}
+     * @return array{0: string, 1: array<mixed>}
      */
     public function getQuery()
     {
         return $this->customColumnType->getQuery($this->id);
     }
 
+    /**
+     * Summary of getFilter
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}
+     */
     public function getFilter($parentTable = null)
     {
         return $this->customColumnType->getFilter($this->id, $parentTable);
@@ -123,6 +153,10 @@ class CustomColumn extends Category
         return $this->htmlvalue;
     }
 
+    /**
+     * Summary of hasChildCategories
+     * @return bool
+     */
     public function hasChildCategories()
     {
         return $this->customColumnType->hasChildCategories();
@@ -132,7 +166,7 @@ class CustomColumn extends Category
      * Find related categories for hierarchical custom columns
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
      * @param mixed $find
-     * @return array
+     * @return array<CustomColumn>
      */
     public function getRelatedCategories($find)
     {
@@ -157,7 +191,7 @@ class CustomColumn extends Category
     /**
      * Return this object as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray()
     {

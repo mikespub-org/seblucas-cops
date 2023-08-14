@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Model\Entry;
+
 class CustomColumnTypeBool extends CustomColumnType
 {
     public const SQL_BOOKLIST_TRUE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
@@ -16,17 +18,28 @@ class CustomColumnTypeBool extends CustomColumnType
     where {2}.book = books.id and {2}.value = 0 {1} order by books.sort';
 
     // PHP pre 5.6 does not support const arrays
+    /** @var array<int, string> */
     private $BOOLEAN_NAMES = [
         -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
         0 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
         +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
     ];
 
+    /**
+     * Summary of __construct
+     * @param mixed $pcustomId
+     * @param mixed $database
+     */
     protected function __construct($pcustomId, $database)
     {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL, $database);
     }
 
+    /**
+     * Summary of getQuery
+     * @param mixed $id
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQuery($id)
     {
         if ($id == -1 || $id === '') {
@@ -43,6 +56,12 @@ class CustomColumnTypeBool extends CustomColumnType
         }
     }
 
+    /**
+     * Summary of getFilter
+     * @param mixed $id
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableName();
@@ -63,11 +82,22 @@ class CustomColumnTypeBool extends CustomColumnType
         }
     }
 
+    /**
+     * Summary of getCustom
+     * @param mixed $id
+     * @return CustomColumn
+     */
     public function getCustom($id)
     {
         return new CustomColumn($id, localize($this->BOOLEAN_NAMES[$id]), $this);
     }
 
+    /**
+     * Summary of getAllCustomValuesFromDatabase
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
+     */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
@@ -83,16 +113,30 @@ class CustomColumnTypeBool extends CustomColumnType
         return $entryArray;
     }
 
+    /**
+     * Summary of getDistinctValueCount
+     * @return int
+     */
     public function getDistinctValueCount()
     {
         return count($this->BOOLEAN_NAMES);
     }
 
+    /**
+     * Summary of getContent
+     * @param mixed $count
+     * @return string
+     */
     public function getContent($count = 0)
     {
         return localize("customcolumn.description.bool");
     }
 
+    /**
+     * Summary of getCustomByBook
+     * @param Book $book
+     * @return CustomColumn
+     */
     public function getCustomByBook($book)
     {
         $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = ?";
@@ -106,6 +150,10 @@ class CustomColumnTypeBool extends CustomColumnType
         }
     }
 
+    /**
+     * Summary of isSearchable
+     * @return bool
+     */
     public function isSearchable()
     {
         return true;
