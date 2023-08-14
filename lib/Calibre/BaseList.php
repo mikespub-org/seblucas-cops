@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -334,6 +335,14 @@ class BaseList
         return $entryArray;
     }
 
+    public function hasChildCategories()
+    {
+        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->className::CATEGORY, Config::get('calibre_categories_using_hierarchy'))) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Use the Calibre tag browser view to retrieve all tags or series with count
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
@@ -342,6 +351,9 @@ class BaseList
      */
     public function browseAllEntries($n = -1)
     {
+        if (!$this->hasChildCategories()) {
+            return [];
+        }
         $tableName = 'tag_browser_' . $this->className::CATEGORY;
         $queryFormat = "SELECT id, name, count FROM {0} ORDER BY {1}";
         if (!in_array($this->orderBy, ['id', 'name', 'count', 'sort'])) {

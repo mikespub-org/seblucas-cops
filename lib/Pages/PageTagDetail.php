@@ -17,6 +17,7 @@ class PageTagDetail extends Page
 
     public function InitializeContent()
     {
+        /** @var Tag $instance */
         $instance = Tag::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&t=' . $this->idGet;
@@ -31,14 +32,32 @@ class PageTagDetail extends Page
         $this->currentUri = $instance->getUri();
         $this->parentTitle = $instance->getParentTitle();
         $this->parentUri = $instance->getParentUri();
+        if ($instance->hasChildCategories()) {
+            $this->hierarchy = [
+                "parent" => $instance->getParentEntry(),
+                "current" => $instance->getEntry(),
+                "children" => $instance->getChildEntries($this->request->get('tree')),
+            ];
+        }
     }
 
+    /**
+     * Summary of getHierarchy
+     * @param Tag $instance
+     * @return void
+     */
     public function getHierarchy($instance)
     {
-        $this->entryArray = $instance->getChildCategories();
-        $this->hierarchy = true;
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstanceOrChildren($instance, $this->n);
+        $this->sorted = $booklist->orderBy ?? "sort";
     }
 
+    /**
+     * Summary of getEntries
+     * @param Tag|null $instance
+     * @return void
+     */
     public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);

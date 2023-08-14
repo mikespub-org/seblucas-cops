@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Pages\Page;
 
-class Tag extends Base
+class Tag extends Category
 {
     public const PAGE_ID = Page::ALL_TAGS_ID;
     public const PAGE_ALL = Page::ALL_TAGS;

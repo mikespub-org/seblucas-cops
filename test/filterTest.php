@@ -202,10 +202,10 @@ class FilterTest extends TestCase
         $tag = Tag::getInstanceById(1);
         $this->assertEquals("1", $tag->id);
 
-        $children = $tag->getChildCategories();
+        $children = $tag->getChildEntries();
         $this->assertCount(0, $children);
 
-        //$siblings = $tag->getSiblingCategories();
+        //$siblings = $tag->getSiblingEntries();
         //$this->assertCount(0, $siblings);
 
         Config::set('calibre_categories_using_hierarchy', []);
@@ -257,7 +257,11 @@ class FilterTest extends TestCase
         $this->assertEquals("Type2", $custom->customColumnType->getTitle());
         $this->assertEquals("tree", $custom->getTitle());
 
-        $children = $custom->getChildCategories();
+        $children = $custom->getChildEntries();
+        $this->assertCount(2, $children);
+        $this->assertEquals("cops:custom:2:5", $children[0]->id);
+
+        $children = $custom->getChildEntries(true);
         $this->assertCount(4, $children);
         $this->assertEquals("cops:custom:2:5", $children[0]->id);
 
@@ -265,7 +269,7 @@ class FilterTest extends TestCase
         $this->assertEquals("Type2", $custom->customColumnType->getTitle());
         $this->assertEquals("tree.more.tag3", $custom->getTitle());
 
-        $parent = $custom->getParentCategory();
+        $parent = $custom->getParentEntry();
         $this->assertEquals("cops:custom:2:5", $parent->id);
         $this->assertEquals("tree.more", $parent->title);
 

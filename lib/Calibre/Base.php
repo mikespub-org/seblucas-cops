@@ -8,7 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 
@@ -28,7 +27,6 @@ abstract class Base
     public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from bases, books_bases_link where base = bases.id and upper (bases.sort) like ? {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_BOOKLIST = 'select {0} from books_bases_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_bases_link.book = books.id and base = ? {1} order by books.sort';
-    public const CATEGORY = "bases";
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     public $id;
@@ -187,91 +185,6 @@ abstract class Base
     {
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
         return [];
-    }
-
-    /**
-     * Get child categories for hierarchical tags or custom columns
-     * @return array
-     */
-    public function getChildCategories()
-    {
-        // Fiction -> Fiction.% matching Fiction.Historical and Fiction.Romance
-        $find = $this->getTitle() . '.%';
-        return $this->getRelatedCategories($find);
-    }
-
-    /**
-     * Get sibling categories for hierarchical tags or custom columns
-     * @return array
-     */
-    public function getSiblingCategories()
-    {
-        // Fiction.Historical -> Fiction.% matching Fiction.Historical and Fiction.Romance
-        $parent = self::findParentName($this->getTitle());
-        if (empty($parent)) {
-            return [];
-        }
-        $find = $parent . '.%';
-        return $this->getRelatedCategories($find);
-    }
-
-    protected static function findParentName($name)
-    {
-        $parts = explode('.', $name);
-        $child = array_pop($parts);
-        if (empty($parts)) {
-            return '';
-        }
-        $parent = implode('.', $parts);
-        return $parent;
-    }
-
-    /**
-     * Get parent category for hierarchical tags or custom columns
-     * @return Entry|null
-     */
-    public function getParentCategory()
-    {
-        // Fiction.Historical -> Fiction
-        $parent = self::findParentName($this->getTitle());
-        if (empty($parent)) {
-            return null;
-        }
-        $find = $parent;
-        $parents = $this->getRelatedCategories($find);
-        if (count($parents) == 1) {
-            return $parents[0];
-        }
-        return null;
-    }
-
-    /**
-     * Find related categories for hierarchical tags or series - @todo needs title_sort function in sqlite for series
-     * Format: tag_browser_tags(id,name,count,avg_rating,sort)
-     * @param mixed $find
-     * @return Entry[]
-     */
-    public function getRelatedCategories($find)
-    {
-        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array(static::CATEGORY, Config::get('calibre_categories_using_hierarchy'))) {
-            return [];
-        }
-        $className = get_class($this);
-        $tableName = 'tag_browser_' . static::CATEGORY;
-        if (strpos($find, '%') === false) {
-            $queryFormat = "SELECT id, name, count FROM {0} WHERE name = ? ORDER BY sort";
-        } else {
-            $queryFormat = "SELECT id, name, count FROM {0} WHERE name LIKE ? ORDER BY sort";
-        }
-        $query = str_format($queryFormat, $tableName);
-        $result = Database::query($query, [$find], $this->databaseId);
-
-        $entryArray = [];
-        while ($post = $result->fetchObject()) {
-            $instance = new $className($post, $this->databaseId);
-            array_push($tags, $instance->getEntry($post->count));
-        }
-        return $entryArray;
     }
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */

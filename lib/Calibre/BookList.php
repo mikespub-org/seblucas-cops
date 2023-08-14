@@ -143,6 +143,23 @@ class BookList
         return $this->getEntryArray($query, $params, $n);
     }
 
+    public function getBooksByInstanceOrChildren($instance, $n)
+    {
+        [$query, $params] = $instance->getQuery();
+        $children = $instance->getChildCategories();
+        if (!empty($children)) {
+            $childIds = [];
+            foreach ($children as $child) {
+                array_push($childIds, $child->id);
+            }
+            $params = array_merge($params, $childIds);
+            $query = str_replace(' = ? ', ' IN (' . str_repeat('?,', count($params) - 1) . '?)', $query);
+            // use distinct here in case books belong to several child categories
+            $query = str_ireplace('select ', 'select distinct ', $query);
+        }
+        return $this->getEntryArray($query, $params, $n);
+    }
+
     public function getBooksWithoutInstance($instance, $n)
     {
         // in_array("series", Config::get('show_not_set_filter'))

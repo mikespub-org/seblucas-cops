@@ -13,7 +13,7 @@ use SebLucas\Cops\Pages\Page;
 /**
  * A CustomColumn with an value
  */
-class CustomColumn extends Base
+class CustomColumn extends Category
 {
     public const PAGE_ID = Page::ALL_CUSTOMS_ID;
     public const PAGE_ALL = Page::ALL_CUSTOMS;
@@ -121,6 +121,11 @@ class CustomColumn extends Base
     public function getHTMLEncodedValue()
     {
         return $this->htmlvalue;
+    }
+
+    public function hasChildCategories()
+    {
+        return $this->customColumnType->hasChildCategories();
     }
 
     /**

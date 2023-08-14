@@ -138,7 +138,10 @@ class JSONRenderer
 
     public static function getContentArray($entry, $endpoint, $extraUri = "")
     {
-        /** @var Entry|EntryBook $entry */
+        if (is_null($entry)) {
+            return false;
+        }
+        /** @var Entry|EntryBook|null $entry */
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
             $out ["book"] = self::getBookContentArray($entry->book, $endpoint);
@@ -364,8 +367,20 @@ class JSONRenderer
         } elseif ($page != Page::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];
         }
-        $out ["hierarchy"] = $currentPage->hierarchy;
+        $out ["hierarchy"] = false;
+        if ($currentPage->hierarchy) {
+            $out ["hierarchy"] = [
+                "parent" => self::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraUri),
+                "current" => self::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraUri),
+                "children" => [],
+                "hastree" => $request->get('tree', false),
+            ];
+            foreach ($currentPage->hierarchy['children'] as $entry) {
+                array_push($out ["hierarchy"]["children"], self::getContentArray($entry, $endpoint, $extraUri));
+            }
+        }
 
+        /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {
             $out ["dbstats"] = Database::getDbStatistics();
         }

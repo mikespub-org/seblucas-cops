@@ -171,6 +171,7 @@ class Database
      */
     public static function getDb($database = null)
     {
+        /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
             self::$count += 1;
         }
@@ -228,6 +229,7 @@ class Database
      */
     public static function querySingle($query, $database = null)
     {
+        /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
             array_push(self::$queries, $query);
         }
@@ -244,6 +246,7 @@ class Database
      */
     public static function query($query, $params = [], $database = null)
     {
+        /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
             array_push(self::$queries, $query);
         }
@@ -269,6 +272,7 @@ class Database
      */
     public static function queryTotal($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
+        /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
             array_push(self::$queries, $query);
         }
@@ -309,6 +313,7 @@ class Database
      */
     public static function queryFilter($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
+        /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
             array_push(self::$queries, $query);
         }
@@ -343,6 +348,7 @@ class Database
      */
     public static function countFilter($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
     {
+        /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
             array_push(self::$queries, $query);
         }

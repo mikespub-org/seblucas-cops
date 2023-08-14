@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Pages\Page;
 
-class Serie extends Base
+class Serie extends Category
 {
     public const PAGE_ID = Page::ALL_SERIES_ID;
     public const PAGE_ALL = Page::ALL_SERIES;

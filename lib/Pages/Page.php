@@ -85,6 +85,7 @@ class Page
     public $totalNumber = -1;
     public $sorted = "sort";
     public $filterUri = "";
+    /** @var array|false */
     public $hierarchy = false;
 
     /** @var Entry[] */
@@ -396,6 +397,7 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getSeries());
         }
+        /** @phpstan-ignore-next-line */
         if (true) {
             array_push($this->entryArray, new Entry(
                 localize("tags.title"),

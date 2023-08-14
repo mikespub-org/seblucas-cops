@@ -239,6 +239,9 @@ abstract class CustomColumnType
      */
     public function browseAllCustomValues($n = -1, $sort = null)
     {
+        if (!$this->hasChildCategories()) {
+            return [];
+        }
         $tableName = 'tag_browser_' . $this->getTableName();
         $queryFormat = "SELECT id, value, count FROM {0} ORDER BY {1}";
         if (!in_array($sort, ['id', 'value', 'count', 'sort'])) {
@@ -258,32 +261,47 @@ abstract class CustomColumnType
         return $entryArray;
     }
 
+    public function hasChildCategories()
+    {
+        // @todo this only works with column titles/names, not the lookup names used elsewhere
+        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->columnTitle, Config::get('calibre_categories_using_hierarchy'))) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Find related categories for hierarchical custom columns
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
-     * @param mixed $find
-     * @return Entry[]
+     * @param mixed $find pattern match or exact match for name, or array of child ids
+     * @return CustomColumn[]
      */
     public function getRelatedCategories($find)
     {
-        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->columnTitle, Config::get('calibre_categories_using_hierarchy'))) {
+        if (!$this->hasChildCategories()) {
             return [];
         }
         $tableName = 'tag_browser_' . $this->getTableName();
-        if (strpos($find, '%') === false) {
+        if (is_array($find)) {
+            $queryFormat = "SELECT id, value, count FROM {0} WHERE id IN (" . str_repeat("?,", count($find) - 1) . "?) ORDER BY sort";
+            $params = $find;
+        } elseif (strpos($find, '%') === false) {
             $queryFormat = "SELECT id, value, count FROM {0} WHERE value = ? ORDER BY sort";
+            $params = [$find];
         } else {
             $queryFormat = "SELECT id, value, count FROM {0} WHERE value LIKE ? ORDER BY sort";
+            $params = [$find];
         }
         $query = str_format($queryFormat, $tableName);
-        $result = Database::query($query, [$find], $this->databaseId);
+        $result = Database::query($query, $params, $this->databaseId);
 
-        $entryArray = [];
+        $instances = [];
         while ($post = $result->fetchObject()) {
             $customcolumn = new CustomColumn($post->id, $post->value, $this);
-            array_push($entryArray, $customcolumn->getEntry($post->count));
+            $customcolumn->count = $post->count;
+            array_push($instances, $customcolumn);
         }
-        return $entryArray;
+        return $instances;
     }
 
     /**

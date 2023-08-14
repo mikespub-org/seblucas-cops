@@ -44,12 +44,11 @@ class PageAllCustoms extends Page
             $this->getCustomEntriesByYear($columnType);
         } elseif (Config::get('custom_integer_split_range') > 0 && $columnType instanceof CustomColumnTypeInteger) {
             $this->getCustomEntriesByRange($columnType);
-        } elseif (!empty(Config::get('calibre_categories_using_hierarchy')) && in_array($columnType->columnTitle, Config::get('calibre_categories_using_hierarchy'))) {
+        } elseif ($columnType->hasChildCategories()) {
             $this->sorted = $this->request->getSorted("sort");
             // use tag_browser_custom_column_X view here, to get the full hierarchy?
             $this->entryArray = $columnType->browseAllCustomValues($this->n, $this->sorted);
             $this->totalNumber = $columnType->getDistinctValueCount();
-            $this->hierarchy = true;
         } else {
             $this->sorted = $this->request->getSorted("value");
             $this->entryArray = $columnType->getAllCustomValues($this->n, $this->sorted);
