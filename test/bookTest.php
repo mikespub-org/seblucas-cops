@@ -37,7 +37,7 @@ define("COVER_HEIGHT", 600);
 
 class BookTest extends TestCase
 {
-    private static $request;
+    private static Request $request;
 
     public static function setUpBeforeClass(): void
     {
@@ -66,13 +66,13 @@ class BookTest extends TestCase
         rmdir(dirname($book->path));
     }
 
-    public function testGetBookCount()
+    public function testGetBookCount(): void
     {
         $booklist = new BookList(self::$request);
         $this->assertEquals(15, $booklist->getBookCount());
     }
 
-    public function testGetCount()
+    public function testGetCount(): void
     {
         $booklist = new BookList(self::$request);
 
@@ -86,7 +86,7 @@ class BookTest extends TestCase
         $this->assertEquals("50 most recent books", $entryRecentBooks->content);
     }
 
-    public function testGetCountRecent()
+    public function testGetCountRecent(): void
     {
         Config::set('recentbooks_limit', 0);
         $request = new Request();
@@ -106,7 +106,7 @@ class BookTest extends TestCase
         Config::set('recentbooks_limit', 50);
     }
 
-    public function testGetBooksByAuthor()
+    public function testGetBooksByAuthor(): void
     {
         // All book by Arthur Conan Doyle
         Config::set('max_item_per_page', 5);
@@ -131,7 +131,7 @@ class BookTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
-    public function testGetBooksBySeries()
+    public function testGetBooksBySeries(): void
     {
         $booklist = new BookList(self::$request);
         $series = Serie::getInstanceById(1);
@@ -142,7 +142,7 @@ class BookTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
-    public function testGetBooksByPublisher()
+    public function testGetBooksByPublisher(): void
     {
         $booklist = new BookList(self::$request);
         $publisher = Publisher::getInstanceById(6);
@@ -153,7 +153,7 @@ class BookTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
-    public function testGetBooksByTag()
+    public function testGetBooksByTag(): void
     {
         $booklist = new BookList(self::$request);
         $tag = Tag::getInstanceById(1);
@@ -164,7 +164,7 @@ class BookTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
-    public function testGetBooksByLanguage()
+    public function testGetBooksByLanguage(): void
     {
         $booklist = new BookList(self::$request);
         $language = Language::getInstanceById(1);
@@ -175,7 +175,7 @@ class BookTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
-    public function testGetBooksByRating()
+    public function testGetBooksByRating(): void
     {
         $booklist = new BookList(self::$request);
         $rating = Rating::getInstanceById(1);
@@ -186,7 +186,7 @@ class BookTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
-    public function testGetCountByFirstLetter()
+    public function testGetCountByFirstLetter(): void
     {
         $booklist = new BookList(self::$request);
 
@@ -195,7 +195,7 @@ class BookTest extends TestCase
         $this->assertCount(9, $entryArray);
     }
 
-    public function testGetBooksByFirstLetter()
+    public function testGetBooksByFirstLetter(): void
     {
         $booklist = new BookList(self::$request);
 
@@ -205,7 +205,7 @@ class BookTest extends TestCase
         $this->assertCount(3, $entryArray);
     }
 
-    public function testGetCountByPubYear()
+    public function testGetCountByPubYear(): void
     {
         $booklist = new BookList(self::$request);
 
@@ -214,7 +214,7 @@ class BookTest extends TestCase
         $this->assertCount(5, $entryArray);
     }
 
-    public function testGetBooksByPubYear()
+    public function testGetBooksByPubYear(): void
     {
         $booklist = new BookList(self::$request);
 
@@ -224,14 +224,14 @@ class BookTest extends TestCase
         $this->assertCount(9, $entryArray);
     }
 
-    public function testGetBookByDataId()
+    public function testGetBookByDataId(): void
     {
         $book = Book::getBookByDataId(17);
 
         $this->assertEquals("Alice's Adventures in Wonderland", $book->getTitle());
     }
 
-    public function testGetAllRecentBooks()
+    public function testGetAllRecentBooks(): void
     {
         // All recent books
         Config::set('recentbooks_limit', 2);
@@ -251,6 +251,9 @@ class BookTest extends TestCase
 
     /**
      * @dataProvider providerPublicationDate
+     * @param mixed $pubdate
+     * @param mixed $expectedYear
+     * @return void
      */
     public function testGetPubDate($pubdate, $expectedYear)
     {
@@ -259,6 +262,10 @@ class BookTest extends TestCase
         $this->assertEquals($expectedYear, $book->getPubDate());
     }
 
+    /**
+     * Summary of providerPublicationDate
+     * @return array<mixed>
+     */
     public function providerPublicationDate()
     {
         return [
@@ -271,7 +278,7 @@ class BookTest extends TestCase
             ];
     }
 
-    public function testGetBookById()
+    public function testGetBookById(): void
     {
         // also check most of book's class methods
         $book = Book::getBookById(2);
@@ -289,21 +296,21 @@ class BookTest extends TestCase
         $this->assertEquals("Strand Magazine", $book->getPublisher()->name);
     }
 
-    public function testGetBookById_NotFound()
+    public function testGetBookById_NotFound(): void
     {
         $book = Book::getBookById(666);
 
         $this->assertNull($book);
     }
 
-    public function testGetRating_FiveStars()
+    public function testGetRating_FiveStars(): void
     {
         $book = Book::getBookById(2);
 
         $this->assertEquals("&#9733;&#9733;&#9733;&#9733;&#9733;", $book->getRating());
     }
 
-    public function testGetRating_FourStars()
+    public function testGetRating_FourStars(): void
     {
         $book = Book::getBookById(2);
         $book->rating = 8;
@@ -312,7 +319,7 @@ class BookTest extends TestCase
         $this->assertEquals("&#9733;&#9733;&#9733;&#9733;&#9734;", $book->getRating());
     }
 
-    public function testGetRating_NoStars_Zero()
+    public function testGetRating_NoStars_Zero(): void
     {
         $book = Book::getBookById(2);
         $book->rating = 0;
@@ -320,7 +327,7 @@ class BookTest extends TestCase
         $this->assertEquals("", $book->getRating());
     }
 
-    public function testGetRating_NoStars_Null()
+    public function testGetRating_NoStars_Null(): void
     {
         $book = Book::getBookById(2);
         $book->rating = null;
@@ -328,7 +335,7 @@ class BookTest extends TestCase
         $this->assertEquals("", $book->getRating());
     }
 
-    public function testGetIdentifiers_Uri()
+    public function testGetIdentifiers_Uri(): void
     {
         $book = Book::getBookById(2);
 
@@ -339,7 +346,7 @@ class BookTest extends TestCase
         $this->assertEquals("", $identifiers[0]->getUri());
     }
 
-    public function testGetIdentifiers_Isbn()
+    public function testGetIdentifiers_Isbn(): void
     {
         $book = Book::getBookById(18);
 
@@ -350,7 +357,7 @@ class BookTest extends TestCase
         $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[0]->getUri());
     }
 
-    public function testBookGetLinkArrayWithUrlRewriting()
+    public function testBookGetLinkArrayWithUrlRewriting(): void
     {
         Config::set('use_url_rewriting', "1");
         $book = Book::getBookById(2);
@@ -365,7 +372,7 @@ class BookTest extends TestCase
         $this->fail();
     }
 
-    public function testBookGetLinkArrayWithoutUrlRewriting()
+    public function testBookGetLinkArrayWithoutUrlRewriting(): void
     {
         Config::set('use_url_rewriting', "0");
         $book = Book::getBookById(2);
@@ -380,7 +387,7 @@ class BookTest extends TestCase
         $this->fail();
     }
 
-    public function testGetThumbnailNotNeeded()
+    public function testGetThumbnailNotNeeded(): void
     {
         $book = Book::getBookById(2);
 
@@ -395,6 +402,11 @@ class BookTest extends TestCase
 
     /**
      * @dataProvider providerThumbnail
+     * @param mixed $width
+     * @param mixed $height
+     * @param mixed $expectedWidth
+     * @param mixed $expectedHeight
+     * @return void
      */
     public function testGetThumbnailByWidth($width, $height, $expectedWidth, $expectedHeight)
     {
@@ -409,6 +421,10 @@ class BookTest extends TestCase
         unlink(TEST_THUMBNAIL);
     }
 
+    /**
+     * Summary of providerThumbnail
+     * @return array<mixed>
+     */
     public function providerThumbnail()
     {
         return [
@@ -417,7 +433,7 @@ class BookTest extends TestCase
         ];
     }
 
-    public function testGetMostInterestingDataToSendToKindle_WithEPUB()
+    public function testGetMostInterestingDataToSendToKindle_WithEPUB(): void
     {
         // Get Alice (available as MOBI, PDF, EPUB in that order)
         $book = Book::getBookById(17);
@@ -425,7 +441,7 @@ class BookTest extends TestCase
         $this->assertEquals("EPUB", $data->format);
     }
 
-    public function testGetMostInterestingDataToSendToKindle_WithMOBI()
+    public function testGetMostInterestingDataToSendToKindle_WithMOBI(): void
     {
         // Get Alice (available as MOBI, PDF, EPUB in that order)
         $book = Book::getBookById(17);
@@ -435,7 +451,7 @@ class BookTest extends TestCase
         $this->assertEquals("MOBI", $data->format);
     }
 
-    public function testGetMostInterestingDataToSendToKindle_WithPDF()
+    public function testGetMostInterestingDataToSendToKindle_WithPDF(): void
     {
         // Get Alice (available as MOBI, PDF, EPUB in that order)
         $book = Book::getBookById(17);
@@ -446,7 +462,7 @@ class BookTest extends TestCase
         $this->assertEquals("PDF", $data->format);
     }
 
-    public function testGetAllCustomColumnValues()
+    public function testGetAllCustomColumnValues(): void
     {
         $book = Book::getBookById(17);
         $data = $book->getCustomColumnValues(["*"], true);
@@ -454,7 +470,7 @@ class BookTest extends TestCase
         $this->assertCount(3, $data);
     }
 
-    public function testGetDataById()
+    public function testGetDataById(): void
     {
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $book = Book::getBookById(17);
@@ -486,7 +502,7 @@ class BookTest extends TestCase
         $this->assertEquals(Config::ENDPOINT["fetch"] . "?data=20&type=epub&id=17", $epub->getHtmlLink());
     }
 
-    public function testGetUpdatedEpub()
+    public function testGetUpdatedEpub(): void
     {
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $book = Book::getBookById(17);
@@ -498,28 +514,28 @@ class BookTest extends TestCase
         $this->assertStringStartsWith("Exception : Cannot modify header information", $output);
     }
 
-    public function testGetFilePath_Cover()
+    public function testGetFilePath_Cover(): void
     {
         $book = Book::getBookById(17);
 
         $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, false));
     }
 
-    public function testGetFilePath_Epub()
+    public function testGetFilePath_Epub(): void
     {
         $book = Book::getBookById(17);
 
         $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, false));
     }
 
-    public function testGetFilePath_Mobi()
+    public function testGetFilePath_Mobi(): void
     {
         $book = Book::getBookById(17);
 
         $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, false));
     }
 
-    public function testGetDataFormat_EPUB()
+    public function testGetDataFormat_EPUB(): void
     {
         $book = Book::getBookById(17);
 
@@ -528,7 +544,7 @@ class BookTest extends TestCase
         $this->assertEquals(20, $data->id);
     }
 
-    public function testGetDataFormat_MOBI()
+    public function testGetDataFormat_MOBI(): void
     {
         $book = Book::getBookById(17);
 
@@ -537,7 +553,7 @@ class BookTest extends TestCase
         $this->assertEquals(17, $data->id);
     }
 
-    public function testGetDataFormat_PDF()
+    public function testGetDataFormat_PDF(): void
     {
         $book = Book::getBookById(17);
 
@@ -546,7 +562,7 @@ class BookTest extends TestCase
         $this->assertEquals(19, $data->id);
     }
 
-    public function testGetDataFormat_NonAvailable()
+    public function testGetDataFormat_NonAvailable(): void
     {
         $book = Book::getBookById(17);
 
@@ -554,7 +570,7 @@ class BookTest extends TestCase
         $this->assertFalse($book->getDataFormat("FB2"));
     }
 
-    public function testGetMimeType_EPUB()
+    public function testGetMimeType_EPUB(): void
     {
         $book = Book::getBookById(17);
 
@@ -563,7 +579,7 @@ class BookTest extends TestCase
         $this->assertEquals("application/epub+zip", $data->getMimeType());
     }
 
-    public function testGetMimeType_MOBI()
+    public function testGetMimeType_MOBI(): void
     {
         $book = Book::getBookById(17);
 
@@ -572,7 +588,7 @@ class BookTest extends TestCase
         $this->assertEquals("application/x-mobipocket-ebook", $data->getMimeType());
     }
 
-    public function testGetMimeType_PDF()
+    public function testGetMimeType_PDF(): void
     {
         $book = Book::getBookById(17);
 
@@ -581,7 +597,7 @@ class BookTest extends TestCase
         $this->assertEquals("application/pdf", $data->getMimeType());
     }
 
-    public function testGetMimeType_Finfo()
+    public function testGetMimeType_Finfo(): void
     {
         $book = Book::getBookById(17);
 
@@ -602,7 +618,7 @@ class BookTest extends TestCase
         }
     }
 
-    public function testTypeaheadSearch_Tag()
+    public function testTypeaheadSearch_Tag(): void
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
@@ -618,7 +634,7 @@ class BookTest extends TestCase
         $this->assertEquals("Science Fiction", $currentPage->entryArray[2]->title);
     }
 
-    public function testTypeaheadSearch_BookAndAuthor()
+    public function testTypeaheadSearch_BookAndAuthor(): void
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
@@ -636,7 +652,7 @@ class BookTest extends TestCase
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray[3]->title);
     }
 
-    public function testTypeaheadSearch_AuthorAndSeries()
+    public function testTypeaheadSearch_AuthorAndSeries(): void
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
@@ -654,7 +670,7 @@ class BookTest extends TestCase
         $this->assertEquals("D'Artagnan Romances", $currentPage->entryArray[3]->title);
     }
 
-    public function testTypeaheadSearch_Publisher()
+    public function testTypeaheadSearch_Publisher(): void
     {
         $request = new Request();
         $page = Page::OPENSEARCH_QUERY;
@@ -670,7 +686,7 @@ class BookTest extends TestCase
         $this->assertEquals("Macmillan Publishers USA", $currentPage->entryArray[2]->title);
     }
 
-    public function testTypeaheadSearchWithIgnored_SingleCategory()
+    public function testTypeaheadSearchWithIgnored_SingleCategory(): void
     {
         Config::set('ignored_categories', ["author"]);
         $request = new Request();
@@ -688,7 +704,7 @@ class BookTest extends TestCase
         Config::set('ignored_categories', []);
     }
 
-    public function testTypeaheadSearchWithIgnored_MultipleCategory()
+    public function testTypeaheadSearchWithIgnored_MultipleCategory(): void
     {
         Config::set('ignored_categories', ["series"]);
         $request = new Request();
@@ -706,7 +722,7 @@ class BookTest extends TestCase
         Config::set('ignored_categories', []);
     }
 
-    public function testTypeaheadSearchMultiDatabase()
+    public function testTypeaheadSearchMultiDatabase(): void
     {
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
             "One book" => __DIR__ . "/BaseWithOneBook/"]);

@@ -13,26 +13,26 @@ use SebLucas\Cops\Output\Mail;
 
 class MailTest extends TestCase
 {
-    public function testCheckConfigurationOk()
+    public function testCheckConfigurationOk(): void
     {
         $this->assertFalse(Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationNull()
+    public function testCheckConfigurationNull(): void
     {
         Config::set('mail_configuration', null);
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationNotArray()
+    public function testCheckConfigurationNotArray(): void
     {
         Config::set('mail_configuration', "Test");
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationSmtpEmpty()
+    public function testCheckConfigurationSmtpEmpty(): void
     {
         // reload test config
         require __DIR__ . '/config_test.php';
@@ -43,7 +43,7 @@ class MailTest extends TestCase
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationEmailEmpty()
+    public function testCheckConfigurationEmailEmpty(): void
     {
         // reload test config
         require __DIR__ . '/config_test.php';
@@ -54,7 +54,7 @@ class MailTest extends TestCase
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationEmailNotEmpty()
+    public function testCheckConfigurationEmailNotEmpty(): void
     {
         $email = "a";
         $mailConfig = Config::get('mail_configuration');
@@ -68,44 +68,44 @@ class MailTest extends TestCase
         require __DIR__ . '/config_test.php';
     }
 
-    public function testCheckConfigurationEmailNotValid()
+    public function testCheckConfigurationEmailNotValid(): void
     {
         $email = "a";
         $this->assertDoesNotMatchRegularExpression('/^.+\@\S+\.\S+$/', $email);
     }
 
-    public function testCheckConfigurationEmailValid()
+    public function testCheckConfigurationEmailValid(): void
     {
         $email = "a@a.com";
         $this->assertMatchesRegularExpression('/^.+\@\S+\.\S+$/', $email);
     }
 
-    public function testCheckRequest()
+    public function testCheckRequest(): void
     {
         $this->assertFalse(Mail::checkRequest(12, "a@a.com"));
     }
 
-    public function testCheckRequestNoData()
+    public function testCheckRequestNoData(): void
     {
         $this->assertStringStartsWith("No", Mail::checkRequest(null, "a@a.com"));
     }
 
-    public function testCheckRequestNoEmail()
+    public function testCheckRequestNoEmail(): void
     {
-        $this->assertStringStartsWith("No", Mail::checkRequest(12, null));
+        $this->assertStringStartsWith("No", Mail::checkRequest(12, ""));
     }
 
-    public function testCheckRequestEmailNotValid()
+    public function testCheckRequestEmailNotValid(): void
     {
         $this->assertStringStartsWith("No", Mail::checkRequest(12, "a@b"));
     }
 
-    public function testSendMailNotFound()
+    public function testSendMailNotFound(): void
     {
         $this->assertStringStartsWith("No", Mail::sendMail(12, "a@a.com"));
     }
 
-    public function testSendMailTooBig()
+    public function testSendMailTooBig(): void
     {
         $old = Mail::$maxSize;
         Mail::$maxSize = 0;
@@ -113,7 +113,7 @@ class MailTest extends TestCase
         Mail::$maxSize = $old;
     }
 
-    public function testSendMailSomeday()
+    public function testSendMailSomeday(): void
     {
         // use dryRun to run preSend() but not actually Send()
         $error = Mail::sendMail(20, "a@a.com", true);

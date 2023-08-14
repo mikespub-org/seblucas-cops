@@ -29,14 +29,14 @@ use SebLucas\Cops\Pages\Page;
 
 class CustomColumnTest extends TestCase
 {
-    private static $endpoint = 'phpunit';
+    private static string $endpoint = 'phpunit';
 
     public static function setUpBeforeClass(): void
     {
         Config::set('show_not_set_filter', []);
     }
 
-    public function testColumnType01()
+    public function testColumnType01(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01"]);
@@ -60,7 +60,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType01b()
+    public function testColumnType01b(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01b"]);
@@ -84,7 +84,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType02()
+    public function testColumnType02(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_02"]);
@@ -108,7 +108,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType03()
+    public function testColumnType03(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_03"]);
@@ -131,7 +131,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(false, $coltype->isSearchable());
     }
 
-    public function testColumnType04()
+    public function testColumnType04(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_04"]);
@@ -156,7 +156,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType05()
+    public function testColumnType05(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_05"]);
@@ -181,7 +181,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType06()
+    public function testColumnType06(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_06"]);
@@ -205,7 +205,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType07()
+    public function testColumnType07(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_07"]);
@@ -229,7 +229,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType08()
+    public function testColumnType08(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_08"]);
@@ -253,7 +253,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType09()
+    public function testColumnType09(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_09"]);
@@ -277,7 +277,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType10()
+    public function testColumnType10(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_10"]);
@@ -301,7 +301,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(true, $coltype->isSearchable());
     }
 
-    public function testColumnType11()
+    public function testColumnType11(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_11"]);
@@ -314,7 +314,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(null, $coltype);
     }
 
-    public function testColumnType12()
+    public function testColumnType12(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_12"]);
@@ -327,7 +327,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(null, $coltype);
     }
 
-    public function testInvalidColumn1()
+    public function testInvalidColumn1(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_12"]);
@@ -343,7 +343,7 @@ class CustomColumnTest extends TestCase
         $this->assertTrue($catch);
     }
 
-    public function testInvalidColumn2()
+    public function testInvalidColumn2(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_12"]);
@@ -354,7 +354,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(null, $coltype);
     }
 
-    public function testIndexTypeAll()
+    public function testIndexTypeAll(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10"]);
@@ -376,7 +376,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("custom_10", $currentPage->entryArray[12]->title);
     }
 
-    public function testIndexType01()
+    public function testIndexType01(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01"]);
@@ -395,7 +395,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(8)->getCount());
     }
 
-    public function testIndexType02()
+    public function testIndexType02(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_02"]);
@@ -414,7 +414,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(6)->getCount());
     }
 
-    public function testIndexType03()
+    public function testIndexType03(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_03"]);
@@ -427,7 +427,7 @@ class CustomColumnTest extends TestCase
         $this->assertCount(6, $currentPage->entryArray); // Authors, Series, Publishers, Languages, All, Recent
     }
 
-    public function testIndexType04()
+    public function testIndexType04(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_04"]);
@@ -446,7 +446,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(4)->getCount());
     }
 
-    public function testIndexType05()
+    public function testIndexType05(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_05"]);
@@ -465,7 +465,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(5)->getCount());
     }
 
-    public function testIndexType06()
+    public function testIndexType06(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_06"]);
@@ -484,7 +484,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(12)->getCount());
     }
 
-    public function testIndexType07()
+    public function testIndexType07(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_07"]);
@@ -503,7 +503,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(14)->getCount());
     }
 
-    public function testIndexType08()
+    public function testIndexType08(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_08"]);
@@ -522,7 +522,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(10)->getCount());
     }
 
-    public function testIndexType09()
+    public function testIndexType09(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_09"]);
@@ -541,7 +541,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(9)->getCount());
     }
 
-    public function testIndexType10()
+    public function testIndexType10(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_10"]);
@@ -560,7 +560,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(11)->getCount());
     }
 
-    public function testAllCustomsType01()
+    public function testAllCustomsType01(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -580,7 +580,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:8:2", $currentPage->entryArray[2]->id);
     }
 
-    public function testAllCustomsType02()
+    public function testAllCustomsType02(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -600,7 +600,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:6:3", $currentPage->entryArray[2]->id);
     }
 
-    public function testAllCustomsType04()
+    public function testAllCustomsType04(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -620,7 +620,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:4:6", $currentPage->entryArray[2]->id);
     }
 
-    public function testAllCustomsType05()
+    public function testAllCustomsType05(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -641,7 +641,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:5:6", $currentPage->entryArray[3]->id);
     }
 
-    public function testAllCustomsType06()
+    public function testAllCustomsType06(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -679,7 +679,7 @@ class CustomColumnTest extends TestCase
         Config::set('custom_date_split_year', '0');
     }
 
-    public function testCustomDetailType06_Year()
+    public function testCustomDetailType06_Year(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -721,7 +721,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("The Quantum Thief", $currentPage->entryArray[0]->title);
     }
 
-    public function testAllCustomsType07()
+    public function testAllCustomsType07(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -744,7 +744,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:14:100000", $currentPage->entryArray[5]->id);
     }
 
-    public function testAllCustomsType08()
+    public function testAllCustomsType08(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -780,7 +780,7 @@ class CustomColumnTest extends TestCase
         Config::set('custom_integer_split_range', '0');
     }
 
-    public function testCustomDetailType08_Range()
+    public function testCustomDetailType08_Range(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -822,7 +822,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Earth Unaware", $currentPage->entryArray[0]->title);
     }
 
-    public function testAllCustomsType09()
+    public function testAllCustomsType09(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -845,7 +845,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:9:10", $currentPage->entryArray[5]->id);
     }
 
-    public function testAllCustomsType10()
+    public function testAllCustomsType10(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
@@ -865,7 +865,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:11:1", $currentPage->entryArray[2]->id);
     }
 
-    public function testAllCustomColumns()
+    public function testAllCustomColumns(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         $columns = CustomColumnType::getAllCustomColumns();
@@ -884,7 +884,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals($check, $columns["custom_01"]);
     }
 
-    public function testDetailTypeAllEntryIDs()
+    public function testDetailTypeAllEntryIDs(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
@@ -921,7 +921,7 @@ class CustomColumnTest extends TestCase
         Database::clearDb();
     }
 
-    public function testRenderCustomColumns()
+    public function testRenderCustomColumns(): void
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
@@ -971,7 +971,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_custom_column_preview', []);
     }
 
-    public function testQueries()
+    public function testQueries(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
@@ -1059,7 +1059,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Yes", $custom[0]['htmlvalue']);
     }
 
-    public function testGetQuery()
+    public function testGetQuery(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);

@@ -20,7 +20,7 @@ use SebLucas\Cops\Pages\Page;
 
 class RestApiTest extends TestCase
 {
-    public static $script;
+    public static string $script;
 
     public static function setUpBeforeClass(): void
     {
@@ -122,6 +122,10 @@ class RestApiTest extends TestCase
         $_SERVER["SCRIPT_NAME"] = $script;
     }
 
+    /**
+     * Summary of getLinks
+     * @return array<mixed>
+     */
     public function getLinks()
     {
         return [
@@ -159,7 +163,11 @@ class RestApiTest extends TestCase
         ];
     }
 
-    public function linkProvider(): array
+    /**
+     * Summary of linkProvider
+     * @return array<mixed>
+     */
+    public function linkProvider()
     {
         $data = [];
         $links = $this->getLinks();
@@ -171,8 +179,11 @@ class RestApiTest extends TestCase
 
     /**
      * @dataProvider linkProvider
+     * @param mixed $link
+     * @param mixed $expected
+     * @return void
      */
-    public function testRouteLink($link, $expected): void
+    public function testRouteLink($link, $expected)
     {
         $params = [];
         parse_str(parse_url($link, PHP_URL_QUERY), $params);
@@ -184,8 +195,11 @@ class RestApiTest extends TestCase
 
     /**
      * @dataProvider linkProvider
+     * @param mixed $expected
+     * @param mixed $path
+     * @return void
      */
-    public function testRouteMatch($expected, $path): void
+    public function testRouteMatch($expected, $path)
     {
         $query = parse_url($path, PHP_URL_QUERY);
         $path = parse_url($path, PHP_URL_PATH);
@@ -219,6 +233,10 @@ class RestApiTest extends TestCase
         $_SERVER["SCRIPT_NAME"] = $script;
     }
 
+    /**
+     * Summary of getRewrites
+     * @return array<mixed>
+     */
     public function getRewrites()
     {
         return [
@@ -231,7 +249,11 @@ class RestApiTest extends TestCase
         ];
     }
 
-    public function rewriteProvider(): array
+    /**
+     * Summary of rewriteProvider
+     * @return array<mixed>
+     */
+    public function rewriteProvider()
     {
         $data = [];
         $links = $this->getRewrites();
@@ -243,8 +265,11 @@ class RestApiTest extends TestCase
 
     /**
      * @dataProvider rewriteProvider
+     * @param mixed $link
+     * @param mixed $expected
+     * @return void
      */
-    public function testRewriteLink($link, $expected): void
+    public function testRewriteLink($link, $expected)
     {
         $params = [];
         parse_str(parse_url($link, PHP_URL_QUERY), $params);
@@ -255,8 +280,11 @@ class RestApiTest extends TestCase
 
     /**
      * @dataProvider rewriteProvider
+     * @param mixed $expected
+     * @param mixed $path
+     * @return void
      */
-    public function testRewriteMatch($expected, $path): void
+    public function testRewriteMatch($expected, $path)
     {
         $query = parse_url($path, PHP_URL_QUERY);
         $path = parse_url($path, PHP_URL_PATH);

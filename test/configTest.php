@@ -15,97 +15,97 @@ use SebLucas\Template\doT;
 
 class ConfigTest extends TestCase
 {
-    public function testCheckConfigurationCalibreDirectory()
+    public function testCheckConfigurationCalibreDirectory(): void
     {
         $this->assertTrue(is_string(Config::get('calibre_directory')));
     }
 
-    public function testCheckConfigurationOPDSTHumbnailHeight()
+    public function testCheckConfigurationOPDSTHumbnailHeight(): void
     {
         $this->assertTrue(is_int((int)Config::get('opds_thumbnail_height')));
     }
 
-    public function testCheckConfigurationHTMLTHumbnailHeight()
+    public function testCheckConfigurationHTMLTHumbnailHeight(): void
     {
         $this->assertTrue(is_int((int)Config::get('html_thumbnail_height')));
     }
 
-    public function testCheckConfigurationPreferedFormat()
+    public function testCheckConfigurationPreferedFormat(): void
     {
         $this->assertTrue(is_array(Config::get('prefered_format')));
     }
 
-    public function testCheckConfigurationUseUrlRewiting()
+    public function testCheckConfigurationUseUrlRewiting(): void
     {
         $this->assertTrue(is_int((int)Config::get('use_url_rewriting')));
     }
 
-    public function testCheckConfigurationGenerateInvalidOPDSStream()
+    public function testCheckConfigurationGenerateInvalidOPDSStream(): void
     {
         $this->assertTrue(is_int((int)Config::get('generate_invalid_opds_stream')));
     }
 
-    public function testCheckConfigurationMaxItemPerPage()
+    public function testCheckConfigurationMaxItemPerPage(): void
     {
         $this->assertTrue(is_int((int)Config::get('max_item_per_page')));
     }
 
-    public function testCheckConfigurationAuthorSplitFirstLetter()
+    public function testCheckConfigurationAuthorSplitFirstLetter(): void
     {
         $this->assertTrue(is_int((int)Config::get('author_split_first_letter')));
     }
 
-    public function testCheckConfigurationTitlesSplitFirstLetter()
+    public function testCheckConfigurationTitlesSplitFirstLetter(): void
     {
         $this->assertTrue(is_int((int)Config::get('titles_split_first_letter')));
     }
 
-    public function testCheckConfigurationCopsUseFancyapps()
+    public function testCheckConfigurationCopsUseFancyapps(): void
     {
         $this->assertTrue(is_int((int)Config::get('use_fancyapps')));
     }
 
-    public function testCheckConfigurationCopsBooksFilter()
+    public function testCheckConfigurationCopsBooksFilter(): void
     {
         $this->assertTrue(is_array(Config::get('books_filter')));
     }
 
-    public function testCheckConfigurationCalibreCustomColumn()
+    public function testCheckConfigurationCalibreCustomColumn(): void
     {
         $this->assertTrue(is_array(Config::get('calibre_custom_column')));
     }
 
-    public function testCheckConfigurationCalibreCustomColumnList()
+    public function testCheckConfigurationCalibreCustomColumnList(): void
     {
         $this->assertTrue(is_array(Config::get('calibre_custom_column_list')));
     }
 
-    public function testCheckConfigurationCalibreCustomColumnPreview()
+    public function testCheckConfigurationCalibreCustomColumnPreview(): void
     {
         $this->assertTrue(is_array(Config::get('calibre_custom_column_preview')));
     }
 
-    public function testCheckConfigurationProvideKepub()
+    public function testCheckConfigurationProvideKepub(): void
     {
         $this->assertTrue(is_int((int)Config::get('provide_kepub')));
     }
 
-    public function testCheckConfigurationMailConfig()
+    public function testCheckConfigurationMailConfig(): void
     {
         $this->assertTrue(is_array(Config::get('mail_configuration')));
     }
 
-    public function testCheckConfiguratioHTMLTagFilter()
+    public function testCheckConfiguratioHTMLTagFilter(): void
     {
         $this->assertTrue(is_int((int)Config::get('html_tag_filter')));
     }
 
-    public function testCheckConfigurationIgnoredCategories()
+    public function testCheckConfigurationIgnoredCategories(): void
     {
         $this->assertTrue(is_array(Config::get('ignored_categories')));
     }
 
-    public function testCheckConfigurationTemplate()
+    public function testCheckConfigurationTemplate(): void
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $templateName = 'bootstrap';

@@ -18,7 +18,7 @@ use SebLucas\Cops\Pages\Page;
 
 class JsonTest extends TestCase
 {
-    private static $endpoint = 'phpunit';
+    private static string $endpoint = 'phpunit';
 
     public static function setUpBeforeClass(): void
     {
@@ -29,7 +29,7 @@ class JsonTest extends TestCase
         Database::clearDb();
     }
 
-    public function testCompleteArray()
+    public function testCompleteArray(): void
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $test = [];
@@ -63,7 +63,7 @@ class JsonTest extends TestCase
         Config::set('thumbnail_handling', "");
     }
 
-    public function testGetBookContentArrayWithoutSeries()
+    public function testGetBookContentArrayWithoutSeries(): void
     {
         $book = Book::getBookById(17);
         $test = JSONRenderer::getBookContentArray($book, self::$endpoint);
@@ -78,7 +78,7 @@ class JsonTest extends TestCase
         $this->assertEquals("", $test ["seriesurl"]);
     }
 
-    public function testGetBookContentArrayWithSeries()
+    public function testGetBookContentArrayWithSeries(): void
     {
         $book = Book::getBookById(2);
 
@@ -94,7 +94,7 @@ class JsonTest extends TestCase
         $this->assertEquals("phpunit?page=7&id=1", $test ["seriesurl"]);
     }
 
-    public function testGetFullBookContentArray()
+    public function testGetFullBookContentArray(): void
     {
         $book = Book::getBookById(17);
 
@@ -128,7 +128,7 @@ class JsonTest extends TestCase
         Database::clearDb();
     }
 
-    public function testGetJson()
+    public function testGetJson(): void
     {
         $page = Page::ALL_RECENT_BOOKS;
 
@@ -141,7 +141,7 @@ class JsonTest extends TestCase
         $this->assertEquals("La curée", $test["entries"][0]["title"]);
     }
 
-    public function testGetJsonSearch()
+    public function testGetJsonSearch(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $query = "fic";
@@ -171,7 +171,7 @@ class JsonTest extends TestCase
         $this->assertEquals($check, $test);
     }
 
-    public function testGetJsonComplete()
+    public function testGetJsonComplete(): void
     {
         $page = Page::ALL_RECENT_BOOKS;
 
