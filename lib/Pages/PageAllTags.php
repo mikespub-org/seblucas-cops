@@ -14,8 +14,12 @@ use SebLucas\Cops\Input\Config;
 
 class PageAllTags extends Page
 {
-    protected $className = Tag::class;
+    protected string $className = Tag::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -23,6 +27,10 @@ class PageAllTags extends Page
         $this->title = localize("tags.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);

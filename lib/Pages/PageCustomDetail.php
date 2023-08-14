@@ -16,8 +16,12 @@ use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 
 class PageCustomDetail extends Page
 {
-    protected $className = CustomColumn::class;
+    protected string $className = CustomColumn::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $customId = $this->request->get("custom", null);

@@ -13,8 +13,12 @@ use SebLucas\Cops\Calibre\Serie;
 
 class PageSerieDetail extends Page
 {
-    protected $className = Serie::class;
+    protected string $className = Serie::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         /** @var Serie $instance */

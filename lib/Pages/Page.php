@@ -9,10 +9,12 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
@@ -68,24 +70,32 @@ class Page
     public const ALL_SERIES_ID = "cops:series";
     public const ALL_TAGS_ID = "cops:tags";
 
+    /** @var mixed */
     public $title;
-    public $subtitle = "";
-    public $authorName = "";
-    public $authorUri = "";
-    public $authorEmail = "";
-    public $parentTitle = "";
-    public $currentUri = "";
-    public $parentUri = "";
+    public string $subtitle = "";
+    public string $authorName = "";
+    public string $authorUri = "";
+    public string $authorEmail = "";
+    public string $parentTitle = "";
+    public string $currentUri = "";
+    public string $parentUri = "";
+    /** @var string|null */
     public $idPage;
+    /** @var mixed */
     public $idGet;
+    /** @var mixed */
     public $query;
-    public $favicon;
+    public string $favicon;
+    /** @var mixed */
     public $n;
+    /** @var Book|null */
     public $book;
+    /** @var mixed */
     public $totalNumber = -1;
+    /** @var mixed */
     public $sorted = "sort";
-    public $filterUri = "";
-    /** @var array|false */
+    public string $filterUri = "";
+    /** @var array<string, mixed>|false */
     public $hierarchy = false;
 
     /** @var Entry[] */
@@ -93,11 +103,20 @@ class Page
 
     /** @var Request */
     protected $request = null;
-    protected $className = null;
+    protected string $className = Base::class;
+    /** @var mixed */
     protected $numberPerPage = -1;
+    /** @var array<string> */
     protected $ignoredCategories = [];
+    /** @var mixed */
     protected $databaseId = null;
 
+    /**
+     * Summary of getPage
+     * @param mixed $pageId
+     * @param mixed $request
+     * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
+     */
     public static function getPage($pageId, $request)
     {
         switch ($pageId) {
@@ -152,6 +171,10 @@ class Page
         }
     }
 
+    /**
+     * Summary of __construct
+     * @param Request|null $request
+     */
     public function __construct($request = null)
     {
         $this->setRequest($request);
@@ -161,6 +184,11 @@ class Page
         $this->authorEmail = Config::get('author_email') ?: 'sebastien@slucas.fr';
     }
 
+    /**
+     * Summary of setRequest
+     * @param Request|null $request
+     * @return void
+     */
     public function setRequest($request)
     {
         $this->request = $request ?? new Request();
@@ -172,21 +200,37 @@ class Page
         $this->databaseId = $this->request->get('db');
     }
 
+    /**
+     * Summary of getNumberPerPage
+     * @return mixed
+     */
     public function getNumberPerPage()
     {
         return $this->numberPerPage;
     }
 
+    /**
+     * Summary of getIgnoredCategories
+     * @return array<string>
+     */
     public function getIgnoredCategories()
     {
         return $this->ignoredCategories;
     }
 
+    /**
+     * Summary of getDatabaseId
+     * @return mixed
+     */
     public function getDatabaseId()
     {
         return $this->databaseId;
     }
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -195,6 +239,10 @@ class Page
         $this->subtitle = Config::get('subtitle_default');
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         if (Database::noDatabaseSelected($this->databaseId)) {
@@ -204,6 +252,10 @@ class Page
         }
     }
 
+    /**
+     * Summary of getDatabaseEntries
+     * @return void
+     */
     public function getDatabaseEntries()
     {
         $i = 0;
@@ -225,6 +277,10 @@ class Page
         }
     }
 
+    /**
+     * Summary of getTopCountEntries
+     * @return void
+     */
     public function getTopCountEntries()
     {
         if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
@@ -275,6 +331,10 @@ class Page
         }
     }
 
+    /**
+     * Summary of isPaginated
+     * @return bool
+     */
     public function isPaginated()
     {
         return ($this->getNumberPerPage() != -1 &&
@@ -282,11 +342,19 @@ class Page
                 $this->totalNumber > $this->getNumberPerPage());
     }
 
+    /**
+     * Summary of getCleanQuery
+     * @return string
+     */
     public function getCleanQuery()
     {
         return preg_replace("/\&n=.*?$/", "", preg_replace("/\&_=\d+/", "", $this->request->query()));
     }
 
+    /**
+     * Summary of getNextLink
+     * @return LinkNavigation|null
+     */
     public function getNextLink()
     {
         $currentUrl = "?" . $this->getCleanQuery();
@@ -296,6 +364,10 @@ class Page
         return null;
     }
 
+    /**
+     * Summary of getPrevLink
+     * @return LinkNavigation|null
+     */
     public function getPrevLink()
     {
         $currentUrl = "?" . $this->getCleanQuery();
@@ -305,11 +377,19 @@ class Page
         return null;
     }
 
+    /**
+     * Summary of getMaxPage
+     * @return float
+     */
     public function getMaxPage()
     {
         return ceil($this->totalNumber / $this->numberPerPage);
     }
 
+    /**
+     * Summary of getSortOptions
+     * @return array<string, string>
+     */
     public function getSortOptions()
     {
         return [
@@ -437,6 +517,10 @@ class Page
          */
     }
 
+    /**
+     * Summary of containsBook
+     * @return bool
+     */
     public function containsBook()
     {
         if (count($this->entryArray) == 0) {

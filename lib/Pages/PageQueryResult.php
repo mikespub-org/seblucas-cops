@@ -29,11 +29,22 @@ class PageQueryResult extends Page
     public const SCOPE_PUBLISHER = "publisher";
     public const SCOPE_LANGUAGE = "language";
 
+    /**
+     * Summary of useTypeahead
+     * @return bool
+     */
     private function useTypeahead()
     {
         return !is_null($this->request->get("search"));
     }
 
+    /**
+     * Summary of searchByScope
+     * @param mixed $scope
+     * @param mixed $limit
+     * @param mixed $database
+     * @return array<mixed>
+     */
     private function searchByScope($scope, $limit = false, $database = null)
     {
         $n = $this->n;
@@ -78,9 +89,13 @@ class PageQueryResult extends Page
         return $array;
     }
 
+    /**
+     * Summary of doSearchByCategory
+     * @param mixed $database
+     * @return void
+     */
     public function doSearchByCategory($database = null)
     {
-        $out = [];
         $pagequery = Page::OPENSEARCH_QUERY;
         $dbArray = [""];
         $d = $database;
@@ -155,9 +170,12 @@ class PageQueryResult extends Page
                 Database::clearDb();
             }
         }
-        return $out;
     }
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $scope = $this->request->get("scope");
@@ -175,6 +193,10 @@ class PageQueryResult extends Page
         $this->getEntries();
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $database = $this->getDatabaseId();
@@ -198,6 +220,10 @@ class PageQueryResult extends Page
         }
     }
 
+    /**
+     * Summary of getDatabaseEntries
+     * @return void
+     */
     public function getDatabaseEntries()
     {
         $ignoredCategories = $this->getIgnoredCategories();

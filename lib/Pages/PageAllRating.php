@@ -14,8 +14,12 @@ use SebLucas\Cops\Input\Config;
 
 class PageAllRating extends Page
 {
-    protected $className = Rating::class;
+    protected string $className = Rating::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -23,6 +27,10 @@ class PageAllRating extends Page
         $this->title = localize("ratings.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);

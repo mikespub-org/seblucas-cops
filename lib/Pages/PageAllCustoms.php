@@ -18,8 +18,12 @@ use SebLucas\Cops\Model\Entry;
 
 class PageAllCustoms extends Page
 {
-    protected $className = CustomColumnType::class;
+    protected string $className = CustomColumnType::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $customId = $this->request->get("custom", null);
@@ -110,6 +114,11 @@ class PageAllCustoms extends Page
         $this->parentUri = $columnType->getUri();
     }
 
+    /**
+     * Summary of addCustomNotSetEntry
+     * @param CustomColumnType $columnType
+     * @return void
+     */
     public function addCustomNotSetEntry($columnType)
     {
         $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);

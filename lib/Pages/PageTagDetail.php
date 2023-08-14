@@ -13,8 +13,12 @@ use SebLucas\Cops\Calibre\Tag;
 
 class PageTagDetail extends Page
 {
-    protected $className = Tag::class;
+    protected string $className = Tag::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         /** @var Tag $instance */
