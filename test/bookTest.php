@@ -112,6 +112,7 @@ class BookTest extends TestCase
         Config::set('max_item_per_page', 5);
         $request = new Request();
         $booklist = new BookList($request);
+        /** @var Author $author */
         $author = Author::getInstanceById(1);
 
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($author, 1);
@@ -134,6 +135,7 @@ class BookTest extends TestCase
     public function testGetBooksBySeries(): void
     {
         $booklist = new BookList(self::$request);
+        /** @var Serie $series */
         $series = Serie::getInstanceById(1);
 
         // All book from the Sherlock Holmes series
@@ -145,6 +147,7 @@ class BookTest extends TestCase
     public function testGetBooksByPublisher(): void
     {
         $booklist = new BookList(self::$request);
+        /** @var Publisher $publisher */
         $publisher = Publisher::getInstanceById(6);
 
         // All books from Strand Magazine
@@ -156,6 +159,7 @@ class BookTest extends TestCase
     public function testGetBooksByTag(): void
     {
         $booklist = new BookList(self::$request);
+        /** @var Tag $tag */
         $tag = Tag::getInstanceById(1);
 
         // All book with the Fiction tag
@@ -167,6 +171,7 @@ class BookTest extends TestCase
     public function testGetBooksByLanguage(): void
     {
         $booklist = new BookList(self::$request);
+        /** @var Language $language */
         $language = Language::getInstanceById(1);
 
         // All english book (= all books)
@@ -178,6 +183,7 @@ class BookTest extends TestCase
     public function testGetBooksByRating(): void
     {
         $booklist = new BookList(self::$request);
+        /** @var Rating $rating */
         $rating = Rating::getInstanceById(1);
 
         // All books with 4 stars

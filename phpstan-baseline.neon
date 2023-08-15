@@ -1,36 +1,66 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to an undefined method DOMNode\\:\\:attr\\(\\)\\.$#"
-			count: 7
-			path: resources/epub-loader/BookEPub.class.php
-
-		-
-			message: "#^Call to an undefined method DOMNode\\:\\:delete\\(\\)\\.$#"
+			message: "#^Call to function is_null\\(\\) with SebLucas\\\\Cops\\\\Calibre\\\\CustomColumn will always evaluate to false\\.$#"
 			count: 1
-			path: resources/epub-loader/BookEPub.class.php
+			path: lib/Calibre/Book.php
 
 		-
-			message: "#^Variable \\$sortField in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 2
+			message: "#^If condition is always false\\.$#"
+			count: 1
+			path: lib/Language/Transliteration.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: lib/Language/Transliteration.php
+
+		-
+			message: "#^Offset string\\|null on array\\{\\} in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: lib/Language/Transliteration.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: lib/Language/Transliteration.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: lib/Output/Format.php
+
+		-
+			message: "#^Offset 'filters' on non\\-empty\\-array\\<string, mixed\\> in empty\\(\\) always exists and is always falsy\\.$#"
+			count: 1
+			path: lib/Output/JSON_renderer.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: lib/Output/JSON_renderer.php
+
+		-
+			message: "#^Property SebLucas\\\\Template\\\\doT\\:\\:\\$functionCode is never written, only read\\.$#"
+			count: 1
+			path: resources/dot-php/doT.php
+
+		-
+			message: "#^Method Marsender\\\\EPubLoader\\\\CalibreDbLoader\\:\\:CheckDatabase\\(\\) is unused\\.$#"
+			count: 1
 			path: resources/epub-loader/CalibreDbLoader.class.php
 
 		-
-			message: "#^Call to an undefined method DOMNode\\:\\:attr\\(\\)\\.$#"
-			count: 15
+			message: "#^Method SebLucas\\\\EPubMeta\\\\EPub\\:\\:getNavPointDetail\\(\\) is unused\\.$#"
+			count: 1
 			path: resources/php-epub-meta/lib/EPub.php
 
 		-
-			message: "#^Call to an undefined method DOMNode\\:\\:delete\\(\\)\\.$#"
-			count: 6
+			message: "#^Property SebLucas\\\\EPubMeta\\\\EPub\\:\\:\\$nav \\(DOMDocument\\) in empty\\(\\) is not falsy\\.$#"
+			count: 1
 			path: resources/php-epub-meta/lib/EPub.php
 
 		-
-			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
-			count: 5
-			path: resources/php-epub-meta/lib/EPub.php
-
-		-
-			message: "#^Cannot call method attr\\(\\) on bool\\|DOMNode\\.$#"
-			count: 7
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
 			path: resources/php-epub-meta/lib/EPub.php

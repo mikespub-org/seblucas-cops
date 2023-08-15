@@ -32,6 +32,7 @@ class FilterTest extends TestCase
 
     public function testAuthorFilters(): void
     {
+        /** @var Author $author */
         $author = Author::getInstanceById(1);
         $this->assertEquals("1", $author->id);
 
@@ -59,6 +60,7 @@ class FilterTest extends TestCase
 
     public function testLanguageFilters(): void
     {
+        /** @var Language $language */
         $language = Language::getInstanceById(1);
         $this->assertEquals("1", $language->id);
 
@@ -86,6 +88,7 @@ class FilterTest extends TestCase
 
     public function testPublisherFilters(): void
     {
+        /** @var Publisher $publisher */
         $publisher = Publisher::getInstanceById(6);
         $this->assertEquals("6", $publisher->id);
 
@@ -113,6 +116,7 @@ class FilterTest extends TestCase
 
     public function testRatingFilters(): void
     {
+        /** @var Rating $rating */
         $rating = Rating::getInstanceById(1);
         $this->assertEquals("1", $rating->id);
 
@@ -140,6 +144,7 @@ class FilterTest extends TestCase
 
     public function testSerieFilters(): void
     {
+        /** @var Serie $serie */
         $serie = Serie::getInstanceById(1);
         $this->assertEquals("1", $serie->id);
 
@@ -167,6 +172,7 @@ class FilterTest extends TestCase
 
     public function testTagFilters(): void
     {
+        /** @var Tag $tag */
         $tag = Tag::getInstanceById(1);
         $this->assertEquals("1", $tag->id);
 
@@ -199,6 +205,7 @@ class FilterTest extends TestCase
         // for hierarchical tags like Fiction, Fiction.Historical, Fiction.Romance etc.
         Config::set('calibre_categories_using_hierarchy', ['tags']);
 
+        /** @var Tag $tag */
         $tag = Tag::getInstanceById(1);
         $this->assertEquals("1", $tag->id);
 

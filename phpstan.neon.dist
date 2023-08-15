@@ -1,5 +1,7 @@
+# baseline re-generated with level 4 to keep some issues visible on higher levels
+# at the time this file was updated there are 13 errors reported for levels 4 to 6
 includes:
-    - phpstan-baseline.neon
+    #- phpstan-baseline.neon
 
 parameters:
     level: 6
@@ -11,3 +13,5 @@ parameters:
         - vendor/*
         - test/Sauce.php
         - resources/php-epub-meta/vendor/*
+        - resources/php-epub-meta/lib/Other.php
+        - resources/php-epub-meta/test/otherTest.php
