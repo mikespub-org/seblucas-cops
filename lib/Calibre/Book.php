@@ -15,6 +15,7 @@ use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\EPubMeta\EPub;
+use SebLucas\TbsZip\clsTbsZip;
 use Exception;
 
 //class Book extends Base
@@ -497,7 +498,7 @@ class Book
         $data = $this->getDataById($idData);
 
         try {
-            $epub = new EPub($data->getLocalPath());
+            $epub = new EPub($data->getLocalPath(), clsTbsZip::class);
 
             $epub->Title($this->title);
             $authorArray = [];
