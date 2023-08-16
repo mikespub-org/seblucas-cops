@@ -15,7 +15,21 @@ use PDO;
 
 class Database
 {
+    public const KEEP_STATS = false;
+    /** @var PDO|null */
     private static $db = null;
+    private static int $count = 0;
+    /** @var array<string> */
+    private static $queries = [];
+
+    /**
+     * Summary of getDbStatistics
+     * @return array<mixed>
+     */
+    public static function getDbStatistics()
+    {
+        return ['count' => self::$count, 'queries' => self::$queries];
+    }
 
     /**
      * Summary of isMultipleDatabaseEnabled
@@ -50,7 +64,7 @@ class Database
 
     /**
      * Summary of getDbList
-     * @return array
+     * @return array<string, string>
      */
     public static function getDbList()
     {
@@ -63,7 +77,7 @@ class Database
 
     /**
      * Summary of getDbNameList
-     * @return array
+     * @return array<string>
      */
     public static function getDbNameList()
     {
@@ -163,6 +177,10 @@ class Database
      */
     public static function getDb($database = null)
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            self::$count += 1;
+        }
         if (is_null(self::$db)) {
             try {
                 if (is_readable(self::getDbFileName($database))) {
@@ -217,6 +235,10 @@ class Database
      */
     public static function querySingle($query, $database = null)
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         return self::getDb($database)->query($query)->fetchColumn();
     }
 
@@ -230,6 +252,10 @@ class Database
      */
     public static function query($query, $params = [], $database = null)
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         if (count($params) > 0) {
             $result = self::getDb($database)->prepare($query);
             $result->execute($params);
@@ -252,6 +278,10 @@ class Database
      */
     public static function queryTotal($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         $totalResult = -1;
 
         if (Translation::useNormAndUp()) {
@@ -289,6 +319,10 @@ class Database
      */
     public static function queryFilter($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         if (Translation::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
             $columns = preg_replace("/upper/", "normAndUp", $columns);
@@ -320,6 +354,10 @@ class Database
      */
     public static function countFilter($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
+        }
         // assuming order by ... is at the end of the query here
         $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|).*$/i', '', $query);
         $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));

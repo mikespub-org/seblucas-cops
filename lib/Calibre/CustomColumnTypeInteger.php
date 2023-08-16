@@ -17,6 +17,13 @@ class CustomColumnTypeInteger extends CustomColumnType
 {
     public const GET_PATTERN = '/^(-?[0-9]+)-(-?[0-9]+)$/';
 
+    /**
+     * Summary of __construct
+     * @param mixed $pcustomId
+     * @param string $datatype
+     * @param mixed $database
+     * @throws \UnexpectedValueException
+     */
     protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_INT, $database = null)
     {
         switch ($datatype) {
@@ -31,6 +38,11 @@ class CustomColumnTypeInteger extends CustomColumnType
         }
     }
 
+    /**
+     * Summary of getQuery
+     * @param mixed $id
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQuery($id)
     {
         if (empty($id) && strval($id) !== '0' && in_array("custom", Config::get('show_not_set_filter'))) {
@@ -41,6 +53,12 @@ class CustomColumnTypeInteger extends CustomColumnType
         return [$query, [$id]];
     }
 
+    /**
+     * Summary of getQueryByRange
+     * @param mixed $range
+     * @throws \UnexpectedValueException
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQueryByRange($range)
     {
         $matches = [];
@@ -53,6 +71,12 @@ class CustomColumnTypeInteger extends CustomColumnType
         return [$query, [$lower, $upper]];
     }
 
+    /**
+     * Summary of getFilter
+     * @param mixed $id
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableName();
@@ -65,11 +89,22 @@ class CustomColumnTypeInteger extends CustomColumnType
         return [$filter, [$id]];
     }
 
+    /**
+     * Summary of getCustom
+     * @param mixed $id
+     * @return CustomColumn
+     */
     public function getCustom($id)
     {
         return new CustomColumn($id, $id, $this);
     }
 
+    /**
+     * Summary of getAllCustomValuesFromDatabase
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
+     */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
@@ -94,7 +129,7 @@ class CustomColumnTypeInteger extends CustomColumnType
      * Summary of getCountByRange
      * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
      * @param mixed $sort
-     * @return Entry[]
+     * @return array<Entry>
      */
     public function getCountByRange($page, $sort = null)
     {
@@ -140,7 +175,7 @@ class CustomColumnTypeInteger extends CustomColumnType
      * Summary of getCustomValuesByRange
      * @param mixed $range
      * @param mixed $sort
-     * @return Entry[]
+     * @return array<Entry>
      */
     public function getCustomValuesByRange($range, $sort = null)
     {
@@ -169,6 +204,11 @@ class CustomColumnTypeInteger extends CustomColumnType
         return $entryArray;
     }
 
+    /**
+     * Summary of getCustomByBook
+     * @param Book $book
+     * @return CustomColumn
+     */
     public function getCustomByBook($book)
     {
         $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
@@ -181,6 +221,10 @@ class CustomColumnTypeInteger extends CustomColumnType
         return new CustomColumn(null, localize("customcolumn.int.unknown"), $this);
     }
 
+    /**
+     * Summary of isSearchable
+     * @return bool
+     */
     public function isSearchable()
     {
         return true;
