@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 
 require_once __DIR__ . '/config.php';
-/** @var array $config */
+/** @var array<mixed> $config */
 
 $request = new Request();
 $err   = $request->get('err', -1);

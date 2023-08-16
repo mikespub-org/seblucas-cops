@@ -13,8 +13,12 @@ use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllAuthorsLetter extends Page
 {
-    protected $className = Author::class;
+    protected string $className = Author::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -28,6 +32,10 @@ class PageAllAuthorsLetter extends Page
         $this->parentUri = "?page=".Author::PAGE_ALL;
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);

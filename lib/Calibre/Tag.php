@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Pages\Page;
 
-class Tag extends Base
+class Tag extends Category
 {
     public const PAGE_ID = Page::ALL_TAGS_ID;
     public const PAGE_ALL = Page::ALL_TAGS;
@@ -27,7 +27,12 @@ class Tag extends Base
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books.id not in (select book from books_tags_link) {1} order by books.sort';
     public const URL_PARAM = "t";
+    public const CATEGORY = "tags";
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return localize("tags.title");
@@ -35,11 +40,21 @@ class Tag extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
     public static function getDefaultName()
     {
         return localize("tagword.none");
     }
 
+    /**
+     * Summary of getInstancesByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return array<Tag>
+     */
     public static function getInstancesByBookId($bookId, $database = null)
     {
         $tags = [];

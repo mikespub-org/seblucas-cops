@@ -11,13 +11,22 @@ namespace SebLucas\Cops\Calibre;
 
 class Identifier
 {
+    /** @var mixed */
     public $id;
+    /** @var mixed */
     public $type;
-    public $formattedType;
+    public string $formattedType;
+    /** @var mixed */
     public $val;
-    public $uri;
+    public string $uri;
+    /** @var mixed */
     protected $databaseId;
 
+    /**
+     * Summary of __construct
+     * @param mixed $post
+     * @param mixed $database
+     */
     public function __construct($post, $database = null)
     {
         $this->id = $post->id;
@@ -27,6 +36,10 @@ class Identifier
         $this->databaseId = $database;
     }
 
+    /**
+     * Summary of formatType
+     * @return void
+     */
     public function formatType()
     {
         if ($this->type == 'amazon') {
@@ -77,11 +90,21 @@ class Identifier
         }
     }
 
+    /**
+     * Summary of getUri
+     * @return string
+     */
     public function getUri()
     {
         return $this->uri;
     }
 
+    /**
+     * Summary of getInstancesByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return array<Identifier>
+     */
     public static function getInstancesByBookId($bookId, $database = null)
     {
         $identifiers = [];

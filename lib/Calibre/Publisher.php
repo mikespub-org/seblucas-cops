@@ -26,6 +26,10 @@ class Publisher extends Base
     where books_publishers_link.book = books.id and publisher = ? {1} order by books.sort';
     public const URL_PARAM = "p";
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return localize("publishers.title");
@@ -33,6 +37,12 @@ class Publisher extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getInstanceByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return Publisher|null
+     */
     public static function getInstanceByBookId($bookId, $database = null)
     {
         $query = 'select publishers.id as id, name
@@ -45,6 +55,10 @@ where publishers.id = publisher and book = ?';
         return null;
     }
 
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
     public static function getDefaultName()
     {
         return localize("publisherword.none");

@@ -14,18 +14,23 @@ use SebLucas\Cops\Pages\Page;
 
 class Entry
 {
-    public $title;
-    public $id;
-    public $content;
+    public string $title;
+    public string $id;
+    public string $content;
+    /** @var mixed */
     public $numberOfElement;
-    public $contentType;
+    public string $contentType;
     /** @var Link[] */
     public $linkArray;
+    /** @var int|null */
     public $localUpdated;
-    public $className;
+    public string $className;
+    /** @var int|null */
     private static $updated = null;
+    /** @var mixed */
     protected $databaseId;
 
+    /** @var array<string, string> */
     public static $icons = [
         Page::ALL_AUTHORS_ID             => 'images/author.png',
         Page::ALL_SERIES_ID              => 'images/serie.png',
@@ -39,6 +44,17 @@ class Entry
         Page::ALL_PUBLISHERS_ID          => 'images/publisher.png',
     ];
 
+    /**
+     * Summary of __construct
+     * @param string $ptitle
+     * @param string $pid
+     * @param string $pcontent
+     * @param string $pcontentType
+     * @param Link[] $plinkArray
+     * @param string|int|null $database
+     * @param string $pclass
+     * @param mixed $pcount
+     */
     public function __construct($ptitle, $pid, $pcontent, $pcontentType = "text", $plinkArray = [], $database = null, $pclass = "", $pcount = 0)
     {
         $this->title = $ptitle;
@@ -59,10 +75,14 @@ class Entry
         }
 
         if (!is_null($database)) {
-            $this->id = str_replace("cops:", "cops:" . $database . ":", $this->id);
+            $this->id = str_replace("cops:", "cops:" . strval($database) . ":", $this->id);
         }
     }
 
+    /**
+     * Summary of getUpdatedTime
+     * @return string
+     */
     public function getUpdatedTime()
     {
         if (!is_null($this->localUpdated)) {
@@ -74,6 +94,12 @@ class Entry
         return date(DATE_ATOM, self::$updated);
     }
 
+    /**
+     * Summary of getNavLink
+     * @param string $endpoint
+     * @param string $extraUri
+     * @return string
+     */
     public function getNavLink($endpoint = "", $extraUri = "")
     {
         foreach ($this->linkArray as $link) {
@@ -88,6 +114,11 @@ class Entry
         return "#";
     }
 
+    /**
+     * Summary of getThumbnail
+     * @param string $endpoint
+     * @return string|null
+     */
     public function getThumbnail($endpoint = '')
     {
         foreach ($this->linkArray as $link) {
@@ -100,6 +131,11 @@ class Entry
         return null;
     }
 
+    /**
+     * Summary of getImage
+     * @param string $endpoint
+     * @return string|null
+     */
     public function getImage($endpoint = '')
     {
         foreach ($this->linkArray as $link) {

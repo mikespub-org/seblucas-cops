@@ -18,8 +18,12 @@ use SebLucas\Cops\Model\Entry;
 
 class PageAllCustoms extends Page
 {
-    protected $className = CustomColumnType::class;
+    protected string $className = CustomColumnType::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $customId = $this->request->get("custom", null);
@@ -44,6 +48,11 @@ class PageAllCustoms extends Page
             $this->getCustomEntriesByYear($columnType);
         } elseif (Config::get('custom_integer_split_range') > 0 && $columnType instanceof CustomColumnTypeInteger) {
             $this->getCustomEntriesByRange($columnType);
+        } elseif ($columnType->hasChildCategories()) {
+            $this->sorted = $this->request->getSorted("sort");
+            // use tag_browser_custom_column_X view here, to get the full hierarchy?
+            $this->entryArray = $columnType->browseAllCustomValues($this->n, $this->sorted);
+            $this->totalNumber = $columnType->getDistinctValueCount();
         } else {
             $this->sorted = $this->request->getSorted("value");
             $this->entryArray = $columnType->getAllCustomValues($this->n, $this->sorted);
@@ -105,6 +114,11 @@ class PageAllCustoms extends Page
         $this->parentUri = $columnType->getUri();
     }
 
+    /**
+     * Summary of addCustomNotSetEntry
+     * @param CustomColumnType $columnType
+     * @return void
+     */
     public function addCustomNotSetEntry($columnType)
     {
         $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);

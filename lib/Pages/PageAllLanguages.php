@@ -13,8 +13,12 @@ use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllLanguages extends Page
 {
-    protected $className = Language::class;
+    protected string $className = Language::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -22,6 +26,10 @@ class PageAllLanguages extends Page
         $this->title = localize("languages.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);

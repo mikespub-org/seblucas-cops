@@ -15,15 +15,12 @@ use SebLucas\Cops\Pages\Page;
 
 class PageMultiDatabaseTest extends TestCase
 {
-    public function testPageIndex()
+    public function testPageIndex(): void
     {
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::INDEX;
-        $query = null;
-        $qid = null;
-        $n = "1";
         $request = new Request();
 
         $currentPage = Page::getPage($page, $request);
@@ -42,6 +39,8 @@ class PageMultiDatabaseTest extends TestCase
 
     /**
      * @dataProvider providerSearch
+     * @param int $maxItem
+     * @return void
      */
     public function testPageSearchXXX($maxItem)
     {
@@ -49,9 +48,6 @@ class PageMultiDatabaseTest extends TestCase
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = Page::OPENSEARCH_QUERY;
-        $query = "art";
-        $qid = null;
-        $n = "1";
         $request = new Request();
         $request->set('query', "art");
 
@@ -71,6 +67,10 @@ class PageMultiDatabaseTest extends TestCase
         Config::set('max_item_per_page', -1);
     }
 
+    /**
+     * Summary of providerSearch
+     * @return array<mixed>
+     */
     public function providerSearch()
     {
         return [

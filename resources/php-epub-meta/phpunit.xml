@@ -19,6 +19,7 @@
   <testsuites>
     <testsuite name="php-epub-meta">
       <directory>./test/</directory>
+      <exclude>./test/otherTest.php</exclude>
     </testsuite>
   </testsuites>
 </phpunit>

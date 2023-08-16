@@ -16,7 +16,7 @@ use SebLucas\EPubMeta\EPub;
 
 class EpubReaderTest extends TestCase
 {
-    private static $book;
+    private static EPub $book;
 
     public static function setUpBeforeClass(): void
     {
@@ -32,7 +32,7 @@ class EpubReaderTest extends TestCase
      * @runInSeparateProcess
      * @return void
      */
-    public function testGetReader()
+    public function testGetReader(): void
     {
         $idData = 20;
         $request = new Request();
@@ -59,7 +59,7 @@ class EpubReaderTest extends TestCase
      * @runInSeparateProcess
      * @return void
      */
-    public function testGetContent()
+    public function testGetContent(): void
     {
         $idData = 20;
         $component = 'title.xml';
@@ -82,7 +82,7 @@ class EpubReaderTest extends TestCase
         $this->assertStringContainsString($check, $h1);
     }
 
-    public function testComponents()
+    public function testComponents(): void
     {
         $data = self::$book->components();
         $check = [
@@ -108,7 +108,7 @@ class EpubReaderTest extends TestCase
         $this->assertEquals($check, $data);
     }
 
-    public function testContents()
+    public function testContents(): void
     {
         $data = self::$book->contents();
         $check = [
@@ -132,6 +132,11 @@ class EpubReaderTest extends TestCase
         $this->assertEquals($check, $data);
     }
 
+    /**
+     * Summary of testComponent
+     * @param mixed $component
+     * @return void
+     */
     public function testComponent($component='cover.xml')
     {
         $data = self::$book->component($component);
@@ -139,6 +144,12 @@ class EpubReaderTest extends TestCase
         $this->assertEquals($check, strlen($data));
     }
 
+    /**
+     * Summary of testGetComponentName
+     * @param mixed $component
+     * @param mixed $element
+     * @return void
+     */
     public function testGetComponentName($component='cover.xml', $element='images/cover.png')
     {
         $data = self::$book->getComponentName($component, $element);
@@ -146,6 +157,11 @@ class EpubReaderTest extends TestCase
         $this->assertEquals($check, $data);
     }
 
+    /**
+     * Summary of testComponentContentType
+     * @param mixed $component
+     * @return void
+     */
     public function testComponentContentType($component='cover.xml')
     {
         $data = self::$book->componentContentType($component);

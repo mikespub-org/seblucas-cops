@@ -13,24 +13,34 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAuthorDetail extends Page
 {
-    protected $className = Author::class;
+    protected string $className = Author::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $author = Author::getInstanceById($this->idGet, $this->getDatabaseId());
+        /** @var Author $instance */
+        $instance = Author::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&a=' . $this->idGet;
-            $this->getFilters($author);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries($author);
+            $this->getEntries($instance);
         }
-        $this->idPage = $author->getEntryId();
-        $this->title = $author->name;  // not by getTitle() = $author->sort here
-        $this->currentUri = $author->getUri();
-        $this->parentTitle = $author->getParentTitle();
-        $this->parentUri = $author->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->name;  // not by getTitle() = $instance->sort here
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
+    /**
+     * Summary of getEntries
+     * @param Author $instance
+     * @return void
+     */
     public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);

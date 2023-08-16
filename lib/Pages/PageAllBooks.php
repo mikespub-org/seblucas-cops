@@ -13,8 +13,12 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAllBooks extends Page
 {
-    protected $className = Book::class;
+    protected string $className = Book::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -22,6 +26,10 @@ class PageAllBooks extends Page
         $this->title = localize("allbooks.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $booklist = new BookList($this->request);

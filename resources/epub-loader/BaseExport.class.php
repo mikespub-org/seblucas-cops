@@ -12,12 +12,15 @@ use Exception;
 
 class BaseExport
 {
+    /** @var array<mixed>|null */
     protected $mProperties = null;
-    protected $mFileName = '';
+    protected string $mFileName = '';
+    /** @var array<mixed>|null */
     protected $mSearch = null;
+    /** @var array<mixed>|null */
     protected $mReplace = null;
 
-    public $mFormatProperty = true;
+    public bool $mFormatProperty = true;
 
     /**
      * Open an export file (or create if file does not exist)
@@ -39,11 +42,21 @@ class BaseExport
         $this->mProperties = [];
     }
 
+    /**
+     * Summary of ClearProperties
+     * @return void
+     */
     public function ClearProperties()
     {
         $this->mProperties = [];
     }
 
+    /**
+     * Summary of SetProperty
+     * @param mixed $inKey
+     * @param mixed $inValue
+     * @return void
+     */
     public function SetProperty($inKey, $inValue)
     {
         // Don't store empty keys
@@ -61,8 +74,8 @@ class BaseExport
     /**
      * Format a property
      *
-     * @param string|array|null $inValue of strings to format
-     * @return string|array of strings formated
+     * @param string|array<mixed>|null $inValue of strings to format
+     * @return string|array<mixed> of strings formated
      */
     protected function FormatProperty($inValue)
     {
@@ -105,6 +118,7 @@ class BaseExport
      * Save data to file
      *
      * @throws Exception if error
+     * @return void
      */
     public function SaveToFile()
     {
@@ -193,6 +207,7 @@ class BaseExport
 
     /**
      * Download export and stop further script execution
+     * @return void
      */
     public function Download()
     {
@@ -208,6 +223,10 @@ class BaseExport
         exit;
     }
 
+    /**
+     * Summary of GetContent
+     * @return string
+     */
     protected function GetContent()
     {
         return '';

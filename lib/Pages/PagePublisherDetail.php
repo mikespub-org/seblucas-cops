@@ -13,24 +13,34 @@ use SebLucas\Cops\Calibre\Publisher;
 
 class PagePublisherDetail extends Page
 {
-    protected $className = Publisher::class;
+    protected string $className = Publisher::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $publisher = Publisher::getInstanceById($this->idGet, $this->getDatabaseId());
+        /** @var Publisher $instance */
+        $instance = Publisher::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&p=' . $this->idGet;
-            $this->getFilters($publisher);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries($publisher);
+            $this->getEntries($instance);
         }
-        $this->idPage = $publisher->getEntryId();
-        $this->title = $publisher->getTitle();
-        $this->currentUri = $publisher->getUri();
-        $this->parentTitle = $publisher->getParentTitle();
-        $this->parentUri = $publisher->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
+    /**
+     * Summary of getEntries
+     * @param Publisher $instance
+     * @return void
+     */
     public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);

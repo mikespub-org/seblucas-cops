@@ -8,8 +8,10 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkFacet;
@@ -20,12 +22,18 @@ use XMLWriter;
 
 class OPDSRenderer
 {
-    public static $endpoint = Config::ENDPOINT["feed"];
+    public static string $endpoint = Config::ENDPOINT["feed"];
+    /** @var XMLWriter|null */
     private $xmlStream = null;
+    /** @var int|null */
     private $updated = null;
     /** @var Request */
     protected $request;
 
+    /**
+     * Summary of getUpdatedTime
+     * @return string
+     */
     private function getUpdatedTime()
     {
         if (is_null($this->updated)) {
@@ -34,6 +42,10 @@ class OPDSRenderer
         return date(DATE_ATOM, $this->updated);
     }
 
+    /**
+     * Summary of getXmlStream
+     * @return XMLWriter
+     */
     private function getXmlStream()
     {
         if (is_null($this->xmlStream)) {
@@ -93,6 +105,12 @@ class OPDSRenderer
         return $xml->outputMemory(true);
     }
 
+    /**
+     * Summary of startXmlDocument
+     * @param Page $page
+     * @param Request $request
+     * @return void
+     */
     private function startXmlDocument($page, $request)
     {
         $database = $request->get('db');
@@ -166,6 +184,10 @@ class OPDSRenderer
         }
     }
 
+    /**
+     * Summary of endXmlDocument
+     * @return string
+     */
     private function endXmlDocument()
     {
         $this->getXmlStream()->endElement();
@@ -173,6 +195,11 @@ class OPDSRenderer
         return $this->getXmlStream()->outputMemory(true);
     }
 
+    /**
+     * Summary of renderLink
+     * @param Link $link
+     * @return void
+     */
     private function renderLink($link)
     {
         $this->getXmlStream()->startElement("link");
@@ -195,6 +222,11 @@ class OPDSRenderer
         $this->getXmlStream()->endElement();
     }
 
+    /**
+     * Summary of getPublicationDate
+     * @param Book $book
+     * @return string
+     */
     private function getPublicationDate($book)
     {
         $dateYmd = substr($book->pubdate, 0, 10);
@@ -207,6 +239,11 @@ class OPDSRenderer
         return $pubdate->format("Y-m-d");
     }
 
+    /**
+     * Summary of renderEntry
+     * @param Entry|EntryBook $entry
+     * @return void
+     */
     private function renderEntry($entry)
     {
         $this->getXmlStream()->startElement("title");
@@ -280,7 +317,7 @@ class OPDSRenderer
             $this->getXmlStream()->text(Config::get('max_item_per_page'));
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->startElement("opensearch:startIndex");
-            $this->getXmlStream()->text(($page->n - 1) * Config::get('max_item_per_page') + 1);
+            $this->getXmlStream()->text((string) (($page->n - 1) * Config::get('max_item_per_page') + 1));
             $this->getXmlStream()->endElement();
             $prevLink = $page->getPrevLink();
             $nextLink = $page->getNextLink();

@@ -15,9 +15,9 @@ use SebLucas\EPubMeta\EPub;
 
 class EpubFsTest extends TestCase
 {
-    private static $book;
-    private static $add;
-    private static $endpoint;
+    private static EPub $book;
+    private static string $add;
+    private static string $endpoint;
 
 
     public static function setUpBeforeClass(): void
@@ -32,7 +32,7 @@ class EpubFsTest extends TestCase
         self::$endpoint = Config::ENDPOINT["epubfs"];
     }
 
-    public function testUrlImage()
+    public function testUrlImage(): void
     {
         $data = EPubReader::getComponentContent(self::$book, "cover.xml", self::$add);
 
@@ -43,7 +43,7 @@ class EpubFsTest extends TestCase
         $this->assertEquals(self::$endpoint . '?data=20&amp;comp=images~SLASH~cover.png', $src);
     }
 
-    public function testUrlHref()
+    public function testUrlHref(): void
     {
         $data = EPubReader::getComponentContent(self::$book, "title.xml", self::$add);
 
@@ -60,7 +60,7 @@ class EpubFsTest extends TestCase
         $this->assertEquals(self::$endpoint . '?data=20&amp;comp=css~SLASH~title.css', $href);
     }
 
-    public function testImportCss()
+    public function testImportCss(): void
     {
         $data = EPubReader::getComponentContent(self::$book, "css~SLASH~title.css", self::$add);
 
@@ -71,7 +71,7 @@ class EpubFsTest extends TestCase
         $this->assertEquals(self::$endpoint . '?data=20&amp;comp=css~SLASH~page.css', $import);
     }
 
-    public function testUrlInCss()
+    public function testUrlInCss(): void
     {
         $data = EPubReader::getComponentContent(self::$book, "css~SLASH~main.css", self::$add);
 
@@ -82,7 +82,7 @@ class EpubFsTest extends TestCase
         $this->assertEquals(self::$endpoint . '?data=20&comp=fonts~SLASH~times.ttf', $src);
     }
 
-    public function testDirectLink()
+    public function testDirectLink(): void
     {
         $data = EPubReader::getComponentContent(self::$book, "main10.xml", self::$add);
 
@@ -93,7 +93,7 @@ class EpubFsTest extends TestCase
         $this->assertEquals(self::$endpoint . '?data=20&amp;comp=main2.xml', $src);
     }
 
-    public function testDirectLinkWithAnchor()
+    public function testDirectLinkWithAnchor(): void
     {
         $data = EPubReader::getComponentContent(self::$book, "main10.xml", self::$add);
 
@@ -104,7 +104,7 @@ class EpubFsTest extends TestCase
         $this->assertEquals(self::$endpoint . '?data=20&amp;comp=main2.xml#anchor', $src);
     }
 
-    public function testAnchorOnly()
+    public function testAnchorOnly(): void
     {
         $data = EPubReader::getComponentContent(self::$book, "main10.xml", self::$add);
 

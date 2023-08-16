@@ -47,7 +47,7 @@ if (!$book) {
 }
 
 // -DC- Add png type
-if ($book && ($type == 'jpg' || $type == 'png' || empty(Config::get('calibre_internal_directory')))) {
+if ($type == 'jpg' || $type == 'png' || empty(Config::get('calibre_internal_directory'))) {
     if ($type == 'jpg' || $type == 'png') {
         $file = $book->getFilePath($type);
     } else {

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Summary of to_file
+ * @param string $input
+ * @return string
+ */
 function to_file($input)
 {
     $input = str_replace(' ', '_', $input);
@@ -12,6 +17,11 @@ function to_file($input)
     return $input;
 }
 
+/**
+ * Summary of book_output
+ * @param string $input
+ * @return string
+ */
 function book_output($input)
 {
     $input = str_replace('__', ',', $input);

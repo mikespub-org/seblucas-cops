@@ -14,8 +14,9 @@ require_once(realpath(__DIR__) . '/CsvExport.class.php');
 
 class BookExport
 {
+    /** @var mixed */
     private $mExport = null;
-    private $mNbBook = 0;
+    private int $mNbBook = 0;
 
     public const eExportTypeCsv = 1;
     public const CsvSeparator = "\t";
@@ -31,7 +32,7 @@ class BookExport
     public function __construct($inFileName, $inExportType, $inCreate = false)
     {
         switch ($inExportType) {
-            case self::eExportTypeCsv:
+            case static::eExportTypeCsv:
                 $this->mExport = new CsvExport($inFileName, $inCreate);
                 break;
             default:
@@ -128,6 +129,7 @@ class BookExport
 
     /**
      * Download export and stop further script execution
+     * @return void
      */
     public function Download()
     {
@@ -136,6 +138,7 @@ class BookExport
 
     /**
      * Save export to file
+     * @return void
      */
     public function SaveToFile()
     {

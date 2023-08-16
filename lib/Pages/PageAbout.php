@@ -10,6 +10,10 @@ namespace SebLucas\Cops\Pages;
 
 class PageAbout extends Page
 {
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->idPage = self::ABOUT_ID;

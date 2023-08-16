@@ -18,11 +18,14 @@ class Request
 {
     /**
      * Summary of urlParams
-     * @var array
+     * @var array<mixed>
      */
     public $urlParams = [];
-    private $queryString = null;
+    private string $queryString = '';
 
+    /**
+     * Summary of __construct
+     */
     public function __construct()
     {
         $this->init();
@@ -39,7 +42,7 @@ class Request
 
     /**
      * Summary of query
-     * @return mixed
+     * @return string
      */
     public function query()
     {
@@ -48,7 +51,7 @@ class Request
 
     /**
      * Summary of agent
-     * @return mixed
+     * @return string
      */
     public function agent()
     {
@@ -60,7 +63,7 @@ class Request
 
     /**
      * Summary of language
-     * @return mixed
+     * @return string|null
      */
     public function language()
     {
@@ -69,7 +72,7 @@ class Request
 
     /**
      * Summary of path
-     * @return mixed
+     * @return string|null
      */
     public function path()
     {
@@ -78,7 +81,7 @@ class Request
 
     /**
      * Summary of script
-     * @return mixed
+     * @return string|null
      */
     public function script()
     {
@@ -87,7 +90,7 @@ class Request
 
     /**
      * Summary of uri
-     * @return mixed
+     * @return string|null
      */
     public function uri()
     {
@@ -122,9 +125,9 @@ class Request
 
     /**
      * Summary of get
-     * @param mixed $name
+     * @param string $name
      * @param mixed $default
-     * @param mixed $pattern
+     * @param string|null $pattern
      * @return mixed
      */
     public function get($name, $default = null, $pattern = null)
@@ -139,7 +142,7 @@ class Request
 
     /**
      * Summary of set
-     * @param mixed $name
+     * @param string $name
      * @param mixed $value
      * @return void
      */
@@ -151,7 +154,7 @@ class Request
 
     /**
      * Summary of post
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function post($name)
@@ -161,7 +164,7 @@ class Request
 
     /**
      * Summary of request
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function request($name)
@@ -171,7 +174,7 @@ class Request
 
     /**
      * Summary of server
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function server($name)
@@ -181,7 +184,7 @@ class Request
 
     /**
      * Summary of session
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function session($name)
@@ -191,7 +194,7 @@ class Request
 
     /**
      * Summary of cookie
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function cookie($name)
@@ -201,7 +204,7 @@ class Request
 
     /**
      * Summary of files
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function files($name)
@@ -211,7 +214,7 @@ class Request
 
     /**
      * Summary of option
-     * @param mixed $option
+     * @param string $option
      * @return mixed
      */
     public function option($option)
@@ -256,12 +259,22 @@ class Request
         return Config::get('template');
     }
 
+    /**
+     * Summary of getSorted
+     * @param string|null $default
+     * @return mixed
+     */
     public function getSorted($default = null)
     {
         return $this->get('sort', $default, '/^\w+(\s+(asc|desc)|)$/i');
         // ?? $this->option('sort');
     }
 
+    /**
+     * Summary of getEndpoint
+     * @param string $default
+     * @return string
+     */
     public function getEndpoint($default)
     {
         $script = explode("/", $this->script() ?? "/" . $default);
@@ -275,6 +288,7 @@ class Request
 
     /**
      * Summary of verifyLogin
+     * @param array<mixed> $serverVars
      * @return bool
      */
     public static function verifyLogin($serverVars = null)
@@ -284,9 +298,8 @@ class Request
           is_array(Config::get('basic_authentication'))) {
             $basicAuth = Config::get('basic_authentication');
             if (!isset($serverVars['PHP_AUTH_USER']) ||
-              (isset($serverVars['PHP_AUTH_USER']) &&
-                ($serverVars['PHP_AUTH_USER'] != $basicAuth['username'] ||
-                  $serverVars['PHP_AUTH_PW'] != $basicAuth['password']))) {
+              (($serverVars['PHP_AUTH_USER'] != $basicAuth['username'] ||
+                $serverVars['PHP_AUTH_PW'] != $basicAuth['password']))) {
                 return false;
             }
         }
@@ -307,10 +320,10 @@ class Request
 
     /**
      * Summary of build
-     * @param array $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-     * @param ?array $server
-     * @param ?array $cookie
-     * @param ?array $config
+     * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
+     * @param array<mixed>|null $server
+     * @param array<mixed>|null $cookie
+     * @param array<mixed>|null $config
      * @return Request
      */
     public static function build($params, $server = null, $cookie = null, $config = null)

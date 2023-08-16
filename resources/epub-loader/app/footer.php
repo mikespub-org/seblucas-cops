@@ -5,7 +5,7 @@ defined('DEF_AppName') or die('Restricted access');
 	<!-- Content end -->
 
 <?php
-    /** @var array $gErrorArray */
+    /** @var array<mixed> $gErrorArray */
     if (count($gErrorArray)) {
         $str = '';
         $str .= '	<!-- Error begin -->' . "\n";

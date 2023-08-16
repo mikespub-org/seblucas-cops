@@ -18,18 +18,20 @@ class Link
     public const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
     public const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
-    public static $endpoint = Config::ENDPOINT["index"];
-    public $href;
-    public $type;
+    public static string $endpoint = Config::ENDPOINT["index"];
+    public string $href;
+    public string $type;
+    /** @var string|null */
     public $rel;
+    /** @var string|null */
     public $title;
 
     /**
      * Summary of __construct
      * @param string $phref uri including the endpoint for images, books etc.
      * @param string $ptype link type in the OPDS catalog
-     * @param ?string $prel relation in the OPDS catalog
-     * @param ?string $ptitle title in the OPDS catalog and elsewhere
+     * @param string|null $prel relation in the OPDS catalog
+     * @param string|null $ptitle title in the OPDS catalog and elsewhere
      */
     public function __construct($phref, $ptype, $prel = null, $ptitle = null)
     {
@@ -39,6 +41,11 @@ class Link
         $this->title = $ptitle;
     }
 
+    /**
+     * Summary of hrefXhtml
+     * @param string $endpoint
+     * @return string
+     */
     public function hrefXhtml($endpoint = '')
     {
         // Link()->href includes the endpoint here

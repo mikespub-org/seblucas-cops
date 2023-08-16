@@ -12,6 +12,7 @@ require_once(realpath(__DIR__) . '/BaseExport.class.php');
 
 class CsvExport extends BaseExport
 {
+    /** @var array<string>|null */
     private $mLines = null;
 
     public const CsvSeparator = "\t";
@@ -24,7 +25,7 @@ class CsvExport extends BaseExport
      */
     public function __construct($inFileName, $inCreate = false)
     {
-        $this->mSearch = ["\r", "\n", self::CsvSeparator];
+        $this->mSearch = ["\r", "\n", static::CsvSeparator];
         $this->mReplace = ['', '<br />', ''];
 
         // Init container
@@ -36,6 +37,7 @@ class CsvExport extends BaseExport
     /**
      * Add the current properties into the export content
      * and reset the properties
+     * @return void
      */
     public function AddContent()
     {
@@ -48,7 +50,7 @@ class CsvExport extends BaseExport
                     if (strpos($value1, '\'') !== false) {
                         $value1 = '\'' . str_replace('\'', '\'\'', $value1) . '\'';
                     }
-                    $text .= $value1 . self::CsvSeparator;
+                    $text .= $value1 . static::CsvSeparator;
                 }
                 continue;
             } else {
@@ -58,7 +60,7 @@ class CsvExport extends BaseExport
                 }
                 $info = $value;
             }
-            $text .= $info . self::CsvSeparator;
+            $text .= $info . static::CsvSeparator;
         }
 
         $this->mLines[] = $text;
@@ -66,6 +68,10 @@ class CsvExport extends BaseExport
         $this->ClearProperties();
     }
 
+    /**
+     * Summary of GetContent
+     * @return string
+     */
     protected function GetContent()
     {
         $text = implode("\n", $this->mLines) . "\n";

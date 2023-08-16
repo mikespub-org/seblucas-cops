@@ -38,6 +38,12 @@ class OpdsTest extends TestCase
         unlink(self::TEST_FEED);
     }
 
+    /**
+     * Summary of jingValidateSchema
+     * @param mixed $feed
+     * @param mixed $relax
+     * @return bool
+     */
     public function jingValidateSchema($feed, $relax = self::OPDS_RELAX_NG)
     {
         $path = "";
@@ -54,6 +60,11 @@ class OpdsTest extends TestCase
         }
     }
 
+    /**
+     * Summary of opdsValidator
+     * @param mixed $feed
+     * @return bool
+     */
     public function opdsValidator($feed)
     {
         $oldcwd = getcwd(); // Save the old working directory
@@ -69,12 +80,17 @@ class OpdsTest extends TestCase
         }
     }
 
+    /**
+     * Summary of opdsCompleteValidation
+     * @param mixed $feed
+     * @return bool
+     */
     public function opdsCompleteValidation($feed)
     {
         return $this->jingValidateSchema($feed) && $this->opdsValidator($feed);
     }
 
-    public function testPageIndex()
+    public function testPageIndex(): void
     {
         $page = Page::INDEX;
 
@@ -104,6 +120,9 @@ class OpdsTest extends TestCase
 
     /**
      * @dataProvider providerPage
+     * @param mixed $page
+     * @param mixed $query
+     * @return void
      */
     public function testMostPages($page, $query)
     {
@@ -123,6 +142,10 @@ class OpdsTest extends TestCase
         unset($_SERVER['REQUEST_URI']);
     }
 
+    /**
+     * Summary of providerPage
+     * @return array<mixed>
+     */
     public function providerPage()
     {
         return [
@@ -137,7 +160,7 @@ class OpdsTest extends TestCase
         ];
     }
 
-    public function testPageIndexMultipleDatabase()
+    public function testPageIndexMultipleDatabase(): void
     {
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
@@ -158,7 +181,7 @@ class OpdsTest extends TestCase
         Database::clearDb();
     }
 
-    public function testOpenSearchDescription()
+    public function testOpenSearchDescription(): void
     {
         $request = new Request();
 
@@ -168,7 +191,7 @@ class OpdsTest extends TestCase
         $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED, self::OPENSEARCHDESCRIPTION_RELAX_NG));
     }
 
-    public function testPageAuthorMultipleDatabase()
+    public function testPageAuthorMultipleDatabase(): void
     {
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
@@ -190,7 +213,7 @@ class OpdsTest extends TestCase
         Database::clearDb();
     }
 
-    public function testPageAuthorsDetail()
+    public function testPageAuthorsDetail(): void
     {
         $page = Page::AUTHOR_DETAIL;
 
@@ -224,7 +247,7 @@ class OpdsTest extends TestCase
         Config::set('max_item_per_page', -1);
     }
 
-    public function testPageAuthorsDetail_WithFacets()
+    public function testPageAuthorsDetail_WithFacets(): void
     {
         $page = Page::AUTHOR_DETAIL;
 
@@ -244,7 +267,7 @@ class OpdsTest extends TestCase
         Config::set('books_filter', []);
     }
 
-    public function testPageAuthorsDetail_WithoutAnyId()
+    public function testPageAuthorsDetail_WithoutAnyId(): void
     {
         $page = Page::AUTHOR_DETAIL;
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";

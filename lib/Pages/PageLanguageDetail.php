@@ -13,24 +13,34 @@ use SebLucas\Cops\Calibre\Language;
 
 class PageLanguageDetail extends Page
 {
-    protected $className = Language::class;
+    protected string $className = Language::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $language = Language::getInstanceById($this->idGet, $this->getDatabaseId());
+        /** @var Language $instance */
+        $instance = Language::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&l=' . $this->idGet;
-            $this->getFilters($language);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries($language);
+            $this->getEntries($instance);
         }
-        $this->idPage = $language->getEntryId();
-        $this->title = $language->getTitle();
-        $this->currentUri = $language->getUri();
-        $this->parentTitle = $language->getParentTitle();
-        $this->parentUri = $language->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
+    /**
+     * Summary of getEntries
+     * @param Language $instance
+     * @return void
+     */
     public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);

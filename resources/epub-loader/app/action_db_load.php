@@ -8,8 +8,8 @@
 
 use Marsender\EPubLoader\CalibreDbLoader;
 
-/** @var array $dbConfig */
-/** @var array $gConfig */
+/** @var array<mixed> $dbConfig */
+/** @var array<mixed> $gConfig */
 
 defined('DEF_AppName') or die('Restricted access');
 

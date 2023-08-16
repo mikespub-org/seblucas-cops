@@ -13,24 +13,34 @@ use SebLucas\Cops\Calibre\Rating;
 
 class PageRatingDetail extends Page
 {
-    protected $className = Rating::class;
+    protected string $className = Rating::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $rating = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
+        /** @var Rating $instance */
+        $instance = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&r=' . $this->idGet;
-            $this->getFilters($rating);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries($rating);
+            $this->getEntries($instance);
         }
-        $this->idPage = $rating->getEntryId();
-        $this->title = $rating->getTitle();
-        $this->currentUri = $rating->getUri();
-        $this->parentTitle = $rating->getParentTitle();
-        $this->parentUri = $rating->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
+    /**
+     * Summary of getEntries
+     * @param Rating $instance
+     * @return void
+     */
     public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);

@@ -29,45 +29,47 @@ else {
  */
 class BookInfos
 {
-    public $mBasePath = '';
+    public string $mBasePath = '';
 
-    public $mPath = '';
+    public string $mPath = '';
 
-    public $mName = '';
+    public string $mName = '';
 
-    public $mFormat = '';
+    public string $mFormat = '';
 
-    public $mUuid = '';
+    public string $mUuid = '';
 
-    public $mUri = '';
+    public string $mUri = '';
 
-    public $mTitle = '';
+    public string $mTitle = '';
 
+    /** @var array<mixed>|null */
     public $mAuthors = null;
 
-    public $mLanguage = '';
+    public string $mLanguage = '';
 
-    public $mDescription = '';
+    public string $mDescription = '';
 
+    /** @var array<string>|null */
     public $mSubjects = null;
 
-    public $mCover = '';
+    public string $mCover = '';
 
-    public $mIsbn = '';
+    public string $mIsbn = '';
 
-    public $mRights = '';
+    public string $mRights = '';
 
-    public $mPublisher = '';
+    public string $mPublisher = '';
 
-    public $mSerie = '';
+    public string $mSerie = '';
 
-    public $mSerieIndex = '';
+    public string $mSerieIndex = '';
 
-    public $mCreationDate = '';
+    public string $mCreationDate = '';
 
-    public $mModificationDate = '';
+    public string $mModificationDate = '';
 
-    public $mTimeStamp = 0;
+    public string $mTimeStamp = '0';
 
     /**
      * Loads book infos from an epub file
@@ -129,8 +131,8 @@ class BookInfos
         // Tag sample in opf file:
         //   <meta content="7" name="calibre:series_index"/>
         $this->mSerieIndex = $ePub->SerieIndex();
-        $this->mCreationDate = $this->GetSqlDate($ePub->CreationDate());
-        $this->mModificationDate = $this->GetSqlDate($ePub->ModificationDate());
+        $this->mCreationDate = $this->GetSqlDate($ePub->CreationDate()) ?? '';
+        $this->mModificationDate = $this->GetSqlDate($ePub->ModificationDate()) ?? '';
         // Timestamp is used to get latest ebooks
         $this->mTimeStamp = $this->mCreationDate;
     }

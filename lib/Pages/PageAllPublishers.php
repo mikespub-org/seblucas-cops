@@ -13,8 +13,12 @@ use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllPublishers extends Page
 {
-    protected $className = Publisher::class;
+    protected string $className = Publisher::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -22,6 +26,10 @@ class PageAllPublishers extends Page
         $this->title = localize("publishers.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);

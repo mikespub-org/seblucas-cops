@@ -25,7 +25,7 @@ class PageTest extends TestCase
         $_GET = [];
     }
 
-    public function testPageIndex()
+    public function testPageIndex(): void
     {
         $page = Page::INDEX;
         $request = new Request();
@@ -67,7 +67,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageIndexWithIgnored()
+    public function testPageIndexWithIgnored(): void
     {
         $page = Page::INDEX;
         $request = new Request();
@@ -89,7 +89,7 @@ class PageTest extends TestCase
         Config::set('ignored_categories', []);
     }
 
-    public function testPageIndexWithCustomColumn_Type1()
+    public function testPageIndexWithCustomColumn_Type1(): void
     {
         $page = Page::INDEX;
         $request = new Request();
@@ -107,7 +107,7 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', []);
     }
 
-    public function testPageIndexWithCustomColumn_Type2()
+    public function testPageIndexWithCustomColumn_Type2(): void
     {
         $page = Page::INDEX;
         $request = new Request();
@@ -125,7 +125,7 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', []);
     }
 
-    public function testPageIndexWithCustomColumn_Type4()
+    public function testPageIndexWithCustomColumn_Type4(): void
     {
         $page = Page::INDEX;
         $request = new Request();
@@ -143,7 +143,7 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', []);
     }
 
-    public function testPageIndexWithCustomColumn_ManyTypes()
+    public function testPageIndexWithCustomColumn_ManyTypes(): void
     {
         $page = Page::INDEX;
         $request = new Request();
@@ -158,7 +158,7 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', []);
     }
 
-    public function testPageIndexWithCustomColumn_All()
+    public function testPageIndexWithCustomColumn_All(): void
     {
         $page = Page::INDEX;
         $request = new Request();
@@ -173,7 +173,7 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', []);
     }
 
-    public function testPageAllCustom_Type4()
+    public function testPageAllCustom_Type4(): void
     {
         $page = Page::ALL_CUSTOMS;
         $request = new Request();
@@ -192,7 +192,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllCustom_Type2()
+    public function testPageAllCustom_Type2(): void
     {
         $page = Page::ALL_CUSTOMS;
         $request = new Request();
@@ -211,7 +211,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllCustom_Type1()
+    public function testPageAllCustom_Type1(): void
     {
         $page = Page::ALL_CUSTOMS;
         $request = new Request();
@@ -230,7 +230,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageCustomDetail_Type4()
+    public function testPageCustomDetail_Type4(): void
     {
         $page = Page::CUSTOM_DETAIL;
         $request = new Request();
@@ -247,7 +247,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageCustomDetail_Type2()
+    public function testPageCustomDetail_Type2(): void
     {
         $page = Page::CUSTOM_DETAIL;
         $request = new Request();
@@ -264,7 +264,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageCustomDetail_Type1()
+    public function testPageCustomDetail_Type1(): void
     {
         $page = Page::CUSTOM_DETAIL;
         $request = new Request();
@@ -281,7 +281,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageAllAuthors_WithFullName()
+    public function testPageAllAuthors_WithFullName(): void
     {
         $page = Page::ALL_AUTHORS;
         $request = new Request();
@@ -299,7 +299,7 @@ class PageTest extends TestCase
         Config::set('author_split_first_letter', "1");
     }
 
-    public function testPageAllAuthors_SplittedByFirstLetter()
+    public function testPageAllAuthors_SplittedByFirstLetter(): void
     {
         $page = Page::ALL_AUTHORS;
         $request = new Request();
@@ -314,7 +314,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAuthorsFirstLetter()
+    public function testPageAuthorsFirstLetter(): void
     {
         $page = Page::AUTHORS_FIRST_LETTER;
         $request = new Request();
@@ -329,7 +329,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAuthorsDetail_FirstPage()
+    public function testPageAuthorsDetail_FirstPage(): void
     {
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
@@ -352,7 +352,7 @@ class PageTest extends TestCase
         Config::set('max_item_per_page', -1);
     }
 
-    public function testPageAuthorsDetail_LastPage()
+    public function testPageAuthorsDetail_LastPage(): void
     {
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
@@ -376,7 +376,7 @@ class PageTest extends TestCase
         Config::set('max_item_per_page', -1);
     }
 
-    public function testPageAuthorsDetail_NoPagination()
+    public function testPageAuthorsDetail_NoPagination(): void
     {
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
@@ -394,7 +394,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->IsPaginated());
     }
 
-    public function testPageAuthorsDetail_Filter()
+    public function testPageAuthorsDetail_Filter(): void
     {
         $page = Page::AUTHOR_DETAIL;
         $request = new Request();
@@ -412,7 +412,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllBooks_WithFullName()
+    public function testPageAllBooks_WithFullName(): void
     {
         $page = Page::ALL_BOOKS;
         $request = new Request();
@@ -433,7 +433,7 @@ class PageTest extends TestCase
         Config::set('titles_split_publication_year', 0);
     }
 
-    public function testPageAllBooks_SplitByFirstLetter()
+    public function testPageAllBooks_SplitByFirstLetter(): void
     {
         $page = Page::ALL_BOOKS;
         $request = new Request();
@@ -448,7 +448,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllBooksByLetter()
+    public function testPageAllBooksByLetter(): void
     {
         $page = Page::ALL_BOOKS_LETTER;
         $request = new Request();
@@ -463,7 +463,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageAllBooks_SplitByPubYear()
+    public function testPageAllBooks_SplitByPubYear(): void
     {
         $page = Page::ALL_BOOKS;
         $request = new Request();
@@ -484,7 +484,7 @@ class PageTest extends TestCase
         Config::set('titles_split_publication_year', 0);
     }
 
-    public function testPageAllBooksByYear()
+    public function testPageAllBooksByYear(): void
     {
         $page = Page::ALL_BOOKS_YEAR;
         $request = new Request();
@@ -499,7 +499,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageAllSeries()
+    public function testPageAllSeries(): void
     {
         $page = Page::ALL_SERIES;
         $request = new Request();
@@ -516,7 +516,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageSeriesDetail()
+    public function testPageSeriesDetail(): void
     {
         $page = Page::SERIE_DETAIL;
         $request = new Request();
@@ -531,7 +531,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageSeriesDetail_Filter()
+    public function testPageSeriesDetail_Filter(): void
     {
         $page = Page::SERIE_DETAIL;
         $request = new Request();
@@ -549,7 +549,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllPublishers()
+    public function testPageAllPublishers(): void
     {
         $page = Page::ALL_PUBLISHERS;
         $request = new Request();
@@ -563,7 +563,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPagePublishersDetail()
+    public function testPagePublishersDetail(): void
     {
         $page = Page::PUBLISHER_DETAIL;
         $request = new Request();
@@ -578,7 +578,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPagePublishersDetail_Filter()
+    public function testPagePublishersDetail_Filter(): void
     {
         $page = Page::PUBLISHER_DETAIL;
         $request = new Request();
@@ -596,7 +596,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllTags()
+    public function testPageAllTags(): void
     {
         $page = Page::ALL_TAGS;
         $request = new Request();
@@ -613,7 +613,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageTagDetail()
+    public function testPageTagDetail(): void
     {
         $page = Page::TAG_DETAIL;
         $request = new Request();
@@ -628,7 +628,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageTagDetail_Filter()
+    public function testPageTagDetail_Filter(): void
     {
         $page = Page::TAG_DETAIL;
         $request = new Request();
@@ -645,7 +645,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllLanguages()
+    public function testPageAllLanguages(): void
     {
         $page = Page::ALL_LANGUAGES;
         $request = new Request();
@@ -660,7 +660,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageLanguageDetail()
+    public function testPageLanguageDetail(): void
     {
         $page = Page::LANGUAGE_DETAIL;
         $request = new Request();
@@ -675,7 +675,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageLanguageDetail_Filter()
+    public function testPageLanguageDetail_Filter(): void
     {
         $page = Page::LANGUAGE_DETAIL;
         $request = new Request();
@@ -692,7 +692,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAllRatings()
+    public function testPageAllRatings(): void
     {
         $page = Page::ALL_RATINGS;
         $request = new Request();
@@ -709,7 +709,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageRatingDetail()
+    public function testPageRatingDetail(): void
     {
         $page = Page::RATING_DETAIL;
         $request = new Request();
@@ -724,7 +724,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageRatingDetail_Filter()
+    public function testPageRatingDetail_Filter(): void
     {
         $page = Page::RATING_DETAIL;
         $request = new Request();
@@ -741,7 +741,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageRecent()
+    public function testPageRecent(): void
     {
         $page = Page::ALL_RECENT_BOOKS;
         $request = new Request();
@@ -755,7 +755,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageRecent_WithFacets_IncludedTag()
+    public function testPageRecent_WithFacets_IncludedTag(): void
     {
         $page = Page::ALL_RECENT_BOOKS;
         $request = new Request();
@@ -770,7 +770,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageRecent_WithFacets_ExcludedTag()
+    public function testPageRecent_WithFacets_ExcludedTag(): void
     {
         $page = Page::ALL_RECENT_BOOKS;
         $request = new Request();
@@ -785,7 +785,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageBookDetail()
+    public function testPageBookDetail(): void
     {
         $page = Page::BOOK_DETAIL;
         $request = new Request();
@@ -799,7 +799,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageSearch_WithOnlyBooksReturned()
+    public function testPageSearch_WithOnlyBooksReturned(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -816,7 +816,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageSearch_WithAuthorsIgnored()
+    public function testPageSearch_WithAuthorsIgnored(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
@@ -836,7 +836,7 @@ class PageTest extends TestCase
         Config::set('ignored_categories', []);
     }
 
-    public function testPageSearch_WithTwoCategories()
+    public function testPageSearch_WithTwoCategories(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
@@ -857,6 +857,10 @@ class PageTest extends TestCase
 
     /**
      * @dataProvider providerAccentuatedCharacters
+     * @param mixed $query
+     * @param mixed $count
+     * @param mixed $content
+     * @return void
      */
     public function testPageSearch_WithAccentuatedCharacters($query, $count, $content)
     {
@@ -875,6 +879,10 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
+    /**
+     * Summary of providerAccentuatedCharacters
+     * @return array<mixed>
+     */
     public function providerAccentuatedCharacters()
     {
         return [
@@ -888,6 +896,10 @@ class PageTest extends TestCase
 
     /**
      * @dataProvider providerNormalizedSearch
+     * @param mixed $query
+     * @param mixed $count
+     * @param mixed $content
+     * @return void
      */
     public function testPageSearch_WithNormalizedSearch_Book($query, $count, $content)
     {
@@ -914,6 +926,10 @@ class PageTest extends TestCase
         Database::clearDb();
     }
 
+    /**
+     * Summary of providerNormalizedSearch
+     * @return array<mixed>
+     */
     public function providerNormalizedSearch()
     {
         return [
@@ -927,7 +943,7 @@ class PageTest extends TestCase
         ];
     }
 
-    public function testAuthorSearch_ByName()
+    public function testAuthorSearch_ByName(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -943,7 +959,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testAuthorSearch_BySort()
+    public function testAuthorSearch_BySort(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -959,7 +975,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageSearchScopeAuthors()
+    public function testPageSearchScopeAuthors(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -976,7 +992,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageSearchScopeSeries()
+    public function testPageSearchScopeSeries(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -993,7 +1009,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageSearchScopeBooks()
+    public function testPageSearchScopeBooks(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -1009,7 +1025,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
-    public function testPageSearchScopePublishers()
+    public function testPageSearchScopePublishers(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -1026,7 +1042,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageSearchScopeTags()
+    public function testPageSearchScopeTags(): void
     {
         $page = Page::OPENSEARCH_QUERY;
         $request = new Request();
@@ -1042,7 +1058,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageAbout()
+    public function testPageAbout(): void
     {
         $page = Page::ABOUT;
         $request = new Request();
@@ -1055,7 +1071,7 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
-    public function testPageCustomize()
+    public function testPageCustomize(): void
     {
         $page = Page::CUSTOMIZE;
         $request = new Request();

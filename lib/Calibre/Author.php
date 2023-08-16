@@ -29,8 +29,14 @@ class Author extends Base
     where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc';
     public const URL_PARAM = "a";
 
+    /** @var mixed */
     public $sort;
 
+    /**
+     * Summary of __construct
+     * @param mixed $post
+     * @param mixed $database
+     */
     public function __construct($post, $database = null)
     {
         $this->id = $post->id;
@@ -39,11 +45,19 @@ class Author extends Base
         $this->databaseId = $database;
     }
 
+    /**
+     * Summary of getTitle
+     * @return mixed
+     */
     public function getTitle()
     {
         return $this->sort;
     }
 
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
     public function getParentTitle()
     {
         return localize("authors.title");
@@ -51,6 +65,12 @@ class Author extends Base
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getInstancesByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return array<Author>
+     */
     public static function getInstancesByBookId($bookId, $database = null)
     {
         $query = 'select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link

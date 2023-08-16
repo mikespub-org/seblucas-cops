@@ -238,6 +238,15 @@ $config['cops_custom_date_split_year'] = '1';
 $config['cops_custom_integer_split_range'] = 0;
 
 /*
+ * @todo https://manual.calibre-ebook.com/sub_groups.html
+ * Start working on hierarchical tags or custom columns
+ * For example for 'tags' and 'Type2' custom column in csv format:
+ * $config['calibre_categories_using_hierarchy'] = ['tags', 'Type2'];
+ * Note: here you need to specify the title/name of the custom column, not the lookup name = different from above
+ */
+$config['calibre_categories_using_hierarchy'] = [];
+
+/*
  * Rename .epub to .kepub.epub if downloaded from a Kobo eReader
  * The ebook will then be recognized a Kepub so with chaptered paging, statistics, ...
  * You have to enable URL rewriting if you want to enable kepup.epub download

@@ -1,7 +1,8 @@
 # COPS for PHP 8.x
 
 ## Prerequisites for this fork
--	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML and XMLWriter support (PHP 8.1 or later recommended).
+-	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML, XMLWriter and ZLib support (PHP 8.1 or later recommended)
+- Release 1.4.2 still works with PHP 7.4 if necessary - earlier PHP 7.x (or 5.x) versions are *not* supported with this fork
 
 User support issues remain available at https://github.com/seblucas/cops/issues - please use it if you need help with COPS in general
 

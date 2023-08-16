@@ -14,8 +14,12 @@ use SebLucas\Cops\Input\Config;
 
 class PageAllSeries extends Page
 {
-    protected $className = Serie::class;
+    protected string $className = Serie::class;
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -23,9 +27,20 @@ class PageAllSeries extends Page
         $this->title = localize("series.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);
+        // @todo needs title_sort function in sqlite for series
+        //if ($baselist->hasChildCategories()) {
+        //    // use tag_browser_series view here, to get the full hierarchy?
+        //    $this->entryArray = $baselist->browseAllEntries($this->n);
+        //} else {
+        //    $this->entryArray = $baselist->getRequestEntries($this->n);
+        //}
         $this->entryArray = $baselist->getRequestEntries($this->n);
         $this->totalNumber = $baselist->countRequestEntries();
         $this->sorted = $baselist->orderBy;

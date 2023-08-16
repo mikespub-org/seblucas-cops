@@ -23,11 +23,12 @@ use SebLucas\Cops\Pages\Page;
 
 class JSONRenderer
 {
-    public static $endpoint = Config::ENDPOINT["index"];
+    public static string $endpoint = Config::ENDPOINT["index"];
 
     /**
      * @param Book $book
-     * @return array
+     * @param string $endpoint
+     * @return array<string, mixed>
      */
     public static function getBookContentArray($book, $endpoint)
     {
@@ -37,7 +38,8 @@ class JSONRenderer
             if ($i == 2) {
                 break;
             }
-            if ($data = $book->getDataFormat($format)) {
+            $data = $book->getDataFormat($format);
+            if ($data) {
                 $i++;
                 array_push($preferedData, ["url" => $data->getHtmlLink(),
                   "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
@@ -88,7 +90,8 @@ class JSONRenderer
 
     /**
      * @param Book $book
-     * @return array
+     * @param string $endpoint
+     * @return array<string, mixed>
      */
     public static function getFullBookContentArray($book, $endpoint)
     {
@@ -136,9 +139,18 @@ class JSONRenderer
         return $out;
     }
 
+    /**
+     * Summary of getContentArray
+     * @param Entry|EntryBook|null $entry
+     * @param string $endpoint
+     * @param string $extraUri
+     * @return array<string, mixed>|bool
+     */
     public static function getContentArray($entry, $endpoint, $extraUri = "")
     {
-        /** @var Entry|EntryBook $entry */
+        if (is_null($entry)) {
+            return false;
+        }
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
             $out ["book"] = self::getBookContentArray($entry->book, $endpoint);
@@ -147,9 +159,14 @@ class JSONRenderer
         return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
     }
 
+    /**
+     * Summary of getContentArrayTypeahead
+     * @param Page $page
+     * @param string $endpoint
+     * @return array<mixed>
+     */
     public static function getContentArrayTypeahead($page, $endpoint)
     {
-        /** @var Page $page */
         $out = [];
         foreach ($page->entryArray as $entry) {
             if ($entry instanceof EntryBook) {
@@ -161,6 +178,13 @@ class JSONRenderer
         return $out;
     }
 
+    /**
+     * Summary of addCompleteArray
+     * @param array<string, mixed> $in
+     * @param Request $request
+     * @param string $endpoint
+     * @return array<string, mixed>
+     */
     public static function addCompleteArray($in, $request, $endpoint)
     {
         $out = $in;
@@ -222,6 +246,11 @@ class JSONRenderer
         return $out;
     }
 
+    /**
+     * Summary of getCurrentUrl
+     * @param string $queryString
+     * @return string
+     */
     public static function getCurrentUrl($queryString)
     {
         return Config::ENDPOINT["json"] . '?' . Format::addURLParam($queryString, 'complete', 1);
@@ -231,7 +260,7 @@ class JSONRenderer
      * Summary of getJson
      * @param Request $request
      * @param bool $complete
-     * @return array
+     * @return array<string, mixed>
      */
     public static function getJson($request, $complete = false)
     {
@@ -363,6 +392,23 @@ class JSONRenderer
             $out ["parenturl"] = $endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
         } elseif ($page != Page::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];
+        }
+        $out ["hierarchy"] = false;
+        if ($currentPage->hierarchy) {
+            $out ["hierarchy"] = [
+                "parent" => self::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraUri),
+                "current" => self::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraUri),
+                "children" => [],
+                "hastree" => $request->get('tree', false),
+            ];
+            foreach ($currentPage->hierarchy['children'] as $entry) {
+                array_push($out ["hierarchy"]["children"], self::getContentArray($entry, $endpoint, $extraUri));
+            }
+        }
+
+        /** @phpstan-ignore-next-line */
+        if (Database::KEEP_STATS) {
+            $out ["dbstats"] = Database::getDbStatistics();
         }
 
         return $out;

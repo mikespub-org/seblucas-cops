@@ -22,7 +22,7 @@ use SebLucas\Cops\Input\Request;
 
 class FilterTest extends TestCase
 {
-    private static $endpoint = 'phpunit';
+    private static string $endpoint = 'phpunit';
 
     public static function setUpBeforeClass(): void
     {
@@ -30,8 +30,9 @@ class FilterTest extends TestCase
         Database::clearDb();
     }
 
-    public function testAuthorFilters()
+    public function testAuthorFilters(): void
     {
+        /** @var Author $author */
         $author = Author::getInstanceById(1);
         $this->assertEquals("1", $author->id);
 
@@ -57,8 +58,9 @@ class FilterTest extends TestCase
         $this->assertCount(4, $tags);
     }
 
-    public function testLanguageFilters()
+    public function testLanguageFilters(): void
     {
+        /** @var Language $language */
         $language = Language::getInstanceById(1);
         $this->assertEquals("1", $language->id);
 
@@ -84,8 +86,9 @@ class FilterTest extends TestCase
         $this->assertCount(10, $tags);
     }
 
-    public function testPublisherFilters()
+    public function testPublisherFilters(): void
     {
+        /** @var Publisher $publisher */
         $publisher = Publisher::getInstanceById(6);
         $this->assertEquals("6", $publisher->id);
 
@@ -111,8 +114,9 @@ class FilterTest extends TestCase
         $this->assertCount(4, $tags);
     }
 
-    public function testRatingFilters()
+    public function testRatingFilters(): void
     {
+        /** @var Rating $rating */
         $rating = Rating::getInstanceById(1);
         $this->assertEquals("1", $rating->id);
 
@@ -138,8 +142,9 @@ class FilterTest extends TestCase
         $this->assertCount(3, $tags);
     }
 
-    public function testSerieFilters()
+    public function testSerieFilters(): void
     {
+        /** @var Serie $serie */
         $serie = Serie::getInstanceById(1);
         $this->assertEquals("1", $serie->id);
 
@@ -165,8 +170,9 @@ class FilterTest extends TestCase
         $this->assertCount(3, $tags);
     }
 
-    public function testTagFilters()
+    public function testTagFilters(): void
     {
+        /** @var Tag $tag */
         $tag = Tag::getInstanceById(1);
         $this->assertEquals("1", $tag->id);
 
@@ -188,11 +194,31 @@ class FilterTest extends TestCase
         $series = $tag->getSeries();
         $this->assertCount(3, $series);
 
-        //$tags = $tag->getTags();
-        //$this->assertCount(1, $tags);
+        // special case if we want to find other tags applied to books where this tag applies
+        $tag->limitSelf = false;
+        $tags = $tag->getTags();
+        $this->assertCount(9, $tags);
     }
 
-    public function testCustomFilters()
+    public function testTagHierarchy(): void
+    {
+        // for hierarchical tags like Fiction, Fiction.Historical, Fiction.Romance etc.
+        Config::set('calibre_categories_using_hierarchy', ['tags']);
+
+        /** @var Tag $tag */
+        $tag = Tag::getInstanceById(1);
+        $this->assertEquals("1", $tag->id);
+
+        $children = $tag->getChildEntries();
+        $this->assertCount(0, $children);
+
+        //$siblings = $tag->getSiblingEntries();
+        //$this->assertCount(0, $siblings);
+
+        Config::set('calibre_categories_using_hierarchy', []);
+    }
+
+    public function testCustomFilters(): void
     {
         $custom = CustomColumn::createCustom(1, 1);
         $this->assertEquals("Type4", $custom->customColumnType->getTitle());
@@ -220,7 +246,46 @@ class FilterTest extends TestCase
         $this->assertCount(4, $tags);
     }
 
-    public function testGetEntryArray()
+    public function testCustomHierarchy(): void
+    {
+        // for hierarchical custom columns like Fiction, Fiction.Historical, Fiction.Romance etc.
+        Config::set('calibre_categories_using_hierarchy', ['Type2']);
+
+        /**
+         * Assuming you add Type2 entries:
+         * 4: Tree
+         * 5: Tree.More
+         * and rename existing tags:
+         * 1: Tree.Tag1
+         * 2: Tree.More.Tag2
+         * 3: Tree.More.Tag3
+         *
+         * See test/BaseWithSomeBooks/hierarchical_type2.sql
+         */
+        $custom = CustomColumn::createCustom(2, 4);
+        $this->assertEquals("Type2", $custom->customColumnType->getTitle());
+        $this->assertEquals("Tree", $custom->getTitle());
+
+        $children = $custom->getChildEntries();
+        $this->assertCount(2, $children);
+        $this->assertEquals("cops:custom:2:5", $children[0]->id);
+
+        $children = $custom->getChildEntries(true);
+        $this->assertCount(4, $children);
+        $this->assertEquals("cops:custom:2:5", $children[0]->id);
+
+        $custom = CustomColumn::createCustom(2, 3);
+        $this->assertEquals("Type2", $custom->customColumnType->getTitle());
+        $this->assertEquals("Tree.More.Tag3", $custom->getTitle());
+
+        $parent = $custom->getParentEntry();
+        $this->assertEquals("cops:custom:2:5", $parent->id);
+        $this->assertEquals("Tree.More", $parent->title);
+
+        Config::set('calibre_categories_using_hierarchy', []);
+    }
+
+    public function testGetEntryArray(): void
     {
         $request = Request::build([]);
         $entries = Filter::getEntryArray($request);

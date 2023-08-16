@@ -8,6 +8,21 @@
 {{??}}
 <div id="filter">
     <ul>
+    {{? it.hierarchy }}
+        {{? it.hierarchy.parent }}
+            <li><a href="{{=it.hierarchy.parent.navlink}}"><strong>{{=it.hierarchy.parent.title}}</strong></a></li>
+        {{?}}
+        {{? it.hierarchy.current }}
+            {{? it.hierarchy.hastree }}
+                <li><a href="{{=it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
+            {{??}}
+                <li><a href="{{=it.hierarchy.current.navlink}}&tree=1"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
+            {{?}}
+        {{?}}
+        {{~it.hierarchy.children:entry:idx}}
+            <li><a href="{{=entry.navlink}}">{{=entry.title}}</a></li>
+        {{~}}
+    {{?}}
     </ul>
 </div>
 

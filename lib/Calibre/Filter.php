@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\Page;
 
 class Filter
@@ -29,18 +30,17 @@ class Filter
     ];
 
     protected Request $request;
-    protected array $params = [];
+    /** @var array<mixed> */
+    protected $params = [];
     protected string $parentTable = "books";
     protected string $queryString = "";
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     protected $databaseId;
 
     /**
      * Summary of __construct
-     * @param Request|array $request current request or urlParams array
-     * @param array $params initial query params
+     * @param Request|array<mixed> $request current request or urlParams array
+     * @param array<mixed> $params initial query params
      * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
      * @param mixed $database current database in multiple database setup
      */
@@ -69,7 +69,7 @@ class Filter
 
     /**
      * Summary of getQueryParams
-     * @return array updated query params including filters
+     * @return array<mixed> updated query params including filters
      */
     public function getQueryParams()
     {
@@ -183,7 +183,7 @@ class Filter
             $this->addCustomIdFilter($instance->customColumnType, $instance->id);
             return;
         }
-        $this->addLinkedIdFilter($instance->id, $instance->getLinkTable(), $instance->getLinkColumn());
+        $this->addLinkedIdFilter($instance->id, $instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
     }
 
     /**
@@ -270,7 +270,7 @@ class Filter
 
     /**
      * Summary of addCustomIdArrayFilters
-     * @param array $customIdArray
+     * @param array<mixed> $customIdArray
      * @return void
      */
     public function addCustomIdArrayFilters($customIdArray)
@@ -306,18 +306,25 @@ class Filter
      * @param mixed $linkId
      * @param mixed $linkTable
      * @param mixed $linkColumn
+     * @param mixed $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
      * @return void
      */
-    public function addLinkedIdFilter($linkId, $linkTable, $linkColumn)
+    public function addLinkedIdFilter($linkId, $linkTable, $linkColumn, $limitSelf = true)
     {
         $exists = true;
+        $matches = [];
         if (preg_match("/^!(.*)$/", $linkId, $matches)) {
             $exists = false;
             $linkId = $matches[1];
         }
 
         if ($this->parentTable == $linkTable) {
-            $filter = "{$linkTable}.{$linkColumn} = ?";
+            if ($limitSelf) {
+                $filter = "{$linkTable}.{$linkColumn} = ?";
+            } else {
+                // find other tags applied to books where this tag applies
+                $filter = "exists (select null from {$linkTable} as filterself, books where {$this->parentTable}.book = books.id and {$this->parentTable}.{$linkColumn} != filterself.{$linkColumn} and filterself.book = books.id and filterself.{$linkColumn} = ?)";
+            }
         } elseif ($this->parentTable == "books") {
             $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
@@ -331,6 +338,12 @@ class Filter
         $this->addFilter($filter, $linkId);
     }
 
+    /**
+     * Summary of getEntryArray
+     * @param Request $request
+     * @param mixed $database
+     * @return array<Entry>
+     */
     public static function getEntryArray($request, $database = null)
     {
         $entryArray = [];
@@ -351,6 +364,10 @@ class Filter
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);
                 }
                 continue;
+            }
+            // remove negative flag for filter entry here
+            if (preg_match('/^!\d+$/', $paramValue)) {
+                $paramValue = substr($paramValue, 1);
             }
             $req = Request::build([$paramName => $paramValue]);
             $baselist = new BaseList($className, $req, $database);

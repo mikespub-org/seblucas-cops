@@ -23,7 +23,7 @@ $zip->Open('an_existing_archive.zip'); // open an existing archive for reading a
 $ok = $zip->FileExists('subfolder/help.html');
 
 // count the files stored in the archive
-$file_nbr = is_countable($zip->CdFileLst) ? count($zip->CdFileLst) : 0;
+$file_nbr = count($zip->CdFileLst);
 
 // retrieve the content of an compressed file in the archive
 $text1 = $zip->FileRead('readme.txt');

@@ -8,6 +8,7 @@
 
 namespace Marsender\EPubLoader;
 
+use Exception;
 use ZipArchive;
 
 /**
@@ -15,7 +16,9 @@ use ZipArchive;
  */
 class ZipFile
 {
+    /** @var ZipArchive|null */
     private $mZip;
+    /** @var array<string, mixed>|null */
     private $mEntries;
 
     public function __construct()
@@ -101,6 +104,39 @@ class ZipFile
         $data = $this->mZip->getFromName($inFileName);
 
         return $data;
+    }
+
+    /**
+     * Get a file handler to a file in the zip entries (read-only)
+     *
+     * @param string $inFileName File to search
+     *
+     * @return resource|bool File handler if the file exist, else false
+     */
+    public function FileStream($inFileName)
+    {
+        if (!isset($this->mZip)) {
+            return false;
+        }
+
+        if (!isset($this->mEntries[$inFileName])) {
+            return false;
+        }
+
+        return $this->mZip->getStream($inFileName);
+    }
+
+    /**
+     * Replace the content of a file in the zip entries
+     *
+     * @param string $inFileName File with content to replace
+     * @param string|bool $inData Data content to replace, or false to delete
+     * @throws \Exception
+     * @return never
+     */
+    public function FileReplace($inFileName, $inData)
+    {
+        throw new Exception('ZipFile is read-only, use clsTbsZip class instead');
     }
 
     /**

@@ -20,7 +20,7 @@ if (!file_exists($fileName)) {
     die('Missing configuration file: ' . $fileName);
 }
 require_once($fileName);
-/** @var array $gConfig */
+/** @var array<mixed> $gConfig */
 
 // Add cops directory to include path
 $includePath = ini_get('include_path');

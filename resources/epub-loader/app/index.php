@@ -24,7 +24,7 @@ if (!file_exists($fileName)) {
 // Global vars
 $gConfig = [];
 require_once($fileName);
-/** @var array $gConfig */
+/** @var array<mixed> $gConfig */
 
 // Include Calibre database loader class
 $fileName = $gConfig['cops_directory'] . '/resources/epub-loader/CalibreDbLoader.class.php';
@@ -59,6 +59,7 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . 'header.php');
  *
  * @param string $inPath Base directory to search in
  * @param string $inPattern Search pattern
+ * @return array<string>
  */
 function RecursiveGlob($inPath = '', $inPattern = '*')
 {

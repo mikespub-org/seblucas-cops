@@ -8,7 +8,7 @@
 
 use Marsender\EPubLoader\BookExport;
 
-/** @var array $dbConfig */
+/** @var array<mixed> $dbConfig */
 
 defined('DEF_AppName') or die('Restricted access');
 

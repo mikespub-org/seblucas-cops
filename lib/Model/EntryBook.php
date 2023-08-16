@@ -12,15 +12,15 @@ use SebLucas\Cops\Calibre\Book;
 
 class EntryBook extends Entry
 {
-    public $book;
+    public Book $book;
 
     /**
      * EntryBook constructor.
      * @param string $ptitle
-     * @param integer $pid
+     * @param string $pid
      * @param string $pcontent
      * @param string $pcontentType
-     * @param array $plinkArray
+     * @param Link[] $plinkArray
      * @param Book $pbook
      */
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook)
@@ -32,6 +32,7 @@ class EntryBook extends Entry
 
     /**
      * @deprecated 1.4.0 use getThumbnail() instead
+     * @return string|null
      */
     public function getCoverThumbnail()
     {
@@ -40,6 +41,7 @@ class EntryBook extends Entry
 
     /**
      * @deprecated 1.4.0 use getImage() instead
+     * @return string|null
      */
     public function getCover()
     {

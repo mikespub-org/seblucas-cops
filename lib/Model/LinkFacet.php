@@ -12,14 +12,15 @@ use SebLucas\Cops\Output\Format;
 
 class LinkFacet extends Link
 {
+    /** @var string|null */
     public $facetGroup;
-    public $activeFacet;
+    public bool $activeFacet;
 
     /**
      * Summary of __construct
      * @param string $phref ?queryString relative to current endpoint
-     * @param ?string $ptitle title in the OPDS catalog
-     * @param ?string $pfacetGroup facetGroup this facet belongs to
+     * @param string|null $ptitle title in the OPDS catalog
+     * @param string|null $pfacetGroup facetGroup this facet belongs to
      * @param bool $pactiveFacet is the facet currently active
      * @param mixed $database current database in multiple database setup
      */
@@ -31,6 +32,11 @@ class LinkFacet extends Link
         $this->activeFacet = $pactiveFacet;
     }
 
+    /**
+     * Summary of hrefXhtml
+     * @param string $endpoint
+     * @return string
+     */
     public function hrefXhtml($endpoint = '')
     {
         // LinkFacet()->href is relative to endpoint
