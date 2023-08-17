@@ -37,7 +37,7 @@ class CustomColumnTypeRating extends CustomColumnType
      *
      * @return string
      */
-    private function getTableLinkName()
+    protected function getTableLinkName()
     {
         return "books_custom_column_{$this->customId}_link";
     }
@@ -47,7 +47,7 @@ class CustomColumnTypeRating extends CustomColumnType
      *
      * @return string
      */
-    private function getTableLinkColumn()
+    protected function getTableLinkColumn()
     {
         return "value";
     }
