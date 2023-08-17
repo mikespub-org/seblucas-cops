@@ -492,9 +492,10 @@ class Book
     /**
      * Summary of getUpdatedEpub
      * @param mixed $idData
+     * @param bool $sendHeaders
      * @return void
      */
-    public function getUpdatedEpub($idData)
+    public function getUpdatedEpub($idData, $sendHeaders = true)
     {
         $data = $this->getDataById($idData);
 
@@ -527,7 +528,7 @@ class Book
                 $epub->updateForKepub();
                 $filename = $data->getUpdatedFilenameKepub();
             }
-            $epub->download($filename);
+            $epub->download($filename, $sendHeaders);
         } catch (Exception $e) {
             echo 'Exception : ' . $e->getMessage();
         }
