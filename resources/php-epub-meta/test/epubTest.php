@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\EPubMeta\Contents\NavPoint as TocNavPoint;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Data\Item as DataItem;
+use SebLucas\EPubMeta\Tools\ZipEdit;
 use SebLucas\TbsZip\clsTbsZip;
 
 // remove seblucas/tbszip from composer.json
@@ -864,5 +865,18 @@ class EPubTest extends TestCase
         $data = $item->getData();
 
         $this->assertEquals(strlen($data), $size);
+    }
+
+    /**
+     * Summary of testZipEdit
+     * @return void
+     */
+    public function testZipEdit()
+    {
+        ZipEdit::copyTest(self::TEST_EPUB_COPY, self::TEST_EPUB_COVER);
+        $epub = new EPub(self::TEST_EPUB_COVER);
+        $oldManifest = $this->epub->getManifest();
+        $newManifest = $epub->getManifest();
+        $this->assertEquals($oldManifest, $newManifest);
     }
 }
