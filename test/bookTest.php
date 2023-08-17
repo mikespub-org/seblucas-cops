@@ -514,10 +514,12 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
 
         ob_start();
-        $book->getUpdatedEpub(20);
+        $book->getUpdatedEpub(20, false);
         $headers = headers_list();
         $output = ob_get_clean();
-        $this->assertStringStartsWith("Exception : Cannot modify header information", $output);
+        //$this->assertStringStartsWith("Exception : Cannot modify header information", $output);
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals(1794249, strlen($output));
     }
 
     public function testGetFilePath_Cover(): void

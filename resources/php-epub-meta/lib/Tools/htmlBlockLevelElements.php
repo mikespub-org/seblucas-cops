@@ -38,5 +38,5 @@ return [
     'table',
     'tfoot',
     'ul',
-    'video'
+    'video',
 ];
