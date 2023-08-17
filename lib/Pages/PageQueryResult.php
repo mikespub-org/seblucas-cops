@@ -33,7 +33,7 @@ class PageQueryResult extends Page
      * Summary of useTypeahead
      * @return bool
      */
-    private function useTypeahead()
+    protected function useTypeahead()
     {
         return !is_null($this->request->get("search"));
     }
@@ -45,7 +45,7 @@ class PageQueryResult extends Page
      * @param mixed $database
      * @return array<mixed>
      */
-    private function searchByScope($scope, $limit = false, $database = null)
+    protected function searchByScope($scope, $limit = false, $database = null)
     {
         $n = $this->n;
         $numberPerPage = null;
