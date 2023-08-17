@@ -16,6 +16,7 @@ use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\TbsZip\clsTbsZip;
+//use SebLucas\EPubMeta\Tools\ZipEdit;
 use Exception;
 
 //class Book extends Base
@@ -498,7 +499,9 @@ class Book
         $data = $this->getDataById($idData);
 
         try {
+            // @todo try getting rid of this dependency here
             $epub = new EPub($data->getLocalPath(), clsTbsZip::class);
+            //$epub = new EPub($data->getLocalPath(), ZipEdit::class);
 
             $epub->setTitle($this->title);
             $authorArray = [];
