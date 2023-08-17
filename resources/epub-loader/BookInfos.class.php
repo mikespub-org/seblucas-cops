@@ -107,14 +107,14 @@ class BookInfos
         $this->mBasePath = $inBasePath;
         $this->mPath = pathinfo($inFileName, PATHINFO_DIRNAME);
         $this->mName = pathinfo($inFileName, PATHINFO_FILENAME);
-        $this->mUuid = $ePub->Uuid();
-        $this->mUri = $ePub->Uri();
-        $this->mTitle = $ePub->Title();
-        $this->mAuthors = $ePub->Authors();
-        $this->mLanguage = $ePub->Language();
-        $this->mDescription = $ePub->Description();
-        $this->mSubjects = $ePub->Subjects();
-        $cover = $ePub->Cover();
+        $this->mUuid = $ePub->getUuid();
+        $this->mUri = $ePub->getUri();
+        $this->mTitle = $ePub->getTitle();
+        $this->mAuthors = $ePub->getAuthors();
+        $this->mLanguage = $ePub->getLanguage();
+        $this->mDescription = $ePub->getDescription();
+        $this->mSubjects = $ePub->getSubjects();
+        $cover = $ePub->getCoverInfo();
         $cover = $cover['found'];
         if (($cover !== false)) {
             // Remove meta base path
@@ -122,15 +122,15 @@ class BookInfos
             $len = strlen($meta) - strlen(pathinfo($meta, PATHINFO_BASENAME));
             $this->mCover = substr($cover, $len);
         }
-        $this->mIsbn = $ePub->ISBN();
-        $this->mRights = $ePub->Copyright();
-        $this->mPublisher = $ePub->Publisher();
+        $this->mIsbn = $ePub->getIsbn();
+        $this->mRights = $ePub->getCopyright();
+        $this->mPublisher = $ePub->getPublisher();
         // Tag sample in opf file:
         //   <meta content="Histoire de la Monarchie de Juillet" name="calibre:series"/>
-        $this->mSerie = $ePub->Serie();
+        $this->mSerie = $ePub->getSeries();
         // Tag sample in opf file:
         //   <meta content="7" name="calibre:series_index"/>
-        $this->mSerieIndex = $ePub->SerieIndex();
+        $this->mSerieIndex = $ePub->getSeriesIndex();
         $this->mCreationDate = $this->GetSqlDate($ePub->CreationDate()) ?? '';
         $this->mModificationDate = $this->GetSqlDate($ePub->ModificationDate()) ?? '';
         // Timestamp is used to get latest ebooks
@@ -144,7 +144,7 @@ class BookInfos
      *
      * @return ?string Sql formated date
      */
-    private function GetSqlDate($inDate)
+    protected function GetSqlDate($inDate)
     {
         if (empty($inDate)) {
             return null;

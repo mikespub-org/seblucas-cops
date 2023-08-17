@@ -35,7 +35,7 @@ if (isset($_REQUEST['book'])) {
 
 // return image data
 if (isset($_REQUEST['img']) && isset($epub)) {
-    $img = $epub->Cover();
+    $img = $epub->getCoverInfo();
     header('Content-Type: ' . $img['mime']);
     echo $img['data'];
     exit;
@@ -43,13 +43,13 @@ if (isset($_REQUEST['img']) && isset($epub)) {
 
 // save epub data
 if ($_REQUEST['save'] && isset($epub)) {
-    $epub->Title($_POST['title']);
-    $epub->Description($_POST['description']);
-    $epub->Language($_POST['language']);
-    $epub->Publisher($_POST['publisher']);
-    $epub->Copyright($_POST['copyright']);
-    $epub->ISBN($_POST['isbn']);
-    $epub->Subjects($_POST['subjects']);
+    $epub->setTitle($_POST['title']);
+    $epub->setDescription($_POST['description']);
+    $epub->setLanguage($_POST['language']);
+    $epub->setPublisher($_POST['publisher']);
+    $epub->setCopyright($_POST['copyright']);
+    $epub->setIsbn($_POST['isbn']);
+    $epub->setSubjects($_POST['subjects']);
 
     $authors = [];
     foreach ((array)$_POST['authorname'] as $num => $name) {
@@ -61,7 +61,7 @@ if ($_REQUEST['save'] && isset($epub)) {
             $authors[$as] = $name;
         }
     }
-    $epub->Authors($authors);
+    $epub->setAuthors($authors);
 
     // handle image
     $cover = '';
@@ -78,7 +78,7 @@ if ($_REQUEST['save'] && isset($epub)) {
     if ($cover) {
         $info = @getimagesize($cover);
         if (preg_match('/^image\/(gif|jpe?g|png)$/', $info['mime'])) {
-            $epub->Cover($cover, $info['mime']);
+            $epub->setCoverInfo($cover, $info['mime']);
         } else {
             $error = 'Not a valid image file' . $cover;
         }
@@ -97,8 +97,8 @@ if ($_REQUEST['save'] && isset($epub)) {
     }
 
     // rename
-    $author = array_keys($epub->Authors())[0];
-    $title  = $epub->Title();
+    $author = array_keys($epub->getAuthors())[0];
+    $title  = $epub->getTitle();
     $new    = to_file($author . '-' . $title);
     $new    = $bookdir . $new . '.epub';
     $old    = $epub->file();

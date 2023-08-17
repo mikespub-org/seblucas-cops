@@ -1,14 +1,10 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use SebLucas\EPubMeta\Contents\Nav;
 use SebLucas\EPubMeta\Contents\NavPoint as TocNavPoint;
-use SebLucas\EPubMeta\Contents\NavPointList as TocNavPointList;
-use SebLucas\EPubMeta\Contents\Spine;
-use SebLucas\EPubMeta\Contents\Toc;
-use SebLucas\EPubMeta\Data\Manifest;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Data\Item as DataItem;
+use SebLucas\TbsZip\clsTbsZip;
 
 // remove seblucas/tbszip from composer.json
 include_once(dirname(dirname(__DIR__)) . '/tbszip/tbszip.php');
@@ -26,6 +22,7 @@ class EPubTest extends TestCase
 {
     public const TEST_EPUB = __DIR__ . '/data/test.epub';
     public const TEST_EPUB_COPY = __DIR__ . '/data/test.copy.epub';
+    public const TEST_EPUB_COVER = __DIR__ . '/data/test.cover.epub';
     public const TEST_IMAGE = __DIR__ . '/data/test.jpg';
     public const EMPTY_ZIP = __DIR__ . '/data/empty.zip';
     public const BROKEN_ZIP = __DIR__ . '/data/broken.zip';
@@ -536,24 +533,69 @@ class EPubTest extends TestCase
 
     public function testCover(): void
     {
+        // we work on a copy to test saving
+        $this->assertTrue(copy(self::TEST_EPUB, self::TEST_EPUB_COVER));
+
+        // use the clsTbsZip class here
+        //$epub = new EPub(self::TEST_EPUB_COVER, clsTbsZip::class);
+        $epub = new EPub(self::TEST_EPUB_COVER);
+
         // read current cover
-        $cover = $this->epub->getCover();
+        $cover = $epub->getCover();
         $this->assertEquals(657911, strlen($cover));
 
-        /**
-        // change cover
-        $this->epub->setCover(self::TEST_IMAGE, 'image/jpeg');
-        $this->epub->save();
+        // change cover and save
+        $epub->setCover(self::TEST_IMAGE, 'image/jpeg');
+        $epub->save();
+
+        // open epub again
+        $epub = new EPub(self::TEST_EPUB_COVER);
 
         // read recently changed cover
-        $cover = $this->epub->getCover();
+        $cover = $epub->getCover();
         $this->assertEquals(filesize(self::TEST_IMAGE), strlen($cover));
 
         // delete cover
-        $this->epub->clearCover();
-        $cover = $this->epub->getCover();
+        $epub->clearCover();
+        $cover = $epub->getCover();
         $this->assertNull($cover);
-         */
+
+        $epub->close();
+
+        unlink(self::TEST_EPUB_COVER);
+    }
+
+    /**
+     * @throws Exception
+     * @return void
+     */
+    public function testTitlePage()
+    {
+        // we work on a copy to test saving
+        $this->assertTrue(copy(self::TEST_EPUB, self::TEST_EPUB_COVER));
+
+        // use the clsTbsZip class here
+        //$epub = new EPub(self::TEST_EPUB_COVER, clsTbsZip::class);
+        $epub = new EPub(self::TEST_EPUB_COVER);
+
+        // add title page and save
+        $epub->addCoverImageTitlePage();
+        $epub->save();
+
+        // open epub again
+        $epub = new EPub(self::TEST_EPUB_COVER);
+
+        // read recently added title page
+        $spine = $epub->getSpine();
+        $titlePage = $spine->first();
+        $this->assertEquals(EPub::TITLE_PAGE_ID . '.xhtml', $titlePage->getHref());
+        $this->assertEquals(EPub::TITLE_PAGE_ID, $titlePage->getId());
+        $this->assertEquals('application/xhtml+xml', (string)$titlePage->getMediaType());
+
+        // We expect an empty string since there is only an image but no text on that page.
+        $this->assertEmpty(trim($titlePage->getContents()));
+
+        unlink(self::TEST_EPUB_COVER);
     }
 
     /**
@@ -630,7 +672,6 @@ class EPubTest extends TestCase
         $this->assertEquals('Prologue', $navPoint->getChildren()->first()->getNavLabel());
         $this->assertEquals('SCENE V. A hall in Capulet\'s house.', $navPoint->getChildren()->last()->getNavLabel());
     }
-
 
     /**
      * @throws Exception

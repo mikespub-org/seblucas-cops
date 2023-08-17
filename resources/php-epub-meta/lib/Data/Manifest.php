@@ -25,18 +25,18 @@ class Manifest implements Iterator, Countable, ArrayAccess
      *
      * @param string $id The identifier of the new item.
      * @param string $href The relative path of the referenced file in the EPUB.
-     * @param resource|null $handle A file handle to the referenced file in the EPUB.
+     * @param callable $callable A callable to get data from the referenced file in the EPUB.
      * @param int $size The size of the referenced file in the EPUB.
      * @param string|null $mediaType
      * @return Item The newly created Item.
      * @throws Exception If $id is already taken.
      */
-    public function createItem($id, $href, $handle, $size, $mediaType = null)
+    public function createItem($id, $href, $callable, $size, $mediaType = null)
     {
         if (isset($this->items[$id])) {
             throw new Exception("Item with ID $id already exists!");
         }
-        $item = new Item($id, $href, $handle, $size, $mediaType);
+        $item = new Item($id, $href, $callable, $size, $mediaType);
         $this->items[$id] = $item;
 
         return $item;

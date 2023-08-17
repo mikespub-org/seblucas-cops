@@ -18,44 +18,25 @@ require_once $ePubMetaPath . '/lib/Dom/XPath.php';
 
 class BookEPub extends EPub
 {
-    protected int $epubVersion = 0;
-
-    /**
-     * Get the ePub version
-     *
-     * @return int The number of the ePub version (2 or 3 for now) or 0 if not found
-     */
-    public function getEpubVersion()
-    {
-        if ($this->epubVersion) {
-            return $this->epubVersion;
-        }
-
-        $this->epubVersion = 0;
-        $nodes = $this->xpath->query('//opf:package[@unique-identifier="BookId"]');
-        if ($nodes->length) {
-            $this->epubVersion = (int) static::getAttr($nodes, 'version');
-        } else {
-            $nodes = $this->xpath->query('//opf:package');
-            if ($nodes->length) {
-                $this->epubVersion = (int) static::getAttr($nodes, 'version');
-            }
-        }
-
-        return $this->epubVersion;
-    }
-
-    /**
-     * meta file getter
-     * @return string
-     */
-    public function meta()
-    {
-        return $this->meta;
-    }
-
     /**
      * Get or set the book author(s)
+     * @deprecated 1.5.0 use getAuthors() or setAuthors() instead
+     * @param array<mixed>|string|false $authors
+     * @return mixed
+     */
+    public function Authors($authors = false)
+    {
+        // set new data
+        if ($authors !== false) {
+            $this->setAuthors($authors);
+        }
+
+        // read current data
+        return $this->getAuthors();
+    }
+
+    /**
+     * Set the book author(s)
      *
      * Authors should be given with a "file-as" and a real name. The file as
      * is used for sorting in e-readers.
@@ -67,43 +48,58 @@ class BookEPub extends EPub
      * 'Simpson, Jacqueline' => 'Jacqueline Simpson',
      * )
      *
-     * @param array<mixed>|string|false $authors
+     * @param array<mixed>|string $authors
+     * @return void
      */
-    public function Authors($authors = false)
+    public function setAuthors($authors)
     {
-        // set new data
-        if ($authors !== false) {
-            // Author where given as a comma separated list
-            if (is_string($authors)) {
-                if ($authors == '') {
-                    $authors = [];
-                } else {
-                    $authors = explode(',', $authors);
-                    $authors = array_map('trim', $authors);
-                }
+        // Author where given as a comma separated list
+        if (is_string($authors)) {
+            if ($authors == '') {
+                $authors = [];
+            } else {
+                $authors = explode(',', $authors);
+                $authors = array_map('trim', $authors);
             }
-
-            // delete existing nodes
-            $nodes = $this->xpath->query('//opf:metadata/dc:creator[@opf:role="aut"]');
-            $this->deleteNodes($nodes);
-
-            // add new nodes
-            /** @var Element $parent */
-            $parent = $this->xpath->query('//opf:metadata')->item(0);
-            foreach ($authors as $as => $name) {
-                if (is_int($as)) {
-                    $as = $name;
-                } //numeric array given
-                /** @var Element $node */
-                $node = $parent->newChild('dc:creator', $name);
-                $node->setAttrib('opf:role', 'aut');
-                $node->setAttrib('opf:file-as', $as);
-            }
-
-            $this->reparse();
         }
 
-        // read current data
+        // delete existing nodes
+        $nodes = $this->xpath->query('//opf:metadata/dc:creator[@opf:role="aut"]');
+        $this->deleteNodes($nodes);
+
+        // add new nodes
+        /** @var Element $parent */
+        $parent = $this->xpath->query('//opf:metadata')->item(0);
+        foreach ($authors as $as => $name) {
+            if (is_int($as)) {
+                $as = $name;
+            } //numeric array given
+            /** @var Element $node */
+            $node = $parent->newChild('dc:creator', $name);
+            $node->setAttrib('opf:role', 'aut');
+            $node->setAttrib('opf:file-as', $as);
+        }
+
+        $this->reparse();
+    }
+
+    /**
+     * Get the book author(s)
+     *
+     * Authors will be given with a "file-as" and a real name. The file as
+     * is used for sorting in e-readers.
+     *
+     * Example:
+     *
+     * array(
+     * 'Pratchett, Terry' => 'Terry Pratchett',
+     * 'Simpson, Jacqueline' => 'Jacqueline Simpson',
+     * )
+     *
+     * @return mixed
+     */
+    public function getAuthors()
+    {
         $rolefix = false;
         $authors = [];
         $version = $this->getEpubVersion();
@@ -161,7 +157,7 @@ class BookEPub extends EPub
     }
 
     /**
-     * Set or get the book's creation date
+     * Set or get the book's creation date - with fallback to dcterms:created
      *
      * @param string|false $date Date eg: 2012-05-19T12:54:25Z
      */
@@ -187,7 +183,7 @@ class BookEPub extends EPub
     }
 
     /**
-     * Set or get the book's modification date
+     * Set or get the book's modification date - with fallback to dcterms:modified
      *
      * @param string|false $date Date eg: 2012-05-19T12:54:25Z
      */

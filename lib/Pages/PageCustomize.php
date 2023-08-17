@@ -18,7 +18,7 @@ class PageCustomize extends Page
      * @param mixed $testedValue
      * @return string
      */
-    private function isChecked($key, $testedValue = 1)
+    protected function isChecked($key, $testedValue = 1)
     {
         $value = $this->request->option($key);
         if (is_array($value)) {
@@ -39,7 +39,7 @@ class PageCustomize extends Page
      * @param mixed $value
      * @return string
      */
-    private function isSelected($key, $value)
+    protected function isSelected($key, $value)
     {
         if ($this->request->option($key) == $value) {
             return "selected='selected'";
@@ -51,7 +51,7 @@ class PageCustomize extends Page
      * Summary of getTemplateList
      * @return array<string>
      */
-    private function getTemplateList()
+    protected function getTemplateList()
     {
         $result = [];
         foreach (glob("templates/*", GLOB_ONLYDIR) as $filename) {
@@ -66,7 +66,7 @@ class PageCustomize extends Page
      * Summary of getStyleList
      * @return array<string>
      */
-    private function getStyleList()
+    protected function getStyleList()
     {
         $result = [];
         foreach (glob("templates/" . $this->request->template() . "/styles/style-*.css") as $filename) {

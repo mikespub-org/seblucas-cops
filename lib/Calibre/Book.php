@@ -500,23 +500,23 @@ class Book
         try {
             $epub = new EPub($data->getLocalPath(), clsTbsZip::class);
 
-            $epub->Title($this->title);
+            $epub->setTitle($this->title);
             $authorArray = [];
             foreach ($this->getAuthors() as $author) {
                 $authorArray[$author->sort] = $author->name;
             }
-            $epub->Authors($authorArray);
-            $epub->Language($this->getLanguages());
-            $epub->Description($this->getComment(false));
-            $epub->Subjects($this->getTagsName());
+            $epub->setAuthors($authorArray);
+            $epub->setLanguage($this->getLanguages());
+            $epub->setDescription($this->getComment(false));
+            $epub->setSubjects($this->getTagsName());
             // -DC- Use cover file name
             // $epub->Cover2($this->getFilePath('jpg'), 'image/jpeg');
-            $epub->Cover2($this->coverFileName, 'image/jpeg');
-            $epub->Calibre($this->uuid);
+            $epub->setCoverFile($this->coverFileName, 'image/jpeg');
+            $epub->setCalibre($this->uuid);
             $se = $this->getSerie();
             if (!is_null($se)) {
-                $epub->Serie($se->name);
-                $epub->SerieIndex($this->seriesIndex);
+                $epub->setSeries($se->name);
+                $epub->setSeriesIndex($this->seriesIndex);
             }
             $filename = $data->getUpdatedFilenameEpub();
             // @checkme this is set in fetch.php now

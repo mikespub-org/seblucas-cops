@@ -4,6 +4,11 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
+1.5.x - 202308xx Update php-epub-meta
+  * Mark combined getsetters for EPub() as deprecated for 1.5.0 in php-epub-meta
+  * Add updated php-epub-meta methods and classes to version in resources - see https://github.com/epubli/epub
+  * Fix code base to work with phpstan level 6
+
 1.4.2 - 20230814 Fix OPDS renderer + add sorting & filtering options to bootstrap2
   * Add optional hierarchical tags and custom columns in bootstrap2 template
   * Split off new Calibre\Category class + support hierarchical tags and custom columns in code

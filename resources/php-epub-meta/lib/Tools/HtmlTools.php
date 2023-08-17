@@ -39,13 +39,13 @@ class HtmlTools
             if (is_string($length)) {
                 $length = trim($length);
                 /* interpret percentage value */
-                if (substr($length,-1)=='%') {
-                    $length = (int) (strlen($htmlString) * intval(substr($length,0,-1)) / 100);
+                if (substr($length, -1)=='%') {
+                    $length = (int) (strlen($htmlString) * intval(substr($length, 0, -1)) / 100);
                 }
             }
             $htmlString = substr($htmlString, 0, $length);
             /* eliminate trailing truncated tag fragment if present */
-            $htmlString = preg_replace('/<[^>]*$/is','',$htmlString);
+            $htmlString = preg_replace('/<[^>]*$/is', '', $htmlString);
         }
 
         return is_array($html) ? $htmls : array_pop($htmls);
@@ -66,8 +66,7 @@ class HtmlTools
         ['title', 'br', 'p', 'h1','h2','h3','h4','h5','span','div','i','strong','b', 'table', 'td', 'th', 'tr'],
         $drop =
         ['head','style']
-    )
-    {
+    ) {
         $htmls = is_array($html) ? $html : [$html];
         foreach ($htmls as &$htmlString) {
             foreach ($drop as $dumpTag) {

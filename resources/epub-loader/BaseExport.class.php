@@ -140,7 +140,7 @@ class BaseExport
      *
      * @return void
      */
-    private function SendDownloadHeaders($inFileName, $inFileSize = null, $inCodeSet = 'utf-8')
+    protected function SendDownloadHeaders($inFileName, $inFileSize = null, $inCodeSet = 'utf-8')
     {
         // Throws excemtion if http headers have been already sent
         $filename = '';

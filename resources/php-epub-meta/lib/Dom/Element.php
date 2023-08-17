@@ -200,7 +200,7 @@ class Element extends DOMElement
      * @param  string $name
      * @return array<string>  (prefix, name)
      */
-    private function splitQualifiedName($name)
+    protected function splitQualifiedName($name)
     {
         $list = explode(':', $name, 2);
         if (count($list) < 2) {
@@ -214,7 +214,7 @@ class Element extends DOMElement
      * @param  string $name
      * @return array<string>
      */
-    private function getNameContext($name)
+    protected function getNameContext($name)
     {
         [$prefix, $localName] = $this->splitQualifiedName($name);
 

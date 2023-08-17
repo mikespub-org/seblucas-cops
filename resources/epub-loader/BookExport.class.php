@@ -75,7 +75,7 @@ class BookExport
      *
      * @return void
      */
-    private function AddBook($inBookInfo)
+    protected function AddBook($inBookInfo)
     {
         // Add export header
         if ($this->mNbBook++ == 0) {

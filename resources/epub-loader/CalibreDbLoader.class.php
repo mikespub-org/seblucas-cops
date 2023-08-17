@@ -69,7 +69,7 @@ class CalibreDbLoader
      *
      * @return void
      */
-    private function LoadBookIds($inBookIdsFileName)
+    protected function LoadBookIds($inBookIdsFileName)
     {
         $this->mBookId = [];
         $this->mBookIdFileName = $inBookIdsFileName;
@@ -93,7 +93,7 @@ class CalibreDbLoader
      * Save the book ids file
      * @return void
      */
-    private function SaveBookIds()
+    protected function SaveBookIds()
     {
         if (empty($this->mBookIdFileName)) {
             return;
@@ -112,7 +112,7 @@ class CalibreDbLoader
      * @param mixed $inBookFileName
      * @return int
      */
-    private function GetBookId($inBookFileName)
+    protected function GetBookId($inBookFileName)
     {
         if (isset($this->mBookId[$inBookFileName])) {
             $res = (int)$this->mBookId[$inBookFileName];
@@ -140,7 +140,7 @@ class CalibreDbLoader
      *
      * @return void
      */
-    private function CreateDatabase($inDbFileName)
+    protected function CreateDatabase($inDbFileName)
     {
         // Read the sql file
         $content = file_get_contents(CalibreCreateDbSql);
@@ -199,7 +199,7 @@ class CalibreDbLoader
      *
      * @return void
      */
-    private function OpenDatabase($inDbFileName)
+    protected function OpenDatabase($inDbFileName)
     {
         try {
             // Init the Data Source Name
@@ -253,7 +253,7 @@ class CalibreDbLoader
      *
      * @return void
      */
-    private function AddBook($inBookInfo, $inBookId, $sortField = 'sort')
+    protected function AddBook($inBookInfo, $inBookId, $sortField = 'sort')
     {
         $errors = [];
 
@@ -565,7 +565,7 @@ class CalibreDbLoader
      *
      * @return void
      */
-    private function CheckDatabase()
+    protected function CheckDatabase()
     {
         // Retrieve some infos for check only
         $sql = 'select id, title, sort from books';

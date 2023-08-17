@@ -34,7 +34,7 @@ class OPDSRenderer
      * Summary of getUpdatedTime
      * @return string
      */
-    private function getUpdatedTime()
+    protected function getUpdatedTime()
     {
         if (is_null($this->updated)) {
             $this->updated = time();
@@ -46,7 +46,7 @@ class OPDSRenderer
      * Summary of getXmlStream
      * @return XMLWriter
      */
-    private function getXmlStream()
+    protected function getXmlStream()
     {
         if (is_null($this->xmlStream)) {
             $this->xmlStream = new XMLWriter();
@@ -111,7 +111,7 @@ class OPDSRenderer
      * @param Request $request
      * @return void
      */
-    private function startXmlDocument($page, $request)
+    protected function startXmlDocument($page, $request)
     {
         $database = $request->get('db');
         $this->getXmlStream()->startDocument('1.0', 'UTF-8');
@@ -188,7 +188,7 @@ class OPDSRenderer
      * Summary of endXmlDocument
      * @return string
      */
-    private function endXmlDocument()
+    protected function endXmlDocument()
     {
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->endDocument();
@@ -200,7 +200,7 @@ class OPDSRenderer
      * @param Link $link
      * @return void
      */
-    private function renderLink($link)
+    protected function renderLink($link)
     {
         $this->getXmlStream()->startElement("link");
         $this->getXmlStream()->writeAttribute("href", $link->hrefXhtml(self::$endpoint));
@@ -227,7 +227,7 @@ class OPDSRenderer
      * @param Book $book
      * @return string
      */
-    private function getPublicationDate($book)
+    protected function getPublicationDate($book)
     {
         $dateYmd = substr($book->pubdate, 0, 10);
         $pubdate = \DateTime::createFromFormat('Y-m-d', $dateYmd);
@@ -244,7 +244,7 @@ class OPDSRenderer
      * @param Entry|EntryBook $entry
      * @return void
      */
-    private function renderEntry($entry)
+    protected function renderEntry($entry)
     {
         $this->getXmlStream()->startElement("title");
         $this->getXmlStream()->text($entry->title);

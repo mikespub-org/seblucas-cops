@@ -20,11 +20,14 @@ class ZipFile
     private $mZip;
     /** @var array<string, mixed>|null */
     private $mEntries;
+    /** @var string|null */
+    private $mFileName;
 
     public function __construct()
     {
         $this->mZip = null;
         $this->mEntries = null;
+        $this->mFileName = null;
     }
 
     /**
@@ -39,17 +42,20 @@ class ZipFile
      * Open a zip file and read it's entries
      *
      * @param string $inFileName
+     * @param int|null $inFlags
      * @return boolean True if zip file has been correctly opended, else false
      */
-    public function Open($inFileName)
+    public function Open($inFileName, $inFlags = 0)  // ZipArchive::RDONLY)
     {
         $this->Close();
 
         $this->mZip = new ZipArchive();
-        $result = $this->mZip->open($inFileName, ZipArchive::RDONLY);
+        $result = $this->mZip->open($inFileName, $inFlags);
         if ($result !== true) {
             return false;
         }
+
+        $this->mFileName = $inFileName;
 
         $this->mEntries = [];
 
@@ -127,16 +133,76 @@ class ZipFile
     }
 
     /**
+     * Summary of FileAdd
+     * @param mixed $Name
+     * @param mixed $Data
+     * @return mixed
+     */
+    public function FileAdd($Name, $Data)
+    {
+        //throw new Exception('ZipFile is read-only, use clsTbsZip class instead');
+        if (!isset($this->mZip)) {
+            return false;
+        }
+
+        if (!$this->mZip->addFromString($Name, $Data)) {
+            return false;
+        }
+        $this->mEntries[$Name] = $this->mZip->statName($Name);
+        return true;
+    }
+
+    /**
      * Replace the content of a file in the zip entries
      *
      * @param string $inFileName File with content to replace
      * @param string|bool $inData Data content to replace, or false to delete
-     * @throws \Exception
-     * @return never
+     * @return mixed
      */
     public function FileReplace($inFileName, $inData)
     {
-        throw new Exception('ZipFile is read-only, use clsTbsZip class instead');
+        //throw new Exception('ZipFile is read-only, use clsTbsZip class instead');
+        if (!isset($this->mZip)) {
+            return false;
+        }
+
+        if ($inData === false) {
+            if ($this->FileExists($inFileName)) {
+                if (!$this->mZip->deleteName($inFileName)) {
+                    return false;
+                }
+                unset($this->mEntries[$inFileName]);
+            }
+            return true;
+        }
+
+        if (!$this->mZip->addFromString($inFileName, $inData)) {
+            return false;
+        }
+        $this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
+        return true;
+    }
+
+
+    /**
+     * Summary of FileCancelModif
+     * @param mixed $NameOrIdx
+     * @param mixed $ReplacedAndDeleted
+     * @return int
+     */
+    public function FileCancelModif($NameOrIdx, $ReplacedAndDeleted=true)
+    {
+        // cancel added, modified or deleted modifications on a file in the archive
+        // return the number of cancels
+
+        $nbr = 0;
+
+        if (!$this->mZip->unchangeName($NameOrIdx)) {
+            return $nbr;
+        }
+        $nbr += 1;
+
+        return $nbr;
     }
 
     /**
