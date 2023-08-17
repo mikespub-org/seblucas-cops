@@ -23,8 +23,9 @@ use DateTime;
 
 class KiwilanOPDS
 {
-    public static $endpoint = "opds.php";
-    public static $version = OpdsVersionEnum::v1Dot2;
+    public static string $endpoint = "opds.php";
+    public static OpdsVersionEnum $version = OpdsVersionEnum::v1Dot2;
+    /** @var DateTime|null */
     private $updated = null;
 
     /**
