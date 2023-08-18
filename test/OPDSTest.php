@@ -72,6 +72,7 @@ class OpdsTest extends TestCase
         $res = system($path . 'java -jar "' . self::OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '"');
         chdir($oldcwd);
         if ($res != '') {
+            copy($feed, $feed . '.bad');
             echo 'OPDS validation error: '.$res;
             return false;
         } else {

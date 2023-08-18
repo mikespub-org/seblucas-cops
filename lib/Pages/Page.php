@@ -263,13 +263,39 @@ class Page
     }
 
     /**
+     * Summary of getFirstLink
+     * @return LinkNavigation|null
+     */
+    public function getFirstLink()
+    {
+        $currentUrl = "?" . $this->getCleanQuery();
+        if ($this->n > 1) {
+            return new LinkNavigation($currentUrl, "first", localize("paging.first.alternate"));
+        }
+        return null;
+    }
+
+    /**
+     * Summary of getLastLink
+     * @return LinkNavigation|null
+     */
+    public function getLastLink()
+    {
+        $currentUrl = "?" . $this->getCleanQuery();
+        if ($this->n < $this->getMaxPage()) {
+            return new LinkNavigation($currentUrl . "&n=" . $this->getMaxPage(), "last", localize("paging.last.alternate"));
+        }
+        return null;
+    }
+
+    /**
      * Summary of getNextLink
      * @return LinkNavigation|null
      */
     public function getNextLink()
     {
         $currentUrl = "?" . $this->getCleanQuery();
-        if (($this->n) * $this->getNumberPerPage() < $this->totalNumber) {
+        if ($this->n < $this->getMaxPage()) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
         }
         return null;
@@ -322,8 +348,16 @@ class Page
      */
     public function getFilters($instance)
     {
+        if ($this->request->isFeed()) {
+            $filterLinks = Config::get('opds_filter_links');
+        } else {
+            $filterLinks = Config::get('html_filter_links');
+        }
         $this->entryArray = [];
-        if (!($instance instanceof Author)) {
+        if (empty($filterLinks)) {
+            return;
+        }
+        if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("authors.title"),
                 "",
@@ -336,7 +370,7 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getAuthors());
         }
-        if (!($instance instanceof Language)) {
+        if (!($instance instanceof Language) && in_array('language', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("languages.title"),
                 "",
@@ -349,7 +383,7 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getLanguages());
         }
-        if (!($instance instanceof Publisher)) {
+        if (!($instance instanceof Publisher) && in_array('publishers', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("publishers.title"),
                 "",
@@ -362,7 +396,7 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getPublishers());
         }
-        if (!($instance instanceof Rating)) {
+        if (!($instance instanceof Rating) && in_array('rating', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("ratings.title"),
                 "",
@@ -375,7 +409,7 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getRatings());
         }
-        if (!($instance instanceof Serie)) {
+        if (!($instance instanceof Serie) && in_array('series', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("series.title"),
                 "",
@@ -388,8 +422,7 @@ class Page
             ));
             $this->entryArray = array_merge($this->entryArray, $instance->getSeries());
         }
-        /** @phpstan-ignore-next-line */
-        if (true) {
+        if (in_array('tag', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("tags.title"),
                 "",
@@ -408,7 +441,7 @@ class Page
         }
         /**
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
-        if (!($instance instanceof CustomColumn)) {
+        if (!($instance instanceof CustomColumn) && in_array('custom', $filterLinks)) {
             $columns = CustomColumnType::getAllCustomColumns($this->getDatabaseId());
             foreach ($columns as $label => $column) {
                 $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());

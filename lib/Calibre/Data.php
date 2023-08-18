@@ -256,7 +256,7 @@ class Data
      */
     public static function handleThumbnailLink($urlParam, $height)
     {
-        // @todo remove use of global variable here
+        // @todo remove use of global variable here - see $request->isFeed()
         if (is_null($height)) {
             if (preg_match('/' . Config::ENDPOINT["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
                 $height = Config::get('opds_thumbnail_height');

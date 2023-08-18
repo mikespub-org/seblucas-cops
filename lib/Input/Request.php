@@ -287,6 +287,19 @@ class Request
     }
 
     /**
+     * Summary of isFeed
+     * @return bool
+     */
+    public function isFeed()
+    {
+        $endpoint = $this->getEndpoint(Config::ENDPOINT['index']);
+        if ($endpoint == Config::ENDPOINT['feed']) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Summary of verifyLogin
      * @param array<mixed> $serverVars
      * @return bool

@@ -343,16 +343,21 @@ class JSONRenderer
 
         $out ["containsBook"] = 0;
         $out ["filterurl"] = false;
+        if ($request->isFeed()) {
+            $filterLinks = Config::get('opds_filter_links');
+        } else {
+            $filterLinks = Config::get('html_filter_links');
+        }
         $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $out ["sorturl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
             $out ["sortoptions"] = $currentPage->getSortOptions();
-            if (!empty($qid) && Config::get('show_filter_links') == 1 && !in_array($page, $skipFilterUrl)) {
+            if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
                 $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
             }
-        } elseif (!empty($qid) && Config::get('show_filter_links') == 1 && !in_array($page, $skipFilterUrl)) {
+        } elseif (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
             $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
         }
 

@@ -651,6 +651,10 @@ class Book
                 array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', null));
                 array_push($linkArray, Data::getLink($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null));
             }
+        } elseif (!empty(Config::get('thumbnail_default'))) {
+            $ext = strtolower(pathinfo(Config::get('thumbnail_default'), PATHINFO_EXTENSION));
+            $mime = 'image/' . (($ext == 'jpg') ? 'jpeg' : 'png');
+            array_push($linkArray, new Link(Config::get('thumbnail_default'), $mime, Link::OPDS_THUMBNAIL_TYPE));
         }
 
         foreach ($this->getDatas() as $data) {

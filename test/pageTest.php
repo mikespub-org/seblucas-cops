@@ -405,7 +405,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
-        $this->assertCount(14, $currentPage->entryArray);
+        $this->assertCount(12, $currentPage->entryArray);
         $this->assertEquals("Languages", $currentPage->entryArray [0]->title);
         $this->assertEquals("English", $currentPage->entryArray [1]->title);
         $this->assertEquals("8 books", $currentPage->entryArray [1]->content);
@@ -542,7 +542,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Sherlock Holmes", $currentPage->title);
-        $this->assertCount(12, $currentPage->entryArray);
+        $this->assertCount(10, $currentPage->entryArray);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
         $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray [1]->title);
         $this->assertEquals("7 books", $currentPage->entryArray [1]->content);
