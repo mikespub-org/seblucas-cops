@@ -29,7 +29,7 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_DATE, $database);
+        parent::__construct($pcustomId, self::TYPE_DATE, $database);
     }
 
     /**

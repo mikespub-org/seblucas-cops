@@ -11,12 +11,12 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Filter
 {
-    public const PAGE_ID = Page::FILTER_ID;
-    public const PAGE_DETAIL = Page::FILTER;
+    public const PAGE_ID = PageId::FILTER_ID;
+    public const PAGE_DETAIL = PageId::FILTER;
     public const URL_PARAMS = [
         Author::URL_PARAM => Author::class,
         Language::URL_PARAM => Language::class,

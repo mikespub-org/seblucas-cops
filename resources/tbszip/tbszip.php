@@ -21,6 +21,11 @@ const TBSZIP_STRING = 32;    // output to string, or add from string
 
 class clsTbsZip
 {
+    public const DOWNLOAD = 1;   // download (default)
+    public const NOHEADER = 4;   // option to use with DOWNLOAD: no header is sent
+    public const FILE = 8;       // output to file  , or add from file
+    public const STRING = 32;    // output to string, or add from string
+
     public bool $Meth8Ok;
     public bool $DisplayError;
     public string $ArchFile;
@@ -159,7 +164,7 @@ class clsTbsZip
      * @param mixed $Compress
      * @return mixed
      */
-    public function FileAdd($Name, $Data, $DataType=TBSZIP_STRING, $Compress=true)
+    public function FileAdd($Name, $Data, $DataType=self::STRING, $Compress=true)
     {
         if ($Data===false) {
             return $this->FileCancelModif($Name, false);
@@ -174,6 +179,27 @@ class clsTbsZip
         $Ref['name'] = $Name;
         $this->AddInfo[] = $Ref;
         return $Ref['res'];
+    }
+
+    /**
+     * Summary of FileAddPath
+     * @param mixed $Name
+     * @param mixed $Path
+     * @return mixed
+     */
+    public function FileAddPath($Name, $Path)
+    {
+        return $this->FileAdd($Name, file_get_contents($Path));
+    }
+
+    /**
+     * Summary of FileDelete
+     * @param mixed $Name
+     * @return mixed
+     */
+    public function FileDelete($Name)
+    {
+        return $this->FileReplace($Name, false);
     }
 
     /**
@@ -572,7 +598,7 @@ class clsTbsZip
      * @param mixed $Compress
      * @return mixed
      */
-    public function FileReplace($NameOrIdx, $Data, $DataType=TBSZIP_STRING, $Compress=true)
+    public function FileReplace($NameOrIdx, $Data, $DataType=self::STRING, $Compress=true)
     {
         // Store replacement information.
 
@@ -670,13 +696,17 @@ class clsTbsZip
      * @param mixed $Render
      * @param mixed $File
      * @param mixed $ContentType
+     * @param bool $sendHeaders
      * @return bool
      */
-    public function Flush($Render=TBSZIP_DOWNLOAD, $File='', $ContentType='')
+    public function Flush($Render=self::DOWNLOAD, $File='', $ContentType='', $sendHeaders = true)
     {
-        if (($File!=='') && ($this->ArchFile===$File) && ($Render==TBSZIP_FILE)) {
+        if (($File!=='') && ($this->ArchFile===$File) && ($Render==self::FILE)) {
             $this->RaiseError('Method Flush() cannot overwrite the current opened archive: \''.$File.'\''); // this makes corrupted zip archives without PHP error.
             return false;
+        }
+        if (!$sendHeaders) {
+            $Render = $Render | self::NOHEADER;
         }
 
         $ArchPos = 0;
@@ -847,8 +877,8 @@ class clsTbsZip
      */
     public function OutputOpen($Render, $File, $ContentType)
     {
-        if (($Render & TBSZIP_FILE)==TBSZIP_FILE) {
-            $this->OutputMode = TBSZIP_FILE;
+        if (($Render & self::FILE)==self::FILE) {
+            $this->OutputMode = self::FILE;
             if (''.$File=='') {
                 $File = basename((string) $this->ArchFile).'.zip';
             }
@@ -856,16 +886,16 @@ class clsTbsZip
             if ($this->OutputHandle===false) {
                 return $this->RaiseError('Method Flush() cannot overwrite the target file \''.$File.'\'. This may not be a valid file path or the file may be locked by another process or because of a denied permission.');
             }
-        } elseif (($Render & TBSZIP_STRING)==TBSZIP_STRING) {
-            $this->OutputMode = TBSZIP_STRING;
+        } elseif (($Render & self::STRING)==self::STRING) {
+            $this->OutputMode = self::STRING;
             $this->OutputSrc = '';
-        } elseif (($Render & TBSZIP_DOWNLOAD)==TBSZIP_DOWNLOAD) {
-            $this->OutputMode = TBSZIP_DOWNLOAD;
+        } elseif (($Render & self::DOWNLOAD)==self::DOWNLOAD) {
+            $this->OutputMode = self::DOWNLOAD;
             // Output the file
             if (''.$File=='') {
                 $File = basename((string) $this->ArchFile);
             }
-            if (($Render & TBSZIP_NOHEADER)==TBSZIP_NOHEADER) {
+            if (($Render & self::NOHEADER)==self::NOHEADER) {
             } else {
                 header('Pragma: no-cache');
                 if ($ContentType!='') {
@@ -924,11 +954,11 @@ class clsTbsZip
      */
     public function OutputFromString($data)
     {
-        if ($this->OutputMode===TBSZIP_DOWNLOAD) {
+        if ($this->OutputMode===self::DOWNLOAD) {
             echo $data; // donwload
-        } elseif ($this->OutputMode===TBSZIP_STRING) {
+        } elseif ($this->OutputMode===self::STRING) {
             $this->OutputSrc .= $data; // to string
-        } elseif ($this->OutputMode===TBSZIP_FILE) {
+        } elseif ($this->OutputMode===self::FILE) {
             fwrite($this->OutputHandle, (string) $data); // to file
         }
     }
@@ -939,7 +969,7 @@ class clsTbsZip
      */
     public function OutputClose()
     {
-        if (($this->OutputMode===TBSZIP_FILE) && ($this->OutputHandle!==false)) {
+        if (($this->OutputMode===self::FILE) && ($this->OutputHandle!==false)) {
             fclose($this->OutputHandle);
             $this->OutputHandle = false;
         }
@@ -1249,7 +1279,7 @@ class clsTbsZip
             $Compress = false;
         }
 
-        if ($DataType==TBSZIP_STRING) {
+        if ($DataType==self::STRING) {
             $path = false;
             if ($Compress) {
                 // we compress now in order to save PHP memory

@@ -10,13 +10,15 @@ namespace SebLucas\Cops\Pages;
 
 class PageAbout extends Page
 {
+    public const PAGE_ID = PageId::ABOUT_ID;
+
     /**
      * Summary of InitializeContent
      * @return void
      */
     public function InitializeContent()
     {
-        $this->idPage = self::ABOUT_ID;
+        $this->idPage = self::PAGE_ID;
         $this->title = localize("about.title");
     }
 }

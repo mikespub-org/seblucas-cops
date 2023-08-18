@@ -3,7 +3,7 @@
  * Maps every HTML named entity to its numeric equivalent.
  * Source: http://stackoverflow.com/questions/11176752/converting-named-html-entities-to-numeric-html-entities#answer-11179875
  */
-return array(
+return [
 '&nbsp;'     => '&#160;',  # no-break space = non-breaking space, U+00A0 ISOnum
 '&iexcl;'    => '&#161;',  # inverted exclamation mark, U+00A1 ISOnum
 '&cent;'     => '&#162;',  # cent sign, U+00A2 ISOnum
@@ -257,4 +257,4 @@ return array(
 '&rsaquo;'   => '&#8250;', # single right-pointing angle quotation mark, U+203A ISO proposed
 '&euro;'     => '&#8364;', # euro sign, U+20AC NEW
 '&apos;'     => '&#39;',   # apostrophe = APL quote, U+0027 ISOnum
-);
+];

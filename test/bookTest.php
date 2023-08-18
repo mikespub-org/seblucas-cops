@@ -20,7 +20,7 @@ use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Link;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 /*
 Publishers:
@@ -514,10 +514,12 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
 
         ob_start();
-        $book->getUpdatedEpub(20);
+        $book->getUpdatedEpub(20, false);
         $headers = headers_list();
         $output = ob_get_clean();
-        $this->assertStringStartsWith("Exception : Cannot modify header information", $output);
+        //$this->assertStringStartsWith("Exception : Cannot modify header information", $output);
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals(1794249, strlen($output));
     }
 
     public function testGetFilePath_Cover(): void
@@ -627,11 +629,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_Tag(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "fic");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -643,11 +645,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_BookAndAuthor(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "car");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(4, $currentPage->entryArray);
@@ -661,11 +663,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_AuthorAndSeries(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "art");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
@@ -679,11 +681,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_Publisher(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "Macmillan");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -696,11 +698,11 @@ class BookTest extends TestCase
     {
         Config::set('ignored_categories', ["author"]);
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "car");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
@@ -714,11 +716,11 @@ class BookTest extends TestCase
     {
         Config::set('ignored_categories', ["series"]);
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "art");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
@@ -733,12 +735,12 @@ class BookTest extends TestCase
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
             "One book" => __DIR__ . "/BaseWithOneBook/"]);
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "art");
         $request->set('search', 1);
         $request->set('multi', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);

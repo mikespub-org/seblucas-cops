@@ -9,7 +9,7 @@ include_once(dirname(__DIR__) . '/epub-loader/ZipFile.class.php');
 
 // modify this to point to your book directory
 $bookdir = '/home/andi/Dropbox/ebooks/';
-$bookdir = '/home/mikespub/epub-tests/tests/';
+$bookdir = __DIR__ . '/test/data/';
 
 // proxy google requests
 if (isset($_GET['api'])) {
@@ -23,18 +23,18 @@ require_once __DIR__ . '/util.php';
 
 $epub = null;
 $error = null;
-if (isset($_REQUEST['book'])) {
+if (!empty($_REQUEST['book'])) {
     try {
-        $book = $_REQUEST['book'];
-        $book = str_replace('..', '', $book); // no upper dirs, lowers might be supported later
-        $epub = new EPub($bookdir . $book . '.epub');
+        $book = preg_replace('/[^\w _-]+/', '', $_REQUEST['book']);
+        $book = basename($book . '.epub'); // no upper dirs, lowers might be supported later
+        $epub = new EPub($bookdir . $book);
     } catch (Exception $e) {
         $error = $e->getMessage();
     }
 }
 
 // return image data
-if (isset($_REQUEST['img']) && isset($epub)) {
+if (!empty($_REQUEST['img']) && isset($epub)) {
     $img = $epub->getCoverInfo();
     header('Content-Type: ' . $img['mime']);
     echo $img['data'];
@@ -42,7 +42,7 @@ if (isset($_REQUEST['img']) && isset($epub)) {
 }
 
 // save epub data
-if ($_REQUEST['save'] && isset($epub)) {
+if (isset($_REQUEST['save']) && isset($epub)) {
     $epub->setTitle($_POST['title']);
     $epub->setDescription($_POST['description']);
     $epub->setLanguage($_POST['language']);
@@ -96,20 +96,22 @@ if ($_REQUEST['save'] && isset($epub)) {
         @unlink($cover);
     }
 
-    // rename
-    $author = array_keys($epub->getAuthors())[0];
-    $title  = $epub->getTitle();
-    $new    = to_file($author . '-' . $title);
-    $new    = $bookdir . $new . '.epub';
-    $old    = $epub->file();
-    if (realpath($new) != realpath($old)) {
-        if (!@rename($old, $new)) {
-            $new = $old; //rename failed, stay here
+    if (!$error) {
+        // rename
+        $author = array_keys($epub->getAuthors())[0];
+        $title  = $epub->getTitle();
+        $new    = to_file($author . '-' . $title);
+        $new    = $bookdir . $new . '.epub';
+        $old    = $epub->file();
+        if (realpath($new) != realpath($old)) {
+            if (!@rename($old, $new)) {
+                $new = $old; //rename failed, stay here
+            }
         }
+        $go = basename($new, '.epub');
+        header('Location: ?book=' . rawurlencode($go));
+        exit;
     }
-    $go = basename($new, '.epub');
-    header('Location: ?book=' . rawurlencode($go));
-    exit;
 }
 
 header('Content-Type: text/html; charset=utf-8');

@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 use Exception;
 
 /**
@@ -19,9 +19,9 @@ use Exception;
  */
 abstract class CustomColumnType
 {
-    public const PAGE_ID = Page::ALL_CUSTOMS_ID;
-    public const PAGE_ALL = Page::ALL_CUSTOMS;
-    public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
+    public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
+    public const PAGE_ALL = PageId::ALL_CUSTOMS;
+    public const PAGE_DETAIL = PageId::CUSTOM_DETAIL;
     public const SQL_TABLE = "custom_columns";
     public const SQL_BOOKLIST_LINK = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where {2}.book = books.id and {2}.{3} = ? {1} order by books.sort';
@@ -36,17 +36,17 @@ abstract class CustomColumnType
     public const URL_PARAM = "c";
     public const ALL_WILDCARD         = ["*"];
 
-    public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
-    public const CUSTOM_TYPE_CSV       = "csv";         // type 2 (internal)
-    public const CUSTOM_TYPE_COMMENT   = "comments";    // type 3
-    public const CUSTOM_TYPE_SERIES    = "series";      // type 4
-    public const CUSTOM_TYPE_ENUM      = "enumeration"; // type 5
-    public const CUSTOM_TYPE_DATE      = "datetime";    // type 6
-    public const CUSTOM_TYPE_FLOAT     = "float";       // type 7
-    public const CUSTOM_TYPE_INT       = "int";         // type 8
-    public const CUSTOM_TYPE_RATING    = "rating";      // type 9
-    public const CUSTOM_TYPE_BOOL      = "bool";        // type 10
-    public const CUSTOM_TYPE_COMPOSITE = "composite";   // type 11 + 12
+    public const TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
+    public const TYPE_CSV       = "csv";         // type 2 (internal)
+    public const TYPE_COMMENT   = "comments";    // type 3
+    public const TYPE_SERIES    = "series";      // type 4
+    public const TYPE_ENUM      = "enumeration"; // type 5
+    public const TYPE_DATE      = "datetime";    // type 6
+    public const TYPE_FLOAT     = "float";       // type 7
+    public const TYPE_INT       = "int";         // type 8
+    public const TYPE_RATING    = "rating";      // type 9
+    public const TYPE_BOOL      = "bool";        // type 10
+    public const TYPE_COMPOSITE = "composite";   // type 11 + 12
 
     /** @var array<int, CustomColumnType>  */
     private static $customColumnCacheID = [];
@@ -58,7 +58,7 @@ abstract class CustomColumnType
     public $customId;
     /** @var string name/title of this column */
     public $columnTitle;
-    /** @var string the datatype of this column (one of the CUSTOM_TYPE_* constant values) */
+    /** @var string the datatype of this column (one of the TYPE_* constant values) */
     public $datatype;
     /** @var null|Entry[] */
     private $customValues = null;
@@ -379,27 +379,27 @@ abstract class CustomColumnType
         $datatype = self::getDatatypeByCustomID($customId, $database);
 
         switch ($datatype) {
-            case self::CUSTOM_TYPE_TEXT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::CUSTOM_TYPE_TEXT, $database);
-            case self::CUSTOM_TYPE_CSV:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::CUSTOM_TYPE_CSV, $database);
-            case self::CUSTOM_TYPE_SERIES:
+            case self::TYPE_TEXT:
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::TYPE_TEXT, $database);
+            case self::TYPE_CSV:
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::TYPE_CSV, $database);
+            case self::TYPE_SERIES:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId, $database);
-            case self::CUSTOM_TYPE_ENUM:
+            case self::TYPE_ENUM:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId, $database);
-            case self::CUSTOM_TYPE_COMMENT:
+            case self::TYPE_COMMENT:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId, $database);
-            case self::CUSTOM_TYPE_DATE:
+            case self::TYPE_DATE:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId, $database);
-            case self::CUSTOM_TYPE_FLOAT:
+            case self::TYPE_FLOAT:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId, $database);
-            case self::CUSTOM_TYPE_INT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, self::CUSTOM_TYPE_INT, $database);
-            case self::CUSTOM_TYPE_RATING:
+            case self::TYPE_INT:
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, self::TYPE_INT, $database);
+            case self::TYPE_RATING:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId, $database);
-            case self::CUSTOM_TYPE_BOOL:
+            case self::TYPE_BOOL:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId, $database);
-            case self::CUSTOM_TYPE_COMPOSITE:
+            case self::TYPE_COMPOSITE:
                 return null; //TODO Currently not supported
             default:
                 throw new Exception("Unkown column type: " . $datatype);

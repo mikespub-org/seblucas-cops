@@ -8,13 +8,13 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Tag extends Category
 {
-    public const PAGE_ID = Page::ALL_TAGS_ID;
-    public const PAGE_ALL = Page::ALL_TAGS;
-    public const PAGE_DETAIL = Page::TAG_DETAIL;
+    public const PAGE_ID = PageId::ALL_TAGS_ID;
+    public const PAGE_ALL = PageId::ALL_TAGS;
+    public const PAGE_DETAIL = PageId::TAG_DETAIL;
     public const SQL_TABLE = "tags";
     public const SQL_LINK_TABLE = "books_tags_link";
     public const SQL_LINK_COLUMN = "tag";

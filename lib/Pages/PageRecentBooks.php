@@ -12,6 +12,7 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageRecentBooks extends Page
 {
+    public const PAGE_ID = PageId::ALL_RECENT_BOOKS_ID;
     //protected string $className = Book::class;
 
     /**
@@ -21,7 +22,7 @@ class PageRecentBooks extends Page
     public function InitializeContent()
     {
         $this->getEntries();
-        $this->idPage = parent::ALL_RECENT_BOOKS_ID;
+        $this->idPage = self::PAGE_ID;
         $this->title = localize("recent.title");
     }
 

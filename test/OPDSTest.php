@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class OpdsTest extends TestCase
 {
@@ -73,6 +73,7 @@ class OpdsTest extends TestCase
         $res = system($path . 'java -jar "' . self::OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '"');
         chdir($oldcwd);
         if ($res != '') {
+            copy($feed, $feed . '.bad');
             echo 'OPDS validation error: '.$res;
             return false;
         } else {
@@ -92,12 +93,12 @@ class OpdsTest extends TestCase
 
     public function testPageIndex(): void
     {
-        $page = Page::INDEX;
+        $page = PageId::INDEX;
 
         Config::set('subtitle_default', "My subtitle");
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $OPDSRender = new OPDSRenderer();
@@ -131,7 +132,7 @@ class OpdsTest extends TestCase
         $request->set('query', $query);
         $_SERVER['REQUEST_URI'] = OPDSRenderer::$endpoint . "?" . $request->query();
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $OPDSRender = new OPDSRenderer();
@@ -149,14 +150,14 @@ class OpdsTest extends TestCase
     public function providerPage()
     {
         return [
-            [Page::OPENSEARCH, "car"],
-            [Page::ALL_AUTHORS, null],
-            [Page::ALL_SERIES, null],
-            [Page::ALL_TAGS, null],
-            [Page::ALL_PUBLISHERS, null],
-            [Page::ALL_LANGUAGES, null],
-            [Page::ALL_RECENT_BOOKS, null],
-            [Page::ALL_BOOKS, null],
+            [PageId::OPENSEARCH, "car"],
+            [PageId::ALL_AUTHORS, null],
+            [PageId::ALL_SERIES, null],
+            [PageId::ALL_TAGS, null],
+            [PageId::ALL_PUBLISHERS, null],
+            [PageId::ALL_LANGUAGES, null],
+            [PageId::ALL_RECENT_BOOKS, null],
+            [PageId::ALL_BOOKS, null],
         ];
     }
 
@@ -165,11 +166,11 @@ class OpdsTest extends TestCase
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
-        $page = Page::INDEX;
+        $page = PageId::INDEX;
         $request = new Request();
         $request->set('id', "1");
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $OPDSRender = new OPDSRenderer();
@@ -196,12 +197,12 @@ class OpdsTest extends TestCase
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
-        $page = Page::AUTHOR_DETAIL;
+        $page = PageId::AUTHOR_DETAIL;
         $request = new Request();
         $request->set('id', "1");
         $request->set('db', "0");
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $OPDSRender = new OPDSRenderer();
@@ -215,7 +216,7 @@ class OpdsTest extends TestCase
 
     public function testPageAuthorsDetail(): void
     {
-        $page = Page::AUTHOR_DETAIL;
+        $page = PageId::AUTHOR_DETAIL;
 
         Config::set('max_item_per_page', 2);
         $request = new Request();
@@ -224,7 +225,7 @@ class OpdsTest extends TestCase
 
         // First page
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $OPDSRender = new OPDSRenderer();
@@ -235,7 +236,7 @@ class OpdsTest extends TestCase
         // Second page
 
         $request->set('n', "2");
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $OPDSRender = new OPDSRenderer();
@@ -249,14 +250,14 @@ class OpdsTest extends TestCase
 
     public function testPageAuthorsDetail_WithFacets(): void
     {
-        $page = Page::AUTHOR_DETAIL;
+        $page = PageId::AUTHOR_DETAIL;
 
         Config::set('books_filter', ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"]);
         $request = new Request();
         $request->set('id', "1");
         $request->set('tag', "Short Stories");
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $OPDSRender = new OPDSRenderer();
@@ -269,12 +270,12 @@ class OpdsTest extends TestCase
 
     public function testPageAuthorsDetail_WithoutAnyId(): void
     {
-        $page = Page::AUTHOR_DETAIL;
+        $page = PageId::AUTHOR_DETAIL;
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
         $request = new Request();
         $request->set('id', "1");
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
         $currentPage->idPage = null;
 
