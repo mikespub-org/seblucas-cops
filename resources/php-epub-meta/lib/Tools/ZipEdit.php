@@ -23,11 +23,14 @@ class ZipEdit
     public const NOHEADER = 4;   // option to use with DOWNLOAD: no header is sent
     public const FILE = 8;       // output to file  , or add from file
     public const STRING = 32;    // output to string, or add from string
+    public const MIME_TYPE = 'application/epub+zip';
 
     /** @var ZipArchive|null */
     private $mZip;
     /** @var array<string, mixed>|null */
     private $mEntries;
+    /** @var array<string, mixed> */
+    private $mChanges = [];
     /** @var string|null */
     private $mFileName;
 
@@ -58,7 +61,7 @@ class ZipEdit
         $this->Close();
 
         $this->mZip = new ZipArchive();
-        $result = $this->mZip->open($inFileName, $inFlags);
+        $result = $this->mZip->open($inFileName, ZipArchive::RDONLY);
         if ($result !== true) {
             return false;
         }
@@ -66,11 +69,13 @@ class ZipEdit
         $this->mFileName = $inFileName;
 
         $this->mEntries = [];
+        $this->mChanges = [];
 
         for ($i = 0; $i <  $this->mZip->numFiles; $i++) {
             $entry =  $this->mZip->statIndex($i);
             $fileName = $entry['name'];
             $this->mEntries[$fileName] = $entry;
+            $this->mChanges[$fileName] = ['status' => 'unchanged'];
         }
 
         return true;
@@ -113,8 +118,25 @@ class ZipEdit
             return false;
         }
 
-        $data = $this->mZip->getFromName($inFileName);
+        $data = false;
 
+        $changes = $this->mChanges[$inFileName] ?? ['status' => 'unchanged'];
+        switch ($changes['status']) {
+            case 'unchanged':
+                $data = $this->mZip->getFromName($inFileName);
+                break;
+            case 'added':
+            case 'modified':
+                if (isset($changes['data'])) {
+                    $data = $changes['data'];
+                } elseif (isset($changes['path'])) {
+                    $data = file_get_contents($changes['path']);
+                }
+                break;
+            case 'deleted':
+            default:
+                break;
+        }
         return $data;
     }
 
@@ -135,44 +157,86 @@ class ZipEdit
             return false;
         }
 
+        // @todo streaming of added/modified data?
         return $this->mZip->getStream($inFileName);
     }
 
     /**
      * Summary of FileAdd
-     * @param string $Name
-     * @param mixed $Data
+     * @param string $inFileName
+     * @param mixed $inData
      * @return bool
      */
-    public function FileAdd($Name, $Data)
+    public function FileAdd($inFileName, $inData)
     {
         if (!isset($this->mZip)) {
             return false;
         }
 
-        if (!$this->mZip->addFromString($Name, $Data)) {
-            return false;
-        }
-        $this->mEntries[$Name] = $this->mZip->statName($Name);
+        //if (!$this->mZip->addFromString($inFileName, $inData)) {
+        //    return false;
+        //}
+        //$this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
+        $this->mEntries[$inFileName] = [
+            'name' => $inFileName,  // 'foobar/baz',
+            //'index' => 3,
+            //'crc' => 499465816,
+            'size' => strlen($inData),
+            'mtime' => time(),  // 1123164748,
+            //'comp_size' => 24,
+            //'comp_method' => 8,
+        ];
+        $this->mChanges[$inFileName] = ['status' => 'added', 'data' => $inData];
         return true;
     }
 
     /**
      * Summary of FileAddPath
-     * @param string $Name
-     * @param string $Path
+     * @param string $inFileName
+     * @param string $inFilePath
      * @return bool
      */
-    public function FileAddPath($Name, $Path)
+    public function FileAddPath($inFileName, $inFilePath)
     {
         if (!isset($this->mZip)) {
             return false;
         }
 
-        if (!$this->mZip->addFile($Path, $Name)) {
+        //if (!$this->mZip->addFile($inFilePath, $inFileName)) {
+        //    return false;
+        //}
+        //$this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
+        $this->mEntries[$inFileName] = [
+            'name' => $inFileName,  // 'foobar/baz',
+            //'index' => 3,
+            //'crc' => 499465816,
+            'size' => filesize($inFilePath),
+            'mtime' => filemtime($inFilePath),  // 1123164748,
+            //'comp_size' => 24,
+            //'comp_method' => 8,
+        ];
+        $this->mChanges[$inFileName] = ['status' => 'added', 'path' => $inFilePath];
+        return true;
+    }
+
+    /**
+     * Summary of FileDelete
+     * @param string $inFileName
+     * @return bool
+     */
+    public function FileDelete($inFileName)
+    {
+        if (!$this->FileExists($inFileName)) {
             return false;
         }
-        $this->mEntries[$Name] = $this->mZip->statName($Name);
+
+        //if (!$this->mZip->deleteName($inFileName)) {
+        //    return false;
+        //}
+        //unset($this->mEntries[$inFileName]);
+        $this->mEntries[$inFileName]['size'] = 0;
+        $this->mEntries[$inFileName]['mtime'] = time();
+        $this->mChanges[$inFileName] = ['status' => 'deleted'];
         return true;
     }
 
@@ -190,40 +254,54 @@ class ZipEdit
         }
 
         if ($inData === false) {
-            if ($this->FileExists($inFileName)) {
-                if (!$this->mZip->deleteName($inFileName)) {
-                    return false;
-                }
-                unset($this->mEntries[$inFileName]);
-            }
-            return true;
+            return $this->FileDelete($inFileName);
         }
 
-        if (!$this->mZip->addFromString($inFileName, $inData)) {
-            return false;
-        }
-        $this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
+        //if (!$this->mZip->addFromString($inFileName, $inData)) {
+        //    return false;
+        //}
+        //$this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
+        $this->mEntries[$inFileName] ??= [
+            'name' => $inFileName,
+            'size' => 0,
+            'mtime' => 0,
+        ];
+        $this->mEntries[$inFileName]['name'] = $inFileName;
+        $this->mEntries[$inFileName]['size'] = strlen($inData);
+        $this->mEntries[$inFileName]['mtime'] = time();
+        $this->mChanges[$inFileName] = ['status' => 'modified', 'data' => $inData];
         return true;
     }
 
     /**
+     * Return the state of the file.
+     * @param mixed $inFileName
+     * @return string|bool 'u'=unchanged, 'm'=modified, 'd'=deleted, 'a'=added, false=unknown
+     */
+    public function FileGetState($inFileName)
+    {
+        $changes = $this->mChanges[$inFileName] ?? ['status' => false];
+        return $changes['status'];
+    }
+
+    /**
      * Summary of FileCancelModif
-     * @param string $NameOrIdx
+     * @param string $inFileName
      * @param bool $ReplacedAndDeleted
      * @return int
      */
-    public function FileCancelModif($NameOrIdx, $ReplacedAndDeleted=true)
+    public function FileCancelModif($inFileName, $ReplacedAndDeleted=true)
     {
         // cancel added, modified or deleted modifications on a file in the archive
         // return the number of cancels
 
         $nbr = 0;
 
-        if (!$this->mZip->unchangeName($NameOrIdx)) {
-            return $nbr;
-        }
+        //if (!$this->mZip->unchangeName($inFileName)) {
+        //    return $nbr;
+        //}
         $nbr += 1;
-
+        $this->mChanges[$inFileName] = ['status' => 'unchanged'];
         return $nbr;
     }
 
@@ -244,15 +322,75 @@ class ZipEdit
 
     /**
      * Summary of Flush
-     * @param mixed $Render
-     * @param mixed $File
-     * @param mixed $ContentType
-     * @return bool
+     * @param mixed $render
+     * @param mixed $outFileName
+     * @param mixed $contentType
+     * @param bool $sendHeaders
+     * @return void
      */
-    public function Flush($Render=self::DOWNLOAD, $File='', $ContentType='')
+    public function Flush($render=self::DOWNLOAD, $outFileName='', $contentType='', $sendHeaders = true)
     {
-        $File = $File ?: $this->mFileName;
-        return false;
+        // we don't want to close the zip file to save all changes here - probably what you needed :-)
+        //$this->Close();
+
+        $outFileName = $outFileName ?: $this->mFileName;
+        $contentType = $contentType ?: self::MIME_TYPE;
+        if (!$sendHeaders) {
+            $render = $render | self::NOHEADER;
+        }
+        if (($render & self::NOHEADER) !== self::NOHEADER) {
+            $sendHeaders = true;
+        } else {
+            $sendHeaders = false;
+        }
+
+        $outZipStream = new ZipStream(
+            outputName: basename($outFileName),
+            //outputStream: $outFileStream,
+            sendHttpHeaders: $sendHeaders,
+            contentType: $contentType,
+        );
+        foreach ($this->mEntries as $fileName => $entry) {
+            $changes = $this->mChanges[$fileName];
+            switch ($changes['status']) {
+                case 'unchanged':
+                    // Automatic binding of $this
+                    $callback = function () use ($fileName) {
+                        // this expects a stream as result, not the actual data
+                        return $this->mZip->getStream($fileName);
+                        //return $inZipFile->getFromName($fileName);
+                    };
+                    $date = new DateTime();
+                    $date->setTimestamp($entry['mtime']);
+                    $outZipStream->addFileFromCallback(
+                        fileName: $fileName,
+                        exactSize: $entry['size'],
+                        lastModificationDateTime: $date,
+                        callback: $callback,
+                    );
+                    break;
+                case 'added':
+                case 'modified':
+                    if (isset($changes['data'])) {
+                        $outZipStream->addFile(
+                            fileName: $fileName,
+                            data: $changes['data'],
+                        );
+                    } elseif (isset($changes['path'])) {
+                        $outZipStream->addFileFromPath(
+                            fileName: $fileName,
+                            path: $changes['path'],
+                        );
+                    }
+                    break;
+                case 'deleted':
+                default:
+                    break;
+            }
+        }
+
+        $outZipStream->finish();
+        //exit;
     }
 
     /**
