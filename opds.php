@@ -11,20 +11,20 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 //use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
-require_once dirname(__FILE__) . '/config.php';
+require_once __DIR__ . '/config.php';
 
 $request = new Request();
-$page = $request->get('page', Page::INDEX);
+$page = $request->get('page', PageId::INDEX);
 // @checkme set page based on path info here
 $path = $_SERVER["PATH_INFO"] ?? "";
-if ($page == Page::INDEX && $path == "/search") {
-    $page = Page::OPENSEARCH;
+if ($page == PageId::INDEX && $path == "/search") {
+    $page = PageId::OPENSEARCH;
 }
 $query = $request->get('query');  // 'q' by default for php-opds
 if ($query) {
-    $page = Page::OPENSEARCH_QUERY;
+    $page = PageId::OPENSEARCH_QUERY;
 }
 
 if (Config::get('fetch_protect') == '1') {
@@ -39,11 +39,11 @@ header('Content-Type:application/xml');
 $OPDSRender = new OPDSRenderer();
 
 switch ($page) {
-    case Page::OPENSEARCH :
+    case PageId::OPENSEARCH :
         echo $OPDSRender->getOpenSearch($request);
         return;
     default:
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
         echo $OPDSRender->render($currentPage, $request);
         return;
