@@ -19,6 +19,7 @@ use SebLucas\EPubMeta\Contents\NavPointList as TocNavPointList;
 use SebLucas\EPubMeta\Contents\Toc;
 use SebLucas\TbsZip\clsTbsZip;
 use Marsender\EPubLoader\ZipFile;
+use SebLucas\EPubMeta\Tools\ZipEdit;
 use DOMDocument;
 use DOMElement;
 use DOMNodeList;
@@ -48,7 +49,7 @@ class EPub
     protected $nav_xpath;
     protected string $file;
     protected string $meta;
-    /** @var clsTbsZip|ZipFile */
+    /** @var clsTbsZip|ZipFile|ZipEdit */
     protected $zip;
     protected string $zipClass;
     protected string $coverpath='';
@@ -281,6 +282,8 @@ class EPub
         if ($file) {
             $render = $this->zipClass::DOWNLOAD;
             $this->zip->Flush($render, $file, self::MIME_TYPE, $sendHeaders);
+        } elseif ($this->zipClass == ZipEdit::class) {
+            $this->zip->SaveBeforeClose();
         }
     }
 

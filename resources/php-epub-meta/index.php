@@ -1,6 +1,7 @@
 <?php
 
 use SebLucas\EPubMeta\EPub;
+use SebLucas\EPubMeta\Tools\ZipEdit;
 
 // remove seblucas/tbszip from composer.json
 include_once(dirname(__DIR__) . '/tbszip/tbszip.php');
@@ -27,7 +28,7 @@ if (!empty($_REQUEST['book'])) {
     try {
         $book = preg_replace('/[^\w _-]+/', '', $_REQUEST['book']);
         $book = basename($book . '.epub'); // no upper dirs, lowers might be supported later
-        $epub = new EPub($bookdir . $book);
+        $epub = new EPub($bookdir . $book, ZipEdit::class);
     } catch (Exception $e) {
         $error = $e->getMessage();
     }

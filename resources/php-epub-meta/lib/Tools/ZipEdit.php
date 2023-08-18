@@ -7,8 +7,6 @@
 
 namespace SebLucas\EPubMeta\Tools;
 
-//use ZipStream\Option\Archive as ArchiveOptions;
-//use ZipStream\Option\File as FileOptions;
 use ZipStream\ZipStream;
 use DateTime;
 use Exception;
@@ -33,6 +31,7 @@ class ZipEdit
     private $mChanges = [];
     /** @var string|null */
     private $mFileName;
+    private bool $mSaveMe = false;
 
     public function __construct()
     {
@@ -173,18 +172,10 @@ class ZipEdit
             return false;
         }
 
-        //if (!$this->mZip->addFromString($inFileName, $inData)) {
-        //    return false;
-        //}
-        //$this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
         $this->mEntries[$inFileName] = [
             'name' => $inFileName,  // 'foobar/baz',
-            //'index' => 3,
-            //'crc' => 499465816,
             'size' => strlen($inData),
             'mtime' => time(),  // 1123164748,
-            //'comp_size' => 24,
-            //'comp_method' => 8,
         ];
         $this->mChanges[$inFileName] = ['status' => 'added', 'data' => $inData];
         return true;
@@ -202,18 +193,10 @@ class ZipEdit
             return false;
         }
 
-        //if (!$this->mZip->addFile($inFilePath, $inFileName)) {
-        //    return false;
-        //}
-        //$this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
         $this->mEntries[$inFileName] = [
             'name' => $inFileName,  // 'foobar/baz',
-            //'index' => 3,
-            //'crc' => 499465816,
             'size' => filesize($inFilePath),
             'mtime' => filemtime($inFilePath),  // 1123164748,
-            //'comp_size' => 24,
-            //'comp_method' => 8,
         ];
         $this->mChanges[$inFileName] = ['status' => 'added', 'path' => $inFilePath];
         return true;
@@ -230,10 +213,6 @@ class ZipEdit
             return false;
         }
 
-        //if (!$this->mZip->deleteName($inFileName)) {
-        //    return false;
-        //}
-        //unset($this->mEntries[$inFileName]);
         $this->mEntries[$inFileName]['size'] = 0;
         $this->mEntries[$inFileName]['mtime'] = time();
         $this->mChanges[$inFileName] = ['status' => 'deleted'];
@@ -257,15 +236,7 @@ class ZipEdit
             return $this->FileDelete($inFileName);
         }
 
-        //if (!$this->mZip->addFromString($inFileName, $inData)) {
-        //    return false;
-        //}
-        //$this->mEntries[$inFileName] = $this->mZip->statName($inFileName);
-        $this->mEntries[$inFileName] ??= [
-            'name' => $inFileName,
-            'size' => 0,
-            'mtime' => 0,
-        ];
+        $this->mEntries[$inFileName] ??= [];
         $this->mEntries[$inFileName]['name'] = $inFileName;
         $this->mEntries[$inFileName]['size'] = strlen($inData);
         $this->mEntries[$inFileName]['mtime'] = time();
@@ -297,11 +268,8 @@ class ZipEdit
 
         $nbr = 0;
 
-        //if (!$this->mZip->unchangeName($inFileName)) {
-        //    return $nbr;
-        //}
-        $nbr += 1;
         $this->mChanges[$inFileName] = ['status' => 'unchanged'];
+        $nbr += 1;
         return $nbr;
     }
 
@@ -309,6 +277,7 @@ class ZipEdit
      * Close the zip file
      *
      * @return void
+     * @throws Exception
      */
     public function Close()
     {
@@ -316,8 +285,43 @@ class ZipEdit
             return;
         }
 
-        $this->mZip->close();
+        $outFileName = $this->mFileName . '.copy';
+        if ($this->mSaveMe) {
+            $outFileStream = fopen($outFileName, 'wb+');
+            if ($outFileStream === false) {
+                throw new Exception('Unable to open zip copy ' . $outFileName);
+            }
+            $this->Flush(self::DOWNLOAD, $this->mFileName, self::MIME_TYPE, false, $outFileStream);
+            $result = fclose($outFileStream);
+            if ($result === false) {
+                throw new Exception('Unable to close zip copy ' . $outFileName);
+            }
+        }
+
+        if (!$this->mZip->close()) {
+            $status = $this->mZip->getStatusString();
+            $this->mZip = null;
+            throw new Exception($status);
+        }
+        if ($this->mSaveMe) {
+            $result = rename($outFileName, $this->mFileName);
+            if ($result === false) {
+                throw new Exception('Unable to rename zip copy ' . $outFileName);
+            }
+            $this->mSaveMe = false;
+        }
         $this->mZip = null;
+    }
+
+    /**
+     * Summary of SaveBeforeClose
+     * @return void
+     */
+    public function SaveBeforeClose()
+    {
+        // Coming from EPub()->download() without fileName, called in EPub()->save()
+        // This comes right before EPub()->zip->close(), at which point we're lost
+        $this->mSaveMe = true;
     }
 
     /**
@@ -326,15 +330,19 @@ class ZipEdit
      * @param mixed $outFileName
      * @param mixed $contentType
      * @param bool $sendHeaders
+     * @param resource|null $outFileStream
      * @return void
      */
-    public function Flush($render=self::DOWNLOAD, $outFileName='', $contentType='', $sendHeaders = true)
+    public function Flush($render=self::DOWNLOAD, $outFileName='', $contentType='', $sendHeaders = true, $outFileStream = null)
     {
         // we don't want to close the zip file to save all changes here - probably what you needed :-)
         //$this->Close();
 
         $outFileName = $outFileName ?: $this->mFileName;
         $contentType = $contentType ?: self::MIME_TYPE;
+        if ($outFileStream) {
+            $sendHeaders = false;
+        }
         if (!$sendHeaders) {
             $render = $render | self::NOHEADER;
         }
@@ -346,7 +354,7 @@ class ZipEdit
 
         $outZipStream = new ZipStream(
             outputName: basename($outFileName),
-            //outputStream: $outFileStream,
+            outputStream: $outFileStream,
             sendHttpHeaders: $sendHeaders,
             contentType: $contentType,
         );
@@ -358,7 +366,6 @@ class ZipEdit
                     $callback = function () use ($fileName) {
                         // this expects a stream as result, not the actual data
                         return $this->mZip->getStream($fileName);
-                        //return $inZipFile->getFromName($fileName);
                     };
                     $date = new DateTime();
                     $date->setTimestamp($entry['mtime']);
@@ -390,7 +397,6 @@ class ZipEdit
         }
 
         $outZipStream->finish();
-        //exit;
     }
 
     /**
@@ -416,31 +422,17 @@ class ZipEdit
 
         // see ZipStreamTest.php
         $outFileStream = fopen($outFileName, 'wb+');
-        //$options = new ArchiveOptions();
-        //$options->setOutputStream($outFileStream);
 
-        //$outZipStream = new ZipStream(basename($outFileName), $options);
         $outZipStream = new ZipStream(
             outputName: basename($outFileName),
             outputStream: $outFileStream,
             sendHttpHeaders: false,
         );
         foreach ($entries as $fileName => $entry) {
-            //$fileOptions = new FileOptions();
-            //$fileOptions->setSize($entry['size']);
             $date = new DateTime();
             $date->setTimestamp($entry['mtime']);
-            //$fileOptions->setTime($date);
             // does not work in v2 - the zip stream is not seekable, but ZipStream checks for it in Stream.php
-            //$outZipStream->addFileFromStream($fileName, $inZipFile->getStreamName($fileName), $fileOptions);
-            //$outZipStream->addFile($fileName, $inZipFile->getFromName($fileName), $fileOptions);
             // does work in v3 - implemented using addFileFromCallback, so we might as well use that :-)
-            //$outZipStream->addFileFromStream(
-            //    fileName: $fileName,
-            //    exactSize: $entry['size'],
-            //    lastModificationDateTime: $date,
-            //    stream: $inZipFile->getStream($fileName),
-            //);
             $outZipStream->addFileFromCallback(
                 fileName: $fileName,
                 exactSize: $entry['size'],
@@ -448,7 +440,6 @@ class ZipEdit
                 callback: function () use ($inZipFile, $fileName) {
                     // this expects a stream as result, not the actual data
                     return $inZipFile->getStream($fileName);
-                    //return $inZipFile->getFromName($fileName);
                 },
             );
         }
