@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Model;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Entry
 {
@@ -32,16 +32,16 @@ class Entry
 
     /** @var array<string, string> */
     public static $icons = [
-        Page::ALL_AUTHORS_ID             => 'images/author.png',
-        Page::ALL_SERIES_ID              => 'images/serie.png',
-        Page::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
-        Page::ALL_TAGS_ID                => 'images/tag.png',
-        Page::ALL_LANGUAGES_ID           => 'images/language.png',
-        Page::ALL_CUSTOMS_ID             => 'images/custom.png',
-        Page::ALL_RATING_ID              => 'images/rating.png',
+        PageId::ALL_AUTHORS_ID             => 'images/author.png',
+        PageId::ALL_SERIES_ID              => 'images/serie.png',
+        PageId::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
+        PageId::ALL_TAGS_ID                => 'images/tag.png',
+        PageId::ALL_LANGUAGES_ID           => 'images/language.png',
+        PageId::ALL_CUSTOMS_ID             => 'images/custom.png',
+        PageId::ALL_RATING_ID              => 'images/rating.png',
         "cops:books$"                    => 'images/allbook.png',
         "cops:books:letter"              => 'images/allbook.png',
-        Page::ALL_PUBLISHERS_ID          => 'images/publisher.png',
+        PageId::ALL_PUBLISHERS_ID          => 'images/publisher.png',
     ];
 
     /**

@@ -17,6 +17,7 @@ use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkFacet;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 
@@ -165,7 +166,7 @@ class OPDSRenderer
         $urlparam = Format::addDatabaseParam($urlparam, $database);
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
-            $urlparam = Format::addURLParam($urlparam, "page", Page::OPENSEARCH);
+            $urlparam = Format::addURLParam($urlparam, "page", PageId::OPENSEARCH);
             $link = new Link(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed

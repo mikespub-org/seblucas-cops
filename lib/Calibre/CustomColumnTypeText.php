@@ -22,20 +22,20 @@ class CustomColumnTypeText extends CustomColumnType
      * @throws \UnexpectedValueException
      * @return void
      */
-    protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_TEXT, $database = null)
+    protected function __construct($pcustomId, $datatype = self::TYPE_TEXT, $database = null)
     {
         switch ($datatype) {
-            case self::CUSTOM_TYPE_TEXT:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT, $database);
+            case self::TYPE_TEXT:
+                parent::__construct($pcustomId, self::TYPE_TEXT, $database);
                 return;
-            case self::CUSTOM_TYPE_CSV:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_CSV, $database);
+            case self::TYPE_CSV:
+                parent::__construct($pcustomId, self::TYPE_CSV, $database);
                 return;
-            case self::CUSTOM_TYPE_ENUM:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM, $database);
+            case self::TYPE_ENUM:
+                parent::__construct($pcustomId, self::TYPE_ENUM, $database);
                 return;
-            case self::CUSTOM_TYPE_SERIES:
-                parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES, $database);
+            case self::TYPE_SERIES:
+                parent::__construct($pcustomId, self::TYPE_SERIES, $database);
                 return;
             default:
                 throw new UnexpectedValueException();
@@ -140,16 +140,16 @@ class CustomColumnTypeText extends CustomColumnType
     public function getCustomByBook($book)
     {
         switch ($this->datatype) {
-            case self::CUSTOM_TYPE_TEXT:
+            case self::TYPE_TEXT:
                 $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
                 break;
-            case self::CUSTOM_TYPE_CSV:
+            case self::TYPE_CSV:
                 $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
                 break;
-            case self::CUSTOM_TYPE_ENUM:
+            case self::TYPE_ENUM:
                 $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
                 break;
-            case self::CUSTOM_TYPE_SERIES:
+            case self::TYPE_SERIES:
                 $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
                 break;
             default:
@@ -159,7 +159,7 @@ class CustomColumnTypeText extends CustomColumnType
 
         $result = Database::query($query, [$book->id], $this->databaseId);
         // handle case where we have several values, e.g. array of text for type 2 (csv)
-        if ($this->datatype === self::CUSTOM_TYPE_CSV) {
+        if ($this->datatype === self::TYPE_CSV) {
             $idArray = [];
             $nameArray = [];
             while ($post = $result->fetchObject()) {
