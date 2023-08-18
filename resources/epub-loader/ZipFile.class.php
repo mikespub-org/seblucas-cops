@@ -65,6 +65,7 @@ class ZipFile
     public function Open($inFileName, $inFlags = 0)  // ZipArchive::RDONLY)
     {
         $this->Close();
+        $inFileName = realpath($inFileName);
 
         $this->mZip = new ZipArchive();
         $result = $this->mZip->open($inFileName, $inFlags);
@@ -287,6 +288,7 @@ class ZipFile
      * Close the zip file
      *
      * @return void
+     * @throws Exception
      */
     public function Close()
     {
@@ -294,44 +296,48 @@ class ZipFile
             return;
         }
 
-        $this->mZip->close();
+        if (!$this->mZip->close()) {
+            $status = $this->mZip->getStatusString();
+            $this->mZip = null;
+            throw new Exception($status);
+        }
         $this->mZip = null;
     }
 
     /**
      * Summary of Flush
-     * @param mixed $Render
-     * @param mixed $File
-     * @param mixed $ContentType
+     * @param mixed $render
+     * @param mixed $outFileName
+     * @param mixed $contentType
      * @param bool $sendHeaders
-     * @return never
+     * @return void
      */
-    public function Flush($Render=self::DOWNLOAD, $File='', $ContentType='', $sendHeaders = true)
+    public function Flush($render=self::DOWNLOAD, $outFileName='', $contentType='', $sendHeaders = true)
     {
         // we need to close the zip file to save all changes here - probably not what you wanted :-()
         $this->Close();
 
-        $File = $File ?: $this->mFileName;
-        $FilePath = realpath($this->mFileName);
+        $outFileName = $outFileName ?: $this->mFileName;
+        $contentType = $contentType ?: self::MIME_TYPE;
         if (!$sendHeaders) {
-            $Render = $Render | self::NOHEADER;
+            $render = $render | self::NOHEADER;
         }
+        $inFilePath = realpath($this->mFileName);
 
-        if (($Render & self::NOHEADER) !== self::NOHEADER) {
+        if (($render & self::NOHEADER) !== self::NOHEADER) {
             $expires = 60*60*24*14;
             header('Pragma: public');
             header('Cache-Control: max-age=' . $expires);
             header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
 
-            header('Content-Type: ' . self::MIME_TYPE);
-            header('Content-Disposition: attachment; filename="' . basename($File) . '"');
+            header('Content-Type: ' . $contentType);
+            header('Content-Disposition: attachment; filename="' . basename($outFileName) . '"');
 
             // see fetch.php for use of Config::get('x_accel_redirect')
-            header('Content-Length: ' . filesize($FilePath));
-            //header(Config::get('x_accel_redirect') . ': ' . $FilePath);
+            header('Content-Length: ' . filesize($inFilePath));
+            //header(Config::get('x_accel_redirect') . ': ' . $inFilePath);
         }
-        readfile($FilePath);
 
-        exit;
+        readfile($inFilePath);
     }
 }

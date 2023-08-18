@@ -8,13 +8,13 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Serie extends Category
 {
-    public const PAGE_ID = Page::ALL_SERIES_ID;
-    public const PAGE_ALL = Page::ALL_SERIES;
-    public const PAGE_DETAIL = Page::SERIE_DETAIL;
+    public const PAGE_ID = PageId::ALL_SERIES_ID;
+    public const PAGE_ALL = PageId::ALL_SERIES;
+    public const PAGE_DETAIL = PageId::SERIE_DETAIL;
     public const SQL_TABLE = "series";
     public const SQL_LINK_TABLE = "books_series_link";
     public const SQL_LINK_COLUMN = "series";

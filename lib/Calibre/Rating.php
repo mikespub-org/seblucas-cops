@@ -9,13 +9,13 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Rating extends Base
 {
-    public const PAGE_ID = Page::ALL_RATING_ID;
-    public const PAGE_ALL = Page::ALL_RATINGS;
-    public const PAGE_DETAIL = Page::RATING_DETAIL;
+    public const PAGE_ID = PageId::ALL_RATING_ID;
+    public const PAGE_ALL = PageId::ALL_RATINGS;
+    public const PAGE_DETAIL = PageId::RATING_DETAIL;
     public const SQL_TABLE = "ratings";
     public const SQL_LINK_TABLE = "books_ratings_link";
     public const SQL_LINK_COLUMN = "rating";

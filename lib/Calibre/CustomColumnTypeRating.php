@@ -28,7 +28,7 @@ class CustomColumnTypeRating extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_RATING, $database);
+        parent::__construct($pcustomId, self::TYPE_RATING, $database);
     }
 
     /**

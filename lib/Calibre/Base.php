@@ -11,10 +11,11 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
+use SebLucas\Cops\Pages\PageId;
 
 abstract class Base
 {
-    public const PAGE_ID = "cops:base";
+    public const PAGE_ID = PageId::ALL_BASES_ID;
     public const PAGE_ALL = 0;
     public const PAGE_DETAIL = 0;
     public const PAGE_LETTER = 0;

@@ -8,13 +8,13 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Language extends Base
 {
-    public const PAGE_ID = Page::ALL_LANGUAGES_ID;
-    public const PAGE_ALL = Page::ALL_LANGUAGES;
-    public const PAGE_DETAIL = Page::LANGUAGE_DETAIL;
+    public const PAGE_ID = PageId::ALL_LANGUAGES_ID;
+    public const PAGE_ALL = PageId::ALL_LANGUAGES;
+    public const PAGE_DETAIL = PageId::LANGUAGE_DETAIL;
     public const SQL_TABLE = "languages";
     public const SQL_LINK_TABLE = "books_languages_link";
     public const SQL_LINK_COLUMN = "lang_code";

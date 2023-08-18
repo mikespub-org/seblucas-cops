@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\PageQueryResult;
 
 class BookList
@@ -127,10 +127,10 @@ class BookList
         if (Config::get('recentbooks_limit') > 0) {
             $entry = new Entry(
                 localize('recent.title'),
-                Page::ALL_RECENT_BOOKS_ID,
+                PageId::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), Config::get('recentbooks_limit')),
                 'text',
-                [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS, null, null, $this->databaseId)],
+                [ new LinkNavigation('?page='.PageId::ALL_RECENT_BOOKS, null, null, $this->databaseId)],
                 $this->databaseId,
                 '',
                 Config::get('recentbooks_limit')

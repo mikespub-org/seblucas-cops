@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class JsonTest extends TestCase
 {
@@ -130,7 +130,7 @@ class JsonTest extends TestCase
 
     public function testGetJson(): void
     {
-        $page = Page::ALL_RECENT_BOOKS;
+        $page = PageId::ALL_RECENT_BOOKS;
 
         $request = new Request();
         $request->set('page', $page);
@@ -143,7 +143,7 @@ class JsonTest extends TestCase
 
     public function testGetJsonSearch(): void
     {
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $query = "fic";
 
         $request = new Request();
@@ -173,7 +173,7 @@ class JsonTest extends TestCase
 
     public function testGetJsonComplete(): void
     {
-        $page = Page::ALL_RECENT_BOOKS;
+        $page = PageId::ALL_RECENT_BOOKS;
 
         $request = new Request();
         $request->set('page', $page);

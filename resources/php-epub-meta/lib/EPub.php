@@ -928,6 +928,7 @@ class EPub
 
         // remember path for save action
         $this->imagetoadd = $path;
+        $this->coverpath = $this->getFullPath(static::COVER_ID . '.img');
 
         $this->reparse();
     }
