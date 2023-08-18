@@ -20,7 +20,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM, $database);
+        parent::__construct($pcustomId, self::TYPE_ENUM, $database);
     }
 
     /**

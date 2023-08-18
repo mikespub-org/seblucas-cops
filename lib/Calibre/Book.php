@@ -13,19 +13,20 @@ use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\TbsZip\clsTbsZip;
+//use SebLucas\EPubMeta\Tools\ZipEdit;
 use Exception;
 
 //class Book extends Base
 class Book
 {
-    public const PAGE_ID = Page::ALL_BOOKS_ID;
-    public const PAGE_ALL = Page::ALL_BOOKS;
-    public const PAGE_LETTER = Page::ALL_BOOKS_LETTER;
-    public const PAGE_YEAR = Page::ALL_BOOKS_YEAR;
-    public const PAGE_DETAIL = Page::BOOK_DETAIL;
+    public const PAGE_ID = PageId::ALL_BOOKS_ID;
+    public const PAGE_ALL = PageId::ALL_BOOKS;
+    public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
+    public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
+    public const PAGE_DETAIL = PageId::BOOK_DETAIL;
     public const SQL_TABLE = "books";
     public const SQL_LINK_TABLE = "books";
     public const SQL_LINK_COLUMN = "id";
@@ -173,7 +174,7 @@ class Book
      */
     public function getEntryId()
     {
-        return Page::ALL_BOOKS_UUID.':'.$this->uuid;
+        return PageId::ALL_BOOKS_UUID.':'.$this->uuid;
     }
 
     /**
@@ -491,14 +492,17 @@ class Book
     /**
      * Summary of getUpdatedEpub
      * @param mixed $idData
+     * @param bool $sendHeaders
      * @return void
      */
-    public function getUpdatedEpub($idData)
+    public function getUpdatedEpub($idData, $sendHeaders = true)
     {
         $data = $this->getDataById($idData);
 
         try {
+            // @todo try getting rid of this dependency here
             $epub = new EPub($data->getLocalPath(), clsTbsZip::class);
+            //$epub = new EPub($data->getLocalPath(), ZipEdit::class);
 
             $epub->setTitle($this->title);
             $authorArray = [];
@@ -524,7 +528,7 @@ class Book
                 $epub->updateForKepub();
                 $filename = $data->getUpdatedFilenameKepub();
             }
-            $epub->download($filename);
+            $epub->download($filename, $sendHeaders);
         } catch (Exception $e) {
             echo 'Exception : ' . $e->getMessage();
         }
@@ -647,6 +651,10 @@ class Book
                 array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', null));
                 array_push($linkArray, Data::getLink($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null));
             }
+        } elseif (!empty(Config::get('thumbnail_default'))) {
+            $ext = strtolower(pathinfo(Config::get('thumbnail_default'), PATHINFO_EXTENSION));
+            $mime = 'image/' . (($ext == 'jpg') ? 'jpeg' : 'png');
+            array_push($linkArray, new Link(Config::get('thumbnail_default'), $mime, Link::OPDS_THUMBNAIL_TYPE));
         }
 
         foreach ($this->getDatas() as $data) {

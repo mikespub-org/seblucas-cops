@@ -23,7 +23,7 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT, $database);
+        parent::__construct($pcustomId, self::TYPE_FLOAT, $database);
     }
 
     /**

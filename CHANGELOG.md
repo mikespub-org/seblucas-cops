@@ -5,6 +5,10 @@ x.x.x - TODO
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
 1.5.x - 202308xx Update php-epub-meta
+  * Add default thumbnail and link numbers for OPDS catalog if e-reader uses them
+  * Add first & last links + sorting & filtering options for OPDS catalog (if e-reader supports facets)
+  * Keep track of changes in ZipFile + fix setCoverInfo() in EPub in code
+  * Split off new Pages\PageId class + move PAGE_ID constants there in code
   * Mark combined getsetters for EPub() as deprecated for 1.5.0 in php-epub-meta
   * Add updated php-epub-meta methods and classes to version in resources - see https://github.com/epubli/epub
   * Fix code base to work with phpstan level 6

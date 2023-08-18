@@ -20,7 +20,7 @@ class CustomColumnTypeComment extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT, $database);
+        parent::__construct($pcustomId, self::TYPE_COMMENT, $database);
     }
 
     /**
