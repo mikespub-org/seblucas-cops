@@ -328,6 +328,18 @@ class OPDSRenderer
             if (!is_null($nextLink)) {
                 $this->renderLink($nextLink);
             }
+            if ($page->containsBook() && (!is_null($prevLink) || !is_null($nextLink))) {
+                $sortUrl = Format::addURLParam("?" . $page->getCleanQuery(), 'sort', null) . "&sort={0}";
+                $sortLabel = localize("sort.alternate");
+                $sortParam = $request->get('sort');
+                $database = $request->get('db');
+                $sortOptions = $page->getSortOptions();
+                foreach ($sortOptions as $field => $title) {
+                    $url = str_format($sortUrl, $field);
+                    $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, $database);
+                    $this->renderLink($link);
+                }
+            }
         }
         foreach ($page->entryArray as $entry) {
             $this->getXmlStream()->startElement("entry");
