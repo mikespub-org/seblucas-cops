@@ -17,6 +17,7 @@ use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkFacet;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 
@@ -121,6 +122,7 @@ class OPDSRenderer
         $this->getXmlStream()->writeAttribute("xmlns:opds", "http://opds-spec.org/2010/catalog");
         $this->getXmlStream()->writeAttribute("xmlns:opensearch", "http://a9.com/-/spec/opensearch/1.1/");
         $this->getXmlStream()->writeAttribute("xmlns:dcterms", "http://purl.org/dc/terms/");
+        $this->getXmlStream()->writeAttribute("xmlns:thr", "http://purl.org/syndication/thread/1.0");
         $this->getXmlStream()->startElement("title");
         $this->getXmlStream()->text($page->title);
         $this->getXmlStream()->endElement();
@@ -165,7 +167,7 @@ class OPDSRenderer
         $urlparam = Format::addDatabaseParam($urlparam, $database);
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
-            $urlparam = Format::addURLParam($urlparam, "page", Page::OPENSEARCH);
+            $urlparam = Format::addURLParam($urlparam, "page", PageId::OPENSEARCH);
             $link = new Link(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed
@@ -178,7 +180,7 @@ class OPDSRenderer
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
-                $link = new LinkFacet("?" . Format::addURLParam($request->query(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter, $database);
+                $link = new LinkFacet("?" . Format::addURLParam($request->query(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
                 $this->renderLink($link);
             }
         }
@@ -198,9 +200,10 @@ class OPDSRenderer
     /**
      * Summary of renderLink
      * @param Link $link
+     * @param int|null $number
      * @return void
      */
-    protected function renderLink($link)
+    protected function renderLink($link, $number = null)
     {
         $this->getXmlStream()->startElement("link");
         $this->getXmlStream()->writeAttribute("href", $link->hrefXhtml(self::$endpoint));
@@ -218,6 +221,11 @@ class OPDSRenderer
             if ($link->activeFacet) {
                 $this->getXmlStream()->writeAttribute("opds:activeFacet", "true");
             }
+            if (!empty($link->threadCount)) {
+                $this->getXmlStream()->writeAttribute("thr:count", (string) $link->threadCount);
+            }
+        } elseif ($link->type === Link::OPDS_NAVIGATION_TYPE && !empty($number)) {
+            $this->getXmlStream()->writeAttribute("thr:count", (string) $number);
         }
         $this->getXmlStream()->endElement();
     }
@@ -259,12 +267,16 @@ class OPDSRenderer
         $this->getXmlStream()->writeAttribute("type", $entry->contentType);
         $this->getXmlStream()->text($entry->content);
         $this->getXmlStream()->endElement();
-        foreach ($entry->linkArray as $link) {
-            $this->renderLink($link);
-        }
 
         if (get_class($entry) != EntryBook::class) {
+            foreach ($entry->linkArray as $link) {
+                $this->renderLink($link, $entry->numberOfElement);
+            }
             return;
+        }
+
+        foreach ($entry->linkArray as $link) {
+            $this->renderLink($link);
         }
 
         foreach ($entry->book->getAuthors() as $author) {
@@ -308,6 +320,7 @@ class OPDSRenderer
      */
     public function render($page, $request)
     {
+        $database = $request->get('db');
         $this->startXmlDocument($page, $request);
         if ($page->isPaginated()) {
             $this->getXmlStream()->startElement("opensearch:totalResults");
@@ -322,10 +335,52 @@ class OPDSRenderer
             $prevLink = $page->getPrevLink();
             $nextLink = $page->getNextLink();
             if (!is_null($prevLink)) {
+                $this->renderLink($page->getFirstLink());
                 $this->renderLink($prevLink);
             }
             if (!is_null($nextLink)) {
                 $this->renderLink($nextLink);
+                $this->renderLink($page->getLastLink());
+            }
+            // only show sorting when paginating
+            if ($page->containsBook()) {
+                $sortUrl = Format::addURLParam("?" . $page->getCleanQuery(), 'sort', null) . "&sort={0}";
+                $sortLabel = localize("sort.alternate");
+                $sortParam = $request->get('sort');
+                $sortOptions = $page->getSortOptions();
+                foreach ($sortOptions as $field => $title) {
+                    $url = str_format($sortUrl, $field);
+                    $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null, $database);
+                    $this->renderLink($link);
+                }
+            }
+        }
+        // always show filters even when not paginating
+        if ($page->containsBook()) {
+            $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
+            if (!empty($request->get('id')) && !empty(Config::get('opds_filter_links')) && !in_array($page, $skipFilterUrl)) {
+                //$url = Format::addURLParam("?" . $page->getCleanQuery(), 'filter', 1);
+                //$filterLabel = localize("cog.alternate");
+                //$title = localize("links.title");
+                //$link = new LinkFacet($url, $title, $filterLabel, false, null, $database);
+                //$this->renderLink($link);
+                // Note: facets are only shown if there are books available, so we need to get a filter page here
+                $request->set('filter', 1);
+                $filterPage = PageId::getPage($request->get('page'), $request);
+                $filterPage->InitializeContent();
+                $request->set('filter', null);
+                $extraUri = $filterPage->filterUri;
+                if ($request->get('sort')) {
+                    $extraUri .= '&sort=' . $request->get('sort');
+                }
+                foreach ($filterPage->entryArray as $entry) {
+                    if (empty($entry->className)) {
+                        continue;
+                    }
+                    $url = $entry->getNavLink('', $extraUri);
+                    $link = new LinkFacet($url, $entry->title, $entry->className, false, $entry->numberOfElement, $database);
+                    $this->renderLink($link);
+                }
             }
         }
         foreach ($page->entryArray as $entry) {

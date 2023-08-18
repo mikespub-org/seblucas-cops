@@ -21,6 +21,7 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class PageQueryResult extends Page
 {
+    public const PAGE_ID = PageId::OPENSEARCH_QUERY;
     public const SCOPE_TAG = "tag";
     public const SCOPE_RATING = "rating";
     public const SCOPE_SERIES = "series";
@@ -96,7 +97,7 @@ class PageQueryResult extends Page
      */
     public function doSearchByCategory($database = null)
     {
-        $pagequery = Page::OPENSEARCH_QUERY;
+        $pagequery = $this->idPage;
         $dbArray = [""];
         $d = $database;
         $query = $this->query;
@@ -178,6 +179,7 @@ class PageQueryResult extends Page
      */
     public function InitializeContent()
     {
+        $this->idPage = self::PAGE_ID;
         $scope = $this->request->get("scope");
         if (empty($scope)) {
             $this->title = str_format(localize("search.result"), $this->query);
@@ -227,7 +229,7 @@ class PageQueryResult extends Page
     public function getDatabaseEntries()
     {
         $ignoredCategories = $this->getIgnoredCategories();
-        $pagequery = Page::OPENSEARCH_QUERY;
+        $pagequery = $this->idPage;
         $query = $this->query;
         $crit = "%" . $this->query . "%";
         $d = 0;
