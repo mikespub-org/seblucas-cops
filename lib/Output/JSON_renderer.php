@@ -10,13 +10,12 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
@@ -99,8 +98,10 @@ class JSONRenderer
         $out = self::getBookContentArray($book, $endpoint);
         $database = $book->getDatabaseId();
 
-        $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
-        $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, Config::get('html_thumbnail_height') * 2)->hrefXhtml();
+        $cover = new Cover($book);
+        // @todo set height for thumbnail here depending on opds vs. html
+        $out ["thumbnailurl"] = $cover->getThumbnailUri($endpoint, Config::get('html_thumbnail_height') * 2, false);
+        $out ["coverurl"] = $cover->getCoverUri($endpoint) ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
@@ -155,6 +156,8 @@ class JSONRenderer
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
             $out ["book"] = self::getBookContentArray($entry->book, $endpoint);
+            $out ["thumbnailurl"] = $entry->getThumbnail($endpoint);
+            $out ["coverurl"] = $entry->getImage($endpoint) ?? $out ["thumbnailurl"];
             return $out;
         }
         return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];

@@ -286,6 +286,13 @@ class Data
      */
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $height = null, $view = false)
     {
+        // @todo move some of the image-specific code from Data to Cover
+        if (Config::get('thumbnail_handling') != "1" &&
+            !empty(Config::get('thumbnail_handling')) &&
+            $rel == Link::OPDS_THUMBNAIL_TYPE) {
+            return new Link(Config::get('thumbnail_handling'), $mime, $rel, $title);
+        }
+
         $urlParam = Format::addURLParam("", "data", $idData);
         if ($view) {
             $urlParam = Format::addURLParam($urlParam, "view", 1);
@@ -302,13 +309,7 @@ class Data
             }
             $urlParam = Format::addURLParam($urlParam, "id", $book->id);
             $urlParam = Format::addDatabaseParam($urlParam, $book->getDatabaseId());
-            if (Config::get('thumbnail_handling') != "1" &&
-                !empty(Config::get('thumbnail_handling')) &&
-                $rel == Link::OPDS_THUMBNAIL_TYPE) {
-                return new Link(Config::get('thumbnail_handling'), $mime, $rel, $title);
-            } else {
-                return new Link(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
-            }
+            return new Link(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
         } else {
             return new Link(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);
         }

@@ -107,56 +107,26 @@ class Book
         $this->comment = $line->comment ?? '';
         $this->uuid = $line->uuid;
         $this->hasCover = $line->has_cover;
+        $this->rating = $line->rating;
+        $this->databaseId = $database;
         // -DC- Use cover file name
         //if (!file_exists($this->getFilePath('jpg'))) {
         //    // double check
         //    $this->hasCover = 0;
         //}
         if ($this->hasCover) {
+            $cover = new Cover($this, $database);
             if (!empty(Config::get('calibre_database_field_cover'))) {
-                $imgDirectory = Database::getImgDirectory($database);
-                $this->coverFileName = $line->cover;
-                if (!file_exists($this->coverFileName)) {
-                    $this->coverFileName = null;
-                }
-                if (empty($this->coverFileName)) {
-                    $this->coverFileName = sprintf('%s%s', $imgDirectory, $line->cover);
-                    if (!file_exists($this->coverFileName)) {
-                        $this->coverFileName = null;
-                    }
-                }
-                if (empty($this->coverFileName)) {
-                    // Try with the epub file name
-                    $data = $this->getDataFormat('EPUB');
-                    if ($data) {
-                        $this->coverFileName = sprintf('%s%s/%s', $imgDirectory, $data->name, $line->cover);
-                        if (!file_exists($this->coverFileName)) {
-                            $this->coverFileName = null;
-                        }
-                        if (empty($this->coverFileName)) {
-                            $this->coverFileName = sprintf('%s%s.jpg', $imgDirectory, $data->name);
-                            if (!file_exists($this->coverFileName)) {
-                                $this->coverFileName = null;
-                            }
-                        }
-                    }
-                }
+                $this->coverFileName = $cover->checkDatabaseFieldCover($line->cover);
             }
             // Else try with default cover file name
             if (empty($this->coverFileName)) {
-                $cover = $this->getFilePath("jpg");
-                if ($cover === false || !file_exists($cover)) {
-                    $cover = $this->getFilePath("png");
-                }
-                if ($cover === false || !file_exists($cover)) {
+                $this->coverFileName = $cover->checkCoverFilePath();
+                if (empty($this->coverFileName)) {
                     $this->hasCover = 0;
-                } else {
-                    $this->coverFileName = $cover;
                 }
             }
         }
-        $this->rating = $line->rating;
-        $this->databaseId = $database;
     }
 
     /**
@@ -166,6 +136,18 @@ class Book
     public function getDatabaseId()
     {
         return $this->databaseId;
+    }
+
+    /**
+     * Summary of getCoverFileName
+     * @return string|null
+     */
+    public function getCoverFileName()
+    {
+        if ($this->hasCover) {
+            return $this->coverFileName;
+        }
+        return null;
     }
 
     /**
@@ -453,22 +435,6 @@ class Book
      */
     public function getFilePath($extension, $idData = null, $relative = false)
     {
-        /*if ($extension == 'jpg')
-        {
-            $file = 'cover.jpg';
-        } else {
-            $data = $this->getDataById($idData);
-            if (!$data) {
-                return null;
-            }
-            $file = $data->name . '.' . strtolower($data->format);
-        }
-
-        if ($relative) {
-            return $this->relativePath.'/'.$file;
-        } else {
-            return $this->path.'/'.$file;
-        }*/
         if ($extension == "jpg" || $extension == "png") {
             if (empty($this->coverFileName)) {
                 return $this->path . '/cover.' . $extension;
@@ -479,14 +445,13 @@ class Book
                 }
             }
             return false;
-        } else {
-            $data = $this->getDataById($idData);
-            if (!$data) {
-                return null;
-            }
-            $file = $data->name . "." . strtolower($data->format);
-            return $this->path . '/' . $file;
         }
+        $data = $this->getDataById($idData);
+        if (!$data) {
+            return null;
+        }
+        $file = $data->name . "." . strtolower($data->format);
+        return $this->path . '/' . $file;
     }
 
     /**
@@ -638,23 +603,15 @@ class Book
         $database = $this->databaseId;
         $linkArray = [];
 
-        if ($this->hasCover) {
-            // -DC- Use cover file name
-            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
-            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
-            $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
-            // @todo set height for thumbnail here depending on opds vs. html
-            if ($ext == 'png') {
-                array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", null));
-                array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", null));
-            } else {
-                array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', null));
-                array_push($linkArray, Data::getLink($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null));
-            }
-        } elseif (!empty(Config::get('thumbnail_default'))) {
-            $ext = strtolower(pathinfo(Config::get('thumbnail_default'), PATHINFO_EXTENSION));
-            $mime = 'image/' . (($ext == 'jpg') ? 'jpeg' : 'png');
-            array_push($linkArray, new Link(Config::get('thumbnail_default'), $mime, Link::OPDS_THUMBNAIL_TYPE));
+        $cover = new Cover($this);
+        $coverLink = $cover->getCoverLink();
+        if ($coverLink) {
+            array_push($linkArray, $coverLink);
+        }
+        // @todo set height for thumbnail here depending on opds vs. html
+        $thumbnailLink = $cover->getThumbnailLink();
+        if ($thumbnailLink) {
+            array_push($linkArray, $thumbnailLink);
         }
 
         foreach ($this->getDatas() as $data) {
