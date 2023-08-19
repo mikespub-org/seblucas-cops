@@ -10,6 +10,8 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Model\LinkAcquisition;
+use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 
@@ -38,6 +40,8 @@ abstract class Base
     public bool $limitSelf = true;
     /** @var mixed */
     protected $databaseId = null;
+    /** @var mixed */
+    protected $filterLimit = null;
 
     /**
      * Summary of __construct
@@ -127,20 +131,22 @@ abstract class Base
 
     /**
      * Summary of getLinkArray
-     * @return array<LinkNavigation>
+     * @return array<LinkFeed>
      */
     public function getLinkArray()
     {
-        return [ new LinkNavigation($this->getUri(), null, null, $this->getDatabaseId()) ];
+        return [ new LinkAcquisition($this->getUri(), null, null, $this->getDatabaseId()) ];
     }
 
     /**
      * Summary of getClassName
+     * @param string|null $className
      * @return string
      */
-    public function getClassName()
+    public function getClassName($className = null)
     {
-        $classParts = explode('\\', get_class($this));
+        $className ??= get_class($this);
+        $classParts = explode('\\', $className);
         return end($classParts);
     }
 
@@ -201,7 +207,7 @@ abstract class Base
      * @param mixed $sort
      * @return array<EntryBook>
      */
-    public function getBooks($n = -1, $sort = null)
+    public function getBooks($n = 1, $sort = null)
     {
         // @todo see if we want to do something special for books, and deal with static:: inheritance
         //return $this->getEntriesByInstance(Book::class, $n, $sort, $this->databaseId);
@@ -220,8 +226,10 @@ abstract class Base
      * @param mixed $numberPerPage
      * @return array<Entry>
      */
-    public function getEntriesByInstance($className, $n = -1, $sort = null, $database = null, $numberPerPage = null)
+    public function getEntriesByInstance($className, $n = 1, $sort = null, $database = null, $numberPerPage = null)
     {
+        $database ??= $this->databaseId;
+        $numberPerPage ??= $this->filterLimit;
         $baselist = new BaseList($className, null, $database, $numberPerPage);
         $baselist->orderBy = $sort;
         return $baselist->getEntriesByInstance($this, $n);
@@ -233,9 +241,9 @@ abstract class Base
      * @param mixed $sort
      * @return array<Entry>
      */
-    public function getAuthors($n = -1, $sort = null)
+    public function getAuthors($n = 1, $sort = null)
     {
-        return $this->getEntriesByInstance(Author::class, $n, $sort, $this->databaseId);
+        return $this->getEntriesByInstance(Author::class, $n, $sort);
     }
 
     /**
@@ -244,9 +252,9 @@ abstract class Base
      * @param mixed $sort
      * @return array<Entry>
      */
-    public function getLanguages($n = -1, $sort = null)
+    public function getLanguages($n = 1, $sort = null)
     {
-        return $this->getEntriesByInstance(Language::class, $n, $sort, $this->databaseId);
+        return $this->getEntriesByInstance(Language::class, $n, $sort);
     }
 
     /**
@@ -255,9 +263,9 @@ abstract class Base
      * @param mixed $sort
      * @return array<Entry>
      */
-    public function getPublishers($n = -1, $sort = null)
+    public function getPublishers($n = 1, $sort = null)
     {
-        return $this->getEntriesByInstance(Publisher::class, $n, $sort, $this->databaseId);
+        return $this->getEntriesByInstance(Publisher::class, $n, $sort);
     }
 
     /**
@@ -266,9 +274,9 @@ abstract class Base
      * @param mixed $sort
      * @return array<Entry>
      */
-    public function getRatings($n = -1, $sort = null)
+    public function getRatings($n = 1, $sort = null)
     {
-        return $this->getEntriesByInstance(Rating::class, $n, $sort, $this->databaseId);
+        return $this->getEntriesByInstance(Rating::class, $n, $sort);
     }
 
     /**
@@ -277,9 +285,9 @@ abstract class Base
      * @param mixed $sort
      * @return array<Entry>
      */
-    public function getSeries($n = -1, $sort = null)
+    public function getSeries($n = 1, $sort = null)
     {
-        return $this->getEntriesByInstance(Serie::class, $n, $sort, $this->databaseId);
+        return $this->getEntriesByInstance(Serie::class, $n, $sort);
     }
 
     /**
@@ -288,9 +296,9 @@ abstract class Base
      * @param mixed $sort
      * @return array<Entry>
      */
-    public function getTags($n = -1, $sort = null)
+    public function getTags($n = 1, $sort = null)
     {
-        return $this->getEntriesByInstance(Tag::class, $n, $sort, $this->databaseId);
+        return $this->getEntriesByInstance(Tag::class, $n, $sort);
     }
 
     /**
@@ -302,6 +310,30 @@ abstract class Base
     {
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
         return [];
+    }
+
+    /**
+     * Summary of setFilterLimit
+     * @param mixed|null $filterLimit
+     * @return void
+     */
+    public function setFilterLimit($filterLimit)
+    {
+        $this->filterLimit = $filterLimit;
+    }
+
+    /**
+     * Did we reach the filter limit or not?
+     * See BaseList()->getEntriesByInstance()
+     * @param int $count
+     * @return bool
+     */
+    public function isFilterLimit($count)
+    {
+        if (empty($this->filterLimit) || $this->filterLimit < 1 || $count < $this->filterLimit) {
+            return false;
+        }
+        return true;
     }
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */

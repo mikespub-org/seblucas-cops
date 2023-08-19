@@ -10,8 +10,8 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\Link;
-use SebLucas\Cops\Model\LinkNavigation;
+use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\EPubMeta\EPub;
@@ -521,7 +521,7 @@ class Book
 
     /**
      * Summary of getLinkArray
-     * @return array<Link>
+     * @return array<LinkEntry|LinkAcquisition>
      */
     public function getLinkArray()
     {
@@ -542,18 +542,20 @@ class Book
 
         foreach ($this->getDatas() as $data) {
             if ($data->isKnownType()) {
-                array_push($linkArray, $data->getDataLink(Link::OPDS_ACQUISITION_TYPE, $data->format));
+                array_push($linkArray, $data->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, $data->format));
             }
         }
 
+        // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
-            array_push($linkArray, new LinkNavigation($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
+            array_push($linkArray, new LinkAcquisition($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
         }
 
+        // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         $serie = $this->getSerie();
         if (!is_null($serie)) {
-            array_push($linkArray, new LinkNavigation($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
+            array_push($linkArray, new LinkAcquisition($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
         }
 
         return $linkArray;

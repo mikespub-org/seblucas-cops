@@ -10,7 +10,9 @@ x.x.x - TODO
 1.5.x - 202308xx Update php-epub-meta
   * Changes in config_default.php file:
     - new $config['cops_thumbnail_default']
+    - new $config['cops_opds_filter_limit']
     - new $config['cops_opds_filter_links']
+    - new $config['cops_html_filter_limit']
     - new $config['cops_html_filter_links']
     - drop $config['cops_show_filter_links']
   * Split off new Calibre\Cover class + move various thumbnail code there

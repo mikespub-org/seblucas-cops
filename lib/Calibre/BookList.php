@@ -13,6 +13,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\PageQueryResult;
@@ -118,7 +119,7 @@ class BookList
             Book::PAGE_ID,
             str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
             'text',
-            [new LinkNavigation('?page='.Book::PAGE_ALL, null, null, $this->databaseId)],
+            [new LinkAcquisition('?page='.Book::PAGE_ALL, null, null, $this->databaseId)],
             $this->databaseId,
             '',
             $nBooks
@@ -130,7 +131,7 @@ class BookList
                 PageId::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), Config::get('recentbooks_limit')),
                 'text',
-                [ new LinkNavigation('?page='.PageId::ALL_RECENT_BOOKS, null, null, $this->databaseId)],
+                [ new LinkAcquisition('?page='.PageId::ALL_RECENT_BOOKS, 'http://opds-spec.org/sort/new', null, $this->databaseId)],
                 $this->databaseId,
                 '',
                 Config::get('recentbooks_limit')

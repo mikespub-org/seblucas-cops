@@ -9,7 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Output\Format;
 
 class Data
@@ -172,11 +172,11 @@ class Data
      * @param mixed $rel
      * @param mixed $title
      * @param mixed $view
-     * @return Link
+     * @return LinkEntry
      */
     public function getDataLink($rel, $title = null, $view = false)
     {
-        if ($rel == Link::OPDS_ACQUISITION_TYPE && Config::get('use_url_rewriting') == "1") {
+        if ($rel == LinkEntry::OPDS_ACQUISITION_TYPE && Config::get('use_url_rewriting') == "1") {
             return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
@@ -189,7 +189,7 @@ class Data
      */
     public function getHtmlLink()
     {
-        return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE)->href;
+        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE)->href;
     }
 
     /**
@@ -198,7 +198,7 @@ class Data
      */
     public function getViewHtmlLink()
     {
-        return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE, null, true)->href;
+        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, null, true)->href;
     }
 
     /**
@@ -214,7 +214,7 @@ class Data
      * Summary of getHtmlLinkWithRewriting
      * @param mixed $title
      * @param mixed $view
-     * @return Link
+     * @return LinkEntry
      */
     public function getHtmlLinkWithRewriting($title = null, $view = false)
     {
@@ -235,7 +235,7 @@ class Data
         } else {
             $href .= rawurlencode($this->getFilename());
         }
-        return new Link($href, $this->getMimeType(), Link::OPDS_ACQUISITION_TYPE, $title);
+        return new LinkEntry($href, $this->getMimeType(), LinkEntry::OPDS_ACQUISITION_TYPE, $title);
     }
 
     /**
@@ -258,7 +258,7 @@ class Data
      * @param string|null $idData
      * @param mixed $title
      * @param mixed $view
-     * @return Link
+     * @return LinkEntry
      */
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $view = false)
     {
@@ -272,9 +272,9 @@ class Data
             if ($view) {
                 $urlParam = Format::addURLParam($urlParam, "view", 1);
             }
-            return new Link(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
+            return new LinkEntry(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
         }
 
-        return new Link(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);
+        return new LinkEntry(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);
     }
 }

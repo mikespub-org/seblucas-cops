@@ -8,34 +8,17 @@
 
 namespace SebLucas\Cops\Model;
 
-use SebLucas\Cops\Output\Format;
-
-class LinkNavigation extends Link
+/**
+ * From https://specs.opds.io/opds-1.2#22-navigation-feeds
+ * A Navigation Feed is an OPDS Catalog Feed Document whose Atom Entries serve to create
+ * a suggested hierarchy for presentation and browsing. A Navigation Feed MUST NOT contain
+ * OPDS Catalog Entries but instead contains Atom Entries that link to other Navigation or
+ * Acquisition Feeds or other Resources.
+ *
+ * Links to Navigation Feeds MUST use the "type" attribute
+ *   "application/atom+xml;profile=opds-catalog;kind=navigation"
+ */
+class LinkNavigation extends LinkFeed
 {
-    /**
-     * Summary of __construct
-     * @param string $phref ?queryString relative to current endpoint
-     * @param ?string $prel relation in the OPDS catalog
-     * @param ?string $ptitle title in the OPDS catalog and elsewhere
-     * @param mixed $database current database in multiple database setup
-     */
-    public function __construct($phref, $prel = null, $ptitle = null, $database = null)
-    {
-        parent::__construct($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        $this->href = Format::addDatabaseParam($this->href, $database);
-        //if (!preg_match("#^\?(.*)#", $this->href) && !empty($this->href)) {
-        //    $this->href = "?" . $this->href;
-        //}
-    }
-
-    /**
-     * Summary of hrefXhtml
-     * @param mixed $endpoint
-     * @return string
-     */
-    public function hrefXhtml($endpoint = '')
-    {
-        // LinkNavigation()->href is relative to endpoint
-        return $endpoint . $this->href;
-    }
+    public const LINK_TYPE = parent::OPDS_NAVIGATION_FEED;
 }

@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Output\Format;
 
 class Cover
@@ -274,26 +274,26 @@ class Cover
 
     /**
      * Summary of getCoverLink
-     * @return Link|null
+     * @return LinkEntry|null
      */
     public function getCoverLink()
     {
         if ($this->coverFileName) {
             // -DC- Use cover file name
-            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
+            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', LinkEntry::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             $file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
-                return new Link(str_replace('%2F', '/', rawurlencode($this->book->path."/".$file)), $mime, Link::OPDS_IMAGE_TYPE);
+                return new LinkEntry(str_replace('%2F', '/', rawurlencode($this->book->path."/".$file)), $mime, LinkEntry::OPDS_IMAGE_TYPE);
             }
             $urlParam = Format::addURLParam("", "id", $this->book->id);
             $urlParam = Format::addDatabaseParam($urlParam, $this->databaseId);
             if ($ext != 'jpg') {
                 $urlParam = Format::addURLParam($urlParam, "type", $ext);
             }
-            return new Link(static::$endpoint . '?' . $urlParam, $mime, Link::OPDS_IMAGE_TYPE);
+            return new LinkEntry(static::$endpoint . '?' . $urlParam, $mime, LinkEntry::OPDS_IMAGE_TYPE);
         }
 
         return null;
@@ -319,7 +319,7 @@ class Cover
      * Summary of getThumbnailLink
      * @param integer $height
      * @param bool $useDefault
-     * @return Link|null
+     * @return LinkEntry|null
      */
     public function getThumbnailLink($height, $useDefault = true)
     {
@@ -328,12 +328,12 @@ class Cover
             $fileName = Config::get('thumbnail_handling');
             $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new Link($fileName, $mime, Link::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry($fileName, $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
 
         if ($this->coverFileName) {
             // -DC- Use cover file name
-            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
+            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', LinkEntry::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             //$file = 'cover.' . $ext;
@@ -346,7 +346,7 @@ class Cover
             if (Config::get('thumbnail_handling') != "1") {
                 $urlParam = Format::addURLParam($urlParam, "height", $height);
             }
-            return new Link(static::$endpoint . '?' . $urlParam, $mime, Link::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(static::$endpoint . '?' . $urlParam, $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
 
         if ($useDefault) {
@@ -357,14 +357,14 @@ class Cover
 
     /**
      * Summary of getDefaultLink
-     * @return Link|null
+     * @return LinkEntry|null
      */
     public function getDefaultLink()
     {
         if (!empty(Config::get('thumbnail_default'))) {
             $ext = strtolower(pathinfo(Config::get('thumbnail_default'), PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new Link(Config::get('thumbnail_default'), $mime, Link::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(Config::get('thumbnail_default'), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
         return null;
     }

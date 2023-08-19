@@ -228,7 +228,7 @@ abstract class CustomColumnType
      * @param integer $n
      * @return \PDOStatement
      */
-    public function getPaginatedResult($query, $params = [], $n = -1)
+    public function getPaginatedResult($query, $params = [], $n = 1)
     {
         if ($this->numberPerPage != -1 && $n != -1) {
             $query .= " LIMIT ?, ?";

@@ -13,8 +13,10 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Model\LinkAcquisition;
+use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFacet;
+use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
@@ -168,13 +170,13 @@ class OPDSRenderer
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             $urlparam = Format::addURLParam($urlparam, "page", PageId::OPENSEARCH);
-            $link = new Link(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
+            $link = new LinkEntry(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $urlparam = Format::addURLParam($urlparam, "query", "{searchTerms}");
             $urlparam = str_replace("%7B", "{", $urlparam);
             $urlparam = str_replace("%7D", "}", $urlparam);
-            $link = new Link(Config::get('full_url') . self::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
+            $link = new LinkEntry(Config::get('full_url') . self::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
         }
         $this->renderLink($link);
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
@@ -199,7 +201,7 @@ class OPDSRenderer
 
     /**
      * Summary of renderLink
-     * @param Link $link
+     * @param LinkEntry|LinkFeed $link
      * @param int|null $number
      * @return void
      */
@@ -224,7 +226,7 @@ class OPDSRenderer
             if (!empty($link->threadCount)) {
                 $this->getXmlStream()->writeAttribute("thr:count", (string) $link->threadCount);
             }
-        } elseif ($link->type === Link::OPDS_NAVIGATION_TYPE && !empty($number)) {
+        } elseif ($link instanceof LinkFeed && !empty($number)) {
             $this->getXmlStream()->writeAttribute("thr:count", (string) $number);
         }
         $this->getXmlStream()->endElement();
@@ -348,9 +350,12 @@ class OPDSRenderer
                 $sortLabel = localize("sort.alternate");
                 $sortParam = $request->get('sort');
                 $sortOptions = $page->getSortOptions();
+                // @todo we can't use really facetGroups here, or OPDS reader thinks we're drilling down :-()
                 foreach ($sortOptions as $field => $title) {
                     $url = str_format($sortUrl, $field);
                     $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null, $database);
+                    //$link = new LinkNavigation($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
+                    //$link = new LinkAcquisition($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
                     $this->renderLink($link);
                 }
             }
@@ -377,8 +382,10 @@ class OPDSRenderer
                     if (empty($entry->className)) {
                         continue;
                     }
+                    $group = strtolower($entry->className);
+                    $group = localize($group . 's.title');
                     $url = $entry->getNavLink('', $extraUri);
-                    $link = new LinkFacet($url, $entry->title, $entry->className, false, $entry->numberOfElement, $database);
+                    $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
                     $this->renderLink($link);
                 }
             }

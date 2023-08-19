@@ -20,7 +20,7 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Model\Link;
+use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Pages\PageId;
 
 /*
@@ -372,7 +372,7 @@ class BookTest extends TestCase
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
-            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
+            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
                 $this->assertEquals("download/1/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub", $link->href);
                 return;
             }
@@ -387,7 +387,7 @@ class BookTest extends TestCase
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
-            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
+            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
                 $this->assertEquals(Config::ENDPOINT["fetch"] . "?id=2&type=epub&data=1", $link->href);
                 return;
             }
@@ -469,6 +469,7 @@ class BookTest extends TestCase
      * @dataProvider providerThumbnailCachePath
      * @param mixed $width
      * @param mixed $height
+     * @param mixed $type
      * @param mixed $expectedCachePath
      * @return void
      */
