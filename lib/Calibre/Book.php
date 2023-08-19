@@ -109,22 +109,11 @@ class Book
         $this->hasCover = $line->has_cover;
         $this->rating = $line->rating;
         $this->databaseId = $database;
-        // -DC- Use cover file name
-        //if (!file_exists($this->getFilePath('jpg'))) {
-        //    // double check
-        //    $this->hasCover = 0;
-        //}
+        // do this at the end when all properties are set
         if ($this->hasCover) {
-            $cover = new Cover($this, $database);
-            if (!empty(Config::get('calibre_database_field_cover'))) {
-                $this->coverFileName = $cover->checkDatabaseFieldCover($line->cover);
-            }
-            // Else try with default cover file name
+            $this->coverFileName = Cover::findCoverFileName($this, $line);
             if (empty($this->coverFileName)) {
-                $this->coverFileName = $cover->checkCoverFilePath();
-                if (empty($this->coverFileName)) {
-                    $this->hasCover = 0;
-                }
+                $this->hasCover = 0;
             }
         }
     }
@@ -431,7 +420,7 @@ class Book
      * @param string $extension
      * @param mixed $idData
      * @param false $relative Deprecated
-     * @return string|false|null
+     * @return string|false|null string for file path, false for missing cover, null for missing data
      */
     public function getFilePath($extension, $idData = null, $relative = false)
     {
@@ -500,70 +489,6 @@ class Book
     }
 
     /**
-     * Summary of getThumbnail
-     * @param mixed $width
-     * @param mixed $height
-     * @param mixed $outputfile
-     * @param mixed $inType
-     * @return bool
-     */
-    public function getThumbnail($width, $height, $outputfile = null, $inType = 'jpg')
-    {
-        if (is_null($width) && is_null($height)) {
-            return false;
-        }
-
-        // -DC- Use cover file name
-        //$file = $this->getFilePath('jpg');
-        $file = $this->coverFileName;
-        // get image size
-        if ($size = GetImageSize($file)) {
-            $w = $size[0];
-            $h = $size[1];
-            //set new size
-            if (!is_null($width)) {
-                $nw = $width;
-                if ($nw >= $w) {
-                    return false;
-                }
-                $nh = intval(($nw*$h)/$w);
-            } else {
-                $nh = $height;
-                if ($nh >= $h) {
-                    return false;
-                }
-                $nw = intval(($nh*$w)/$h);
-            }
-        } else {
-            return false;
-        }
-
-        // Draw the image
-        if ($inType == 'png') {
-            $src_img = imagecreatefrompng($file);
-        } else {
-            $src_img = imagecreatefromjpeg($file);
-        }
-        $dst_img = imagecreatetruecolor($nw, $nh);
-        if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
-            return false;
-        }
-        if ($inType == 'png') {
-            if (!imagepng($dst_img, $outputfile, 9)) {
-                return false;
-            }
-        } else {
-            if (!imagejpeg($dst_img, $outputfile, 80)) {
-                return false;
-            }
-        }
-        imagedestroy($src_img);
-        imagedestroy($dst_img);
-
-        return true;
-    }
-
-    /**
      * The values of all the specified columns
      *
      * @param string[] $columns
@@ -609,7 +534,8 @@ class Book
             array_push($linkArray, $coverLink);
         }
         // @todo set height for thumbnail here depending on opds vs. html
-        $thumbnailLink = $cover->getThumbnailLink();
+        $height = (int) Config::get('html_thumbnail_height');
+        $thumbnailLink = $cover->getThumbnailLink($height);
         if ($thumbnailLink) {
             array_push($linkArray, $thumbnailLink);
         }

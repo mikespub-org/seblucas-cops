@@ -180,7 +180,7 @@ class Data
             return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
-        return self::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, null, $view);
+        return self::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
     }
 
     /**
@@ -249,29 +249,6 @@ class Data
     }
 
     /**
-     * Summary of handleThumbnailLink
-     * @param string $urlParam
-     * @param mixed $height
-     * @return string
-     */
-    public static function handleThumbnailLink($urlParam, $height)
-    {
-        // @todo remove use of global variable here - see $request->isFeed()
-        if (is_null($height)) {
-            if (preg_match('/' . Config::ENDPOINT["feed"] . '/', $_SERVER["SCRIPT_NAME"])) {
-                $height = Config::get('opds_thumbnail_height');
-            } else {
-                $height = Config::get('html_thumbnail_height');
-            }
-        }
-        if (Config::get('thumbnail_handling') != "1") {
-            $urlParam = Format::addURLParam($urlParam, "height", $height);
-        }
-
-        return $urlParam;
-    }
-
-    /**
      * Summary of getLink
      * @param Book $book
      * @param string $type
@@ -280,38 +257,24 @@ class Data
      * @param string $filename
      * @param string|null $idData
      * @param mixed $title
-     * @param mixed $height
      * @param mixed $view
      * @return Link
      */
-    public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $height = null, $view = false)
+    public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $view = false)
     {
-        // @todo move some of the image-specific code from Data to Cover
-        if (Config::get('thumbnail_handling') != "1" &&
-            !empty(Config::get('thumbnail_handling')) &&
-            $rel == Link::OPDS_THUMBNAIL_TYPE) {
-            return new Link(Config::get('thumbnail_handling'), $mime, $rel, $title);
-        }
-
-        $urlParam = Format::addURLParam("", "data", $idData);
-        if ($view) {
-            $urlParam = Format::addURLParam($urlParam, "view", 1);
-        }
-
+        // moved image-specific code from Data to Cover
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
-            $rel == Link::OPDS_THUMBNAIL_TYPE ||
             ($type == "epub" && Config::get('update_epub-metadata'))) {
-            if ($type != "jpg") {
-                $urlParam = Format::addURLParam($urlParam, "type", $type);
-            }
-            if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
-                $urlParam = self::handleThumbnailLink($urlParam, $height);
-            }
-            $urlParam = Format::addURLParam($urlParam, "id", $book->id);
+            $urlParam = Format::addURLParam("", "id", $book->id);
             $urlParam = Format::addDatabaseParam($urlParam, $book->getDatabaseId());
+            $urlParam = Format::addURLParam($urlParam, "type", $type);
+            $urlParam = Format::addURLParam($urlParam, "data", $idData);
+            if ($view) {
+                $urlParam = Format::addURLParam($urlParam, "view", 1);
+            }
             return new Link(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
-        } else {
-            return new Link(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);
         }
+
+        return new Link(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);
     }
 }

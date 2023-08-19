@@ -307,6 +307,7 @@ $config['cops_thumbnail_handling'] = '';
 
 /*
  * Default thumbnail to use in OPDS and HTML catalog if none is available
+ * Set to '' if you don't want to use some default thumbnail as fallback
  */
 $config['cops_thumbnail_default'] = 'images/icons/icon144.png';
 

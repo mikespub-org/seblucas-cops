@@ -99,8 +99,13 @@ class JSONRenderer
         $database = $book->getDatabaseId();
 
         $cover = new Cover($book);
-        // @todo set height for thumbnail here depending on opds vs. html
-        $out ["thumbnailurl"] = $cover->getThumbnailUri($endpoint, Config::get('html_thumbnail_height') * 2, false);
+        // set height for thumbnail here depending on opds vs. html
+        if ($endpoint == Config::ENDPOINT['feed']) {
+            $height = intval(Config::get('opds_thumbnail_height')) * 2;
+        } else {
+            $height = intval(Config::get('html_thumbnail_height')) * 2;
+        }
+        $out ["thumbnailurl"] = $cover->getThumbnailUri($endpoint, $height, false);
         $out ["coverurl"] = $cover->getCoverUri($endpoint) ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
         $out ["datas"] = [];
