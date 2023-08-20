@@ -5,6 +5,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
+namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Output\OPDSRenderer;
 

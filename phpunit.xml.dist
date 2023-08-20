@@ -21,6 +21,7 @@
   <testsuites>
     <testsuite name="COPS">
       <directory>./test/</directory>
+      <exclude>./test/WebDriverTest.php</exclude>
     </testsuite>
   </testsuites>
 </phpunit>

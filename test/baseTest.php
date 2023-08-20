@@ -5,6 +5,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
+namespace SebLucas\Cops\Tests;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,8 @@ use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Template\doT;
+use DOMDocument;
+use Exception;
 
 class BaseTest extends TestCase
 {

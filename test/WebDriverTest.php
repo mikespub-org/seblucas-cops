@@ -1,9 +1,34 @@
 <?php
+/**
+ * COPS (Calibre OPDS PHP Server) test file
+ *
+ * This test still uses a simulated WebDriverTestCase from (sauce/sausage)
+ * to minimize the changes and see if it works...
+ *
+ * See https://github.com/php-webdriver/php-webdriver/blob/main/example.php
+ * for better ways to use WebDriver (php-webdriver/webdriver) natively instead.
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     mikespub
+ */
 
-require_once 'vendor/autoload.php';
+namespace SebLucas\Cops\Tests;
 
-class Cops extends Sauce\Sausage\WebDriverTestCase
+require_once __DIR__ . '/config_test.php';
+//use PHPUnit\Framework\TestCase;
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Cookie;
+use Exception;
+
+class WebDriverTest extends WebDriverTestCase
 {
+    public static string $serverUrl = 'http://host.docker.internal/cops/';
+    /** @var RemoteWebDriver */
+    public static $driver;
+
+    /** @var array<mixed> */
     public static $browsers = [
         // run FF15 on Windows 8 on Sauce
         [
@@ -67,17 +92,41 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
 
     public function setUp(): void
     {
+        // trying to set cookie before navigating first triggers an error: invalid cookie domain
+        $this->url(self::$serverUrl);
+        // set default template in cookie
+        $domain = parse_url(self::$serverUrl, PHP_URL_HOST);
+        //$path = parse_url(self::$serverUrl, PHP_URL_PATH);
+        self::$driver->manage()->addCookie(['name' => 'template', 'value' => 'default', 'domain' => $domain]);
+    }
+
+    public function testHomepage(): void
+    {
+        $this->url(self::$serverUrl . 'index.php?page=index');
+
+        $driver = $this;
+        $title_test = function ($value) use ($driver) {
+            $text = $driver->byXPath('//h1')->getText();
+            return $text == $value;
+        };
+
+        //$this->spinAssert("Home Title", $title_test, [ "COPS" ]);
+        $this->spinWait("Home Title", $title_test, [ "COPS" ]);
+    }
+
+    public function oldSetUp(): void
+    {
         if (isset($_SERVER["TRAVIS_JOB_NUMBER"])) {
-            $caps = $this->getDesiredCapabilities();
+            $caps = self::$driver->getCapabilities();
             $caps['build'] = getenv("TRAVIS_JOB_NUMBER");
             $caps['tunnel-identifier'] = getenv("TRAVIS_JOB_NUMBER");
             $caps['idle-timeout'] = "180";
-            $this->setDesiredCapabilities($caps);
+            //$this->setDesiredCapabilities($caps);
         }
         parent::setUp();
     }
 
-    public function setUpPage(): void
+    public function oldSetUpPage(): void
     {
         if (isset($_SERVER["TRAVIS_JOB_NUMBER"])) {
             $this->url('http://127.0.0.1:8080/index.php');
@@ -87,13 +136,18 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
 
         $driver = $this;
         $title_test = function ($value) use ($driver) {
-            $text = $driver->byXPath('//h1')->text();
+            $text = $driver->byXPath('//h1')->getText();
             return $text == $value;
         };
 
         $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
     }
 
+    /**
+     * Summary of string_to_ascii
+     * @param string $string
+     * @return string
+     */
     public function string_to_ascii($string)
     {
         $ascii = null;
@@ -136,7 +190,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
     {
         $driver = $this;
         $title_test = function ($value) use ($driver) {
-            $text = $driver->byXPath('//h1')->text();
+            $text = $driver->byXPath('//h1')->getText();
             return $text == $value;
         };
 
@@ -146,16 +200,16 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         };
 
         // Click on the wrench to enable tag filtering
-        $this->spinWait("", $element_present, [ "class name", 'icon-wrench']);
-        $this->byClassName("icon-wrench")->click();
+        $this->spinWait("", $element_present, [ "class name", 'fa-wrench']);
+        $this->byClassName("fa-wrench")->click();
 
         $this->spinWait("", $element_present, [ "id", "html_tag_filter"]);
         $this->byId("html_tag_filter")->click();
 
         // Go back to home screen
-        $this->byClassName("icon-home")->click();
+        $this->byClassName("fa-home")->click();
 
-        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
+        $this->spinAssert("Home Title", $title_test, [ "COPS" ]);
 
         // Go on the recent page
         $author = $this->byXPath('//h2[contains(text(), "Recent")]');
@@ -181,11 +235,17 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         $this->assertEquals(14, count($filtered));
     }
 
+    /**
+     * Summary of normalSearch
+     * @param string $src
+     * @param string $out
+     * @return void
+     */
     public function normalSearch($src, $out)
     {
         $driver = $this;
         $title_test = function ($value) use ($driver) {
-            $text = $driver->byXPath('//h1')->text();
+            $text = $driver->byXPath('//h1')->getText();
             return $text == $value;
         };
 
@@ -196,14 +256,17 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
 
         // Focus the input and type
         $this->waitUntil(function () {
-            if ($this->byName("query")) {
+            try {
+                $this->byName("query");
                 return true;
+            } catch (Exception) {
+                return null;
             }
-            return null;
-        }, 1000);
+        });
         $queryInput = $this->byName("query");
         $queryInput->click();
-        $queryInput->value($src);
+        // this returns an exception: element not interactable - why?
+        $queryInput->sendKeys($src);
         $queryInput->submit();
 
         $this->spinAssert("Home Title", $title_test, [ "SEARCH RESULT FOR *" . $out . "*" ]);
@@ -218,7 +281,6 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
     {
         if ($this->getBrowser() == "Android") {
             $this->markTestIncomplete();
-            return;
         }
         $this->normalSearch("é", "É");
     }
