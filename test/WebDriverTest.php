@@ -21,6 +21,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Exception;
 
@@ -31,6 +32,8 @@ class WebDriverTest extends WebDriverTestCase
     public static $driver;
     /** @var string|null */
     public static $userAgent = null;  // Chrome by default, override here with 'Kindle/2.0'
+    /** @var string|null */
+    public static $template = 'default';
 
     /** @var array<mixed> */
     public static $browsers = [
@@ -94,14 +97,81 @@ class WebDriverTest extends WebDriverTestCase
         //)
     ];
 
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::$driver->manage()->window()->maximize();
+    }
+
     public function setUp(): void
     {
         // trying to set cookie before navigating first triggers an error: invalid cookie domain
         $this->url(self::$serverUrl);
         // set default template in cookie
-        $domain = parse_url(self::$serverUrl, PHP_URL_HOST);
-        //$path = parse_url(self::$serverUrl, PHP_URL_PATH);
-        self::$driver->manage()->addCookie(['name' => 'template', 'value' => 'default', 'domain' => $domain]);
+        $this->setTemplateName(self::$template);
+    }
+
+    /**
+     * Summary of testScreenshots
+     * @dataProvider providerCombinations
+     * @param string $template
+     * @param int $width
+     * @param int $height
+     * @return void
+     */
+    public function testScreenshots($name, $url, $template, $width, $height)
+    {
+        $this->setTemplateName($template);
+        $this->setWindowSize($width, $height);
+        $this->url($url);
+        self::$driver->takeScreenshot("{$name}.{$template}-{$width}x{$height}.png");
+    }
+
+    protected function providerPages()
+    {
+        return [
+            ['index', self::$serverUrl . '?page=index'],
+            ['recent', self::$serverUrl . '?page=10'],
+            ['allbooks', self::$serverUrl . '?page=4'],
+            ['authors', self::$serverUrl . '?page=1'],
+            ['customize', self::$serverUrl . '?page=19'],
+            ['about', self::$serverUrl . '?page=16'],
+        ];
+    }
+
+    /**
+     * Summary of providerTemplateSizes
+     * @return array<mixed>
+     */
+    protected function providerTemplateSizes()
+    {
+        return [
+            ['default', 0, 0],
+            ['bootstrap', 0, 0],
+            ['bootstrap2', 0, 0],
+            ['default', 320, 720],
+            ['bootstrap', 320, 720],
+            ['bootstrap2', 320, 720],
+            ['default', 1920, 1080],
+            ['bootstrap', 1920, 1080],
+            ['bootstrap2', 1920, 1080],
+        ];
+    }
+
+    /**
+     * Summary of providerCombinations
+     * @return array<mixed>
+     */
+    protected function providerCombinations()
+    {
+        $combinations = [];
+        foreach ($this->providerTemplateSizes() as $options) {
+            foreach ($this->providerPages() as $pages) {
+                array_push($combinations, array_merge($pages, $options));
+            }
+        }
+        return $combinations;
     }
 
     public function testHomepage(): void

@@ -22,6 +22,7 @@ use Facebook\WebDriver\Remote\RemoteWebElement;
 use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Exception;
 
@@ -48,6 +49,38 @@ class WebDriverTestCase extends TestCase
     public static function tearDownAfterClass(): void
     {
         static::$driver->quit();
+    }
+
+    /**
+     * Summary of setWindowSize
+     * @param int $width
+     * @param int $height
+     * @return void
+     */
+    protected static function setWindowSize($width, $height)
+    {
+        if ($width > 0 && $height > 0) {
+            static::$driver->manage()->window()->setSize(new WebDriverDimension($width, $height));
+            return;
+        }
+        if ($width < 0 && $height < 0) {
+            static::$driver->manage()->window()->maximize();
+            return;
+        }
+    }
+
+    /**
+     * Summary of setTemplateName
+     * @param string $template
+     * @return void
+     */
+    protected static function setTemplateName($template)
+    {
+        // set default template in cookie
+        //$domain = parse_url(self::$serverUrl, PHP_URL_HOST);
+        //$path = parse_url(self::$serverUrl, PHP_URL_PATH);
+        //self::$driver->manage()->addCookie(['name' => 'template', 'value' => $template, 'domain' => $domain]);
+        static::$driver->manage()->addCookie(['name' => 'template', 'value' => $template]);
     }
 
     /** see https://github.com/giorgiosironi/phpunit-selenium/blob/master/PHPUnit/Extensions/Selenium2TestCase/Element/Accessor.php */
