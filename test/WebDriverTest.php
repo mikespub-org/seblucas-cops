@@ -20,6 +20,8 @@ require_once __DIR__ . '/config_test.php';
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Cookie;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use Exception;
 
 class WebDriverTest extends WebDriverTestCase
@@ -27,6 +29,8 @@ class WebDriverTest extends WebDriverTestCase
     public static string $serverUrl = 'http://host.docker.internal/cops/';
     /** @var RemoteWebDriver */
     public static $driver;
+    /** @var string|null */
+    public static $userAgent = null;  // Chrome by default, override here with 'Kindle/2.0'
 
     /** @var array<mixed> */
     public static $browsers = [
@@ -217,8 +221,13 @@ class WebDriverTest extends WebDriverTestCase
 
         $this->spinAssert("Recent book title", $title_test, [ "RECENT ADDITIONS" ]);
 
-        // Click on the cog to show tag filters
-        $cog = $this->byId("searchImage");
+        // Click on the cog to show tag filters - not available with server-side rendering
+        try {
+            $cog = $this->byId("searchImage");
+        } catch (Exception $e) {
+            self::$driver->takeScreenshot('oops.searchImage.png');
+            throw $e;
+        }
         $cog->click();
         sleep(1);
         // Filter on War & Military
@@ -249,7 +258,7 @@ class WebDriverTest extends WebDriverTestCase
             return $text == $value;
         };
 
-        // Click on the cog to show the search
+        // Click on the cog to show the search - not needed with server-side rendering
         $cog = $this->byId("searchImage");
         $cog->click();
         //sleep (1);
@@ -263,13 +272,17 @@ class WebDriverTest extends WebDriverTestCase
                 return null;
             }
         });
+        self::$driver->wait(2, 200)->until(
+            WebDriverExpectedCondition::visibilityOfElementLocated(WebDriverBy::name("query"))
+        );
         $queryInput = $this->byName("query");
+        // this returned an exception: element not interactable - waiting for visibility now
         $queryInput->click();
-        // this returns an exception: element not interactable - why?
         $queryInput->sendKeys($src);
         $queryInput->submit();
 
-        $this->spinAssert("Home Title", $title_test, [ "SEARCH RESULT FOR *" . $out . "*" ]);
+        $this->spinWait("Home Title", $title_test, [ "SEARCH RESULT FOR *" . $out . "*" ]);
+        //self::$driver->takeScreenshot('search-' . $out . '.png');
     }
 
     public function testSearchWithoutAccentuatedCharacters(): void

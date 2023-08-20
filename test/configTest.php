@@ -5,6 +5,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
+
 namespace SebLucas\Cops\Tests;
 
 require_once __DIR__ . '/config_test.php';

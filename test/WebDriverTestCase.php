@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\RemoteWebElement;
+use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
@@ -28,11 +29,19 @@ class WebDriverTestCase extends TestCase
 {
     /** @var RemoteWebDriver */
     public static $driver;
+    /** @var string|null */
+    public static $userAgent = null;
 
     public static function setUpBeforeClass(): void
     {
         $host = 'http://localhost:4444';
+        // use Chrome by default, or override above with 'Kindle/2.0'
         $capabilities = DesiredCapabilities::chrome();
+        if (static::$userAgent) {
+            $options = new ChromeOptions();
+            $options->addArguments(['--user-agent="' . static::$userAgent . '"']);
+            $capabilities->setCapability(ChromeOptions::CAPABILITY_W3C, $options);
+        }
         static::$driver = RemoteWebDriver::create($host, $capabilities);
     }
 
@@ -266,7 +275,7 @@ class WebDriverTestCase extends TestCase
      * @param int $timeout
      * @return array<mixed>
      */
-    protected function spinAssert($msg, $test, $args=array(), $timeout=20)
+    protected function spinAssert($msg, $test, $args=[], $timeout=20)
     {
         // wait until the target page is loaded
         $result = static::$driver->wait($timeout)->until(
@@ -287,7 +296,7 @@ class WebDriverTestCase extends TestCase
      * @param int $timeout
      * @return void
      */
-    protected function spinWait($msg, $test, $args=array(), $timeout=20)
+    protected function spinWait($msg, $test, $args=[], $timeout=20)
     {
         [$result, $msg] = $this->spinAssert($msg, $test, $args, $timeout);
         $this->assertTrue($result, $msg);
