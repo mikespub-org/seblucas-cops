@@ -13,7 +13,6 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFacet;
 use SebLucas\Cops\Model\LinkFeed;
@@ -355,7 +354,7 @@ class OPDSRenderer
                     $url = str_format($sortUrl, $field);
                     $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null, $database);
                     //$link = new LinkNavigation($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
-                    //$link = new LinkAcquisition($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
+                    //$link = new LinkFeed($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
                     $this->renderLink($link);
                 }
             }
@@ -384,7 +383,8 @@ class OPDSRenderer
                     }
                     $group = strtolower($entry->className);
                     $group = localize($group . 's.title');
-                    $url = $entry->getNavLink('', $extraUri);
+                    // @todo handle special case of OPDS not expecting filter while HTML does better
+                    $url = str_replace('&filter=1', '', $entry->getNavLink('', $extraUri));
                     $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
                     $this->renderLink($link);
                 }

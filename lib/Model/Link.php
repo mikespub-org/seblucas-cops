@@ -12,11 +12,11 @@ use SebLucas\Cops\Input\Config;
 
 class Link
 {
-    public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
-    public const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
-    public const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
-    public const OPDS_NAVIGATION_FEED = "application/atom+xml;profile=opds-catalog;kind=navigation";
-    public const OPDS_ACQUISITION_FEED = "application/atom+xml;profile=opds-catalog;kind=acquisition";
+    //public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
+    //public const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
+    //public const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
+    //public const OPDS_NAVIGATION_FEED = "application/atom+xml;profile=opds-catalog;kind=navigation";
+    //public const OPDS_ACQUISITION_FEED = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
     public static string $endpoint = Config::ENDPOINT["index"];
     public string $href;

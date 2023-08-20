@@ -18,7 +18,7 @@ namespace SebLucas\Cops\Model;
  *
  * Links using this relation MUST only appear in Acquisition Feeds.
  */
-class LinkFacet extends LinkAcquisition
+class LinkFacet extends LinkFeed
 {
     public const LINK_RELATION = "http://opds-spec.org/facet";
 

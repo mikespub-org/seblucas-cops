@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 
@@ -389,8 +388,9 @@ class BaseList
         $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
         $entries = $this->getFilteredEntries($filter, $n);
+        $limit = $instance->getFilterLimit();
         // are we at the filter limit for this instance?
-        if ($n == 1 && !$instance->isFilterLimit(count($entries))) {
+        if ($n == 1 && count($entries) < $limit) {
             return $entries;
         }
         // if so, let's see how many entries we're missing
@@ -405,27 +405,31 @@ class BaseList
         $title = strtolower($className);
         $title = localize($title . 's.title');
         if ($n > 1) {
-            $paging = '&g[' . $this->className::URL_PARAM . ']=' . strval($n - 1);
+            $paging = '&filter=1';
+            if ($n > 2) {
+                $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n - 1);
+            }
             $entry = new Entry(
                 localize("paging.previous.alternate") . " " . $title,
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
-                [ new LinkAcquisition($instance->getUri() . $paging) ],
+                [ new LinkFeed($instance->getUri() . $paging) ],
                 $this->databaseId,
                 $className,
                 $count
             );
             array_push($entries, $entry);
         }
-        if ($n < ceil($total / count($entries))) {
-            $paging = '&g[' . $this->className::URL_PARAM . ']=' . strval($n + 1);
+        if ($n < ceil($total / $limit)) {
+            $paging = '&filter=1';
+            $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n + 1);
             $entry = new Entry(
                 localize("paging.next.alternate") . " " . $title,
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
-                [ new LinkAcquisition($instance->getUri() . $paging) ],
+                [ new LinkFeed($instance->getUri() . $paging) ],
                 $this->databaseId,
                 $className,
                 $count

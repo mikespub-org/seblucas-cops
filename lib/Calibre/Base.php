@@ -10,7 +10,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
@@ -135,7 +134,7 @@ abstract class Base
      */
     public function getLinkArray()
     {
-        return [ new LinkAcquisition($this->getUri(), null, null, $this->getDatabaseId()) ];
+        return [ new LinkFeed($this->getUri(), null, null, $this->getDatabaseId()) ];
     }
 
     /**
@@ -323,17 +322,15 @@ abstract class Base
     }
 
     /**
-     * Did we reach the filter limit or not?
-     * See BaseList()->getEntriesByInstance()
-     * @param int $count
-     * @return bool
+     * Summary of getFilterLimit
+     * @return mixed|null
      */
-    public function isFilterLimit($count)
+    public function getFilterLimit()
     {
-        if (empty($this->filterLimit) || $this->filterLimit < 1 || $count < $this->filterLimit) {
-            return false;
+        if (empty($this->filterLimit) || $this->filterLimit < 1) {
+            return 999999;
         }
-        return true;
+        return $this->filterLimit;
     }
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */

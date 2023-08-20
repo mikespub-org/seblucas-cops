@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkEntry;
-use SebLucas\Cops\Model\LinkAcquisition;
+use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\EPubMeta\EPub;
@@ -521,7 +521,7 @@ class Book
 
     /**
      * Summary of getLinkArray
-     * @return array<LinkEntry|LinkAcquisition>
+     * @return array<LinkEntry|LinkFeed>
      */
     public function getLinkArray()
     {
@@ -549,13 +549,13 @@ class Book
         // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
-            array_push($linkArray, new LinkAcquisition($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
+            array_push($linkArray, new LinkFeed($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
         }
 
         // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         $serie = $this->getSerie();
         if (!is_null($serie)) {
-            array_push($linkArray, new LinkAcquisition($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
+            array_push($linkArray, new LinkFeed($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
         }
 
         return $linkArray;
