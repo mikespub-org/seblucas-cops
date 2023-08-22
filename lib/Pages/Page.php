@@ -28,47 +28,7 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class Page
 {
-    public const INDEX = "index";
-    public const ALL_AUTHORS = "1";
-    public const AUTHORS_FIRST_LETTER = "2";
-    public const AUTHOR_DETAIL = "3";
-    public const ALL_BOOKS = "4";
-    public const ALL_BOOKS_LETTER = "5";
-    public const ALL_SERIES = "6";
-    public const SERIE_DETAIL = "7";
-    public const OPENSEARCH = "8";
-    public const OPENSEARCH_QUERY = "9";
-    public const ALL_RECENT_BOOKS = "10";
-    public const ALL_TAGS = "11";
-    public const TAG_DETAIL = "12";
-    public const BOOK_DETAIL = "13";
-    public const ALL_CUSTOMS = "14";
-    public const CUSTOM_DETAIL = "15";
-    public const ABOUT = "16";
-    public const ALL_LANGUAGES = "17";
-    public const LANGUAGE_DETAIL = "18";
-    public const CUSTOMIZE = "19";
-    public const ALL_PUBLISHERS = "20";
-    public const PUBLISHER_DETAIL = "21";
-    public const ALL_RATINGS = "22";
-    public const RATING_DETAIL = "23";
-    public const ALL_BOOKS_YEAR = "50";
-    public const FILTER = "99";
-    public const ERROR = "100";
     public const PAGE_ID = "cops:catalog";
-    public const ABOUT_ID = "cops:about";
-    public const FILTER_ID = "cops:filter";
-    public const ERROR_ID = "cops:error";
-    public const ALL_AUTHORS_ID = "cops:authors";
-    public const ALL_BOOKS_UUID = 'urn:uuid';
-    public const ALL_BOOKS_ID = 'cops:books';
-    public const ALL_RECENT_BOOKS_ID = 'cops:recentbooks';
-    public const ALL_CUSTOMS_ID       = "cops:custom";
-    public const ALL_LANGUAGES_ID = "cops:languages";
-    public const ALL_PUBLISHERS_ID = "cops:publishers";
-    public const ALL_RATING_ID = "cops:rating";
-    public const ALL_SERIES_ID = "cops:series";
-    public const ALL_TAGS_ID = "cops:tags";
 
     /** @var mixed */
     public $title;
@@ -119,56 +79,7 @@ class Page
      */
     public static function getPage($pageId, $request)
     {
-        switch ($pageId) {
-            case Page::ALL_AUTHORS :
-                return new PageAllAuthors($request);
-            case Page::AUTHORS_FIRST_LETTER :
-                return new PageAllAuthorsLetter($request);
-            case Page::AUTHOR_DETAIL :
-                return new PageAuthorDetail($request);
-            case Page::ALL_TAGS :
-                return new PageAllTags($request);
-            case Page::TAG_DETAIL :
-                return new PageTagDetail($request);
-            case Page::ALL_LANGUAGES :
-                return new PageAllLanguages($request);
-            case Page::LANGUAGE_DETAIL :
-                return new PageLanguageDetail($request);
-            case Page::ALL_CUSTOMS :
-                return new PageAllCustoms($request);
-            case Page::CUSTOM_DETAIL :
-                return new PageCustomDetail($request);
-            case Page::ALL_RATINGS :
-                return new PageAllRating($request);
-            case Page::RATING_DETAIL :
-                return new PageRatingDetail($request);
-            case Page::ALL_SERIES :
-                return new PageAllSeries($request);
-            case Page::ALL_BOOKS :
-                return new PageAllBooks($request);
-            case Page::ALL_BOOKS_LETTER:
-                return new PageAllBooksLetter($request);
-            case Page::ALL_BOOKS_YEAR:
-                return new PageAllBooksYear($request);
-            case Page::ALL_RECENT_BOOKS :
-                return new PageRecentBooks($request);
-            case Page::SERIE_DETAIL :
-                return new PageSerieDetail($request);
-            case Page::OPENSEARCH_QUERY :
-                return new PageQueryResult($request);
-            case Page::BOOK_DETAIL :
-                return new PageBookDetail($request);
-            case Page::ALL_PUBLISHERS:
-                return new PageAllPublishers($request);
-            case Page::PUBLISHER_DETAIL :
-                return new PagePublisherDetail($request);
-            case Page::ABOUT :
-                return new PageAbout($request);
-            case Page::CUSTOMIZE :
-                return new PageCustomize($request);
-            default:
-                return new Page($request);
-        }
+        return PageId::getPage($pageId, $request);
     }
 
     /**
@@ -194,7 +105,7 @@ class Page
         $this->request = $request ?? new Request();
         $this->idGet = $this->request->get('id');
         $this->query = $this->request->get('query');
-        $this->n = $this->request->get('n', '1');  // use default here
+        $this->n = $this->request->get('n', 1);  // use default here
         $this->numberPerPage = $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->get('db');
@@ -352,13 +263,39 @@ class Page
     }
 
     /**
+     * Summary of getFirstLink
+     * @return LinkNavigation|null
+     */
+    public function getFirstLink()
+    {
+        $currentUrl = "?" . $this->getCleanQuery();
+        if ($this->n > 1) {
+            return new LinkNavigation($currentUrl, "first", localize("paging.first.alternate"));
+        }
+        return null;
+    }
+
+    /**
+     * Summary of getLastLink
+     * @return LinkNavigation|null
+     */
+    public function getLastLink()
+    {
+        $currentUrl = "?" . $this->getCleanQuery();
+        if ($this->n < $this->getMaxPage()) {
+            return new LinkNavigation($currentUrl . "&n=" . $this->getMaxPage(), "last", localize("paging.last.alternate"));
+        }
+        return null;
+    }
+
+    /**
      * Summary of getNextLink
      * @return LinkNavigation|null
      */
     public function getNextLink()
     {
         $currentUrl = "?" . $this->getCleanQuery();
-        if (($this->n) * $this->getNumberPerPage() < $this->totalNumber) {
+        if ($this->n < $this->getMaxPage()) {
             return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
         }
         return null;
@@ -393,7 +330,8 @@ class Page
     public function getSortOptions()
     {
         return [
-            'title' => localize("bookword.title"),
+            //'title' => localize("bookword.title"),
+            'title' => localize("sort.titles"),
             'timestamp' => localize("recent.title"),
             'author' => localize("authors.title"),
             'pubdate' => localize("pubdate.title"),
@@ -411,8 +349,23 @@ class Page
      */
     public function getFilters($instance)
     {
+        if ($this->request->isFeed()) {
+            $filterLinks = Config::get('opds_filter_links');
+            $instance->setFilterLimit(Config::get('opds_filter_limit'));
+        } else {
+            $filterLinks = Config::get('html_filter_links');
+            $instance->setFilterLimit(Config::get('html_filter_limit'));
+        }
         $this->entryArray = [];
-        if (!($instance instanceof Author)) {
+        if (empty($filterLinks)) {
+            return;
+        }
+        // we use g[a]=2 to indicate we want to paginate in facetgroup Authors
+        $paging = $this->request->get('g');
+        if (!is_array($paging)) {
+            $paging = [];
+        }
+        if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("authors.title"),
                 "",
@@ -423,9 +376,10 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getAuthors());
+            $paging['a'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getAuthors($paging['a']));
         }
-        if (!($instance instanceof Language)) {
+        if (!($instance instanceof Language) && in_array('language', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("languages.title"),
                 "",
@@ -436,9 +390,10 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getLanguages());
+            $paging['l'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getLanguages($paging['l']));
         }
-        if (!($instance instanceof Publisher)) {
+        if (!($instance instanceof Publisher) && in_array('publishers', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("publishers.title"),
                 "",
@@ -449,9 +404,10 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getPublishers());
+            $paging['p'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getPublishers($paging['p']));
         }
-        if (!($instance instanceof Rating)) {
+        if (!($instance instanceof Rating) && in_array('rating', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("ratings.title"),
                 "",
@@ -462,9 +418,10 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getRatings());
+            $paging['r'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getRatings($paging['r']));
         }
-        if (!($instance instanceof Serie)) {
+        if (!($instance instanceof Serie) && in_array('series', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("series.title"),
                 "",
@@ -475,10 +432,10 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getSeries());
+            $paging['s'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getSeries($paging['s']));
         }
-        /** @phpstan-ignore-next-line */
-        if (true) {
+        if (in_array('tag', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("tags.title"),
                 "",
@@ -489,16 +446,18 @@ class Page
                 "",
                 ""
             ));
+            $paging['t'] ??= 1;
             // special case if we want to find other tags applied to books where this tag applies
             if ($instance instanceof Tag) {
                 $instance->limitSelf = false;
             }
-            $this->entryArray = array_merge($this->entryArray, $instance->getTags());
+            $this->entryArray = array_merge($this->entryArray, $instance->getTags($paging['t']));
         }
         /**
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
-        if (!($instance instanceof CustomColumn)) {
+        if (!($instance instanceof CustomColumn) && in_array('custom', $filterLinks)) {
             $columns = CustomColumnType::getAllCustomColumns($this->getDatabaseId());
+            $paging['c'] ??= [];
             foreach ($columns as $label => $column) {
                 $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());
                 array_push($this->entryArray, new Entry(
@@ -511,6 +470,7 @@ class Page
                     "",
                     ""
                 ));
+                $paging['c'][$column['id']] ??= 1;
                 $entries = $instance->getCustomValues($customType);
             }
         }

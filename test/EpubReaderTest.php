@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops\Tests;
+
 use SebLucas\Cops\Output\EPubReader;
 
 require_once __DIR__ . '/config_test.php';
@@ -13,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Request;
 use SebLucas\EPubMeta\EPub;
+use DOMDocument;
 
 class EpubReaderTest extends TestCase
 {

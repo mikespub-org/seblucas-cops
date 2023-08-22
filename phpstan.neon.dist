@@ -13,8 +13,6 @@ parameters:
         - vendor/*
         - test/Sauce.php
         - resources/php-epub-meta/vendor/*
-        - resources/php-epub-meta/lib/Contents/*
-        - resources/php-epub-meta/lib/Data/*
         - resources/php-epub-meta/lib/Dom/XmlNamespace.php
         - resources/php-epub-meta/lib/Other.php
         - resources/php-epub-meta/test/otherTest.php

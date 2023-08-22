@@ -13,8 +13,9 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\PageQueryResult;
 
 class BookList
@@ -118,7 +119,7 @@ class BookList
             Book::PAGE_ID,
             str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
             'text',
-            [new LinkNavigation('?page='.Book::PAGE_ALL, null, null, $this->databaseId)],
+            [new LinkFeed('?page='.Book::PAGE_ALL, null, null, $this->databaseId)],
             $this->databaseId,
             '',
             $nBooks
@@ -127,10 +128,10 @@ class BookList
         if (Config::get('recentbooks_limit') > 0) {
             $entry = new Entry(
                 localize('recent.title'),
-                Page::ALL_RECENT_BOOKS_ID,
+                PageId::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), Config::get('recentbooks_limit')),
                 'text',
-                [ new LinkNavigation('?page='.Page::ALL_RECENT_BOOKS, null, null, $this->databaseId)],
+                [ new LinkFeed('?page='.PageId::ALL_RECENT_BOOKS, 'http://opds-spec.org/sort/new', null, $this->databaseId)],
                 $this->databaseId,
                 '',
                 Config::get('recentbooks_limit')
@@ -325,7 +326,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
                 Book::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.$page.'&id='. rawurlencode($post->groupid), null, null, $this->databaseId)],
+                [new LinkFeed('?page='.$page.'&id='. rawurlencode($post->groupid), null, null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

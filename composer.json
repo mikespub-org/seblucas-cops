@@ -38,26 +38,21 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~9.6",
-        "sauce/sausage": "dev-php8x",
-        "phing/phing": "~2.17"
+        "phing/phing": "~2.17",
+        "php-webdriver/webdriver": "dev-main"
     },
     "autoload": {
-        "classmap": ["lib/", "resources/"],
+        "classmap": ["lib/", "resources/", "test/"],
         "exclude-from-classmap": ["resources/php-epub-meta/test/", "resources/php-epub-meta/vendor/"]
     },
     "repositories": [
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/IMrahulpai/sausage"
         }
     ],
     "config": {
         "allow-plugins": {
-            "sauce/sausage-installer": false
         }
     }
 }

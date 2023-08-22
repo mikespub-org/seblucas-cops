@@ -6,11 +6,14 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops\Tests;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -19,8 +22,8 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Model\Link;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Pages\PageId;
 
 /*
 Publishers:
@@ -31,12 +34,13 @@ id:5 (1 book)    Pierson's Magazine:         H. G. Wells
 id:6 (8 books)   Strand Magazine:            Arthur Conan Doyle
 */
 
-define("TEST_THUMBNAIL", __DIR__ . "/thumbnail.jpg");
-define("COVER_WIDTH", 400);
-define("COVER_HEIGHT", 600);
-
 class BookTest extends TestCase
 {
+    private const TEST_THUMBNAIL = __DIR__ . "/thumbnail.jpg";
+    private const COVER_WIDTH = 400;
+    private const COVER_HEIGHT = 600;
+
+    private static string $endpoint = 'phpunit';
     private static Request $request;
 
     public static function setUpBeforeClass(): void
@@ -49,7 +53,7 @@ class BookTest extends TestCase
         if (!is_dir($book->path)) {
             mkdir($book->path, 0777, true);
         }
-        $im = imagecreatetruecolor(COVER_WIDTH, COVER_HEIGHT);
+        $im = imagecreatetruecolor(self::COVER_WIDTH, self::COVER_HEIGHT);
         $text_color = imagecolorallocate($im, 255, 0, 0);
         imagestring($im, 1, 5, 5, 'Book cover', $text_color);
         imagejpeg($im, $book->path . "/cover.jpg", 80);
@@ -370,7 +374,7 @@ class BookTest extends TestCase
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
-            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
+            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
                 $this->assertEquals("download/1/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub", $link->href);
                 return;
             }
@@ -385,8 +389,8 @@ class BookTest extends TestCase
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
-            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
-                $this->assertEquals(Config::ENDPOINT["fetch"] . "?data=1&type=epub&id=2", $link->href);
+            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
+                $this->assertEquals(Config::ENDPOINT["fetch"] . "?id=2&type=epub&data=1", $link->href);
                 return;
             }
         }
@@ -396,14 +400,15 @@ class BookTest extends TestCase
     public function testGetThumbnailNotNeeded(): void
     {
         $book = Book::getBookById(2);
+        $cover = new Cover($book);
 
-        $this->assertFalse($book->getThumbnail(null, null, null));
+        $this->assertFalse($cover->getThumbnail(null, null, null));
 
         // Current cover is 400*600
-        $this->assertFalse($book->getThumbnail(COVER_WIDTH, null, null));
-        $this->assertFalse($book->getThumbnail(COVER_WIDTH + 1, null, null));
-        $this->assertFalse($book->getThumbnail(null, COVER_HEIGHT, null));
-        $this->assertFalse($book->getThumbnail(null, COVER_HEIGHT + 1, null));
+        $this->assertFalse($cover->getThumbnail(self::COVER_WIDTH, null, null));
+        $this->assertFalse($cover->getThumbnail(self::COVER_WIDTH + 1, null, null));
+        $this->assertFalse($cover->getThumbnail(null, self::COVER_HEIGHT, null));
+        $this->assertFalse($cover->getThumbnail(null, self::COVER_HEIGHT + 1, null));
     }
 
     /**
@@ -417,14 +422,15 @@ class BookTest extends TestCase
     public function testGetThumbnailByWidth($width, $height, $expectedWidth, $expectedHeight)
     {
         $book = Book::getBookById(2);
+        $cover = new Cover($book);
 
-        $this->assertTrue($book->getThumbnail($width, $height, TEST_THUMBNAIL));
+        $this->assertTrue($cover->getThumbnail($width, $height, self::TEST_THUMBNAIL));
 
-        $size = GetImageSize(TEST_THUMBNAIL);
+        $size = GetImageSize(self::TEST_THUMBNAIL);
         $this->assertEquals($expectedWidth, $size [0]);
         $this->assertEquals($expectedHeight, $size [1]);
 
-        unlink(TEST_THUMBNAIL);
+        unlink(self::TEST_THUMBNAIL);
     }
 
     /**
@@ -437,6 +443,197 @@ class BookTest extends TestCase
             [164, null, 164, 246],
             [null, 164, 109, 164],
         ];
+    }
+
+    public function testGetThumbnailUri(): void
+    {
+        $book = Book::getBookById(2);
+
+        // The thumbnails should be the same as the covers
+        Config::set('thumbnail_handling', "1");
+        $entry = $book->getEntry();
+        $thumbnailurl = $entry->getThumbnail(self::$endpoint);
+        $this->assertEquals("fetch.php?id=2", $thumbnailurl);
+
+        // The thumbnails should be the same as the handling
+        Config::set('thumbnail_handling', "/images.png");
+        $entry = $book->getEntry();
+        $thumbnailurl = $entry->getThumbnail(self::$endpoint);
+        $this->assertEquals("/images.png", $thumbnailurl);
+
+        Config::set('thumbnail_handling', "");
+        $entry = $book->getEntry();
+        $thumbnailurl = $entry->getThumbnail(self::$endpoint);
+        $this->assertEquals("fetch.php?id=2&height=225", $thumbnailurl);
+    }
+
+    /**
+     * @dataProvider providerThumbnailCachePath
+     * @param mixed $width
+     * @param mixed $height
+     * @param mixed $type
+     * @param mixed $expectedCachePath
+     * @return void
+     */
+    public function testGetThumbnailCachePath($width, $height, $type, $expectedCachePath): void
+    {
+        $book = Book::getBookById(2);
+        $cover = new Cover($book);
+
+        Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
+        $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
+        $this->assertEquals($expectedCachePath, $cachePath);
+
+        rmdir(dirname($cachePath));
+        rmdir(dirname(dirname($cachePath)));
+
+        Config::set('thumbnail_cache_directory', '');
+    }
+
+    /**
+     * Summary of providerThumbnail
+     * @return array<mixed>
+     */
+    public function providerThumbnailCachePath()
+    {
+        return [
+            [164, null, 'jpg', __DIR__ . '/cache/8/7d/dbdeb-1e27-4d06-b79b-4b2a3bfc6a5f-164x.jpg'],
+            [null, 164, 'jpg', __DIR__ . '/cache/8/7d/dbdeb-1e27-4d06-b79b-4b2a3bfc6a5f-x164.jpg'],
+            [164, null, 'png', __DIR__ . '/cache/8/7d/dbdeb-1e27-4d06-b79b-4b2a3bfc6a5f-164x.png'],
+            [null, 164, 'png', __DIR__ . '/cache/8/7d/dbdeb-1e27-4d06-b79b-4b2a3bfc6a5f-x164.png'],
+        ];
+    }
+
+    public function testSendThumbnailOriginal(): void
+    {
+        $book = Book::getBookById(17);
+        $cover = new Cover($book);
+        $request = Request::build([]);
+        $expected = filesize($cover->coverFileName);
+
+        // no thumbnail resizing
+        ob_start();
+        $cover->sendThumbnail($request, false);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    public function testSendThumbnailResize(): void
+    {
+        $book = Book::getBookById(17);
+        $cover = new Cover($book);
+        $request = Request::build(['height' => Config::get('html_thumbnail_height')]);
+        $expected = 15349;
+
+        // no thumbnail cache
+        ob_start();
+        $cover->sendThumbnail($request, false);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    public function testSendThumbnailCacheMiss(): void
+    {
+        $book = Book::getBookById(17);
+        $cover = new Cover($book);
+        $width = null;
+        $height = Config::get('html_thumbnail_height');
+        $type = 'jpg';
+        $request = Request::build(['height' => $height]);
+        $expected = 15349;
+
+        // use thumbnail cache
+        Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
+        $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
+        if (file_exists($cachePath)) {
+            unlink($cachePath);
+            rmdir(dirname($cachePath));
+            rmdir(dirname(dirname($cachePath)));
+        }
+
+        // 1. cache miss
+        ob_start();
+        $cover->sendThumbnail($request, false);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+
+        Config::set('thumbnail_cache_directory', '');
+    }
+
+    public function testSendThumbnailCacheHit(): void
+    {
+        $book = Book::getBookById(17);
+        $cover = new Cover($book);
+        $width = null;
+        $height = Config::get('html_thumbnail_height');
+        $type = 'jpg';
+        $request = Request::build(['height' => $height]);
+        $expected = 15349;
+
+        // use thumbnail cache
+        Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
+
+        // 2. cache hit
+        ob_start();
+        $cover->sendThumbnail($request, false);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+
+        $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
+        if (file_exists($cachePath)) {
+            unlink($cachePath);
+            rmdir(dirname($cachePath));
+            rmdir(dirname(dirname($cachePath)));
+        }
+
+        Config::set('thumbnail_cache_directory', '');
+    }
+
+    public function testCheckDatabaseFieldCover(): void
+    {
+        $book = Book::getBookById(17);
+        $cover = new Cover($book);
+
+        // full path
+        $fileName = $cover->checkDatabaseFieldCover($book->path . '/cover.jpg');
+        $expected = $book->path . '/cover.jpg';
+        $this->assertEquals($expected, $fileName);
+
+        // relative path to image_directory
+        Config::set('image_directory', $book->path . '/');
+        $fileName = $cover->checkDatabaseFieldCover('cover.jpg');
+        $expected = $book->path . '/cover.jpg';
+        $this->assertEquals($expected, $fileName);
+
+        // relative path to image_directory . epub->name
+        // this won't work for Calibre directories due to missing (book->id) in path here
+        Config::set('image_directory', dirname($book->path) . '/');
+        $fileName = $cover->checkDatabaseFieldCover('cover.jpg');
+        $expected = null;
+        $this->assertEquals($expected, $fileName);
+
+        // unknown path
+        Config::set('image_directory', '');
+        $fileName = $cover->checkDatabaseFieldCover('thumbnail.png');
+        $expected = null;
+        $this->assertEquals($expected, $fileName);
+
+        // based on book path works for Calibre directories
+        $fileName = $cover->checkCoverFilePath();
+        $expected = $book->path . '/cover.jpg';
+        $this->assertEquals($expected, $fileName);
     }
 
     public function testGetMostInterestingDataToSendToKindle_WithEPUB(): void
@@ -505,7 +702,7 @@ class BookTest extends TestCase
         $this->assertEquals("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $epub->getHtmlLink());
 
         Config::set('use_url_rewriting', "0");
-        $this->assertEquals(Config::ENDPOINT["fetch"] . "?data=20&type=epub&id=17", $epub->getHtmlLink());
+        $this->assertEquals(Config::ENDPOINT["fetch"] . "?id=17&type=epub&data=20", $epub->getHtmlLink());
     }
 
     public function testGetUpdatedEpub(): void
@@ -514,31 +711,33 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
 
         ob_start();
-        $book->getUpdatedEpub(20);
+        $book->getUpdatedEpub(20, false);
         $headers = headers_list();
         $output = ob_get_clean();
-        $this->assertStringStartsWith("Exception : Cannot modify header information", $output);
+        //$this->assertStringStartsWith("Exception : Cannot modify header information", $output);
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals(1794249, strlen($output));
     }
 
     public function testGetFilePath_Cover(): void
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, false));
+        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null));
     }
 
     public function testGetFilePath_Epub(): void
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, false));
+        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20));
     }
 
     public function testGetFilePath_Mobi(): void
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, false));
+        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17));
     }
 
     public function testGetDataFormat_EPUB(): void
@@ -627,11 +826,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_Tag(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "fic");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -643,11 +842,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_BookAndAuthor(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "car");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(4, $currentPage->entryArray);
@@ -661,11 +860,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_AuthorAndSeries(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "art");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
@@ -679,11 +878,11 @@ class BookTest extends TestCase
     public function testTypeaheadSearch_Publisher(): void
     {
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "Macmillan");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
@@ -696,11 +895,11 @@ class BookTest extends TestCase
     {
         Config::set('ignored_categories', ["author"]);
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "car");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
@@ -714,11 +913,11 @@ class BookTest extends TestCase
     {
         Config::set('ignored_categories', ["series"]);
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "art");
         $request->set('search', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
@@ -733,12 +932,12 @@ class BookTest extends TestCase
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
             "One book" => __DIR__ . "/BaseWithOneBook/"]);
         $request = new Request();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "art");
         $request->set('search', 1);
         $request->set('multi', 1);
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);

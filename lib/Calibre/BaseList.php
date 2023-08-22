@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 
 class BaseList
@@ -203,6 +204,18 @@ class BaseList
     }
 
     /**
+     * Summary of countEntriesByInstance
+     * @param Base|Category $instance
+     * @return int
+     */
+    public function countEntriesByInstance($instance)
+    {
+        $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
+        $filter->addInstanceFilter($instance);
+        return $this->countFilteredEntries($filter);
+    }
+
+    /**
      * Summary of countFilteredEntries
      * @param Filter $filter
      * @return int
@@ -240,7 +253,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getRequestEntries($n = -1)
+    public function getRequestEntries($n = 1)
     {
         if ($this->request->hasFilter()) {
             return self::getEntriesByFilter($n);
@@ -253,7 +266,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getAllEntries($n = -1)
+    public function getAllEntries($n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
         if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getColumns(), ' as ' . $this->orderBy) !== false) {
@@ -274,7 +287,7 @@ class BaseList
      * @param mixed $repeat
      * @return array<Entry>
      */
-    public function getAllEntriesByQuery($find, $n = -1, $repeat = 1)
+    public function getAllEntriesByQuery($find, $n = 1, $repeat = 1)
     {
         $query = $this->className::SQL_ROWS_FOR_SEARCH;
         $columns = $this->getColumns();
@@ -343,7 +356,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getEntriesByFirstLetter($letter, $n = -1)
+    public function getEntriesByFirstLetter($letter, $n = 1)
     {
         $query = $this->className::SQL_ROWS_BY_FIRST_LETTER;
         $columns = $this->getColumns();
@@ -358,7 +371,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getEntriesByFilter($n = -1)
+    public function getEntriesByFilter($n = 1)
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         return $this->getFilteredEntries($filter, $n);
@@ -370,11 +383,60 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getEntriesByInstance($instance, $n = -1)
+    public function getEntriesByInstance($instance, $n = 1)
     {
         $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
-        return $this->getFilteredEntries($filter, $n);
+        $entries = $this->getFilteredEntries($filter, $n);
+        $limit = $instance->getFilterLimit();
+        // are we at the filter limit for this instance?
+        if ($n == 1 && count($entries) < $limit) {
+            return $entries;
+        }
+        // if so, let's see how many entries we're missing
+        $total = $this->countEntriesByInstance($instance);
+        $count = $total - count($entries);
+        if ($count < 1) {
+            return $entries;
+        }
+        // @todo let the caller know there are more entries available
+        // @todo we can't use facetGroups here, or OPDS reader thinks we're drilling down :-()
+        $className = $instance->getClassName($this->className);
+        $title = strtolower($className);
+        $title = localize($title . 's.title');
+        if ($n > 1) {
+            $paging = '&filter=1';
+            if ($n > 2) {
+                $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n - 1);
+            }
+            $entry = new Entry(
+                localize("paging.previous.alternate") . " " . $title,
+                $instance->getEntryId() . ':filter:',
+                $instance->getContent($count),
+                "text",
+                [ new LinkFeed($instance->getUri() . $paging) ],
+                $this->databaseId,
+                $className,
+                $count
+            );
+            array_push($entries, $entry);
+        }
+        if ($n < ceil($total / $limit)) {
+            $paging = '&filter=1';
+            $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n + 1);
+            $entry = new Entry(
+                localize("paging.next.alternate") . " " . $title,
+                $instance->getEntryId() . ':filter:',
+                $instance->getContent($count),
+                "text",
+                [ new LinkFeed($instance->getUri() . $paging) ],
+                $this->databaseId,
+                $className,
+                $count
+            );
+            array_push($entries, $entry);
+        }
+        return $entries;
     }
 
     /**
@@ -384,7 +446,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getEntriesByCustomValueId($customType, $valueId, $n = -1)
+    public function getEntriesByCustomValueId($customType, $valueId, $n = 1)
     {
         $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
         $filter->addCustomIdFilter($customType, $valueId);
@@ -397,7 +459,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getFilteredEntries($filter, $n = -1)
+    public function getFilteredEntries($filter, $n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
         if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getColumns(), ' as ' . $this->orderBy) !== false) {
@@ -422,7 +484,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $n = -1)
+    public function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $n)
     {
         $result = Database::queryFilter($query, $columns, $filter, $params, $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
@@ -456,7 +518,7 @@ class BaseList
      * @param mixed $n
      * @return array<Entry>
      */
-    public function browseAllEntries($n = -1)
+    public function browseAllEntries($n = 1)
     {
         if (!$this->hasChildCategories()) {
             return [];

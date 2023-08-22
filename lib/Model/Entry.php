@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Model;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Entry
 {
@@ -20,7 +20,7 @@ class Entry
     /** @var mixed */
     public $numberOfElement;
     public string $contentType;
-    /** @var Link[] */
+    /** @var array<LinkEntry|LinkFeed> */
     public $linkArray;
     /** @var int|null */
     public $localUpdated;
@@ -32,16 +32,16 @@ class Entry
 
     /** @var array<string, string> */
     public static $icons = [
-        Page::ALL_AUTHORS_ID             => 'images/author.png',
-        Page::ALL_SERIES_ID              => 'images/serie.png',
-        Page::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
-        Page::ALL_TAGS_ID                => 'images/tag.png',
-        Page::ALL_LANGUAGES_ID           => 'images/language.png',
-        Page::ALL_CUSTOMS_ID             => 'images/custom.png',
-        Page::ALL_RATING_ID              => 'images/rating.png',
+        PageId::ALL_AUTHORS_ID             => 'images/author.png',
+        PageId::ALL_SERIES_ID              => 'images/serie.png',
+        PageId::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
+        PageId::ALL_TAGS_ID                => 'images/tag.png',
+        PageId::ALL_LANGUAGES_ID           => 'images/language.png',
+        PageId::ALL_CUSTOMS_ID             => 'images/custom.png',
+        PageId::ALL_RATING_ID              => 'images/rating.png',
         "cops:books$"                    => 'images/allbook.png',
         "cops:books:letter"              => 'images/allbook.png',
-        Page::ALL_PUBLISHERS_ID          => 'images/publisher.png',
+        PageId::ALL_PUBLISHERS_ID          => 'images/publisher.png',
     ];
 
     /**
@@ -50,7 +50,7 @@ class Entry
      * @param string $pid
      * @param string $pcontent
      * @param string $pcontentType
-     * @param Link[] $plinkArray
+     * @param array<LinkEntry|LinkFeed> $plinkArray
      * @param string|int|null $database
      * @param string $pclass
      * @param mixed $pcount
@@ -68,7 +68,7 @@ class Entry
         if (Config::get('show_icons') == 1) {
             foreach (self::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $pid)) {
-                    array_push($this->linkArray, new Link(Format::addVersion($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
+                    array_push($this->linkArray, new LinkEntry(Format::addVersion($image), "image/png", LinkEntry::OPDS_THUMBNAIL_TYPE));
                     break;
                 }
             }
@@ -103,9 +103,9 @@ class Entry
     public function getNavLink($endpoint = "", $extraUri = "")
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkNavigation */
+            /** @var $link LinkEntry|LinkFeed */
 
-            if ($link->type != Link::OPDS_NAVIGATION_TYPE) {
+            if (!($link instanceof LinkFeed)) {
                 continue;
             }
 
@@ -122,9 +122,9 @@ class Entry
     public function getThumbnail($endpoint = '')
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkNavigation */
+            /** @var $link LinkFeed|LinkEntry */
 
-            if ($link->rel == Link::OPDS_THUMBNAIL_TYPE) {
+            if ($link->rel == LinkEntry::OPDS_THUMBNAIL_TYPE) {
                 return $link->hrefXhtml($endpoint);
             }
         }
@@ -139,9 +139,9 @@ class Entry
     public function getImage($endpoint = '')
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkNavigation */
+            /** @var $link LinkFeed|LinkEntry */
 
-            if ($link->rel == Link::OPDS_IMAGE_TYPE) {
+            if ($link->rel == LinkEntry::OPDS_IMAGE_TYPE) {
                 return $link->hrefXhtml($endpoint);
             }
         }

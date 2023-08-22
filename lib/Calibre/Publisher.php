@@ -8,13 +8,13 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class Publisher extends Base
 {
-    public const PAGE_ID = Page::ALL_PUBLISHERS_ID;
-    public const PAGE_ALL = Page::ALL_PUBLISHERS;
-    public const PAGE_DETAIL = Page::PUBLISHER_DETAIL;
+    public const PAGE_ID = PageId::ALL_PUBLISHERS_ID;
+    public const PAGE_ALL = PageId::ALL_PUBLISHERS;
+    public const PAGE_DETAIL = PageId::PUBLISHER_DETAIL;
     public const SQL_TABLE = "publishers";
     public const SQL_LINK_TABLE = "books_publishers_link";
     public const SQL_LINK_COLUMN = "publisher";

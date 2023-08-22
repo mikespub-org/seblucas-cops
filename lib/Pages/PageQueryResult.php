@@ -21,6 +21,7 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class PageQueryResult extends Page
 {
+    public const PAGE_ID = PageId::OPENSEARCH_QUERY;
     public const SCOPE_TAG = "tag";
     public const SCOPE_RATING = "rating";
     public const SCOPE_SERIES = "series";
@@ -33,7 +34,7 @@ class PageQueryResult extends Page
      * Summary of useTypeahead
      * @return bool
      */
-    private function useTypeahead()
+    protected function useTypeahead()
     {
         return !is_null($this->request->get("search"));
     }
@@ -45,7 +46,7 @@ class PageQueryResult extends Page
      * @param mixed $database
      * @return array<mixed>
      */
-    private function searchByScope($scope, $limit = false, $database = null)
+    protected function searchByScope($scope, $limit = false, $database = null)
     {
         $n = $this->n;
         $numberPerPage = null;
@@ -64,6 +65,7 @@ class PageQueryResult extends Page
                 break;
             case self::SCOPE_AUTHOR :
                 $baselist = new BaseList(Author::class, $this->request, $database, $numberPerPage);
+                // we need to repeat the query x 2 here because Author checks both name and sort fields
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
             case self::SCOPE_SERIES :
@@ -96,7 +98,7 @@ class PageQueryResult extends Page
      */
     public function doSearchByCategory($database = null)
     {
-        $pagequery = Page::OPENSEARCH_QUERY;
+        $pagequery = $this->idPage;
         $dbArray = [""];
         $d = $database;
         $query = $this->query;
@@ -178,6 +180,7 @@ class PageQueryResult extends Page
      */
     public function InitializeContent()
     {
+        $this->idPage = self::PAGE_ID;
         $scope = $this->request->get("scope");
         if (empty($scope)) {
             $this->title = str_format(localize("search.result"), $this->query);
@@ -227,7 +230,7 @@ class PageQueryResult extends Page
     public function getDatabaseEntries()
     {
         $ignoredCategories = $this->getIgnoredCategories();
-        $pagequery = Page::OPENSEARCH_QUERY;
+        $pagequery = $this->idPage;
         $query = $this->query;
         $crit = "%" . $this->query . "%";
         $d = 0;

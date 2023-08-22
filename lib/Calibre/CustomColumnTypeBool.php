@@ -32,7 +32,7 @@ class CustomColumnTypeBool extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL, $database);
+        parent::__construct($pcustomId, self::TYPE_BOOL, $database);
     }
 
     /**

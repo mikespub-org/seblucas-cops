@@ -20,7 +20,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      */
     protected function __construct($pcustomId, $database = null)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES, $database);
+        parent::__construct($pcustomId, self::TYPE_SERIES, $database);
     }
 
     /**
@@ -29,7 +29,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      *
      * @return string
      */
-    private function getTableLinkName()
+    protected function getTableLinkName()
     {
         return "books_custom_column_{$this->customId}_link";
     }
@@ -39,7 +39,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      *
      * @return string
      */
-    private function getTableLinkColumn()
+    protected function getTableLinkColumn()
     {
         return "value";
     }

@@ -9,16 +9,16 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 /**
  * A CustomColumn with an value
  */
 class CustomColumn extends Category
 {
-    public const PAGE_ID = Page::ALL_CUSTOMS_ID;
-    public const PAGE_ALL = Page::ALL_CUSTOMS;
-    public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
+    public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
+    public const PAGE_ALL = PageId::ALL_CUSTOMS;
+    public const PAGE_DETAIL = PageId::CUSTOM_DETAIL;
 
     /** @var string the (string) representation of the value */
     public $value;
@@ -101,9 +101,10 @@ class CustomColumn extends Category
 
     /**
      * Summary of getClassName
+     * @param string|null $className
      * @return string
      */
-    public function getClassName()
+    public function getClassName($className = null)
     {
         return $this->customColumnType->getTitle();
     }

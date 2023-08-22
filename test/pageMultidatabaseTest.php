@@ -6,12 +6,14 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops\Tests;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class PageMultiDatabaseTest extends TestCase
 {
@@ -20,10 +22,10 @@ class PageMultiDatabaseTest extends TestCase
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
-        $page = Page::INDEX;
+        $page = PageId::INDEX;
         $request = new Request();
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals(Config::get('title_default'), $currentPage->title);
@@ -47,13 +49,13 @@ class PageMultiDatabaseTest extends TestCase
         Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $request = new Request();
         $request->set('query', "art");
 
         // Issue 124
         Config::set('max_item_per_page', $maxItem);
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *art*", $currentPage->title);

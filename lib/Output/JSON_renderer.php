@@ -10,15 +10,15 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\Link;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 
 class JSONRenderer
@@ -98,8 +98,15 @@ class JSONRenderer
         $out = self::getBookContentArray($book, $endpoint);
         $database = $book->getDatabaseId();
 
-        $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
-        $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, Config::get('html_thumbnail_height') * 2)->hrefXhtml();
+        $cover = new Cover($book);
+        // set height for thumbnail here depending on opds vs. html
+        if ($endpoint == Config::ENDPOINT['feed']) {
+            $height = intval(Config::get('opds_thumbnail_height')) * 2;
+        } else {
+            $height = intval(Config::get('html_thumbnail_height')) * 2;
+        }
+        $out ["thumbnailurl"] = $cover->getThumbnailUri($endpoint, $height, false);
+        $out ["coverurl"] = $cover->getCoverUri($endpoint) ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
@@ -154,6 +161,8 @@ class JSONRenderer
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
             $out ["book"] = self::getBookContentArray($entry->book, $endpoint);
+            $out ["thumbnailurl"] = $entry->getThumbnail($endpoint);
+            $out ["coverurl"] = $entry->getImage($endpoint) ?? $out ["thumbnailurl"];
             return $out;
         }
         return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
@@ -265,16 +274,16 @@ class JSONRenderer
     public static function getJson($request, $complete = false)
     {
         // Use the configured home page if needed
-        $homepage = Page::INDEX;
-        if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\Page::' . Config::get('home_page'))) {
-            $homepage = constant('SebLucas\Cops\Pages\Page::' . Config::get('home_page'));
+        $homepage = PageId::INDEX;
+        if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'))) {
+            $homepage = constant('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'));
         }
         $page = $request->get("page", $homepage);
         $search = $request->get("search");
         $qid = $request->get("id");
         $database = $request->get('db');
 
-        $currentPage = Page::getPage($page, $request);
+        $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
         // adapt endpoint based on $request e.g. for rest api
@@ -303,8 +312,8 @@ class JSONRenderer
                 $currentPage->book->updateForKepub = true;
             }
             $out ["book"] = self::getFullBookContentArray($currentPage->book, $endpoint);
-        } elseif ($page == Page::BOOK_DETAIL) {
-            $page = Page::INDEX;
+        } elseif ($page == PageId::BOOK_DETAIL) {
+            $page = PageId::INDEX;
         }
         $out ["databaseId"] = $database ?? "";
         $out ["databaseName"] = Database::getDbName($database);
@@ -342,21 +351,26 @@ class JSONRenderer
 
         $out ["containsBook"] = 0;
         $out ["filterurl"] = false;
-        $skipFilterUrl = [Page::AUTHORS_FIRST_LETTER, Page::ALL_BOOKS_LETTER, Page::ALL_BOOKS_YEAR, Page::ALL_RECENT_BOOKS, Page::BOOK_DETAIL];
+        if ($request->isFeed()) {
+            $filterLinks = Config::get('opds_filter_links');
+        } else {
+            $filterLinks = Config::get('html_filter_links');
+        }
+        $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $out ["sorturl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
             $out ["sortoptions"] = $currentPage->getSortOptions();
-            if (!empty($qid) && Config::get('show_filter_links') == 1 && !in_array($page, $skipFilterUrl)) {
+            if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
                 $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
             }
-        } elseif (!empty($qid) && Config::get('show_filter_links') == 1 && !in_array($page, $skipFilterUrl)) {
+        } elseif (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
             $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
         }
 
-        $out["abouturl"] = $endpoint . Format::addURLParam("?page=" . Page::ABOUT, 'db', $database);
-        $out["customizeurl"] = $endpoint . Format::addURLParam("?page=" . Page::CUSTOMIZE, 'db', $database);
+        $out["abouturl"] = $endpoint . Format::addURLParam("?page=" . PageId::ABOUT, 'db', $database);
+        $out["customizeurl"] = $endpoint . Format::addURLParam("?page=" . PageId::CUSTOMIZE, 'db', $database);
         $out["filters"] = false;
         if ($request->hasFilter()) {
             $out["filters"] = [];
@@ -365,20 +379,20 @@ class JSONRenderer
             }
         }
 
-        if ($page == Page::ABOUT) {
+        if ($page == PageId::ABOUT) {
             $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));
             $out ["fullhtml"] = $temp;
         }
 
         // multiple database setup
-        if ($page != Page::INDEX && !is_null($database)) {
-            if ($homepage != Page::INDEX) {
-                $out ["homeurl"] = $endpoint .  "?" . Format::addURLParam("page=" . Page::INDEX, 'db', $database);
+        if ($page != PageId::INDEX && !is_null($database)) {
+            if ($homepage != PageId::INDEX) {
+                $out ["homeurl"] = $endpoint .  "?" . Format::addURLParam("page=" . PageId::INDEX, 'db', $database);
             } else {
                 $out ["homeurl"] = $endpoint .  "?" . Format::addURLParam("", 'db', $database);
             }
-        } elseif ($homepage != Page::INDEX) {
-            $out ["homeurl"] = $endpoint . "?page=" . Page::INDEX;
+        } elseif ($homepage != PageId::INDEX) {
+            $out ["homeurl"] = $endpoint . "?page=" . PageId::INDEX;
         } else {
             $out ["homeurl"] = $endpoint;
         }
@@ -390,7 +404,7 @@ class JSONRenderer
         } elseif (!empty($currentPage->parentUri)) {
             // otherwise use the parent uri
             $out ["parenturl"] = $endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
-        } elseif ($page != Page::INDEX) {
+        } elseif ($page != PageId::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];
         }
         $out ["hierarchy"] = false;

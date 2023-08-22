@@ -9,7 +9,7 @@
 
 namespace SebLucas\Cops\Input;
 
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 use Exception;
 
 /**
@@ -25,35 +25,35 @@ class Route
      */
     protected static $routes = [
         // Format: route => page, or route => [page => page, fixed => 1, ...] with fixed params
-        "/index" => Page::INDEX,
-        "/authors" => Page::ALL_AUTHORS,
-        "/authors/letter" => ["page" => Page::ALL_AUTHORS, "letter" => 1],
-        "/authors/letter/{id}" => Page::AUTHORS_FIRST_LETTER,
-        "/authors/{id}" => Page::AUTHOR_DETAIL,
-        "/books" => Page::ALL_BOOKS,
-        "/books/letter" => ["page" => Page::ALL_BOOKS, "letter" => 1],
-        "/books/letter/{id}" => Page::ALL_BOOKS_LETTER,
-        "/books/year" => ["page" => Page::ALL_BOOKS, "year" => 1],
-        "/books/year/{id}" => Page::ALL_BOOKS_YEAR,
-        "/books/{id}" => Page::BOOK_DETAIL,
-        "/series" => Page::ALL_SERIES,
-        "/series/{id}" => Page::SERIE_DETAIL,
-        "/search" => Page::OPENSEARCH,
-        "/search/{query}" => Page::OPENSEARCH_QUERY,
-        "/search/{query}/{scope}" => Page::OPENSEARCH_QUERY,
-        "/recent" => Page::ALL_RECENT_BOOKS,
-        "/tags" => Page::ALL_TAGS,
-        "/tags/{id}" => Page::TAG_DETAIL,
-        "/custom/{custom}" => Page::ALL_CUSTOMS,
-        "/custom/{custom}/{id}" => Page::CUSTOM_DETAIL,
-        "/about" => Page::ABOUT,
-        "/languages" => Page::ALL_LANGUAGES,
-        "/languages/{id}" => Page::LANGUAGE_DETAIL,
-        "/customize" => Page::CUSTOMIZE,
-        "/publishers" => Page::ALL_PUBLISHERS,
-        "/publishers/{id}" => Page::PUBLISHER_DETAIL,
-        "/ratings" => Page::ALL_RATINGS,
-        "/ratings/{id}" => Page::RATING_DETAIL,
+        "/index" => PageId::INDEX,
+        "/authors" => PageId::ALL_AUTHORS,
+        "/authors/letter" => ["page" => PageId::ALL_AUTHORS, "letter" => 1],
+        "/authors/letter/{id}" => PageId::AUTHORS_FIRST_LETTER,
+        "/authors/{id}" => PageId::AUTHOR_DETAIL,
+        "/books" => PageId::ALL_BOOKS,
+        "/books/letter" => ["page" => PageId::ALL_BOOKS, "letter" => 1],
+        "/books/letter/{id}" => PageId::ALL_BOOKS_LETTER,
+        "/books/year" => ["page" => PageId::ALL_BOOKS, "year" => 1],
+        "/books/year/{id}" => PageId::ALL_BOOKS_YEAR,
+        "/books/{id}" => PageId::BOOK_DETAIL,
+        "/series" => PageId::ALL_SERIES,
+        "/series/{id}" => PageId::SERIE_DETAIL,
+        "/search" => PageId::OPENSEARCH,
+        "/search/{query}" => PageId::OPENSEARCH_QUERY,
+        "/search/{query}/{scope}" => PageId::OPENSEARCH_QUERY,
+        "/recent" => PageId::ALL_RECENT_BOOKS,
+        "/tags" => PageId::ALL_TAGS,
+        "/tags/{id}" => PageId::TAG_DETAIL,
+        "/custom/{custom}" => PageId::ALL_CUSTOMS,
+        "/custom/{custom}/{id}" => PageId::CUSTOM_DETAIL,
+        "/about" => PageId::ABOUT,
+        "/languages" => PageId::ALL_LANGUAGES,
+        "/languages/{id}" => PageId::LANGUAGE_DETAIL,
+        "/customize" => PageId::CUSTOMIZE,
+        "/publishers" => PageId::ALL_PUBLISHERS,
+        "/publishers/{id}" => PageId::PUBLISHER_DETAIL,
+        "/ratings" => PageId::ALL_RATINGS,
+        "/ratings/{id}" => PageId::RATING_DETAIL,
     ];
     // with use_url_rewriting = 1 - basic rewrites only
     /** @var array<string, mixed> */

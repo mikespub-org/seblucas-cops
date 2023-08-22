@@ -7,6 +7,8 @@
  * @author     mikespub
  */
 
+namespace SebLucas\Cops\Tests;
+
 use SebLucas\Cops\Output\RestApi;
 
 require_once __DIR__ . '/config_test.php';
@@ -16,7 +18,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\JSONRenderer;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class RestApiTest extends TestCase
 {
@@ -60,7 +62,7 @@ class RestApiTest extends TestCase
         $apiHandler = new RestApi($request);
         $path = $apiHandler->getPathInfo();
 
-        $expected = ["page" => Page::BOOK_DETAIL, "id" => 2];
+        $expected = ["page" => PageId::BOOK_DETAIL, "id" => 2];
         $test = $apiHandler->matchPathInfo($path);
         $this->assertEquals($expected, $test);
 
@@ -89,7 +91,7 @@ class RestApiTest extends TestCase
         $params = $apiHandler->matchPathInfo($path);
         $request = $apiHandler->setParams($params);
 
-        $expected = Page::BOOK_DETAIL;
+        $expected = PageId::BOOK_DETAIL;
         $test = $request->get("page");
         $this->assertEquals($expected, $test);
 

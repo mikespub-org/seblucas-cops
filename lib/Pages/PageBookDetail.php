@@ -22,7 +22,7 @@ class PageBookDetail extends Page
     {
         $this->book = Book::getBookById($this->idGet, $this->getDatabaseId());
         if (is_null($this->book)) {
-            $this->idPage = Page::ERROR_ID;
+            $this->idPage = PageId::ERROR_ID;
             $this->title = 'Not Found';
             return;
         }

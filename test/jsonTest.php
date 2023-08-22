@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops\Tests;
+
 use SebLucas\Cops\Output\JSONRenderer;
 
 require_once __DIR__ . '/config_test.php';
@@ -14,7 +16,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 
 class JsonTest extends TestCase
 {
@@ -69,7 +71,7 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getBookContentArray($book, self::$endpoint);
 
         $this->assertCount(2, $test ["preferedData"]);
-        $this->assertEquals("fetch.php?data=20&type=epub&id=17", $test ["preferedData"][0]["url"]);
+        $this->assertEquals("fetch.php?id=17&type=epub&data=20", $test ["preferedData"][0]["url"]);
         $this->assertEquals("phpunit?page=21&id=2", $test ["publisherurl"]);
 
         $this->assertEquals("", $test ["seriesName"]);
@@ -85,7 +87,7 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getBookContentArray($book, self::$endpoint);
 
         $this->assertCount(1, $test ["preferedData"]);
-        $this->assertEquals("fetch.php?data=1&type=epub&id=2", $test ["preferedData"][0]["url"]);
+        $this->assertEquals("fetch.php?id=2&type=epub&data=1", $test ["preferedData"][0]["url"]);
         $this->assertEquals("phpunit?page=21&id=6", $test ["publisherurl"]);
 
         $this->assertEquals("Sherlock Holmes", $test ["seriesName"]);
@@ -101,15 +103,15 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
 
         $this->assertEquals("fetch.php?id=17", $test ["coverurl"]);
-        $this->assertEquals("fetch.php?height=450&id=17", $test ["thumbnailurl"]);
+        $this->assertEquals("fetch.php?id=17&height=450", $test ["thumbnailurl"]);
         $this->assertCount(1, $test ["authors"]);
         $this->assertEquals("phpunit?page=3&id=3", $test ["authors"][0]["url"]);
         $this->assertCount(3, $test ["tags"]);
         $this->assertEquals("phpunit?page=12&id=5", $test ["tags"][0]["url"]);
         $this->assertCount(0, $test ["identifiers"]);
         $this->assertCount(3, $test ["datas"]);
-        $this->assertEquals("fetch.php?data=20&type=epub&id=17", $test ["datas"][2]["url"]);
-        $this->assertEquals("fetch.php?data=20&view=1&type=epub&id=17", $test ["datas"][2]["viewUrl"]);
+        $this->assertEquals("fetch.php?id=17&type=epub&data=20", $test ["datas"][2]["url"]);
+        $this->assertEquals("fetch.php?id=17&type=epub&data=20&view=1", $test ["datas"][2]["viewUrl"]);
         $this->assertEquals("epubreader.php?data=20&db=", $test ["datas"][2]["readerUrl"]);
 
         // use relative path for calibre directory
@@ -120,7 +122,7 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
 
         $this->assertEquals("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg", $test ["coverurl"]);
-        $this->assertEquals("fetch.php?height=450&id=17", $test ["thumbnailurl"]);
+        $this->assertEquals("fetch.php?id=17&height=450", $test ["thumbnailurl"]);
         // see bookTest for more tests on data links
         $this->assertEquals("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $test ["datas"][2]["url"]);
 
@@ -130,7 +132,7 @@ class JsonTest extends TestCase
 
     public function testGetJson(): void
     {
-        $page = Page::ALL_RECENT_BOOKS;
+        $page = PageId::ALL_RECENT_BOOKS;
 
         $request = new Request();
         $request->set('page', $page);
@@ -143,7 +145,7 @@ class JsonTest extends TestCase
 
     public function testGetJsonSearch(): void
     {
-        $page = Page::OPENSEARCH_QUERY;
+        $page = PageId::OPENSEARCH_QUERY;
         $query = "fic";
 
         $request = new Request();
@@ -173,7 +175,7 @@ class JsonTest extends TestCase
 
     public function testGetJsonComplete(): void
     {
-        $page = Page::ALL_RECENT_BOOKS;
+        $page = PageId::ALL_RECENT_BOOKS;
 
         $request = new Request();
         $request->set('page', $page);

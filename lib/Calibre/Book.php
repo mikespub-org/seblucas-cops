@@ -10,22 +10,23 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\Link;
-use SebLucas\Cops\Model\LinkNavigation;
+use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\TbsZip\clsTbsZip;
+//use SebLucas\EPubMeta\Tools\ZipEdit;
 use Exception;
 
 //class Book extends Base
 class Book
 {
-    public const PAGE_ID = Page::ALL_BOOKS_ID;
-    public const PAGE_ALL = Page::ALL_BOOKS;
-    public const PAGE_LETTER = Page::ALL_BOOKS_LETTER;
-    public const PAGE_YEAR = Page::ALL_BOOKS_YEAR;
-    public const PAGE_DETAIL = Page::BOOK_DETAIL;
+    public const PAGE_ID = PageId::ALL_BOOKS_ID;
+    public const PAGE_ALL = PageId::ALL_BOOKS;
+    public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
+    public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
+    public const PAGE_DETAIL = PageId::BOOK_DETAIL;
     public const SQL_TABLE = "books";
     public const SQL_LINK_TABLE = "books";
     public const SQL_LINK_COLUMN = "id";
@@ -106,56 +107,15 @@ class Book
         $this->comment = $line->comment ?? '';
         $this->uuid = $line->uuid;
         $this->hasCover = $line->has_cover;
-        // -DC- Use cover file name
-        //if (!file_exists($this->getFilePath('jpg'))) {
-        //    // double check
-        //    $this->hasCover = 0;
-        //}
-        if ($this->hasCover) {
-            if (!empty(Config::get('calibre_database_field_cover'))) {
-                $imgDirectory = Database::getImgDirectory($database);
-                $this->coverFileName = $line->cover;
-                if (!file_exists($this->coverFileName)) {
-                    $this->coverFileName = null;
-                }
-                if (empty($this->coverFileName)) {
-                    $this->coverFileName = sprintf('%s%s', $imgDirectory, $line->cover);
-                    if (!file_exists($this->coverFileName)) {
-                        $this->coverFileName = null;
-                    }
-                }
-                if (empty($this->coverFileName)) {
-                    // Try with the epub file name
-                    $data = $this->getDataFormat('EPUB');
-                    if ($data) {
-                        $this->coverFileName = sprintf('%s%s/%s', $imgDirectory, $data->name, $line->cover);
-                        if (!file_exists($this->coverFileName)) {
-                            $this->coverFileName = null;
-                        }
-                        if (empty($this->coverFileName)) {
-                            $this->coverFileName = sprintf('%s%s.jpg', $imgDirectory, $data->name);
-                            if (!file_exists($this->coverFileName)) {
-                                $this->coverFileName = null;
-                            }
-                        }
-                    }
-                }
-            }
-            // Else try with default cover file name
-            if (empty($this->coverFileName)) {
-                $cover = $this->getFilePath("jpg");
-                if ($cover === false || !file_exists($cover)) {
-                    $cover = $this->getFilePath("png");
-                }
-                if ($cover === false || !file_exists($cover)) {
-                    $this->hasCover = 0;
-                } else {
-                    $this->coverFileName = $cover;
-                }
-            }
-        }
         $this->rating = $line->rating;
         $this->databaseId = $database;
+        // do this at the end when all properties are set
+        if ($this->hasCover) {
+            $this->coverFileName = Cover::findCoverFileName($this, $line);
+            if (empty($this->coverFileName)) {
+                $this->hasCover = 0;
+            }
+        }
     }
 
     /**
@@ -168,12 +128,24 @@ class Book
     }
 
     /**
+     * Summary of getCoverFileName
+     * @return string|null
+     */
+    public function getCoverFileName()
+    {
+        if ($this->hasCover) {
+            return $this->coverFileName;
+        }
+        return null;
+    }
+
+    /**
      * Summary of getEntryId
      * @return string
      */
     public function getEntryId()
     {
-        return Page::ALL_BOOKS_UUID.':'.$this->uuid;
+        return PageId::ALL_BOOKS_UUID.':'.$this->uuid;
     }
 
     /**
@@ -448,26 +420,10 @@ class Book
      * @param string $extension
      * @param mixed $idData
      * @param false $relative Deprecated
-     * @return string|false|null
+     * @return string|false|null string for file path, false for missing cover, null for missing data
      */
     public function getFilePath($extension, $idData = null, $relative = false)
     {
-        /*if ($extension == 'jpg')
-        {
-            $file = 'cover.jpg';
-        } else {
-            $data = $this->getDataById($idData);
-            if (!$data) {
-                return null;
-            }
-            $file = $data->name . '.' . strtolower($data->format);
-        }
-
-        if ($relative) {
-            return $this->relativePath.'/'.$file;
-        } else {
-            return $this->path.'/'.$file;
-        }*/
         if ($extension == "jpg" || $extension == "png") {
             if (empty($this->coverFileName)) {
                 return $this->path . '/cover.' . $extension;
@@ -478,45 +434,47 @@ class Book
                 }
             }
             return false;
-        } else {
-            $data = $this->getDataById($idData);
-            if (!$data) {
-                return null;
-            }
-            $file = $data->name . "." . strtolower($data->format);
-            return $this->path . '/' . $file;
         }
+        $data = $this->getDataById($idData);
+        if (!$data) {
+            return null;
+        }
+        $file = $data->name . "." . strtolower($data->format);
+        return $this->path . '/' . $file;
     }
 
     /**
      * Summary of getUpdatedEpub
      * @param mixed $idData
+     * @param bool $sendHeaders
      * @return void
      */
-    public function getUpdatedEpub($idData)
+    public function getUpdatedEpub($idData, $sendHeaders = true)
     {
         $data = $this->getDataById($idData);
 
         try {
+            // @todo try getting rid of this dependency here
             $epub = new EPub($data->getLocalPath(), clsTbsZip::class);
+            //$epub = new EPub($data->getLocalPath(), ZipEdit::class);
 
-            $epub->Title($this->title);
+            $epub->setTitle($this->title);
             $authorArray = [];
             foreach ($this->getAuthors() as $author) {
                 $authorArray[$author->sort] = $author->name;
             }
-            $epub->Authors($authorArray);
-            $epub->Language($this->getLanguages());
-            $epub->Description($this->getComment(false));
-            $epub->Subjects($this->getTagsName());
+            $epub->setAuthors($authorArray);
+            $epub->setLanguage($this->getLanguages());
+            $epub->setDescription($this->getComment(false));
+            $epub->setSubjects($this->getTagsName());
             // -DC- Use cover file name
             // $epub->Cover2($this->getFilePath('jpg'), 'image/jpeg');
-            $epub->Cover2($this->coverFileName, 'image/jpeg');
-            $epub->Calibre($this->uuid);
+            $epub->setCoverFile($this->coverFileName, 'image/jpeg');
+            $epub->setCalibre($this->uuid);
             $se = $this->getSerie();
             if (!is_null($se)) {
-                $epub->Serie($se->name);
-                $epub->SerieIndex($this->seriesIndex);
+                $epub->setSeries($se->name);
+                $epub->setSeriesIndex($this->seriesIndex);
             }
             $filename = $data->getUpdatedFilenameEpub();
             // @checkme this is set in fetch.php now
@@ -524,74 +482,10 @@ class Book
                 $epub->updateForKepub();
                 $filename = $data->getUpdatedFilenameKepub();
             }
-            $epub->download($filename);
+            $epub->download($filename, $sendHeaders);
         } catch (Exception $e) {
             echo 'Exception : ' . $e->getMessage();
         }
-    }
-
-    /**
-     * Summary of getThumbnail
-     * @param mixed $width
-     * @param mixed $height
-     * @param mixed $outputfile
-     * @param mixed $inType
-     * @return bool
-     */
-    public function getThumbnail($width, $height, $outputfile = null, $inType = 'jpg')
-    {
-        if (is_null($width) && is_null($height)) {
-            return false;
-        }
-
-        // -DC- Use cover file name
-        //$file = $this->getFilePath('jpg');
-        $file = $this->coverFileName;
-        // get image size
-        if ($size = GetImageSize($file)) {
-            $w = $size[0];
-            $h = $size[1];
-            //set new size
-            if (!is_null($width)) {
-                $nw = $width;
-                if ($nw >= $w) {
-                    return false;
-                }
-                $nh = intval(($nw*$h)/$w);
-            } else {
-                $nh = $height;
-                if ($nh >= $h) {
-                    return false;
-                }
-                $nw = intval(($nh*$w)/$h);
-            }
-        } else {
-            return false;
-        }
-
-        // Draw the image
-        if ($inType == 'png') {
-            $src_img = imagecreatefrompng($file);
-        } else {
-            $src_img = imagecreatefromjpeg($file);
-        }
-        $dst_img = imagecreatetruecolor($nw, $nh);
-        if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
-            return false;
-        }
-        if ($inType == 'png') {
-            if (!imagepng($dst_img, $outputfile, 9)) {
-                return false;
-            }
-        } else {
-            if (!imagejpeg($dst_img, $outputfile, 80)) {
-                return false;
-            }
-        }
-        imagedestroy($src_img);
-        imagedestroy($dst_img);
-
-        return true;
     }
 
     /**
@@ -627,42 +521,41 @@ class Book
 
     /**
      * Summary of getLinkArray
-     * @return array<Link>
+     * @return array<LinkEntry|LinkFeed>
      */
     public function getLinkArray()
     {
         $database = $this->databaseId;
         $linkArray = [];
 
-        if ($this->hasCover) {
-            // -DC- Use cover file name
-            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
-            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
-            $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
-            // @todo set height for thumbnail here depending on opds vs. html
-            if ($ext == 'png') {
-                array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", null));
-                array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", null));
-            } else {
-                array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', null));
-                array_push($linkArray, Data::getLink($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null));
-            }
+        $cover = new Cover($this);
+        $coverLink = $cover->getCoverLink();
+        if ($coverLink) {
+            array_push($linkArray, $coverLink);
+        }
+        // @todo set height for thumbnail here depending on opds vs. html
+        $height = (int) Config::get('html_thumbnail_height');
+        $thumbnailLink = $cover->getThumbnailLink($height);
+        if ($thumbnailLink) {
+            array_push($linkArray, $thumbnailLink);
         }
 
         foreach ($this->getDatas() as $data) {
             if ($data->isKnownType()) {
-                array_push($linkArray, $data->getDataLink(Link::OPDS_ACQUISITION_TYPE, $data->format));
+                array_push($linkArray, $data->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, $data->format));
             }
         }
 
+        // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
-            array_push($linkArray, new LinkNavigation($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
+            array_push($linkArray, new LinkFeed($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
         }
 
+        // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         $serie = $this->getSerie();
         if (!is_null($serie)) {
-            array_push($linkArray, new LinkNavigation($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
+            array_push($linkArray, new LinkFeed($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
         }
 
         return $linkArray;

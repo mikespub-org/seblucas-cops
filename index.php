@@ -12,7 +12,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JSONRenderer;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\PageId;
 use SebLucas\Template\doT;
 
 require_once __DIR__ . '/config.php';
@@ -27,14 +27,14 @@ $request = new Request();
 $page     = $request->get('page');
 $query    = $request->get('query');
 $qid      = $request->get('id');
-$n        = $request->get('n', '1');
+$n        = $request->get('n', 1);
 $database = $request->get('db');
 
 // Use the configured home page if needed
 if (!isset($page)) {
-    $page = Page::INDEX;
-    if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\Page::' . Config::get('home_page'))) {
-        $page = constant('SebLucas\Cops\Pages\Page::' . Config::get('home_page'));
+    $page = PageId::INDEX;
+    if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'))) {
+        $page = constant('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'));
     }
     $request->set('page', $page);
 }
