@@ -23,9 +23,10 @@
       </div>
     </div>
   </nav>
-  {{? it.containsBook != 0}}
+  {{? it.containsBook != 0 || it.filters}}
   <nav class="navbar bg-body-tertiary p-0" data-bs-theme="dark">
-      <ul name="sortbar" class="nav nav-pills" style="font-size: 0.8rem;">
+      <ul name="2-bar" class="nav nav-pills" style="font-size: 0.8rem;">
+        {{? it.containsBook != 0 }}
         <li class="nav-item sm">
           <a class="nav-link p-1{{? it.sorted=='title' }} active{{?}}" href="{{=str_format(it.sorturl, 'title')}}"><i class="bi-sort-alpha-down"></i>Title</a>
         </li>
@@ -41,6 +42,32 @@
         <li class="nav-item sm">
           <a class="nav-link p-1{{? it.sorted=='timestamp'||it.sorted=='timestamp desc' }} active{{?}}" href="{{=str_format(it.sorturl, 'timestamp')}}"><i class="bi-sort-numeric-up"></i>Added</a>
         </li>
+        {{?}}
+        {{? it.filters}}
+          <!-- show links to filter -->
+          {{~it.filters:filter:idx}}
+          <li class="nav-item sm">
+            <a class="nav-link p-1" href="{{=filter.navlink}}&filter=1" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=filter.class}} {{=filter.title}}">
+              <i class="bi-funnel"></i>{{=filter.class}} = {{=filter.title}}
+            </a>
+          </li>
+          {{~}}
+        {{?}}
+        {{? it.filterurl }}
+        <!-- show links to filter -->
+          {{? it.containsBook == 0 }}
+          <li class="nav-item sm">
+            <a class="nav-link p-1" href="{{=it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.bookwordTitle}}">
+              <i class="bi-list-ul"></i>{{=it.c.i18n.bookwordTitle}}
+            </a>
+          </li>
+          {{?}}
+          <li class="nav-item sm">
+            <a class="nav-link p-1" href="{{=it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.linksTitle}}">
+              <i class="bi-link-45deg"></i>{{=it.c.i18n.linksTitle}}
+            </a>
+          </li>
+        {{?}}
       </ul>
   </nav>
   {{?}}
