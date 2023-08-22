@@ -8,15 +8,16 @@
  *
  */
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\RestApi;
 
-require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
+require_once __DIR__ . '/config.php';
 
 // override splitting authors and books by first letter here?
-$config['cops_author_split_first_letter'] = '0';
-$config['cops_titles_split_first_letter'] = '0';
+Config::set('author_split_first_letter', '0');
+Config::set('titles_split_first_letter', '0');
+//Config::set('titles_split_publication_year', '0');
 
 $request = new Request();
 $apiHandler = new RestApi($request);

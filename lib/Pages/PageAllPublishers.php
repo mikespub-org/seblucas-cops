@@ -9,9 +9,16 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Publisher;
+use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllPublishers extends Page
 {
+    protected string $className = Publisher::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -19,10 +26,15 @@ class PageAllPublishers extends Page
         $this->title = localize("publishers.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
-        $this->entryArray = Publisher::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
-        $this->totalNumber = Publisher::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Publisher::SQL_SORT;
+        $baselist = new BaseList($this->className, $this->request);
+        $this->entryArray = $baselist->getRequestEntries($this->n);
+        $this->totalNumber = $baselist->countRequestEntries();
+        $this->sorted = $baselist->orderBy;
     }
 }

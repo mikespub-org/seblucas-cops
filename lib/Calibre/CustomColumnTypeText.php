@@ -8,10 +8,20 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Model\Entry;
 use UnexpectedValueException;
 
 class CustomColumnTypeText extends CustomColumnType
 {
+    /**
+     * Summary of __construct
+     * @param mixed $pcustomId
+     * @param string $datatype
+     * @param mixed $database
+     * @throws \UnexpectedValueException
+     * @return void
+     */
     protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_TEXT, $database = null)
     {
         switch ($datatype) {
@@ -53,17 +63,27 @@ class CustomColumnTypeText extends CustomColumnType
         return "value";
     }
 
+    /**
+     * Summary of getQuery
+     * @param mixed $id
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableLinkName());
+        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
+        $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
     }
 
+    /**
+     * Summary of getFilter
+     * @param mixed $id
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableLinkName();
@@ -76,17 +96,28 @@ class CustomColumnTypeText extends CustomColumnType
         return [$filter, [$id]];
     }
 
+    /**
+     * Summary of getCustom
+     * @param mixed $id
+     * @return CustomColumn
+     */
     public function getCustom($id)
     {
-        $result = $this->getDb($this->databaseId)->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
-        $result->execute([$id]);
+        $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
+        $result = Database::query($query, [$id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
         return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    /**
+     * Summary of getAllCustomValuesFromDatabase
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
+     */
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
@@ -100,27 +131,33 @@ class CustomColumnTypeText extends CustomColumnType
         return $entryArray;
     }
 
+    /**
+     * Summary of getCustomByBook
+     * @param mixed $book
+     * @throws \UnexpectedValueException
+     * @return CustomColumn
+     */
     public function getCustomByBook($book)
     {
         switch ($this->datatype) {
             case self::CUSTOM_TYPE_TEXT:
-                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
+                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
                 break;
             case self::CUSTOM_TYPE_CSV:
-                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
+                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
                 break;
             case self::CUSTOM_TYPE_ENUM:
-                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
                 break;
             case self::CUSTOM_TYPE_SERIES:
-                $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+                $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
                 break;
             default:
                 throw new UnexpectedValueException();
         }
-        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         // handle case where we have several values, e.g. array of text for type 2 (csv)
         if ($this->datatype === self::CUSTOM_TYPE_CSV) {
             $idArray = [];
@@ -137,6 +174,10 @@ class CustomColumnTypeText extends CustomColumnType
         return new CustomColumn(null, "", $this);
     }
 
+    /**
+     * Summary of isSearchable
+     * @return bool
+     */
     public function isSearchable()
     {
         return true;

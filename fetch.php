@@ -5,17 +5,15 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 
-require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
-
-global $config;
+require_once __DIR__ . '/config.php';
 
 $request = new Request();
 
-if ($config['cops_fetch_protect'] == '1') {
+if (Config::get('fetch_protect') == '1') {
     session_start();
     if (!isset($_SESSION['connected'])) {
         $request->notFound();
@@ -49,7 +47,7 @@ if (!$book) {
 }
 
 // -DC- Add png type
-if ($book && ($type == 'jpg' || $type == 'png' || empty($config['calibre_internal_directory']))) {
+if ($type == 'jpg' || $type == 'png' || empty(Config::get('calibre_internal_directory'))) {
     if ($type == 'jpg' || $type == 'png') {
         $file = $book->getFilePath($type);
     } else {
@@ -72,8 +70,8 @@ switch ($type) {
         }
         //by default, we don't cache
         $thumbnailCacheFullpath = null;
-        if (isset($config['cops_thumbnail_cache_directory']) && $config['cops_thumbnail_cache_directory'] !== '') {
-            $thumbnailCacheFullpath = $config['cops_thumbnail_cache_directory'];
+        if (!empty(Config::get('thumbnail_cache_directory'))) {
+            $thumbnailCacheFullpath = Config::get('thumbnail_cache_directory');
             //if multiple databases, add a subfolder with the database ID
             $thumbnailCacheFullpath .= !is_null($database) ? 'db-' . $database . DIRECTORY_SEPARATOR : '';
             //when there are lots of thumbnails, it's better to save files in subfolders, so if the book's uuid is
@@ -118,8 +116,8 @@ switch ($type) {
 
 // absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
 $file = $book->getFilePath($type, $idData, false);
-if (!$viewOnly && $type == 'epub' && $config['cops_update_epub-metadata']) {
-    if ($config['cops_provide_kepub'] == '1'  && preg_match('/Kobo/', $request->agent())) {
+if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
+    if (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
         $book->updateForKepub = true;
     }
     $book->getUpdatedEpub($idData);
@@ -135,17 +133,17 @@ if ($type == 'jpg' || $type == 'png') {
 }
 
 // -DC- File is a full path
-//$dir = $config['calibre_internal_directory'];
-//if (empty($config['calibre_internal_directory'])) {
+//$dir = Config::get('calibre_internal_directory');
+//if (empty(Config::get('calibre_internal_directory'))) {
 //    $dir = Database::getDbDirectory();
 //}
 $dir = '';
 
-if (empty($config['cops_x_accel_redirect'])) {
+if (empty(Config::get('x_accel_redirect'))) {
     $filename = $dir . $file;
     header('Content-Length: ' . filesize($filename));
     readfile($filename);
 } else {
-    header($config['cops_x_accel_redirect'] . ': ' . $dir . $file);
+    header(Config::get('x_accel_redirect') . ': ' . $dir . $file);
 }
 exit();

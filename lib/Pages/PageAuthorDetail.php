@@ -13,27 +13,38 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAuthorDetail extends Page
 {
+    protected string $className = Author::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $author = Author::getAuthorById($this->idGet, $this->getDatabaseId());
+        /** @var Author $instance */
+        $instance = Author::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&a=' . $this->idGet;
-            $this->getFilters($author);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries();
+            $this->getEntries($instance);
         }
-        $this->idPage = $author->getEntryId();
-        $this->title = $author->name;  // not by getTitle() = $author->sort here
-        $this->currentUri = $author->getUri();
-        $this->parentTitle = localize("authors.title");
-        $this->parentUri = $author->getParentUri();
-        //$seriesArray = $author->getSeries();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->name;  // not by getTitle() = $instance->sort here
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
-    public function getEntries()
+    /**
+     * Summary of getEntries
+     * @param Author $instance
+     * @return void
+     */
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByAuthor($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series desc";
     }
 }

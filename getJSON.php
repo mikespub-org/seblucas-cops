@@ -9,8 +9,7 @@
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\JSONRenderer;
 
-require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
+require_once __DIR__ . '/config.php';
 
 $request = new Request();
 

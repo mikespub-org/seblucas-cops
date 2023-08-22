@@ -13,6 +13,12 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAllBooksLetter extends Page
 {
+    protected string $className = Book::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -26,6 +32,10 @@ class PageAllBooksLetter extends Page
         $this->parentUri = "?page=".Book::PAGE_ALL;
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $booklist = new BookList($this->request);

@@ -13,26 +13,60 @@ use SebLucas\Cops\Calibre\Serie;
 
 class PageSerieDetail extends Page
 {
+    protected string $className = Serie::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $serie = Serie::getSerieById($this->idGet, $this->getDatabaseId());
+        /** @var Serie $instance */
+        $instance = Serie::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&s=' . $this->idGet;
-            $this->getFilters($serie);
+            $this->getFilters($instance);
+            // @todo needs title_sort function in sqlite for series
+            //} elseif ($this->request->get('tree')) {
+            //    $this->getHierarchy($instance);
         } else {
-            $this->getEntries();
+            $this->getEntries($instance);
         }
-        $this->idPage = $serie->getEntryId();
-        $this->title = $serie->getTitle();
-        $this->currentUri = $serie->getUri();
-        $this->parentTitle = localize("series.title");
-        $this->parentUri = $serie->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
+        //if ($instance->hasChildCategories()) {
+        //    $this->hierarchy = [
+        //        "parent" => $instance->getParentEntry(),
+        //        "current" => $instance->getEntry(),
+        //        "children" => $instance->getChildEntries($this->request->get('tree')),
+        //    ];
+        //}
     }
 
-    public function getEntries()
+    /**
+     * Summary of getHierarchy
+     * @param Serie $instance
+     * @return void
+     */
+    public function getHierarchy($instance)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksBySeries($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstanceOrChildren($instance, $this->n);
+        $this->sorted = $booklist->orderBy ?? "sort";
+    }
+
+    /**
+     * Summary of getEntries
+     * @param Serie|null $instance
+     * @return void
+     */
+    public function getEntries($instance = null)
+    {
+        $booklist = new BookList($this->request);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series_index";
     }
 }

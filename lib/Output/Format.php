@@ -18,6 +18,8 @@ class Format
     /**
      * This method is a direct copy-paste from
      * http://tmont.com/blargh/2010/1/string-format-in-php
+     * @param string $format
+     * @return string
      */
     public static function str_format($format)
     {
@@ -35,6 +37,13 @@ class Format
         return $format;
     }
 
+    /**
+     * Summary of addURLParam
+     * @param mixed $urlParams
+     * @param mixed $paramName
+     * @param mixed $paramValue
+     * @return string
+     */
     public static function addURLParam($urlParams, $paramName, $paramValue)
     {
         if (empty($urlParams)) {
@@ -55,6 +64,12 @@ class Format
         return $start . http_build_query($params);
     }
 
+    /**
+     * Summary of addDatabaseParam
+     * @param string $urlParams
+     * @param mixed $database
+     * @return string
+     */
     public static function addDatabaseParam($urlParams, $database)
     {
         if (!is_null($database)) {
@@ -63,9 +78,14 @@ class Format
         return $urlParams;
     }
 
+    /**
+     * Summary of addVersion
+     * @param string $url
+     * @return string
+     */
     public static function addVersion($url)
     {
-        if (str_contains($url, '?')) {
+        if (strpos($url, '?') !== false) {
             $url .= '&v=' . Config::VERSION;
         } else {
             $url .= '?v=' . Config::VERSION;
@@ -73,6 +93,31 @@ class Format
         return $url;
     }
 
+    /**
+     * Summary of getEndpointURL
+     * @param string $endpoint
+     * @param mixed $params
+     * @param mixed $database
+     * @return string
+     */
+    public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
+    {
+        if (!empty($database)) {
+            $params ??= [];
+            $params['db'] = $database;
+        }
+        if (!empty($params)) {
+            return Config::ENDPOINT[$endpoint] . "?" . http_build_query($params);
+        }
+        return Config::ENDPOINT[$endpoint];
+    }
+
+    /**
+     * Summary of serverSideRender
+     * @param mixed $data
+     * @param mixed $theme
+     * @return bool|string|null
+     */
     public static function serverSideRender($data, $theme = 'default')
     {
         // Get the templates
@@ -101,6 +146,11 @@ class Format
         return null;
     }
 
+    /**
+     * Summary of xml2xhtml
+     * @param string $xml
+     * @return string|null
+     */
     public static function xml2xhtml($xml)
     {
         return preg_replace_callback('#<(\w+)([^>]*)\s*/>#s', function ($m) {
@@ -113,6 +163,11 @@ class Format
         }, $xml);
     }
 
+    /**
+     * Summary of display_xml_error
+     * @param mixed $error
+     * @return string
+     */
     public static function display_xml_error($error)
     {
         $return = '';
@@ -141,6 +196,10 @@ class Format
         return "$return\n\n--------------------------------------------\n\n";
     }
 
+    /**
+     * Summary of are_libxml_errors_ok
+     * @return bool
+     */
     public static function are_libxml_errors_ok()
     {
         $errors = libxml_get_errors();
@@ -153,6 +212,11 @@ class Format
         return true;
     }
 
+    /**
+     * Summary of html2xhtml
+     * @param string $html
+     * @return string
+     */
     public static function html2xhtml($html)
     {
         $doc = new DOMDocument();

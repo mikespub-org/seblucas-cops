@@ -21,70 +21,35 @@ class Language extends Base
     public const SQL_SORT = "lang_code";
     public const SQL_COLUMNS = "languages.id as id, languages.lang_code as name, count(*) as count";
     public const SQL_ALL_ROWS = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code {1} group by languages.id, books_languages_link.lang_code order by languages.lang_code";
-    public $id;
-    public $name;
+    public const SQL_BOOKLIST = 'select {0} from books_languages_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';
+    public const URL_PARAM = "l";
 
-    public function __construct($post, $database = null)
-    {
-        $this->id = $post->id;
-        $this->name = $post->name;
-        $this->databaseId = $database;
-    }
-
-    public function getUri()
-    {
-        return "?page=".self::PAGE_DETAIL."&id=$this->id";
-    }
-
-    public function getEntryId()
-    {
-        return self::PAGE_ID.":".$this->id;
-    }
-
+    /**
+     * Summary of getTitle
+     * @return mixed
+     */
     public function getTitle()
     {
         return self::getLanguageString($this->name);
     }
 
-    /** Use inherited class methods to get entries from <Whatever> by languageId (linked via books) */
-
-    public function getBooks($n = -1)
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
+    public function getParentTitle()
     {
-        return Book::getEntriesByLanguageId($this->id, $n, $this->databaseId);
-    }
-
-    public function getAuthors($n = -1)
-    {
-        return Author::getEntriesByLanguageId($this->id, $n, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1)
-    {
-        //return Language::getEntriesByLanguageId($this->id, $n, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1)
-    {
-        return Publisher::getEntriesByLanguageId($this->id, $n, $this->databaseId);
-    }
-
-    public function getRatings($n = -1)
-    {
-        return Rating::getEntriesByLanguageId($this->id, $n, $this->databaseId);
-    }
-
-    public function getSeries($n = -1)
-    {
-        return Serie::getEntriesByLanguageId($this->id, $n, $this->databaseId);
-    }
-
-    public function getTags($n = -1)
-    {
-        return Tag::getEntriesByLanguageId($this->id, $n, $this->databaseId);
+        return localize("languages.title");
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getLanguageString
+     * @param string $code
+     * @return string
+     */
     public static function getLanguageString($code)
     {
         $string = localize("languages.".$code);
@@ -94,14 +59,33 @@ class Language extends Base
         return $string;
     }
 
-    public static function getCount($database = null)
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
+    public static function getDefaultName()
     {
-        // str_format (localize("languages.alphabetical", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database);
+        return localize("language.title");
     }
 
-    public static function getLanguageById($languageId, $database = null)
+    /**
+     * Summary of getLanguagesByBookId
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return string
+     */
+    public static function getLanguagesByBookId($bookId, $database = null)
     {
-        return self::getInstanceById($languageId, localize("language.title"), self::class, $database);
+        $lang = [];
+        $query = 'select languages.lang_code
+            from books_languages_link, languages
+            where books_languages_link.lang_code = languages.id
+            and book = ?
+            order by item_order';
+        $result = Database::query($query, [$bookId], $database);
+        while ($post = $result->fetchObject()) {
+            array_push($lang, self::getLanguageString($post->lang_code));
+        }
+        return implode(', ', $lang);
     }
 }

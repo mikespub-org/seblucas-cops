@@ -8,11 +8,18 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Pages\Page;
+
 /**
  * A CustomColumn with an value
  */
-class CustomColumn extends Base
+class CustomColumn extends Category
 {
+    public const PAGE_ID = Page::ALL_CUSTOMS_ID;
+    public const PAGE_ALL = Page::ALL_CUSTOMS;
+    public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
+
     /** @var string the (string) representation of the value */
     public $value;
     /** @var CustomColumnType the custom column that contains the value */
@@ -37,13 +44,31 @@ class CustomColumn extends Base
     }
 
     /**
+     * Summary of getCustomId
+     * @return int|mixed
+     */
+    public function getCustomId()
+    {
+        return $this->customColumnType->customId;
+    }
+
+    /**
      * Get the URI to show all books with this value
      *
      * @return string
      */
     public function getUri()
     {
-        return $this->customColumnType->getUri($this->id);
+        return "?page=" . self::PAGE_DETAIL . "&custom={$this->getCustomId()}&id={$this->id}";
+    }
+
+    /**
+     * Summary of getParentUri
+     * @return string
+     */
+    public function getParentUri()
+    {
+        return $this->customColumnType->getUri();
     }
 
     /**
@@ -53,29 +78,45 @@ class CustomColumn extends Base
      */
     public function getEntryId()
     {
-        return $this->customColumnType->getEntryId($this->id);
+        return self::PAGE_ID . ":" . $this->getCustomId() . ":" . $this->id;
     }
 
+    /**
+     * Summary of getTitle
+     * @return string
+     */
     public function getTitle()
     {
-        return $this->value;
+        return strval($this->value);
     }
 
-    public function getLinkArray()
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
+    public function getParentTitle()
     {
-        return $this->customColumnType->getLinkArray($this->id);
+        return $this->customColumnType->getTitle();
     }
 
+    /**
+     * Summary of getClassName
+     * @return string
+     */
     public function getClassName()
     {
         return $this->customColumnType->getTitle();
     }
 
-    public function getCount()
+    /**
+     * Summary of getCustomCount
+     * @return Entry
+     */
+    public function getCustomCount()
     {
         [$query, $params] = $this->getQuery();
         $columns = 'count(*)';
-        $count = Base::countQuery($query, $columns, "", $params, $this->databaseId);
+        $count = Database::countFilter($query, $columns, "", $params, $this->databaseId);
         return $this->getEntry($count);
     }
 
@@ -85,11 +126,21 @@ class CustomColumn extends Base
      *  - first the query (string)
      *  - second an array of all PreparedStatement parameters
      *
-     * @return array
+     * @return array{0: string, 1: array<mixed>}
      */
     public function getQuery()
     {
         return $this->customColumnType->getQuery($this->id);
+    }
+
+    /**
+     * Summary of getFilter
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}
+     */
+    public function getFilter($parentTable = null)
+    {
+        return $this->customColumnType->getFilter($this->id, $parentTable);
     }
 
     /**
@@ -102,41 +153,24 @@ class CustomColumn extends Base
         return $this->htmlvalue;
     }
 
-    /** Use inherited class methods to get entries from <Whatever> by customType and valueId (linked via books) */
-
-    public function getBooks($n = -1)
+    /**
+     * Summary of hasChildCategories
+     * @return bool
+     */
+    public function hasChildCategories()
     {
-        return Book::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return $this->customColumnType->hasChildCategories();
     }
 
-    public function getAuthors($n = -1)
+    /**
+     * Find related categories for hierarchical custom columns
+     * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
+     * @param mixed $find
+     * @return array<CustomColumn>
+     */
+    public function getRelatedCategories($find)
     {
-        return Author::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1)
-    {
-        return Language::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1)
-    {
-        return Publisher::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getRatings($n = -1)
-    {
-        return Rating::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getSeries($n = -1)
-    {
-        return Serie::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
-    }
-
-    public function getTags($n = -1)
-    {
-        return Tag::getEntriesByCustomValueId($this->customColumnType, $this->id, $n, $this->databaseId);
+        return $this->customColumnType->getRelatedCategories($find);
     }
 
     /**
@@ -157,7 +191,7 @@ class CustomColumn extends Base
     /**
      * Return this object as an array
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function toArray()
     {

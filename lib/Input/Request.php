@@ -18,11 +18,14 @@ class Request
 {
     /**
      * Summary of urlParams
-     * @var array
+     * @var array<mixed>
      */
     public $urlParams = [];
-    private $queryString = null;
+    private string $queryString = '';
 
+    /**
+     * Summary of __construct
+     */
     public function __construct()
     {
         $this->init();
@@ -34,13 +37,12 @@ class Request
      */
     public function render()
     {
-        global $config;
-        return preg_match('/' . $config['cops_server_side_render'] . '/', $this->agent());
+        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent());
     }
 
     /**
      * Summary of query
-     * @return mixed
+     * @return string
      */
     public function query()
     {
@@ -49,7 +51,7 @@ class Request
 
     /**
      * Summary of agent
-     * @return mixed
+     * @return string
      */
     public function agent()
     {
@@ -61,7 +63,7 @@ class Request
 
     /**
      * Summary of language
-     * @return mixed
+     * @return string|null
      */
     public function language()
     {
@@ -70,7 +72,7 @@ class Request
 
     /**
      * Summary of path
-     * @return mixed
+     * @return string|null
      */
     public function path()
     {
@@ -79,7 +81,7 @@ class Request
 
     /**
      * Summary of script
-     * @return mixed
+     * @return string|null
      */
     public function script()
     {
@@ -88,7 +90,7 @@ class Request
 
     /**
      * Summary of uri
-     * @return mixed
+     * @return string|null
      */
     public function uri()
     {
@@ -123,9 +125,9 @@ class Request
 
     /**
      * Summary of get
-     * @param mixed $name
+     * @param string $name
      * @param mixed $default
-     * @param mixed $pattern
+     * @param string|null $pattern
      * @return mixed
      */
     public function get($name, $default = null, $pattern = null)
@@ -140,7 +142,7 @@ class Request
 
     /**
      * Summary of set
-     * @param mixed $name
+     * @param string $name
      * @param mixed $value
      * @return void
      */
@@ -152,7 +154,7 @@ class Request
 
     /**
      * Summary of post
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function post($name)
@@ -162,7 +164,7 @@ class Request
 
     /**
      * Summary of request
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function request($name)
@@ -172,7 +174,7 @@ class Request
 
     /**
      * Summary of server
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function server($name)
@@ -182,7 +184,7 @@ class Request
 
     /**
      * Summary of session
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function session($name)
@@ -192,7 +194,7 @@ class Request
 
     /**
      * Summary of cookie
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function cookie($name)
@@ -202,7 +204,7 @@ class Request
 
     /**
      * Summary of files
-     * @param mixed $name
+     * @param string $name
      * @return mixed
      */
     public function files($name)
@@ -212,21 +214,20 @@ class Request
 
     /**
      * Summary of option
-     * @param mixed $option
+     * @param string $option
      * @return mixed
      */
     public function option($option)
     {
-        global $config;
         if (isset($_COOKIE[$option])) {
-            if (isset($config ['cops_' . $option]) && is_array($config ['cops_' . $option])) {
+            if (!is_null(Config::get($option)) && is_array(Config::get($option))) {
                 return explode(',', $_COOKIE[$option]);
             } elseif (!preg_match('/[^A-Za-z0-9\-_.@]/', $_COOKIE[$option])) {
                 return $_COOKIE[$option];
             }
         }
-        if (isset($config ['cops_' . $option])) {
-            return $config ['cops_' . $option];
+        if (!is_null(Config::get($option))) {
+            return Config::get($option);
         }
 
         return '';
@@ -238,12 +239,11 @@ class Request
      */
     public function style()
     {
-        global $config;
         $style = $this->option('style');
         if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
             return 'templates/' . $this->template() . '/styles/style-' . $this->option('style') . '.css';
         }
-        return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
+        return 'templates/' . Config::get('template') . '/styles/style-' . Config::get('style') . '.css';
     }
 
     /**
@@ -252,28 +252,54 @@ class Request
      */
     public function template()
     {
-        global $config;
         $template = $this->option('template');
         if (!preg_match('/[^A-Za-z0-9\-_]/', $template) && is_dir("templates/{$template}/")) {
             return $template;
         }
-        return $config['cops_template'];
+        return Config::get('template');
+    }
+
+    /**
+     * Summary of getSorted
+     * @param string|null $default
+     * @return mixed
+     */
+    public function getSorted($default = null)
+    {
+        return $this->get('sort', $default, '/^\w+(\s+(asc|desc)|)$/i');
+        // ?? $this->option('sort');
+    }
+
+    /**
+     * Summary of getEndpoint
+     * @param string $default
+     * @return string
+     */
+    public function getEndpoint($default)
+    {
+        $script = explode("/", $this->script() ?? "/" . $default);
+        $link = array_pop($script);
+        // see former LinkNavigation
+        if (preg_match("/(bookdetail|getJSON).php/", $link)) {
+            return $default;
+        }
+        return $link;
     }
 
     /**
      * Summary of verifyLogin
+     * @param array<mixed> $serverVars
      * @return bool
      */
     public static function verifyLogin($serverVars = null)
     {
-        global $config;
         $serverVars ??= $_SERVER;
-        if (isset($config['cops_basic_authentication']) &&
-          is_array($config['cops_basic_authentication'])) {
+        if (!is_null(Config::get('basic_authentication')) &&
+          is_array(Config::get('basic_authentication'))) {
+            $basicAuth = Config::get('basic_authentication');
             if (!isset($serverVars['PHP_AUTH_USER']) ||
-              (isset($serverVars['PHP_AUTH_USER']) &&
-                ($serverVars['PHP_AUTH_USER'] != $config['cops_basic_authentication']['username'] ||
-                  $serverVars['PHP_AUTH_PW'] != $config['cops_basic_authentication']['password']))) {
+              (($serverVars['PHP_AUTH_USER'] != $basicAuth['username'] ||
+                $serverVars['PHP_AUTH_PW'] != $basicAuth['password']))) {
                 return false;
             }
         }
@@ -294,10 +320,10 @@ class Request
 
     /**
      * Summary of build
-     * @param array $params
-     * @param ?array $server
-     * @param ?array $cookie
-     * @param ?array $config
+     * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
+     * @param array<mixed>|null $server
+     * @param array<mixed>|null $cookie
+     * @param array<mixed>|null $config
      * @return Request
      */
     public static function build($params, $server = null, $cookie = null, $config = null)
@@ -305,6 +331,7 @@ class Request
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
         $request = new self();
         $request->urlParams = $params;
+        $request->queryString = http_build_query($request->urlParams);
         return $request;
     }
 }

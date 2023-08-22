@@ -9,8 +9,9 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
@@ -26,12 +27,24 @@ class PageQueryResult extends Page
     public const SCOPE_AUTHOR = "author";
     public const SCOPE_BOOK = "book";
     public const SCOPE_PUBLISHER = "publisher";
+    public const SCOPE_LANGUAGE = "language";
 
+    /**
+     * Summary of useTypeahead
+     * @return bool
+     */
     private function useTypeahead()
     {
         return !is_null($this->request->get("search"));
     }
 
+    /**
+     * Summary of searchByScope
+     * @param mixed $scope
+     * @param mixed $limit
+     * @param mixed $database
+     * @return array<mixed>
+     */
     private function searchByScope($scope, $limit = false, $database = null)
     {
         $n = $this->n;
@@ -50,16 +63,20 @@ class PageQueryResult extends Page
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsForSearch('%' . $queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList(Author::class, $this->request, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
             case self::SCOPE_SERIES :
-                $array = Serie::getAllSeriesByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList(Serie::class, $this->request, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case self::SCOPE_TAG :
-                $array = Tag::getAllTagsByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList(Tag::class, $this->request, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case self::SCOPE_PUBLISHER :
-                $array = Publisher::getAllPublishersByQuery($queryNormedAndUp, $n, $database, $numberPerPage);
+                $baselist = new BaseList(Publisher::class, $this->request, $database, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             default:
                 $booklist = new BookList($this->request, $database, $numberPerPage);
@@ -72,9 +89,13 @@ class PageQueryResult extends Page
         return $array;
     }
 
+    /**
+     * Summary of doSearchByCategory
+     * @param mixed $database
+     * @return void
+     */
     public function doSearchByCategory($database = null)
     {
-        $out = [];
         $pagequery = Page::OPENSEARCH_QUERY;
         $dbArray = [""];
         $d = $database;
@@ -149,9 +170,12 @@ class PageQueryResult extends Page
                 Database::clearDb();
             }
         }
-        return $out;
     }
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $scope = $this->request->get("scope");
@@ -169,6 +193,10 @@ class PageQueryResult extends Page
         $this->getEntries();
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $database = $this->getDatabaseId();
@@ -192,6 +220,10 @@ class PageQueryResult extends Page
         }
     }
 
+    /**
+     * Summary of getDatabaseEntries
+     * @return void
+     */
     public function getDatabaseEntries()
     {
         $ignoredCategories = $this->getIgnoredCategories();

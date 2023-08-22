@@ -8,11 +8,18 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Input\Config;
 
 class PageAllSeries extends Page
 {
+    protected string $className = Serie::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -20,22 +27,25 @@ class PageAllSeries extends Page
         $this->title = localize("series.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
-        global $config;
-        $this->entryArray = Serie::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
-        $this->totalNumber = Serie::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Serie::SQL_SORT;
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $config['cops_show_not_set_filter'])) {
-            $this->addNotSetEntry();
+        $baselist = new BaseList($this->className, $this->request);
+        // @todo needs title_sort function in sqlite for series
+        //if ($baselist->hasChildCategories()) {
+        //    // use tag_browser_series view here, to get the full hierarchy?
+        //    $this->entryArray = $baselist->browseAllEntries($this->n);
+        //} else {
+        //    $this->entryArray = $baselist->getRequestEntries($this->n);
+        //}
+        $this->entryArray = $baselist->getRequestEntries($this->n);
+        $this->totalNumber = $baselist->countRequestEntries();
+        $this->sorted = $baselist->orderBy;
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", Config::get('show_not_set_filter'))) {
+            array_push($this->entryArray, $baselist->getWithoutEntry());
         }
-    }
-
-    public function addNotSetEntry()
-    {
-        $instance = new Serie((object)['id' => null, 'name' => localize("seriesword.none")], $this->getDatabaseId());
-        $booklist = new BookList($this->request);
-        [$result,] = $booklist->getBooksWithoutSeries(-1);
-        array_push($this->entryArray, $instance->getEntry(count($result)));
     }
 }

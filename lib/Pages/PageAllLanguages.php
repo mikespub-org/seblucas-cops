@@ -9,9 +9,16 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Language;
+use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllLanguages extends Page
 {
+    protected string $className = Language::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -19,10 +26,15 @@ class PageAllLanguages extends Page
         $this->title = localize("languages.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
-        $this->entryArray = Language::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
-        $this->totalNumber = Language::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Language::SQL_SORT;
+        $baselist = new BaseList($this->className, $this->request);
+        $this->entryArray = $baselist->getRequestEntries($this->n);
+        $this->totalNumber = $baselist->countRequestEntries();
+        $this->sorted = $baselist->orderBy;
     }
 }

@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\Page;
 
 class Rating extends Base
@@ -21,78 +22,49 @@ class Rating extends Base
     public const SQL_SORT = "rating";
     public const SQL_COLUMNS = "ratings.id as id, ratings.rating as name, count(*) as count";
     public const SQL_ALL_ROWS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id {1} group by ratings.id order by ratings.rating";
-    public $id;
-    public $name;
+    public const SQL_BOOKLIST = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books_ratings_link.book = books.id and ratings.id = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where ((books.id not in (select book from books_ratings_link)) or (ratings.rating = 0)) {1} order by books.sort';
+    public const URL_PARAM = "r";
 
-    public function __construct($post, $database = null)
-    {
-        $this->id = $post->id;
-        $this->name = $post->name;
-        $this->databaseId = $database;
-    }
-
-    public function getUri()
-    {
-        return "?page=".self::PAGE_DETAIL."&id=$this->id";
-    }
-
-    public function getEntryId()
-    {
-        return self::PAGE_ID.":".$this->id;
-    }
-
+    /**
+     * Summary of getTitle
+     * @return string
+     */
     public function getTitle()
     {
         return str_format(localize("ratingword", $this->name/2), $this->name/2);
     }
 
-    /** Use inherited class methods to get entries from <Whatever> by ratingId (linked via books) */
-
-    public function getBooks($n = -1)
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
+    public function getParentTitle()
     {
-        return Book::getEntriesByRatingId($this->id, $n, $this->databaseId);
-    }
-
-    public function getAuthors($n = -1)
-    {
-        return Author::getEntriesByRatingId($this->id, $n, $this->databaseId);
-    }
-
-    public function getLanguages($n = -1)
-    {
-        return Language::getEntriesByRatingId($this->id, $n, $this->databaseId);
-    }
-
-    public function getPublishers($n = -1)
-    {
-        return Publisher::getEntriesByRatingId($this->id, $n, $this->databaseId);
-    }
-
-    public function getRatings($n = -1)
-    {
-        //return Rating::getEntriesByRatingId($this->id, $n, $this->databaseId);
-    }
-
-    public function getSeries($n = -1)
-    {
-        return Serie::getEntriesByRatingId($this->id, $n, $this->databaseId);
-    }
-
-    public function getTags($n = -1)
-    {
-        return Tag::getEntriesByRatingId($this->id, $n, $this->databaseId);
+        return localize("ratings.title");
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
 
+    /**
+     * Summary of getCount
+     * @param mixed $database
+     * @return Entry|null
+     */
     public static function getCount($database = null)
     {
         // str_format (localize("ratings", count(array))
-        return parent::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
+        return BaseList::getCountGeneric(self::SQL_TABLE, self::PAGE_ID, self::PAGE_ALL, $database, "ratings");
     }
 
-    public static function getRatingById($ratingId, $database = null)
+    /**
+     * Summary of getDefaultName
+     * @return int
+     */
+    public static function getDefaultName()
     {
-        return self::getInstanceById($ratingId, 0, self::class, $database);
+        return 0;
     }
 }

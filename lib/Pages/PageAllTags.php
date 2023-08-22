@@ -8,11 +8,18 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Input\Config;
 
 class PageAllTags extends Page
 {
+    protected string $className = Tag::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -20,22 +27,24 @@ class PageAllTags extends Page
         $this->title = localize("tags.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
-        global $config;
-        $this->entryArray = Tag::getRequestEntries($this->request, $this->n, $this->getDatabaseId());
-        $this->totalNumber = Tag::countRequestEntries($this->request, $this->getDatabaseId());
-        $this->sorted = Tag::SQL_SORT;
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", $config['cops_show_not_set_filter'])) {
-            $this->addNotSetEntry();
+        $baselist = new BaseList($this->className, $this->request);
+        $this->sorted = $this->request->getSorted("sort");
+        if ($baselist->hasChildCategories()) {
+            // use tag_browser_tags view here, to get the full hierarchy?
+            $this->entryArray = $baselist->browseAllEntries($this->n);
+        } else {
+            $this->entryArray = $baselist->getRequestEntries($this->n);
         }
-    }
-
-    public function addNotSetEntry()
-    {
-        $instance = new Tag((object)['id' => null, 'name' => localize("tagword.none")], $this->getDatabaseId());
-        $booklist = new BookList($this->request);
-        [$result,] = $booklist->getBooksWithoutTag(-1);
-        array_push($this->entryArray, $instance->getEntry(count($result)));
+        $this->totalNumber = $baselist->countRequestEntries();
+        $this->sorted = $baselist->orderBy;
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", Config::get('show_not_set_filter'))) {
+            array_push($this->entryArray, $baselist->getWithoutEntry());
+        }
     }
 }

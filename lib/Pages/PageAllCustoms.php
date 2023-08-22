@@ -13,20 +13,26 @@ use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\CustomColumnTypeDate;
 use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 
 class PageAllCustoms extends Page
 {
+    protected string $className = CustomColumnType::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        global $config;
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
 
-        $this->idPage = $columnType->getAllCustomsId();
+        $this->idPage = $columnType->getEntryId();
         $this->title = $columnType->getTitle();
         $this->getCustomEntries($columnType);
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("custom", $config['cops_show_not_set_filter'])) {
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("custom", Config::get('show_not_set_filter'))) {
             $this->addCustomNotSetEntry($columnType);
         }
     }
@@ -38,16 +44,19 @@ class PageAllCustoms extends Page
      */
     public function getCustomEntries($columnType)
     {
-        global $config;
-        // @todo paginate and/or split by year
-        if ($config['cops_custom_date_split_year'] == 1 && $columnType instanceof CustomColumnTypeDate) {
+        if (Config::get('custom_date_split_year') == 1 && $columnType instanceof CustomColumnTypeDate) {
             $this->getCustomEntriesByYear($columnType);
-        } elseif ($config['cops_custom_integer_split_range'] > 0 && $columnType instanceof CustomColumnTypeInteger) {
+        } elseif (Config::get('custom_integer_split_range') > 0 && $columnType instanceof CustomColumnTypeInteger) {
             $this->getCustomEntriesByRange($columnType);
-        } else {
-            $this->entryArray = $columnType->getAllCustomValues($this->n);
+        } elseif ($columnType->hasChildCategories()) {
+            $this->sorted = $this->request->getSorted("sort");
+            // use tag_browser_custom_column_X view here, to get the full hierarchy?
+            $this->entryArray = $columnType->browseAllCustomValues($this->n, $this->sorted);
             $this->totalNumber = $columnType->getDistinctValueCount();
-            $this->sorted = "value";
+        } else {
+            $this->sorted = $this->request->getSorted("value");
+            $this->entryArray = $columnType->getAllCustomValues($this->n, $this->sorted);
+            $this->totalNumber = $columnType->getDistinctValueCount();
         }
     }
 
@@ -61,13 +70,13 @@ class PageAllCustoms extends Page
         $year = $this->request->get("year", null, $columnType::GET_PATTERN);
         if (empty($year)) {
             // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
-            $this->entryArray = $columnType->getCountByYear($columnType::PAGE_DETAIL);
-            $this->sorted = "year";
+            $this->sorted = $this->request->getSorted("year");
+            $this->entryArray = $columnType->getCountByYear($columnType::PAGE_DETAIL, $this->sorted);
             return;
         }
         // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
-        $this->entryArray = $columnType->getCustomValuesByYear($year);
-        $this->sorted = "value";
+        $this->sorted = $this->request->getSorted("value");
+        $this->entryArray = $columnType->getCustomValuesByYear($year, $this->sorted);
         $count = 0;
         foreach ($this->entryArray as $entry) {
             /** @var Entry $entry */
@@ -75,7 +84,7 @@ class PageAllCustoms extends Page
         }
         $this->title = str_format(localize("splitByYear.year"), str_format(localize("bookword", $count), $count), $year);
         $this->parentTitle = $columnType->getTitle();
-        $this->parentUri = $columnType->getUriAllCustoms();
+        $this->parentUri = $columnType->getUri();
     }
 
     /**
@@ -88,13 +97,13 @@ class PageAllCustoms extends Page
         $range = $this->request->get("range", null, $columnType::GET_PATTERN);
         if (empty($range)) {
             // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
-            $this->entryArray = $columnType->getCountByRange($columnType::PAGE_DETAIL);
-            $this->sorted = "range";
+            $this->sorted = $this->request->getSorted("range");
+            $this->entryArray = $columnType->getCountByRange($columnType::PAGE_DETAIL, $this->sorted);
             return;
         }
         // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
-        $this->entryArray = $columnType->getCustomValuesByRange($range);
-        $this->sorted = "value";
+        $this->sorted = $this->request->getSorted("value");
+        $this->entryArray = $columnType->getCustomValuesByRange($range, $this->sorted);
         $count = 0;
         foreach ($this->entryArray as $entry) {
             /** @var Entry $entry */
@@ -102,13 +111,20 @@ class PageAllCustoms extends Page
         }
         $this->title = str_format(localize("splitByRange.range"), str_format(localize("bookword", $count), $count), $range);
         $this->parentTitle = $columnType->getTitle();
-        $this->parentUri = $columnType->getUriAllCustoms();
+        $this->parentUri = $columnType->getUri();
     }
 
+    /**
+     * Summary of addCustomNotSetEntry
+     * @param CustomColumnType $columnType
+     * @return void
+     */
     public function addCustomNotSetEntry($columnType)
     {
         $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
+        // @todo support countWithoutEntries() for CustomColumn
         $booklist = new BookList($this->request);
+        $booklist->orderBy = null;
         [$result,] = $booklist->getBooksWithoutCustom($columnType, -1);
         array_push($this->entryArray, $instance->getEntry(count($result)));
     }

@@ -13,26 +13,38 @@ use SebLucas\Cops\Calibre\Rating;
 
 class PageRatingDetail extends Page
 {
+    protected string $className = Rating::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $rating = Rating::getRatingById($this->idGet, $this->getDatabaseId());
+        /** @var Rating $instance */
+        $instance = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&r=' . $this->idGet;
-            $this->getFilters($rating);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries();
+            $this->getEntries($instance);
         }
-        $this->idPage = $rating->getEntryId();
-        $this->title = $rating->getTitle();
-        $this->currentUri = $rating->getUri();
-        $this->parentTitle = localize("ratings.title");
-        $this->parentUri = $rating->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
-    public function getEntries()
+    /**
+     * Summary of getEntries
+     * @param Rating $instance
+     * @return void
+     */
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByRating($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

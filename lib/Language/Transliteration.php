@@ -17,12 +17,12 @@ class Transliteration
      * Based on Mediawiki's UtfNormal::quickIsNFCVerify().
      * Based on Drupal 7 transliteration module.
      *
-     * @param $string
+     * @param string $string
      *   UTF-8 encoded text input.
-     * @param $unknown
+     * @param string $unknown
      *   Replacement string for characters that do not have a suitable ASCII
      *   equivalent.
-     * @param $source_langcode
+     * @param string|null $source_langcode
      *   Optional ISO 639 language code that denotes the language of the input and
      *   is used to apply language-specific variations. If the source language is
      *   not known at the time of transliteration, it is recommended to set this
@@ -157,12 +157,12 @@ class Transliteration
     /**
      * Replaces a Unicode character using the transliteration database.
      *
-     * @param $ord
+     * @param int $ord
      *   An ordinal Unicode character code.
-     * @param $unknown
+     * @param string $unknown
      *   Replacement string for characters that do not have a suitable ASCII
      *   equivalent.
-     * @param $langcode
+     * @param string|null $langcode
      *   Optional ISO 639 language code that denotes the language of the input and
      *   is used to apply language-specific variations.  Defaults to the current
      *   display language.
@@ -172,14 +172,6 @@ class Transliteration
     public static function replace($ord, $unknown = '?', $langcode = null)
     {
         static $map = [];
-
-        //GL: set language later
-        /*
-        if (!isset($langcode)) {
-        global $language;
-        $langcode = $language->language;
-        }
-        */
 
         $bank = $ord >> 8;
 

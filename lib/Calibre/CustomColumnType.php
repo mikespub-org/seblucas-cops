@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\Page;
@@ -16,12 +17,23 @@ use Exception;
 /**
  * A single calibre custom column
  */
-abstract class CustomColumnType extends Base
+abstract class CustomColumnType
 {
     public const PAGE_ID = Page::ALL_CUSTOMS_ID;
     public const PAGE_ALL = Page::ALL_CUSTOMS;
     public const PAGE_DETAIL = Page::CUSTOM_DETAIL;
     public const SQL_TABLE = "custom_columns";
+    public const SQL_BOOKLIST_LINK = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.{3} = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_ID = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.id = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_VALUE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value = ? {1} order by books.sort';
+    public const SQL_BOOKLIST_RANGE = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
+    public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books.id not in (select book from {2}) {1} order by books.sort';
+    public const URL_PARAM = "c";
     public const ALL_WILDCARD         = ["*"];
 
     public const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
@@ -50,17 +62,35 @@ abstract class CustomColumnType extends Base
     public $datatype;
     /** @var null|Entry[] */
     private $customValues = null;
-    protected mixed $numberPerPage = -1;
+    /** @var mixed */
+    protected $databaseId = null;
+    /** @var mixed */
+    protected $numberPerPage = -1;
 
+    /**
+     * Summary of __construct
+     * @param mixed $pcustomId
+     * @param mixed $pdatatype
+     * @param mixed $database
+     * @param mixed $numberPerPage
+     */
     protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
     {
-        global $config;
         $this->columnTitle = self::getTitleByCustomID($pcustomId, $database);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
         $this->customValues = null;
         $this->databaseId = $database;
-        $this->numberPerPage = $numberPerPage ?? $config['cops_max_item_per_page'];
+        $this->numberPerPage = $numberPerPage ?? Config::get('max_item_per_page');
+    }
+
+    /**
+     * Summary of getDatabaseId
+     * @return mixed
+     */
+    public function getDatabaseId()
+    {
+        return $this->databaseId;
     }
 
     /**
@@ -74,35 +104,13 @@ abstract class CustomColumnType extends Base
     }
 
     /**
-     * The URI to show all book swith a specific value in this column
-     *
-     * @param string|integer $id the id of the value to show
-     * @return string
-     */
-    public function getUri($id = null)
-    {
-        return "?page=" . self::PAGE_DETAIL . "&custom={$this->customId}&id={$id}";
-    }
-
-    /**
      * The URI to show all the values of this column
      *
      * @return string
      */
-    public function getUriAllCustoms()
+    public function getUri()
     {
         return "?page=" . self::PAGE_ALL . "&custom={$this->customId}";
-    }
-
-    /**
-     * The EntryID to show all book swith a specific value in this column
-     *
-     * @param string|integer $id the id of the value to show
-     * @return string
-     */
-    public function getEntryId($id = null)
-    {
-        return self::PAGE_ID . ":" . $this->customId . ":" . $id;
     }
 
     /**
@@ -110,7 +118,7 @@ abstract class CustomColumnType extends Base
      *
      * @return string
      */
-    public function getAllCustomsId()
+    public function getEntryId()
     {
         return self::PAGE_ID . ":" . $this->customId;
     }
@@ -125,22 +133,31 @@ abstract class CustomColumnType extends Base
         return $this->columnTitle;
     }
 
+    /**
+     * Summary of getContentType
+     * @return mixed|string
+     */
     public function getContentType()
     {
         return $this->datatype;
     }
 
-    public function getLinkArray($id = null)
+    /**
+     * Summary of getLinkArray
+     * @return array<LinkNavigation>
+     */
+    public function getLinkArray()
     {
-        return [ new LinkNavigation($this->getUri($id), null, null, $this->getDatabaseId()) ];
+        return [ new LinkNavigation($this->getUri(), null, null, $this->getDatabaseId()) ];
     }
 
     /**
      * The description used in the index page
      *
+     * @param mixed $count
      * @return string
      */
-    public function getDescription()
+    public function getContent($count = 0)
     {
         $desc = $this->getDatabaseDescription();
         if ($desc === null || empty($desc)) {
@@ -156,8 +173,8 @@ abstract class CustomColumnType extends Base
      */
     public function getDatabaseDescription()
     {
-        $result = $this->getDb($this->databaseId)->prepare('SELECT display FROM custom_columns WHERE id = ?');
-        $result->execute([$this->customId]);
+        $query = 'SELECT display FROM custom_columns WHERE id = ?';
+        $result = Database::query($query, [$this->customId], $this->databaseId);
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
             return (isset($json->description) && !empty($json->description)) ? $json->description : null;
@@ -173,15 +190,15 @@ abstract class CustomColumnType extends Base
      */
     public function getCount()
     {
+        $pcount = $this->getDistinctValueCount();
         $ptitle = $this->getTitle();
-        $pid = $this->getAllCustomsId();
-        $pcontent = $this->getDescription();
+        $pid = $this->getEntryId();
+        $pcontent = $this->getContent($pcount);
         // @checkme convert "csv" back to "text" here?
         $pcontentType = $this->datatype;
-        $database = $this->getDatabaseId();
-        $plinkArray = [new LinkNavigation($this->getUriAllCustoms(), null, null, $database)];
+        $database = $this->databaseId;
+        $plinkArray = [new LinkNavigation($this->getUri(), null, null, $database)];
         $pclass = "";
-        $pcount = $this->getDistinctValueCount();
 
         return new Entry($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $database, $pclass, $pcount);
     }
@@ -190,13 +207,15 @@ abstract class CustomColumnType extends Base
      * Return an entry array for all possible (in the DB used) values of this column
      * These are the values used in the getUriAllCustoms() page
      *
-     * @return Entry[]
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
      */
-    public function getAllCustomValues($n = -1)
+    public function getAllCustomValues($n = -1, $sort = null)
     {
         // lazy loading
         if ($this->customValues == null) {
-            $this->customValues = $this->getAllCustomValuesFromDatabase($n);
+            $this->customValues = $this->getAllCustomValuesFromDatabase($n, $sort);
         }
 
         return $this->customValues;
@@ -205,7 +224,7 @@ abstract class CustomColumnType extends Base
     /**
      * Summary of getPaginatedResult
      * @param string $query
-     * @param array $params
+     * @param array<mixed> $params
      * @param integer $n
      * @return \PDOStatement
      */
@@ -215,13 +234,7 @@ abstract class CustomColumnType extends Base
             $query .= " LIMIT ?, ?";
             array_push($params, ($n - 1) * $this->numberPerPage, $this->numberPerPage);
         }
-
-        if (count($params) > 0) {
-            $result = $this->getDb($this->databaseId)->prepare($query);
-            $result->execute($params);
-        } else {
-            $result = $this->getDb($this->databaseId)->query($query);
-        }
+        $result = Database::query($query, $params, $this->databaseId);
 
         return $result;
     }
@@ -235,7 +248,85 @@ abstract class CustomColumnType extends Base
     {
         $queryFormat = "SELECT COUNT(DISTINCT value) AS count FROM {0}";
         $query = str_format($queryFormat, $this->getTableName());
-        return parent::executeQuerySingle($query, $this->databaseId);
+        return Database::querySingle($query, $this->databaseId);
+    }
+
+    /**
+     * Use the Calibre tag browser view to retrieve all custom values with count
+     * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
+     */
+    public function browseAllCustomValues($n = -1, $sort = null)
+    {
+        if (!$this->hasChildCategories()) {
+            return [];
+        }
+        $tableName = 'tag_browser_' . $this->getTableName();
+        $queryFormat = "SELECT id, value, count FROM {0} ORDER BY {1}";
+        if (!in_array($sort, ['id', 'value', 'count', 'sort'])) {
+            $sort = "sort";
+        }
+        if ($sort == 'count') {
+            $sort .= ' desc, value';
+        }
+        $query = str_format($queryFormat, $tableName, $sort);
+
+        $result = $this->getPaginatedResult($query, [], $n);
+        $entryArray = [];
+        while ($post = $result->fetchObject()) {
+            $customcolumn = new CustomColumn($post->id, $post->value, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
+        }
+        return $entryArray;
+    }
+
+    /**
+     * Summary of hasChildCategories
+     * @return bool
+     */
+    public function hasChildCategories()
+    {
+        // @todo this only works with column titles/names, not the lookup names used elsewhere
+        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->columnTitle, Config::get('calibre_categories_using_hierarchy'))) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Find related categories for hierarchical custom columns
+     * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
+     * @param mixed $find pattern match or exact match for name, or array of child ids
+     * @return array<CustomColumn>
+     */
+    public function getRelatedCategories($find)
+    {
+        if (!$this->hasChildCategories()) {
+            return [];
+        }
+        $tableName = 'tag_browser_' . $this->getTableName();
+        if (is_array($find)) {
+            $queryFormat = "SELECT id, value, count FROM {0} WHERE id IN (" . str_repeat("?,", count($find) - 1) . "?) ORDER BY sort";
+            $params = $find;
+        } elseif (strpos($find, '%') === false) {
+            $queryFormat = "SELECT id, value, count FROM {0} WHERE value = ? ORDER BY sort";
+            $params = [$find];
+        } else {
+            $queryFormat = "SELECT id, value, count FROM {0} WHERE value LIKE ? ORDER BY sort";
+            $params = [$find];
+        }
+        $query = str_format($queryFormat, $tableName);
+        $result = Database::query($query, $params, $this->databaseId);
+
+        $instances = [];
+        while ($post = $result->fetchObject()) {
+            $customcolumn = new CustomColumn($post->id, $post->value, $this);
+            $customcolumn->count = $post->count;
+            array_push($instances, $customcolumn);
+        }
+        return $instances;
     }
 
     /**
@@ -253,12 +344,13 @@ abstract class CustomColumnType extends Base
      * Get the datatype of a CustomColumn by its customID
      *
      * @param integer $customId
+     * @param mixed $database
      * @return string|null
      */
     private static function getDatatypeByCustomID($customId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('SELECT datatype, is_multiple FROM custom_columns WHERE id = ?');
-        $result->execute([$customId]);
+        $query = 'SELECT datatype, is_multiple FROM custom_columns WHERE id = ?';
+        $result = Database::query($query, [$customId], $database);
         if ($post = $result->fetchObject()) {
             // handle case where we have several values, e.g. array of text for type 2 (csv)
             if ($post->datatype === "text" && $post->is_multiple === 1) {
@@ -273,6 +365,7 @@ abstract class CustomColumnType extends Base
      * Create a CustomColumnType by CustomID
      *
      * @param integer $customId the id of the custom column
+     * @param mixed $database
      * @return CustomColumnType|null
      * @throws Exception If the $customId is not found or the datatype is unknown
      */
@@ -317,6 +410,7 @@ abstract class CustomColumnType extends Base
      * Create a CustomColumnType by its lookup name
      *
      * @param string $lookup the lookup-name of the custom column
+     * @param mixed $database
      * @return CustomColumnType|null
      */
     public static function createByLookup($lookup, $database = null)
@@ -326,8 +420,8 @@ abstract class CustomColumnType extends Base
             return self::$customColumnCacheLookup[$lookup];
         }
 
-        $result = parent::getDb($database)->prepare('SELECT id FROM custom_columns WHERE label = ?');
-        $result->execute([$lookup]);
+        $query = 'SELECT id FROM custom_columns WHERE label = ?';
+        $result = Database::query($query, [$lookup], $database);
         if ($post = $result->fetchObject()) {
             return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id, $database);
         }
@@ -338,12 +432,13 @@ abstract class CustomColumnType extends Base
      * Get the title of a CustomColumn by its customID
      *
      * @param integer $customId
+     * @param mixed $database
      * @return string
      */
     protected static function getTitleByCustomID($customId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('SELECT name FROM custom_columns WHERE id = ?');
-        $result->execute([$customId]);
+        $query = 'SELECT name FROM custom_columns WHERE id = ?';
+        $result = Database::query($query, [$customId], $database);
         if ($post = $result->fetchObject()) {
             return $post->name;
         }
@@ -354,6 +449,7 @@ abstract class CustomColumnType extends Base
      * Check the list of custom columns requested (and expand the wildcard if needed)
      *
      * @param array<string> $columnList
+     * @param mixed $database
      * @return array<string>
      */
     public static function checkCustomColumnList($columnList, $database = null)
@@ -367,12 +463,13 @@ abstract class CustomColumnType extends Base
     /**
      * Get all defined custom columns from the database
      *
-     * @return array<string, array>
+     * @param mixed $database
+     * @return array<string, array<mixed>>
      */
     public static function getAllCustomColumns($database = null)
     {
-        $result = parent::getDb($database)->prepare('SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns');
-        $result->execute();
+        $query = 'SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns';
+        $result = Database::query($query, [], $database);
         $columns = [];
         while ($post = $result->fetchObject()) {
             $columns[$post->label] = (array) $post;
@@ -387,11 +484,17 @@ abstract class CustomColumnType extends Base
      *  - second an array of all PreparedStatement parameters
      *
      * @param string|integer|null $id the id of the searched value
-     * @return array|null
+     * @return array{0: string, 1: array<mixed>}|null
      */
     abstract public function getQuery($id);
 
-    abstract public function getFilter($id);
+    /**
+     * Summary of getFilter
+     * @param mixed $id
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}|null
+     */
+    abstract public function getFilter($id, $parentTable = null);
 
     /**
      * Get a CustomColumn for a specified (by ID) value
@@ -404,9 +507,11 @@ abstract class CustomColumnType extends Base
     /**
      * Return an entry array for all possible (in the DB used) values of this column by querying the database
      *
-     * @return Entry[]|null
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>|null
      */
-    abstract protected function getAllCustomValuesFromDatabase($n = -1);
+    abstract protected function getAllCustomValuesFromDatabase($n = -1, $sort = null);
 
     /**
      * Find the value of this column for a specific book

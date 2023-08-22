@@ -12,6 +12,12 @@ use SebLucas\Cops\Model\Entry;
 
 class PageCustomize extends Page
 {
+    /**
+     * Summary of isChecked
+     * @param mixed $key
+     * @param mixed $testedValue
+     * @return string
+     */
     private function isChecked($key, $testedValue = 1)
     {
         $value = $this->request->option($key);
@@ -27,6 +33,12 @@ class PageCustomize extends Page
         return "";
     }
 
+    /**
+     * Summary of isSelected
+     * @param mixed $key
+     * @param mixed $value
+     * @return string
+     */
     private function isSelected($key, $value)
     {
         if ($this->request->option($key) == $value) {
@@ -35,6 +47,10 @@ class PageCustomize extends Page
         return "";
     }
 
+    /**
+     * Summary of getTemplateList
+     * @return array<string>
+     */
     private function getTemplateList()
     {
         $result = [];
@@ -46,6 +62,10 @@ class PageCustomize extends Page
         return $result;
     }
 
+    /**
+     * Summary of getStyleList
+     * @return array<string>
+     */
     private function getStyleList()
     {
         $result = [];
@@ -57,12 +77,20 @@ class PageCustomize extends Page
         return $result;
     }
 
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
         $this->title = localize("customize.title");
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
         $this->entryArray = [];
@@ -89,7 +117,7 @@ class PageCustomize extends Page
             }
         }
         array_push($this->entryArray, new Entry(
-            "Template",
+            localize("customize.template"),
             "",
             $content,
             "text",

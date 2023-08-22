@@ -3,10 +3,7 @@
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Mail;
 
-require_once dirname(__FILE__) . '/config.php';
-/** @var array $config */
-
-global $config;
+require_once __DIR__ . '/config.php';
 
 if ($error = Mail::checkConfiguration()) {
     echo $error;

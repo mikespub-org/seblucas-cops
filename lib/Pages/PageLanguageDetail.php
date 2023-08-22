@@ -13,26 +13,38 @@ use SebLucas\Cops\Calibre\Language;
 
 class PageLanguageDetail extends Page
 {
+    protected string $className = Language::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $language = Language::getLanguageById($this->idGet, $this->getDatabaseId());
+        /** @var Language $instance */
+        $instance = Language::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&l=' . $this->idGet;
-            $this->getFilters($language);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries();
+            $this->getEntries($instance);
         }
-        $this->idPage = $language->getEntryId();
-        $this->title = $language->getTitle();
-        $this->currentUri = $language->getUri();
-        $this->parentTitle = localize("languages.title");
-        $this->parentUri = $language->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
-    public function getEntries()
+    /**
+     * Summary of getEntries
+     * @param Language $instance
+     * @return void
+     */
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByLanguage($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

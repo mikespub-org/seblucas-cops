@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\Page;
 
 class Filter
@@ -17,30 +18,33 @@ class Filter
     public const PAGE_ID = Page::FILTER_ID;
     public const PAGE_DETAIL = Page::FILTER;
     public const URL_PARAMS = [
-        'a' => Author::class,
-        'l' => Language::class,
-        'p' => Publisher::class,
-        'r' => Rating::class,
-        's' => Serie::class,
-        't' => Tag::class,
-        'c' => CustomColumnType::class,
-        'f' => BookList::class,
-        'y' => BookList::class,
+        Author::URL_PARAM => Author::class,
+        Language::URL_PARAM => Language::class,
+        Publisher::URL_PARAM => Publisher::class,
+        Rating::URL_PARAM => Rating::class,
+        Serie::URL_PARAM => Serie::class,
+        Tag::URL_PARAM => Tag::class,
+        CustomColumnType::URL_PARAM => CustomColumnType::class,
+        BookList::URL_PARAM_FIRST => BookList::class,
+        BookList::URL_PARAM_YEAR => BookList::class,
     ];
+
     protected Request $request;
-    protected array $params = [];
+    /** @var array<mixed> */
+    protected $params = [];
     protected string $parentTable = "books";
     protected string $queryString = "";
-    protected mixed $databaseId;
+    /** @var mixed */
+    protected $databaseId;
 
     /**
      * Summary of __construct
-     * @param Request|array $request current request or urlParams array
-     * @param array $params initial query params
+     * @param Request|array<mixed> $request current request or urlParams array
+     * @param array<mixed> $params initial query params
      * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
      * @param mixed $database current database in multiple database setup
      */
-    public function __construct(Request|array $request, array $params = [], string $parent = "books", mixed $database = null)
+    public function __construct($request, array $params = [], string $parent = "books", $database = null)
     {
         if (is_array($request)) {
             $request = Request::build($request);
@@ -65,7 +69,7 @@ class Filter
 
     /**
      * Summary of getQueryParams
-     * @return array updated query params including filters
+     * @return array<mixed> updated query params including filters
      */
     public function getQueryParams()
     {
@@ -87,48 +91,48 @@ class Filter
             $this->addTagNameFilter($tagName);
         }
 
-        $authorId = $this->request->get('a', null, '/^!?\d+$/');
+        $authorId = $this->request->get(Author::URL_PARAM, null, '/^!?\d+$/');
         if (!empty($authorId)) {
             $this->addAuthorIdFilter($authorId);
         }
 
-        $languageId = $this->request->get('l', null, '/^!?\d+$/');
+        $languageId = $this->request->get(Language::URL_PARAM, null, '/^!?\d+$/');
         if (!empty($languageId)) {
             $this->addLanguageIdFilter($languageId);
         }
 
-        $publisherId = $this->request->get('p', null, '/^!?\d+$/');
+        $publisherId = $this->request->get(Publisher::URL_PARAM, null, '/^!?\d+$/');
         if (!empty($publisherId)) {
             $this->addPublisherIdFilter($publisherId);
         }
 
-        $ratingId = $this->request->get('r', null, '/^!?\d+$/');
+        $ratingId = $this->request->get(Rating::URL_PARAM, null, '/^!?\d+$/');
         if (!empty($ratingId)) {
             $this->addRatingIdFilter($ratingId);
         }
 
-        $seriesId = $this->request->get('s', null, '/^!?\d+$/');
+        $seriesId = $this->request->get(Serie::URL_PARAM, null, '/^!?\d+$/');
         if (!empty($seriesId)) {
             $this->addSeriesIdFilter($seriesId);
         }
 
-        $tagId = $this->request->get('t', null, '/^!?\d+$/');
+        $tagId = $this->request->get(Tag::URL_PARAM, null, '/^!?\d+$/');
         if (!empty($tagId)) {
             $this->addTagIdFilter($tagId);
         }
 
-        $letter = $this->request->get('f', null, '/^\w$/');
+        $letter = $this->request->get(BookList::URL_PARAM_FIRST, null, '/^\w$/');
         if (!empty($letter)) {
             $this->addFirstLetterFilter($letter);
         }
 
-        $year = $this->request->get('y', null, '/^\d+$/');
+        $year = $this->request->get(BookList::URL_PARAM_YEAR, null, '/^\d+$/');
         if (!empty($year)) {
             $this->addPubYearFilter($year);
         }
 
         // URL format: ...&c[2]=3&c[3]=other to filter on column 2 = 3 and column 3 = other
-        $customIdArray = $this->request->get('c', null);
+        $customIdArray = $this->request->get(CustomColumnType::URL_PARAM, null);
         if (!empty($customIdArray) && is_array($customIdArray)) {
             $this->addCustomIdArrayFilters($customIdArray);
         }
@@ -166,6 +170,20 @@ class Filter
         }
 
         $this->addFilter($filter, $tagName);
+    }
+
+    /**
+     * Summary of addInstanceFilter
+     * @param Base|Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @return void
+     */
+    public function addInstanceFilter($instance)
+    {
+        if ($instance instanceof CustomColumn) {
+            $this->addCustomIdFilter($instance->customColumnType, $instance->id);
+            return;
+        }
+        $this->addLinkedIdFilter($instance->id, $instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
     }
 
     /**
@@ -252,7 +270,7 @@ class Filter
 
     /**
      * Summary of addCustomIdArrayFilters
-     * @param array $customIdArray
+     * @param array<mixed> $customIdArray
      * @return void
      */
     public function addCustomIdArrayFilters($customIdArray)
@@ -268,7 +286,7 @@ class Filter
 
     /**
      * Summary of addCustomIdFilter
-     * @param mixed $customType
+     * @param CustomColumnType $customType
      * @param mixed $valueId
      * @return void
      */
@@ -288,18 +306,25 @@ class Filter
      * @param mixed $linkId
      * @param mixed $linkTable
      * @param mixed $linkColumn
+     * @param mixed $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
      * @return void
      */
-    public function addLinkedIdFilter($linkId, $linkTable, $linkColumn)
+    public function addLinkedIdFilter($linkId, $linkTable, $linkColumn, $limitSelf = true)
     {
         $exists = true;
+        $matches = [];
         if (preg_match("/^!(.*)$/", $linkId, $matches)) {
             $exists = false;
             $linkId = $matches[1];
         }
 
         if ($this->parentTable == $linkTable) {
-            $filter = "{$linkTable}.{$linkColumn} = ?";
+            if ($limitSelf) {
+                $filter = "{$linkTable}.{$linkColumn} = ?";
+            } else {
+                // find other tags applied to books where this tag applies
+                $filter = "exists (select null from {$linkTable} as filterself, books where {$this->parentTable}.book = books.id and {$this->parentTable}.{$linkColumn} != filterself.{$linkColumn} and filterself.book = books.id and filterself.{$linkColumn} = ?)";
+            }
         } elseif ($this->parentTable == "books") {
             $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
@@ -313,6 +338,12 @@ class Filter
         $this->addFilter($filter, $linkId);
     }
 
+    /**
+     * Summary of getEntryArray
+     * @param Request $request
+     * @param mixed $database
+     * @return array<Entry>
+     */
     public static function getEntryArray($request, $database = null)
     {
         $entryArray = [];
@@ -330,11 +361,17 @@ class Filter
             if ($className == CustomColumnType::class) {
                 foreach ($paramValue as $customId => $valueId) {
                     $custom = CustomColumn::createCustom($customId, $valueId, $database);
-                    $entryArray = array_merge($entryArray, [ $custom->getCount() ]);
+                    $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);
                 }
                 continue;
             }
-            $entries = $className::getEntriesByFilter([$paramName => $paramValue], -1, $database);
+            // remove negative flag for filter entry here
+            if (preg_match('/^!\d+$/', $paramValue)) {
+                $paramValue = substr($paramValue, 1);
+            }
+            $req = Request::build([$paramName => $paramValue]);
+            $baselist = new BaseList($className, $req, $database);
+            $entries = $baselist->getEntriesByFilter();
             $entryArray = array_merge($entryArray, $entries);
         }
         return $entryArray;

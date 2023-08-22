@@ -9,9 +9,10 @@
 
 use SebLucas\Cops\Output\RestApi;
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\JSONRenderer;
@@ -19,12 +20,11 @@ use SebLucas\Cops\Pages\Page;
 
 class RestApiTest extends TestCase
 {
-    public static $script;
+    public static string $script;
 
     public static function setUpBeforeClass(): void
     {
-        global $config;
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
         self::$script = $_SERVER["SCRIPT_NAME"];
     }
@@ -122,12 +122,13 @@ class RestApiTest extends TestCase
         $_SERVER["SCRIPT_NAME"] = $script;
     }
 
-    public function testReplaceLinks(): void
+    /**
+     * Summary of getLinks
+     * @return array<mixed>
+     */
+    public function getLinks()
     {
-        $script = $_SERVER["SCRIPT_NAME"];
-        $_SERVER["SCRIPT_NAME"] =  "/" . RestApi::$endpoint;
-        $request = new Request();
-        $links = [
+        return [
             "restapi.php?page=index" => "restapi.php/index",
             "restapi.php?page=1" => "restapi.php/authors",
             "restapi.php?page=1&letter=1" => "restapi.php/authors/letter",
@@ -160,15 +161,67 @@ class RestApiTest extends TestCase
             "restapi.php?page=22&a=1" => "restapi.php/ratings?a=1",
             "restapi.php?page=23&id=1&a=1" => "restapi.php/ratings/1?a=1",
         ];
+    }
 
-        foreach ($links as $link => $expected) {
-            $params = [];
-            parse_str(parse_url($link, PHP_URL_QUERY), $params);
-            $page = $params["page"];
-            unset($params["page"]);
-            $test = RestApi::$endpoint . Route::link($page, $params);
-            $this->assertEquals($expected, $test);
+    /**
+     * Summary of linkProvider
+     * @return array<mixed>
+     */
+    public function linkProvider()
+    {
+        $data = [];
+        $links = $this->getLinks();
+        foreach ($links as $from => $to) {
+            array_push($data, [$from, $to]);
         }
+        return $data;
+    }
+
+    /**
+     * @dataProvider linkProvider
+     * @param mixed $link
+     * @param mixed $expected
+     * @return void
+     */
+    public function testRouteLink($link, $expected)
+    {
+        $params = [];
+        parse_str(parse_url($link, PHP_URL_QUERY), $params);
+        $page = $params["page"];
+        unset($params["page"]);
+        $test = RestApi::$endpoint . Route::link($page, $params);
+        $this->assertEquals($expected, $test);
+    }
+
+    /**
+     * @dataProvider linkProvider
+     * @param mixed $expected
+     * @param mixed $path
+     * @return void
+     */
+    public function testRouteMatch($expected, $path)
+    {
+        $query = parse_url($path, PHP_URL_QUERY);
+        $path = parse_url($path, PHP_URL_PATH);
+        $parts = explode('/', $path);
+        $endpoint = array_shift($parts);
+        $path = '/' . implode('/', $parts);
+        $params = Route::match($path);
+        $test = $endpoint . '?' . http_build_query($params);
+        if (!empty($query)) {
+            $test .= '&' . $query;
+        }
+        $this->assertEquals($expected, $test);
+    }
+
+    public function testReplaceLinks(): void
+    {
+        $script = $_SERVER["SCRIPT_NAME"];
+        $_SERVER["SCRIPT_NAME"] =  "/" . RestApi::$endpoint;
+        $request = new Request();
+
+        $links = $this->getLinks();
+        // Note: this does not replace rewrite rules, as they are already generated in code when use_url_rewriting == 1
 
         $output = json_encode(array_keys($links));
         $endpoint = RestApi::getScriptName($request);
@@ -180,13 +233,77 @@ class RestApiTest extends TestCase
         $_SERVER["SCRIPT_NAME"] = $script;
     }
 
+    /**
+     * Summary of getRewrites
+     * @return array<mixed>
+     */
+    public function getRewrites()
+    {
+        return [
+            "fetch.php?data=1&type=epub" => "/download/1/ignore.epub",
+            "fetch.php?data=1&type=epub&view=1" => "/view/1/ignore.epub",
+            "fetch.php?data=1&type=png&height=225" => "/download/1/ignore.png?height=225",
+            "fetch.php?data=1&db=0&type=epub" => "/download/1/0/ignore.epub",
+            "fetch.php?data=1&db=0&type=epub&view=1" => "/view/1/0/ignore.epub",
+            "fetch.php?data=1&db=0&type=png&height=225" => "/download/1/0/ignore.png?height=225",
+        ];
+    }
+
+    /**
+     * Summary of rewriteProvider
+     * @return array<mixed>
+     */
+    public function rewriteProvider()
+    {
+        $data = [];
+        $links = $this->getRewrites();
+        foreach ($links as $from => $to) {
+            array_push($data, [$from, $to]);
+        }
+        return $data;
+    }
+
+    /**
+     * @dataProvider rewriteProvider
+     * @param mixed $link
+     * @param mixed $expected
+     * @return void
+     */
+    public function testRewriteLink($link, $expected)
+    {
+        $params = [];
+        parse_str(parse_url($link, PHP_URL_QUERY), $params);
+        $endpoint = parse_url($link, PHP_URL_PATH);
+        $test = Route::linkRewrite($endpoint, $params);
+        $this->assertEquals($expected, $test);
+    }
+
+    /**
+     * @dataProvider rewriteProvider
+     * @param mixed $expected
+     * @param mixed $path
+     * @return void
+     */
+    public function testRewriteMatch($expected, $path)
+    {
+        $query = parse_url($path, PHP_URL_QUERY);
+        $path = parse_url($path, PHP_URL_PATH);
+        //$endpoint = parse_url($expected, PHP_URL_PATH);
+        [$endpoint, $params] = Route::matchRewrite($path);
+        $test = $endpoint . '?' . http_build_query($params);
+        if (!empty($query)) {
+            $test .= '&' . $query;
+        }
+        $this->assertEquals($expected, $test);
+    }
+
     public function testGetOutput(): void
     {
         $request = new Request();
         $apiHandler = new RestApi($request);
         $expected = true;
         $test = $apiHandler->getOutput();
-        $this->assertEquals($expected, str_starts_with($test, '{"title":"COPS",'));
+        $this->assertEquals($expected, strncmp($test, '{"title":"COPS",', strlen('{"title":"COPS",')) === 0);
     }
 
     public function testGetCustomColumns(): void

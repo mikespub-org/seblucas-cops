@@ -6,100 +6,106 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Mail;
 
 class MailTest extends TestCase
 {
-    public function testCheckConfigurationOk()
+    public function testCheckConfigurationOk(): void
     {
         $this->assertFalse(Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationNull()
+    public function testCheckConfigurationNull(): void
     {
-        global $config;
-        $config['cops_mail_configuration'] = null;
+        Config::set('mail_configuration', null);
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationNotArray()
+    public function testCheckConfigurationNotArray(): void
     {
-        global $config;
-        $config['cops_mail_configuration'] = "Test";
+        Config::set('mail_configuration', "Test");
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationSmtpEmpty()
+    public function testCheckConfigurationSmtpEmpty(): void
     {
-        global $config;
-        require(dirname(__FILE__) . "/config_test.php");
-        $config['cops_mail_configuration']["smtp.host"] = "";
+        // reload test config
+        require __DIR__ . '/config_test.php';
+        $mailConfig = Config::get('mail_configuration');
+        $mailConfig["smtp.host"] = "";
+        Config::set('mail_configuration', $mailConfig);
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationEmailEmpty()
+    public function testCheckConfigurationEmailEmpty(): void
     {
-        global $config;
-        require(dirname(__FILE__) . "/config_test.php");
-        $config['cops_mail_configuration']["address.from"] = "";
+        // reload test config
+        require __DIR__ . '/config_test.php';
+        $mailConfig = Config::get('mail_configuration');
+        $mailConfig["address.from"] = "";
+        Config::set('mail_configuration', $mailConfig);
 
         $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
     }
 
-    public function testCheckConfigurationEmailNotEmpty()
+    public function testCheckConfigurationEmailNotEmpty(): void
     {
-        global $config;
         $email = "a";
-        $config['cops_mail_configuration']["address.from"] = $email;
+        $mailConfig = Config::get('mail_configuration');
+        $mailConfig["address.from"] = $email;
+        Config::set('mail_configuration', $mailConfig);
 
-        $this->assertStringContainsString($email, $config['cops_mail_configuration']["address.from"]);
+        //$this->assertStringContainsString($email, $mailConfig["address.from"]);
+        $this->assertFalse(Mail::checkConfiguration());
+
+        // reload test config
+        require __DIR__ . '/config_test.php';
     }
 
-    public function testCheckConfigurationEmailNotValid()
+    public function testCheckConfigurationEmailNotValid(): void
     {
-        global $config;
         $email = "a";
         $this->assertDoesNotMatchRegularExpression('/^.+\@\S+\.\S+$/', $email);
     }
 
-    public function testCheckConfigurationEmailValid()
+    public function testCheckConfigurationEmailValid(): void
     {
-        global $config;
         $email = "a@a.com";
         $this->assertMatchesRegularExpression('/^.+\@\S+\.\S+$/', $email);
     }
 
-    public function testCheckRequest()
+    public function testCheckRequest(): void
     {
         $this->assertFalse(Mail::checkRequest(12, "a@a.com"));
     }
 
-    public function testCheckRequestNoData()
+    public function testCheckRequestNoData(): void
     {
         $this->assertStringStartsWith("No", Mail::checkRequest(null, "a@a.com"));
     }
 
-    public function testCheckRequestNoEmail()
+    public function testCheckRequestNoEmail(): void
     {
-        $this->assertStringStartsWith("No", Mail::checkRequest(12, null));
+        $this->assertStringStartsWith("No", Mail::checkRequest(12, ""));
     }
 
-    public function testCheckRequestEmailNotValid()
+    public function testCheckRequestEmailNotValid(): void
     {
         $this->assertStringStartsWith("No", Mail::checkRequest(12, "a@b"));
     }
 
-    public function testSendMailNotFound()
+    public function testSendMailNotFound(): void
     {
         $this->assertStringStartsWith("No", Mail::sendMail(12, "a@a.com"));
     }
 
-    public function testSendMailTooBig()
+    public function testSendMailTooBig(): void
     {
         $old = Mail::$maxSize;
         Mail::$maxSize = 0;
@@ -107,8 +113,10 @@ class MailTest extends TestCase
         Mail::$maxSize = $old;
     }
 
-    public function testSendMailSomeday()
+    public function testSendMailSomeday(): void
     {
-        $this->assertStringStartsWith("Mailer Error:", Mail::sendMail(20, "a@a.com"));
+        // use dryRun to run preSend() but not actually Send()
+        $error = Mail::sendMail(20, "a@a.com", true);
+        $this->assertFalse($error);
     }
 }

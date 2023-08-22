@@ -21,8 +21,8 @@ use SebLucas\Template\doT;
  */
 class EPubReader
 {
-    public static $endpoint = Config::ENDPOINT["epubfs"];
-    public static $template = "templates/epubreader.html";
+    public static string $endpoint = Config::ENDPOINT["epubfs"];
+    public static string $template = "templates/epubreader.html";
 
     /**
      * Summary of getComponentContent

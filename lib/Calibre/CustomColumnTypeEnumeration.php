@@ -8,8 +8,16 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Model\Entry;
+
 class CustomColumnTypeEnumeration extends CustomColumnType
 {
+    /**
+     * Summary of __construct
+     * @param mixed $pcustomId
+     * @param mixed $database
+     */
     protected function __construct($pcustomId, $database)
     {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM, $database);
@@ -36,17 +44,27 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         return "value";
     }
 
+    /**
+     * Summary of getQuery
+     * @param mixed $id
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getQuery($id)
     {
-        global $config;
-        if (empty($id) && in_array("custom", $config['cops_show_not_set_filter'])) {
-            $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM_NULL, "{0}", "{1}", $this->getTableLinkName());
+        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
-        $query = str_format(BookList::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
+        $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
     }
 
+    /**
+     * Summary of getFilter
+     * @param mixed $id
+     * @param mixed $parentTable
+     * @return array{0: string, 1: array<mixed>}|null
+     */
     public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableLinkName();
@@ -59,18 +77,28 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         return [$filter, [$id]];
     }
 
+    /**
+     * Summary of getCustom
+     * @param mixed $id
+     * @return CustomColumn
+     */
     public function getCustom($id)
     {
         $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
-        $result = $this->getDb($this->databaseId)->prepare($query);
-        $result->execute([$id]);
+        $result = Database::query($query, [$id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
         return new CustomColumn(null, localize("customcolumn.enum.unknown"), $this);
     }
 
-    protected function getAllCustomValuesFromDatabase($n = -1)
+    /**
+     * Summary of getAllCustomValuesFromDatabase
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
+     */
+    protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
@@ -84,24 +112,37 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         return $entryArray;
     }
 
-    public function getDescription()
+    /**
+     * Summary of getContent
+     * @param mixed $count
+     * @return string
+     */
+    public function getContent($count = 0)
     {
-        $count = $this->getDistinctValueCount();
         return str_format(localize("customcolumn.description.enum", $count), $count);
     }
 
+    /**
+     * Summary of getCustomByBook
+     * @param Book $book
+     * @return CustomColumn
+     */
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
-        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = $this->getDb($this->databaseId)->query($query);
+        $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
         return new CustomColumn(null, localize("customcolumn.enum.unknown"), $this);
     }
 
+    /**
+     * Summary of isSearchable
+     * @return bool
+     */
     public function isSearchable()
     {
         return true;

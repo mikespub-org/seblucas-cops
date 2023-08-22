@@ -15,9 +15,11 @@ use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\EPubMeta\EPub;
+use SebLucas\TbsZip\clsTbsZip;
 use Exception;
 
-class Book extends Base
+//class Book extends Base
+class Book
 {
     public const PAGE_ID = Page::ALL_BOOKS_ID;
     public const PAGE_ALL = Page::ALL_BOOKS;
@@ -37,33 +39,58 @@ class Book extends Base
 
     public const BAD_SEARCH = 'QQQQQ';
 
-    public static $endpoint = Config::ENDPOINT["index"];
+    public static string $endpoint = Config::ENDPOINT["index"];
+    /** @var mixed */
     public $id;
+    /** @var mixed */
     public $title;
+    /** @var mixed */
     public $timestamp;
+    /** @var mixed */
     public $pubdate;
+    /** @var mixed */
     public $path;
+    /** @var mixed */
     public $uuid;
+    /** @var mixed */
     public $hasCover;
+    /** @var mixed */
     public $relativePath;
+    /** @var mixed */
     public $seriesIndex;
+    /** @var mixed */
     public $comment;
+    /** @var mixed */
     public $rating;
+    /** @var mixed */
+    protected $databaseId = null;
+    /** @var Data[]|null */
     public $datas = null;
+    /** @var Author[]|null */
     public $authors = null;
+    /** @var Publisher|null */
     public $publisher = null;
+    /** @var Serie|null */
     public $serie = null;
+    /** @var Tag[]|null */
     public $tags = null;
+    /** @var Identifier[]|null */
     public $identifiers = null;
+    /** @var string|null */
     public $languages = null;
+    /** @var array<mixed> */
     public $format = [];
+    /** @var string|null */
     private $coverFileName = null;
-    public $updateForKepub = false;
+    public bool $updateForKepub = false;
 
+    /**
+     * Summary of __construct
+     * @param mixed $line
+     * @param mixed $database
+     */
     public function __construct($line, $database = null)
     {
-        global $config;
-
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp);
@@ -85,7 +112,7 @@ class Book extends Base
         //    $this->hasCover = 0;
         //}
         if ($this->hasCover) {
-            if (!empty($config['calibre_database_field_cover'])) {
+            if (!empty(Config::get('calibre_database_field_cover'))) {
                 $imgDirectory = Database::getImgDirectory($database);
                 $this->coverFileName = $line->cover;
                 if (!file_exists($this->coverFileName)) {
@@ -131,26 +158,57 @@ class Book extends Base
         $this->databaseId = $database;
     }
 
+    /**
+     * Summary of getDatabaseId
+     * @return mixed
+     */
+    public function getDatabaseId()
+    {
+        return $this->databaseId;
+    }
+
+    /**
+     * Summary of getEntryId
+     * @return string
+     */
     public function getEntryId()
     {
         return Page::ALL_BOOKS_UUID.':'.$this->uuid;
     }
 
+    /**
+     * Summary of getEntryIdByLetter
+     * @param mixed $startingLetter
+     * @return string
+     */
     public static function getEntryIdByLetter($startingLetter)
     {
         return self::PAGE_ID.':letter:'.$startingLetter;
     }
 
+    /**
+     * Summary of getEntryIdByYear
+     * @param mixed $year
+     * @return string
+     */
     public static function getEntryIdByYear($year)
     {
         return self::PAGE_ID.':year:'.$year;
     }
 
+    /**
+     * Summary of getUri
+     * @return string
+     */
     public function getUri()
     {
         return '?page='.self::PAGE_DETAIL.'&id=' . $this->id;
     }
 
+    /**
+     * Summary of getDetailUrl
+     * @return string
+     */
     public function getDetailUrl()
     {
         $urlParam = $this->getUri();
@@ -158,6 +216,10 @@ class Book extends Base
         return self::$endpoint . $urlParam;
     }
 
+    /**
+     * Summary of getTitle
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
@@ -166,16 +228,22 @@ class Book extends Base
     /* Other class (author, series, tag, ...) initialization and accessors */
 
     /**
-     * @return Author[]
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Author>|null
      */
-    public function getAuthors()
+    public function getAuthors($n = -1, $sort = null)
     {
         if (is_null($this->authors)) {
-            $this->authors = Author::getAuthorByBookId($this->id, $this->databaseId);
+            $this->authors = Author::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->authors;
     }
 
+    /**
+     * Summary of getAuthorsName
+     * @return string
+     */
     public function getAuthorsName()
     {
         return implode(', ', array_map(function ($author) {
@@ -183,6 +251,10 @@ class Book extends Base
         }, $this->getAuthors()));
     }
 
+    /**
+     * Summary of getAuthorsSort
+     * @return string
+     */
     public function getAuthorsSort()
     {
         return implode(', ', array_map(function ($author) {
@@ -190,10 +262,14 @@ class Book extends Base
         }, $this->getAuthors()));
     }
 
+    /**
+     * Summary of getPublisher
+     * @return Publisher|null
+     */
     public function getPublisher()
     {
         if (is_null($this->publisher)) {
-            $this->publisher = Publisher::getPublisherByBookId($this->id, $this->databaseId);
+            $this->publisher = Publisher::getInstanceByBookId($this->id, $this->databaseId);
         }
         return $this->publisher;
     }
@@ -204,50 +280,41 @@ class Book extends Base
     public function getSerie()
     {
         if (is_null($this->serie)) {
-            $this->serie = Serie::getSerieByBookId($this->id, $this->databaseId);
+            $this->serie = Serie::getInstanceByBookId($this->id, $this->databaseId);
         }
         return $this->serie;
     }
 
     /**
+     * @param mixed $n
+     * @param mixed $sort
      * @return string
      */
-    public function getLanguages()
+    public function getLanguages($n = -1, $sort = null)
     {
-        $lang = [];
-        $result = parent::getDb($this->databaseId)->prepare('select languages.lang_code
-                from books_languages_link, languages
-                where books_languages_link.lang_code = languages.id
-                and book = ?
-                order by item_order');
-        $result->execute([$this->id]);
-        while ($post = $result->fetchObject()) {
-            array_push($lang, Language::getLanguageString($post->lang_code));
+        if (is_null($this->languages)) {
+            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId);
         }
-        return implode(', ', $lang);
+        return $this->languages;
     }
 
     /**
-     * @return Tag[]
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Tag>
      */
-    public function getTags()
+    public function getTags($n = -1, $sort = null)
     {
         if (is_null($this->tags)) {
-            $this->tags = [];
-
-            $result = parent::getDb($this->databaseId)->prepare('select tags.id as id, name
-                from books_tags_link, tags
-                where tag = tags.id
-                and book = ?
-                order by name');
-            $result->execute([$this->id]);
-            while ($post = $result->fetchObject()) {
-                array_push($this->tags, new Tag($post, $this->databaseId));
-            }
+            $this->tags = Tag::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->tags;
     }
 
+    /**
+     * Summary of getTagsName
+     * @return string
+     */
     public function getTagsName()
     {
         return implode(', ', array_map(function ($tag) {
@@ -256,27 +323,18 @@ class Book extends Base
     }
 
     /**
-     * @return Identifier[]
+     * @return array<Identifier>
      */
     public function getIdentifiers()
     {
         if (is_null($this->identifiers)) {
-            $this->identifiers = [];
-
-            $result = parent::getDb($this->databaseId)->prepare('select type, val, id
-                from identifiers
-                where book = ?
-                order by type');
-            $result->execute([$this->id]);
-            while ($post = $result->fetchObject()) {
-                array_push($this->identifiers, new Identifier($post, $this->databaseId));
-            }
+            $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->identifiers;
     }
 
     /**
-     * @return Data[]
+     * @return array<Data>
      */
     public function getDatas()
     {
@@ -286,6 +344,10 @@ class Book extends Base
         return $this->datas;
     }
 
+    /**
+     * Summary of GetMostInterestingDataToSendToKindle
+     * @return Data|null
+     */
     public function GetMostInterestingDataToSendToKindle()
     {
         $bestFormatForKindle = ['PDF', 'AZW3', 'MOBI', 'EPUB'];
@@ -301,6 +363,11 @@ class Book extends Base
         return $bestData;
     }
 
+    /**
+     * Summary of getDataById
+     * @param mixed $idData
+     * @return Data|false
+     */
     public function getDataById($idData)
     {
         $reduced = array_filter($this->getDatas(), function ($data) use ($idData) {
@@ -309,6 +376,10 @@ class Book extends Base
         return reset($reduced);
     }
 
+    /**
+     * Summary of getRating
+     * @return string
+     */
     public function getRating()
     {
         if (is_null($this->rating) || $this->rating == 0) {
@@ -324,6 +395,10 @@ class Book extends Base
         return $retour;
     }
 
+    /**
+     * Summary of getPubDate
+     * @return string
+     */
     public function getPubDate()
     {
         if (empty($this->pubdate)) {
@@ -336,6 +411,11 @@ class Book extends Base
         return '';
     }
 
+    /**
+     * Summary of getComment
+     * @param bool $withSerie
+     * @return string
+     */
     public function getComment($withSerie = true)
     {
         $addition = '';
@@ -350,6 +430,11 @@ class Book extends Base
         //}
     }
 
+    /**
+     * Summary of getDataFormat
+     * @param mixed $format
+     * @return Data|false
+     */
     public function getDataFormat($format)
     {
         $reduced = array_filter($this->getDatas(), function ($data) use ($format) {
@@ -360,7 +445,10 @@ class Book extends Base
 
     /**
      * @checkme always returns absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
+     * @param string $extension
+     * @param mixed $idData
      * @param false $relative Deprecated
+     * @return string|false|null
      */
     public function getFilePath($extension, $idData = null, $relative = false)
     {
@@ -400,13 +488,17 @@ class Book extends Base
         }
     }
 
+    /**
+     * Summary of getUpdatedEpub
+     * @param mixed $idData
+     * @return void
+     */
     public function getUpdatedEpub($idData)
     {
-        global $config;
         $data = $this->getDataById($idData);
 
         try {
-            $epub = new EPub($data->getLocalPath());
+            $epub = new EPub($data->getLocalPath(), clsTbsZip::class);
 
             $epub->Title($this->title);
             $authorArray = [];
@@ -438,6 +530,14 @@ class Book extends Base
         }
     }
 
+    /**
+     * Summary of getThumbnail
+     * @param mixed $width
+     * @param mixed $height
+     * @param mixed $outputfile
+     * @param mixed $inType
+     * @return bool
+     */
     public function getThumbnail($width, $height, $outputfile = null, $inType = 'jpg')
     {
         if (is_null($width) && is_null($height)) {
@@ -498,12 +598,13 @@ class Book extends Base
      * The values of all the specified columns
      *
      * @param string[] $columns
-     * @return array
+     * @param bool $asArray
+     * @return array<mixed>
      */
     public function getCustomColumnValues($columns, $asArray = false)
     {
         $result = [];
-        $database = $this->getDatabaseId();
+        $database = $this->databaseId;
 
         $columns = CustomColumnType::checkCustomColumnList($columns, $database);
 
@@ -524,9 +625,13 @@ class Book extends Base
         return $result;
     }
 
+    /**
+     * Summary of getLinkArray
+     * @return array<Link>
+     */
     public function getLinkArray()
     {
-        $database = $this->getDatabaseId();
+        $database = $this->databaseId;
         $linkArray = [];
 
         if ($this->hasCover) {
@@ -534,6 +639,7 @@ class Book extends Base
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
+            // @todo set height for thumbnail here depending on opds vs. html
             if ($ext == 'png') {
                 array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", null));
                 array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", null));
@@ -562,7 +668,11 @@ class Book extends Base
         return $linkArray;
     }
 
-
+    /**
+     * Summary of getEntry
+     * @param mixed $count
+     * @return EntryBook
+     */
     public function getEntry($count = 0)
     {
         return new EntryBook(
@@ -578,24 +688,32 @@ class Book extends Base
     /* End of other class (author, series, tag, ...) initialization and accessors */
 
     // -DC- Get customisable book columns
+    /**
+     * Summary of getBookColumns
+     * @return string
+     */
     public static function getBookColumns()
     {
-        global $config;
-
         $res = self::SQL_COLUMNS;
-        if (!empty($config['calibre_database_field_cover'])) {
-            $res = str_replace('has_cover,', 'has_cover, ' . $config['calibre_database_field_cover'] . ',', $res);
+        if (!empty(Config::get('calibre_database_field_cover'))) {
+            $res = str_replace('has_cover,', 'has_cover, ' . Config::get('calibre_database_field_cover') . ',', $res);
         }
 
         return $res;
     }
 
+    /**
+     * Summary of getBookById
+     * @param mixed $bookId
+     * @param mixed $database
+     * @return Book|null
+     */
     public static function getBookById($bookId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ' . self::getBookColumns() . '
+        $query = 'select ' . self::getBookColumns() . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
-where books.id = ?');
-        $result->execute([$bookId]);
+where books.id = ?';
+        $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             return $book;
@@ -603,12 +721,18 @@ where books.id = ?');
         return null;
     }
 
+    /**
+     * Summary of getBookByDataId
+     * @param mixed $dataId
+     * @param mixed $database
+     * @return Book|null
+     */
     public static function getBookByDataId($dataId, $database = null)
     {
-        $result = parent::getDb($database)->prepare('select ' . self::getBookColumns() . ', data.name, data.format
+        $query = 'select ' . self::getBookColumns() . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
-where data.book = books.id and data.id = ?');
-        $result->execute([$dataId]);
+where data.book = books.id and data.id = ?';
+        $result = Database::query($query, [$dataId], $database);
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             $data = new Data($post, $book);
@@ -619,15 +743,18 @@ where data.book = books.id and data.id = ?');
         return null;
     }
 
+    /**
+     * Summary of getDataByBook
+     * @param Book $book
+     * @return array<Data>
+     */
     public static function getDataByBook($book)
     {
-        global $config;
-
         $out = [];
 
         $sql = 'select id, format, name from data where book = ?';
 
-        $ignored_formats = $config['cops_ignored_formats'];
+        $ignored_formats = Config::get('ignored_formats');
         if (count($ignored_formats) > 0) {
             $sql .= " and format not in ('"
             . implode("','", $ignored_formats)
@@ -635,8 +762,7 @@ where data.book = books.id and data.id = ?');
         }
 
         $database = $book->getDatabaseId();
-        $result = parent::getDb($database)->prepare($sql);
-        $result->execute([$book->id]);
+        $result = Database::query($sql, [$book->id], $database);
 
         while ($post = $result->fetchObject()) {
             array_push($out, new Data($post, $book));

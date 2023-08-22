@@ -13,26 +13,38 @@ use SebLucas\Cops\Calibre\Publisher;
 
 class PagePublisherDetail extends Page
 {
+    protected string $className = Publisher::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
-        $publisher = Publisher::getPublisherById($this->idGet, $this->getDatabaseId());
+        /** @var Publisher $instance */
+        $instance = Publisher::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
             $this->filterUri = '&p=' . $this->idGet;
-            $this->getFilters($publisher);
+            $this->getFilters($instance);
         } else {
-            $this->getEntries();
+            $this->getEntries($instance);
         }
-        $this->idPage = $publisher->getEntryId();
-        $this->title = $publisher->getTitle();
-        $this->currentUri = $publisher->getUri();
-        $this->parentTitle = localize("publishers.title");
-        $this->parentUri = $publisher->getParentUri();
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $this->parentUri = $instance->getParentUri();
     }
 
-    public function getEntries()
+    /**
+     * Summary of getEntries
+     * @param Publisher $instance
+     * @return void
+     */
+    public function getEntries($instance = null)
     {
         $booklist = new BookList($this->request);
-        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByPublisher($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }
 }

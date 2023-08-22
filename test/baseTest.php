@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
+require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
@@ -20,12 +20,11 @@ class BaseTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        global $config;
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
-    public function testAddURLParameter()
+    public function testAddURLParameter(): void
     {
         $this->assertEquals("?db=0", Format::addURLParam("?", "db", "0"));
         $this->assertEquals("?key=value&db=0", Format::addURLParam("?key=value", "db", "0"));
@@ -35,6 +34,8 @@ class BaseTest extends TestCase
     /**
      * FALSE is returned if the create_function failed (meaning there was a syntax error)
      * @dataProvider providerTemplate
+     * @param mixed $template
+     * @return void
      */
     public function testServerSideRender($template)
     {
@@ -62,30 +63,36 @@ class BaseTest extends TestCase
         unset($_COOKIE['template']);
     }
 
+    /**
+     * Summary of getTemplateData
+     * @param mixed $request
+     * @param mixed $templateName
+     * @return array<string, mixed>
+     */
     public function getTemplateData($request, $templateName)
     {
-        global $config;
-        return ["title"                 => $config['cops_title_default'],
+        return ["title"                 => Config::get('title_default'),
                 "version"               => Config::VERSION,
-                "opds_url"              => $config['cops_full_url'] . Config::ENDPOINT["feed"],
+                "opds_url"              => Config::get('full_url') . Config::ENDPOINT["feed"],
                 "customHeader"          => "",
                 "template"              => $templateName,
                 "server_side_rendering" => $request->render(),
                 "current_css"           => $request->style(),
-                "favico"                => $config['cops_icon'],
+                "favico"                => Config::get('icon'),
                 "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
     }
 
     /**
      * The function for the head of the HTML catalog
      * @dataProvider providerTemplate
+     * @param mixed $templateName
+     * @return void
      */
     public function testGenerateHeader($templateName)
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $request = new Request();
-        global $config;
-        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
+        $headcontent = file_get_contents(__DIR__ . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
         $data = $this->getTemplateData($request, $templateName);
@@ -95,6 +102,10 @@ class BaseTest extends TestCase
         $this->assertStringContainsString("</head>", $head);
     }
 
+    /**
+     * Summary of providerTemplate
+     * @return array<mixed>
+     */
     public function providerTemplate()
     {
         return [
@@ -104,14 +115,14 @@ class BaseTest extends TestCase
         ];
     }
 
-    public function testLocalize()
+    public function testLocalize(): void
     {
         $this->assertEquals("Authors", localize("authors.title"));
 
         $this->assertEquals("unknow.key", localize("unknow.key"));
     }
 
-    public function testLocalizeFr()
+    public function testLocalizeFr(): void
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
         $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -121,7 +132,7 @@ class BaseTest extends TestCase
         localize("authors.title", -1, true);
     }
 
-    public function testLocalizeUnknown()
+    public function testLocalizeUnknown(): void
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "aa";
         $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -133,6 +144,9 @@ class BaseTest extends TestCase
 
     /**
      * @dataProvider providerGetLangAndTranslationFile
+     * @param mixed $acceptLanguage
+     * @param mixed $result
+     * @return void
      */
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
@@ -145,6 +159,10 @@ class BaseTest extends TestCase
         localize("authors.title", -1, true);
     }
 
+    /**
+     * Summary of providerGetLangAndTranslationFile
+     * @return array<mixed>
+     */
     public function providerGetLangAndTranslationFile()
     {
         return [
@@ -160,6 +178,9 @@ class BaseTest extends TestCase
 
     /**
      * @dataProvider providerGetAcceptLanguages
+     * @param mixed $acceptLanguage
+     * @param mixed $result
+     * @return void
      */
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
@@ -172,6 +193,10 @@ class BaseTest extends TestCase
         localize("authors.title", -1, true);
     }
 
+    /**
+     * Summary of providerGetAcceptLanguages
+     * @return array<mixed>
+     */
     public function providerGetAcceptLanguages()
     {
         return [
@@ -185,42 +210,38 @@ class BaseTest extends TestCase
         ];
     }
 
-    public function testBaseFunction()
+    public function testBaseFunction(): void
     {
-        global $config;
-
         $this->assertFalse(Database::isMultipleDatabaseEnabled());
-        $this->assertEquals(["" => dirname(__FILE__) . "/BaseWithSomeBooks/"], Database::getDbList());
+        $this->assertEquals(["" => __DIR__ . "/BaseWithSomeBooks/"], Database::getDbList());
 
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::isMultipleDatabaseEnabled());
         $this->assertEquals("Some books", Database::getDbName(0));
         $this->assertEquals("One book", Database::getDbName(1));
-        $this->assertEquals($config['calibre_directory'], Database::getDbList());
+        $this->assertEquals(Config::get('calibre_directory'), Database::getDbList());
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
-    public function testCheckDatabaseAvailability_1()
+    public function testCheckDatabaseAvailability_1(): void
     {
         $this->assertTrue(Database::checkDatabaseAvailability(null));
     }
 
-    public function testCheckDatabaseAvailability_2()
+    public function testCheckDatabaseAvailability_2(): void
     {
-        global $config;
-
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -228,12 +249,10 @@ class BaseTest extends TestCase
      * @expectedException        Exception
      * @expectedExceptionMessage Database <1> not found.
      */
-    public function testCheckDatabaseAvailability_Exception1()
+    public function testCheckDatabaseAvailability_Exception1(): void
     {
-        global $config;
-
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/OneBook/"];
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
+                                              "One book" => __DIR__ . "/OneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);
@@ -241,7 +260,7 @@ class BaseTest extends TestCase
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -249,12 +268,10 @@ class BaseTest extends TestCase
      * @expectedException        Exception
      * @expectedExceptionMessage Database <0> not found.
      */
-    public function testCheckDatabaseAvailability_Exception2()
+    public function testCheckDatabaseAvailability_Exception2(): void
     {
-        global $config;
-
-        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/SomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Config::set('calibre_directory', ["Some books" => __DIR__ . "/SomeBooks/",
+                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);
@@ -262,7 +279,7 @@ class BaseTest extends TestCase
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
-        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 
@@ -271,7 +288,7 @@ class BaseTest extends TestCase
     more here :
     http://unicode.org/cldr/utility/transform.jsp?a=Latin-ASCII&b=%C3%80%C3%81%C3%82%C3%83%C3%84%C3%85%C3%87%C3%88%C3%89%C3%8A%C3%8B%C3%8C%C3%8D%C3%8E%C3%8F%C5%92%C3%92%C3%93%C3%94%C3%95%C3%96%C3%99%C3%9A%C3%9B%C3%9C%C3%9D%C3%A0%C3%A1%C3%A2%C3%A3%C3%A4%C3%A5%C3%A7%C3%A8%C3%A9%C3%AA%C3%AB%C3%AC%C3%AD%C3%AE%C3%AF%C5%93%C3%B0%C3%B2%C3%B3%C3%B4%C3%B5%C3%B6%C3%B9%C3%BA%C3%BB%C3%BC%C3%BD%C3%BF%C3%B1
     */
-    public function testNormalizeUtf8String()
+    public function testNormalizeUtf8String(): void
     {
         $this->assertEquals(
             "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn",
@@ -279,19 +296,21 @@ class BaseTest extends TestCase
         );
     }
 
-    public function testLoginEnabledWithoutCreds()
+    public function testLoginEnabledWithoutCreds(): void
     {
-        global $config;
-        $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
+        Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
         $this->assertFalse(Request::verifyLogin());
+
+        Config::set('basic_authentication', null);
     }
 
-    public function testLoginEnabledAndLoggingIn()
+    public function testLoginEnabledAndLoggingIn(): void
     {
-        global $config;
-        $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
+        Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
         $_SERVER['PHP_AUTH_USER'] = 'xxx';
         $_SERVER['PHP_AUTH_PW'] = 'secret';
         $this->assertTrue(Request::verifyLogin($_SERVER));
+
+        Config::set('basic_authentication', null);
     }
 }

@@ -9,14 +9,17 @@
 
 namespace SebLucas\Cops\Language;
 
+use SebLucas\Cops\Input\Config;
+
 class Translation
 {
     public const BASE_DIR = './lang';
+    /** @var string|null */
     protected $acceptLanguageHeader;
 
     /**
      * Summary of __construct
-     * @param string $acceptLanguageHeader from $_SERVER['HTTP_ACCEPT_LANGUAGE']
+     * @param string|null $acceptLanguageHeader from $_SERVER['HTTP_ACCEPT_LANGUAGE']
      */
     public function __construct($acceptLanguageHeader = null)
     {
@@ -26,8 +29,8 @@ class Translation
     /**
      * Get all accepted languages from the browser and put them in a sorted array
      * languages id are normalized : fr-fr -> fr_FR
-     * @param string $accept from $_SERVER['HTTP_ACCEPT_LANGUAGE']
-     * @return array of languages
+     * @param string|null $accept from $_SERVER['HTTP_ACCEPT_LANGUAGE']
+     * @return array<mixed> of languages
      */
     public function getAcceptLanguages($accept)
     {
@@ -74,15 +77,14 @@ class Translation
 
     /**
      * Find the best translation file possible based on the accepted languages
-     * @return array of language and language file
+     * @return array<mixed> of language and language file
      */
     public function getLangAndTranslationFile()
     {
-        global $config;
         $langs = [];
         $lang = 'en';
-        if (!empty($config['cops_language'])) {
-            $lang = $config['cops_language'];
+        if (!empty(Config::get('language'))) {
+            $lang = Config::get('language');
         } elseif (!empty($this->acceptLanguageHeader)) {
             $langs = $this->getAcceptLanguages($this->acceptLanguageHeader);
         }
@@ -104,10 +106,13 @@ class Translation
     /**
      * This method is based on this page
      * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
+     * @param string $phrase
+     * @param integer $count
+     * @param bool $reset
+     * @return string
      */
     public function localize($phrase, $count=-1, $reset=false)
     {
-        global $config;
         if ($count == 0) {
             $phrase .= '.none';
         }
@@ -153,17 +158,30 @@ class Translation
         return $phrase;
     }
 
+    /**
+     * Summary of useNormAndUp
+     * @return bool
+     */
     public static function useNormAndUp()
     {
-        global $config;
-        return $config ['cops_normalized_search'] == '1';
+        return Config::get('normalized_search') == '1';
     }
 
+    /**
+     * Summary of normalizeUtf8String
+     * @param string $s
+     * @return string
+     */
     public static function normalizeUtf8String($s)
     {
         return Transliteration::process($s);
     }
 
+    /**
+     * Summary of normAndUp
+     * @param string $s
+     * @return string
+     */
     public static function normAndUp($s)
     {
         return mb_strtoupper(self::normalizeUtf8String($s), 'UTF-8');

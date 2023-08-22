@@ -18,44 +18,37 @@ class Link
     public const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
     public const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
-    public static $endpoint = Config::ENDPOINT["index"];
-    public $href;
-    public $type;
+    public static string $endpoint = Config::ENDPOINT["index"];
+    public string $href;
+    public string $type;
+    /** @var string|null */
     public $rel;
+    /** @var string|null */
     public $title;
-    public $facetGroup;
-    public $activeFacet;
 
-    public function __construct($phref, $ptype, $prel = null, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false)
+    /**
+     * Summary of __construct
+     * @param string $phref uri including the endpoint for images, books etc.
+     * @param string $ptype link type in the OPDS catalog
+     * @param string|null $prel relation in the OPDS catalog
+     * @param string|null $ptitle title in the OPDS catalog and elsewhere
+     */
+    public function __construct($phref, $ptype, $prel = null, $ptitle = null)
     {
         $this->href = $phref;
         $this->type = $ptype;
         $this->rel = $prel;
         $this->title = $ptitle;
-        $this->facetGroup = $pfacetGroup;
-        $this->activeFacet = $pactiveFacet;
     }
 
-    public function hrefXhtml()
+    /**
+     * Summary of hrefXhtml
+     * @param string $endpoint
+     * @return string
+     */
+    public function hrefXhtml($endpoint = '')
     {
+        // Link()->href includes the endpoint here
         return $this->href;
-    }
-
-    public static function getScriptName()
-    {
-        $parts = explode('/', $_SERVER["SCRIPT_NAME"] ??  "/" . self::$endpoint);
-        return $parts[count($parts) - 1];
-    }
-
-    public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
-    {
-        if (!empty($database)) {
-            $params ??= [];
-            $params['db'] = $database;
-        }
-        if (!empty($params)) {
-            return Config::ENDPOINT[$endpoint] . "?" . http_build_query($params);
-        }
-        return Config::ENDPOINT[$endpoint];
     }
 }

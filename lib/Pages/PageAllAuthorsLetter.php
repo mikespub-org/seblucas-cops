@@ -9,9 +9,16 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllAuthorsLetter extends Page
 {
+    protected string $className = Author::class;
+
+    /**
+     * Summary of InitializeContent
+     * @return void
+     */
     public function InitializeContent()
     {
         $this->getEntries();
@@ -25,10 +32,15 @@ class PageAllAuthorsLetter extends Page
         $this->parentUri = "?page=".Author::PAGE_ALL;
     }
 
+    /**
+     * Summary of getEntries
+     * @return void
+     */
     public function getEntries()
     {
-        $this->entryArray = Author::getEntriesByFirstLetter($this->request, $this->idGet, $this->n, $this->getDatabaseId());
-        $this->totalNumber = Author::countEntriesByFirstLetter($this->request, $this->idGet, $this->getDatabaseId());
-        $this->sorted = Author::SQL_SORT;
+        $baselist = new BaseList($this->className, $this->request);
+        $this->entryArray = $baselist->getEntriesByFirstLetter($this->idGet, $this->n);
+        $this->totalNumber = $baselist->countEntriesByFirstLetter($this->idGet);
+        $this->sorted = $baselist->orderBy;
     }
 }

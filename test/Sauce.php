@@ -65,7 +65,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         //)
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         if (isset($_SERVER["TRAVIS_JOB_NUMBER"])) {
             $caps = $this->getDesiredCapabilities();
@@ -77,7 +77,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         parent::setUp();
     }
 
-    public function setUpPage()
+    public function setUpPage(): void
     {
         if (isset($_SERVER["TRAVIS_JOB_NUMBER"])) {
             $this->url('http://127.0.0.1:8080/index.php');
@@ -105,34 +105,34 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         return mb_detect_encoding($string) . "X" . $ascii;
     }
 
-    // public function testTitle()
+    // public function testTitle(): void
     // {
-        // $driver = $this;
-        // $title_test = function($value) use ($driver) {
-            // $text = $driver->byXPath('//h1')->text ();
-            // return $text == $value;
-        // };
+    // $driver = $this;
+    // $title_test = function($value) use ($driver) {
+    // $text = $driver->byXPath('//h1')->text ();
+    // return $text == $value;
+    // };
 
-        // $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
-        // $author->click ();
+    // $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
+    // $author->click ();
 
-        // $this->spinAssert("Author Title", $title_test, [ "AUTHORS" ]);
+    // $this->spinAssert("Author Title", $title_test, [ "AUTHORS" ]);
     // }
 
-    // public function testCog()
+    // public function testCog(): void
     // {
-        // $cog = $this->byId ("searchImage");
+    // $cog = $this->byId ("searchImage");
 
-        // $search = $this->byName ("query");
-        // $this->assertFalse ($search->displayed ());
+    // $search = $this->byName ("query");
+    // $this->assertFalse ($search->displayed ());
 
-        // $cog->click ();
+    // $cog->click ();
 
-        // $search = $this->byName ("query");
-        // $this->assertTrue ($search->displayed ());
+    // $search = $this->byName ("query");
+    // $this->assertTrue ($search->displayed ());
     // }
 
-    public function testFilter()
+    public function testFilter(): void
     {
         $driver = $this;
         $title_test = function ($value) use ($driver) {
@@ -209,12 +209,12 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         $this->spinAssert("Home Title", $title_test, [ "SEARCH RESULT FOR *" . $out . "*" ]);
     }
 
-    public function testSearchWithoutAccentuatedCharacters()
+    public function testSearchWithoutAccentuatedCharacters(): void
     {
         $this->normalSearch("ali", "ALI");
     }
 
-    public function testSearchWithAccentuatedCharacters()
+    public function testSearchWithAccentuatedCharacters(): void
     {
         if ($this->getBrowser() == "Android") {
             $this->markTestIncomplete();

@@ -10,13 +10,17 @@ namespace SebLucas\Template;
 
 class doT
 {
-    public $functionBody;
-    /**
-     * @var callable
-     */
+    public string $functionBody;
+    /** @var callable */
     private $functionCode;
+    /** @var array<mixed> */
     public $def;
 
+    /**
+     * Summary of resolveDefs
+     * @param mixed $block
+     * @return string|null
+     */
     public function resolveDefs($block)
     {
         $me = $this;
@@ -35,6 +39,11 @@ class doT
         }, $block);
     }
 
+    /**
+     * Summary of handleDotNotation
+     * @param string $string
+     * @return string|null
+     */
     public function handleDotNotation($string)
     {
         $out = preg_replace("/(\w+)\.(.*?)([\s,\)])/", "\$$1[\"$2\"]$3", $string);
@@ -46,6 +55,12 @@ class doT
         return $out;
     }
 
+    /**
+     * Summary of template
+     * @param mixed $string
+     * @param mixed $def
+     * @return \Closure
+     */
     public function template($string, $def)
     {
         $me = $this;
@@ -115,6 +130,11 @@ class doT
         };
     }
 
+    /**
+     * Summary of execute
+     * @param mixed $data
+     * @return mixed
+     */
     public function execute($data)
     {
         try {
