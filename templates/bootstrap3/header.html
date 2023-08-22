@@ -23,14 +23,25 @@
       </div>
     </div>
   </nav>
+  {{? it.containsBook != 0}}
   <nav class="navbar bg-body-tertiary p-0" data-bs-theme="dark">
       <ul name="sortbar" class="nav nav-pills" style="font-size: 0.8rem;">
         <li class="nav-item sm">
-          <a class="nav-link" href="#">Sort menu 1</a>
+          <a class="nav-link p-1{{? it.sorted=='title' }} active{{?}}" href="{{=str_format(it.sorturl, 'title')}}"><i class="bi-sort-alpha-down"></i>Title</a>
         </li>
         <li class="nav-item sm">
-          <a class="nav-link" href="#">Sort menu 2</a>
+          <a class="nav-link p-1{{? it.sorted=='author' }} active{{?}}" href="{{=str_format(it.sorturl, 'author')}}"><i class="bi-sort-alpha-down"></i>Author</a>
+        </li>
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted=='pubdate' }} active{{?}}" href="{{=str_format(it.sorturl, 'pubdate')}}"><i class="bi-sort-numeric-down"></i>Published</a>
+        </li>
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted=='rating' }} active{{?}}" href="{{=str_format(it.sorturl, 'rating')}}"><i class="bi-sort-numeric-up"></i>Rating</a>
+        </li>
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted=='timestamp'||it.sorted=='timestamp desc' }} active{{?}}" href="{{=str_format(it.sorturl, 'timestamp')}}"><i class="bi-sort-numeric-up"></i>Added</a>
         </li>
       </ul>
   </nav>
+  {{?}}
 </header>
