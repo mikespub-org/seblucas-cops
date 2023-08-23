@@ -1,11 +1,11 @@
 <div class="card mb-3">
-    <div class="row g-0">
-        <div class="col-md-4" id="cover" name="cover">
+    <div class="row">
+        <div class="col-4" id="cover" name="cover">
             {{? it.book.hasCover == 1}}
                 <img class="img-fluid rounded-start" src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
             {{?}}
         </div>
-        <div class="col-md-8" id="book-info">
+        <div class="col-8" id="book-info">
             <h1>{{=htmlspecialchars (it.title)}}</h1>
             <h4>{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}</h4>
             {{? it.book.pubDate != ""}}
