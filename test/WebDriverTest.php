@@ -2,6 +2,13 @@
 /**
  * COPS (Calibre OPDS PHP Server) test file
  *
+ * This setup assumes that you have a local PHP webserver that serves COPS under /cops/
+ * on the same system (*) as the docker host where the selenium container will run.
+ *
+ * You should adapt the $serverUrl below if you have a different configuration.
+ *
+ * (*) for development this can be a default WSL2 Linux server on your Win laptop ;-)
+ *
  * This test still uses a simulated WebDriverTestCase from (sauce/sausage)
  * to minimize the changes and see if it works...
  *
@@ -17,11 +24,8 @@ namespace SebLucas\Cops\Tests;
 
 require_once __DIR__ . '/config_test.php';
 //use PHPUnit\Framework\TestCase;
-use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Facebook\WebDriver\Cookie;
 use Facebook\WebDriver\WebDriverBy;
-use Facebook\WebDriver\WebDriverDimension;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Exception;
 
@@ -115,6 +119,8 @@ class WebDriverTest extends WebDriverTestCase
     /**
      * Summary of testScreenshots
      * @dataProvider providerCombinations
+     * @param string $name
+     * @param string $url
      * @param string $template
      * @param int $width
      * @param int $height
@@ -128,6 +134,10 @@ class WebDriverTest extends WebDriverTestCase
         self::$driver->takeScreenshot("{$name}.{$template}-{$width}x{$height}.png");
     }
 
+    /**
+     * Summary of providerPages
+     * @return array<mixed>
+     */
     protected function providerPages()
     {
         return [
@@ -222,7 +232,7 @@ class WebDriverTest extends WebDriverTestCase
      * @param string $string
      * @return string
      */
-    public function string_to_ascii($string)
+    protected function string_to_ascii($string)
     {
         $ascii = null;
 
@@ -320,7 +330,7 @@ class WebDriverTest extends WebDriverTestCase
      * @param string $out
      * @return void
      */
-    public function normalSearch($src, $out)
+    protected function normalSearch($src, $out)
     {
         $driver = $this;
         $title_test = function ($value) use ($driver) {
