@@ -43,7 +43,7 @@
                 <a class="btn btn-sm btn-info" role="button" href="{{=tag.url}}"><i class="bi-tag"></i> {{=htmlspecialchars (tag.name)}}</a>
                 {{~}}
             </div>
-        {{?}}
+            {{?}}
             {{? it.book.identifiers != ""}}
             <div class="more-info mb-2">
                 {{~it.book.identifiers:id:i}}
@@ -51,6 +51,9 @@
                 {{~}}
             </div>
             {{?}}
+            {{~it.book.customcolumns_preview :column:column_index}}
+            <p><span class="fw-bold">{{=column.customColumnType.columnTitle}}</span>: {{=column.htmlvalue}}</p>
+            {{~}}
         </div>
     </div>
 </div>
