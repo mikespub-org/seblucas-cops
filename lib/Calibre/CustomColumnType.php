@@ -139,6 +139,7 @@ abstract class CustomColumnType
      */
     public function getContentType()
     {
+        // @checkme convert "csv" back to "text" here?
         return $this->datatype;
     }
 
@@ -148,7 +149,7 @@ abstract class CustomColumnType
      */
     public function getLinkArray()
     {
-        return [ new LinkNavigation($this->getUri(), null, null, $this->getDatabaseId()) ];
+        return [ new LinkNavigation($this->getUri(), "section", null, $this->getDatabaseId()) ];
     }
 
     /**
@@ -195,9 +196,9 @@ abstract class CustomColumnType
         $pid = $this->getEntryId();
         $pcontent = $this->getContent($pcount);
         // @checkme convert "csv" back to "text" here?
-        $pcontentType = $this->datatype;
-        $database = $this->databaseId;
-        $plinkArray = [new LinkNavigation($this->getUri(), null, null, $database)];
+        $pcontentType = $this->getContentType();
+        $database = $this->getDatabaseId();
+        $plinkArray = $this->getLinkArray();
         $pclass = "";
 
         return new Entry($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $database, $pclass, $pcount);

@@ -341,7 +341,7 @@ class BaseList
                 $this->className::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.$page.'&id='. rawurlencode($post->groupid), null, null, $this->databaseId)],
+                [new LinkNavigation('?page='.$page.'&id='. rawurlencode($post->groupid), "subsection", null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count
@@ -562,7 +562,7 @@ class BaseList
             $id,
             str_format(localize($numberOfString, $count), $count),
             "text",
-            [ new LinkNavigation("?page=".$pageId, null, null, $database)],
+            [ new LinkNavigation("?page=".$pageId, "section", null, $database)],
             $database,
             "",
             $count

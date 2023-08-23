@@ -134,7 +134,7 @@ abstract class Base
      */
     public function getLinkArray()
     {
-        return [ new LinkFeed($this->getUri(), null, null, $this->getDatabaseId()) ];
+        return [ new LinkFeed($this->getUri(), "subsection", null, $this->getDatabaseId()) ];
     }
 
     /**

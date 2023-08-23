@@ -87,7 +87,7 @@ class BookTest extends TestCase
         $this->assertEquals("Alphabetical index of the 15 books", $entryAllBooks->content);
 
         $entryRecentBooks = $entryArray [1];
-        $this->assertEquals("50 most recent books", $entryRecentBooks->content);
+        $this->assertEquals("15 most recent books", $entryRecentBooks->content);
     }
 
     public function testGetCountRecent(): void

@@ -64,8 +64,8 @@ class PageTest extends TestCase
         $this->assertEquals("Alphabetical index of the 15 books", $currentPage->entryArray [6]->content);
         $this->assertEquals(15, $currentPage->entryArray [6]->numberOfElement);
         $this->assertEquals("Recent additions", $currentPage->entryArray [7]->title);
-        $this->assertEquals("50 most recent books", $currentPage->entryArray [7]->content);
-        $this->assertEquals(50, $currentPage->entryArray [7]->numberOfElement);
+        $this->assertEquals("15 most recent books", $currentPage->entryArray [7]->content);
+        $this->assertEquals(15, $currentPage->entryArray [7]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -85,7 +85,7 @@ class PageTest extends TestCase
         $this->assertEquals("All books", $currentPage->entryArray [1]->title);
         $this->assertEquals("Alphabetical index of the 15 books", $currentPage->entryArray [1]->content);
         $this->assertEquals("Recent additions", $currentPage->entryArray [2]->title);
-        $this->assertEquals("50 most recent books", $currentPage->entryArray [2]->content);
+        $this->assertEquals("15 most recent books", $currentPage->entryArray [2]->content);
         $this->assertFalse($currentPage->containsBook());
 
         Config::set('ignored_categories', []);

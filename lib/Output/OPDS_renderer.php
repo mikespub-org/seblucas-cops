@@ -162,7 +162,11 @@ class OPDSRenderer
         $this->getXmlStream()->endElement();
         $link = new LinkNavigation("", "start", "Home");
         $this->renderLink($link);
-        $link = new LinkNavigation("?" . $request->query(), "self");
+        if ($page->containsBook()) {
+            $link = new LinkFeed("?" . $request->query(), "self");
+        } else {
+            $link = new LinkNavigation("?" . $request->query(), "self");
+        }
         $this->renderLink($link);
         $urlparam = "?";
         $urlparam = Format::addDatabaseParam($urlparam, $database);
