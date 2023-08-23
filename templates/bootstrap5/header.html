@@ -24,6 +24,10 @@
     </div>
   </nav>
   {{? it.containsBook != 0 || it.filters}}
+  <script>
+    /* Add submenu class to body to give extra spacing */
+    document.body.classList.add('submenu');
+  </script>
   <nav class="navbar bg-body-tertiary p-0" data-bs-theme="dark">
       <ul name="2-bar" class="nav nav-pills" style="font-size: 0.8rem;">
         {{? it.containsBook != 0 }}
