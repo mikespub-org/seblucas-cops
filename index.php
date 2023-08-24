@@ -27,7 +27,7 @@ $request = new Request();
 $page     = $request->get('page');
 $query    = $request->get('query');
 $qid      = $request->get('id');
-$n        = $request->get('n', '1');
+$n        = $request->get('n', 1);
 $database = $request->get('db');
 
 // Use the configured home page if needed

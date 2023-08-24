@@ -101,9 +101,10 @@ class CustomColumn extends Category
 
     /**
      * Summary of getClassName
+     * @param string|null $className
      * @return string
      */
-    public function getClassName()
+    public function getClassName($className = null)
     {
         return $this->customColumnType->getTitle();
     }

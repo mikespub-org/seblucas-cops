@@ -42,9 +42,9 @@
           </div>
           <div class="panel-body">
             <div class="cover-image">
-            {{? entry.book.hasCover == 1}}
-                <a href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}">
-                    <img src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+            {{? entry.thumbnailurl }}
+                <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">
+                    <img src="{{=entry.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
                 </a>
             {{?}}
             </div>

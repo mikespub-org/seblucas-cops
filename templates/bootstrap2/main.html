@@ -64,9 +64,9 @@
     {{~it.entries:entry:idx}}
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
             <div class="cover-image">
-                {{? entry.book.hasCover == 1}}
+                {{? entry.thumbnailurl }}
                     <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
-                        <img class ="img-responsive" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+                        <img class ="img-responsive" src="{{=entry.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
                     </a>
                 {{?}}
             </div>

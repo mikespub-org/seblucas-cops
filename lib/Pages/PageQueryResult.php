@@ -65,6 +65,7 @@ class PageQueryResult extends Page
                 break;
             case self::SCOPE_AUTHOR :
                 $baselist = new BaseList(Author::class, $this->request, $database, $numberPerPage);
+                // we need to repeat the query x 2 here because Author checks both name and sort fields
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
             case self::SCOPE_SERIES :
