@@ -118,6 +118,15 @@ class BookEPub extends EPub
             if ($version == 3) {
                 $property = '';
                 $id = $node->getAttrib('id');
+                if (empty($id)) {
+                    $as = $name;
+                    $node->setAttrib('opf:file-as', $as);
+                    if ($rolefix) {
+                        $node->setAttrib('opf:role', 'aut');
+                    }
+                    $authors[$as] = $name;
+                    continue;
+                }
                 // Check if role is aut
                 // <meta refines="#create1" scheme="marc:relators" property="role">aut</meta>
                 $metaNodes = $this->xpath->query('//opf:metadata/opf:meta[@refines="#' . $id . '"]');
@@ -133,7 +142,7 @@ class BookEPub extends EPub
                             break;
                     }
                 }
-                if ($property != 'aut') {
+                if (count($metaNodes) > 0 && $property != 'aut') {
                     continue;
                 }
             } else {
@@ -177,6 +186,11 @@ class BookEPub extends EPub
         // <meta content="2014-08-03T18:01:35" name="amanuensis:xhtml-creation-date" />
         if (empty($res)) {
             $res = $this->getset('opf:meta', $date, 'name', 'amanuensis:xhtml-creation-date', 'content');
+        }
+
+        // <dc:date>2014-08-03T16:01:40Z</dc:date>
+        if (empty($res)) {
+            $res = $this->getset('dc:date', $date);
         }
 
         return $res;

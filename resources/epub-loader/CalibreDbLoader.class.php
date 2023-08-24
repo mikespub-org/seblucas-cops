@@ -279,9 +279,9 @@ class CalibreDbLoader
             $sql .= ':id, ';
         }
         $sql .= ':title, :sort, :timestamp, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
-        $timeStamp = BookInfos::GetTimeStamp($inBookInfo->mTimeStamp);
-        $pubDate = BookInfos::GetTimeStamp(empty($inBookInfo->mCreationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mCreationDate);
-        $lastModified = BookInfos::GetTimeStamp(empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mModificationDate);
+        $timeStamp = BookInfos::GetSqlDate($inBookInfo->mTimeStamp);
+        $pubDate = BookInfos::GetSqlDate(empty($inBookInfo->mCreationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mCreationDate);
+        $lastModified = BookInfos::GetSqlDate(empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mModificationDate);
         $hasCover = empty($inBookInfo->mCover) ? 0 : 1;
         if (empty($inBookInfo->mCover)) {
             $error = 'Warning: Cover not found';

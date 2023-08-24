@@ -144,7 +144,7 @@ class BookInfos
      *
      * @return ?string Sql formated date
      */
-    protected function GetSqlDate($inDate)
+    public static function GetSqlDate($inDate)
     {
         if (empty($inDate)) {
             return null;
