@@ -13,6 +13,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\PageQueryResult;
@@ -113,27 +114,35 @@ class BookList
     {
         $nBooks = $this->getBookCount();
         $result = [];
+        if (!empty(Config::get('titles_split_first_letter'))) {
+            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "section", null, $this->databaseId)];
+        } elseif (!empty(Config::get('titles_split_publication_year'))) {
+            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "section", null, $this->databaseId)];
+        } else {
+            $linkArray = [new LinkFeed('?page='.Book::PAGE_ALL, null, null, $this->databaseId)];
+        }
         $entry = new Entry(
             localize('allbooks.title'),
             Book::PAGE_ID,
             str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
             'text',
-            [new LinkNavigation('?page='.Book::PAGE_ALL, null, null, $this->databaseId)],
+            $linkArray,
             $this->databaseId,
             '',
             $nBooks
         );
         array_push($result, $entry);
         if (Config::get('recentbooks_limit') > 0) {
+            $count = ($nBooks > Config::get('recentbooks_limit')) ? Config::get('recentbooks_limit') : $nBooks;
             $entry = new Entry(
                 localize('recent.title'),
                 PageId::ALL_RECENT_BOOKS_ID,
-                str_format(localize('recent.list'), Config::get('recentbooks_limit')),
+                str_format(localize('recent.list'), $count),
                 'text',
-                [ new LinkNavigation('?page='.PageId::ALL_RECENT_BOOKS, null, null, $this->databaseId)],
+                [ new LinkFeed('?page='.PageId::ALL_RECENT_BOOKS, 'http://opds-spec.org/sort/new', null, $this->databaseId)],
                 $this->databaseId,
                 '',
-                Config::get('recentbooks_limit')
+                $count
             );
             array_push($result, $entry);
         }
@@ -325,7 +334,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
                 Book::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.$page.'&id='. rawurlencode($post->groupid), null, null, $this->databaseId)],
+                [new LinkFeed('?page='.$page.'&id='. rawurlencode($post->groupid), "subsection", null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

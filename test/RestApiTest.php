@@ -7,6 +7,8 @@
  * @author     mikespub
  */
 
+namespace SebLucas\Cops\Tests;
+
 use SebLucas\Cops\Output\RestApi;
 
 require_once __DIR__ . '/config_test.php';

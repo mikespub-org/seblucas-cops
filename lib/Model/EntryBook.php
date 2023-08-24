@@ -20,7 +20,7 @@ class EntryBook extends Entry
      * @param string $pid
      * @param string $pcontent
      * @param string $pcontentType
-     * @param Link[] $plinkArray
+     * @param array<LinkEntry|LinkFeed> $plinkArray
      * @param Book $pbook
      */
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook)
