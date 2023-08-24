@@ -195,7 +195,10 @@ class Page
     public function getTopCountEntries()
     {
         if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
-            array_push($this->entryArray, Author::getCount($this->databaseId));
+            $author = Author::getCount($this->databaseId);
+            if (!is_null($author)) {
+                array_push($this->entryArray, $author);
+            }
         }
         if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
             $series = Serie::getCount($this->databaseId);
