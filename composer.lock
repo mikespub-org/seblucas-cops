@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "64ce781a330fea52f83f1f715d2ff3b4",
+    "content-hash": "14186141f9d1c141e5c9980eeaaddb99",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -749,12 +749,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-webdriver/php-webdriver.git",
-                "reference": "7b00cc1d929a72797fc636e9dcc0b212fa72089f"
+                "reference": "a16a2ba4a30d758661e735ba7819f9bc23e00cad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/7b00cc1d929a72797fc636e9dcc0b212fa72089f",
-                "reference": "7b00cc1d929a72797fc636e9dcc0b212fa72089f",
+                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/a16a2ba4a30d758661e735ba7819f9bc23e00cad",
+                "reference": "a16a2ba4a30d758661e735ba7819f9bc23e00cad",
                 "shasum": ""
             },
             "require": {
@@ -808,7 +808,7 @@
                 "issues": "https://github.com/php-webdriver/php-webdriver/issues",
                 "source": "https://github.com/php-webdriver/php-webdriver/tree/main"
             },
-            "time": "2023-08-22T11:51:23+00:00"
+            "time": "2023-08-24T09:03:38+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
