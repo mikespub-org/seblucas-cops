@@ -307,6 +307,7 @@ $config['cops_thumbnail_handling'] = '';
 
 /*
  * Default thumbnail to use in OPDS and HTML catalog if none is available
+ * Set to '' if you don't want to use some default thumbnail as fallback
  */
 $config['cops_thumbnail_default'] = 'images/icons/icon144.png';
 
@@ -417,6 +418,11 @@ $config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];
 $config['cops_html_filter_links'] = ['author', 'language', 'publisher', 'rating', 'series', 'tag'];
 
 /*
+ * Number of filter links to show per category in HTML page detail
+ */
+$config['cops_html_filter_limit'] = '8';
+
+/*
  * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag in OPDS catalog (using facets)
  * Note: this will only work if your e-reader supports facets in OPDS feeds, like Thorium Reader for example
  * See https://specs.opds.io/opds-1.2.html#4-facets for specification details
@@ -424,3 +430,8 @@ $config['cops_html_filter_links'] = ['author', 'language', 'publisher', 'rating'
  * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag']
  */
 $config['cops_opds_filter_links'] = ['author', 'language', 'rating', 'tag'];
+
+/*
+ * Number of filter links to show per category in OPDS catalog
+ */
+$config['cops_opds_filter_limit'] = '8';

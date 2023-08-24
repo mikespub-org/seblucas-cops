@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+namespace SebLucas\Cops\Tests;
+
 use SebLucas\Cops\Output\OPDSRenderer;
 
 require_once __DIR__ . '/config_test.php';

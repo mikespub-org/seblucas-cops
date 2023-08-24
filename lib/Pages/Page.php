@@ -105,7 +105,7 @@ class Page
         $this->request = $request ?? new Request();
         $this->idGet = $this->request->get('id');
         $this->query = $this->request->get('query');
-        $this->n = $this->request->get('n', '1');  // use default here
+        $this->n = $this->request->get('n', 1);  // use default here
         $this->numberPerPage = $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->get('db');
@@ -330,7 +330,8 @@ class Page
     public function getSortOptions()
     {
         return [
-            'title' => localize("bookword.title"),
+            //'title' => localize("bookword.title"),
+            'title' => localize("sort.titles"),
             'timestamp' => localize("recent.title"),
             'author' => localize("authors.title"),
             'pubdate' => localize("pubdate.title"),
@@ -350,12 +351,19 @@ class Page
     {
         if ($this->request->isFeed()) {
             $filterLinks = Config::get('opds_filter_links');
+            $instance->setFilterLimit(Config::get('opds_filter_limit'));
         } else {
             $filterLinks = Config::get('html_filter_links');
+            $instance->setFilterLimit(Config::get('html_filter_limit'));
         }
         $this->entryArray = [];
         if (empty($filterLinks)) {
             return;
+        }
+        // we use g[a]=2 to indicate we want to paginate in facetgroup Authors
+        $paging = $this->request->get('g');
+        if (!is_array($paging)) {
+            $paging = [];
         }
         if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
             array_push($this->entryArray, new Entry(
@@ -368,7 +376,8 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getAuthors());
+            $paging['a'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getAuthors($paging['a']));
         }
         if (!($instance instanceof Language) && in_array('language', $filterLinks)) {
             array_push($this->entryArray, new Entry(
@@ -381,7 +390,8 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getLanguages());
+            $paging['l'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getLanguages($paging['l']));
         }
         if (!($instance instanceof Publisher) && in_array('publishers', $filterLinks)) {
             array_push($this->entryArray, new Entry(
@@ -394,7 +404,8 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getPublishers());
+            $paging['p'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getPublishers($paging['p']));
         }
         if (!($instance instanceof Rating) && in_array('rating', $filterLinks)) {
             array_push($this->entryArray, new Entry(
@@ -407,7 +418,8 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getRatings());
+            $paging['r'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getRatings($paging['r']));
         }
         if (!($instance instanceof Serie) && in_array('series', $filterLinks)) {
             array_push($this->entryArray, new Entry(
@@ -420,7 +432,8 @@ class Page
                 "",
                 ""
             ));
-            $this->entryArray = array_merge($this->entryArray, $instance->getSeries());
+            $paging['s'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getSeries($paging['s']));
         }
         if (in_array('tag', $filterLinks)) {
             array_push($this->entryArray, new Entry(
@@ -433,16 +446,18 @@ class Page
                 "",
                 ""
             ));
+            $paging['t'] ??= 1;
             // special case if we want to find other tags applied to books where this tag applies
             if ($instance instanceof Tag) {
                 $instance->limitSelf = false;
             }
-            $this->entryArray = array_merge($this->entryArray, $instance->getTags());
+            $this->entryArray = array_merge($this->entryArray, $instance->getTags($paging['t']));
         }
         /**
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
         if (!($instance instanceof CustomColumn) && in_array('custom', $filterLinks)) {
             $columns = CustomColumnType::getAllCustomColumns($this->getDatabaseId());
+            $paging['c'] ??= [];
             foreach ($columns as $label => $column) {
                 $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());
                 array_push($this->entryArray, new Entry(
@@ -455,6 +470,7 @@ class Page
                     "",
                     ""
                 ));
+                $paging['c'][$column['id']] ??= 1;
                 $entries = $instance->getCustomValues($customType);
             }
         }

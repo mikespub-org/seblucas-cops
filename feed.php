@@ -19,6 +19,8 @@ $query = $request->get('query');
 if ($query) {
     $page = PageId::OPENSEARCH_QUERY;
 }
+// @todo handle special case of OPDS not expecting filter while HTML does better
+$request->set('filter', null);
 
 if (Config::get('fetch_protect') == '1') {
     session_start();

@@ -19,9 +19,9 @@
     {{??}}
     <article class="books">
             <span class="cover">
-            {{? entry.book.hasCover == 1}}
-                <a class="fancycover" href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}>
-                    <img src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+            {{? entry.thumbnailurl }}
+                <a class="fancycover" href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}>
+                    <img src="{{=entry.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
                 </a>
             {{?}}
             </span>
