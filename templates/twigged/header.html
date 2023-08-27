@@ -1,0 +1,79 @@
+<div class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      {{? it.parenturl != ""}}
+        <a class="navbar-brand" href="{{=it.parenturl}}">{{=it.fullTitle}}</a>
+      {{??}}
+        <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
+      {{?}}
+      {{? it.filters }}
+        <!-- show current filter(s) -->
+        {{~it.filters:filter:idx}}
+        <a class="navbar-brand" href="{{=filter.navlink}}&filter=1" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=filter.class}} {{=filter.title}}">
+          <span class="glyphicon glyphicon-filter"></span>
+        </a>
+        {{~}}
+      {{??}}
+        {{? it.filterurl }}
+          <!-- show links to filter -->
+          {{? it.containsBook == 0 }}
+            <a class="navbar-brand" href="{{=it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.bookwordTitle}}">
+              <span class="glyphicon glyphicon-list"></span>
+            </a>
+          {{??}}
+            <a class="navbar-brand" href="{{=it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.linksTitle}}">
+              <span class="glyphicon glyphicon-link"></span>
+            </a>
+          {{?}}
+        {{?}}
+      {{?}}
+    </div>
+    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search">
+      <div class="input-group">
+        <input id="queryInput" type="text" class="form-control" placeholder="{{=it.c.i18n.searchAlt}}" name="query">
+        <div class="input-group-btn">
+          <button id="searchButton" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+      </div>
+    </form>     
+    <div class="collapse navbar-collapse">
+      {{? it.containsBook != 0}}
+      <!-- show sort options -->
+      <ul class="nav navbar-nav">
+        <li><a href="{{=str_format(it.sorturl, "title")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.title}}">
+          <span class="glyphicon glyphicon-font"></span><span class="glyphicon glyphicon-sort-by-alphabet"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "author")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.author}}">
+          <span class="glyphicon glyphicon-user"></span><span class="glyphicon glyphicon-sort-by-alphabet"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "pubdate")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.pubdate}}">
+          <span class="glyphicon glyphicon-calendar"></span><span class="glyphicon glyphicon-sort-by-order-alt"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "rating")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.rating}}">
+          <span class="glyphicon glyphicon-star"></span><span class="glyphicon glyphicon-sort-by-order-alt"></span>
+        </a></li>
+        <li><a href="{{=str_format(it.sorturl, "timestamp")}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.sortoptions.timestamp}}">
+          <span class="glyphicon glyphicon-time"></span><span class="glyphicon glyphicon-sort-by-order-alt"></span>
+        </a></li>
+      </ul>
+      {{?}}
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.defaultTemplate}}">
+          <span class="glyphicon glyphicon-picture"></span><span class="hidden-sm hidden-md"> {{=it.c.i18n.defaultTemplate}}</span>
+        </a></li>
+        <li><a href="{{=it.customizeurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.customizeTitle}}">
+          <span class="glyphicon glyphicon-wrench"></span><span class="hidden-sm hidden-md"> {{=it.c.i18n.customizeTitle}}</span>
+        </a></li>
+        <li><a href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.aboutTitle}}">
+          <span class="glyphicon glyphicon-info-sign"></span><span class="hidden-sm hidden-md"> {{=it.c.i18n.aboutTitle}}</span>
+        </a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
