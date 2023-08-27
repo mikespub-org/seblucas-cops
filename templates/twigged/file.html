@@ -12,22 +12,22 @@
     <meta name="msapplication-TileColor" content="#123456"/>
     <meta name="msapplication-TileImage" content="./images/icons/icon144.png"/>
 
-    <title>{{=it.title}}</title>
+    <title>{{it.title}}</title>
 
-    <script type="text/javascript" src="vendor/npm-asset/jquery/dist/jquery.min.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="vendor/npm-asset/js-cookie/src/js.cookie.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/simonpioli/sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
-{{? it.server_side_rendering == 0}}
-    <script type="text/javascript" src="vendor/npm-asset/magnific-popup/dist/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
-    <link rel="stylesheet" type="text/css" href="vendor/npm-asset/magnific-popup/dist/magnific-popup.css?v={{=it.version}}" media="screen" />
-    <script type="text/javascript" src="vendor/npm-asset/dot/doT.min.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="vendor/npm-asset/corejs-typeahead/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
-{{?}}
-    <script type="text/javascript" src="vendor/npm-asset/lru-fast/lru.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/npm-asset/jquery/dist/jquery.min.js?v={{it.version}}"></script>
+    <script type="text/javascript" src="vendor/npm-asset/js-cookie/src/js.cookie.js?v={{it.version}}"></script>
+    <script type="text/javascript" src="resources/simonpioli/sortelements/jquery.sortElements.js?v={{it.version}}"></script>
+{% if it.server_side_rendering == 0 %}
+    <script type="text/javascript" src="vendor/npm-asset/magnific-popup/dist/jquery.magnific-popup.min.js?v={{it.version}}"></script>
+    <link rel="stylesheet" type="text/css" href="vendor/npm-asset/magnific-popup/dist/magnific-popup.css?v={{it.version}}" media="screen" />
+    <script type="text/javascript" src="vendor/npm-asset/dot/doT.min.js?v={{it.version}}"></script>
+    <script type="text/javascript" src="vendor/npm-asset/corejs-typeahead/dist/typeahead.bundle.min.js?v={{it.version}}"></script>
+{% endif %}
+    <script type="text/javascript" src="vendor/npm-asset/lru-fast/lru.js?v={{it.version}}"></script>
     <script type="text/javascript" src="templates/bootstrap2/scripts/cops.js"></script>
     <script type="text/javascript" src="util.js"></script>
-    <link rel="related" href="{{=it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{=it.title}}" />
-    <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
+    <link rel="related" href="{{it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{it.title}}" />
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{{it.favico}}" />
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="vendor/npm-asset/bootstrap/dist/css/bootstrap.min.css">
@@ -200,11 +200,11 @@
     </style>
     <link rel="stylesheet" href="templates/bootstrap2/styles/typeahead.css">
 
-{{? it.server_side_rendering == 0}}
+{% if it.server_side_rendering == 0 %}
     <script type="text/javascript">
         $(document).ready(function() {
-            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}");
+            //initiateAjax ("{{it.getjson_url|raw}}", "{{it.template}}");
         });
     </script>
-{{?}}
+{% endif %}
 </head>

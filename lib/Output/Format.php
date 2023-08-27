@@ -147,6 +147,18 @@ class Format
     }
 
     /**
+     * Summary of serverTwigRender
+     * @param \Twig\Environment $twig
+     * @param mixed $data
+     * @param mixed $theme
+     * @return bool|string|null
+     */
+    public static function serverTwigRender($twig, $data, $theme = 'default')
+    {
+        return $twig->render('page.html', ['it' => $data]);
+    }
+
+    /**
      * Summary of xml2xhtml
      * @param string $xml
      * @return string|null

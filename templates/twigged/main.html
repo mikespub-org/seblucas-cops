@@ -1,115 +1,115 @@
 <div class="container-fluid">
-{{? it.page == 13 || it.page == 16}}
-    {{? it.page == 13}}
-        {{#def.bookdetail}}
-    {{??}}
-        {{= it.fullhtml}}
-    {{?}}
-{{??}}
+{% if it.page == 13 or it.page == 16 %}
+    {% if it.page == 13 %}
+        {{ include('bookdetail.html') }}
+    {% else %}
+        {{it.fullhtml|raw}}
+    {% endif %}
+{% else %}
 <div id="filter">
     <ul>
-    {{? it.hierarchy }}
-        {{? it.hierarchy.parent }}
-            <li><a href="{{=it.hierarchy.parent.navlink}}"><strong>{{=it.hierarchy.parent.title}}</strong></a></li>
-        {{?}}
-        {{? it.hierarchy.current }}
-            {{? it.hierarchy.hastree }}
-                <li><a href="{{=it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
-            {{??}}
-                <li><a href="{{=it.hierarchy.current.navlink}}&tree=1"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
-            {{?}}
-        {{?}}
-        {{~it.hierarchy.children:entry:idx}}
-            <li><a href="{{=entry.navlink}}">{{=entry.title}}</a></li>
-        {{~}}
-    {{?}}
+    {% if it.hierarchy  %}
+        {% if it.hierarchy.parent  %}
+            <li><a href="{{it.hierarchy.parent.navlink}}"><strong>{{it.hierarchy.parent.title}}</strong></a></li>
+        {% endif %}
+        {% if it.hierarchy.current  %}
+            {% if it.hierarchy.hastree  %}
+                <li><a href="{{it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+            {% else %}
+                <li><a href="{{it.hierarchy.current.navlink}}&tree=1"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+            {% endif %}
+        {% endif %}
+        {% for entry in it.hierarchy.children %}
+            <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
+        {% endfor %}
+    {% endif %}
     </ul>
 </div>
 
-{{? it.containsBook == 0}}
+{% if it.containsBook == 0 %}
 <div class="container-fluid">
     <div class="row">
-        {{~it.entries:entry:idx}}
+        {% for entry in it.entries %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
             <div class="panel panel-default">
-                {{? it.page == 19}}
+                {% if it.page == 19 %}
                     <div class="panel-heading">
-                        {{=htmlspecialchars (entry.title)}}
+                        {{entry.title|escape}}
                     </div>
                     <div class="panel-body">
-                        {{=entry.content}}
+                        {{entry.content|raw}}
                     </div>
-                {{??}}
-                    {{? entry.navlink == "#" && entry.number == ""}}
+                {% else %}
+                    {% if entry.navlink == "#" and entry.number == "" %}
                         <!-- fixme: show as separator on larger screens? -->
                         <div class="panel-heading">
-                            {{=htmlspecialchars (entry.title)}}
+                            {{entry.title|escape}}
                         </div>
-                    {{??}}
-                        <a href="{{=entry.navlink}}">
+                    {% else %}
+                        <a href="{{entry.navlink}}">
                             <div class="panel-body">
-                                {{=htmlspecialchars (entry.title)}}
-                                <span class="badge pull-right">{{=entry.number}}</span>
+                                {{entry.title|escape}}
+                                <span class="badge pull-right">{{entry.number}}</span>
                             </div>
                         </a>
-                    {{?}}
-                {{?}}
+                    {% endif %}
+                {% endif %}
             </div>
         </div>
-        {{~}}
+        {% endfor %}
     </div>
 </div>
-{{??}}
+{% else %}
 <div class="row d-flex">
-    {{~it.entries:entry:idx}}
+    {% for entry in it.entries %}
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
             <div class="cover-image">
-                {{? entry.thumbnailurl }}
-                    <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
-                        <img class ="img-responsive" src="{{=entry.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
+                {% if entry.thumbnailurl  %}
+                    <a href="{{str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
+                        <img class ="img-responsive" src="{{entry.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
                     </a>
-                {{?}}
+                {% endif %}
             </div>
             <div class="meta">
-                <p class="title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></p>
-                <div class="author ellipsis">{{=htmlspecialchars (entry.book.authorsName)}}</div>
-                {{? entry.book.seriesName != ""}}<div class="series ellipsis"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
+                <p class="title"><a href="{{str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{entry.title|escape}}</a></p>
+                <div class="author ellipsis">{{entry.book.authorsName|escape}}</div>
+                {% if entry.book.seriesName != "" %}<div class="series ellipsis"><a href="{{entry.book.seriesurl}}">{{entry.book.seriesName|escape}}</a> ({{entry.book.seriesIndex}})</div>{% endif %}
                 <!-- custom columns not tested -->
-                {{~entry.book.customcolumns_list :column:column_index}}
-                <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
-                {{~}}
+                {% for column in entry.book.customcolumns_list  %}
+                <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{column.customColumnType.columnTitle}} : {{column.htmlvalue}}</span></div>
+                {% endfor %}
             </div>
             <div style="height: 40px;"><!-- reserve space for absolutely positioned bottom download button --></div>
             <div class="download bottom">
                 <!-- download Split button -->
-                {{? entry.book.preferedCount > 1}}<div class="btn-group">{{?}}
-                    {{~entry.book.preferedData:data:i}}
-                        {{? i == 0}}
-                            <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
-                            {{? entry.book.preferedCount > 1}}
+                {% if entry.book.preferedCount > 1 %}<div class="btn-group">{% endif %}
+                    {% for data in entry.book.preferedData %}
+                        {% if loop.first %}
+                            <a href="{{data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{data.name}}</a>
+                            {% if entry.book.preferedCount > 1 %}
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
-                                {{? entry.book.preferedCount > 1}}<ul class="dropdown-menu">{{?}}
-                            {{?}}
-                        {{??}}
-                            <li><a href="{{=data.url}}">{{=data.name}}</a></li>
-                            {{? i + 1 == entry.book.preferedCount}}</ul>{{?}}
-                        {{?}}
-                    {{~}}
-                {{? entry.book.preferedCount > 1}}</div>{{?}}
+                                {% if entry.book.preferedCount > 1 %}<ul class="dropdown-menu">{% endif %}
+                            {% endif %}
+                        {% else %}
+                            <li><a href="{{data.url}}">{{data.name}}</a></li>
+                            {% if loop.last %}</ul>{% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% if entry.book.preferedCount > 1 %}</div>{% endif %}
             </div>
         </div>
-    {{~}}
+    {% endfor %}
 </div>
-{{?}}
-{{?}}
-{{? it.isPaginated == 1}}
+{% endif %}
+{% endif %}
+{% if it.isPaginated == 1 %}
     <ul class="pager">
-        <li class="{{? it.prevLink == ""}}disabled{{?}}"><a id="prevLink" href="{{=it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{=it.c.i18n.previousAlt}}</a></li>
-        <li> {{=it.currentPage}} / {{=it.maxPage}} </li>
-        <li class="{{? it.nextLink == ""}}disabled{{?}}"><a id="nextLink" href="{{=it.nextLink}}">{{=it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+        <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
+        <li> {{it.currentPage}} / {{it.maxPage}} </li>
+        <li class="{% if it.nextLink == "" %}disabled{% endif %}"><a id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
     </ul>
-{{?}}
+{% endif %}
 </div>
