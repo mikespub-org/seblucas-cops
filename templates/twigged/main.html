@@ -1,11 +1,4 @@
 <div class="container-fluid">
-{% if it.page == 13 or it.page == 16 %}
-    {% if it.page == 13 %}
-        {{ include('bookdetail.html') }}
-    {% else %}
-        {{it.fullhtml|raw}}
-    {% endif %}
-{% else %}
 <div id="filter">
     <ul>
     {% if it.hierarchy  %}
@@ -27,89 +20,7 @@
 </div>
 
 {% if it.containsBook == 0 %}
-<div class="container-fluid">
-    <div class="row">
-        {% for entry in it.entries %}
-        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
-            <div class="panel panel-default">
-                {% if it.page == 19 %}
-                    <div class="panel-heading">
-                        {{entry.title|escape}}
-                    </div>
-                    <div class="panel-body">
-                        {{entry.content|raw}}
-                    </div>
-                {% else %}
-                    {% if entry.navlink == "#" and entry.number == "" %}
-                        <!-- fixme: show as separator on larger screens? -->
-                        <div class="panel-heading">
-                            {{entry.title|escape}}
-                        </div>
-                    {% else %}
-                        <a href="{{entry.navlink}}">
-                            <div class="panel-body">
-                                {{entry.title|escape}}
-                                <span class="badge pull-right">{{entry.number}}</span>
-                            </div>
-                        </a>
-                    {% endif %}
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+    {% include 'navlist.html' %}
 {% else %}
-<div class="row d-flex">
-    {% for entry in it.entries %}
-        <div class="col-lg-2 col-sm-3 col-xs-6 books">
-            <div class="cover-image">
-                {% if entry.thumbnailurl  %}
-                    <a href="{{str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
-                        <img class ="img-responsive" src="{{entry.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
-                    </a>
-                {% endif %}
-            </div>
-            <div class="meta">
-                <p class="title"><a href="{{str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{entry.title|escape}}</a></p>
-                <div class="author ellipsis">{{entry.book.authorsName|escape}}</div>
-                {% if entry.book.seriesName != "" %}<div class="series ellipsis"><a href="{{entry.book.seriesurl}}">{{entry.book.seriesName|escape}}</a> ({{entry.book.seriesIndex}})</div>{% endif %}
-                <!-- custom columns not tested -->
-                {% for column in entry.book.customcolumns_list  %}
-                <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{column.customColumnType.columnTitle}} : {{column.htmlvalue}}</span></div>
-                {% endfor %}
-            </div>
-            <div style="height: 40px;"><!-- reserve space for absolutely positioned bottom download button --></div>
-            <div class="download bottom">
-                <!-- download Split button -->
-                {% if entry.book.preferedCount > 1 %}<div class="btn-group">{% endif %}
-                    {% for data in entry.book.preferedData %}
-                        {% if loop.first %}
-                            <a href="{{data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{data.name}}</a>
-                            {% if entry.book.preferedCount > 1 %}
-                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                {% if entry.book.preferedCount > 1 %}<ul class="dropdown-menu">{% endif %}
-                            {% endif %}
-                        {% else %}
-                            <li><a href="{{data.url}}">{{data.name}}</a></li>
-                            {% if loop.last %}</ul>{% endif %}
-                        {% endif %}
-                    {% endfor %}
-                {% if entry.book.preferedCount > 1 %}</div>{% endif %}
-            </div>
-        </div>
-    {% endfor %}
-</div>
+    {% include 'booklist.html' %}
 {% endif %}
-{% endif %}
-{% if it.isPaginated == 1 %}
-    <ul class="pager">
-        <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
-        <li> {{it.currentPage}} / {{it.maxPage}} </li>
-        <li class="{% if it.nextLink == "" %}disabled{% endif %}"><a id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
-    </ul>
-{% endif %}
-</div>

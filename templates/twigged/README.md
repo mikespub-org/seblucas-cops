@@ -6,7 +6,7 @@ This is an experiment to convert existing COPS templates from the doT.js syntax 
 It is based on a one-to-one conversion of the 'bootstrap2' template to the 'twigged' template.
 
 The main use case is for server-side rendering with a well-known and supported template engine.
-Client-side rendering might be possible with Twig.js as well, but this hasn't been tested yet.
+Client-side rendering is possible with Twig.js as well, but this hasn't been fully tested yet.
 
 References:
 - See http://olado.github.io/doT/index.html for details of doT.js
