@@ -74,7 +74,7 @@ if ($request->template() == 'twigged') {
     $twig->addFunction($function);
     echo $twig->render('file.html', ['it' => $data]);
     echo "<body>\n";
-    if (true || $request->render()) {
+    if ($request->render()) {
         // Get the data
         $data = JSONRenderer::getJson($request, true);
 
