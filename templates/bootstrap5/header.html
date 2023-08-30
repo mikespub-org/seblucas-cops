@@ -82,8 +82,14 @@
     </nav>
   {{?}}
 </header>
+<!-- put footer directly after header so that on browsers that don't support fixed-bottom, all the controls are at the top of the page -->
 <footer class="fixed-bottom">
   <ul class="nav nav-pills bg-body-tertiary justify-content-end" data-bs-theme="dark">
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.defaultTemplate}}">
+        <i class="bi-escape"></i> {{=it.c.i18n.defaultTemplate}}</span>
+      </a>
+      </li>
       <li class="nav-item">
           <a class="nav-link{{? it.page == 19}} active{{?}}" href="{{=it.customizeurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.customizeTitle}}">
           <i class="bi-tools"></i> {{=it.c.i18n.customizeTitle}}
