@@ -301,6 +301,17 @@ abstract class Base
     }
 
     /**
+     * Summary of getIdentifiers
+     * @param mixed $n
+     * @param mixed $sort
+     * @return array<Entry>
+     */
+    public function getIdentifiers($n = 1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Identifier::class, $n, $sort);
+    }
+
+    /**
      * Summary of getCustomValues
      * @param CustomColumnType $customType
      * @return array<mixed>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="./images/icons/icon57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/icons/icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/icons/icon114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="./images/icons/icon144.png" />
+    <meta name="msapplication-TileColor" content="#123456"/>
+    <meta name="msapplication-TileImage" content="./images/icons/icon144.png"/>
+
+    <title>{{=it.title}}</title>
+
+    <script type="text/javascript" src="vendor/npm-asset/jquery/dist/jquery.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/npm-asset/js-cookie/src/js.cookie.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="resources/simonpioli/sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
+{{? it.server_side_rendering == 0}}
+    <script type="text/javascript" src="vendor/npm-asset/magnific-popup/dist/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
+    <link rel="stylesheet" type="text/css" href="vendor/npm-asset/magnific-popup/dist/magnific-popup.css?v={{=it.version}}" media="screen" />
+    <script type="text/javascript" src="vendor/npm-asset/dot/doT.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/npm-asset/corejs-typeahead/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
+{{?}}
+    <script type="text/javascript" src="vendor/npm-asset/lru-fast/lru.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="templates/bootstrap5/scripts/cops.js"></script>
+    <script type="text/javascript" src="util.js"></script>
+    <link rel="related" href="{{=it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{=it.title}}" />
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="templates/bootstrap5/styles/bootstrap5.css">
+    <link rel="stylesheet" href="templates/bootstrap5/styles/typeahead.css">
+
+{{? it.server_side_rendering == 0}}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}");
+        });
+    </script>
+{{?}}
+</head>

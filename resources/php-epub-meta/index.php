@@ -5,8 +5,6 @@ use SebLucas\EPubMeta\Tools\ZipEdit;
 
 // remove seblucas/tbszip from composer.json
 include_once(dirname(__DIR__) . '/tbszip/tbszip.php');
-// remove marsender/epub-loader from composer.json
-include_once(dirname(__DIR__) . '/epub-loader/ZipFile.class.php');
 
 // modify this to point to your book directory
 $bookdir = '/home/andi/Dropbox/ebooks/';

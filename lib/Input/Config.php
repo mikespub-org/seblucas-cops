@@ -16,7 +16,7 @@ use Exception;
  */
 class Config
 {
-    public const VERSION = '1.4.2';
+    public const VERSION = '1.4.3';
     public const ENDPOINT = [
         "index" => "index.php",
         "feed" => "feed.php",

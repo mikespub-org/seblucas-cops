@@ -157,7 +157,7 @@ class BookList
      */
     public function getBooksByInstance($instance, $n)
     {
-        if (empty($instance->id) && in_array(get_class($instance), [Rating::class, Serie::class, Tag::class])) {
+        if (empty($instance->id) && in_array(get_class($instance), [Rating::class, Serie::class, Tag::class, Identifier::class])) {
             return $this->getBooksWithoutInstance($instance, $n);
         }
         [$query, $params] = $instance->getQuery();

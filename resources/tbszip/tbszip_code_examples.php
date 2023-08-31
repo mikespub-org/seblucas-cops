@@ -69,7 +69,7 @@ $zip->Flush(TBSZIP_DOWNLOAD, 'download.zip', 'application/zip'); // with a speci
 header("Content-type: application/force-download");
 header("Content-Disposition: attachment; filename=download.zip");
 header("Expires: Fri, 01 Jan 2010 05:00:00 GMT");
-$zip->Flush(TBSZIP_DOWNLOAD+TBSZIP_NOHEADER);
+$zip->Flush(TBSZIP_DOWNLOAD + TBSZIP_NOHEADER);
 
 
 // -----------------

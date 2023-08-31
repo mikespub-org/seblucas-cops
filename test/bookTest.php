@@ -353,7 +353,7 @@ class BookTest extends TestCase
         $this->assertCount(2, $identifiers);
         $this->assertEquals("uri", $identifiers[0]->type);
         $this->assertEquals("http|//www.feedbooks.com/book/63", $identifiers[0]->val);
-        $this->assertEquals("", $identifiers[0]->getUri());
+        $this->assertEquals("", $identifiers[0]->getLink());
     }
 
     public function testGetIdentifiers_Isbn(): void
@@ -364,7 +364,7 @@ class BookTest extends TestCase
         $this->assertCount(1, $identifiers);
         $this->assertEquals("isbn", $identifiers[0]->type);
         $this->assertEquals("9782253003663", $identifiers[0]->val);
-        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[0]->getUri());
+        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[0]->getLink());
     }
 
     public function testBookGetLinkArrayWithUrlRewriting(): void

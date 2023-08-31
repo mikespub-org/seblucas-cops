@@ -138,7 +138,7 @@ class JSONRenderer
 
         $out ["identifiers"] = [];
         foreach ($book->getIdentifiers() as $ident) {
-            array_push($out ["identifiers"], ["name" => $ident->formattedType, "url" => $ident->getUri()]);
+            array_push($out ["identifiers"], ["name" => $ident->formattedType, "url" => $ident->getLink()]);
         }
 
         $out ["customcolumns_preview"] = $book->getCustomColumnValues(Config::get('calibre_custom_column_preview'), true);

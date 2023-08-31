@@ -7,7 +7,7 @@
  * @author     mikespub
  */
 
-namespace Marsender\EPubLoader;
+namespace SebLucas\EPubMeta\Tools;
 
 use Exception;
 use ZipArchive;
@@ -269,7 +269,7 @@ class ZipFile
      * @param bool $ReplacedAndDeleted
      * @return int
      */
-    public function FileCancelModif($inFileName, $ReplacedAndDeleted=true)
+    public function FileCancelModif($inFileName, $ReplacedAndDeleted = true)
     {
         // cancel added, modified or deleted modifications on a file in the archive
         // return the number of cancels
@@ -312,7 +312,7 @@ class ZipFile
      * @param bool $sendHeaders
      * @return void
      */
-    public function Flush($render=self::DOWNLOAD, $outFileName='', $contentType='', $sendHeaders = true)
+    public function Flush($render = self::DOWNLOAD, $outFileName = '', $contentType = '', $sendHeaders = true)
     {
         // we need to close the zip file to save all changes here - probably not what you wanted :-()
         $this->Close();
@@ -325,10 +325,10 @@ class ZipFile
         $inFilePath = realpath($this->mFileName);
 
         if (($render & self::NOHEADER) !== self::NOHEADER) {
-            $expires = 60*60*24*14;
+            $expires = 60 * 60 * 24 * 14;
             header('Pragma: public');
             header('Cache-Control: max-age=' . $expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
 
             header('Content-Type: ' . $contentType);
             header('Content-Disposition: attachment; filename="' . basename($outFileName) . '"');

@@ -8,20 +8,12 @@
 
 namespace Marsender\EPubLoader;
 
+use SebLucas\EPubMeta\Tools\ZipFile;
 use Exception;
 
 require_once(realpath(__DIR__) . '/BookEPub.class.php');
-require_once(realpath(__DIR__) . '/ZipFile.class.php');
-/*
-$fileName = realpath(dirname(__DIR__)) . '/php-epub-meta/epub.php';
-if (file_exists($fileName)) {
-    require_once ($fileName);
-}
-else {
-    $fileName = realpath(dirname(dirname(__DIR__))) . '/vendor/seblucas/php-epub-meta/lib/EPub.php';
-    require_once ($fileName);
-}
-*/
+$ePubMetaPath = realpath(dirname(__DIR__)) . '/php-epub-meta';
+require_once $ePubMetaPath . '/lib/Tools/ZipFile.php';
 
 /**
  * BookInfos class contains informations about a book,

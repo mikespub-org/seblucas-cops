@@ -42,7 +42,8 @@
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
                 <exclude name="saucetest/**" />
-                <exclude name="resources/epub-loader/**" />
+                <exclude name="resources/epub-loader/app/**" />
+                <exclude name="resources/epub-loader/test/**" />
                 <exclude name="resources/tbszip/stuffs/**" />
                 <exclude name="resources/php-epub-meta/assets/**" />
                 <exclude name="resources/php-epub-meta/coverage/**" />

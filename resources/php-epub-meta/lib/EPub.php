@@ -17,9 +17,8 @@ use SebLucas\EPubMeta\Contents\Spine;
 use SebLucas\EPubMeta\Contents\NavPoint as TocNavPoint;
 use SebLucas\EPubMeta\Contents\NavPointList as TocNavPointList;
 use SebLucas\EPubMeta\Contents\Toc;
-use SebLucas\TbsZip\clsTbsZip;
-use Marsender\EPubLoader\ZipFile;
 use SebLucas\EPubMeta\Tools\ZipEdit;
+use SebLucas\EPubMeta\Tools\ZipFile;
 use DOMDocument;
 use DOMElement;
 use DOMNodeList;
@@ -37,9 +36,9 @@ class EPub
     public const MIME_TYPE = 'application/epub+zip';
     /** @var DOMDocument */
     public $xml; //FIXME: change to protected, later
-    /** @var DOMDocument */
+    /** @var DOMDocument|null */
     public $toc;
-    /** @var DOMDocument */
+    /** @var DOMDocument|null */
     public $nav;
     /** @var EpubDomXPath */
     protected $xpath;
@@ -49,13 +48,13 @@ class EPub
     protected $nav_xpath;
     protected string $file;
     protected string $meta;
-    /** @var clsTbsZip|ZipFile|ZipEdit */
+    /** @var ZipEdit|ZipFile */
     protected $zip;
     protected string $zipClass;
-    protected string $coverpath='';
+    protected string $coverpath = '';
     /** @var mixed */
     protected $namespaces;
-    protected string $imagetoadd='';
+    protected string $imagetoadd = '';
     /** @var array<mixed> A map of ZIP items mapping filenames to file sizes */
     protected $zipSizeMap;
     /** @var Manifest|null The manifest (catalog of files) of this EPUB */
@@ -277,7 +276,7 @@ class EPub
         // add the cover image
         if ($this->imagetoadd) {
             $this->zip->FileAddPath($this->coverpath, $this->imagetoadd);
-            $this->imagetoadd='';
+            $this->imagetoadd = '';
         }
         if ($file) {
             $render = $this->zipClass::DOWNLOAD;
@@ -480,7 +479,7 @@ class EPub
      * @param mixed $authors
      * @return mixed
      */
-    public function Authors($authors=false)
+    public function Authors($authors = false)
     {
         // set new data
         if ($authors !== false) {
@@ -575,7 +574,7 @@ class EPub
      * @param string|bool $title
      * @return mixed
      */
-    public function Title($title=false)
+    public function Title($title = false)
     {
         return $this->getset('dc:title', $title);
     }
@@ -587,7 +586,7 @@ class EPub
      * @param string|bool $lang
      * @return mixed
      */
-    public function Language($lang=false)
+    public function Language($lang = false)
     {
         return $this->getset('dc:language', $lang);
     }
@@ -599,7 +598,7 @@ class EPub
      * @param string|bool $publisher
      * @return mixed
      */
-    public function Publisher($publisher=false)
+    public function Publisher($publisher = false)
     {
         return $this->getset('dc:publisher', $publisher);
     }
@@ -611,7 +610,7 @@ class EPub
      * @param string|bool $rights
      * @return mixed
      */
-    public function Copyright($rights=false)
+    public function Copyright($rights = false)
     {
         return $this->getset('dc:rights', $rights);
     }
@@ -623,7 +622,7 @@ class EPub
      * @param string|bool $description
      * @return mixed
      */
-    public function Description($description=false)
+    public function Description($description = false)
     {
         return $this->getset('dc:description', $description);
     }
@@ -698,7 +697,7 @@ class EPub
      * @param string|bool $isbn
      * @return mixed
      */
-    public function ISBN($isbn=false)
+    public function ISBN($isbn = false)
     {
         return $this->getset('dc:identifier', $isbn, 'opf:scheme', 'ISBN');
     }
@@ -709,7 +708,7 @@ class EPub
      * @param string|bool $google
      * @return mixed
      */
-    public function Google($google=false)
+    public function Google($google = false)
     {
         return $this->getset('dc:identifier', $google, 'opf:scheme', 'GOOGLE');
     }
@@ -720,7 +719,7 @@ class EPub
      * @param string|bool $amazon
      * @return mixed
      */
-    public function Amazon($amazon=false)
+    public function Amazon($amazon = false)
     {
         return $this->getset('dc:identifier', $amazon, 'opf:scheme', 'AMAZON');
     }
@@ -732,7 +731,7 @@ class EPub
      * @param string|bool $uuid
      * @return mixed
      */
-    public function Calibre($uuid=false)
+    public function Calibre($uuid = false)
     {
         return $this->getset('dc:identifier', $uuid, 'opf:scheme', 'calibre');
     }
@@ -744,7 +743,7 @@ class EPub
      * @param string|bool $serie
      * @return mixed
      */
-    public function Serie($serie=false)
+    public function Serie($serie = false)
     {
         return $this->getset('opf:meta', $serie, 'name', 'calibre:series', 'content');
     }
@@ -777,7 +776,7 @@ class EPub
      * @param string|bool $serieIndex
      * @return mixed
      */
-    public function SerieIndex($serieIndex=false)
+    public function SerieIndex($serieIndex = false)
     {
         return $this->getset('opf:meta', $serieIndex, 'name', 'calibre:series_index', 'content');
     }
@@ -813,7 +812,7 @@ class EPub
      * @param array<string>|string|bool $subjects
      * @return array<mixed>
      */
-    public function Subjects($subjects=false)
+    public function Subjects($subjects = false)
     {
         // setter
         if ($subjects !== false) {
@@ -883,7 +882,7 @@ class EPub
      * @param  string|bool $mime mime type of the given file
      * @return array<mixed>
      */
-    public function Cover($path=false, $mime=false)
+    public function Cover($path = false, $mime = false)
     {
         // set cover
         if ($path !== false) {
@@ -1120,7 +1119,7 @@ class EPub
      * @param mixed $mime
      * @return array<mixed>|void
      */
-    public function Cover2($path=false, $mime=false)
+    public function Cover2($path = false, $mime = false)
     {
         return $this->setCoverFile($path, $mime);
     }
@@ -1199,7 +1198,7 @@ class EPub
      * @param string|bool $datt   Destination attribute
      * @return string|void
      */
-    protected function getset($item, $value=false, $att=false, $aval=false, $datt=false)
+    protected function getset($item, $value = false, $att = false, $aval = false, $datt = false)
     {
         // construct xpath
         $xpath = '//opf:metadata/' . $item;
@@ -2211,7 +2210,7 @@ class EPub
      * @param string $file|null Path to a ZIP file or null for current file
      * @return array<mixed> (filename => details of the entry)
      */
-    public function getZipEntries($file=null)
+    public function getZipEntries($file = null)
     {
         $file ??= $this->file;
         $entries = [];
@@ -2236,7 +2235,7 @@ class EPub
      * @param string $file|null Path to a ZIP file or null for current ZIP file
      * @return array<mixed> (filename => file size)
      */
-    protected function loadSizeMap($file=null)
+    protected function loadSizeMap($file = null)
     {
         $entries = $this->getZipEntries($file);
 
