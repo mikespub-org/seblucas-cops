@@ -365,4 +365,27 @@ class Database
         $totalResult = $result->fetchColumn();
         return $totalResult;
     }
+
+    /**
+     * Summary of getDbSchema
+     * @param mixed $database
+     * @param mixed $type get table or view entries
+     * @return array<mixed>
+     */
+    public static function getDbSchema($database = null, $type = null)
+    {
+        $query = 'SELECT type, name, tbl_name, rootpage, sql FROM sqlite_schema';
+        $params = [];
+        if (!empty($type)) {
+            $query .= ' WHERE type = ?';
+            $params[] = $type;
+        }
+        $entries = [];
+        $result = self::query($query, $params, $database);
+        while ($post = $result->fetchObject()) {
+            $entry = (array) $post;
+            array_push($entries, $entry);
+        }
+        return $entries;
+    }
 }
