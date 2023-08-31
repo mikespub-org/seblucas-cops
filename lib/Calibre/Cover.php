@@ -162,13 +162,13 @@ class Cover
                 if ($nw >= $w) {
                     return false;
                 }
-                $nh = intval(($nw*$h)/$w);
+                $nh = intval(($nw * $h) / $w);
             } else {
                 $nh = $height;
                 if ($nh >= $h) {
                     return false;
                 }
-                $nw = intval(($nh*$w)/$h);
+                $nw = intval(($nh * $w) / $h);
             }
         } else {
             return false;
@@ -214,10 +214,10 @@ class Cover
         $file = $this->coverFileName;
 
         if ($sendHeaders) {
-            $expires = 60*60*24*14;
+            $expires = 60 * 60 * 24 * 14;
             header('Pragma: public');
             header('Cache-Control: max-age=' . $expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
             header('Content-Type: ' . $mime);
         }
 
