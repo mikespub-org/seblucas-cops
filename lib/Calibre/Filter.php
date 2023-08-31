@@ -24,6 +24,7 @@ class Filter
         Rating::URL_PARAM => Rating::class,
         Serie::URL_PARAM => Serie::class,
         Tag::URL_PARAM => Tag::class,
+        Identifier::URL_PARAM => Identifier::class,
         CustomColumnType::URL_PARAM => CustomColumnType::class,
         BookList::URL_PARAM_FIRST => BookList::class,
         BookList::URL_PARAM_YEAR => BookList::class,
@@ -119,6 +120,11 @@ class Filter
         $tagId = $this->request->get(Tag::URL_PARAM, null, '/^!?\d+$/');
         if (!empty($tagId)) {
             $this->addTagIdFilter($tagId);
+        }
+
+        $identifierType = $this->request->get(Identifier::URL_PARAM, null, '/^!?\w+$/');
+        if (!empty($identifierType)) {
+            $this->addIdentifierTypeFilter($identifierType);
         }
 
         $letter = $this->request->get(BookList::URL_PARAM_FIRST, null, '/^\w$/');
@@ -244,6 +250,16 @@ class Filter
     public function addTagIdFilter($tagId)
     {
         $this->addLinkedIdFilter($tagId, Tag::SQL_LINK_TABLE, Tag::SQL_LINK_COLUMN);
+    }
+
+    /**
+     * Summary of addIdentifierTypeFilter
+     * @param mixed $identifierType
+     * @return void
+     */
+    public function addIdentifierTypeFilter($identifierType)
+    {
+        $this->addLinkedIdFilter($identifierType, Identifier::SQL_LINK_TABLE, Identifier::SQL_LINK_COLUMN);
     }
 
     /**

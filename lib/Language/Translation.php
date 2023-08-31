@@ -111,7 +111,7 @@ class Translation
      * @param bool $reset
      * @return string
      */
-    public function localize($phrase, $count=-1, $reset=false)
+    public function localize($phrase, $count = -1, $reset = false)
     {
         if ($count == 0) {
             $phrase .= '.none';

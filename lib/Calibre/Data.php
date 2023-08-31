@@ -41,7 +41,7 @@ class Data
         'doc'   => 'application/msword',
         'epub'  => 'application/epub+zip',
         'fb2'   => 'text/fb2+xml',
-        'ibooks'=> 'application/x-ibooks+zip',
+        'ibooks' => 'application/x-ibooks+zip',
         'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
         'm4a'   => 'audio/mp4',
