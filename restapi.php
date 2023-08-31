@@ -24,4 +24,8 @@ $apiHandler = new RestApi($request);
 
 header('Content-Type:application/json;charset=utf-8');
 
-echo $apiHandler->getOutput();
+try {
+    echo $apiHandler->getOutput();
+} catch (Exception $e) {
+    echo json_encode(["Exception" => $e->getMessage()]);
+}

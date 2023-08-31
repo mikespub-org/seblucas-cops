@@ -26,8 +26,11 @@ Same options as original:
   ```
 
 3. Docker image
-  - see [docker/Dockerfile.alpine](docker/Dockerfile.alpine) and [docker-compose.yaml](docker-compose.yaml) (or [docker-compose-dev.yaml](docker-compose-dev.yaml)) as starting point - **not** optimized for size/performance
-  - a modified Dockerfile for the archived linuxserver/docker-cops version is available at [docker/Dockerfile.linuxserver](docker/Dockerfile.linuxserver)
+  - use latest [linuxserver/cops](https://hub.docker.com/r/linuxserver/cops) image from [linuxserver.io](https://github.com/linuxserver/docker-cops) - see setup and usage there
+  - or use [docker/Dockerfile.alpine](docker/Dockerfile.alpine) and [docker-compose.yaml](docker-compose.yaml) (or [docker-compose-dev.yaml](docker-compose-dev.yaml)) as starting point - **not** optimized for size/performance
+
+4. Home Assistant Add-on
+  - see [HA COPS](https://github.com/dunxd/HomeAssistantAddons/tree/main/COPS) from [dunxd](https://github.com/dunxd/HomeAssistantAddons)
 
 The rest of the installation process is very similar to the original below. But if you install from source, just use your regular composer 2.x - you don't need to download an old composer 1.x version or install global asset plugins anymore :-)
 

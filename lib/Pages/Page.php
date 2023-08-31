@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
@@ -75,7 +76,7 @@ class Page
      * Summary of getPage
      * @param mixed $pageId
      * @param mixed $request
-     * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
+     * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllIdentifiers|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageIdentifierDetail|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
      */
     public static function getPage($pageId, $request)
     {
@@ -195,7 +196,10 @@ class Page
     public function getTopCountEntries()
     {
         if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
-            array_push($this->entryArray, Author::getCount($this->databaseId));
+            $author = Author::getCount($this->databaseId);
+            if (!is_null($author)) {
+                array_push($this->entryArray, $author);
+            }
         }
         if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
             $series = Serie::getCount($this->databaseId);
@@ -344,7 +348,7 @@ class Page
 
     /**
      * Summary of getFilters
-     * @param Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @param Author|Language|Publisher|Rating|Serie|Tag|Identifier|CustomColumn $instance
      * @return void
      */
     public function getFilters($instance)
@@ -452,6 +456,20 @@ class Page
                 $instance->limitSelf = false;
             }
             $this->entryArray = array_merge($this->entryArray, $instance->getTags($paging['t']));
+        }
+        if (!($instance instanceof Identifier) && in_array('identifier', $filterLinks)) {
+            array_push($this->entryArray, new Entry(
+                localize("identifiers.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $paging['i'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getIdentifiers($paging['i']));
         }
         /**
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy

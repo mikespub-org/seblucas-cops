@@ -240,7 +240,7 @@ class BaseList
     public function countWithoutEntries()
     {
         // @todo see BookList::getBooksWithoutCustom() to support CustomColumn
-        if (!in_array($this->className, [Rating::class, Serie::class, Tag::class])) {
+        if (!in_array($this->className, [Rating::class, Serie::class, Tag::class, Identifier::class])) {
             return 0;
         }
         $query = $this->className::SQL_BOOKLIST_NULL;
