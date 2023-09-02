@@ -14,6 +14,10 @@ use SebLucas\Cops\Output\Format;
 
 class Data
 {
+    public const SQL_TABLE = "data";
+    public const SQL_COLUMNS = "id, name, format";
+    public const SQL_LINK_TABLE = "data";
+    public const SQL_LINK_COLUMN = "id";
     public static string $endpoint = Config::ENDPOINT["fetch"];
     /** @var mixed */
     public $id;
@@ -83,7 +87,7 @@ class Data
         $this->book = $book;
         $this->databaseId = ($nullsafeVariable1 = $book) ? $nullsafeVariable1->getDatabaseId() : null;
         // this is set on book in JSONRenderer now
-        if ($book->updateForKepub && $this->isEpubValidOnKobo()) {
+        if (!is_null($book) && $book->updateForKepub && $this->isEpubValidOnKobo()) {
             $this->updateForKepub = true;
         }
     }

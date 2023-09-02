@@ -20,7 +20,7 @@ class Rating extends Base
     public const SQL_LINK_TABLE = "books_ratings_link";
     public const SQL_LINK_COLUMN = "rating";
     public const SQL_SORT = "rating";
-    public const SQL_COLUMNS = "ratings.id as id, ratings.rating as name, count(*) as count";
+    public const SQL_COLUMNS = "ratings.id as id, ratings.rating as name";
     public const SQL_ALL_ROWS = "select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id {1} group by ratings.id order by ratings.rating";
     public const SQL_BOOKLIST = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_ratings_link.book = books.id and ratings.id = ? {1} order by books.sort';

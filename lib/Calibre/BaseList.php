@@ -105,7 +105,7 @@ class BaseList
      */
     public function getColumns()
     {
-        return $this->className::SQL_COLUMNS;
+        return $this->className::SQL_COLUMNS . ", count(*) as count";
     }
 
     /**
