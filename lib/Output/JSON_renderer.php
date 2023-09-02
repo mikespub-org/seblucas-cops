@@ -47,6 +47,18 @@ class JSONRenderer
         }
         $database = $book->getDatabaseId();
 
+        $authors = [];
+        foreach ($book->getAuthors() as $author) {
+            $link = new LinkNavigation($author->getUri(), null, null, $database);
+            array_push($authors, ["name" => $author->name, "url" => $link->hrefXhtml($endpoint)]);
+        }
+
+        $tags = [];
+        foreach ($book->getTags() as $tag) {
+            $link = new LinkNavigation($tag->getUri(), null, null, $database);
+            array_push($tags, ["name" => $tag->name, "url" => $link->hrefXhtml($endpoint)]);
+        }
+
         $publisher = $book->getPublisher();
         if (is_null($publisher)) {
             $pn = "";
@@ -80,7 +92,9 @@ class JSONRenderer
                       "pubDate" => $book->getPubDate(),
                       "languagesName" => $book->getLanguages(),
                       "authorsName" => $book->getAuthorsName(),
+                      "authors" => $authors,
                       "tagsName" => $book->getTagsName(),
+                      "tags" => $tags,
                       "seriesName" => $sn,
                       "seriesIndex" => $book->seriesIndex,
                       "seriesCompleteName" => $scn,
@@ -165,7 +179,32 @@ class JSONRenderer
             $out ["coverurl"] = $entry->getImage($endpoint) ?? $out ["thumbnailurl"];
             return $out;
         }
-        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
+        switch ($entry->className) {
+            case 'Author':
+                $label = localize("authors.title");
+                break;
+            case 'Identifier':
+                $label = localize("identifiers.title");
+                break;
+            case 'Language':
+                $label = localize("languages.title");
+                break;
+            case 'Publisher':
+                $label = localize("publishers.title");
+                break;
+            case 'Rating':
+                $label = localize("ratings.title");
+                break;
+            case 'Serie':
+                $label = localize("series.title");
+                break;
+            case 'Tag':
+                $label = localize("tags.title");
+                break;
+            default:
+                $label = $entry->className;
+        }
+        return [ "class" => $label, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
     }
 
     /**
