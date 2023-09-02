@@ -562,7 +562,8 @@ class BaseList
             $id,
             str_format(localize($numberOfString, $count), $count),
             "text",
-            [ new LinkNavigation("?page=".$pageId, "section", null, $database)],
+            // issue #26 for koreader: section is not supported
+            [ new LinkNavigation("?page=".$pageId, "subsection", null, $database)],
             $database,
             "",
             $count

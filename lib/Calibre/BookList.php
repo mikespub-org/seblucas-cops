@@ -114,10 +114,11 @@ class BookList
     {
         $nBooks = $this->getBookCount();
         $result = [];
+        // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
-            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "section", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "subsection", null, $this->databaseId)];
         } elseif (!empty(Config::get('titles_split_publication_year'))) {
-            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "section", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "subsection", null, $this->databaseId)];
         } else {
             $linkArray = [new LinkFeed('?page='.Book::PAGE_ALL, null, null, $this->databaseId)];
         }
