@@ -84,6 +84,16 @@ class Data
         $this->format = $post->format;
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
+        $this->setBook($book);
+    }
+
+    /**
+     * Summary of setBook
+     * @param Book|null $book
+     * @return void
+     */
+    public function setBook($book)
+    {
         $this->book = $book;
         $this->databaseId = ($nullsafeVariable1 = $book) ? $nullsafeVariable1->getDatabaseId() : null;
         // this is set on book in JSONRenderer now

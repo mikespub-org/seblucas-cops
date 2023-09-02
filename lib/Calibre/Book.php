@@ -68,9 +68,9 @@ class Book
     public $datas = null;
     /** @var Author[]|null */
     public $authors = null;
-    /** @var Publisher|null */
+    /** @var Publisher|false|null */
     public $publisher = null;
-    /** @var Serie|null */
+    /** @var Serie|false|null */
     public $serie = null;
     /** @var Tag[]|null */
     public $tags = null;
@@ -235,7 +235,7 @@ class Book
 
     /**
      * Summary of getPublisher
-     * @return Publisher|null
+     * @return Publisher|false
      */
     public function getPublisher()
     {
@@ -246,7 +246,7 @@ class Book
     }
 
     /**
-     * @return Serie|null
+     * @return Serie|false
      */
     public function getSerie()
     {
@@ -391,7 +391,7 @@ class Book
     {
         $addition = '';
         $se = $this->getSerie();
-        if (!is_null($se) && $withSerie) {
+        if (!empty($se) && $withSerie) {
             $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
         //if (preg_match('/<\/(div|p|a|span)>/', $this->comment)) {
@@ -469,7 +469,7 @@ class Book
             $epub->setCoverFile($this->coverFileName, 'image/jpeg');
             $epub->setCalibre($this->uuid);
             $se = $this->getSerie();
-            if (!is_null($se)) {
+            if (!empty($se)) {
                 $epub->setSeries($se->name);
                 $epub->setSeriesIndex($this->seriesIndex);
             }
@@ -551,7 +551,7 @@ class Book
 
         // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         $serie = $this->getSerie();
-        if (!is_null($serie)) {
+        if (!empty($serie)) {
             array_push($linkArray, new LinkFeed($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
         }
 

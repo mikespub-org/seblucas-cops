@@ -41,7 +41,7 @@ class Publisher extends Base
      * Summary of getInstanceByBookId
      * @param mixed $bookId
      * @param mixed $database
-     * @return Publisher|null
+     * @return Publisher|false
      */
     public static function getInstanceByBookId($bookId, $database = null)
     {
@@ -52,7 +52,7 @@ where publishers.id = publisher and book = ?';
         if ($post = $result->fetchObject()) {
             return new Publisher($post, $database);
         }
-        return null;
+        return false;
     }
 
     /**

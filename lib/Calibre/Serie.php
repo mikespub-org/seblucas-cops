@@ -44,7 +44,7 @@ class Serie extends Category
      * Summary of getInstanceByBookId
      * @param mixed $bookId
      * @param mixed $database
-     * @return Serie|null
+     * @return Serie|false
      */
     public static function getInstanceByBookId($bookId, $database = null)
     {
@@ -55,7 +55,7 @@ where series.id = series and book = ?';
         if ($post = $result->fetchObject()) {
             return new Serie($post, $database);
         }
-        return null;
+        return false;
     }
 
     /**

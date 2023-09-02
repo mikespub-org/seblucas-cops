@@ -60,7 +60,7 @@ class JSONRenderer
         }
 
         $publisher = $book->getPublisher();
-        if (is_null($publisher)) {
+        if (empty($publisher)) {
             $pn = "";
             $pu = "";
         } else {
@@ -70,7 +70,7 @@ class JSONRenderer
         }
 
         $serie = $book->getSerie();
-        if (is_null($serie)) {
+        if (empty($serie)) {
             $sn = "";
             $scn = "";
             $su = "";
