@@ -18,6 +18,7 @@ class Data
     public const SQL_COLUMNS = "id, name, format";
     public const SQL_LINK_TABLE = "data";
     public const SQL_LINK_COLUMN = "id";
+    public const SQL_SORT = "name";
     public static string $endpoint = Config::ENDPOINT["fetch"];
     /** @var mixed */
     public $id;
