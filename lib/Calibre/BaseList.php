@@ -24,7 +24,7 @@ class BaseList
     /** @var mixed */
     protected $numberPerPage = null;
     /** @var array<string> */
-    protected $ignoredCategories = [];
+    //protected $ignoredCategories = [];
     /** @var mixed */
     public $orderBy = null;
 
@@ -40,7 +40,7 @@ class BaseList
         $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
-        $this->ignoredCategories = $this->request->option('ignored_categories');
+        //$this->ignoredCategories = $this->request->option('ignored_categories');
         $this->setOrderBy();
     }
 
@@ -105,7 +105,7 @@ class BaseList
      */
     public function getColumns()
     {
-        return $this->className::SQL_COLUMNS;
+        return $this->className::SQL_COLUMNS . ", count(*) as count";
     }
 
     /**
@@ -540,6 +540,67 @@ class BaseList
     }
 
     /**
+     * Summary of getInstanceIdsByBookIds
+     * @param array<int> $bookIds
+     * @return array<int, array<int>>
+     */
+    public function getInstanceIdsByBookIds($bookIds)
+    {
+        if (count($bookIds) < 1) {
+            return [];
+        }
+        $queryFormat = 'SELECT book, {1} as instanceId FROM {0} WHERE book IN (' . str_repeat('?,', count($bookIds) - 1) . '?)';
+        $query = str_format($queryFormat, $this->getLinkTable(), $this->getLinkColumn());
+        $result = Database::query($query, $bookIds, $this->databaseId);
+
+        $instanceIds = [];
+        while ($post = $result->fetchObject()) {
+            $instanceIds[$post->book] ??= [];
+            array_push($instanceIds[$post->book], $post->instanceId);
+        }
+        return $instanceIds;
+    }
+
+    /**
+     * Summary of getInstancesByIds
+     * @param array<int, array<int>> $instanceIds
+     * @return array<int, mixed>
+     */
+    public function getInstancesByIds($instanceIds)
+    {
+        $uniqueIds = self::getUniqueInstanceIds($instanceIds);
+        if (count($uniqueIds) < 1) {
+            return [];
+        }
+        $query = 'select ' . $this->className::SQL_COLUMNS . ' from ' . $this->className::SQL_TABLE . ' where id IN (' . str_repeat('?,', count($uniqueIds) - 1) . '?)';
+        $result = Database::query($query, $uniqueIds, $this->databaseId);
+        $instances = [];
+        while ($post = $result->fetchObject()) {
+            if ($this->className == Data::class) {
+                // we don't have the book available here, set later
+                $instances[$post->id] = new $this->className($post);
+            } else {
+                $instances[$post->id] = new $this->className($post, $this->databaseId);
+            }
+        }
+        return $instances;
+    }
+
+    /**
+     * Summary of getUniqueInstanceIds
+     * @param array<int, array<int>> $instanceIds
+     * @return array<int>
+     */
+    public static function getUniqueInstanceIds($instanceIds)
+    {
+        $uniqueIds = [];
+        foreach ($instanceIds as $bookId => $instanceIdList) {
+            $uniqueIds = array_values(array_unique(array_merge($uniqueIds, $instanceIdList)));
+        }
+        return $uniqueIds;
+    }
+
+    /**
      * Summary of getCountGeneric
      * @param mixed $table
      * @param mixed $id
@@ -562,7 +623,8 @@ class BaseList
             $id,
             str_format(localize($numberOfString, $count), $count),
             "text",
-            [ new LinkNavigation("?page=".$pageId, "section", null, $database)],
+            // issue #26 for koreader: section is not supported
+            [ new LinkNavigation("?page=".$pageId, "subsection", null, $database)],
             $database,
             "",
             $count

@@ -149,7 +149,8 @@ abstract class CustomColumnType
      */
     public function getLinkArray()
     {
-        return [ new LinkNavigation($this->getUri(), "section", null, $this->getDatabaseId()) ];
+        // issue #26 for koreader: section is not supported
+        return [ new LinkNavigation($this->getUri(), "subsection", null, $this->getDatabaseId()) ];
     }
 
     /**
