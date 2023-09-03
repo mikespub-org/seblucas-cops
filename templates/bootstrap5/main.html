@@ -42,12 +42,12 @@
                 {{?}}
             </div>
             <div class="card-body meta">
-                <h5 class="card-title title ellipsis"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
-                <div class="card-subtitle author ellipsis">{{=htmlspecialchars (entry.book.authorsName)}}</div>
+                <h5 class="card-title title text-truncate"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
+                <div class="card-subtitle author text-truncate">{{=htmlspecialchars (entry.book.authorsName)}}</div>
                 {{? entry.book.seriesName != ""}}<div class="series ellipsis"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
                 <!-- custom columns not tested -->
                 {{~entry.book.customcolumns_list :column:column_index}}
-                <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
+                <div class="text-truncate"><i class="bi-node-minus"></i> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
                 {{~}}
             </div>
             <div class="card-footer">
