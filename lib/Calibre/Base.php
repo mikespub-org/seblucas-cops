@@ -24,7 +24,7 @@ abstract class Base
     public const SQL_LINK_TABLE = "books_bases_link";
     public const SQL_LINK_COLUMN = "base";
     public const SQL_SORT = "sort";
-    public const SQL_COLUMNS = "bases.id as id, bases.name as name, bases.sort as sort, count(*) as count";
+    public const SQL_COLUMNS = "bases.id as id, bases.name as name, bases.sort as sort";
     public const SQL_ALL_ROWS = "select {0} from bases, books_bases_link where base = bases.id {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from bases, books_bases_link where base = bases.id and (upper (bases.sort) like ? or upper (bases.name) like ?) {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from bases, books_bases_link where base = bases.id and upper (bases.sort) like ? {1} group by bases.id, bases.name, bases.sort order by sort";

@@ -193,7 +193,7 @@ class RestApi
 
     /**
      * Summary of getDatabase
-     * @param int $db
+     * @param int $database
      * @param Request $request
      * @return array<string, mixed>
      */

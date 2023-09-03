@@ -19,7 +19,7 @@ class Language extends Base
     public const SQL_LINK_TABLE = "books_languages_link";
     public const SQL_LINK_COLUMN = "lang_code";
     public const SQL_SORT = "lang_code";
-    public const SQL_COLUMNS = "languages.id as id, languages.lang_code as name, count(*) as count";
+    public const SQL_COLUMNS = "languages.id as id, languages.lang_code as name";
     public const SQL_ALL_ROWS = "select {0} from languages, books_languages_link where languages.id = books_languages_link.lang_code {1} group by languages.id, books_languages_link.lang_code order by languages.lang_code";
     public const SQL_BOOKLIST = 'select {0} from books_languages_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_languages_link.book = books.id and lang_code = ? {1} order by books.sort';

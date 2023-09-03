@@ -20,7 +20,7 @@ class Identifier extends Base
     public const SQL_LINK_TABLE = "identifiers";
     public const SQL_LINK_COLUMN = "type";
     public const SQL_SORT = "type";
-    public const SQL_COLUMNS = "identifiers.type as id, identifiers.type as type, '' as val, count(*) as count";
+    public const SQL_COLUMNS = "identifiers.type as id, identifiers.type as type, '' as val";
     public const SQL_ALL_ROWS = "select {0} from identifiers where 1=1 {1} group by identifiers.type order by identifiers.type";
     public const SQL_ROWS_FOR_SEARCH = "";  // "select {0} from tags, books_tags_link where tags.id = tag and upper (tags.name) like ? {1} group by tags.id, tags.name order by tags.name";
     public const SQL_BOOKLIST = 'select {0} from identifiers, books ' . Book::SQL_BOOKS_LEFT_JOIN . '

@@ -17,6 +17,7 @@ use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\PageQueryResult;
+use Exception;
 
 class BookList
 {
@@ -38,6 +39,7 @@ class BookList
     public const URL_PARAM_YEAR = "y";
 
     public const BAD_SEARCH = 'QQQQQ';
+    public const BATCH_QUERY = false;
 
     public Request $request;
     /** @var mixed */
@@ -45,9 +47,11 @@ class BookList
     /** @var mixed */
     protected $numberPerPage = null;
     /** @var array<string> */
-    protected $ignoredCategories = [];
+    //protected $ignoredCategories = [];
     /** @var string|null */
     public $orderBy = null;
+    /** @var array<int, mixed> */
+    public $bookList = [];
 
     /**
      * @param Request|null $request
@@ -59,7 +63,7 @@ class BookList
         $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
-        $this->ignoredCategories = $this->request->option('ignored_categories');
+        //$this->ignoredCategories = $this->request->option('ignored_categories');
         $this->setOrderBy();
     }
 
@@ -114,10 +118,11 @@ class BookList
     {
         $nBooks = $this->getBookCount();
         $result = [];
+        // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
-            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "section", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "subsection", null, $this->databaseId)];
         } elseif (!empty(Config::get('titles_split_publication_year'))) {
-            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "section", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "subsection", null, $this->databaseId)];
         } else {
             $linkArray = [new LinkFeed('?page='.Book::PAGE_ALL, null, null, $this->databaseId)];
         }
@@ -400,11 +405,193 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         /** @var \PDOStatement $result */
         [$totalNumber, $result] = Database::queryTotal($query, Book::getBookColumns(), $filterString, $params, $n, $this->databaseId, $this->numberPerPage);
 
+        /** @phpstan-ignore-next-line */
+        if (self::BATCH_QUERY) {
+            return $this->batchQuery($totalNumber, $result);
+        }
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $this->databaseId);
             array_push($entryArray, $book->getEntry());
         }
         return [$entryArray, $totalNumber];
+    }
+
+    /**
+     * Summary of batchQuery
+     * @param integer $totalNumber
+     * @param \PDOStatement $result
+     * @throws \Exception
+     * @return array{0: EntryBook[], 1: integer}
+     */
+    public function batchQuery($totalNumber, $result)
+    {
+        $this->bookList = [];
+        while ($post = $result->fetchObject()) {
+            $book = new Book($post, $this->databaseId);
+            $this->bookList[$book->id] = $book;
+        }
+        $entryArray = [];
+        if (count($this->bookList) < 1) {
+            return [$entryArray, $totalNumber];
+        }
+        $this->setAuthors();
+        $this->setSerie();
+        $this->setPublisher();
+        $this->setTags();
+        $this->setLanguages();
+        $this->setDatas();
+        foreach ($this->bookList as $bookId => $book) {
+            array_push($entryArray, $book->getEntry());
+        }
+        $this->bookList = [];
+        return [$entryArray, $totalNumber];
+    }
+
+    /**
+     * Summary of setAuthors
+     * @throws \Exception
+     * @return void
+     */
+    public function setAuthors()
+    {
+        $bookIds = array_keys($this->bookList);
+        $baselist = new BaseList(Author::class, $this->request, $this->databaseId);
+        $authorIds = $baselist->getInstanceIdsByBookIds($bookIds);
+        $authors = $baselist->getInstancesByIds($authorIds);
+        foreach ($bookIds as $bookId) {
+            $this->bookList[$bookId]->authors = [];
+            $authorIds[$bookId] ??= [];
+            foreach ($authorIds[$bookId] as $authorId) {
+                if (!array_key_exists($authorId, $authors)) {
+                    throw new Exception('Unknown author ' . $authorId . ' in ' . var_export($authors, true));
+                }
+                array_push($this->bookList[$bookId]->authors, $authors[$authorId]);
+            }
+        }
+    }
+
+    /**
+     * Summary of setSerie
+     * @throws \Exception
+     * @return void
+     */
+    public function setSerie()
+    {
+        $bookIds = array_keys($this->bookList);
+        $baselist = new BaseList(Serie::class, $this->request, $this->databaseId);
+        $seriesIds = $baselist->getInstanceIdsByBookIds($bookIds);
+        $series = $baselist->getInstancesByIds($seriesIds);
+        foreach ($bookIds as $bookId) {
+            $this->bookList[$bookId]->serie = false;
+            $seriesIds[$bookId] ??= [];
+            foreach ($seriesIds[$bookId] as $seriesId) {
+                if (!array_key_exists($seriesId, $series)) {
+                    throw new Exception('Unknown series ' . $seriesId . ' in ' . var_export($series, true));
+                }
+                $this->bookList[$bookId]->serie = $series[$seriesId];
+                break;
+            }
+        }
+    }
+
+    /**
+     * Summary of setPublisher
+     * @throws \Exception
+     * @return void
+     */
+    public function setPublisher()
+    {
+        $bookIds = array_keys($this->bookList);
+        $baselist = new BaseList(Publisher::class, $this->request, $this->databaseId);
+        $publisherIds = $baselist->getInstanceIdsByBookIds($bookIds);
+        $publishers = $baselist->getInstancesByIds($publisherIds);
+        foreach ($bookIds as $bookId) {
+            $this->bookList[$bookId]->publisher = false;
+            $publisherIds[$bookId] ??= [];
+            foreach ($publisherIds[$bookId] as $publisherId) {
+                if (!array_key_exists($publisherId, $publishers)) {
+                    throw new Exception('Unknown publisher ' . $publisherId . ' in ' . var_export($publishers, true));
+                }
+                $this->bookList[$bookId]->publisher = $publishers[$publisherId];
+                break;
+            }
+        }
+    }
+
+    /**
+     * Summary of setTags
+     * @throws \Exception
+     * @return void
+     */
+    public function setTags()
+    {
+        $bookIds = array_keys($this->bookList);
+        $baselist = new BaseList(Tag::class, $this->request, $this->databaseId);
+        $tagIds = $baselist->getInstanceIdsByBookIds($bookIds);
+        $tags = $baselist->getInstancesByIds($tagIds);
+        foreach ($bookIds as $bookId) {
+            $this->bookList[$bookId]->tags = [];
+            $tagIds[$bookId] ??= [];
+            foreach ($tagIds[$bookId] as $tagId) {
+                if (!array_key_exists($tagId, $tags)) {
+                    throw new Exception('Unknown tag ' . $tagId . ' in ' . var_export($tags, true));
+                }
+                array_push($this->bookList[$bookId]->tags, $tags[$tagId]);
+            }
+        }
+    }
+
+    /**
+     * Summary of setLanguages
+     * @throws \Exception
+     * @return void
+     */
+    public function setLanguages()
+    {
+        $bookIds = array_keys($this->bookList);
+        $baselist = new BaseList(Language::class, $this->request, $this->databaseId);
+        $languageIds = $baselist->getInstanceIdsByBookIds($bookIds);
+        $languages = $baselist->getInstancesByIds($languageIds);
+        foreach ($bookIds as $bookId) {
+            $langCodes = [];
+            $languageIds[$bookId] ??= [];
+            foreach ($languageIds[$bookId] as $languageId) {
+                if (!array_key_exists($languageId, $languages)) {
+                    throw new Exception('Unknown language ' . $languageId . ' in ' . var_export($languages, true));
+                }
+                array_push($langCodes, $languages[$languageId]->getTitle());
+            }
+            $this->bookList[$bookId]->languages = implode(', ', $langCodes);
+        }
+    }
+
+    /**
+     * Summary of setDatas
+     * @throws \Exception
+     * @return void
+     */
+    public function setDatas()
+    {
+        $bookIds = array_keys($this->bookList);
+        $baselist = new BaseList(Data::class, $this->request, $this->databaseId);
+        $dataIds = $baselist->getInstanceIdsByBookIds($bookIds);
+        $datas = $baselist->getInstancesByIds($dataIds);
+        $ignored_formats = Config::get('ignored_formats');
+        foreach ($bookIds as $bookId) {
+            $this->bookList[$bookId]->datas = [];
+            $dataIds[$bookId] ??= [];
+            foreach ($dataIds[$bookId] as $dataId) {
+                if (!array_key_exists($dataId, $datas)) {
+                    throw new Exception('Unknown data ' . $dataId . ' in ' . var_export($datas, true));
+                }
+                if (!empty($ignored_formats) && in_array($datas[$dataId]->format, $ignored_formats)) {
+                    continue;
+                }
+                // we need to set the book here, since we didn't do it above
+                $datas[$dataId]->setBook($this->bookList[$bookId]);
+                array_push($this->bookList[$bookId]->datas, $datas[$dataId]);
+            }
+        }
     }
 }
