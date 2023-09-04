@@ -12,6 +12,11 @@ x.x.x - TODO
   * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
   * Add twigged template using Twig template engine as alternative for doT
 
+1.4.4 - 20230904 Revert OPDS feed changes for old e-readers
+  * Switch section to subsection in OPDS link rel for koreader and Kybook3 - see #26 and #27
+  * Add class label for #24 + authors & tags for #25 in JSON renderer
+  * Prepare move from clsTbsZip to ZipEdit when updating EPUB in code
+
 1.4.3 - 20230831 Sort & Filter in OPDS Catalog + Add bootstrap v5 template
   * Changes in config_default.php file:
     - new $config['cops_thumbnail_default']
