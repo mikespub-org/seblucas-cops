@@ -39,7 +39,7 @@ References:
 
 ## Templates and Inheritance
 
-1. [file.html](file.html) is rendered server-side to generate the initial HTML page
+1. [index.html](index.html) is rendered server-side to generate the initial HTML page
 2. [page.html](page.html) is rendered client-side or server-side for each request, and it decides which template to include next
 3. [base.html](base.html) is extended by all other templates:
   - [about.html](about.html)

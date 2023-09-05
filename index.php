@@ -72,15 +72,11 @@ if ($request->template() == 'twigged') {
         return Format::str_format($format, ...$args);
     });
     $twig->addFunction($function);
-    echo $twig->render('file.html', ['it' => $data]);
-    echo "<body>\n";
     if ($request->render()) {
-        // Get the data
-        $data = JSONRenderer::getJson($request, true);
-
-        echo $twig->render('page.html', ['it' => $data]);
+        // Get the page data
+        $data['page_it'] = JSONRenderer::getJson($request, true);
     }
-    echo "</body>\n</html>";
+    echo $twig->render('index.html', ['it' => $data]);
     return;
 }
 $headcontent = file_get_contents('templates/' . $request->template() . '/file.html');

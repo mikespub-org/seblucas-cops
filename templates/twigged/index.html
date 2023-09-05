@@ -209,3 +209,10 @@
     </script>
 {% endif %}
 </head>
+<body>
+{% if it.server_side_rendering %}
+    {# only this 'it' variable will be accessible inside page.html #}
+    {% include 'page.html' with {'it': it.page_it} only %}
+{% endif %}
+</body>
+</html>
