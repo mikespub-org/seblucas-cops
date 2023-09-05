@@ -14,7 +14,6 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
-use SebLucas\Template\doT;
 
 /**
  * EPub Reader based on Monocle
@@ -125,12 +124,18 @@ class EPubReader
             'link'       => self::$endpoint . "?" . $add .  "&comp=",
         ];
 
+        // replace {{=it.key}} (= doT syntax) and {{it.key}} (= twig syntax) with value
+        $pattern = [];
+        $replace = [];
+        foreach ($data as $key => $value) {
+            array_push($pattern, '/\{\{=?\s*it\.' . $key . '\s*\}\}/');
+            array_push($replace, $value);
+        }
+
         header('Content-Type: text/html;charset=utf-8');
 
         $filecontent = file_get_contents(self::$template);
-        $template = new doT();
-        $dot = $template->template($filecontent, null);
 
-        return $dot($data);
+        return preg_replace($pattern, $replace, $filecontent);
     }
 }

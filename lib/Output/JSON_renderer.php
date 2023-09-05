@@ -419,7 +419,7 @@ class JSONRenderer
         }
 
         if ($page == PageId::ABOUT) {
-            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));
+            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('templates/about.html'));
             $out ["fullhtml"] = $temp;
         }
 
