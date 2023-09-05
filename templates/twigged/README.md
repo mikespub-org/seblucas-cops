@@ -42,14 +42,19 @@ References:
 1. [index.html](index.html) is rendered server-side to generate the initial HTML page
 2. [page.html](page.html) is rendered client-side or server-side for each request, and it decides which template to include next
 3. [base.html](base.html) is extended by all other templates:
-  - [about.html](about.html)
-  - [bookdetail.html](bookdetail.html)
+  - [about.html](about.html) (page=16)
+  - [bookdetail.html](bookdetail.html) (page=13)
   - [mainlist.html](mainlist.html)
     - [booklist.html](booklist.html)
-      - [authordetail.html](authordetail.html)
-      - [customdetail.html](customer.html)
-      - ...
-      - [recent.html](recent.html)
+      - [recent.html](recent.html) (page=10)
+      - [authordetail.html](authordetail.html) (page=3)
+      - [customdetail.html](customdetail.html) (page=15)
+      - [identifierdetail.html](identifierdetail.html) (page=42)
+      - [languagedetail.html](languagedetail.html) (page=18)
+      - [publisherdetail.html](publisherdetail.html) (page=21)
+      - [ratingdetail.html](ratingdetail.html) (page=23)
+      - [seriedetail.html](seriedetail.html) (page=7)
+      - [tagdetail.html](tagdetail.html) (page=12)
     - [navlist.html](navlist.html)
-      - [customize.html](customize.html)
-      - [filters.html](filters.html)
+      - [customize.html](customize.html) (page=19)
+      - [filters.html](filters.html) (filter=1)
