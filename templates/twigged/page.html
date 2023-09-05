@@ -9,6 +9,8 @@
     {% include 'filters.html' %}
 {% elseif it.containsBook == 0 %}
     {% include 'navlist.html' %}
+{% elseif it.page == 10 %}
+    {% include 'recent.html' %}
 {% else %}
     {% include 'booklist.html' %}
 {% endif %}

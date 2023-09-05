@@ -46,6 +46,10 @@ References:
   - [bookdetail.html](bookdetail.html)
   - [mainlist.html](mainlist.html)
     - [booklist.html](booklist.html)
+      - [authordetail.html](authordetail.html)
+      - [customdetail.html](customer.html)
+      - ...
+      - [recent.html](recent.html)
     - [navlist.html](navlist.html)
       - [customize.html](customize.html)
       - [filters.html](filters.html)
