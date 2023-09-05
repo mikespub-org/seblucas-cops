@@ -6,30 +6,16 @@
     <div class="row">
         {% for entry in it.entries %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+            {% block entry %}
             <div class="panel panel-default">
-                {% if it.page == 19 %}
-                    <div class="panel-heading">
-                        {{entry.title|escape}}
-                    </div>
+                <a href="{{entry.navlink}}">
                     <div class="panel-body">
-                        {{entry.content|raw}}
+                        {{entry.title|escape}}
+                        <span class="badge pull-right">{{entry.number}}</span>
                     </div>
-                {% else %}
-                    {% if entry.navlink == "#" and entry.number == "" %}
-                        <!-- fixme: show as separator on larger screens? -->
-                        <div class="panel-heading">
-                            {{entry.title|escape}}
-                        </div>
-                    {% else %}
-                        <a href="{{entry.navlink}}">
-                            <div class="panel-body">
-                                {{entry.title|escape}}
-                                <span class="badge pull-right">{{entry.number}}</span>
-                            </div>
-                        </a>
-                    {% endif %}
-                {% endif %}
+                </a>
             </div>
+            {% endblock entry %}
         </div>
         {% endfor %}
     </div>

@@ -3,6 +3,10 @@
     {% include 'bookdetail.html' %}
 {% elseif it.page == 16 %}
     {% include 'about.html' %}
+{% elseif it.page == 19 %}
+    {% include 'customize.html' %}
+{% elseif it.isFilterPage %}
+    {% include 'filters.html' %}
 {% elseif it.containsBook == 0 %}
     {% include 'navlist.html' %}
 {% else %}

@@ -47,3 +47,5 @@ References:
   - [mainlist.html](mainlist.html)
     - [booklist.html](booklist.html)
     - [navlist.html](navlist.html)
+      - [customize.html](customize.html)
+      - [filters.html](filters.html)

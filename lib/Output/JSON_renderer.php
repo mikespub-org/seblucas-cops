@@ -339,8 +339,10 @@ class JSONRenderer
         }
         $entries = [];
         $extraUri = "";
+        $out ["isFilterPage"] = false;
         if (!empty($request->get('filter')) && !empty($currentPage->filterUri)) {
             $extraUri = $currentPage->filterUri;
+            $out ["isFilterPage"] = true;
         }
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, self::getContentArray($entry, $endpoint, $extraUri));
