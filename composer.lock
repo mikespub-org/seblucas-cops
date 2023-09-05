@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "npm-asset/babel--runtime",
-            "version": "v7.22.9",
+            "version": "v7.22.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/babel/babel.git",
-                "reference": "24ce62afee8b5100fac83bff510aab8dfdded913"
+                "reference": "1a8436c3475c613e498c37c8a0d32dde4826613e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/babel/babel/zipball/24ce62afee8b5100fac83bff510aab8dfdded913",
-                "reference": "24ce62afee8b5100fac83bff510aab8dfdded913"
+                "url": "https://api.github.com/repos/babel/babel/zipball/1a8436c3475c613e498c37c8a0d32dde4826613e",
+                "reference": "1a8436c3475c613e498c37c8a0d32dde4826613e"
             },
             "type": "npm-asset"
         },
