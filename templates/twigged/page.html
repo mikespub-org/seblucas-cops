@@ -1,0 +1,13 @@
+{% include 'header.html' %}
+{% if it.page == 13 %}
+    <div class="container-fluid">
+        {% include 'bookdetail.html' %}
+    </div>
+{% elseif it.page == 16 %}
+    <div class="container-fluid">
+        {{it.fullhtml|raw}}
+    </div>
+{% else %}
+    {% include 'main.html' %}
+{% endif %}
+{% include 'footer.html' %}

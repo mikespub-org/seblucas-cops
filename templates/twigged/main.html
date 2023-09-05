@@ -1,0 +1,26 @@
+<div class="container-fluid">
+<div id="filter">
+    <ul>
+    {% if it.hierarchy  %}
+        {% if it.hierarchy.parent  %}
+            <li><a href="{{it.hierarchy.parent.navlink}}"><strong>{{it.hierarchy.parent.title}}</strong></a></li>
+        {% endif %}
+        {% if it.hierarchy.current  %}
+            {% if it.hierarchy.hastree  %}
+                <li><a href="{{it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+            {% else %}
+                <li><a href="{{it.hierarchy.current.navlink}}&tree=1"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+            {% endif %}
+        {% endif %}
+        {% for entry in it.hierarchy.children %}
+            <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
+        {% endfor %}
+    {% endif %}
+    </ul>
+</div>
+
+{% if it.containsBook == 0 %}
+    {% include 'navlist.html' %}
+{% else %}
+    {% include 'booklist.html' %}
+{% endif %}
