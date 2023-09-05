@@ -1,4 +1,9 @@
+{# mainlist.html is extended by booklist.html and navlist.html #}
+{% extends 'base.html' %}
+
+{% block main %}
 <div class="container-fluid">
+{% block filter %}
 <div id="filter">
     <ul>
     {% if it.hierarchy  %}
@@ -18,9 +23,20 @@
     {% endif %}
     </ul>
 </div>
+{% endblock filter %}
 
-{% if it.containsBook == 0 %}
-    {% include 'navlist.html' %}
-{% else %}
-    {% include 'booklist.html' %}
+{% block content %}
+This is the content block
+{% endblock content %}
+
+{% block pager %}
+{% if it.isPaginated == 1 %}
+    <ul class="pager">
+        <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
+        <li> {{it.currentPage}} / {{it.maxPage}} </li>
+        <li class="{% if it.nextLink == "" %}disabled{% endif %}"><a id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+    </ul>
 {% endif %}
+{% endblock pager %}
+</div>
+{% endblock main %}

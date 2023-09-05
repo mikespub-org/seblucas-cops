@@ -1,3 +1,8 @@
+{# bookdetail.html is used for it.page == 13 #}
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container-fluid">
 <div class="row">
 <div class="col-md-offset-2 col-md-4 col-sm-6 col-xs-12" id="cover" name="cover">
     <div class="cover-image">
@@ -15,7 +20,7 @@
     <div class="btn-group">
         <a title="Download // {{data.format}}" href="{{data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{data.format}}</a>
         {% if data.mail == 1 %}
-        <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{data.id}}); return false;">
+        <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{data.format}}" href="empty.php" onclick="sendToMailAddress (this, '{{data.id}}'); return false;">
         <span class="glyphicon glyphicon-envelope"></span></a>
         {% endif %}
         {% if data.readerUrl != "" %}
@@ -89,3 +94,5 @@
     {% endif %}
 </div>
 </div>
+</div>
+{% endblock main %}

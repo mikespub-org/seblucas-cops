@@ -1,3 +1,7 @@
+{# booklist.html is used for it.containsBook != 0 #}
+{% extends 'mainlist.html' %}
+
+{% block content %}
 <div class="row d-flex">
     {% for entry in it.entries %}
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
@@ -41,10 +45,4 @@
         </div>
     {% endfor %}
 </div>
-{% if it.isPaginated == 1 %}
-    <ul class="pager">
-        <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
-        <li> {{it.currentPage}} / {{it.maxPage}} </li>
-        <li class="{% if it.nextLink == "" %}disabled{% endif %}"><a id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
-    </ul>
-{% endif %}
+{% endblock content %}

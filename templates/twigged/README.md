@@ -9,9 +9,12 @@ The main use case is for server-side rendering with a well-known and supported t
 Client-side rendering is possible with Twig.js as well, but this hasn't been fully tested yet.
 
 References:
-- See http://olado.github.io/doT/index.html for details of doT.js
-- See https://github.com/seblucas/doT-php for doT-php restrictions
-- See https://twig.symfony.com/doc/3.x/ for Twig documentation
+- doT:
+  * Client-side: See http://olado.github.io/doT/index.html for details of doT.js
+  * Server-side: See https://github.com/seblucas/doT-php for doT-php restrictions
+- Twig:
+  * Server-side: see https://twig.symfony.com/doc/3.x/ for Twig documentation
+  * Client-side: see https://github.com/twigjs/twig.js/wiki/Implementation-Notes for Twig features supported by twig.js
 
 ## Basic Cheatsheet
 
@@ -34,3 +37,13 @@ References:
 | Encode | {{! it.title }} | N/A | not supported in doT-php |
 | Define | {{##def:snippet: ... #}} | N/A | not supported in doT-php |
 
+## Templates and Inheritance
+
+1. [file.html](file.html) is rendered server-side to generate the initial HTML page
+2. [page.html](page.html) is rendered client-side or server-side for each request, and it decides which template to include next
+3. [base.html](base.html) is extended by all other templates:
+  - [about.html](about.html)
+  - [bookdetail.html](bookdetail.html)
+  - [mainlist.html](mainlist.html)
+    - [booklist.html](booklist.html)
+    - [navlist.html](navlist.html)

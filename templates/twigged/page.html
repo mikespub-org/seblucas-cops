@@ -1,13 +1,10 @@
-{% include 'header.html' %}
+{# page.html is rendered by Twig and it decides which template to include #}
 {% if it.page == 13 %}
-    <div class="container-fluid">
-        {% include 'bookdetail.html' %}
-    </div>
+    {% include 'bookdetail.html' %}
 {% elseif it.page == 16 %}
-    <div class="container-fluid">
-        {{it.fullhtml|raw}}
-    </div>
+    {% include 'about.html' %}
+{% elseif it.containsBook == 0 %}
+    {% include 'navlist.html' %}
 {% else %}
-    {% include 'main.html' %}
+    {% include 'booklist.html' %}
 {% endif %}
-{% include 'footer.html' %}
