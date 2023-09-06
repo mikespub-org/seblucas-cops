@@ -64,12 +64,26 @@ $data = ['title'                 => Config::get('title_default'),
 if (preg_match('/Kindle/', $request->agent())) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
 }
+if ($request->template() == 'twigged') {
+    $loader = new \Twig\Loader\FilesystemLoader('templates/twigged');
+    $twig = new \Twig\Environment($loader);
+    $function = new \Twig\TwigFunction('str_format', function ($format, ...$args) {
+        //return str_format($format, ...$args);
+        return Format::str_format($format, ...$args);
+    });
+    $twig->addFunction($function);
+    if ($request->render()) {
+        // Get the page data
+        $data['page_it'] = JSONRenderer::getJson($request, true);
+    }
+    echo $twig->render('index.html', ['it' => $data]);
+    return;
+}
 $headcontent = file_get_contents('templates/' . $request->template() . '/file.html');
 $template = new doT();
 $dot = $template->template($headcontent, null);
 echo($dot($data));
-?><body>
-<?php
+echo "<body>\n";
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 if ($request->render()) {
     // Get the data
@@ -77,6 +91,4 @@ if ($request->render()) {
 
     echo Format::serverSideRender($data, $request->template());
 }
-?>
-</body>
-</html>
+echo "</body>\n</html>\n";

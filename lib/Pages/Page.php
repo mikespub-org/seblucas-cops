@@ -333,17 +333,24 @@ class Page
      */
     public function getSortOptions()
     {
-        return [
+        if ($this->request->isFeed()) {
+            $sortLinks = Config::get('opds_sort_links');
+        } else {
+            $sortLinks = Config::get('html_sort_links');
+        }
+        $allowed = array_flip($sortLinks);
+        $sortOptions = [
             //'title' => localize("bookword.title"),
             'title' => localize("sort.titles"),
-            'timestamp' => localize("recent.title"),
             'author' => localize("authors.title"),
             'pubdate' => localize("pubdate.title"),
             'rating' => localize("ratings.title"),
+            'timestamp' => localize("recent.title"),
             //'series' => localize("series.title"),
             //'language' => localize("languages.title"),
             //'publisher' => localize("publishers.title"),
         ];
+        return array_intersect_key($sortOptions, $allowed);
     }
 
     /**
