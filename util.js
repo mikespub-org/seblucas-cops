@@ -124,6 +124,9 @@ function sendToMailAddress (component, dataid) {
 
 function str_format () {
     var s = arguments[0];
+    if (typeof s === 'undefined') {
+        return '';
+    }
     for (var i = 0; i < arguments.length - 1; i++) {
         var reg = new RegExp("\\{" + i + "\\}", "gm");
         s = s.replace(reg, arguments[i + 1]);
@@ -516,6 +519,31 @@ function initiateAjax (url, theme) {
 
         updatePage (data [0]);
         cache.put (url, data [0]);
+        if (isPushStateEnabled) {
+            window.history.replaceState(url, "", window.location);
+        }
+        handleLinks ();
+    });
+}
+
+function initiateTwig(url, theme) {
+    Twig.extendFunction("str_format", str_format);
+
+    let template = Twig.twig({
+        id: 'page',
+        href: 'templates/' + theme + '/page.html',
+        async: false 
+     });
+
+     templatePage = function (data) {
+        return Twig.twig({ref: 'page'}).render({it: data});
+     };
+
+     $.when($.getJSON(url)).done(function(data){
+        currentData = data;
+
+        updatePage (currentData);
+        cache.put (url, currentData);
         if (isPushStateEnabled) {
             window.history.replaceState(url, "", window.location);
         }

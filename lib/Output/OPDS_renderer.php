@@ -348,7 +348,7 @@ class OPDSRenderer
                 $this->renderLink($page->getLastLink());
             }
             // only show sorting when paginating
-            if ($page->containsBook()) {
+            if ($page->containsBook() && !empty(Config::get('opds_sort_links'))) {
                 $sortUrl = Format::addURLParam("?" . $page->getCleanQuery(), 'sort', null) . "&sort={0}";
                 $sortLabel = localize("sort.alternate");
                 $sortParam = $request->get('sort');
