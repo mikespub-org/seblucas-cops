@@ -44,9 +44,7 @@
             <div class="card-body meta">
                 <h5 class="card-title title text-truncate"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
                 <div class="card-subtitle author text-truncate">
-                    {{~ entry.book.authors:author:author_index}}
-                        <a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>
-                    {{~}}
+                    {{~ entry.book.authors:author:author_index}}{{? author_index > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}
                 </div>
                 {{? entry.book.seriesName != ""}}<div class="series text-truncate"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
                 <!-- custom columns not tested -->
