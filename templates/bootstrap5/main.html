@@ -48,7 +48,7 @@
                         <a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>
                     {{~}}
                 </div>
-                {{? entry.book.seriesName != ""}}<div class="series ellipsis"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
+                {{? entry.book.seriesName != ""}}<div class="series text-truncate"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
                 <!-- custom columns not tested -->
                 {{~entry.book.customcolumns_list :column:column_index}}
                 <div class="text-truncate"><i class="bi-node-minus"></i> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
