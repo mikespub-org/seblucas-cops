@@ -16,7 +16,7 @@
             {{?}}
             {{~it.book.datas:data:i}}
             <div class="btn-group">
-                <a title="Download {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><i class="bi-download"></i> {{=data.format}}</a>
+                <a title="Download {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><i class="bi-download pe-1"></i>{{=data.format}}</a>
                 {{? data.mail == 1}}
                 <a id="mailButton" class="btn btn-primary" role="button" title="Send by eMail - {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
                 <i class="bi-envelope-at-fill"></i></a>
@@ -40,14 +40,14 @@
             {{? it.book.tagsName != ""}}
             <div class="tags mb-2">
                 {{~it.book.tags:tag:i}}
-                <a class="btn btn-sm btn-info" role="button" href="{{=tag.url}}"><i class="bi-tag"></i> {{=htmlspecialchars (tag.name)}}</a>
+                <a class="btn btn-sm btn-info" role="button" href="{{=tag.url}}"><i class="bi-tag pe-1"></i>{{=htmlspecialchars (tag.name)}}</a>
                 {{~}}
             </div>
             {{?}}
             {{? it.book.identifiers != ""}}
             <div class="more-info mb-2">
                 {{~it.book.identifiers:id:i}}
-                <a class="btn btn-sm btn-info" role="button" href="{{=id.url}}"><i class="bi-link-45deg"></i>{{=htmlspecialchars (id.name)}}</a> 
+                <a class="btn btn-sm btn-info" role="button" href="{{=id.url}}"><i class="bi-link-45de pe-1"></i>{{=htmlspecialchars (id.name)}}</a> 
                 {{~}}
             </div>
             {{?}}
