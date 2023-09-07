@@ -1,5 +1,5 @@
 # baseline re-generated with level 4 to keep some issues visible on higher levels
-# at the time this file was updated there are 13 errors reported for levels 4 to 6
+# at the time this file was updated there are 11 errors reported for levels 4 to 6
 includes:
     #- phpstan-baseline.neon
 
@@ -11,7 +11,10 @@ parameters:
         - vendor/autoload.php
     excludePaths:
         - vendor/*
-        - test/Sauce.php
+        - test/WebDriverTestCase.php
+        - test/WebDriverTest.php
+        - resources/epub-loader/app/action_authors.php
+        - resources/epub-loader/vendor/*
         - resources/php-epub-meta/vendor/*
         - resources/php-epub-meta/lib/Dom/XmlNamespace.php
         - resources/php-epub-meta/lib/Other.php
