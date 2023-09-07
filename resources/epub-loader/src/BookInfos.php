@@ -11,8 +11,7 @@ namespace Marsender\EPubLoader;
 use SebLucas\EPubMeta\Tools\ZipFile;
 use Exception;
 
-require_once(realpath(__DIR__) . '/BookEPub.class.php');
-$ePubMetaPath = realpath(dirname(__DIR__)) . '/php-epub-meta';
+$ePubMetaPath = realpath(dirname(__DIR__, 2)) . '/php-epub-meta';
 require_once $ePubMetaPath . '/lib/Tools/ZipFile.php';
 
 /**

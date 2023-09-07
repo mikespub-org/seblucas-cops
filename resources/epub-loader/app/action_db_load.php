@@ -40,7 +40,7 @@ try {
         }
     }
     // Display info
-    echo sprintf('Load database %s - %d files', $calibreFileName, $nbOk) . '<br />';
+    return sprintf('Load database %s - %d files', $calibreFileName, $nbOk) . '<br />';
 } catch (Exception $e) {
     $gErrorArray[$calibreFileName] = $e->getMessage();
 }

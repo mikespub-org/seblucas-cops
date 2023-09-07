@@ -1,8 +1,6 @@
-## =============================================================================
-## epub-loader readme
-## =============================================================================
+# epub-loader readme
 
-epub-loader is a utility ressource for ebooks.
+epub-loader is a utility resource for ebooks.
 
 - CalibreDbLoader class allows create Calibre databases and add ebooks
 - BookExport class allows to export ebooks metadata in csv files
@@ -10,7 +8,6 @@ epub-loader is a utility ressource for ebooks.
 
 
 ## Installation
-## -----------------------------------------------------------------------------
 
 - If a first-time install, copy app/config.php.example to app/config.php
 - Edit config.php to match your config

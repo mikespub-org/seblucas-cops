@@ -36,7 +36,7 @@ try {
     // Save export
     $export->SaveToFile();
     // Display info
-    echo sprintf('Export ebooks to %s - %d files', $fileName, $nbOk) . '<br />';
+    return sprintf('Export ebooks to %s - %d files', $fileName, $nbOk) . '<br />';
 } catch (Exception $e) {
     $gErrorArray[$fileName] = $e->getMessage();
 }

@@ -50,6 +50,7 @@ class Data
         'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
         'm4a'   => 'audio/mp4',
+        'm4b'   => 'audio/mp4',
         'mobi'  => 'application/x-mobipocket-ebook',
         'mp3'   => 'audio/mpeg',
         'lit'   => 'application/x-ms-reader',

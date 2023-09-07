@@ -46,8 +46,17 @@
         "symfony/http-client": "~6.3"
     },
     "autoload": {
-        "classmap": ["lib/", "resources/", "test/"],
-        "exclude-from-classmap": ["resources/php-epub-meta/test/", "resources/php-epub-meta/vendor/"]
+        "classmap": [
+            "lib/",
+            "resources/",
+            "test/"
+        ],
+        "exclude-from-classmap": [
+            "resources/epub-loader/test/",
+            "resources/epub-loader/vendor/",
+            "resources/php-epub-meta/test/",
+            "resources/php-epub-meta/vendor/"
+        ]
     },
     "repositories": [
         {

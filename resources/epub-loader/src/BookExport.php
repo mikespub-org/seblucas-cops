@@ -10,8 +10,6 @@ namespace Marsender\EPubLoader;
 
 use Exception;
 
-require_once(realpath(__DIR__) . '/CsvExport.class.php');
-
 class BookExport
 {
     /** @var mixed */

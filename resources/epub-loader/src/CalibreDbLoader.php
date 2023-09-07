@@ -11,8 +11,6 @@ namespace Marsender\EPubLoader;
 use Exception;
 use PDO;
 
-require_once(realpath(__DIR__) . '/BookInfos.class.php');
-
 define('PDO_SUCCES_CODE', '00000');
 
 /**
@@ -576,5 +574,17 @@ class CalibreDbLoader
             $title = $post->title;
             $sort = $post->sort;
         }
+    }
+
+    public function getAuthors()
+    {
+        $sql = 'select id, name, sort, link from authors';
+        $stmt = $this->mDb->prepare($sql);
+        $stmt->execute();
+        $authors = [];
+        while ($post = $stmt->fetchObject()) {
+            $authors[] = (array) $post;
+        }
+        return $authors;
     }
 }

@@ -1,0 +1,24 @@
+{
+    "name": "marsender/epub-loader",
+    "description": "epub-loader is a utility resource for ebooks",
+    "authors": [
+        {
+            "name": "marsender",
+            "homepage": "https://github.com/marsender",
+            "role": "Developer"
+        },
+        {
+            "name": "mikespub",
+            "homepage": "https://github.com/mikespub-org/seblucas-cops",
+            "role": "Developer"
+        }
+    ],
+    "type": "project",
+    "require": {
+        "freearhey/wikidata": "^3.6",
+        "twig/twig": "^3.7"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}

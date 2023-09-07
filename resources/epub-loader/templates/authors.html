@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="title"><a href="./index.php?action={{action}}">{{actionTitle}}</a> for <a href="./index.php?action={{action}}&dbnum={{dbNum}}">{{dbConfig.name}}</a></div>
+<form method="POST" action="./index.php?action={{action}}&dbnum={{dbNum}}">
+<table width="100%">
+	<tr>
+		<th>Id</th>
+		<th>Name</th>
+		<th>Sort</th>
+		<th>Action</th>
+		<th>Link</th>
+	</tr>
+	{% for author in authors %}
+	<tr>
+		<td>{{author.id}}</td>
+		<td>{{author.name}}</td>
+		<td>{{author.sort}}</td>
+		<td>{% if authorId == author.id %}<strong>Match</strong>{% else %}<a href="./index.php?action={{action}}&dbnum={{dbNum}}&authorId={{author.id}}">Match</a>{% endif %}</td>
+		<td><input type="url" name="link[{{author.id}}]" value="{{author.link}}" /></td>
+	</tr>
+	{% endfor %}
+</table>
+</form>
+{% if authorId %}
+<div class="part">
+	<p>Wikidata:</p>
+	{% if matched %}
+		<ul>
+		{% for match in matched %}
+			<li><a href="http://www.wikidata.org/entity/{{match.id}}">{{match.id}}</a> {{match.label}} {{match.description}} {% if match.wiki_url %}<a href="{{match.wiki_url}}">Wikipedia</a>{% endif %}</li>
+		{% endfor %}
+		</ul>
+	{% else %}
+		No match found
+	{% endif %}
+</div>
+{% endif %}
+{% endblock content %}

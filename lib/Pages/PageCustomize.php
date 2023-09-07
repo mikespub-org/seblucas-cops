@@ -113,7 +113,7 @@ class PageCustomize extends Page
             $content .= '</select>';
         } else {
             foreach ($this-> getTemplateList() as $filename) {
-                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='template' name='template' value='{$filename}' " . $this->isChecked("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label>";
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='template' name='template' value='{$filename}' " . $this->isChecked("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label><br>";
             }
         }
         array_push($this->entryArray, new Entry(
@@ -134,7 +134,7 @@ class PageCustomize extends Page
             $content .= '</select>';
         } else {
             foreach ($this-> getStyleList() as $filename) {
-                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label>";
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label><br>";
             }
         }
         array_push($this->entryArray, new Entry(
@@ -186,7 +186,7 @@ class PageCustomize extends Page
         $content = "";
         foreach ($ignoredBaseArray as $key) {
             $keyPlural = preg_replace('/(ss)$/', 's', $key . "s");
-            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $this->isChecked("ignored_categories", $key) . ' > ' . localize("{$keyPlural}.title") . '</input> ';
+            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $this->isChecked("ignored_categories", $key) . ' > ' . localize("{$keyPlural}.title") . '</input><br>';
         }
 
         array_push($this->entryArray, new Entry(
