@@ -269,6 +269,7 @@ class JSONRenderer
                 "sortorderDesc" => localize("search.sortorder.desc"),
                 "customizeEmail" => localize("customize.email"),
                 "ratingsTitle" => localize("ratings.title"),
+                "linkTitle" => localize("extra.link"),
             ],
             "url" => [
                 "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
@@ -460,6 +461,7 @@ class JSONRenderer
                 array_push($out ["hierarchy"]["children"], self::getContentArray($entry, $endpoint, $extraUri));
             }
         }
+        $out ["extra"] = $currentPage->extra;
 
         /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {

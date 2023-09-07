@@ -58,6 +58,8 @@ class Page
     public string $filterUri = "";
     /** @var array<string, mixed>|false */
     public $hierarchy = false;
+    /** @var array<string, mixed>|false */
+    public $extra = false;
 
     /** @var Entry[] */
     public $entryArray = [];
@@ -162,6 +164,7 @@ class Page
         } else {
             $this->getTopCountEntries();
         }
+        $this->getExtra();
     }
 
     /**
@@ -244,6 +247,15 @@ class Page
         if (Database::isMultipleDatabaseEnabled()) {
             $this->title =  Database::getDbName($this->getDatabaseId());
         }
+    }
+
+    /**
+     * Summary of getExtra
+     * @return void
+     */
+    public function getExtra()
+    {
+        $this->extra = false;
     }
 
     /**

@@ -20,7 +20,7 @@ class Author extends Base
     public const SQL_LINK_TABLE = "books_authors_link";
     public const SQL_LINK_COLUMN = "author";
     public const SQL_SORT = "sort";
-    public const SQL_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort";
+    public const SQL_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, authors.link as link";
     public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? {1} group by authors.id, authors.name, authors.sort order by sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from authors, books_authors_link where author = authors.id and (upper (authors.sort) like ? or upper (authors.name) like ?) {1} group by authors.id, authors.name, authors.sort order by sort";
     public const SQL_ALL_ROWS = "select {0} from authors, books_authors_link where author = authors.id {1} group by authors.id, authors.name, authors.sort order by sort";
@@ -31,6 +31,8 @@ class Author extends Base
 
     /** @var mixed */
     public $sort;
+    /** @var mixed */
+    public $link;
 
     /**
      * Summary of __construct
@@ -42,6 +44,7 @@ class Author extends Base
         $this->id = $post->id;
         $this->name = str_replace("|", ",", $post->name);
         $this->sort = $post->sort;
+        $this->link = property_exists($post, 'link') ? $post->link : null;
         $this->databaseId = $database;
     }
 
@@ -73,7 +76,7 @@ class Author extends Base
      */
     public static function getInstancesByBookId($bookId, $database = null)
     {
-        $query = 'select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
+        $query = 'select authors.id as id, authors.name as name, authors.sort as sort, authors.link as link from authors, books_authors_link
 where author = authors.id
 and book = ? order by books_authors_link.id';
         $result = Database::query($query, [$bookId], $database);
