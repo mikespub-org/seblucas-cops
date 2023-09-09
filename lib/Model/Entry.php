@@ -147,4 +147,13 @@ class Entry
         }
         return null;
     }
+
+    /**
+     * Summary of isValidForOPDS
+     * @return bool
+     */
+    public function isValidForOPDS()
+    {
+        return true;
+    }
 }

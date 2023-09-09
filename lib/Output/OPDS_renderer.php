@@ -395,6 +395,9 @@ class OPDSRenderer
             }
         }
         foreach ($page->entryArray as $entry) {
+            if (!$entry->isValidForOPDS()) {
+                continue;
+            }
             $this->getXmlStream()->startElement("entry");
             $this->renderEntry($entry);
             $this->getXmlStream()->endElement();
