@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "165b905252b9e108a7eaf1cd34ca29e3",
+    "content-hash": "5e0fe4c2f9ca2108a97174c5da813351",
     "packages": [
         {
             "name": "freearhey/wikidata",
@@ -435,22 +435,23 @@
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "45d34dd3e90f5046343c66c0e922a49cfc32e3c2"
+                "reference": "cb1bbabeb0efd31dd36e049118322f8d3e3936bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/45d34dd3e90f5046343c66c0e922a49cfc32e3c2",
-                "reference": "45d34dd3e90f5046343c66c0e922a49cfc32e3c2",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/cb1bbabeb0efd31dd36e049118322f8d3e3936bf",
+                "reference": "cb1bbabeb0efd31dd36e049118322f8d3e3936bf",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-xml": "*",
-                "ext-zip": "*"
+                "ext-zip": "*",
+                "php": ">=7.4"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.*"
@@ -458,7 +459,8 @@
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "src/"
+                    "src/",
+                    "resources/tbszip/src/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -493,9 +495,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/1.5.0"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/1.5.1"
             },
-            "time": "2023-09-09T19:41:14+00:00"
+            "time": "2023-09-09T21:11:56+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",

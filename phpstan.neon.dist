@@ -13,4 +13,3 @@ parameters:
         - vendor/*
         - test/WebDriverTestCase.php
         - test/WebDriverTest.php
-        - resources/tbszip/vendor/*
