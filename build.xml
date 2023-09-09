@@ -45,6 +45,11 @@
                 <exclude name="vendor/appium/**" />
                 <exclude name="vendor/bin/**" />
                 <exclude name="vendor/brianium/**" />
+                <exclude name="vendor/mikespub/epub-loader/app/**" />
+                <exclude name="vendor/mikespub/php-epub-meta/app/**" />
+                <exclude name="vendor/mikespub/php-epub-meta/assets/**" />
+                <exclude name="vendor/mikespub/php-epub-meta/resources/tbszip/test/**" />
+                <exclude name="vendor/mikespub/php-epub-meta/test/**" />
                 <exclude name="vendor/npm-asset/dot/benchmarks/**" />
                 <exclude name="vendor/npm-asset/dot/bin/**" />
                 <exclude name="vendor/npm-asset/dot/examples/**" />
