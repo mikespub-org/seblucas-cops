@@ -1,0 +1,118 @@
+{% extends 'index.html' %}
+
+{% macro tree(id, item) %}
+	{% if item is iterable %}
+		{% if 0 in item|keys %}
+			{{id}}: 
+			<ul>
+			{% for key, value in item %}
+				<li>
+					{{ _self.tree(0, value) }}
+				</li>
+			{% endfor %}
+			</ul>
+		{% elseif item.id and item.id == id and item.label %}
+			{{item.id}}: {{item.label}}
+			{% if 'values' in item|keys and item.values|length == 1 and 0 in item.values|keys %}
+				= {{ _self.tree(0, item.values.0) }}
+			{% else %}
+			<ul>
+			{% for key, value in item %}
+				{% if key in ['id', 'label'] %}
+				{% else %}
+				<li>
+					{{ _self.tree(key, value) }}
+				</li>
+				{% endif %}
+			{% endfor %}
+			</ul>
+			{% endif %}
+		{% elseif item.id and item.label and item.id == item.label %}
+			{{item.label}}
+			{% if 'qualifiers' in item|keys and item.qualifiers|length == 0 %}
+			{% else %}
+			<ul>
+			{% for key, value in item %}
+				{% if key in ['id', 'label'] %}
+				{% else %}
+				<li>
+					{{ _self.tree(key, value) }}
+				</li>
+				{% endif %}
+			{% endfor %}
+			</ul>
+			{% endif %}
+		{% elseif id == 0 %}
+			{% if item.id and item.label and 'value' in item|keys and item.value is not iterable %}
+				{{item.id}}: {{item.label}} = {{item.value|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_UNESCAPED_UNICODE'))}}
+			{% elseif item.id and item.label and 'qualifiers' in item|keys %}
+				{% if item.qualifiers|length == 0 %}
+					{{item.id}}: {{item.label}}
+				{% else %}
+					<ul>
+						<li>{{item.id}}: {{item.label}}</li>
+						<li>{{ _self.tree('qualifiers', item.qualifiers) }}</li>
+					</ul>
+				{% endif %}
+			{% else %}
+			<ul>
+			{% for key, value in item %}
+				<li>
+					{{ _self.tree(key, value) }}
+				</li>
+			{% endfor %}
+			</ul>
+			{% endif %}
+		{% elseif item|length == 0 %}
+			{{id}}
+		{% else %}
+			{{id}}: 
+			<ul>
+			{% for key, value in item %}
+				<li>
+					{{ _self.tree(key, value) }}
+				</li>
+			{% endfor %}
+			</ul>
+		{% endif %}
+	{% elseif id == 0 %}
+		{{item}}
+	{% else %}
+		{{id}}: {{item}}
+	{% endif %}
+{% endmacro %}
+
+{% block content %}
+<form method="GET" action="./index.php">
+	<input type="hidden" name="action" value="{{action}}" />
+	<input type="hidden" name="dbnum" value="{{dbNum}}" />
+	Entity <input type="text" name="matchId" value="{{entityId}}" />
+	Search <input type="text" name="query" value="" />
+	Author <select name="authorId">
+		<option value=""></option>
+		{% for id, name in authors %}
+		{% if authorId and authorId == id %}
+		<option value="{{id}}" selected>{{name}}</option>
+		{% else %}
+		<option value="{{id}}">{{name}}</option>
+		{% endif %}
+		{% endfor %}
+	</select>
+	<input type="submit" value="Find"/>
+</form>
+<div><b>Wikidata Entity {{entityId}}</b></div>
+{% if entity|length > 0 and 'P18' in entity.properties|keys and entity.properties.P18.values|length > 0 %}
+	{% set url = entity.properties.P18.values[0].id|split('/')|slice(-1) %}
+	<img src="https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/{{url|join}}&width=300"/>
+{% endif %}
+<ul>
+{% for key, value in entity %}
+	<li>
+		{{ _self.tree(key, value) }}
+		{% if key == 'wiki_url' and value %}
+			<a href="{{value}}">Wikipedia</a>
+		{% endif %}
+	</li>
+{% endfor %}
+</ul>
+{% endblock content %}

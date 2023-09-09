@@ -62,3 +62,6 @@ $gConfig['actions'] = [];
 $gConfig['actions']['csv_export'] = 'Csv export';
 $gConfig['actions']['db_load'] = 'Create database';
 $gConfig['actions']['authors'] = 'Check authors in database';
+$gConfig['actions']['books'] = 'Check books for author';
+$gConfig['actions']['series'] = 'Check series for author';
+$gConfig['actions']['wikidata'] = 'Find Wikidata entity';
