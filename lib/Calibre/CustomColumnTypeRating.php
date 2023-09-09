@@ -28,7 +28,7 @@ class CustomColumnTypeRating extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::TYPE_RATING, $database);
+        parent::__construct($pcustomId, static::TYPE_RATING, $database);
     }
 
     /**
@@ -60,10 +60,10 @@ class CustomColumnTypeRating extends CustomColumnType
     public function getQuery($id)
     {
         if (empty($id)) {
-            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
+            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return [$query, []];
         } else {
-            $query = str_format(self::SQL_BOOKLIST, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
+            $query = str_format(static::SQL_BOOKLIST, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return [$query, [$id]];
         }
     }

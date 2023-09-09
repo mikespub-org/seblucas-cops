@@ -1,0 +1,13 @@
+{# customize.html is used for it.page == 19 #}
+{% extends 'navlist.html' %}
+
+{% block entry %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+    {{entry.title|escape}}
+    </div>
+    <div class="panel-body">
+        {{entry.content|raw}}
+    </div>
+</div>
+{% endblock entry %}

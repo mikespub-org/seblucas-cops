@@ -1,0 +1,15 @@
+{# filters.html is used for it.isFilterPage #}
+{% extends 'navlist.html' %}
+
+{% block entry %}
+{% if entry.navlink == "#" and entry.number == "" %}
+    <div class="panel panel-default">
+        <!-- fixme: show as separator on larger screens? -->
+        <div class="panel-heading">
+            {{entry.title|escape}}
+        </div>
+    </div>
+{% else %}
+    {{ parent() }}
+{% endif %}
+{% endblock entry %}

@@ -58,6 +58,8 @@ class Page
     public string $filterUri = "";
     /** @var array<string, mixed>|false */
     public $hierarchy = false;
+    /** @var array<string, mixed>|false */
+    public $extra = false;
 
     /** @var Entry[] */
     public $entryArray = [];
@@ -146,7 +148,7 @@ class Page
     public function InitializeContent()
     {
         $this->getEntries();
-        $this->idPage = self::PAGE_ID;
+        $this->idPage = static::PAGE_ID;
         $this->title = Config::get('title_default');
         $this->subtitle = Config::get('subtitle_default');
     }
@@ -162,6 +164,7 @@ class Page
         } else {
             $this->getTopCountEntries();
         }
+        $this->getExtra();
     }
 
     /**
@@ -244,6 +247,15 @@ class Page
         if (Database::isMultipleDatabaseEnabled()) {
             $this->title =  Database::getDbName($this->getDatabaseId());
         }
+    }
+
+    /**
+     * Summary of getExtra
+     * @return void
+     */
+    public function getExtra()
+    {
+        $this->extra = false;
     }
 
     /**
@@ -333,17 +345,24 @@ class Page
      */
     public function getSortOptions()
     {
-        return [
+        if ($this->request->isFeed()) {
+            $sortLinks = Config::get('opds_sort_links');
+        } else {
+            $sortLinks = Config::get('html_sort_links');
+        }
+        $allowed = array_flip($sortLinks);
+        $sortOptions = [
             //'title' => localize("bookword.title"),
             'title' => localize("sort.titles"),
-            'timestamp' => localize("recent.title"),
             'author' => localize("authors.title"),
             'pubdate' => localize("pubdate.title"),
             'rating' => localize("ratings.title"),
+            'timestamp' => localize("recent.title"),
             //'series' => localize("series.title"),
             //'language' => localize("languages.title"),
             //'publisher' => localize("publishers.title"),
         ];
+        return array_intersect_key($sortOptions, $allowed);
     }
 
     /**

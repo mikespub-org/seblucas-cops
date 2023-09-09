@@ -18,3 +18,4 @@
 .editorconfig
 .gitattributes
 *.cache
+.devcontainer/devcontainer.json

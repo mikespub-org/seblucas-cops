@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -71,9 +72,9 @@ class RestApi
         }
 
         // handle extra functions
-        if (array_key_exists($path, self::$extra)) {
+        if (array_key_exists($path, static::$extra)) {
             $this->isExtra = true;
-            return call_user_func(self::$extra[$path], $this->request);
+            return call_user_func(static::$extra[$path], $this->request);
         }
 
         // match path with routes
@@ -109,7 +110,7 @@ class RestApi
      */
     public static function getScriptName($request)
     {
-        return $request->getEndpoint(self::$endpoint);
+        return $request->getEndpoint(static::$endpoint);
     }
 
     /**
@@ -147,9 +148,9 @@ class RestApi
             }
         }
         $output = json_encode($result, JSON_UNESCAPED_SLASHES);
-        $endpoint = self::getScriptName($this->request);
+        $endpoint = static::getScriptName($this->request);
 
-        return self::replaceLinks($output, $endpoint);
+        return static::replaceLinks($output, $endpoint);
     }
 
     /**
@@ -160,7 +161,7 @@ class RestApi
     public static function getCustomColumns($request)
     {
         $columns = CustomColumnType::getAllCustomColumns();
-        $endpoint = self::getScriptName($request);
+        $endpoint = static::getScriptName($request);
         $result = ["title" => "Custom Columns", "entries" => []];
         foreach ($columns as $title => $column) {
             $column["navlink"] = $endpoint . "/custom/" . $column["id"];
@@ -176,11 +177,63 @@ class RestApi
      */
     public static function getDatabases($request)
     {
+        $db = $request->get('db', null, '/^\d+$/');
+        if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
+            return static::getDatabase($db, $request);
+        }
+        $endpoint = static::getScriptName($request);
         $result = ["title" => "Databases", "entries" => []];
-        if (is_array(Config::get('calibre_directory'))) {
-            $result["entries"] = Config::get('calibre_directory');
-        } else {
-            array_push($result["entries"], Config::get('calibre_directory'));
+        $id = 0;
+        foreach (Database::getDbNameList() as $key) {
+            array_push($result["entries"], ["class" => "Database", "title" => $key, "id" => $id, "navlink" => "{$endpoint}/databases?db={$id}"]);
+            $id += 1;
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getDatabase
+     * @param int $database
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getDatabase($database, $request)
+    {
+        if (!Database::isMultipleDatabaseEnabled() && $database != 0) {
+            return ["title" => "Database Invalid", "entries" => []];
+        }
+        $dbName = Database::getDbName($database) ?: $database;
+        $endpoint = static::getScriptName($request);
+        $result = ["title" => "Database $dbName", "entries" => []];
+        /**
+        $name = $request->get('name', null, '/^\w+$/');
+        if (!empty($name)) {
+            $query = "SELECT * FROM {$name} LIMIT ?, ?";
+            $res = Database::query($query, [0, 10], $database);
+            while ($post = $res->fetchObject()) {
+                $entry = (array) $post;
+                $entry["navlink"] = "{$endpoint}/databases?db={$database}&name={$name}&id={$entry['id']}";
+                array_push($result["entries"], $entry);
+            }
+            return $result;
+        }
+         */
+        $type = $request->get('type', null, '/^\w+$/');
+        if (in_array($type, ['table', 'view'])) {
+            $entries = Database::getDbSchema($database, $type);
+            foreach ($entries as $entry) {
+                $entry["navlink"] = "{$endpoint}/databases?db={$database}&name={$entry['tbl_name']}";
+                unset($entry["sql"]);
+                array_push($result["entries"], $entry);
+            }
+            return $result;
+        }
+        $metadata = [
+            "table" => "Tables",
+            "view" => "Views",
+        ];
+        foreach ($metadata as $name => $title) {
+            array_push($result["entries"], ["class" => "Metadata", "title" => $title, "navlink" => "{$endpoint}/databases?db={$database}&type={$name}"]);
         }
         return $result;
     }

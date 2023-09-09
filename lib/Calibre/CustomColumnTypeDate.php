@@ -29,7 +29,7 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::TYPE_DATE, $database);
+        parent::__construct($pcustomId, static::TYPE_DATE, $database);
     }
 
     /**
@@ -40,11 +40,11 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getQuery($id)
     {
         if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
-            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
         $date = new DateTime($id);
-        $query = str_format(self::SQL_BOOKLIST, "{0}", "{1}", $this->getTableName());
+        $query = str_format(static::SQL_BOOKLIST, "{0}", "{1}", $this->getTableName());
         return [$query, [$date->format("Y-m-d")]];
     }
 
@@ -56,10 +56,10 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getQueryByYear($year)
     {
-        if (!preg_match(self::GET_PATTERN, $year)) {
+        if (!preg_match(static::GET_PATTERN, $year)) {
             throw new UnexpectedValueException();
         }
-        $query = str_format(self::SQL_BOOKLIST_YEAR, "{0}", "{1}", $this->getTableName());
+        $query = str_format(static::SQL_BOOKLIST_YEAR, "{0}", "{1}", $this->getTableName());
         return [$query, [$year]];
     }
 
@@ -181,7 +181,7 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getCustomValuesByYear($year, $sort = null)
     {
-        if (!preg_match(self::GET_PATTERN, $year)) {
+        if (!preg_match(static::GET_PATTERN, $year)) {
             throw new UnexpectedValueException();
         }
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} WHERE substr(date(value), 1, 4) = ? GROUP BY datevalue";

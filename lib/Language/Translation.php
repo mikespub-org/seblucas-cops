@@ -90,7 +90,7 @@ class Translation
         }
         $lang_file = null;
         foreach ($langs as $language => $val) {
-            $temp_file = self::BASE_DIR . '/Localization_' . $language . '.json';
+            $temp_file = static::BASE_DIR . '/Localization_' . $language . '.json';
             if (file_exists($temp_file)) {
                 $lang = $language;
                 $lang_file = $temp_file;
@@ -98,7 +98,7 @@ class Translation
             }
         }
         if (empty($lang_file)) {
-            $lang_file = self::BASE_DIR . '/Localization_' . $lang . '.json';
+            $lang_file = static::BASE_DIR . '/Localization_' . $lang . '.json';
         }
         return [$lang, $lang_file];
     }
@@ -133,7 +133,7 @@ class Translation
             $lang_file_en = null;
             [$lang, $lang_file] = $this->getLangAndTranslationFile();
             if ($lang != 'en') {
-                $lang_file_en = self::BASE_DIR . '/Localization_en.json';
+                $lang_file_en = static::BASE_DIR . '/Localization_en.json';
             }
 
             $lang_file_content = file_get_contents($lang_file);
@@ -184,6 +184,6 @@ class Translation
      */
     public static function normAndUp($s)
     {
-        return mb_strtoupper(self::normalizeUtf8String($s), 'UTF-8');
+        return mb_strtoupper(static::normalizeUtf8String($s), 'UTF-8');
     }
 }

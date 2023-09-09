@@ -1,0 +1,42 @@
+{# mainlist.html is extended by booklist.html and navlist.html #}
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container-fluid">
+{% block filter %}
+<div id="filter">
+    <ul>
+    {% if it.hierarchy  %}
+        {% if it.hierarchy.parent  %}
+            <li><a href="{{it.hierarchy.parent.navlink}}"><strong>{{it.hierarchy.parent.title}}</strong></a></li>
+        {% endif %}
+        {% if it.hierarchy.current  %}
+            {% if it.hierarchy.hastree  %}
+                <li><a href="{{it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+            {% else %}
+                <li><a href="{{it.hierarchy.current.navlink}}&tree=1"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+            {% endif %}
+        {% endif %}
+        {% for entry in it.hierarchy.children %}
+            <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
+        {% endfor %}
+    {% endif %}
+    </ul>
+</div>
+{% endblock filter %}
+
+{% block content %}
+This is the content block
+{% endblock content %}
+
+{% block pager %}
+{% if it.isPaginated == 1 %}
+    <ul class="pager">
+        <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
+        <li> {{it.currentPage}} / {{it.maxPage}} </li>
+        <li class="{% if it.nextLink == "" %}disabled{% endif %}"><a id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+    </ul>
+{% endif %}
+{% endblock pager %}
+</div>
+{% endblock main %}

@@ -19,7 +19,7 @@ class CustomColumnTypeBool extends CustomColumnType
 
     // PHP pre 5.6 does not support const arrays
     /** @var array<int, string> */
-    private $BOOLEAN_NAMES = [
+    protected $BOOLEAN_NAMES = [
         -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
         0 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
         +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
@@ -32,7 +32,7 @@ class CustomColumnTypeBool extends CustomColumnType
      */
     protected function __construct($pcustomId, $database)
     {
-        parent::__construct($pcustomId, self::TYPE_BOOL, $database);
+        parent::__construct($pcustomId, static::TYPE_BOOL, $database);
     }
 
     /**
@@ -43,13 +43,13 @@ class CustomColumnTypeBool extends CustomColumnType
     public function getQuery($id)
     {
         if ($id == -1 || $id === '') {
-            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 0) {
-            $query = str_format(self::SQL_BOOKLIST_FALSE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(static::SQL_BOOKLIST_FALSE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 1) {
-            $query = str_format(self::SQL_BOOKLIST_TRUE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(static::SQL_BOOKLIST_TRUE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } else {
             return null;
