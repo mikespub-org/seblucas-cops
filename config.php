@@ -34,6 +34,3 @@ if (!Request::verifyLogin($_SERVER)) {
     echo 'This site is password protected';
     exit;
 }
-
-// load global functions if necessary
-require_once __DIR__ . '/lib/functions.php';

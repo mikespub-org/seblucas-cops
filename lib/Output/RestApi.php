@@ -72,9 +72,9 @@ class RestApi
         }
 
         // handle extra functions
-        if (array_key_exists($path, self::$extra)) {
+        if (array_key_exists($path, static::$extra)) {
             $this->isExtra = true;
-            return call_user_func(self::$extra[$path], $this->request);
+            return call_user_func(static::$extra[$path], $this->request);
         }
 
         // match path with routes
@@ -110,7 +110,7 @@ class RestApi
      */
     public static function getScriptName($request)
     {
-        return $request->getEndpoint(self::$endpoint);
+        return $request->getEndpoint(static::$endpoint);
     }
 
     /**
@@ -148,9 +148,9 @@ class RestApi
             }
         }
         $output = json_encode($result, JSON_UNESCAPED_SLASHES);
-        $endpoint = self::getScriptName($this->request);
+        $endpoint = static::getScriptName($this->request);
 
-        return self::replaceLinks($output, $endpoint);
+        return static::replaceLinks($output, $endpoint);
     }
 
     /**
@@ -161,7 +161,7 @@ class RestApi
     public static function getCustomColumns($request)
     {
         $columns = CustomColumnType::getAllCustomColumns();
-        $endpoint = self::getScriptName($request);
+        $endpoint = static::getScriptName($request);
         $result = ["title" => "Custom Columns", "entries" => []];
         foreach ($columns as $title => $column) {
             $column["navlink"] = $endpoint . "/custom/" . $column["id"];
@@ -179,9 +179,9 @@ class RestApi
     {
         $db = $request->get('db', null, '/^\d+$/');
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
-            return self::getDatabase($db, $request);
+            return static::getDatabase($db, $request);
         }
-        $endpoint = self::getScriptName($request);
+        $endpoint = static::getScriptName($request);
         $result = ["title" => "Databases", "entries" => []];
         $id = 0;
         foreach (Database::getDbNameList() as $key) {
@@ -203,7 +203,7 @@ class RestApi
             return ["title" => "Database Invalid", "entries" => []];
         }
         $dbName = Database::getDbName($database) ?: $database;
-        $endpoint = self::getScriptName($request);
+        $endpoint = static::getScriptName($request);
         $result = ["title" => "Database $dbName", "entries" => []];
         /**
         $name = $request->get('name', null, '/^\w+$/');

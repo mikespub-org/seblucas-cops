@@ -43,8 +43,12 @@
                 <exclude name="coverage/**" />
                 <exclude name="saucetest/**" />
                 <exclude name="resources/epub-loader/app/**" />
+                <exclude name="resources/epub-loader/cache/**" />
                 <exclude name="resources/epub-loader/test/**" />
-                <exclude name="resources/tbszip/stuffs/**" />
+                <exclude name="resources/epub-loader/vendor/**" />
+                <exclude name="resources/tbszip/test/**" />
+                <exclude name="resources/tbszip/vendor/**" />
+                <exclude name="resources/php-epub-meta/app/**" />
                 <exclude name="resources/php-epub-meta/assets/**" />
                 <exclude name="resources/php-epub-meta/coverage/**" />
                 <exclude name="resources/php-epub-meta/test/**" />
@@ -72,7 +76,6 @@
                 <exclude name="vendor/psr/**" />
                 <exclude name="vendor/sauce/**" />
                 <exclude name="vendor/sebastian/**" />
-                <exclude name="vendor/symfony/**" />
                 <exclude name="vendor/theseer/**" />
                 <exclude name="vendor/npm-asset/bootstrap/docs/**" />
                 <exclude name="vendor/npm-asset/bootstrap/fonts/**" />
@@ -87,6 +90,14 @@
                 <exclude name="vendor/npm-asset/twig/lib/**" />
                 <exclude name="vendor/npm-asset/twig/node/**" />
                 <exclude name="vendor/npm-asset/twig/src/**" />
+                <exclude name="vendor/npm-asset/babel--runtime/**" />
+                <exclude name="vendor/npm-asset/balanced-match/**" />
+                <exclude name="vendor/npm-asset/brace-expansion/**" />
+                <exclude name="vendor/npm-asset/concat-map/**" />
+                <exclude name="vendor/npm-asset/foreachasync/**" />
+                <exclude name="vendor/npm-asset/locutus/**" />
+                <exclude name="vendor/npm-asset/minimatch/**" />
+                <exclude name="vendor/npm-asset/walk/**" />
                 <exclude name="*.phar" />
                 <exclude name="*.zip" />
                 <exclude name="*.xml" />

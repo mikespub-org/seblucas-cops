@@ -75,20 +75,30 @@ if ($request->template() == 'twigged') {
     if ($request->render()) {
         // Get the page data
         $data['page_it'] = JSONRenderer::getJson($request, true);
+        if ($data['title'] != $data['page_it']['title']) {
+            $data['title'] .= ' - ' . $data['page_it']['title'];
+        }
     }
     echo $twig->render('index.html', ['it' => $data]);
     return;
 }
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 $headcontent = file_get_contents('templates/' . $request->template() . '/file.html');
 $template = new doT();
 $dot = $template->template($headcontent, null);
+if ($request->render()) {
+    // Get the page data
+    $page_it = JSONRenderer::getJson($request, true);
+    if ($data['title'] != $page_it['title']) {
+        $data['title'] .= ' - ' . $page_it['title'];
+    }
+    echo($dot($data));
+    echo "<body>\n";
+
+    echo Format::serverSideRender($page_it, $request->template());
+    echo "</body>\n</html>\n";
+    return;
+}
 echo($dot($data));
 echo "<body>\n";
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-if ($request->render()) {
-    // Get the data
-    $data = JSONRenderer::getJson($request, true);
-
-    echo Format::serverSideRender($data, $request->template());
-}
 echo "</body>\n</html>\n";

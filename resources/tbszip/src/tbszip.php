@@ -701,12 +701,12 @@ class clsTbsZip
      */
     public function Flush($Render = self::DOWNLOAD, $File = '', $ContentType = '', $sendHeaders = true)
     {
-        if (($File !== '') && ($this->ArchFile === $File) && ($Render == self::FILE)) {
+        if (($File !== '') && ($this->ArchFile === $File) && ($Render == static::FILE)) {
             $this->RaiseError('Method Flush() cannot overwrite the current opened archive: \''.$File.'\''); // this makes corrupted zip archives without PHP error.
             return false;
         }
         if (!$sendHeaders) {
-            $Render = $Render | self::NOHEADER;
+            $Render = $Render | static::NOHEADER;
         }
 
         $ArchPos = 0;
@@ -877,8 +877,8 @@ class clsTbsZip
      */
     public function OutputOpen($Render, $File, $ContentType)
     {
-        if (($Render & self::FILE) == self::FILE) {
-            $this->OutputMode = self::FILE;
+        if (($Render & static::FILE) == static::FILE) {
+            $this->OutputMode = static::FILE;
             if (''.$File == '') {
                 $File = basename((string) $this->ArchFile).'.zip';
             }
@@ -886,16 +886,16 @@ class clsTbsZip
             if ($this->OutputHandle === false) {
                 return $this->RaiseError('Method Flush() cannot overwrite the target file \''.$File.'\'. This may not be a valid file path or the file may be locked by another process or because of a denied permission.');
             }
-        } elseif (($Render & self::STRING) == self::STRING) {
-            $this->OutputMode = self::STRING;
+        } elseif (($Render & static::STRING) == static::STRING) {
+            $this->OutputMode = static::STRING;
             $this->OutputSrc = '';
-        } elseif (($Render & self::DOWNLOAD) == self::DOWNLOAD) {
-            $this->OutputMode = self::DOWNLOAD;
+        } elseif (($Render & static::DOWNLOAD) == static::DOWNLOAD) {
+            $this->OutputMode = static::DOWNLOAD;
             // Output the file
             if (''.$File == '') {
                 $File = basename((string) $this->ArchFile);
             }
-            if (($Render & self::NOHEADER) == self::NOHEADER) {
+            if (($Render & static::NOHEADER) == static::NOHEADER) {
             } else {
                 header('Pragma: no-cache');
                 if ($ContentType != '') {
@@ -954,11 +954,11 @@ class clsTbsZip
      */
     public function OutputFromString($data)
     {
-        if ($this->OutputMode === self::DOWNLOAD) {
+        if ($this->OutputMode === static::DOWNLOAD) {
             echo $data; // donwload
-        } elseif ($this->OutputMode === self::STRING) {
+        } elseif ($this->OutputMode === static::STRING) {
             $this->OutputSrc .= $data; // to string
-        } elseif ($this->OutputMode === self::FILE) {
+        } elseif ($this->OutputMode === static::FILE) {
             fwrite($this->OutputHandle, (string) $data); // to file
         }
     }
@@ -969,7 +969,7 @@ class clsTbsZip
      */
     public function OutputClose()
     {
-        if (($this->OutputMode === self::FILE) && ($this->OutputHandle !== false)) {
+        if (($this->OutputMode === static::FILE) && ($this->OutputHandle !== false)) {
             fclose($this->OutputHandle);
             $this->OutputHandle = false;
         }
@@ -1279,7 +1279,7 @@ class clsTbsZip
             $Compress = false;
         }
 
-        if ($DataType == self::STRING) {
+        if ($DataType == static::STRING) {
             $path = false;
             if ($Compress) {
                 // we compress now in order to save PHP memory

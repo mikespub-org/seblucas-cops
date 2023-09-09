@@ -76,7 +76,7 @@ abstract class Category extends Base
     public function getSiblingEntries()
     {
         // Fiction.Historical -> Fiction.% matching Fiction.Historical and Fiction.Romance
-        $parentName = self::findParentName($this->getTitle());
+        $parentName = static::findParentName($this->getTitle());
         if (empty($parentName)) {
             return [];
         }
@@ -117,7 +117,7 @@ abstract class Category extends Base
         }
         $this->parent = false;
         // Fiction.Historical -> Fiction
-        $parentName = self::findParentName($this->getTitle());
+        $parentName = static::findParentName($this->getTitle());
         if (empty($parentName)) {
             return $this->parent;
         }

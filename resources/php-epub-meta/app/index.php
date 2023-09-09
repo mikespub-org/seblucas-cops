@@ -2,12 +2,9 @@
 
 use SebLucas\EPubMeta\EPub;
 
-// remove seblucas/tbszip from composer.json
-include_once(dirname(__DIR__) . '/tbszip/tbszip.php');
-
 // modify this to point to your book directory
 $bookdir = '/home/andi/Dropbox/ebooks/';
-$bookdir = __DIR__ . '/test/data/';
+$bookdir = dirname(__DIR__) . '/test/data/';
 
 // proxy google requests
 if (isset($_GET['api'])) {
@@ -16,7 +13,7 @@ if (isset($_GET['api'])) {
     exit;
 }
 
-require_once __DIR__ . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 require_once __DIR__ . '/util.php';
 
 $epub = null;
@@ -118,9 +115,9 @@ header('Content-Type: text/html; charset=utf-8');
 <head>
     <title>EPub Manager</title>
 
-    <link rel="stylesheet" type="text/css" href="assets/css/smoothness/jquery-ui-1.8.18.custom.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/cleditor/jquery.cleditor.css" />
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/smoothness/jquery-ui-1.8.18.custom.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/cleditor/jquery.cleditor.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css" />
 
     <script type="text/javascript">
         <?php if($error) {
@@ -220,10 +217,10 @@ foreach ($list as $book) {
     <?php endif; ?>
 
     <!-- load at the end, for faster site load -->
-    <script type="text/javascript" src="assets/js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="assets/js/jquery-ui-1.8.18.custom.min.js"></script>
-    <script type="text/javascript" src="assets/js/jquery.cleditor.min.js"></script>
-    <script type="text/javascript" src="assets/js/script.js"></script>
+    <script type="text/javascript" src="../assets/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../assets/js/jquery-ui-1.8.18.custom.min.js"></script>
+    <script type="text/javascript" src="../assets/js/jquery.cleditor.min.js"></script>
+    <script type="text/javascript" src="../assets/js/script.js"></script>
 
 </div>
 </body>

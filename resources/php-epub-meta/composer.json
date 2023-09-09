@@ -28,6 +28,6 @@
         "phpunit/phpunit": "9.*"
     },
     "autoload": {
-        "classmap": ["lib/"]
+        "classmap": ["src/", "../tbszip/src/"]
     }
 }

@@ -11,9 +11,6 @@ namespace Marsender\EPubLoader;
 use SebLucas\EPubMeta\Tools\ZipFile;
 use Exception;
 
-$ePubMetaPath = realpath(dirname(__DIR__, 2)) . '/php-epub-meta';
-require_once $ePubMetaPath . '/lib/Tools/ZipFile.php';
-
 /**
  * BookInfos class contains informations about a book,
  * and methods to load this informations from multiple sources (eg epub file)

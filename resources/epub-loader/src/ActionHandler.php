@@ -12,9 +12,9 @@ namespace Marsender\EPubLoader;
 class ActionHandler
 {
     /** @var array<mixed> */
-    private $dbConfig;
+    protected $dbConfig;
     /** @var CalibreDbLoader */
-    private $db;
+    protected $db;
     /** @var string */
     public $cacheDir;
     /** @var string */

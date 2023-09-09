@@ -110,7 +110,7 @@ class Data
      */
     public function isKnownType()
     {
-        return array_key_exists($this->extension, self::$mimetypes);
+        return array_key_exists($this->extension, static::$mimetypes);
     }
 
     /**
@@ -121,7 +121,7 @@ class Data
     {
         $result = "application/octet-stream";
         if ($this->isKnownType()) {
-            return self::$mimetypes [$this->extension];
+            return static::$mimetypes [$this->extension];
         } elseif (function_exists('finfo_open') === true) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
@@ -196,7 +196,7 @@ class Data
             return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
-        return self::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
+        return static::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
     }
 
     /**
@@ -288,7 +288,7 @@ class Data
             if ($view) {
                 $urlParam = Format::addURLParam($urlParam, "view", 1);
             }
-            return new LinkEntry(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
+            return new LinkEntry(static::$endpoint . '?' . $urlParam, $mime, $rel, $title);
         }
 
         return new LinkEntry(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);

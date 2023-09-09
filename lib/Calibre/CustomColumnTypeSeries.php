@@ -20,7 +20,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      */
     protected function __construct($pcustomId, $database = null)
     {
-        parent::__construct($pcustomId, self::TYPE_SERIES, $database);
+        parent::__construct($pcustomId, static::TYPE_SERIES, $database);
     }
 
     /**
@@ -52,10 +52,10 @@ class CustomColumnTypeSeries extends CustomColumnType
     public function getQuery($id)
     {
         if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
-            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
+            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
-        $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
+        $query = str_format(static::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
     }
 

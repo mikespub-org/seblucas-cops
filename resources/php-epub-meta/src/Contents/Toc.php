@@ -10,11 +10,11 @@ namespace SebLucas\EPubMeta\Contents;
 class Toc
 {
     /** @var string */
-    private $docTitle;
+    protected $docTitle;
     /** @var string */
-    private $docAuthor;
+    protected $docAuthor;
     /** @var NavPointList */
-    private $navMap;
+    protected $navMap;
 
     /**
      * Summary of __construct

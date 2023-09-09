@@ -11,7 +11,7 @@ namespace Marsender\EPubLoader;
 class CsvExport extends BaseExport
 {
     /** @var array<string>|null */
-    private $mLines = null;
+    protected $mLines = null;
 
     public const CsvSeparator = "\t";
 

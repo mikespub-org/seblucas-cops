@@ -280,7 +280,7 @@ class EPub
         }
         if ($file) {
             $render = $this->zipClass::DOWNLOAD;
-            $this->zip->Flush($render, $file, self::MIME_TYPE, $sendHeaders);
+            $this->zip->Flush($render, $file, static::MIME_TYPE, $sendHeaders);
         }
     }
 

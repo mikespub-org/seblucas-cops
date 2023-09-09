@@ -86,7 +86,7 @@ class EPubReader
         $epub = new EPub($book->getFilePath('EPUB', $idData));
         $epub->initSpineComponent();
 
-        $data = self::getComponentContent($epub, $component, $add);
+        $data = static::getComponentContent($epub, $component, $add);
 
         header('Content-Type: ' . $epub->componentContentType($component));
 
@@ -121,7 +121,7 @@ class EPubReader
             'version'    => Config::VERSION,
             'components' => $components,
             'contents'   => $contents,
-            'link'       => self::$endpoint . "?" . $add .  "&comp=",
+            'link'       => static::$endpoint . "?" . $add .  "&comp=",
         ];
 
         // replace {{=it.key}} (= doT syntax) and {{it.key}} (= twig syntax) with value
@@ -134,7 +134,7 @@ class EPubReader
 
         header('Content-Type: text/html;charset=utf-8');
 
-        $filecontent = file_get_contents(self::$template);
+        $filecontent = file_get_contents(static::$template);
 
         return preg_replace($pattern, $replace, $filecontent);
     }

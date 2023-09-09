@@ -1,49 +1,73 @@
 <?php
 
-namespace SebLucas\EPubMeta\Data;
+namespace SebLucas\EPubMeta\Contents;
 
+use SebLucas\EPubMeta\Data\Item;
 use ArrayAccess;
 use Countable;
-use Exception;
-use BadMethodCallException;
 use Iterator;
+use BadMethodCallException;
 
 /**
- * EPUB manifest structure
+ * EPUB spine structure
  *
  * @author Simon Schrape <simon@epubli.com>
- * @implements \Iterator<string, Item>
- * @implements \ArrayAccess<string, Item>
+ * @implements \Iterator<int, Item>
+ * @implements \ArrayAccess<int, Item>
  */
-class Manifest implements Iterator, Countable, ArrayAccess
+class Spine implements Iterator, Countable, ArrayAccess
 {
-    /** @var array|Item[] The map of all Items in this Manifest indexed by their IDs. */
-    private $items = [];
+    /** @var Item */
+    protected $tocItem;
+    protected string $tocFormat;
+    /** @var array|Item[] The ordered list of all Items in this Spine. */
+    protected $items = [];
 
     /**
-     * Create and add an Item with the given properties.
+     * Spine Constructor.
      *
-     * @param string $id The identifier of the new item.
-     * @param string $href The relative path of the referenced file in the EPUB.
-     * @param callable $callable A callable to get data from the referenced file in the EPUB.
-     * @param int $size The size of the referenced file in the EPUB.
-     * @param string|null $mediaType
-     * @return Item The newly created Item.
-     * @throws Exception If $id is already taken.
+     * @param Item $tocItem The TOC Item of this Spine.
+     * @param string $tocFormat The TOC Format of this Spine (Toc or Nav).
      */
-    public function createItem($id, $href, $callable, $size, $mediaType = null)
+    public function __construct(Item $tocItem, string $tocFormat)
     {
-        if (isset($this->items[$id])) {
-            throw new Exception("Item with ID $id already exists!");
-        }
-        $item = new Item($id, $href, $callable, $size, $mediaType);
-        $this->items[$id] = $item;
-
-        return $item;
+        $this->tocItem = $tocItem;
+        $this->tocFormat = $tocFormat;
     }
 
     /**
-     * Return the current Item while iterating this Manifest.
+     * Get the TOC Item of this Spine.
+     *
+     * @return Item
+     */
+    public function getTocItem()
+    {
+        return $this->tocItem;
+    }
+
+    /**
+     * Get the TOC Format of this Spine.
+     *
+     * @return string
+     */
+    public function getTocFormat()
+    {
+        return $this->tocFormat;
+    }
+
+    /**
+     * Append an Item to this Spine.
+     *
+     * @param Item $item The Item to append to this Spine.
+     * @return void
+     */
+    public function appendItem(Item $item)
+    {
+        $this->items[] = $item;
+    }
+
+    /**
+     * Return the current Item while iterating this Spine.
      *
      * @link http://php.net/manual/en/iterator.current.php
      * @return Item
@@ -54,7 +78,7 @@ class Manifest implements Iterator, Countable, ArrayAccess
     }
 
     /**
-     * Move forward to next Item while iterating this Manifest.
+     * Move forward to next Item while iterating this Spine.
      * @link http://php.net/manual/en/iterator.next.php
      * @return void Any returned value is ignored.
      */
@@ -64,12 +88,12 @@ class Manifest implements Iterator, Countable, ArrayAccess
     }
 
     /**
-     * Return the ID of the current Item while iterating this Manifest.
+     * Return the index of the current Item while iterating this Spine.
      *
      * @link http://php.net/manual/en/iterator.key.php
-     * @return string|null on success, or null on failure.
+     * @return int|null on success, or null on failure.
      */
-    public function key(): ?string
+    public function key(): ?int
     {
         return key($this->items);
     }
@@ -97,7 +121,7 @@ class Manifest implements Iterator, Countable, ArrayAccess
     }
 
     /**
-     * Get the first Item of this Manifest.
+     * Get the first Item of this Spine.
      *
      * @return Item
      */
@@ -107,7 +131,7 @@ class Manifest implements Iterator, Countable, ArrayAccess
     }
 
     /**
-     * Get the last Item of this Manifest.
+     * Get the last Item of this Spine.
      *
      * @return Item
      */
@@ -117,10 +141,10 @@ class Manifest implements Iterator, Countable, ArrayAccess
     }
 
     /**
-     * Count items of this Manifest.
+     * Count items of this Spine.
      *
      * @link https://php.net/manual/en/countable.count.php
-     * @return int The number of Items contained in this Manifest.
+     * @return int The number of Items contained in this Spine.
      */
     public function count(): int
     {
@@ -130,7 +154,7 @@ class Manifest implements Iterator, Countable, ArrayAccess
     /**
      * Whether a offset exists
      * @link https://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param string $offset An offset to check for.
+     * @param int $offset An offset to check for.
      * @return boolean true on success or false on failure.
      */
     public function offsetExists($offset): bool
@@ -141,7 +165,7 @@ class Manifest implements Iterator, Countable, ArrayAccess
     /**
      * Offset to retrieve
      * @link https://php.net/manual/en/arrayaccess.offsetget.php
-     * @param string $offset The offset to retrieve.
+     * @param int $offset The offset to retrieve.
      * @return Item
      */
     public function offsetGet($offset): Item

@@ -2,8 +2,8 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="./vendor/autoload.php" verbose="true">
   <coverage processUncoveredFiles="false">
     <include>
-      <directory suffix=".php">./</directory>
-      <directory suffix=".php">./lib/</directory>
+      <directory suffix=".php">./app/</directory>
+      <directory suffix=".php">./src/</directory>
     </include>
     <exclude>
       <directory suffix=".php">./test</directory>

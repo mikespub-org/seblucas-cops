@@ -6,7 +6,7 @@ Skrol29, 2010-09-03
 
 namespace SebLucas\TbsZip;
 
-include_once('tbszip.php'); // load the TbsZip library
+include_once('src/tbszip.php'); // load the TbsZip library
 $zip = new clsTbsZip(); // create a new instance of the TbsZip class
 
 

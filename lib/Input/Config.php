@@ -16,7 +16,7 @@ use Exception;
  */
 class Config
 {
-    public const VERSION = '1.4.5';
+    public const VERSION = '1.5.0';
     public const ENDPOINT = [
         "index" => "index.php",
         "feed" => "feed.php",
@@ -44,7 +44,7 @@ class Config
     public static function load($values)
     {
         // some phpunit tests re-load the config so we merge here
-        self::$values = array_merge(self::$values, $values);
+        static::$values = array_merge(static::$values, $values);
     }
 
     /**
@@ -56,13 +56,13 @@ class Config
      */
     public static function get($name, $default = null)
     {
-        if (empty(self::$values)) {
+        if (empty(static::$values)) {
             throw new Exception('Config was not loaded correctly in config.php or test/config_test.php');
         }
-        if (array_key_exists(self::PREFIX . $name, self::$values)) {
-            return self::$values[self::PREFIX . $name];
+        if (array_key_exists(static::PREFIX . $name, static::$values)) {
+            return static::$values[static::PREFIX . $name];
         }
-        return self::$values[$name] ?? $default;
+        return static::$values[$name] ?? $default;
     }
 
     /**
@@ -73,7 +73,7 @@ class Config
      */
     public static function set($name, $value)
     {
-        self::$values[self::PREFIX . $name] = $value;
+        static::$values[static::PREFIX . $name] = $value;
     }
 
     /**
@@ -82,6 +82,6 @@ class Config
      */
     public static function dump()
     {
-        return self::$values;
+        return static::$values;
     }
 }

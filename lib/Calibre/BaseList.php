@@ -155,7 +155,7 @@ class BaseList
      */
     public function getEntryCount()
     {
-        return self::getCountGeneric($this->getTable(), $this->className::PAGE_ID, $this->className::PAGE_ALL, $this->databaseId);
+        return static::getCountGeneric($this->getTable(), $this->className::PAGE_ID, $this->className::PAGE_ALL, $this->databaseId);
     }
 
     /**
@@ -256,9 +256,9 @@ class BaseList
     public function getRequestEntries($n = 1)
     {
         if ($this->request->hasFilter()) {
-            return self::getEntriesByFilter($n);
+            return static::getEntriesByFilter($n);
         }
-        return self::getAllEntries($n);
+        return static::getAllEntries($n);
     }
 
     /**
@@ -568,7 +568,7 @@ class BaseList
      */
     public function getInstancesByIds($instanceIds)
     {
-        $uniqueIds = self::getUniqueInstanceIds($instanceIds);
+        $uniqueIds = static::getUniqueInstanceIds($instanceIds);
         if (count($uniqueIds) < 1) {
             return [];
         }

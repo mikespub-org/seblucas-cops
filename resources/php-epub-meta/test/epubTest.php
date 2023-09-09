@@ -35,12 +35,12 @@ class EPubTest extends TestCase
     protected function setUp(): void
     {
         // sometime I might have accidentally broken the test file
-        if (filesize(self::TEST_EPUB) != 768780) {
+        if (filesize(static::TEST_EPUB) != 768780) {
             die('test.epub has wrong size, make sure it\'s unmodified');
         }
 
         // we work on a copy to test saving
-        if (!copy(self::TEST_EPUB, self::TEST_EPUB_COPY)) {
+        if (!copy(static::TEST_EPUB, static::TEST_EPUB_COPY)) {
             die('failed to create copy of the test book');
         }
 
@@ -52,14 +52,14 @@ class EPubTest extends TestCase
             E_ALL
         );
 
-        $this->epub = new Epub(self::TEST_EPUB_COPY);
+        $this->epub = new Epub(static::TEST_EPUB_COPY);
     }
 
     protected function tearDown(): void
     {
         restore_error_handler();
 
-        unlink(self::TEST_EPUB_COPY);
+        unlink(static::TEST_EPUB_COPY);
     }
 
     public function testOldAuthors(): void
@@ -217,20 +217,20 @@ class EPubTest extends TestCase
         // $this->assertEquals(strlen($cover['data']), 42);
 
         // // set new cover (will return a not-found as it's not yet saved)
-        $cover = $this->epub->Cover2(self::TEST_IMAGE,'image/jpeg');
+        $cover = $this->epub->Cover2(static::TEST_IMAGE,'image/jpeg');
         // $this->assertEquals($cover['mime'],'image/jpeg');
         // $this->assertEquals($cover['found'],'OPS/php-epub-meta-cover.img');
         // $this->assertEquals(strlen($cover['data']), 0);
 
         // save
         $this->epub->save();
-        //$this->epub = new EPub(self::TEST_EPUB_COPY);
+        //$this->epub = new EPub(static::TEST_EPUB_COPY);
 
         // read now changed cover
         $cover = $this->epub->Cover2();
         $this->assertEquals($cover['mime'],'image/jpeg');
         $this->assertEquals($cover['found'],'OPS/images/cover.png');
-        $this->assertEquals(strlen($cover['data']), filesize(self::TEST_IMAGE));
+        $this->assertEquals(strlen($cover['data']), filesize(static::TEST_IMAGE));
          */
     }
 
@@ -258,7 +258,7 @@ class EPubTest extends TestCase
         //$this->expectExceptionMessage('Failed to read epub file');
         $this->expectException(ValueError::class);
         $this->expectExceptionMessage('Invalid or uninitialized Zip object');
-        new Epub(self::TEST_IMAGE);
+        new Epub(static::TEST_IMAGE);
     }
 
     public function testLoadBrokenZip(): void
@@ -268,7 +268,7 @@ class EPubTest extends TestCase
         //$this->expectExceptionMessage('Unable to find metadata.xml');
         $this->expectException(ValueError::class);
         $this->expectExceptionMessage('Invalid or uninitialized Zip object');
-        new Epub(self::BROKEN_ZIP);
+        new Epub(static::BROKEN_ZIP);
     }
 
     public function testLoadMissingFile(): void
@@ -297,12 +297,12 @@ class EPubTest extends TestCase
         //$this->expectExceptionMessage('Failed to read from EPUB container: META-INF/container.xml');
         //$this->expectExceptionMessage('Failed to read epub file');
         $this->expectExceptionMessage('Unable to find ' . EPub::METADATA_FILE);
-        new Epub(self::EMPTY_ZIP);
+        new Epub(static::EMPTY_ZIP);
     }
 
     public function testFilename(): void
     {
-        $this->assertEquals(self::TEST_EPUB_COPY, $this->epub->file());
+        $this->assertEquals(static::TEST_EPUB_COPY, $this->epub->file());
     }
 
     public function testAuthors(): void
@@ -532,26 +532,26 @@ class EPubTest extends TestCase
     public function testCover(): void
     {
         // we work on a copy to test saving
-        $this->assertTrue(copy(self::TEST_EPUB, self::TEST_EPUB_COVER));
+        $this->assertTrue(copy(static::TEST_EPUB, static::TEST_EPUB_COVER));
 
         // use the ZipEdit class here
-        //$epub = new EPub(self::TEST_EPUB_COVER, ZipEdit::class);
-        $epub = new EPub(self::TEST_EPUB_COVER);
+        //$epub = new EPub(static::TEST_EPUB_COVER, ZipEdit::class);
+        $epub = new EPub(static::TEST_EPUB_COVER);
 
         // read current cover
         $cover = $epub->getCover();
         $this->assertEquals(657911, strlen($cover));
 
         // change cover and save
-        $epub->setCover(self::TEST_IMAGE, 'image/jpeg');
+        $epub->setCover(static::TEST_IMAGE, 'image/jpeg');
         $epub->save();
 
         // open epub again
-        $epub = new EPub(self::TEST_EPUB_COVER);
+        $epub = new EPub(static::TEST_EPUB_COVER);
 
         // read recently changed cover
         $cover = $epub->getCover();
-        $this->assertEquals(filesize(self::TEST_IMAGE), strlen($cover));
+        $this->assertEquals(filesize(static::TEST_IMAGE), strlen($cover));
 
         // delete cover
         $epub->clearCover();
@@ -560,7 +560,7 @@ class EPubTest extends TestCase
 
         $epub->close();
 
-        unlink(self::TEST_EPUB_COVER);
+        unlink(static::TEST_EPUB_COVER);
     }
 
     /**
@@ -570,18 +570,18 @@ class EPubTest extends TestCase
     public function testTitlePage()
     {
         // we work on a copy to test saving
-        $this->assertTrue(copy(self::TEST_EPUB, self::TEST_EPUB_COVER));
+        $this->assertTrue(copy(static::TEST_EPUB, static::TEST_EPUB_COVER));
 
         // use the ZipEdit class here
-        //$epub = new EPub(self::TEST_EPUB_COVER, ZipEdit::class);
-        $epub = new EPub(self::TEST_EPUB_COVER);
+        //$epub = new EPub(static::TEST_EPUB_COVER, ZipEdit::class);
+        $epub = new EPub(static::TEST_EPUB_COVER);
 
         // add title page and save
         $epub->addCoverImageTitlePage();
         $epub->save();
 
         // open epub again
-        $epub = new EPub(self::TEST_EPUB_COVER);
+        $epub = new EPub(static::TEST_EPUB_COVER);
 
         // read recently added title page
         $spine = $epub->getSpine();
@@ -593,7 +593,7 @@ class EPubTest extends TestCase
         // We expect an empty string since there is only an image but no text on that page.
         $this->assertEmpty(trim($titlePage->getContents()));
 
-        unlink(self::TEST_EPUB_COVER);
+        unlink(static::TEST_EPUB_COVER);
     }
 
     /**
@@ -843,11 +843,11 @@ class EPubTest extends TestCase
     public function provideItemContentsMarkupTestParameters()
     {
         return [
-            [self::MARKUP_XML_1, 3],
-            [self::MARKUP_XML_2, 4],
-            [self::MARKUP_XML_3, 16, 'section_77331', 'section_77332'],
-            [self::MARKUP_XML_4, 16, null, 'section_77332'],
-            [self::MARKUP_XML_5, 16, 'section_77332'],
+            [static::MARKUP_XML_1, 3],
+            [static::MARKUP_XML_2, 4],
+            [static::MARKUP_XML_3, 16, 'section_77331', 'section_77332'],
+            [static::MARKUP_XML_4, 16, null, 'section_77332'],
+            [static::MARKUP_XML_5, 16, 'section_77332'],
         ];
     }
 

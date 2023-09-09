@@ -9,7 +9,8 @@
     "js-cookie": "^2.2.1",
     "lru-fast": "^0.2.2",
     "magnific-popup": "^1.1.0",
-    "normalize.css": "^8.0.1"
+    "normalize.css": "^8.0.1",
+    "twig": "^1.16.0"
   },
   "license": "GPL-2.0-or-later"
 }

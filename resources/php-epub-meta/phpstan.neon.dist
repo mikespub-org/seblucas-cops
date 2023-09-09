@@ -1,0 +1,14 @@
+# baseline re-generated with level 4 to keep some issues visible on higher levels
+# at the time this file was updated there are 1 errors reported for levels 4 to 6
+includes:
+    #- phpstan-baseline.neon
+
+parameters:
+    level: 6
+    paths:
+        - .
+    bootstrapFiles:
+        - vendor/autoload.php
+    excludePaths:
+        - vendor/*
+        - src/Other.php

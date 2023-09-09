@@ -10,19 +10,19 @@ namespace SebLucas\EPubMeta\Contents;
 class NavPoint
 {
     /** @var string */
-    private $id;
+    protected $id;
     /** @var string */
-    private $class;
+    protected $class;
     /** @var int */
-    private $playOrder;
+    protected $playOrder;
     /** @var string */
-    private $navLabel;
+    protected $navLabel;
     /** @var string */
-    private $contentSourceFile;
+    protected $contentSourceFile;
     /** @var string */
-    private $contentSourceFragment;
+    protected $contentSourceFragment;
     /** @var NavPointList */
-    private $children;
+    protected $children;
 
     /**
      * @param string $id

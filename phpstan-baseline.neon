@@ -41,11 +41,6 @@ parameters:
 			path: lib/Output/JSON_renderer.php
 
 		-
-			message: "#^Property SebLucas\\\\Template\\\\doT\\:\\:\\$functionCode is never written, only read\\.$#"
-			count: 1
-			path: resources/dot-php/doT.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: resources/epub-loader/src/BookEPub.php
@@ -53,4 +48,4 @@ parameters:
 		-
 			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
 			count: 1
-			path: resources/php-epub-meta/lib/Data/Item.php
+			path: resources/php-epub-meta/src/Data/Item.php

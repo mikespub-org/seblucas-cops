@@ -19,6 +19,6 @@
         "twig/twig": "^3.7"
     },
     "autoload": {
-        "classmap": ["src/", "../php-epub-meta/lib/"]
+        "classmap": ["src/", "../php-epub-meta/src/"]
     }
 }

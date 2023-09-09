@@ -13,8 +13,8 @@ use Exception;
 class BookExport
 {
     /** @var mixed */
-    private $mExport = null;
-    private int $mNbBook = 0;
+    protected $mExport = null;
+    protected int $mNbBook = 0;
 
     public const eExportTypeCsv = 1;
     public const CsvSeparator = "\t";

@@ -234,6 +234,19 @@ class BookTest extends TestCase
         $this->assertCount(9, $entryArray);
     }
 
+    public function testGetBatchQuery(): void
+    {
+        // All recent books
+        $request = new Request();
+        // Use anonymous class to override class constant
+        $booklist = new class($request) extends BookList {
+            public const BATCH_QUERY = true;
+        };
+
+        $entryArray = $booklist->getAllRecentBooks();
+        $this->assertCount(15, $entryArray);
+    }
+
     public function testGetBookByDataId(): void
     {
         $book = Book::getBookByDataId(17);

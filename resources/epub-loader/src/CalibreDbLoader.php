@@ -27,12 +27,12 @@ define('CalibreCreateDbSql', realpath(__DIR__) . '/metadata_sqlite.sql');
 class CalibreDbLoader
 {
     /** @var PDO|null */
-    private $mDb = null;
+    protected $mDb = null;
 
     /** @var array<string, mixed>|null */
-    private $mBookId = null;
+    protected $mBookId = null;
 
-    private string $mBookIdFileName = '';
+    protected string $mBookIdFileName = '';
 
     /**
      * Open a Calibre database (or create if database does not exist)
