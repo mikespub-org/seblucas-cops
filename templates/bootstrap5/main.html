@@ -1,0 +1,73 @@
+<div class="container-fluid">
+{{? it.page == 13 || it.page == 16}}
+    {{? it.page == 13}}
+        {{#def.bookdetail}}
+    {{??}}
+        {{= it.fullhtml}}
+    {{?}}
+{{??}}
+
+{{? it.containsBook == 0}}
+    <!-- Not book data -->
+    <div class="row row-cols-md-3 g-2">
+        {{~it.entries:entry:i}}
+        <div class="card">
+            <div class="card-body">
+                {{? it.page == 19}}
+                    <h5 class="card-title">
+                        {{=htmlspecialchars (entry.title)}}
+                    </h5>
+                    <p class="card-text">
+                        {{=entry.content}}
+                    </p>
+                {{??}}
+                    <a class="stretched-link link-underline link-underline-opacity-0" href="{{=entry.navlink}}">
+                            {{=htmlspecialchars (entry.title)}}&nbsp;
+                            <span class="badge text-bg-secondary rounded-pill">{{=entry.number}}</span></a>
+                {{?}}
+            </div>
+        </div>
+        {{~}}
+    </div>
+    <!-- end Not book data -->
+{{??}}
+<div class="row row-cols-2 row-cols-md-5 g-2">
+    {{~it.entries:entry:i}}
+        <div class="card">
+            <div class="cover-image">
+                {{? entry.book.hasCover == 1}}
+                    <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
+                        <img class ="card-image-top" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+                    </a>
+                {{?}}
+            </div>
+            <div class="card-body meta">
+                <h5 class="card-title title text-truncate"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
+                <div class="card-subtitle author text-truncate">
+                    {{~ entry.book.authors:author:author_index}}{{? author_index > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}
+                </div>
+                {{? entry.book.seriesName != ""}}<div class="series text-truncate"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
+                <!-- custom columns not tested -->
+                {{~entry.book.customcolumns_list :column:column_index}}
+                <div class="text-truncate"><i class="bi-node-minus"></i> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
+                {{~}}
+            </div>
+            <div class="card-footer">
+                <!-- download buttons for each available format -->
+                    {{~entry.book.preferedData:data:j}}
+                    <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
+                    {{~}}
+            </div>
+        </div>
+    {{~}}
+</div>
+{{?}}
+{{?}}
+{{? it.isPaginated == 1}}
+    <ul class="pager">
+        <li class="{{? it.prevLink == ""}}disabled{{?}}"><a id="prevLink" href="{{=it.prevLink}}"><i class="bi-chevron-left"></i>{{=it.c.i18n.previousAlt}}</a></li>
+        <li> {{=it.currentPage}} / {{=it.maxPage}} </li>
+        <li class="{{? it.nextLink == ""}}disabled{{?}}"><a id="nextLink" href="{{=it.nextLink}}">{{=it.c.i18n.nextAlt}}<i class="bi-chevron-right"></i></a></li>
+    </ul>
+{{?}}
+</div>

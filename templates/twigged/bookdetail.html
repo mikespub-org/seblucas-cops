@@ -1,0 +1,98 @@
+{# bookdetail.html is used for it.page == 13 #}
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="container-fluid">
+<div class="row">
+<div class="col-md-offset-2 col-md-4 col-sm-6 col-xs-12" id="cover" name="cover">
+    <div class="cover-image">
+        {% if it.book.hasCover == 1 %}
+        <div class="visible-xs topspace"></div>
+        <a href="{{it.book.coverurl}}">
+          <img class="img-responsive center-block" src="{{it.book.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 text-xs-center text-sm-left ">
+    {% for data in it.book.datas %}
+    <div class="btn-group">
+        <a title="Download // {{data.format}}" href="{{data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{data.format}}</a>
+        {% if data.mail == 1 %}
+        <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{data.format}}" href="empty.php" onclick="sendToMailAddress (this, '{{data.id}}'); return false;">
+        <span class="glyphicon glyphicon-envelope"></span></a>
+        {% endif %}
+        {% if data.readerUrl != "" %}
+        <a title="Reader" class="btn btn-primary" role="button" href="{{data.readerUrl}}" target="blank">
+        <span class="glyphicon glyphicon-eye-open"></span></a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+
+<div class="col-md-4 col-sm-6 col-xs-12">
+    <h1>{{it.title|escape}}</h1>
+    <h4>{% for author in it.book.authors %}{% if not loop.first %}, {% endif %}<a href="{{author.url}}">{{author.name|escape}}</a>{% endfor %}</h4>
+    {% if it.book.seriesName != "" %}
+        <h4><a href="{{it.book.seriesurl}}">{{it.book.seriesName|escape}}</a> ({{it.book.seriesIndex}})</h4>
+    {% endif %}
+</div>
+
+
+<div class="col-md-4 col-sm-6 col-xs-12">
+
+    {% if it.book.languagesName != "" %}
+    <p>
+        <span class="label label-default">{{it.c.i18n.languagesTitle}}: {{it.book.languagesName}}</span>
+    </p>
+    {% endif %}
+
+    {% if it.book.identifiers != "" %}
+    <div class="tags">
+        <p>
+        <span class="glyphicon glyphicon-link" title="{{it.c.i18n.linksTitle}}"></span>
+        {% for id in it.book.identifiers %}<a class="btn btn-xs btn-success" role="button" href="{{id.url}}">{{id.name|escape}}</a> {% endfor %}
+        </p>
+    </div>
+    {% endif %}
+
+    {% if it.book.tagsName != "" %}
+    <div class="tags">
+        <span class="glyphicon glyphicon-tags" title="{{it.c.i18n.tagsTitle}}"></span>
+        {% for tag in it.book.tags %}<a class="btn btn-xs btn-info" role="button" href="{{tag.url}}">{{tag.name|escape}}</a> {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if it.book.publisherName != "" %}
+    <p>
+        <h4>{{it.c.i18n.publisherName}}: <a href="{{it.book.publisherurl}}">{{it.book.publisherName|escape}}</a></h4>
+    </p>
+    {% endif %}
+    {% if it.book.pubDate != "" %}
+    <p>
+        <h4>{{it.c.i18n.pubdateTitle}}: {{it.book.pubDate}}</h4>
+    </p>
+    {% endif %}
+    {% for column in it.book.customcolumns_preview  %}
+    <p>
+        <h4>{{column.customColumnType.columnTitle}}: {{column.htmlvalue}}</h4>
+    </p>
+    {% endfor %}
+
+</div>
+
+</div>
+
+<div class="row">
+<div class="col-md-offset-2 col-md-8 col-sm-12">    
+    {% if it.book.content != "" %}
+    <br />
+    <h4>{{it.c.i18n.contentTitle}}</h4>
+    <div>{{it.book.content|raw}}</div>
+    {% endif %}
+</div>
+</div>
+</div>
+{% endblock main %}

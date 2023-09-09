@@ -47,8 +47,20 @@ class JSONRenderer
         }
         $database = $book->getDatabaseId();
 
+        $authors = [];
+        foreach ($book->getAuthors() as $author) {
+            $link = new LinkNavigation($author->getUri(), null, null, $database);
+            array_push($authors, ["name" => $author->name, "url" => $link->hrefXhtml($endpoint)]);
+        }
+
+        $tags = [];
+        foreach ($book->getTags() as $tag) {
+            $link = new LinkNavigation($tag->getUri(), null, null, $database);
+            array_push($tags, ["name" => $tag->name, "url" => $link->hrefXhtml($endpoint)]);
+        }
+
         $publisher = $book->getPublisher();
-        if (is_null($publisher)) {
+        if (empty($publisher)) {
             $pn = "";
             $pu = "";
         } else {
@@ -58,7 +70,7 @@ class JSONRenderer
         }
 
         $serie = $book->getSerie();
-        if (is_null($serie)) {
+        if (empty($serie)) {
             $sn = "";
             $scn = "";
             $su = "";
@@ -80,7 +92,9 @@ class JSONRenderer
                       "pubDate" => $book->getPubDate(),
                       "languagesName" => $book->getLanguages(),
                       "authorsName" => $book->getAuthorsName(),
+                      "authors" => $authors,
                       "tagsName" => $book->getTagsName(),
+                      "tags" => $tags,
                       "seriesName" => $sn,
                       "seriesIndex" => $book->seriesIndex,
                       "seriesCompleteName" => $scn,
@@ -95,7 +109,7 @@ class JSONRenderer
      */
     public static function getFullBookContentArray($book, $endpoint)
     {
-        $out = self::getBookContentArray($book, $endpoint);
+        $out = static::getBookContentArray($book, $endpoint);
         $database = $book->getDatabaseId();
 
         $cover = new Cover($book);
@@ -138,7 +152,7 @@ class JSONRenderer
 
         $out ["identifiers"] = [];
         foreach ($book->getIdentifiers() as $ident) {
-            array_push($out ["identifiers"], ["name" => $ident->formattedType, "url" => $ident->getUri()]);
+            array_push($out ["identifiers"], ["name" => $ident->formattedType, "url" => $ident->getLink()]);
         }
 
         $out ["customcolumns_preview"] = $book->getCustomColumnValues(Config::get('calibre_custom_column_preview'), true);
@@ -160,12 +174,37 @@ class JSONRenderer
         }
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
-            $out ["book"] = self::getBookContentArray($entry->book, $endpoint);
+            $out ["book"] = static::getBookContentArray($entry->book, $endpoint);
             $out ["thumbnailurl"] = $entry->getThumbnail($endpoint);
             $out ["coverurl"] = $entry->getImage($endpoint) ?? $out ["thumbnailurl"];
             return $out;
         }
-        return [ "class" => $entry->className, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
+        switch ($entry->className) {
+            case 'Author':
+                $label = localize("authors.title");
+                break;
+            case 'Identifier':
+                $label = localize("identifiers.title");
+                break;
+            case 'Language':
+                $label = localize("languages.title");
+                break;
+            case 'Publisher':
+                $label = localize("publishers.title");
+                break;
+            case 'Rating':
+                $label = localize("ratings.title");
+                break;
+            case 'Serie':
+                $label = localize("series.title");
+                break;
+            case 'Tag':
+                $label = localize("tags.title");
+                break;
+            default:
+                $label = $entry->className;
+        }
+        return [ "class" => $label, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
     }
 
     /**
@@ -197,6 +236,10 @@ class JSONRenderer
     public static function addCompleteArray($in, $request, $endpoint)
     {
         $out = $in;
+        // check for it.c.config.ignored_categories.whatever in templates for category 'whatever'
+        $ignoredCategories = ['dummy'];
+        $ignoredCategories = array_merge($ignoredCategories, $request->option('ignored_categories'));
+        $ignoredCategories = array_flip($ignoredCategories);
 
         $out ["c"] = [
             "version" => Config::VERSION,
@@ -230,6 +273,7 @@ class JSONRenderer
                 "sortorderDesc" => localize("search.sortorder.desc"),
                 "customizeEmail" => localize("customize.email"),
                 "ratingsTitle" => localize("ratings.title"),
+                "linkTitle" => localize("extra.link"),
             ],
             "url" => [
                 "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
@@ -242,6 +286,7 @@ class JSONRenderer
                 "kindleHack"        => "",
                 "server_side_rendering" => $request->render(),
                 "html_tag_filter" => Config::get('html_tag_filter'),
+                "ignored_categories" => $ignoredCategories,
             ],
         ];
         if (Config::get('thumbnail_handling') == "1") {
@@ -287,10 +332,10 @@ class JSONRenderer
         $currentPage->InitializeContent();
 
         // adapt endpoint based on $request e.g. for rest api
-        $endpoint = $request->getEndpoint(self::$endpoint);
+        $endpoint = $request->getEndpoint(static::$endpoint);
 
         if ($search) {
-            return self::getContentArrayTypeahead($currentPage, $endpoint);
+            return static::getContentArrayTypeahead($currentPage, $endpoint);
         }
 
         $out = [ "title" => $currentPage->title];
@@ -300,18 +345,20 @@ class JSONRenderer
         }
         $entries = [];
         $extraUri = "";
+        $out ["isFilterPage"] = false;
         if (!empty($request->get('filter')) && !empty($currentPage->filterUri)) {
             $extraUri = $currentPage->filterUri;
+            $out ["isFilterPage"] = true;
         }
         foreach ($currentPage->entryArray as $entry) {
-            array_push($entries, self::getContentArray($entry, $endpoint, $extraUri));
+            array_push($entries, static::getContentArray($entry, $endpoint, $extraUri));
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
             if (Config::get('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
                 $currentPage->book->updateForKepub = true;
             }
-            $out ["book"] = self::getFullBookContentArray($currentPage->book, $endpoint);
+            $out ["book"] = static::getFullBookContentArray($currentPage->book, $endpoint);
         } elseif ($page == PageId::BOOK_DETAIL) {
             $page = PageId::INDEX;
         }
@@ -346,7 +393,7 @@ class JSONRenderer
             $out ["currentPage"] = $currentPage->n;
         }
         if (!is_null($request->get("complete")) || $complete) {
-            $out = self::addCompleteArray($out, $request, $endpoint);
+            $out = static::addCompleteArray($out, $request, $endpoint);
         }
 
         $out ["containsBook"] = 0;
@@ -375,12 +422,12 @@ class JSONRenderer
         if ($request->hasFilter()) {
             $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
-                array_push($out["filters"], self::getContentArray($entry, $endpoint));
+                array_push($out["filters"], static::getContentArray($entry, $endpoint));
             }
         }
 
         if ($page == PageId::ABOUT) {
-            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('about.html'));
+            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('templates/about.html'));
             $out ["fullhtml"] = $temp;
         }
 
@@ -410,15 +457,16 @@ class JSONRenderer
         $out ["hierarchy"] = false;
         if ($currentPage->hierarchy) {
             $out ["hierarchy"] = [
-                "parent" => self::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraUri),
-                "current" => self::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraUri),
+                "parent" => static::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraUri),
+                "current" => static::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraUri),
                 "children" => [],
                 "hastree" => $request->get('tree', false),
             ];
             foreach ($currentPage->hierarchy['children'] as $entry) {
-                array_push($out ["hierarchy"]["children"], self::getContentArray($entry, $endpoint, $extraUri));
+                array_push($out ["hierarchy"]["children"], static::getContentArray($entry, $endpoint, $extraUri));
             }
         }
+        $out ["extra"] = $currentPage->extra;
 
         /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {

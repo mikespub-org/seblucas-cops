@@ -1,0 +1,59 @@
+<div class="card mb-3">
+    <div class="row">
+        <div class="col-4" id="cover" name="cover">
+            {{? it.book.hasCover == 1}}
+                <img class="img-fluid rounded-start" src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
+            {{?}}
+        </div>
+        <div class="col-8" id="book-info">
+            <h1>{{=htmlspecialchars (it.title)}}</h1>
+            <h4>{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}</h4>
+            {{? it.book.pubDate != ""}}
+            <p><span class="fw-bold">{{=it.c.i18n.pubdateTitle}}</span>: {{=it.book.pubDate}}</p>
+            {{?}}
+            {{? it.book.seriesName != ""}}
+            <h4><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
+            {{?}}
+            {{~it.book.datas:data:i}}
+            <div class="btn-group">
+                <a title="Download {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><i class="bi-download"></i> {{=data.format}}</a>
+                {{? data.mail == 1}}
+                <a id="mailButton" class="btn btn-primary" role="button" title="Send by eMail - {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
+                <i class="bi-envelope-at-fill"></i></a>
+                {{?}}
+                {{? data.readerUrl != ""}}
+                <a title="Open in Web Reader" class="btn btn-primary" role="button" href="{{=data.readerUrl}}" target="blank">
+                <i class="bi-eye"></i></a>
+                {{?}}
+            </div>
+            {{~}}
+            {{? it.book.content != ""}}
+            <h4>{{=it.c.i18n.contentTitle}}</h4>
+            <div>{{=it.book.content}}</div>
+            {{?}}
+            {{? it.book.publisherName != ""}}
+            <p><span class="fw-bold">{{=it.c.i18n.publisherName}}</span>: <a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a></p>
+            {{?}}
+            {{? it.book.languagesName != ""}}
+            <p><span class="fw-bold">{{=it.c.i18n.languagesTitle}}</span>: {{=it.book.languagesName}}</p>
+            {{?}}
+            {{? it.book.tagsName != ""}}
+            <div class="tags mb-2">
+                {{~it.book.tags:tag:i}}
+                <a class="btn btn-sm btn-info" role="button" href="{{=tag.url}}"><i class="bi-tag"></i> {{=htmlspecialchars (tag.name)}}</a>
+                {{~}}
+            </div>
+            {{?}}
+            {{? it.book.identifiers != ""}}
+            <div class="more-info mb-2">
+                {{~it.book.identifiers:id:i}}
+                <a class="btn btn-sm btn-info" role="button" href="{{=id.url}}"><i class="bi-link-45deg"></i>{{=htmlspecialchars (id.name)}}</a> 
+                {{~}}
+            </div>
+            {{?}}
+            {{~it.book.customcolumns_preview :column:column_index}}
+            <p><span class="fw-bold">{{=column.customColumnType.columnTitle}}</span>: {{=column.htmlvalue}}</p>
+            {{~}}
+        </div>
+    </div>
+</div>

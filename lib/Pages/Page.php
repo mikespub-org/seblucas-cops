@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
@@ -57,6 +58,8 @@ class Page
     public string $filterUri = "";
     /** @var array<string, mixed>|false */
     public $hierarchy = false;
+    /** @var array<string, mixed>|false */
+    public $extra = false;
 
     /** @var Entry[] */
     public $entryArray = [];
@@ -75,7 +78,7 @@ class Page
      * Summary of getPage
      * @param mixed $pageId
      * @param mixed $request
-     * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
+     * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllIdentifiers|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageIdentifierDetail|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
      */
     public static function getPage($pageId, $request)
     {
@@ -145,7 +148,7 @@ class Page
     public function InitializeContent()
     {
         $this->getEntries();
-        $this->idPage = self::PAGE_ID;
+        $this->idPage = static::PAGE_ID;
         $this->title = Config::get('title_default');
         $this->subtitle = Config::get('subtitle_default');
     }
@@ -161,6 +164,7 @@ class Page
         } else {
             $this->getTopCountEntries();
         }
+        $this->getExtra();
     }
 
     /**
@@ -243,6 +247,15 @@ class Page
         if (Database::isMultipleDatabaseEnabled()) {
             $this->title =  Database::getDbName($this->getDatabaseId());
         }
+    }
+
+    /**
+     * Summary of getExtra
+     * @return void
+     */
+    public function getExtra()
+    {
+        $this->extra = false;
     }
 
     /**
@@ -332,22 +345,29 @@ class Page
      */
     public function getSortOptions()
     {
-        return [
+        if ($this->request->isFeed()) {
+            $sortLinks = Config::get('opds_sort_links');
+        } else {
+            $sortLinks = Config::get('html_sort_links');
+        }
+        $allowed = array_flip($sortLinks);
+        $sortOptions = [
             //'title' => localize("bookword.title"),
             'title' => localize("sort.titles"),
-            'timestamp' => localize("recent.title"),
             'author' => localize("authors.title"),
             'pubdate' => localize("pubdate.title"),
             'rating' => localize("ratings.title"),
+            'timestamp' => localize("recent.title"),
             //'series' => localize("series.title"),
             //'language' => localize("languages.title"),
             //'publisher' => localize("publishers.title"),
         ];
+        return array_intersect_key($sortOptions, $allowed);
     }
 
     /**
      * Summary of getFilters
-     * @param Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @param Author|Language|Publisher|Rating|Serie|Tag|Identifier|CustomColumn $instance
      * @return void
      */
     public function getFilters($instance)
@@ -455,6 +475,20 @@ class Page
                 $instance->limitSelf = false;
             }
             $this->entryArray = array_merge($this->entryArray, $instance->getTags($paging['t']));
+        }
+        if (!($instance instanceof Identifier) && in_array('identifier', $filterLinks)) {
+            array_push($this->entryArray, new Entry(
+                localize("identifiers.title"),
+                "",
+                "TODO",
+                "text",
+                [],
+                $this->getDatabaseId(),
+                "",
+                ""
+            ));
+            $paging['i'] ??= 1;
+            $this->entryArray = array_merge($this->entryArray, $instance->getIdentifiers($paging['i']));
         }
         /**
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy

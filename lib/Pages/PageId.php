@@ -34,6 +34,8 @@ class PageId
     public const PUBLISHER_DETAIL = "21";
     public const ALL_RATINGS = "22";
     public const RATING_DETAIL = "23";
+    public const ALL_IDENTIFIERS = "41";
+    public const IDENTIFIER_DETAIL = "42";
     public const ALL_BOOKS_YEAR = "50";
     public const FILTER = "99";
     public const ERROR = "100";
@@ -52,6 +54,7 @@ class PageId
     public const ALL_RATING_ID = "cops:rating";
     public const ALL_SERIES_ID = "cops:series";
     public const ALL_TAGS_ID = "cops:tags";
+    public const ALL_IDENTIFIERS_ID = "cops:identifiers";
 
     /**
      * Summary of getPage
@@ -104,6 +107,10 @@ class PageId
                 return new PageAllPublishers($request);
             case PageId::PUBLISHER_DETAIL :
                 return new PagePublisherDetail($request);
+            case PageId::ALL_IDENTIFIERS:
+                return new PageAllIdentifiers($request);
+            case PageId::IDENTIFIER_DETAIL :
+                return new PageIdentifierDetail($request);
             case PageId::ABOUT :
                 return new PageAbout($request);
             case PageId::CUSTOMIZE :

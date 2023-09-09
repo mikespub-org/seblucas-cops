@@ -234,6 +234,19 @@ class BookTest extends TestCase
         $this->assertCount(9, $entryArray);
     }
 
+    public function testGetBatchQuery(): void
+    {
+        // All recent books
+        $request = new Request();
+        // Use anonymous class to override class constant
+        $booklist = new class($request) extends BookList {
+            public const BATCH_QUERY = true;
+        };
+
+        $entryArray = $booklist->getAllRecentBooks();
+        $this->assertCount(15, $entryArray);
+    }
+
     public function testGetBookByDataId(): void
     {
         $book = Book::getBookByDataId(17);
@@ -353,7 +366,7 @@ class BookTest extends TestCase
         $this->assertCount(2, $identifiers);
         $this->assertEquals("uri", $identifiers[0]->type);
         $this->assertEquals("http|//www.feedbooks.com/book/63", $identifiers[0]->val);
-        $this->assertEquals("", $identifiers[0]->getUri());
+        $this->assertEquals("", $identifiers[0]->getLink());
     }
 
     public function testGetIdentifiers_Isbn(): void
@@ -364,7 +377,7 @@ class BookTest extends TestCase
         $this->assertCount(1, $identifiers);
         $this->assertEquals("isbn", $identifiers[0]->type);
         $this->assertEquals("9782253003663", $identifiers[0]->val);
-        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[0]->getUri());
+        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[0]->getLink());
     }
 
     public function testBookGetLinkArrayWithUrlRewriting(): void

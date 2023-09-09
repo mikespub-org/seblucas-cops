@@ -35,7 +35,7 @@ if (!function_exists('localize')) {
      * @param bool $reset
      * @return string
      */
-    function localize($phrase, $count=-1, $reset=false)
+    function localize($phrase, $count = -1, $reset = false)
     {
         return Config::get('_translator_')->localize($phrase, $count, $reset);
     }

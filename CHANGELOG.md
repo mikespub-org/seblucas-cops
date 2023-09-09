@@ -6,8 +6,31 @@ or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
+  * Use kiwilan/php-opds to generate OPDS 2.0 catalog with opds.php (besides OPDS 1.2 with feed.php)
 
-1.5.x - 202308xx Update php-epub-meta
+1.5.x - 202309xx To be continued
+  * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
+
+1.5.0 - 20230909 New baseline for next releases
+  * Support class inheritance for most COPS lib and resource classes in code
+  * Minor updates for templates - pass ignored categories #30 + set document title #31
+  * Add resources/epub-loader actions for books, series and wikidata
+  * Update bootstrap5 template - see pull request #29 from @dunxd - feedback still appreciated
+  * Add support for .m4b files in COPS - see issue #28 from @Chirishman
+  * Add twigged template using Twig template engine as alternative for doT
+
+1.4.5 - 20230905 Make sort links optional in OPDS feeds for old e-readers
+  * Changes in config_default.php file:
+    - new $config['cops_opds_sort_links']
+    - new $config['cops_html_sort_links']
+  * Make sort links optional in HTML page detail and OPDS catalog - see #27
+
+1.4.4 - 20230904 Revert OPDS feed changes for old e-readers
+  * Switch section to subsection in OPDS link rel for koreader and Kybook3 - see #26 and #27
+  * Add class label for #24 + authors & tags for #25 in JSON renderer
+  * Prepare move from clsTbsZip to ZipEdit when updating EPUB in code
+
+1.4.3 - 20230831 Sort & Filter in OPDS Catalog + Add bootstrap v5 template
   * Changes in config_default.php file:
     - new $config['cops_thumbnail_default']
     - new $config['cops_opds_filter_limit']
@@ -15,6 +38,10 @@ x.x.x - TODO
     - new $config['cops_html_filter_limit']
     - new $config['cops_html_filter_links']
     - drop $config['cops_show_filter_links']
+  * Add bootstrap5 template for modern devices - see pull request #22 from @dunxd - feedback appreciated
+  * Add optional Identifier pages in code
+  * Fix updating author & date in epub-loader
+  * Start WebDriver and BrowserKit test classes for functional testing
   * Split off new Calibre\Cover class + move various thumbnail code there
   * Add default thumbnail and link numbers for OPDS catalog if e-reader uses them
   * Add first & last links + sorting & filtering options for OPDS catalog (if e-reader supports facets)
