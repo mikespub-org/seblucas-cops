@@ -11,13 +11,17 @@
 		<th>Action</th>
 		<th>Link</th>
 	</tr>
-	{% for author in authors %}
+	{% for item in authors %}
 	<tr>
-		<td>{{author.id}}</td>
-		<td>{{author.name}}</td>
-		<td>{{author.sort}}</td>
-		<td>{% if authorId == author.id %}<strong>Match</strong>{% else %}<a href="./index.php?action={{action}}&dbnum={{dbNum}}&authorId={{author.id}}">Match</a>{% endif %}</td>
-		<td><input type="url" name="link[{{author.id}}]" value="{{author.link}}" /></td>
+		<td>{{item.id}}</td>
+		<td>
+			{{item.name}}
+			<a href="./index.php?action=books&dbnum={{dbNum}}&authorId={{item.id}}" title="Books">B</a>
+			<a href="./index.php?action=series&dbnum={{dbNum}}&authorId={{item.id}}" title="Series">S</a>
+		</td>
+		<td>{{item.sort}}</td>
+		<td>{% if authorId == item.id %}<strong>Search</strong>{% else %}<a href="./index.php?action={{action}}&dbnum={{dbNum}}&authorId={{item.id}}">Search</a>{% endif %}</td>
+		<td><input type="url" name="link[{{item.id}}]" value="{{item.link}}" size="32" /> {% if item.entityId %}<a href="./index.php?action=wikidata&dbnum={{dbNum}}&authorId={{authorId}}&matchId={{item.entityId}}">{{item.entityId}}</a>{% endif %}</td>
 	</tr>
 	{% endfor %}
 </table>
@@ -26,11 +30,35 @@
 <div class="part">
 	<p>Wikidata:</p>
 	{% if matched %}
-		<ul>
+	<table width="100%">
+		<tr>
+			<th>Id</th>
+			<th>Label</th>
+			<th>Action</th>
+			<th>Description</th>
+			<th>Link</th>
+		</tr>
 		{% for match in matched %}
-			<li><a href="http://www.wikidata.org/entity/{{match.id}}">{{match.id}}</a> {{match.label}} {{match.description}} {% if match.wiki_url %}<a href="{{match.wiki_url}}">Wikipedia</a>{% endif %}</li>
+		<tr>
+			<td><a href="./index.php?action=wikidata&dbnum={{dbNum}}&authorId={{authorId}}&matchId={{match.id}}">{{match.id}}</a></td>
+			<td>{{match.label}}</td>
+			<td><a href="./index.php?action={{action}}&dbnum={{dbNum}}&authorId={{authorId}}&matchId={{match.id}}">Match</a></td>
+			<td>{{match.description}}</td>
+			<td>{% if match.wiki_url %}<a rel="external" target="_blank" href="{{match.wiki_url}}">Wikipedia</a>{% endif %}</td>
+		</tr>
+		{% if match.entries %}
+		<tr>
+			<td colspan="5">
+				<ul>
+				{% for entry in match.entries %}
+				<li><a href="./index.php?action=wikidata&dbnum={{dbNum}}&authorId={{authorId}}&matchId={{entry.id}}">{{entry.id}}</a> {{entry.label}} = {{entry.description}}</li>
+				{% endfor %}
+				</ul>
+			</td>
+		</tr>
+		{% endif %}
 		{% endfor %}
-		</ul>
+		</table>
 	{% else %}
 		No match found
 	{% endif %}

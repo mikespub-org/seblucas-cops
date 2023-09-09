@@ -11,4 +11,5 @@ epub-loader is a utility resource for ebooks.
 
 - If a first-time install, copy app/config.php.example to app/config.php
 - Edit config.php to match your config
-- Open the app directory url
+- Run `composer install -o` to install all package dependencies and optimize autoloader
+- Open the app directory url: [.../cops/resources/epub-loader/app/index.php](./app/index.php)

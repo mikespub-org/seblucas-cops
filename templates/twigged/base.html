@@ -68,6 +68,28 @@
 This is the main block
 {% endblock main %}
 
-{% block extra %}{% endblock extra %}
+{% block extra %}
+{% if it.extra %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-half-padding">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  {{it.extra.title}}
+                </div>
+                <div class="panel-body">
+                  {% if it.extra.link %}
+                    <p>{{it.c.i18n.linkTitle}}: <a rel="external" target="_blank" href="{{it.extra.link}}">{{it.extra.link}}</a></p>
+                  {% endif %}
+                  {% if it.extra.content %}
+                    {{it.extra.content}}
+                  {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock extra %}
 
 {% block footer %}{% endblock footer %}

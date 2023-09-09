@@ -236,6 +236,10 @@ class JSONRenderer
     public static function addCompleteArray($in, $request, $endpoint)
     {
         $out = $in;
+        // check for it.c.config.ignored_categories.whatever in templates for category 'whatever'
+        $ignoredCategories = ['dummy'];
+        $ignoredCategories = array_merge($ignoredCategories, $request->option('ignored_categories'));
+        $ignoredCategories = array_flip($ignoredCategories);
 
         $out ["c"] = [
             "version" => Config::VERSION,
@@ -269,6 +273,7 @@ class JSONRenderer
                 "sortorderDesc" => localize("search.sortorder.desc"),
                 "customizeEmail" => localize("customize.email"),
                 "ratingsTitle" => localize("ratings.title"),
+                "linkTitle" => localize("extra.link"),
             ],
             "url" => [
                 "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
@@ -281,6 +286,7 @@ class JSONRenderer
                 "kindleHack"        => "",
                 "server_side_rendering" => $request->render(),
                 "html_tag_filter" => Config::get('html_tag_filter'),
+                "ignored_categories" => $ignoredCategories,
             ],
         ];
         if (Config::get('thumbnail_handling') == "1") {
@@ -460,6 +466,7 @@ class JSONRenderer
                 array_push($out ["hierarchy"]["children"], self::getContentArray($entry, $endpoint, $extraUri));
             }
         }
+        $out ["extra"] = $currentPage->extra;
 
         /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {
