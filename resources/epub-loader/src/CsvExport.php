@@ -8,12 +8,10 @@
 
 namespace Marsender\EPubLoader;
 
-require_once(realpath(__DIR__) . '/BaseExport.class.php');
-
 class CsvExport extends BaseExport
 {
     /** @var array<string>|null */
-    private $mLines = null;
+    protected $mLines = null;
 
     public const CsvSeparator = "\t";
 

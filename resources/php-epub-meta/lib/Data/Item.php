@@ -18,17 +18,17 @@ class Item
 {
     public const XHTML = 'application/xhtml+xml';
     /** @var string */
-    private $id;
+    protected $id;
     /** @var string The path to the corresponding file. */
-    private $href;
+    protected $href;
     /** @var string */
-    private $mediaType;
+    protected $mediaType;
     /** @var callable|null A callable to get data from the referenced file. */
-    private $dataCallable;
+    protected $dataCallable;
     /** @var string The data read from the referenced file. */
-    private $data;
+    protected $data;
     /** @var int The size of the referenced file. */
-    private $size;
+    protected $size;
 
     /**
      * @param string $id This Item’s identifier.

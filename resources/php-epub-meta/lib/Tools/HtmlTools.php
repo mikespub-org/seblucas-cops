@@ -39,7 +39,7 @@ class HtmlTools
             if (is_string($length)) {
                 $length = trim($length);
                 /* interpret percentage value */
-                if (substr($length, -1)=='%') {
+                if (substr($length, -1) == '%') {
                     $length = (int) (strlen($htmlString) * intval(substr($length, 0, -1)) / 100);
                 }
             }

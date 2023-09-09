@@ -70,7 +70,7 @@ class Mail
         if (!file_exists($data->getLocalPath())) {
             return 'No email sent. Attachment not found';
         }
-        if (filesize($data->getLocalPath()) > self::$maxSize) {
+        if (filesize($data->getLocalPath()) > static::$maxSize) {
             return 'No email sent. Attachment too big';
         }
 

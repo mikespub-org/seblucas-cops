@@ -6,7 +6,11 @@
  * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
 
+namespace Marsender\EPubLoader\App;
+
+use Marsender\EPubLoader\ActionHandler;
 use Marsender\EPubLoader\BookExport;
+use Exception;
 
 /** @var array<mixed> $dbConfig */
 
@@ -22,7 +26,7 @@ try {
     $nbOk = 0;
     $epubPath = $dbConfig['epub_path'];
     if (!empty($epubPath)) {
-        $fileList = RecursiveGlob($dbPath . DIRECTORY_SEPARATOR . $epubPath, '*.epub');
+        $fileList = ActionHandler::getFiles($dbPath . DIRECTORY_SEPARATOR . $epubPath, '*.epub');
         foreach ($fileList as $file) {
             $filePath = substr($file, strlen($dbPath) + 1);
             $error = $export->AddEpub($dbPath, $filePath);
@@ -36,7 +40,7 @@ try {
     // Save export
     $export->SaveToFile();
     // Display info
-    echo sprintf('Export ebooks to %s - %d files', $fileName, $nbOk) . '<br />';
+    return sprintf('Export ebooks to %s - %d files', $fileName, $nbOk) . '<br />';
 } catch (Exception $e) {
     $gErrorArray[$fileName] = $e->getMessage();
 }

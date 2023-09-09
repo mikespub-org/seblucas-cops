@@ -1,0 +1,114 @@
+<header class="fixed-top">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary pb-0" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.libraryName}}</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link{{? it.page == 10}} active{{?}}" href="index.php?page=10"{{? it.page == 10 }} aria-current="page"{{?}}>{{=it.c.i18n.recentTitle}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{? it.page == 1}} active{{?}}" href="index.php?page=1"{{? it.page == 1 }} aria-current="page"{{?}}>{{=it.c.i18n.authorsTitle}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{? it.page == 11}} active{{?}}" href="index.php?page=11"{{? it.page == 11 }} aria-current="page"{{?}}>{{=it.c.i18n.tagsTitle}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link{{? it.page == 6}} active{{?}}" href="index.php?page=6"{{? it.page == 6 }} aria-current="page"{{?}}>{{=it.c.i18n.seriesTitle}}</a>
+          </li>
+        </ul>
+        <form id="searchForm" class="d-flex" role="search">
+            <input id="queryInput" name="query" class="form-control form-control-sm me-2" type="text" placeholder="{{=it.c.i18n.searchAlt}}" aria-label="{{=it.c.i18n.searchAlt}}">
+            <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+  {{? it.containsBook != 0 || it.filters}}
+  <script>
+    /* Add submenu class to body to give extra spacing */
+    document.body.classList.add("submenu");
+  </script>
+  <nav class="navbar bg-body-tertiary p-0" data-bs-theme="dark">
+      <ul name="2-bar" class="nav nav-pills" style="font-size: 0.8rem;">
+        {{? it.containsBook != 0 }}
+        <li class="nav-item p-1 text-white">Sort by:</li>
+        {{? it.sortoptions.title }}
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted == "title" }} active{{?}}" href="{{=str_format(it.sorturl, "title")}}"><i class="bi-sort-alpha-down"></i>Title</a>
+        </li>
+        {{?}}
+        {{? it.sortoptions.author }}
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted == "author" }} active{{?}}" href="{{=str_format(it.sorturl, "author")}}"><i class="bi-sort-alpha-down"></i>Author</a>
+        </li>
+        {{?}}
+        {{? it.sortoptions.pubdate }}
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted == "pubdate" }} active{{?}}" href="{{=str_format(it.sorturl, "pubdate")}}"><i class="bi-sort-numeric-down"></i>Published</a>
+        </li>
+        {{?}}
+        {{? it.sortoptions.rating }}
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted == "rating" }} active{{?}}" href="{{=str_format(it.sorturl, "rating")}}"><i class="bi-sort-numeric-up"></i>Rating</a>
+        </li>
+        {{?}}
+        {{? it.sortoptions.timestamp }}
+        <li class="nav-item sm">
+          <a class="nav-link p-1{{? it.sorted == "timestamp" || it.sorted == "timestamp desc" }} active{{?}}" href="{{=str_format(it.sorturl, "timestamp" ) }}"><i class="bi-sort-numeric-up"></i>Added</a>
+        </li>
+        {{?}}
+        {{?}}
+        {{? it.filters}}
+          <!-- show links to filter -->
+          {{~it.filters:filter:idx}}
+          <li class="nav-item p-1 text-white">Filters:</li>
+          <li class="nav-item sm">
+            <a class="nav-link p-1" href="{{=filter.navlink}}&filter=1" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=filter.class}} {{=filter.title}}">
+              <i class="bi-funnel"></i>{{=filter.class}} = {{=filter.title}}
+            </a>
+          </li>
+          {{~}}
+        {{?}}
+        {{? it.filterurl }}
+        <!-- show links to filter -->
+          {{? it.containsBook == 0 }}
+          <li class="nav-item sm">
+            <a class="nav-link p-1" href="{{=it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.bookwordTitle}}">
+              <i class="bi-list-ul"></i>{{=it.c.i18n.bookwordTitle }}
+            </a>
+          </li>
+          {{?}}
+          <li class="nav-item sm">
+            <a class="nav-link p-1" href="{{=it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.linksTitle}}">
+              <i class="bi-link-45deg"></i>{{=it.c.i18n.linksTitle }}
+            </a>
+          </li>
+        {{?}}
+      </ul>
+    </nav>
+  {{?}}
+</header>
+<!-- put footer directly after header so that on browsers that don't support fixed-bottom, all the controls are at the top of the page -->
+<footer class="fixed-bottom">
+  <ul class="nav nav-pills bg-body-tertiary justify-content-end" data-bs-theme="dark">
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.defaultTemplate}}">
+        <i class="bi-escape"></i> {{=it.c.i18n.defaultTemplate}}</span>
+      </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link{{? it.page == 19}} active{{?}}" href="{{=it.customizeurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.customizeTitle}}">
+          <i class="bi-tools"></i> {{=it.c.i18n.customizeTitle}}
+          </a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link{{? it.page == 16}} active{{?}}" href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.aboutTitle}}">
+          <i class="bi-info-circle"></i> {{=it.c.i18n.aboutTitle}}
+          </a>
+      </li>
+    </ul>
+</footer>

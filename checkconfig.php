@@ -273,18 +273,21 @@ Please check
             <h2>Check if all Calibre books are found</h2>
             <h4>
             <?php
-        try {
-            $db = new PDO('sqlite:' . Database::getDbFileName($i));
-            $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
-            $result->execute();
-            while ($post = $result->fetchObject()) {
-                if (!is_file(Database::getDbDirectory($i) . $post->fullpath)) {
-                    echo '<p>' . Database::getDbDirectory($i) . $post->fullpath . '</p>';
+            echo "This option has been disabled by default - uncomment if you are sure you want to do this...";
+            /**
+            try {
+                $db = new PDO('sqlite:' . Database::getDbFileName($i));
+                $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
+                $result->execute();
+                while ($post = $result->fetchObject()) {
+                    if (!is_file(Database::getDbDirectory($i) . $post->fullpath)) {
+                        echo '<p>' . Database::getDbDirectory($i) . $post->fullpath . '</p>';
+                    }
                 }
+            } catch (Exception $e) {
+                echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
             }
-        } catch (Exception $e) {
-            echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
-        }
+             */
             ?>
             </h4>
         </article>

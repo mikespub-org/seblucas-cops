@@ -18,7 +18,7 @@ use Iterator;
 class Manifest implements Iterator, Countable, ArrayAccess
 {
     /** @var array|Item[] The map of all Items in this Manifest indexed by their IDs. */
-    private $items = [];
+    protected $items = [];
 
     /**
      * Create and add an Item with the given properties.

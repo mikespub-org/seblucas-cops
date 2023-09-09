@@ -47,4 +47,28 @@ class EntryBook extends Entry
     {
         return $this->getImage();
     }
+
+    /**
+     * Summary of hasAcquisitionLink
+     * @return bool
+     */
+    public function hasAcquisitionLink()
+    {
+        foreach ($this->linkArray as $link) {
+            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Summary of isValidForOPDS
+     * @return bool
+     */
+    public function isValidForOPDS()
+    {
+        // check that we have at least 1 valid acquisition link for this book - see #28
+        return $this->hasAcquisitionLink();
+    }
 }

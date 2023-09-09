@@ -21,7 +21,7 @@ class Request
      * @var array<mixed>
      */
     public $urlParams = [];
-    private string $queryString = '';
+    protected string $queryString = '';
 
     /**
      * Summary of __construct

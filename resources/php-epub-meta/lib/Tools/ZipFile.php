@@ -7,7 +7,7 @@
  * @author     mikespub
  */
 
-namespace Marsender\EPubLoader;
+namespace SebLucas\EPubMeta\Tools;
 
 use Exception;
 use ZipArchive;
@@ -32,13 +32,13 @@ class ZipFile
     public const MIME_TYPE = 'application/epub+zip';
 
     /** @var ZipArchive|null */
-    private $mZip;
+    protected $mZip;
     /** @var array<string, mixed>|null */
-    private $mEntries;
+    protected $mEntries;
     /** @var array<string, mixed> */
-    private $mChanges = [];
+    protected $mChanges = [];
     /** @var string|null */
-    private $mFileName;
+    protected $mFileName;
 
     public function __construct()
     {
@@ -269,7 +269,7 @@ class ZipFile
      * @param bool $ReplacedAndDeleted
      * @return int
      */
-    public function FileCancelModif($inFileName, $ReplacedAndDeleted=true)
+    public function FileCancelModif($inFileName, $ReplacedAndDeleted = true)
     {
         // cancel added, modified or deleted modifications on a file in the archive
         // return the number of cancels
@@ -312,23 +312,23 @@ class ZipFile
      * @param bool $sendHeaders
      * @return void
      */
-    public function Flush($render=self::DOWNLOAD, $outFileName='', $contentType='', $sendHeaders = true)
+    public function Flush($render = self::DOWNLOAD, $outFileName = '', $contentType = '', $sendHeaders = true)
     {
         // we need to close the zip file to save all changes here - probably not what you wanted :-()
         $this->Close();
 
         $outFileName = $outFileName ?: $this->mFileName;
-        $contentType = $contentType ?: self::MIME_TYPE;
+        $contentType = $contentType ?: static::MIME_TYPE;
         if (!$sendHeaders) {
-            $render = $render | self::NOHEADER;
+            $render = $render | static::NOHEADER;
         }
         $inFilePath = realpath($this->mFileName);
 
-        if (($render & self::NOHEADER) !== self::NOHEADER) {
-            $expires = 60*60*24*14;
+        if (($render & static::NOHEADER) !== static::NOHEADER) {
+            $expires = 60 * 60 * 24 * 14;
             header('Pragma: public');
             header('Cache-Control: max-age=' . $expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
 
             header('Content-Type: ' . $contentType);
             header('Content-Disposition: attachment; filename="' . basename($outFileName) . '"');

@@ -1,0 +1,23 @@
+{# navlist.html is used for it.containsBook == 0 #}
+{% extends 'mainlist.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        {% for entry in it.entries %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+            {% block entry %}
+            <div class="panel panel-default">
+                <a href="{{entry.navlink}}">
+                    <div class="panel-body">
+                        {{entry.title|escape}}
+                        <span class="badge pull-right">{{entry.number}}</span>
+                    </div>
+                </a>
+            </div>
+            {% endblock entry %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

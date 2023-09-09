@@ -11,7 +11,7 @@ namespace Marsender\EPubLoader;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Dom\Element;
 
-$ePubMetaPath = realpath(dirname(__DIR__)) . '/php-epub-meta';
+$ePubMetaPath = realpath(dirname(__DIR__, 2)) . '/php-epub-meta';
 require_once $ePubMetaPath . '/lib/EPub.php';
 require_once $ePubMetaPath . '/lib/Dom/Element.php';
 require_once $ePubMetaPath . '/lib/Dom/XPath.php';

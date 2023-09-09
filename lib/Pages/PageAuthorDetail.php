@@ -46,5 +46,22 @@ class PageAuthorDetail extends Page
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series desc";
+        $this->getExtra($instance);
+    }
+
+    /**
+     * Summary of getExtra
+     * @param Author $instance
+     * @return void
+     */
+    public function getExtra($instance = null)
+    {
+        if (!is_null($instance) && !empty($instance->link)) {
+            $this->extra = [
+                "title" => localize("extra.title"),
+                "link" => $instance->link,
+                "content" => null,
+            ];
+        }
     }
 }

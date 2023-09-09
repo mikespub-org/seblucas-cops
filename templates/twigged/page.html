@@ -1,0 +1,16 @@
+{# page.html is rendered by Twig and it decides which template to include #}
+{% if it.page == 13 %}
+    {% include 'bookdetail.html' %}
+{% elseif it.page == 16 %}
+    {% include 'about.html' %}
+{% elseif it.page == 19 %}
+    {% include 'customize.html' %}
+{% elseif it.isFilterPage %}
+    {% include 'filters.html' %}
+{% elseif it.containsBook == 0 %}
+    {% include 'navlist.html' %}
+{% elseif it.page == 10 %}
+    {% include 'recent.html' %}
+{% else %}
+    {% include 'booklist.html' %}
+{% endif %}

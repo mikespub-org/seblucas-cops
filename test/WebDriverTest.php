@@ -348,7 +348,7 @@ class WebDriverTest extends WebDriverTestCase
             try {
                 $this->byName("query");
                 return true;
-            } catch (Exception) {
+            } catch (Exception $e) {
                 return null;
             }
         });

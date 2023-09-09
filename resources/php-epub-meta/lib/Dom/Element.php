@@ -36,7 +36,7 @@ class Element extends DOMElement
      * @param string $value
      * @param string $namespaceUri
      */
-    public function __construct($name, $value='', $namespaceUri='')
+    public function __construct($name, $value = '', $namespaceUri = '')
     {
         [$prefix, $name] = $this->splitQualifiedName($name);
         $value = htmlspecialchars($value);
@@ -84,7 +84,7 @@ class Element extends DOMElement
      * @param string $value
      * @return Element|bool
      */
-    public function newChild($name, $value='')
+    public function newChild($name, $value = '')
     {
         [$localName, $namespaceUri] = $this->getNameContext($name);
 
@@ -119,7 +119,7 @@ class Element extends DOMElement
      * @param string|false|null $value
      * @return string|void
      */
-    public function attr($attr, $value=null)
+    public function attr($attr, $value = null)
     {
         if (!is_null($value)) {
             if ($value === false) {
