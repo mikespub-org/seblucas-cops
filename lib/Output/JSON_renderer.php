@@ -236,6 +236,10 @@ class JSONRenderer
     public static function addCompleteArray($in, $request, $endpoint)
     {
         $out = $in;
+        // check for it.c.config.ignored_categories.whatever in templates for category 'whatever'
+        $ignoredCategories = ['dummy'];
+        $ignoredCategories = array_merge($ignoredCategories, $request->option('ignored_categories'));
+        $ignoredCategories = array_flip($ignoredCategories);
 
         $out ["c"] = [
             "version" => Config::VERSION,
@@ -282,6 +286,7 @@ class JSONRenderer
                 "kindleHack"        => "",
                 "server_side_rendering" => $request->render(),
                 "html_tag_filter" => Config::get('html_tag_filter'),
+                "ignored_categories" => $ignoredCategories,
             ],
         ];
         if (Config::get('thumbnail_handling') == "1") {
