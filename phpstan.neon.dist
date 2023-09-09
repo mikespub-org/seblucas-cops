@@ -13,7 +13,7 @@ parameters:
         - vendor/*
         - test/WebDriverTestCase.php
         - test/WebDriverTest.php
-        - resources/epub-loader/app/action_authors.php
+        - resources/epub-loader/src/WikiMatch.php
         - resources/epub-loader/vendor/*
         - resources/php-epub-meta/vendor/*
         - resources/php-epub-meta/lib/Dom/XmlNamespace.php
