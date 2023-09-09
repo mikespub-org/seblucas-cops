@@ -48,4 +48,4 @@ parameters:
 		-
 			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
 			count: 1
-			path: resources/php-epub-meta/lib/Data/Item.php
+			path: resources/php-epub-meta/src/Data/Item.php

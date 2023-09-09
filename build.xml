@@ -46,7 +46,9 @@
                 <exclude name="resources/epub-loader/cache/**" />
                 <exclude name="resources/epub-loader/test/**" />
                 <exclude name="resources/epub-loader/vendor/**" />
-                <exclude name="resources/tbszip/stuffs/**" />
+                <exclude name="resources/tbszip/test/**" />
+                <exclude name="resources/tbszip/vendor/**" />
+                <exclude name="resources/php-epub-meta/app/**" />
                 <exclude name="resources/php-epub-meta/assets/**" />
                 <exclude name="resources/php-epub-meta/coverage/**" />
                 <exclude name="resources/php-epub-meta/test/**" />

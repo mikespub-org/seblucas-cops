@@ -18,10 +18,11 @@ docker-compose-dev.yaml
 resources/epub-loader/cache/
 resources/epub-loader/test/
 resources/epub-loader/vendor/
-resources/tbszip/stuffs/
-resources/php-epub-meta/assets/
+resources/php-epub-meta/coverage/
 resources/php-epub-meta/test/
 resources/php-epub-meta/vendor/
+resources/tbszip/test/
+resources/tbszip/vendor/
 tools/
 clover.xml
 coverage/
