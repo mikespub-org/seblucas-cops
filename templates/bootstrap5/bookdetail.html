@@ -16,7 +16,7 @@
             {{?}}
             {{~it.book.datas:data:i}}
             <div class="btn-group">
-                <a title="Download {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span>{{=data.format}}</a>
+                <a title="Download {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><i class="bi-download"></i> {{=data.format}}</a>
                 {{? data.mail == 1}}
                 <a id="mailButton" class="btn btn-primary" role="button" title="Send by eMail - {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
                 <i class="bi-envelope-at-fill"></i></a>

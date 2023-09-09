@@ -68,9 +68,9 @@ class Book
     public $datas = null;
     /** @var Author[]|null */
     public $authors = null;
-    /** @var Publisher|null */
+    /** @var Publisher|false|null */
     public $publisher = null;
-    /** @var Serie|null */
+    /** @var Serie|false|null */
     public $serie = null;
     /** @var Tag[]|null */
     public $tags = null;
@@ -81,7 +81,7 @@ class Book
     /** @var array<mixed> */
     public $format = [];
     /** @var string|null */
-    private $coverFileName = null;
+    protected $coverFileName = null;
     public bool $updateForKepub = false;
 
     /**
@@ -154,7 +154,7 @@ class Book
      */
     public static function getEntryIdByLetter($startingLetter)
     {
-        return self::PAGE_ID.':letter:'.$startingLetter;
+        return static::PAGE_ID.':letter:'.$startingLetter;
     }
 
     /**
@@ -164,7 +164,7 @@ class Book
      */
     public static function getEntryIdByYear($year)
     {
-        return self::PAGE_ID.':year:'.$year;
+        return static::PAGE_ID.':year:'.$year;
     }
 
     /**
@@ -173,7 +173,7 @@ class Book
      */
     public function getUri()
     {
-        return '?page='.self::PAGE_DETAIL.'&id=' . $this->id;
+        return '?page='.static::PAGE_DETAIL.'&id=' . $this->id;
     }
 
     /**
@@ -184,7 +184,7 @@ class Book
     {
         $urlParam = $this->getUri();
         $urlParam = Format::addDatabaseParam($urlParam, $this->databaseId);
-        return self::$endpoint . $urlParam;
+        return static::$endpoint . $urlParam;
     }
 
     /**
@@ -235,7 +235,7 @@ class Book
 
     /**
      * Summary of getPublisher
-     * @return Publisher|null
+     * @return Publisher|false
      */
     public function getPublisher()
     {
@@ -246,7 +246,7 @@ class Book
     }
 
     /**
-     * @return Serie|null
+     * @return Serie|false
      */
     public function getSerie()
     {
@@ -310,7 +310,7 @@ class Book
     public function getDatas()
     {
         if (is_null($this->datas)) {
-            $this->datas = self::getDataByBook($this);
+            $this->datas = static::getDataByBook($this);
         }
         return $this->datas;
     }
@@ -391,7 +391,7 @@ class Book
     {
         $addition = '';
         $se = $this->getSerie();
-        if (!is_null($se) && $withSerie) {
+        if (!empty($se) && $withSerie) {
             $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
         //if (preg_match('/<\/(div|p|a|span)>/', $this->comment)) {
@@ -469,7 +469,7 @@ class Book
             $epub->setCoverFile($this->coverFileName, 'image/jpeg');
             $epub->setCalibre($this->uuid);
             $se = $this->getSerie();
-            if (!is_null($se)) {
+            if (!empty($se)) {
                 $epub->setSeries($se->name);
                 $epub->setSeriesIndex($this->seriesIndex);
             }
@@ -551,7 +551,7 @@ class Book
 
         // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         $serie = $this->getSerie();
-        if (!is_null($serie)) {
+        if (!empty($serie)) {
             array_push($linkArray, new LinkFeed($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
         }
 
@@ -584,7 +584,7 @@ class Book
      */
     public static function getBookColumns()
     {
-        $res = self::SQL_COLUMNS;
+        $res = static::SQL_COLUMNS;
         if (!empty(Config::get('calibre_database_field_cover'))) {
             $res = str_replace('has_cover,', 'has_cover, ' . Config::get('calibre_database_field_cover') . ',', $res);
         }
@@ -600,8 +600,8 @@ class Book
      */
     public static function getBookById($bookId, $database = null)
     {
-        $query = 'select ' . self::getBookColumns() . '
-from books ' . self::SQL_BOOKS_LEFT_JOIN . '
+        $query = 'select ' . static::getBookColumns() . '
+from books ' . static::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?';
         $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
@@ -619,8 +619,8 @@ where books.id = ?';
      */
     public static function getBookByDataId($dataId, $database = null)
     {
-        $query = 'select ' . self::getBookColumns() . ', data.name, data.format
-from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
+        $query = 'select ' . static::getBookColumns() . ', data.name, data.format
+from data, books ' . static::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?';
         $result = Database::query($query, [$dataId], $database);
         while ($post = $result->fetchObject()) {

@@ -54,6 +54,8 @@ class Route
         "/publishers/{id}" => PageId::PUBLISHER_DETAIL,
         "/ratings" => PageId::ALL_RATINGS,
         "/ratings/{id}" => PageId::RATING_DETAIL,
+        "/identifiers" => PageId::ALL_IDENTIFIERS,
+        "/identifiers/{id}" => PageId::IDENTIFIER_DETAIL,
     ];
     // with use_url_rewriting = 1 - basic rewrites only
     /** @var array<string, mixed> */

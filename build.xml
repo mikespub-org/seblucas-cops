@@ -83,6 +83,10 @@
                 <exclude name="vendor/npm-asset/corejs-typeahead/doc/**" />
                 <exclude name="vendor/npm-asset/corejs-typeahead/src/**" />
                 <exclude name="vendor/npm-asset/corejs-typeahead/test/**" />
+                <exclude name="vendor/npm-asset/twig/bin/**" />
+                <exclude name="vendor/npm-asset/twig/lib/**" />
+                <exclude name="vendor/npm-asset/twig/node/**" />
+                <exclude name="vendor/npm-asset/twig/src/**" />
                 <exclude name="*.phar" />
                 <exclude name="*.zip" />
                 <exclude name="*.xml" />

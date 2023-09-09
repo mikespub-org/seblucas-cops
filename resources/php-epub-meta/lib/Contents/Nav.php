@@ -10,11 +10,11 @@ namespace SebLucas\EPubMeta\Contents;
 class Nav
 {
     /** @var string from main document */
-    private $docTitle;
+    protected $docTitle;
     /** @var string from main document */
-    private $docAuthor;
+    protected $docAuthor;
     /** @var NavPointList */
-    private $navMap;
+    protected $navMap;
 
     /**
      * Summary of __construct

@@ -14,6 +14,11 @@ use SebLucas\Cops\Output\Format;
 
 class Data
 {
+    public const SQL_TABLE = "data";
+    public const SQL_COLUMNS = "id, name, format";
+    public const SQL_LINK_TABLE = "data";
+    public const SQL_LINK_COLUMN = "id";
+    public const SQL_SORT = "name";
     public static string $endpoint = Config::ENDPOINT["fetch"];
     /** @var mixed */
     public $id;
@@ -45,6 +50,7 @@ class Data
         'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
         'm4a'   => 'audio/mp4',
+        'm4b'   => 'audio/mp4',
         'mobi'  => 'application/x-mobipocket-ebook',
         'mp3'   => 'audio/mpeg',
         'lit'   => 'application/x-ms-reader',
@@ -80,10 +86,20 @@ class Data
         $this->format = $post->format;
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
+        $this->setBook($book);
+    }
+
+    /**
+     * Summary of setBook
+     * @param Book|null $book
+     * @return void
+     */
+    public function setBook($book)
+    {
         $this->book = $book;
         $this->databaseId = ($nullsafeVariable1 = $book) ? $nullsafeVariable1->getDatabaseId() : null;
         // this is set on book in JSONRenderer now
-        if ($book->updateForKepub && $this->isEpubValidOnKobo()) {
+        if (!is_null($book) && $book->updateForKepub && $this->isEpubValidOnKobo()) {
             $this->updateForKepub = true;
         }
     }
@@ -94,7 +110,7 @@ class Data
      */
     public function isKnownType()
     {
-        return array_key_exists($this->extension, self::$mimetypes);
+        return array_key_exists($this->extension, static::$mimetypes);
     }
 
     /**
@@ -105,7 +121,7 @@ class Data
     {
         $result = "application/octet-stream";
         if ($this->isKnownType()) {
-            return self::$mimetypes [$this->extension];
+            return static::$mimetypes [$this->extension];
         } elseif (function_exists('finfo_open') === true) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
@@ -180,7 +196,7 @@ class Data
             return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
-        return self::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
+        return static::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
     }
 
     /**
@@ -272,7 +288,7 @@ class Data
             if ($view) {
                 $urlParam = Format::addURLParam($urlParam, "view", 1);
             }
-            return new LinkEntry(self::$endpoint . '?' . $urlParam, $mime, $rel, $title);
+            return new LinkEntry(static::$endpoint . '?' . $urlParam, $mime, $rel, $title);
         }
 
         return new LinkEntry(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);

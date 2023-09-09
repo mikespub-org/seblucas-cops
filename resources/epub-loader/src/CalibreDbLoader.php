@@ -4,14 +4,13 @@
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Didier Corbière <contact@atoll-digital-library.org>
+ * @author     mikespub
  */
 
 namespace Marsender\EPubLoader;
 
 use Exception;
 use PDO;
-
-require_once(realpath(__DIR__) . '/BookInfos.class.php');
 
 define('PDO_SUCCES_CODE', '00000');
 
@@ -28,12 +27,12 @@ define('CalibreCreateDbSql', realpath(__DIR__) . '/metadata_sqlite.sql');
 class CalibreDbLoader
 {
     /** @var PDO|null */
-    private $mDb = null;
+    protected $mDb = null;
 
     /** @var array<string, mixed>|null */
-    private $mBookId = null;
+    protected $mBookId = null;
 
-    private string $mBookIdFileName = '';
+    protected string $mBookIdFileName = '';
 
     /**
      * Open a Calibre database (or create if database does not exist)
@@ -576,5 +575,141 @@ class CalibreDbLoader
             $title = $post->title;
             $sort = $post->sort;
         }
+    }
+
+    /**
+     * Summary of setAuthorLink
+     * @param int $authorId
+     * @param string $link
+     * @return bool
+     */
+    public function setAuthorLink($authorId, $link)
+    {
+        $sql = 'update authors set link = ? where id = ?';
+        $stmt = $this->mDb->prepare($sql);
+        return $stmt->execute([$link, $authorId]);
+    }
+
+    /**
+     * Summary of getAuthors
+     * @param int|null $authorId
+     * @return array<mixed>
+     */
+    public function getAuthors($authorId = null)
+    {
+        $sql = 'select id, name, sort, link from authors';
+        $params = [];
+        if (!empty($authorId)) {
+            $sql .= ' where id = ?';
+            $params[] = $authorId;
+        }
+        $stmt = $this->mDb->prepare($sql);
+        $stmt->execute($params);
+        $authors = [];
+        while ($post = $stmt->fetchObject()) {
+            $authors[$post->id] = (array) $post;
+        }
+        return $authors;
+    }
+
+    /**
+     * Summary of getBooks
+     * @param int|null $bookId
+     * @param int|null $authorId
+     * @return array<mixed>
+     */
+    public function getBooks($bookId = null, $authorId = null)
+    {
+        $sql = 'select books.id as id, books.title as title, author from books, books_authors_link
+        where book = books.id';
+        $params = [];
+        if (!empty($bookId)) {
+            $sql .= ' and book = ?';
+            $params[] = $bookId;
+        }
+        if (!empty($authorId)) {
+            $sql .= ' and author = ?';
+            $params[] = $authorId;
+        }
+        $stmt = $this->mDb->prepare($sql);
+        $stmt->execute($params);
+        $books = [];
+        $bookIdList = [];
+        while ($post = $stmt->fetchObject()) {
+            $books[$post->id] = (array) $post;
+            $books[$post->id]['identifiers'] = [];
+            $bookIdList[] = $post->id;
+        }
+        $sql = 'select id, book, type, val as value from identifiers
+        where book IN (' . str_repeat('?,', count($bookIdList) - 1) . '?)';
+        $stmt = $this->mDb->prepare($sql);
+        $stmt->execute($bookIdList);
+        while ($post = $stmt->fetchObject()) {
+            $books[$post->book]['identifiers'][$post->id] = (array) $post;
+        }
+        return $books;
+    }
+
+    /**
+     * Summary of getBooksByAuthor
+     * @param int $authorId
+     * @return array<mixed>
+     */
+    public function getBooksByAuthor($authorId)
+    {
+        return $this->getBooks(null, $authorId);
+    }
+
+    /**
+     * Summary of getSeries
+     * @param int|null $seriesId
+     * @param int|null $authorId
+     * @param int|null $bookId
+     * @return array<mixed>
+     */
+    public function getSeries($seriesId = null, $authorId = null, $bookId = null)
+    {
+        $sql = 'select series.id as id, series.name as name, author from series, books_series_link, books, books_authors_link
+        where books_series_link.series = series.id and books_series_link.book = books.id and books_authors_link.book = books.id';
+        $params = [];
+        if (!empty($seriesId)) {
+            $sql .= ' and series.id = ?';
+            $params[] = $seriesId;
+        }
+        if (!empty($authorId)) {
+            $sql .= ' and author = ?';
+            $params[] = $authorId;
+        }
+        if (!empty($bookId)) {
+            $sql .= ' and books.id = ?';
+            $params[] = $bookId;
+        }
+        $stmt = $this->mDb->prepare($sql);
+        $stmt->execute($params);
+        $series = [];
+        while ($post = $stmt->fetchObject()) {
+            $series[$post->id] = (array) $post;
+        }
+        return $series;
+    }
+
+    /**
+     * Summary of getSeriesByAuthor
+     * @param int $authorId
+     * @return array<mixed>
+     */
+    public function getSeriesByAuthor($authorId)
+    {
+        return $this->getSeries(null, $authorId);
+    }
+
+    /**
+     * Summary of getSeriesByBook
+     * @param int $bookId
+     * @return array<mixed>
+     */
+    public function getSeriesByBook($bookId)
+    {
+        return $this->getSeries(null, null, $bookId);
     }
 }

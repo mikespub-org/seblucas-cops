@@ -1,0 +1,95 @@
+{# base.html is extended by all other templates #}
+{% block header %}
+<div class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      {% if it.parenturl != "" %}
+        <a class="navbar-brand" href="{{it.parenturl}}">{{it.fullTitle}}</a>
+      {% else %}
+        <a class="navbar-brand" href="{{it.homeurl}}">{{it.fullTitle}}</a>
+      {% endif %}
+      {% block filterlinks %}
+      {% if it.filters  %}
+        <!-- show current filter(s) -->
+        {% for filter in it.filters %}
+        <a class="navbar-brand" href="{{filter.navlink}}&filter=1" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{filter.class}} {{filter.title}}">
+          <span class="glyphicon glyphicon-filter"></span>
+        </a>
+        {% endfor %}
+      {% else %}
+        {% if it.filterurl  %}
+          <!-- show links to filter -->
+          {% if it.containsBook == 0  %}
+            <a class="navbar-brand" href="{{it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.c.i18n.bookwordTitle}}">
+              <span class="glyphicon glyphicon-list"></span>
+            </a>
+          {% else %}
+            <a class="navbar-brand" href="{{it.filterurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.c.i18n.linksTitle}}">
+              <span class="glyphicon glyphicon-link"></span>
+            </a>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+      {% endblock filterlinks %}
+    </div>
+    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search">
+      <div class="input-group">
+        <input id="queryInput" type="text" class="form-control" placeholder="{{it.c.i18n.searchAlt}}" name="query">
+        <div class="input-group-btn">
+          <button id="searchButton" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+      </div>
+    </form>     
+    <div class="collapse navbar-collapse">
+      {% block sortlinks %}{% endblock sortlinks %}
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.c.i18n.defaultTemplate}}">
+          <span class="glyphicon glyphicon-picture"></span><span class="hidden-sm hidden-md"> {{it.c.i18n.defaultTemplate}}</span>
+        </a></li>
+        <li><a href="{{it.customizeurl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.c.i18n.customizeTitle}}">
+          <span class="glyphicon glyphicon-wrench"></span><span class="hidden-sm hidden-md"> {{it.c.i18n.customizeTitle}}</span>
+        </a></li>
+        <li><a href="{{it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.c.i18n.aboutTitle}}">
+          <span class="glyphicon glyphicon-info-sign"></span><span class="hidden-sm hidden-md"> {{it.c.i18n.aboutTitle}}</span>
+        </a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+{% endblock header %}
+
+{% block main %}
+This is the main block
+{% endblock main %}
+
+{% block extra %}
+{% if it.extra %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-half-padding">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  {{it.extra.title}}
+                </div>
+                <div class="panel-body">
+                  {% if it.extra.link %}
+                    <p>{{it.c.i18n.linkTitle}}: <a rel="external" target="_blank" href="{{it.extra.link}}">{{it.extra.link}}</a></p>
+                  {% endif %}
+                  {% if it.extra.content %}
+                    {{it.extra.content}}
+                  {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock extra %}
+
+{% block footer %}{% endblock footer %}

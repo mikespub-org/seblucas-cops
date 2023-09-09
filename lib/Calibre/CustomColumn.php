@@ -59,7 +59,7 @@ class CustomColumn extends Category
      */
     public function getUri()
     {
-        return "?page=" . self::PAGE_DETAIL . "&custom={$this->getCustomId()}&id={$this->id}";
+        return "?page=" . static::PAGE_DETAIL . "&custom={$this->getCustomId()}&id={$this->id}";
     }
 
     /**
@@ -78,7 +78,7 @@ class CustomColumn extends Category
      */
     public function getEntryId()
     {
-        return self::PAGE_ID . ":" . $this->getCustomId() . ":" . $this->id;
+        return static::PAGE_ID . ":" . $this->getCustomId() . ":" . $this->id;
     }
 
     /**

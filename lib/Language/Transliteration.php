@@ -133,7 +133,7 @@ class Transliteration
                     } else {
                         $ord = $n;
                     }
-                    $result .= self::replace($ord, $unknown, $source_langcode);
+                    $result .= static::replace($ord, $unknown, $source_langcode);
                     $head = '';
                 } elseif ($c < "\x80") {
                     // ASCII byte.
@@ -176,7 +176,7 @@ class Transliteration
         $bank = $ord >> 8;
 
         if (!isset($map[$bank][$langcode])) {
-            $file = self::BASE_DIR . '/' . sprintf('x%02x', $bank) . '.php';
+            $file = static::BASE_DIR . '/' . sprintf('x%02x', $bank) . '.php';
             if (file_exists($file)) {
                 $base = [];
                 $variant = [];

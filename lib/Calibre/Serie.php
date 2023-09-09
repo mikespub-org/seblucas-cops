@@ -19,7 +19,7 @@ class Serie extends Category
     public const SQL_LINK_TABLE = "books_series_link";
     public const SQL_LINK_COLUMN = "series";
     public const SQL_SORT = "sort";
-    public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
+    public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort";
     public const SQL_ALL_ROWS = "select {0} from series, books_series_link where series.id = series {1} group by series.id, series.name, series.sort order by series.sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
     public const SQL_BOOKLIST = 'select {0} from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
@@ -44,7 +44,7 @@ class Serie extends Category
      * Summary of getInstanceByBookId
      * @param mixed $bookId
      * @param mixed $database
-     * @return Serie|null
+     * @return Serie|false
      */
     public static function getInstanceByBookId($bookId, $database = null)
     {
@@ -55,7 +55,7 @@ where series.id = series and book = ?';
         if ($post = $result->fetchObject()) {
             return new Serie($post, $database);
         }
-        return null;
+        return false;
     }
 
     /**

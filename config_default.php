@@ -410,6 +410,13 @@ $config['cops_home_page'] = 'INDEX';
 $config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];
 
 /*
+ * Show links to sort by title, author, pubdate, rating or timestamp in HTML page detail
+ *
+ * Available values: ['title', 'author', 'pubdate', 'rating', 'timestamp']
+ */
+$config['cops_html_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'timestamp'];
+
+/*
  * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag in HTML page detail
  * Note: this replaces 'cops_show_filter_links' in previous release, and now expects an array
  *
@@ -423,9 +430,22 @@ $config['cops_html_filter_links'] = ['author', 'language', 'publisher', 'rating'
 $config['cops_html_filter_limit'] = '8';
 
 /*
+ * Show links to sort by title, author, pubdate, rating or timestamp in OPDS catalog (using facets)
+ * Note: this will only work if your e-reader supports facets in OPDS feeds, like Thorium Reader for example
+ * See https://specs.opds.io/opds-1.2.html#4-facets for specification details
+ * To disable this feature, use an empty array in config_local.php:
+ * $config['cops_opds_sort_links'] = [];
+ *
+ * Available values: ['title', 'author', 'pubdate', 'rating', 'timestamp']
+ */
+$config['cops_opds_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'timestamp'];
+
+/*
  * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag in OPDS catalog (using facets)
  * Note: this will only work if your e-reader supports facets in OPDS feeds, like Thorium Reader for example
  * See https://specs.opds.io/opds-1.2.html#4-facets for specification details
+ * To disable this feature, use an empty array in config_local.php:
+ * $config['cops_opds_filter_links'] = [];
  *
  * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag']
  */

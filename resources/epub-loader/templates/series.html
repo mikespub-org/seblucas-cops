@@ -1,0 +1,65 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="title">
+	<form method="GET" action="./index.php">
+		<a href="./index.php?action={{action}}">{{actionTitle}}</a> in <a href="./index.php?action=books&dbnum={{dbNum}}&authorId={{authorId}}">{{dbConfig.name}}</a>
+		<input type="hidden" name="action" value="{{action}}" />
+		<input type="hidden" name="dbnum" value="{{dbNum}}" />
+		Author <select name="authorId">
+			<option value=""></option>
+			{% for id, name in authors %}
+			{% if authorId and authorId == id %}
+			<option value="{{id}}" selected>{{name}}</option>
+			{% else %}
+			<option value="{{id}}">{{name}}</option>
+			{% endif %}
+			{% endfor %}
+		</select>
+		<input type="submit" value="Find"/>
+	</form>
+</div>
+<form method="POST" action="./index.php?action={{action}}&dbnum={{dbNum}}">
+<table width="100%">
+	<tr>
+		<th>Id</th>
+		<th>Name</th>
+		<th>Action</th>
+	</tr>
+	{% for item in series %}
+	<tr>
+		<td>{{item.id}}</td>
+		<td>{{item.name}}</td>
+		<td>{% if seriesId == item.id %}<strong>Search</strong>{% else %}<a href="./index.php?action={{action}}&dbnum={{dbNum}}&authorId={{item.author}}&seriesId={{item.id}}">Search</a>{% endif %}</td>
+	</tr>
+	{% endfor %}
+</table>
+</form>
+{% if authorId %}
+<div class="part">
+	<p>Wikidata:</p>
+	{% if matched %}
+	<table width="100%">
+		<tr>
+			<th>Id</th>
+			<th>Label</th>
+			<th>Action</th>
+			<th>Description</th>
+			<th>Link</th>
+		</tr>
+		{% for match in matched %}
+		<tr>
+			<td><a href="./index.php?action=wikidata&dbnum={{dbNum}}&authorId={{authorId}}&seriesId={{seriesId}}&matchId={{match.id}}">{{match.id}}</a></td>
+			<td>{{match.label}}</td>
+			<td><a href="./index.php?action={{action}}&dbnum={{dbNum}}&seriesId={{seriesId}}&matchId={{match.id}}">Match</a></td>
+			<td>{{match.description}}</td>
+			<td>{% if match.wiki_url %}<a rel="external" target="_blank" href="{{match.wiki_url}}">Wikipedia</a>{% endif %}</td>
+		</tr>
+		{% endfor %}
+		</table>
+	{% else %}
+		No match found
+	{% endif %}
+</div>
+{% endif %}
+{% endblock content %}

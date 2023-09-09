@@ -13,7 +13,7 @@ use Iterator;
 class NavPointList implements Iterator
 {
     /** @var array|NavPoint[] */
-    private $navPoints = [];
+    protected $navPoints = [];
 
     public function __construct()
     {

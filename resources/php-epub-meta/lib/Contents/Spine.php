@@ -18,10 +18,10 @@ use BadMethodCallException;
 class Spine implements Iterator, Countable, ArrayAccess
 {
     /** @var Item */
-    private $tocItem;
-    private string $tocFormat;
+    protected $tocItem;
+    protected string $tocFormat;
     /** @var array|Item[] The ordered list of all Items in this Spine. */
-    private $items = [];
+    protected $items = [];
 
     /**
      * Spine Constructor.
