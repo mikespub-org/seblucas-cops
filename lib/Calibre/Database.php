@@ -17,10 +17,10 @@ class Database
 {
     public const KEEP_STATS = false;
     /** @var PDO|null */
-    private static $db = null;
-    private static int $count = 0;
+    protected static $db = null;
+    protected static int $count = 0;
     /** @var array<string> */
-    private static $queries = [];
+    protected static $queries = [];
 
     /**
      * Summary of getDbStatistics
@@ -28,7 +28,7 @@ class Database
      */
     public static function getDbStatistics()
     {
-        return ['count' => self::$count, 'queries' => self::$queries];
+        return ['count' => static::$count, 'queries' => static::$queries];
     }
 
     /**
@@ -47,7 +47,7 @@ class Database
      */
     public static function useAbsolutePath($database)
     {
-        $path = self::getDbDirectory($database);
+        $path = static::getDbDirectory($database);
         return preg_match('/^\//', $path) || // Linux /
                preg_match('/^\w\:/', $path); // Windows X:
     }
@@ -59,7 +59,7 @@ class Database
      */
     public static function noDatabaseSelected($database)
     {
-        return self::isMultipleDatabaseEnabled() && is_null($database);
+        return static::isMultipleDatabaseEnabled() && is_null($database);
     }
 
     /**
@@ -68,7 +68,7 @@ class Database
      */
     public static function getDbList()
     {
-        if (self::isMultipleDatabaseEnabled()) {
+        if (static::isMultipleDatabaseEnabled()) {
             return Config::get('calibre_directory');
         } else {
             return ["" => Config::get('calibre_directory')];
@@ -81,7 +81,7 @@ class Database
      */
     public static function getDbNameList()
     {
-        if (self::isMultipleDatabaseEnabled()) {
+        if (static::isMultipleDatabaseEnabled()) {
             return array_keys(Config::get('calibre_directory'));
         } else {
             return [""];
@@ -95,12 +95,12 @@ class Database
      */
     public static function getDbName($database)
     {
-        if (self::isMultipleDatabaseEnabled()) {
+        if (static::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
             }
             if (!preg_match('/^\d+$/', $database)) {
-                self::error($database);
+                static::error($database);
             }
             $array = array_keys(Config::get('calibre_directory'));
             return  $array[$database];
@@ -115,12 +115,12 @@ class Database
      */
     public static function getDbDirectory($database)
     {
-        if (self::isMultipleDatabaseEnabled()) {
+        if (static::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
             }
             if (!preg_match('/^\d+$/', $database)) {
-                self::error($database);
+                static::error($database);
             }
             $array = array_values(Config::get('calibre_directory'));
             return  $array[$database];
@@ -136,7 +136,7 @@ class Database
      */
     public static function getImgDirectory($database)
     {
-        if (self::isMultipleDatabaseEnabled()) {
+        if (static::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
             }
@@ -153,7 +153,7 @@ class Database
      */
     public static function getDbFileName($database)
     {
-        return self::getDbDirectory($database) .'metadata.db';
+        return static::getDbDirectory($database) .'metadata.db';
     }
 
     /**
@@ -162,7 +162,7 @@ class Database
      * @throws \Exception
      * @return never
      */
-    private static function error($database)
+    protected static function error($database)
     {
         if (php_sapi_name() != "cli") {
             header("location: " . Config::ENDPOINT["check"] . "?err=1");
@@ -177,27 +177,26 @@ class Database
      */
     public static function getDb($database = null)
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            self::$count += 1;
+        if (static::KEEP_STATS) {
+            static::$count += 1;
         }
-        if (is_null(self::$db)) {
+        if (is_null(static::$db)) {
             try {
-                if (is_readable(self::getDbFileName($database))) {
-                    self::$db = new PDO('sqlite:'. self::getDbFileName($database));
+                if (is_readable(static::getDbFileName($database))) {
+                    static::$db = new PDO('sqlite:'. static::getDbFileName($database));
                     if (Translation::useNormAndUp()) {
-                        self::$db->sqliteCreateFunction('normAndUp', function ($s) {
+                        static::$db->sqliteCreateFunction('normAndUp', function ($s) {
                             return Translation::normAndUp($s);
                         }, 1);
                     }
                 } else {
-                    self::error($database);
+                    static::error($database);
                 }
             } catch (Exception $e) {
-                self::error($database);
+                static::error($database);
             }
         }
-        return self::$db;
+        return static::$db;
     }
 
     /**
@@ -207,13 +206,13 @@ class Database
      */
     public static function checkDatabaseAvailability($database)
     {
-        if (self::noDatabaseSelected($database)) {
-            for ($i = 0; $i < count(self::getDbList()); $i++) {
-                self::getDb($i);
-                self::clearDb();
+        if (static::noDatabaseSelected($database)) {
+            for ($i = 0; $i < count(static::getDbList()); $i++) {
+                static::getDb($i);
+                static::clearDb();
             }
         } else {
-            self::getDb($database);
+            static::getDb($database);
         }
         return true;
     }
@@ -224,7 +223,7 @@ class Database
      */
     public static function clearDb()
     {
-        self::$db = null;
+        static::$db = null;
     }
 
     /**
@@ -235,11 +234,10 @@ class Database
      */
     public static function querySingle($query, $database = null)
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            array_push(self::$queries, $query);
+        if (static::KEEP_STATS) {
+            array_push(static::$queries, $query);
         }
-        return self::getDb($database)->query($query)->fetchColumn();
+        return static::getDb($database)->query($query)->fetchColumn();
     }
 
 
@@ -252,15 +250,14 @@ class Database
      */
     public static function query($query, $params = [], $database = null)
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            array_push(self::$queries, $query);
+        if (static::KEEP_STATS) {
+            array_push(static::$queries, $query);
         }
         if (count($params) > 0) {
-            $result = self::getDb($database)->prepare($query);
+            $result = static::getDb($database)->prepare($query);
             $result->execute($params);
         } else {
-            $result = self::getDb($database)->query($query);
+            $result = static::getDb($database)->query($query);
         }
         return $result;
     }
@@ -278,9 +275,8 @@ class Database
      */
     public static function queryTotal($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            array_push(self::$queries, $query);
+        if (static::KEEP_STATS) {
+            array_push(static::$queries, $query);
         }
         $totalResult = -1;
 
@@ -295,13 +291,13 @@ class Database
 
         if ($numberPerPage != -1 && $n != -1) {
             // First check total number of results
-            $totalResult = self::countFilter($query, 'count(*)', $filter, $params, $database);
+            $totalResult = static::countFilter($query, 'count(*)', $filter, $params, $database);
 
             // Next modify the query and params
             $query .= " limit ?, ?";
             array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
-        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
+        $result = static::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         return [$totalResult, $result];
     }
@@ -319,9 +315,8 @@ class Database
      */
     public static function queryFilter($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            array_push(self::$queries, $query);
+        if (static::KEEP_STATS) {
+            array_push(static::$queries, $query);
         }
         if (Translation::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
@@ -338,7 +333,7 @@ class Database
             array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
 
-        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
+        $result = static::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         return $result;
     }
@@ -354,13 +349,12 @@ class Database
      */
     public static function countFilter($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            array_push(self::$queries, $query);
+        if (static::KEEP_STATS) {
+            array_push(static::$queries, $query);
         }
         // assuming order by ... is at the end of the query here
         $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|).*$/i', '', $query);
-        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
+        $result = static::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         $totalResult = $result->fetchColumn();
         return $totalResult;
@@ -381,7 +375,7 @@ class Database
             $params[] = $type;
         }
         $entries = [];
-        $result = self::query($query, $params, $database);
+        $result = static::query($query, $params, $database);
         while ($post = $result->fetchObject()) {
             $entry = (array) $post;
             array_push($entries, $entry);

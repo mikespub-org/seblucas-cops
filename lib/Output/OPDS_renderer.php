@@ -26,9 +26,9 @@ class OPDSRenderer
 {
     public static string $endpoint = Config::ENDPOINT["feed"];
     /** @var XMLWriter|null */
-    private $xmlStream = null;
+    protected $xmlStream = null;
     /** @var int|null */
-    private $updated = null;
+    protected $updated = null;
     /** @var Request */
     protected $request;
 
@@ -96,7 +96,7 @@ class OPDSRenderer
         $urlparam = Format::addDatabaseParam($urlparam, $database);
         $urlparam = str_replace("%7B", "{", $urlparam);
         $urlparam = str_replace("%7D", "}", $urlparam);
-        $xml->writeAttribute("template", Config::get('full_url') . self::$endpoint . $urlparam);
+        $xml->writeAttribute("template", Config::get('full_url') . static::$endpoint . $urlparam);
         $xml->endElement();
         $xml->startElement("Query");
         $xml->writeAttribute("role", "example");
@@ -173,13 +173,13 @@ class OPDSRenderer
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             $urlparam = Format::addURLParam($urlparam, "page", PageId::OPENSEARCH);
-            $link = new LinkEntry(self::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
+            $link = new LinkEntry(static::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $urlparam = Format::addURLParam($urlparam, "query", "{searchTerms}");
             $urlparam = str_replace("%7B", "{", $urlparam);
             $urlparam = str_replace("%7D", "}", $urlparam);
-            $link = new LinkEntry(Config::get('full_url') . self::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
+            $link = new LinkEntry(Config::get('full_url') . static::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
         }
         $this->renderLink($link);
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
@@ -211,7 +211,7 @@ class OPDSRenderer
     protected function renderLink($link, $number = null)
     {
         $this->getXmlStream()->startElement("link");
-        $this->getXmlStream()->writeAttribute("href", $link->hrefXhtml(self::$endpoint));
+        $this->getXmlStream()->writeAttribute("href", $link->hrefXhtml(static::$endpoint));
         $this->getXmlStream()->writeAttribute("type", $link->type);
         if (!is_null($link->rel)) {
             $this->getXmlStream()->writeAttribute("rel", $link->rel);
@@ -290,7 +290,7 @@ class OPDSRenderer
             $this->getXmlStream()->text($author->name);
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->startElement("uri");
-            $this->getXmlStream()->text(self::$endpoint . $author->getUri());
+            $this->getXmlStream()->text(static::$endpoint . $author->getUri());
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->endElement();
         }

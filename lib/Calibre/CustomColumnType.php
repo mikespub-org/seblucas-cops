@@ -49,10 +49,10 @@ abstract class CustomColumnType
     public const TYPE_COMPOSITE = "composite";   // type 11 + 12
 
     /** @var array<int, CustomColumnType>  */
-    private static $customColumnCacheID = [];
+    protected static $customColumnCacheID = [];
 
     /** @var array<string, CustomColumnType>  */
-    private static $customColumnCacheLookup = [];
+    protected static $customColumnCacheLookup = [];
 
     /** @var integer the id of this column */
     public $customId;
@@ -61,7 +61,7 @@ abstract class CustomColumnType
     /** @var string the datatype of this column (one of the TYPE_* constant values) */
     public $datatype;
     /** @var null|Entry[] */
-    private $customValues = null;
+    protected $customValues = null;
     /** @var mixed */
     protected $databaseId = null;
     /** @var mixed */
@@ -76,7 +76,7 @@ abstract class CustomColumnType
      */
     protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
     {
-        $this->columnTitle = self::getTitleByCustomID($pcustomId, $database);
+        $this->columnTitle = static::getTitleByCustomID($pcustomId, $database);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
         $this->customValues = null;
@@ -110,7 +110,7 @@ abstract class CustomColumnType
      */
     public function getUri()
     {
-        return "?page=" . self::PAGE_ALL . "&custom={$this->customId}";
+        return "?page=" . static::PAGE_ALL . "&custom={$this->customId}";
     }
 
     /**
@@ -120,7 +120,7 @@ abstract class CustomColumnType
      */
     public function getEntryId()
     {
-        return self::PAGE_ID . ":" . $this->customId;
+        return static::PAGE_ID . ":" . $this->customId;
     }
 
     /**
@@ -349,7 +349,7 @@ abstract class CustomColumnType
      * @param mixed $database
      * @return string|null
      */
-    private static function getDatatypeByCustomID($customId, $database = null)
+    protected static function getDatatypeByCustomID($customId, $database = null)
     {
         $query = 'SELECT datatype, is_multiple FROM custom_columns WHERE id = ?';
         $result = Database::query($query, [$customId], $database);
@@ -374,34 +374,34 @@ abstract class CustomColumnType
     public static function createByCustomID($customId, $database = null)
     {
         // Reuse already created CustomColumns for performance
-        if (array_key_exists($customId, self::$customColumnCacheID)) {
-            return self::$customColumnCacheID[$customId];
+        if (array_key_exists($customId, static::$customColumnCacheID)) {
+            return static::$customColumnCacheID[$customId];
         }
 
-        $datatype = self::getDatatypeByCustomID($customId, $database);
+        $datatype = static::getDatatypeByCustomID($customId, $database);
 
         switch ($datatype) {
-            case self::TYPE_TEXT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::TYPE_TEXT, $database);
-            case self::TYPE_CSV:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, self::TYPE_CSV, $database);
-            case self::TYPE_SERIES:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId, $database);
-            case self::TYPE_ENUM:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId, $database);
-            case self::TYPE_COMMENT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId, $database);
-            case self::TYPE_DATE:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId, $database);
-            case self::TYPE_FLOAT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId, $database);
-            case self::TYPE_INT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, self::TYPE_INT, $database);
-            case self::TYPE_RATING:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId, $database);
-            case self::TYPE_BOOL:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId, $database);
-            case self::TYPE_COMPOSITE:
+            case static::TYPE_TEXT:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_TEXT, $database);
+            case static::TYPE_CSV:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_CSV, $database);
+            case static::TYPE_SERIES:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId, $database);
+            case static::TYPE_ENUM:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId, $database);
+            case static::TYPE_COMMENT:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId, $database);
+            case static::TYPE_DATE:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId, $database);
+            case static::TYPE_FLOAT:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId, $database);
+            case static::TYPE_INT:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, static::TYPE_INT, $database);
+            case static::TYPE_RATING:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId, $database);
+            case static::TYPE_BOOL:
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId, $database);
+            case static::TYPE_COMPOSITE:
                 return null; //TODO Currently not supported
             default:
                 throw new Exception("Unkown column type: " . $datatype);
@@ -418,16 +418,16 @@ abstract class CustomColumnType
     public static function createByLookup($lookup, $database = null)
     {
         // Reuse already created CustomColumns for performance
-        if (array_key_exists($lookup, self::$customColumnCacheLookup)) {
-            return self::$customColumnCacheLookup[$lookup];
+        if (array_key_exists($lookup, static::$customColumnCacheLookup)) {
+            return static::$customColumnCacheLookup[$lookup];
         }
 
         $query = 'SELECT id FROM custom_columns WHERE label = ?';
         $result = Database::query($query, [$lookup], $database);
         if ($post = $result->fetchObject()) {
-            return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id, $database);
+            return static::$customColumnCacheLookup[$lookup] = static::createByCustomID($post->id, $database);
         }
-        return self::$customColumnCacheLookup[$lookup] = null;
+        return static::$customColumnCacheLookup[$lookup] = null;
     }
 
     /**
@@ -456,8 +456,8 @@ abstract class CustomColumnType
      */
     public static function checkCustomColumnList($columnList, $database = null)
     {
-        if ($columnList === self::ALL_WILDCARD) {
-            $columnList = array_keys(self::getAllCustomColumns($database));
+        if ($columnList === static::ALL_WILDCARD) {
+            $columnList = array_keys(static::getAllCustomColumns($database));
         }
         return $columnList;
     }

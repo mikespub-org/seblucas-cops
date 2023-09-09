@@ -109,7 +109,7 @@ class JSONRenderer
      */
     public static function getFullBookContentArray($book, $endpoint)
     {
-        $out = self::getBookContentArray($book, $endpoint);
+        $out = static::getBookContentArray($book, $endpoint);
         $database = $book->getDatabaseId();
 
         $cover = new Cover($book);
@@ -174,7 +174,7 @@ class JSONRenderer
         }
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
-            $out ["book"] = self::getBookContentArray($entry->book, $endpoint);
+            $out ["book"] = static::getBookContentArray($entry->book, $endpoint);
             $out ["thumbnailurl"] = $entry->getThumbnail($endpoint);
             $out ["coverurl"] = $entry->getImage($endpoint) ?? $out ["thumbnailurl"];
             return $out;
@@ -332,10 +332,10 @@ class JSONRenderer
         $currentPage->InitializeContent();
 
         // adapt endpoint based on $request e.g. for rest api
-        $endpoint = $request->getEndpoint(self::$endpoint);
+        $endpoint = $request->getEndpoint(static::$endpoint);
 
         if ($search) {
-            return self::getContentArrayTypeahead($currentPage, $endpoint);
+            return static::getContentArrayTypeahead($currentPage, $endpoint);
         }
 
         $out = [ "title" => $currentPage->title];
@@ -351,14 +351,14 @@ class JSONRenderer
             $out ["isFilterPage"] = true;
         }
         foreach ($currentPage->entryArray as $entry) {
-            array_push($entries, self::getContentArray($entry, $endpoint, $extraUri));
+            array_push($entries, static::getContentArray($entry, $endpoint, $extraUri));
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
             if (Config::get('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
                 $currentPage->book->updateForKepub = true;
             }
-            $out ["book"] = self::getFullBookContentArray($currentPage->book, $endpoint);
+            $out ["book"] = static::getFullBookContentArray($currentPage->book, $endpoint);
         } elseif ($page == PageId::BOOK_DETAIL) {
             $page = PageId::INDEX;
         }
@@ -393,7 +393,7 @@ class JSONRenderer
             $out ["currentPage"] = $currentPage->n;
         }
         if (!is_null($request->get("complete")) || $complete) {
-            $out = self::addCompleteArray($out, $request, $endpoint);
+            $out = static::addCompleteArray($out, $request, $endpoint);
         }
 
         $out ["containsBook"] = 0;
@@ -422,7 +422,7 @@ class JSONRenderer
         if ($request->hasFilter()) {
             $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
-                array_push($out["filters"], self::getContentArray($entry, $endpoint));
+                array_push($out["filters"], static::getContentArray($entry, $endpoint));
             }
         }
 
@@ -457,13 +457,13 @@ class JSONRenderer
         $out ["hierarchy"] = false;
         if ($currentPage->hierarchy) {
             $out ["hierarchy"] = [
-                "parent" => self::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraUri),
-                "current" => self::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraUri),
+                "parent" => static::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraUri),
+                "current" => static::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraUri),
                 "children" => [],
                 "hastree" => $request->get('tree', false),
             ];
             foreach ($currentPage->hierarchy['children'] as $entry) {
-                array_push($out ["hierarchy"]["children"], self::getContentArray($entry, $endpoint, $extraUri));
+                array_push($out ["hierarchy"]["children"], static::getContentArray($entry, $endpoint, $extraUri));
             }
         }
         $out ["extra"] = $currentPage->extra;

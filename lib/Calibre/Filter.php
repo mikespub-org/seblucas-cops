@@ -363,7 +363,7 @@ class Filter
     public static function getEntryArray($request, $database = null)
     {
         $entryArray = [];
-        foreach (self::URL_PARAMS as $paramName => $className) {
+        foreach (static::URL_PARAMS as $paramName => $className) {
             $paramValue = $request->get($paramName, null);
             if (!isset($paramValue)) {
                 continue;

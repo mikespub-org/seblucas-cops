@@ -25,17 +25,17 @@ class CustomColumnTypeText extends CustomColumnType
     protected function __construct($pcustomId, $datatype = self::TYPE_TEXT, $database = null)
     {
         switch ($datatype) {
-            case self::TYPE_TEXT:
-                parent::__construct($pcustomId, self::TYPE_TEXT, $database);
+            case static::TYPE_TEXT:
+                parent::__construct($pcustomId, static::TYPE_TEXT, $database);
                 return;
-            case self::TYPE_CSV:
-                parent::__construct($pcustomId, self::TYPE_CSV, $database);
+            case static::TYPE_CSV:
+                parent::__construct($pcustomId, static::TYPE_CSV, $database);
                 return;
-            case self::TYPE_ENUM:
-                parent::__construct($pcustomId, self::TYPE_ENUM, $database);
+            case static::TYPE_ENUM:
+                parent::__construct($pcustomId, static::TYPE_ENUM, $database);
                 return;
-            case self::TYPE_SERIES:
-                parent::__construct($pcustomId, self::TYPE_SERIES, $database);
+            case static::TYPE_SERIES:
+                parent::__construct($pcustomId, static::TYPE_SERIES, $database);
                 return;
             default:
                 throw new UnexpectedValueException();
@@ -71,10 +71,10 @@ class CustomColumnTypeText extends CustomColumnType
     public function getQuery($id)
     {
         if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
-            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
+            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
-        $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
+        $query = str_format(static::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
     }
 
@@ -140,16 +140,16 @@ class CustomColumnTypeText extends CustomColumnType
     public function getCustomByBook($book)
     {
         switch ($this->datatype) {
-            case self::TYPE_TEXT:
+            case static::TYPE_TEXT:
                 $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
                 break;
-            case self::TYPE_CSV:
+            case static::TYPE_CSV:
                 $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
                 break;
-            case self::TYPE_ENUM:
+            case static::TYPE_ENUM:
                 $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
                 break;
-            case self::TYPE_SERIES:
+            case static::TYPE_SERIES:
                 $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
                 break;
             default:
@@ -159,7 +159,7 @@ class CustomColumnTypeText extends CustomColumnType
 
         $result = Database::query($query, [$book->id], $this->databaseId);
         // handle case where we have several values, e.g. array of text for type 2 (csv)
-        if ($this->datatype === self::TYPE_CSV) {
+        if ($this->datatype === static::TYPE_CSV) {
             $idArray = [];
             $nameArray = [];
             while ($post = $result->fetchObject()) {

@@ -31,7 +31,7 @@ class Language extends Base
      */
     public function getTitle()
     {
-        return self::getLanguageString($this->name);
+        return static::getLanguageString($this->name);
     }
 
     /**
@@ -84,7 +84,7 @@ class Language extends Base
             order by item_order';
         $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
-            array_push($lang, self::getLanguageString($post->lang_code));
+            array_push($lang, static::getLanguageString($post->lang_code));
         }
         return implode(', ', $lang);
     }

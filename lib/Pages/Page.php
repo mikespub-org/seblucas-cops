@@ -148,7 +148,7 @@ class Page
     public function InitializeContent()
     {
         $this->getEntries();
-        $this->idPage = self::PAGE_ID;
+        $this->idPage = static::PAGE_ID;
         $this->title = Config::get('title_default');
         $this->subtitle = Config::get('subtitle_default');
     }

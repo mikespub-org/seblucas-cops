@@ -39,7 +39,7 @@ class LinkFacet extends LinkFeed
      */
     public function __construct($phref, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false, $pthreadCount = null, $database = null)
     {
-        parent::__construct($phref, self::LINK_RELATION, $ptitle, $database);
+        parent::__construct($phref, static::LINK_RELATION, $ptitle, $database);
         //$this->href = Format::addDatabaseParam($this->href, $database);
         $this->facetGroup = $pfacetGroup;
         $this->activeFacet = $pactiveFacet;

@@ -12,7 +12,7 @@ class doT
 {
     public string $functionBody;
     /** @var callable */
-    private $functionCode;
+    protected $functionCode;
     /** @var array<mixed> */
     public $def;
 

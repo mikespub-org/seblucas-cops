@@ -26,7 +26,7 @@ class Entry
     public $localUpdated;
     public string $className;
     /** @var int|null */
-    private static $updated = null;
+    protected static $updated = null;
     /** @var mixed */
     protected $databaseId;
 
@@ -66,7 +66,7 @@ class Entry
         $this->numberOfElement = $pcount;
 
         if (Config::get('show_icons') == 1) {
-            foreach (self::$icons as $reg => $image) {
+            foreach (static::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $pid)) {
                     array_push($this->linkArray, new LinkEntry(Format::addVersion($image), "image/png", LinkEntry::OPDS_THUMBNAIL_TYPE));
                     break;
@@ -88,10 +88,10 @@ class Entry
         if (!is_null($this->localUpdated)) {
             return date(DATE_ATOM, $this->localUpdated);
         }
-        if (is_null(self::$updated)) {
-            self::$updated = time();
+        if (is_null(static::$updated)) {
+            static::$updated = time();
         }
-        return date(DATE_ATOM, self::$updated);
+        return date(DATE_ATOM, static::$updated);
     }
 
     /**
