@@ -320,7 +320,7 @@ updatePage = function (data) {
         result = templatePage (data);
         $("body").html (result);
     }
-    document.title = data.title;
+    document.title = data.libraryName + " | " + data.title;
     currentData = data;
 
     debug_log (elapsed ());
