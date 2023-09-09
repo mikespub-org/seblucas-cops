@@ -10,6 +10,13 @@ x.x.x - TODO
 
 1.5.x - 202309xx To be continued
   * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
+
+1.5.0 - 20230909 New baseline for next releases
+  * Support class inheritance for most COPS lib and resource classes in code
+  * Minor updates for templates - pass ignored categories #30 + set document title #31
+  * Add resources/epub-loader actions for books, series and wikidata
+  * Update bootstrap5 template - see pull request #29 from @dunxd - feedback still appreciated
+  * Add support for .m4b files in COPS - see issue #28 from @Chirishman
   * Add twigged template using Twig template engine as alternative for doT
 
 1.4.5 - 20230905 Make sort links optional in OPDS feeds for old e-readers

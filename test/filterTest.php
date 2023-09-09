@@ -19,6 +19,8 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Calibre\BaseList;
+use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 
@@ -211,11 +213,21 @@ class FilterTest extends TestCase
         $tag = Tag::getInstanceById(1);
         $this->assertEquals("1", $tag->id);
 
+        // @todo add hierarchical tags for proper testing
         $children = $tag->getChildEntries();
         $this->assertCount(0, $children);
 
-        //$siblings = $tag->getSiblingEntries();
-        //$this->assertCount(0, $siblings);
+        $siblings = $tag->getSiblingEntries();
+        $this->assertCount(0, $siblings);
+
+        $request = Request::build([]);
+        $booklist = new BookList($request);
+        $entries = $booklist->getBooksByInstanceOrChildren($tag, 1);
+        $this->assertCount(2, $entries);
+
+        $baselist = new BaseList(Tag::class, $request);
+        $entries = $baselist->browseAllEntries();
+        $this->assertCount(11, $entries);
 
         Config::set('calibre_categories_using_hierarchy', []);
     }
