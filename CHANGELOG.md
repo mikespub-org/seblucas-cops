@@ -10,6 +10,7 @@ x.x.x - TODO
 
 1.5.x - 202309xx To be continued
   * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
+  * Align resources folders to src and app in code
 
 1.5.0 - 20230909 New baseline for next releases
   * Support class inheritance for most COPS lib and resource classes in code

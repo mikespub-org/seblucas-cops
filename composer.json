@@ -58,6 +58,9 @@
             "resources/php-epub-meta/vendor/",
             "resources/tbszip/test/",
             "resources/tbszip/vendor/"
+        ],
+        "files": [
+            "lib/functions.php"
         ]
     },
     "repositories": [
