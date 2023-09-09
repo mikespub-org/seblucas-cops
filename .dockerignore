@@ -15,8 +15,6 @@ docker-compose-dev.yaml
 #!.yarn/plugins
 .pnp.*
 # remove unused directories
-resources/tbszip/test/
-resources/tbszip/vendor/
 tools/
 clover.xml
 coverage/

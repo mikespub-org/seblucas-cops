@@ -26,8 +26,8 @@
         "ext-xml": "*",
         "ext-xmlwriter": "*",
         "ext-zlib": "*",
-        "mikespub/epub-loader": "~1.5",
-        "mikespub/php-epub-meta": "~1.5",
+        "mikespub/epub-loader": "~1.5.2",
+        "mikespub/php-epub-meta": "~1.5.1",
         "npm-asset/bootstrap": "~3.4",
         "npm-asset/dot": "~1.1",
         "npm-asset/jquery": "~3.7",
@@ -52,14 +52,6 @@
             "lib/",
             "resources/",
             "test/"
-        ],
-        "exclude-from-classmap": [
-            "resources/epub-loader/test/",
-            "resources/epub-loader/vendor/",
-            "resources/php-epub-meta/test/",
-            "resources/php-epub-meta/vendor/",
-            "resources/tbszip/test/",
-            "resources/tbszip/vendor/"
         ],
         "files": [
             "lib/functions.php"

@@ -42,8 +42,6 @@
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
                 <exclude name="saucetest/**" />
-                <exclude name="resources/tbszip/test/**" />
-                <exclude name="resources/tbszip/vendor/**" />
                 <exclude name="vendor/appium/**" />
                 <exclude name="vendor/bin/**" />
                 <exclude name="vendor/brianium/**" />
