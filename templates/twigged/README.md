@@ -33,6 +33,7 @@ References:
 |  | htmlspecialchars(entry.title) | entry.title\|escape | for defined Twig filters |
 |  | it.book.content | it.book.content\|raw | for pre-formatted HTML |
 |  | entry.book.preferedData.length | entry.book.preferedCount | not supported in doT-php |
+|  | {{=it.assets}}/whatever.js?v={{=it.version}} | {{asset('whatever.js')}} | quote issues in doT-php |
 | Evaluate | {{ ... }} | N/A | not supported in doT-php |
 | Encode | {{! it.title }} | N/A | not supported in doT-php |
 | Define | {{##def:snippet: ... #}} | N/A | not supported in doT-php |

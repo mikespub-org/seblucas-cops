@@ -60,6 +60,7 @@ $data = ['title'                 => Config::get('title_default'),
               'server_side_rendering' => $request->render(),
               'current_css'           => $request->style(),
               'favico'                => Config::get('icon'),
+              'assets'                => Config::get('assets'),
               'getjson_url'           => JSONRenderer::getCurrentUrl($request->query())];
 if (preg_match('/Kindle/', $request->agent())) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
@@ -70,6 +71,10 @@ if ($request->template() == 'twigged') {
     $function = new \Twig\TwigFunction('str_format', function ($format, ...$args) {
         //return str_format($format, ...$args);
         return Format::str_format($format, ...$args);
+    });
+    $twig->addFunction($function);
+    $function = new \Twig\TwigFunction('asset', function ($file) {
+        return Config::get('assets') . '/' . $file . '?v=' . Config::VERSION;
     });
     $twig->addFunction($function);
     if ($request->render()) {
