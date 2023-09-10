@@ -4,27 +4,109 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25c3edc6ebe67b76d788f59d34170545",
+    "content-hash": "a78b31f25004b6b4773befc10735d6c0",
     "packages": [
         {
-            "name": "mikespub/php-epub-meta",
-            "version": "1.5.2",
+            "name": "maennchen/zipstream-php",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "30d45ff07d32bc6695d7336581355102779f42c7"
+                "url": "https://github.com/maennchen/ZipStream-PHP.git",
+                "reference": "b8174494eda667f7d13876b4a7bfef0f62a7c0d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/30d45ff07d32bc6695d7336581355102779f42c7",
-                "reference": "30d45ff07d32bc6695d7336581355102779f42c7",
+                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/b8174494eda667f7d13876b4a7bfef0f62a7c0d1",
+                "reference": "b8174494eda667f7d13876b4a7bfef0f62a7c0d1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-zlib": "*",
+                "php-64bit": "^8.1"
+            },
+            "require-dev": {
+                "ext-zip": "*",
+                "friendsofphp/php-cs-fixer": "^3.16",
+                "guzzlehttp/guzzle": "^7.5",
+                "mikey179/vfsstream": "^1.6",
+                "php-coveralls/php-coveralls": "^2.5",
+                "phpunit/phpunit": "^10.0",
+                "vimeo/psalm": "^5.0"
+            },
+            "suggest": {
+                "guzzlehttp/psr7": "^2.4",
+                "psr/http-message": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ZipStream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paul Duncan",
+                    "email": "pabs@pablotron.org"
+                },
+                {
+                    "name": "Jonatan Männchen",
+                    "email": "jonatan@maennchen.ch"
+                },
+                {
+                    "name": "Jesse Donat",
+                    "email": "donatj@gmail.com"
+                },
+                {
+                    "name": "András Kolesár",
+                    "email": "kolesar@kolesar.hu"
+                }
+            ],
+            "description": "ZipStream is a library for dynamically streaming dynamic zip files from PHP without writing to the disk at all on the server.",
+            "keywords": [
+                "stream",
+                "zip"
+            ],
+            "support": {
+                "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
+                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/maennchen",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/zipstream",
+                    "type": "open_collective"
+                }
+            ],
+            "time": "2023-06-21T14:59:35+00:00"
+        },
+        {
+            "name": "mikespub/php-epub-meta",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/php-epub-meta.git",
+                "reference": "e328f44d011ace787ba35036f657a9506f737de6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/e328f44d011ace787ba35036f657a9506f737de6",
+                "reference": "e328f44d011ace787ba35036f657a9506f737de6",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-xml": "*",
                 "ext-zip": "*",
-                "php": ">=7.4"
+                "maennchen/zipstream-php": "~3.1",
+                "php": ">=8.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "9.*"
@@ -36,8 +118,7 @@
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "src/",
-                    "resources/tbszip/src/"
+                    "src/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -72,9 +153,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/1.5.2"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.0.1"
             },
-            "time": "2023-09-10T09:50:29+00:00"
+            "time": "2023-09-10T09:59:39+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",
