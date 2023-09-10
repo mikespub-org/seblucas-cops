@@ -387,6 +387,11 @@ $config['cops_template'] = 'bootstrap2';
 $config['cops_style'] = 'default';
 
 /*
+ * Which URL prefix to use in templates for js & css assets (without trailing /)
+ */
+$config['cops_assets'] = 'vendor/npm-asset';
+
+/*
  * Set language code to force a language (see lang/ directory for available languages).
  * When empty it will auto detect the language.
  */

@@ -122,6 +122,15 @@ function sendToMailAddress (component, dataid) {
     $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail});
 }
 
+/*exported asset */
+function asset (file) {
+    var url = 'vendor/npm-asset/' + file;
+    if (currentData && currentData.version) {
+        url = url + '?v=' + currentData.version;
+    }
+    return url;
+}
+
 function str_format () {
     var s = arguments[0];
     if (typeof s === 'undefined') {
@@ -532,6 +541,7 @@ function initiateAjax (url, theme) {
 
 function initiateTwig(url, theme) {
     Twig.extendFunction("str_format", str_format);
+    Twig.extendFunction("asset", asset);
 
     let template = Twig.twig({
         id: 'page',
