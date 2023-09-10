@@ -147,7 +147,7 @@ class OPDSRenderer
         $this->getXmlStream()->text($this->getUpdatedTime());
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->startElement("icon");
-        $this->getXmlStream()->text($page->favicon);
+        $this->getXmlStream()->text($page->favico);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->startElement("author");
         $this->getXmlStream()->startElement("name");
