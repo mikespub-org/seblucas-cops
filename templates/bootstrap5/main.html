@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid p-1">
 {{? it.page == 13 || it.page == 16}}
     {{? it.page == 13}}
         {{#def.bookdetail}}
@@ -9,7 +9,7 @@
 
 {{? it.containsBook == 0}}
     <!-- Not book data -->
-    <div class="row row-cols-md-3 g-2">
+    <div class="row row-cols-md-3 g-0">
         {{~it.entries:entry:i}}
         <div class="card">
             <div class="card-body">
@@ -31,7 +31,7 @@
     </div>
     <!-- end Not book data -->
 {{??}}
-<div class="row row-cols-2 row-cols-md-5 g-2">
+<div class="row row-cols-2 row-cols-md-5 g-0">
     {{~it.entries:entry:i}}
         <div class="card">
             <div class="cover-image">
