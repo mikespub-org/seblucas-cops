@@ -9,10 +9,13 @@ x.x.x - TODO
   * Use kiwilan/php-opds to generate OPDS 2.0 catalog with opds.php (besides OPDS 1.2 with feed.php)
 
 2.0.x - 2023xxxx To be continued (PHP >= 8.1)
-  * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
 
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
+
+2.0.1 - 20230910 Initial release for PHP >= 8.1 with new EPub update package
+  * More spacing tweaks on the bootstrap5 template - see pull request #35 from @dunxd
+  * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
 
 1.5.4 - 20230910 Split off resources in preparation of 2.x
   * Changes in config_default.php file:
