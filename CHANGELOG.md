@@ -8,8 +8,19 @@ x.x.x - TODO
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
   * Use kiwilan/php-opds to generate OPDS 2.0 catalog with opds.php (besides OPDS 1.2 with feed.php)
 
-1.5.x - 202309xx To be continued
+2.0.x - 2023xxxx To be continued (PHP >= 8.1)
   * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
+
+1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
+  * ...
+
+1.5.4 - 20230910 Split off resources in preparation of 2.x
+  * Changes in config_default.php file:
+    - new $config['cops_assets']
+  * Use it.assets variable in doT templates to refer to 'vendor/npm-asset'
+  * Use asset() function in Twig templates to get versioned asset URLs
+  * Split off epub-loader, php-epub-meta and tbszip resources again
+  * Align resources folders to src and app in code
 
 1.5.0 - 20230909 New baseline for next releases
   * Support class inheritance for most COPS lib and resource classes in code

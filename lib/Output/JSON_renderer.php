@@ -467,6 +467,7 @@ class JSONRenderer
             }
         }
         $out ["extra"] = $currentPage->extra;
+        $out ["assets"] = Config::get('assets');
 
         /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {

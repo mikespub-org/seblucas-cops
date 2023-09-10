@@ -17,6 +17,3 @@ $config['cops_mail_configuration'] = [
 
 // from here on, we assume that all global $config variables have been loaded
 Config::load($config);
-
-// load global functions if necessary
-require_once __DIR__ . '/../lib/functions.php';

@@ -15,10 +15,6 @@ docker-compose-dev.yaml
 #!.yarn/plugins
 .pnp.*
 # remove unused directories
-resources/epub-loader/
-resources/tbszip/stuffs/
-resources/php-epub-meta/assets/
-resources/php-epub-meta/test/
 tools/
 clover.xml
 coverage/

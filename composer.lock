@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "786a1b8db99d55a37497417fef5b141c",
+    "content-hash": "9fe16bc222e2d65b9668ceee7e6907bc",
     "packages": [
         {
             "name": "kiwilan/php-opds",
@@ -70,6 +70,76 @@
                 }
             ],
             "time": "2023-09-07T07:20:34+00:00"
+        },
+        {
+            "name": "mikespub/php-epub-meta",
+            "version": "1.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/php-epub-meta.git",
+                "reference": "30d45ff07d32bc6695d7336581355102779f42c7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/30d45ff07d32bc6695d7336581355102779f42c7",
+                "reference": "30d45ff07d32bc6695d7336581355102779f42c7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-xml": "*",
+                "ext-zip": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "9.*"
+            },
+            "suggest": {
+                "mikespub/epub-loader": "epub-loader is a utility resource for ebooks",
+                "mikespub/seblucas-cops": "COPS - Calibre OPDS (and HTML) PHP Server"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/",
+                    "resources/tbszip/src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Gohr",
+                    "email": "andi@splitbrain.org",
+                    "homepage": "https://www.splitbrain.org/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sébastien Lucas",
+                    "email": "sebastien@slucas.fr",
+                    "homepage": "http://www.slucas.fr/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "mikespub",
+                    "homepage": "https://github.com/mikespub-org/php-epub-meta",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Reading and writing metadata included in the EPub ebook format",
+            "homepage": "https://github.com/mikespub-org/php-epub-meta",
+            "keywords": [
+                "ebook",
+                "epub",
+                "metadata"
+            ],
+            "support": {
+                "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/1.5.2"
+            },
+            "time": "2023-09-10T09:50:29+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",

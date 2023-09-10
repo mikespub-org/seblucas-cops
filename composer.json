@@ -26,6 +26,7 @@
         "ext-xml": "*",
         "ext-xmlwriter": "*",
         "ext-zlib": "*",
+        "mikespub/php-epub-meta": "~1.5",
         "npm-asset/bootstrap": "~3.4",
         "npm-asset/dot": "~1.1",
         "npm-asset/jquery": "~3.7",
@@ -46,17 +47,17 @@
         "symfony/browser-kit": "~6.3",
         "symfony/http-client": "~6.3"
     },
+    "suggest": {
+        "mikespub/epub-loader": "epub-loader is a utility resource for ebooks"
+    },
     "autoload": {
         "classmap": [
             "lib/",
             "resources/",
             "test/"
         ],
-        "exclude-from-classmap": [
-            "resources/epub-loader/test/",
-            "resources/epub-loader/vendor/",
-            "resources/php-epub-meta/test/",
-            "resources/php-epub-meta/vendor/"
+        "files": [
+            "lib/functions.php"
         ]
     },
     "repositories": [
