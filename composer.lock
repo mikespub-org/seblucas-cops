@@ -4,59 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e0fe4c2f9ca2108a97174c5da813351",
+    "content-hash": "25c3edc6ebe67b76d788f59d34170545",
     "packages": [
-        {
-            "name": "mikespub/epub-loader",
-            "version": "1.5.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "081023a474702cec3ba4cd69549d26ccc6535284"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/081023a474702cec3ba4cd69549d26ccc6535284",
-                "reference": "081023a474702cec3ba4cd69549d26ccc6535284",
-                "shasum": ""
-            },
-            "require": {
-                "mikespub/php-epub-meta": "^1.5",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "freearhey/wikidata": "^3.6",
-                "twig/twig": "^3.7"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "marsender",
-                    "homepage": "https://github.com/marsender",
-                    "role": "Developer"
-                },
-                {
-                    "name": "mikespub",
-                    "homepage": "https://github.com/mikespub-org/seblucas-cops",
-                    "role": "Developer"
-                }
-            ],
-            "description": "epub-loader is a utility resource for ebooks",
-            "support": {
-                "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/1.5.3"
-            },
-            "time": "2023-09-09T22:21:29+00:00"
-        },
         {
             "name": "mikespub/php-epub-meta",
             "version": "1.5.1",
