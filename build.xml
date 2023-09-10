@@ -29,10 +29,7 @@
         <zip destfile="${cops.release.filename}">
             <fileset dir=".">
                 <include name="**" />
-                <exclude name="components/**" />
-                <exclude name="node_modules/**" />
                 <exclude name="test/**" />
-                <exclude name=".hg*/**" />
                 <exclude name=".git/**" />
                 <exclude name="docker/**" />
                 <exclude name="docker-*.yaml" />
@@ -41,11 +38,7 @@
                 <exclude name=".pnp.*" />
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
-                <exclude name="saucetest/**" />
-                <exclude name="vendor/appium/**" />
                 <exclude name="vendor/bin/**" />
-                <exclude name="vendor/brianium/**" />
-                <exclude name="vendor/mikespub/epub-loader/app/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/app/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/assets/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/resources/tbszip/test/**" />
@@ -54,24 +47,14 @@
                 <exclude name="vendor/npm-asset/dot/bin/**" />
                 <exclude name="vendor/npm-asset/dot/examples/**" />
                 <exclude name="vendor/npm-asset/dot/test/**" />
+                <exclude name="vendor/npm-asset/jquery/dist/**.map" />
                 <exclude name="vendor/npm-asset/jquery/external/**" />
                 <exclude name="vendor/npm-asset/jquery/src/**" />
                 <exclude name="vendor/npm-asset/magnific-popup/libs/**" />
                 <exclude name="vendor/npm-asset/magnific-popup/src/**" />
                 <exclude name="vendor/npm-asset/magnific-popup/website/**" />
-                <exclude name="vendor/doctrine/**" />
-                <exclude name="vendor/fidry/**" />
-                <exclude name="vendor/jean85/**" />
-                <exclude name="vendor/myclabs/**" />
-                <exclude name="vendor/nikic/**" />
-                <exclude name="vendor/phar-io/**" />
-                <exclude name="vendor/phing/**" />
-                <exclude name="vendor/phpunit/**" />
-                <exclude name="vendor/psr/**" />
-                <exclude name="vendor/sauce/**" />
-                <exclude name="vendor/sebastian/**" />
-                <exclude name="vendor/theseer/**" />
                 <exclude name="vendor/npm-asset/bootstrap/docs/**" />
+                <exclude name="vendor/npm-asset/bootstrap/dist/**.map" />
                 <exclude name="vendor/npm-asset/bootstrap/fonts/**" />
                 <exclude name="vendor/npm-asset/bootstrap/grunt/**" />
                 <exclude name="vendor/npm-asset/bootstrap/js/**" />
@@ -84,6 +67,7 @@
                 <exclude name="vendor/npm-asset/twig/lib/**" />
                 <exclude name="vendor/npm-asset/twig/node/**" />
                 <exclude name="vendor/npm-asset/twig/src/**" />
+                <exclude name="vendor/npm-asset/twig/**.map" />
                 <exclude name="vendor/npm-asset/babel--runtime/**" />
                 <exclude name="vendor/npm-asset/balanced-match/**" />
                 <exclude name="vendor/npm-asset/brace-expansion/**" />
@@ -95,12 +79,8 @@
                 <exclude name="*.phar" />
                 <exclude name="*.zip" />
                 <exclude name="*.xml" />
-                <exclude name=".travis.yml" />
-                <exclude name=".coveralls.yml" />
-                <exclude name=".scrutinizer.yml" />
                 <exclude name="config_local.php" />
                 <exclude name="composer*" />
-                <exclude name="cops.sublime*" />
                 <exclude name="*.cache" />
             </fileset>
         </zip>
