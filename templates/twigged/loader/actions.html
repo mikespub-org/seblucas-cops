@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div><b>Select action</b></div>
+<ul>
+{% for action, actionInfo in actions %}
+	<li>
+		<a href="{{endpoint}}?action={{action}}">{{actionInfo}}</a>
+	</li>
+{% endfor %}
+</ul>
+{% endblock content %}

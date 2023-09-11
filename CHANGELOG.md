@@ -9,6 +9,7 @@ x.x.x - TODO
   * Use kiwilan/php-opds to generate OPDS 2.0 catalog with opds.php (besides OPDS 1.2 with feed.php)
 
 2.0.x - 2023xxxx To be continued (PHP >= 8.1)
+  * Add loader.php for integration of epub-loader (development mode only)
 
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...

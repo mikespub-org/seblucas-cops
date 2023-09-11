@@ -44,10 +44,11 @@
         "phing/phing": "~2.17",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "~6.3",
-        "symfony/http-client": "~6.3"
+        "symfony/http-client": "~6.3",
+        "mikespub/epub-loader": "~2.1"
     },
     "suggest": {
-        "mikespub/epub-loader": "epub-loader is a utility resource for ebooks"
+        "mikespub/epub-loader": "epub-loader is a utility package for ebooks"
     },
     "autoload": {
         "classmap": [
