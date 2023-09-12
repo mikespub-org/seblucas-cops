@@ -27,6 +27,8 @@ class Config
         "restapi" => "restapi.php",
         "check" => "checkconfig.php",
         "opds" => "opds.php",
+        "loader" => "loader.php",
+        "download" => "download.php",
     ];
     protected const PREFIX = 'cops_';
 

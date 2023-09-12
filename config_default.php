@@ -460,3 +460,15 @@ $config['cops_opds_filter_links'] = ['author', 'language', 'rating', 'tag'];
  * Number of filter links to show per category in OPDS catalog
  */
 $config['cops_opds_filter_limit'] = '8';
+
+/*
+ * Allow downloading all books of a series for a specific format
+ * Example: $config['cops_download_series'] = ['EPUB', 'MOBI'];
+ */
+$config['cops_download_series'] = [];
+
+/*
+ * Allow downloading all books of an author for a specific format
+ * Example: $config['cops_download_author'] = ['EPUB'];
+ */
+$config['cops_download_author'] = [];
