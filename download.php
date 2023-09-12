@@ -14,7 +14,7 @@ use SebLucas\Cops\Output\Downloader;
 
 require_once __DIR__ . '/config.php';
 
-if (empty(Config::get('download_series') && empty(Config::get('download_author')))) {
+if (empty(Config::get('download_series')) && empty(Config::get('download_author'))) {
     echo 'Downloads by series or author are disabled in config';
     exit();
 }
