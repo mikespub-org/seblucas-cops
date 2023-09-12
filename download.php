@@ -32,6 +32,8 @@ if (Config::get('fetch_protect') == '1') {
 $downloader = new Downloader($request);
 
 if ($downloader->isValid()) {
+    // disable nginx buffering by default
+    header('X-Accel-Buffering: no');
     $downloader->download();
 } else {
     echo "Invalid download";
