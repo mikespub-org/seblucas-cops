@@ -239,7 +239,7 @@ class BookTest extends TestCase
         // All recent books
         $request = new Request();
         // Use anonymous class to override class constant
-        $booklist = new class($request) extends BookList {
+        $booklist = new class ($request) extends BookList {
             public const BATCH_QUERY = true;
         };
 
