@@ -36,6 +36,6 @@ if ($downloader->isValid()) {
     header('X-Accel-Buffering: no');
     $downloader->download();
 } else {
-    echo "Invalid download";
+    echo "Invalid download: " . $downloader->getMessage();
 }
 exit();

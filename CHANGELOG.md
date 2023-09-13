@@ -10,9 +10,11 @@ x.x.x - TODO
 
 2.0.x - 2023xxxx To be continued (PHP >= 8.1)
   * Changes in config_default.php file:
+    - new $config['cops_download_page']
     - new $config['cops_download_series']
     - new $config['cops_download_author']
-  * Add download.php to allow downloading all books of a series or author
+  * Add download.php to allow downloading all books of a series or author, or all books on a page
+  * Fix search form with server-side rendering in bootstrap* templates - see pull request #38 from @dunxd
   * Add loader.php for integration of epub-loader (development mode only)
 
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
