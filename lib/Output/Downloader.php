@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use ZipStream\ZipStream;
@@ -34,6 +35,8 @@ class Downloader
     protected $fileName = 'download.epub.zip';
     /** @var array<string, string> */
     protected $fileList = [];
+    /** @var string|null */
+    protected $message = null;
 
     /**
      * Summary of __construct
@@ -73,18 +76,21 @@ class Downloader
     public function hasPage()
     {
         if (!in_array($this->format, Config::get('download_page'))) {
+            $this->message ??= 'Invalid format for page';
             return false;
         }
         $pageId = $this->request->get('page', null, '/^\d+$/');
         if (empty($pageId)) {
+            $this->message ??= 'Invalid page id';
             return false;
         }
         /** @var Page $instance */
         $instance = PageId::getPage($pageId, $this->request);
-        $instance->InitializeContent();
         if (empty($instance)) {
+            $this->message = 'Invalid page';
             return false;
         }
+        $instance->InitializeContent();
         if ($this->format == 'ANY') {
             $this->fileName = $instance->title . '.zip';
         } else {
@@ -96,8 +102,12 @@ class Downloader
         if (!empty($instance->n) && intval($instance->n) > 1) {
             $this->fileName = str_replace('.zip', '.' . strval($instance->n) . '.zip', $this->fileName);
         }
-        $instance->InitializeContent();
-        return $instance->entryArray;
+        $entries = $instance->entryArray;
+        if (empty($entries)) {
+            $this->message = 'No books found for page';
+            return false;
+        }
+        return $entries;
     }
 
     /**
@@ -107,15 +117,18 @@ class Downloader
     public function hasSeries()
     {
         if (!in_array($this->format, Config::get('download_series'))) {
+            $this->message ??= 'Invalid format for series';
             return false;
         }
         $seriesId = $this->request->get('series', null, '/^\d+$/');
         if (empty($seriesId)) {
+            $this->message ??= 'Invalid series id';
             return false;
         }
         /** @var Serie $instance */
         $instance = Serie::getInstanceById($seriesId, $this->databaseId);
         if (empty($instance->id)) {
+            $this->message = 'Invalid series';
             return false;
         }
         if ($this->format == 'ANY') {
@@ -124,6 +137,10 @@ class Downloader
             $this->fileName = $instance->name . '.' . strtolower($this->format) . '.zip';
         }
         $entries = $instance->getBooks();  // -1
+        if (empty($entries)) {
+            $this->message = 'No books found for series';
+            return false;
+        }
         return $entries;
     }
 
@@ -134,15 +151,18 @@ class Downloader
     public function hasAuthor()
     {
         if (!in_array($this->format, Config::get('download_author'))) {
+            $this->message ??= 'Invalid format for author';
             return false;
         }
         $authorId = $this->request->get('author', null, '/^\d+$/');
         if (empty($authorId)) {
+            $this->message ??= 'Invalid author id';
             return false;
         }
         /** @var Author $instance */
         $instance = Author::getInstanceById($authorId, $this->databaseId);
         if (empty($instance->id)) {
+            $this->message = 'Invalid author';
             return false;
         }
         if ($this->format == 'ANY') {
@@ -151,6 +171,10 @@ class Downloader
             $this->fileName = $instance->name . '.' . strtolower($this->format) . '.zip';
         }
         $entries = $instance->getBooks();  // -1
+        if (empty($entries)) {
+            $this->message = 'No books found for author';
+            return false;
+        }
         return $entries;
     }
 
@@ -162,6 +186,7 @@ class Downloader
     public function checkFileList($entries)
     {
         if (count($entries) < 1) {
+            $this->message = 'No books found';
             return false;
         }
         $this->fileList = [];
@@ -171,6 +196,9 @@ class Downloader
             $checkFormats = [ $this->format ];
         }
         foreach ($entries as $entry) {
+            if (get_class($entry) != EntryBook::class) {
+                continue;
+            }
             $data = false;
             foreach ($checkFormats as $format) {
                 $data = $entry->book->getDataFormat($format);
@@ -189,6 +217,7 @@ class Downloader
             $this->fileList[$name] = $path;
         }
         if (count($this->fileList) < 1) {
+            $this->message = 'No files found';
             return false;
         }
         return true;
@@ -212,5 +241,14 @@ class Downloader
             );
         }
         $zip->finish();
+    }
+
+    /**
+     * Summary of getMessage
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->message ?? 'Unknown error';
     }
 }
