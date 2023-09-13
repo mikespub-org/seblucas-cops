@@ -306,7 +306,7 @@ class WebDriverTestCase extends TestCase
      * @param int $timeout
      * @return array<mixed>
      */
-    protected function spinAssert($msg, $test, $args=[], $timeout=20)
+    protected function spinAssert($msg, $test, $args = [], $timeout = 20)
     {
         // wait until the target page is loaded
         $result = static::$driver->wait($timeout)->until(
@@ -327,7 +327,7 @@ class WebDriverTestCase extends TestCase
      * @param int $timeout
      * @return void
      */
-    protected function spinWait($msg, $test, $args=[], $timeout=20)
+    protected function spinWait($msg, $test, $args = [], $timeout = 20)
     {
         [$result, $msg] = $this->spinAssert($msg, $test, $args, $timeout);
         $this->assertTrue($result, $msg);

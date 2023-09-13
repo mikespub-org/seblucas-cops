@@ -1,6 +1,16 @@
 {# booklist.html is used for it.containsBook != 0 #}
 {% extends 'mainlist.html' %}
 
+{% block download %}
+  {% if it.download %}
+    {% for link in it.download %}
+    <a class="navbar-brand" href="{{link.url}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{link.format}}">
+      <span class="glyphicon glyphicon-download"></span>
+    </a>
+    {% endfor %}
+  {% endif %}
+{% endblock download %}
+
 {% block sortlinks %}
 <!-- show sort options -->
 <ul class="nav navbar-nav">

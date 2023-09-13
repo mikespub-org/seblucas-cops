@@ -14,6 +14,7 @@
       {% else %}
         <a class="navbar-brand" href="{{it.homeurl}}">{{it.fullTitle}}</a>
       {% endif %}
+      {% block download %}{% endblock download %}
       {% block filterlinks %}
       {% if it.filters  %}
         <!-- show current filter(s) -->
@@ -38,8 +39,12 @@
       {% endif %}
       {% endblock filterlinks %}
     </div>
-    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search">
+    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search" action="index.php" method="get">
       <div class="input-group">
+        <input type="hidden" name="page" value="9">
+        {% if it.databaseId != "" %}
+            <input type="hidden" name="db" value="{{it.databaseId}}">
+        {% endif %}
         <input id="queryInput" type="text" class="form-control" placeholder="{{it.c.i18n.searchAlt}}" name="query">
         <div class="input-group-btn">
           <button id="searchButton" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>

@@ -190,7 +190,7 @@ class BrowserKitTest extends TestCase
         //$expected = ['page' => '9', 'query' => ''];
         $this->assertArrayHasKey('query', $form->getValues());
 
-        // for bootstrap & bootstrap2 the correct URI is set in util.js and there is no hidden 'page' field
+        // for bootstrap & bootstrap2 the correct URI was set in util.js and there was no hidden 'page' field
         if (!$form->has('page')) {
             $query = 'ali';
             $expected = [
@@ -205,15 +205,25 @@ class BrowserKitTest extends TestCase
             $this->checkJsonSearch($query, $expected);
 
         } else {
-            //$form['page'] = '9';
+            $form['page'] = '9';
             $form['query'] = 'ali';
+            //$form['scope'] = 'book';
             $crawler = $this->browser->submit($form);
             $this->checkResponse();
 
             $articles = $crawler->filterXPath($xpath);
             $this->assertCount(1, $articles);
-            $this->assertEquals('Search result for *ali* in books', $articles->filterXPath('//h2')->text());
-            $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
+            if ($template == 'bootstrap2') {
+                $this->assertEquals('Search result for *ali* in books 2', $articles->filterXPath('//div[@class="panel-body"]')->text());
+            } else {
+                $this->assertEquals('Search result for *ali* in books', $articles->filterXPath('//h2')->text());
+            }
+            if ($template == 'bootstrap') {
+                $this->assertEquals('2', $articles->filterXPath('//span')->text());
+            }
+            if ($template == 'default') {
+                $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
+            }
             $this->assertEquals('index.php?page=9&query=ali&db=&scope=book', $articles->filterXPath('//a')->attr('href'));
         }
     }

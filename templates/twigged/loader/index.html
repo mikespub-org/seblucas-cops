@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{{app_name}}</title>
+	<meta name="author" content="atoll-digital-library.org" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+/*<![CDATA[*/
+  body {
+	  font-family: Arial, Times, serif;
+	  font-size: 80%;
+	  background-color: #ffffff;
+	  color: #333333;
+	  margin: 20px;
+  }
+  a {
+	  color: #096DD1;
+		text-decoration: none;
+  }
+  a:hover {
+	  color: #DF7800;
+  }
+  a:focus {
+	  color: #6E749F !important;
+  }
+	ul, li {
+		margin: 0;
+	}
+  .header {
+	  color: #6E749F;
+	  font-style: bold;
+	  font-size: 120%;
+	  padding-bottom: 10px;
+		border-bottom: solid #2F4769 1px;
+		margin-bottom: 15px;
+  }
+  .part {
+		border-top: solid #2F4769 1px;
+		padding: 10px;
+	}
+  .title {
+	  padding-bottom: 5px;
+  	font-weight: bold;
+	}
+	.small {
+		font-size: 80%;
+	}
+	table {
+		border-collapse: collapse;
+		border-color: #ccc;
+	}
+	table th {
+		text-align: left;
+	}
+	table td, table th {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+	td.col_1, th.col_1 {
+		width: 50%;
+	}
+	td.col_2, th.col_2 {
+		width: 50%;
+	}
+  .error {
+	  color: #750000;
+		margin-top: 15px;
+  }
+	.footer {
+		border-top: solid #2F4769 1px;
+		margin-top: 15px;
+		padding-top: 10px;
+	  font-size: 80%;
+	  font-style: italic;
+  }
+  /*]]>*/
+  </style>
+</head>
+<body>
+	<!-- Header begin -->
+	<div class="header">
+		<a href="{{endpoint}}">{{app_name}}</a> <span class="small"> - version {{version}}</span>
+	</div>
+	<!-- Header end -->
+
+	<!-- Content begin -->
+	<div class="content">
+		{% block content %}
+			{% if actionTitle %}
+			<div><p><a href="{{endpoint}}?action={{action}}">{{actionTitle}}</a></p></div>
+			{% endif %}
+			{{result|raw}}
+		{% endblock content %}
+	</div>
+	<!-- Content end -->
+
+	{% if errors|length %}
+	<!-- Error begin -->
+	<div class="error">
+		<table width="100%">
+			<tr>
+				<th colspan="2">Errors ({{ errors|length }})</th>
+			</tr>
+			{% for fileName, error in errors %}
+			<!-- Diplay error -->
+			<tr>
+				<td class="col_1">{{fileName}}</td>
+				<td class="col_2">{{error}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+	<!-- Error end -->
+	{% endif %}
+
+	<!-- Footer begin -->
+	<div class="footer">
+		{% if admin_email %}
+		<script type="text/javascript">
+			/*<![CDATA[*/
+				document.write("<n uers=\"znvygb:{{admin_email}}\">".replace(/[a-zA-Z]/g, function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);}));
+				document.write("Contact<\/a>");
+			/*]]>*/
+		</script>
+		{% endif %}
+	</div>
+	<!-- Footer end -->
+
+</body>
+</html>

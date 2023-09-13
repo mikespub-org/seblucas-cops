@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<table width="100%">
+	<tr>
+		<th>Db num</th>
+		<th>Db name</th>
+		<th>Action</th>
+		<th>Db Path</th>
+		<th>Epub path</th>
+		<th>Nb Files</th>
+	</tr>
+	{% for dbNum, dbConfig in databases %}
+	<tr>
+		<td>{{dbNum}}</td>
+		<td>{{dbConfig.name}}</td>
+		<td><a href="{{endpoint}}?action={{action}}&dbnum={{dbNum}}">{{actionTitle}}</a></td>
+		<td>{{dbConfig.db_path}}</td>
+		<td>{{dbConfig.epub_path}}</td>
+		<td>{{dbConfig.count}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock content %}

@@ -16,7 +16,7 @@ use Exception;
  */
 class Config
 {
-    public const VERSION = '1.5.4';
+    public const VERSION = '2.1.1';
     public const ENDPOINT = [
         "index" => "index.php",
         "feed" => "feed.php",
@@ -27,6 +27,8 @@ class Config
         "restapi" => "restapi.php",
         "check" => "checkconfig.php",
         "opds" => "opds.php",
+        "loader" => "loader.php",
+        "download" => "download.php",
     ];
     protected const PREFIX = 'cops_';
 

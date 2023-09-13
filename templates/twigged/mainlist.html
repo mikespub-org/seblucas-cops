@@ -3,7 +3,7 @@
 
 {% block main %}
 <div class="container-fluid">
-{% block filter %}
+{% block hierarchy %}
 <div id="filter">
     <ul>
     {% if it.hierarchy  %}
@@ -23,7 +23,7 @@
     {% endif %}
     </ul>
 </div>
-{% endblock filter %}
+{% endblock hierarchy %}
 
 {% block content %}
 This is the content block

@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid p-1">
 {{? it.page == 13 || it.page == 16}}
     {{? it.page == 13}}
         {{#def.bookdetail}}
@@ -9,7 +9,7 @@
 
 {{? it.containsBook == 0}}
     <!-- Not book data -->
-    <div class="row row-cols-md-3 g-2">
+    <div class="row row-cols-md-3 g-0">
         {{~it.entries:entry:i}}
         <div class="card">
             <div class="card-body">
@@ -31,8 +31,8 @@
     </div>
     <!-- end Not book data -->
 {{??}}
-<div class="row row-cols-2 row-cols-md-5 g-2">
-    {{~it.entries:entry:i}}
+<div class="row row-cols-2 row-cols-md-5 g-0">
+    {{~it.entries:entry:idx}}
         <div class="card">
             <div class="cover-image">
                 {{? entry.book.hasCover == 1}}
@@ -44,17 +44,19 @@
             <div class="card-body meta">
                 <h5 class="card-title title text-truncate"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
                 <div class="card-subtitle author text-truncate">
-                    {{~ entry.book.authors:author:author_index}}{{? author_index > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}
+                    {{~ entry.book.authors:author:i}}{{? i != 0 }}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}
                 </div>
-                {{? entry.book.seriesName != ""}}<div class="series text-truncate"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
+                {{? entry.book.seriesName != ""}}
+                <div class="series text-truncate"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>
+                {{?}}
                 <!-- custom columns not tested -->
-                {{~entry.book.customcolumns_list :column:column_index}}
+                {{~ entry.book.customcolumns_list:column:column_index}}
                 <div class="text-truncate"><i class="bi-node-minus pe-1"></i><span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
                 {{~}}
             </div>
             <div class="card-footer">
                 <!-- download buttons for each available format -->
-                    {{~entry.book.preferedData:data:j}}
+                    {{~ entry.book.preferedData:data:i}}
                     <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
                     {{~}}
             </div>

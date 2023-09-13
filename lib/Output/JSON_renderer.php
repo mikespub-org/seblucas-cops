@@ -468,6 +468,29 @@ class JSONRenderer
         }
         $out ["extra"] = $currentPage->extra;
         $out ["assets"] = Config::get('assets');
+        $out ["download"] = [];
+        if ($currentPage->containsBook()) {
+            if (!empty(Config::get('download_page'))) {
+                foreach (Config::get('download_page') as $format) {
+                    $query = preg_replace("/\&_=\d+/", "", $request->query());
+                    $url = Config::ENDPOINT['download'] . Format::addURLParam("?" . $query, 'type', strtolower($format));
+                    array_push($out ["download"], ['url' => $url, 'format' => $format]);
+                }
+            } elseif (!empty($qid)) {
+                if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
+                    foreach (Config::get('download_series') as $format) {
+                        $url = Config::ENDPOINT['download'] . '?series=' .  $qid . '&type=' . strtolower($format);
+                        array_push($out ["download"], ['url' => $url, 'format' => $format]);
+                    }
+                }
+                if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
+                    foreach (Config::get('download_author') as $format) {
+                        $url = Config::ENDPOINT['download'] . '?author=' .  $qid . '&type=' . strtolower($format);
+                        array_push($out ["download"], ['url' => $url, 'format' => $format]);
+                    }
+                }
+            }
+        }
 
         /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {

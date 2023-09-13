@@ -12,6 +12,13 @@
       {{??}}
         <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
       {{?}}
+      {{? it.download }}
+        {{~it.download:link:idx}}
+        <a class="navbar-brand" href="{{=link.url}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=link.format}}">
+          <span class="glyphicon glyphicon-download"></span>
+        </a>
+        {{~}}
+      {{?}}
       {{? it.filters }}
         <!-- show current filter(s) -->
         {{~it.filters:filter:idx}}
@@ -34,8 +41,12 @@
         {{?}}
       {{?}}
     </div>
-    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search">
+    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search" action="index.php" method="get">
       <div class="input-group">
+        <input type="hidden" name="page" value="9">
+        {{? it.databaseId != ""}}
+            <input type="hidden" name="db" value="{{=it.databaseId}}">
+        {{?}}
         <input id="queryInput" type="text" class="form-control" placeholder="{{=it.c.i18n.searchAlt}}" name="query">
         <div class="input-group-btn">
           <button id="searchButton" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>

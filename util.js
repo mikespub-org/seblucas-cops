@@ -539,6 +539,7 @@ function initiateAjax (url, theme) {
     });
 }
 
+/** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
 function initiateTwig(url, theme) {
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
@@ -564,3 +565,4 @@ function initiateTwig(url, theme) {
         handleLinks ();
     });
 }
+ */

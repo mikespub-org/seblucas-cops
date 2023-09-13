@@ -8,11 +8,23 @@ x.x.x - TODO
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
   * Use kiwilan/php-opds to generate OPDS 2.0 catalog with opds.php (besides OPDS 1.2 with feed.php)
 
-2.0.x - 2023xxxx To be continued (PHP >= 8.1)
-  * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
+2.1.x - 2023xxxx To be continued (PHP >= 8.1)
+
+2.1.1 - 202309xx Download books per page/series/author, fix search form + add epub-loader (PHP >= 8.1)
+  * Changes in config_default.php file:
+    - new $config['cops_download_page']
+    - new $config['cops_download_series']
+    - new $config['cops_download_author']
+  * Add download.php to allow downloading all books of a series or author, or all books on a page
+  * Fix search form with server-side rendering in bootstrap* templates - see pull request #38 from @dunxd
+  * Add loader.php for integration of epub-loader (development mode only)
 
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
+
+2.0.1 - 20230910 Initial release for PHP >= 8.1 with new EPub update package
+  * More spacing tweaks on the bootstrap5 template - see pull request #35 from @dunxd
+  * Use maennchen/zipstream-php to update epub files on the fly (PHP 8.x)
 
 1.5.4 - 20230910 Split off resources in preparation of 2.x
   * Changes in config_default.php file:

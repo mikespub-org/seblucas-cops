@@ -140,7 +140,7 @@ class EpubReaderTest extends TestCase
      * @param mixed $component
      * @return void
      */
-    public function testComponent($component='cover.xml')
+    public function testComponent($component = 'cover.xml')
     {
         $data = self::$book->component($component);
         $check = 532;
@@ -153,7 +153,7 @@ class EpubReaderTest extends TestCase
      * @param mixed $element
      * @return void
      */
-    public function testGetComponentName($component='cover.xml', $element='images/cover.png')
+    public function testGetComponentName($component = 'cover.xml', $element = 'images/cover.png')
     {
         $data = self::$book->getComponentName($component, $element);
         $check = 'images~SLASH~cover.png';
@@ -165,7 +165,7 @@ class EpubReaderTest extends TestCase
      * @param mixed $component
      * @return void
      */
-    public function testComponentContentType($component='cover.xml')
+    public function testComponentContentType($component = 'cover.xml')
     {
         $data = self::$book->componentContentType($component);
         $check = 'application/xhtml+xml';
