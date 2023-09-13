@@ -469,17 +469,24 @@ class JSONRenderer
         $out ["extra"] = $currentPage->extra;
         $out ["assets"] = Config::get('assets');
         $out ["download"] = [];
-        if (!empty($qid) && $currentPage->containsBook()) {
-            if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
-                foreach (Config::get('download_series') as $format) {
-                    $url = Config::ENDPOINT['download'] . '?series=' .  $qid . '&type=' . strtolower($format);
+        if ($currentPage->containsBook()) {
+            if (!empty(Config::get('download_page'))) {
+                foreach (Config::get('download_page') as $format) {
+                    $url = Config::ENDPOINT['download'] . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'type', strtolower($format));
                     array_push($out ["download"], ['url' => $url, 'format' => $format]);
                 }
-            }
-            if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
-                foreach (Config::get('download_author') as $format) {
-                    $url = Config::ENDPOINT['download'] . '?author=' .  $qid . '&type=' . strtolower($format);
-                    array_push($out ["download"], ['url' => $url, 'format' => $format]);
+            } elseif (!empty($qid)) {
+                if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
+                    foreach (Config::get('download_series') as $format) {
+                        $url = Config::ENDPOINT['download'] . '?series=' .  $qid . '&type=' . strtolower($format);
+                        array_push($out ["download"], ['url' => $url, 'format' => $format]);
+                    }
+                }
+                if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
+                    foreach (Config::get('download_author') as $format) {
+                        $url = Config::ENDPOINT['download'] . '?author=' .  $qid . '&type=' . strtolower($format);
+                        array_push($out ["download"], ['url' => $url, 'format' => $format]);
+                    }
                 }
             }
         }

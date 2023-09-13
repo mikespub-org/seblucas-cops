@@ -462,6 +462,15 @@ $config['cops_opds_filter_links'] = ['author', 'language', 'rating', 'tag'];
 $config['cops_opds_filter_limit'] = '8';
 
 /*
+ * Allow downloading all books shown on a page for a specific format
+ * Example: $config['cops_download_page'] = ['EPUB'];
+ *
+ * To get any format in prefered_format order you can use : ["ANY"];
+ * Example: $config['cops_download_page'] = ['ANY'];
+ */
+$config['cops_download_page'] = [];
+
+/*
  * Allow downloading all books of a series for a specific format
  * Example: $config['cops_download_series'] = ['EPUB', 'MOBI'];
  */

@@ -13,6 +13,8 @@ use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Pages\Page;
 use ZipStream\ZipStream;
 
 /**
@@ -30,7 +32,7 @@ class Downloader
     protected $format = 'EPUB';
     /** @var string */
     protected $fileName = 'download.epub.zip';
-    /** @var array<string> */
+    /** @var array<string, string> */
     protected $fileList = [];
 
     /**
@@ -51,20 +53,53 @@ class Downloader
      */
     public function isValid()
     {
-        // @todo support other grouped downloads?
-        $instance = $this->hasSeries();
-        if (!$instance) {
-            $instance = $this->hasAuthor();
-            if (!$instance) {
-                return false;
+        $entries = $this->hasPage();
+        if (!$entries) {
+            $entries = $this->hasSeries();
+            if (!$entries) {
+                $entries = $this->hasAuthor();
+                if (!$entries) {
+                    return false;
+                }
             }
         }
-        return $this->checkFileList($instance);
+        return $this->checkFileList($entries);
+    }
+
+    /**
+     * Summary of hasPage
+     * @return array<mixed>|bool
+     */
+    public function hasPage()
+    {
+        if (!in_array($this->format, Config::get('download_page'))) {
+            return false;
+        }
+        $pageId = $this->request->get('page', null, '/^\d+$/');
+        if (empty($pageId)) {
+            return false;
+        }
+        /** @var Page $instance */
+        $instance = PageId::getPage($pageId, $this->request);
+        $instance->InitializeContent();
+        if (empty($instance)) {
+            return false;
+        }
+        if ($this->format == 'ANY') {
+            $this->fileName = $instance->title . '.zip';
+        } else {
+            $this->fileName = $instance->title . '.' . strtolower($this->format) . '.zip';
+        }
+        if (!empty($instance->parentTitle)) {
+            $this->fileName = $instance->parentTitle . ' - ' . $this->fileName;
+        }
+        $instance->InitializeContent();
+        return $instance->entryArray;
     }
 
     /**
      * Summary of hasSeries
-     * @return Serie|bool
+     * @return array<mixed>|bool
      */
     public function hasSeries()
     {
@@ -80,12 +115,18 @@ class Downloader
         if (empty($instance->id)) {
             return false;
         }
-        return $instance;
+        if ($this->format == 'ANY') {
+            $this->fileName = $instance->name . '.zip';
+        } else {
+            $this->fileName = $instance->name . '.' . strtolower($this->format) . '.zip';
+        }
+        $entries = $instance->getBooks();  // -1
+        return $entries;
     }
 
     /**
      * Summary of hasAuthor
-     * @return Author|bool
+     * @return array<mixed>|bool
      */
     public function hasAuthor()
     {
@@ -101,23 +142,39 @@ class Downloader
         if (empty($instance->id)) {
             return false;
         }
-        return $instance;
+        if ($this->format == 'ANY') {
+            $this->fileName = $instance->name . '.zip';
+        } else {
+            $this->fileName = $instance->name . '.' . strtolower($this->format) . '.zip';
+        }
+        $entries = $instance->getBooks();  // -1
+        return $entries;
     }
 
     /**
      * Summary of checkFileList
-     * @param Serie|Author $instance
+     * @param array<mixed> $entries
      * @return bool
      */
-    public function checkFileList($instance)
+    public function checkFileList($entries)
     {
-        $entries = $instance->getBooks();  // -1
         if (count($entries) < 1) {
             return false;
         }
         $this->fileList = [];
+        if ($this->format == 'ANY') {
+            $checkFormats = Config::get('prefered_format');
+        } else {
+            $checkFormats = [ $this->format ];
+        }
         foreach ($entries as $entry) {
-            $data = $entry->book->getDataFormat($this->format);
+            $data = false;
+            foreach ($checkFormats as $format) {
+                $data = $entry->book->getDataFormat($format);
+                if ($data) {
+                    break;
+                }
+            }
             if (!$data) {
                 continue;
             }
@@ -125,12 +182,12 @@ class Downloader
             if (!file_exists($path)) {
                 continue;
             }
-            $this->fileList[] = $path;
+            $name = basename($path);
+            $this->fileList[$name] = $path;
         }
         if (count($this->fileList) < 1) {
             return false;
         }
-        $this->fileName = $instance->name . '.' . strtolower($this->format) . '.zip';
         return true;
     }
 
@@ -145,9 +202,9 @@ class Downloader
             outputName: $this->fileName,
             sendHttpHeaders: true,
         );
-        foreach ($this->fileList as $path) {
+        foreach ($this->fileList as $name => $path) {
             $zip->addFileFromPath(
-                fileName: basename($path),
+                fileName: $name,
                 path: $path,
             );
         }
