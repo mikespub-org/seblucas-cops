@@ -12,6 +12,7 @@ use SebLucas\Cops\Input\Request;
 //use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
 use SebLucas\Cops\Pages\PageId;
+use Kiwilan\Opds\OpdsResponse;
 
 require_once __DIR__ . '/config.php';
 
@@ -34,17 +35,21 @@ if (Config::get('fetch_protect') == '1') {
     }
 }
 
-header('Content-Type:application/xml');
-
 $OPDSRender = new OPDSRenderer();
 
 switch ($page) {
     case PageId::OPENSEARCH :
-        echo $OPDSRender->getOpenSearch($request);
-        return;
+        $response = $OPDSRender->getOpenSearch($request);
+        break;
     default:
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
-        echo $OPDSRender->render($currentPage, $request);
-        return;
+        $response = $OPDSRender->render($currentPage, $request);
 }
+
+foreach ($response->getHeaders() as $type => $value) {
+    header($type.': '.$value);
+}
+http_response_code($response->getStatus());
+
+echo $response->getContents();

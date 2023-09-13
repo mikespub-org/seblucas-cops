@@ -115,6 +115,24 @@ class Entry
     }
 
     /**
+     * Summary of getRelation
+     * @return string|null
+     */
+    public function getRelation()
+    {
+        foreach ($this->linkArray as $link) {
+            /** @var $link LinkEntry|LinkFeed */
+
+            if (!($link instanceof LinkFeed)) {
+                continue;
+            }
+
+            return $link->rel;
+        }
+        return null;
+    }
+
+    /**
      * Summary of getThumbnail
      * @param string $endpoint
      * @return string|null

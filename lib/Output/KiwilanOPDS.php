@@ -11,10 +11,11 @@ namespace SebLucas\Cops\Output;
 
 use Kiwilan\Opds\Opds;
 use Kiwilan\Opds\OpdsConfig;
-use Kiwilan\Opds\OpdsVersionEnum;
-use Kiwilan\Opds\Entries\OpdsEntry;
+use Kiwilan\Opds\OpdsResponse;
 use Kiwilan\Opds\Entries\OpdsEntryBook;
 use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
+use Kiwilan\Opds\Entries\OpdsEntryNavigation;
+use Kiwilan\Opds\Enums\OpdsVersionEnum;
 use SebLucas\Cops\Input\Config as CopsConfig;
 use SebLucas\Cops\Input\Request as CopsRequest;
 use SebLucas\Cops\Model\Entry as CopsEntry;
@@ -24,7 +25,7 @@ use DateTime;
 class KiwilanOPDS
 {
     public static string $endpoint = "opds.php";
-    public static OpdsVersionEnum $version = OpdsVersionEnum::v1Dot2;
+    public static OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
     /** @var DateTime|null */
     private $updated = null;
 
@@ -55,8 +56,10 @@ class KiwilanOPDS
             // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
             //searchUrl: self::$endpoint . '?page=8',
             searchUrl: self::$endpoint . '/search',
-            searchQuery: 'query',  // 'q' by default for php-opds
+            //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
+            maxItemsPerPage: CopsConfig::get('max_item_per_page'),
+            forceJson: true,
         );
     }
 
@@ -92,11 +95,15 @@ class KiwilanOPDS
         if ($serie) {
             $serie = $serie->name;
         }
+        $publisher = $entry->book->getPublisher();
+        if ($publisher) {
+            $publisher = $publisher->name;
+        }
         $opdsEntry = new OpdsEntryBook(
             id: $entry->id,
             title: $entry->title,
             route: $entry->getNavLink(self::$endpoint),
-            summary: OpdsEntryBook::handleContent($entry->content),
+            summary: OpdsEntryNavigation::handleContent($entry->content),
             content: $entry->content,
             media: $entry->getImage(self::$endpoint),
             updated: new DateTime($entry->getUpdatedTime()),
@@ -106,9 +113,12 @@ class KiwilanOPDS
             authors: $authors,
             published: $published,
             // Element "volume" not allowed here; expected the element end-tag, element "author", "category", "contributor", "link", "rights" or "source" or an element from another namespace
-            //volume: $entry->book->seriesIndex,
+            volume: $entry->book->seriesIndex,
             serie: $serie,
             language: $entry->book->getLanguages(),
+            //isbn: $entry->book->uuid,
+            identifier: $entry->id,
+            publisher: $publisher,
         );
 
         return $opdsEntry;
@@ -117,19 +127,23 @@ class KiwilanOPDS
     /**
      * Summary of getOpdsEntry
      * @param CopsEntry $entry
-     * @return OpdsEntry
+     * @return OpdsEntryNavigation
      */
     private function getOpdsEntry($entry)
     {
-        $opdsEntry = new OpdsEntry(
+        $opdsEntry = new OpdsEntryNavigation(
             id: $entry->id,
             title: $entry->title,
             route: $entry->getNavLink(self::$endpoint),
-            content: $entry->content,
+            summary: $entry->content,
             media: $entry->getThumbnail(self::$endpoint),
+            relation: $entry->getRelation(),
             //updated: $entry->getUpdatedTime(),
             updated: $this->getUpdatedTime(),
         );
+        if ($entry->numberOfElement) {
+            $opdsEntry->properties([ "numberOfItems" => $entry->numberOfElement ]);
+        }
 
         return $opdsEntry;
     }
@@ -137,29 +151,24 @@ class KiwilanOPDS
     /**
      * Summary of getOpenSearch
      * @param CopsRequest $request
-     * @return string
+     * @return OpdsResponse
      */
     public function getOpenSearch($request)
     {
-        $opds = Opds::make(
-            config: $this->getOpdsConfig(),
-            feeds: [], // OpdsEntry[]|OpdsEntryBook[]
-            title: 'Search',
-            //url: self::$endpoint . '?page=8', // Can be null to be set automatically
-            url: self::$endpoint . '/search', // Can be null to be set automatically
-            version: self::$version, // OPDS version
-            //asString: false, // Output as string
-            //isSearch: false, // Is search feed
-        );
-
-        return $opds->response(true);
+        $opds = Opds::make($this->getOpdsConfig())
+            ->title('Search')
+            ->url(self::$endpoint . '/search')
+            ->isSearch()
+            ->feeds([])
+            ->get();
+        return $opds->getResponse();
     }
 
     /**
      * Summary of render
      * @param mixed $page
      * @param CopsRequest $request
-     * @return string
+     * @return OpdsResponse
      */
     public function render($page, $request)
     {
@@ -174,16 +183,10 @@ class KiwilanOPDS
         }
         $url = null;
 
-        $opds = Opds::make(
-            config: $this->getOpdsConfig(),
-            feeds: $feeds, // OpdsEntry[]|OpdsEntryBook[]
-            title: $title,
-            url: $url, // Can be null to be set automatically
-            version: self::$version, // OPDS version
-            //asString: false, // Output as string
-            //isSearch: false, // Is search feed
-        );
-
-        return $opds->response(true);
+        $opds = Opds::make($this->getOpdsConfig())
+            ->title($title)
+            ->feeds($feeds)
+            ->get();
+        return $opds->getResponse();
     }
 }

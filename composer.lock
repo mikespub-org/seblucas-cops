@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/kiwilan-php-opds.git",
-                "reference": "029177a92489cce2c99dcc497001b43d0ecad4cb"
+                "reference": "bee81ec0866bcac2f721605ee0ea9fddcc0465f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/kiwilan-php-opds/zipball/029177a92489cce2c99dcc497001b43d0ecad4cb",
-                "reference": "029177a92489cce2c99dcc497001b43d0ecad4cb",
+                "url": "https://api.github.com/repos/mikespub-org/kiwilan-php-opds/zipball/bee81ec0866bcac2f721605ee0ea9fddcc0465f8",
+                "reference": "bee81ec0866bcac2f721605ee0ea9fddcc0465f8",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
                 "php"
             ],
             "support": {
-                "source": "https://github.com/mikespub-org/kiwilan-php-opds/tree/main"
+                "source": "https://github.com/mikespub-org/kiwilan-php-opds/tree/relations"
             },
             "funding": [
                 {
@@ -94,7 +94,7 @@
                     "url": "https://github.com/kiwilan"
                 }
             ],
-            "time": "2023-09-07T07:20:34+00:00"
+            "time": "2023-09-13T16:18:57+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
