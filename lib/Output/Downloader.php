@@ -46,7 +46,7 @@ class Downloader
     {
         $this->request = $request;
         $this->databaseId = $this->request->get('db');
-        $type = $this->request->get('type', 'epub');
+        $type = $this->request->get('type', 'any');
         $this->format = strtoupper($type);
     }
 
@@ -86,7 +86,7 @@ class Downloader
         }
         /** @var Page $instance */
         $instance = PageId::getPage($pageId, $this->request);
-        if (empty($instance)) {
+        if (get_class($instance) == Page::class) {
             $this->message = 'Invalid page';
             return false;
         }
