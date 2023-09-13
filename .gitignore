@@ -19,3 +19,5 @@
 .gitattributes
 *.cache
 .devcontainer/devcontainer.json
+.DS_Store
+.gitignore
