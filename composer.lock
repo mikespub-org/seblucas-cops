@@ -4,19 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d56de7cedd1b6fb646ebf50ae5b50df1",
+    "content-hash": "6850799acaef10691dc55f7b4bd116f8",
     "packages": [
         {
             "name": "kiwilan/php-opds",
-            "version": "dev-main",
+            "version": "dev-relations",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kiwilan/php-opds.git",
+                "url": "https://github.com/mikespub-org/kiwilan-php-opds.git",
                 "reference": "029177a92489cce2c99dcc497001b43d0ecad4cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/029177a92489cce2c99dcc497001b43d0ecad4cb",
+                "url": "https://api.github.com/repos/mikespub-org/kiwilan-php-opds/zipball/029177a92489cce2c99dcc497001b43d0ecad4cb",
                 "reference": "029177a92489cce2c99dcc497001b43d0ecad4cb",
                 "shasum": ""
             },
@@ -31,14 +31,40 @@
                 "phpstan/phpstan": "^1.10",
                 "spatie/ray": "^1.28"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Kiwilan\\Opds\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Kiwilan\\Opds\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-filter": [
+                    "vendor/bin/pest --filter"
+                ],
+                "test-parallel": [
+                    "vendor/bin/pest --parallel"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest --coverage --min=90"
+                ],
+                "test-coverage-parallel": [
+                    "vendor/bin/pest --parallel --coverage"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "format": [
+                    "vendor/bin/pint"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -52,21 +78,20 @@
             "description": "PHP package to create OPDS feed for eBooks.",
             "homepage": "https://github.com/kiwilan/php-opds",
             "keywords": [
-                "OPDS",
                 "api",
                 "atom",
                 "book",
                 "ebook",
+                "opds",
                 "php"
             ],
             "support": {
-                "issues": "https://github.com/kiwilan/php-opds/issues",
-                "source": "https://github.com/kiwilan/php-opds/tree/main"
+                "source": "https://github.com/mikespub-org/kiwilan-php-opds/tree/main"
             },
             "funding": [
                 {
-                    "url": "https://github.com/kiwilan",
-                    "type": "github"
+                    "type": "github",
+                    "url": "https://github.com/kiwilan"
                 }
             ],
             "time": "2023-09-07T07:20:34+00:00"
