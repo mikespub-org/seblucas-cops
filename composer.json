@@ -63,8 +63,8 @@
     },
     "repositories": [
         {
-            "type": "vcs",
-            "url": "https://github.com/mikespub-org/kiwilan-php-opds"
+            "type": "composer",
+            "url": "https://github-org.mikespub.net/composer/"
         },
         {
             "type": "composer",

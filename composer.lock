@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6850799acaef10691dc55f7b4bd116f8",
+    "content-hash": "931d86918b88dfa972eb3ab42fc342f7",
     "packages": [
         {
             "name": "kiwilan/php-opds",
@@ -16,9 +16,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/kiwilan-php-opds/zipball/bee81ec0866bcac2f721605ee0ea9fddcc0465f8",
+                "url": "https://github-org.mikespub.net/composer//dist/kiwilan/php-opds/kiwilan-php-opds-bee81ec0866bcac2f721605ee0ea9fddcc0465f8-zip-15c147.zip",
                 "reference": "bee81ec0866bcac2f721605ee0ea9fddcc0465f8",
-                "shasum": ""
+                "shasum": "fddac7f6648fa9314e2eacf3e55716598b68cd4a"
             },
             "require": {
                 "php": "^8.1",
@@ -187,9 +187,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/024cb926b463467eb6fcceb04ec3f9279d1009f9",
+                "url": "https://github-org.mikespub.net/composer//dist/mikespub/php-epub-meta/mikespub-php-epub-meta-024cb926b463467eb6fcceb04ec3f9279d1009f9-zip-93ca2b.zip",
                 "reference": "024cb926b463467eb6fcceb04ec3f9279d1009f9",
-                "shasum": ""
+                "shasum": "c44f2f9ca5d296a9d264b6ad259b1a51a505d8f9"
             },
             "require": {
                 "ext-dom": "*",
@@ -211,7 +211,6 @@
                     "src/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -242,8 +241,8 @@
                 "metadata"
             ],
             "support": {
-                "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.0.2"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.0.2",
+                "issues": "https://github.com/mikespub-org/php-epub-meta/issues"
             },
             "time": "2023-09-10T15:06:11+00:00"
         },
@@ -1379,9 +1378,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/81b4a0a34f5a16252a9abcb5c4944c1795c298e3",
+                "url": "https://github-org.mikespub.net/composer//dist/mikespub/epub-loader/mikespub-epub-loader-81b4a0a34f5a16252a9abcb5c4944c1795c298e3-zip-870927.zip",
                 "reference": "81b4a0a34f5a16252a9abcb5c4944c1795c298e3",
-                "shasum": ""
+                "shasum": "7c75004424d8b417b4539e014affa64653106794"
             },
             "require": {
                 "freearhey/wikidata": "^3.6",
@@ -1399,7 +1398,6 @@
                     "app/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
@@ -1417,8 +1415,8 @@
             ],
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
-                "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/2.1.1"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/2.1.1",
+                "issues": "https://github.com/mikespub-org/epub-loader/issues"
             },
             "time": "2023-09-11T20:05:10+00:00"
         },
