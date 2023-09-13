@@ -93,6 +93,9 @@ class Downloader
         if (!empty($instance->parentTitle)) {
             $this->fileName = $instance->parentTitle . ' - ' . $this->fileName;
         }
+        if (!empty($instance->n) && intval($instance->n) > 1) {
+            $this->fileName = str_replace('.zip', '.' . strval($instance->n) . '.zip', $this->fileName);
+        }
         $instance->InitializeContent();
         return $instance->entryArray;
     }

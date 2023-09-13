@@ -472,7 +472,8 @@ class JSONRenderer
         if ($currentPage->containsBook()) {
             if (!empty(Config::get('download_page'))) {
                 foreach (Config::get('download_page') as $format) {
-                    $url = Config::ENDPOINT['download'] . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'type', strtolower($format));
+                    $query = preg_replace("/\&_=\d+/", "", $request->query());
+                    $url = Config::ENDPOINT['download'] . Format::addURLParam("?" . $query, 'type', strtolower($format));
                     array_push($out ["download"], ['url' => $url, 'format' => $format]);
                 }
             } elseif (!empty($qid)) {
