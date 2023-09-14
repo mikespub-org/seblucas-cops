@@ -325,8 +325,8 @@ class JSONRenderer
         }
         $page = $request->get("page", $homepage);
         $search = $request->get("search");
-        $qid = $request->get("id");
-        $database = $request->get('db');
+        $qid = $request->getId();
+        $database = $request->database();
 
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();

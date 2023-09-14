@@ -61,7 +61,7 @@ class BookList
     public function __construct($request, $database = null, $numberPerPage = null)
     {
         $this->request = $request ?? new Request();
-        $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
+        $this->databaseId = $database ?? $this->request->database();
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         //$this->ignoredCategories = $this->request->option('ignored_categories');
         $this->setOrderBy();

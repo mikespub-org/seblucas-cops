@@ -29,7 +29,7 @@ class Identifier extends Base
     where books.id not in (select book from identifiers) {1} order by books.sort';
     public const URL_PARAM = "i";
 
-    /** @var string|int|null */
+    /** @var ?int */
     public $id;
     /** @var string */
     public $type;

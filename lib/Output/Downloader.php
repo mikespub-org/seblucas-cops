@@ -45,7 +45,7 @@ class Downloader
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->databaseId = $this->request->get('db');
+        $this->databaseId = $this->request->database();
         $type = $this->request->get('type', 'any');
         $this->format = strtoupper($type);
     }
@@ -79,7 +79,7 @@ class Downloader
             $this->message ??= 'Invalid format for page';
             return false;
         }
-        $pageId = $this->request->get('page', null, '/^\d+$/');
+        $pageId = $this->request->getId('page');
         if (empty($pageId)) {
             $this->message ??= 'Invalid page id';
             return false;
@@ -120,7 +120,7 @@ class Downloader
             $this->message ??= 'Invalid format for series';
             return false;
         }
-        $seriesId = $this->request->get('series', null, '/^\d+$/');
+        $seriesId = $this->request->getId('series');
         if (empty($seriesId)) {
             $this->message ??= 'Invalid series id';
             return false;
@@ -154,7 +154,7 @@ class Downloader
             $this->message ??= 'Invalid format for author';
             return false;
         }
-        $authorId = $this->request->get('author', null, '/^\d+$/');
+        $authorId = $this->request->getId('author');
         if (empty($authorId)) {
             $this->message ??= 'Invalid author id';
             return false;

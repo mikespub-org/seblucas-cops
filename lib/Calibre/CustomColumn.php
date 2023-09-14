@@ -45,7 +45,7 @@ class CustomColumn extends Category
 
     /**
      * Summary of getCustomId
-     * @return string|int|null
+     * @return int
      */
     public function getCustomId()
     {
@@ -78,7 +78,7 @@ class CustomColumn extends Category
      */
     public function getEntryId()
     {
-        return static::PAGE_ID . ":" . $this->getCustomId() . ":" . $this->id;
+        return static::PAGE_ID . ":" . strval($this->getCustomId()) . ":" . $this->id;
     }
 
     /**
@@ -178,7 +178,7 @@ class CustomColumn extends Category
      * Create an CustomColumn by CustomColumnID and ValueID
      *
      * @param int $customId the id of the customColumn
-     * @param int $id the id of the chosen value
+     * @param string|int $id the id of the chosen value
      * @param ?int $database
      * @return ?CustomColumn
      */

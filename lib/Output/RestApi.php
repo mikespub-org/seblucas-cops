@@ -177,7 +177,7 @@ class RestApi
      */
     public static function getDatabases($request)
     {
-        $db = $request->get('db', null, '/^\d+$/');
+        $db = $request->database();
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
             return static::getDatabase($db, $request);
         }

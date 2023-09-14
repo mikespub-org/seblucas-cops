@@ -501,7 +501,7 @@ abstract class CustomColumnType
     /**
      * Get a CustomColumn for a specified (by ID) value
      *
-     * @param string|integer $id the id of the searched value
+     * @param string|int|null $id the id of the searched value
      * @return ?CustomColumn
      */
     abstract public function getCustom($id);

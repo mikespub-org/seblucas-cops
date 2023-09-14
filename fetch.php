@@ -26,11 +26,11 @@ if (ob_get_length() !== false) {
     ob_end_clean();
 }
 
-$bookId   = $request->get('id', null);
+$bookId   = $request->getId();
 $type     = $request->get('type', 'jpg');
-$idData   = $request->get('data', null);
+$idData   = $request->getId('data');
 $viewOnly = $request->get('view', false);
-$database = $request->get('db');
+$database = $request->database();
 
 if (is_null($bookId)) {
     $book = Book::getBookByDataId($idData, $database);

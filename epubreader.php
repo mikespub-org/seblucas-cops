@@ -12,7 +12,7 @@ use SebLucas\Cops\Output\EPubReader;
 require_once __DIR__ . '/config.php';
 
 $request = new Request();
-$idData = (int) $request->get('data', null);
+$idData = $request->getId('data');
 if (empty($idData)) {
     $request->notFound();
     exit;

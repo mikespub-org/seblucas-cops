@@ -96,7 +96,7 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
 
         $expected = 2;
-        $test = $request->get("id");
+        $test = $request->getId();
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);

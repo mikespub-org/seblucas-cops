@@ -260,6 +260,39 @@ class Request
     }
 
     /**
+     * Summary of getIntOrNull
+     * @param string $name
+     * @return ?int
+     */
+    protected function getIntOrNull($name)
+    {
+        $value = $this->get($name, null, '/^\d+$/');
+        if (!is_null($value)) {
+            return (int) $value;
+        }
+        return null;
+    }
+
+    /**
+     * Summary of getId
+     * @param string $name
+     * @return ?int
+     */
+    public function getId($name = 'id')
+    {
+        return $this->getIntOrNull($name);
+    }
+
+    /**
+     * Summary of database
+     * @return ?int
+     */
+    public function database()
+    {
+        return $this->getIntOrNull('db');
+    }
+
+    /**
      * Summary of getSorted
      * @param ?string $default
      * @return ?string

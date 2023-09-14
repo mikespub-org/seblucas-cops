@@ -32,7 +32,7 @@ abstract class Base
     where books_bases_link.book = books.id and base = ? {1} order by books.sort';
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
-    /** @var string|int|null */
+    /** @var ?int */
     public $id;
     /** @var ?string */
     public $name;

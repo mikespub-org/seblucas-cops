@@ -16,7 +16,7 @@ if (php_sapi_name() === 'cli') {
 }
 
 $request = new Request();
-$idData = (int) $request->get('data', null);
+$idData = $request->getId('data');
 if (empty($idData)) {
     $request->notFound();
     return;

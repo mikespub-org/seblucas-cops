@@ -65,7 +65,7 @@ class OPDSRenderer
      */
     public function getOpenSearch($request)
     {
-        $database = $request->get('db');
+        $database = $request->database();
         $xml = new XMLWriter();
         $xml->openMemory();
         $xml->setIndent(true);
@@ -115,7 +115,7 @@ class OPDSRenderer
      */
     protected function startXmlDocument($page, $request)
     {
-        $database = $request->get('db');
+        $database = $request->database();
         $this->getXmlStream()->startDocument('1.0', 'UTF-8');
         $this->getXmlStream()->startElement("feed");
         $this->getXmlStream()->writeAttribute("xmlns", "http://www.w3.org/2005/Atom");
@@ -135,8 +135,8 @@ class OPDSRenderer
         $this->getXmlStream()->startElement("id");
         if ($page->idPage) {
             $idPage = $page->idPage;
-            if (!is_null($request->get('db'))) {
-                $idPage = str_replace("cops:", "cops:" . $request->get('db') . ":", $idPage);
+            if (!is_null($request->database())) {
+                $idPage = str_replace("cops:", "cops:" . strval($request->database()) . ":", $idPage);
             }
             $this->getXmlStream()->text($idPage);
         } else {
@@ -325,7 +325,7 @@ class OPDSRenderer
      */
     public function render($page, $request)
     {
-        $database = $request->get('db');
+        $database = $request->database();
         $this->startXmlDocument($page, $request);
         if ($page->isPaginated()) {
             $this->getXmlStream()->startElement("opensearch:totalResults");
@@ -366,7 +366,7 @@ class OPDSRenderer
         // always show filters even when not paginating
         if ($page->containsBook()) {
             $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
-            if (!empty($request->get('id')) && !empty(Config::get('opds_filter_links')) && !in_array($page, $skipFilterUrl)) {
+            if (!empty($request->getId()) && !empty(Config::get('opds_filter_links')) && !in_array($page, $skipFilterUrl)) {
                 //$url = Format::addURLParam("?" . $page->getCleanQuery(), 'filter', 1);
                 //$filterLabel = localize("cog.alternate");
                 //$title = localize("links.title");

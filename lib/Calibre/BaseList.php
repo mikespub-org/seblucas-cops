@@ -38,7 +38,7 @@ class BaseList
     {
         $this->className = $className;
         $this->request = $request ?? new Request();
-        $this->databaseId = $database ?? $this->request->get('db', null, '/^\d+$/');
+        $this->databaseId = $database ?? $this->request->database();
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         //$this->ignoredCategories = $this->request->option('ignored_categories');
         $this->setOrderBy();
@@ -130,7 +130,7 @@ class BaseList
 
     /**
      * Summary of getInstanceById
-     * @param string|int|null $id
+     * @param ?int $id
      * @return mixed
      */
     public function getInstanceById($id)

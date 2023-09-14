@@ -106,12 +106,13 @@ class Page
     public function setRequest($request)
     {
         $this->request = $request ?? new Request();
-        $this->idGet = $this->request->get('id');
+        // this could be string for first letter or custom columns - override there
+        $this->idGet = $this->request->getId();
         $this->query = $this->request->get('query');
-        $this->n = $this->request->get('n', 1);  // use default here
+        $this->n = $this->request->get('n', 1, '/^\d+$/');  // use default here
         $this->numberPerPage = $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
-        $this->databaseId = $this->request->get('db');
+        $this->databaseId = $this->request->database();
     }
 
     /**

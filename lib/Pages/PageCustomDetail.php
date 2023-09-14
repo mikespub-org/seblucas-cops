@@ -24,6 +24,8 @@ class PageCustomDetail extends Page
      */
     public function InitializeContent()
     {
+        // this could be string for some custom columns - override here
+        $this->idGet = $this->request->get('id');
         $customId = $this->request->get("custom", null);
         $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $this->idPage = $instance->getEntryId();
