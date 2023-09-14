@@ -36,6 +36,10 @@ body.submenu {
     padding: 85px 0 38px 0; /* Needed with fixed header and footer */
 }
 
+html {
+    scroll-padding-top: 85px; /* Better solution for fixed header */
+}
+
 .meta {
     font-size: 12px;
 }
