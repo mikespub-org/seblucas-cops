@@ -8,7 +8,8 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Output\OPDSRenderer;
+//use SebLucas\Cops\Output\OPDSRenderer;
+use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;

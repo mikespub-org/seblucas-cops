@@ -1,0 +1,194 @@
+<?php
+/**
+ * COPS (Calibre OPDS PHP Server) class file
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     mikespub
+ */
+
+namespace SebLucas\Cops\Output;
+
+use Kiwilan\Opds\Opds;
+use Kiwilan\Opds\OpdsConfig;
+use Kiwilan\Opds\OpdsResponse;
+use Kiwilan\Opds\Entries\OpdsEntryBook;
+use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
+use Kiwilan\Opds\Entries\OpdsEntryNavigation;
+use Kiwilan\Opds\Enums\OpdsVersionEnum;
+use SebLucas\Cops\Input\Config as CopsConfig;
+use SebLucas\Cops\Input\Request as CopsRequest;
+use SebLucas\Cops\Model\Entry as CopsEntry;
+use SebLucas\Cops\Model\EntryBook as CopsEntryBook;
+use DateTime;
+
+class KiwilanOPDS
+{
+    public static string $endpoint = "opds.php";
+    public static OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
+    /** @var DateTime|null */
+    private $updated = null;
+
+    /**
+     * Summary of getUpdatedTime
+     * @return DateTime
+     */
+    private function getUpdatedTime()
+    {
+        if (is_null($this->updated)) {
+            $this->updated = new DateTime();
+        }
+        return $this->updated;
+    }
+
+    /**
+     * Summary of getOpdsConfig
+     * @return OpdsConfig
+     */
+    private function getOpdsConfig()
+    {
+        return new OpdsConfig(
+            name: 'Calibre',  // CopsConfig::get('title_default')
+            author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
+            authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
+            iconUrl: CopsConfig::get('icon'),
+            startUrl: self::$endpoint,
+            // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
+            //searchUrl: self::$endpoint . '?page=8',
+            searchUrl: self::$endpoint . '/search',
+            //searchQuery: 'query',  // 'q' by default for php-opds
+            updated: $this->getUpdatedTime(),
+            usePagination: false, // To enable pagination, default is false
+            useAutoPagination: false, // To enable auto pagination, default is false, if `usePagination` is true, this option will be ignored
+            maxItemsPerPage: CopsConfig::get('max_item_per_page'),
+            forceJson: true,
+        );
+    }
+
+    /**
+     * Summary of getOpdsEntryBook
+     * @param CopsEntryBook $entry
+     * @return OpdsEntryBook
+     */
+    private function getOpdsEntryBook($entry)
+    {
+        $authors = [];
+        foreach ($entry->book->getAuthors() as $author) {
+            $opdsEntryAuthor = new OpdsEntryBookAuthor(
+                name: $author->name,
+                uri: self::$endpoint . $author->getUri(),
+            );
+            array_push($authors, $opdsEntryAuthor);
+        }
+        $categories = [];
+        foreach ($entry->book->getTags() as $category) {
+            array_push($categories, $category->name);
+        }
+        $published = null;
+        if ($entry->book->getPubDate() != "") {
+            $published = new DateTime($entry->book->getPubDate());
+        }
+        $download = null;
+        $data = $entry->book->getDataFormat('EPUB');
+        if ($data) {
+            $download = $data->getHtmlLink();
+        }
+        $serie = $entry->book->getSerie();
+        if ($serie) {
+            $serie = $serie->name;
+        }
+        $publisher = $entry->book->getPublisher();
+        if ($publisher) {
+            $publisher = $publisher->name;
+        }
+        $opdsEntry = new OpdsEntryBook(
+            id: $entry->id,
+            title: $entry->title,
+            route: $entry->getNavLink(self::$endpoint),
+            summary: OpdsEntryNavigation::handleContent($entry->content),
+            content: $entry->content,
+            media: $entry->getImage(self::$endpoint),
+            updated: new DateTime($entry->getUpdatedTime()),
+            download: $download,
+            mediaThumbnail: $entry->getThumbnail(self::$endpoint),
+            categories: $categories,
+            authors: $authors,
+            published: $published,
+            // Element "volume" not allowed here; expected the element end-tag, element "author", "category", "contributor", "link", "rights" or "source" or an element from another namespace
+            volume: $entry->book->seriesIndex,
+            serie: $serie,
+            language: $entry->book->getLanguages(),
+            //isbn: $entry->book->uuid,
+            identifier: $entry->id,
+            publisher: $publisher,
+        );
+
+        return $opdsEntry;
+    }
+
+    /**
+     * Summary of getOpdsEntry
+     * @param CopsEntry $entry
+     * @return OpdsEntryNavigation
+     */
+    private function getOpdsEntry($entry)
+    {
+        $opdsEntry = new OpdsEntryNavigation(
+            id: $entry->id,
+            title: $entry->title,
+            route: $entry->getNavLink(self::$endpoint),
+            summary: $entry->content,
+            media: $entry->getThumbnail(self::$endpoint),
+            relation: $entry->getRelation(),
+            //updated: $entry->getUpdatedTime(),
+            updated: $this->getUpdatedTime(),
+        );
+        if ($entry->numberOfElement) {
+            $opdsEntry->properties([ "numberOfItems" => $entry->numberOfElement ]);
+        }
+
+        return $opdsEntry;
+    }
+
+    /**
+     * Summary of getOpenSearch
+     * @param CopsRequest $request
+     * @return OpdsResponse
+     */
+    public function getOpenSearch($request)
+    {
+        $opds = Opds::make($this->getOpdsConfig())
+            ->title('Search')
+            ->url(self::$endpoint . '/search')
+            ->isSearch()
+            ->feeds([])
+            ->get();
+        return $opds->getResponse();
+    }
+
+    /**
+     * Summary of render
+     * @param mixed $page
+     * @param CopsRequest $request
+     * @return OpdsResponse
+     */
+    public function render($page, $request)
+    {
+        $title = $page->title;
+        $feeds = [];
+        foreach ($page->entryArray as $entry) {
+            if ($entry instanceof CopsEntryBook) {
+                array_push($feeds, $this->getOpdsEntryBook($entry));
+            } else {
+                array_push($feeds, $this->getOpdsEntry($entry));
+            }
+        }
+        $url = null;
+
+        $opds = Opds::make($this->getOpdsConfig())
+            ->title($title)
+            ->feeds($feeds)
+            ->get();
+        return $opds->getResponse();
+    }
+}
