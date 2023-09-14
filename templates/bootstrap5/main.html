@@ -66,10 +66,12 @@
 {{?}}
 {{?}}
 {{? it.isPaginated == 1}}
-    <ul class="pager">
-        <li class="{{? it.prevLink == ""}}disabled{{?}}"><a id="prevLink" href="{{=it.prevLink}}"><i class="bi-chevron-left"></i>{{=it.c.i18n.previousAlt}}</a></li>
-        <li> {{=it.currentPage}} / {{=it.maxPage}} </li>
-        <li class="{{? it.nextLink == ""}}disabled{{?}}"><a id="nextLink" href="{{=it.nextLink}}">{{=it.c.i18n.nextAlt}}<i class="bi-chevron-right"></i></a></li>
+<nav class="pt-1" aria-label="Page navigation">
+    <ul class="pagination">
+        <li class="page-item{{? it.prevLink == ""}} disabled{{?}}"><a id="prevLink" class="page-link" href="{{=it.prevLink}}"><i class="bi-chevron-left"></i>{{=it.c.i18n.previousAlt}}</a></li>
+        <li class="page-item disabled"><span class="page-link">{{=it.currentPage}} / {{=it.maxPage}}</span></li>
+        <li class="page-item{{? it.nextLink == ""}} disabled{{?}}"><a id="nextLink" class="page-link" href="{{=it.nextLink}}">{{=it.c.i18n.nextAlt}}<i class="bi-chevron-right"></i></a></li>
     </ul>
+</nav>
 {{?}}
 </div>
