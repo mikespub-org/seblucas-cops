@@ -4,98 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "931d86918b88dfa972eb3ab42fc342f7",
+    "content-hash": "dfb75f46c997337853ff91b16d1f6c0f",
     "packages": [
-        {
-            "name": "kiwilan/php-opds",
-            "version": "dev-relations",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mikespub-org/kiwilan-php-opds.git",
-                "reference": "bee81ec0866bcac2f721605ee0ea9fddcc0465f8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github-org.mikespub.net/composer//dist/kiwilan/php-opds/kiwilan-php-opds-bee81ec0866bcac2f721605ee0ea9fddcc0465f8-zip-15c147.zip",
-                "reference": "bee81ec0866bcac2f721605ee0ea9fddcc0465f8",
-                "shasum": "fddac7f6648fa9314e2eacf3e55716598b68cd4a"
-            },
-            "require": {
-                "php": "^8.1",
-                "spatie/array-to-xml": "^3.1"
-            },
-            "require-dev": {
-                "kiwilan/php-xml-reader": "^1.0",
-                "laravel/pint": "^1.2",
-                "pestphp/pest": "^1.20",
-                "phpstan/phpstan": "^1.10",
-                "spatie/ray": "^1.28"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Kiwilan\\Opds\\": "src"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Kiwilan\\Opds\\Tests\\": "tests"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "vendor/bin/pest"
-                ],
-                "test-filter": [
-                    "vendor/bin/pest --filter"
-                ],
-                "test-parallel": [
-                    "vendor/bin/pest --parallel"
-                ],
-                "test-coverage": [
-                    "vendor/bin/pest --coverage --min=90"
-                ],
-                "test-coverage-parallel": [
-                    "vendor/bin/pest --parallel --coverage"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "format": [
-                    "vendor/bin/pint"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Ewilan Rivière",
-                    "email": "ewilan.riviere@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP package to create OPDS feed for eBooks.",
-            "homepage": "https://github.com/kiwilan/php-opds",
-            "keywords": [
-                "api",
-                "atom",
-                "book",
-                "ebook",
-                "opds",
-                "php"
-            ],
-            "support": {
-                "source": "https://github.com/mikespub-org/kiwilan-php-opds/tree/relations"
-            },
-            "funding": [
-                {
-                    "type": "github",
-                    "url": "https://github.com/kiwilan"
-                }
-            ],
-            "time": "2023-09-13T16:18:57+00:00"
-        },
         {
             "name": "maennchen/zipstream-php",
             "version": "3.1.0",
@@ -187,9 +97,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github-org.mikespub.net/composer//dist/mikespub/php-epub-meta/mikespub-php-epub-meta-024cb926b463467eb6fcceb04ec3f9279d1009f9-zip-93ca2b.zip",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/024cb926b463467eb6fcceb04ec3f9279d1009f9",
                 "reference": "024cb926b463467eb6fcceb04ec3f9279d1009f9",
-                "shasum": "c44f2f9ca5d296a9d264b6ad259b1a51a505d8f9"
+                "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
@@ -211,6 +121,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -241,8 +152,8 @@
                 "metadata"
             ],
             "support": {
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.0.2",
-                "issues": "https://github.com/mikespub-org/php-epub-meta/issues"
+                "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.0.2"
             },
             "time": "2023-09-10T15:06:11+00:00"
         },
@@ -551,69 +462,6 @@
                 }
             ],
             "time": "2023-08-29T08:26:30+00:00"
-        },
-        {
-            "name": "spatie/array-to-xml",
-            "version": "3.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/spatie/array-to-xml.git",
-                "reference": "f9ab39c808500c347d5a8b6b13310bd5221e39e7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/f9ab39c808500c347d5a8b6b13310bd5221e39e7",
-                "reference": "f9ab39c808500c347d5a8b6b13310bd5221e39e7",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "php": "^8.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "^1.2",
-                "pestphp/pest": "^1.21",
-                "spatie/pest-plugin-snapshots": "^1.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Spatie\\ArrayToXml\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Freek Van der Herten",
-                    "email": "freek@spatie.be",
-                    "homepage": "https://freek.dev",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Convert an array to xml",
-            "homepage": "https://github.com/spatie/array-to-xml",
-            "keywords": [
-                "array",
-                "convert",
-                "xml"
-            ],
-            "support": {
-                "source": "https://github.com/spatie/array-to-xml/tree/3.2.0"
-            },
-            "funding": [
-                {
-                    "url": "https://spatie.be/open-source/support-us",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/spatie",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-07-19T18:30:26+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1302,6 +1150,70 @@
             "time": "2023-08-27T10:13:57+00:00"
         },
         {
+            "name": "kiwilan/php-opds",
+            "version": "1.0.23",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kiwilan/php-opds.git",
+                "reference": "14369d7326ceb4a032209a7826e99f764f0c7599"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/14369d7326ceb4a032209a7826e99f764f0c7599",
+                "reference": "14369d7326ceb4a032209a7826e99f764f0c7599",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "spatie/array-to-xml": "^3.1"
+            },
+            "require-dev": {
+                "kiwilan/php-xml-reader": "^1.0",
+                "laravel/pint": "^1.2",
+                "pestphp/pest": "^1.20",
+                "phpstan/phpstan": "^1.10",
+                "spatie/ray": "^1.28"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Kiwilan\\Opds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ewilan Rivière",
+                    "email": "ewilan.riviere@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP package to create OPDS feed for eBooks.",
+            "homepage": "https://github.com/kiwilan/php-opds",
+            "keywords": [
+                "OPDS",
+                "api",
+                "atom",
+                "book",
+                "ebook",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/kiwilan/php-opds/issues",
+                "source": "https://github.com/kiwilan/php-opds/tree/v1.0.23"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kiwilan",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-09-14T15:52:21+00:00"
+        },
+        {
             "name": "masterminds/html5",
             "version": "2.8.1",
             "source": {
@@ -1378,9 +1290,9 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github-org.mikespub.net/composer//dist/mikespub/epub-loader/mikespub-epub-loader-81b4a0a34f5a16252a9abcb5c4944c1795c298e3-zip-870927.zip",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/81b4a0a34f5a16252a9abcb5c4944c1795c298e3",
                 "reference": "81b4a0a34f5a16252a9abcb5c4944c1795c298e3",
-                "shasum": "7c75004424d8b417b4539e014affa64653106794"
+                "shasum": ""
             },
             "require": {
                 "freearhey/wikidata": "^3.6",
@@ -1398,6 +1310,7 @@
                     "app/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-2.0-or-later"
             ],
@@ -1415,8 +1328,8 @@
             ],
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
-                "source": "https://github.com/mikespub-org/epub-loader/tree/2.1.1",
-                "issues": "https://github.com/mikespub-org/epub-loader/issues"
+                "issues": "https://github.com/mikespub-org/epub-loader/issues",
+                "source": "https://github.com/mikespub-org/epub-loader/tree/2.1.1"
             },
             "time": "2023-09-11T20:05:10+00:00"
         },
@@ -3519,6 +3432,69 @@
             "time": "2020-09-28T06:39:44+00:00"
         },
         {
+            "name": "spatie/array-to-xml",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/array-to-xml.git",
+                "reference": "f9ab39c808500c347d5a8b6b13310bd5221e39e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/array-to-xml/zipball/f9ab39c808500c347d5a8b6b13310bd5221e39e7",
+                "reference": "f9ab39c808500c347d5a8b6b13310bd5221e39e7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "pestphp/pest": "^1.21",
+                "spatie/pest-plugin-snapshots": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ArrayToXml\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://freek.dev",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Convert an array to xml",
+            "homepage": "https://github.com/spatie/array-to-xml",
+            "keywords": [
+                "array",
+                "convert",
+                "xml"
+            ],
+            "support": {
+                "source": "https://github.com/spatie/array-to-xml/tree/3.2.0"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-07-19T18:30:26+00:00"
+        },
+        {
             "name": "symfony/browser-kit",
             "version": "v6.3.2",
             "source": {
@@ -4225,7 +4201,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "kiwilan/php-opds": 20,
         "php-webdriver/webdriver": 20
     },
     "prefer-stable": false,

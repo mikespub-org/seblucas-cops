@@ -58,6 +58,8 @@ class KiwilanOPDS
             searchUrl: self::$endpoint . '/search',
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
+            usePagination: false, // To enable pagination, default is false
+            useAutoPagination: false, // To enable auto pagination, default is false, if `usePagination` is true, this option will be ignored
             maxItemsPerPage: CopsConfig::get('max_item_per_page'),
             forceJson: true,
         );
