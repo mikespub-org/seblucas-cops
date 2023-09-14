@@ -49,7 +49,7 @@
       <ul name="2-bar" class="nav nav-pills" style="font-size: 0.8rem;">
         <li class="nav-item fw-bolder p-1 ps-2">{{=it.fullTitle}}</li>
         {{? it.containsBook != 0 }}
-        <li class="nav-item p-1">Sort by:</li>
+        <li class="nav-item p-1 border-start border-secondary-subtle">Sort by:</li>
         {{? it.sortoptions.title }}
         <li class="nav-item sm">
           <a class="nav-link p-1{{? it.sorted == "title" }} active{{?}}" href="{{=str_format(it.sorturl, "title")}}"><i class="bi-sort-alpha-down"></i>Title</a>
