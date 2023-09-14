@@ -19,20 +19,20 @@ class BaseList
 {
     public Request $request;
     public string $className;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId = null;
-    /** @var mixed */
+    /** @var ?int */
     protected $numberPerPage = null;
     /** @var array<string> */
     //protected $ignoredCategories = [];
-    /** @var mixed */
+    /** @var ?string */
     public $orderBy = null;
 
     /**
      * @param string $className
-     * @param Request|null $request
-     * @param mixed $database
-     * @param mixed $numberPerPage
+     * @param ?Request $request
+     * @param ?int $database
+     * @param ?int $numberPerPage
      */
     public function __construct($className, $request, $database = null, $numberPerPage = null)
     {
@@ -56,7 +56,7 @@ class BaseList
 
     /**
      * Summary of getOrderBy
-     * @return string|null
+     * @return ?string
      */
     protected function getOrderBy()
     {
@@ -72,7 +72,7 @@ class BaseList
 
     /**
      * Summary of getDatabaseId
-     * @return mixed
+     * @return ?int
      */
     public function getDatabaseId()
     {
@@ -130,7 +130,7 @@ class BaseList
 
     /**
      * Summary of getInstanceById
-     * @param mixed $id
+     * @param string|int|null $id
      * @return mixed
      */
     public function getInstanceById($id)
@@ -140,7 +140,7 @@ class BaseList
 
     /**
      * Summary of getWithoutEntry
-     * @return Entry|null
+     * @return ?Entry
      */
     public function getWithoutEntry()
     {
@@ -151,7 +151,7 @@ class BaseList
 
     /**
      * Summary of getEntryCount
-     * @return Entry|null
+     * @return ?Entry
      */
     public function getEntryCount()
     {
@@ -250,7 +250,7 @@ class BaseList
 
     /**
      * Summary of getRequestEntries
-     * @param mixed $n
+     * @param int $n
      * @return array<Entry>
      */
     public function getRequestEntries($n = 1)
@@ -263,7 +263,7 @@ class BaseList
 
     /**
      * Summary of getAllEntries = same as getAll<Whatever>() in <Whatever> child class
-     * @param mixed $n
+     * @param int $n
      * @return array<Entry>
      */
     public function getAllEntries($n = 1)
@@ -283,8 +283,8 @@ class BaseList
     /**
      * Summary of getAllEntriesByQuery
      * @param string $find
-     * @param mixed $n
-     * @param mixed $repeat
+     * @param int $n
+     * @param int $repeat for SCOPE_AUTHOR we need to repeat the query x 2 because Author checks both name and sort fields
      * @return array<Entry>
      */
     public function getAllEntriesByQuery($find, $n = 1, $repeat = 1)
@@ -352,8 +352,8 @@ class BaseList
 
     /**
      * Summary of getEntriesByFirstLetter
-     * @param mixed $letter
-     * @param mixed $n
+     * @param string $letter
+     * @param int $n
      * @return array<Entry>
      */
     public function getEntriesByFirstLetter($letter, $n = 1)
@@ -368,7 +368,7 @@ class BaseList
 
     /**
      * Summary of getEntriesByFilter
-     * @param mixed $n
+     * @param int $n
      * @return array<Entry>
      */
     public function getEntriesByFilter($n = 1)
@@ -380,7 +380,7 @@ class BaseList
     /**
      * Summary of getEntriesByInstance
      * @param Base|Category $instance
-     * @param mixed $n
+     * @param int $n
      * @return array<Entry>
      */
     public function getEntriesByInstance($instance, $n = 1)
@@ -443,7 +443,7 @@ class BaseList
      * Summary of getEntriesByCustomValueId
      * @param CustomColumnType $customType
      * @param mixed $valueId
-     * @param mixed $n
+     * @param int $n
      * @return array<Entry>
      */
     public function getEntriesByCustomValueId($customType, $valueId, $n = 1)
@@ -455,8 +455,8 @@ class BaseList
 
     /**
      * Summary of getFilteredEntries
-     * @param mixed $filter
-     * @param mixed $n
+     * @param Filter $filter
+     * @param int $n
      * @return array<Entry>
      */
     public function getFilteredEntries($filter, $n = 1)
@@ -477,11 +477,11 @@ class BaseList
 
     /**
      * Summary of getEntryArrayWithBookNumber
-     * @param mixed $query
-     * @param mixed $columns
-     * @param mixed $filter
-     * @param mixed $params
-     * @param mixed $n
+     * @param string $query
+     * @param string $columns
+     * @param string $filter
+     * @param array<mixed> $params
+     * @param int $n
      * @return array<Entry>
      */
     public function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $n)
@@ -515,7 +515,7 @@ class BaseList
     /**
      * Use the Calibre tag browser view to retrieve all tags or series with count
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
-     * @param mixed $n
+     * @param int $n
      * @return array<Entry>
      */
     public function browseAllEntries($n = 1)
@@ -602,12 +602,12 @@ class BaseList
 
     /**
      * Summary of getCountGeneric
-     * @param mixed $table
-     * @param mixed $id
-     * @param mixed $pageId
-     * @param mixed $database
-     * @param mixed $numberOfString
-     * @return Entry|null
+     * @param string $table
+     * @param string $id
+     * @param string|int $pageId
+     * @param ?int $database
+     * @param ?string $numberOfString
+     * @return ?Entry
      */
     public static function getCountGeneric($table, $id, $pageId, $database = null, $numberOfString = null)
     {

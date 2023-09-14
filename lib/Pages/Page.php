@@ -31,7 +31,7 @@ class Page
 {
     public const PAGE_ID = "cops:catalog";
 
-    /** @var mixed */
+    /** @var string */
     public $title;
     public string $subtitle = "";
     public string $authorName = "";
@@ -40,20 +40,20 @@ class Page
     public string $parentTitle = "";
     public string $currentUri = "";
     public string $parentUri = "";
-    /** @var string|null */
+    /** @var ?string */
     public $idPage;
-    /** @var mixed */
+    /** @var string|int|null */
     public $idGet;
-    /** @var mixed */
+    /** @var ?string */
     public $query;
     public string $favicon;
-    /** @var mixed */
+    /** @var int */
     public $n;
-    /** @var Book|null */
+    /** @var ?Book */
     public $book;
-    /** @var mixed */
+    /** @var int */
     public $totalNumber = -1;
-    /** @var mixed */
+    /** @var ?string */
     public $sorted = "sort";
     public string $filterUri = "";
     /** @var array<string, mixed>|false */
@@ -67,17 +67,17 @@ class Page
     /** @var Request */
     protected $request = null;
     protected string $className = Base::class;
-    /** @var mixed */
+    /** @var int */
     protected $numberPerPage = -1;
     /** @var array<string> */
     protected $ignoredCategories = [];
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId = null;
 
     /**
      * Summary of getPage
-     * @param mixed $pageId
-     * @param mixed $request
+     * @param string|int|null $pageId
+     * @param ?Request $request
      * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllIdentifiers|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageIdentifierDetail|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
      */
     public static function getPage($pageId, $request)
@@ -87,7 +87,7 @@ class Page
 
     /**
      * Summary of __construct
-     * @param Request|null $request
+     * @param ?Request $request
      */
     public function __construct($request = null)
     {
@@ -100,7 +100,7 @@ class Page
 
     /**
      * Summary of setRequest
-     * @param Request|null $request
+     * @param ?Request $request
      * @return void
      */
     public function setRequest($request)
@@ -116,7 +116,7 @@ class Page
 
     /**
      * Summary of getNumberPerPage
-     * @return mixed
+     * @return int
      */
     public function getNumberPerPage()
     {
@@ -134,7 +134,7 @@ class Page
 
     /**
      * Summary of getDatabaseId
-     * @return mixed
+     * @return ?int
      */
     public function getDatabaseId()
     {
@@ -280,7 +280,7 @@ class Page
 
     /**
      * Summary of getFirstLink
-     * @return LinkNavigation|null
+     * @return ?LinkNavigation
      */
     public function getFirstLink()
     {
@@ -293,39 +293,39 @@ class Page
 
     /**
      * Summary of getLastLink
-     * @return LinkNavigation|null
+     * @return ?LinkNavigation
      */
     public function getLastLink()
     {
         $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n < $this->getMaxPage()) {
-            return new LinkNavigation($currentUrl . "&n=" . $this->getMaxPage(), "last", localize("paging.last.alternate"));
+            return new LinkNavigation($currentUrl . "&n=" . strval($this->getMaxPage()), "last", localize("paging.last.alternate"));
         }
         return null;
     }
 
     /**
      * Summary of getNextLink
-     * @return LinkNavigation|null
+     * @return ?LinkNavigation
      */
     public function getNextLink()
     {
         $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n < $this->getMaxPage()) {
-            return new LinkNavigation($currentUrl . "&n=" . ($this->n + 1), "next", localize("paging.next.alternate"));
+            return new LinkNavigation($currentUrl . "&n=" . strval($this->n + 1), "next", localize("paging.next.alternate"));
         }
         return null;
     }
 
     /**
      * Summary of getPrevLink
-     * @return LinkNavigation|null
+     * @return ?LinkNavigation
      */
     public function getPrevLink()
     {
         $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n > 1) {
-            return new LinkNavigation($currentUrl . "&n=" . ($this->n - 1), "previous", localize("paging.previous.alternate"));
+            return new LinkNavigation($currentUrl . "&n=" . strval($this->n - 1), "previous", localize("paging.previous.alternate"));
         }
         return null;
     }

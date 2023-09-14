@@ -19,15 +19,15 @@ class Cover
     public static string $endpoint = Config::ENDPOINT["fetch"];
     /** @var Book */
     public $book;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId;
-    /** @var string|null */
+    /** @var ?string */
     public $coverFileName = null;
 
     /**
      * Summary of __construct
      * @param Book $book
-     * @param mixed $database
+     * @param ?int $database
      */
     public function __construct($book, $database = null)
     {
@@ -41,7 +41,7 @@ class Cover
     /**
      * Summary of checkDatabaseFieldCover
      * @param string $fileName
-     * @return string|null
+     * @return ?string
      */
     public function checkDatabaseFieldCover($fileName)
     {
@@ -78,7 +78,7 @@ class Cover
 
     /**
      * Summary of checkCoverFilePath
-     * @return string|null
+     * @return ?string
      */
     public function checkCoverFilePath()
     {
@@ -96,10 +96,10 @@ class Cover
 
     /**
      * Summary of getThumbnailCachePath
-     * @param mixed $width
-     * @param mixed $height
-     * @param mixed $type
-     * @return string|null
+     * @param ?int $width
+     * @param ?int $height
+     * @param string $type
+     * @return ?string
      */
     public function getThumbnailCachePath($width, $height, $type = 'jpg')
     {
@@ -122,7 +122,7 @@ class Cover
         //check if cache folder exists or create it
         if (file_exists($cachePath) || mkdir($cachePath, 0700, true)) {
             //we name the thumbnail from the book's uuid and it's dimensions (width and/or height)
-            $thumbnailCacheName = substr($uuid, 3) . '-' . $width . 'x' . $height . '.' . $type;
+            $thumbnailCacheName = substr($uuid, 3) . '-' . strval($width) . 'x' . strval($height) . '.' . $type;
             $cachePath = $cachePath . $thumbnailCacheName;
         } else {
             //error creating the folder, so we don't cache
@@ -134,10 +134,10 @@ class Cover
 
     /**
      * Summary of getThumbnail
-     * @param mixed $width
-     * @param mixed $height
-     * @param mixed $outputfile
-     * @param mixed $inType
+     * @param ?int $width
+     * @param ?int $height
+     * @param ?string $outputfile
+     * @param string $inType
      * @return bool
      */
     public function getThumbnail($width, $height, $outputfile = null, $inType = 'jpg')
@@ -261,7 +261,7 @@ class Cover
     /**
      * Summary of getCoverUri
      * @param string $endpoint
-     * @return string|null
+     * @return ?string
      */
     public function getCoverUri($endpoint)
     {
@@ -274,7 +274,7 @@ class Cover
 
     /**
      * Summary of getCoverLink
-     * @return LinkEntry|null
+     * @return ?LinkEntry
      */
     public function getCoverLink()
     {
@@ -302,9 +302,9 @@ class Cover
     /**
      * Summary of getThumbnailUri
      * @param string $endpoint
-     * @param integer $height
+     * @param int $height
      * @param bool $useDefault
-     * @return string|null
+     * @return ?string
      */
     public function getThumbnailUri($endpoint, $height, $useDefault = true)
     {
@@ -317,9 +317,9 @@ class Cover
 
     /**
      * Summary of getThumbnailLink
-     * @param integer $height
+     * @param int $height
      * @param bool $useDefault
-     * @return LinkEntry|null
+     * @return ?LinkEntry
      */
     public function getThumbnailLink($height, $useDefault = true)
     {
@@ -357,7 +357,7 @@ class Cover
 
     /**
      * Summary of getDefaultLink
-     * @return LinkEntry|null
+     * @return ?LinkEntry
      */
     public function getDefaultLink()
     {
@@ -372,8 +372,8 @@ class Cover
     /**
      * Summary of findCoverFileName
      * @param Book $book
-     * @param mixed $line
-     * @return string|null
+     * @param object $line
+     * @return ?string
      */
     public static function findCoverFileName($book, $line)
     {

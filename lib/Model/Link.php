@@ -21,17 +21,17 @@ class Link
     public static string $endpoint = Config::ENDPOINT["index"];
     public string $href;
     public string $type;
-    /** @var string|null */
+    /** @var ?string */
     public $rel;
-    /** @var string|null */
+    /** @var ?string */
     public $title;
 
     /**
      * Summary of __construct
      * @param string $phref uri including the endpoint for images, books etc.
      * @param string $ptype link type in the OPDS catalog
-     * @param string|null $prel relation in the OPDS catalog
-     * @param string|null $ptitle title in the OPDS catalog and elsewhere
+     * @param ?string $prel relation in the OPDS catalog
+     * @param ?string $ptitle title in the OPDS catalog and elsewhere
      */
     public function __construct($phref, $ptype, $prel = null, $ptitle = null)
     {

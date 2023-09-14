@@ -14,7 +14,7 @@ class PageCustomize extends Page
 {
     /**
      * Summary of isChecked
-     * @param mixed $key
+     * @param string $key
      * @param mixed $testedValue
      * @return string
      */
@@ -35,7 +35,7 @@ class PageCustomize extends Page
 
     /**
      * Summary of isSelected
-     * @param mixed $key
+     * @param string $key
      * @param mixed $value
      * @return string
      */
@@ -156,7 +156,7 @@ class PageCustomize extends Page
                 $database
             ));
         }
-        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . $this->getNumberPerPage() . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
+        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . strval($this->getNumberPerPage()) . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
         array_push($this->entryArray, new Entry(
             localize("customize.paging"),
             "",

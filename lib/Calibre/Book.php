@@ -40,54 +40,54 @@ class Book
     public const BAD_SEARCH = 'QQQQQ';
 
     public static string $endpoint = Config::ENDPOINT["index"];
-    /** @var mixed */
+    /** @var int */
     public $id;
-    /** @var mixed */
+    /** @var string */
     public $title;
     /** @var mixed */
     public $timestamp;
     /** @var mixed */
     public $pubdate;
-    /** @var mixed */
+    /** @var string */
     public $path;
-    /** @var mixed */
+    /** @var string */
     public $uuid;
-    /** @var mixed */
+    /** @var bool */
     public $hasCover;
-    /** @var mixed */
+    /** @var string */
     public $relativePath;
-    /** @var mixed */
+    /** @var ?float */
     public $seriesIndex;
-    /** @var mixed */
+    /** @var string */
     public $comment;
-    /** @var mixed */
+    /** @var ?int */
     public $rating;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId = null;
-    /** @var Data[]|null */
+    /** @var ?array<Data> */
     public $datas = null;
-    /** @var Author[]|null */
+    /** @var ?array<Author> */
     public $authors = null;
     /** @var Publisher|false|null */
     public $publisher = null;
     /** @var Serie|false|null */
     public $serie = null;
-    /** @var Tag[]|null */
+    /** @var ?array<Tag> */
     public $tags = null;
-    /** @var Identifier[]|null */
+    /** @var ?array<Identifier> */
     public $identifiers = null;
-    /** @var string|null */
+    /** @var ?string */
     public $languages = null;
     /** @var array<mixed> */
     public $format = [];
-    /** @var string|null */
+    /** @var ?string */
     protected $coverFileName = null;
     public bool $updateForKepub = false;
 
     /**
      * Summary of __construct
-     * @param mixed $line
-     * @param mixed $database
+     * @param object $line
+     * @param ?int $database
      */
     public function __construct($line, $database = null)
     {
@@ -112,14 +112,14 @@ class Book
         if ($this->hasCover) {
             $this->coverFileName = Cover::findCoverFileName($this, $line);
             if (empty($this->coverFileName)) {
-                $this->hasCover = 0;
+                $this->hasCover = false;
             }
         }
     }
 
     /**
      * Summary of getDatabaseId
-     * @return mixed
+     * @return ?int
      */
     public function getDatabaseId()
     {
@@ -128,7 +128,7 @@ class Book
 
     /**
      * Summary of getCoverFileName
-     * @return string|null
+     * @return ?string
      */
     public function getCoverFileName()
     {
@@ -149,7 +149,7 @@ class Book
 
     /**
      * Summary of getEntryIdByLetter
-     * @param mixed $startingLetter
+     * @param string $startingLetter
      * @return string
      */
     public static function getEntryIdByLetter($startingLetter)
@@ -159,7 +159,7 @@ class Book
 
     /**
      * Summary of getEntryIdByYear
-     * @param mixed $year
+     * @param string|int $year
      * @return string
      */
     public static function getEntryIdByYear($year)
@@ -199,9 +199,9 @@ class Book
     /* Other class (author, series, tag, ...) initialization and accessors */
 
     /**
-     * @param mixed $n
-     * @param mixed $sort
-     * @return array<Author>|null
+     * @param int $n
+     * @param ?string $sort
+     * @return ?array<Author>
      */
     public function getAuthors($n = -1, $sort = null)
     {
@@ -257,8 +257,8 @@ class Book
     }
 
     /**
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return string
      */
     public function getLanguages($n = -1, $sort = null)
@@ -270,8 +270,8 @@ class Book
     }
 
     /**
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Tag>
      */
     public function getTags($n = -1, $sort = null)
@@ -317,7 +317,7 @@ class Book
 
     /**
      * Summary of GetMostInterestingDataToSendToKindle
-     * @return Data|null
+     * @return ?Data
      */
     public function GetMostInterestingDataToSendToKindle()
     {
@@ -336,7 +336,7 @@ class Book
 
     /**
      * Summary of getDataById
-     * @param mixed $idData
+     * @param int $idData
      * @return Data|false
      */
     public function getDataById($idData)
@@ -403,7 +403,7 @@ class Book
 
     /**
      * Summary of getDataFormat
-     * @param mixed $format
+     * @param string $format
      * @return Data|false
      */
     public function getDataFormat($format)
@@ -417,7 +417,7 @@ class Book
     /**
      * @checkme always returns absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
      * @param string $extension
-     * @param mixed $idData
+     * @param int $idData
      * @param false $relative Deprecated
      * @return string|false|null string for file path, false for missing cover, null for missing data
      */
@@ -444,7 +444,7 @@ class Book
 
     /**
      * Summary of getUpdatedEpub
-     * @param mixed $idData
+     * @param int $idData
      * @param bool $sendHeaders
      * @return void
      */
@@ -471,7 +471,7 @@ class Book
             $se = $this->getSerie();
             if (!empty($se)) {
                 $epub->setSeries($se->name);
-                $epub->setSeriesIndex($this->seriesIndex);
+                $epub->setSeriesIndex(strval($this->seriesIndex));
             }
             $filename = $data->getUpdatedFilenameEpub();
             // @checkme this is set in fetch.php now
@@ -560,7 +560,7 @@ class Book
 
     /**
      * Summary of getEntry
-     * @param mixed $count
+     * @param int $count
      * @return EntryBook
      */
     public function getEntry($count = 0)
@@ -594,9 +594,9 @@ class Book
 
     /**
      * Summary of getBookById
-     * @param mixed $bookId
-     * @param mixed $database
-     * @return Book|null
+     * @param int $bookId
+     * @param ?int $database
+     * @return ?Book
      */
     public static function getBookById($bookId, $database = null)
     {
@@ -613,9 +613,9 @@ where books.id = ?';
 
     /**
      * Summary of getBookByDataId
-     * @param mixed $dataId
-     * @param mixed $database
-     * @return Book|null
+     * @param int $dataId
+     * @param ?int $database
+     * @return ?Book
      */
     public static function getBookByDataId($dataId, $database = null)
     {

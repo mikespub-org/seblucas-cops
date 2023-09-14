@@ -32,7 +32,7 @@ class EntryBook extends Entry
 
     /**
      * @deprecated 1.4.0 use getThumbnail() instead
-     * @return string|null
+     * @return ?string
      */
     public function getCoverThumbnail()
     {
@@ -41,7 +41,7 @@ class EntryBook extends Entry
 
     /**
      * @deprecated 1.4.0 use getImage() instead
-     * @return string|null
+     * @return ?string
      */
     public function getCover()
     {

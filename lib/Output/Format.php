@@ -39,9 +39,9 @@ class Format
 
     /**
      * Summary of addURLParam
-     * @param mixed $urlParams
-     * @param mixed $paramName
-     * @param mixed $paramValue
+     * @param string $urlParams
+     * @param string $paramName
+     * @param string|int|null $paramValue
      * @return string
      */
     public static function addURLParam($urlParams, $paramName, $paramValue)
@@ -67,7 +67,7 @@ class Format
     /**
      * Summary of addDatabaseParam
      * @param string $urlParams
-     * @param mixed $database
+     * @param ?int $database
      * @return string
      */
     public static function addDatabaseParam($urlParams, $database)
@@ -96,8 +96,8 @@ class Format
     /**
      * Summary of getEndpointURL
      * @param string $endpoint
-     * @param mixed $params
-     * @param mixed $database
+     * @param ?array<mixed> $params
+     * @param ?int $database
      * @return string
      */
     public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
@@ -114,8 +114,8 @@ class Format
 
     /**
      * Summary of serverSideRender
-     * @param mixed $data
-     * @param mixed $theme
+     * @param ?array<mixed> $data
+     * @param string $theme
      * @return bool|string|null
      */
     public static function serverSideRender($data, $theme = 'default')
@@ -149,8 +149,8 @@ class Format
     /**
      * Summary of serverTwigRender
      * @param \Twig\Environment $twig
-     * @param mixed $data
-     * @param mixed $theme
+     * @param ?array<mixed> $data
+     * @param string $theme
      * @return bool|string|null
      */
     public static function serverTwigRender($twig, $data, $theme = 'default')
@@ -161,7 +161,7 @@ class Format
     /**
      * Summary of xml2xhtml
      * @param string $xml
-     * @return string|null
+     * @return ?string
      */
     public static function xml2xhtml($xml)
     {

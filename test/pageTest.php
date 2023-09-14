@@ -859,9 +859,9 @@ class PageTest extends TestCase
 
     /**
      * @dataProvider providerAccentuatedCharacters
-     * @param mixed $query
-     * @param mixed $count
-     * @param mixed $content
+     * @param string $query
+     * @param int $count
+     * @param string $content
      * @return void
      */
     public function testPageSearch_WithAccentuatedCharacters($query, $count, $content)
@@ -898,9 +898,9 @@ class PageTest extends TestCase
 
     /**
      * @dataProvider providerNormalizedSearch
-     * @param mixed $query
-     * @param mixed $count
-     * @param mixed $content
+     * @param string $query
+     * @param int $count
+     * @param string $content
      * @return void
      */
     public function testPageSearch_WithNormalizedSearch_Book($query, $count, $content)

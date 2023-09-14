@@ -22,7 +22,7 @@ class Transliteration
      * @param string $unknown
      *   Replacement string for characters that do not have a suitable ASCII
      *   equivalent.
-     * @param string|null $source_langcode
+     * @param ?string $source_langcode
      *   Optional ISO 639 language code that denotes the language of the input and
      *   is used to apply language-specific variations. If the source language is
      *   not known at the time of transliteration, it is recommended to set this
@@ -162,7 +162,7 @@ class Transliteration
      * @param string $unknown
      *   Replacement string for characters that do not have a suitable ASCII
      *   equivalent.
-     * @param string|null $langcode
+     * @param ?string $langcode
      *   Optional ISO 639 language code that denotes the language of the input and
      *   is used to apply language-specific variations.  Defaults to the current
      *   display language.

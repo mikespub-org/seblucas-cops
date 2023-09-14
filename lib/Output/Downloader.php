@@ -27,7 +27,7 @@ class Downloader
 
     /** @var Request */
     protected $request;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId = null;
     /** @var string */
     protected $format = 'EPUB';
@@ -35,7 +35,7 @@ class Downloader
     protected $fileName = 'download.epub.zip';
     /** @var array<string, string> */
     protected $fileList = [];
-    /** @var string|null */
+    /** @var ?string */
     protected $message = null;
 
     /**
@@ -99,7 +99,7 @@ class Downloader
         if (!empty($instance->parentTitle)) {
             $this->fileName = $instance->parentTitle . ' - ' . $this->fileName;
         }
-        if (!empty($instance->n) && intval($instance->n) > 1) {
+        if (!empty($instance->n) && $instance->n > 1) {
             $this->fileName = str_replace('.zip', '.' . strval($instance->n) . '.zip', $this->fileName);
         }
         $entries = $instance->entryArray;

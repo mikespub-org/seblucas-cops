@@ -63,7 +63,7 @@ class RestApi
      * Summary of matchPathInfo
      * @param string $path
      * @throws Exception if the $path is not found in $routes or $extra
-     * @return array<mixed>|null
+     * @return ?array<mixed>
      */
     public function matchPathInfo($path)
     {
@@ -83,7 +83,7 @@ class RestApi
 
     /**
      * Summary of setParams
-     * @param mixed $params
+     * @param array<mixed> $params
      * @return Request
      */
     public function setParams($params)

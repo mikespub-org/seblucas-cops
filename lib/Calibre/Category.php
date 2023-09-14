@@ -17,9 +17,9 @@ use SebLucas\Cops\Model\Entry;
 abstract class Category extends Base
 {
     public const CATEGORY = "categories";
-    /** @var mixed */
+    /** @var ?int */
     public $count;
-    /** @var Category[]|null */
+    /** @var ?array<Category> */
     protected $children = null;
     /** @var Category|false|null */
     protected $parent = null;
@@ -53,7 +53,7 @@ abstract class Category extends Base
 
     /**
      * Get child entries for hierarchical tags or custom columns
-     * @param mixed $expand include all child categories at all levels or only direct children
+     * @param int|bool|null $expand include all child categories at all levels or only direct children
      * @return array<Entry>
      */
     public function getChildEntries($expand = false)
@@ -132,7 +132,7 @@ abstract class Category extends Base
 
     /**
      * Get parent entry for hierarchical tags or custom columns
-     * @return Entry|null
+     * @return ?Entry
      */
     public function getParentEntry()
     {
@@ -146,7 +146,7 @@ abstract class Category extends Base
     /**
      * Find related categories for hierarchical tags or series - @todo needs title_sort function in sqlite for series
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
-     * @param mixed $find pattern match or exact match for name, or array of child ids
+     * @param string|array<mixed> $find pattern match or exact match for name, or array of child ids
      * @return array<Category>
      */
     public function getRelatedCategories($find)

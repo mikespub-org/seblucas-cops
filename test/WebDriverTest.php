@@ -34,9 +34,9 @@ class WebDriverTest extends WebDriverTestCase
     public static string $serverUrl = 'http://host.docker.internal/cops/';
     /** @var RemoteWebDriver */
     public static $driver;
-    /** @var string|null */
+    /** @var ?string */
     public static $userAgent = null;  // Chrome by default, override here with 'Kindle/2.0'
-    /** @var string|null */
+    /** @var ?string */
     public static $template = 'default';
 
     /** @var array<mixed> */

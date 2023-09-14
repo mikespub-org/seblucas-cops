@@ -42,8 +42,8 @@ class Serie extends Category
 
     /**
      * Summary of getInstanceByBookId
-     * @param mixed $bookId
-     * @param mixed $database
+     * @param int $bookId
+     * @param ?int $database
      * @return Serie|false
      */
     public static function getInstanceByBookId($bookId, $database = null)

@@ -18,8 +18,8 @@ class doT
 
     /**
      * Summary of resolveDefs
-     * @param mixed $block
-     * @return string|null
+     * @param ?string $block
+     * @return ?string
      */
     public function resolveDefs($block)
     {
@@ -42,7 +42,7 @@ class doT
     /**
      * Summary of handleDotNotation
      * @param string $string
-     * @return string|null
+     * @return ?string
      */
     public function handleDotNotation($string)
     {
@@ -57,8 +57,8 @@ class doT
 
     /**
      * Summary of template
-     * @param mixed $string
-     * @param mixed $def
+     * @param string $string
+     * @param ?array<mixed> $def
      * @return \Closure
      */
     public function template($string, $def)

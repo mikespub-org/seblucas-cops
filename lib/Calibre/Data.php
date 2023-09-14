@@ -20,15 +20,15 @@ class Data
     public const SQL_LINK_COLUMN = "id";
     public const SQL_SORT = "name";
     public static string $endpoint = Config::ENDPOINT["fetch"];
-    /** @var mixed */
+    /** @var int */
     public $id;
     public string $name;
     public string $format;
     public string $realFormat;
     public string $extension;
-    /** @var Book|null */
+    /** @var ?Book */
     public $book;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId;
     public bool $updateForKepub = false;
 
@@ -76,8 +76,8 @@ class Data
 
     /**
      * Summary of __construct
-     * @param mixed $post
-     * @param Book|null $book
+     * @param object $post
+     * @param ?Book $book
      */
     public function __construct($post, $book = null)
     {
@@ -91,7 +91,7 @@ class Data
 
     /**
      * Summary of setBook
-     * @param Book|null $book
+     * @param ?Book $book
      * @return void
      */
     public function setBook($book)
@@ -185,9 +185,9 @@ class Data
 
     /**
      * Summary of getDataLink
-     * @param mixed $rel
-     * @param mixed $title
-     * @param mixed $view
+     * @param string $rel
+     * @param ?string $title
+     * @param bool $view
      * @return LinkEntry
      */
     public function getDataLink($rel, $title = null, $view = false)
@@ -228,8 +228,8 @@ class Data
 
     /**
      * Summary of getHtmlLinkWithRewriting
-     * @param mixed $title
-     * @param mixed $view
+     * @param ?string $title
+     * @param bool $view
      * @return LinkEntry
      */
     public function getHtmlLinkWithRewriting($title = null, $view = false)
@@ -271,9 +271,9 @@ class Data
      * @param string $mime
      * @param string $rel
      * @param string $filename
-     * @param string|null $idData
-     * @param mixed $title
-     * @param mixed $view
+     * @param ?int $idData
+     * @param ?string $title
+     * @param bool $view
      * @return LinkEntry
      */
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $view = false)

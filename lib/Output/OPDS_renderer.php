@@ -25,9 +25,9 @@ use XMLWriter;
 class OPDSRenderer
 {
     public static string $endpoint = Config::ENDPOINT["feed"];
-    /** @var XMLWriter|null */
+    /** @var ?XMLWriter */
     protected $xmlStream = null;
-    /** @var int|null */
+    /** @var ?int */
     protected $updated = null;
     /** @var Request */
     protected $request;
@@ -205,7 +205,7 @@ class OPDSRenderer
     /**
      * Summary of renderLink
      * @param LinkEntry|LinkFeed $link
-     * @param int|null $number
+     * @param ?int $number
      * @return void
      */
     protected function renderLink($link, $number = null)
@@ -329,7 +329,7 @@ class OPDSRenderer
         $this->startXmlDocument($page, $request);
         if ($page->isPaginated()) {
             $this->getXmlStream()->startElement("opensearch:totalResults");
-            $this->getXmlStream()->text($page->totalNumber);
+            $this->getXmlStream()->text((string) $page->totalNumber);
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->startElement("opensearch:itemsPerPage");
             $this->getXmlStream()->text(Config::get('max_item_per_page'));

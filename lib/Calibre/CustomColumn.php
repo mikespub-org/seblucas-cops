@@ -45,7 +45,7 @@ class CustomColumn extends Category
 
     /**
      * Summary of getCustomId
-     * @return int|mixed
+     * @return string|int|null
      */
     public function getCustomId()
     {
@@ -101,7 +101,7 @@ class CustomColumn extends Category
 
     /**
      * Summary of getClassName
-     * @param string|null $className
+     * @param ?string $className
      * @return string
      */
     public function getClassName($className = null)
@@ -136,7 +136,7 @@ class CustomColumn extends Category
 
     /**
      * Summary of getFilter
-     * @param mixed $parentTable
+     * @param ?string $parentTable
      * @return array{0: string, 1: array<mixed>}
      */
     public function getFilter($parentTable = null)
@@ -166,7 +166,7 @@ class CustomColumn extends Category
     /**
      * Find related categories for hierarchical custom columns
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
-     * @param mixed $find
+     * @param string|array<mixed> $find
      * @return array<CustomColumn>
      */
     public function getRelatedCategories($find)
@@ -177,10 +177,10 @@ class CustomColumn extends Category
     /**
      * Create an CustomColumn by CustomColumnID and ValueID
      *
-     * @param integer $customId the id of the customColumn
-     * @param integer $id the id of the chosen value
-     * @param mixed $database
-     * @return CustomColumn|null
+     * @param int $customId the id of the customColumn
+     * @param int $id the id of the chosen value
+     * @param ?int $database
+     * @return ?CustomColumn
      */
     public static function createCustom($customId, $id, $database = null)
     {

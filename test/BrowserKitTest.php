@@ -34,9 +34,9 @@ class BrowserKitTest extends TestCase
     public static string $serverUrl = 'http://localhost/cops/';
     /** @var HttpBrowser */
     public $browser;
-    /** @var string|null */
+    /** @var ?string */
     public $userAgent = 'Kindle/2.0';  // Chrome by default, override here with 'Kindle/2.0'
-    /** @var string|null */
+    /** @var ?string */
     public $template = 'default';
 
     public function setUp(): void
@@ -110,7 +110,7 @@ class BrowserKitTest extends TestCase
     /**
      * Summary of checkResponse
      * @param int $status
-     * @param string|null $expected
+     * @param ?string $expected
      * @return Response
      */
     protected function checkResponse($status = 200, $expected = null)

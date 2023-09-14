@@ -14,12 +14,12 @@ use SebLucas\Cops\Input\Config;
 class Translation
 {
     public const BASE_DIR = './lang';
-    /** @var string|null */
+    /** @var ?string */
     protected $acceptLanguageHeader;
 
     /**
      * Summary of __construct
-     * @param string|null $acceptLanguageHeader from $_SERVER['HTTP_ACCEPT_LANGUAGE']
+     * @param ?string $acceptLanguageHeader from $_SERVER['HTTP_ACCEPT_LANGUAGE']
      */
     public function __construct($acceptLanguageHeader = null)
     {
@@ -29,7 +29,7 @@ class Translation
     /**
      * Get all accepted languages from the browser and put them in a sorted array
      * languages id are normalized : fr-fr -> fr_FR
-     * @param string|null $accept from $_SERVER['HTTP_ACCEPT_LANGUAGE']
+     * @param ?string $accept from $_SERVER['HTTP_ACCEPT_LANGUAGE']
      * @return array<mixed> of languages
      */
     public function getAcceptLanguages($accept)
@@ -107,7 +107,7 @@ class Translation
      * This method is based on this page
      * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
      * @param string $phrase
-     * @param integer $count
+     * @param int $count
      * @param bool $reset
      * @return string
      */

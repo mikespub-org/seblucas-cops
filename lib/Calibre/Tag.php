@@ -51,8 +51,8 @@ class Tag extends Category
 
     /**
      * Summary of getInstancesByBookId
-     * @param mixed $bookId
-     * @param mixed $database
+     * @param int $bookId
+     * @param ?int $database
      * @return array<Tag>
      */
     public static function getInstancesByBookId($bookId, $database = null)

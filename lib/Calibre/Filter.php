@@ -35,7 +35,7 @@ class Filter
     protected $params = [];
     protected string $parentTable = "books";
     protected string $queryString = "";
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId;
 
     /**
@@ -43,7 +43,7 @@ class Filter
      * @param Request|array<mixed> $request current request or urlParams array
      * @param array<mixed> $params initial query params
      * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
-     * @param mixed $database current database in multiple database setup
+     * @param ?int $database current database in multiple database setup
      */
     public function __construct($request, array $params = [], string $parent = "books", $database = null)
     {
@@ -146,7 +146,7 @@ class Filter
 
     /**
      * Summary of addFilter
-     * @param mixed $filter
+     * @param string $filter
      * @param mixed $param
      * @return void
      */
@@ -158,7 +158,7 @@ class Filter
 
     /**
      * Summary of addTagNameFilter
-     * @param mixed $tagName
+     * @param string $tagName
      * @return void
      */
     public function addTagNameFilter($tagName)
@@ -194,7 +194,7 @@ class Filter
 
     /**
      * Summary of addAuthorIdFilter
-     * @param mixed $authorId
+     * @param string|int $authorId
      * @return void
      */
     public function addAuthorIdFilter($authorId)
@@ -204,7 +204,7 @@ class Filter
 
     /**
      * Summary of addLanguageIdFilter
-     * @param mixed $languageId
+     * @param string|int $languageId
      * @return void
      */
     public function addLanguageIdFilter($languageId)
@@ -214,7 +214,7 @@ class Filter
 
     /**
      * Summary of addPublisherIdFilter
-     * @param mixed $publisherId
+     * @param string|int $publisherId
      * @return void
      */
     public function addPublisherIdFilter($publisherId)
@@ -224,7 +224,7 @@ class Filter
 
     /**
      * Summary of addRatingIdFilter
-     * @param mixed $ratingId
+     * @param string|int $ratingId
      * @return void
      */
     public function addRatingIdFilter($ratingId)
@@ -234,7 +234,7 @@ class Filter
 
     /**
      * Summary of addSeriesIdFilter
-     * @param mixed $seriesId
+     * @param string|int $seriesId
      * @return void
      */
     public function addSeriesIdFilter($seriesId)
@@ -244,7 +244,7 @@ class Filter
 
     /**
      * Summary of addTagIdFilter
-     * @param mixed $tagId
+     * @param string|int $tagId
      * @return void
      */
     public function addTagIdFilter($tagId)
@@ -254,7 +254,7 @@ class Filter
 
     /**
      * Summary of addIdentifierTypeFilter
-     * @param mixed $identifierType
+     * @param string $identifierType
      * @return void
      */
     public function addIdentifierTypeFilter($identifierType)
@@ -319,10 +319,10 @@ class Filter
 
     /**
      * Summary of addLinkedIdFilter
-     * @param mixed $linkId
-     * @param mixed $linkTable
-     * @param mixed $linkColumn
-     * @param mixed $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
+     * @param string|int $linkId
+     * @param string $linkTable
+     * @param string $linkColumn
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
      * @return void
      */
     public function addLinkedIdFilter($linkId, $linkTable, $linkColumn, $limitSelf = true)
@@ -357,7 +357,7 @@ class Filter
     /**
      * Summary of getEntryArray
      * @param Request $request
-     * @param mixed $database
+     * @param ?int $database
      * @return array<Entry>
      */
     public static function getEntryArray($request, $database = null)

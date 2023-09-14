@@ -59,7 +59,7 @@ class PageTagDetail extends Page
 
     /**
      * Summary of getEntries
-     * @param Tag|null $instance
+     * @param ?Tag $instance
      * @return void
      */
     public function getEntries($instance = null)

@@ -41,9 +41,9 @@ class PageQueryResult extends Page
 
     /**
      * Summary of searchByScope
-     * @param mixed $scope
-     * @param mixed $limit
-     * @param mixed $database
+     * @param string $scope
+     * @param bool $limit
+     * @param ?int $database
      * @return array<mixed>
      */
     protected function searchByScope($scope, $limit = false, $database = null)
@@ -93,7 +93,7 @@ class PageQueryResult extends Page
 
     /**
      * Summary of doSearchByCategory
-     * @param mixed $database
+     * @param ?int $database
      * @return void
      */
     public function doSearchByCategory($database = null)

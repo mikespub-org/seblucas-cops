@@ -16,9 +16,9 @@ class CustomColumnTypeText extends CustomColumnType
 {
     /**
      * Summary of __construct
-     * @param mixed $pcustomId
+     * @param int $pcustomId
      * @param string $datatype
-     * @param mixed $database
+     * @param ?int $database
      * @throws \UnexpectedValueException
      * @return void
      */
@@ -65,8 +65,8 @@ class CustomColumnTypeText extends CustomColumnType
 
     /**
      * Summary of getQuery
-     * @param mixed $id
-     * @return array{0: string, 1: array<mixed>}|null
+     * @param string|int|null $id
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQuery($id)
     {
@@ -80,9 +80,9 @@ class CustomColumnTypeText extends CustomColumnType
 
     /**
      * Summary of getFilter
-     * @param mixed $id
-     * @param mixed $parentTable
-     * @return array{0: string, 1: array<mixed>}|null
+     * @param string|int|null $id
+     * @param ?string $parentTable
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getFilter($id, $parentTable = null)
     {
@@ -98,7 +98,7 @@ class CustomColumnTypeText extends CustomColumnType
 
     /**
      * Summary of getCustom
-     * @param mixed $id
+     * @param string|int|null $id
      * @return CustomColumn
      */
     public function getCustom($id)
@@ -113,8 +113,8 @@ class CustomColumnTypeText extends CustomColumnType
 
     /**
      * Summary of getAllCustomValuesFromDatabase
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)

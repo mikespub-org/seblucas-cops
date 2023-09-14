@@ -60,7 +60,7 @@ class PageSerieDetail extends Page
 
     /**
      * Summary of getEntries
-     * @param Serie|null $instance
+     * @param ?Serie $instance
      * @return void
      */
     public function getEntries($instance = null)

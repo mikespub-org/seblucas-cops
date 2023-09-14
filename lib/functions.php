@@ -31,7 +31,7 @@ if (!function_exists('localize')) {
     /**
      * Summary of localize
      * @param string $phrase
-     * @param integer $count
+     * @param int $count
      * @param bool $reset
      * @return string
      */

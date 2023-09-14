@@ -63,7 +63,7 @@ class Request
 
     /**
      * Summary of language
-     * @return string|null
+     * @return ?string
      */
     public function language()
     {
@@ -72,7 +72,7 @@ class Request
 
     /**
      * Summary of path
-     * @return string|null
+     * @return ?string
      */
     public function path()
     {
@@ -81,7 +81,7 @@ class Request
 
     /**
      * Summary of script
-     * @return string|null
+     * @return ?string
      */
     public function script()
     {
@@ -90,7 +90,7 @@ class Request
 
     /**
      * Summary of uri
-     * @return string|null
+     * @return ?string
      */
     public function uri()
     {
@@ -127,7 +127,7 @@ class Request
      * Summary of get
      * @param string $name
      * @param mixed $default
-     * @param string|null $pattern
+     * @param ?string $pattern
      * @return mixed
      */
     public function get($name, $default = null, $pattern = null)
@@ -248,7 +248,7 @@ class Request
 
     /**
      * Summary of template
-     * @return mixed
+     * @return string
      */
     public function template()
     {
@@ -261,8 +261,8 @@ class Request
 
     /**
      * Summary of getSorted
-     * @param string|null $default
-     * @return mixed
+     * @param ?string $default
+     * @return ?string
      */
     public function getSorted($default = null)
     {
@@ -334,9 +334,9 @@ class Request
     /**
      * Summary of build
      * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-     * @param array<mixed>|null $server
-     * @param array<mixed>|null $cookie
-     * @param array<mixed>|null $config
+     * @param ?array<mixed> $server
+     * @param ?array<mixed> $cookie
+     * @param ?array<mixed> $config
      * @return Request
      */
     public static function build($params, $server = null, $cookie = null, $config = null)

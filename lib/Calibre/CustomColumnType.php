@@ -62,17 +62,17 @@ abstract class CustomColumnType
     public $datatype;
     /** @var null|Entry[] */
     protected $customValues = null;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId = null;
-    /** @var mixed */
+    /** @var ?int */
     protected $numberPerPage = -1;
 
     /**
      * Summary of __construct
-     * @param mixed $pcustomId
-     * @param mixed $pdatatype
-     * @param mixed $database
-     * @param mixed $numberPerPage
+     * @param int $pcustomId
+     * @param string $pdatatype
+     * @param ?int $database
+     * @param ?int $numberPerPage
      */
     protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
     {
@@ -156,7 +156,7 @@ abstract class CustomColumnType
     /**
      * The description used in the index page
      *
-     * @param mixed $count
+     * @param int $count
      * @return string
      */
     public function getContent($count = 0)
@@ -171,7 +171,7 @@ abstract class CustomColumnType
     /**
      * The description of this column as it is definied in the database
      *
-     * @return string|null
+     * @return ?string
      */
     public function getDatabaseDescription()
     {
@@ -209,8 +209,8 @@ abstract class CustomColumnType
      * Return an entry array for all possible (in the DB used) values of this column
      * These are the values used in the getUriAllCustoms() page
      *
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getAllCustomValues($n = -1, $sort = null)
@@ -227,7 +227,7 @@ abstract class CustomColumnType
      * Summary of getPaginatedResult
      * @param string $query
      * @param array<mixed> $params
-     * @param integer $n
+     * @param int $n
      * @return \PDOStatement
      */
     public function getPaginatedResult($query, $params = [], $n = 1)
@@ -256,8 +256,8 @@ abstract class CustomColumnType
     /**
      * Use the Calibre tag browser view to retrieve all custom values with count
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function browseAllCustomValues($n = -1, $sort = null)
@@ -300,7 +300,7 @@ abstract class CustomColumnType
     /**
      * Find related categories for hierarchical custom columns
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
-     * @param mixed $find pattern match or exact match for name, or array of child ids
+     * @param string|array<mixed> $find pattern match or exact match for name, or array of child ids
      * @return array<CustomColumn>
      */
     public function getRelatedCategories($find)
@@ -345,9 +345,9 @@ abstract class CustomColumnType
     /**
      * Get the datatype of a CustomColumn by its customID
      *
-     * @param integer $customId
-     * @param mixed $database
-     * @return string|null
+     * @param int $customId
+     * @param ?int $database
+     * @return ?string
      */
     protected static function getDatatypeByCustomID($customId, $database = null)
     {
@@ -366,9 +366,9 @@ abstract class CustomColumnType
     /**
      * Create a CustomColumnType by CustomID
      *
-     * @param integer $customId the id of the custom column
-     * @param mixed $database
-     * @return CustomColumnType|null
+     * @param int $customId the id of the custom column
+     * @param ?int $database
+     * @return ?CustomColumnType
      * @throws Exception If the $customId is not found or the datatype is unknown
      */
     public static function createByCustomID($customId, $database = null)
@@ -412,8 +412,8 @@ abstract class CustomColumnType
      * Create a CustomColumnType by its lookup name
      *
      * @param string $lookup the lookup-name of the custom column
-     * @param mixed $database
-     * @return CustomColumnType|null
+     * @param ?int $database
+     * @return ?CustomColumnType
      */
     public static function createByLookup($lookup, $database = null)
     {
@@ -433,8 +433,8 @@ abstract class CustomColumnType
     /**
      * Get the title of a CustomColumn by its customID
      *
-     * @param integer $customId
-     * @param mixed $database
+     * @param int $customId
+     * @param ?int $database
      * @return string
      */
     protected static function getTitleByCustomID($customId, $database = null)
@@ -451,7 +451,7 @@ abstract class CustomColumnType
      * Check the list of custom columns requested (and expand the wildcard if needed)
      *
      * @param array<string> $columnList
-     * @param mixed $database
+     * @param ?int $database
      * @return array<string>
      */
     public static function checkCustomColumnList($columnList, $database = null)
@@ -465,7 +465,7 @@ abstract class CustomColumnType
     /**
      * Get all defined custom columns from the database
      *
-     * @param mixed $database
+     * @param ?int $database
      * @return array<string, array<mixed>>
      */
     public static function getAllCustomColumns($database = null)
@@ -486,15 +486,15 @@ abstract class CustomColumnType
      *  - second an array of all PreparedStatement parameters
      *
      * @param string|integer|null $id the id of the searched value
-     * @return array{0: string, 1: array<mixed>}|null
+     * @return ?array{0: string, 1: array<mixed>}
      */
     abstract public function getQuery($id);
 
     /**
      * Summary of getFilter
-     * @param mixed $id
-     * @param mixed $parentTable
-     * @return array{0: string, 1: array<mixed>}|null
+     * @param string|int|null $id
+     * @param ?string $parentTable
+     * @return ?array{0: string, 1: array<mixed>}
      */
     abstract public function getFilter($id, $parentTable = null);
 
@@ -502,16 +502,16 @@ abstract class CustomColumnType
      * Get a CustomColumn for a specified (by ID) value
      *
      * @param string|integer $id the id of the searched value
-     * @return CustomColumn|null
+     * @return ?CustomColumn
      */
     abstract public function getCustom($id);
 
     /**
      * Return an entry array for all possible (in the DB used) values of this column by querying the database
      *
-     * @param mixed $n
-     * @param mixed $sort
-     * @return array<Entry>|null
+     * @param int $n
+     * @param ?string $sort
+     * @return ?array<Entry>
      */
     abstract protected function getAllCustomValuesFromDatabase($n = -1, $sort = null);
 

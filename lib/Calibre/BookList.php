@@ -42,21 +42,21 @@ class BookList
     public const BATCH_QUERY = false;
 
     public Request $request;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId = null;
-    /** @var mixed */
+    /** @var ?int */
     protected $numberPerPage = null;
     /** @var array<string> */
     //protected $ignoredCategories = [];
-    /** @var string|null */
+    /** @var ?string */
     public $orderBy = null;
     /** @var array<int, mixed> */
     public $bookList = [];
 
     /**
-     * @param Request|null $request
-     * @param mixed $database
-     * @param mixed $numberPerPage
+     * @param ?Request $request
+     * @param ?int $database
+     * @param ?int $numberPerPage
      */
     public function __construct($request, $database = null, $numberPerPage = null)
     {
@@ -79,7 +79,7 @@ class BookList
 
     /**
      * Summary of getOrderBy
-     * @return string|null
+     * @return ?string
      */
     protected function getOrderBy()
     {
@@ -103,7 +103,7 @@ class BookList
 
     /**
      * Summary of getBookCount
-     * @return mixed
+     * @return int
      */
     public function getBookCount()
     {
@@ -157,7 +157,7 @@ class BookList
     /**
      * Summary of getBooksByInstance
      * @param Base|Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
-     * @param mixed $n
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByInstance($instance, $n)
@@ -172,7 +172,7 @@ class BookList
     /**
      * Summary of getBooksByInstanceOrChildren
      * @param Category $instance
-     * @param mixed $n
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByInstanceOrChildren($instance, $n)
@@ -195,7 +195,7 @@ class BookList
     /**
      * Summary of getBooksWithoutInstance
      * @param mixed $instance
-     * @param mixed $n
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksWithoutInstance($instance, $n)
@@ -210,8 +210,8 @@ class BookList
     /**
      * Summary of getBooksByCustomYear
      * @param CustomColumnTypeDate $columnType
-     * @param mixed $year
-     * @param mixed $n
+     * @param string|int $year
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByCustomYear($columnType, $year, $n)
@@ -224,8 +224,8 @@ class BookList
     /**
      * Summary of getBooksByCustomRange
      * @param CustomColumnTypeInteger $columnType
-     * @param mixed $range
-     * @param mixed $n
+     * @param string $range
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByCustomRange($columnType, $range, $n)
@@ -238,7 +238,7 @@ class BookList
     /**
      * Summary of getBooksWithoutCustom
      * @param CustomColumnType $columnType
-     * @param mixed $n
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksWithoutCustom($columnType, $n)
@@ -251,7 +251,7 @@ class BookList
     /**
      * Summary of getBooksByQueryScope
      * @param array<string, string> $queryScope
-     * @param mixed $n
+     * @param int $n
      * @param array<string> $ignoredCategories
      * @return array{0: EntryBook[], 1: integer}
      */
@@ -281,7 +281,7 @@ class BookList
 
     /**
      * Summary of getAllBooks
-     * @param mixed $n
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getAllBooks($n)
@@ -350,8 +350,8 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
     /**
      * Summary of getBooksByFirstLetter
-     * @param mixed $letter
-     * @param mixed $n
+     * @param string $letter
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByFirstLetter($letter, $n)
@@ -361,8 +361,8 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
     /**
      * Summary of getBooksByPubYear
-     * @param mixed $year
-     * @param mixed $n
+     * @param string|int $year
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByPubYear($year, $n)
@@ -382,9 +382,9 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
     /**
      * Summary of getEntryArray
-     * @param mixed $query
-     * @param mixed $params
-     * @param mixed $n
+     * @param string $query
+     * @param array<mixed> $params
+     * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getEntryArray($query, $params, $n)
@@ -418,7 +418,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
     /**
      * Summary of batchQuery
-     * @param integer $totalNumber
+     * @param int $totalNumber
      * @param \PDOStatement $result
      * @throws \Exception
      * @return array{0: EntryBook[], 1: integer}

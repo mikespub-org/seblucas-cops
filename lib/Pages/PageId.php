@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Input\Request;
+
 class PageId
 {
     public const INDEX = "index";
@@ -58,8 +60,8 @@ class PageId
 
     /**
      * Summary of getPage
-     * @param mixed $pageId
-     * @param mixed $request
+     * @param string|int|null $pageId
+     * @param ?Request $request
      * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
      */
     public static function getPage($pageId, $request)

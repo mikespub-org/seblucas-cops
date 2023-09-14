@@ -33,7 +33,7 @@ class LinkFeed extends Link
      * @param string $phref ?queryString relative to current endpoint
      * @param ?string $prel relation in the OPDS catalog
      * @param ?string $ptitle title in the OPDS catalog and elsewhere
-     * @param mixed $database current database in multiple database setup
+     * @param ?int $database current database in multiple database setup
      */
     public function __construct($phref, $prel = null, $ptitle = null, $database = null)
     {
@@ -46,7 +46,7 @@ class LinkFeed extends Link
 
     /**
      * Summary of hrefXhtml
-     * @param mixed $endpoint
+     * @param string $endpoint
      * @return string
      */
     public function hrefXhtml($endpoint = '')

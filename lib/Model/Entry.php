@@ -17,17 +17,17 @@ class Entry
     public string $title;
     public string $id;
     public string $content;
-    /** @var mixed */
+    /** @var string|int */
     public $numberOfElement;
     public string $contentType;
     /** @var array<LinkEntry|LinkFeed> */
     public $linkArray;
-    /** @var int|null */
+    /** @var ?int */
     public $localUpdated;
     public string $className;
-    /** @var int|null */
+    /** @var ?int */
     protected static $updated = null;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId;
 
     /** @var array<string, string> */
@@ -53,7 +53,7 @@ class Entry
      * @param array<LinkEntry|LinkFeed> $plinkArray
      * @param string|int|null $database
      * @param string $pclass
-     * @param mixed $pcount
+     * @param string|int $pcount
      */
     public function __construct($ptitle, $pid, $pcontent, $pcontentType = "text", $plinkArray = [], $database = null, $pclass = "", $pcount = 0)
     {
@@ -116,7 +116,7 @@ class Entry
 
     /**
      * Summary of getRelation
-     * @return string|null
+     * @return ?string
      */
     public function getRelation()
     {
@@ -135,7 +135,7 @@ class Entry
     /**
      * Summary of getThumbnail
      * @param string $endpoint
-     * @return string|null
+     * @return ?string
      */
     public function getThumbnail($endpoint = '')
     {
@@ -152,7 +152,7 @@ class Entry
     /**
      * Summary of getImage
      * @param string $endpoint
-     * @return string|null
+     * @return ?string
      */
     public function getImage($endpoint = '')
     {

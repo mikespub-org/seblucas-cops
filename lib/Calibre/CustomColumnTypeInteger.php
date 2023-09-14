@@ -19,9 +19,9 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of __construct
-     * @param mixed $pcustomId
+     * @param int $pcustomId
      * @param string $datatype
-     * @param mixed $database
+     * @param ?int $database
      * @throws \UnexpectedValueException
      */
     protected function __construct($pcustomId, $datatype = self::TYPE_INT, $database = null)
@@ -40,8 +40,8 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of getQuery
-     * @param mixed $id
-     * @return array{0: string, 1: array<mixed>}|null
+     * @param string|int|null $id
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQuery($id)
     {
@@ -55,9 +55,9 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of getQueryByRange
-     * @param mixed $range
+     * @param string $range
      * @throws \UnexpectedValueException
-     * @return array{0: string, 1: array<mixed>}|null
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQueryByRange($range)
     {
@@ -73,9 +73,9 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of getFilter
-     * @param mixed $id
-     * @param mixed $parentTable
-     * @return array{0: string, 1: array<mixed>}|null
+     * @param string|int|null $id
+     * @param ?string $parentTable
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getFilter($id, $parentTable = null)
     {
@@ -91,7 +91,7 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of getCustom
-     * @param mixed $id
+     * @param string|int|null $id
      * @return CustomColumn
      */
     public function getCustom($id)
@@ -101,8 +101,8 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of getAllCustomValuesFromDatabase
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
@@ -128,7 +128,7 @@ class CustomColumnTypeInteger extends CustomColumnType
     /**
      * Summary of getCountByRange
      * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
-     * @param mixed $sort
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getCountByRange($page, $sort = null)
@@ -173,8 +173,8 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of getCustomValuesByRange
-     * @param mixed $range
-     * @param mixed $sort
+     * @param string $range
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getCustomValuesByRange($range, $sort = null)

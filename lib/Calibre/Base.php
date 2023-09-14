@@ -32,20 +32,20 @@ abstract class Base
     where books_bases_link.book = books.id and base = ? {1} order by books.sort';
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
-    /** @var mixed */
+    /** @var string|int|null */
     public $id;
-    /** @var mixed */
+    /** @var ?string */
     public $name;
     public bool $limitSelf = true;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId = null;
-    /** @var mixed */
+    /** @var ?int */
     protected $filterLimit = null;
 
     /**
      * Summary of __construct
-     * @param mixed $post
-     * @param mixed $database
+     * @param object $post
+     * @param ?int $database
      */
     public function __construct($post, $database = null)
     {
@@ -56,7 +56,7 @@ abstract class Base
 
     /**
      * Summary of getDatabaseId
-     * @return mixed
+     * @return ?int
      */
     public function getDatabaseId()
     {
@@ -92,7 +92,7 @@ abstract class Base
 
     /**
      * Summary of getEntryIdByLetter
-     * @param mixed $startingLetter
+     * @param string $startingLetter
      * @return string
      */
     public static function getEntryIdByLetter($startingLetter)
@@ -102,7 +102,7 @@ abstract class Base
 
     /**
      * Summary of getTitle
-     * @return mixed
+     * @return string
      */
     public function getTitle()
     {
@@ -111,7 +111,7 @@ abstract class Base
 
     /**
      * Summary of getContent
-     * @param mixed $count
+     * @param int $count
      * @return string
      */
     public function getContent($count = 0)
@@ -139,7 +139,7 @@ abstract class Base
 
     /**
      * Summary of getClassName
-     * @param string|null $className
+     * @param ?string $className
      * @return string
      */
     public function getClassName($className = null)
@@ -151,7 +151,7 @@ abstract class Base
 
     /**
      * Summary of getEntry
-     * @param mixed $count
+     * @param int $count
      * @return Entry
      */
     public function getEntry($count = 0)
@@ -202,8 +202,8 @@ abstract class Base
 
     /**
      * Summary of getBooks
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<EntryBook>
      */
     public function getBooks($n = 1, $sort = null)
@@ -218,11 +218,11 @@ abstract class Base
 
     /**
      * Summary of getEntriesByInstance
-     * @param mixed $className
-     * @param mixed $n
-     * @param mixed $sort
-     * @param mixed $database
-     * @param mixed $numberPerPage
+     * @param string $className
+     * @param int $n
+     * @param ?string $sort
+     * @param ?int $database
+     * @param ?int $numberPerPage
      * @return array<Entry>
      */
     public function getEntriesByInstance($className, $n = 1, $sort = null, $database = null, $numberPerPage = null)
@@ -236,8 +236,8 @@ abstract class Base
 
     /**
      * Summary of getAuthors
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getAuthors($n = 1, $sort = null)
@@ -247,8 +247,8 @@ abstract class Base
 
     /**
      * Summary of getLanguages
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getLanguages($n = 1, $sort = null)
@@ -258,8 +258,8 @@ abstract class Base
 
     /**
      * Summary of getPublishers
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getPublishers($n = 1, $sort = null)
@@ -269,8 +269,8 @@ abstract class Base
 
     /**
      * Summary of getRatings
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getRatings($n = 1, $sort = null)
@@ -280,8 +280,8 @@ abstract class Base
 
     /**
      * Summary of getSeries
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getSeries($n = 1, $sort = null)
@@ -291,8 +291,8 @@ abstract class Base
 
     /**
      * Summary of getTags
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getTags($n = 1, $sort = null)
@@ -302,8 +302,8 @@ abstract class Base
 
     /**
      * Summary of getIdentifiers
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getIdentifiers($n = 1, $sort = null)
@@ -324,7 +324,7 @@ abstract class Base
 
     /**
      * Summary of setFilterLimit
-     * @param mixed|null $filterLimit
+     * @param ?int $filterLimit
      * @return void
      */
     public function setFilterLimit($filterLimit)
@@ -334,7 +334,7 @@ abstract class Base
 
     /**
      * Summary of getFilterLimit
-     * @return mixed|null
+     * @return ?int
      */
     public function getFilterLimit()
     {
@@ -348,8 +348,8 @@ abstract class Base
 
     /**
      * Summary of getInstanceById
-     * @param mixed $id
-     * @param mixed $database
+     * @param string|int|null $id
+     * @param ?int $database
      * @return object
      */
     public static function getInstanceById($id, $database = null)
@@ -368,7 +368,7 @@ abstract class Base
 
     /**
      * Summary of getDefaultName
-     * @return mixed
+     * @return ?string
      */
     public static function getDefaultName()
     {
@@ -377,8 +377,8 @@ abstract class Base
 
     /**
      * Summary of getCount
-     * @param mixed $database
-     * @return Entry|null
+     * @param ?int $database
+     * @return ?Entry
      */
     public static function getCount($database = null)
     {

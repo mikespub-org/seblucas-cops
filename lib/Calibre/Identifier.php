@@ -29,21 +29,21 @@ class Identifier extends Base
     where books.id not in (select book from identifiers) {1} order by books.sort';
     public const URL_PARAM = "i";
 
-    /** @var mixed */
+    /** @var string|int|null */
     public $id;
-    /** @var mixed */
+    /** @var string */
     public $type;
     public string $formattedType;
-    /** @var mixed */
+    /** @var string */
     public $val;
     public string $uri;
-    /** @var mixed */
+    /** @var ?int */
     protected $databaseId;
 
     /**
      * Summary of __construct
-     * @param mixed $post
-     * @param mixed $database
+     * @param object $post
+     * @param ?int $database
      */
     public function __construct($post, $database = null)
     {
@@ -143,8 +143,8 @@ class Identifier extends Base
 
     /**
      * Summary of getInstanceById
-     * @param mixed $id used for the type of identifier here
-     * @param mixed $database
+     * @param string|int|null $id used for the type of identifier here
+     * @param ?int $database
      * @return object
      */
     public static function getInstanceById($id, $database = null)
@@ -167,8 +167,8 @@ class Identifier extends Base
 
     /**
      * Summary of getInstancesByBookId
-     * @param mixed $bookId
-     * @param mixed $database
+     * @param int $bookId
+     * @param ?int $database
      * @return array<Identifier>
      */
     public static function getInstancesByBookId($bookId, $database = null)

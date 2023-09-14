@@ -27,7 +27,7 @@ class Language extends Base
 
     /**
      * Summary of getTitle
-     * @return mixed
+     * @return string
      */
     public function getTitle()
     {
@@ -70,8 +70,8 @@ class Language extends Base
 
     /**
      * Summary of getLanguagesByBookId
-     * @param mixed $bookId
-     * @param mixed $database
+     * @param int $bookId
+     * @param ?int $database
      * @return string
      */
     public static function getLanguagesByBookId($bookId, $database = null)

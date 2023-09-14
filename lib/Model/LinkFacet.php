@@ -22,20 +22,20 @@ class LinkFacet extends LinkFeed
 {
     public const LINK_RELATION = "http://opds-spec.org/facet";
 
-    /** @var string|null */
+    /** @var ?string */
     public $facetGroup;
     public bool $activeFacet;
-    /** @var int|null */
+    /** @var ?int */
     public $threadCount;
 
     /**
      * Summary of __construct
      * @param string $phref ?queryString relative to current endpoint
-     * @param string|null $ptitle title in the OPDS catalog
-     * @param string|null $pfacetGroup facetGroup this facet belongs to
+     * @param ?string $ptitle title in the OPDS catalog
+     * @param ?string $pfacetGroup facetGroup this facet belongs to
      * @param bool $pactiveFacet is the facet currently active
-     * @param int|null $pthreadCount number of items expected
-     * @param mixed $database current database in multiple database setup
+     * @param ?int $pthreadCount number of items expected
+     * @param ?int $database current database in multiple database setup
      */
     public function __construct($phref, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false, $pthreadCount = null, $database = null)
     {

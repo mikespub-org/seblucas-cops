@@ -34,7 +34,7 @@ class Rating extends Base
      */
     public function getTitle()
     {
-        return str_format(localize("ratingword", $this->name / 2), $this->name / 2);
+        return str_format(localize("ratingword", intval($this->name) / 2), intval($this->name) / 2);
     }
 
     /**
@@ -50,8 +50,8 @@ class Rating extends Base
 
     /**
      * Summary of getCount
-     * @param mixed $database
-     * @return Entry|null
+     * @param ?int $database
+     * @return ?Entry
      */
     public static function getCount($database = null)
     {

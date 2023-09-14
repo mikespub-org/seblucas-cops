@@ -28,7 +28,7 @@ class EPubReader
      * @param EPub $book
      * @param string $component
      * @param string $add
-     * @return string|null
+     * @return ?string
      */
     public static function getComponentContent($book, $component, $add)
     {
@@ -71,7 +71,7 @@ class EPubReader
 
     /**
      * Summary of getContent
-     * @param integer $idData
+     * @param int $idData
      * @param string $component
      * @param Request $request
      * @return string
@@ -95,7 +95,7 @@ class EPubReader
 
     /**
      * Summary of getReader
-     * @param integer $idData
+     * @param int $idData
      * @param Request $request
      * @return string
      */

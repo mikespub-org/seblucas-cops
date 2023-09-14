@@ -29,15 +29,15 @@ class Author extends Base
     where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc';
     public const URL_PARAM = "a";
 
-    /** @var mixed */
+    /** @var string */
     public $sort;
-    /** @var mixed */
+    /** @var ?string */
     public $link;
 
     /**
      * Summary of __construct
-     * @param mixed $post
-     * @param mixed $database
+     * @param object $post
+     * @param ?int $database
      */
     public function __construct($post, $database = null)
     {
@@ -50,7 +50,7 @@ class Author extends Base
 
     /**
      * Summary of getTitle
-     * @return mixed
+     * @return string
      */
     public function getTitle()
     {
@@ -70,8 +70,8 @@ class Author extends Base
 
     /**
      * Summary of getInstancesByBookId
-     * @param mixed $bookId
-     * @param mixed $database
+     * @param int $bookId
+     * @param ?int $database
      * @return array<Author>
      */
     public static function getInstancesByBookId($bookId, $database = null)

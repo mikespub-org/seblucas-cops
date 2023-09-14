@@ -26,7 +26,7 @@ class KiwilanOPDS
 {
     public static string $endpoint = "opds.php";
     public static OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
-    /** @var DateTime|null */
+    /** @var ?DateTime */
     private $updated = null;
 
     /**
@@ -115,7 +115,7 @@ class KiwilanOPDS
             authors: $authors,
             published: $published,
             // Element "volume" not allowed here; expected the element end-tag, element "author", "category", "contributor", "link", "rights" or "source" or an element from another namespace
-            volume: $entry->book->seriesIndex,
+            volume: $entry->book->seriesIndex,  // @todo support float 1.5
             serie: $serie,
             language: $entry->book->getLanguages(),
             //isbn: $entry->book->uuid,

@@ -16,7 +16,7 @@ use PDO;
 class Database
 {
     public const KEEP_STATS = false;
-    /** @var PDO|null */
+    /** @var ?PDO */
     protected static $db = null;
     protected static int $count = 0;
     /** @var array<string> */
@@ -42,7 +42,7 @@ class Database
 
     /**
      * Summary of useAbsolutePath
-     * @param mixed $database
+     * @param ?int $database
      * @return bool
      */
     public static function useAbsolutePath($database)
@@ -54,7 +54,7 @@ class Database
 
     /**
      * Summary of noDatabaseSelected
-     * @param mixed $database
+     * @param ?int $database
      * @return bool
      */
     public static function noDatabaseSelected($database)
@@ -90,7 +90,7 @@ class Database
 
     /**
      * Summary of getDbName
-     * @param mixed $database
+     * @param ?int $database
      * @return string
      */
     public static function getDbName($database)
@@ -98,9 +98,6 @@ class Database
         if (static::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
-            }
-            if (!preg_match('/^\d+$/', $database)) {
-                static::error($database);
             }
             $array = array_keys(Config::get('calibre_directory'));
             return  $array[$database];
@@ -110,7 +107,7 @@ class Database
 
     /**
      * Summary of getDbDirectory
-     * @param mixed $database
+     * @param ?int $database
      * @return string
      */
     public static function getDbDirectory($database)
@@ -118,9 +115,6 @@ class Database
         if (static::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
-            }
-            if (!preg_match('/^\d+$/', $database)) {
-                static::error($database);
             }
             $array = array_values(Config::get('calibre_directory'));
             return  $array[$database];
@@ -131,7 +125,7 @@ class Database
     // -DC- Add image directory
     /**
      * Summary of getImgDirectory
-     * @param mixed $database
+     * @param ?int $database
      * @return string
      */
     public static function getImgDirectory($database)
@@ -148,7 +142,7 @@ class Database
 
     /**
      * Summary of getDbFileName
-     * @param mixed $database
+     * @param ?int $database
      * @return string
      */
     public static function getDbFileName($database)
@@ -158,7 +152,7 @@ class Database
 
     /**
      * Summary of error
-     * @param mixed $database
+     * @param ?int $database
      * @throws \Exception
      * @return never
      */
@@ -172,7 +166,7 @@ class Database
 
     /**
      * Summary of getDb
-     * @param mixed $database
+     * @param ?int $database
      * @return \PDO
      */
     public static function getDb($database = null)
@@ -201,7 +195,7 @@ class Database
 
     /**
      * Summary of checkDatabaseAvailability
-     * @param mixed $database
+     * @param ?int $database
      * @return bool
      */
     public static function checkDatabaseAvailability($database)
@@ -228,8 +222,8 @@ class Database
 
     /**
      * Summary of querySingle
-     * @param mixed $query
-     * @param mixed $database
+     * @param string $query
+     * @param ?int $database
      * @return mixed
      */
     public static function querySingle($query, $database = null)
@@ -243,9 +237,9 @@ class Database
 
     /**
      * Summary of query
-     * @param mixed $query
-     * @param mixed $params
-     * @param mixed $database
+     * @param string $query
+     * @param array<mixed> $params
+     * @param ?int $database
      * @return \PDOStatement
      */
     public static function query($query, $params = [], $database = null)
@@ -264,13 +258,13 @@ class Database
 
     /**
      * Summary of queryTotal
-     * @param mixed $query
-     * @param mixed $columns
-     * @param mixed $filter
-     * @param mixed $params
-     * @param mixed $n
-     * @param mixed $database
-     * @param mixed $numberPerPage
+     * @param string $query
+     * @param string $columns
+     * @param string $filter
+     * @param array<mixed> $params
+     * @param int $n
+     * @param ?int $database
+     * @param ?int $numberPerPage
      * @return array{0: integer, 1: \PDOStatement}
      */
     public static function queryTotal($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
@@ -304,13 +298,13 @@ class Database
 
     /**
      * Summary of queryFilter
-     * @param mixed $query
-     * @param mixed $columns
-     * @param mixed $filter
-     * @param mixed $params
-     * @param mixed $n
-     * @param mixed $database
-     * @param mixed $numberPerPage
+     * @param string $query
+     * @param string $columns
+     * @param string $filter
+     * @param array<mixed> $params
+     * @param int $n
+     * @param ?int $database
+     * @param ?int $numberPerPage
      * @return \PDOStatement
      */
     public static function queryFilter($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
@@ -340,11 +334,11 @@ class Database
 
     /**
      * Summary of countFilter
-     * @param mixed $query
-     * @param mixed $columns
-     * @param mixed $filter
-     * @param mixed $params
-     * @param mixed $database
+     * @param string $query
+     * @param string $columns
+     * @param string $filter
+     * @param array<mixed> $params
+     * @param ?int $database
      * @return integer
      */
     public static function countFilter($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
@@ -362,8 +356,8 @@ class Database
 
     /**
      * Summary of getDbSchema
-     * @param mixed $database
-     * @param mixed $type get table or view entries
+     * @param ?int $database
+     * @param ?string $type get table or view entries
      * @return array<mixed>
      */
     public static function getDbSchema($database = null, $type = null)

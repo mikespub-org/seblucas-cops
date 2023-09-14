@@ -28,7 +28,7 @@ class WebDriverTestCase extends TestCase
 {
     /** @var RemoteWebDriver */
     public static $driver;
-    /** @var string|null */
+    /** @var ?string */
     public static $userAgent = null;
 
     public static function setUpBeforeClass(): void

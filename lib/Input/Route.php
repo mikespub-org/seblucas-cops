@@ -77,7 +77,7 @@ class Route
      * Match pathinfo against routes and return query params
      * @param string $path
      * @throws \Exception if the $path is not found in $routes
-     * @return array<mixed>|null
+     * @return ?array<mixed>
      */
     public static function match($path)
     {
@@ -415,7 +415,7 @@ class Route
     /**
      * Summary of replaceLinks
      * @param string $output
-     * @return string|null
+     * @return ?string
      */
     public static function replaceLinks($output)
     {

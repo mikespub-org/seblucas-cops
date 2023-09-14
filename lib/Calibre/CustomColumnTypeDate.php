@@ -24,8 +24,8 @@ class CustomColumnTypeDate extends CustomColumnType
 
     /**
      * Summary of __construct
-     * @param mixed $pcustomId
-     * @param mixed $database
+     * @param int $pcustomId
+     * @param ?int $database
      */
     protected function __construct($pcustomId, $database)
     {
@@ -34,8 +34,8 @@ class CustomColumnTypeDate extends CustomColumnType
 
     /**
      * Summary of getQuery
-     * @param mixed $id
-     * @return array{0: string, 1: array<mixed>}|null
+     * @param string|int|null $id
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQuery($id)
     {
@@ -52,7 +52,7 @@ class CustomColumnTypeDate extends CustomColumnType
      * Summary of getQueryByYear
      * @param mixed $year
      * @throws \UnexpectedValueException
-     * @return array{0: string, 1: array<mixed>}|null
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQueryByYear($year)
     {
@@ -65,9 +65,9 @@ class CustomColumnTypeDate extends CustomColumnType
 
     /**
      * Summary of getFilter
-     * @param mixed $id
-     * @param mixed $parentTable
-     * @return array{0: string, 1: array<mixed>}|null
+     * @param string|int|null $id
+     * @param ?string $parentTable
+     * @return ?array{0: string, 1: array<mixed>}
      */
     public function getFilter($id, $parentTable = null)
     {
@@ -84,7 +84,7 @@ class CustomColumnTypeDate extends CustomColumnType
 
     /**
      * Summary of getCustom
-     * @param mixed $id
+     * @param string|int|null $id
      * @return CustomColumn
      */
     public function getCustom($id)
@@ -99,8 +99,8 @@ class CustomColumnTypeDate extends CustomColumnType
 
     /**
      * Summary of getAllCustomValuesFromDatabase
-     * @param mixed $n
-     * @param mixed $sort
+     * @param int $n
+     * @param ?string $sort
      * @return array<Entry>
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
@@ -141,7 +141,7 @@ class CustomColumnTypeDate extends CustomColumnType
     /**
      * Summary of getCountByYear
      * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
-     * @param mixed $sort
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getCountByYear($page, $sort = null)
@@ -176,7 +176,7 @@ class CustomColumnTypeDate extends CustomColumnType
     /**
      * Summary of getCustomValuesByYear
      * @param mixed $year
-     * @param mixed $sort
+     * @param ?string $sort
      * @return array<Entry>
      */
     public function getCustomValuesByYear($year, $sort = null)
