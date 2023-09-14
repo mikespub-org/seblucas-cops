@@ -16,6 +16,11 @@ use Kiwilan\Opds\OpdsResponse;
 
 require_once __DIR__ . '/config.php';
 
+if (!class_exists('Kiwilan\Opds\OpdsResponse')) {
+    echo 'This endpoint is an example for development only';
+    return;
+}
+
 $request = new Request();
 $page = $request->get('page', PageId::INDEX);
 // @checkme set page based on path info here

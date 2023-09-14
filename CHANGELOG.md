@@ -6,9 +6,9 @@ or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
-  * Use kiwilan/php-opds to generate OPDS 2.0 catalog with opds.php (besides OPDS 1.2 with feed.php)
 
 2.1.x - 2023xxxx To be continued (PHP >= 8.1)
+  * Use kiwilan/php-opds to generate OPDS 2.0 catalog with opds.php (besides OPDS 1.2 with feed.php) (dev only)
 
 2.1.1 - 202309xx Download books per page/series/author, fix search form + add epub-loader (PHP >= 8.1)
   * Changes in config_default.php file:

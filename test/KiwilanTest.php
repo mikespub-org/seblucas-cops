@@ -8,7 +8,8 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Output\OPDSRenderer;
+//use SebLucas\Cops\Output\OPDSRenderer;
+use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
@@ -17,7 +18,10 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\PageId;
 
-class OpdsTest extends TestCase
+/**
+ * @todo JSON schema validation for OPDS 2.0
+ */
+class KiwilanTest extends TestCase
 {
     public const OPDS_RELAX_NG = __DIR__ . "/opds-relax-ng/opds_catalog_1_2.rng";
     public const OPENSEARCHDESCRIPTION_RELAX_NG = __DIR__ . "/opds-relax-ng/opensearchdescription.rng";
