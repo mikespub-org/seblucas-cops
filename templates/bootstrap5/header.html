@@ -103,7 +103,7 @@
             </a>
           </li>
         {{?}}
-        {{? it.download }} 
+        {{? it.download.length != 0 && it.entries.length > 1 }} 
           <li class="nav-item p-1 border-start border-secondary-subtle ms-1">Download all:</li>
           {{~it.download:link:idx}}
           <li class="nav-item sm">
