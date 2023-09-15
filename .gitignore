@@ -20,3 +20,4 @@
 *.cache
 .devcontainer/devcontainer.json
 **/.DS_Store
+nohup.out
