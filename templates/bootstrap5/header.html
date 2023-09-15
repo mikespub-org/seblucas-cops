@@ -103,6 +103,16 @@
             </a>
           </li>
         {{?}}
+        {{? it.download }} 
+          <li class="nav-item p-1 border-start border-secondary-subtle ms-1">Download all:</li>
+          {{~it.download:link:idx}}
+          <li class="nav-item sm">
+            <a class="btn btn-primary btn-sm p-1 me-1" href="{{=link.url}}" style="--bs-btn-padding-y: .5rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;"> 
+              <i class="bi-download pe-1"></i>{{=link.format}}
+            </a> 
+          </li>
+          {{~}} 
+        {{?}}
       </ul>
     </nav>
   {{?}}
