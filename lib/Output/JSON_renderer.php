@@ -468,9 +468,11 @@ class JSONRenderer
         }
         $out ["extra"] = $currentPage->extra;
         $out ["assets"] = Config::get('assets');
-        $out ["download"] = [];
+        // avoid messy Javascript issue with empty array being truthy or falsy - see #40
+        $out ["download"] = false;
         if ($currentPage->containsBook()) {
             if (!empty(Config::get('download_page'))) {
+                $out ["download"] = [];
                 foreach (Config::get('download_page') as $format) {
                     $query = preg_replace("/\&_=\d+/", "", $request->query());
                     $url = Config::ENDPOINT['download'] . Format::addURLParam("?" . $query, 'type', strtolower($format));
@@ -478,12 +480,14 @@ class JSONRenderer
                 }
             } elseif (!empty($qid)) {
                 if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
+                    $out ["download"] = [];
                     foreach (Config::get('download_series') as $format) {
                         $url = Config::ENDPOINT['download'] . '?series=' .  $qid . '&type=' . strtolower($format);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }
                 if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
+                    $out ["download"] = [];
                     foreach (Config::get('download_author') as $format) {
                         $url = Config::ENDPOINT['download'] . '?author=' .  $qid . '&type=' . strtolower($format);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
