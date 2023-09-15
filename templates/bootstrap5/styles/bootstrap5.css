@@ -165,3 +165,8 @@ div[class*="books"] {
     border-right:thick solid red;
     opacity: 1;
 }
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: rgb(255, 255, 255);
+    background-color: rgb(108, 117, 125);
+}
