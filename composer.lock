@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfb75f46c997337853ff91b16d1f6c0f",
+    "content-hash": "958012193dd8cce42de4e571fe9bd08b",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -89,16 +89,16 @@
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "2.0.2",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "024cb926b463467eb6fcceb04ec3f9279d1009f9"
+                "reference": "0f936215e1dde4321e991016943dca864ed6a671"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/024cb926b463467eb6fcceb04ec3f9279d1009f9",
-                "reference": "024cb926b463467eb6fcceb04ec3f9279d1009f9",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/0f936215e1dde4321e991016943dca864ed6a671",
+                "reference": "0f936215e1dde4321e991016943dca864ed6a671",
                 "shasum": ""
             },
             "require": {
@@ -153,22 +153,22 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.0.2"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.1.0"
             },
-            "time": "2023-09-10T15:06:11+00:00"
+            "time": "2023-09-16T16:52:36+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",
-            "version": "v7.22.17",
+            "version": "v7.22.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/babel/babel.git",
-                "reference": "49adb6008120607adb559fd21e8f5a6df7b1a492"
+                "reference": "77b0d7359909c94f3797c24006f244847fbc8d6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/babel/babel/zipball/49adb6008120607adb559fd21e8f5a6df7b1a492",
-                "reference": "49adb6008120607adb559fd21e8f5a6df7b1a492"
+                "url": "https://api.github.com/repos/babel/babel/zipball/77b0d7359909c94f3797c24006f244847fbc8d6d",
+                "reference": "77b0d7359909c94f3797c24006f244847fbc8d6d"
             },
             "type": "npm-asset"
         },
@@ -1282,16 +1282,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "81b4a0a34f5a16252a9abcb5c4944c1795c298e3"
+                "reference": "a8dbaaf1020a37117e658a756a22c723dcb40d29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/81b4a0a34f5a16252a9abcb5c4944c1795c298e3",
-                "reference": "81b4a0a34f5a16252a9abcb5c4944c1795c298e3",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/a8dbaaf1020a37117e658a756a22c723dcb40d29",
+                "reference": "a8dbaaf1020a37117e658a756a22c723dcb40d29",
                 "shasum": ""
             },
             "require": {
@@ -1329,9 +1329,9 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/2.1.1"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/2.1.2"
             },
-            "time": "2023-09-11T20:05:10+00:00"
+            "time": "2023-09-16T11:15:33+00:00"
         },
         {
             "name": "myclabs/deep-copy",

@@ -113,7 +113,7 @@ class EPubReader
         }, $epub->components()));
 
         $contents = implode(', ', array_map(function ($content) {
-            return "{title: '" . addslashes($content['title']) . "', src: '". $content['src'] . "'}";
+            return static::addContentItem($content);
         }, $epub->contents()));
 
         $data = [
@@ -137,5 +137,21 @@ class EPubReader
         $filecontent = file_get_contents(static::$template);
 
         return preg_replace($pattern, $replace, $filecontent);
+    }
+
+    /**
+     * Summary of addContentItem
+     * @param array<mixed> $item
+     * @return string
+     */
+    public static function addContentItem($item)
+    {
+        if (empty($item['children'])) {
+            return "{title: '" . addslashes($item['title']) . "', src: '". $item['src'] . "'}";
+        }
+        foreach (array_keys($item['children']) as $idx) {
+            $item['children'][$idx] = static::addContentItem($item['children'][$idx]);
+        }
+        return "{title: '" . addslashes($item['title']) . "', src: '". $item['src'] . "', children: [" . implode(', ', $item['children']) . "]}";
     }
 }
