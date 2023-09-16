@@ -375,6 +375,7 @@ class JSONRenderer
         $out ["page"] = $page;
         $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
         $out ["entries"] = $entries;
+        $out ["entriesCount"] = count($entries);
         $out ["sorted"] = $currentPage->sorted;
         $out ["isPaginated"] = 0;
         if ($currentPage->isPaginated()) {

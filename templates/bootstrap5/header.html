@@ -103,6 +103,16 @@
             </a>
           </li>
         {{?}}
+        {{? it.download && it.entriesCount > 1 }} 
+          <li class="nav-item p-1 border-start border-secondary-subtle ms-1">Download all:</li>
+          {{~it.download:link:idx}}
+          <li class="nav-item sm">
+            <a class="btn btn-primary btn-sm me-1 p-1 border-0" href="{{=link.url}}" style="-bs-btn-border-radius: 6px; --bs-btn-font-size: .8rem;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Download a zip file containing all books on this page in {{=link.format}} format"> 
+              <i class="bi-file-earmark-zip pe-1"></i>{{=link.format}}
+            </a> 
+          </li>
+          {{~}} 
+        {{?}}
       </ul>
     </nav>
   {{?}}
