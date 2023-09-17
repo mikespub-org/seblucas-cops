@@ -199,7 +199,7 @@ class CustomColumn extends Category
         return [
             'valueID'          => $this->id,
             'value'            => $this->value,
-            'customColumnType' => (array)$this->customColumnType,
+            'customColumnType' => $this->customColumnType->toArray(),
             'htmlvalue'        => $this->htmlvalue,
         ];
     }

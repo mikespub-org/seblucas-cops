@@ -343,6 +343,21 @@ abstract class CustomColumnType
     }
 
     /**
+     * Return this object as an array
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray()
+    {
+        return [
+            'customId'     => $this->customId,
+            'columnTitle'  => $this->columnTitle,
+            'datatype'     => $this->datatype,
+            //'customValues' => $this->customValues,
+        ];
+    }
+
+    /**
      * Get the datatype of a CustomColumn by its customID
      *
      * @param int $customId

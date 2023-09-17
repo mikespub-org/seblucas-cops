@@ -24,7 +24,7 @@ use DateTime;
 
 class KiwilanOPDS
 {
-    public static string $endpoint = "opds.php";
+    public static string $endpoint = CopsConfig::ENDPOINT["opds"];
     public static OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
     /** @var ?DateTime */
     private $updated = null;
