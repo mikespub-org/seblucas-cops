@@ -77,15 +77,11 @@ class Route
     /** @var array<string, mixed> */
     protected static $rewrites = [
         // Format: route => endpoint, or route => [endpoint, [fixed => 1, ...]] with fixed params
-        "/download/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
         "/view/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"], ["view" => 1]],
-        "/download/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
+        "/download/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
         "/view/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"], ["view" => 1]],
+        "/download/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
     ];
-    /** @var array<string, mixed> */
-    protected static $exact = [];
-    /** @var array<string, mixed> */
-    protected static $match = [];
     /** @var array<string, mixed> */
     protected static $endpoints = [];
 
@@ -246,7 +242,7 @@ class Route
         if (count($queryParams) < 1) {
             return $prefix;
         }
-        return static::rewrite($queryParams, $prefix, $separator);
+        return static::route($queryParams, $prefix, $separator);
     }
 
     /**
@@ -278,17 +274,17 @@ class Route
         if (count($queryParams) < 1) {
             return $prefix;
         }
-        return static::rewrite($queryParams, $prefix, $separator);
+        return static::route($queryParams, $prefix, $separator);
     }
 
     /**
-     * Summary of rewrite
+     * Summary of route
      * @param array<mixed> $params
      * @param string $prefix
      * @param string|null $separator
      * @return string
      */
-    public static function rewrite($params, $prefix = '', $separator = null)
+    public static function route($params, $prefix = '', $separator = null)
     {
         if (Config::get('use_route_urls')) {
             $route = static::getPageRoute($params, $prefix, $separator);
@@ -316,6 +312,19 @@ class Route
             return null;
         }
         unset($params['page']);
+        return static::findMatchingRoute($routes, $params, $prefix, $separator);
+    }
+
+    /**
+     * Summary of findMatchingRoute
+     * @param array<mixed> $routes
+     * @param array<mixed> $params
+     * @param string $prefix
+     * @param string|null $separator
+     * @return string|null
+     */
+    public static function findMatchingRoute($routes, $params, $prefix = '', $separator = null)
+    {
         // find matching route based on fixed and/or path params - e.g. authors letter
         foreach ($routes as $route => $fixed) {
             if (count($fixed) > count($params)) {
@@ -332,14 +341,13 @@ class Route
             $found = [];
             // check and replace path params
             if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
+                if (in_array('ignore', $found[1])) {
+                    $subst['ignore'] = 'ignore';
+                }
                 if (count($found[1]) > count($subst)) {
                     continue;
                 }
                 foreach ($found[1] as $param) {
-                    if ($param == 'ignore') {
-                        $route = str_replace('{' . $param . '}', "$param", $route);
-                        continue;
-                    }
                     if (!isset($subst[$param])) {
                         continue 2;
                     }
@@ -351,7 +359,6 @@ class Route
                     unset($subst[$param]);
                 }
             }
-            echo "$route\n";
             if (count($subst) > 0) {
                 return $prefix . $route . '?' . http_build_query($subst, '', $separator);
             }
@@ -361,7 +368,7 @@ class Route
     }
 
     /**
-     * Get mapping of pages to routes with query params
+     * Get mapping of pages to routes with fixed params
      * @return array<string, array<mixed>>
      */
     public static function getPages()
@@ -385,181 +392,73 @@ class Route
     }
 
     /**
-     * Summary of findMatches
-     * @param array<mixed> $mapping
-     * @param string $prefix
-     * @return array<mixed>
-     */
-    protected static function findMatches($mapping, $prefix = '\?')
-    {
-        $matches = [];
-        $exact = [];
-        foreach ($mapping as $route => $fixed) {
-            $from = '';
-            $separator = '';
-            // for normal routes, put fixed params at the start
-            if ($prefix == '\?') {
-                $from = http_build_query($fixed);
-                $separator = '&';
-            }
-            $to = $route;
-            $found = [];
-            $ref = 1;
-            if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
-                foreach ($found[1] as $param) {
-                    if ($param == 'ignore') {
-                        $to = str_replace('{' . $param . '}', "$param", $to);
-                        continue;
-                    }
-                    $from .= $separator . $param . '=([^&"]+)';
-                    $to = str_replace('{' . $param . '}', "\\$ref", $to);
-                    $separator = '&';
-                    $ref += 1;
-                }
-            } else {
-                $exact[$from] = $to;
-            }
-            // for rewrite rules, put fixed params at the end
-            if ($prefix !== '\?' && !empty($fixed)) {
-                $from .= $separator . http_build_query($fixed);
-            }
-            // replace & with ? if necessary
-            $matches['~' . $prefix . $from . '&~'] = $to . '?';
-            $matches['~' . $prefix . $from . '("|$)~'] = $to . "\\$ref";
-        }
-        // List matches in order for replaceLinks
-        $matchList = array_keys($matches);
-        sort($matchList);
-        // match extra params first - & comes before ( so we don't need to reverse here
-        //$matchList = array_reverse($matchList);
-        $matchMap = [];
-        foreach ($matchList as $from) {
-            $matchMap[$from] = $matches[$from];
-        }
-        return [$matchMap, $exact];
-    }
-
-    /**
      * Match rewrite rule for path and return endpoint with params
      * @param string $path
      * @return array<mixed>
      */
     public static function matchRewrite($path)
     {
+        $dispatcher = simpleDispatcher(function (RouteCollector $r) {
+            foreach (static::$rewrites as $route => $map) {
+                $r->addRoute('GET', $route, $map);
+            }
+        });
+
         // match pattern
         $endpoint = '';
-        $fixed = [];
-        $found = [];
-        foreach (static::listRewrites() as $route) {
-            if (strpos($route, "{") === false) {
-                continue;
-            }
-            // replace dots + ignore parts of the route
-            $match = str_replace(['.', '{ignore}'], ['\.', '[^/&"?]*'], $route);
-            $match = str_replace(["{", "}"], ["(?P<", ">\w+)"], $match);
-            $pattern = "~^$match$~";
-            if (preg_match($pattern, $path, $found)) {
-                [$endpoint, $fixed] = static::getRewrite($route);
-                break;
-            }
-        }
-        if (empty($endpoint)) {
-            throw new Exception("Invalid path " . htmlspecialchars($path));
-        }
         $params = [];
-        // set named params
-        foreach ($found as $param => $value) {
-            if (is_numeric($param)) {
-                continue;
-            }
-            $params[$param] = $value;
-        }
-        // for rewrite rules, put fixed params at the end
-        if (!empty($fixed)) {
-            $params = array_merge($params, $fixed);
-        }
-        return [$endpoint, $params];
-    }
+        $method = 'GET';
+        $routeInfo = $dispatcher->dispatch($method, $path);
 
-    /**
-     * Get endpoint and fixed params for rewrite rule
-     * @param string $route
-     * @return array<mixed>
-     */
-    public static function getRewrite($route)
-    {
-        $map = static::$rewrites[$route];
-        if (!is_array($map)) {
-            $map = [ $map ];
+        if ($routeInfo[0] !== Dispatcher::FOUND) {
+            return [$endpoint,  $params];
         }
+        $map = $routeInfo[1];
+        $params = $routeInfo[2];
         $endpoint = array_shift($map);
         $fixed = array_shift($map) ?? [];
-        return [$endpoint, $fixed];
+        unset($params['ignore']);
+
+        // for rewrite rules, put fixed params at the end
+        $params = array_merge($params, $fixed);
+        return [$endpoint,  $params];
     }
 
     /**
-     * List rewrite rules in reverse order for match
-     * @param bool $ordered
-     * @return array<string>
-     */
-    public static function listRewrites($ordered = true)
-    {
-        $rewriteList = array_keys(static::$rewrites);
-        if ($ordered) {
-            sort($rewriteList);
-            // match longer routes first
-            $rewriteList = array_reverse($rewriteList);
-        }
-        return $rewriteList;
-    }
-
-    /**
-     * Find rewrite rule for endpoint with params and return link
+     * Summary of getUrlRewrite
      * @param string $endpoint
      * @param array<mixed> $params
-     * @throws \Exception if the $endpoint is not found in $rewrites
-     * @return string
+     * @return string|null
      */
-    public static function linkRewrite($endpoint, $params = [])
+    public static function getUrlRewrite($endpoint, $params)
     {
-        if (empty(static::$endpoints)) {
-            static::buildEndpoints();
+        $endpoints = static::getEndpoints();
+        $routes = $endpoints[$endpoint] ?? [];
+        if (count($routes) < 1) {
+            return null;
         }
-        if (!array_key_exists($endpoint, static::$endpoints)) {
-            throw new Exception("Invalid endpoint " . htmlspecialchars($endpoint));
-        }
-        $url = $endpoint . '?' . http_build_query($params);
-
-        // Use cases:
-        // 1. fetch.php?data={data}&type={type}
-        // 2. fetch.php?data={data}&type={type}&view=1
-        // 3. fetch.php?data={data}&db={db}&type={type}
-        // 4. fetch.php?data={data}&db={db}&type={type}&view=1
-        // 5. all of the above with extra params
-        [$matches, $exact] = static::findMatches(static::$endpoints[$endpoint], preg_quote($endpoint . '?'));
-
-        // match exact query
-        if (array_key_exists($url, $exact)) {
-            return $exact[$url];
-        }
-
-        // match pattern
-        $found = preg_replace(array_keys($matches), array_values($matches), $url);
-        return $found;
+        return static::findMatchingRoute($routes, $params);
     }
 
     /**
-     * Summary of buildEndpoints
-     * @return void
+     * Get mapping of endpoints to rewrites with fixed params
+     * @return array<string, array<mixed>>
      */
-    public static function buildEndpoints()
+    public static function getEndpoints()
     {
+        if (!empty(static::$endpoints)) {
+            return static::$endpoints;
+        }
+        static::$endpoints = [];
         foreach (static::$rewrites as $route => $map) {
-            [$endpoint, $fixed] = static::getRewrite($route);
-            if (!array_key_exists($endpoint, static::$endpoints)) {
-                static::$endpoints[$endpoint] = [];
+            if (!is_array($map)) {
+                $map = [ $map ];
             }
+            $endpoint = array_shift($map);
+            $fixed = array_shift($map) ?? [];
+            static::$endpoints[$endpoint] ??= [];
             static::$endpoints[$endpoint][$route] = $fixed;
         }
+        return static::$endpoints;
     }
 }

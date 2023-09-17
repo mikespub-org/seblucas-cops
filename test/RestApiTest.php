@@ -260,7 +260,7 @@ class RestApiTest extends TestCase
         $params = [];
         parse_str(parse_url($link, PHP_URL_QUERY), $params);
         $endpoint = parse_url($link, PHP_URL_PATH);
-        $test = Route::linkRewrite($endpoint, $params);
+        $test = Route::getUrlRewrite($endpoint, $params);
         $this->assertEquals($expected, $test);
     }
 
