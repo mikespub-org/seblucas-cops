@@ -9,8 +9,12 @@
 
 namespace SebLucas\Cops\Input;
 
+use FastRoute\Dispatcher;
+use FastRoute\RouteCollector;
 use SebLucas\Cops\Pages\PageId;
 use Exception;
+
+use function FastRoute\simpleDispatcher;
 
 /**
  * Summary of Route
@@ -26,37 +30,49 @@ class Route
     protected static $routes = [
         // Format: route => page, or route => [page => page, fixed => 1, ...] with fixed params
         "/index" => PageId::INDEX,
-        "/authors" => PageId::ALL_AUTHORS,
-        "/authors/letter" => ["page" => PageId::ALL_AUTHORS, "letter" => 1],
         "/authors/letter/{id}" => PageId::AUTHORS_FIRST_LETTER,
+        "/authors/letter" => ["page" => PageId::ALL_AUTHORS, "letter" => 1],
+        "/authors/{id}/{title}" => PageId::AUTHOR_DETAIL,
         "/authors/{id}" => PageId::AUTHOR_DETAIL,
-        "/books" => PageId::ALL_BOOKS,
-        "/books/letter" => ["page" => PageId::ALL_BOOKS, "letter" => 1],
+        "/authors" => PageId::ALL_AUTHORS,
         "/books/letter/{id}" => PageId::ALL_BOOKS_LETTER,
-        "/books/year" => ["page" => PageId::ALL_BOOKS, "year" => 1],
+        "/books/letter" => ["page" => PageId::ALL_BOOKS, "letter" => 1],
         "/books/year/{id}" => PageId::ALL_BOOKS_YEAR,
+        "/books/year" => ["page" => PageId::ALL_BOOKS, "year" => 1],
+        "/books/{id}/{author}/{title}" => PageId::BOOK_DETAIL,
         "/books/{id}" => PageId::BOOK_DETAIL,
-        "/series" => PageId::ALL_SERIES,
+        "/books" => PageId::ALL_BOOKS,
+        "/series/{id}/{title}" => PageId::SERIE_DETAIL,
         "/series/{id}" => PageId::SERIE_DETAIL,
-        "/search" => PageId::OPENSEARCH,
-        "/search/{query}" => PageId::OPENSEARCH_QUERY,
+        "/series" => PageId::ALL_SERIES,
         "/search/{query}/{scope}" => PageId::OPENSEARCH_QUERY,
+        "/search/{query}" => PageId::OPENSEARCH_QUERY,
+        "/search" => PageId::OPENSEARCH,
         "/recent" => PageId::ALL_RECENT_BOOKS,
-        "/tags" => PageId::ALL_TAGS,
+        "/tags/{id}/{title}" => PageId::TAG_DETAIL,
         "/tags/{id}" => PageId::TAG_DETAIL,
-        "/custom/{custom}" => PageId::ALL_CUSTOMS,
+        "/tags" => PageId::ALL_TAGS,
         "/custom/{custom}/{id}" => PageId::CUSTOM_DETAIL,
+        "/custom/{custom}" => PageId::ALL_CUSTOMS,
         "/about" => PageId::ABOUT,
-        "/languages" => PageId::ALL_LANGUAGES,
+        "/languages/{id}/{title}" => PageId::LANGUAGE_DETAIL,
         "/languages/{id}" => PageId::LANGUAGE_DETAIL,
+        "/languages" => PageId::ALL_LANGUAGES,
         "/customize" => PageId::CUSTOMIZE,
-        "/publishers" => PageId::ALL_PUBLISHERS,
+        "/publishers/{id}/{title}" => PageId::PUBLISHER_DETAIL,
         "/publishers/{id}" => PageId::PUBLISHER_DETAIL,
-        "/ratings" => PageId::ALL_RATINGS,
+        "/publishers" => PageId::ALL_PUBLISHERS,
+        "/ratings/{id}/{title}" => PageId::RATING_DETAIL,
         "/ratings/{id}" => PageId::RATING_DETAIL,
-        "/identifiers" => PageId::ALL_IDENTIFIERS,
+        "/ratings" => PageId::ALL_RATINGS,
+        "/identifiers/{id}/{title}" => PageId::IDENTIFIER_DETAIL,
         "/identifiers/{id}" => PageId::IDENTIFIER_DETAIL,
+        "/identifiers" => PageId::ALL_IDENTIFIERS,
     ];
+    /** @var Dispatcher|null */
+    protected static $dispatcher = null;
+    /** @var array<string, mixed> */
+    protected static $pages = [];
     // with use_url_rewriting = 1 - basic rewrites only
     /** @var array<string, mixed> */
     protected static $rewrites = [
@@ -92,28 +108,25 @@ class Route
 
         // match pattern
         $fixed = [];
-        $found = [];
-        foreach (static::listRoutes() as $route) {
-            if (strpos($route, "{") === false) {
-                continue;
-            }
-            $match = str_replace(["{", "}"], ["(?P<", ">\w+)"], $route);
-            $pattern = "~^$match$~";
-            if (preg_match($pattern, $path, $found)) {
-                $fixed = static::get($route);
-                break;
-            }
-        }
-        if (empty($found)) {
-            throw new Exception("Invalid route " . htmlspecialchars($path));
-        }
         $params = [];
-        // set named params
-        foreach ($found as $param => $value) {
-            if (is_numeric($param)) {
-                continue;
-            }
-            $params[$param] = $value;
+        $method = 'GET';
+
+        $dispatcher = static::getSimpleDispatcher();
+        $routeInfo = $dispatcher->dispatch($method, $path);
+        switch ($routeInfo[0]) {
+            case Dispatcher::NOT_FOUND:
+                // ... 404 Not Found
+                //http_response_code(404);
+                throw new Exception("Invalid route " . htmlspecialchars($path));
+            case Dispatcher::METHOD_NOT_ALLOWED:
+                //$allowedMethods = $routeInfo[1];
+                // ... 405 Method Not Allowed
+                //header('Allow: ' . implode(', ', $allowedMethods));
+                //http_response_code(405);
+                throw new Exception("Invalid method " . htmlspecialchars($method) . " for route " . htmlspecialchars($path));
+            case Dispatcher::FOUND:
+                $fixed = $routeInfo[1];
+                $params = $routeInfo[2];
         }
         // for normal routes, put fixed params at the start
         $params = array_merge($fixed, $params);
@@ -162,19 +175,27 @@ class Route
     }
 
     /**
-     * List routes in reverse order for match
-     * @param bool $ordered
-     * @return array<string>
+     * Summary of getSimpleDispatcher
+     * @return Dispatcher
      */
-    public static function listRoutes($ordered = true)
+    public static function getSimpleDispatcher()
     {
-        $routeList = array_keys(static::$routes);
-        if ($ordered) {
-            sort($routeList);
-            // match longer routes first
-            $routeList = array_reverse($routeList);
+        static::$dispatcher ??= simpleDispatcher(function (RouteCollector $r) {
+            static::addRouteCollection($r);
+        });
+        return static::$dispatcher;
+    }
+
+    /**
+     * Summary of addRouteCollection
+     * @param RouteCollector $r
+     * @return void
+     */
+    public static function addRouteCollection($r)
+    {
+        foreach (static::getRoutes() as $route => $queryParams) {
+            $r->addRoute('GET', $route, $queryParams);
         }
-        return $routeList;
     }
 
     /**
@@ -221,11 +242,11 @@ class Route
         if (!empty($page)) {
             $queryParams = array_merge(['page' => $page], $queryParams);
         }
+        $prefix = '';
         if (count($queryParams) < 1) {
-            return '';
+            return $prefix;
         }
-        $queryString = http_build_query($queryParams, '', $separator);
-        return '?' . $queryString;
+        return static::rewrite($queryParams, $prefix, $separator);
     }
 
     /**
@@ -257,51 +278,110 @@ class Route
         if (count($queryParams) < 1) {
             return $prefix;
         }
-        $queryString = http_build_query($queryParams, '', $separator);
+        return static::rewrite($queryParams, $prefix, $separator);
+    }
+
+    /**
+     * Summary of rewrite
+     * @param array<mixed> $params
+     * @param string $prefix
+     * @param string|null $separator
+     * @return string
+     */
+    public static function rewrite($params, $prefix = '', $separator = null)
+    {
+        if (Config::get('use_route_urls')) {
+            $route = static::getPageRoute($params, $prefix, $separator);
+            if (!is_null($route)) {
+                return $route;
+            }
+        }
+        $queryString = http_build_query($params, '', $separator);
         return $prefix . '?' . $queryString;
     }
 
     /**
-     * Find route for page with params and return link
-     * @param string|int $page
+     * Summary of getPageRoute
      * @param array<mixed> $params
-     * @return string
+     * @param string $prefix
+     * @param string|null $separator
+     * @return string|null
      */
-    public static function link($page, $params = [])
+    public static function getPageRoute($params, $prefix = '', $separator = null)
     {
-        if (empty($page)) {
-            return "/index";
+        $page = $params['page'] ?? '';
+        $pages = static::getPages();
+        $routes = $pages[$page] ?? [];
+        if (count($routes) < 1) {
+            return null;
         }
-        $queryParams = array_merge(["page" => $page], $params);
-        $queryString = http_build_query($queryParams);
-
-        if (empty(static::$match)) {
-            static::buildMatch();
+        unset($params['page']);
+        // find matching route based on fixed and/or path params - e.g. authors letter
+        foreach ($routes as $route => $fixed) {
+            if (count($fixed) > count($params)) {
+                continue;
+            }
+            $subst = $params;
+            // check and remove fixed params
+            foreach ($fixed as $key => $val) {
+                if (!isset($subst[$key]) || $subst[$key] != $val) {
+                    continue 2;
+                }
+                unset($subst[$key]);
+            }
+            $found = [];
+            // check and replace path params
+            if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
+                if (count($found[1]) > count($subst)) {
+                    continue;
+                }
+                foreach ($found[1] as $param) {
+                    if ($param == 'ignore') {
+                        $route = str_replace('{' . $param . '}', "$param", $route);
+                        continue;
+                    }
+                    if (!isset($subst[$param])) {
+                        continue 2;
+                    }
+                    $value = $subst[$param];
+                    if (in_array($param, ['title', 'author'])) {
+                        $value = str_replace(' ', '_', $value);
+                    }
+                    $route = str_replace('{' . $param . '}', "$value", $route);
+                    unset($subst[$param]);
+                }
+            }
+            echo "$route\n";
+            if (count($subst) > 0) {
+                return $prefix . $route . '?' . http_build_query($subst, '', $separator);
+            }
+            return $prefix . $route;
         }
-
-        // match exact query
-        if (array_key_exists($queryString, static::$exact)) {
-            return static::$exact[$queryString];
-        }
-
-        // match pattern
-        $found = preg_replace(array_keys(static::$match), array_values(static::$match), '?' . $queryString);
-        return $found;
+        return null;
     }
 
     /**
-     * Summary of buildMatch
-     * @return void
+     * Get mapping of pages to routes with query params
+     * @return array<string, array<mixed>>
      */
-    protected static function buildMatch()
+    public static function getPages()
     {
-        // Use cases:
-        // 1. page=1
-        // 2. page=1&letter=1
-        // 3. page=2&id={id}
-        // 4. page=15&custom={custom}&id={id}
-        // 5. all of the above with extra params
-        [static::$match, static::$exact] = static::findMatches(static::getRoutes(), '\?');
+        if (!empty(static::$pages)) {
+            return static::$pages;
+        }
+        static::$pages = [];
+        foreach (static::$routes as $route => $params) {
+            if (!is_array($params)) {
+                $page = $params;
+                $params = [];
+            } else {
+                $page = $params["page"];
+                unset($params["page"]);
+            }
+            static::$pages[$page] ??= [];
+            static::$pages[$page][$route] = $params;
+        }
+        return static::$pages;
     }
 
     /**
@@ -481,19 +561,5 @@ class Route
             }
             static::$endpoints[$endpoint][$route] = $fixed;
         }
-    }
-
-    /**
-     * Summary of replaceLinks
-     * @param string $output
-     * @return ?string
-     */
-    public static function replaceLinks($output)
-    {
-        if (empty(static::$match)) {
-            static::buildMatch();
-        }
-        // Note: this does not replace rewrite rules, as they are already generated in code when use_url_rewriting == 1
-        return preg_replace(array_keys(static::$match), array_values(static::$match), $output);
     }
 }

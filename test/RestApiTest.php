@@ -29,11 +29,14 @@ class RestApiTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
         self::$script = $_SERVER["SCRIPT_NAME"];
+        // try out route urls
+        Config::set('use_route_urls', true);
     }
 
     public static function tearDownAfterClass(): void
     {
         $_SERVER["SCRIPT_NAME"] = self::$script;
+        Config::set('use_route_urls', null);
     }
 
     public function testGetPathInfo(): void
@@ -191,7 +194,7 @@ class RestApiTest extends TestCase
         parse_str(parse_url($link, PHP_URL_QUERY), $params);
         $page = $params["page"];
         unset($params["page"]);
-        $test = RestApi::$endpoint . Route::link($page, $params);
+        $test = RestApi::$endpoint . Route::uri($page, $params);
         $this->assertEquals($expected, $test);
     }
 
@@ -214,25 +217,6 @@ class RestApiTest extends TestCase
             $test .= '&' . $query;
         }
         $this->assertEquals($expected, $test);
-    }
-
-    public function testReplaceLinks(): void
-    {
-        $script = $_SERVER["SCRIPT_NAME"];
-        $_SERVER["SCRIPT_NAME"] =  "/" . RestApi::$endpoint;
-        $request = new Request();
-
-        $links = $this->getLinks();
-        // Note: this does not replace rewrite rules, as they are already generated in code when use_url_rewriting == 1
-
-        $output = json_encode(array_keys($links));
-        $endpoint = RestApi::getScriptName($request);
-
-        $expected = json_encode(array_values($links), JSON_UNESCAPED_SLASHES);
-        $test = RestApi::replaceLinks($output, $endpoint);
-        $this->assertEquals($expected, $test);
-
-        $_SERVER["SCRIPT_NAME"] = $script;
     }
 
     /**

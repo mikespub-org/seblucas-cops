@@ -114,19 +114,6 @@ class RestApi
     }
 
     /**
-     * Summary of replaceLinks
-     * @param string $output
-     * @param string $endpoint
-     * @return string
-     */
-    public static function replaceLinks($output, $endpoint)
-    {
-        //$link = $endpoint;
-        $output = Route::replaceLinks($output);
-        return $output;
-    }
-
-    /**
      * Summary of getOutput
      * @param mixed $result
      * @return string
@@ -148,9 +135,9 @@ class RestApi
             }
         }
         $output = json_encode($result, JSON_UNESCAPED_SLASHES);
-        $endpoint = static::getScriptName($this->request);
+        //$endpoint = static::getScriptName($this->request);
 
-        return static::replaceLinks($output, $endpoint);
+        return $output;
     }
 
     /**

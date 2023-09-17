@@ -410,7 +410,7 @@ class JSONRenderer
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
-            $out ["sorturl"] = $endpoint . Route::query($currentPage->getCleanQuery(), ['sort' => null]) . "&sort={0}";
+            $out ["sorturl"] = $endpoint . str_replace('%7B0%7D', '{0}', Route::query($currentPage->getCleanQuery(), ['sort' => '{0}']));
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
                 $out ["filterurl"] = $endpoint . Route::query($currentPage->getCleanQuery(), ['filter' => 1]);
