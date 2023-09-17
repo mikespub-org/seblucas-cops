@@ -89,16 +89,16 @@
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "2.1.0",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "0f936215e1dde4321e991016943dca864ed6a671"
+                "reference": "039477e14059a387c9ba1fdb6f9021a2d67bfb3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/0f936215e1dde4321e991016943dca864ed6a671",
-                "reference": "0f936215e1dde4321e991016943dca864ed6a671",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/039477e14059a387c9ba1fdb6f9021a2d67bfb3b",
+                "reference": "039477e14059a387c9ba1fdb6f9021a2d67bfb3b",
                 "shasum": ""
             },
             "require": {
@@ -153,9 +153,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.1.0"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.1.2"
             },
-            "time": "2023-09-16T16:52:36+00:00"
+            "time": "2023-09-16T20:40:35+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",

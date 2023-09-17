@@ -84,18 +84,36 @@ class BookList
     protected function getOrderBy()
     {
         switch ($this->orderBy) {
+            case 'title asc':
             case 'title':
-                return 'books.sort';
+                return 'books.sort asc';
+            case 'title desc':
+                return 'books.sort desc';
+            case 'author asc':
             case 'author':
-                return 'books.author_sort';
+                return 'books.author_sort asc';
+            case 'author desc':
+                return 'books.author_sort desc';
+            case 'pubdate desc':
             case 'pubdate':
                 return 'books.pubdate desc';
+            case 'pubdate asc':
+                return 'books.pubdate asc';
+            case 'rating desc':
             case 'rating':
                 return 'ratings.rating desc';
+            case 'rating asc':
+                return 'ratings.rating asc';
+            case 'timestamp desc':
             case 'timestamp':
                 return 'books.timestamp desc';
+            case 'timestamp asc':
+                return 'books.timestamp asc';
+            case 'count desc':
             case 'count':
                 return 'count desc';
+            case 'count asc':
+                return 'count asc';
             default:
                 return $this->orderBy;
         }
