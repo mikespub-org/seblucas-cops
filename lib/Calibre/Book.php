@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFeed;
@@ -173,7 +174,7 @@ class Book
      */
     public function getUri()
     {
-        return '?page='.static::PAGE_DETAIL.'&id=' . $this->id;
+        return Route::uri(static::PAGE_DETAIL, ['id' => $this->id]);
     }
 
     /**
@@ -182,9 +183,7 @@ class Book
      */
     public function getDetailUrl()
     {
-        $urlParam = $this->getUri();
-        $urlParam = Format::addDatabaseParam($urlParam, $this->databaseId);
-        return static::$endpoint . $urlParam;
+        return Route::url(static::$endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'db' => $this->databaseId]);
     }
 
     /**

@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
@@ -69,7 +70,7 @@ abstract class Base
      */
     public function getUri()
     {
-        return "?page=".static::PAGE_DETAIL."&id=$this->id";
+        return Route::uri(static::PAGE_DETAIL, ['id' => $this->id]);
     }
 
     /**
@@ -78,7 +79,7 @@ abstract class Base
      */
     public function getParentUri()
     {
-        return "?page=".static::PAGE_ALL;
+        return Route::uri(static::PAGE_ALL);
     }
 
     /**

@@ -157,7 +157,7 @@ class JsonTest extends TestCase
             [
                 'class' => 'tt-header',
                 'title' => 'Search result for *fic* in tags',
-                'navlink' => 'phpunit?page=9&query=fic&db=&scope=tag',
+                'navlink' => 'phpunit?page=9&query=fic&scope=tag',
             ],
             [
                 'class' => 'Tag',

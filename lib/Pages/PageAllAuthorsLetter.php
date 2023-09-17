@@ -10,6 +10,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
+use SebLucas\Cops\Input\Route;
 
 class PageAllAuthorsLetter extends Page
 {
@@ -31,7 +32,7 @@ class PageAllAuthorsLetter extends Page
         }
         $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("authorword", $count), $count), $this->idGet);
         $this->parentTitle = "";  // localize("authors.title");
-        $this->parentUri = "?page=".Author::PAGE_ALL;
+        $this->parentUri = Route::uri(Author::PAGE_ALL);
     }
 
     /**

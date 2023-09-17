@@ -10,6 +10,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Input\Route;
 
 class PageAllBooksYear extends Page
 {
@@ -29,7 +30,7 @@ class PageAllBooksYear extends Page
         }
         $this->title = str_format(localize("splitByYear.year"), str_format(localize("bookword", $count), $count), $this->idGet);
         $this->parentTitle = "";  // localize("allbooks.title");
-        $this->parentUri = "?page=".Book::PAGE_ALL;
+        $this->parentUri = Route::uri(Book::PAGE_ALL);
     }
 
     /**

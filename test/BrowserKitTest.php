@@ -198,7 +198,7 @@ class BrowserKitTest extends TestCase
                     'class' => 'tt-header',
                     'title' => 'Search result for *ali* in books',
                     'content' => '2 books',
-                    'navlink' => 'index.php?page=9&query=ali&db=&scope=book',
+                    'navlink' => 'index.php?page=9&query=ali&scope=book',
                     'number' => 2,
                 ],
             ];
@@ -224,7 +224,7 @@ class BrowserKitTest extends TestCase
             if ($template == 'default') {
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
-            $this->assertEquals('index.php?page=9&query=ali&db=&scope=book', $articles->filterXPath('//a')->attr('href'));
+            $this->assertEquals('index.php?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
         }
     }
 

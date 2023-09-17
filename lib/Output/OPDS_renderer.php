@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkEntry;
@@ -92,11 +93,11 @@ class OPDSRenderer
         $xml->endElement();
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
-        $urlparam = "?query={searchTerms}";
-        $urlparam = Format::addDatabaseParam($urlparam, $database);
-        $urlparam = str_replace("%7B", "{", $urlparam);
-        $urlparam = str_replace("%7D", "}", $urlparam);
-        $xml->writeAttribute("template", Config::get('full_url') . static::$endpoint . $urlparam);
+        $params = ["query" => "{searchTerms}", "db" => $database];
+        $url = Route::url(static::$endpoint, null, $params);
+        $url = str_replace("%7B", "{", $url);
+        $url = str_replace("%7D", "}", $url);
+        $xml->writeAttribute("template", Config::get('full_url') . $url);
         $xml->endElement();
         $xml->startElement("Query");
         $xml->writeAttribute("role", "example");
@@ -163,29 +164,29 @@ class OPDSRenderer
         $link = new LinkNavigation("", "start", "Home");
         $this->renderLink($link);
         if ($page->containsBook()) {
-            $link = new LinkFeed("?" . $request->query(), "self");
+            $link = new LinkFeed(Route::query($request->query()), "self");
         } else {
-            $link = new LinkNavigation("?" . $request->query(), "self");
+            $link = new LinkNavigation(Route::query($request->query()), "self");
         }
         $this->renderLink($link);
-        $urlparam = "?";
-        $urlparam = Format::addDatabaseParam($urlparam, $database);
+        $params = ["db" => $database];
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
-            $urlparam = Format::addURLParam($urlparam, "page", PageId::OPENSEARCH);
-            $link = new LinkEntry(static::$endpoint . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
+            $url = Route::url(static::$endpoint, PageId::OPENSEARCH, $params);
+            $link = new LinkEntry($url, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed
-            $urlparam = Format::addURLParam($urlparam, "query", "{searchTerms}");
-            $urlparam = str_replace("%7B", "{", $urlparam);
-            $urlparam = str_replace("%7D", "}", $urlparam);
-            $link = new LinkEntry(Config::get('full_url') . static::$endpoint . $urlparam, "application/atom+xml", "search", "Search here");
+            $params["query"] = "{searchTerms}";
+            $url = Route::url(static::$endpoint, null, $params);
+            $url = str_replace("%7B", "{", $url);
+            $url = str_replace("%7D", "}", $url);
+            $link = new LinkEntry(Config::get('full_url') . $url, "application/atom+xml", "search", "Search here");
         }
         $this->renderLink($link);
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
-                $link = new LinkFacet("?" . Format::addURLParam($request->query(), "tag", $filter), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
+                $link = new LinkFacet(Route::query($request->query(), ["tag" => $filter]), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
                 $this->renderLink($link);
             }
         }
@@ -349,7 +350,7 @@ class OPDSRenderer
             }
             // only show sorting when paginating
             if ($page->containsBook() && !empty(Config::get('opds_sort_links'))) {
-                $sortUrl = Format::addURLParam("?" . $page->getCleanQuery(), 'sort', null) . "&sort={0}";
+                $sortUrl = Route::query($page->getCleanQuery(), ['sort' => null]) . "&sort={0}";
                 $sortLabel = localize("sort.alternate");
                 $sortParam = $request->get('sort');
                 $sortOptions = $page->getSortOptions();
@@ -367,7 +368,7 @@ class OPDSRenderer
         if ($page->containsBook()) {
             $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
             if (!empty($request->getId()) && !empty(Config::get('opds_filter_links')) && !in_array($page, $skipFilterUrl)) {
-                //$url = Format::addURLParam("?" . $page->getCleanQuery(), 'filter', 1);
+                //$url = Route::query($page->getCleanQuery(), ['filter' => 1]);
                 //$filterLabel = localize("cog.alternate");
                 //$title = localize("links.title");
                 //$link = new LinkFacet($url, $title, $filterLabel, false, null, $database);

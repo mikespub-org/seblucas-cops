@@ -191,8 +191,79 @@ class Route
     }
 
     /**
+     * Get url with endpoint for page with params
+     * @param string $endpoint
+     * @param string|int|null $page
+     * @param array<mixed> $params
+     * @param string|null $separator
+     * @return string
+     */
+    public static function url($endpoint, $page = null, $params = [], $separator = null)
+    {
+        return $endpoint . static::uri($page, $params, $separator);
+    }
+
+    /**
+     * Get uri for page with params
+     * @param string|int|null $page
+     * @param array<mixed> $params
+     * @param string|null $separator
+     * @return string
+     */
+    public static function uri($page, $params = [], $separator = null)
+    {
+        $queryParams = array_filter($params, function ($val) {
+            if (empty($val) && strval($val) !== '0') {
+                return false;
+            }
+            return true;
+        });
+        if (!empty($page)) {
+            $queryParams = array_merge(['page' => $page], $queryParams);
+        }
+        if (count($queryParams) < 1) {
+            return '';
+        }
+        $queryString = http_build_query($queryParams, '', $separator);
+        return '?' . $queryString;
+    }
+
+    /**
+     * Get uri for query with params
+     * @param string|null $query
+     * @param array<mixed> $params
+     * @param string|null $separator
+     * @return string
+     */
+    public static function query($query, $params = [], $separator = null)
+    {
+        $prefix = '';
+        $pos = strpos($query, '?');
+        if ($pos !== false) {
+            $prefix = substr($query, 0, $pos);
+            $query = substr($query, $pos + 1);
+        }
+        $queryParams = [];
+        if (!empty($query)) {
+            parse_str($query, $queryParams);
+            $params = array_merge($queryParams, $params);
+        }
+        $queryParams = array_filter($params, function ($val) {
+            if (empty($val) && strval($val) !== '0') {
+                return false;
+            }
+            return true;
+        });
+        if (count($queryParams) < 1) {
+            return $prefix;
+        }
+        $queryString = http_build_query($queryParams, '', $separator);
+        return $prefix . '?' . $queryString;
+    }
+
+    /**
      * Find route for page with params and return link
-     * @param string $page
+     * @param string|int $page
      * @param array<mixed> $params
      * @return string
      */

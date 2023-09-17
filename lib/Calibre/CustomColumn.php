@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
@@ -59,7 +60,7 @@ class CustomColumn extends Category
      */
     public function getUri()
     {
-        return "?page=" . static::PAGE_DETAIL . "&custom={$this->getCustomId()}&id={$this->id}";
+        return Route::uri(static::PAGE_DETAIL, ['custom' => $this->getCustomId(), 'id' => $this->id]);
     }
 
     /**

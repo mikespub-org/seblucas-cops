@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Output\Format;
 
@@ -288,12 +289,11 @@ class Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
                 return new LinkEntry(str_replace('%2F', '/', rawurlencode($this->book->path."/".$file)), $mime, LinkEntry::OPDS_IMAGE_TYPE);
             }
-            $urlParam = Format::addURLParam("", "id", $this->book->id);
-            $urlParam = Format::addDatabaseParam($urlParam, $this->databaseId);
+            $params = ['id' => $this->book->id, 'db' => $this->databaseId];
             if ($ext != 'jpg') {
-                $urlParam = Format::addURLParam($urlParam, "type", $ext);
+                $params['type'] = $ext;
             }
-            return new LinkEntry(static::$endpoint . '?' . $urlParam, $mime, LinkEntry::OPDS_IMAGE_TYPE);
+            return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, LinkEntry::OPDS_IMAGE_TYPE);
         }
 
         return null;
@@ -338,15 +338,14 @@ class Cover
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             //$file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
-            $urlParam = Format::addURLParam("", "id", $this->book->id);
-            $urlParam = Format::addDatabaseParam($urlParam, $this->databaseId);
+            $params = ['id' => $this->book->id, 'db' => $this->databaseId];
             if ($ext != 'jpg') {
-                $urlParam = Format::addURLParam($urlParam, "type", $ext);
+                $params['type'] = $ext;
             }
             if (Config::get('thumbnail_handling') != "1") {
-                $urlParam = Format::addURLParam($urlParam, "height", $height);
+                $params['height'] = $height;
             }
-            return new LinkEntry(static::$endpoint . '?' . $urlParam, $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
 
         if ($useDefault) {

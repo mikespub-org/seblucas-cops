@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Model;
 
-use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Input\Route;
 
 /**
  * From https://specs.opds.io/opds-1.2#23-acquisition-feeds
@@ -38,10 +38,7 @@ class LinkFeed extends Link
     public function __construct($phref, $prel = null, $ptitle = null, $database = null)
     {
         parent::__construct($phref, static::LINK_TYPE, $prel, $ptitle);
-        $this->href = Format::addDatabaseParam($this->href, $database);
-        //if (!preg_match("#^\?(.*)#", $this->href) && !empty($this->href)) {
-        //    $this->href = "?" . $this->href;
-        //}
+        $this->href = Route::query($this->href, ['db' => $database]);
     }
 
     /**

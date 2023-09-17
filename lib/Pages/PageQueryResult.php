@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -151,7 +152,7 @@ class PageQueryResult extends Page
                         "db:query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
-                        [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")],
+                        [ new LinkNavigation(Route::uri($pagequery, ['query' => $query, 'db' => $d, 'scope' => $key]))],
                         $database,
                         Database::noDatabaseSelected($database) ? "" : "tt-header",
                         $total
@@ -243,7 +244,7 @@ class PageQueryResult extends Page
                 "db:query:{$d}",
                 str_format(localize("bookword", $totalNumber), $totalNumber),
                 "text",
-                [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}")],
+                [ new LinkNavigation(Route::uri($pagequery, ['query' => $query, 'db' => $d]))],
                 null,
                 "",
                 $totalNumber

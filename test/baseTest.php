@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Language\Translation;
@@ -33,6 +34,34 @@ class BaseTest extends TestCase
         $this->assertEquals("?db=0", Format::addURLParam("?", "db", "0"));
         $this->assertEquals("?key=value&db=0", Format::addURLParam("?key=value", "db", "0"));
         $this->assertEquals("?key=value&otherKey=&db=0", Format::addURLParam("?key=value&otherKey", "db", "0"));
+    }
+
+    public function testRouteQuery(): void
+    {
+        $this->assertEquals("?db=0", Route::query("", ["db" => "0"]));
+        $this->assertEquals("?key=value&db=0", Route::query("key=value", ["db" => "0"]));
+        $this->assertEquals("?key=value&db=0", Route::query("key=value&otherKey", ["db" => "0"]));
+        $this->assertEquals("?key=value&otherKey=other&db=0", Route::query("key=value&otherKey=other", ["db" => "0"]));
+        $this->assertEquals("?db=0", Route::query("?", ["db" => "0"]));
+        $this->assertEquals("?key=value&db=0", Route::query("?key=value", ["db" => "0"]));
+        $this->assertEquals("?key=value&db=0", Route::query("?key=value&otherKey", ["db" => "0"]));
+        $this->assertEquals("?key=value&otherKey=other&db=0", Route::query("?key=value&otherKey=other", ["db" => "0"]));
+    }
+
+    public function testRouteUri(): void
+    {
+        $this->assertEquals("", Route::uri(null, ['db' => null]));
+        $this->assertEquals("?db=0", Route::uri(null, ['db' => 0]));
+        $this->assertEquals("?key=value", Route::uri(null, ['key' => 'value', 'db' => null]));
+        $this->assertEquals("?key=value&db=0", Route::uri(null, ['key' => 'value', 'db' => 0]));
+        $this->assertEquals("?key=value&db=0", Route::uri(null, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
+        $this->assertEquals("?key=value&otherKey=other&db=0", Route::uri(null, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
+        $this->assertEquals("?page=1", Route::uri(1, ['db' => null]));
+        $this->assertEquals("?page=1&db=0", Route::uri(1, ['db' => 0]));
+        $this->assertEquals("?page=1&key=value", Route::uri(1, ['key' => 'value', 'db' => null]));
+        $this->assertEquals("?page=1&key=value&db=0", Route::uri(1, ['key' => 'value', 'db' => 0]));
+        $this->assertEquals("?page=1&key=value&db=0", Route::uri(1, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
+        $this->assertEquals("?page=1&key=value&otherKey=other&db=0", Route::uri(1, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
     }
 
     /**

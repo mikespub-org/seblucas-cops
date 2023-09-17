@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Output\Format;
 
@@ -281,14 +282,13 @@ class Data
         // moved image-specific code from Data to Cover
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
             ($type == "epub" && Config::get('update_epub-metadata'))) {
-            $urlParam = Format::addURLParam("", "id", $book->id);
-            $urlParam = Format::addDatabaseParam($urlParam, $book->getDatabaseId());
-            $urlParam = Format::addURLParam($urlParam, "type", $type);
-            $urlParam = Format::addURLParam($urlParam, "data", $idData);
+            $params = ['id' => $book->id, 'db' => $book->getDatabaseId()];
+            $params['type'] = $type;
+            $params['data'] = $idData;
             if ($view) {
-                $urlParam = Format::addURLParam($urlParam, "view", 1);
+                $params['view'] = 1;
             }
-            return new LinkEntry(static::$endpoint . '?' . $urlParam, $mime, $rel, $title);
+            return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, $rel, $title);
         }
 
         return new LinkEntry(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);

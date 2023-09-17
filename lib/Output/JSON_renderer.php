@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -307,7 +308,7 @@ class JSONRenderer
      */
     public static function getCurrentUrl($queryString)
     {
-        return Config::ENDPOINT["json"] . '?' . Format::addURLParam($queryString, 'complete', 1);
+        return Config::ENDPOINT["json"] . Route::query($queryString, ['complete' => 1]);
     }
 
     /**
@@ -408,17 +409,17 @@ class JSONRenderer
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
-            $out ["sorturl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'sort', null) . "&sort={0}";
+            $out ["sorturl"] = $endpoint . Route::query($currentPage->getCleanQuery(), ['sort' => null]) . "&sort={0}";
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-                $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', 1);
+                $out ["filterurl"] = $endpoint . Route::query($currentPage->getCleanQuery(), ['filter' => 1]);
             }
         } elseif (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-            $out ["filterurl"] = $endpoint . Format::addURLParam("?" . $currentPage->getCleanQuery(), 'filter', null);
+            $out ["filterurl"] = $endpoint . Route::query($currentPage->getCleanQuery(), ['filter' => null]);
         }
 
-        $out["abouturl"] = $endpoint . Format::addURLParam("?page=" . PageId::ABOUT, 'db', $database);
-        $out["customizeurl"] = $endpoint . Format::addURLParam("?page=" . PageId::CUSTOMIZE, 'db', $database);
+        $out["abouturl"] = Route::url($endpoint, PageId::ABOUT, ['db' => $database]);
+        $out["customizeurl"] = Route::url($endpoint, PageId::CUSTOMIZE, ['db' => $database]);
         $out["filters"] = false;
         if ($request->hasFilter()) {
             $out["filters"] = [];
@@ -435,23 +436,23 @@ class JSONRenderer
         // multiple database setup
         if ($page != PageId::INDEX && !is_null($database)) {
             if ($homepage != PageId::INDEX) {
-                $out ["homeurl"] = $endpoint .  "?" . Format::addURLParam("page=" . PageId::INDEX, 'db', $database);
+                $out ["homeurl"] = Route::url($endpoint, PageId::INDEX, ['db' => $database]);
             } else {
-                $out ["homeurl"] = $endpoint .  "?" . Format::addURLParam("", 'db', $database);
+                $out ["homeurl"] = Route::url($endpoint, null, ['db' => $database]);
             }
         } elseif ($homepage != PageId::INDEX) {
-            $out ["homeurl"] = $endpoint . "?page=" . PageId::INDEX;
+            $out ["homeurl"] = Route::url($endpoint, PageId::INDEX);
         } else {
-            $out ["homeurl"] = $endpoint;
+            $out ["homeurl"] = Route::url($endpoint);
         }
 
         $out ["parenturl"] = "";
         if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
             // if filtered, use the unfiltered uri as parent first
-            $out ["parenturl"] = $endpoint . Format::addURLParam($currentPage->currentUri, 'db', $database);
+            $out ["parenturl"] = $endpoint . Route::query($currentPage->currentUri, ['db' => $database]);
         } elseif (!empty($currentPage->parentUri)) {
             // otherwise use the parent uri
-            $out ["parenturl"] = $endpoint . Format::addURLParam($currentPage->parentUri, 'db', $database);
+            $out ["parenturl"] = $endpoint . Route::query($currentPage->parentUri, ['db' => $database]);
         } elseif ($page != PageId::INDEX) {
             $out ["parenturl"] = $out ["homeurl"];
         }
@@ -476,21 +477,21 @@ class JSONRenderer
                 $out ["download"] = [];
                 foreach (Config::get('download_page') as $format) {
                     $query = preg_replace("/\&_=\d+/", "", $request->query());
-                    $url = Config::ENDPOINT['download'] . Format::addURLParam("?" . $query, 'type', strtolower($format));
+                    $url = Config::ENDPOINT['download'] . Route::query($query, ['type' => strtolower($format)]);
                     array_push($out ["download"], ['url' => $url, 'format' => $format]);
                 }
             } elseif (!empty($qid)) {
                 if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
                     $out ["download"] = [];
                     foreach (Config::get('download_series') as $format) {
-                        $url = Config::ENDPOINT['download'] . '?series=' .  $qid . '&type=' . strtolower($format);
+                        $url = Route::url(Config::ENDPOINT['download'], null, ['series' => $qid, 'type' => strtolower($format)]);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }
                 if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
                     $out ["download"] = [];
                     foreach (Config::get('download_author') as $format) {
-                        $url = Config::ENDPOINT['download'] . '?author=' .  $qid . '&type=' . strtolower($format);
+                        $url = Route::url(Config::ENDPOINT['download'], null, ['author' => $qid, 'type' => strtolower($format)]);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }
