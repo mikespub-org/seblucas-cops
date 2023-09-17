@@ -179,11 +179,13 @@ class Book
 
     /**
      * Summary of getDetailUrl
+     * @param string|null $endpoint
      * @return string
      */
-    public function getDetailUrl()
+    public function getDetailUrl($endpoint = null)
     {
-        return Route::url(static::$endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'db' => $this->databaseId]);
+        $endpoint ??= static::$endpoint;
+        return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'db' => $this->databaseId]);
     }
 
     /**

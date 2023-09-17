@@ -101,6 +101,7 @@ class Format
      * @param ?array<mixed> $params
      * @param ?int $database
      * @return string
+     * @deprecated 2.1.2 use Route::url instead
      */
     public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
     {

@@ -84,6 +84,7 @@ class JSONRenderer
         $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);
 
         return ["id" => $book->id,
+                      "detailurl" => $book->getDetailUrl($endpoint),
                       "hasCover" => $book->hasCover,
                       "preferedData" => $preferedData,
                       "preferedCount" => count($preferedData),
@@ -136,7 +137,7 @@ class JSONRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = Config::ENDPOINT["read"] . "?data={$data->id}&db={$database}";
+                $tab ["readerUrl"] = Route::url(Config::ENDPOINT["read"], null, ["data" => $data->id, "db" => $database]);
             }
             array_push($out ["datas"], $tab);
         }

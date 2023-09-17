@@ -23,6 +23,7 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -183,7 +184,7 @@ class Page
                 "cops:{$i}:catalog",
                 str_format(localize("bookword", $nBooks), $nBooks),
                 "text",
-                [ new LinkNavigation("?db={$i}")],
+                [ new LinkNavigation(Route::uri(null, ["db" => $i])) ],
                 null,
                 "",
                 $nBooks
@@ -285,9 +286,8 @@ class Page
      */
     public function getFirstLink()
     {
-        $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n > 1) {
-            return new LinkNavigation($currentUrl, "first", localize("paging.first.alternate"));
+            return new LinkNavigation(Route::query($this->getCleanQuery()), "first", localize("paging.first.alternate"));
         }
         return null;
     }
@@ -298,9 +298,8 @@ class Page
      */
     public function getLastLink()
     {
-        $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n < $this->getMaxPage()) {
-            return new LinkNavigation($currentUrl . "&n=" . strval($this->getMaxPage()), "last", localize("paging.last.alternate"));
+            return new LinkNavigation(Route::query($this->getCleanQuery(), ["n" => strval($this->getMaxPage())]), "last", localize("paging.last.alternate"));
         }
         return null;
     }
@@ -311,9 +310,8 @@ class Page
      */
     public function getNextLink()
     {
-        $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n < $this->getMaxPage()) {
-            return new LinkNavigation($currentUrl . "&n=" . strval($this->n + 1), "next", localize("paging.next.alternate"));
+            return new LinkNavigation(Route::query($this->getCleanQuery(), ["n" => strval($this->n + 1)]), "next", localize("paging.next.alternate"));
         }
         return null;
     }
@@ -324,9 +322,8 @@ class Page
      */
     public function getPrevLink()
     {
-        $currentUrl = "?" . $this->getCleanQuery();
         if ($this->n > 1) {
-            return new LinkNavigation($currentUrl . "&n=" . strval($this->n - 1), "previous", localize("paging.previous.alternate"));
+            return new LinkNavigation(Route::query($this->getCleanQuery(), ["n" => strval($this->n - 1)]), "previous", localize("paging.previous.alternate"));
         }
         return null;
     }
