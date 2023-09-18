@@ -51,43 +51,73 @@
         {{? it.containsBook != 0 }}
         <li class="nav-item p-1 border-start border-secondary-subtle">Sort by:</li>
         {{? it.sortoptions.title }}
-        <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "title" }} active{{?}}" href="{{=str_format(it.sorturl, "title")}}"><i class="bi-sort-alpha-down"></i>Title</a>
+          <li class="nav-item sm">
+          {{? it.sortedDir == "asc" && it.sortedBy == "title" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "title+desc")}}"><i class="bi-sort-alpha-down"></i>Title</a>
+          {{?? it.sortedDir == "desc" && it.sortedBy == "title" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "title+asc")}}"><i class="bi-sort-alpha-down-alt"></i>Title</a>
+          {{??}}
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "title+asc")}}"><i class="bi-sort-alpha-down"></i>Title</a>
+          {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.author }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "author" }} active{{?}}" href="{{=str_format(it.sorturl, "author")}}"><i class="bi-sort-alpha-down"></i>Author</a>
+          {{? it.sortedDir == "asc" && it.sortedBy == "author" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "author+desc")}}"><i class="bi-sort-alpha-down"></i>Author</a>
+          {{?? it.sortedDir == "desc" && it.sortedBy == "author" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "author+asc")}}"><i class="bi-sort-alpha-down-alt"></i>Author</a>
+          {{??}}
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "author+asc")}}"><i class="bi-sort-alpha-down"></i>Author</a>
+          {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.pubdate }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "pubdate" }} active{{?}}" href="{{=str_format(it.sorturl, "pubdate")}}"><i class="bi-sort-numeric-down"></i>Published</a>
+          {{? it.sortedDir == "asc" && it.sortedBy == "pubdate" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "pubdate+desc")}}"><i class="bi-sort-numeric-down"></i>Published</a>
+          {{?? it.sortedDir == "desc" && it.sortedBy == "pubdate" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "pubdate+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
+          {{??}}
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "pubdate+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
+          {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.rating }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "rating" }} active{{?}}" href="{{=str_format(it.sorturl, "rating")}}"><i class="bi-sort-numeric-up"></i>Rating</a>
+          {{? it.sortedDir == "desc" && it.sortedBy == "rating" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "rating+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Rating</a>
+          {{?? it.sortedDir == "asc" && it.sortedBy == "rating" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "rating+desc")}}"><i class="bi-sort-numeric-down"></i>Rating</a>
+          {{??}}
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "rating+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Rating</a>
+          {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.timestamp }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "timestamp" || it.sorted == "timestamp desc" }} active{{?}}" href="{{=str_format(it.sorturl, "timestamp" ) }}"><i class="bi-sort-numeric-up"></i>Added</a>
+          {{? it.sortedDir == "desc" && it.sortedBy == "timestamp" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "timestamp+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Added</a>
+          {{?? it.sortedDir == "asc" && it.sortedBy == "timestamp" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "timestamp+desc")}}"><i class="bi-sort-numeric-down"></i>Added</a>
+          {{??}}
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "timestamp+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Added</a>
+          {{?}}
         </li>
         {{?}}
-        {{?}}
-        {{? it.filters}}
+      {{?}}
+      {{? it.filters}}
           <!-- show links to filter -->
-          {{~it.filters:filter:idx}}
+        {{~it.filters:filter:idx}}
           <li class="nav-item p-1 border-start border-secondary-subtle">Filters:</li>
           <li class="nav-item sm">
             <a class="nav-link p-1" href="{{=filter.navlink}}&filter=1" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=filter.class}} {{=filter.title}}">
               <i class="bi-funnel"></i>{{=filter.class}} = {{=filter.title}}
             </a>
           </li>
-          {{~}}
-        {{?}}
-        {{? it.filterurl }}
+        {{~}}
+      {{?}}
+      {{? it.filterurl }}
         <!-- show links to filter -->
           <li class="nav-item p-1 border-start border-secondary-subtle">Explore:</li>
           {{? it.containsBook == 0 }}
@@ -102,8 +132,8 @@
               <i class="bi-link-45deg"></i>{{=it.c.i18n.linksTitle }}
             </a>
           </li>
-        {{?}}
-        {{? it.download && it.entriesCount > 1 }} 
+      {{?}}
+      {{? it.download && it.entriesCount > 1 }} 
           <li class="nav-item p-1 border-start border-secondary-subtle ms-1">Download all:</li>
           {{~it.download:link:idx}}
           <li class="nav-item sm">
@@ -112,7 +142,7 @@
             </a> 
           </li>
           {{~}} 
-        {{?}}
+      {{?}}
       </ul>
     </nav>
   {{?}}
