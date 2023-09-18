@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
@@ -110,7 +111,7 @@ abstract class CustomColumnType
      */
     public function getUri()
     {
-        return "?page=" . static::PAGE_ALL . "&custom={$this->customId}";
+        return Route::uri(static::PAGE_ALL, ['custom' => $this->customId]);
     }
 
     /**
@@ -340,6 +341,21 @@ abstract class CustomColumnType
     public function encodeHTMLValue($value)
     {
         return htmlspecialchars($value);
+    }
+
+    /**
+     * Return this object as an array
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray()
+    {
+        return [
+            'customId'     => $this->customId,
+            'columnTitle'  => $this->columnTitle,
+            'datatype'     => $this->datatype,
+            //'customValues' => $this->customValues,
+        ];
     }
 
     /**

@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use UnexpectedValueException;
@@ -161,7 +162,7 @@ class CustomColumnTypeInteger extends CustomColumnType
                 $this->getEntryId().':'.$label.':'.$range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation("?page=" . $page . "&custom={$this->customId}&range=". rawurlencode($range), null, null, $this->databaseId)],
+                [new LinkNavigation(Route::uri($page, ['custom' => $this->customId, 'range' => $range]), null, null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

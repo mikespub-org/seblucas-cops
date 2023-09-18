@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfb75f46c997337853ff91b16d1f6c0f",
+    "content-hash": "8bcff41844937808558c1228d038db85",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -89,16 +89,16 @@
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "2.0.2",
+            "version": "2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "024cb926b463467eb6fcceb04ec3f9279d1009f9"
+                "reference": "039477e14059a387c9ba1fdb6f9021a2d67bfb3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/024cb926b463467eb6fcceb04ec3f9279d1009f9",
-                "reference": "024cb926b463467eb6fcceb04ec3f9279d1009f9",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/039477e14059a387c9ba1fdb6f9021a2d67bfb3b",
+                "reference": "039477e14059a387c9ba1fdb6f9021a2d67bfb3b",
                 "shasum": ""
             },
             "require": {
@@ -153,9 +153,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.0.2"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.1.2"
             },
-            "time": "2023-09-10T15:06:11+00:00"
+            "time": "2023-09-16T20:40:35+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",
@@ -1391,6 +1391,72 @@
                 }
             ],
             "time": "2023-03-08T13:26:56+00:00"
+        },
+        {
+            "name": "nikic/fast-route",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/FastRoute.git",
+                "reference": "8fe73460b200628e4717251038d52295e280e9f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/8fe73460b200628e4717251038d52295e280e9f2",
+                "reference": "8fe73460b200628e4717251038d52295e280e9f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1.0"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^12.0",
+                "phpbench/phpbench": "^1.2",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-deprecation-rules": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.3",
+                "phpstan/phpstan-strict-rules": "^1.5",
+                "phpunit/phpunit": "^9.6"
+            },
+            "suggest": {
+                "ext-apcu": "To be able to use APCu cache driver"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "FastRoute\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov",
+                    "email": "nikic@php.net"
+                }
+            ],
+            "description": "Fast request router for PHP",
+            "keywords": [
+                "router",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/nikic/FastRoute/issues",
+                "source": "https://github.com/nikic/FastRoute/tree/master"
+            },
+            "time": "2023-07-27T22:52:32+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -4201,7 +4267,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "php-webdriver/webdriver": 20
+        "php-webdriver/webdriver": 20,
+        "nikic/fast-route": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

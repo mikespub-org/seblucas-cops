@@ -43,6 +43,7 @@ class Format
      * @param string $paramName
      * @param string|int|null $paramValue
      * @return string
+     * @deprecated 2.1.2 use Route::query or Route::uri instead
      */
     public static function addURLParam($urlParams, $paramName, $paramValue)
     {
@@ -69,6 +70,7 @@ class Format
      * @param string $urlParams
      * @param ?int $database
      * @return string
+     * @deprecated 2.1.2 use Route::query or Route::uri instead
      */
     public static function addDatabaseParam($urlParams, $database)
     {
@@ -99,6 +101,7 @@ class Format
      * @param ?array<mixed> $params
      * @param ?int $database
      * @return string
+     * @deprecated 2.1.2 use Route::url instead
      */
     public static function getEndpointURL($endpoint = "index", $params = null, $database = null)
     {

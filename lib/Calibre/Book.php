@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFeed;
@@ -173,18 +174,24 @@ class Book
      */
     public function getUri()
     {
-        return '?page='.static::PAGE_DETAIL.'&id=' . $this->id;
+        if (Config::get('use_route_urls')) {
+            return Route::uri(static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle()]);
+        }
+        return Route::uri(static::PAGE_DETAIL, ['id' => $this->id]);
     }
 
     /**
      * Summary of getDetailUrl
+     * @param string|null $endpoint
      * @return string
      */
-    public function getDetailUrl()
+    public function getDetailUrl($endpoint = null)
     {
-        $urlParam = $this->getUri();
-        $urlParam = Format::addDatabaseParam($urlParam, $this->databaseId);
-        return static::$endpoint . $urlParam;
+        $endpoint ??= static::$endpoint;
+        if (Config::get('use_route_urls')) {
+            return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle()]);
+        }
+        return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'db' => $this->databaseId]);
     }
 
     /**

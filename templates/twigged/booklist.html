@@ -48,13 +48,13 @@
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
             <div class="cover-image">
                 {% if entry.thumbnailurl  %}
-                    <a href="{{str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
+                    <a href="{{entry.book.detailurl}}#cover">
                         <img class ="img-responsive" src="{{entry.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
                     </a>
                 {% endif %}
             </div>
             <div class="meta">
-                <p class="title"><a href="{{str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{entry.title|escape}}</a></p>
+                <p class="title"><a href="{{entry.book.detailurl}}#cover">{{entry.title|escape}}</a></p>
                 <div class="author ellipsis">{{entry.book.authorsName|escape}}</div>
                 {% if entry.book.seriesName != "" %}<div class="series ellipsis"><a href="{{entry.book.seriesurl}}">{{entry.book.seriesName|escape}}</a> ({{entry.book.seriesIndex}})</div>{% endif %}
                 <!-- custom columns not tested -->

@@ -36,13 +36,13 @@
         <div class="card">
             <div class="cover-image">
                 {{? entry.book.hasCover == 1}}
-                    <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
+                    <a href="{{=entry.book.detailurl}}#cover">
                         <img class ="card-image-top" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
                     </a>
                 {{?}}
             </div>
             <div class="card-body meta">
-                <h5 class="card-title title text-truncate"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
+                <h5 class="card-title title text-truncate"><a href="{{=entry.book.detailurl}}#cover">{{=htmlspecialchars (entry.title)}}</a></h5>
                 <div class="card-subtitle author text-truncate">
                     {{~ entry.book.authors:author:i}}{{? i != 0 }}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}
                 </div>

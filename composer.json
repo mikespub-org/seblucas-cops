@@ -26,7 +26,7 @@
         "ext-xml": "*",
         "ext-xmlwriter": "*",
         "ext-zlib": "*",
-        "mikespub/php-epub-meta": "~2.0",
+        "mikespub/php-epub-meta": "~2.1",
         "npm-asset/bootstrap": "~3.4",
         "npm-asset/dot": "~1.1",
         "npm-asset/jquery": "~3.7",
@@ -46,7 +46,8 @@
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "~6.3",
         "symfony/http-client": "~6.3",
-        "mikespub/epub-loader": "~2.1"
+        "mikespub/epub-loader": "~2.1",
+        "nikic/fast-route": "~2.0-dev"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks"

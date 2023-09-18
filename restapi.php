@@ -19,6 +19,9 @@ Config::set('author_split_first_letter', '0');
 Config::set('titles_split_first_letter', '0');
 //Config::set('titles_split_publication_year', '0');
 
+// try out route urls
+Config::set('use_route_urls', true);
+
 $request = new Request();
 $apiHandler = new RestApi($request);
 

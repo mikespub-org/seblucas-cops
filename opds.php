@@ -9,6 +9,7 @@
  */
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 //use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
 use SebLucas\Cops\Pages\PageId;
@@ -21,10 +22,19 @@ if (!class_exists('Kiwilan\Opds\OpdsResponse')) {
     return;
 }
 
+// try out route urls
+Config::set('use_route_urls', true);
+
 $request = new Request();
-$page = $request->get('page', PageId::INDEX);
 // @checkme set page based on path info here
-$path = $_SERVER["PATH_INFO"] ?? "";
+$path = $request->path() ?? "";
+if (!empty($path)) {
+    $params = Route::match($path) ?? [];
+    foreach ($params as $param => $value) {
+        $request->set($param, $value);
+    }
+}
+$page = $request->get('page', PageId::INDEX);
 if ($page == PageId::INDEX && $path == "/search") {
     $page = PageId::OPENSEARCH;
 }

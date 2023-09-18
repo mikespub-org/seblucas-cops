@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -84,18 +85,36 @@ class BookList
     protected function getOrderBy()
     {
         switch ($this->orderBy) {
+            case 'title asc':
             case 'title':
-                return 'books.sort';
+                return 'books.sort asc';
+            case 'title desc':
+                return 'books.sort desc';
+            case 'author asc':
             case 'author':
-                return 'books.author_sort';
+                return 'books.author_sort asc';
+            case 'author desc':
+                return 'books.author_sort desc';
+            case 'pubdate desc':
             case 'pubdate':
                 return 'books.pubdate desc';
+            case 'pubdate asc':
+                return 'books.pubdate asc';
+            case 'rating desc':
             case 'rating':
                 return 'ratings.rating desc';
+            case 'rating asc':
+                return 'ratings.rating asc';
+            case 'timestamp desc':
             case 'timestamp':
                 return 'books.timestamp desc';
+            case 'timestamp asc':
+                return 'books.timestamp asc';
+            case 'count desc':
             case 'count':
                 return 'count desc';
+            case 'count asc':
+                return 'count asc';
             default:
                 return $this->orderBy;
         }
@@ -120,11 +139,11 @@ class BookList
         $result = [];
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
-            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "subsection", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation(Route::uri(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
         } elseif (!empty(Config::get('titles_split_publication_year'))) {
-            $linkArray = [new LinkNavigation('?page='.Book::PAGE_ALL, "subsection", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation(Route::uri(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
         } else {
-            $linkArray = [new LinkFeed('?page='.Book::PAGE_ALL, null, null, $this->databaseId)];
+            $linkArray = [new LinkFeed(Route::uri(Book::PAGE_ALL), null, null, $this->databaseId)];
         }
         $entry = new Entry(
             localize('allbooks.title'),
@@ -144,7 +163,7 @@ class BookList
                 PageId::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $count),
                 'text',
-                [ new LinkFeed('?page='.PageId::ALL_RECENT_BOOKS, 'http://opds-spec.org/sort/new', null, $this->databaseId)],
+                [ new LinkFeed(Route::uri(PageId::ALL_RECENT_BOOKS), 'http://opds-spec.org/sort/new', null, $this->databaseId)],
                 $this->databaseId,
                 '',
                 $count
@@ -339,7 +358,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
                 Book::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkFeed('?page='.$page.'&id='. rawurlencode($post->groupid), "subsection", null, $this->databaseId)],
+                [new LinkFeed(Route::uri($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

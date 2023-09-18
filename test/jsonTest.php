@@ -112,7 +112,7 @@ class JsonTest extends TestCase
         $this->assertCount(3, $test ["datas"]);
         $this->assertEquals("fetch.php?id=17&type=epub&data=20", $test ["datas"][2]["url"]);
         $this->assertEquals("fetch.php?id=17&type=epub&data=20&view=1", $test ["datas"][2]["viewUrl"]);
-        $this->assertEquals("epubreader.php?data=20&db=", $test ["datas"][2]["readerUrl"]);
+        $this->assertEquals("epubreader.php?data=20", $test ["datas"][2]["readerUrl"]);
 
         // use relative path for calibre directory
         Config::set('calibre_directory', "./test/BaseWithSomeBooks/");
@@ -157,7 +157,7 @@ class JsonTest extends TestCase
             [
                 'class' => 'tt-header',
                 'title' => 'Search result for *fic* in tags',
-                'navlink' => 'phpunit?page=9&query=fic&db=&scope=tag',
+                'navlink' => 'phpunit?page=9&query=fic&scope=tag',
             ],
             [
                 'class' => 'Tag',

@@ -8,10 +8,11 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 
 abstract class Base
@@ -69,7 +70,10 @@ abstract class Base
      */
     public function getUri()
     {
-        return "?page=".static::PAGE_DETAIL."&id=$this->id";
+        if (Config::get('use_route_urls')) {
+            return Route::uri(static::PAGE_DETAIL, ['id' => $this->id, 'title' => $this->name]);
+        }
+        return Route::uri(static::PAGE_DETAIL, ['id' => $this->id]);
     }
 
     /**
@@ -78,7 +82,7 @@ abstract class Base
      */
     public function getParentUri()
     {
-        return "?page=".static::PAGE_ALL;
+        return Route::uri(static::PAGE_ALL);
     }
 
     /**

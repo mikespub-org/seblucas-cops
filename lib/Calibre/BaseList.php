@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkFeed;
@@ -341,7 +342,7 @@ class BaseList
                 $this->className::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation('?page='.$page.'&id='. rawurlencode($post->groupid), "subsection", null, $this->databaseId)],
+                [new LinkNavigation(Route::uri($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count
@@ -624,7 +625,7 @@ class BaseList
             str_format(localize($numberOfString, $count), $count),
             "text",
             // issue #26 for koreader: section is not supported
-            [ new LinkNavigation("?page=".$pageId, "subsection", null, $database)],
+            [ new LinkNavigation(Route::uri($pageId), "subsection", null, $database)],
             $database,
             "",
             $count
