@@ -379,6 +379,7 @@ class JSONRenderer
         $out ["entries"] = $entries;
         $out ["entriesCount"] = count($entries);
         $out ["sorted"] = $currentPage->sorted;
+        $out ["sortedBy"] = explode(' ',$currentPage->sorted)[0];
         $out ["sortedDir"] = str_contains($currentPage->sorted, 'desc') ? 'desc' : 'asc';
         $out ["isPaginated"] = 0;
         if ($currentPage->isPaginated()) {
