@@ -52,61 +52,56 @@
         <li class="nav-item p-1 border-start border-secondary-subtle">Sort by:</li>
         {{? it.sortoptions.title }}
           <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sortedBy == "title" }} active{{?}}"
           {{? it.sortedDir == "asc" && it.sortedBy == "title" }}
-          href="{{=str_format(it.sorturl, "title+desc")}}"><i class="bi-sort-alpha-down"></i>Title</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "title+desc")}}"><i class="bi-sort-alpha-down"></i>Title</a>
           {{?? it.sortedDir == "desc" && it.sortedBy == "title" }}
-          href="{{=str_format(it.sorturl, "title+asc")}}"><i class="bi-sort-alpha-down-alt"></i>Title</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "title+asc")}}"><i class="bi-sort-alpha-down-alt"></i>Title</a>
           {{??}}
-          href="{{=str_format(it.sorturl, "title")}}"><i class="bi-sort-alpha-down"></i>Title</a>
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "title+asc")}}"><i class="bi-sort-alpha-down"></i>Title</a>
           {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.author }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sortedBy == "author" }} active{{?}}"
           {{? it.sortedDir == "asc" && it.sortedBy == "author" }}
-          href="{{=str_format(it.sorturl, "author+desc")}}"><i class="bi-sort-alpha-down"></i>Author</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "author+desc")}}"><i class="bi-sort-alpha-down"></i>Author</a>
           {{?? it.sortedDir == "desc" && it.sortedBy == "author" }}
-          href="{{=str_format(it.sorturl, "author+asc")}}"><i class="bi-sort-alpha-down-alt"></i>Author</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "author+asc")}}"><i class="bi-sort-alpha-down-alt"></i>Author</a>
           {{??}}
-          href="{{=str_format(it.sorturl, "author")}}"><i class="bi-sort-alpha-down"></i>Author</a>
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "author+asc")}}"><i class="bi-sort-alpha-down"></i>Author</a>
           {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.pubdate }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sortedBy == "pubdate" }} active{{?}}"
           {{? it.sortedDir == "desc" && it.sortedBy == "pubdate" }}
-          href="{{=str_format(it.sorturl, "pubdate+asc")}}"><i class="bi-sort-numeric-down"></i>Published</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "pubdate+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
           {{?? it.sortedDir == "asc" && it.sortedBy == "pubdate" }}
-          href="{{=str_format(it.sorturl, "pubdate+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "pubdate+desc")}}"><i class="bi-sort-numeric-down"></i>Published</a>
           {{??}}
-          href="{{=str_format(it.sorturl, "pubdate")}}"><i class="bi-sort-numeric-down"></i>Published</a>
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "pubdate+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
           {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.rating }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sortedBy == "rating" }} active{{?}}" 
           {{? it.sortedDir == "desc" && it.sortedBy == "rating" }}
-          href="{{=str_format(it.sorturl, "rating+asc")}}"><i class="bi-sort-numeric-down"></i>Rating</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "rating+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Rating</a>
           {{?? it.sortedDir == "asc" && it.sortedBy == "rating" }}
-          href="{{=str_format(it.sorturl, "rating+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Rating</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "rating+desc")}}"><i class="bi-sort-numeric-down"></i>Rating</a>
           {{??}}
-          href="{{=str_format(it.sorturl, "rating")}}"><i class="bi-sort-numeric-down"></i>Rating</a>
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "rating+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Rating</a>
           {{?}}
         </li>
         {{?}}
         {{? it.sortoptions.timestamp }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sortedBy == "timestamp" }} active{{?}}" 
           {{? it.sortedDir == "desc" && it.sortedBy == "timestamp" }}
-          href="{{=str_format(it.sorturl, "timestamp+asc")}}"><i class="bi-sort-numeric-down"></i>Added</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "timestamp+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Added</a>
           {{?? it.sortedDir == "asc" && it.sortedBy == "timestamp" }}
-          href="{{=str_format(it.sorturl, "timestamp+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Added</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "rating+desc")}}"><i class="bi-sort-numeric-down"></i>Added</a>
           {{??}}
-          href="{{=str_format(it.sorturl, "timestamp")}}"><i class="bi-sort-numeric-down"></i>Added</a>
+          <a class="nav-link p-1" href="{{=str_format(it.sorturl, "timestamp+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Added</a>
           {{?}}
         </li>
         {{?}}
