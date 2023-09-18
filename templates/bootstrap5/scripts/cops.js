@@ -6,3 +6,9 @@ function postRefresh()
     var elmnt = document.getElementById(hash);
     if (elmnt) elmnt.scrollIntoView();
 }
+
+function reverseSortEntries(){
+    currentData.entries.reverse();
+    result = templateMain(currentData);
+    $('#main').html(result);
+}
