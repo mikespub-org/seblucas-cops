@@ -1,4 +1,4 @@
-<div class="container-fluid p-1">
+<div class="container-fluid p-1" id="main">
 {{? it.page == 13 || it.page == 16}}
     {{? it.page == 13}}
         {{#def.bookdetail}}
@@ -31,9 +31,9 @@
     </div>
     <!-- end Not book data -->
 {{??}}
-<div class="row row-cols-2 row-cols-md-5 g-0">
+<div class="row row-cols-2 row-cols-md-5 g-0" id="entries">
     {{~it.entries:entry:idx}}
-        <div class="card">
+        <div class="card" id="{{=idx}}">
             <div class="cover-image">
                 {{? entry.book.hasCover == 1}}
                     <a href="{{=entry.book.detailurl}}#cover">
