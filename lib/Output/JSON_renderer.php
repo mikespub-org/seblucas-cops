@@ -258,8 +258,10 @@ class JSONRenderer
                 "defaultTemplate" => localize("default.template"),
                 "customizeTitle" => localize("customize.title"),
                 "aboutTitle" => localize("about.title"),
+                "firstAlt" => localize("paging.first.alternate"),
                 "previousAlt" => localize("paging.previous.alternate"),
                 "nextAlt" => localize("paging.next.alternate"),
+                "lastAlt" => localize("paging.last.alternate"),
                 "searchAlt" => localize("search.alternate"),
                 "sortAlt" => localize("sort.alternate"),
                 "homeAlt" => localize("home.alternate"),
@@ -398,13 +400,17 @@ class JSONRenderer
             $prevLink = $currentPage->getPrevLink();
             $nextLink = $currentPage->getNextLink();
             $out ["isPaginated"] = 1;
+            $out ["firstLink"] = "";
             $out ["prevLink"] = "";
             if (!is_null($prevLink)) {
+                $out ["firstLink"] = $currentPage->getFirstLink()->hrefXhtml($endpoint);
                 $out ["prevLink"] = $prevLink->hrefXhtml($endpoint);
             }
             $out ["nextLink"] = "";
+            $out ["lastLink"] = "";
             if (!is_null($nextLink)) {
                 $out ["nextLink"] = $nextLink->hrefXhtml($endpoint);
+                $out ["lastLink"] = $currentPage->getLastLink()->hrefXhtml($endpoint);
             }
             $out ["maxPage"] = $currentPage->getMaxPage();
             $out ["currentPage"] = $currentPage->n;
