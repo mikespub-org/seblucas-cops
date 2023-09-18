@@ -74,10 +74,10 @@
         {{?}}
         {{? it.sortoptions.pubdate }}
         <li class="nav-item sm">
-          {{? it.sortedDir == "desc" && it.sortedBy == "pubdate" }}
-          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "pubdate+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
-          {{?? it.sortedDir == "asc" && it.sortedBy == "pubdate" }}
+          {{? it.sortedDir == "asc" && it.sortedBy == "pubdate" }}
           <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "pubdate+desc")}}"><i class="bi-sort-numeric-down"></i>Published</a>
+          {{?? it.sortedDir == "desc" && it.sortedBy == "pubdate" }}
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "pubdate+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
           {{??}}
           <a class="nav-link p-1" href="{{=str_format(it.sorturl, "pubdate+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Published</a>
           {{?}}
@@ -99,7 +99,7 @@
           {{? it.sortedDir == "desc" && it.sortedBy == "timestamp" }}
           <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "timestamp+asc")}}"><i class="bi-sort-numeric-down-alt"></i>Added</a>
           {{?? it.sortedDir == "asc" && it.sortedBy == "timestamp" }}
-          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "rating+desc")}}"><i class="bi-sort-numeric-down"></i>Added</a>
+          <a class="nav-link p-1 active" href="{{=str_format(it.sorturl, "timestamp+desc")}}"><i class="bi-sort-numeric-down"></i>Added</a>
           {{??}}
           <a class="nav-link p-1" href="{{=str_format(it.sorturl, "timestamp+desc")}}"><i class="bi-sort-numeric-down-alt"></i>Added</a>
           {{?}}
