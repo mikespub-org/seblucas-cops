@@ -52,19 +52,19 @@
         <li class="nav-item p-1 border-start border-secondary-subtle">Sort by:</li>
         {{? it.sortoptions.title }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "title" && it.c.config.server_side_rendering == 0 }} active{{?}}"
-          {{? it.sorted == "title"}}
+          <a class="nav-link p-1{{? it.sorted == "title" }} active{{?}}"
+          {{? it.sorted == "title" && it.c.config.server_side_rendering == 0 }}
           onclick="reverseSortEntries()" href="#"
           {{??}}
           href="{{=str_format(it.sorturl, "title")}}"
           {{?}}
           ><i class="bi-sort-alpha-down"></i>Title</a>
         </li>
-        {{?}}
-        {{? it.sortoptions.author }}
-        <li class="nav-item sm">
+          {{?}}
+          {{? it.sortoptions.author }}
+          <li class="nav-item sm">
           <a class="nav-link p-1{{? it.sorted == "author" }} active{{?}}"
-          {{? it.sorted == "author"}}
+          {{? it.sorted == "author" && it.c.config.server_side_rendering == 0 }}
           onclick="reverseSortEntries()" href="#"
           {{??}}
           href="{{=str_format(it.sorturl, "author")}}"
@@ -74,8 +74,8 @@
         {{?}}
         {{? it.sortoptions.pubdate }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "pubdate" && it.c.config.server_side_rendering == 0 }} active{{?}}"
-          {{? it.sorted == "pubdate"}}
+          <a class="nav-link p-1{{? it.sorted == "pubdate" }} active{{?}}"
+          {{? it.sorted == "pubdate" && it.c.config.server_side_rendering == 0 }}
           onclick="reverseSortEntries()" href="#"
           {{??}}
           href="{{=str_format(it.sorturl, "pubdate")}}"
@@ -85,8 +85,8 @@
         {{?}}
         {{? it.sortoptions.rating }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? it.sorted == "rating" && it.c.config.server_side_rendering == 0 }} active{{?}}"
-          {{? it.sorted == "rating"}}
+          <a class="nav-link p-1{{? it.sorted == "rating" }} active{{?}}"
+          {{? it.sorted == "rating" && it.c.config.server_side_rendering == 0 }}
           onclick="reverseSortEntries()" href="#"
           {{??}}
           href="{{=str_format(it.sorturl, "rating")}}"
@@ -96,8 +96,8 @@
         {{?}}
         {{? it.sortoptions.timestamp || it.sorted == "timestamp desc" }}
         <li class="nav-item sm">
-          <a class="nav-link p-1{{? (it.sorted == "timestamp" || it.sorted == "timestamp desc") && it.c.config.server_side_rendering == 0 }} active{{?}}"
-          {{? it.sorted == "timestamp"}}
+          <a class="nav-link p-1{{? (it.sorted == "timestamp" || it.sorted == "timestamp desc") }} active{{?}}"
+          {{? (it.sorted == "timestamp" || it.sorted == "timestamp desc") && it.c.config.server_side_rendering == 0}}
           onclick="reverseSortEntries()" href="#"
           {{??}}
           href="{{=str_format(it.sorturl, "timestamp")}}"
