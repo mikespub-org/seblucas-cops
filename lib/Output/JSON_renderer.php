@@ -378,9 +378,21 @@ class JSONRenderer
         $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
         $out ["entries"] = $entries;
         $out ["entriesCount"] = count($entries);
-        $out ["sorted"] = $currentPage->sorted;
-        $out ["sortedBy"] = explode(' ',$currentPage->sorted)[0];
-        $out ["sortedDir"] = str_contains($currentPage->sorted, 'desc') ? 'desc' : 'asc';
+        $out ["sorted"] = $currentPage->sorted ?? '';
+        $out ["sortedBy"] = explode(' ', $out ["sorted"])[0];
+        $out ["sortedDir"] = '';
+        if (!empty($out ["sortedBy"])) {
+            if (in_array($out ["sortedBy"], ['title', 'author', 'sort', 'name', 'type', 'lang_code', 'letter', 'year', 'range', 'value', 'groupid', 'series_index'])) {
+                // default ascending order for anything vaguely alphabetical or grouped
+                $out ["sortedDir"] = str_contains($out ["sorted"], 'desc') ? 'desc' : 'asc';
+            } elseif (in_array($out ["sortedBy"], ['pubdate', 'rating', 'timestamp', 'count', 'series'])) {
+                // default descending order for anything vaguely numerical or recent
+                $out ["sortedDir"] = str_contains($out ["sorted"], 'asc') ? 'asc' : 'desc';
+            } else {
+                // default descending order for anything else we forgot above :-)
+                $out ["sortedDir"] = str_contains($out ["sorted"], 'asc') ? 'asc' : 'desc';
+            }
+        }
         $out ["isPaginated"] = 0;
         if ($currentPage->isPaginated()) {
             $prevLink = $currentPage->getPrevLink();
