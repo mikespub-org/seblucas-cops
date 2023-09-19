@@ -194,7 +194,7 @@ class RestApiTest extends TestCase
         parse_str(parse_url($link, PHP_URL_QUERY), $params);
         $page = $params["page"];
         unset($params["page"]);
-        $test = RestApi::$endpoint . Route::uri($page, $params);
+        $test = RestApi::$endpoint . Route::page($page, $params);
         $this->assertEquals($expected, $test);
     }
 

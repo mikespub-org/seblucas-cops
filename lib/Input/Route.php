@@ -217,7 +217,7 @@ class Route
      */
     public static function url($endpoint, $page = null, $params = [], $separator = null)
     {
-        return $endpoint . static::uri($page, $params, $separator);
+        return $endpoint . static::page($page, $params, $separator);
     }
 
     /**
@@ -227,7 +227,7 @@ class Route
      * @param string|null $separator
      * @return string
      */
-    public static function uri($page, $params = [], $separator = null)
+    public static function page($page, $params = [], $separator = null)
     {
         $queryParams = array_filter($params, function ($val) {
             if (empty($val) && strval($val) !== '0') {

@@ -175,9 +175,9 @@ class Book
     public function getUri()
     {
         if (Config::get('use_route_urls')) {
-            return Route::uri(static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle()]);
+            return Route::page(static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle()]);
         }
-        return Route::uri(static::PAGE_DETAIL, ['id' => $this->id]);
+        return Route::page(static::PAGE_DETAIL, ['id' => $this->id]);
     }
 
     /**

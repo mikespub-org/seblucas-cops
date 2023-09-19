@@ -71,9 +71,9 @@ abstract class Base
     public function getUri()
     {
         if (Config::get('use_route_urls')) {
-            return Route::uri(static::PAGE_DETAIL, ['id' => $this->id, 'title' => $this->name]);
+            return Route::page(static::PAGE_DETAIL, ['id' => $this->id, 'title' => $this->name]);
         }
-        return Route::uri(static::PAGE_DETAIL, ['id' => $this->id]);
+        return Route::page(static::PAGE_DETAIL, ['id' => $this->id]);
     }
 
     /**
@@ -82,7 +82,7 @@ abstract class Base
      */
     public function getParentUri()
     {
-        return Route::uri(static::PAGE_ALL);
+        return Route::page(static::PAGE_ALL);
     }
 
     /**

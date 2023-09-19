@@ -111,7 +111,7 @@ abstract class CustomColumnType
      */
     public function getUri()
     {
-        return Route::uri(static::PAGE_ALL, ['custom' => $this->customId]);
+        return Route::page(static::PAGE_ALL, ['custom' => $this->customId]);
     }
 
     /**

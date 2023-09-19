@@ -164,7 +164,7 @@ class CustomColumnTypeDate extends CustomColumnType
                 $this->getEntryId().':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::uri($page, ['custom' => $this->customId, 'year' => $post->groupid]), null, null, $this->databaseId)],
+                [new LinkNavigation(Route::page($page, ['custom' => $this->customId, 'year' => $post->groupid]), null, null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

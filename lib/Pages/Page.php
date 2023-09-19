@@ -184,7 +184,7 @@ class Page
                 "cops:{$i}:catalog",
                 str_format(localize("bookword", $nBooks), $nBooks),
                 "text",
-                [ new LinkNavigation(Route::uri(null, ["db" => $i])) ],
+                [ new LinkNavigation(Route::page(null, ["db" => $i])) ],
                 null,
                 "",
                 $nBooks

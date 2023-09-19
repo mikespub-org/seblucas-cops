@@ -342,7 +342,7 @@ class BaseList
                 $this->className::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::uri($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
+                [new LinkNavigation(Route::page($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count
@@ -625,7 +625,7 @@ class BaseList
             str_format(localize($numberOfString, $count), $count),
             "text",
             // issue #26 for koreader: section is not supported
-            [ new LinkNavigation(Route::uri($pageId), "subsection", null, $database)],
+            [ new LinkNavigation(Route::page($pageId), "subsection", null, $database)],
             $database,
             "",
             $count

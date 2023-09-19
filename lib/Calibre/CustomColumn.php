@@ -60,7 +60,7 @@ class CustomColumn extends Category
      */
     public function getUri()
     {
-        return Route::uri(static::PAGE_DETAIL, ['custom' => $this->getCustomId(), 'id' => $this->id]);
+        return Route::page(static::PAGE_DETAIL, ['custom' => $this->getCustomId(), 'id' => $this->id]);
     }
 
     /**

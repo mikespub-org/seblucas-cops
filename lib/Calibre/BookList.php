@@ -139,11 +139,11 @@ class BookList
         $result = [];
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
-            $linkArray = [new LinkNavigation(Route::uri(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
         } elseif (!empty(Config::get('titles_split_publication_year'))) {
-            $linkArray = [new LinkNavigation(Route::uri(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
         } else {
-            $linkArray = [new LinkFeed(Route::uri(Book::PAGE_ALL), null, null, $this->databaseId)];
+            $linkArray = [new LinkFeed(Route::page(Book::PAGE_ALL), null, null, $this->databaseId)];
         }
         $entry = new Entry(
             localize('allbooks.title'),
@@ -163,7 +163,7 @@ class BookList
                 PageId::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $count),
                 'text',
-                [ new LinkFeed(Route::uri(PageId::ALL_RECENT_BOOKS), 'http://opds-spec.org/sort/new', null, $this->databaseId)],
+                [ new LinkFeed(Route::page(PageId::ALL_RECENT_BOOKS), 'http://opds-spec.org/sort/new', null, $this->databaseId)],
                 $this->databaseId,
                 '',
                 $count
@@ -358,7 +358,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
                 Book::PAGE_ID.':'.$label.':'.$post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkFeed(Route::uri($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
+                [new LinkFeed(Route::page($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

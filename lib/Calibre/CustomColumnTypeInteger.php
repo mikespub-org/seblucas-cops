@@ -162,7 +162,7 @@ class CustomColumnTypeInteger extends CustomColumnType
                 $this->getEntryId().':'.$label.':'.$range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::uri($page, ['custom' => $this->customId, 'range' => $range]), null, null, $this->databaseId)],
+                [new LinkNavigation(Route::page($page, ['custom' => $this->customId, 'range' => $range]), null, null, $this->databaseId)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count
