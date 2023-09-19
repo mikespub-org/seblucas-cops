@@ -11,6 +11,15 @@ x.x.x - TODO
   * ...
 
 2.1.x - 2023xxxx To be continued (PHP >= 8.1)
+  * Changes in config_default.php file:
+    - new $config['cops_use_route_urls']
+
+2.1.3 - 20230919 Try route urls + improve sort in bootstrap5 (PHP >= 8.1)
+  * Use nikic/fast-route to match route urls (dev only)
+  * Use route urls in code and absolute paths in templates
+  * Improve sorting in bootstrap5 template - see pull requests from @dunxd
+
+2.1.2 - 20230917 Fix TOC children + improve bootstrap5 template (PHP >= 8.1)
   * Fix sort asc/desc for author and rating - see issue #44
   * Show TOC with children in epub reader with mikespub/php-epub-meta 2.1+
   * Improve bootstrap5 template some more - see pull requests from @dunxd
