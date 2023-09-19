@@ -11,6 +11,9 @@
             {{? it.book.pubDate != ""}}
             <p><span class="fw-bold">{{=it.c.i18n.pubdateTitle}}</span>: {{=it.book.pubDate}}</p>
             {{?}}
+            {{? it.book.rating != ""}}
+            <p id="rating">{{= it.book.rating }}</p>
+            {{?}}
             {{? it.book.seriesName != ""}}
             <h4><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
             {{?}}

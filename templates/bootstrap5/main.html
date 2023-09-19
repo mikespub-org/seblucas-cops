@@ -49,6 +49,12 @@
                 {{? entry.book.seriesName != ""}}
                 <div class="series text-truncate"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>
                 {{?}}
+                {{? entry.book.pubDate != "" && it.sortoptions.pubdate }}
+                <div class="pubdate">{{=it.c.i18n.pubdateTitle}}: {{= entry.book.pubDate }}</div>
+                {{?}}
+                {{? entry.book.rating != "" && it.sortoptions.rating }}
+                <div class="rating">{{= entry.book.rating }}</div>
+                {{?}}
                 <!-- custom columns not tested -->
                 {{~ entry.book.customcolumns_list:column:column_index}}
                 <div class="text-truncate"><i class="bi-node-minus pe-1"></i><span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
