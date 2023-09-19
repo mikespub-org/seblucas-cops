@@ -355,7 +355,7 @@ class Route
                     }
                     $value = $subst[$param];
                     if (in_array($param, ['title', 'author'])) {
-                        $value = str_replace(' ', '_', $value);
+                        $value = static::slugify($value);
                     }
                     $route = str_replace('{' . $param . '}', "$value", $route);
                     unset($subst[$param]);
@@ -391,6 +391,28 @@ class Route
             static::$pages[$page][$route] = $params;
         }
         return static::$pages;
+    }
+
+    /**
+     * Summary of slug - @todo check transliteration
+     * @param string $string
+     * @return string
+     */
+    public static function slugify($string)
+    {
+        static $transliterator;
+
+        $string = str_replace([' ', '&'], ['_', '-'], $string);
+        if (!preg_match('/[\x80-\xff]/', $string)) {
+            return $string;
+        }
+
+        // see https://www.drupal.org/project/rename_admin_paths/issues/3275140 for different order
+        if (!isset($transliterator)) {
+            $transliterator = transliterator_create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
+            //$transliterator = transliterator_create("Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;");
+        }
+        return transliterator_transliterate($transliterator, $string);
     }
 
     /**

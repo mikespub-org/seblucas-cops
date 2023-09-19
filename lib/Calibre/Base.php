@@ -71,7 +71,7 @@ abstract class Base
     public function getUri()
     {
         if (Config::get('use_route_urls')) {
-            return Route::page(static::PAGE_DETAIL, ['id' => $this->id, 'title' => $this->name]);
+            return Route::page(static::PAGE_DETAIL, ['id' => $this->id, 'title' => $this->getTitle()]);
         }
         return Route::page(static::PAGE_DETAIL, ['id' => $this->id]);
     }

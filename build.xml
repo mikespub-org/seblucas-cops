@@ -39,9 +39,12 @@
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
                 <exclude name="vendor/bin/**" />
+                <exclude name="vendor/maennchen/zipstream-php/.phive/**" />
+                <exclude name="vendor/maennchen/zipstream-php/.phpdoc/**" />
+                <exclude name="vendor/maennchen/zipstream-php/guides/**" />
+                <exclude name="vendor/maennchen/zipstream-php/test/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/app/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/assets/**" />
-                <exclude name="vendor/mikespub/php-epub-meta/resources/tbszip/test/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/test/**" />
                 <exclude name="vendor/npm-asset/dot/benchmarks/**" />
                 <exclude name="vendor/npm-asset/dot/bin/**" />
@@ -63,6 +66,7 @@
                 <exclude name="vendor/npm-asset/corejs-typeahead/doc/**" />
                 <exclude name="vendor/npm-asset/corejs-typeahead/src/**" />
                 <exclude name="vendor/npm-asset/corejs-typeahead/test/**" />
+                <exclude name="vendor/npm-asset/twig/.github/**" />
                 <exclude name="vendor/npm-asset/twig/bin/**" />
                 <exclude name="vendor/npm-asset/twig/lib/**" />
                 <exclude name="vendor/npm-asset/twig/node/**" />
