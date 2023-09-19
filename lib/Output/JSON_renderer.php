@@ -306,12 +306,14 @@ class JSONRenderer
 
     /**
      * Summary of getCurrentUrl
-     * @param string $queryString
+     * @param Request $request
      * @return string
      */
-    public static function getCurrentUrl($queryString)
+    public static function getCurrentUrl($request)
     {
-        return Config::ENDPOINT["json"] . Route::query($queryString, ['complete' => 1]);
+        $pathInfo = $request->path();
+        $queryString = $request->query();
+        return Route::url(Config::ENDPOINT["json"] . $pathInfo) . Route::query($queryString, ['complete' => 1]);
     }
 
     /**
@@ -347,6 +349,7 @@ class JSONRenderer
         if (!empty($out ["parentTitle"])) {
             $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
         }
+        $out ["baseurl"] = Route::url($endpoint);
         $entries = [];
         $extraUri = "";
         $out ["isFilterPage"] = false;
@@ -430,13 +433,13 @@ class JSONRenderer
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
-            $out ["sorturl"] = $endpoint . str_replace('%7B0%7D', '{0}', Route::query($currentPage->getCleanQuery(), ['sort' => '{0}']));
+            $out ["sorturl"] = $out["baseurl"] . str_replace('%7B0%7D', '{0}', Route::query($currentPage->getCleanQuery(), ['sort' => '{0}']));
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-                $out ["filterurl"] = $endpoint . Route::query($currentPage->getCleanQuery(), ['filter' => 1]);
+                $out ["filterurl"] = $out["baseurl"] . Route::query($currentPage->getCleanQuery(), ['filter' => 1]);
             }
         } elseif (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-            $out ["filterurl"] = $endpoint . Route::query($currentPage->getCleanQuery(), ['filter' => null]);
+            $out ["filterurl"] = $out["baseurl"] . Route::query($currentPage->getCleanQuery(), ['filter' => null]);
         }
 
         $out["abouturl"] = Route::url($endpoint, PageId::ABOUT, ['db' => $database]);
@@ -464,18 +467,18 @@ class JSONRenderer
         } elseif ($homepage != PageId::INDEX) {
             $out ["homeurl"] = Route::url($endpoint, PageId::INDEX);
         } else {
-            $out ["homeurl"] = Route::url($endpoint);
+            $out ["homeurl"] = $out["baseurl"];
         }
 
         $out ["parenturl"] = "";
         if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
             // if filtered, use the unfiltered uri as parent first
-            $out ["parenturl"] = $endpoint . Route::query($currentPage->currentUri, ['db' => $database]);
+            $out ["parenturl"] = $out["baseurl"] . Route::query($currentPage->currentUri, ['db' => $database]);
         } elseif (!empty($currentPage->parentUri)) {
             // otherwise use the parent uri
-            $out ["parenturl"] = $endpoint . Route::query($currentPage->parentUri, ['db' => $database]);
+            $out ["parenturl"] = $out["baseurl"] . Route::query($currentPage->parentUri, ['db' => $database]);
         } elseif ($page != PageId::INDEX) {
-            $out ["parenturl"] = $out ["homeurl"];
+            $out ["parenturl"] = $out["homeurl"];
         }
         $out ["hierarchy"] = false;
         if ($currentPage->hierarchy) {
@@ -490,7 +493,7 @@ class JSONRenderer
             }
         }
         $out ["extra"] = $currentPage->extra;
-        $out ["assets"] = Config::get('assets');
+        $out ["assets"] = Route::url(Config::get('assets'));
         // avoid messy Javascript issue with empty array being truthy or falsy - see #40
         $out ["download"] = false;
         if ($currentPage->containsBook()) {
@@ -498,7 +501,7 @@ class JSONRenderer
                 $out ["download"] = [];
                 foreach (Config::get('download_page') as $format) {
                     $query = preg_replace("/\&_=\d+/", "", $request->query());
-                    $url = Config::ENDPOINT['download'] . Route::query($query, ['type' => strtolower($format)]);
+                    $url = Route::url(Config::ENDPOINT['download']) . Route::query($query, ['type' => strtolower($format)]);
                     array_push($out ["download"], ['url' => $url, 'format' => $format]);
                 }
             } elseif (!empty($qid)) {

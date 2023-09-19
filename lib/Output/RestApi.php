@@ -56,7 +56,7 @@ class RestApi
      */
     public function getPathInfo()
     {
-        return $this->request->path() ?? "/index";
+        return $this->request->path() ?: "/index";
     }
 
     /**

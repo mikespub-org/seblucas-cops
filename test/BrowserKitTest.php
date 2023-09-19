@@ -154,7 +154,7 @@ class BrowserKitTest extends TestCase
         $crawler = $this->url('index.php?page=index');
 
         $uri = 'getJSON.php?page=index&complete=1';
-        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '");';
+        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "templates");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
 

@@ -363,7 +363,7 @@ class Cover
         if (!empty(Config::get('thumbnail_default'))) {
             $ext = strtolower(pathinfo(Config::get('thumbnail_default'), PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new LinkEntry(Config::get('thumbnail_default'), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(Route::url(Config::get('thumbnail_default')), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
         return null;
     }

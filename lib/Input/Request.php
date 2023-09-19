@@ -72,11 +72,11 @@ class Request
 
     /**
      * Summary of path
-     * @return ?string
+     * @return string
      */
     public function path()
     {
-        return $_SERVER['PATH_INFO'] ?? null;
+        return $_SERVER['PATH_INFO'] ?? '';
     }
 
     /**
@@ -354,14 +354,19 @@ class Request
 
     /**
      * Summary of notFound
+     * @param string|null $home
      * @return void
      */
-    public static function notFound()
+    public static function notFound($home = null)
     {
         header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
         header('Status: 404 Not Found');
 
         $_SERVER['REDIRECT_STATUS'] = 404;
+        $home ??= $_SERVER['SCRIPT_NAME'] ?? null;
+        $link = Route::url($home);
+        $contents = file_get_contents('templates/notfound.html');
+        echo str_replace('{{=it.link}}', $link, $contents);
     }
 
     /**

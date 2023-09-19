@@ -11,8 +11,8 @@ namespace SebLucas\Cops\Input;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Pages\PageId;
-use Exception;
 
 use function FastRoute\simpleDispatcher;
 
@@ -88,12 +88,11 @@ class Route
     /**
      * Match pathinfo against routes and return query params
      * @param string $path
-     * @throws \Exception if the $path is not found in $routes
      * @return ?array<mixed>
      */
     public static function match($path)
     {
-        if (empty($path)) {
+        if (empty($path) || $path == '/') {
             return [];
         }
 
@@ -113,13 +112,15 @@ class Route
             case Dispatcher::NOT_FOUND:
                 // ... 404 Not Found
                 //http_response_code(404);
-                throw new Exception("Invalid route " . htmlspecialchars($path));
+                //throw new Exception("Invalid route " . htmlspecialchars($path));
+                return null;
             case Dispatcher::METHOD_NOT_ALLOWED:
                 //$allowedMethods = $routeInfo[1];
                 // ... 405 Method Not Allowed
                 //header('Allow: ' . implode(', ', $allowedMethods));
                 //http_response_code(405);
-                throw new Exception("Invalid method " . htmlspecialchars($method) . " for route " . htmlspecialchars($path));
+                //throw new Exception("Invalid method " . htmlspecialchars($method) . " for route " . htmlspecialchars($path));
+                return null;
             case Dispatcher::FOUND:
                 $fixed = $routeInfo[1];
                 $params = $routeInfo[2];
@@ -208,16 +209,17 @@ class Route
     }
 
     /**
-     * Get url with endpoint for page with params
-     * @param string $endpoint
+     * Get full url with endpoint for page with params
+     * @param string|null $endpoint
      * @param string|int|null $page
      * @param array<mixed> $params
      * @param string|null $separator
      * @return string
      */
-    public static function url($endpoint, $page = null, $params = [], $separator = null)
+    public static function url($endpoint = null, $page = null, $params = [], $separator = null)
     {
-        return $endpoint . static::page($page, $params, $separator);
+        $endpoint ??= Config::ENDPOINT['index'];
+        return Config::get('full_url') . $endpoint . static::page($page, $params, $separator);
     }
 
     /**

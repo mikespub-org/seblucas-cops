@@ -27,9 +27,13 @@ Config::set('use_route_urls', true);
 
 $request = new Request();
 // @checkme set page based on path info here
-$path = $request->path() ?? "";
+$path = $request->path();
 if (!empty($path)) {
-    $params = Route::match($path) ?? [];
+    $params = Route::match($path);
+    if (is_null($params)) {
+        $request->notFound();
+        return;
+    }
     foreach ($params as $param => $value) {
         $request->set($param, $value);
     }

@@ -122,6 +122,7 @@ class EPubReader
         $data = [
             'title'      => $book->title,
             'version'    => Config::VERSION,
+            'resources'  => Route::url('resources'),
             'components' => $components,
             'contents'   => $contents,
             'link'       => $link,

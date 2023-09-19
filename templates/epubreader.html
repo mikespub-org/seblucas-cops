@@ -5,10 +5,11 @@
     <meta http-equiv="imagetoolbar" content="no" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>COPS EPub Reader</title>
-    <script type="text/javascript" src="resources/monocle/scripts/monocore.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/monocle/scripts/monoctrl.js?v={{=it.version}}"></script>
-    <link rel="stylesheet" type="text/css" href="resources/monocle/styles/monocore.css?v={{=it.version}}" media="screen" />
-    <link rel="stylesheet" type="text/css" href="resources/monocle/styles/monoctrl.css?v={{=it.version}}" media="screen" />
+    <!-- in pseudo doT syntax, but only these variables are replaced -->
+    <script type="text/javascript" src="{{=it.resources}}/monocle/scripts/monocore.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="{{=it.resources}}/monocle/scripts/monoctrl.js?v={{=it.version}}"></script>
+    <link rel="stylesheet" type="text/css" href="{{=it.resources}}/monocle/styles/monocore.css?v={{=it.version}}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{=it.resources}}/monocle/styles/monoctrl.css?v={{=it.version}}" media="screen" />
     <script type="text/javascript">
         Monocle.DEBUG = true;
         var bookData = {

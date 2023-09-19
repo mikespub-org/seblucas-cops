@@ -10,6 +10,7 @@
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\PageId;
@@ -24,6 +25,14 @@ if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Rea
 }
 
 $request = new Request();
+// @checkme set page based on path info here
+$path = $request->path();
+// make unexpected pathinfo visible for now...
+if (!empty($path) && empty(Config::get('use_route_urls'))) {
+    http_response_code(500);
+    echo 'Unexpected PATH_INFO in request';
+    return;
+}
 $page     = $request->get('page');
 $database = $request->database();
 
@@ -49,16 +58,21 @@ if (Config::get('fetch_protect') == '1') {
 
 header('Content-Type:text/html;charset=utf-8');
 
+$assets = Route::url(Config::get('assets'));
 $data = ['title'                 => Config::get('title_default'),
               'version'               => Config::VERSION,
-              'opds_url'              => Config::get('full_url') . Config::ENDPOINT["feed"],
+              'opds_url'              => Route::url(Config::ENDPOINT["feed"]),
               'customHeader'          => '',
               'template'              => $request->template(),
               'server_side_rendering' => $request->render(),
               'current_css'           => $request->style(),
-              'favico'                => Config::get('icon'),
-              'assets'                => Config::get('assets'),
-              'getjson_url'           => JSONRenderer::getCurrentUrl($request->query())];
+              'favico'                => Route::url(Config::get('icon')),
+              'assets'                => $assets,
+              'images'                => Route::url('images'),
+              'resources'             => Route::url('resources'),
+              'templates'             => Route::url('templates'),
+              'basedir'               => Route::url('.'),
+              'getjson_url'           => JSONRenderer::getCurrentUrl($request)];
 if (preg_match('/Kindle/', $request->agent())) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
 }
@@ -70,8 +84,8 @@ if ($request->template() == 'twigged') {
         return Format::str_format($format, ...$args);
     });
     $twig->addFunction($function);
-    $function = new \Twig\TwigFunction('asset', function ($file) {
-        return Config::get('assets') . '/' . $file . '?v=' . Config::VERSION;
+    $function = new \Twig\TwigFunction('asset', function ($file) use ($assets) {
+        return $assets . '/' . $file . '?v=' . Config::VERSION;
     });
     $twig->addFunction($function);
     if ($request->render()) {

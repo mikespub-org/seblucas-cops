@@ -6,13 +6,13 @@ function postRefresh()
     if (elmnt) elmnt.scrollIntoView();
 }
 
-function initiateTwig(url, theme) {
+function initiateTwig(url, theme, templates = 'templates') {
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
 
     let template = Twig.twig({
         id: 'page',
-        href: 'templates/' + theme + '/page.html',
+        href: templates + '/' + theme + '/page.html',
         async: false
      });
 

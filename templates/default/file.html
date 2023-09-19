@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="apple-touch-icon" href="./images/icons/icon57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="./images/icons/icon72.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="./images/icons/icon114.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="./images/icons/icon144.png" />
+    <link rel="apple-touch-icon" href="{{=it.images}}/icons/icon57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{{=it.images}}/icons/icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{{=it.images}}/icons/icon114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="{{=it.images}}/icons/icon144.png" />
     <meta name="msapplication-TileColor" content="#123456"/>
-    <meta name="msapplication-TileImage" content="./images/icons/icon144.png"/>
+    <meta name="msapplication-TileImage" content="{{=it.images}}/icons/icon144.png"/>
 
     <title>{{=it.title}}</title>
 
     <script type="text/javascript" src="{{=it.assets}}/jquery/dist/jquery.min.js?v={{=it.version}}"></script>
     <script type="text/javascript" src="{{=it.assets}}/js-cookie/src/js.cookie.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/simonpioli/sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="{{=it.resources}}/simonpioli/sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
 {{? it.server_side_rendering == 0}}
     <script type="text/javascript" src="{{=it.assets}}/magnific-popup/dist/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
     <link rel="stylesheet" type="text/css" href="{{=it.assets}}/magnific-popup/dist/magnific-popup.css?v={{=it.version}}" media="screen" />
@@ -24,12 +24,12 @@
     <script type="text/javascript" src="{{=it.assets}}/corejs-typeahead/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
 {{?}}
     <script type="text/javascript" src="{{=it.assets}}/lru-fast/lru.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="util.js"></script>
+    <script type="text/javascript" src="{{=it.basedir}}/util.js"></script>
     <link rel="related" href="{{=it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{=it.title}}" />
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
     <link rel="stylesheet" type="text/css" href="{{=it.assets}}/normalize.css/normalize.css?v={{=it.version}}" />
-    <link rel="stylesheet" type="text/css" href="templates/default/styles/fa-solid.min.css?v={{=it.version}}" media="screen" />
-    <link rel="stylesheet" type="text/css" href="templates/default/styles/fontawesome.min.css?v={{=it.version}}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{=it.templates}}/default/styles/fa-solid.min.css?v={{=it.version}}" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{{=it.templates}}/default/styles/fontawesome.min.css?v={{=it.version}}" media="screen" />
     <link rel="stylesheet" type="text/css" href="{{=it.current_css}}?v={{=it.version}}" media="screen" />
 
     {{=it.customHeader}}
@@ -37,7 +37,7 @@
 {{? it.server_side_rendering == 0}}
     <script type="text/javascript">
         $(document).ready(function() {
-            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}");
+            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}", "{{=it.templates}}");
         });
     </script>
 {{?}}

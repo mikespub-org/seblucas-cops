@@ -446,7 +446,11 @@ function search_Submitted (event) {
 
 /*exported handleLinks */
 function handleLinks () {
-    $("body").on ("click", "a[href^='index']", link_Clicked);
+    if (currentData && currentData.baseurl) {
+        $("body").on ("click", "a[href^='" + currentData.baseurl + "']", link_Clicked);
+    } else {
+        $("body").on ("click", "a[href^='index']", link_Clicked);
+    }
     $("body").on ("submit", "#searchForm", search_Submitted);
     $("body").on ("click", "#sort", function(){
         $('.books').sortElements(function(a, b){
@@ -501,13 +505,13 @@ $(document).on("keydown", function(e){
 });
 
 /*exported initiateAjax */
-function initiateAjax (url, theme) {
-    $.when($.get('templates/' + theme + '/header.html'),
-           $.get('templates/' + theme + '/footer.html'),
-           $.get('templates/' + theme + '/bookdetail.html'),
-           $.get('templates/' + theme + '/main.html'),
-           $.get('templates/' + theme + '/page.html'),
-           $.get('templates/' + theme + '/suggestion.html'),
+function initiateAjax (url, theme, templates = 'templates') {
+    $.when($.get(templates + '/' + theme + '/header.html'),
+           $.get(templates + '/' + theme + '/footer.html'),
+           $.get(templates + '/' + theme + '/bookdetail.html'),
+           $.get(templates + '/' + theme + '/main.html'),
+           $.get(templates + '/' + theme + '/page.html'),
+           $.get(templates + '/' + theme + '/suggestion.html'),
            $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
         templateBookDetail = doT.template (bookdetail [0]);
 
@@ -540,13 +544,13 @@ function initiateAjax (url, theme) {
 }
 
 /** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
-function initiateTwig(url, theme) {
+function initiateTwig(url, theme, templates = 'templates') {
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
 
     let template = Twig.twig({
         id: 'page',
-        href: 'templates/' + theme + '/page.html',
+        href: templates + '/' + theme + '/page.html',
         async: false 
      });
 

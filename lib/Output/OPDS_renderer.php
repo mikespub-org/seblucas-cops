@@ -97,7 +97,7 @@ class OPDSRenderer
         $url = Route::url(static::$endpoint, null, $params);
         $url = str_replace("%7B", "{", $url);
         $url = str_replace("%7D", "}", $url);
-        $xml->writeAttribute("template", Config::get('full_url') . $url);
+        $xml->writeAttribute("template", $url);
         $xml->endElement();
         $xml->startElement("Query");
         $xml->writeAttribute("role", "example");
@@ -180,7 +180,7 @@ class OPDSRenderer
             $url = Route::url(static::$endpoint, null, $params);
             $url = str_replace("%7B", "{", $url);
             $url = str_replace("%7D", "}", $url);
-            $link = new LinkEntry(Config::get('full_url') . $url, "application/atom+xml", "search", "Search here");
+            $link = new LinkEntry($url, "application/atom+xml", "search", "Search here");
         }
         $this->renderLink($link);
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {

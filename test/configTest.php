@@ -126,7 +126,7 @@ class ConfigTest extends TestCase
             "server_side_rendering" => $request->render(),
             "current_css"           => $request->style(),
             "favico"                => Config::get('icon'),
-            "getjson_url"           => JSONRenderer::getCurrentUrl($request->query())];
+            "getjson_url"           => JSONRenderer::getCurrentUrl($request)];
 
         $head = $tpl($data);
 

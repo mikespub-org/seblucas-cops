@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Model;
 
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Config;
 
 /**
  * From https://specs.opds.io/opds-1.2#23-acquisition-feeds
@@ -56,6 +56,6 @@ class LinkFeed extends Link
     public function hrefXhtml($endpoint = '')
     {
         // LinkFeed()->href is relative to endpoint
-        return $endpoint . $this->href;
+        return Config::get('full_url') . $endpoint . $this->href;
     }
 }
