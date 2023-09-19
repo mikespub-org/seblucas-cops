@@ -246,8 +246,10 @@ class JSONRenderer
         $out ["c"] = [
             "version" => Config::VERSION,
             "i18n" => [
+                "addedDateTitle" => localize("addeddate.title"),
                 "coverAlt" => localize("i18n.coversection"),
                 "authorsTitle" => localize("authors.title"),
+                "authorTitle" => localize("author.title"),
                 "allbooksTitle" => localize("allbooks.title"),
                 "bookwordTitle" => localize("bookword.title"),
                 "recentTitle" => localize("recent.title"),
@@ -264,6 +266,7 @@ class JSONRenderer
                 "lastAlt" => localize("paging.last.alternate"),
                 "searchAlt" => localize("search.alternate"),
                 "sortAlt" => localize("sort.alternate"),
+                "sortByTitle" => localize("sortby.title"),
                 "homeAlt" => localize("home.alternate"),
                 "cogAlt" => localize("cog.alternate"),
                 "permalinkAlt" => localize("permalink.alternate"),
@@ -277,7 +280,12 @@ class JSONRenderer
                 "sortorderDesc" => localize("search.sortorder.desc"),
                 "customizeEmail" => localize("customize.email"),
                 "ratingsTitle" => localize("ratings.title"),
+                "ratingTitle" => localize("rating.title"),
                 "linkTitle" => localize("extra.link"),
+                "titleTitle" => localize("title.title"),
+                "filtersTitle" => localize("filters.title"),
+                "downloadAllTitle" => localize("downloadall.title"),
+                "downloadAllTooltip" => localize("downloadall.tooltip"),
             ],
             "url" => [
                 "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
