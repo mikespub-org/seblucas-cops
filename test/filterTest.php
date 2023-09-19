@@ -308,7 +308,7 @@ class FilterTest extends TestCase
         $request = Request::build(['a' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Author", $entries[0]->className);
-        $this->assertEquals("Doyle, Arthur Conan", $entries[0]->title);
+        $this->assertEquals("Arthur Conan Doyle", $entries[0]->title);
         $this->assertEquals("8 books", $entries[0]->content);
         $this->assertEquals("phpunit?page=3&id=1", $entries[0]->getNavLink(self::$endpoint));
 

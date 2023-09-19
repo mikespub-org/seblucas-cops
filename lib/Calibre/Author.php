@@ -54,7 +54,7 @@ class Author extends Base
      */
     public function getTitle()
     {
-        return $this->sort;
+        return $this->name;
     }
 
     /**

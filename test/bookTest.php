@@ -867,7 +867,7 @@ class BookTest extends TestCase
         $this->assertEquals("A Study in Scarlet", $currentPage->entryArray[1]->title);
 
         $this->assertEquals("1 author", $currentPage->entryArray[2]->content);
-        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray[3]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray[3]->title);
     }
 
     public function testTypeaheadSearch_AuthorAndSeries(): void
@@ -882,7 +882,7 @@ class BookTest extends TestCase
 
         $this->assertCount(5, $currentPage->entryArray);
         $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
-        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
+        $this->assertEquals("Arthur Conan Doyle", $currentPage->entryArray[1]->title);
 
         $this->assertEquals("2 series", $currentPage->entryArray[2]->content);
         $this->assertEquals("D'Artagnan Romances", $currentPage->entryArray[3]->title);
@@ -935,7 +935,7 @@ class BookTest extends TestCase
 
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
-        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
+        $this->assertEquals("Arthur Conan Doyle", $currentPage->entryArray[1]->title);
 
         Config::set('ignored_categories', []);
     }

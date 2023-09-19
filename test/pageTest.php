@@ -295,7 +295,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Authors", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
-        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->containsBook());
 
         Config::set('author_split_first_letter', "1");
@@ -546,7 +546,7 @@ class PageTest extends TestCase
         $this->assertEquals("Sherlock Holmes", $currentPage->title);
         $this->assertCount(10, $currentPage->entryArray);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray [1]->title);
+        $this->assertEquals("Arthur Conan Doyle", $currentPage->entryArray [1]->title);
         $this->assertEquals("7 books", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
     }
@@ -593,7 +593,7 @@ class PageTest extends TestCase
         $this->assertEquals("Strand Magazine", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray [1]->title);
+        $this->assertEquals("Arthur Conan Doyle", $currentPage->entryArray [1]->title);
         $this->assertEquals("8 books", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
     }
@@ -642,7 +642,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Fiction", $currentPage->title);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [1]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray [1]->title);
         $this->assertEquals("2 books", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
     }
@@ -689,7 +689,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("English", $currentPage->title);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [1]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray [1]->title);
         $this->assertEquals("2 books", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
     }
@@ -738,7 +738,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("5 stars", $currentPage->title);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray [1]->title);
+        $this->assertEquals("Arthur Conan Doyle", $currentPage->entryArray [1]->title);
         $this->assertEquals("4 books", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
     }
@@ -957,7 +957,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Search result for *Lewis Carroll* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
-        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -973,7 +973,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Search result for *Carroll, Lewis* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
-        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -990,7 +990,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Search result for *car* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
-        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->containsBook());
     }
 
