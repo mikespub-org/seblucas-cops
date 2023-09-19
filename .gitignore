@@ -20,4 +20,8 @@
 *.cache
 .devcontainer/devcontainer.json
 **/.DS_Store
+<<<<<<< HEAD
+=======
+.gitignore
+>>>>>>> 61892a3 (Ignore nohup.out PHP logs)
 nohup.out
