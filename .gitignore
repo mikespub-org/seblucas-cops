@@ -18,6 +18,10 @@
 .editorconfig
 .gitattributes
 *.cache
-.devcontainer/devcontainer.json
+.devcontainer
+.vscode
 **/.DS_Store
 nohup.out
+debugtest.php
+info.php
+xdebug_info.php
