@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Tests;
 
+use Opis\JsonSchema\Validator;
+use Opis\JsonSchema\Errors\ErrorFormatter;
 //use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
 
@@ -23,16 +25,29 @@ use SebLucas\Cops\Pages\PageId;
  */
 class KiwilanTest extends TestCase
 {
-    public const OPDS_RELAX_NG = __DIR__ . "/opds-relax-ng/opds_catalog_1_2.rng";
-    public const OPENSEARCHDESCRIPTION_RELAX_NG = __DIR__ . "/opds-relax-ng/opensearchdescription.rng";
-    public const JING_JAR = __DIR__ . "/jing.jar";
-    public const OPDSVALIDATOR_JAR = __DIR__ . "/OPDSValidator.jar";
-    public const TEST_FEED = __DIR__ . "/text.atom";
+    public const OPDS_SCHEMAS = __DIR__ . "/schema/opds";
+    public const READIUM_SCHEMAS = __DIR__ . "/schema/readium";
+    public const FEED_SCHEMA = __DIR__ . "/schema/opds/feed.schema.json";
+    public const TEST_FEED = __DIR__ . "/text.json";
+
+    /** @var Validator */
+    public static $validator;
+    /** @var string */
+    public static $schema;
 
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
+
+        // See https://opis.io/json-schema/2.x/php-loader.html
+        self::$validator = new Validator();
+
+        $resolver = self::$validator->resolver();
+        $resolver->registerPrefix('https://readium.org/webpub-manifest/schema/', self::READIUM_SCHEMAS);
+        $resolver->registerPrefix('https://drafts.opds.io/schema/', self::OPDS_SCHEMAS);
+
+        self::$schema = file_get_contents(self::FEED_SCHEMA);
     }
 
     public static function tearDownAfterClass(): void
@@ -44,46 +59,35 @@ class KiwilanTest extends TestCase
     }
 
     /**
-     * Summary of jingValidateSchema
-     * @param mixed $feed
-     * @param mixed $relax
-     * @return bool
-     */
-    public function jingValidateSchema($feed, $relax = self::OPDS_RELAX_NG)
-    {
-        $path = "";
-        $code = null;
-        $res = system($path . 'java -jar "' . self::JING_JAR . '" "' . $relax . '" "' . $feed . '"', $code);
-        if ($res != '') {
-            echo 'RelaxNG validation error: '.$res;
-            return false;
-            //} elseif (isset($code) && $code > 0) {
-            //    echo 'Return code: '.strval($code);
-            //    return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Summary of opdsValidator
      * @param mixed $feed
      * @return bool
      */
     public function opdsValidator($feed)
     {
-        $oldcwd = getcwd(); // Save the old working directory
-        chdir("test");
-        $path = "";
-        $res = system($path . 'java -jar "' . self::OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '"');
-        chdir($oldcwd);
-        if ($res != '') {
-            copy($feed, $feed . '.bad');
-            echo 'OPDS validation error: '.$res;
+        $data = json_decode(file_get_contents($feed));
+
+        $result = self::$validator->validate($data, self::$schema);
+
+        // See https://opis.io/json-schema/2.x/php-error-formatter.html
+        if ($result->hasError()) {
+            echo 'OPDS validation error';
+            $error = $result->error();
+            $formatter = new ErrorFormatter();
+            // Print helper
+            $print = function ($value) {
+                echo json_encode(
+                    $value,
+                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                ), PHP_EOL;
+                echo '-----------', PHP_EOL;
+            };
+            // default - multiple
+            $print($formatter->format($error, true));
+            //echo json_encode($data, JSON_PRETTY_PRINT);
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
@@ -93,7 +97,7 @@ class KiwilanTest extends TestCase
      */
     public function opdsCompleteValidation($feed)
     {
-        return $this->jingValidateSchema($feed) && $this->opdsValidator($feed);
+        return $this->opdsValidator($feed);
     }
 
     public function testPageIndex(): void
@@ -108,17 +112,17 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED));
-        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
+        $this->AssertTrue($this->opdsValidator(self::TEST_FEED));
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
         $request = new Request();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED));
-        $this->AssertFalse($this->opdsValidator(self::TEST_FEED));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
+        $this->AssertTrue($this->opdsValidator(self::TEST_FEED));
 
         unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('generate_invalid_opds_stream', "0");
@@ -142,7 +146,8 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
@@ -180,7 +185,8 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
@@ -193,8 +199,9 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->getOpenSearch($request));
-        $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED, self::OPENSEARCHDESCRIPTION_RELAX_NG));
+        $response = $OPDSRender->getOpenSearch($request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
+        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
     }
 
     public function testPageAuthorMultipleDatabase(): void
@@ -212,7 +219,8 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
@@ -235,7 +243,8 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         // Second page
@@ -246,7 +255,8 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         // No pagination
@@ -267,7 +277,8 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         Config::set('books_filter', []);
@@ -286,7 +297,8 @@ class KiwilanTest extends TestCase
 
         $OPDSRender = new OPDSRenderer();
 
-        file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
+        $response = $OPDSRender->render($currentPage, $request);
+        file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
