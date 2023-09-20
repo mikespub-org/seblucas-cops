@@ -17,8 +17,8 @@ $request = new Request();
 if (Config::get('fetch_protect') == '1') {
     session_start();
     if (!isset($_SESSION['connected'])) {
+        // this will call exit()
         $request->notFound();
-        return;
     }
 }
 // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
@@ -39,8 +39,8 @@ if (is_null($bookId)) {
 }
 
 if (!$book) {
+    // this will call exit()
     $request->notFound();
-    return;
 }
 
 // -DC- Add png type
@@ -51,8 +51,8 @@ if ($type == 'jpg' || $type == 'png' || empty(Config::get('calibre_internal_dire
         $file = $book->getFilePath($type, $idData);
     }
     if (is_null($file) || !file_exists($file)) {
+        // this will call exit()
         $request->notFound();
-        return;
     }
 }
 
@@ -67,10 +67,10 @@ switch ($type) {
         break;
 }
 
-$expires = 60*60*24*14;
+$expires = 60 * 60 * 24 * 14;
 header('Pragma: public');
 header('Cache-Control: max-age=' . $expires);
-header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
 
 $data = $book->getDataById($idData);
 header('Content-Type: ' . $data->getMimeType());

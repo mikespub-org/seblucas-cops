@@ -13,8 +13,8 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
-use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 
 class PageTest extends TestCase
@@ -40,7 +40,7 @@ class PageTest extends TestCase
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
         $this->assertEquals("Alphabetical index of the 6 authors", $currentPage->entryArray [0]->content);
         if (Config::get('show_icons') == 1) {
-            $this->assertEquals(Format::addVersion("images/author.png"), $currentPage->entryArray [0]->getThumbnail());
+            $this->assertEquals(Route::url("images/author.png", null, ["v" => Config::VERSION]), $currentPage->entryArray [0]->getThumbnail());
         } else {
             $this->assertNull($currentPage->entryArray [0]->getThumbnail());
         }

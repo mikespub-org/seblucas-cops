@@ -25,6 +25,7 @@ use SebLucas\Cops\Calibre\CustomColumnTypeSeries;
 use SebLucas\Cops\Calibre\CustomColumnTypeText;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\PageId;
@@ -578,7 +579,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:8:3", $currentPage->entryArray[0]->id);
         $this->assertEquals("other_text", $currentPage->entryArray[0]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=8&id=3", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=8&id=3", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:8:1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:8:2", $currentPage->entryArray[2]->id);
     }
@@ -598,7 +599,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:6:1", $currentPage->entryArray[0]->id);
         $this->assertEquals("a", $currentPage->entryArray[0]->title);
         $this->assertEquals("6 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=6&id=1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=6&id=1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:6:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:6:3", $currentPage->entryArray[2]->id);
     }
@@ -618,7 +619,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:4:4", $currentPage->entryArray[0]->id);
         $this->assertEquals("GroupA", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=4&id=4", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=4&id=4", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:4:5", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:4:6", $currentPage->entryArray[2]->id);
     }
@@ -638,7 +639,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:5:3", $currentPage->entryArray[0]->id);
         $this->assertEquals("val01", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=5&id=3", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=5&id=3", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:5:4", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:5:5", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:5:6", $currentPage->entryArray[3]->id);
@@ -660,7 +661,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:12:2000-01-01", $currentPage->entryArray[0]->id);
         $this->assertEquals("2000-01-01", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=12&id=2000-01-01", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=12&id=2000-01-01", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:12:2000-01-02", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:12:2000-01-03", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:12:2016-04-20", $currentPage->entryArray[3]->id);
@@ -676,7 +677,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("2000", $currentPage->entryArray[0]->title);
         $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
         // switched to using PAGE_DETAIL instead of PAGE_ALL
-        $this->assertEquals("phpunit?page=15&custom=12&year=2000", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=12&year=2000", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:12:year:2016", $currentPage->entryArray[1]->id);
 
         Config::set('custom_date_split_year', '0');
@@ -739,7 +740,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:14:-99", $currentPage->entryArray[0]->id);
         $this->assertEquals(-99.0, $currentPage->entryArray[0]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=14&id=-99", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=14&id=-99", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:14:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:14:0.1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:14:0.2", $currentPage->entryArray[3]->id);
@@ -763,7 +764,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:10:-2", $currentPage->entryArray[0]->id);
         $this->assertEquals(-2, $currentPage->entryArray[0]->title);
         $this->assertEquals("3 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=10&id=-2", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=10&id=-2", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:10:-1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:10:1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:10:2", $currentPage->entryArray[3]->id);
@@ -777,7 +778,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:10:range:-2--1", $currentPage->entryArray[0]->id);
         $this->assertEquals("-2--1", $currentPage->entryArray[0]->title);
         $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=10&range=-2--1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=10&range=-2--1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:10:range:1-2", $currentPage->entryArray[1]->id);
 
         Config::set('custom_integer_split_range', '0');
@@ -840,7 +841,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:9:0", $currentPage->entryArray[0]->id);
         $this->assertEquals("No Stars", $currentPage->entryArray[0]->title);
         $this->assertEquals("12 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=9&id=0", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=9&id=0", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:9:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:9:4", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:9:6", $currentPage->entryArray[3]->id);
@@ -863,7 +864,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:11:-1", $currentPage->entryArray[0]->id);
         $this->assertEquals("Not Set", $currentPage->entryArray[0]->title);
         $this->assertEquals("9 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals("phpunit?page=15&custom=11&id=-1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=11&id=-1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
         $this->assertEquals("cops:custom:11:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:11:1", $currentPage->entryArray[2]->id);
     }

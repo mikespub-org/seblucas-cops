@@ -25,7 +25,7 @@
           <span class="glyphicon glyphicon-info-sign"></span><span class="visible-xs-inline"> {{=it.c.i18n.aboutTitle}}</span>
         </a></li>
       </ul>
-      <form id="searchForm" class="navbar-form navbar-right" role="search" action="index.php" method="get">
+      <form id="searchForm" class="navbar-form navbar-right" role="search" action="{{=it.baseurl}}" method="get">
         <div class="form-group">
           <input type="hidden" name="page" value="9">
           {{? it.databaseId != ""}}

@@ -287,7 +287,7 @@ class Cover
             $file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
-                return new LinkEntry(str_replace('%2F', '/', rawurlencode($this->book->path."/".$file)), $mime, LinkEntry::OPDS_IMAGE_TYPE);
+                return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($this->book->path."/".$file))), $mime, LinkEntry::OPDS_IMAGE_TYPE);
             }
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
             if ($ext != 'jpg') {
@@ -328,7 +328,7 @@ class Cover
             $fileName = Config::get('thumbnail_handling');
             $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new LinkEntry($fileName, $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(Route::url($fileName), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
 
         if ($this->coverFileName) {

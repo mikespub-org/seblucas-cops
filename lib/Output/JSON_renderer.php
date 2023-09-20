@@ -456,7 +456,7 @@ class JSONRenderer
         if ($request->hasFilter()) {
             $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
-                array_push($out["filters"], static::getContentArray($entry, $endpoint));
+                array_push($out["filters"], static::getContentArray($entry, $endpoint, '&filter=1'));
             }
         }
 

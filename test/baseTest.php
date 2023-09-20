@@ -106,7 +106,7 @@ class BaseTest extends TestCase
     {
         return ["title"                 => Config::get('title_default'),
                 "version"               => Config::VERSION,
-                "opds_url"              => Config::get('full_url') . Config::ENDPOINT["feed"],
+                "opds_url"              => Route::url(Config::ENDPOINT["feed"]),
                 "customHeader"          => "",
                 "template"              => $templateName,
                 "server_side_rendering" => $request->render(),

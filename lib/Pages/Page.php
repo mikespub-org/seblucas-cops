@@ -277,7 +277,12 @@ class Page
      */
     public function getCleanQuery()
     {
-        return preg_replace("/\&n=.*?$/", "", preg_replace("/\&_=\d+/", "", $this->request->query()));
+        $query = preg_replace("/(^|\&)n=.*?$/", "", preg_replace("/(^|\&)_=\d+/", "", $this->request->query()));
+        if (!empty(Config::get('use_route_urls'))) {
+            $path = $this->request->path();
+            return $path . '?' . $query;
+        }
+        return $query;
     }
 
     /**
