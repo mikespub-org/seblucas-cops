@@ -5,4 +5,5 @@ function postRefresh()
     hash = window.location.hash.replace("#", "");
     var elmnt = document.getElementById(hash);
     if (elmnt) elmnt.scrollIntoView();
+    $(".tt-hint").attr("name","searchTypeahead");
 }
