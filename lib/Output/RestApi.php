@@ -22,6 +22,7 @@ use Exception;
 class RestApi
 {
     public static string $endpoint = Config::ENDPOINT["restapi"];
+    public static int $numberPerPage = 100;
 
     /**
      * Summary of extra
@@ -249,13 +250,24 @@ class RestApi
             $result["error"] = "Invalid api key";
             return $result;
         }
+        $query = "SELECT COUNT(*) FROM {$name}";
+        $count = Database::querySingle($query, $database);
+        $result["total"] = $count;
+        $result["limit"] = static::$numberPerPage;
+        $start = 0;
+        $n = (int) $request->get('n', 1, '/^\d+$/');
+        if ($n > 0 && $n < ceil($count / static::$numberPerPage)) {
+            $start = ($n - 1) * static::$numberPerPage;
+        }
+        $result["offset"] = $start;
         $query = "SELECT * FROM {$name} LIMIT ?, ?";
-        $res = Database::query($query, [0, 10], $database);
+        $res = Database::query($query, [$start, static::$numberPerPage], $database);
         while ($post = $res->fetchObject()) {
             $entry = (array) $post;
             $entry["navlink"] = "{$endpoint}/databases/{$database}/{$name}?id={$entry['id']}";
             array_push($result["entries"], $entry);
         }
+        $result["columns"] = Database::getTableInfo($database, $name);
         return $result;
     }
 
@@ -281,6 +293,9 @@ class RestApi
                 }
             }
             $result["paths"][$route] = ["get" => ["summary" => "Route to " . $queryString, "responses" => ["200" => ["description" => "Result of " . $queryString]]]];
+            if ($route == "/databases/{db}") {
+                array_push($params, ["name" => "type", "in" => "query", "schema" => ["type" => "string", "enum" => ["table", "view"]]]);
+            }
             if (!empty($params)) {
                 $result["paths"][$route]["get"]["parameters"] = $params;
             }

@@ -308,6 +308,42 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test["title"]);
     }
 
+    public function testGetDatabase(): void
+    {
+        $request = new Request();
+        $request->set('db', 0);
+        $request->set('type', 'table');
+        $expected = "Database Type table";
+        $test = RestApi::getDatabases($request);
+        $this->assertEquals($expected, $test["title"]);
+    }
+
+    public function testGetTable(): void
+    {
+        $request = new Request();
+        $request->set('db', 0);
+        $request->set('name', 'books');
+        $expected = "Database Table books";
+        $test = RestApi::getDatabases($request);
+        $this->assertEquals($expected, $test["title"]);
+
+        $expected = "Invalid api key";
+        $this->assertEquals($expected, $test["error"]);
+
+        // generate api key and pass along in request
+        $apiKey = bin2hex(random_bytes(20));
+        Config::set('api_key', $apiKey);
+        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
+
+        // less than RestApi::$numberPerPage;
+        $expected = 15;
+        $test = RestApi::getDatabases($request);
+        $this->assertCount($expected, $test["entries"]);
+
+        Config::set('api_key', null);
+        unset($_SERVER['HTTP_X_API_KEY']);
+    }
+
     public function testGetOpenApi(): void
     {
         $request = new Request();
