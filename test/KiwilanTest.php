@@ -42,6 +42,7 @@ class KiwilanTest extends TestCase
 
         // See https://opis.io/json-schema/2.x/php-loader.html
         self::$validator = new Validator();
+        self::$validator->setMaxErrors(5);
 
         $resolver = self::$validator->resolver();
         $resolver->registerPrefix('https://readium.org/webpub-manifest/schema/', self::READIUM_SCHEMAS);
