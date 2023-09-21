@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Model;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 
@@ -68,7 +69,7 @@ class Entry
         if (Config::get('show_icons') == 1) {
             foreach (static::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $pid)) {
-                    array_push($this->linkArray, new LinkEntry(Format::addVersion($image), "image/png", LinkEntry::OPDS_THUMBNAIL_TYPE));
+                    array_push($this->linkArray, new LinkEntry(Route::url($image, null, ["v" => Config::VERSION]), "image/png", LinkEntry::OPDS_THUMBNAIL_TYPE));
                     break;
                 }
             }
@@ -109,7 +110,11 @@ class Entry
                 continue;
             }
 
-            return $link->hrefXhtml($endpoint) . $extraUri;
+            $uri = $link->hrefXhtml($endpoint);
+            if (!empty($extraUri) && strpos($uri, '?') === false) {
+                $extraUri = '?' . substr($extraUri, 1);
+            }
+            return $uri . $extraUri;
         }
         return "#";
     }

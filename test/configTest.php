@@ -12,6 +12,7 @@ require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Template\doT;
 
@@ -120,7 +121,7 @@ class ConfigTest extends TestCase
         $tpl = $template->template($headcontent, null);
         $data = ["title"                 => Config::get('title_default'),
             "version"               => Config::VERSION,
-            "opds_url"              => Config::get('full_url') . Config::ENDPOINT["feed"],
+            "opds_url"              => Route::url(Config::ENDPOINT["feed"]),
             "customHeader"          => "",
             "template"              => Config::get('template'),
             "server_side_rendering" => $request->render(),

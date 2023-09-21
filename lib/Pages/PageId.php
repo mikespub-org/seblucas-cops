@@ -39,6 +39,7 @@ class PageId
     public const ALL_IDENTIFIERS = "41";
     public const IDENTIFIER_DETAIL = "42";
     public const ALL_BOOKS_YEAR = "50";
+    public const REST_API = "98";
     public const FILTER = "99";
     public const ERROR = "100";
     public const INDEX_ID = "cops:catalog";

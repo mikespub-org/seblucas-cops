@@ -24,8 +24,8 @@ $request = new Request();
 if (Config::get('fetch_protect') == '1') {
     session_start();
     if (!isset($_SESSION['connected'])) {
+        // this will call exit()
         $request->notFound();
-        return;
     }
 }
 

@@ -22,12 +22,15 @@ class Request
      */
     public $urlParams = [];
     protected string $queryString = '';
+    protected bool $online = true;
 
     /**
      * Summary of __construct
+     * @param bool $online
      */
-    public function __construct()
+    public function __construct($online = true)
     {
+        $this->online = $online;
         $this->init();
     }
 
@@ -72,11 +75,12 @@ class Request
 
     /**
      * Summary of path
+     * @param string $default
      * @return string
      */
-    public function path()
+    public function path($default = '')
     {
-        return $_SERVER['PATH_INFO'] ?? '';
+        return $_SERVER['PATH_INFO'] ?? $default;
     }
 
     /**
@@ -104,6 +108,26 @@ class Request
     public function init()
     {
         $this->urlParams = [];
+        $this->queryString = '';
+        if (!$this->online) {
+            return;
+        }
+        $path = $this->path();
+        if (!empty(Config::get('use_route_urls'))) {
+            $params = Route::match($path);
+            if (is_null($params)) {
+                // this will call exit()
+                $this->notFound();
+            }
+            foreach ($params as $name => $value) {
+                $this->urlParams[$name] = $value;
+            }
+        } elseif (!empty($path)) {
+            // make unexpected pathinfo visible for now...
+            http_response_code(500);
+            echo 'Unexpected PATH_INFO in request';
+            return;
+        }
         if (!empty($_GET)) {
             foreach ($_GET as $name => $value) {
                 $this->urlParams[$name] = $_GET[$name];
@@ -355,18 +379,20 @@ class Request
     /**
      * Summary of notFound
      * @param string|null $home
-     * @return void
+     * @return never
      */
     public static function notFound($home = null)
     {
-        header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+        header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1') . ' 404 Not Found');
         header('Status: 404 Not Found');
 
         $_SERVER['REDIRECT_STATUS'] = 404;
-        $home ??= $_SERVER['SCRIPT_NAME'] ?? null;
+        // default to script basename or null if undefined
+        $home ??= basename($_SERVER['SCRIPT_NAME'] ?? '') ?: null;
         $link = Route::url($home);
         $contents = file_get_contents('templates/notfound.html');
         echo str_replace('{{=it.link}}', $link, $contents);
+        exit;
     }
 
     /**
@@ -380,7 +406,7 @@ class Request
     public static function build($params, $server = null, $cookie = null, $config = null)
     {
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-        $request = new self();
+        $request = new self(false);
         $request->urlParams = $params;
         $request->queryString = http_build_query($request->urlParams);
         return $request;

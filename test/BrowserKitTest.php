@@ -21,6 +21,8 @@ namespace SebLucas\Cops\Tests;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -31,7 +33,8 @@ use Exception;
 
 class BrowserKitTest extends TestCase
 {
-    public static string $serverUrl = 'http://localhost/cops/';
+    public static string $baseDir = '/cops/';
+    public static string $serverUrl = 'http://localhost';
     /** @var HttpBrowser */
     public $browser;
     /** @var ?string */
@@ -43,6 +46,12 @@ class BrowserKitTest extends TestCase
     {
         $this->userAgent ??= 'Chrome';
         $this->createBrowser($this->template, $this->userAgent);
+        Config::set('full_url', static::$baseDir);
+    }
+
+    public function tearDown(): void
+    {
+        Config::set('full_url', '');
     }
 
     /**
@@ -150,11 +159,11 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Chrome');
 
-        $uri = 'index.php?page=index';
-        $crawler = $this->url('index.php?page=index');
+        $uri = Route::url('index.php') . '?page=index';
+        $crawler = $this->url($uri);
 
-        $uri = 'getJSON.php?page=index&complete=1';
-        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "templates");';
+        $uri = Route::url('getJSON.php') . '?page=index&complete=1';
+        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . Route::url("templates") . '");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
 
@@ -179,7 +188,8 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Kindle/2.0');
 
-        $crawler = $this->url('index.php?page=index');
+        $uri = Route::url('index.php') . '?page=index';
+        $crawler = $this->url($uri);
 
         $expected = 11;
         $articles = $crawler->filterXPath($xpath);
@@ -224,7 +234,7 @@ class BrowserKitTest extends TestCase
             if ($template == 'default') {
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
-            $this->assertEquals('index.php?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
+            $this->assertEquals(Route::url('index.php') . '?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
         }
     }
 

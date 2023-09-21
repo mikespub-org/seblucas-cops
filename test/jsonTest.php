@@ -16,6 +16,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
 
 class JsonTest extends TestCase
@@ -43,8 +44,8 @@ class JsonTest extends TestCase
         $this->assertArrayHasKey("url", $test ["c"]);
         $this->assertArrayHasKey("config", $test ["c"]);
 
-        $this->assertEquals("phpunit?page=13&id={0}&db={1}", $test ["c"]["url"]["detailUrl"]);
-        $this->assertEquals("fetch.php?height=225&id={0}&db={1}", $test ["c"]["url"]["thumbnailUrl"]);
+        $this->assertEquals(self::$endpoint . "?page=13&id={0}&db={1}", $test ["c"]["url"]["detailUrl"]);
+        $this->assertEquals(Config::ENDPOINT["fetch"] . "?height=225&id={0}&db={1}", $test ["c"]["url"]["thumbnailUrl"]);
         $this->assertFalse($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
@@ -52,7 +53,7 @@ class JsonTest extends TestCase
         $test = [];
         $test = JSONRenderer::addCompleteArray($test, $request, self::$endpoint);
 
-        $this->assertEquals("fetch.php?id={0}&db={1}", $test ["c"]["url"]["thumbnailUrl"]);
+        $this->assertEquals(Config::ENDPOINT["fetch"] . "?id={0}&db={1}", $test ["c"]["url"]["thumbnailUrl"]);
         $this->assertTrue($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
@@ -71,8 +72,8 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getBookContentArray($book, self::$endpoint);
 
         $this->assertCount(2, $test ["preferedData"]);
-        $this->assertEquals("fetch.php?id=17&type=epub&data=20", $test ["preferedData"][0]["url"]);
-        $this->assertEquals("phpunit?page=21&id=2", $test ["publisherurl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&type=epub&data=20", $test ["preferedData"][0]["url"]);
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=21&id=2", $test ["publisherurl"]);
 
         $this->assertEquals("", $test ["seriesName"]);
         $this->assertEquals("1.0", $test ["seriesIndex"]);
@@ -87,13 +88,13 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getBookContentArray($book, self::$endpoint);
 
         $this->assertCount(1, $test ["preferedData"]);
-        $this->assertEquals("fetch.php?id=2&type=epub&data=1", $test ["preferedData"][0]["url"]);
-        $this->assertEquals("phpunit?page=21&id=6", $test ["publisherurl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=2&type=epub&data=1", $test ["preferedData"][0]["url"]);
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=21&id=6", $test ["publisherurl"]);
 
         $this->assertEquals("Sherlock Holmes", $test ["seriesName"]);
         $this->assertEquals("6.0", $test ["seriesIndex"]);
         $this->assertEquals("Book 6 in the Sherlock Holmes series", $test ["seriesCompleteName"]);
-        $this->assertEquals("phpunit?page=7&id=1", $test ["seriesurl"]);
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=7&id=1", $test ["seriesurl"]);
     }
 
     public function testGetFullBookContentArray(): void
@@ -102,17 +103,17 @@ class JsonTest extends TestCase
 
         $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
 
-        $this->assertEquals("fetch.php?id=17", $test ["coverurl"]);
-        $this->assertEquals("fetch.php?id=17&height=450", $test ["thumbnailurl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17", $test ["coverurl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&height=450", $test ["thumbnailurl"]);
         $this->assertCount(1, $test ["authors"]);
-        $this->assertEquals("phpunit?page=3&id=3", $test ["authors"][0]["url"]);
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=3&id=3", $test ["authors"][0]["url"]);
         $this->assertCount(3, $test ["tags"]);
-        $this->assertEquals("phpunit?page=12&id=5", $test ["tags"][0]["url"]);
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=12&id=5", $test ["tags"][0]["url"]);
         $this->assertCount(0, $test ["identifiers"]);
         $this->assertCount(3, $test ["datas"]);
-        $this->assertEquals("fetch.php?id=17&type=epub&data=20", $test ["datas"][2]["url"]);
-        $this->assertEquals("fetch.php?id=17&type=epub&data=20&view=1", $test ["datas"][2]["viewUrl"]);
-        $this->assertEquals("epubreader.php?data=20", $test ["datas"][2]["readerUrl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&type=epub&data=20", $test ["datas"][2]["url"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&type=epub&data=20&view=1", $test ["datas"][2]["viewUrl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["read"]) . "?data=20", $test ["datas"][2]["readerUrl"]);
 
         // use relative path for calibre directory
         Config::set('calibre_directory', "./test/BaseWithSomeBooks/");
@@ -121,10 +122,10 @@ class JsonTest extends TestCase
 
         $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
 
-        $this->assertEquals("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg", $test ["coverurl"]);
-        $this->assertEquals("fetch.php?id=17&height=450", $test ["thumbnailurl"]);
+        $this->assertEquals(Route::url("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&height=450", $test ["thumbnailurl"]);
         // see bookTest for more tests on data links
-        $this->assertEquals("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $test ["datas"][2]["url"]);
+        $this->assertEquals(Route::url("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $test ["datas"][2]["url"]);
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
@@ -157,17 +158,17 @@ class JsonTest extends TestCase
             [
                 'class' => 'tt-header',
                 'title' => 'Search result for *fic* in tags',
-                'navlink' => 'phpunit?page=9&query=fic&scope=tag',
+                'navlink' => Route::url(self::$endpoint) . '?page=9&query=fic&scope=tag',
             ],
             [
                 'class' => 'Tag',
                 'title' => 'Fiction',
-                'navlink' => 'phpunit?page=12&id=1',
+                'navlink' => Route::url(self::$endpoint) . '?page=12&id=1',
             ],
             [
                 'class' => 'Tag',
                 'title' => 'Science Fiction',
-                'navlink' => 'phpunit?page=12&id=7',
+                'navlink' => Route::url(self::$endpoint) . '?page=12&id=7',
             ],
         ];
         $this->assertEquals($check, $test);

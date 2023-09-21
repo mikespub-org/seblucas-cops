@@ -26,22 +26,7 @@ if (!class_exists('Kiwilan\Opds\OpdsResponse')) {
 Config::set('use_route_urls', true);
 
 $request = new Request();
-// @checkme set page based on path info here
-$path = $request->path();
-if (!empty($path)) {
-    $params = Route::match($path);
-    if (is_null($params)) {
-        $request->notFound();
-        return;
-    }
-    foreach ($params as $param => $value) {
-        $request->set($param, $value);
-    }
-}
 $page = $request->get('page', PageId::INDEX);
-if ($page == PageId::INDEX && $path == "/search") {
-    $page = PageId::OPENSEARCH;
-}
 $query = $request->get('query');  // 'q' by default for php-opds
 if ($query) {
     $page = PageId::OPENSEARCH_QUERY;

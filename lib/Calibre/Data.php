@@ -11,7 +11,6 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
-use SebLucas\Cops\Output\Format;
 
 class Data
 {
@@ -252,7 +251,7 @@ class Data
         } else {
             $href .= rawurlencode($this->getFilename());
         }
-        return new LinkEntry($href, $this->getMimeType(), LinkEntry::OPDS_ACQUISITION_TYPE, $title);
+        return new LinkEntry(Route::url($href), $this->getMimeType(), LinkEntry::OPDS_ACQUISITION_TYPE, $title);
     }
 
     /**
@@ -291,6 +290,6 @@ class Data
             return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, $rel, $title);
         }
 
-        return new LinkEntry(str_replace('%2F', '/', rawurlencode($book->path."/".$filename)), $mime, $rel, $title);
+        return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($book->path."/".$filename))), $mime, $rel, $title);
     }
 }
