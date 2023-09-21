@@ -70,6 +70,8 @@ class Route
         "/identifiers" => PageId::ALL_IDENTIFIERS,
         // extra routes supported by REST API
         "/custom" => PageId::REST_API,
+        "/databases/{db}/{name}" => PageId::REST_API,
+        "/databases/{db}" => PageId::REST_API,
         "/databases" => PageId::REST_API,
         "/openapi" => PageId::REST_API,
         "/routes" => PageId::REST_API,
@@ -312,7 +314,11 @@ class Route
      */
     public static function base()
     {
-        return Config::get('full_url') ?: dirname($_SERVER['SCRIPT_NAME']) . '/';
+        $base = Config::get('full_url') ?: dirname($_SERVER['SCRIPT_NAME']);
+        if (!str_ends_with($base, '/')) {
+            $base .= '/';
+        }
+        return $base;
     }
 
     /**

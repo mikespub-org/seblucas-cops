@@ -376,4 +376,23 @@ class Database
         }
         return $entries;
     }
+
+    /**
+     * Summary of getTableInfo
+     * @param ?int $database
+     * @param string $name table or view name
+     * @return array<mixed>
+     */
+    public static function getTableInfo($database = null, $name)
+    {
+        $query = "PRAGMA table_info({$name})";
+        $params = [];
+        $result = static::query($query, $params, $database);
+        $entries = [];
+        while ($post = $result->fetchObject()) {
+            $entry = (array) $post;
+            array_push($entries, $entry);
+        }
+        return $entries;
+    }
 }

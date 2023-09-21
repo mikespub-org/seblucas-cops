@@ -344,6 +344,30 @@ class Request
     }
 
     /**
+     * Summary of getApiKey
+     * @return string
+     */
+    public function getApiKey()
+    {
+        // If you send header X-Api-Key from your client, the web server will turn this into HTTP_X_API_KEY
+        // For Nginx proxy configurations you may need to add something like this:
+        // proxy_set_header X-Api-Key $http_x_api_key;
+        return $this->server('HTTP_X_API_KEY') ?? '';
+    }
+
+    /**
+     * Summary of hasValidApiKey
+     * @return bool
+     */
+    public function hasValidApiKey()
+    {
+        if (empty(Config::get('api_key')) || Config::get('api_key') !== $this->getApiKey()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Summary of isFeed
      * @return bool
      */
