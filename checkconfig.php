@@ -11,7 +11,7 @@
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Input\Route;
 
 require_once __DIR__ . '/config.php';
 /** @var array<mixed> $config */
@@ -31,7 +31,7 @@ switch ($err) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>COPS Configuration Check</title>
-    <link rel="stylesheet" type="text/css" href="<?php echo Format::addVersion($request->style()) ?>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<?php echo Route::url($request->style()) ?>" media="screen" />
 </head>
 <body>
 <div class="container">

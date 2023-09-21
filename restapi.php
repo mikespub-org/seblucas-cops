@@ -23,6 +23,14 @@ Config::set('titles_split_first_letter', '0');
 Config::set('use_route_urls', true);
 
 $request = new Request();
+$path = $request->path();
+if (empty($path)) {
+    $contents = file_get_contents(__DIR__ . '/templates/restapi.html');
+    $link = $request->script() . '/openapi';
+    echo str_replace('{{=it.link}}', $link, $contents);
+    return;
+}
+
 $apiHandler = new RestApi($request);
 
 header('Content-Type:application/json;charset=utf-8');

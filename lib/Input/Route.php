@@ -68,6 +68,13 @@ class Route
         "/identifiers/{id}/{title}" => PageId::IDENTIFIER_DETAIL,
         "/identifiers/{id}" => PageId::IDENTIFIER_DETAIL,
         "/identifiers" => PageId::ALL_IDENTIFIERS,
+        // extra routes supported by REST API
+        "/custom" => PageId::REST_API,
+        "/databases/{db}/{name}" => PageId::REST_API,
+        "/databases/{db}" => PageId::REST_API,
+        "/databases" => PageId::REST_API,
+        "/openapi" => PageId::REST_API,
+        "/routes" => PageId::REST_API,
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
@@ -88,7 +95,7 @@ class Route
     /**
      * Match pathinfo against routes and return query params
      * @param string $path
-     * @return ?array<mixed>
+     * @return ?array<mixed> array of query params or null if not found
      */
     public static function match($path)
     {
@@ -219,7 +226,10 @@ class Route
     public static function url($endpoint = null, $page = null, $params = [], $separator = null)
     {
         $endpoint ??= Config::ENDPOINT['index'];
-        return Config::get('full_url') . $endpoint . static::page($page, $params, $separator);
+        if (!empty($endpoint) && substr($endpoint, 0, 1) === '/') {
+            return $endpoint . static::page($page, $params, $separator);
+        }
+        return static::base() . $endpoint . static::page($page, $params, $separator);
     }
 
     /**
@@ -296,6 +306,19 @@ class Route
         }
         $queryString = http_build_query($params, '', $separator);
         return $prefix . '?' . $queryString;
+    }
+
+    /**
+     * Summary of base
+     * @return string
+     */
+    public static function base()
+    {
+        $base = Config::get('full_url') ?: dirname($_SERVER['SCRIPT_NAME']);
+        if (!str_ends_with($base, '/')) {
+            $base .= '/';
+        }
+        return $base;
     }
 
     /**
@@ -384,7 +407,7 @@ class Route
                 $page = $params;
                 $params = [];
             } else {
-                $page = $params["page"];
+                $page = $params["page"] ?? '';
                 unset($params["page"]);
             }
             static::$pages[$page] ??= [];
@@ -423,9 +446,7 @@ class Route
     public static function matchRewrite($path)
     {
         $dispatcher = simpleDispatcher(function (RouteCollector $r) {
-            foreach (static::$rewrites as $route => $map) {
-                $r->addRoute('GET', $route, $map);
-            }
+            static::addRewriteRules($r);
         });
 
         // match pattern
@@ -446,6 +467,18 @@ class Route
         // for rewrite rules, put fixed params at the end
         $params = array_merge($params, $fixed);
         return [$endpoint,  $params];
+    }
+
+    /**
+     * Summary of addRewriteRules
+     * @param RouteCollector $r
+     * @return void
+     */
+    public static function addRewriteRules($r)
+    {
+        foreach (static::$rewrites as $route => $map) {
+            $r->addRoute('GET', $route, $map);
+        }
     }
 
     /**

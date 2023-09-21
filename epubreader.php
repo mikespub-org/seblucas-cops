@@ -14,8 +14,8 @@ require_once __DIR__ . '/config.php';
 $request = new Request();
 $idData = $request->getId('data');
 if (empty($idData)) {
+    // this will call exit()
     $request->notFound();
-    exit;
 }
 
 header('Content-Type: text/html;charset=utf-8');

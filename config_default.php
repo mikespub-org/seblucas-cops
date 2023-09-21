@@ -481,3 +481,23 @@ $config['cops_download_series'] = [];
  * Example: $config['cops_download_author'] = ['EPUB'];
  */
 $config['cops_download_author'] = [];
+
+/*
+ * Use route URLs (/books/12/The_Author/My_Book) instead of URL parameters (?page=13&id=12)
+ *
+ * You may also need to specify the full_url if COPS is running in a sub-directory:
+ * $config['cops_full_url'] = '/cops/';
+ *
+ * Note: this is independent of the URL rewriting for downloading ebooks (files) for Kobo
+ *  1 : enable
+ *  0 : disable
+ */
+$config['cops_use_route_urls'] = '0';
+
+/*
+ * Specify api key to access some restricted features via REST API (dev only)
+ *
+ * Example: generate a random api key once via command line
+ * $ php -r 'echo bin2hex(random_bytes(20));'
+ */
+$config['cops_api_key'] = '';

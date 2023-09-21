@@ -14,7 +14,7 @@
     </div>
     <div id="tool" {{? it.c.config.server_side_rendering == 0}}style="display: none"{{?}}>
         <div style="float: left; width: 50%">
-            <form id="searchForm" action="index.php" method="get">
+            <form id="searchForm" action="{{=it.baseurl}}" method="get">
                 <div class="stop">
                     <input type="hidden" name="page" value="9" />
                     {{? it.databaseId != ""}}

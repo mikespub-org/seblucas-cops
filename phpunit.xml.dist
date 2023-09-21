@@ -22,7 +22,6 @@
     <testsuite name="COPS">
       <directory>./test/</directory>
       <exclude>./test/WebDriverTest.php</exclude>
-      <exclude>./test/KiwilanTest.php</exclude>
     </testsuite>
   </testsuites>
 </phpunit>

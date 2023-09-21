@@ -49,6 +49,7 @@ $gConfig['actions']['books'] = 'Check books for author';
 $gConfig['actions']['series'] = 'Check series for author';
 $gConfig['actions']['wikidata'] = 'Find Wikidata entity';
 $gConfig['actions']['google'] = 'Search Google Books';
+$gConfig['actions']['volume'] = 'Get Google Books Volume';
 $gConfig['actions']['hello_world'] = 'Example: Hello, World - see app/example.php';
 //$gConfig['actions']['goodbye'] = 'Example: Goodbye - see app/example.php';
 

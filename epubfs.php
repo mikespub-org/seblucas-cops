@@ -18,22 +18,22 @@ if (php_sapi_name() === 'cli') {
 $request = new Request();
 $idData = $request->getId('data');
 if (empty($idData)) {
+    // this will call exit()
     $request->notFound();
-    return;
 }
 $component = $request->get('comp', null);
 if (empty($component)) {
+    // this will call exit()
     $request->notFound();
-    return;
 }
 
 try {
     $data = EPubReader::getContent($idData, $component, $request);
 
-    $expires = 60*60*24*14;
+    $expires = 60 * 60 * 24 * 14;
     header('Pragma: public');
     header('Cache-Control: maxage='.$expires);
-    header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
+    header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
 
     echo $data;
 } catch (Exception $e) {

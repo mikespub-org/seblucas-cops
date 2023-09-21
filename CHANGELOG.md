@@ -13,10 +13,15 @@ x.x.x - TODO
 2.1.x - 2023xxxx To be continued (PHP >= 8.1)
   * Changes in config_default.php file:
     - new $config['cops_use_route_urls']
+    - new $config['cops_api_key']
+  * Add swagger-ui interface and api key config for REST API tests
+  * Add json schema validation for OPDS 2.0 tests (failing due to 'modified' format)
+  * Use nikic/fast-route to match route urls (if enabled)
+  * Use route urls in code and absolute paths in templates
 
 2.1.3 - 20230919 Try route urls + improve sort in bootstrap5 (PHP >= 8.1)
   * Use nikic/fast-route to match route urls (dev only)
-  * Use route urls in code and absolute paths in templates
+  * Start route urls in code and absolute paths in templates
   * Improve sorting in bootstrap5 template - see pull requests from @dunxd
 
 2.1.2 - 20230917 Fix TOC children + improve bootstrap5 template (PHP >= 8.1)

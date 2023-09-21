@@ -29,7 +29,7 @@
             <a class="nav-link{{? it.page == 4}} active{{?}}" href="index.php?page=4"{{? it.page ==4 }} aria-current="page"{{?}}>{{=it.c.i18n.allbooksTitle}}</a>
           </li>
         </ul>
-        <form id="searchForm" class="d-flex ps-2" role="search" action="index.php" method="get">
+        <form id="searchForm" class="d-flex ps-2" role="search" action="{{=it.baseurl}}" method="get">
             <input type="hidden" name="page" value="9">
             {{? it.databaseId != ""}}
               <input type="hidden" name="db" value="{{=it.databaseId}}">

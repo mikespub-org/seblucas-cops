@@ -83,6 +83,7 @@ class Format
     /**
      * Summary of addVersion
      * @param string $url
+     * @deprecated 2.1.2 use Route::url instead
      * @return string
      */
     public static function addVersion($url)

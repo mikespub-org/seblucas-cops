@@ -25,14 +25,6 @@ if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Rea
 }
 
 $request = new Request();
-// @checkme set page based on path info here
-$path = $request->path();
-// make unexpected pathinfo visible for now...
-if (!empty($path) && empty(Config::get('use_route_urls'))) {
-    http_response_code(500);
-    echo 'Unexpected PATH_INFO in request';
-    return;
-}
 $page     = $request->get('page');
 $database = $request->database();
 
