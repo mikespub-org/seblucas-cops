@@ -13,6 +13,8 @@ x.x.x - TODO
 2.1.x - 2023xxxx To be continued (PHP >= 8.1)
   * Changes in config_default.php file:
     - new $config['cops_use_route_urls']
+    - new $config['cops_api_key']
+  * Add swagger-ui interface and api key config for REST API tests
   * Add json schema validation for OPDS 2.0 tests (failing due to 'modified' format)
   * Use nikic/fast-route to match route urls (if enabled)
   * Use route urls in code and absolute paths in templates

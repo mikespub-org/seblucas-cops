@@ -72,9 +72,15 @@ class RestApi
         }
 
         // handle extra functions
-        if (array_key_exists($path, static::$extra)) {
+        $root = '/' . explode('/', $path . '/')[1];
+        if (array_key_exists($root, static::$extra)) {
             $this->isExtra = true;
-            return call_user_func(static::$extra[$path], $this->request);
+            $params = Route::match($path);
+            unset($params['page']);
+            if (!empty($params)) {
+                $this->setParams($params);
+            }
+            return call_user_func(static::$extra[$root], $this->request);
         }
 
         // match path with routes
@@ -172,7 +178,7 @@ class RestApi
         $result = ["title" => "Databases", "entries" => []];
         $id = 0;
         foreach (Database::getDbNameList() as $key) {
-            array_push($result["entries"], ["class" => "Database", "title" => $key, "id" => $id, "navlink" => "{$endpoint}/databases?db={$id}"]);
+            array_push($result["entries"], ["class" => "Database", "title" => $key, "id" => $id, "navlink" => "{$endpoint}/databases/{$id}"]);
             $id += 1;
         }
         return $result;
@@ -189,38 +195,66 @@ class RestApi
         if (!Database::isMultipleDatabaseEnabled() && $database != 0) {
             return ["title" => "Database Invalid", "entries" => []];
         }
-        $dbName = Database::getDbName($database) ?: $database;
-        $endpoint = static::getScriptName($request);
-        $result = ["title" => "Database $dbName", "entries" => []];
-        /**
         $name = $request->get('name', null, '/^\w+$/');
         if (!empty($name)) {
-            $query = "SELECT * FROM {$name} LIMIT ?, ?";
-            $res = Database::query($query, [0, 10], $database);
-            while ($post = $res->fetchObject()) {
-                $entry = (array) $post;
-                $entry["navlink"] = "{$endpoint}/databases?db={$database}&name={$name}&id={$entry['id']}";
-                array_push($result["entries"], $entry);
-            }
-            return $result;
+            return static::getTable($database, $name, $request);
         }
-         */
+        $title = "Database";
+        $dbName = Database::getDbName($database);
+        if (!empty($dbName)) {
+            $title .= " $dbName";
+        }
+        $endpoint = static::getScriptName($request);
         $type = $request->get('type', null, '/^\w+$/');
         if (in_array($type, ['table', 'view'])) {
+            $title .= " Type $type";
+            $result = ["title" => $title, "entries" => []];
             $entries = Database::getDbSchema($database, $type);
             foreach ($entries as $entry) {
-                $entry["navlink"] = "{$endpoint}/databases?db={$database}&name={$entry['tbl_name']}";
+                $entry["navlink"] = "{$endpoint}/databases/{$database}/{$entry['tbl_name']}";
                 unset($entry["sql"]);
                 array_push($result["entries"], $entry);
             }
             return $result;
         }
+        $result = ["title" => $title, "entries" => []];
         $metadata = [
             "table" => "Tables",
             "view" => "Views",
         ];
         foreach ($metadata as $name => $title) {
-            array_push($result["entries"], ["class" => "Metadata", "title" => $title, "navlink" => "{$endpoint}/databases?db={$database}&type={$name}"]);
+            array_push($result["entries"], ["class" => "Metadata", "title" => $title, "navlink" => "{$endpoint}/databases/{$database}?type={$name}"]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getTable
+     * @param int $database
+     * @param string $name
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getTable($database, $name, $request)
+    {
+        $title = "Database";
+        $dbName = Database::getDbName($database);
+        if (!empty($dbName)) {
+            $title .= " $dbName";
+        }
+        $title .= " Table $name";
+        $endpoint = static::getScriptName($request);
+        $result = ["title" => $title, "entries" => []];
+        if (!$request->hasValidApiKey()) {
+            $result["error"] = "Invalid api key";
+            return $result;
+        }
+        $query = "SELECT * FROM {$name} LIMIT ?, ?";
+        $res = Database::query($query, [0, 10], $database);
+        while ($post = $res->fetchObject()) {
+            $entry = (array) $post;
+            $entry["navlink"] = "{$endpoint}/databases/{$database}/{$name}?id={$entry['id']}";
+            array_push($result["entries"], $entry);
         }
         return $result;
     }
@@ -234,6 +268,7 @@ class RestApi
     {
         $result = ["openapi" => "3.0.3", "info" => ["title" => "COPS REST API", "version" => Config::VERSION]];
         $result["servers"] = [["url" => $request->script(), "description" => "COPS REST API Endpoint"]];
+        $result["components"] = ["securitySchemes" => ["ApiKeyAuth" => ["type" => "apiKey", "in" => "header", "name" => "X-API-KEY"]]];
         $result["paths"] = [];
         foreach (Route::getRoutes() as $route => $queryParams) {
             $params = [];
@@ -248,6 +283,9 @@ class RestApi
             $result["paths"][$route] = ["get" => ["summary" => "Route to " . $queryString, "responses" => ["200" => ["description" => "Result of " . $queryString]]]];
             if (!empty($params)) {
                 $result["paths"][$route]["get"]["parameters"] = $params;
+            }
+            if ($route == "/databases/{db}/{name}") {
+                $result["paths"][$route]["get"]["security"] = [["ApiKeyAuth" => []]];
             }
         }
         return $result;

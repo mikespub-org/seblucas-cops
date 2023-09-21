@@ -493,3 +493,11 @@ $config['cops_download_author'] = [];
  *  0 : disable
  */
 $config['cops_use_route_urls'] = '0';
+
+/*
+ * Specify api key to access some restricted features via REST API (dev only)
+ *
+ * Example: generate a random api key once via command line
+ * $ php -r 'echo bin2hex(random_bytes(20));'
+ */
+$config['cops_api_key'] = '';
