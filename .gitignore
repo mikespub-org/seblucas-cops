@@ -19,9 +19,3 @@
 .gitattributes
 *.cache
 .devcontainer
-.vscode
-**/.DS_Store
-nohup.out
-debugtest.php
-info.php
-xdebug_info.php
