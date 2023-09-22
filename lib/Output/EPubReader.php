@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
 
 /**
@@ -123,24 +124,14 @@ class EPubReader
             'title'      => $book->title,
             'version'    => Config::VERSION,
             'resources'  => Route::url('resources'),
+            'styles'     => Route::url('styles'),
+            'favicon'    => Route::url(Config::get('icon')),
             'components' => $components,
             'contents'   => $contents,
             'link'       => $link,
         ];
 
-        // replace {{=it.key}} (= doT syntax) and {{it.key}} (= twig syntax) with value
-        $pattern = [];
-        $replace = [];
-        foreach ($data as $key => $value) {
-            array_push($pattern, '/\{\{=?\s*it\.' . $key . '\s*\}\}/');
-            array_push($replace, $value);
-        }
-
-        header('Content-Type: text/html;charset=utf-8');
-
-        $filecontent = file_get_contents(static::$template);
-
-        return preg_replace($pattern, $replace, $filecontent);
+        return Format::template($data, static::$template);
     }
 
     /**

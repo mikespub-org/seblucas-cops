@@ -163,6 +163,25 @@ class Format
     }
 
     /**
+     * Summary of template
+     * @param ?array<mixed> $data
+     * @param string $template
+     * @return string
+     */
+    public static function template($data, $template)
+    {
+        // replace {{=it.key}} (= doT syntax) and {{it.key}} (= twig syntax) with value
+        $pattern = [];
+        $replace = [];
+        foreach ($data as $key => $value) {
+            array_push($pattern, '/\{\{=?\s*it\.' . $key . '\s*\}\}/');
+            array_push($replace, $value);
+        }
+        $filecontent = file_get_contents($template);
+        return preg_replace($pattern, $replace, $filecontent);
+    }
+
+    /**
      * Summary of xml2xhtml
      * @param string $xml
      * @return ?string

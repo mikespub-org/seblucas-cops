@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Output\Format;
 
 /**
  * Summary of Request
@@ -413,9 +414,9 @@ class Request
         $_SERVER['REDIRECT_STATUS'] = 404;
         // default to script basename or null if undefined
         $home ??= basename($_SERVER['SCRIPT_NAME'] ?? '') ?: null;
-        $link = Route::url($home);
-        $contents = file_get_contents('templates/notfound.html');
-        echo str_replace('{{=it.link}}', $link, $contents);
+        $data = ['link' => Route::url($home)];
+        $template = 'templates/notfound.html';
+        echo Format::template($data, $template);
         exit;
     }
 
