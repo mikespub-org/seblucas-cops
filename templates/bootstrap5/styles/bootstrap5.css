@@ -33,7 +33,7 @@ body {
 }
 
 body.submenu {
-    padding: 85px 0 38px 0; /* Needed with fixed header and footer */
+    padding: 85px 0 38px 0; /* Increased padding when submenu present */
 }
 
 html {
