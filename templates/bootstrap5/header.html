@@ -41,12 +41,8 @@
     </div>
   </nav>
   {{? it.containsBook != 0 || it.filters || it.isFilterPage }}
-  <script>
-    /* Add submenu class to body to give extra spacing */
-    document.body.classList.add("submenu");
-  </script>
-  <nav class="navbar bg-light py-1 ps-2" data-bs-theme="dark">
-      <ul name="2-bar" class="nav nav-pills" style="font-size: 0.8rem;">
+  <nav class="navbar bg-light py-1 ps-2" data-bs-theme="dark" id="controls-menu">
+      <ul id="2-bar" class="nav nav-pills" style="font-size: 0.8rem;">
         <li class="nav-item fw-bolder p-1 ps-2">{{=it.fullTitle}}</li>
         {{? it.containsBook != 0 }}
         <li class="nav-item p-1 border-start border-secondary-subtle">{{=it.c.i18n.sortByTitle}}:</li>
