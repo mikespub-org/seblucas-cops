@@ -35,7 +35,7 @@ class PageAllIdentifiers extends Page
     {
         $baselist = new BaseList($this->className, $this->request);
         $this->entryArray = $baselist->getRequestEntries($this->n);
-        $this->totalNumber = $baselist->countRequestEntries();
+        $this->totalNumber = $baselist->countDistinctEntries();
         $this->sorted = $baselist->orderBy;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("identifier", Config::get('show_not_set_filter'))) {
             array_push($this->entryArray, $baselist->getWithoutEntry());

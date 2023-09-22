@@ -107,7 +107,7 @@ class Page
     public function setRequest($request)
     {
         $this->request = $request ?? new Request();
-        // this could be string for first letter or custom columns - override there
+        // this could be string for first letter, identifier or custom columns - override there
         $this->idGet = $this->request->getId();
         $this->query = $this->request->get('query');
         $this->n = $this->request->get('n', 1, '/^\d+$/');  // use default here
