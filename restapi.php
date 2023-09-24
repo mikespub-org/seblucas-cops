@@ -10,6 +10,7 @@
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\RestApi;
 
 require_once __DIR__ . '/config.php';
@@ -25,9 +26,11 @@ Config::set('use_route_urls', true);
 $request = new Request();
 $path = $request->path();
 if (empty($path)) {
-    $contents = file_get_contents(__DIR__ . '/templates/restapi.html');
-    $link = $request->script() . '/openapi';
-    echo str_replace('{{=it.link}}', $link, $contents);
+    header('Content-Type:text/html;charset=utf-8');
+
+    $data = ['link' => $request->script() . '/openapi'];
+    $template = __DIR__ . '/templates/restapi.html';
+    echo Format::template($data, $template);
     return;
 }
 

@@ -383,7 +383,7 @@ class Database
      * @param string $name table or view name
      * @return array<mixed>
      */
-    public static function getTableInfo($database = null, $name)
+    public static function getTableInfo($database = null, $name = 'books')
     {
         $query = "PRAGMA table_info({$name})";
         $params = [];

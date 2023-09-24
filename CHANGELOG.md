@@ -10,12 +10,18 @@ x.x.x - TODO
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.1.x - 2023xxxx To be continued (PHP >= 8.1)
+2.x.x - 2023xxxx To be continued (PHP >= 8.1)
+  * TODO - Fix OPDS 2.0 pagination
+
+2.1.4 - 20230924 Translations, Bootstrap5, Route URLs and REST API (PHP >= 8.1)
   * Changes in config_default.php file:
     - new $config['cops_use_route_urls']
     - new $config['cops_api_key']
+  * Translations update sept 2023 - see pull request #52 from @horus68
+  * Improve submenu and filters in bootstrap5 template - see pull requests from @dunxd
+  * Fix distinct count for identifiers
   * Add swagger-ui interface and api key config for REST API tests
-  * Add json schema validation for OPDS 2.0 tests (failing due to 'modified' format)
+  * Add json schema validation for OPDS 2.0 tests - ok with 1.0.30 except pagination
   * Use nikic/fast-route to match route urls (if enabled)
   * Use route urls in code and absolute paths in templates
 

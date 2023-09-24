@@ -28,6 +28,8 @@ class PageIdentifierDetail extends Page
      */
     public function InitializeContent()
     {
+        // this would be the identifier - override here
+        $this->idGet = $this->request->get('id', null, '/^\w+$/');
         /** @var Identifier $instance */
         $instance = Identifier::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {

@@ -181,6 +181,17 @@ class BaseList
     }
 
     /**
+     * Summary of countDistinctEntries
+     * @param ?string $column
+     * @return int
+     */
+    public function countDistinctEntries($column = null)
+    {
+        $column ??= $this->getSort();
+        return Database::querySingle('select count(distinct ' . $column . ') from ' . $this->getTable(), $this->databaseId);
+    }
+
+    /**
      * Summary of countEntriesByFirstLetter
      * @param string $letter
      * @return int

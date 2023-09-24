@@ -29,6 +29,8 @@
         <zip destfile="${cops.release.filename}">
             <fileset dir=".">
                 <include name="**" />
+                <exclude name="tables.php" />
+                <exclude name="templates/tables.html" />
                 <exclude name="test/**" />
                 <exclude name=".git/**" />
                 <exclude name="docker/**" />
