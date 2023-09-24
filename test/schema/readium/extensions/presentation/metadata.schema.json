@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://readium.org/webpub-manifest/schema/extensions/presentation/metadata.schema.json",
+  "title": "Presentation Hints - Metadata",
+  "type": "object",
+  "properties": {
+    "presentation": {
+      "type": "object",
+      "properties": {
+        "clipped": {
+          "description": "Specifies whether or not the parts of a linked resource that flow out of the viewport are clipped.",
+          "type": "boolean"
+        },
+        "continuous": {
+          "description": "Indicates if consecutive linked resources from the `reading order` should be handled in a continuous or discontinuous way.",
+          "type": "boolean"
+        },
+        "fit": {
+          "description": "Specifies constraints for the presentation of a linked resource within the viewport.",
+          "type": "string",
+          "enum": [
+            "width", 
+            "height", 
+            "contain",
+            "cover"
+          ]
+        },
+        "orientation": {
+          "description": "Suggested orientation for the device when displaying the linked resource.",
+          "type": "string",
+          "enum": [
+            "auto", 
+            "landscape", 
+            "portrait"
+          ]
+        },
+        "overflow": {
+          "description": "Indicates if the overflow of linked resources from the `readingOrder` or `resources` should be handled using dynamic pagination or scrolling.",
+          "type": "string",
+          "enum": [
+            "auto",
+            "paginated",
+            "scrolled",
+            "scrolled-continuous"
+          ]
+        },
+        "spread": {
+          "description": "Indicates the condition to be met for the linked resource to be rendered within a synthetic spread.",
+          "type": "string",
+          "enum": [
+            "auto",
+            "both",
+            "none",
+            "landscape"
+          ]
+        }
+      }
+    }
+  }
+}

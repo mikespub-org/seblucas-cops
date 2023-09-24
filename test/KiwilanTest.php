@@ -202,7 +202,8 @@ class KiwilanTest extends TestCase
 
         $response = $OPDSRender->getOpenSearch($request);
         file_put_contents(self::TEST_FEED, $response->getContents());
-        $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        // OpenSearch is not a valid OPDS 2.0 feed
+        $this->AssertFalse($this->opdsCompleteValidation(self::TEST_FEED));
     }
 
     public function testPageAuthorMultipleDatabase(): void

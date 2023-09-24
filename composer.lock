@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d3833c7e1451d1d5ad95febd3c2e1f8",
+    "content-hash": "569c6bdbbb180666999ee0d084f8a785",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1217,16 +1217,16 @@
         },
         {
             "name": "kiwilan/php-opds",
-            "version": "1.0.23",
+            "version": "1.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kiwilan/php-opds.git",
-                "reference": "14369d7326ceb4a032209a7826e99f764f0c7599"
+                "reference": "fc01714cab21ae38b9c2f190583f29d4ae49029b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/14369d7326ceb4a032209a7826e99f764f0c7599",
-                "reference": "14369d7326ceb4a032209a7826e99f764f0c7599",
+                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/fc01714cab21ae38b9c2f190583f29d4ae49029b",
+                "reference": "fc01714cab21ae38b9c2f190583f29d4ae49029b",
                 "shasum": ""
             },
             "require": {
@@ -1236,9 +1236,11 @@
             "require-dev": {
                 "kiwilan/php-xml-reader": "^1.0",
                 "laravel/pint": "^1.2",
+                "opis/json-schema": "^2.3",
                 "pestphp/pest": "^1.20",
                 "phpstan/phpstan": "^1.10",
-                "spatie/ray": "^1.28"
+                "spatie/ray": "^1.28",
+                "symfony/console": "^6.3"
             },
             "type": "library",
             "autoload": {
@@ -1269,7 +1271,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kiwilan/php-opds/issues",
-                "source": "https://github.com/kiwilan/php-opds/tree/v1.0.23"
+                "source": "https://github.com/kiwilan/php-opds/tree/v1.0.30"
             },
             "funding": [
                 {
@@ -1277,7 +1279,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-14T15:52:21+00:00"
+            "time": "2023-09-23T12:20:37+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -2471,16 +2473,16 @@
         },
         {
             "name": "psr/http-client",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-client.git",
-                "reference": "0955afe48220520692d2d09f7ab7e0f93ffd6a31"
+                "reference": "bb5906edc1c324c9a05aa0873d40117941e5fa90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/0955afe48220520692d2d09f7ab7e0f93ffd6a31",
-                "reference": "0955afe48220520692d2d09f7ab7e0f93ffd6a31",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/bb5906edc1c324c9a05aa0873d40117941e5fa90",
+                "reference": "bb5906edc1c324c9a05aa0873d40117941e5fa90",
                 "shasum": ""
             },
             "require": {
@@ -2517,9 +2519,9 @@
                 "psr-18"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-client/tree/1.0.2"
+                "source": "https://github.com/php-fig/http-client"
             },
-            "time": "2023-04-10T20:12:12+00:00"
+            "time": "2023-09-23T14:17:50+00:00"
         },
         {
             "name": "psr/http-factory",
@@ -4475,5 +4477,5 @@
         "ext-zlib": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
