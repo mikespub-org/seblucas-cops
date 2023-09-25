@@ -127,14 +127,14 @@ class PageCustomize extends Page
 
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent())) {
-            $content .= '<select id="style" onchange="updateCookie (this);">';
+            $content .= '<select id="style" name="style" onchange="updateCookie (this); window.location=window.location;">';
             foreach ($this-> getStyleList() as $filename) {
                 $content .= "<option value='{$filename}' " . $this->isSelected("style", $filename) . ">{$filename}</option>";
             }
             $content .= '</select>';
         } else {
             foreach ($this-> getStyleList() as $filename) {
-                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label><br>";
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);window.location=window.location;' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label><br>";
             }
         }
         array_push($this->entryArray, new Entry(
