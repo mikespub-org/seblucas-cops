@@ -266,9 +266,9 @@ class Request
     {
         $style = $this->option('style');
         if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
-            return Route::base() . 'templates/' . $this->template() . '/styles/style-' . $this->option('style') . '.css';
+            return 'templates/' . $this->template() . '/styles/style-' . $this->option('style') . '.css';
         }
-        return Route::base() . 'templates/' . Config::get('template') . '/styles/style-' . Config::get('style') . '.css';
+        return 'templates/' . Config::get('template') . '/styles/style-' . Config::get('style') . '.css';
     }
 
     /**
