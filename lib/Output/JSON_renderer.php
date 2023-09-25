@@ -508,8 +508,9 @@ class JSONRenderer
             if (!empty(Config::get('download_page'))) {
                 $out ["download"] = [];
                 foreach (Config::get('download_page') as $format) {
-                    $query = preg_replace("/\&_=\d+/", "", $request->query());
-                    $url = Route::url(Config::ENDPOINT['download']) . Route::query($query, ['type' => strtolower($format)]);
+                    $pathInfo = $request->path();
+                    $query = preg_replace("/(^|\&)_=\d+/", "", $request->query());
+                    $url = Route::url(Config::ENDPOINT['download'] . $pathInfo) . Route::query($query, ['type' => strtolower($format)]);
                     array_push($out ["download"], ['url' => $url, 'format' => $format]);
                 }
             } elseif (!empty($qid)) {

@@ -15,6 +15,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
+use Exception;
 
 /**
  * EPub Reader based on Monocle
@@ -106,8 +107,12 @@ class EPubReader
         $book = Book::getBookByDataId($idData);
         $params = ['data' => $idData, 'db' => $book->getDatabaseId()];
 
-        $epub = new static::$epubClass($book->getFilePath('EPUB', $idData));
-        $epub->initSpineComponent();
+        try {
+            $epub = new static::$epubClass($book->getFilePath('EPUB', $idData));
+            $epub->initSpineComponent();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
 
         $components = implode(', ', array_map(function ($comp) {
             return "'" . $comp . "'";

@@ -425,7 +425,7 @@ class Route
     {
         static $transliterator;
 
-        $string = str_replace([' ', '&'], ['_', '-'], $string);
+        $string = str_replace([' ', '&', '"'], ['_', '-', ''], trim($string));
         if (!preg_match('/[\x80-\xff]/', $string)) {
             return $string;
         }
