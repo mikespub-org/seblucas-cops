@@ -7,7 +7,7 @@
 *:after,
 *:before {
     box-sizing: border-box;
-    font-smoothing: antialiased
+    -webkit-font-smoothing: antialiased
 }
 
 html,
@@ -496,6 +496,7 @@ footer:after {
 
 footer:before {
     content: "\63 \6f \70 \73 \20 \6b \69 \6e \64 \6c \65 \20 \74 \68 \65 \6d \65 \20 \62 \79 \20 \67 \69 \74 \68 \75 \62 .\63 \6f \6d /";
+    font-size: 0.75em;
     width: 63%;
     color: #555;
     left: 0;
@@ -505,6 +506,7 @@ footer:before {
 footer:after {
     clear: both;
     content: "\6A \6F \64 \75 \61 \69";
+    font-size: 0.75em;
     width: 37%;
     display: block;
     right: 0;
@@ -592,6 +594,12 @@ footer:after {
 #tool form input {
     padding: 5px;
     border: 1px solid #000
+}
+
+input[type="radio"], input[type="checkbox"]{ /* Make radio buttons easier to hit with touchscreen */
+    width: 30px;
+    height:30px;
+    margin-right: 10px;
 }
 
 @media only screen and (min-width:1100px) {
