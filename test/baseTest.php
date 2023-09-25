@@ -29,13 +29,6 @@ class BaseTest extends TestCase
         Database::clearDb();
     }
 
-    public function testAddURLParameter(): void
-    {
-        $this->assertEquals("?db=0", Format::addURLParam("?", "db", "0"));
-        $this->assertEquals("?key=value&db=0", Format::addURLParam("?key=value", "db", "0"));
-        $this->assertEquals("?key=value&otherKey=&db=0", Format::addURLParam("?key=value&otherKey", "db", "0"));
-    }
-
     public function testRouteQuery(): void
     {
         $this->assertEquals("?db=0", Route::query("", ["db" => "0"]));
