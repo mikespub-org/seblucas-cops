@@ -13,6 +13,12 @@ x.x.x - TODO
 2.x.x - 2023xxxx To be continued (PHP >= 8.1)
   * TODO - Fix OPDS 2.0 pagination
 
+2.1.5 - 2023xxxx Tweaks and fixes on previous release (PHP >= 8.1)
+  * Fix download by page with route urls, customize link in default footer, header links in bootstrap5
+  * Add first & last paging in bootstrap2 & twigged templates
+  * Refresh page on style change - see pull request #55 from @dunxd
+  * Fix style css not being prefixed with Route::base() - see pull request #54 from @Mikescher
+
 2.1.4 - 20230924 Translations, Bootstrap5, Route URLs and REST API (PHP >= 8.1)
   * Changes in config_default.php file:
     - new $config['cops_use_route_urls']

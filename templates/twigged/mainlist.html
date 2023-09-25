@@ -32,9 +32,11 @@ This is the content block
 {% block pager %}
 {% if it.isPaginated == 1 %}
     <ul class="pager">
+        {% if it.maxPage > 3 %}<li class="{% if it.firstLink == "" %}disabled{% endif %}"><a id="firstLink" href="{{it.firstLink}}"><span class="glyphicon glyphicon-step-backward"></span>{{it.c.i18n.firstAlt}}</a></li>{% endif %}
         <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
         <li> {{it.currentPage}} / {{it.maxPage}} </li>
         <li class="{% if it.nextLink == "" %}disabled{% endif %}"><a id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+        {% if it.maxPage > 3 %}<li class="{% if it.lastLink == "" %}disabled{% endif %}"><a id="lastLink" href="{{it.lastLink}}">{{it.c.i18n.lastAlt}}<span class="glyphicon glyphicon-step-forward"></span></a></li>{% endif %}
     </ul>
 {% endif %}
 {% endblock pager %}

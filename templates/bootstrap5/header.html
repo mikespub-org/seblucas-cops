@@ -8,25 +8,25 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="nav nav-tabs">
           <li class="nav-item">
-            <a class="nav-link{{? it.page == 10}} active{{?}}" href="index.php?page=10"{{? it.page == 10 }} aria-current="page"{{?}}>{{=it.c.i18n.recentTitle}}</a>
+            <a class="nav-link{{? it.page == 10}} active{{?}}" href="{{=it.baseurl}}?page=10"{{? it.page == 10 }} aria-current="page"{{?}}>{{=it.c.i18n.recentTitle}}</a>
           </li>
           {{? !it.c.config.ignored_categories.author }}
           <li class="nav-item">
-            <a class="nav-link{{? it.page == 1}} active{{?}}" href="index.php?page=1"{{? it.page == 1 }} aria-current="page"{{?}}>{{=it.c.i18n.authorsTitle}}</a>
+            <a class="nav-link{{? it.page == 1}} active{{?}}" href="{{=it.baseurl}}?page=1"{{? it.page == 1 }} aria-current="page"{{?}}>{{=it.c.i18n.authorsTitle}}</a>
           </li>
           {{?}}
           {{? !it.c.config.ignored_categories.tag }}
           <li class="nav-item">
-            <a class="nav-link{{? it.page == 11}} active{{?}}" href="index.php?page=11"{{? it.page == 11 }} aria-current="page"{{?}}>{{=it.c.i18n.tagsTitle}}</a>
+            <a class="nav-link{{? it.page == 11}} active{{?}}" href="{{=it.baseurl}}?page=11"{{? it.page == 11 }} aria-current="page"{{?}}>{{=it.c.i18n.tagsTitle}}</a>
           </li>
           {{?}}
           {{? !it.c.config.ignored_categories.series }}
           <li class="nav-item">
-            <a class="nav-link{{? it.page == 6}} active{{?}}" href="index.php?page=6"{{? it.page == 6 }} aria-current="page"{{?}}>{{=it.c.i18n.seriesTitle}}</a>
+            <a class="nav-link{{? it.page == 6}} active{{?}}" href="{{=it.baseurl}}?page=6"{{? it.page == 6 }} aria-current="page"{{?}}>{{=it.c.i18n.seriesTitle}}</a>
           </li>
           {{?}}
           <li class="nav-item">
-            <a class="nav-link{{? it.page == 4}} active{{?}}" href="index.php?page=4"{{? it.page ==4 }} aria-current="page"{{?}}>{{=it.c.i18n.allbooksTitle}}</a>
+            <a class="nav-link{{? it.page == 4}} active{{?}}" href="{{=it.baseurl}}?page=4"{{? it.page ==4 }} aria-current="page"{{?}}>{{=it.c.i18n.allbooksTitle}}</a>
           </li>
         </ul>
         <form id="searchForm" class="d-flex ps-2" role="search" action="{{=it.baseurl}}" method="get">
