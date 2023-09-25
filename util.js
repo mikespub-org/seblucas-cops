@@ -507,12 +507,12 @@ $(document).on("keydown", function(e){
 /*exported initiateAjax */
 function initiateAjax (url, theme, templates) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
-    $.when($.get('templates/' + theme + '/header.html'),
-           $.get('templates/' + theme + '/footer.html'),
-           $.get('templates/' + theme + '/bookdetail.html'),
-           $.get('templates/' + theme + '/main.html'),
-           $.get('templates/' + theme + '/page.html'),
-           $.get('templates/' + theme + '/suggestion.html'),
+    $.when($.get(templates + '/' + theme + '/header.html'),
+           $.get(templates + '/' + theme + '/footer.html'),
+           $.get(templates + '/' + theme + '/bookdetail.html'),
+           $.get(templates + '/' + theme + '/main.html'),
+           $.get(templates + '/' + theme + '/page.html'),
+           $.get(templates + '/' + theme + '/suggestion.html'),
            $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
         templateBookDetail = doT.template (bookdetail [0]);
 
