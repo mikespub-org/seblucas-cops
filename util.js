@@ -28,6 +28,7 @@ if (typeof Bloodhound === 'undefined') {
         remote: {
                     url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
                     replace: function (url, query) {
+                        url = url.replace('getJSON.php', currentData.baseurl.replace('index.php', 'getJSON.php'));
                         if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
                             return url.replace('%QUERY', query).replace('&db=%DB', "");
                         }
@@ -380,7 +381,7 @@ updatePage = function (data) {
 navigateTo = function (url) {
     $("h1").append (" <i class='fas fa-spinner fa-pulse'></i>");
     before = new Date ();
-    var jsonurl = url.replace ("index", "getJSON");
+    var jsonurl = url.replace ("index.php", "getJSON.php");
     var cachedData = cache.get (jsonurl);
     if (cachedData) {
         window.history.pushState(jsonurl, "", url);
@@ -412,7 +413,7 @@ function link_Clicked (event) {
     if (getCurrentOption ("use_fancyapps") === "1" &&
         (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
         before = new Date ();
-        var jsonurl = url.replace ("index", "getJSON");
+        var jsonurl = url.replace ("index.php", "getJSON.php");
         $.getJSON(jsonurl, function(data) {
             data.c = currentData.c;
             var detail = "";
@@ -440,7 +441,7 @@ function search_Submitted (event) {
         return;
     }
     event.preventDefault();
-    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
+    var url = str_format (currentData.baseurl + "?page=9&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
     navigateTo (url);
 }
 
@@ -545,13 +546,14 @@ function initiateAjax (url, theme, templates) {
 }
 
 /** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
-function initiateTwig(url, theme) {
+function initiateTwig(url, theme, templates = 'templates') {
+    templates = typeof templates !== 'undefined' ? templates : 'templates';
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
 
     let template = Twig.twig({
         id: 'page',
-        href: 'templates/' + theme + '/page.html',
+        href: templates + '/' + theme + '/page.html',
         async: false 
      });
 
