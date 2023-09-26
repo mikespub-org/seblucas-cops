@@ -506,7 +506,8 @@ $(document).on("keydown", function(e){
 });
 
 /*exported initiateAjax */
-function initiateAjax (url, theme, templates = 'templates') {
+function initiateAjax (url, theme, templates) {
+    templates = typeof templates !== 'undefined' ? templates : 'templates';
     $.when($.get(templates + '/' + theme + '/header.html'),
            $.get(templates + '/' + theme + '/footer.html'),
            $.get(templates + '/' + theme + '/bookdetail.html'),
@@ -546,6 +547,7 @@ function initiateAjax (url, theme, templates = 'templates') {
 
 /** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
 function initiateTwig(url, theme, templates = 'templates') {
+    templates = typeof templates !== 'undefined' ? templates : 'templates';
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
 
