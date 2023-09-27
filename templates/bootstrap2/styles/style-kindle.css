@@ -55,3 +55,7 @@ a {
     color:black;
     text-decoration: underline;
 }
+
+.book-meta-label, .book-title, .book-author {
+    font-weight: bold;
+}
