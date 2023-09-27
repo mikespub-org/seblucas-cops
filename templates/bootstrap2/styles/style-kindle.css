@@ -3,6 +3,16 @@
 body {
     font-family: "Amazon Ember", Helvetica, Futura, Caecilia, Georgia, Palatino, sans-serif;
     font-size: 25px;
+    background-color: white;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    color:black;
+}
+
+a, a:hover {
+    color:black;
+    text-decoration: underline;
 }
 
 .navbar-static-top {
@@ -11,6 +21,32 @@ body {
 
 .navbar-brand {
     font-size: 2em;
+}
+
+.navbar > div {
+    background-color: white;
+    border-bottom: solid 1px black;
+    color: black;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    color: black;
+}
+
+/* Navbar collapse button */
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: black;
+    color:white;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-brand:focus, .navbar-inverse .navbar-brand:hover {
+    color:black;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.navbar-inverse .navbar-form {
+    border: none;
 }
 
 .meta .title {
@@ -37,9 +73,9 @@ input[type="checkbox"], input[type="radio"] {
     margin-right: 5px;
 }
 
-.btn-success,.btn-success:hover, .btn-info,.btn-info:hover, .btn-primary, .btn-primary:hover {
-    background-color: gray;
-    border-color: gray;
+.btn-success,.btn-success:hover, .btn-info,.btn-info:hover, .btn-primary, .btn-primary:hover, .navbar-toggle {
+    background-color: black;
+    border-color: black;
     text-decoration: none;
 }
 
@@ -47,15 +83,10 @@ input[type="checkbox"], input[type="radio"] {
     height: 45px;
 }
 
-.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
-    color: white;
-}
-
-a {
-    color:black;
-    text-decoration: underline;
-}
-
 .book-meta-label, .book-title, .book-author {
     font-weight: bold;
+}
+
+.badge {
+    background-color: black;
 }
