@@ -1,0 +1,57 @@
+/* Override fonts, sizes and colours for Kindle eInk readers */
+
+body {
+    font-family: "Amazon Ember", Helvetica, Futura, Caecilia, Georgia, Palatino, sans-serif;
+    font-size: 25px;
+}
+
+.navbar-static-top {
+    padding-top: 5px;
+}
+
+.navbar-brand {
+    font-size: 2em;
+}
+
+.meta .title {
+    font-size: 1.8em;
+}
+
+.meta .author {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.btn-sm {
+    font-size: 0.6em;
+}
+
+.form-control {
+    font-size: 1.1em;
+    line-height: 1.2em;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    height: 25px;
+    width: 25px;
+    margin-right: 5px;
+}
+
+.btn-success,.btn-success:hover, .btn-info,.btn-info:hover, .btn-primary, .btn-primary:hover {
+    background-color: gray;
+    border-color: gray;
+    text-decoration: none;
+}
+
+#queryInput.form-control, #searchButton {
+    height: 45px;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+    color: white;
+}
+
+a {
+    color:black;
+    text-decoration: underline;
+}
