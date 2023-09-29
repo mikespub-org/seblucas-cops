@@ -21,6 +21,11 @@ a, a:hover {
 
 .navbar-brand {
     font-size: 2em;
+    line-height: 1.2em;
+    margin-bottom: 10px;
+    float:none;
+    font-weight: bold;
+    padding: 0px;
 }
 
 .navbar > div {
@@ -29,8 +34,17 @@ a, a:hover {
     color: black;
 }
 
-.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a {
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a, span.glyphicon.glyphicon-tags {
     color: black;
+}
+
+.navbar-inverse, .container-fluid {
+    background-color: white;
+    border:none;
+}
+
+.navbar>.container-fluid .navbar-brand {
+    margin-left: 0px; /* Fixes issue with long navbar-brand losing margin on wrap around lines. */
 }
 
 /* Navbar collapse button */
@@ -87,6 +101,6 @@ input[type="checkbox"], input[type="radio"] {
     font-weight: bold;
 }
 
-.badge {
+.badge, .label-default {
     background-color: black;
 }
