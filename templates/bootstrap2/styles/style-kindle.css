@@ -17,6 +17,7 @@ a, a:hover {
 
 .navbar-static-top {
     padding-top: 5px;
+    padding-left:15px;
 }
 
 .navbar-brand {
@@ -41,10 +42,6 @@ a, a:hover {
 .navbar-inverse, .container-fluid {
     background-color: white;
     border:none;
-}
-
-.navbar>.container-fluid .navbar-brand {
-    margin-left: 0px; /* Fixes issue with long navbar-brand losing margin on wrap around lines. */
 }
 
 /* Navbar collapse button */
