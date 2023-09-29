@@ -87,6 +87,10 @@ input[type="checkbox"], input[type="radio"] {
     margin-right: 5px;
 }
 
+input#email, input#max_item_per_page, select#style, select#template { /* prevents overlap */
+    width: 100%;
+}
+
 .btn-success,.btn-success:hover, .btn-info,.btn-info:hover, .btn-primary, .btn-primary:hover, .navbar-toggle {
     background-color: black;
     border-color: black;
