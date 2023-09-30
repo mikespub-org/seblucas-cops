@@ -123,6 +123,13 @@ input#email, input#max_item_per_page, select#style, select#template { /* prevent
     height: 45px;
 }
 
+#searchButton {
+    width: 50px;
+    padding-left:16px;
+    padding-top: 10px;
+    font-size: 18px;
+}
+
 .book-meta-label, .book-title, .book-author {
     font-weight: bold;
 }
