@@ -44,10 +44,35 @@ a, a:hover {
     border:none;
 }
 
+.panel-default>.panel-heading {
+    color: black;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+.panel-body{
+    font-weight: normal;
+    color: black;
+}
+
+.panel-body label {
+    font-weight: normal;
+}
+
 /* Navbar collapse button */
 .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
     background-color: black;
     color:white;
+}
+
+.navbar-toggle {
+    height: 50px;
+    width: 50px;
+    padding: 12px 6px;
+}
+.navbar-toggle .icon-bar {
+    width: 80%;
+    margin: auto;
 }
 
 .navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-brand:focus, .navbar-inverse .navbar-brand:hover {
