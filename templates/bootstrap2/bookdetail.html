@@ -28,10 +28,10 @@
 
 
 <div class="col-md-4 col-sm-6 col-xs-12">
-    <h1>{{=htmlspecialchars (it.title)}}</h1>
-    <h4>{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}</h4>
+    <h1 class="book-title">{{=htmlspecialchars (it.title)}}</h1>
+    <h4 class="book-author">{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}</h4>
     {{? it.book.seriesName != ""}}
-        <h4><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
+        <h4 class="book-series"><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
     {{?}}
 </div>
 
@@ -62,17 +62,17 @@
 
     {{? it.book.publisherName != ""}}
     <p>
-        <h4>{{=it.c.i18n.publisherName}}: <a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a></h4>
+        <h4><span class="book-meta-label">{{=it.c.i18n.publisherName}}</span>: <a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a></h4>
     </p>
     {{?}}
     {{? it.book.pubDate != ""}}
     <p>
-        <h4>{{=it.c.i18n.pubdateTitle}}: {{=it.book.pubDate}}</h4>
+        <h4><span class="book-meta-label">{{=it.c.i18n.pubdateTitle}}</span>: {{=it.book.pubDate}}</h4>
     </p>
     {{?}}
     {{~it.book.customcolumns_preview :column:column_index}}
     <p>
-        <h4>{{=column.customColumnType.columnTitle}}: {{=column.htmlvalue}}</h4>
+        <h4><span class="book-meta-label">{{=column.customColumnType.columnTitle}}</span>: {{=column.htmlvalue}}</h4>
     </p>
     {{~}}
 
@@ -84,7 +84,7 @@
 <div class="col-md-offset-2 col-md-8 col-sm-12">    
     {{? it.book.content != ""}}
     <br />
-    <h4>{{=it.c.i18n.contentTitle}}</h4>
+    <h4 class="book-meta-label">{{=it.c.i18n.contentTitle}}</h4>
     <div>{{=it.book.content}}</div>
     {{?}}
 </div>

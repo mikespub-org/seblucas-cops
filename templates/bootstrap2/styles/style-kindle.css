@@ -1,0 +1,139 @@
+/* Override fonts, sizes and colours for Kindle eInk readers */
+
+body {
+    font-family: "Amazon Ember", Helvetica, Futura, Caecilia, Georgia, Palatino, sans-serif;
+    font-size: 25px;
+    background-color: white;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    color:black;
+}
+
+a, a:hover {
+    color:black;
+    text-decoration: underline;
+}
+
+.navbar-static-top {
+    padding-top: 5px;
+    padding-left:15px;
+}
+
+.navbar-brand {
+    font-size: 2em;
+    line-height: 1.2em;
+    margin-bottom: 10px;
+    float:none;
+    font-weight: bold;
+    padding: 0px;
+}
+
+.navbar > div {
+    background-color: white;
+    border-bottom: solid 1px black;
+    color: black;
+}
+
+.navbar-inverse .navbar-brand, .navbar-inverse .navbar-nav>li>a, span.glyphicon.glyphicon-tags {
+    color: black;
+}
+
+.navbar-inverse, .container-fluid {
+    background-color: white;
+    border:none;
+}
+
+.panel-default>.panel-heading {
+    color: black;
+    background-color: transparent;
+    font-weight: bold;
+}
+
+.panel-body{
+    font-weight: normal;
+    color: black;
+}
+
+.panel-body label {
+    font-weight: normal;
+}
+
+/* Navbar collapse button */
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: black;
+    color:white;
+}
+
+.navbar-toggle {
+    height: 50px;
+    width: 50px;
+    padding: 12px 6px;
+}
+.navbar-toggle .icon-bar {
+    width: 80%;
+    margin: auto;
+}
+
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-brand:focus, .navbar-inverse .navbar-brand:hover {
+    color:black;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+.navbar-inverse .navbar-form {
+    border: none;
+}
+
+.meta .title {
+    font-size: 1.8em;
+}
+
+.meta .author {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.btn-sm {
+    font-size: 0.6em;
+}
+
+.form-control {
+    font-size: 1.1em;
+    line-height: 1.2em;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    height: 25px;
+    width: 25px;
+    margin-right: 5px;
+}
+
+input#email, input#max_item_per_page, select#style, select#template { /* prevents overlap */
+    width: 100%;
+}
+
+.btn-success,.btn-success:hover, .btn-info,.btn-info:hover, .btn-primary, .btn-primary:hover, .navbar-toggle {
+    background-color: black;
+    border-color: black;
+    text-decoration: none;
+}
+
+#queryInput.form-control, #searchButton {
+    height: 45px;
+}
+
+#searchButton {
+    width: 50px;
+    padding-left:16px;
+    padding-top: 10px;
+    font-size: 18px;
+}
+
+.book-meta-label, .book-title, .book-author {
+    font-weight: bold;
+}
+
+.badge, .label-default {
+    background-color: black;
+}
