@@ -199,6 +199,8 @@ if ($request->render()) {
 }
 ?>
             </h4>
+            <h2>User agent detected</h2>
+            <h4><?php echo $_SERVER["HTTP_USER_AGENT"] ?></h4>
         </article>
 <?php
 $i = 0;
