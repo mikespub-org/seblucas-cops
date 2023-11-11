@@ -23,16 +23,17 @@ class CustomColumnTypeInteger extends CustomColumnType
      * @param int $pcustomId
      * @param string $datatype
      * @param ?int $database
+     * @param array $displaySettings
      * @throws \UnexpectedValueException
      */
-    protected function __construct($pcustomId, $datatype = self::TYPE_INT, $database = null)
+    protected function __construct($pcustomId, $datatype, $database, $displaySettings)
     {
         switch ($datatype) {
             case static::TYPE_INT:
-                parent::__construct($pcustomId, static::TYPE_INT, $database);
+                parent::__construct($pcustomId, static::TYPE_INT, $database, $displaySettings);
                 break;
             case static::TYPE_FLOAT:
-                parent::__construct($pcustomId, static::TYPE_FLOAT, $database);
+                parent::__construct($pcustomId, static::TYPE_FLOAT, $database, $displaySettings);
                 break;
             default:
                 throw new UnexpectedValueException();
