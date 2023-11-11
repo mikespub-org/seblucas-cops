@@ -271,6 +271,17 @@ max-width:800px;
     font-style: italic;
 }
 
+.customcolumncontent {
+    display: inline;
+}
+
+.customcolumncontent[data-customcolumn-datatype='comments'][data-customcolumn-interpretas='long-text'],
+.customcolumncontent[data-customcolumn-datatype='comments'][data-customcolumn-interpretas='html'],
+.customcolumncontent[data-customcolumn-datatype='comments'][data-customcolumn-interpretas='markdown'] {
+    display: block;
+    white-space: pre-wrap;
+}
+
 /*-------------books popup article-------------*/
 .bookpopup h2{
     margin: 15px 15px;
