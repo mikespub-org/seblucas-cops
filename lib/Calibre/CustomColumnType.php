@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use PHPUnit\Util\Json;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
@@ -67,6 +68,8 @@ abstract class CustomColumnType
     protected $databaseId = null;
     /** @var ?int */
     protected $numberPerPage = -1;
+    /** @var array */
+    protected $displaySettings = [];
 
     /**
      * Summary of __construct
@@ -75,14 +78,15 @@ abstract class CustomColumnType
      * @param ?int $database
      * @param ?int $numberPerPage
      */
-    protected function __construct($pcustomId, $pdatatype, $database = null, $numberPerPage = null)
+    protected function __construct($pcustomId, $pdatatype, $database, $displaySettings)
     {
         $this->columnTitle = static::getTitleByCustomID($pcustomId, $database);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
         $this->customValues = null;
         $this->databaseId = $database;
-        $this->numberPerPage = $numberPerPage ?? Config::get('max_item_per_page');
+        $this->numberPerPage = Config::get('max_item_per_page');
+        $this->displaySettings = $displaySettings;
     }
 
     /**
@@ -351,32 +355,35 @@ abstract class CustomColumnType
     public function toArray()
     {
         return [
-            'customId'     => $this->customId,
-            'columnTitle'  => $this->columnTitle,
-            'datatype'     => $this->datatype,
-            //'customValues' => $this->customValues,
+            'customId'        => $this->customId,
+            'columnTitle'     => $this->columnTitle,
+            'datatype'        => $this->datatype,
+            'displaySettings' => $this->displaySettings,
+            //'customValues'  => $this->customValues,
         ];
     }
 
     /**
-     * Get the datatype of a CustomColumn by its customID
+     * Get the datatype & display-settings of a CustomColumn by its customID
      *
      * @param int $customId
      * @param ?int $database
-     * @return ?string
      */
-    protected static function getDatatypeByCustomID($customId, $database = null)
+    protected static function getDatatypeAndDisplaySettingsByCustomID($customId, $database = null)
     {
-        $query = 'SELECT datatype, is_multiple FROM custom_columns WHERE id = ?';
+        $query = 'SELECT datatype, is_multiple, display FROM custom_columns WHERE id = ?';
         $result = Database::query($query, [$customId], $database);
         if ($post = $result->fetchObject()) {
+
+            $settings = $post->display ? json_decode($post->display, true) : [];
+
             // handle case where we have several values, e.g. array of text for type 2 (csv)
             if ($post->datatype === "text" && $post->is_multiple === 1) {
-                return "csv";
+                return ["csv", $settings];
             }
-            return $post->datatype;
+            return [$post->datatype, $settings];
         }
-        return null;
+        return [null, []];
     }
 
     /**
@@ -394,29 +401,29 @@ abstract class CustomColumnType
             return static::$customColumnCacheID[$customId];
         }
 
-        $datatype = static::getDatatypeByCustomID($customId, $database);
+        [$datatype, $displaySettings] = static::getDatatypeAndDisplaySettingsByCustomID($customId, $database);
 
         switch ($datatype) {
             case static::TYPE_TEXT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_TEXT, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_TEXT, $database, $displaySettings);
             case static::TYPE_CSV:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_CSV, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_CSV, $database, $displaySettings);
             case static::TYPE_SERIES:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId, $database, $displaySettings);
             case static::TYPE_ENUM:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId, $database, $displaySettings);
             case static::TYPE_COMMENT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId, $database, $displaySettings);
             case static::TYPE_DATE:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId, $database, $displaySettings);
             case static::TYPE_FLOAT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId, $database, $displaySettings);
             case static::TYPE_INT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, static::TYPE_INT, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, static::TYPE_INT, $database, $displaySettings);
             case static::TYPE_RATING:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId, $database, $displaySettings);
             case static::TYPE_BOOL:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId, $database);
+                return static::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId, $database, $displaySettings);
             case static::TYPE_COMPOSITE:
                 return null; //TODO Currently not supported
             default:

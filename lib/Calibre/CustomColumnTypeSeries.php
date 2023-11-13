@@ -17,10 +17,11 @@ class CustomColumnTypeSeries extends CustomColumnType
      * Summary of __construct
      * @param int $pcustomId
      * @param ?int $database
+     * @param array $displaySettings
      */
-    protected function __construct($pcustomId, $database = null)
+    protected function __construct($pcustomId, $database, $displaySettings)
     {
-        parent::__construct($pcustomId, static::TYPE_SERIES, $database);
+        parent::__construct($pcustomId, static::TYPE_SERIES, $database, $displaySettings);
     }
 
     /**

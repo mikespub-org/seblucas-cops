@@ -56,7 +56,10 @@
     {{?}}
     {{~it.book.customcolumns_preview :column:column_index}}
     <p class="popupless">
-    <h3>{{=column.customColumnType.columnTitle}}: </h3>{{=column.htmlvalue}}
+    <h3>{{=column.customColumnType.columnTitle}}: </h3>
+    <div class="customcolumncontent"
+         data-customcolumn-datatype="{{=column.customColumnType.datatype}}"
+         data-customcolumn-interpretas="{{=column.customColumnType.displaySettings.interpret_as ?? ''}}">{{=column.htmlvalue}}</div>
     </p>
     {{~}}
     {{? it.book.content != ""}}
