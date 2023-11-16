@@ -13,7 +13,19 @@ x.x.x - TODO
 2.x.x - 2023xxxx To be continued (PHP >= 8.1)
   * TODO - Fix OPDS 2.0 pagination
 
-2.1.5 - 2023xxxx Tweaks and fixes on previous release (PHP >= 8.1)
+2.2.1 - 20231116 Consolidate PRs for next release (PHP >= 8.1)
+  * Support display settings for custom columns - see pull request #69 from @Mikescher
+  * Add Japanese language file - see pull request #67 from @horus68 translated by Rentaro Yoshidumi
+  * Use server side rendering for Kobo - see pull request #62 from @dunxd
+  * Add bootstrap2 Kindle theme - see pull request #61 from @dunxd
+  * Improve Kindle style - see pull request #60 from @dunxd
+  * Fix default values in util.js for Kindle - see pull request #58 from @dunxd
+
+2.2.0 - 20230925 Update dependencies (PHP >= 8.1)
+  * Upgrade mikespub/epub-loader to 2.2 (dev only)
+  * Upgrade mikespub/php-epub-meta to 2.2
+
+2.1.5 - 20230925 Tweaks and fixes on previous release (PHP >= 8.1)
   * Fix download by page with route urls, customize link in default footer, header links in bootstrap5
   * Add first & last paging in bootstrap2 & twigged templates
   * Refresh page on style change - see pull request #55 from @dunxd
