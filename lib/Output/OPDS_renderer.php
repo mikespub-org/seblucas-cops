@@ -18,7 +18,6 @@ use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFacet;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
-use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;

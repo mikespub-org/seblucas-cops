@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
 
 class OpdsTest extends TestCase
@@ -41,8 +42,8 @@ class OpdsTest extends TestCase
 
     /**
      * Summary of jingValidateSchema
-     * @param mixed $feed
-     * @param mixed $relax
+     * @param string $feed
+     * @param string $relax
      * @param bool $expected expected result (default true)
      * @return bool
      */
@@ -53,12 +54,12 @@ class OpdsTest extends TestCase
         $res = system($path . 'java -jar "' . self::JING_JAR . '" "' . $relax . '" "' . $feed . '" 2>&1', $code);
         if ($res != '') {
             if ($expected) {
-                echo 'RelaxNG validation error: '.$res;
+                echo 'RelaxNG validation error: ' . $res;
             }
             return false;
-            //} elseif (isset($code) && $code > 0) {
-            //    echo 'Return code: '.strval($code);
-            //    return false;
+        //} elseif (isset($code) && $code > 0) {
+        //    echo 'Return code: '.strval($code);
+        //    return false;
         } else {
             return true;
         }
@@ -66,7 +67,7 @@ class OpdsTest extends TestCase
 
     /**
      * Summary of opdsValidator
-     * @param mixed $feed
+     * @param string $feed
      * @param bool $expected expected result (default true)
      * @return bool
      */
@@ -80,7 +81,7 @@ class OpdsTest extends TestCase
         if ($res != '') {
             if ($expected) {
                 copy($feed, $feed . '.bad');
-                echo 'OPDS validation error: '.$res;
+                echo 'OPDS validation error: ' . $res;
             }
             return false;
         } else {
@@ -90,7 +91,7 @@ class OpdsTest extends TestCase
 
     /**
      * Summary of opdsCompleteValidation
-     * @param mixed $feed
+     * @param string $feed
      * @param bool $expected expected result (default true)
      * @return bool
      */
@@ -101,12 +102,13 @@ class OpdsTest extends TestCase
 
     /**
      * Summary of checkEntries
-     * @param mixed $currentPage
-     * @param mixed $feed
+     * @param Page $currentPage
+     * @param string $feed
      * @return bool
      */
     protected function checkEntries($currentPage, $feed)
     {
+        copy($feed, $feed . '.' . $this->getName());
         $hasPaging = $currentPage->isPaginated();
         $numEntries = count($currentPage->entryArray);
         $xml = simplexml_load_file($feed);
@@ -129,7 +131,7 @@ class OpdsTest extends TestCase
         } else {
             echo $this->getName() . ": $numEntries entries\n";
         }
-        return true;
+        return false;
     }
 
     public function testPageIndex(): void

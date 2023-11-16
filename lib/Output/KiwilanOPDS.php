@@ -20,6 +20,7 @@ use SebLucas\Cops\Input\Config as CopsConfig;
 use SebLucas\Cops\Input\Request as CopsRequest;
 use SebLucas\Cops\Model\Entry as CopsEntry;
 use SebLucas\Cops\Model\EntryBook as CopsEntryBook;
+use SebLucas\Cops\Pages\Page;
 use DateTime;
 
 class KiwilanOPDS
@@ -168,7 +169,7 @@ class KiwilanOPDS
 
     /**
      * Summary of render
-     * @param mixed $page
+     * @param Page $page
      * @param CopsRequest $request
      * @return OpdsResponse
      */
@@ -184,6 +185,23 @@ class KiwilanOPDS
             }
         }
         $url = null;
+        if ($page->isPaginated()) {
+            $prevLink = $page->getPrevLink();
+            if (!is_null($prevLink)) {
+                //$out ["firstLink"] = $page->getFirstLink()->hrefXhtml(self::$endpoint);
+                //$out ["prevLink"] = $prevLink->hrefXhtml(self::$endpoint);
+            }
+            $nextLink = $page->getNextLink();
+            if (!is_null($nextLink)) {
+                //$out ["nextLink"] = $nextLink->hrefXhtml(self::$endpoint);
+                //$out ["lastLink"] = $page->getLastLink()->hrefXhtml(self::$endpoint);
+            }
+            //$out ["maxPage"] = $page->getMaxPage();
+            //'numberOfItems' => $page->totalNumber,
+            //'itemsPerPage' => $page->getNumberPerPage(),
+            //'currentPage' => $page->n,
+            // 'opensearch:startIndex' => (($page->n - 1) * $page->getNumberPerPage() + 1)
+        }
 
         $opds = Opds::make($this->getOpdsConfig())
             ->title($title)

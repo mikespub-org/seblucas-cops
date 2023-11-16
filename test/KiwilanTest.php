@@ -21,9 +21,6 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
 
-/**
- * @todo JSON schema validation for OPDS 2.0
- */
 class KiwilanTest extends TestCase
 {
     public const OPDS_SCHEMAS = __DIR__ . "/schema/opds";
@@ -62,7 +59,7 @@ class KiwilanTest extends TestCase
 
     /**
      * Summary of opdsValidator
-     * @param mixed $feed
+     * @param string $feed
      * @param bool $expected expected result (default true)
      * @return bool
      */
@@ -98,7 +95,7 @@ class KiwilanTest extends TestCase
 
     /**
      * Summary of opdsCompleteValidation
-     * @param mixed $feed
+     * @param string $feed
      * @return bool
      */
     protected function opdsCompleteValidation($feed)
@@ -108,12 +105,13 @@ class KiwilanTest extends TestCase
 
     /**
      * Summary of checkEntries
-     * @param mixed $currentPage
-     * @param mixed $feed
+     * @param Page $currentPage
+     * @param string $feed
      * @return bool
      */
     protected function checkEntries($currentPage, $feed)
     {
+        copy($feed, $feed . '.' . $this->getName());
         $hasPaging = $currentPage->isPaginated();
         $numEntries = count($currentPage->entryArray);
         $contents = json_decode(file_get_contents($feed), true, 512, JSON_THROW_ON_ERROR);

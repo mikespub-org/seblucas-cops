@@ -131,7 +131,7 @@ class ConfigTest extends TestCase
 
         $head = $tpl($data);
 
-        $this->assertStringContainsString($templateName.".min.css", $head);
-        $this->assertStringContainsString($templateName.".min.js", $head);
+        $this->assertStringContainsString($templateName . ".min.css", $head);
+        $this->assertStringContainsString($templateName . ".min.js", $head);
     }
 }
