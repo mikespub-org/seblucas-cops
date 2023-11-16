@@ -20,9 +20,9 @@ class CustomColumnTypeFloat extends CustomColumnType
      * Summary of __construct
      * @param int $pcustomId
      * @param ?int $database
-     * @param array $displaySettings
+     * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($pcustomId, $database, $displaySettings)
+    protected function __construct($pcustomId, $database = null, $displaySettings = [])
     {
         parent::__construct($pcustomId, static::TYPE_FLOAT, $database, $displaySettings);
     }

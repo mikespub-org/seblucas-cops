@@ -26,9 +26,9 @@ class PageSerieDetail extends Page
         if ($this->request->get('filter')) {
             $this->filterUri = '&s=' . $this->idGet;
             $this->getFilters($instance);
-            // @todo needs title_sort function in sqlite for series
-            //} elseif ($this->request->get('tree')) {
-            //    $this->getHierarchy($instance);
+        // @todo needs title_sort function in sqlite for series
+        //} elseif ($this->request->get('tree')) {
+        //    $this->getHierarchy($instance);
         } else {
             $this->getEntries($instance);
         }

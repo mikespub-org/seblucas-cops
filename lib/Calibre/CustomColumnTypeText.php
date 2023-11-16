@@ -19,11 +19,11 @@ class CustomColumnTypeText extends CustomColumnType
      * @param int $pcustomId
      * @param string $datatype
      * @param ?int $database
-     * @param array $displaySettings
+     * @param array<string, mixed> $displaySettings
      * @return void
-     *@throws \UnexpectedValueException
+     * @throws \UnexpectedValueException
      */
-    protected function __construct($pcustomId, $datatype, $database, $displaySettings)
+    protected function __construct($pcustomId, $datatype = self::TYPE_TEXT, $database = null, $displaySettings = [])
     {
         switch ($datatype) {
             case static::TYPE_TEXT:

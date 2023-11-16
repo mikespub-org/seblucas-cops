@@ -8,7 +8,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use PHPUnit\Util\Json;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
@@ -68,7 +67,7 @@ abstract class CustomColumnType
     protected $databaseId = null;
     /** @var ?int */
     protected $numberPerPage = -1;
-    /** @var array */
+    /** @var array<string, mixed> */
     protected $displaySettings = [];
 
     /**
@@ -76,9 +75,9 @@ abstract class CustomColumnType
      * @param int $pcustomId
      * @param string $pdatatype
      * @param ?int $database
-     * @param ?int $numberPerPage
+     * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($pcustomId, $pdatatype, $database, $displaySettings)
+    protected function __construct($pcustomId, $pdatatype, $database = null, $displaySettings = [])
     {
         $this->columnTitle = static::getTitleByCustomID($pcustomId, $database);
         $this->customId = $pcustomId;
@@ -368,6 +367,7 @@ abstract class CustomColumnType
      *
      * @param int $customId
      * @param ?int $database
+     * @return array<mixed>
      */
     protected static function getDatatypeAndDisplaySettingsByCustomID($customId, $database = null)
     {

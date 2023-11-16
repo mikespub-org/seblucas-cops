@@ -135,8 +135,8 @@ class PageQueryResult extends Page
                 if (count($array) == 2 && is_array($array [0])) {
                     $total = $array [1];
                     $array = $array [0];
-                    // show the number of entries here, not the number of books found
-                    //$total = count($array);
+                // show the number of entries here, not the number of books found
+                //$total = count($array);
                 } else {
                     $total = count($array);
                 }
