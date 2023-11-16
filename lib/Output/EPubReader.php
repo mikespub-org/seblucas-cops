@@ -147,12 +147,12 @@ class EPubReader
     public static function addContentItem($item)
     {
         if (empty($item['children'])) {
-            return "{title: '" . addslashes($item['title']) . "', src: '". $item['src'] . "'}";
+            return "{title: '" . addslashes($item['title']) . "', src: '" . $item['src'] . "'}";
         }
         foreach (array_keys($item['children']) as $idx) {
             $item['children'][$idx] = static::addContentItem($item['children'][$idx]);
         }
-        return "{title: '" . addslashes($item['title']) . "', src: '". $item['src'] . "', children: [" . implode(', ', $item['children']) . "]}";
+        return "{title: '" . addslashes($item['title']) . "', src: '" . $item['src'] . "', children: [" . implode(', ', $item['children']) . "]}";
     }
 
     /**

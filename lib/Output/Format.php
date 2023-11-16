@@ -258,7 +258,7 @@ class Format
         libxml_use_internal_errors(true);
 
         $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' .
-                            $html  . '</body></html>'); // Load the HTML
+                            $html . '</body></html>'); // Load the HTML
         $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
         $output = static::xml2xhtml($output);
         if (preg_match('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {

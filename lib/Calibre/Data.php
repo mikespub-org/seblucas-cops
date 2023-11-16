@@ -290,6 +290,6 @@ class Data
             return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, $rel, $title);
         }
 
-        return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($book->path."/".$filename))), $mime, $rel, $title);
+        return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($book->path . "/" . $filename))), $mime, $rel, $title);
     }
 }

@@ -91,7 +91,7 @@ abstract class Base
      */
     public function getEntryId()
     {
-        return static::PAGE_ID.":".$this->id;
+        return static::PAGE_ID . ":" . $this->id;
     }
 
     /**
@@ -101,7 +101,7 @@ abstract class Base
      */
     public static function getEntryIdByLetter($startingLetter)
     {
-        return static::PAGE_ID.":letter:".$startingLetter;
+        return static::PAGE_ID . ":letter:" . $startingLetter;
     }
 
     /**

@@ -287,7 +287,7 @@ class Cover
             $file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
-                return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($this->book->path."/".$file))), $mime, LinkEntry::OPDS_IMAGE_TYPE);
+                return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($this->book->path . "/" . $file))), $mime, LinkEntry::OPDS_IMAGE_TYPE);
             }
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
             if ($ext != 'jpg') {

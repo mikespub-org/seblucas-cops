@@ -147,7 +147,7 @@ class Database
      */
     public static function getDbFileName($database)
     {
-        return static::getDbDirectory($database) .'metadata.db';
+        return static::getDbDirectory($database) . 'metadata.db';
     }
 
     /**
@@ -177,7 +177,7 @@ class Database
         if (is_null(static::$db)) {
             try {
                 if (is_readable(static::getDbFileName($database))) {
-                    static::$db = new PDO('sqlite:'. static::getDbFileName($database));
+                    static::$db = new PDO('sqlite:' . static::getDbFileName($database));
                     if (Translation::useNormAndUp()) {
                         static::$db->sqliteCreateFunction('normAndUp', function ($s) {
                             return Translation::normAndUp($s);

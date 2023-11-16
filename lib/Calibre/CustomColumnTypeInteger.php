@@ -160,7 +160,7 @@ class CustomColumnTypeInteger extends CustomColumnType
             $range = $post->min_value . "-" . $post->max_value;
             array_push($entryArray, new Entry(
                 $range,
-                $this->getEntryId().':'.$label.':'.$range,
+                $this->getEntryId() . ':' . $label . ':' . $range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [new LinkNavigation(Route::page($page, ['custom' => $this->customId, 'range' => $range]), null, null, $this->databaseId)],

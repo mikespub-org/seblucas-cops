@@ -355,7 +355,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
                 $post->groupid,
-                Book::PAGE_ID.':'.$label.':'.$post->groupid,
+                Book::PAGE_ID . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [new LinkFeed(Route::page($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],

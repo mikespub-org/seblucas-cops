@@ -350,7 +350,7 @@ class BaseList
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
                 $post->groupid,
-                $this->className::PAGE_ID.':'.$label.':'.$post->groupid,
+                $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [new LinkNavigation(Route::page($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],

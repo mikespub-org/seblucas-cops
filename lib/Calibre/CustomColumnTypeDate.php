@@ -162,7 +162,7 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
                 $post->groupid,
-                $this->getEntryId().':'.$label.':'.$post->groupid,
+                $this->getEntryId() . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [new LinkNavigation(Route::page($page, ['custom' => $this->customId, 'year' => $post->groupid]), null, null, $this->databaseId)],

@@ -145,7 +145,7 @@ class Book
      */
     public function getEntryId()
     {
-        return PageId::ALL_BOOKS_UUID.':'.$this->uuid;
+        return PageId::ALL_BOOKS_UUID . ':' . $this->uuid;
     }
 
     /**
@@ -155,7 +155,7 @@ class Book
      */
     public static function getEntryIdByLetter($startingLetter)
     {
-        return static::PAGE_ID.':letter:'.$startingLetter;
+        return static::PAGE_ID . ':letter:' . $startingLetter;
     }
 
     /**
@@ -165,7 +165,7 @@ class Book
      */
     public static function getEntryIdByYear($year)
     {
-        return static::PAGE_ID.':year:'.$year;
+        return static::PAGE_ID . ':year:' . $year;
     }
 
     /**

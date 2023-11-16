@@ -52,7 +52,7 @@ class Language extends Base
      */
     public static function getLanguageString($code)
     {
-        $string = localize("languages.".$code);
+        $string = localize("languages." . $code);
         if (preg_match("/^languages/", $string)) {
             return $code;
         }
