@@ -43,15 +43,18 @@ class OpdsTest extends TestCase
      * Summary of jingValidateSchema
      * @param mixed $feed
      * @param mixed $relax
+     * @param bool $expected expected result (default true)
      * @return bool
      */
-    public function jingValidateSchema($feed, $relax = self::OPDS_RELAX_NG)
+    protected function jingValidateSchema($feed, $relax = self::OPDS_RELAX_NG, $expected = true)
     {
         $path = "";
         $code = null;
-        $res = system($path . 'java -jar "' . self::JING_JAR . '" "' . $relax . '" "' . $feed . '"', $code);
+        $res = system($path . 'java -jar "' . self::JING_JAR . '" "' . $relax . '" "' . $feed . '" 2>&1', $code);
         if ($res != '') {
-            echo 'RelaxNG validation error: '.$res;
+            if ($expected) {
+                echo 'RelaxNG validation error: '.$res;
+            }
             return false;
             //} elseif (isset($code) && $code > 0) {
             //    echo 'Return code: '.strval($code);
@@ -64,18 +67,21 @@ class OpdsTest extends TestCase
     /**
      * Summary of opdsValidator
      * @param mixed $feed
+     * @param bool $expected expected result (default true)
      * @return bool
      */
-    public function opdsValidator($feed)
+    protected function opdsValidator($feed, $expected = true)
     {
         $oldcwd = getcwd(); // Save the old working directory
         chdir("test");
         $path = "";
-        $res = system($path . 'java -jar "' . self::OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '"');
+        $res = system($path . 'java -jar "' . self::OPDSVALIDATOR_JAR . '" -v 1.2 "' . $feed . '" 2>&1');
         chdir($oldcwd);
         if ($res != '') {
-            copy($feed, $feed . '.bad');
-            echo 'OPDS validation error: '.$res;
+            if ($expected) {
+                copy($feed, $feed . '.bad');
+                echo 'OPDS validation error: '.$res;
+            }
             return false;
         } else {
             return true;
@@ -85,11 +91,45 @@ class OpdsTest extends TestCase
     /**
      * Summary of opdsCompleteValidation
      * @param mixed $feed
+     * @param bool $expected expected result (default true)
      * @return bool
      */
-    public function opdsCompleteValidation($feed)
+    protected function opdsCompleteValidation($feed, $expected = true)
     {
-        return $this->jingValidateSchema($feed) && $this->opdsValidator($feed);
+        return $this->jingValidateSchema($feed, self::OPDS_RELAX_NG, $expected) && $this->opdsValidator($feed, $expected);
+    }
+
+    /**
+     * Summary of checkEntries
+     * @param mixed $currentPage
+     * @param mixed $feed
+     * @return bool
+     */
+    protected function checkEntries($currentPage, $feed)
+    {
+        $hasPaging = $currentPage->isPaginated();
+        $numEntries = count($currentPage->entryArray);
+        $xml = simplexml_load_file($feed);
+        if ($xml === false) {
+            echo file_get_contents($feed);
+            return false;
+        }
+        if ($currentPage->containsBook()) {
+            if (count($xml->entry) == $numEntries) {
+                return true;
+            }
+        } else {
+            if (count($xml->entry) == $numEntries) {
+                return true;
+            }
+        }
+        echo $xml->asXML();
+        if ($hasPaging) {
+            echo $this->getName() . ": page " . $currentPage->n . " has $numEntries of " . $currentPage->totalNumber . " entries\n";
+        } else {
+            echo $this->getName() . ": $numEntries entries\n";
+        }
+        return true;
     }
 
     public function testPageIndex(): void
@@ -107,14 +147,16 @@ class OpdsTest extends TestCase
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
         $request = new Request();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
-        $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED));
-        $this->AssertFalse($this->opdsValidator(self::TEST_FEED));
+        $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED, self::OPDS_RELAX_NG, false));
+        $this->AssertFalse($this->opdsValidator(self::TEST_FEED, false));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('generate_invalid_opds_stream', "0");
@@ -140,6 +182,7 @@ class OpdsTest extends TestCase
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
     }
@@ -178,6 +221,7 @@ class OpdsTest extends TestCase
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
@@ -210,6 +254,7 @@ class OpdsTest extends TestCase
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
@@ -233,6 +278,7 @@ class OpdsTest extends TestCase
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         // Second page
 
@@ -244,6 +290,7 @@ class OpdsTest extends TestCase
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         // No pagination
         Config::set('max_item_per_page', -1);
@@ -265,6 +312,7 @@ class OpdsTest extends TestCase
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         Config::set('books_filter', []);
     }
@@ -284,6 +332,7 @@ class OpdsTest extends TestCase
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
     }

@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
 
 /**
@@ -62,9 +63,10 @@ class KiwilanTest extends TestCase
     /**
      * Summary of opdsValidator
      * @param mixed $feed
+     * @param bool $expected expected result (default true)
      * @return bool
      */
-    public function opdsValidator($feed)
+    protected function opdsValidator($feed, $expected = true)
     {
         $data = json_decode(file_get_contents($feed));
 
@@ -72,6 +74,9 @@ class KiwilanTest extends TestCase
 
         // See https://opis.io/json-schema/2.x/php-error-formatter.html
         if ($result->hasError()) {
+            if (!$expected) {
+                return false;
+            }
             echo 'OPDS validation error';
             $error = $result->error();
             $formatter = new ErrorFormatter();
@@ -96,9 +101,42 @@ class KiwilanTest extends TestCase
      * @param mixed $feed
      * @return bool
      */
-    public function opdsCompleteValidation($feed)
+    protected function opdsCompleteValidation($feed)
     {
         return $this->opdsValidator($feed);
+    }
+
+    /**
+     * Summary of checkEntries
+     * @param mixed $currentPage
+     * @param mixed $feed
+     * @return bool
+     */
+    protected function checkEntries($currentPage, $feed)
+    {
+        $hasPaging = $currentPage->isPaginated();
+        $numEntries = count($currentPage->entryArray);
+        $contents = json_decode(file_get_contents($feed), true, 512, JSON_THROW_ON_ERROR);
+        if ($contents === null) {
+            echo file_get_contents($feed);
+            return false;
+        }
+        if ($currentPage->containsBook()) {
+            if (count($contents['publications']) == $numEntries) {
+                return true;
+            }
+        } else {
+            if (count($contents['navigation']) == $numEntries) {
+                return true;
+            }
+        }
+        echo json_encode($contents, JSON_PRETTY_PRINT) . "\n";
+        if ($hasPaging) {
+            echo $this->getName() . ": page " . $currentPage->n . " has $numEntries of " . $currentPage->totalNumber . " entries\n";
+        } else {
+            echo $this->getName() . ": $numEntries entries\n";
+        }
+        return false;
     }
 
     public function testPageIndex(): void
@@ -116,6 +154,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsValidator(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
@@ -124,6 +163,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsValidator(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('generate_invalid_opds_stream', "0");
@@ -150,6 +190,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
     }
@@ -189,6 +230,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
@@ -203,7 +245,8 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->getOpenSearch($request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         // OpenSearch is not a valid OPDS 2.0 feed
-        $this->AssertFalse($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertFalse($this->opdsValidator(self::TEST_FEED, false));
+        $this->markTestSkipped('OpenSearch is not a valid OPDS 2.0 feed');
     }
 
     public function testPageAuthorMultipleDatabase(): void
@@ -224,6 +267,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
@@ -248,6 +292,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         // Second page
 
@@ -260,6 +305,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         // No pagination
         Config::set('max_item_per_page', -1);
@@ -282,6 +328,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         Config::set('books_filter', []);
     }
@@ -302,6 +349,7 @@ class KiwilanTest extends TestCase
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
+        $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
     }

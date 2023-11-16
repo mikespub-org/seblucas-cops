@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6cd7713439a9d5899aa6419f40fae5cd",
+    "content-hash": "ac6b77a8ea09495b9ca4b640b4241c25",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1219,16 +1219,16 @@
         },
         {
             "name": "kiwilan/php-opds",
-            "version": "1.0.30",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kiwilan/php-opds.git",
-                "reference": "fc01714cab21ae38b9c2f190583f29d4ae49029b"
+                "reference": "2de093d96212d65ca98867e5d7faa4bd7675f013"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/fc01714cab21ae38b9c2f190583f29d4ae49029b",
-                "reference": "fc01714cab21ae38b9c2f190583f29d4ae49029b",
+                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/2de093d96212d65ca98867e5d7faa4bd7675f013",
+                "reference": "2de093d96212d65ca98867e5d7faa4bd7675f013",
                 "shasum": ""
             },
             "require": {
@@ -1273,7 +1273,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kiwilan/php-opds/issues",
-                "source": "https://github.com/kiwilan/php-opds/tree/v1.0.30"
+                "source": "https://github.com/kiwilan/php-opds/tree/develop"
             },
             "funding": [
                 {
@@ -1281,7 +1281,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-23T12:20:37+00:00"
+            "time": "2023-10-03T06:49:57+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -4468,6 +4468,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "nikic/fast-route": 20,
+        "kiwilan/php-opds": 20,
         "php-webdriver/webdriver": 20
     },
     "prefer-stable": false,
