@@ -18,9 +18,10 @@ use Kiwilan\Opds\Entries\OpdsEntryNavigation;
 use Kiwilan\Opds\Enums\OpdsVersionEnum;
 use SebLucas\Cops\Input\Config as CopsConfig;
 use SebLucas\Cops\Input\Request as CopsRequest;
+use SebLucas\Cops\Input\Route as CopsRoute;
 use SebLucas\Cops\Model\Entry as CopsEntry;
 use SebLucas\Cops\Model\EntryBook as CopsEntryBook;
-use SebLucas\Cops\Pages\Page;
+use SebLucas\Cops\Pages\Page as CopsPage;
 use DateTime;
 
 class KiwilanOPDS
@@ -53,10 +54,10 @@ class KiwilanOPDS
             author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
             authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
             iconUrl: CopsConfig::get('icon'),
-            startUrl: self::$endpoint,
+            startUrl: CopsRoute::url(self::$endpoint),
             // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
             //searchUrl: self::$endpoint . '?page=8',
-            searchUrl: self::$endpoint . '/search',
+            searchUrl: CopsRoute::url(self::$endpoint . '/search'),
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
             usePagination: false, // To enable pagination, default is false
@@ -77,7 +78,7 @@ class KiwilanOPDS
         foreach ($entry->book->getAuthors() as $author) {
             $opdsEntryAuthor = new OpdsEntryBookAuthor(
                 name: $author->name,
-                uri: self::$endpoint . $author->getUri(),
+                uri: CopsRoute::url(self::$endpoint . $author->getUri()),
             );
             array_push($authors, $opdsEntryAuthor);
         }
@@ -160,7 +161,7 @@ class KiwilanOPDS
     {
         $opds = Opds::make($this->getOpdsConfig())
             ->title('Search')
-            ->url(self::$endpoint . '/search')
+            ->url(CopsRoute::url(self::$endpoint . '/search'))
             ->isSearch()
             ->feeds([])
             ->get();
@@ -169,7 +170,7 @@ class KiwilanOPDS
 
     /**
      * Summary of render
-     * @param Page $page
+     * @param CopsPage $page
      * @param CopsRequest $request
      * @return OpdsResponse
      */
@@ -184,29 +185,44 @@ class KiwilanOPDS
                 array_push($feeds, $this->getOpdsEntry($entry));
             }
         }
-        $url = null;
+        $url = $request->getCurrentUrl(static::$endpoint);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {
-                //$out ["firstLink"] = $page->getFirstLink()->hrefXhtml(self::$endpoint);
-                //$out ["prevLink"] = $prevLink->hrefXhtml(self::$endpoint);
+                $first = $page->getFirstLink()->hrefXhtml(self::$endpoint);
+                $previous = $prevLink->hrefXhtml(self::$endpoint);
+            } else {
+                $first = null;
+                $previous = null;
             }
             $nextLink = $page->getNextLink();
             if (!is_null($nextLink)) {
-                //$out ["nextLink"] = $nextLink->hrefXhtml(self::$endpoint);
-                //$out ["lastLink"] = $page->getLastLink()->hrefXhtml(self::$endpoint);
+                $next = $nextLink->hrefXhtml(self::$endpoint);
+                $last = $page->getLastLink()->hrefXhtml(self::$endpoint);
+            } else {
+                $next = null;
+                $last = null;
             }
             //$out ["maxPage"] = $page->getMaxPage();
             //'numberOfItems' => $page->totalNumber,
             //'itemsPerPage' => $page->getNumberPerPage(),
             //'currentPage' => $page->n,
             // 'opensearch:startIndex' => (($page->n - 1) * $page->getNumberPerPage() + 1)
-        }
 
-        $opds = Opds::make($this->getOpdsConfig())
+            $opds = Opds::make($this->getOpdsConfig())
             ->title($title)
+            ->url($url)
+            ->feeds($feeds)
+            ->paging(page: $page->n, total: $page->totalNumber, first: $first, last: $last, previous: $previous, next: $next)
+            ->get();
+
+        } else {
+            $opds = Opds::make($this->getOpdsConfig())
+            ->title($title)
+            ->url($url)
             ->feeds($feeds)
             ->get();
+        }
         return $opds->getResponse();
     }
 }

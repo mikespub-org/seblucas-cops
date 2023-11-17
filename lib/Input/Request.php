@@ -329,6 +329,22 @@ class Request
     }
 
     /**
+     * Summary of getCurrentUrl
+     * @param ?string $endpoint
+     * @return string
+     */
+    public function getCurrentUrl($endpoint = null)
+    {
+        $endpoint ??= $this->getEndpoint(Config::ENDPOINT['index']);
+        $pathInfo = $this->path();
+        $queryString = $this->query();
+        if (empty($queryString)) {
+            return Route::url($endpoint . $pathInfo);
+        }
+        return Route::url($endpoint . $pathInfo) . '?' . $queryString;
+    }
+
+    /**
      * Summary of getEndpoint
      * @param string $default
      * @return string

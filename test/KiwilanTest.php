@@ -28,6 +28,7 @@ class KiwilanTest extends TestCase
     public const FEED_SCHEMA = __DIR__ . "/schema/opds/feed.schema.json";
     public const TEST_FEED = __DIR__ . "/text.json";
 
+    public static string $baseUrl = 'htt://localhost:8080/cops/';
     /** @var Validator */
     public static $validator;
     /** @var string */
@@ -35,6 +36,7 @@ class KiwilanTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        Config::set('full_url', static::$baseUrl);
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
 
@@ -51,6 +53,7 @@ class KiwilanTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
+        Config::set('full_url', '');
         if (!file_exists(self::TEST_FEED)) {
             return;
         }
@@ -111,13 +114,15 @@ class KiwilanTest extends TestCase
      */
     protected function checkEntries($currentPage, $feed)
     {
-        copy($feed, $feed . '.' . $this->getName());
         $hasPaging = $currentPage->isPaginated();
         $numEntries = count($currentPage->entryArray);
         $contents = json_decode(file_get_contents($feed), true, 512, JSON_THROW_ON_ERROR);
         if ($contents === null) {
             echo file_get_contents($feed);
             return false;
+        }
+        if ($hasPaging) {
+            copy($feed, $feed . '.' . $this->getName());
         }
         if ($currentPage->containsBook()) {
             if (count($contents['publications']) == $numEntries) {

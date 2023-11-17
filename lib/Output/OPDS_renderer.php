@@ -290,7 +290,7 @@ class OPDSRenderer
             $this->getXmlStream()->text($author->name);
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->startElement("uri");
-            $this->getXmlStream()->text(static::$endpoint . $author->getUri());
+            $this->getXmlStream()->text(Route::url(static::$endpoint . $author->getUri()));
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->endElement();
         }

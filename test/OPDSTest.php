@@ -108,13 +108,15 @@ class OpdsTest extends TestCase
      */
     protected function checkEntries($currentPage, $feed)
     {
-        copy($feed, $feed . '.' . $this->getName());
         $hasPaging = $currentPage->isPaginated();
         $numEntries = count($currentPage->entryArray);
         $xml = simplexml_load_file($feed);
         if ($xml === false) {
             echo file_get_contents($feed);
             return false;
+        }
+        if ($hasPaging) {
+            copy($feed, $feed . '.' . $this->getName());
         }
         if ($currentPage->containsBook()) {
             if (count($xml->entry) == $numEntries) {
