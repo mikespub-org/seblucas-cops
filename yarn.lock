@@ -147,13 +147,13 @@ __metadata:
     lru-fast: ^0.2.2
     magnific-popup: ^1.1.0
     normalize.css: ^8.0.1
-    twig: ^1.16.0
+    twig: ^1.17.1
   languageName: unknown
   linkType: soft
 
-"twig@npm:^1.16.0":
-  version: 1.16.0
-  resolution: "twig@npm:1.16.0"
+"twig@npm:^1.17.1":
+  version: 1.17.1
+  resolution: "twig@npm:1.17.1"
   dependencies:
     "@babel/runtime": ^7.8.4
     locutus: ^2.0.11
@@ -161,7 +161,7 @@ __metadata:
     walk: 2.3.x
   bin:
     twigjs: bin/twigjs
-  checksum: 4d9323ec913e886df44ef6f104b4be6124f770fbe963fa9a2c00cfabdfebfab48587b3e8196407893a1a2707f0eaf7bd4c6f71ebdc670e2e742a900e89b1127b
+  checksum: d39f8bd017269a144f78ee6089a37081063ecd9f444a6f6a715d8b5224982fb96327a8061d4e0ce5f3b695714035a2834dfaa9b8e6ed298c16fb66dadf199757
   languageName: node
   linkType: hard
 
