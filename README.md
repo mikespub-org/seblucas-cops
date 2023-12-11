@@ -94,7 +94,7 @@ On Centos you may have to add :
 3.  Edit config_local.php to match your config.
 4.  If needed add other configuration item from config_default.php
 
-If you like Docker, you can also try this multiarch docker container from [linuxserver.io](https://hub.docker.com/r/linuxserver/cops/)  It has builds for x64, armhf and arm64. 
+If you like Docker, you can also try this multiarch docker container from [linuxserver.io](https://hub.docker.com/r/linuxserver/cops/)  It has builds for x64 and arm64. 
 
 # Install from sources
 
