@@ -18,7 +18,7 @@ if ($error = Mail::checkRequest($idData, $emailDest)) {
     exit;
 }
 
-if ($error = Mail::sendMail($idData, $emailDest)) {
+if ($error = Mail::sendMail($idData, $emailDest, $request)) {
     echo localize("mail.messagenotsent");
     echo $error;
     exit;

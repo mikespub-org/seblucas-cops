@@ -83,6 +83,7 @@ class PageMultiDatabaseTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
+        Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
 }

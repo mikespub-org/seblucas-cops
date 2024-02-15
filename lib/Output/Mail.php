@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 use SebLucas\Cops\Calibre\Book;
 
@@ -59,12 +60,13 @@ class Mail
      * Summary of sendMail
      * @param mixed $idData
      * @param string $emailDest
+     * @param Request $request
      * @param bool $dryRun
      * @return bool|string
      */
-    public static function sendMail($idData, $emailDest, $dryRun = false)
+    public static function sendMail($idData, $emailDest, $request, $dryRun = false)
     {
-        $book = Book::getBookByDataId($idData);
+        $book = Book::getBookByDataId($idData, $request->database());
         $data = $book->getDataById($idData);
 
         if (!file_exists($data->getLocalPath())) {

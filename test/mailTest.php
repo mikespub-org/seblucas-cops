@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Tests;
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Mail;
 
 class MailTest extends TestCase
@@ -104,21 +105,24 @@ class MailTest extends TestCase
 
     public function testSendMailNotFound(): void
     {
-        $this->assertStringStartsWith("No", Mail::sendMail(12, "a@a.com"));
+        $request = Request::build([]);
+        $this->assertStringStartsWith("No", Mail::sendMail(12, "a@a.com", $request));
     }
 
     public function testSendMailTooBig(): void
     {
         $old = Mail::$maxSize;
         Mail::$maxSize = 0;
-        $this->assertStringStartsWith("No", Mail::sendMail(20, "a@a.com"));
+        $request = Request::build([]);
+        $this->assertStringStartsWith("No", Mail::sendMail(20, "a@a.com", $request));
         Mail::$maxSize = $old;
     }
 
     public function testSendMailSomeday(): void
     {
+        $request = Request::build([]);
         // use dryRun to run preSend() but not actually Send()
-        $error = Mail::sendMail(20, "a@a.com", true);
+        $error = Mail::sendMail(20, "a@a.com", $request, true);
         $this->assertFalse($error);
     }
 }

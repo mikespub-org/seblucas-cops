@@ -10,8 +10,11 @@ x.x.x - TODO
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.x.x - 2023xxxx To be continued (PHP >= 8.1)
+2.x.x - 2024xxxx To be continued (PHP >= 8.1)
   * TODO - Fix OPDS 2.0 pagination
+
+2.2.2 - 20240215 Fix multi-database for epub reader and email
+  * Error sending or reading book from additional dbs - see issue #72 from @malkavi
 
 2.2.1 - 20231116 Consolidate PRs for next release (PHP >= 8.1)
   * Support display settings for custom columns - see pull request #69 from @Mikescher
