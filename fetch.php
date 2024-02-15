@@ -78,6 +78,7 @@ header('Content-Type: ' . $data->getMimeType());
 // absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
 $file = $book->getFilePath($type, $idData);
 if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
+    // update epub metadata + provide kepub if needed (with update of opf properties for cover-image in EPub)
     if (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
         $book->updateForKepub = true;
     }
@@ -86,6 +87,9 @@ if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
 }
 if ($viewOnly) {
     header('Content-Disposition: inline');
+} elseif (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
+    // provide kepub if needed (without update of opf properties for cover-image in Epub)
+    header('Content-Disposition: attachment; filename="' . basename($data->getUpdatedFilenameKepub()) . '"');
 } else {
     header('Content-Disposition: attachment; filename="' . basename($file) . '"');
 }
