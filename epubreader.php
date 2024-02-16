@@ -18,6 +18,10 @@ if (empty($idData)) {
     $request->notFound();
 }
 
-header('Content-Type: text/html;charset=utf-8');
-
-echo EPubReader::getReader($idData, $request);
+try {
+    header('Content-Type: text/html;charset=utf-8');
+    echo EPubReader::getReader($idData, $request);
+} catch (Exception $e) {
+    error_log($e);
+    $request->notFound();
+}

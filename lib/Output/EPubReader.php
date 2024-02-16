@@ -82,8 +82,10 @@ class EPubReader
      */
     public static function getContent($idData, $component, $request)
     {
-        /** @var Book */
         $book = Book::getBookByDataId($idData, $request->database());
+        if (!$book) {
+            throw new Exception('Unknown data ' . $idData);
+        }
         $params = ['data' => $idData, 'db' => $book->getDatabaseId()];
 
         $epub = new static::$epubClass($book->getFilePath('EPUB', $idData));
@@ -105,6 +107,9 @@ class EPubReader
     public static function getReader($idData, $request)
     {
         $book = Book::getBookByDataId($idData, $request->database());
+        if (!$book) {
+            throw new Exception('Unknown data ' . $idData);
+        }
         $params = ['data' => $idData, 'db' => $book->getDatabaseId()];
 
         try {

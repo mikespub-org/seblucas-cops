@@ -67,6 +67,9 @@ class Mail
     public static function sendMail($idData, $emailDest, $request, $dryRun = false)
     {
         $book = Book::getBookByDataId($idData, $request->database());
+        if (!$book) {
+            return 'No email sent. Unknown book data';
+        }
         $data = $book->getDataById($idData);
 
         if (!file_exists($data->getLocalPath())) {
