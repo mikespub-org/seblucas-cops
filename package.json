@@ -1,6 +1,6 @@
 {
   "name": "seblucas-cops",
-  "packageManager": "yarn@3.5.0",
+  "packageManager": "yarn@4.1.0",
   "dependencies": {
     "bootstrap": "^3.4.1",
     "corejs-typeahead": "^1.3.3",
