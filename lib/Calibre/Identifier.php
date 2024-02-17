@@ -105,6 +105,9 @@ class Identifier extends Base
         } elseif ($this->type == "ltid") {
             $this->formattedType = "LibraryThing";
             $this->uri = sprintf("https://www.librarything.com/work/book/%s", $this->val);
+        } elseif ($this->type == "olid") {
+            $this->formattedType = "OpenLibrary";
+            $this->uri = sprintf("https://openlibrary.org/works/%s", $this->val);
         } elseif ($this->type == "url") {
             $this->formattedType = $this->type;
             $this->uri = $this->val;

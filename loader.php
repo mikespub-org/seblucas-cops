@@ -44,12 +44,16 @@ $gConfig['actions'] = [];
 $gConfig['actions']['csv_export'] = 'Csv export';
 // only if you start without an existing calibre database
 //$gConfig['actions']['db_load'] = 'Create database';
-$gConfig['actions']['authors'] = 'Check authors in database';
-$gConfig['actions']['books'] = 'Check books for author';
-$gConfig['actions']['series'] = 'Check series for author';
-$gConfig['actions']['wikidata'] = 'Find Wikidata entity';
-$gConfig['actions']['google'] = 'Search Google Books';
-$gConfig['actions']['volume'] = 'Get Google Books Volume';
+$gConfig['actions']['authors'] = 'List authors in database';
+$gConfig['actions']['wd_author'] = 'Check authors in database';
+$gConfig['actions']['wd_books'] = 'Check books for author';
+$gConfig['actions']['wd_series'] = 'Check series for author';
+$gConfig['actions']['wd_entity'] = 'Find Wikidata entity';
+$gConfig['actions']['gb_books'] = 'Search Google Books';
+$gConfig['actions']['gb_volume'] = 'Get Google Books Volume';
+$gConfig['actions']['ol_author'] = 'Check OpenLibrary author';
+$gConfig['actions']['ol_books'] = 'Check OpenLibrary books';
+$gConfig['actions']['ol_work'] = 'Get OpenLibrary work';
 $gConfig['actions']['hello_world'] = 'Example: Hello, World - see app/example.php';
 //$gConfig['actions']['goodbye'] = 'Example: Goodbye - see app/example.php';
 

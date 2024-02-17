@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "205335a018fe773cd5a3fdd977027945",
+    "content-hash": "4c153917217204b0f5e2d31c1573020d",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1489,16 +1489,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "2.2.1",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "686e0444216b432468338f43a1c43a553455d124"
+                "reference": "39bff97a5e7510a693d1f194f1a640911ae87340"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/686e0444216b432468338f43a1c43a553455d124",
-                "reference": "686e0444216b432468338f43a1c43a553455d124",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/39bff97a5e7510a693d1f194f1a640911ae87340",
+                "reference": "39bff97a5e7510a693d1f194f1a640911ae87340",
                 "shasum": ""
             },
             "require": {
@@ -1542,9 +1542,9 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/2.2.1"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/2.3.0"
             },
-            "time": "2024-02-05T13:03:31+00:00"
+            "time": "2024-02-17T23:12:34+00:00"
         },
         {
             "name": "myclabs/deep-copy",
