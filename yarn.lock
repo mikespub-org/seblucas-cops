@@ -2,29 +2,29 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 6
-  cacheKey: 8
+  version: 8
+  cacheKey: 10
 
 "@babel/runtime@npm:^7.8.4":
   version: 7.22.15
   resolution: "@babel/runtime@npm:7.22.15"
   dependencies:
-    regenerator-runtime: ^0.14.0
-  checksum: 793296df1e41599a935a3d77ec01eb6088410d3fd4dbe4e92f06c6b7bb2f8355024e6d78621a3a35f44e0e23b0b59107f23d585384df4f3123256a1e1492040e
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: 10/9670da63b77ea6d8234117c55a6d9888be5cf220b91a5954d7faefe7a537e06fa8992e11d36b7cff2ab0ef5301fe6effb3d41bec8b4e0bae10d386b7c377568b
   languageName: node
   linkType: hard
 
 "balanced-match@npm:^1.0.0":
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
-  checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
+  checksum: 10/9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
   languageName: node
   linkType: hard
 
 "bootstrap@npm:^3.4.1":
   version: 3.4.1
   resolution: "bootstrap@npm:3.4.1"
-  checksum: 5742035e8c541cd525780542771e7d56f63e5d4b2d902427bf182d3383e74a17c9074b6809f50d7f3de0585377e673339628b97cfdcde597ad69ecb1d2b562a6
+  checksum: 10/c46285f9d46f6d7a716fa2d294a68b83d8da5f394b2df80e96e0015055e78899312186ac998474568949545e8edcea5c396d500fb9de71c2c81ad5bac1fb56b6
   languageName: node
   linkType: hard
 
@@ -32,16 +32,16 @@ __metadata:
   version: 1.1.11
   resolution: "brace-expansion@npm:1.1.11"
   dependencies:
-    balanced-match: ^1.0.0
-    concat-map: 0.0.1
-  checksum: faf34a7bb0c3fcf4b59c7808bc5d2a96a40988addf2e7e09dfbb67a2251800e0d14cd2bfc1aa79174f2f5095c54ff27f46fb1289fe2d77dac755b5eb3434cc07
+    balanced-match: "npm:^1.0.0"
+    concat-map: "npm:0.0.1"
+  checksum: 10/faf34a7bb0c3fcf4b59c7808bc5d2a96a40988addf2e7e09dfbb67a2251800e0d14cd2bfc1aa79174f2f5095c54ff27f46fb1289fe2d77dac755b5eb3434cc07
   languageName: node
   linkType: hard
 
 "concat-map@npm:0.0.1":
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
-  checksum: 902a9f5d8967a3e2faf138d5cb784b9979bad2e6db5357c5b21c568df4ebe62bcb15108af1b2253744844eb964fc023fbd9afbbbb6ddd0bcc204c6fb5b7bf3af
+  checksum: 10/9680699c8e2b3af0ae22592cb764acaf973f292a7b71b8a06720233011853a58e256c89216a10cbe889727532fd77f8bcd49a760cedfde271b8e006c20e079f2
   languageName: node
   linkType: hard
 
@@ -49,8 +49,8 @@ __metadata:
   version: 1.3.3
   resolution: "corejs-typeahead@npm:1.3.3"
   dependencies:
-    jquery: ">=1.11"
-  checksum: bc627f9475ee29644db332ce843b7b3ccbdd25368a3ecd3d4f2d93d739336e29e603c3c48c21ee6c2e2a313a5935c395554f49edc9dd4a397e6e417c530d58ba
+    jquery: "npm:>=1.11"
+  checksum: 10/ee7004ab7188e82d5e67417ec6064d9e50a30cc72c9842ffb638541d8f374c75790d1ecb202426cd588078ed6289e058b082bc1be1a2d01826ad05312eebef5c
   languageName: node
   linkType: hard
 
@@ -59,56 +59,56 @@ __metadata:
   resolution: "dot@npm:1.1.3"
   bin:
     dottojs: ./bin/dot-packer
-  checksum: 9a2ecf7b5ff8c5121481702e9fdc7eb802ebf5b9e318a73631f70cb9484c7bb6973322912c173f5fa52d1f9408eaef4d6468e9ef8af3899664f4d42091f5f868
+  checksum: 10/a2738bbe08272164a104fa6e0f6119a7cad06fb21c23c58dbb0468e038e6397234e268923d7a79ca869753ce4b0627987928fe5d6a9885685b4639accc367695
   languageName: node
   linkType: hard
 
 "foreachasync@npm:^3.0.0":
   version: 3.0.0
   resolution: "foreachasync@npm:3.0.0"
-  checksum: 4791f64b539b06c751b14adb2881173c780d41ce37d881715a5e5787fa4a08961f2c6a6cf3bccdfa48e56fb91d8676d867fdc63c008cdb576bd33261716e8381
+  checksum: 10/21bd394f1db54a89a03b5351a07abe318ebb90756364adefafcfccf98c37b92cbe6b95f09909e0c398661f7ccccfa05119d7dbe4c2c58a680e7cdfd7d9009fca
   languageName: node
   linkType: hard
 
 "jquery@npm:>=1.11":
   version: 3.7.0
   resolution: "jquery@npm:3.7.0"
-  checksum: 907785e133afc427650a131af5fccef66a404885037513b3d4d7d63aee6409bcc32a39836868c60e59b05aa0fb8ace8961c18b2ee3ffdf6ffdb571d6d7cd88ff
+  checksum: 10/ff4c075740048157e0cd131c83b9359b4608b13c4493ab41a5459144a85c06450ae1a254b281a0d56d785d995fd9ad03d2caae17a3b408c53862241fd8ada494
   languageName: node
   linkType: hard
 
 "jquery@npm:^3.7.1":
   version: 3.7.1
   resolution: "jquery@npm:3.7.1"
-  checksum: 4370b8139d6ae82867eb6f7f21d1edccf1d1bdf41c0840920ea80d366c2cd5dbe1ceebb110ee9772aa839b04400faa1572c5c560b507c688ed7b61cea26c0e27
+  checksum: 10/17be9929f5fa37697d9848284f0d108c543318ef79ec794e130cd0c49f6c050d60c803a69e8cfa16fa19f5ff7cdb814a6905cceab0831186560c65ed113cd579
   languageName: node
   linkType: hard
 
 "js-cookie@npm:^2.2.1":
   version: 2.2.1
   resolution: "js-cookie@npm:2.2.1"
-  checksum: 9b1fb980a1c5e624fd4b28ea4867bb30c71e04c4484bb3a42766344c533faa684de9498e443425479ec68609e96e27b60614bfe354877c449c631529b6d932f2
+  checksum: 10/4387f5f5691cb96ca9ff8852c589d3012b53f484fda68630a39e20cabc6c5b740f09225e23233ba56cd9de6ebe300a23d20b2c7315f10c309ad5a89fd8c4990b
   languageName: node
   linkType: hard
 
 "locutus@npm:^2.0.11":
   version: 2.0.16
   resolution: "locutus@npm:2.0.16"
-  checksum: 69eaaf119462d54fd55d1f23c15df8365a36c610520a30d7a456046369dae7530ece938783cda7f5e051a0c15655bb2c15110b3ef725fb46a762975be3b50d07
+  checksum: 10/e66662730d4bf4db073d810daf2281eca306908ef77e4e596474bba258ff452618d0382fe8b6d9e2edce1bb4ef12fbb4ee44c501e450ce2a861e3a73e92dc9cb
   languageName: node
   linkType: hard
 
 "lru-fast@npm:^0.2.2":
   version: 0.2.2
   resolution: "lru-fast@npm:0.2.2"
-  checksum: 31b375e3ebb8daab10fe0d103e2a3f01f3d7c934d852f4530fd1efa74da41a0d0171c1ef76d739b5e7eb63aef9f10ae7bafab5f613a7e3edb9f8ad0dee7ff84c
+  checksum: 10/5402196c2b469e1af7464039d696c9355dfe9ed775c9e3ceba40001f58b59eb04bc69271b2d052588773aac5bf7b4cd3ec0555259531a326e2ab44cb5749133a
   languageName: node
   linkType: hard
 
 "magnific-popup@npm:^1.1.0":
   version: 1.1.0
   resolution: "magnific-popup@npm:1.1.0"
-  checksum: 97ff185208d5fc3c49ba2f7b22d9353c1d21ca1a6daf07fae0ef07dda07281f174e3da0ad4e7f04c5f5cf332a611f0f64c3db444002d12f9de37ab14999f0a06
+  checksum: 10/f88e9810f1d1ebf4779f16b327bb5b9ccba0c971b2323ab937ade225514f07942123a1119b151188742022dba0ac8835fef66ad7d9ce230936ea633104baf308
   languageName: node
   linkType: hard
 
@@ -116,22 +116,22 @@ __metadata:
   version: 3.0.8
   resolution: "minimatch@npm:3.0.8"
   dependencies:
-    brace-expansion: ^1.1.7
-  checksum: 850cca179cad715133132693e6963b0db64ab0988c4d211415b087fc23a3e46321e2c5376a01bf5623d8782aba8bdf43c571e2e902e51fdce7175c7215c29f8b
+    brace-expansion: "npm:^1.1.7"
+  checksum: 10/6df5373cb1ea79020beb6887ff5576c58cfabcfd32c5a65c2cf58f326e4ee8eae84f129e5fa50b8a4347fa1d1e583f931285c9fb3040d984bdfb5109ef6607ec
   languageName: node
   linkType: hard
 
 "normalize.css@npm:^8.0.1":
   version: 8.0.1
   resolution: "normalize.css@npm:8.0.1"
-  checksum: 4698cae88ec35e3f3e82f9f9402e6ffb906c27ccd6373cad88e6b3f5634fc7a043cb38702472299e5edb73825cf8b18d5fd9283f58829eddda79ea97453049a2
+  checksum: 10/c3af2145c21d57b94fe9f1abe7bac82ec91f8088810ada6ee3385f29a2d51af441a469b3c680d25b27bfab5291908a3ef3ed7012955036e8967f0b18fe39f38a
   languageName: node
   linkType: hard
 
 "regenerator-runtime@npm:^0.14.0":
   version: 0.14.0
   resolution: "regenerator-runtime@npm:0.14.0"
-  checksum: 1c977ad82a82a4412e4f639d65d22be376d3ebdd30da2c003eeafdaaacd03fc00c2320f18120007ee700900979284fc78a9f00da7fb593f6e6eeebc673fba9a3
+  checksum: 10/6c19495baefcf5fbb18a281b56a97f0197b5f219f42e571e80877f095320afac0bdb31dab8f8186858e6126950068c3f17a1226437881e3e70446ea66751897c
   languageName: node
   linkType: hard
 
@@ -139,15 +139,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "seblucas-cops@workspace:."
   dependencies:
-    bootstrap: ^3.4.1
-    corejs-typeahead: ^1.3.3
-    dot: ^1.1.3
-    jquery: ^3.7.1
-    js-cookie: ^2.2.1
-    lru-fast: ^0.2.2
-    magnific-popup: ^1.1.0
-    normalize.css: ^8.0.1
-    twig: ^1.17.1
+    bootstrap: "npm:^3.4.1"
+    corejs-typeahead: "npm:^1.3.3"
+    dot: "npm:^1.1.3"
+    jquery: "npm:^3.7.1"
+    js-cookie: "npm:^2.2.1"
+    lru-fast: "npm:^0.2.2"
+    magnific-popup: "npm:^1.1.0"
+    normalize.css: "npm:^8.0.1"
+    twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
 
@@ -155,13 +155,13 @@ __metadata:
   version: 1.17.1
   resolution: "twig@npm:1.17.1"
   dependencies:
-    "@babel/runtime": ^7.8.4
-    locutus: ^2.0.11
-    minimatch: 3.0.x
-    walk: 2.3.x
+    "@babel/runtime": "npm:^7.8.4"
+    locutus: "npm:^2.0.11"
+    minimatch: "npm:3.0.x"
+    walk: "npm:2.3.x"
   bin:
     twigjs: bin/twigjs
-  checksum: d39f8bd017269a144f78ee6089a37081063ecd9f444a6f6a715d8b5224982fb96327a8061d4e0ce5f3b695714035a2834dfaa9b8e6ed298c16fb66dadf199757
+  checksum: 10/5910c05e481fb90c0c2207754a5510ed0171d65aa628998366d54c802f7eeff37a15b86b53cb2fd706cb448414e63d6a7dbfd1cbdd78ecbaad3becb0e8d2175c
   languageName: node
   linkType: hard
 
@@ -169,7 +169,7 @@ __metadata:
   version: 2.3.15
   resolution: "walk@npm:2.3.15"
   dependencies:
-    foreachasync: ^3.0.0
-  checksum: d494df1924656cc4881ff8f70474f80be10d07d0c899620e02ff8627e4f339f37e74d1b30b70e7a714d0b873b0dc8b20129a619c4b407b39949c756637ebe3a6
+    foreachasync: "npm:^3.0.0"
+  checksum: 10/79dcd1749e2d78bacabb745cb2239fc98e64abc58bcb024a238cdf9158343a7b725dfba1a561fc6193e903829ff74f2d8212d691eb540fd1a5e23a7cf8552b86
   languageName: node
   linkType: hard

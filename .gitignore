@@ -14,6 +14,7 @@
 .yarn/*
 #!.yarn/releases
 #!.yarn/plugins
+.yarnrc.yml
 .pnp.*
 .editorconfig
 .gitattributes

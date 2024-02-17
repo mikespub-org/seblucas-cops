@@ -1360,17 +1360,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kiwilan/php-opds.git",
-                "reference": "45c654690f12825c70475db6e8471ff41fe1a215"
+                "reference": "f19ea1705ec7d2e56250476b3b81b5f84cf45155"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/45c654690f12825c70475db6e8471ff41fe1a215",
-                "reference": "45c654690f12825c70475db6e8471ff41fe1a215",
+                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/f19ea1705ec7d2e56250476b3b81b5f84cf45155",
+                "reference": "f19ea1705ec7d2e56250476b3b81b5f84cf45155",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.1",
-                "spatie/array-to-xml": "^3.1"
+                "spatie/array-to-xml": "^3.2.3"
             },
             "require-dev": {
                 "kiwilan/php-xml-reader": "^1.0",
@@ -1418,7 +1418,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-30T14:10:18+00:00"
+            "time": "2024-02-17T09:32:32+00:00"
         },
         {
             "name": "masterminds/html5",
