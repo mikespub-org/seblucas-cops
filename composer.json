@@ -42,7 +42,7 @@
         "twig/twig": "~3.8"
     },
     "require-dev": {
-        "kiwilan/php-opds": "dev-develop",
+        "kiwilan/php-opds": "~2.0",
         "phpunit/phpunit": "~9.6",
         "phing/phing": "~2.17",
         "php-webdriver/webdriver": "dev-main",

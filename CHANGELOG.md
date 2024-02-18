@@ -10,8 +10,9 @@ x.x.x - TODO
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.x.x - 2024xxxx To be continued (PHP >= 8.1)
-  * TODO - Fix OPDS 2.0 pagination
+2.3.0 - 20240218 Update OPDS 2.0 and EPub Loader (dev only)
+  * Upgrade kiwilan/php-opds to 2.0 to fix OPDS 2.0 pagination
+  * Upgrade mikespub/epub-loader to 2.3 to include OpenLibrary lookup
 
 2.2.2 - 20240215 Fix multi-database for epub reader and email
   * Error sending or reading book from additional dbs - see issue #72 from @malkavi

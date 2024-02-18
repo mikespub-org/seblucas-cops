@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Output;
 use Kiwilan\Opds\Opds;
 use Kiwilan\Opds\OpdsConfig;
 use Kiwilan\Opds\OpdsResponse;
+use Kiwilan\Opds\Engine\Paginate\OpdsPaginate;
 use Kiwilan\Opds\Entries\OpdsEntryBook;
 use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
 use Kiwilan\Opds\Entries\OpdsEntryNavigation;
@@ -60,8 +61,6 @@ class KiwilanOPDS
             searchUrl: CopsRoute::url(self::$endpoint . '/search'),
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
-            usePagination: false, // To enable pagination, default is false
-            useAutoPagination: false, // To enable auto pagination, default is false, if `usePagination` is true, this option will be ignored
             maxItemsPerPage: CopsConfig::get('max_item_per_page'),
             forceJson: true,
         );
@@ -213,7 +212,14 @@ class KiwilanOPDS
             ->title($title)
             ->url($url)
             ->feeds($feeds)
-            ->paging(page: $page->n, total: $page->totalNumber, first: $first, last: $last, previous: $previous, next: $next)
+            ->paginate(new OpdsPaginate(
+                currentPage: $page->n,
+                totalItems: $page->totalNumber,
+                firstUrl: $first,
+                lastUrl: $last,
+                previousUrl: $previous,
+                nextUrl: $next,
+              )) // will generate pagination based on `OpdsPaginate` object
             ->get();
 
         } else {

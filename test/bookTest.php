@@ -370,15 +370,48 @@ class BookTest extends TestCase
         $this->assertEquals("", $identifiers[0]->getLink());
     }
 
+    public function testGetIdentifiers_Google(): void
+    {
+        $book = Book::getBookById(18);
+
+        $identifiers = $book->getIdentifiers();
+        $this->assertCount(4, $identifiers);
+        $this->assertEquals("google", $identifiers[0]->type);
+        $this->assertEquals("yr9EAAAAYAAJ", $identifiers[0]->val);
+        $this->assertEquals("https://books.google.com/books?id=yr9EAAAAYAAJ", $identifiers[0]->getLink());
+    }
+
     public function testGetIdentifiers_Isbn(): void
     {
         $book = Book::getBookById(18);
 
         $identifiers = $book->getIdentifiers();
-        $this->assertCount(1, $identifiers);
-        $this->assertEquals("isbn", $identifiers[0]->type);
-        $this->assertEquals("9782253003663", $identifiers[0]->val);
-        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[0]->getLink());
+        $this->assertCount(4, $identifiers);
+        $this->assertEquals("isbn", $identifiers[1]->type);
+        $this->assertEquals("9782253003663", $identifiers[1]->val);
+        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[1]->getLink());
+    }
+
+    public function testGetIdentifiers_OpenLibrary(): void
+    {
+        $book = Book::getBookById(18);
+
+        $identifiers = $book->getIdentifiers();
+        $this->assertCount(4, $identifiers);
+        $this->assertEquals("olid", $identifiers[2]->type);
+        $this->assertEquals("OL118974W", $identifiers[2]->val);
+        $this->assertEquals("https://openlibrary.org/works/OL118974W", $identifiers[2]->getLink());
+    }
+
+    public function testGetIdentifiers_WikiData(): void
+    {
+        $book = Book::getBookById(18);
+
+        $identifiers = $book->getIdentifiers();
+        $this->assertCount(4, $identifiers);
+        $this->assertEquals("wd", $identifiers[3]->type);
+        $this->assertEquals("Q962265", $identifiers[3]->val);
+        $this->assertEquals("https://www.wikidata.org/entity/Q962265", $identifiers[3]->getLink());
     }
 
     public function testBookGetLinkArrayWithUrlRewriting(): void
