@@ -37,6 +37,7 @@
                 <exclude name="docker-*.yaml" />
                 <exclude name=".vscode/**" />
                 <exclude name=".yarn/**" />
+                <exclude name=".yarnrc.yml" />
                 <exclude name=".pnp.*" />
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
