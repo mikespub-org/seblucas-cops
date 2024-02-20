@@ -20,7 +20,7 @@
     <article class="books">
             <span class="cover">
             {{? entry.thumbnailurl }}
-                <a class="fancycover" href="{{=entry.book.detailurl}}" {{=it.c.config.kindleHack}}>
+                <a class="fancycover" href="{{=entry.coverurl}}" {{=it.c.config.kindleHack}}>
                     <img src="{{=entry.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
                 </a>
             {{?}}
