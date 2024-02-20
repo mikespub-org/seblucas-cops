@@ -10,6 +10,9 @@ x.x.x - TODO
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
+2.3.1 - 20240220 Fix cover popup for default template
+  * Fix no large book covers and white screen with viewer - see issue #73 from @marioscube
+
 2.3.0 - 20240218 Update OPDS 2.0 and EPub Loader (dev only)
   * Upgrade kiwilan/php-opds to 2.0 to fix OPDS 2.0 pagination
   * Upgrade mikespub/epub-loader to 2.3 to include OpenLibrary lookup
