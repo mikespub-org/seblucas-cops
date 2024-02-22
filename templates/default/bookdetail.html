@@ -34,6 +34,11 @@
         {{~}}
     </p>
     {{?}}
+    {{? it.book.rating != ""}}
+    <p class="popupless">
+        <h3>{{=it.c.i18n.ratingTitle}}: </h3>{{=it.book.rating}}
+    </p>
+    {{?}}
     {{? it.book.seriesName != ""}}
     <p class="popupless">
         <h3><a href="{{=it.book.seriesurl}}" {{=it.c.config.kindleHack}}>{{=it.c.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
