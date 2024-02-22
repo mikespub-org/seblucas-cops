@@ -195,6 +195,8 @@ class Downloader
         } else {
             $checkFormats = [ $this->format ];
         }
+        // @todo use download_template to format name
+        //$template = Config::get('download_template');
         foreach ($entries as $entry) {
             if (get_class($entry) != EntryBook::class) {
                 continue;
@@ -213,7 +215,18 @@ class Downloader
             if (!file_exists($path)) {
                 continue;
             }
-            $name = basename($path);
+            //$name = basename($path);
+            // Using {author} - {series} #{series_index} - {title} with .{format}
+            $author = $entry->book->getAuthorsName();
+            $name = explode(', ', $author)[0];
+            $serie = $entry->book->getSerie();
+            if (!empty($serie)) {
+                $name .= ' - ' . $serie->name . ' #' . $entry->book->seriesIndex;
+            }
+            $name .= ' - ' . $entry->book->title;
+            $info = pathinfo($path);
+            $name .= '.' . $info['extension'];
+            $name = preg_replace('/[^\w\s\d\'\.\-_,\[\]\(\)]/', '', $name);
             $this->fileList[$name] = $path;
         }
         if (count($this->fileList) < 1) {

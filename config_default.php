@@ -483,6 +483,11 @@ $config['cops_download_series'] = [];
 $config['cops_download_author'] = [];
 
 /*
+ * Save to disk template for book filenames inside the .zip download file - @todo
+ */
+$config['cops_download_template'] = '{author} - {series} #{series_index} - {title}';
+
+/*
  * Use route URLs (/books/12/The_Author/My_Book) instead of URL parameters (?page=13&id=12)
  *
  * You may also need to specify the full_url if COPS is running in a sub-directory:

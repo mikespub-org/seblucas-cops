@@ -10,6 +10,13 @@ x.x.x - TODO
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
+2.4.x - 2024xxxx
+  * Changes in config_default.php file:
+    - new $config['cops_download_template']
+  * Save to disk template for book filenames inside the .zip download file (TODO)
+  * Upgrade mikespub/epub-loader to 2.4 to get rid of superglobals (dev only)
+  * Add missing rating to bookdetail templates
+
 2.3.1 - 20240220 Fix cover popup for default template
   * Fix no large book covers and white screen with viewer - see issue #73 from @marioscube
 
