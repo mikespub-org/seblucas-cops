@@ -48,12 +48,12 @@ $gConfig['actions']['authors'] = 'List authors in database';
 $gConfig['actions']['wd_author'] = 'Check authors in database';
 $gConfig['actions']['wd_books'] = 'Check books for author';
 $gConfig['actions']['wd_series'] = 'Check series for author';
-$gConfig['actions']['wd_entity'] = 'Find Wikidata entity';
+$gConfig['actions']['wd_entity'] = 'Check Wikidata entity';
 $gConfig['actions']['gb_books'] = 'Search Google Books';
-$gConfig['actions']['gb_volume'] = 'Get Google Books Volume';
-$gConfig['actions']['ol_author'] = 'Check OpenLibrary author';
-$gConfig['actions']['ol_books'] = 'Check OpenLibrary books';
-$gConfig['actions']['ol_work'] = 'Get OpenLibrary work';
+$gConfig['actions']['gb_volume'] = 'Search Google Books Volume';
+$gConfig['actions']['ol_author'] = 'Find OpenLibrary author';
+$gConfig['actions']['ol_books'] = 'Find OpenLibrary books';
+$gConfig['actions']['ol_work'] = 'Find OpenLibrary work';
 $gConfig['actions']['hello_world'] = 'Example: Hello, World - see app/example.php';
 //$gConfig['actions']['goodbye'] = 'Example: Goodbye - see app/example.php';
 
@@ -69,11 +69,12 @@ foreach ($calibreDir as $name => $path) {
 // get the current action and dbNum if any
 $request = new Request();
 $action = $request->get('action');
-$dbNum = $request->get('dbnum');
+$dbNum = $request->getId('dbnum');
+$urlParams = $request->urlParams;
 
 // you can define extra actions for your app - see example.php
 $handler = new RequestHandler($gConfig, ExtraActions::class, $cacheDir);
-$result = $handler->request($action, $dbNum);
+$result = $handler->request($action, $dbNum, $urlParams);
 
 header('Content-Type:text/html;charset=utf-8');
 

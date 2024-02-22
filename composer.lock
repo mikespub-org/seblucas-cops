@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86d802d835c6b09f456b422154c17e17",
+    "content-hash": "324f497b229a28cba32c804d5b4c81fc",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1489,16 +1489,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "2.3.2",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "fdcd6ebdbafadc97dc689abcb1d00b40d0ca0452"
+                "reference": "dcb980048496a9fd2a1ba850301635b3d4b7f4b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/fdcd6ebdbafadc97dc689abcb1d00b40d0ca0452",
-                "reference": "fdcd6ebdbafadc97dc689abcb1d00b40d0ca0452",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/dcb980048496a9fd2a1ba850301635b3d4b7f4b7",
+                "reference": "dcb980048496a9fd2a1ba850301635b3d4b7f4b7",
                 "shasum": ""
             },
             "require": {
@@ -1542,9 +1542,9 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/2.3.2"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/2.4.0"
             },
-            "time": "2024-02-19T15:31:06+00:00"
+            "time": "2024-02-21T13:02:20+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1607,16 +1607,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc"
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
                 "shasum": ""
             },
             "require": {
@@ -1659,9 +1659,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
             },
-            "time": "2024-01-07T17:17:35+00:00"
+            "time": "2024-02-21T19:24:10+00:00"
         },
         {
             "name": "opis/json-schema",
