@@ -16,8 +16,14 @@ use PDO;
 class Database
 {
     public const KEEP_STATS = false;
+    public const CALIBRE_DB_NAME = 'metadata.db';
+    public const NOTES_DIR_NAME = '.calnotes';
+    public const NOTES_DB_NAME = 'notes.db';
     /** @var ?PDO */
     protected static $db = null;
+    protected static ?string $dbFileName = null;
+    /** @var ?PDO */
+    protected static $notesDb = null;
     protected static int $count = 0;
     /** @var array<string> */
     protected static $queries = [];
@@ -183,6 +189,7 @@ class Database
                             return Translation::normAndUp($s);
                         }, 1);
                     }
+                    static::$dbFileName = static::getDbFileName($database);
                 } else {
                     static::error($database);
                 }
@@ -218,6 +225,7 @@ class Database
     public static function clearDb()
     {
         static::$db = null;
+        static::$notesDb = null;
     }
 
     /**
@@ -406,5 +414,25 @@ class Database
         $query = "PRAGMA user_version";
         $result = static::querySingle($query, $database);
         return $result;
+    }
+
+    /**
+     * Summary of getNotesDb
+     * @param ?int $database
+     * @return PDO|null
+     */
+    public static function getNotesDb($database = null)
+    {
+        if (!is_null(static::$notesDb)) {
+            return static::$notesDb;
+        }
+        static::getDb($database);
+        // calibre_dir/.calnotes/notes.db
+        $dbFileName = dirname(static::$dbFileName) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_NAME;
+        if (!file_exists($dbFileName) || !is_readable($dbFileName)) {
+            return null;
+        }
+        static::$notesDb = new PDO('sqlite:' . $dbFileName);
+        return static::$notesDb;
     }
 }

@@ -389,6 +389,30 @@ abstract class Base
     }
 
     /**
+     * Summary of getNotesById
+     * @param string|int|null $id
+     * @param ?int $database
+     * @return object|null
+     */
+    public static function getNotesById($id, $database = null)
+    {
+        $notesDb = Database::getNotesDb($database);
+        if (is_null($notesDb)) {
+            return null;
+        }
+        $className = static::class;
+        $tableName = $className::SQL_TABLE;
+        $query = 'select item, colname, doc, mtime from notes where item = ? and colname = ?';
+        $params = [$id, $tableName];
+        $result = $notesDb->prepare($query);
+        $result->execute($params);
+        if ($post = $result->fetchObject()) {
+            return $post;
+        }
+        return null;
+    }
+
+    /**
      * Summary of getDefaultName
      * @return ?string
      */

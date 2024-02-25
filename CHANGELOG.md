@@ -11,6 +11,9 @@ x.x.x - TODO
   * ...
 
 2.4.x - 2024xxxx
+  * Add notes for author, book, publisher, serie and tag if available
+
+2.4.0 - 20240225 Add rating and instance link if available
   * Changes in config_default.php file:
     - new $config['cops_download_template']
   * Add instance link for extra information on author, publisher, serie and tag
