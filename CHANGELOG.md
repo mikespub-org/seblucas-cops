@@ -13,6 +13,7 @@ x.x.x - TODO
 2.4.x - 2024xxxx
   * Changes in config_default.php file:
     - new $config['cops_download_template']
+  * Add instance link for extra information on author, publisher, serie and tag
   * Save to disk template for book filenames inside the .zip download file (TODO)
   * Upgrade mikespub/epub-loader to 2.4 to get rid of superglobals (dev only)
   * Add missing rating to bookdetail templates

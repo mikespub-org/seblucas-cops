@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Tag;
 
-class PageTagDetail extends Page
+class PageTagDetail extends PageWithDetail
 {
     protected string $className = Tag::class;
 

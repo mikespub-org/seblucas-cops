@@ -101,10 +101,10 @@ class BaseList
     }
 
     /**
-     * Summary of getColumns
+     * Summary of getCountColumns
      * @return string
      */
-    public function getColumns()
+    public function getCountColumns()
     {
         return $this->className::SQL_COLUMNS . ", count(*) as count";
     }
@@ -281,14 +281,14 @@ class BaseList
     public function getAllEntries($n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getColumns(), ' as ' . $this->orderBy) !== false) {
+        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getCountColumns(), ' as ' . $this->orderBy) !== false) {
             if (strpos($query, 'order by') !== false) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';
             }
         }
-        $columns = $this->getColumns();
+        $columns = $this->getCountColumns();
         return $this->getEntryArrayWithBookNumber($query, $columns, "", [], $n);
     }
 
@@ -302,7 +302,7 @@ class BaseList
     public function getAllEntriesByQuery($find, $n = 1, $repeat = 1)
     {
         $query = $this->className::SQL_ROWS_FOR_SEARCH;
-        $columns = $this->getColumns();
+        $columns = $this->getCountColumns();
         // Author has 2 params, the rest 1
         $params = array_fill(0, $repeat, '%' . $find . '%');
         return $this->getEntryArrayWithBookNumber($query, $columns, "", $params, $n);
@@ -371,7 +371,7 @@ class BaseList
     public function getEntriesByFirstLetter($letter, $n = 1)
     {
         $query = $this->className::SQL_ROWS_BY_FIRST_LETTER;
-        $columns = $this->getColumns();
+        $columns = $this->getCountColumns();
         $filter = new Filter($this->request, [$letter . "%"], $this->getLinkTable(), $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
@@ -474,14 +474,14 @@ class BaseList
     public function getFilteredEntries($filter, $n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getColumns(), ' as ' . $this->orderBy) !== false) {
+        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getCountColumns(), ' as ' . $this->orderBy) !== false) {
             if (strpos($query, 'order by') !== false) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';
             }
         }
-        $columns = $this->getColumns();
+        $columns = $this->getCountColumns();
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
         return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);

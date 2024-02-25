@@ -244,7 +244,7 @@ Please check
             <h4>
             <?php
     try {
-        $db = new PDO('sqlite:'. Database::getDbFileName($i));
+        $db = new PDO('sqlite:' . Database::getDbFileName($i));
         echo $name . ' OK';
     } catch (Exception $e) {
         echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
@@ -257,7 +257,7 @@ Please check
             <h4>
             <?php
         try {
-            $db = new PDO('sqlite:'. Database::getDbFileName($i));
+            $db = new PDO('sqlite:' . Database::getDbFileName($i));
             $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
             if ($count == 4) {
                 echo $name . ' OK';

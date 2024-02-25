@@ -57,9 +57,9 @@ class OpdsTest extends TestCase
                 echo 'RelaxNG validation error: ' . $res;
             }
             return false;
-        //} elseif (isset($code) && $code > 0) {
-        //    echo 'Return code: '.strval($code);
-        //    return false;
+            //} elseif (isset($code) && $code > 0) {
+            //    echo 'Return code: '.strval($code);
+            //    return false;
         } else {
             return true;
         }

@@ -153,10 +153,10 @@ class Identifier extends Base
     public static function getInstanceById($id, $database = null)
     {
         if (isset($id)) {
-            return new Identifier((object)['id' => $id, 'type' => $id, 'val' => ''], $database);
+            return new Identifier((object) ['id' => $id, 'type' => $id, 'val' => ''], $database);
         }
         $default = static::getDefaultName();
-        return new Identifier((object)['id' => null, 'type' => $default, 'val' => ''], $database);
+        return new Identifier((object) ['id' => null, 'type' => $default, 'val' => ''], $database);
     }
 
     /**

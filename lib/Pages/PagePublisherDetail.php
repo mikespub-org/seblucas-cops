@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Publisher;
 
-class PagePublisherDetail extends Page
+class PagePublisherDetail extends PageWithDetail
 {
     protected string $className = Publisher::class;
 

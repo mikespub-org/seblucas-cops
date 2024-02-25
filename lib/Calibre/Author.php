@@ -31,8 +31,6 @@ class Author extends Base
 
     /** @var string */
     public $sort;
-    /** @var ?string */
-    public $link;
 
     /**
      * Summary of __construct
@@ -76,7 +74,8 @@ class Author extends Base
      */
     public static function getInstancesByBookId($bookId, $database = null)
     {
-        $query = 'select authors.id as id, authors.name as name, authors.sort as sort, authors.link as link from authors, books_authors_link
+        $query = 'select ' . static::getInstanceColumns($database) . '
+from authors, books_authors_link
 where author = authors.id
 and book = ? order by books_authors_link.id';
         $result = Database::query($query, [$bookId], $database);

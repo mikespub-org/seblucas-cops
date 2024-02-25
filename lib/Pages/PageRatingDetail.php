@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Rating;
 
-class PageRatingDetail extends Page
+class PageRatingDetail extends PageWithDetail
 {
     protected string $className = Rating::class;
 

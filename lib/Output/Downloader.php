@@ -226,7 +226,7 @@ class Downloader
             $name .= ' - ' . $entry->book->title;
             $info = pathinfo($path);
             $name .= '.' . $info['extension'];
-            $name = preg_replace('/[^\w\s\d\'\.\-_,\[\]\(\)]/', '', $name);
+            $name = preg_replace('/[^\w\s\d\'\.\-\/_,#\[\]\(\)]/', '', $name);
             $this->fileList[$name] = $path;
         }
         if (count($this->fileList) < 1) {

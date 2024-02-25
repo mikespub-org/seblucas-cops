@@ -52,7 +52,7 @@ class BookTest extends TestCase
 
         $book = Book::getBookById(2);
         if (!is_dir($book->path)) {
-            mkdir($book->path, 0777, true);
+            mkdir($book->path, 0o777, true);
         }
         $im = imagecreatetruecolor(self::COVER_WIDTH, self::COVER_HEIGHT);
         $text_color = imagecolorallocate($im, 255, 0, 0);
@@ -318,6 +318,14 @@ class BookTest extends TestCase
         $this->assertEquals('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment(false));
         $this->assertEquals("English", $book->getLanguages());
         $this->assertEquals("Strand Magazine", $book->getPublisher()->name);
+        $author = $book->getAuthors()[0];
+        $this->assertEquals("http://www.wikidata.org/entity/Q35610", $author->link);
+        $publisher = $book->getPublisher();
+        if (Database::getUserVersion() > 25) {
+            $this->assertNotNull($publisher->link);
+        } else {
+            $this->assertNull($publisher->link);
+        }
     }
 
     public function testGetBookById_NotFound(): void

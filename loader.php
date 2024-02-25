@@ -21,7 +21,7 @@ if (!class_exists('Marsender\EPubLoader\RequestHandler')) {
 
 // specify a cache directory for any Google or Wikidata lookup
 $cacheDir = 'test/cache';
-if (!is_dir($cacheDir) && !mkdir($cacheDir, 0777, true)) {
+if (!is_dir($cacheDir) && !mkdir($cacheDir, 0o777, true)) {
     echo 'Please make sure the cache directory can be created';
     return;
 }

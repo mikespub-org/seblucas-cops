@@ -30,8 +30,8 @@ class Format
         $offset = 0;
         foreach ($matches[1] as $data) {
             $i = $data[0];
-            $format = substr_replace($format, @$args[(int)$i], $offset + $data[1] - 1, 2 + strlen($i));
-            $offset += strlen(@$args[(int)$i]) - 2 - strlen($i);
+            $format = substr_replace($format, @$args[(int) $i], $offset + $data[1] - 1, 2 + strlen($i));
+            $offset += strlen(@$args[(int) $i]) - 2 - strlen($i);
         }
 
         return $format;

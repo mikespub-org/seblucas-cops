@@ -25,7 +25,7 @@ abstract class Base
     public const SQL_LINK_TABLE = "books_bases_link";
     public const SQL_LINK_COLUMN = "base";
     public const SQL_SORT = "sort";
-    public const SQL_COLUMNS = "bases.id as id, bases.name as name, bases.sort as sort";
+    public const SQL_COLUMNS = "bases.id as id, bases.name as name, bases.sort as sort, bases.link as link";
     public const SQL_ALL_ROWS = "select {0} from bases, books_bases_link where base = bases.id {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from bases, books_bases_link where base = bases.id and (upper (bases.sort) like ? or upper (bases.name) like ?) {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from bases, books_bases_link where base = bases.id and upper (bases.sort) like ? {1} group by bases.id, bases.name, bases.sort order by sort";
@@ -37,6 +37,8 @@ abstract class Base
     public $id;
     /** @var ?string */
     public $name;
+    /** @var ?string */
+    public $link;
     public bool $limitSelf = true;
     /** @var ?int */
     protected $databaseId = null;
@@ -52,6 +54,7 @@ abstract class Base
     {
         $this->id = $post->id;
         $this->name = $post->name;
+        $this->link = property_exists($post, 'link') ? $post->link : null;
         $this->databaseId = $database;
     }
 
@@ -360,14 +363,29 @@ abstract class Base
     {
         $className = static::class;
         if (isset($id)) {
-            $query = 'select ' . $className::SQL_COLUMNS . ' from ' . $className::SQL_TABLE . ' where id = ?';
+            $query = 'select ' . static::getInstanceColumns($database) . ' from ' . $className::SQL_TABLE . ' where id = ?';
             $result = Database::query($query, [$id], $database);
             if ($post = $result->fetchObject()) {
                 return new $className($post, $database);
             }
         }
         $default = static::getDefaultName();
-        return new $className((object)['id' => null, 'name' => $default, 'sort' => $default], $database);
+        return new $className((object) ['id' => null, 'name' => $default, 'sort' => $default], $database);
+    }
+
+    /**
+     * Summary of getInstanceColumns
+     * @param ?int $database
+     * @return string
+     */
+    public static function getInstanceColumns($database = null)
+    {
+        $className = static::class;
+        // add link field for database user_version 26 = Calibre version 6.15.0 and later (Apr 7, 2023)
+        if (in_array($className::SQL_TABLE, ['languages', 'publishers', 'ratings', 'series', 'tags']) && Database::getUserVersion($database) > 25) {
+            return $className::SQL_COLUMNS . ', ' . $className::SQL_TABLE . '.link as link';
+        }
+        return $className::SQL_COLUMNS;
     }
 
     /**

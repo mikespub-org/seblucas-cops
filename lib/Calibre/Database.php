@@ -395,4 +395,16 @@ class Database
         }
         return $entries;
     }
+
+    /**
+     * Summary of getUserVersion
+     * @param ?int $database
+     * @return int
+     */
+    public static function getUserVersion($database = null)
+    {
+        $query = "PRAGMA user_version";
+        $result = static::querySingle($query, $database);
+        return $result;
+    }
 }

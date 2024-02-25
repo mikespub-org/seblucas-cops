@@ -219,7 +219,7 @@ class KiwilanOPDS
                 lastUrl: $last,
                 previousUrl: $previous,
                 nextUrl: $next,
-              )) // will generate pagination based on `OpdsPaginate` object
+            )) // will generate pagination based on `OpdsPaginate` object
             ->get();
 
         } else {

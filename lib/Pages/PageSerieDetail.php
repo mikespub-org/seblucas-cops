@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Serie;
 
-class PageSerieDetail extends Page
+class PageSerieDetail extends PageWithDetail
 {
     protected string $className = Serie::class;
 
@@ -26,9 +26,9 @@ class PageSerieDetail extends Page
         if ($this->request->get('filter')) {
             $this->filterUri = '&s=' . $this->idGet;
             $this->getFilters($instance);
-        // @todo needs title_sort function in sqlite for series
-        //} elseif ($this->request->get('tree')) {
-        //    $this->getHierarchy($instance);
+            // @todo needs title_sort function in sqlite for series
+            //} elseif ($this->request->get('tree')) {
+            //    $this->getHierarchy($instance);
         } else {
             $this->getEntries($instance);
         }

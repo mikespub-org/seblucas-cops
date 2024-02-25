@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Language;
 
-class PageLanguageDetail extends Page
+class PageLanguageDetail extends PageWithDetail
 {
     protected string $className = Language::class;
 

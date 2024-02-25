@@ -25,12 +25,12 @@ class ConfigTest extends TestCase
 
     public function testCheckConfigurationOPDSTHumbnailHeight(): void
     {
-        $this->assertTrue(is_int((int)Config::get('opds_thumbnail_height')));
+        $this->assertTrue(is_int((int) Config::get('opds_thumbnail_height')));
     }
 
     public function testCheckConfigurationHTMLTHumbnailHeight(): void
     {
-        $this->assertTrue(is_int((int)Config::get('html_thumbnail_height')));
+        $this->assertTrue(is_int((int) Config::get('html_thumbnail_height')));
     }
 
     public function testCheckConfigurationPreferedFormat(): void
@@ -40,32 +40,32 @@ class ConfigTest extends TestCase
 
     public function testCheckConfigurationUseUrlRewiting(): void
     {
-        $this->assertTrue(is_int((int)Config::get('use_url_rewriting')));
+        $this->assertTrue(is_int((int) Config::get('use_url_rewriting')));
     }
 
     public function testCheckConfigurationGenerateInvalidOPDSStream(): void
     {
-        $this->assertTrue(is_int((int)Config::get('generate_invalid_opds_stream')));
+        $this->assertTrue(is_int((int) Config::get('generate_invalid_opds_stream')));
     }
 
     public function testCheckConfigurationMaxItemPerPage(): void
     {
-        $this->assertTrue(is_int((int)Config::get('max_item_per_page')));
+        $this->assertTrue(is_int((int) Config::get('max_item_per_page')));
     }
 
     public function testCheckConfigurationAuthorSplitFirstLetter(): void
     {
-        $this->assertTrue(is_int((int)Config::get('author_split_first_letter')));
+        $this->assertTrue(is_int((int) Config::get('author_split_first_letter')));
     }
 
     public function testCheckConfigurationTitlesSplitFirstLetter(): void
     {
-        $this->assertTrue(is_int((int)Config::get('titles_split_first_letter')));
+        $this->assertTrue(is_int((int) Config::get('titles_split_first_letter')));
     }
 
     public function testCheckConfigurationCopsUseFancyapps(): void
     {
-        $this->assertTrue(is_int((int)Config::get('use_fancyapps')));
+        $this->assertTrue(is_int((int) Config::get('use_fancyapps')));
     }
 
     public function testCheckConfigurationCopsBooksFilter(): void
@@ -90,7 +90,7 @@ class ConfigTest extends TestCase
 
     public function testCheckConfigurationProvideKepub(): void
     {
-        $this->assertTrue(is_int((int)Config::get('provide_kepub')));
+        $this->assertTrue(is_int((int) Config::get('provide_kepub')));
     }
 
     public function testCheckConfigurationMailConfig(): void
@@ -100,7 +100,7 @@ class ConfigTest extends TestCase
 
     public function testCheckConfiguratioHTMLTagFilter(): void
     {
-        $this->assertTrue(is_int((int)Config::get('html_tag_filter')));
+        $this->assertTrue(is_int((int) Config::get('html_tag_filter')));
     }
 
     public function testCheckConfigurationIgnoredCategories(): void

@@ -216,6 +216,7 @@ class RestApi
                 unset($entry["sql"]);
                 array_push($result["entries"], $entry);
             }
+            $result["version"] = Database::getUserVersion($database);
             return $result;
         }
         $result = ["title" => $title, "entries" => []];
@@ -226,6 +227,7 @@ class RestApi
         foreach ($metadata as $name => $title) {
             array_push($result["entries"], ["class" => "Metadata", "title" => $title, "navlink" => "{$endpoint}/databases/{$database}?type={$name}"]);
         }
+        $result["version"] = Database::getUserVersion($database);
         return $result;
     }
 

@@ -121,7 +121,7 @@ class Cover
         //"01234567-89ab-cdef-0123-456789abcdef", we will save the thumbnail in .../0/12/34567-89ab-cdef-0123-456789abcdef-...
         $cachePath .= substr($uuid, 0, 1) . DIRECTORY_SEPARATOR . substr($uuid, 1, 2) . DIRECTORY_SEPARATOR;
         //check if cache folder exists or create it
-        if (file_exists($cachePath) || mkdir($cachePath, 0700, true)) {
+        if (file_exists($cachePath) || mkdir($cachePath, 0o700, true)) {
             //we name the thumbnail from the book's uuid and it's dimensions (width and/or height)
             $thumbnailCacheName = substr($uuid, 3) . '-' . strval($width) . 'x' . strval($height) . '.' . $type;
             $cachePath = $cachePath . $thumbnailCacheName;

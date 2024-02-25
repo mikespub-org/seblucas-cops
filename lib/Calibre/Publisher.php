@@ -45,7 +45,7 @@ class Publisher extends Base
      */
     public static function getInstanceByBookId($bookId, $database = null)
     {
-        $query = 'select publishers.id as id, name
+        $query = 'select ' . static::getInstanceColumns($database) . '
 from books_publishers_link, publishers
 where publishers.id = publisher and book = ?';
         $result = Database::query($query, [$bookId], $database);

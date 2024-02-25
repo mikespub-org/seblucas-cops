@@ -52,7 +52,7 @@ switch ($page) {
 }
 
 foreach ($response->getHeaders() as $type => $value) {
-    header($type.': '.$value);
+    header($type . ': ' . $value);
 }
 http_response_code($response->getStatus());
 
