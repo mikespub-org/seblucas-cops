@@ -22,7 +22,7 @@ class PageWithDetail extends Page
     {
         if (!is_null($instance) && !empty($instance->id)) {
             $content = null;
-            $note = $instance::getNotesByInstance($instance);
+            $note = $instance->getNote();
             if (!empty($note) && !empty($note->doc)) {
                 $content = Resource::fixResourceLinks($note->doc, $instance->getDatabaseId());
             }

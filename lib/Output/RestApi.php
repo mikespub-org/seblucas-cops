@@ -11,6 +11,8 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Note;
+use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -34,6 +36,7 @@ class RestApi
         "/databases" => [self::class, 'getDatabases'],
         "/openapi" => [self::class, 'getOpenApi'],
         "/routes" => [self::class, 'getRoutes'],
+        "/notes" => [self::class, 'getNotes'],
     ];
 
     /**
@@ -323,6 +326,78 @@ class RestApi
         $result = ["title" => "Routes", "baseurl" => $endpoint, "entries" => []];
         foreach (Route::getRoutes() as $route => $queryParams) {
             array_push($result["entries"], ["route" => $route, "params" => $queryParams]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getNotes
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getNotes($request)
+    {
+        $type = $request->get('type', null, '/^\w+$/');
+        if (!empty($type)) {
+            return static::getNotesByType($type, $request);
+        }
+        $db = $request->database();
+        $endpoint = Route::url(static::getScriptName($request));
+        $result = ["title" => "Notes", "baseurl" => $endpoint, "databaseId" => $db, "entries" => []];
+        foreach (Note::getCountByType($db) as $type => $count) {
+            array_push($result["entries"], ["class" => "Notes Type", "title" => $type, "navlink" => "{$endpoint}/notes/{$type}", "number" => $count]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getNotesByType
+     * @param string $type
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getNotesByType($type, $request)
+    {
+        $id = $request->getId('id');
+        if (!empty($id)) {
+            return static::getNotesByTypeId($type, $id, $request);
+        }
+        $db = $request->database();
+        $endpoint = Route::url(static::getScriptName($request));
+        $result = ["title" => "Notes for {$type}", "baseurl" => $endpoint, "databaseId" => $db, "entries" => []];
+        // @todo get item from notes + corresponding title from instance
+        foreach (Note::getEntriesByType($type, $db) as $entry) {
+            if (!empty($entry["title"])) {
+                $title = Route::slugify($entry["title"]);
+                array_push($result["entries"], ["class" => "Notes", "title" => $entry["title"], "id" => $entry["item"], "navlink" => "{$endpoint}/notes/{$type}/{$entry['item']}/{$title}", "size" => $entry["size"], "timestamp" => $entry["mtime"]]);
+            } else {
+                array_push($result["entries"], ["class" => "Notes", "title" => $type, "id" => $entry["item"], "navlink" => "{$endpoint}/notes/{$type}/{$entry['item']}", "size" => $entry["size"], "timestamp" => $entry["mtime"]]);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getNotesByTypeId
+     * @param string $type
+     * @param int $id
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getNotesByTypeId($type, $id, $request)
+    {
+        $db = $request->database();
+        $note = Note::getInstanceByTypeId($type, $id, $db);
+        $endpoint = Route::url(static::getScriptName($request));
+        $result = ["title" => "Note for {$type} #{$id}", "baseurl" => $endpoint, "databaseId" => $db];
+        $result = array_replace($result, (array) $note);
+        $result["size"] = strlen($result["doc"]);
+        $result["resources"] = [];
+        foreach ($note->getResources() as $hash => $resource) {
+            $path = Resource::getResourcePath($hash, $db);
+            $size = !empty($path) ? filesize($path) : 0;
+            $mtime = !empty($path) ? filemtime($path) : 0;
+            $result["resources"][$hash] = ["hash" => $resource->hash, "name" => $resource->name, "size" => $size, "mtime" => $mtime];
         }
         return $result;
     }

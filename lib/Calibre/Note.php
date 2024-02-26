@@ -11,6 +11,13 @@ namespace SebLucas\Cops\Calibre;
 
 class Note
 {
+    public const ALLOWED_FIELDS = [
+        'authors' => Author::class,
+        //'languages' => Language::class,
+        'publishers' => Publisher::class,
+        'series' => Serie::class,
+        'tags' => Tag::class,
+    ];
     public int $id;
     public int $item;
     public string $colname;
@@ -52,5 +59,89 @@ class Note
             $resources[$post->hash] = new Resource($post, $this->databaseId);
         }
         return $resources;
+    }
+
+    /**
+     * Summary of getCountByType
+     * @param ?int $database
+     * @return array<mixed>
+     */
+    public static function getCountByType($database = null)
+    {
+        $notesDb = Database::getNotesDb($database);
+        if (is_null($notesDb)) {
+            return [];
+        }
+        $entries = [];
+        $query = 'select colname as type, count(*) as count from notes group by colname order by colname';
+        $result = $notesDb->prepare($query);
+        $result->execute();
+        while ($post = $result->fetchObject()) {
+            $entries[$post->type] = $post->count;
+        }
+        return $entries;
+    }
+
+    /**
+     * Summary of getEntriesByType
+     * @param string $type
+     * @param ?int $database
+     * @return array<mixed>
+     */
+    public static function getEntriesByType($type, $database = null)
+    {
+        if (!array_key_exists($type, static::ALLOWED_FIELDS)) {
+            return [];
+        }
+        $notesDb = Database::getNotesDb($database);
+        if (is_null($notesDb)) {
+            return [];
+        }
+        $entries = [];
+        $query = 'select item, length(doc) as size, mtime from notes where colname = ? order by item';
+        $params = [$type];
+        $result = $notesDb->prepare($query);
+        $result->execute($params);
+        while ($post = $result->fetchObject()) {
+            $entries[$post->item] = (array) $post;
+        }
+        $itemIdList = array_keys($entries);
+        if (empty($itemIdList)) {
+            return $entries;
+        }
+        $query = "select id, name from {$type} where id in (" . str_repeat('?,', count($itemIdList) - 1) . '?)';
+        $result = Database::query($query, $itemIdList, $database);
+        while ($post = $result->fetchObject()) {
+            if (array_key_exists($post->id, $entries)) {
+                $entries[$post->id]["title"] = $post->name;
+            }
+        }
+        return $entries;
+    }
+
+    /**
+     * Summary of getInstanceByTypeId
+     * @param string $type
+     * @param int $id
+     * @param ?int $database
+     * @return self|null
+     */
+    public static function getInstanceByTypeId($type, $id, $database = null)
+    {
+        if (!array_key_exists($type, static::ALLOWED_FIELDS)) {
+            return null;
+        }
+        $notesDb = Database::getNotesDb($database);
+        if (is_null($notesDb)) {
+            return null;
+        }
+        $query = 'select id, item, colname, doc, mtime from notes where item = ? and colname = ?';
+        $params = [$id, $type];
+        $result = $notesDb->prepare($query);
+        $result->execute($params);
+        if ($post = $result->fetchObject()) {
+            return new self($post, $database);
+        }
+        return null;
     }
 }

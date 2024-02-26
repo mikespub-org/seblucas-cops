@@ -20,13 +20,14 @@ use SebLucas\Cops\Input\Request;
 class NotesTest extends TestCase
 {
     private static string $endpoint = 'phpunit';
-    private static Request $request;
+    private static Author $author;
+
 
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
-        self::$request = new Request();
         Database::clearDb();
+        self::$author = Author::getInstanceById(3);
     }
 
     public static function tearDownAfterClass(): void
@@ -42,7 +43,7 @@ class NotesTest extends TestCase
 
     public function testGetNotesById(): void
     {
-        $note = Author::getNotesById(3);
+        $note = static::$author->getNote();
         $this->assertEquals(Note::class, get_class($note));
         $this->assertEquals(3, $note->item);
         $this->assertEquals("authors", $note->colname);
@@ -54,7 +55,7 @@ class NotesTest extends TestCase
     {
         Config::set('full_url', '/cops/');
 
-        $note = Author::getNotesById(3);
+        $note = static::$author->getNote();
         $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
         $expected = '<img src="/cops/calres.php/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
@@ -64,7 +65,7 @@ class NotesTest extends TestCase
 
     public function testGetResources(): void
     {
-        $note = Author::getNotesById(3);
+        $note = static::$author->getNote();
         $resources = $note->getResources();
         $this->assertCount(1, $resources);
         $hash = "xxh64:7c301792c52eebf7";

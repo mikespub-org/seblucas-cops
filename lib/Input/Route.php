@@ -75,6 +75,10 @@ class Route
         "/databases" => PageId::REST_API,
         "/openapi" => PageId::REST_API,
         "/routes" => PageId::REST_API,
+        "/notes/{type}/{id}/{title}" => PageId::REST_API,
+        "/notes/{type}/{id}" => PageId::REST_API,
+        "/notes/{type}" => PageId::REST_API,
+        "/notes" => PageId::REST_API,
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;

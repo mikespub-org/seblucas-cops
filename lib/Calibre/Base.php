@@ -351,6 +351,17 @@ abstract class Base
         return $this->filterLimit;
     }
 
+    /**
+     * Summary of getNote
+     * @return Note|null
+     */
+    public function getNote()
+    {
+        $className = static::class;
+        $tableName = $className::SQL_TABLE;
+        return Note::getInstanceByTypeId($tableName, $this->id, $this->databaseId);
+    }
+
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
 
     /**
@@ -386,40 +397,6 @@ abstract class Base
             return $className::SQL_COLUMNS . ', ' . $className::SQL_TABLE . '.link as link';
         }
         return $className::SQL_COLUMNS;
-    }
-
-    /**
-     * Summary of getNotesByInstance
-     * @param Base|Category $instance
-     * @return object|null
-     */
-    public static function getNotesByInstance($instance)
-    {
-        return static::getNotesById($instance->id, $instance->getDatabaseId());
-    }
-
-    /**
-     * Summary of getNotesById
-     * @param string|int|null $id
-     * @param ?int $database
-     * @return object|null
-     */
-    public static function getNotesById($id, $database = null)
-    {
-        $notesDb = Database::getNotesDb($database);
-        if (is_null($notesDb)) {
-            return null;
-        }
-        $className = static::class;
-        $tableName = $className::SQL_TABLE;
-        $query = 'select id, item, colname, doc, mtime from notes where item = ? and colname = ?';
-        $params = [$id, $tableName];
-        $result = $notesDb->prepare($query);
-        $result->execute($params);
-        if ($post = $result->fetchObject()) {
-            return new Note($post, $database);
-        }
-        return null;
     }
 
     /**
