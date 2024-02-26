@@ -13,6 +13,9 @@ x.x.x - TODO
 2.4.x - 2024xxxx
   * Add notes for author, book, publisher, serie and tag if available
 
+2.4.1 - 20240226 Support cops_full_url in REST API swagger ui
+  * Fix restapi.php when cops_full_url is needed - see issue #74 from @bcleonard
+
 2.4.0 - 20240225 Add rating and instance link if available
   * Changes in config_default.php file:
     - new $config['cops_download_template']
