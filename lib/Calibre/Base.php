@@ -402,12 +402,12 @@ abstract class Base
         }
         $className = static::class;
         $tableName = $className::SQL_TABLE;
-        $query = 'select item, colname, doc, mtime from notes where item = ? and colname = ?';
+        $query = 'select id, item, colname, doc, mtime from notes where item = ? and colname = ?';
         $params = [$id, $tableName];
         $result = $notesDb->prepare($query);
         $result->execute($params);
         if ($post = $result->fetchObject()) {
-            return $post;
+            return new Note($post, $database);
         }
         return null;
     }

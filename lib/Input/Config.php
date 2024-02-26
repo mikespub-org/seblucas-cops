@@ -29,6 +29,7 @@ class Config
         "opds" => "opds.php",
         "loader" => "loader.php",
         "download" => "download.php",
+        "calres" => "calres.php",
     ];
     protected const PREFIX = 'cops_';
 
