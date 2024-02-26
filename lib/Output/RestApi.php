@@ -290,6 +290,7 @@ class RestApi
         $result = ["openapi" => "3.0.3", "info" => ["title" => "COPS REST API", "version" => Config::VERSION]];
         $result["servers"] = [["url" => Route::url(static::$endpoint), "description" => "COPS REST API Endpoint"]];
         $result["components"] = ["securitySchemes" => ["ApiKeyAuth" => ["type" => "apiKey", "in" => "header", "name" => "X-API-KEY"]]];
+        $result["components"]["parameters"] = ["dbParam" => ["name" => "db", "in" => "query", "required" => false, "schema" => ["type" => "integer", "minimum" => 0]]];
         $result["paths"] = [];
         foreach (Route::getRoutes() as $route => $queryParams) {
             $params = [];
@@ -304,6 +305,9 @@ class RestApi
             $result["paths"][$route] = ["get" => ["summary" => "Route to " . $queryString, "responses" => ["200" => ["description" => "Result of " . $queryString]]]];
             if ($route == "/databases/{db}") {
                 array_push($params, ["name" => "type", "in" => "query", "schema" => ["type" => "string", "enum" => ["table", "view"]]]);
+            }
+            if (!str_starts_with($route, "/databases") && !in_array($route, ["/openapi", "/routes"])) {
+                array_push($params, ['$ref' => "#/components/parameters/dbParam"]);
             }
             if (!empty($params)) {
                 $result["paths"][$route]["get"]["parameters"] = $params;
