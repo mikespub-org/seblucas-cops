@@ -131,7 +131,7 @@ class RestApi
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
-                header('Location: ' . $this->request->script() . '/index');
+                header('Location: ' . Route::url(static::$endpoint) . '/index');
                 exit;
             }
             if ($this->isExtra) {
@@ -281,7 +281,7 @@ class RestApi
     public static function getOpenApi($request)
     {
         $result = ["openapi" => "3.0.3", "info" => ["title" => "COPS REST API", "version" => Config::VERSION]];
-        $result["servers"] = [["url" => $request->script(), "description" => "COPS REST API Endpoint"]];
+        $result["servers"] = [["url" => Route::url(static::$endpoint), "description" => "COPS REST API Endpoint"]];
         $result["components"] = ["securitySchemes" => ["ApiKeyAuth" => ["type" => "apiKey", "in" => "header", "name" => "X-API-KEY"]]];
         $result["paths"] = [];
         foreach (Route::getRoutes() as $route => $queryParams) {

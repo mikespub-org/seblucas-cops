@@ -10,6 +10,7 @@
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\RestApi;
 
@@ -28,7 +29,7 @@ $path = $request->path();
 if (empty($path)) {
     header('Content-Type:text/html;charset=utf-8');
 
-    $data = ['link' => $request->script() . '/openapi'];
+    $data = ['link' => Route::url(Config::ENDPOINT["restapi"]) . '/openapi'];
     $template = __DIR__ . '/templates/restapi.html';
     echo Format::template($data, $template);
     return;
