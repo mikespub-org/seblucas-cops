@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Resource;
 
 class PageWithDetail extends Page
 {
@@ -19,12 +20,19 @@ class PageWithDetail extends Page
      */
     public function getExtra($instance = null)
     {
-        if (!is_null($instance) && !empty($instance->link)) {
-            $this->extra = [
-                "title" => localize("extra.title"),
-                "link" => $instance->link,
-                "content" => null,
-            ];
+        if (!is_null($instance) && !empty($instance->id)) {
+            $content = null;
+            $note = $instance::getNotesByInstance($instance);
+            if (!empty($note) && !empty($note->doc)) {
+                $content = Resource::fixResourceLinks($note->doc, $instance->getDatabaseId());
+            }
+            if (!empty($instance->link) || !empty($content)) {
+                $this->extra = [
+                    "title" => localize("extra.title"),
+                    "link" => $instance->link,
+                    "content" => $content,
+                ];
+            }
         }
     }
 }

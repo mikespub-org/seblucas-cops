@@ -389,6 +389,16 @@ abstract class Base
     }
 
     /**
+     * Summary of getNotesByInstance
+     * @param Base|Category $instance
+     * @return object|null
+     */
+    public static function getNotesByInstance($instance)
+    {
+        return static::getNotesById($instance->id, $instance->getDatabaseId());
+    }
+
+    /**
      * Summary of getNotesById
      * @param string|int|null $id
      * @param ?int $database

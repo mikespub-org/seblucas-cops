@@ -115,3 +115,24 @@
     </ul>
 {{?}}
 </div>
+{{? it.extra }}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-half-padding">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  {{=it.extra.title}}
+                </div>
+                <div class="panel-body">
+                  {{? it.extra.link }}
+                    <p>{{=it.c.i18n.linkTitle}}: <a rel="external" target="_blank" href="{{=it.extra.link}}">{{=it.extra.link}}</a></p>
+                  {{?}}
+                  {{? it.extra.content }}
+                    {{=it.extra.content}}
+                  {{?}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{?}}

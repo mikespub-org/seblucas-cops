@@ -5,8 +5,8 @@
  * Resources:
  *     hash = alg:digest
  *     name = imagefile.jpg
- *     path = ./.calnotes/resources/di/digest
- *     meta = ./.calnotes/resources/di/digest.metadata
+ *     path = ./.calnotes/resources/di/alg-digest
+ *     meta = ./.calnotes/resources/di/alg-digest.metadata
  *     link = calres://alg/digest?placement=uuid4
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
