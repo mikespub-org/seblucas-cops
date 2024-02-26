@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Pages\PageId;
 use Exception;
 
 /**
@@ -75,8 +76,11 @@ class RestApi
         // handle extra functions
         $root = '/' . explode('/', $path . '/')[1];
         if (array_key_exists($root, static::$extra)) {
-            $this->isExtra = true;
             $params = Route::match($path);
+            if (!empty($params['page']) && $params['page'] != PageId::REST_API) {
+                return $params;
+            }
+            $this->isExtra = true;
             unset($params['page']);
             if (!empty($params)) {
                 $this->setParams($params);
@@ -155,8 +159,8 @@ class RestApi
     public static function getCustomColumns($request)
     {
         $columns = CustomColumnType::getAllCustomColumns();
-        $endpoint = static::getScriptName($request);
-        $result = ["title" => "Custom Columns", "entries" => []];
+        $endpoint = Route::url(static::getScriptName($request));
+        $result = ["title" => "Custom Columns", "baseurl" => $endpoint, "entries" => []];
         foreach ($columns as $title => $column) {
             $column["navlink"] = $endpoint . "/custom/" . $column["id"];
             array_push($result["entries"], $column);
@@ -175,8 +179,8 @@ class RestApi
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
             return static::getDatabase($db, $request);
         }
-        $endpoint = static::getScriptName($request);
-        $result = ["title" => "Databases", "entries" => []];
+        $endpoint = Route::url(static::getScriptName($request));
+        $result = ["title" => "Databases", "baseurl" => $endpoint, "entries" => []];
         $id = 0;
         foreach (Database::getDbNameList() as $key) {
             array_push($result["entries"], ["class" => "Database", "title" => $key, "id" => $id, "navlink" => "{$endpoint}/databases/{$id}"]);
@@ -205,11 +209,11 @@ class RestApi
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
-        $endpoint = static::getScriptName($request);
+        $endpoint = Route::url(static::getScriptName($request));
         $type = $request->get('type', null, '/^\w+$/');
         if (in_array($type, ['table', 'view'])) {
             $title .= " Type $type";
-            $result = ["title" => $title, "entries" => []];
+            $result = ["title" => $title, "baseurl" => $endpoint, "entries" => []];
             $entries = Database::getDbSchema($database, $type);
             foreach ($entries as $entry) {
                 $entry["navlink"] = "{$endpoint}/databases/{$database}/{$entry['tbl_name']}";
@@ -219,7 +223,7 @@ class RestApi
             $result["version"] = Database::getUserVersion($database);
             return $result;
         }
-        $result = ["title" => $title, "entries" => []];
+        $result = ["title" => $title, "baseurl" => $endpoint, "entries" => []];
         $metadata = [
             "table" => "Tables",
             "view" => "Views",
@@ -246,8 +250,8 @@ class RestApi
             $title .= " $dbName";
         }
         $title .= " Table $name";
-        $endpoint = static::getScriptName($request);
-        $result = ["title" => $title, "entries" => []];
+        $endpoint = Route::url(static::getScriptName($request));
+        $result = ["title" => $title, "baseurl" => $endpoint, "entries" => []];
         if (!$request->hasValidApiKey()) {
             $result["error"] = "Invalid api key";
             return $result;
@@ -315,7 +319,8 @@ class RestApi
      */
     public static function getRoutes($request)
     {
-        $result = ["title" => "Routes", "entries" => []];
+        $endpoint = Route::url(static::getScriptName($request));
+        $result = ["title" => "Routes", "baseurl" => $endpoint, "entries" => []];
         foreach (Route::getRoutes() as $route => $queryParams) {
             array_push($result["entries"], ["route" => $route, "params" => $queryParams]);
         }
