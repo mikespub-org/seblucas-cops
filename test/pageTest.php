@@ -743,6 +743,38 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
+    public function testPageAllIdentifiers(): void
+    {
+        $page = PageId::ALL_IDENTIFIERS;
+        $request = new Request();
+
+        $currentPage = PageId::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("Identifiers", $currentPage->title);
+        $this->assertCount(6, $currentPage->entryArray);
+        $this->assertEquals("Google Books", $currentPage->entryArray [0]->title);
+        $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("uri", $currentPage->entryArray [3]->title);
+        $this->assertEquals(13, $currentPage->entryArray [3]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageIdentifierDetail(): void
+    {
+        $page = PageId::IDENTIFIER_DETAIL;
+        $request = new Request();
+        $request->set('id', "isbn");
+
+        $currentPage = PageId::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("ISBN", $currentPage->title);
+        $this->assertCount(1, $currentPage->entryArray);
+        $this->assertEquals("La curée", $currentPage->entryArray [0]->title);
+        $this->assertTrue($currentPage->containsBook());
+    }
+
     public function testPageRecent(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;

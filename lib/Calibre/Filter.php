@@ -29,6 +29,16 @@ class Filter
         BookList::URL_PARAM_FIRST => BookList::class,
         BookList::URL_PARAM_YEAR => BookList::class,
     ];
+    // @todo map search string from virtual library/saved search to filters
+    public const SEARCH_FIELDS = [
+        'authors' => Author::class,
+        //'formats' => Format::class,
+        'languages' => Language::class,
+        'publishers' => Publisher::class,
+        'ratings' => Rating::class,
+        'series' => Serie::class,
+        'tags' => Tag::class,
+    ];
 
     protected Request $request;
     /** @var array<mixed> */

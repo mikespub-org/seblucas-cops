@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
+use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -37,6 +38,7 @@ class RestApi
         "/openapi" => [self::class, 'getOpenApi'],
         "/routes" => [self::class, 'getRoutes'],
         "/notes" => [self::class, 'getNotes'],
+        "/preferences" => [self::class, 'getPreferences'],
     ];
 
     /**
@@ -371,7 +373,7 @@ class RestApi
     {
         $id = $request->getId('id');
         if (!empty($id)) {
-            return static::getNotesByTypeId($type, $id, $request);
+            return static::getNoteByTypeId($type, $id, $request);
         }
         $db = $request->database();
         $endpoint = static::getScriptName($request);
@@ -390,18 +392,18 @@ class RestApi
     }
 
     /**
-     * Summary of getNotesByTypeId
+     * Summary of getNoteByTypeId
      * @param string $type
      * @param int $id
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getNotesByTypeId($type, $id, $request)
+    public static function getNoteByTypeId($type, $id, $request)
     {
         $db = $request->database();
         $note = Note::getInstanceByTypeId($type, $id, $db);
         if (empty($note)) {
-            return [];
+            return ["error" => "Invalid note type id"];
         }
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
@@ -409,12 +411,64 @@ class RestApi
         $result = array_replace($result, (array) $note);
         $result["size"] = strlen($result["doc"]);
         $result["resources"] = [];
+        $baseurl = Route::url(Resource::$endpoint);
         foreach ($note->getResources() as $hash => $resource) {
             $path = Resource::getResourcePath($hash, $db);
             $size = !empty($path) ? filesize($path) : 0;
             $mtime = !empty($path) ? filemtime($path) : 0;
-            $result["resources"][$hash] = ["hash" => $resource->hash, "name" => $resource->name, "size" => $size, "mtime" => $mtime];
+            $link = $baseurl . $resource->getUri();
+            $result["resources"][$hash] = ["hash" => $resource->hash, "name" => $resource->name, "url" => $link, "size" => $size, "mtime" => $mtime];
         }
+        return $result;
+    }
+
+    /**
+     * Summary of getPreferences
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getPreferences($request)
+    {
+        $key = $request->get('key', null, '/^[\w\s:]+$/');
+        if (!empty($key)) {
+            return static::getPreferenceByKey($key, $request);
+        }
+        $db = $request->database();
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $result = ["title" => "Preferences", "baseurl" => $baseurl, "databaseId" => $db, "entries" => []];
+        foreach (Preference::getInstances($db) as $key => $preference) {
+            if (is_array($preference->val)) {
+                $count = count($preference->val);
+            } elseif (is_string($preference->val)) {
+                $count = strlen($preference->val);
+            } elseif (!is_null($preference->val)) {
+                $count = 1;
+            } else {
+                $count = 0;
+            }
+            array_push($result["entries"], ["class" => "Preference", "title" => $key, "navlink" => Route::url("{$endpoint}/preferences/" . rawurlencode($key), null, ["db" => $db]), "number" => $count]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getPreferenceByKey
+     * @param string $key
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getPreferenceByKey($key, $request)
+    {
+        $db = $request->database();
+        $preference = Preference::getInstanceByKey($key, $db);
+        if (empty($preference)) {
+            return ["error" => "Invalid preference key"];
+        }
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $result = ["title" => "Preference for {$key}", "baseurl" => $baseurl, "databaseId" => $db];
+        $result = array_replace($result, (array) $preference);
         return $result;
     }
 }

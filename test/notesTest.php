@@ -39,6 +39,26 @@ class NotesTest extends TestCase
         $this->assertNotNull($notesDb);
     }
 
+    public function testGetCountByType(): void
+    {
+        $expected = ["authors" => 1];
+        $result = Note::getCountByType();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testGetEntriesByType(): void
+    {
+        $expected = [];
+        $expected[3] = [
+            "item" => 3,
+            "size" => 227,
+            "mtime" => 1708880895.654,
+            "title" => "Lewis Carroll",
+        ];
+        $result = Note::getEntriesByType("authors");
+        $this->assertEquals($expected, $result);
+    }
+
     public function testGetNotesById(): void
     {
         $note = self::$author->getNote();
@@ -74,6 +94,8 @@ class NotesTest extends TestCase
         $this->assertEquals($expected, $resources[$hash]->name);
         $expected = "/.calnotes/resources/7c/xxh64-7c301792c52eebf7";
         $this->assertStringEndsWith($expected, Resource::getResourcePath($resources[$hash]->hash));
+        $expected = "/0/xxh64/7c301792c52eebf7";
+        $this->assertEquals($expected, $resources[$hash]->getUri());
     }
 
     /**

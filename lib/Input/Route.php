@@ -79,6 +79,8 @@ class Route
         "/notes/{type}/{id}" => PageId::REST_API,
         "/notes/{type}" => PageId::REST_API,
         "/notes" => PageId::REST_API,
+        "/preferences/{key}" => PageId::REST_API,
+        "/preferences" => PageId::REST_API,
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;

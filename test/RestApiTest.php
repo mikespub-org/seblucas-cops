@@ -359,4 +359,58 @@ class RestApiTest extends TestCase
         $test = RestApi::getRoutes($request);
         $this->assertEquals($expected, $test["title"]);
     }
+
+    public function testGetNotes(): void
+    {
+        $request = new Request();
+        $expected = "Notes";
+        $test = RestApi::getNotes($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 1;
+        $this->assertCount($expected, $test["entries"]);
+    }
+
+    public function testGetNotesByType(): void
+    {
+        $request = new Request();
+        $request->set('type', 'authors');
+        $expected = "Notes for authors";
+        $test = RestApi::getNotes($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 1;
+        $this->assertCount($expected, $test["entries"]);
+    }
+
+    public function testGetNoteByTypeId(): void
+    {
+        $request = new Request();
+        $request->set('type', 'authors');
+        $request->set('id', 3);
+        $expected = "Note for authors #3";
+        $test = RestApi::getNotes($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 1;
+        $this->assertCount($expected, $test["resources"]);
+    }
+
+    public function testGetPreferences(): void
+    {
+        $request = new Request();
+        $expected = "Preferences";
+        $test = RestApi::getPreferences($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 12;
+        $this->assertCount($expected, $test["entries"]);
+    }
+
+    public function testGetPreferenceByKey(): void
+    {
+        $request = new Request();
+        $request->set('key', 'saved_searches');
+        $expected = "Preference for saved_searches";
+        $test = RestApi::getPreferences($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 0;
+        $this->assertCount($expected, $test["val"]);
+    }
 }

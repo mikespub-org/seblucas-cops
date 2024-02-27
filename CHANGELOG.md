@@ -11,7 +11,13 @@ x.x.x - TODO
   * ...
 
 2.4.x - 2024xxxx
-  * Add notes for author, book, publisher, serie and tag if available
+
+2.4.2 - 20240227 Show category notes for Calibre 7.x (bootstrap2 & twigged)
+  * Show use of db parameter in openapi for REST API
+  * Add notes and preferences routes in REST API
+  * Add Preference class for Calibre preferences
+  * Show notes in page detail for bootstrap2 & twigged templates
+  * Get notes for author, publisher, serie and tag if available
 
 2.4.1 - 20240226 Support cops_full_url in REST API swagger ui
   * Fix restapi.php when cops_full_url is needed - see issue #74 from @bcleonard
