@@ -189,7 +189,7 @@ class Book
     {
         $endpoint ??= static::$endpoint;
         if (Config::get('use_route_urls')) {
-            return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle()]);
+            return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle(), 'db' => $this->databaseId]);
         }
         return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'db' => $this->databaseId]);
     }

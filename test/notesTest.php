@@ -15,11 +15,9 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 
 class NotesTest extends TestCase
 {
-    private static string $endpoint = 'phpunit';
     private static Author $author;
 
 
@@ -43,7 +41,7 @@ class NotesTest extends TestCase
 
     public function testGetNotesById(): void
     {
-        $note = static::$author->getNote();
+        $note = self::$author->getNote();
         $this->assertEquals(Note::class, get_class($note));
         $this->assertEquals(3, $note->item);
         $this->assertEquals("authors", $note->colname);
@@ -55,7 +53,7 @@ class NotesTest extends TestCase
     {
         Config::set('full_url', '/cops/');
 
-        $note = static::$author->getNote();
+        $note = self::$author->getNote();
         $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
         $expected = '<img src="/cops/calres.php/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
@@ -65,7 +63,7 @@ class NotesTest extends TestCase
 
     public function testGetResources(): void
     {
-        $note = static::$author->getNote();
+        $note = self::$author->getNote();
         $resources = $note->getResources();
         $this->assertCount(1, $resources);
         $hash = "xxh64:7c301792c52eebf7";

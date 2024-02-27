@@ -517,14 +517,14 @@ class JSONRenderer
                 if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
                     $out ["download"] = [];
                     foreach (Config::get('download_series') as $format) {
-                        $url = Route::url(Config::ENDPOINT['download'], null, ['series' => $qid, 'type' => strtolower($format)]);
+                        $url = Route::url(Config::ENDPOINT['download'], null, ['series' => $qid, 'type' => strtolower($format), 'db' => $database]);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }
                 if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
                     $out ["download"] = [];
                     foreach (Config::get('download_author') as $format) {
-                        $url = Route::url(Config::ENDPOINT['download'], null, ['author' => $qid, 'type' => strtolower($format)]);
+                        $url = Route::url(Config::ENDPOINT['download'], null, ['author' => $qid, 'type' => strtolower($format), 'db' => $database]);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }
