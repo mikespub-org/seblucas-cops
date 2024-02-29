@@ -385,6 +385,23 @@ abstract class Base
     }
 
     /**
+     * Summary of getInstanceByName
+     * @param string $name
+     * @param ?int $database
+     * @return object|null
+     */
+    public static function getInstanceByName($name, $database = null)
+    {
+        $className = static::class;
+        $query = 'select ' . static::getInstanceColumns($database) . ' from ' . $className::SQL_TABLE . ' where name = ?';
+        $result = Database::query($query, [$name], $database);
+        if ($post = $result->fetchObject()) {
+            return new $className($post, $database);
+        }
+        return null;
+    }
+
+    /**
      * Summary of getInstanceColumns
      * @param ?int $database
      * @return string

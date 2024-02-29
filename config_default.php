@@ -441,7 +441,7 @@ $config['cops_html_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'time
  * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag in HTML page detail
  * Note: this replaces 'cops_show_filter_links' in previous release, and now expects an array
  *
- * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag']
+ * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'identifier']
  */
 $config['cops_html_filter_links'] = ['author', 'language', 'publisher', 'rating', 'series', 'tag'];
 

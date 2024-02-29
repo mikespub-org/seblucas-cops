@@ -9,7 +9,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -19,8 +18,7 @@ class VirtualLibrary extends Base
 {
     public const PAGE_ID = PageId::ALL_LIBRARIES_ID;
     public const PAGE_ALL = PageId::ALL_LIBRARIES;
-    //public const PAGE_DETAIL = PageId::LIBRARY_DETAIL;
-    public const PAGE_DETAIL = PageId::INDEX;
+    public const PAGE_DETAIL = PageId::LIBRARY_DETAIL;
     public const URL_PARAM = "vl";
 
     /** @var array<mixed> */
@@ -46,14 +44,15 @@ class VirtualLibrary extends Base
      */
     public function getUri()
     {
-        // @todo get home page from Config
+        // get home page from Config
+        $homepage = PageId::getHomePage();
         if (empty($this->id)) {
-            return Route::page(static::PAGE_DETAIL);
+            return Route::page($homepage);
         }
         //if (Config::get('use_route_urls')) {
-        //    return Route::page(static::PAGE_DETAIL, ['vl' => $this->getTitle()]);
+        //    return Route::page($homepage, ['vl' => $this->getTitle()]);
         //}
-        return Route::page(static::PAGE_DETAIL, ['vl' => $this->getTitle()]);
+        return Route::page($homepage, ['vl' => strval($this->id) . '.' . Route::slugify($this->getTitle())]);
     }
 
     /**
@@ -114,6 +113,7 @@ class VirtualLibrary extends Base
 
     /**
      * Summary of getWithoutEntry
+     * @param ?int $database
      * @return ?Entry
      */
     public static function getWithoutEntry($database = null)

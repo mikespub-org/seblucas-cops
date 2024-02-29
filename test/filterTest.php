@@ -17,6 +17,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\BaseList;
@@ -61,6 +62,9 @@ class FilterTest extends TestCase
 
         $tags = $author->getTags();
         $this->assertCount(4, $tags);
+
+        $identifiers = $author->getIdentifiers();
+        $this->assertCount(2, $identifiers);
     }
 
     public function testLanguageFilters(): void
@@ -89,6 +93,9 @@ class FilterTest extends TestCase
 
         $tags = $language->getTags();
         $this->assertCount(10, $tags);
+
+        $identifiers = $language->getIdentifiers();
+        $this->assertCount(4, $identifiers);
     }
 
     public function testPublisherFilters(): void
@@ -117,6 +124,9 @@ class FilterTest extends TestCase
 
         $tags = $publisher->getTags();
         $this->assertCount(4, $tags);
+
+        $identifiers = $publisher->getIdentifiers();
+        $this->assertCount(2, $identifiers);
     }
 
     public function testRatingFilters(): void
@@ -145,6 +155,9 @@ class FilterTest extends TestCase
 
         $tags = $rating->getTags();
         $this->assertCount(3, $tags);
+
+        $identifiers = $rating->getIdentifiers();
+        $this->assertCount(2, $identifiers);
     }
 
     public function testSerieFilters(): void
@@ -173,6 +186,9 @@ class FilterTest extends TestCase
 
         $tags = $serie->getTags();
         $this->assertCount(3, $tags);
+
+        $identifiers = $serie->getIdentifiers();
+        $this->assertCount(2, $identifiers);
     }
 
     public function testTagFilters(): void
@@ -203,6 +219,9 @@ class FilterTest extends TestCase
         $tag->limitSelf = false;
         $tags = $tag->getTags();
         $this->assertCount(9, $tags);
+
+        $identifiers = $tag->getIdentifiers();
+        $this->assertCount(4, $identifiers);
     }
 
     public function testTagHierarchy(): void
@@ -233,6 +252,39 @@ class FilterTest extends TestCase
         Config::set('calibre_categories_using_hierarchy', []);
     }
 
+    public function testIdentifierFilters(): void
+    {
+        /** @var Identifier $identifier */
+        $identifier = Identifier::getInstanceById('uri');
+        $this->assertEquals("uri", $identifier->id);
+
+        $books = $identifier->getBooks();
+        $this->assertCount(13, $books);
+
+        $authors = $identifier->getAuthors();
+        $this->assertCount(5, $authors);
+
+        $languages = $identifier->getLanguages();
+        $this->assertCount(1, $languages);
+
+        $publishers = $identifier->getPublishers();
+        $this->assertCount(5, $publishers);
+
+        $ratings = $identifier->getRatings();
+        $this->assertCount(2, $ratings);
+
+        $series = $identifier->getSeries();
+        $this->assertCount(3, $series);
+
+        $tags = $identifier->getTags();
+        $this->assertCount(10, $tags);
+
+        // special case if we want to find other identifiers applied to books where this identifier applies
+        $identifier->limitSelf = false;
+        $identifiers = $identifier->getIdentifiers();
+        $this->assertCount(3, $identifiers);
+    }
+
     public function testCustomFilters(): void
     {
         $custom = CustomColumn::createCustom(1, 1);
@@ -259,6 +311,9 @@ class FilterTest extends TestCase
 
         $tags = $custom->getTags();
         $this->assertCount(4, $tags);
+
+        $identifiers = $custom->getIdentifiers();
+        $this->assertCount(3, $identifiers);
     }
 
     public function testCustomHierarchy(): void

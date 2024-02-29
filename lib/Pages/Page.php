@@ -486,7 +486,7 @@ class Page
             }
             $this->entryArray = array_merge($this->entryArray, $instance->getTags($paging['t']));
         }
-        if (!($instance instanceof Identifier) && in_array('identifier', $filterLinks)) {
+        if (in_array('identifier', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("identifiers.title"),
                 "",
@@ -498,6 +498,10 @@ class Page
                 ""
             ));
             $paging['i'] ??= 1;
+            // special case if we want to find other identifiers applied to books where this identifier applies
+            if ($instance instanceof Identifier) {
+                $instance->limitSelf = false;
+            }
             $this->entryArray = array_merge($this->entryArray, $instance->getIdentifiers($paging['i']));
         }
         /**
