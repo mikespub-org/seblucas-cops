@@ -9,10 +9,14 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Pages\PageId;
 use JsonException;
 
 class Preference
 {
+    public const PAGE_ID = PageId::ALL_PREFERENCES_ID;
+    public const PAGE_ALL = PageId::ALL_PREFERENCES;
+    public const PAGE_DETAIL = PageId::PREFERENCE_DETAIL;
     public const SQL_TABLE = "preferences";
     public const SQL_COLUMNS = "id, key, val";
 
@@ -74,7 +78,9 @@ class Preference
     /**
      * Summary of getVirtualLibraries
      * {
-     *   "Both Authors": "authors:\"=Author Two\" and authors:\"=Author One\""
+     *   "Both Authors": "authors:\"=Author Two\" and authors:\"=Author One\"",
+     *   "Kindle 2": "tags:\"=Kindle_Mike\" or tags:\"=Kindle_Luca\"",
+     *   "No Device": "not tags:\"=Kindle_Mike\" and not tags:\"=Kindle_Luca\" and not tags:\"=Kindle_Lydia\""
      * }
      * See https://github.com/seblucas/cops/pull/233
      * @param ?int $database

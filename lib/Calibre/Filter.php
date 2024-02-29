@@ -28,6 +28,7 @@ class Filter
         CustomColumnType::URL_PARAM => CustomColumnType::class,
         BookList::URL_PARAM_FIRST => BookList::class,
         BookList::URL_PARAM_YEAR => BookList::class,
+        VirtualLibrary::URL_PARAM => VirtualLibrary::class,
     ];
     // @todo map search string from virtual library/saved search to filters
     public const SEARCH_FIELDS = [
@@ -162,7 +163,7 @@ class Filter
      */
     public function addFilter($filter, $param)
     {
-        $this->queryString .= 'and (' . $filter . ')';
+        $this->queryString .= ' and (' . $filter . ')';
         array_push($this->params, $param);
     }
 
@@ -320,7 +321,7 @@ class Filter
     {
         [$filter, $params] = $customType->getFilter($valueId, $this->parentTable);
         if (!empty($filter)) {
-            $this->queryString .= 'and (' . $filter . ')';
+            $this->queryString .= ' and (' . $filter . ')';
             foreach ($params as $param) {
                 array_push($this->params, $param);
             }
@@ -374,6 +375,9 @@ class Filter
     {
         $entryArray = [];
         foreach (static::URL_PARAMS as $paramName => $className) {
+            if ($className == VirtualLibrary::class) {
+                continue;
+            }
             $paramValue = $request->get($paramName, null);
             if (!isset($paramValue)) {
                 continue;

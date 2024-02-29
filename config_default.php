@@ -184,6 +184,20 @@ $config['cops_update_epub-metadata'] = '0';
 $config['cops_books_filter'] = [];
 
 /*
+ * Virtual libraries
+ * to add as an array containing the library names configured in Calibre
+ *
+ * For example : ["Short Stories in English", "Fiction from this Century"];
+ *
+ * To select all Calibre virtual libraries you can use wildcard : ["*"];
+ *
+ * @todo https://manual.calibre-ebook.com/virtual_libraries.html
+ * Note that search criteria for virtual libraries are very limited in COPS (TODO)
+ */
+$config['cops_calibre_virtual_libraries'] = [];
+//$config['cops_calibre_virtual_libraries'] = ["*"];
+
+/*
  * Custom Columns for the index page
  * to add as an array containing the lookup names configured in Calibre
  *
@@ -238,8 +252,9 @@ $config['cops_custom_date_split_year'] = '1';
 $config['cops_custom_integer_split_range'] = 0;
 
 /*
- * @todo https://manual.calibre-ebook.com/sub_groups.html
  * Start working on hierarchical tags or custom columns
+ * @todo https://manual.calibre-ebook.com/sub_groups.html
+ *
  * For example for 'tags' and 'Type2' custom column in csv format:
  * $config['calibre_categories_using_hierarchy'] = ['tags', 'Type2'];
  * Note: here you need to specify the title/name of the custom column, not the lookup name = different from above
@@ -338,6 +353,7 @@ $config['cops_server_side_render'] = 'Kindle\/1\.\d|Kindle\/2\.\d|Kindle\/3\.\d|
  * - publisher
  * - rating
  * - language
+ * - libraries
  */
 $config ['cops_ignored_categories'] = [];
 

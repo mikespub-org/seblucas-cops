@@ -13,7 +13,6 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
-use SebLucas\Cops\Output\Format;
 
 class Cover
 {

@@ -30,10 +30,7 @@ $database = $request->database();
 
 // Use the configured home page if needed
 if (!isset($page)) {
-    $page = PageId::INDEX;
-    if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'))) {
-        $page = constant('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'));
-    }
+    $page = PageId::getHomePage();
     $request->set('page', $page);
 }
 

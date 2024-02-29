@@ -399,7 +399,7 @@ class RestApiTest extends TestCase
         $expected = "Preferences";
         $test = RestApi::getPreferences($request);
         $this->assertEquals($expected, $test["title"]);
-        $expected = 12;
+        $expected = 13;
         $this->assertCount($expected, $test["entries"]);
     }
 
@@ -410,7 +410,7 @@ class RestApiTest extends TestCase
         $expected = "Preference for saved_searches";
         $test = RestApi::getPreferences($request);
         $this->assertEquals($expected, $test["title"]);
-        $expected = 0;
+        $expected = 1;
         $this->assertCount($expected, $test["val"]);
     }
 }

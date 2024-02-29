@@ -21,6 +21,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Calibre\VirtualLibrary;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -241,6 +242,12 @@ class Page
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 array_push($this->entryArray, $customColumn->getCount());
+            }
+        }
+        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array('libraries', $this->ignoredCategories)) {
+            $library = VirtualLibrary::getCount($this->databaseId);
+            if (!is_null($library)) {
+                array_push($this->entryArray, $library);
             }
         }
         $booklist = new BookList($this->request);

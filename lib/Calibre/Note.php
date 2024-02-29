@@ -9,8 +9,14 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Pages\PageId;
+
 class Note
 {
+    public const PAGE_ID = PageId::ALL_NOTES_ID;
+    public const PAGE_ALL = PageId::ALL_NOTES;
+    public const PAGE_TYPE = PageId::ALL_NOTES_TYPE;
+    public const PAGE_DETAIL = PageId::NOTE_DETAIL;
     public const ALLOWED_FIELDS = [
         'authors' => Author::class,
         //'languages' => Language::class,

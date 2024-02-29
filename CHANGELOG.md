@@ -11,6 +11,9 @@ x.x.x - TODO
   * ...
 
 2.4.x - 2024xxxx
+  * Changes in config_default.php file:
+    - new $config['cops_calibre_virtual_libraries']
+  * Start support for virtual libraries from Calibre (TODO)
 
 2.4.2 - 20240227 Show category notes for Calibre 7.x (bootstrap2 & twigged)
   * Show use of db parameter in openapi for REST API

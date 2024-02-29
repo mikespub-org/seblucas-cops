@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 
 class PageId
@@ -38,6 +39,13 @@ class PageId
     public const RATING_DETAIL = "23";
     public const ALL_IDENTIFIERS = "41";
     public const IDENTIFIER_DETAIL = "42";
+    public const ALL_LIBRARIES = "43";
+    public const LIBRARY_DETAIL = "44";
+    public const ALL_NOTES = "45";
+    public const ALL_NOTES_TYPE = "46";
+    public const NOTE_DETAIL = "47";
+    public const ALL_PREFERENCES = "48";
+    public const PREFERENCE_DETAIL = "49";
     public const ALL_BOOKS_YEAR = "50";
     public const REST_API = "98";
     public const FILTER = "99";
@@ -58,6 +66,9 @@ class PageId
     public const ALL_SERIES_ID = "cops:series";
     public const ALL_TAGS_ID = "cops:tags";
     public const ALL_IDENTIFIERS_ID = "cops:identifiers";
+    public const ALL_LIBRARIES_ID = "cops:libraries";
+    public const ALL_NOTES_ID = "cops:notes";
+    public const ALL_PREFERENCES_ID = "cops:preferences";
 
     /**
      * Summary of getPage
@@ -114,6 +125,10 @@ class PageId
                 return new PageAllIdentifiers($request);
             case PageId::IDENTIFIER_DETAIL :
                 return new PageIdentifierDetail($request);
+            case PageId::ALL_LIBRARIES:
+                return new PageAllVirtualLibraries($request);
+            //case PageId::LIBRARY_DETAIL :
+            //    return new PageVirtualLibraryDetail($request);
             case PageId::ABOUT :
                 return new PageAbout($request);
             case PageId::CUSTOMIZE :
@@ -121,5 +136,19 @@ class PageId
             default:
                 return new Page($request);
         }
+    }
+
+    /**
+     * Summary of getHomePage
+     * @return string|int
+     */
+    public static function getHomePage()
+    {
+        // Use the configured home page if needed
+        $page = PageId::INDEX;
+        if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'))) {
+            $page = constant('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'));
+        }
+        return $page;
     }
 }

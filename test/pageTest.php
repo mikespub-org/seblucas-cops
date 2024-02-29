@@ -775,6 +775,23 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
+    public function testPageAllLibraries(): void
+    {
+        $page = PageId::ALL_LIBRARIES;
+        $request = new Request();
+
+        $currentPage = PageId::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertEquals("Virtual libraries", $currentPage->title);
+        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertEquals("Action Fiction from this Century", $currentPage->entryArray [0]->title);
+        $this->assertEquals(0, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("No virtual libraries", $currentPage->entryArray [2]->title);
+        $this->assertEquals(15, $currentPage->entryArray [2]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
     public function testPageRecent(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;

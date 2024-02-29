@@ -281,6 +281,8 @@ class JSONRenderer
                 "customizeEmail" => localize("customize.email"),
                 "ratingsTitle" => localize("ratings.title"),
                 "ratingTitle" => localize("rating.title"),
+                "librariesTitle" => localize("libraries.title"),
+                "libraryTitle" => localize("library.title"),
                 "linkTitle" => localize("extra.link"),
                 "titleTitle" => localize("title.title"),
                 "filtersTitle" => localize("filters.title"),
@@ -333,10 +335,7 @@ class JSONRenderer
     public static function getJson($request, $complete = false)
     {
         // Use the configured home page if needed
-        $homepage = PageId::INDEX;
-        if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'))) {
-            $homepage = constant('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'));
-        }
+        $homepage = PageId::getHomePage();
         $page = $request->get("page", $homepage);
         $search = $request->get("search");
         $qid = $request->getId();

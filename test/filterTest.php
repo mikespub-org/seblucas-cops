@@ -348,6 +348,13 @@ class FilterTest extends TestCase
         $this->assertEquals("14 books", $entries[0]->content);
         $this->assertEquals(Route::url(self::$endpoint) . "?page=12&id=1", $entries[0]->getNavLink(self::$endpoint));
 
+        $request = Request::build(['i' => 'uri']);
+        $entries = Filter::getEntryArray($request);
+        $this->assertEquals("Identifier", $entries[0]->className);
+        $this->assertEquals("uri", $entries[0]->title);
+        $this->assertEquals("13 books", $entries[0]->content);
+        $this->assertEquals(Route::url(self::$endpoint) . "?page=42&id=uri", $entries[0]->getNavLink(self::$endpoint));
+
         $request = Request::build(['c' => [1 => 1]]);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Type4", $entries[0]->className);
@@ -368,5 +375,95 @@ class FilterTest extends TestCase
         $this->assertEquals("2006", $entries[0]->title);
         $this->assertEquals("9 books", $entries[0]->content);
         $this->assertEquals(Route::url(self::$endpoint) . "?page=50&id=2006", $entries[0]->getNavLink(self::$endpoint));
+    }
+
+    public function testCheckForFilters(): void
+    {
+        $request = Request::build([]);
+        $filter = new Filter($request);
+        $expected = [];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = "";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['a' => '1']);
+        $filter = new Filter($request);
+        $expected = ['1'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_authors_link where books_authors_link.book = books.id and books_authors_link.author = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['l' => '1']);
+        $filter = new Filter($request);
+        $expected = ['1'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_languages_link where books_languages_link.book = books.id and books_languages_link.lang_code = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['p' => '2']);
+        $filter = new Filter($request);
+        $expected = ['2'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_publishers_link where books_publishers_link.book = books.id and books_publishers_link.publisher = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['r' => '1']);
+        $filter = new Filter($request);
+        $expected = ['1'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_ratings_link where books_ratings_link.book = books.id and books_ratings_link.rating = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['s' => '1']);
+        $filter = new Filter($request);
+        $expected = ['1'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_series_link where books_series_link.book = books.id and books_series_link.series = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['t' => '1']);
+        $filter = new Filter($request);
+        $expected = ['1'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_tags_link where books_tags_link.book = books.id and books_tags_link.tag = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['i' => 'uri']);
+        $filter = new Filter($request);
+        $expected = ['uri'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from identifiers where identifiers.book = books.id and identifiers.type = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['c' => [1 => 1]]);
+        $filter = new Filter($request);
+        $expected = [1];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_custom_column_1_link where books_custom_column_1_link.book = books.id and books_custom_column_1_link.value = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['f' => 'C']);
+        $filter = new Filter($request);
+        $expected = ['C'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (substr(upper(books.sort), 1, 1) = ?)";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['y' => '2006']);
+        $filter = new Filter($request);
+        $expected = ['2006'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (substr(date(books.pubdate), 1, 4) = ?)";
+        $this->assertEquals($expected, $filter->getFilterString());
+    }
+
+    public function testCheckForNegativeFilters(): void
+    {
+        $request = Request::build(['t' => '!1']);
+        $filter = new Filter($request);
+        $expected = ['1'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (not exists (select null from books_tags_link where books_tags_link.book = books.id and books_tags_link.tag = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
     }
 }

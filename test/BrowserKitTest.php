@@ -167,7 +167,7 @@ class BrowserKitTest extends TestCase
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
 
-        $expected = 11;
+        $expected = 12;
         $result = $this->ajax($uri);
         $this->assertCount($expected, $result['entries']);
 
@@ -191,7 +191,7 @@ class BrowserKitTest extends TestCase
         $uri = Route::url('index.php') . '?page=index';
         $crawler = $this->url($uri);
 
-        $expected = 11;
+        $expected = 12;
         $articles = $crawler->filterXPath($xpath);
         $this->assertCount($expected, $articles);
 

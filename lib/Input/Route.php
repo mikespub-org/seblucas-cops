@@ -68,6 +68,7 @@ class Route
         "/identifiers/{id}/{title}" => PageId::IDENTIFIER_DETAIL,
         "/identifiers/{id}" => PageId::IDENTIFIER_DETAIL,
         "/identifiers" => PageId::ALL_IDENTIFIERS,
+        "/libraries" => PageId::ALL_LIBRARIES,
         // extra routes supported by REST API
         "/custom" => PageId::REST_API,
         "/databases/{db}/{name}" => PageId::REST_API,
