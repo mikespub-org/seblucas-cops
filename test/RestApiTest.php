@@ -131,7 +131,7 @@ class RestApiTest extends TestCase
      * Summary of getLinks
      * @return array<mixed>
      */
-    public function getLinks()
+    public static function getLinks()
     {
         return [
             "restapi.php?page=index" => "restapi.php/index",
@@ -172,10 +172,10 @@ class RestApiTest extends TestCase
      * Summary of linkProvider
      * @return array<mixed>
      */
-    public function linkProvider()
+    public static function linkProvider()
     {
         $data = [];
-        $links = $this->getLinks();
+        $links = static::getLinks();
         foreach ($links as $from => $to) {
             array_push($data, [$from, $to]);
         }
@@ -223,7 +223,7 @@ class RestApiTest extends TestCase
      * Summary of getRewrites
      * @return array<mixed>
      */
-    public function getRewrites()
+    public static function getRewrites()
     {
         return [
             "fetch.php?data=1&type=epub" => "/download/1/ignore.epub",
@@ -239,10 +239,10 @@ class RestApiTest extends TestCase
      * Summary of rewriteProvider
      * @return array<mixed>
      */
-    public function rewriteProvider()
+    public static function rewriteProvider()
     {
         $data = [];
-        $links = $this->getRewrites();
+        $links = static::getRewrites();
         foreach ($links as $from => $to) {
             array_push($data, [$from, $to]);
         }

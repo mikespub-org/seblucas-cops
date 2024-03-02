@@ -40,7 +40,7 @@ class CustomColumn extends Category
         $this->id = $pid;
         $this->value = $pvalue;
         $this->customColumnType = $pcustomColumnType;
-        $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value);
+        $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value ?? '');
         $this->databaseId = $this->customColumnType->getDatabaseId();
     }
 

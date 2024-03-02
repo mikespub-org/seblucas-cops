@@ -934,7 +934,7 @@ class PageTest extends TestCase
      * Summary of providerAccentuatedCharacters
      * @return array<mixed>
      */
-    public function providerAccentuatedCharacters()
+    public static function providerAccentuatedCharacters()
     {
         return [
             ["curée", 1, "1 book"],
@@ -981,7 +981,7 @@ class PageTest extends TestCase
      * Summary of providerNormalizedSearch
      * @return array<mixed>
      */
-    public function providerNormalizedSearch()
+    public static function providerNormalizedSearch()
     {
         return [
             ["curee", 1, "1 book"],

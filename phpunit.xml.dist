@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="./vendor/autoload.php" verbose="true">
-  <coverage processUncoveredFiles="false">
-    <include>
-      <directory suffix=".php">./</directory>
-    </include>
-    <exclude>
-      <directory suffix=".php">./resources</directory>
-      <directory suffix=".php">./test</directory>
-      <directory suffix=".php">./saucetest</directory>
-      <directory suffix=".php">./vendor</directory>
-      <file>config.php</file>
-      <file>config_default.php</file>
-    </exclude>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" bootstrap="./vendor/autoload.php" cacheDirectory=".phpunit.cache">
+  <coverage>
     <report>
       <clover outputFile="./clover.xml"/>
       <text outputFile="php://stdout" showUncoveredFiles="false"/>
@@ -24,4 +13,17 @@
       <exclude>./test/WebDriverTest.php</exclude>
     </testsuite>
   </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">./</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./resources</directory>
+      <directory suffix=".php">./test</directory>
+      <directory suffix=".php">./saucetest</directory>
+      <directory suffix=".php">./vendor</directory>
+      <file>config.php</file>
+      <file>config_default.php</file>
+    </exclude>
+  </source>
 </phpunit>

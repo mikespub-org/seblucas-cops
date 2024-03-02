@@ -97,15 +97,22 @@ class BaseTest extends TestCase
      */
     public function getTemplateData($request, $templateName)
     {
-        return ["title"                 => Config::get('title_default'),
-                "version"               => Config::VERSION,
-                "opds_url"              => Route::url(Config::ENDPOINT["feed"]),
-                "customHeader"          => "",
-                "template"              => $templateName,
-                "server_side_rendering" => $request->render(),
-                "current_css"           => $request->style(),
-                "favico"                => Config::get('icon'),
-                "getjson_url"           => JSONRenderer::getCurrentUrl($request)];
+        return [
+            "title"                 => Config::get('title_default'),
+            "version"               => Config::VERSION,
+            "opds_url"              => Route::url(Config::ENDPOINT["feed"]),
+            "customHeader"          => "",
+            "template"              => $templateName,
+            "server_side_rendering" => $request->render(),
+            "current_css"           => $request->style(),
+            "favico"                => Config::get('icon'),
+            "assets"                => Route::url(Config::get('assets')),
+            "images"                => Route::url('images'),
+            "resources"             => Route::url('resources'),
+            "templates"             => Route::url('templates'),
+            "basedir"               => Route::url('.'),
+            "getjson_url"           => JSONRenderer::getCurrentUrl($request),
+        ];
     }
 
     /**
@@ -132,7 +139,7 @@ class BaseTest extends TestCase
      * Summary of providerTemplate
      * @return array<mixed>
      */
-    public function providerTemplate()
+    public static function providerTemplate()
     {
         return [
             ["bootstrap2"],
@@ -189,7 +196,7 @@ class BaseTest extends TestCase
      * Summary of providerGetLangAndTranslationFile
      * @return array<mixed>
      */
-    public function providerGetLangAndTranslationFile()
+    public static function providerGetLangAndTranslationFile()
     {
         return [
             ["en", "en"],
@@ -223,7 +230,7 @@ class BaseTest extends TestCase
      * Summary of providerGetAcceptLanguages
      * @return array<mixed>
      */
-    public function providerGetAcceptLanguages()
+    public static function providerGetAcceptLanguages()
     {
         return [
             ["en", "en"],

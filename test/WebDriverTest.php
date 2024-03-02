@@ -138,7 +138,7 @@ class WebDriverTest extends WebDriverTestCase
      * Summary of providerPages
      * @return array<mixed>
      */
-    protected function providerPages()
+    public static function providerPages()
     {
         return [
             ['index', self::$serverUrl . '?page=index'],
@@ -154,7 +154,7 @@ class WebDriverTest extends WebDriverTestCase
      * Summary of providerTemplateSizes
      * @return array<mixed>
      */
-    protected function providerTemplateSizes()
+    public static function providerTemplateSizes()
     {
         return [
             ['default', 0, 0],
@@ -173,7 +173,7 @@ class WebDriverTest extends WebDriverTestCase
      * Summary of providerCombinations
      * @return array<mixed>
      */
-    protected function providerCombinations()
+    public static function providerCombinations()
     {
         $combinations = [];
         foreach ($this->providerTemplateSizes() as $options) {

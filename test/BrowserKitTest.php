@@ -138,7 +138,7 @@ class BrowserKitTest extends TestCase
      * Summary of providerTemplates
      * @return array<mixed>
      */
-    protected function providerTemplates()
+    public static function providerTemplates()
     {
         return [
             ['default', '//body/div/section/article'],

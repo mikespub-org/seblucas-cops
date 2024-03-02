@@ -290,7 +290,7 @@ class BookTest extends TestCase
      * Summary of providerPublicationDate
      * @return array<mixed>
      */
-    public function providerPublicationDate()
+    public static function providerPublicationDate()
     {
         return [
             ['2010-10-05 22:00:00+00:00', '2010'],
@@ -492,7 +492,7 @@ class BookTest extends TestCase
      * Summary of providerThumbnail
      * @return array<mixed>
      */
-    public function providerThumbnail()
+    public static function providerThumbnail()
     {
         return [
             [164, null, 164, 246],
@@ -549,7 +549,7 @@ class BookTest extends TestCase
      * Summary of providerThumbnail
      * @return array<mixed>
      */
-    public function providerThumbnailCachePath()
+    public static function providerThumbnailCachePath()
     {
         return [
             [164, null, 'jpg', __DIR__ . '/cache/8/7d/dbdeb-1e27-4d06-b79b-4b2a3bfc6a5f-164x.jpg'],

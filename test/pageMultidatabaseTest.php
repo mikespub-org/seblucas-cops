@@ -73,7 +73,7 @@ class PageMultiDatabaseTest extends TestCase
      * Summary of providerSearch
      * @return array<mixed>
      */
-    public function providerSearch()
+    public static function providerSearch()
     {
         return [
             [2],

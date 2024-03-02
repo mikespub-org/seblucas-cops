@@ -119,7 +119,8 @@ class ConfigTest extends TestCase
         $headcontent = file_get_contents(__DIR__ . '/../templates/' . Config::get('template') . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
-        $data = ["title"                 => Config::get('title_default'),
+        $data = [
+            "title"                 => Config::get('title_default'),
             "version"               => Config::VERSION,
             "opds_url"              => Route::url(Config::ENDPOINT["feed"]),
             "customHeader"          => "",
@@ -127,7 +128,13 @@ class ConfigTest extends TestCase
             "server_side_rendering" => $request->render(),
             "current_css"           => $request->style(),
             "favico"                => Config::get('icon'),
-            "getjson_url"           => JSONRenderer::getCurrentUrl($request)];
+            "assets"                => Route::url(Config::get('assets')),
+            "images"                => Route::url('images'),
+            "resources"             => Route::url('resources'),
+            "templates"             => Route::url('templates'),
+            "basedir"               => Route::url('.'),
+            "getjson_url"           => JSONRenderer::getCurrentUrl($request),
+        ];
 
         $head = $tpl($data);
 

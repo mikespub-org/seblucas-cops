@@ -116,7 +116,7 @@ class OpdsTest extends TestCase
             return false;
         }
         if ($hasPaging) {
-            copy($feed, $feed . '.' . $this->getName());
+            copy($feed, $feed . '.' . $this->name());
         }
         if ($currentPage->containsBook()) {
             if (count($xml->entry) == $numEntries) {
@@ -129,9 +129,9 @@ class OpdsTest extends TestCase
         }
         echo $xml->asXML();
         if ($hasPaging) {
-            echo $this->getName() . ": page " . $currentPage->n . " has $numEntries of " . $currentPage->totalNumber . " entries\n";
+            echo $this->name() . ": page " . $currentPage->n . " has $numEntries of " . $currentPage->totalNumber . " entries\n";
         } else {
-            echo $this->getName() . ": $numEntries entries\n";
+            echo $this->name() . ": $numEntries entries\n";
         }
         return false;
     }
@@ -195,7 +195,7 @@ class OpdsTest extends TestCase
      * Summary of providerPage
      * @return array<mixed>
      */
-    public function providerPage()
+    public static function providerPage()
     {
         return [
             [PageId::OPENSEARCH, "car"],

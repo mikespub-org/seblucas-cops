@@ -31,7 +31,7 @@ use SebLucas\Cops\Output\JSONRenderer;
 use SebLucas\Cops\Pages\PageId;
 use Exception;
 
-class CustomColumnTest extends TestCase
+class CustomColumnsTest extends TestCase
 {
     private static string $endpoint = 'phpunit';
 
