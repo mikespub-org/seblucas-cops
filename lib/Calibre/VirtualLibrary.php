@@ -50,9 +50,9 @@ class VirtualLibrary extends Base
             return Route::page($homepage);
         }
         //if (Config::get('use_route_urls')) {
-        //    return Route::page($homepage, ['vl' => $this->getTitle()]);
+        //    return Route::page($homepage, [static::URL_PARAM => $this->getTitle()]);
         //}
-        return Route::page($homepage, ['vl' => strval($this->id) . '.' . Route::slugify($this->getTitle())]);
+        return Route::page($homepage, [static::URL_PARAM => strval($this->id) . '.' . Route::slugify($this->getTitle())]);
     }
 
     /**

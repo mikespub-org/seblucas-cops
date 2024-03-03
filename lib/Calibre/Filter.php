@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
+use UnexpectedValueException;
 
 class Filter
 {
@@ -98,9 +99,16 @@ class Filter
             return;
         }
 
+        // See $config['cops_books_filter']
         $tagName = $this->request->get('tag', null);
         if (!empty($tagName)) {
             $this->addTagNameFilter($tagName);
+        }
+
+        // See $config['cops_calibre_virtual_libraries']
+        $libraryId = $this->request->get(VirtualLibrary::URL_PARAM, null);
+        if (!empty($libraryId)) {
+            $this->addVirtualLibraryFilter($libraryId);
         }
 
         $authorId = $this->request->get(Author::URL_PARAM, null, '/^!?\d+$/');
@@ -187,6 +195,58 @@ class Filter
         }
 
         $this->addFilter($filter, $tagName);
+    }
+
+    /**
+     * Summary of addVirtualLibraryFilter
+     * @param string|int $libraryId
+     * @throws \UnexpectedValueException
+     * @return void
+     */
+    public function addVirtualLibraryFilter($libraryId)
+    {
+        // URL format: ...&vl=2.Short_Stories_in_English
+        if (str_contains($libraryId, '.')) {
+            [$libraryId, $slug] = explode('.', $libraryId);
+        }
+        $instance = VirtualLibrary::getInstanceById($libraryId);
+        if (empty($instance->id)) {
+            return;
+        }
+
+        $search = $instance->value;
+        $replace = $search;
+        $params = [];
+        $matches = [];
+        // See https://github.com/seblucas/cops/pull/233 by @Broele
+        preg_match_all('/(?P<attr>#?\w+)\:(?P<value>\w+|"(?P<quoted>[^"]*)")/', $search, $matches, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            // get search field
+            if (!array_key_exists($match['attr'], static::SEARCH_FIELDS)) {
+                $match['attr'] .= 's';
+                if (!array_key_exists($match['attr'], static::SEARCH_FIELDS)) {
+                    throw new UnexpectedValueException('Invalid search criteria ' . $match['attr']);
+                }
+            }
+            // find exact match
+            if (isset($match['quoted']) && str_starts_with($match['quoted'], '=')) {
+                $value = substr($match['quoted'], 1);
+                $className = static::SEARCH_FIELDS[$match['attr']];
+                $instance = $className::getInstanceByName($value, $this->databaseId);
+                $filterString = $this->getLinkedIdFilter($instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
+                $replace = str_replace($match[0], $filterString, $replace);
+                array_push($params, $instance->id);
+            } else {
+                throw new UnexpectedValueException('Invalid search criteria ' . $match['attr'] . '=' . $match['value']);
+            }
+        }
+
+        if (!empty($replace)) {
+            $this->queryString .= ' and (' . $replace . ')';
+            foreach ($params as $param) {
+                array_push($this->params, $param);
+            }
+        }
     }
 
     /**
@@ -345,11 +405,29 @@ class Filter
             $linkId = $matches[1];
         }
 
+        $filter = $this->getLinkedIdFilter($linkTable, $linkColumn, $limitSelf);
+
+        if (!$exists) {
+            $filter = 'not ' . $filter;
+        }
+
+        $this->addFilter($filter, $linkId);
+    }
+
+    /**
+     * Summary of getLinkedIdFilter
+     * @param string $linkTable
+     * @param string $linkColumn
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
+     * @return string
+     */
+    public function getLinkedIdFilter($linkTable, $linkColumn, $limitSelf = true)
+    {
         if ($this->parentTable == $linkTable) {
             if ($limitSelf) {
                 $filter = "{$linkTable}.{$linkColumn} = ?";
             } else {
-                // find other tags applied to books where this tag applies
+                // find other tags/identifiers applied to books where this tag/identifier applies
                 $filter = "exists (select null from {$linkTable} as filterself, books where {$this->parentTable}.book = books.id and {$this->parentTable}.{$linkColumn} != filterself.{$linkColumn} and filterself.book = books.id and filterself.{$linkColumn} = ?)";
             }
         } elseif ($this->parentTable == "books") {
@@ -358,11 +436,7 @@ class Filter
             $filter = "exists (select null from {$linkTable}, books where {$this->parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         }
 
-        if (!$exists) {
-            $filter = 'not ' . $filter;
-        }
-
-        $this->addFilter($filter, $linkId);
+        return $filter;
     }
 
     /**

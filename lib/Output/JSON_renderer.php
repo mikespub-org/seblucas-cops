@@ -18,9 +18,9 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
-use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
+use Exception;
 
 class JSONRenderer
 {
@@ -342,7 +342,11 @@ class JSONRenderer
         $database = $request->database();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
+        try {
+            $currentPage->InitializeContent();
+        } catch (Exception $e) {
+            Request::notFound(static::$endpoint, $e->getMessage());
+        }
 
         // adapt endpoint based on $request e.g. for rest api
         $endpoint = $request->getEndpoint(static::$endpoint);
