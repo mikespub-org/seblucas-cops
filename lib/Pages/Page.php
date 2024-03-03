@@ -11,17 +11,13 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
-use SebLucas\Cops\Calibre\CustomColumnType;
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
-use SebLucas\Cops\Calibre\VirtualLibrary;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -162,100 +158,7 @@ class Page
      */
     public function getEntries()
     {
-        if (Database::noDatabaseSelected($this->databaseId)) {
-            $this->getDatabaseEntries();
-        } else {
-            $this->getTopCountEntries();
-        }
         $this->getExtra();
-    }
-
-    /**
-     * Summary of getDatabaseEntries
-     * @return void
-     */
-    public function getDatabaseEntries()
-    {
-        $i = 0;
-        foreach (Database::getDbNameList() as $key) {
-            $booklist = new BookList($this->request, $i);
-            $nBooks = $booklist->getBookCount();
-            array_push($this->entryArray, new Entry(
-                $key,
-                "cops:{$i}:catalog",
-                str_format(localize("bookword", $nBooks), $nBooks),
-                "text",
-                [ new LinkNavigation(Route::page(null, ["db" => $i])) ],
-                null,
-                "",
-                $nBooks
-            ));
-            $i++;
-            Database::clearDb();
-        }
-    }
-
-    /**
-     * Summary of getTopCountEntries
-     * @return void
-     */
-    public function getTopCountEntries()
-    {
-        if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
-            $author = Author::getCount($this->databaseId);
-            if (!is_null($author)) {
-                array_push($this->entryArray, $author);
-            }
-        }
-        if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
-            $series = Serie::getCount($this->databaseId);
-            if (!is_null($series)) {
-                array_push($this->entryArray, $series);
-            }
-        }
-        if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
-            $publisher = Publisher::getCount($this->databaseId);
-            if (!is_null($publisher)) {
-                array_push($this->entryArray, $publisher);
-            }
-        }
-        if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
-            $tags = Tag::getCount($this->databaseId);
-            if (!is_null($tags)) {
-                array_push($this->entryArray, $tags);
-            }
-        }
-        if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
-            $rating = Rating::getCount($this->databaseId);
-            if (!is_null($rating)) {
-                array_push($this->entryArray, $rating);
-            }
-        }
-        if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
-            $languages = Language::getCount($this->databaseId);
-            if (!is_null($languages)) {
-                array_push($this->entryArray, $languages);
-            }
-        }
-        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
-        foreach ($customColumnList as $lookup) {
-            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
-            if (!is_null($customColumn) && $customColumn->isSearchable()) {
-                array_push($this->entryArray, $customColumn->getCount());
-            }
-        }
-        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array('libraries', $this->ignoredCategories)) {
-            $library = VirtualLibrary::getCount($this->databaseId);
-            if (!is_null($library)) {
-                array_push($this->entryArray, $library);
-            }
-        }
-        $booklist = new BookList($this->request);
-        $this->entryArray = array_merge($this->entryArray, $booklist->getCount());
-
-        if (Database::isMultipleDatabaseEnabled()) {
-            $this->title =  Database::getDbName($this->getDatabaseId());
-        }
     }
 
     /**

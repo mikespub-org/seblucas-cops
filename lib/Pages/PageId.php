@@ -134,7 +134,7 @@ class PageId
             case PageId::CUSTOMIZE :
                 return new PageCustomize($request);
             default:
-                return new Page($request);
+                return new PageIndex($request);
         }
     }
 

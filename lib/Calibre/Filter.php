@@ -209,6 +209,7 @@ class Filter
         if (str_contains($libraryId, '.')) {
             [$libraryId, $slug] = explode('.', $libraryId);
         }
+        /** @var VirtualLibrary $instance */
         $instance = VirtualLibrary::getInstanceById($libraryId);
         if (empty($instance->id)) {
             return;

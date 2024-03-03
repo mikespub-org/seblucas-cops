@@ -785,7 +785,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Virtual libraries", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
-        $this->assertEquals("Action Fiction from this Century", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Action Fiction from this Century (TODO)", $currentPage->entryArray [0]->title);
         $this->assertEquals(0, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("No virtual libraries", $currentPage->entryArray [2]->title);
         $this->assertEquals(15, $currentPage->entryArray [2]->numberOfElement);
