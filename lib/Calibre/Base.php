@@ -13,6 +13,7 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
+use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 
 abstract class Base
@@ -32,6 +33,7 @@ abstract class Base
     public const SQL_BOOKLIST = 'select {0} from books_bases_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_bases_link.book = books.id and base = ? {1} order by books.sort';
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
+    public const URL_PARAM = "b";
 
     /** @var ?int */
     public $id;
@@ -69,23 +71,27 @@ abstract class Base
 
     /**
      * Summary of getUri
+     * @param array<mixed> $params
      * @return string
      */
-    public function getUri()
+    public function getUri($params = [])
     {
+        $params['id'] = $this->id;
         if (Config::get('use_route_urls')) {
-            return Route::page(static::PAGE_DETAIL, ['id' => $this->id, 'title' => $this->getTitle()]);
+            $params['title'] = $this->getTitle();
+            return Route::page(static::PAGE_DETAIL, $params);
         }
-        return Route::page(static::PAGE_DETAIL, ['id' => $this->id]);
+        return Route::page(static::PAGE_DETAIL, $params);
     }
 
     /**
      * Summary of getParentUri
+     * @param array<mixed> $params
      * @return string
      */
-    public function getParentUri()
+    public function getParentUri($params = [])
     {
-        return Route::page(static::PAGE_ALL);
+        return Route::page(static::PAGE_ALL, $params);
     }
 
     /**
@@ -137,11 +143,14 @@ abstract class Base
 
     /**
      * Summary of getLinkArray
+     * @param array<mixed> $params
      * @return array<LinkFeed>
      */
-    public function getLinkArray()
+    public function getLinkArray($params = [])
     {
-        return [ new LinkFeed($this->getUri(), "subsection", null, $this->getDatabaseId()) ];
+        // remove for Filter::getEntryArray() - see filterTest
+        unset($params[static::URL_PARAM]);
+        return [ new LinkFeed($this->getUri($params), "subsection", null, $this->getDatabaseId()) ];
     }
 
     /**
@@ -159,16 +168,17 @@ abstract class Base
     /**
      * Summary of getEntry
      * @param int $count
+     * @param array<mixed> $params
      * @return Entry
      */
-    public function getEntry($count = 0)
+    public function getEntry($count = 0, $params = [])
     {
         return new Entry(
             $this->getTitle(),
             $this->getEntryId(),
             $this->getContent($count),
             $this->getContentType(),
-            $this->getLinkArray(),
+            $this->getLinkArray($params),
             $this->getDatabaseId(),
             $this->getClassName(),
             $count
@@ -432,6 +442,39 @@ abstract class Base
      */
     public static function getCount($database = null)
     {
-        return BaseList::getCountGeneric(static::SQL_TABLE, static::PAGE_ID, static::PAGE_ALL, $database);
+        $count = Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
+        return static::getCountEntry($count, $database);
+    }
+
+    /**
+     * Summary of getCountEntry
+     * @param int $count
+     * @param ?int $database
+     * @param ?string $numberOfString
+     * @param array<mixed> $params
+     * @return ?Entry
+     */
+    public static function getCountEntry($count, $database = null, $numberOfString = null, $params = [])
+    {
+        if ($count == 0) {
+            return null;
+        }
+        if (!$numberOfString) {
+            $numberOfString = static::SQL_TABLE . ".alphabetical";
+        }
+        $params["db"] ??= $database;
+        $entry = new Entry(
+            localize(static::SQL_TABLE . ".title"),
+            static::PAGE_ID,
+            str_format(localize($numberOfString, $count), $count),
+            "text",
+            // issue #26 for koreader: section is not supported
+            //[ new LinkNavigation(Route::page(static::PAGE_ALL), "subsection", null, $database)],
+            [ new LinkNavigation(Route::page(static::PAGE_ALL, $params), "subsection")],
+            $database,
+            "",
+            $count
+        );
+        return $entry;
     }
 }

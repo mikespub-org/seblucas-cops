@@ -56,20 +56,24 @@ class CustomColumn extends Category
     /**
      * Get the URI to show all books with this value
      *
+     * @param array<mixed> $params
      * @return string
      */
-    public function getUri()
+    public function getUri($params = [])
     {
-        return Route::page(static::PAGE_DETAIL, ['custom' => $this->getCustomId(), 'id' => $this->id]);
+        $params['custom'] = $this->getCustomId();
+        $params['id'] = $this->id;
+        return Route::page(static::PAGE_DETAIL, $params);
     }
 
     /**
      * Summary of getParentUri
+     * @param array<mixed> $params
      * @return string
      */
-    public function getParentUri()
+    public function getParentUri($params = [])
     {
-        return $this->customColumnType->getUri();
+        return $this->customColumnType->getUri($params);
     }
 
     /**

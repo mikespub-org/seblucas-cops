@@ -42,7 +42,8 @@ class PageIdentifierDetail extends Page
         $this->title = $instance->getTitle();
         $this->currentUri = $instance->getUri();
         $this->parentTitle = $instance->getParentTitle();
-        $this->parentUri = $instance->getParentUri();
+        $filterParams = $this->request->getFilterParams();
+        $this->parentUri = $instance->getParentUri($filterParams);
     }
 
     /**

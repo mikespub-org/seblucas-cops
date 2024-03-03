@@ -170,28 +170,38 @@ class Book
 
     /**
      * Summary of getUri
+     * @param array<mixed> $params
      * @return string
      */
-    public function getUri()
+    public function getUri($params = [])
     {
+        $params['id'] = $this->id;
         if (Config::get('use_route_urls')) {
-            return Route::page(static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle()]);
+            $params['author'] = $this->getAuthorsName();
+            $params['title'] = $this->getTitle();
+            return Route::page(static::PAGE_DETAIL, $params);
         }
-        return Route::page(static::PAGE_DETAIL, ['id' => $this->id]);
+        return Route::page(static::PAGE_DETAIL, $params);
     }
 
     /**
      * Summary of getDetailUrl
      * @param string|null $endpoint
+     * @param array<mixed> $params
      * @return string
      */
-    public function getDetailUrl($endpoint = null)
+    public function getDetailUrl($endpoint = null, $params = [])
     {
         $endpoint ??= static::$endpoint;
+        $params['id'] = $this->id;
+        // we need databaseId here because we use Route::url with $endpoint
+        $params['db'] = $this->databaseId;
         if (Config::get('use_route_urls')) {
-            return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'author' => $this->getAuthorsName(), 'title' => $this->getTitle(), 'db' => $this->databaseId]);
+            $params['author'] = $this->getAuthorsName();
+            $params['title'] = $this->getTitle();
+            return Route::url($endpoint, static::PAGE_DETAIL, $params);
         }
-        return Route::url($endpoint, static::PAGE_DETAIL, ['id' => $this->id, 'db' => $this->databaseId]);
+        return Route::url($endpoint, static::PAGE_DETAIL, $params);
     }
 
     /**
@@ -525,9 +535,10 @@ class Book
 
     /**
      * Summary of getLinkArray
+     * @param array<mixed> $params @todo is this useful here?
      * @return array<LinkEntry|LinkFeed>
      */
-    public function getLinkArray()
+    public function getLinkArray($params = [])
     {
         $database = $this->databaseId;
         $linkArray = [];
@@ -568,16 +579,17 @@ class Book
     /**
      * Summary of getEntry
      * @param int $count
+     * @param array<mixed> $params
      * @return EntryBook
      */
-    public function getEntry($count = 0)
+    public function getEntry($count = 0, $params = [])
     {
         return new EntryBook(
             $this->getTitle(),
             $this->getEntryId(),
             $this->getComment(),
             'text/html',
-            $this->getLinkArray(),
+            $this->getLinkArray($params),
             $this
         );
     }

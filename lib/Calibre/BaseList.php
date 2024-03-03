@@ -156,7 +156,7 @@ class BaseList
      */
     public function getEntryCount()
     {
-        return static::getCountGeneric($this->getTable(), $this->className::PAGE_ID, $this->className::PAGE_ALL, $this->databaseId);
+        return $this->className::getCount($this->databaseId);
     }
 
     /**
@@ -347,13 +347,16 @@ class BaseList
         $result = Database::queryFilter($query, $columns, $filterString, $params, -1, $this->databaseId);
 
         $entryArray = [];
+        $params = $this->request->getFilterParams();
+        $params["db"] ??= $this->databaseId;
         while ($post = $result->fetchObject()) {
+            $params["id"] = $post->groupid;
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::page($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
+                [new LinkNavigation(Route::page($page, $params), "subsection")],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count
@@ -500,6 +503,11 @@ class BaseList
     {
         $result = Database::queryFilter($query, $columns, $filter, $params, $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
+        $params = [];
+        if ($this->request->hasFilter()) {
+            $params = $this->request->getFilterParams();
+            //$params["db"] ??= $this->databaseId;
+        }
         while ($post = $result->fetchObject()) {
             /** @var Author|Tag|Serie|Publisher|Language|Rating|Book $instance */
             if ($this->className == Book::class) {
@@ -507,7 +515,7 @@ class BaseList
             }
 
             $instance = new $this->className($post, $this->databaseId);
-            array_push($entryArray, $instance->getEntry($post->count));
+            array_push($entryArray, $instance->getEntry($post->count, $params));
         }
         return $entryArray;
     }
@@ -610,37 +618,5 @@ class BaseList
             $uniqueIds = array_values(array_unique(array_merge($uniqueIds, $instanceIdList)));
         }
         return $uniqueIds;
-    }
-
-    /**
-     * Summary of getCountGeneric
-     * @param string $table
-     * @param string $id
-     * @param string|int $pageId
-     * @param ?int $database
-     * @param ?string $numberOfString
-     * @return ?Entry
-     */
-    public static function getCountGeneric($table, $id, $pageId, $database = null, $numberOfString = null)
-    {
-        if (!$numberOfString) {
-            $numberOfString = $table . ".alphabetical";
-        }
-        $count = Database::querySingle('select count(*) from ' . $table, $database);
-        if ($count == 0) {
-            return null;
-        }
-        $entry = new Entry(
-            localize($table . ".title"),
-            $id,
-            str_format(localize($numberOfString, $count), $count),
-            "text",
-            // issue #26 for koreader: section is not supported
-            [ new LinkNavigation(Route::page($pageId), "subsection", null, $database)],
-            $database,
-            "",
-            $count
-        );
-        return $entry;
     }
 }

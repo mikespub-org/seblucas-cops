@@ -329,7 +329,7 @@ class Page
             $paging['l'] ??= 1;
             $this->entryArray = array_merge($this->entryArray, $instance->getLanguages($paging['l']));
         }
-        if (!($instance instanceof Publisher) && in_array('publishers', $filterLinks)) {
+        if (!($instance instanceof Publisher) && in_array('publisher', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("publishers.title"),
                 "",

@@ -131,6 +131,10 @@ class Request
         }
         if (!empty($_GET)) {
             foreach ($_GET as $name => $value) {
+                // remove ajax timestamp for jQuery cache = false
+                if ($name == '_') {
+                    continue;
+                }
                 $this->urlParams[$name] = $_GET[$name];
             }
         }
@@ -146,6 +150,17 @@ class Request
         // see list of acceptable filter params in Filter.php
         $find = Filter::URL_PARAMS;
         return !empty(array_intersect_key($find, $this->urlParams));
+    }
+
+    /**
+     * Summary of getFilterParams
+     * @return array<mixed>
+     */
+    public function getFilterParams()
+    {
+        // see list of acceptable filter params in Filter.php
+        $find = Filter::URL_PARAMS;
+        return array_intersect_key($this->urlParams, $find);
     }
 
     /**

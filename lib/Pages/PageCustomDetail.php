@@ -40,7 +40,8 @@ class PageCustomDetail extends Page
             $this->getCustomEntries($instance);
         }
         $this->parentTitle = $instance->getParentTitle();
-        $this->parentUri = $instance->getParentUri();
+        $filterParams = $this->request->getFilterParams();
+        $this->parentUri = $instance->getParentUri($filterParams);
         if ($instance->hasChildCategories()) {
             $this->hierarchy = [
                 "parent" => $instance->getParentEntry(),

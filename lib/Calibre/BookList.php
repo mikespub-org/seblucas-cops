@@ -126,7 +126,22 @@ class BookList
      */
     public function getBookCount()
     {
+        if ($this->request->hasFilter()) {
+            return $this->getFilterBookCount();
+        }
         return Database::querySingle('select count(*) from books', $this->databaseId);
+    }
+
+    /**
+     * Summary of getFilterBookCount
+     * @return int
+     */
+    public function getFilterBookCount()
+    {
+        $filter = new Filter($this->request, [], "books", $this->databaseId);
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+        return Database::countFilter(static::SQL_BOOKS_ALL, 'count(*)', $filterString, $params, $this->databaseId);
     }
 
     /**
@@ -137,13 +152,15 @@ class BookList
     {
         $nBooks = $this->getBookCount();
         $result = [];
+        $params = $this->request->getFilterParams();
+        $params["db"] ??= $this->databaseId;
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
-            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL, $params), "subsection")];
         } elseif (!empty(Config::get('titles_split_publication_year'))) {
-            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL), "subsection", null, $this->databaseId)];
+            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL, $params), "subsection")];
         } else {
-            $linkArray = [new LinkFeed(Route::page(Book::PAGE_ALL), null, null, $this->databaseId)];
+            $linkArray = [new LinkFeed(Route::page(Book::PAGE_ALL, $params), null)];
         }
         $entry = new Entry(
             localize('allbooks.title'),
@@ -163,7 +180,7 @@ class BookList
                 PageId::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $count),
                 'text',
-                [ new LinkFeed(Route::page(PageId::ALL_RECENT_BOOKS), 'http://opds-spec.org/sort/new', null, $this->databaseId)],
+                [ new LinkFeed(Route::page(PageId::ALL_RECENT_BOOKS, $params), 'http://opds-spec.org/sort/new')],
                 $this->databaseId,
                 '',
                 $count

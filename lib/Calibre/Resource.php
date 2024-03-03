@@ -50,9 +50,10 @@ class Resource
 
     /**
      * Summary of getUri
+     * @param array<mixed> $params
      * @return string
      */
-    public function getUri()
+    public function getUri($params = [])
     {
         $database = $this->databaseId ?? 0;
         return '/' . $database . '/' . str_replace(':', '/', $this->hash);

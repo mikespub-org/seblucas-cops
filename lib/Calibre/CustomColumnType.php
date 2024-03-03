@@ -110,11 +110,13 @@ abstract class CustomColumnType
     /**
      * The URI to show all the values of this column
      *
+     * @param array<mixed> $params
      * @return string
      */
-    public function getUri()
+    public function getUri($params = [])
     {
-        return Route::page(static::PAGE_ALL, ['custom' => $this->customId]);
+        $params['custom'] = $this->customId;
+        return Route::page(static::PAGE_ALL, $params);
     }
 
     /**
@@ -149,12 +151,13 @@ abstract class CustomColumnType
 
     /**
      * Summary of getLinkArray
+     * @param array<mixed> $params
      * @return array<LinkNavigation>
      */
-    public function getLinkArray()
+    public function getLinkArray($params = [])
     {
         // issue #26 for koreader: section is not supported
-        return [ new LinkNavigation($this->getUri(), "subsection", null, $this->getDatabaseId()) ];
+        return [ new LinkNavigation($this->getUri($params), "subsection", null, $this->getDatabaseId()) ];
     }
 
     /**
@@ -192,10 +195,12 @@ abstract class CustomColumnType
      * Get the Entry for this column
      * This is used in the initializeContent method to display e.g. the index page
      *
+     * @param array<mixed> $params
      * @return Entry
      */
-    public function getCount()
+    public function getCount($params = [])
     {
+        // @todo do we want to filter by virtual library etc. here?
         $pcount = $this->getDistinctValueCount();
         $ptitle = $this->getTitle();
         $pid = $this->getEntryId();
@@ -203,7 +208,7 @@ abstract class CustomColumnType
         // @checkme convert "csv" back to "text" here?
         $pcontentType = $this->getContentType();
         $database = $this->getDatabaseId();
-        $plinkArray = $this->getLinkArray();
+        $plinkArray = $this->getLinkArray($params);
         $pclass = "";
 
         return new Entry($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $database, $pclass, $pcount);
@@ -254,6 +259,7 @@ abstract class CustomColumnType
     {
         $queryFormat = "SELECT COUNT(DISTINCT value) AS count FROM {0}";
         $query = str_format($queryFormat, $this->getTableName());
+        // @todo do we want to filter by virtual library etc. here?
         return Database::querySingle($query, $this->databaseId);
     }
 

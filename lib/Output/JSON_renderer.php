@@ -489,7 +489,13 @@ class JSONRenderer
             // otherwise use the parent uri
             $out ["parenturl"] = $out["baseurl"] . Route::query($currentPage->parentUri, ['db' => $database]);
         } elseif ($page != PageId::INDEX) {
-            $out ["parenturl"] = $out["homeurl"];
+            if ($request->hasFilter()) {
+                $filterParams = $request->getFilterParams();
+                $filterParams["db"] = $database;
+                $out ["parenturl"] = Route::url($endpoint, PageId::INDEX, $filterParams);
+            } else {
+                $out ["parenturl"] = $out["homeurl"];
+            }
         }
         $out ["hierarchy"] = false;
         if ($currentPage->hierarchy) {

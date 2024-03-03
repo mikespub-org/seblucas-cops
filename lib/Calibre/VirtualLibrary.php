@@ -19,6 +19,7 @@ class VirtualLibrary extends Base
     public const PAGE_ID = PageId::ALL_LIBRARIES_ID;
     public const PAGE_ALL = PageId::ALL_LIBRARIES;
     public const PAGE_DETAIL = PageId::LIBRARY_DETAIL;
+    public const SQL_TABLE = "libraries";
     public const URL_PARAM = "vl";
 
     /** @var array<mixed> */
@@ -40,19 +41,22 @@ class VirtualLibrary extends Base
 
     /**
      * Summary of getUri
+     * @param array<mixed> $params
      * @return string
      */
-    public function getUri()
+    public function getUri($params = [])
     {
         // get home page from Config
         $homepage = PageId::getHomePage();
         if (empty($this->id)) {
-            return Route::page($homepage);
+            return Route::page($homepage, $params);
         }
+        // URL Format: ...&vl=2.Short_Stories_in_English
+        $params[static::URL_PARAM] = strval($this->id) . '.' . Route::slugify($this->getTitle());
         //if (Config::get('use_route_urls')) {
         //    return Route::page($homepage, [static::URL_PARAM => $this->getTitle()]);
         //}
-        return Route::page($homepage, [static::URL_PARAM => strval($this->id) . '.' . Route::slugify($this->getTitle())]);
+        return Route::page($homepage, $params);
     }
 
     /**
@@ -142,18 +146,7 @@ class VirtualLibrary extends Base
     {
         $libraries = self::getLibraries($database);
         $count = count($libraries);
-        $entry = new Entry(
-            localize("libraries.title"),
-            static::PAGE_ID,
-            str_format(localize("libraries", $count), $count),
-            "text",
-            // issue #26 for koreader: section is not supported
-            [ new LinkNavigation(Route::page(static::PAGE_ALL), "subsection", null, $database)],
-            $database,
-            "",
-            $count
-        );
-        return $entry;
+        return static::getCountEntry($count, $database, "libraries");
     }
 
     /**

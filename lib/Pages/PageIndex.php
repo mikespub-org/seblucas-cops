@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
@@ -45,6 +46,8 @@ class PageIndex extends Page
     {
         if (Database::noDatabaseSelected($this->databaseId)) {
             $this->getDatabaseEntries();
+        } elseif ($this->request->hasFilter()) {
+            $this->getFilterCountEntries();
         } else {
             $this->getTopCountEntries();
         }
@@ -73,6 +76,77 @@ class PageIndex extends Page
             ));
             $i++;
             Database::clearDb();
+        }
+    }
+
+    /**
+     * Summary of getFilterCountEntries
+     * @return void
+     */
+    public function getFilterCountEntries()
+    {
+        $filterParams = $this->request->getFilterParams();
+        if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
+            $baselist = new BaseList(Author::class, $this->request, $this->databaseId);
+            $count = $baselist->countRequestEntries();
+            if ($count > 0) {
+                array_push($this->entryArray, Author::getCountEntry($count, $this->databaseId, null, $filterParams));
+            }
+        }
+        if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
+            $baselist = new BaseList(Serie::class, $this->request, $this->databaseId);
+            $count = $baselist->countRequestEntries();
+            if ($count > 0) {
+                array_push($this->entryArray, Serie::getCountEntry($count, $this->databaseId, null, $filterParams));
+            }
+        }
+        if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
+            $baselist = new BaseList(Publisher::class, $this->request, $this->databaseId);
+            $count = $baselist->countRequestEntries();
+            if ($count > 0) {
+                array_push($this->entryArray, Publisher::getCountEntry($count, $this->databaseId, null, $filterParams));
+            }
+        }
+        if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
+            $baselist = new BaseList(Tag::class, $this->request, $this->databaseId);
+            $count = $baselist->countRequestEntries();
+            if ($count > 0) {
+                array_push($this->entryArray, Tag::getCountEntry($count, $this->databaseId, null, $filterParams));
+            }
+        }
+        if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
+            $baselist = new BaseList(Rating::class, $this->request, $this->databaseId);
+            $count = $baselist->countRequestEntries();
+            if ($count > 0) {
+                array_push($this->entryArray, Rating::getCountEntry($count, $this->databaseId, "ratings", $filterParams));
+            }
+        }
+        if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
+            $baselist = new BaseList(Language::class, $this->request, $this->databaseId);
+            $count = $baselist->countRequestEntries();
+            if ($count > 0) {
+                array_push($this->entryArray, Language::getCountEntry($count, $this->databaseId, null, $filterParams));
+            }
+        }
+        // @todo apply filter?
+        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
+        foreach ($customColumnList as $lookup) {
+            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
+            if (!is_null($customColumn) && $customColumn->isSearchable()) {
+                array_push($this->entryArray, $customColumn->getCount());
+            }
+        }
+        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array('libraries', $this->ignoredCategories)) {
+            $library = VirtualLibrary::getCount($this->databaseId);
+            if (!is_null($library)) {
+                array_push($this->entryArray, $library);
+            }
+        }
+        $booklist = new BookList($this->request);
+        $this->entryArray = array_merge($this->entryArray, $booklist->getCount());
+
+        if (Database::isMultipleDatabaseEnabled()) {
+            $this->title =  Database::getDbName($this->getDatabaseId());
         }
     }
 
