@@ -49,10 +49,12 @@
         "symfony/browser-kit": "~6.4",
         "symfony/http-client": "~6.4",
         "mikespub/epub-loader": "~2.4",
-        "opis/json-schema": "~2.3"
+        "opis/json-schema": "~2.3",
+        "mikespub/epubjs-reader": "^2024.2"
     },
     "suggest": {
-        "mikespub/epub-loader": "epub-loader is a utility package for ebooks"
+        "mikespub/epub-loader": "epub-loader is a utility package for ebooks",
+        "mikespub/epubjs-reader": "epub.js reader with zipfs.php"
     },
     "autoload": {
         "classmap": [

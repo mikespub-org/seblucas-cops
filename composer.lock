@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0455bf0ea0e3a16185ec3d5ef4286ab",
+    "content-hash": "f44e14f9c80750d66fcde124d19e80fc",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1475,6 +1475,51 @@
                 "source": "https://github.com/mikespub-org/epub-loader/tree/2.4.2"
             },
             "time": "2024-03-02T13:41:27+00:00"
+        },
+        {
+            "name": "mikespub/epubjs-reader",
+            "version": "2024.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
+                "reference": "5d7927f97386c06dd3ab6870e4fcea9819504d5d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/5d7927f97386c06dd3ab6870e4fcea9819504d5d",
+                "reference": "5d7927f97386c06dd3ab6870e4fcea9819504d5d",
+                "shasum": ""
+            },
+            "suggest": {
+                "mikespub/seblucas-cops": "COPS - Calibre OPDS (and HTML) PHP Server"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "fchasen",
+                    "homepage": "https://github.com/futurepress/epubjs-reader",
+                    "role": "Developer"
+                },
+                {
+                    "name": "intity",
+                    "homepage": "https://github.com/intity/epubjs-reader",
+                    "role": "Developer"
+                },
+                {
+                    "name": "mikespub",
+                    "homepage": "https://github.com/mikespub-org/intity-epubjs-reader",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Epub.js Reader with zipfs.php",
+            "support": {
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.2.7"
+            },
+            "time": "2024-03-04T01:15:19+00:00"
         },
         {
             "name": "myclabs/deep-copy",
