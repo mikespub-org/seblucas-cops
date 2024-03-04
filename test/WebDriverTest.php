@@ -5,6 +5,13 @@
  * This setup assumes that you have a local PHP webserver that serves COPS under /cops/
  * on the same system (*) as the docker host where the selenium container will run.
  *
+ * Start selenium/standalone-chrome container:
+ * ```
+ * $ ./tools/selenium.sh
+ * ...
+ * Host http://localhost:4444
+ * ```
+ *
  * You should adapt the $serverUrl below if you have a different configuration.
  *
  * (*) for development this can be a default WSL2 Linux server on your Win laptop ;-)
@@ -131,7 +138,9 @@ class WebDriverTest extends WebDriverTestCase
         $this->setTemplateName($template);
         $this->setWindowSize($width, $height);
         $this->url($url);
-        self::$driver->takeScreenshot("{$name}.{$template}-{$width}x{$height}.png");
+        $filename = "{$name}.{$template}-{$width}x{$height}.png";
+        self::$driver->takeScreenshot($filename);
+        $this->assertFileExists($filename);
     }
 
     /**
@@ -176,8 +185,8 @@ class WebDriverTest extends WebDriverTestCase
     public static function providerCombinations()
     {
         $combinations = [];
-        foreach ($this->providerTemplateSizes() as $options) {
-            foreach ($this->providerPages() as $pages) {
+        foreach (self::providerTemplateSizes() as $options) {
+            foreach (self::providerPages() as $pages) {
                 array_push($combinations, array_merge($pages, $options));
             }
         }

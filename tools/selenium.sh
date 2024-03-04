@@ -12,3 +12,5 @@
 #docker run --rm -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:latest
 #docker run --rm -d --network=host --shm-size="2g" selenium/standalone-chrome:latest
 docker run --rm -d --add-host=host.docker.internal:host-gateway -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:latest
+echo "Host http://localhost:4444"
+echo "Watch http://localhost:7900/?autoconnect=1&resize=scale&password=secret"
