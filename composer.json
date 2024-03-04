@@ -50,7 +50,7 @@
         "symfony/http-client": "~6.4",
         "mikespub/epub-loader": "~2.4",
         "opis/json-schema": "~2.3",
-        "mikespub/epubjs-reader": "^2024.2"
+        "mikespub/epubjs-reader": "^2024.3"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks",

@@ -106,6 +106,10 @@ class EPubReader
      */
     public static function getReader($idData, $request)
     {
+        $version = $request->get('version', 'monocle');
+        if ($version == 'epubjs') {
+            return static::getEpubjsReader($idData, $request);
+        }
         $book = Book::getBookByDataId($idData, $request->database());
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
@@ -173,5 +177,38 @@ class EPubReader
             $encodeReplace[1],
             $src
         );
+    }
+
+    /**
+     * Summary of getEpubjsReader
+     * @param int $idData
+     * @param Request $request
+     * @return string
+     */
+    public static function getEpubjsReader($idData, $request)
+    {
+        $endpoint = Config::ENDPOINT["zipfs"];
+        $template = "templates/epubjs-reader.html";
+        $book = Book::getBookByDataId($idData, $request->database());
+        if (!$book) {
+            throw new Exception('Unknown data ' . $idData);
+        }
+        $epub = $book->getFilePath('EPUB', $idData);
+        if (!$epub || !file_exists($epub)) {
+            throw new Exception('Unknown file ' . $epub);
+        }
+        // URL format: zipfs.php/{db}/{idData}/{component}
+        $db = $book->getDatabaseId() ?? 0;
+        $link = Route::url($endpoint . "/{$db}/{$idData}/");
+
+        $dist = Route::url(dirname(Config::get('assets')) . '/mikespub/epubjs-reader/dist');
+        $data = [
+            'title'      => htmlspecialchars($book->title),
+            'version'    => Config::VERSION,
+            'dist'       => $dist,
+            'link'       => $link,
+        ];
+
+        return Format::template($data, $template);
     }
 }

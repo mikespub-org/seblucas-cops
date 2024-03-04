@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f44e14f9c80750d66fcde124d19e80fc",
+    "content-hash": "220c05223289240ba1c7a10f78434a39",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1478,16 +1478,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2024.2.7",
+            "version": "2024.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "5d7927f97386c06dd3ab6870e4fcea9819504d5d"
+                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/5d7927f97386c06dd3ab6870e4fcea9819504d5d",
-                "reference": "5d7927f97386c06dd3ab6870e4fcea9819504d5d",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
+                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
                 "shasum": ""
             },
             "suggest": {
@@ -1517,9 +1517,9 @@
             ],
             "description": "Epub.js Reader with zipfs.php",
             "support": {
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.2.7"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.3.5"
             },
-            "time": "2024-03-04T01:15:19+00:00"
+            "time": "2024-03-04T15:08:36+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1830,20 +1830,21 @@
         },
         {
             "name": "phar-io/manifest",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phar-io/manifest.git",
-                "reference": "97803eca37d319dfa7826cc2437fc020857acb53"
+                "reference": "54750ef60c58e43759730615a392c31c80e23176"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phar-io/manifest/zipball/97803eca37d319dfa7826cc2437fc020857acb53",
-                "reference": "97803eca37d319dfa7826cc2437fc020857acb53",
+                "url": "https://api.github.com/repos/phar-io/manifest/zipball/54750ef60c58e43759730615a392c31c80e23176",
+                "reference": "54750ef60c58e43759730615a392c31c80e23176",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
+                "ext-libxml": "*",
                 "ext-phar": "*",
                 "ext-xmlwriter": "*",
                 "phar-io/version": "^3.0.1",
@@ -1884,9 +1885,15 @@
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
             "support": {
                 "issues": "https://github.com/phar-io/manifest/issues",
-                "source": "https://github.com/phar-io/manifest/tree/2.0.3"
+                "source": "https://github.com/phar-io/manifest/tree/2.0.4"
             },
-            "time": "2021-07-20T11:28:43+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/theseer",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-03T12:33:53+00:00"
         },
         {
             "name": "phar-io/version",
@@ -4429,16 +4436,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.2",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96"
+                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
-                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
+                "reference": "737eda637ed5e28c3413cb1ebe8bb52cbf1ca7a2",
                 "shasum": ""
             },
             "require": {
@@ -4467,7 +4474,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/1.2.2"
+                "source": "https://github.com/theseer/tokenizer/tree/1.2.3"
             },
             "funding": [
                 {
@@ -4475,7 +4482,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-20T00:12:19+00:00"
+            "time": "2024-03-03T12:36:25+00:00"
         },
         {
             "name": "tightenco/collect",

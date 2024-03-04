@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- in pseudo doT syntax, but only these variables are replaced -->
+	<title>{{=it.title}}</title>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+	<link rel="icon" type="image/png" href="{{=it.dist}}/img/favicon.png">
+	<link rel="stylesheet" href="{{=it.dist}}/css/main.css?v={{=it.version}}">
+
+	<!-- Libs -->
+	<script src="{{=it.dist}}/js/libs/jszip.min.js?v={{=it.version}}"></script>
+	<script src="{{=it.dist}}/js/libs/md5.min.js?v={{=it.version}}"></script>
+	<script src="{{=it.dist}}/js/libs/epub.min.js?v={{=it.version}}"></script>
+
+	<!-- Reader -->
+	<script src="{{=it.dist}}/js/epubreader.js?v={{=it.version}}"></script>
+
+	<!-- Initialize bookPath -->
+	<script>
+		window.bookPath = "{{=it.link}}";
+	</script>
+</head>
+
+<body>
+</body>
+
+</html>

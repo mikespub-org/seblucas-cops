@@ -1,6 +1,6 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) class file
+ * COPS (Calibre OPDS PHP Server) endpoint for epubjs-reader
  *
  * @author mikespub
  */
@@ -14,6 +14,7 @@ if (php_sapi_name() === 'cli') {
     return;
 }
 
+// URL format: zipfs.php/{db}/{idData}/{component}
 // don't try to match path params here
 $request = new Request(false);
 $path = $request->path();
@@ -22,19 +23,13 @@ if (empty($path) || $path == '/') {
 }
 $path = substr($path, 1);
 $matches = [];
-if (!preg_match('/^(\d+)\/(.+)$/', $path, $matches)) {
+if (!preg_match('/^(\d+)\/(\d+)\/(.+)$/', $path, $matches)) {
     Request::notFound();
 }
-$idData = $matches[1];
-if (empty($idData)) {
-    // this will call exit()
-    $request->notFound();
-}
-$component = $matches[2];
-if (empty($component)) {
-    // this will call exit()
-    $request->notFound();
-}
+$database = $matches[1];
+$idData = $matches[2];
+$component = $matches[3];
+$request->set('db', $database);
 
 try {
     $book = Book::getBookByDataId($idData, $request->database());
