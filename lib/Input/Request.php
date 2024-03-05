@@ -138,6 +138,10 @@ class Request
                 $this->urlParams[$name] = $_GET[$name];
             }
         }
+        // @todo get virtual library from option (see customize)
+        if (!isset($this->urlParams['vl']) && !empty($this->option('virtual_library'))) {
+            $this->urlParams['vl'] = $this->option('virtual_library');
+        }
         $this->queryString = $_SERVER['QUERY_STRING'] ?? '';
     }
 
@@ -335,7 +339,7 @@ class Request
     /**
      * Summary of getVirtualLibrary
      * @param bool $strip
-     * @return ?int
+     * @return int|string|null
      */
     public function getVirtualLibrary($strip = false)
     {

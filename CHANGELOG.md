@@ -11,6 +11,9 @@ x.x.x - TODO
   * ...
 
 2.4.x - 2024xxxx
+  * Changes in config_default.php file:
+    - new $config['cops_virtual_library']
+  * Select virtual library via customize page or config_local
   * Propose epubjs-reader as alternative for monocle (dev only)
   * Clarify WebDriver tests with selenium container (dev only)
   * Split off index page and filter by virtual library

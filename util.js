@@ -29,10 +29,10 @@ if (typeof Bloodhound === 'undefined') {
                     url: 'getJSON.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
                     replace: function (url, query) {
                         url = url.replace('getJSON.php', currentData.baseurl.replace('index.php', 'getJSON.php'));
-                        if (currentData.libraryId === "") {
-                            url = url.replace('&vl=%VL', "");
-                        } else {
+                        if (currentData.libraryId) {
                             url = url.replace('%VL', encodeURIComponent(currentData.libraryId));
+                        } else {
+                            url = url.replace('&vl=%VL', "");
                         }
                         if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
                             return url.replace('%QUERY', query).replace('&db=%DB', "");
@@ -337,12 +337,12 @@ updatePage = function (data) {
         $("body").html (result);
     }
     if (data.title != data.libraryName) {
-        if (data.libraryId !== undefined) {
+        if (data.libraryId) {
             document.title = data.libraryName + ' ' + data.libraryId + ' - ' + data.title;
         } else {
             document.title = data.libraryName + ' - ' + data.title;
         }
-    } else if (data.libraryId !== undefined) {
+    } else if (data.libraryId) {
         document.title = data.libraryId + ' - ' + data.title;
     } else {
         document.title = data.title;
@@ -454,7 +454,7 @@ function search_Submitted (event) {
     }
     event.preventDefault();
     var url = str_format (currentData.baseurl + "?page=9&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
-    if (currentData.libraryId !== "") {
+    if (currentData.libraryId) {
         url = url + '&vl=' + encodeURIComponent(currentData.libraryId);
     }
     navigateTo (url);

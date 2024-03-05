@@ -198,6 +198,12 @@ $config['cops_calibre_virtual_libraries'] = [];
 //$config['cops_calibre_virtual_libraries'] = ["*"];
 
 /*
+ * Default virtual library to use (and filter on) in COPS
+ * based on the Calibre list of virtual libraries (starting with 1)
+ */
+$config['cops_virtual_library'] = '0';
+
+/*
  * Custom Columns for the index page
  * to add as an array containing the lookup names configured in Calibre
  *
