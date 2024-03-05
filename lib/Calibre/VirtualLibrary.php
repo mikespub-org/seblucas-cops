@@ -11,7 +11,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 
 class VirtualLibrary extends Base

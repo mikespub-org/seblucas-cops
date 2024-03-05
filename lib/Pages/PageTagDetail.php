@@ -24,7 +24,7 @@ class PageTagDetail extends PageWithDetail
         /** @var Tag $instance */
         $instance = Tag::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
-            $this->filterUri = '&t=' . $this->idGet;
+            $this->filterParams = [Tag::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
         } elseif ($this->request->get('tree')) {
             $this->getHierarchy($instance);

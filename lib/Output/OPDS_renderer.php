@@ -377,18 +377,19 @@ class OPDSRenderer
                 $filterPage = PageId::getPage($request->get('page'), $request);
                 $filterPage->InitializeContent();
                 $request->set('filter', null);
-                $extraUri = $filterPage->filterUri;
+                $extraParams = $filterPage->filterParams;
                 if ($request->get('sort')) {
-                    $extraUri .= '&sort=' . $request->get('sort');
+                    $extraParams['sort'] = $request->get('sort');
                 }
+                // @todo handle special case of OPDS not expecting filter while HTML does better
+                unset($extraParams['filter']);
                 foreach ($filterPage->entryArray as $entry) {
                     if (empty($entry->className)) {
                         continue;
                     }
                     $group = strtolower($entry->className);
                     $group = localize($group . 's.title');
-                    // @todo handle special case of OPDS not expecting filter while HTML does better
-                    $url = str_replace('&filter=1', '', $entry->getNavLink('', $extraUri));
+                    $url = $entry->getNavLink('', $extraParams);
                     $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
                     $this->renderLink($link);
                 }

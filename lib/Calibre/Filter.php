@@ -26,12 +26,11 @@ class Filter
         Serie::URL_PARAM => Serie::class,
         Tag::URL_PARAM => Tag::class,
         Identifier::URL_PARAM => Identifier::class,
-        CustomColumnType::URL_PARAM => CustomColumnType::class,
+        CustomColumn::URL_PARAM => CustomColumn::class,
         BookList::URL_PARAM_FIRST => BookList::class,
         BookList::URL_PARAM_YEAR => BookList::class,
         VirtualLibrary::URL_PARAM => VirtualLibrary::class,
     ];
-    // @todo map search string from virtual library/saved search to filters
     public const SEARCH_FIELDS = [
         'authors' => Author::class,
         //'formats' => Format::class,
@@ -157,7 +156,7 @@ class Filter
         }
 
         // URL format: ...&c[2]=3&c[3]=other to filter on column 2 = 3 and column 3 = other
-        $customIdArray = $this->request->get(CustomColumnType::URL_PARAM, null);
+        $customIdArray = $this->request->get(CustomColumn::URL_PARAM, null);
         if (!empty($customIdArray) && is_array($customIdArray)) {
             $this->addCustomIdArrayFilters($customIdArray);
         }
@@ -448,6 +447,7 @@ class Filter
      */
     public static function getEntryArray($request, $database = null)
     {
+        $libraryId = $request->getVirtualLibrary();
         $entryArray = [];
         foreach (static::URL_PARAMS as $paramName => $className) {
             if ($className == VirtualLibrary::class) {
@@ -457,13 +457,14 @@ class Filter
             if (!isset($paramValue)) {
                 continue;
             }
+            // @todo do we want to filter by virtual library etc. here?
             if ($className == BookList::class) {
                 $booklist = new BookList(Request::build([$paramName => $paramValue]), $database);
                 $groupFunc = ($paramName == 'f') ? 'getCountByFirstLetter' : 'getCountByPubYear';
                 $entryArray = array_merge($entryArray, $booklist->$groupFunc());
                 continue;
             }
-            if ($className == CustomColumnType::class) {
+            if ($className == CustomColumn::class) {
                 foreach ($paramValue as $customId => $valueId) {
                     $custom = CustomColumn::createCustom($customId, $valueId, $database);
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);
@@ -474,7 +475,11 @@ class Filter
             if (preg_match('/^!\d+$/', $paramValue)) {
                 $paramValue = substr($paramValue, 1);
             }
-            $req = Request::build([$paramName => $paramValue]);
+            if (!empty($libraryId)) {
+                $req = Request::build([$paramName => $paramValue, VirtualLibrary::URL_PARAM => $libraryId]);
+            } else {
+                $req = Request::build([$paramName => $paramValue]);
+            }
             $baselist = new BaseList($className, $req, $database);
             $entries = $baselist->getEntriesByFilter();
             $entryArray = array_merge($entryArray, $entries);

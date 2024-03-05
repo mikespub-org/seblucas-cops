@@ -11,8 +11,15 @@ x.x.x - TODO
   * ...
 
 2.4.x - 2024xxxx
+  * Propose epubjs-reader as alternative for monocle (dev only)
+  * Clarify WebDriver tests with selenium container (dev only)
+  * Split off index page and filter by virtual library
+
+2.4.3 - 20240302 Start virtual libraries + switch to phpunit 10.5
   * Changes in config_default.php file:
     - new $config['cops_calibre_virtual_libraries']
+  * Update dependencies + switch to phpunit 10.5
+  * Add identifier filter links
   * Start support for virtual libraries from Calibre (TODO)
 
 2.4.2 - 20240227 Show category notes for Calibre 7.x (bootstrap2 & twigged)

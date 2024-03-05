@@ -24,7 +24,7 @@ class PageSerieDetail extends PageWithDetail
         /** @var Serie $instance */
         $instance = Serie::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
-            $this->filterUri = '&s=' . $this->idGet;
+            $this->filterParams = [Serie::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
             // @todo needs title_sort function in sqlite for series
             //} elseif ($this->request->get('tree')) {

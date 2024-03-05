@@ -331,7 +331,13 @@ updatePage = function (data) {
         $("body").html (result);
     }
     if (data.title != data.libraryName) {
-        document.title = data.libraryName + ' - ' + data.title;
+        if (data.libraryId !== undefined) {
+            document.title = data.libraryName + ' ' + data.libraryId + ' - ' + data.title;
+        } else {
+            document.title = data.libraryName + ' - ' + data.title;
+        }
+    } else if (data.libraryId !== undefined) {
+        document.title = data.libraryId + ' - ' + data.title;
     } else {
         document.title = data.title;
     }

@@ -53,7 +53,8 @@ class Page
     public $totalNumber = -1;
     /** @var ?string */
     public $sorted = "sort";
-    public string $filterUri = "";
+    /** @var array<string, mixed> */
+    public $filterParams = [];
     /** @var array<string, mixed>|false */
     public $hierarchy = false;
     /** @var array<string, mixed>|false */
@@ -301,6 +302,7 @@ class Page
         if (!is_array($paging)) {
             $paging = [];
         }
+        // @todo do we want to filter by virtual library etc. here?
         if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("authors.title"),

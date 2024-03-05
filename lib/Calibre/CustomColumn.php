@@ -20,6 +20,7 @@ class CustomColumn extends Category
     public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
     public const PAGE_ALL = PageId::ALL_CUSTOMS;
     public const PAGE_DETAIL = PageId::CUSTOM_DETAIL;
+    public const URL_PARAM = "c";
 
     /** @var string the (string) representation of the value */
     public $value;

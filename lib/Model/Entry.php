@@ -98,10 +98,10 @@ class Entry
     /**
      * Summary of getNavLink
      * @param string $endpoint
-     * @param string $extraUri
+     * @param array<string, mixed> $extraParams
      * @return string
      */
-    public function getNavLink($endpoint = "", $extraUri = "")
+    public function getNavLink($endpoint = "", $extraParams = [])
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkEntry|LinkFeed */
@@ -111,10 +111,14 @@ class Entry
             }
 
             $uri = $link->hrefXhtml($endpoint);
-            if (!empty($extraUri) && strpos($uri, '?') === false) {
-                $extraUri = '?' . substr($extraUri, 1);
+            if (empty($extraParams)) {
+                return $uri;
             }
-            return $uri . $extraUri;
+            $separator = '&';
+            if (strpos($uri, '?') === false) {
+                $separator = '?';
+            }
+            return $uri . $separator . http_build_query($extraParams);
         }
         return "#";
     }

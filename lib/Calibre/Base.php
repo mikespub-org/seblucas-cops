@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -44,6 +45,8 @@ abstract class Base
     public bool $limitSelf = true;
     /** @var ?int */
     protected $databaseId = null;
+    /** @var ?Request */
+    protected $request = null;
     /** @var ?int */
     protected $filterLimit = null;
 
@@ -246,6 +249,7 @@ abstract class Base
     {
         $database ??= $this->databaseId;
         $numberPerPage ??= $this->filterLimit;
+        // @todo do we want to filter by virtual library etc. here?
         $baselist = new BaseList($className, null, $database, $numberPerPage);
         $baselist->orderBy = $sort;
         return $baselist->getEntriesByInstance($this, $n);

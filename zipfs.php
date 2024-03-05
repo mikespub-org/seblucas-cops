@@ -27,7 +27,7 @@ if (!preg_match('/^(\d+)\/(\d+)\/(.+)$/', $path, $matches)) {
     Request::notFound();
 }
 $database = $matches[1];
-$idData = $matches[2];
+$idData = intval($matches[2]);
 $component = $matches[3];
 $request->set('db', $database);
 

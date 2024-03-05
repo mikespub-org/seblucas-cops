@@ -33,7 +33,7 @@ class PageIdentifierDetail extends Page
         /** @var Identifier $instance */
         $instance = Identifier::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
-            $this->filterUri = '&i=' . $this->idGet;
+            $this->filterParams = [Identifier::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
         } else {
             $this->getEntries($instance);

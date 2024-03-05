@@ -32,7 +32,7 @@ class PageCustomDetail extends Page
         $this->title = $instance->getTitle();
         $this->currentUri = $instance->getUri();
         if ($this->request->get('filter')) {
-            $this->filterUri = '&c[' . $customId . ']=' . $this->idGet;
+            $this->filterParams = [CustomColumn::URL_PARAM . '[' . $customId . ']' => $this->idGet];
             $this->getFilters($instance);
         } elseif ($this->request->get('tree')) {
             $this->getHierarchy($instance);

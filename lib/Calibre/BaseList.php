@@ -400,6 +400,7 @@ class BaseList
      */
     public function getEntriesByInstance($instance, $n = 1)
     {
+        // @todo do we want to filter by virtual library etc. here?
         $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
         $entries = $this->getFilteredEntries($filter, $n);

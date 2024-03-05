@@ -24,7 +24,7 @@ class PageAuthorDetail extends PageWithDetail
         /** @var Author $instance */
         $instance = Author::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
-            $this->filterUri = '&a=' . $this->idGet;
+            $this->filterParams = [Author::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
         } else {
             $this->getEntries($instance);

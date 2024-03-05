@@ -166,10 +166,10 @@ class JSONRenderer
      * Summary of getContentArray
      * @param Entry|EntryBook|null $entry
      * @param string $endpoint
-     * @param string $extraUri
+     * @param array<string, mixed> $extraParams
      * @return array<string, mixed>|bool
      */
-    public static function getContentArray($entry, $endpoint, $extraUri = "")
+    public static function getContentArray($entry, $endpoint, $extraParams = [])
     {
         if (is_null($entry)) {
             return false;
@@ -206,7 +206,7 @@ class JSONRenderer
             default:
                 $label = $entry->className;
         }
-        return [ "class" => $label, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraUri), "number" => $entry->numberOfElement ];
+        return [ "class" => $label, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraParams), "number" => $entry->numberOfElement ];
     }
 
     /**
@@ -340,6 +340,7 @@ class JSONRenderer
         $search = $request->get("search");
         $qid = $request->getId();
         $database = $request->database();
+        $libraryId = $request->getVirtualLibrary();
 
         $currentPage = PageId::getPage($page, $request);
         try {
@@ -362,14 +363,14 @@ class JSONRenderer
         }
         $out ["baseurl"] = Route::url($endpoint);
         $entries = [];
-        $extraUri = "";
+        $extraParams = [];
         $out ["isFilterPage"] = false;
-        if (!empty($request->get('filter')) && !empty($currentPage->filterUri)) {
-            $extraUri = $currentPage->filterUri;
+        if (!empty($request->get('filter')) && !empty($currentPage->filterParams)) {
+            $extraParams = $currentPage->filterParams;
             $out ["isFilterPage"] = true;
         }
         foreach ($currentPage->entryArray as $entry) {
-            array_push($entries, static::getContentArray($entry, $endpoint, $extraUri));
+            array_push($entries, static::getContentArray($entry, $endpoint, $extraParams));
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
@@ -385,6 +386,7 @@ class JSONRenderer
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
+        $out ["libraryId"] = $libraryId ?? "";
         $out ["libraryName"] = Config::get('title_default');
         $out ["fullTitle"] = $out ["title"];
         if ($out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
@@ -459,7 +461,10 @@ class JSONRenderer
         if ($request->hasFilter()) {
             $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
-                array_push($out["filters"], static::getContentArray($entry, $endpoint, '&filter=1'));
+                array_push($out["filters"], static::getContentArray($entry, $endpoint, ['filter' => 1]));
+            }
+            if (empty($out["filters"])) {
+                $out["filters"] = false;
             }
         }
 
@@ -500,13 +505,13 @@ class JSONRenderer
         $out ["hierarchy"] = false;
         if ($currentPage->hierarchy) {
             $out ["hierarchy"] = [
-                "parent" => static::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraUri),
-                "current" => static::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraUri),
+                "parent" => static::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraParams),
+                "current" => static::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraParams),
                 "children" => [],
                 "hastree" => $request->get('tree', false),
             ];
             foreach ($currentPage->hierarchy['children'] as $entry) {
-                array_push($out ["hierarchy"]["children"], static::getContentArray($entry, $endpoint, $extraUri));
+                array_push($out ["hierarchy"]["children"], static::getContentArray($entry, $endpoint, $extraParams));
             }
         }
         $out ["extra"] = $currentPage->extra;

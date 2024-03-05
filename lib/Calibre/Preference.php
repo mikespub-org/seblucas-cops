@@ -88,7 +88,6 @@ class Preference
      */
     public static function getVirtualLibraries($database = null)
     {
-        // @todo map search string from virtual library to filters
         return static::getInstanceByKey('virtual_libraries', $database);
     }
 

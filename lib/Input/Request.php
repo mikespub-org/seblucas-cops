@@ -333,6 +333,24 @@ class Request
     }
 
     /**
+     * Summary of getVirtualLibrary
+     * @param bool $strip
+     * @return ?int
+     */
+    public function getVirtualLibrary($strip = false)
+    {
+        $libraryId = $this->get('vl', null);
+        if (empty($libraryId)) {
+            return null;
+        }
+        // URL format: ...&vl=2.Short_Stories_in_English
+        if ($strip && str_contains($libraryId, '.')) {
+            [$libraryId, $slug] = explode('.', $libraryId);
+        }
+        return $libraryId;
+    }
+
+    /**
      * Summary of getSorted
      * @param ?string $default
      * @return ?string

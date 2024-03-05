@@ -24,7 +24,7 @@ class PageRatingDetail extends PageWithDetail
         /** @var Rating $instance */
         $instance = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
         if ($this->request->get('filter')) {
-            $this->filterUri = '&r=' . $this->idGet;
+            $this->filterParams = [Rating::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
         } else {
             $this->getEntries($instance);
