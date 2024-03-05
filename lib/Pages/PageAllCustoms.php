@@ -44,6 +44,7 @@ class PageAllCustoms extends Page
      */
     public function getCustomEntries($columnType)
     {
+        // @todo do we want to filter by virtual library etc. here?
         if (Config::get('custom_date_split_year') == 1 && $columnType instanceof CustomColumnTypeDate) {
             $this->getCustomEntriesByYear($columnType);
         } elseif (Config::get('custom_integer_split_range') > 0 && $columnType instanceof CustomColumnTypeInteger) {

@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
@@ -59,30 +60,38 @@ class PageQueryResult extends Page
             $n = 1;
             $numberPerPage = 5;
         }
+        $libraryId = "";
+        if (!Database::noDatabaseSelected($database)) {
+            $libraryId = $this->request->getVirtualLibrary();
+        }
+        $req = null;
+        if (!empty($libraryId)) {
+            $req = Request::build(['vl' => $libraryId]);
+        }
         switch ($scope) {
             case static::SCOPE_BOOK :
-                $booklist = new BookList($this->request, $database, $numberPerPage);
+                $booklist = new BookList($req, $database, $numberPerPage);
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
             case static::SCOPE_AUTHOR :
-                $baselist = new BaseList(Author::class, $this->request, $database, $numberPerPage);
+                $baselist = new BaseList(Author::class, $req, $database, $numberPerPage);
                 // we need to repeat the query x 2 here because Author checks both name and sort fields
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
             case static::SCOPE_SERIES :
-                $baselist = new BaseList(Serie::class, $this->request, $database, $numberPerPage);
+                $baselist = new BaseList(Serie::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case static::SCOPE_TAG :
-                $baselist = new BaseList(Tag::class, $this->request, $database, $numberPerPage);
+                $baselist = new BaseList(Tag::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case static::SCOPE_PUBLISHER :
-                $baselist = new BaseList(Publisher::class, $this->request, $database, $numberPerPage);
+                $baselist = new BaseList(Publisher::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             default:
-                $booklist = new BookList($this->request, $database, $numberPerPage);
+                $booklist = new BookList($req, $database, $numberPerPage);
                 $array = $booklist->getBooksByQueryScope(
                     ["all" => "%" . $queryNormedAndUp . "%"],
                     $n
@@ -103,10 +112,13 @@ class PageQueryResult extends Page
         $dbArray = [""];
         $d = $database;
         $query = $this->query;
+        $libraryId = "";
         // Special case when no databases were chosen, we search on all databases
         if (Database::noDatabaseSelected($database)) {
             $dbArray = Database::getDbNameList();
             $d = 0;
+        } else {
+            $libraryId = $this->request->getVirtualLibrary();
         }
         foreach ($dbArray as $key) {
             if (Database::noDatabaseSelected($database)) {
@@ -147,12 +159,16 @@ class PageQueryResult extends Page
                     // str_format (localize("seriesword", count($array))
                     // str_format (localize("tagword", count($array))
                     // str_format (localize("publisherword", count($array))
+                    $params = ['query' => $query, 'db' => $d, 'scope' => $key];
+                    if (!empty($libraryId)) {
+                        $params['vl'] = $libraryId;
+                    }
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$key}"), $this->query),
                         "db:query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
-                        [ new LinkNavigation(Route::page($pagequery, ['query' => $query, 'db' => $d, 'scope' => $key])) ],
+                        [ new LinkNavigation(Route::page($pagequery, $params)) ],
                         $database,
                         Database::noDatabaseSelected($database) ? "" : "tt-header",
                         $total

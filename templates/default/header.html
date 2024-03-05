@@ -20,6 +20,9 @@
                     {{? it.databaseId != ""}}
                         <input type="hidden" name="db" value="{{=it.databaseId}}" />
                     {{?}}
+                    {{? it.libraryId != ""}}
+                        <input type="hidden" name="vl" value="{{=it.libraryId}}" />
+                    {{?}}
                     <input id="queryInput" type="text" data-type="search" required="required" name="query" />
                 </div>
                 <button id="searchButton" title="{{=it.c.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">

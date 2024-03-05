@@ -26,9 +26,14 @@ if (typeof Bloodhound === 'undefined') {
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         limit: 30,
         remote: {
-                    url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
+                    url: 'getJSON.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
                     replace: function (url, query) {
                         url = url.replace('getJSON.php', currentData.baseurl.replace('index.php', 'getJSON.php'));
+                        if (currentData.libraryId === "") {
+                            url = url.replace('&vl=%VL', "");
+                        } else {
+                            url = url.replace('%VL', encodeURIComponent(currentData.libraryId));
+                        }
                         if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
                             return url.replace('%QUERY', query).replace('&db=%DB', "");
                         }
@@ -448,6 +453,9 @@ function search_Submitted (event) {
     }
     event.preventDefault();
     var url = str_format (currentData.baseurl + "?page=9&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
+    if (currentData.libraryId !== "") {
+        url = url + '&vl=' + encodeURIComponent(currentData.libraryId);
+    }
     navigateTo (url);
 }
 

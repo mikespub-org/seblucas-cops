@@ -32,7 +32,8 @@ class PageAllAuthorsLetter extends Page
         }
         $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("authorword", $count), $count), $this->idGet);
         $this->parentTitle = "";  // localize("authors.title");
-        $this->parentUri = Route::page(Author::PAGE_ALL);
+        $filterParams = $this->request->getFilterParams();
+        $this->parentUri = Route::page(Author::PAGE_ALL, $filterParams);
     }
 
     /**

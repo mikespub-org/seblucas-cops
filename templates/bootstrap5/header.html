@@ -34,6 +34,9 @@
             {{? it.databaseId != ""}}
               <input type="hidden" name="db" value="{{=it.databaseId}}">
             {{?}}
+            {{? it.libraryId != ""}}
+              <input type="hidden" name="vl" value="{{=it.libraryId}}">
+            {{?}}
             <input id="queryInput" name="query" class="form-control form-control-sm me-2" type="text" placeholder="{{=it.c.i18n.searchAlt}}" aria-label="{{=it.c.i18n.searchAlt}}" data-type="search" required="required">
             <button class="btn btn-sm btn-outline-primary" type="submit">{{=it.c.i18n.searchAlt}}</button>
         </form>

@@ -306,6 +306,12 @@ class BaseList
         $columns = $this->getCountColumns();
         // Author has 2 params, the rest 1
         $params = array_fill(0, $repeat, '%' . $find . '%');
+        if ($this->request->hasFilter()) {
+            $filter = new Filter($this->request, $params, $this->getLinkTable(), $this->databaseId);
+            $filterString = $filter->getFilterString();
+            $params = $filter->getQueryParams();
+            return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        }
         return $this->getEntryArrayWithBookNumber($query, $columns, "", $params, $n);
     }
 

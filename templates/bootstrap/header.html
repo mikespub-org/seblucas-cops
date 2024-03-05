@@ -31,6 +31,9 @@
           {{? it.databaseId != ""}}
               <input type="hidden" name="db" value="{{=it.databaseId}}">
           {{?}}
+          {{? it.libraryId != ""}}
+              <input type="hidden" name="vl" value="{{=it.libraryId}}">
+          {{?}}
           <input id="queryInput" type="text" class="form-control" placeholder="{{=it.c.i18n.searchAlt}}" name="query">
         </div>
         <button id="searchButton" type="submit" class="btn btn-default hidden-xs"><span class="glyphicon glyphicon-search"></span></button>

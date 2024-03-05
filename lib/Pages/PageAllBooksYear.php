@@ -30,7 +30,8 @@ class PageAllBooksYear extends Page
         }
         $this->title = str_format(localize("splitByYear.year"), str_format(localize("bookword", $count), $count), $this->idGet);
         $this->parentTitle = "";  // localize("allbooks.title");
-        $this->parentUri = Route::page(Book::PAGE_ALL);
+        $filterParams = $this->request->getFilterParams();
+        $this->parentUri = Route::page(Book::PAGE_ALL, $filterParams);
     }
 
     /**
