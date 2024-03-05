@@ -45,10 +45,10 @@ abstract class Base
     public bool $limitSelf = true;
     /** @var ?int */
     protected $databaseId = null;
-    /** @var ?Request */
-    protected $request = null;
     /** @var ?int */
     protected $filterLimit = null;
+    /** @var array<string, mixed> */
+    protected $filterParams = [];
 
     /**
      * Summary of __construct
@@ -249,10 +249,9 @@ abstract class Base
     {
         $database ??= $this->databaseId;
         $numberPerPage ??= $this->filterLimit;
-        // @todo do we want to filter by virtual library etc. here?
         $baselist = new BaseList($className, null, $database, $numberPerPage);
         $baselist->orderBy = $sort;
-        return $baselist->getEntriesByInstance($this, $n);
+        return $baselist->getEntriesByInstance($this, $n, $this->filterParams);
     }
 
     /**
@@ -363,6 +362,25 @@ abstract class Base
             return 999999;
         }
         return $this->filterLimit;
+    }
+
+    /**
+     * Summary of setFilterParams if we want to filter by virtual library etc.
+     * @param array<string, mixed> $filterParams
+     * @return void
+     */
+    public function setFilterParams($filterParams)
+    {
+        $this->filterParams = $filterParams;
+    }
+
+    /**
+     * Summary of getFilterParams
+     * @return array<string, mixed>
+     */
+    public function getFilterParams()
+    {
+        return $this->filterParams;
     }
 
     /**

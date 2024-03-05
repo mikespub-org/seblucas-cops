@@ -18,6 +18,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Calibre\VirtualLibrary;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -302,7 +303,11 @@ class Page
         if (!is_array($paging)) {
             $paging = [];
         }
-        // @todo do we want to filter by virtual library etc. here?
+        // if we want to filter by virtual library etc.
+        $libraryId = $this->request->getVirtualLibrary();
+        if (!empty($libraryId)) {
+            $instance->setFilterParams([VirtualLibrary::URL_PARAM => $libraryId]);
+        }
         if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
             array_push($this->entryArray, new Entry(
                 localize("authors.title"),

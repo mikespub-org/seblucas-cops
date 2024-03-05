@@ -218,11 +218,12 @@ class BaseList
     /**
      * Summary of countEntriesByInstance
      * @param Base|Category $instance
+     * @param array<string, mixed> $filterParams if we want to filter by virtual library etc.
      * @return int
      */
-    public function countEntriesByInstance($instance)
+    public function countEntriesByInstance($instance, $filterParams = [])
     {
-        $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
         return $this->countFilteredEntries($filter);
     }
@@ -396,12 +397,12 @@ class BaseList
      * Summary of getEntriesByInstance
      * @param Base|Category $instance
      * @param int $n
+     * @param array<string, mixed> $filterParams if we want to filter by virtual library etc.
      * @return array<Entry>
      */
-    public function getEntriesByInstance($instance, $n = 1)
+    public function getEntriesByInstance($instance, $n = 1, $filterParams = [])
     {
-        // @todo do we want to filter by virtual library etc. here?
-        $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
         $entries = $this->getFilteredEntries($filter, $n);
         $limit = $instance->getFilterLimit();
@@ -410,7 +411,7 @@ class BaseList
             return $entries;
         }
         // if so, let's see how many entries we're missing
-        $total = $this->countEntriesByInstance($instance);
+        $total = $this->countEntriesByInstance($instance, $filterParams);
         $count = $total - count($entries);
         if ($count < 1) {
             return $entries;
