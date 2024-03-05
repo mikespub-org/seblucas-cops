@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Calibre\VirtualLibrary;
 use SebLucas\Cops\Model\Entry;
 
 class PageCustomize extends Page
@@ -104,7 +105,7 @@ class PageCustomize extends Page
 
         $database = $this->getDatabaseId();
         $content = "";
-        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent())) {
+        if ($this->useSelectTag()) {
             $content .= "<select id='template' onchange='updateCookie (this); window.location=window.location;'>";
 
             foreach ($this-> getTemplateList() as $filename) {
@@ -113,7 +114,7 @@ class PageCustomize extends Page
             $content .= '</select>';
         } else {
             foreach ($this-> getTemplateList() as $filename) {
-                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='template' name='template' value='{$filename}' " . $this->isChecked("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label><br>";
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='template-{$filename}' name='template' value='{$filename}' " . $this->isChecked("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label><br>";
             }
         }
         array_push($this->entryArray, new Entry(
@@ -126,7 +127,7 @@ class PageCustomize extends Page
         ));
 
         $content = "";
-        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent())) {
+        if ($this->useSelectTag()) {
             $content .= '<select id="style" name="style" onchange="updateCookie (this); window.location=window.location;">';
             foreach ($this-> getStyleList() as $filename) {
                 $content .= "<option value='{$filename}' " . $this->isSelected("style", $filename) . ">{$filename}</option>";
@@ -191,6 +192,57 @@ class PageCustomize extends Page
 
         array_push($this->entryArray, new Entry(
             localize("customize.ignored"),
+            "",
+            $content,
+            "text",
+            [],
+            $database
+        ));
+
+        $this->addVirtualLibraries($database);
+    }
+
+    /**
+     * Summary of useSelectTag
+     * @return bool|int
+     */
+    public function useSelectTag()
+    {
+        return !preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent()); 
+    }
+
+    /**
+     * Summary of addVirtualLibraries
+     * @param int|null $database
+     * @return void
+     */
+    public function addVirtualLibraries($database = null)
+    {
+        $libraries = VirtualLibrary::getLibraries($database);
+        if (empty($libraries)) {
+            return;
+        }
+        $content = "";
+        $id = 1;
+        if ($this->useSelectTag()) {
+            $content .= "<select id='virtual_library' onchange='updateCookie (this); window.location=window.location;'>";
+            $content .= "<option value='' " . $this->isSelected("virtual_library", "") . ">" . localize("libraries.none") . "</option>";
+            foreach ($libraries as $name => $value) {
+                $value = VirtualLibrary::formatParameter($id, $name);
+                $content .= "<option value='$value' " . $this->isSelected("virtual_library", $value) . ">{$id}. {$name}</option>";
+                $id += 1;
+            }
+            $content .= '</select>';
+        } else {
+            $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='virtual_library-0' name='virtual_library' value='' " . $this->isChecked("virtual_library", "") . " /><label for='virtual_library-0'> " . localize("libraries.none") . " </label><br>";
+            foreach ($libraries as $name => $value) {
+                $value = VirtualLibrary::formatParameter($id, $name);
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='virtual_library-{$id}' name='virtual_library' value='{$value}' " . $this->isChecked("virtual_library", $value) . " /><label for='virtual_library-{$id}'> {$id}. {$name} </label><br>";
+                $id += 1;
+            }
+        }
+        array_push($this->entryArray, new Entry(
+            localize("library.title"),
             "",
             $content,
             "text",

@@ -69,8 +69,9 @@ function updateCookie (id) {
 /*exported updateCookieFromCheckbox */
 function updateCookieFromCheckbox (id) {
     var name = $(id).attr('id');
-    if ((/^style/).test (name)) {
-        name = "style";
+    if (name.includes('-')) {
+        var nameArray = name.split('-');
+        name = nameArray[0];
     }
     if ($(id).is(":checked"))
     {

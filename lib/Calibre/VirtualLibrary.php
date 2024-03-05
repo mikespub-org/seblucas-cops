@@ -51,7 +51,7 @@ class VirtualLibrary extends Base
             return Route::page($homepage, $params);
         }
         // URL Format: ...&vl=2.Short_Stories_in_English
-        $params[static::URL_PARAM] = strval($this->id) . '.' . Route::slugify($this->getTitle());
+        $params[static::URL_PARAM] = static::formatParameter($this->id, $this->getTitle());
         //if (Config::get('use_route_urls')) {
         //    return Route::page($homepage, [static::URL_PARAM => $this->getTitle()]);
         //}
@@ -68,11 +68,23 @@ class VirtualLibrary extends Base
     }
 
     /**
+     * Summary of formatParameter
+     * @param string|int $id
+     * @param string $title
+     * @return string
+     */
+    public static function formatParameter($id, $title)
+    {
+        // URL Format: ...&vl=2.Short_Stories_in_English
+        return strval($id) . '.' . Route::slugify($title);
+    }
+
+    /**
      * Summary of getLibraries
      * @param ?int $database
      * @return array<string, mixed>
      */
-    protected static function getLibraries($database = null)
+    public static function getLibraries($database = null)
     {
         $db = $database ?? 0;
         if (array_key_exists($db, self::$libraries)) {

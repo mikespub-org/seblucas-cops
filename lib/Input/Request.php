@@ -262,7 +262,7 @@ class Request
         if (isset($_COOKIE[$option])) {
             if (!is_null(Config::get($option)) && is_array(Config::get($option))) {
                 return explode(',', $_COOKIE[$option]);
-            } elseif (!preg_match('/[^A-Za-z0-9\-_.@]/', $_COOKIE[$option])) {
+            } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', $_COOKIE[$option])) {
                 return $_COOKIE[$option];
             }
         }
