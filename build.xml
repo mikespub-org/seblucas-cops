@@ -90,6 +90,7 @@
                 <exclude name="config_local.php" />
                 <exclude name="composer*" />
                 <exclude name="*.cache" />
+                <exclude name="*.cache/**" />
             </fileset>
         </zip>
 
