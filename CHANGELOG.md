@@ -7,8 +7,16 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
-1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
+1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
+
+2.5.x - 2024xxxx
+  * Changes in config_default.php file:
+    - new $config['cops_http_auth_user']
+    - new $config['calibre_user_database']
+    - add $config['cops_basic_authentication'] option
+  * Start use of Calibre user accounts database (TODO)
+  * Add support for authentication via reverse proxy
 
 2.5.0 - 20240306 Use virtual libraries + support epubjs reader
   * Changes in config_default.php file:

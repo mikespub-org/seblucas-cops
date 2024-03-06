@@ -382,10 +382,26 @@ $config ['cops_fetch_protect'] = '0';
 $config ['cops_normalized_search'] = '0';
 
 /*
+ * Get remote user authentication from server for:
+ * 1. basic authentication: use 'PHP_AUTH_USER' for Apache or Nginx if configured to pass Authorization header
+ * 2. auth done by reverse proxy: use 'REMOTE_USER' or 'X-WEBAUTH-USER' or ... depending on auth proxy config
+ * In the 2nd case, authentication is already done by the reverse proxy, and only the remote user is passed
+ */
+$config['cops_http_auth_user'] = 'PHP_AUTH_USER';
+
+/*
+ * Calibre user accounts database as configured for content server
+ * e.g. '/config/.config/calibre/server-users.sqlite' - WARNING: passwords are in clear!
+ * This can be used to get user info for auth done by reverse proxy, or to verify password for basic authentication
+ */
+$config['calibre_user_database'] = null;
+
+/*
  * Enable PHP password protection (You can use if htpasswd is not possible for you)
- * If possible prefer htpasswd !
+ * If possible prefer htpasswd or authentication done by reverse proxy!
  * array( "username" => "xxx", "password" => "secret") : Enable PHP password protection
- * NULL : Disable PHP password protection (You can still use htpasswd)
+ * NULL : Disable PHP password protection (You can still use htpasswd or reverse proxy)
+ * $config['calibre_user_database'] : Calibre user accounts database - WARNING: passwords are in clear!
  */
 $config['cops_basic_authentication'] = null;
 

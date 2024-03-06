@@ -138,9 +138,13 @@ class Request
                 $this->urlParams[$name] = $_GET[$name];
             }
         }
-        // @todo get virtual library from option (see customize)
+        // get virtual library from option (see customize)
         if (!isset($this->urlParams['vl']) && !empty($this->option('virtual_library'))) {
             $this->urlParams['vl'] = $this->option('virtual_library');
+        }
+        if (!empty(Config::get('calibre_user_database'))) {
+            $user = $this->getUserName();
+            // @todo use restriction etc. from Calibre user database
         }
         $this->queryString = $_SERVER['QUERY_STRING'] ?? '';
     }
@@ -355,6 +359,18 @@ class Request
     }
 
     /**
+     * Summary of getUserName
+     * @param ?string $name
+     * @return string|null
+     */
+    public function getUserName($name = null)
+    {
+        $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
+        $name ??= $this->server($http_auth_user);
+        return $name;
+    }
+
+    /**
      * Summary of getSorted
      * @param ?string $default
      * @return ?string
@@ -432,26 +448,6 @@ class Request
             return true;
         }
         return false;
-    }
-
-    /**
-     * Summary of verifyLogin
-     * @param array<mixed> $serverVars
-     * @return bool
-     */
-    public static function verifyLogin($serverVars = null)
-    {
-        $serverVars ??= $_SERVER;
-        if (!is_null(Config::get('basic_authentication')) &&
-          is_array(Config::get('basic_authentication'))) {
-            $basicAuth = Config::get('basic_authentication');
-            if (!isset($serverVars['PHP_AUTH_USER']) ||
-              (($serverVars['PHP_AUTH_USER'] != $basicAuth['username'] ||
-                $serverVars['PHP_AUTH_PW'] != $basicAuth['password']))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
