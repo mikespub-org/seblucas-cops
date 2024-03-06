@@ -46,6 +46,7 @@
                 <exclude name="vendor/maennchen/zipstream-php/.phpdoc/**" />
                 <exclude name="vendor/maennchen/zipstream-php/guides/**" />
                 <exclude name="vendor/maennchen/zipstream-php/test/**" />
+                <exclude name="vendor/mikespub/epubjs-reader/src/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/app/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/assets/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/test/**" />

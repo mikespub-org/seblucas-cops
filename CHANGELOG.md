@@ -10,11 +10,12 @@ x.x.x - TODO
 1.5.x - 2023xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.4.x - 2024xxxx
+2.5.0 - 20240306 Use virtual libraries + support epubjs reader
   * Changes in config_default.php file:
     - new $config['cops_virtual_library']
+    - new $config['cops_epub_reader']
   * Select virtual library via customize page or config_local
-  * Propose epubjs-reader as alternative for monocle (dev only)
+  * Propose epubjs-reader as alternative for monocle
   * Clarify WebDriver tests with selenium container (dev only)
   * Split off index page and filter by virtual library
 

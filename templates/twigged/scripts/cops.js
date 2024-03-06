@@ -29,5 +29,8 @@ function initiateTwig(url, theme, templates = 'templates') {
             window.history.replaceState(url, "", window.location);
         }
         handleLinks ();
+    }).fail(function (error) {
+        document.write (error.responseText);
+        console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
     });
 }

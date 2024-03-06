@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "220c05223289240ba1c7a10f78434a39",
+    "content-hash": "711378987ecb2b7afd26b2dc7d95e41d",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -88,6 +88,51 @@
             "time": "2023-06-21T14:59:35+00:00"
         },
         {
+            "name": "mikespub/epubjs-reader",
+            "version": "2024.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
+                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
+                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
+                "shasum": ""
+            },
+            "suggest": {
+                "mikespub/seblucas-cops": "COPS - Calibre OPDS (and HTML) PHP Server"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "fchasen",
+                    "homepage": "https://github.com/futurepress/epubjs-reader",
+                    "role": "Developer"
+                },
+                {
+                    "name": "intity",
+                    "homepage": "https://github.com/intity/epubjs-reader",
+                    "role": "Developer"
+                },
+                {
+                    "name": "mikespub",
+                    "homepage": "https://github.com/mikespub-org/intity-epubjs-reader",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Epub.js Reader with zipfs.php",
+            "support": {
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.3.5"
+            },
+            "time": "2024-03-04T15:08:36+00:00"
+        },
+        {
             "name": "mikespub/php-epub-meta",
             "version": "2.2.2",
             "source": {
@@ -165,12 +210,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/FastRoute.git",
-                "reference": "0e4448becf138690c6cbdc521175b07c2412c238"
+                "reference": "d3ada013d0f683ad2a8d0614fc97917a6ab72ce9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/0e4448becf138690c6cbdc521175b07c2412c238",
-                "reference": "0e4448becf138690c6cbdc521175b07c2412c238",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/d3ada013d0f683ad2a8d0614fc97917a6ab72ce9",
+                "reference": "d3ada013d0f683ad2a8d0614fc97917a6ab72ce9",
                 "shasum": ""
             },
             "require": {
@@ -219,16 +264,16 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/FastRoute/issues",
-                "source": "https://github.com/nikic/FastRoute/tree/master"
+                "source": "https://github.com/nikic/FastRoute/tree/2.0.0-beta1"
             },
-            "time": "2024-02-06T21:23:15+00:00"
+            "time": "2024-03-04T23:46:43+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",
-            "version": "7.23.9",
+            "version": "7.24.0",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.23.9.tgz"
+                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.24.0.tgz"
             },
             "require": {
                 "npm-asset/regenerator-runtime": ">=0.14.0,<0.15.0"
@@ -1477,51 +1522,6 @@
             "time": "2024-03-02T13:41:27+00:00"
         },
         {
-            "name": "mikespub/epubjs-reader",
-            "version": "2024.3.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
-                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
-                "shasum": ""
-            },
-            "suggest": {
-                "mikespub/seblucas-cops": "COPS - Calibre OPDS (and HTML) PHP Server"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "fchasen",
-                    "homepage": "https://github.com/futurepress/epubjs-reader",
-                    "role": "Developer"
-                },
-                {
-                    "name": "intity",
-                    "homepage": "https://github.com/intity/epubjs-reader",
-                    "role": "Developer"
-                },
-                {
-                    "name": "mikespub",
-                    "homepage": "https://github.com/mikespub-org/intity-epubjs-reader",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Epub.js Reader with zipfs.php",
-            "support": {
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.3.5"
-            },
-            "time": "2024-03-04T15:08:36+00:00"
-        },
-        {
             "name": "myclabs/deep-copy",
             "version": "1.11.1",
             "source": {
@@ -1582,16 +1582,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
-                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/139676794dc1e9231bf7bcd123cfc0c99182cb13",
+                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13",
                 "shasum": ""
             },
             "require": {
@@ -1634,9 +1634,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.2"
             },
-            "time": "2024-02-21T19:24:10+00:00"
+            "time": "2024-03-05T20:51:40+00:00"
         },
         {
             "name": "opis/json-schema",
@@ -4037,16 +4037,16 @@
         },
         {
             "name": "symfony/http-client",
-            "version": "v6.4.4",
+            "version": "v6.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "aa6281ddb3be1b3088f329307d05abfbbeb97649"
+                "reference": "f3c86a60a3615f466333a11fd42010d4382a82c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/aa6281ddb3be1b3088f329307d05abfbbeb97649",
-                "reference": "aa6281ddb3be1b3088f329307d05abfbbeb97649",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/f3c86a60a3615f466333a11fd42010d4382a82c7",
+                "reference": "f3c86a60a3615f466333a11fd42010d4382a82c7",
                 "shasum": ""
             },
             "require": {
@@ -4110,7 +4110,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v6.4.4"
+                "source": "https://github.com/symfony/http-client/tree/v6.4.5"
             },
             "funding": [
                 {
@@ -4126,7 +4126,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-14T16:28:12+00:00"
+            "time": "2024-03-02T12:45:30+00:00"
         },
         {
             "name": "symfony/http-client-contracts",

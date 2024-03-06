@@ -1131,8 +1131,9 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Customize COPS UI", $currentPage->title);
-        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("Template", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Virtual library", $currentPage->entryArray [7]->title);
         $this->assertFalse($currentPage->containsBook());
     }
 }

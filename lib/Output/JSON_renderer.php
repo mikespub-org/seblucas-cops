@@ -346,7 +346,7 @@ class JSONRenderer
         try {
             $currentPage->InitializeContent();
         } catch (Exception $e) {
-            Request::notFound(static::$endpoint, $e->getMessage());
+            Request::notFound(static::$endpoint, $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
         }
 
         // adapt endpoint based on $request e.g. for rest api

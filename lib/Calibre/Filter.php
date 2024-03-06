@@ -225,7 +225,7 @@ class Filter
             if (!array_key_exists($match['attr'], static::SEARCH_FIELDS)) {
                 $match['attr'] .= 's';
                 if (!array_key_exists($match['attr'], static::SEARCH_FIELDS)) {
-                    throw new UnexpectedValueException('Invalid search criteria ' . $match['attr']);
+                    throw new UnexpectedValueException('Unsupported search field: ' . $match['attr']);
                 }
             }
             // find exact match
@@ -237,7 +237,7 @@ class Filter
                 $replace = str_replace($match[0], $filterString, $replace);
                 array_push($params, $instance->id);
             } else {
-                throw new UnexpectedValueException('Invalid search criteria ' . $match['attr'] . '=' . $match['value']);
+                throw new UnexpectedValueException('Unsupported search criteria: ' . $match['attr'] . '=' . $match['value']);
             }
         }
 

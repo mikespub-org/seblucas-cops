@@ -106,7 +106,7 @@ class EPubReader
      */
     public static function getReader($idData, $request)
     {
-        $version = $request->get('version', 'monocle');
+        $version = $request->get('version', Config::get('epub_reader', 'monocle'));
         if ($version == 'epubjs') {
             return static::getEpubjsReader($idData, $request);
         }

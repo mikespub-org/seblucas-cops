@@ -528,3 +528,10 @@ $config['cops_use_route_urls'] = '0';
  * $ php -r 'echo bin2hex(random_bytes(20));'
  */
 $config['cops_api_key'] = '';
+
+/*
+ * Choose preferred epub reader when viewing epub files online:
+ * 'monocle' (default)
+ * 'epubjs'
+ */
+$config['cops_epub_reader'] = 'monocle';

@@ -458,9 +458,10 @@ class Request
      * Summary of notFound
      * @param string|null $home
      * @param string|null $error
+     * @param array<string, mixed> $params
      * @return never
      */
-    public static function notFound($home = null, $error = null)
+    public static function notFound($home = null, $error = null, $params = [])
     {
         header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1') . ' 404 Not Found');
         header('Status: 404 Not Found');
@@ -468,7 +469,7 @@ class Request
         $_SERVER['REDIRECT_STATUS'] = 404;
         // default to script basename or null if undefined
         $home ??= basename($_SERVER['SCRIPT_NAME'] ?? '') ?: null;
-        $data = ['link' => Route::url($home)];
+        $data = ['link' => Route::url($home, null, $params)];
         if (!empty($error)) {
             $data['error'] = htmlspecialchars($error);
             $template = 'templates/error.html';
