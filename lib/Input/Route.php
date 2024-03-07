@@ -86,6 +86,10 @@ class Route
         "/calres/{db}/{alg}/{digest}" => ["endpoint" => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route
         "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => ["endpoint" => "zipfs"],
+        "/loader/{action}/{dbNum}/{authorId}" => ["endpoint" => "loader"],
+        "/loader/{action}/{dbNum}" => ["endpoint" => "loader"],
+        "/loader/{action}" => ["endpoint" => "loader"],
+        "/loader" => ["endpoint" => "loader"],
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;

@@ -167,6 +167,7 @@ class RestApiTest extends TestCase
             "restapi.php?page=23&id=1&a=1" => "restapi.php/ratings/1?a=1",
             "calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7" => "restapi.php/calres/0/xxh64/7c301792c52eebf7",
             "zipfs.php?db=0&idData=20&component=META-INF%2Fcontainer.xml" => "restapi.php/zipfs/0/20/META-INF/container.xml",
+            "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "restapi.php/loader/wd_author/0/1?matchId=Q35610",
         ];
     }
 
@@ -234,6 +235,7 @@ class RestApiTest extends TestCase
         $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute(["endpoint" => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
         $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute(["endpoint" => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
         $this->assertNull(Route::getPageRoute(["endpoint" => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
+        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute(["endpoint" => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
     }
 
     /**

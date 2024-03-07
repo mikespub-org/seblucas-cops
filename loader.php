@@ -1,7 +1,7 @@
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) Epub Loader (example)
- * URL format: loader.php?action={action}&dbnum={dbNum}&...
+ * URL format: loader.php/{action}/{dbNum}/{authorId}?...
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     mikespub
