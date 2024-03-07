@@ -15,6 +15,7 @@ x.x.x - TODO
     - new $config['cops_http_auth_user']
     - new $config['calibre_user_database']
     - add $config['cops_basic_authentication'] option
+  * Upgrade mikespub/epub-loader to 2.5 to use route urls (dev only)
   * Start use of Calibre user accounts database (TODO)
   * Add support for authentication via reverse proxy
 

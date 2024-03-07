@@ -5,7 +5,7 @@
 <ul>
 {% for action, actionInfo in actions %}
 	<li>
-		<a href="{{endpoint}}?action={{action}}&dbnum={{dbNum}}">{{actionInfo}}</a>
+		<a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionInfo}}</a>
 	</li>
 {% endfor %}
 </ul>

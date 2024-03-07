@@ -88,7 +88,7 @@
 	<div class="content">
 		{% block content %}
 			{% if actionTitle %}
-			<div><p><a href="{{endpoint}}?action={{action}}">{{actionTitle}}</a></p></div>
+			<div><p><a href="{{endpoint}}/{{action}}">{{actionTitle}}</a></p></div>
 			{% endif %}
 			{{result|raw}}
 		{% endblock content %}

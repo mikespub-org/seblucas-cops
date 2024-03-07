@@ -123,11 +123,6 @@ class Request
             foreach ($params as $name => $value) {
                 $this->urlParams[$name] = $value;
             }
-        } elseif (!empty($path)) {
-            // make unexpected pathinfo visible for now...
-            http_response_code(500);
-            echo 'Unexpected PATH_INFO in request';
-            return;
         }
         if (!empty($_GET)) {
             foreach ($_GET as $name => $value) {

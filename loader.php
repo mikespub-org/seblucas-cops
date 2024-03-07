@@ -9,6 +9,7 @@
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use Marsender\EPubLoader\RequestHandler;
 use Marsender\EPubLoader\App\ExtraActions;
 
@@ -32,7 +33,7 @@ if (!is_writable($cacheDir)) {
 
 // get the global config for epub-loader from somewhere
 $gConfig = [];
-$gConfig['endpoint'] = 'loader.php';
+$gConfig['endpoint'] = Route::url(Config::ENDPOINT['loader']);
 $gConfig['app_name'] = 'COPS Loader';
 $gConfig['version'] = Config::VERSION;
 $gConfig['admin_email'] = '';
@@ -54,6 +55,8 @@ $gConfig['actions']['gb_volume'] = 'Search Google Books Volume';
 $gConfig['actions']['ol_author'] = 'Find OpenLibrary author';
 $gConfig['actions']['ol_books'] = 'Find OpenLibrary books';
 $gConfig['actions']['ol_work'] = 'Find OpenLibrary work';
+$gConfig['actions']['notes'] = 'Get Calibre Notes';
+$gConfig['actions']['resource'] = 'Get Calibre Resource';
 $gConfig['actions']['hello_world'] = 'Example: Hello, World - see app/example.php';
 //$gConfig['actions']['goodbye'] = 'Example: Goodbye - see app/example.php';
 
@@ -66,10 +69,16 @@ foreach ($calibreDir as $name => $path) {
     $gConfig['databases'][] = ['name' => $name, 'db_path' => rtrim($path, '/'), 'epub_path' => '.'];
 }
 
-// get the current action and dbNum if any
+// don't try to match path params here
 $request = new Request();
-$action = $request->get('action');
-$dbNum = $request->getId('dbnum');
+$path = $request->path('/');
+$path = substr($path, 1);
+[$action, $dbNum, $itemId, $other] = explode('/', $path . '///', 4);
+$action = $action ?: null;
+$dbNum = ($dbNum !== '') ? (int) $dbNum : null;
+if (!empty($itemId)) {
+    $request->set('authorId', $itemId);
+}
 $urlParams = $request->urlParams;
 
 // you can define extra actions for your app - see example.php
