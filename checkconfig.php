@@ -6,7 +6,7 @@
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
- *
+ * @author     mikespub
  */
 
 use SebLucas\Cops\Calibre\Database;
@@ -185,6 +185,26 @@ if (extension_loaded('zlib')) {
 } else {
     echo 'Please make sure zlib is enabled';
 }
+?>
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if the base URL looks OK</h2>
+            <h4>
+            <?php
+$base = dirname($_SERVER['SCRIPT_NAME']);
+if (!str_ends_with($base, '/')) {
+    $base .= '/';
+}
+echo 'Base URL detected by the script: ' . $base . '<br>';
+echo 'Full URL specified in $config[\'cops_full_url\']: ' . $config['cops_full_url'] . '<br><br>';
+echo 'SCRIPT_NAME: ' . ($_SERVER['SCRIPT_NAME'] ?? '') . '<br>';
+echo 'HTTP_HOST: ' . ($_SERVER['HTTP_HOST'] ?? '') . '<br>';
+echo 'SERVER_NAME: ' . ($_SERVER['SERVER_NAME'] ?? '') . '<br>';
+echo 'SERVER_ADDR: ' . ($_SERVER['SERVER_ADDR'] ?? '') . '<br>';
+echo 'SERVER_PORT: ' . ($_SERVER['SERVER_PORT'] ?? '') . '<br>';
+echo 'REQUEST_SCHEME: ' . ($_SERVER['REQUEST_SCHEME'] ?? '') . '<br>';
+echo 'REQUEST_URI: ' . ($_SERVER['REQUEST_URI'] ?? '') . '<br>';
 ?>
             </h4>
         </article>

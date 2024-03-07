@@ -1,9 +1,12 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) class file
+ * COPS (Calibre OPDS PHP Server) default configuration
+ * Settings can be overridden in config_local.php and
+ * optional config_local.{remote_user}.php
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     mikespub
  */
 
 if (!isset($config)) {
@@ -28,8 +31,13 @@ $config['calibre_internal_directory'] = '';
 
 /*
  * Full URL prefix (with trailing /)
- * useful especially for Opensearch where a full URL is often required
- * For example Mantano, Aldiko and Marvin require it.
+ * useful where a full URL is required, COPS is behind a proxy or the script name shows the wrong place
+ * Older e-readers like Mantano, Aldiko and Marvin may require it for Opensearch too.
+ * e.g.
+ * $config['cops_full_url'] = '/cops/';
+ * $config['cops_full_url'] = 'http://localhost/cops/';
+ * $config['cops_full_url'] = 'http://192.168.1.xxx/cops/';
+ * $config['cops_full_url'] = 'https://www.domainname.com/cops/';
  */
 $config['cops_full_url'] = '';
 
