@@ -165,6 +165,8 @@ class RestApiTest extends TestCase
             "restapi.php?page=23&id=1" => "restapi.php/ratings/1",
             "restapi.php?page=22&a=1" => "restapi.php/ratings?a=1",
             "restapi.php?page=23&id=1&a=1" => "restapi.php/ratings/1?a=1",
+            "calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7" => "restapi.php/calres/0/xxh64/7c301792c52eebf7",
+            "zipfs.php?db=0&idData=20&component=META-INF%2Fcontainer.xml" => "restapi.php/zipfs/0/20/META-INF/container.xml",
         ];
     }
 
@@ -192,8 +194,12 @@ class RestApiTest extends TestCase
     {
         $params = [];
         parse_str(parse_url($link, PHP_URL_QUERY), $params);
-        $page = $params["page"];
+        $page = $params["page"] ?? null;
         unset($params["page"]);
+        $endpoint = parse_url($link, PHP_URL_PATH);
+        if ($endpoint !== RestApi::$endpoint) {
+            $params['endpoint'] = str_replace('.php', '', $endpoint);
+        }
         $test = RestApi::$endpoint . Route::page($page, $params);
         $this->assertEquals($expected, $test);
     }
@@ -212,11 +218,22 @@ class RestApiTest extends TestCase
         $endpoint = array_shift($parts);
         $path = '/' . implode('/', $parts);
         $params = Route::match($path);
+        if (!empty($params['endpoint']) && array_key_exists($params['endpoint'], Config::ENDPOINT)) {
+            $endpoint = Config::ENDPOINT[$params['endpoint']];
+            unset($params['endpoint']);
+        }
         $test = $endpoint . '?' . http_build_query($params);
         if (!empty($query)) {
             $test .= '&' . $query;
         }
         $this->assertEquals($expected, $test);
+    }
+
+    public function testRouteGetPageRoute(): void
+    {
+        $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute(["endpoint" => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
+        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute(["endpoint" => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
+        $this->assertNull(Route::getPageRoute(["endpoint" => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
     }
 
     /**

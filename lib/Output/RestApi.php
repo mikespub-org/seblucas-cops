@@ -147,6 +147,7 @@ class RestApi
                 $result = $params;
             } else {
                 $request = $this->setParams($params);
+                // @todo extra routes supported by other endpoints
                 $result = $this->getJson();
             }
         }

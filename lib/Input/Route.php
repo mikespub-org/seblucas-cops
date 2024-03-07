@@ -83,9 +83,9 @@ class Route
         "/preferences/{key}" => PageId::REST_API,
         "/preferences" => PageId::REST_API,
         // @todo extra routes supported by other endpoints
-        "/calres/{db}/{alg}/{digest}" => PageId::CALIBRE_RESOURCE,
-        // @todo support custom pattern for route placeholders - see nikic/fast-route
-        "/zipfs/{db}/{idData}/{component:.+}" => PageId::EPUBJS_ZIPFS,
+        "/calres/{db}/{alg}/{digest}" => ["endpoint" => "calres"],
+        // support custom pattern for route placeholders - see nikic/fast-route
+        "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => ["endpoint" => "zipfs"],
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
@@ -375,8 +375,8 @@ class Route
                 unset($subst[$key]);
             }
             $found = [];
-            // check and replace path params
-            if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
+            // check and replace path params + support custom patterns - see nikic/fast-route
+            if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $route, $found)) {
                 if (in_array('ignore', $found[1])) {
                     $subst['ignore'] = 'ignore';
                 }
@@ -384,14 +384,25 @@ class Route
                     continue;
                 }
                 foreach ($found[1] as $param) {
+                    $pattern = '';
+                    if (str_contains($param, ':')) {
+                        [$param, $pattern] = explode(':', $param);
+                    }
                     if (!isset($subst[$param])) {
                         continue 2;
                     }
                     $value = $subst[$param];
+                    if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', $value)) {
+                        continue 2;
+                    }
                     if (in_array($param, ['title', 'author'])) {
                         $value = static::slugify($value);
                     }
-                    $route = str_replace('{' . $param . '}', "$value", $route);
+                    if (!empty($pattern)) {
+                        $route = str_replace('{' . $param . ':' . $pattern . '}', "$value", $route);
+                    } else {
+                        $route = str_replace('{' . $param . '}', "$value", $route);
+                    }
                     unset($subst[$param]);
                 }
             }
