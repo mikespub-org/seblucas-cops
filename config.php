@@ -1,9 +1,10 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) class file
+ * COPS (Calibre OPDS PHP Server) config loader
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     mikespub
  */
 
 require_once __DIR__ . '/vendor/autoload.php';

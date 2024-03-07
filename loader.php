@@ -1,10 +1,10 @@
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) Epub Loader (example)
+ * URL format: loader.php?action={action}&dbnum={dbNum}&...
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     mikespub
- *
  */
 
 use SebLucas\Cops\Input\Config;

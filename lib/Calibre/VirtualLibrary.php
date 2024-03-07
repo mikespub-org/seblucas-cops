@@ -50,7 +50,7 @@ class VirtualLibrary extends Base
         if (empty($this->id)) {
             return Route::page($homepage, $params);
         }
-        // URL Format: ...&vl=2.Short_Stories_in_English
+        // URL format: ...&vl=2.Short_Stories_in_English
         $params[static::URL_PARAM] = static::formatParameter($this->id, $this->getTitle());
         //if (Config::get('use_route_urls')) {
         //    return Route::page($homepage, [static::URL_PARAM => $this->getTitle()]);
@@ -75,7 +75,7 @@ class VirtualLibrary extends Base
      */
     public static function formatParameter($id, $title)
     {
-        // URL Format: ...&vl=2.Short_Stories_in_English
+        // URL format: ...&vl=2.Short_Stories_in_English
         return strval($id) . '.' . Route::slugify($title);
     }
 

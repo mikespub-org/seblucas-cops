@@ -3,6 +3,7 @@
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) Configuration check
+ * URL format: checkconfig.php?err={err}&full={full}
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>

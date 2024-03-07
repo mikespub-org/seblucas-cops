@@ -1,11 +1,11 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) datatables endpoint
+ * COPS (Calibre OPDS PHP Server) endpoint for datatables (TODO)
+ * URL format: tables.php
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
- *
  */
 
 use SebLucas\Cops\Input\Route;

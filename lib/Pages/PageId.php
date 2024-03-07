@@ -47,6 +47,8 @@ class PageId
     public const ALL_PREFERENCES = "48";
     public const PREFERENCE_DETAIL = "49";
     public const ALL_BOOKS_YEAR = "50";
+    public const EPUBJS_ZIPFS = "95";
+    public const CALIBRE_RESOURCE = "97";
     public const REST_API = "98";
     public const FILTER = "99";
     public const ERROR = "100";

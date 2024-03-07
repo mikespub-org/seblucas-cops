@@ -1,19 +1,17 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) main script
+ * COPS (Calibre OPDS PHP Server) endpoint for OPDS 2.0 feed (dev only)
+ * URL format: opds.php{/route}?query={query} etc.
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
- *
  */
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 //use SebLucas\Cops\Output\OPDSRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
 use SebLucas\Cops\Pages\PageId;
-use Kiwilan\Opds\OpdsResponse;
 
 require_once __DIR__ . '/config.php';
 

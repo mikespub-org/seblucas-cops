@@ -82,6 +82,10 @@ class Route
         "/notes" => PageId::REST_API,
         "/preferences/{key}" => PageId::REST_API,
         "/preferences" => PageId::REST_API,
+        // @todo extra routes supported by other endpoints
+        "/calres/{db}/{alg}/{digest}" => PageId::CALIBRE_RESOURCE,
+        // @todo support custom pattern for route placeholders - see nikic/fast-route
+        "/zipfs/{db}/{idData}/{component:.+}" => PageId::EPUBJS_ZIPFS,
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;

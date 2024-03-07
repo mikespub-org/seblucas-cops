@@ -1,6 +1,7 @@
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) endpoint for epubjs-reader
+ * URL format: zipfs.php/{db}/{idData}/{component}
  *
  * @author mikespub
  */
@@ -14,7 +15,6 @@ if (php_sapi_name() === 'cli') {
     return;
 }
 
-// URL format: zipfs.php/{db}/{idData}/{component}
 // don't try to match path params here
 $request = new Request(false);
 $path = $request->path();
