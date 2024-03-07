@@ -405,7 +405,11 @@ navigateTo = function (url) {
             updatePage (data);
         }).fail(function (error) {
             window.history.pushState(jsonurl, "", url);
-            $("#error").html (error.responseText);
+            if (error.responseText) {
+                $("#error").html (error.responseText);
+            } else {
+                $("#error").html ('Error loading url: ' + encodeURI(jsonurl));
+            }
             console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
         });
     }
@@ -562,7 +566,11 @@ function initiateAjax (url, theme, templates) {
         }
         handleLinks ();
     }).fail(function (error) {
-        document.write (error.responseText);
+        if (error.responseText) {
+            document.write (error.responseText);
+        } else {
+            document.write ('Error loading templates from directory "' + encodeURI(templates + '/' + theme) + '/" for url: ' + encodeURI(url));
+        }
         console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
     });
 }
@@ -593,7 +601,11 @@ function initiateTwig(url, theme, templates = 'templates') {
         }
         handleLinks ();
     }).fail(function (error) {
-        document.write (error.responseText);
+        if (error.responseText) {
+            document.write (error.responseText);
+        } else {
+            document.write ('Error loading templates from directory "' + encodeURI(templates + '/' + theme) + '/" for url: ' + encodeURI(url));
+        }
         console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
     });
 }

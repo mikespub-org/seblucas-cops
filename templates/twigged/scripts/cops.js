@@ -30,7 +30,11 @@ function initiateTwig(url, theme, templates = 'templates') {
         }
         handleLinks ();
     }).fail(function (error) {
-        document.write (error.responseText);
+        if (error.responseText) {
+            document.write (error.responseText);
+        } else {
+            document.write ('Error loading templates from directory "' + encodeURI(templates + '/' + theme) + '/" for url: ' + encodeURI(url));
+        }
         console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
     });
 }
