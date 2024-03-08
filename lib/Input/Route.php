@@ -21,6 +21,7 @@ use function FastRoute\simpleDispatcher;
  */
 class Route
 {
+    public const ENDPOINT_PARAM = "endpoint";
     //public static $endpoint = Config::ENDPOINT["index"];
 
     /**
@@ -84,14 +85,14 @@ class Route
         "/preferences" => PageId::REST_API,
         "/user/details" => PageId::REST_API,
         "/user" => PageId::REST_API,
-        // @todo extra routes supported by other endpoints
-        "/calres/{db}/{alg}/{digest}" => ["endpoint" => "calres"],
+        // extra routes supported by other endpoints
+        "/calres/{db}/{alg}/{digest}" => [self::ENDPOINT_PARAM => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route
-        "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => ["endpoint" => "zipfs"],
-        "/loader/{action}/{dbNum}/{authorId}" => ["endpoint" => "loader"],
-        "/loader/{action}/{dbNum}" => ["endpoint" => "loader"],
-        "/loader/{action}" => ["endpoint" => "loader"],
-        "/loader" => ["endpoint" => "loader"],
+        "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [self::ENDPOINT_PARAM => "zipfs"],
+        "/loader/{action}/{dbNum}/{authorId}" => [self::ENDPOINT_PARAM => "loader"],
+        "/loader/{action}/{dbNum}" => [self::ENDPOINT_PARAM => "loader"],
+        "/loader/{action}" => [self::ENDPOINT_PARAM => "loader"],
+        "/loader" => [self::ENDPOINT_PARAM => "loader"],
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;

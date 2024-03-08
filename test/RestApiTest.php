@@ -199,7 +199,7 @@ class RestApiTest extends TestCase
         unset($params["page"]);
         $endpoint = parse_url($link, PHP_URL_PATH);
         if ($endpoint !== RestApi::$endpoint) {
-            $params['endpoint'] = str_replace('.php', '', $endpoint);
+            $params[Route::ENDPOINT_PARAM] = str_replace('.php', '', $endpoint);
         }
         $test = RestApi::$endpoint . Route::page($page, $params);
         $this->assertEquals($expected, $test);
@@ -219,9 +219,9 @@ class RestApiTest extends TestCase
         $endpoint = array_shift($parts);
         $path = '/' . implode('/', $parts);
         $params = Route::match($path);
-        if (!empty($params['endpoint']) && array_key_exists($params['endpoint'], Config::ENDPOINT)) {
-            $endpoint = Config::ENDPOINT[$params['endpoint']];
-            unset($params['endpoint']);
+        if (!empty($params[Route::ENDPOINT_PARAM]) && array_key_exists($params[Route::ENDPOINT_PARAM], Config::ENDPOINT)) {
+            $endpoint = Config::ENDPOINT[$params[Route::ENDPOINT_PARAM]];
+            unset($params[Route::ENDPOINT_PARAM]);
         }
         $test = $endpoint . '?' . http_build_query($params);
         if (!empty($query)) {
@@ -232,10 +232,10 @@ class RestApiTest extends TestCase
 
     public function testRouteGetPageRoute(): void
     {
-        $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute(["endpoint" => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
-        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute(["endpoint" => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
-        $this->assertNull(Route::getPageRoute(["endpoint" => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
-        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute(["endpoint" => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
+        $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute([Route::ENDPOINT_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
+        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
+        $this->assertNull(Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
+        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::ENDPOINT_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
     }
 
     /**
@@ -470,5 +470,65 @@ class RestApiTest extends TestCase
         unset($_SERVER[$http_auth_user]);
         unset($_SERVER['PATH_INFO']);
         Config::set('calibre_user_database', null);
+    }
+
+    public function testRunEndpointFalse(): void
+    {
+        // generate api key and pass along in request
+        $apiKey = bin2hex(random_bytes(20));
+        Config::set('api_key', $apiKey);
+        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
+        $_SERVER['PATH_INFO'] = '/zipfs/0/20/META-INF/container.xml';
+        $request = new Request();
+
+        $apiHandler = new RestApi($request);
+        $expected = [
+            "endpoint" => "zipfs.php",
+            "path" => "/0/20/META-INF/container.xml",
+            "params" => [
+                "db" => "0",
+                "idData" => "20",
+                "component" => "META-INF/container.xml",
+            ],
+        ];
+        $expected = json_encode($expected, JSON_UNESCAPED_SLASHES);
+        $test = $apiHandler->getOutput();
+        $this->assertEquals($expected, $test);
+
+        Config::set('api_key', null);
+        unset($_SERVER['HTTP_X_API_KEY']);
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    /**
+     * Summary of testRunEndpointTrue
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testRunEndpointTrue(): void
+    {
+        // generate api key and pass along in request
+        $apiKey = bin2hex(random_bytes(20));
+        Config::set('api_key', $apiKey);
+        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
+        $_SERVER['PATH_INFO'] = '/calres/0/xxh64/7c301792c52eebf7';
+        $request = new Request();
+        RestApi::$doRunEndpoint = true;
+
+        ob_start();
+        $apiHandler = new RestApi($request);
+        $test = $apiHandler->getOutput();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = 37341;
+        $this->assertEquals('', $test);
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+
+        RestApi::$doRunEndpoint = false;
+        Config::set('api_key', null);
+        unset($_SERVER['HTTP_X_API_KEY']);
+        unset($_SERVER['PATH_INFO']);
     }
 }

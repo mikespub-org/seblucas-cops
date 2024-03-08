@@ -28,6 +28,7 @@ class RestApi
 {
     public static string $endpoint = Config::ENDPOINT["restapi"];
     public static int $numberPerPage = 100;
+    public static bool $doRunEndpoint = false;  // @todo disabled for now
 
     /**
      * Summary of extra
@@ -122,6 +123,36 @@ class RestApi
     }
 
     /**
+     * Summary of runEndpoint
+     * @param string $path
+     * @param array<string, mixed> $params
+     * @param ?bool $run
+     * @return array<string, mixed>|null
+     */
+    public function runEndpoint($path, $params, $run = null)
+    {
+        if (empty($params[Route::ENDPOINT_PARAM]) || !array_key_exists($params[Route::ENDPOINT_PARAM], Config::ENDPOINT)) {
+            return ["error" => "Invalid endpoint"];
+        }
+        if (!$this->request->hasValidApiKey()) {
+            return ["error" => "Invalid api key"];
+        }
+        $endpoint = Config::ENDPOINT[$params[Route::ENDPOINT_PARAM]];
+        unset($params[Route::ENDPOINT_PARAM]);
+        $parts = array_slice(explode('/', $path), 2);
+        $path = '/' . implode('/', $parts);
+        // @todo run endpoint via handler someday
+        $run ??= static::$doRunEndpoint;
+        if ($run) {
+            $_SERVER['PATH_INFO'] = $path;
+            require dirname(__DIR__, 2) . '/' . $endpoint;
+            return null;
+        }
+        $result = ["endpoint" => $endpoint, "path" => $path, "params" => $params];
+        return $result;
+    }
+
+    /**
      * Summary of getScriptName
      * @param Request $request
      * @return string
@@ -147,9 +178,14 @@ class RestApi
             }
             if ($this->isExtra) {
                 $result = $params;
+            } elseif (!empty($params[Route::ENDPOINT_PARAM])) {
+                // extra routes supported by other endpoints
+                $result = $this->runEndpoint($path, $params);
+                if (is_null($result)) {
+                    return '';
+                }
             } else {
-                $request = $this->setParams($params);
-                // @todo extra routes supported by other endpoints
+                $this->setParams($params);
                 $result = $this->getJson();
             }
         }
@@ -368,16 +404,23 @@ class RestApi
             $params = [];
             $found = [];
             $queryString = http_build_query($queryParams);
-            if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
+            // support custom pattern for route placeholders - see nikic/fast-route
+            if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $route, $found)) {
                 foreach ($found[1] as $param) {
+                    $schema = [
+                        "type" => "string",
+                    ];
+                    if (str_contains($param, ':')) {
+                        [$param, $pattern] = explode(':', $param);
+                        $schema["pattern"] = '^' . $pattern . '$';
+                        $route = str_replace(':' . $pattern, '', $route);
+                    }
                     $queryString .= "&{$param}=" . '{' . $param . '}';
                     array_push($params, [
                         "name" => $param,
                         "in" => "path",
                         "required" => true,
-                        "schema" => [
-                            "type" => "string",
-                        ],
+                        "schema" => $schema,
                     ]);
                 }
             }
@@ -404,7 +447,11 @@ class RestApi
                     ],
                 ]);
             }
-            if (!str_starts_with($route, "/databases") && !in_array($route, ["/openapi", "/routes", "/about"])) {
+            if (
+                !str_starts_with($route, "/databases") &&
+                !in_array($route, ["/openapi", "/routes", "/about"]) &&
+                empty($queryParams[Route::ENDPOINT_PARAM])
+            ) {
                 array_push($params, [
                     '$ref' => "#/components/parameters/dbParam",
                 ]);
@@ -422,6 +469,12 @@ class RestApi
                 $result["paths"][$route]["get"]["summary"] .= " - with basic authentication";
                 $result["paths"][$route]["get"]["security"] = [
                     ["BasicAuth" => []],
+                ];
+            }
+            if (!empty($queryParams[Route::ENDPOINT_PARAM])) {
+                $result["paths"][$route]["get"]["summary"] .= " - with api key";
+                $result["paths"][$route]["get"]["security"] = [
+                    ["ApiKeyAuth" => []],
                 ];
             }
         }
