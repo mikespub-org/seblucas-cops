@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
+use SebLucas\Cops\Calibre\User;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -39,6 +40,7 @@ class RestApi
         "/routes" => [self::class, 'getRoutes'],
         "/notes" => [self::class, 'getNotes'],
         "/preferences" => [self::class, 'getPreferences'],
+        "/user" => [self::class, 'getUser'],
     ];
 
     /**
@@ -168,7 +170,11 @@ class RestApi
         $columns = CustomColumnType::getAllCustomColumns();
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Custom Columns", "baseurl" => $baseurl, "entries" => []];
+        $result = [
+            "title" => "Custom Columns",
+            "baseurl" => $baseurl,
+            "entries" => [],
+        ];
         foreach ($columns as $title => $column) {
             $column["navlink"] = Route::url($endpoint . "/custom/" . $column["id"], null, ["db" => $db]);
             array_push($result["entries"], $column);
@@ -189,10 +195,19 @@ class RestApi
         }
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Databases", "baseurl" => $baseurl, "entries" => []];
+        $result = [
+            "title" => "Databases",
+            "baseurl" => $baseurl,
+            "entries" => [],
+        ];
         $id = 0;
         foreach (Database::getDbNameList() as $key) {
-            array_push($result["entries"], ["class" => "Database", "title" => $key, "id" => $id, "navlink" => "{$baseurl}/databases/{$id}"]);
+            array_push($result["entries"], [
+                "class" => "Database",
+                "title" => $key,
+                "id" => $id,
+                "navlink" => "{$baseurl}/databases/{$id}",
+            ]);
             $id += 1;
         }
         return $result;
@@ -207,7 +222,10 @@ class RestApi
     public static function getDatabase($database, $request)
     {
         if (!Database::isMultipleDatabaseEnabled() && $database != 0) {
-            return ["title" => "Database Invalid", "entries" => []];
+            return [
+                "title" => "Database Invalid",
+                "entries" => [],
+            ];
         }
         $name = $request->get('name', null, '/^\w+$/');
         if (!empty($name)) {
@@ -223,7 +241,11 @@ class RestApi
         $type = $request->get('type', null, '/^\w+$/');
         if (in_array($type, ['table', 'view'])) {
             $title .= " Type $type";
-            $result = ["title" => $title, "baseurl" => $baseurl, "entries" => []];
+            $result = [
+                "title" => $title,
+                "baseurl" => $baseurl,
+                "entries" => [],
+            ];
             $entries = Database::getDbSchema($database, $type);
             foreach ($entries as $entry) {
                 $entry["navlink"] = "{$baseurl}/databases/{$database}/{$entry['tbl_name']}";
@@ -233,13 +255,21 @@ class RestApi
             $result["version"] = Database::getUserVersion($database);
             return $result;
         }
-        $result = ["title" => $title, "baseurl" => $baseurl, "entries" => []];
+        $result = [
+            "title" => $title,
+            "baseurl" => $baseurl,
+            "entries" => [],
+        ];
         $metadata = [
             "table" => "Tables",
             "view" => "Views",
         ];
         foreach ($metadata as $name => $title) {
-            array_push($result["entries"], ["class" => "Metadata", "title" => $title, "navlink" => "{$baseurl}/databases/{$database}?type={$name}"]);
+            array_push($result["entries"], [
+                "class" => "Metadata",
+                "title" => $title,
+                "navlink" => "{$baseurl}/databases/{$database}?type={$name}",
+            ]);
         }
         $result["version"] = Database::getUserVersion($database);
         return $result;
@@ -262,7 +292,11 @@ class RestApi
         $title .= " Table $name";
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => $title, "baseurl" => $baseurl, "entries" => []];
+        $result = [
+            "title" => $title,
+            "baseurl" => $baseurl,
+            "entries" => [],
+        ];
         if (!$request->hasValidApiKey()) {
             $result["error"] = "Invalid api key";
             return $result;
@@ -295,10 +329,40 @@ class RestApi
      */
     public static function getOpenApi($request)
     {
-        $result = ["openapi" => "3.0.3", "info" => ["title" => "COPS REST API", "version" => Config::VERSION]];
-        $result["servers"] = [["url" => Route::url(static::$endpoint), "description" => "COPS REST API Endpoint"]];
-        $result["components"] = ["securitySchemes" => ["ApiKeyAuth" => ["type" => "apiKey", "in" => "header", "name" => "X-API-KEY"]]];
-        $result["components"]["parameters"] = ["dbParam" => ["name" => "db", "in" => "query", "required" => false, "schema" => ["type" => "integer", "minimum" => 0]]];
+        $result = [
+            "openapi" => "3.0.3",
+            "info" => [
+                "title" => "COPS REST API",
+                "version" => Config::VERSION,
+            ],
+        ];
+        $result["servers"] = [
+            ["url" => Route::url(static::$endpoint), "description" => "COPS REST API Endpoint"],
+        ];
+        $result["components"] = [
+            "securitySchemes" => [
+                "ApiKeyAuth" => [
+                    "type" => "apiKey",
+                    "in" => "header",
+                    "name" => "X-API-KEY",
+                ],
+                "BasicAuth" => [
+                    "type" => "http",
+                    "scheme" => "basic",
+                ],
+            ],
+        ];
+        $result["components"]["parameters"] = [
+            "dbParam" => [
+                "name" => "db",
+                "in" => "query",
+                "required" => false,
+                "schema" => [
+                    "type" => "integer",
+                    "minimum" => 0,
+                ],
+            ],
+        ];
         $result["paths"] = [];
         foreach (Route::getRoutes() as $route => $queryParams) {
             $params = [];
@@ -307,21 +371,58 @@ class RestApi
             if (preg_match_all("~\{(\w+)\}~", $route, $found)) {
                 foreach ($found[1] as $param) {
                     $queryString .= "&{$param}=" . '{' . $param . '}';
-                    array_push($params, ["name" => $param, "in" => "path", "required" => true, "schema" => ["type" => "string"]]);
+                    array_push($params, [
+                        "name" => $param,
+                        "in" => "path",
+                        "required" => true,
+                        "schema" => [
+                            "type" => "string",
+                        ],
+                    ]);
                 }
             }
-            $result["paths"][$route] = ["get" => ["summary" => "Route to " . $queryString, "responses" => ["200" => ["description" => "Result of " . $queryString]]]];
+            if (!empty($queryParams["page"]) && $queryParams["page"] == PageId::REST_API) {
+                $queryString = substr($route, 1);
+            }
+            $result["paths"][$route] = [
+                "get" => [
+                    "summary" => "Route to " . $queryString,
+                    "responses" => [
+                        "200" => [
+                            "description" => "Result of " . $queryString,
+                        ],
+                    ],
+                ],
+            ];
             if ($route == "/databases/{db}") {
-                array_push($params, ["name" => "type", "in" => "query", "schema" => ["type" => "string", "enum" => ["table", "view"]]]);
+                array_push($params, [
+                    "name" => "type",
+                    "in" => "query",
+                    "schema" => [
+                        "type" => "string",
+                        "enum" => ["table", "view"],
+                    ],
+                ]);
             }
             if (!str_starts_with($route, "/databases") && !in_array($route, ["/openapi", "/routes", "/about"])) {
-                array_push($params, ['$ref' => "#/components/parameters/dbParam"]);
+                array_push($params, [
+                    '$ref' => "#/components/parameters/dbParam",
+                ]);
             }
             if (!empty($params)) {
                 $result["paths"][$route]["get"]["parameters"] = $params;
             }
             if ($route == "/databases/{db}/{name}") {
-                $result["paths"][$route]["get"]["security"] = [["ApiKeyAuth" => []]];
+                $result["paths"][$route]["get"]["summary"] .= " - with api key";
+                $result["paths"][$route]["get"]["security"] = [
+                    ["ApiKeyAuth" => []],
+                ];
+            }
+            if ($route == "/user" || $route == "/user/details") {
+                $result["paths"][$route]["get"]["summary"] .= " - with basic authentication";
+                $result["paths"][$route]["get"]["security"] = [
+                    ["BasicAuth" => []],
+                ];
             }
         }
         return $result;
@@ -336,9 +437,16 @@ class RestApi
     {
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Routes", "baseurl" => $baseurl, "entries" => []];
+        $result = [
+            "title" => "Routes",
+            "baseurl" => $baseurl,
+            "entries" => [],
+        ];
         foreach (Route::getRoutes() as $route => $queryParams) {
-            array_push($result["entries"], ["route" => $route, "params" => $queryParams]);
+            array_push($result["entries"], [
+                "route" => $route,
+                "params" => $queryParams,
+            ]);
         }
         return $result;
     }
@@ -357,9 +465,19 @@ class RestApi
         $db = $request->database();
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Notes", "baseurl" => $baseurl, "databaseId" => $db, "entries" => []];
+        $result = [
+            "title" => "Notes",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+            "entries" => [],
+        ];
         foreach (Note::getCountByType($db) as $type => $count) {
-            array_push($result["entries"], ["class" => "Notes Type", "title" => $type, "navlink" => Route::url("{$endpoint}/notes/{$type}", null, ["db" => $db]), "number" => $count]);
+            array_push($result["entries"], [
+                "class" => "Notes Type",
+                "title" => $type,
+                "navlink" => Route::url("{$endpoint}/notes/{$type}", null, ["db" => $db]),
+                "number" => $count,
+            ]);
         }
         return $result;
     }
@@ -379,14 +497,33 @@ class RestApi
         $db = $request->database();
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Notes for {$type}", "baseurl" => $baseurl, "databaseId" => $db, "entries" => []];
+        $result = [
+            "title" => "Notes for {$type}",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+            "entries" => [],
+        ];
         // @todo get item from notes + corresponding title from instance
         foreach (Note::getEntriesByType($type, $db) as $entry) {
             if (!empty($entry["title"])) {
                 $title = Route::slugify($entry["title"]);
-                array_push($result["entries"], ["class" => "Notes", "title" => $entry["title"], "id" => $entry["item"], "navlink" => Route::url("{$endpoint}/notes/{$type}/{$entry['item']}/{$title}", null, ["db" => $db]), "size" => $entry["size"], "timestamp" => $entry["mtime"]]);
+                array_push($result["entries"], [
+                    "class" => "Notes",
+                    "title" => $entry["title"],
+                    "id" => $entry["item"],
+                    "navlink" => Route::url("{$endpoint}/notes/{$type}/{$entry['item']}/{$title}", null, ["db" => $db]),
+                    "size" => $entry["size"],
+                    "timestamp" => $entry["mtime"],
+                ]);
             } else {
-                array_push($result["entries"], ["class" => "Notes", "title" => $type, "id" => $entry["item"], "navlink" => Route::url("{$endpoint}/notes/{$type}/{$entry['item']}", null, ["db" => $db]), "size" => $entry["size"], "timestamp" => $entry["mtime"]]);
+                array_push($result["entries"], [
+                    "class" => "Notes",
+                    "title" => $type,
+                    "id" => $entry["item"],
+                    "navlink" => Route::url("{$endpoint}/notes/{$type}/{$entry['item']}", null, ["db" => $db]),
+                    "size" => $entry["size"],
+                    "timestamp" => $entry["mtime"],
+                ]);
             }
         }
         return $result;
@@ -408,7 +545,11 @@ class RestApi
         }
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Note for {$type} #{$id}", "baseurl" => $baseurl, "databaseId" => $db];
+        $result = [
+            "title" => "Note for {$type} #{$id}",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+        ];
         $result = array_replace($result, (array) $note);
         $result["size"] = strlen($result["doc"]);
         $result["resources"] = [];
@@ -418,7 +559,13 @@ class RestApi
             $size = !empty($path) ? filesize($path) : 0;
             $mtime = !empty($path) ? filemtime($path) : 0;
             $link = $baseurl . $resource->getUri();
-            $result["resources"][$hash] = ["hash" => $resource->hash, "name" => $resource->name, "url" => $link, "size" => $size, "mtime" => $mtime];
+            $result["resources"][$hash] = [
+                "hash" => $resource->hash,
+                "name" => $resource->name,
+                "url" => $link,
+                "size" => $size,
+                "mtime" => $mtime,
+            ];
         }
         return $result;
     }
@@ -437,7 +584,12 @@ class RestApi
         $db = $request->database();
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Preferences", "baseurl" => $baseurl, "databaseId" => $db, "entries" => []];
+        $result = [
+            "title" => "Preferences",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+            "entries" => [],
+        ];
         foreach (Preference::getInstances($db) as $key => $preference) {
             if (is_array($preference->val)) {
                 $count = count($preference->val);
@@ -448,7 +600,12 @@ class RestApi
             } else {
                 $count = 0;
             }
-            array_push($result["entries"], ["class" => "Preference", "title" => $key, "navlink" => Route::url("{$endpoint}/preferences/" . rawurlencode($key), null, ["db" => $db]), "number" => $count]);
+            array_push($result["entries"], [
+                "class" => "Preference",
+                "title" => $key,
+                "navlink" => Route::url("{$endpoint}/preferences/" . rawurlencode($key), null, ["db" => $db]),
+                "number" => $count,
+            ]);
         }
         return $result;
     }
@@ -468,8 +625,39 @@ class RestApi
         }
         $endpoint = static::getScriptName($request);
         $baseurl = Route::url($endpoint);
-        $result = ["title" => "Preference for {$key}", "baseurl" => $baseurl, "databaseId" => $db];
+        $result = [
+            "title" => "Preference for {$key}",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+        ];
         $result = array_replace($result, (array) $preference);
+        return $result;
+    }
+
+    /**
+     * Summary of getUser
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getUser($request)
+    {
+        $username = $request->getUserName();
+        if (empty($username)) {
+            return ["error" => "Invalid username"];
+        }
+        $db = $request->database();
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $result = [
+            "title" => "User",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+        ];
+        $result["username"] = $username;
+        if ($request->path() == "/user/details") {
+            $user = User::getInstanceByName($username);
+            $result = array_replace($result, (array) $user);
+        }
         return $result;
     }
 }

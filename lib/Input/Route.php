@@ -82,6 +82,8 @@ class Route
         "/notes" => PageId::REST_API,
         "/preferences/{key}" => PageId::REST_API,
         "/preferences" => PageId::REST_API,
+        "/user/details" => PageId::REST_API,
+        "/user" => PageId::REST_API,
         // @todo extra routes supported by other endpoints
         "/calres/{db}/{alg}/{digest}" => ["endpoint" => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route

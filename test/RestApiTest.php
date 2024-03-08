@@ -432,4 +432,43 @@ class RestApiTest extends TestCase
         $expected = 1;
         $this->assertCount($expected, $test["val"]);
     }
+
+    public function testGetUserNoAuth(): void
+    {
+        $request = new Request();
+        $expected = "Invalid username";
+        $test = RestApi::getUser($request);
+        $this->assertEquals($expected, $test["error"]);
+    }
+
+    public function testGetUser(): void
+    {
+        $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
+        $_SERVER[$http_auth_user] = "admin";
+        $request = new Request();
+        $expected = "admin";
+        $test = RestApi::getUser($request);
+        $this->assertEquals($expected, $test["username"]);
+        unset($_SERVER[$http_auth_user]);
+    }
+
+    public function testGetUserDetails(): void
+    {
+        Config::set('calibre_user_database', __DIR__ . "/BaseWithSomeBooks/users.db");
+        $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
+        $_SERVER[$http_auth_user] = 'admin';
+        $_SERVER['PATH_INFO'] = '/user/details';
+        $request = new Request();
+
+        $expected = "admin";
+        $test = RestApi::getUser($request);
+        $this->assertEquals($expected, $test["username"]);
+
+        $expected = ['library_restrictions' => []];
+        $this->assertEquals($expected, $test["restriction"]);
+
+        unset($_SERVER[$http_auth_user]);
+        unset($_SERVER['PATH_INFO']);
+        Config::set('calibre_user_database', null);
+    }
 }
