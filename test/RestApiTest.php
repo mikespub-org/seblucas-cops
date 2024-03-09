@@ -325,9 +325,22 @@ class RestApiTest extends TestCase
         $expected = "Databases";
         $test = RestApi::getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
+        $expected = 1;
+        $this->assertCount($expected, $test["entries"]);
     }
 
     public function testGetDatabase(): void
+    {
+        $request = new Request();
+        $request->set('db', 0);
+        $expected = "Database Types";
+        $test = RestApi::getDatabases($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 2;
+        $this->assertCount($expected, $test["entries"]);
+    }
+
+    public function testGetDatabaseTable(): void
     {
         $request = new Request();
         $request->set('db', 0);
@@ -335,6 +348,8 @@ class RestApiTest extends TestCase
         $expected = "Database Type table";
         $test = RestApi::getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
+        $expected = 43;
+        $this->assertCount($expected, $test["entries"]);
     }
 
     public function testGetTable(): void

@@ -291,6 +291,7 @@ class RestApi
             $result["version"] = Database::getUserVersion($database);
             return $result;
         }
+        $title .= " Types";
         $result = [
             "title" => $title,
             "baseurl" => $baseurl,

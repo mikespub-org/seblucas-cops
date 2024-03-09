@@ -175,6 +175,41 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', []);
     }
 
+    public function testPageIndexWithVirtualLibrary(): void
+    {
+        $page = PageId::INDEX;
+        $request = new Request();
+
+        Config::set('calibre_virtual_libraries', ["*"]);
+        $request->set('vl', '2.Short_Stories_in_English');
+
+        $currentPage = PageId::getPage($page, $request);
+        $currentPage->InitializeContent();
+
+        $this->assertCount(9, $currentPage->entryArray);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("Series", $currentPage->entryArray [1]->title);
+        $this->assertEquals(1, $currentPage->entryArray [1]->numberOfElement);
+        $this->assertEquals("Publishers", $currentPage->entryArray [2]->title);
+        $this->assertEquals(1, $currentPage->entryArray [2]->numberOfElement);
+        $this->assertEquals("Tags", $currentPage->entryArray [3]->title);
+        $this->assertEquals(1, $currentPage->entryArray [3]->numberOfElement);
+        $this->assertEquals("Ratings", $currentPage->entryArray [4]->title);
+        $this->assertEquals(1, $currentPage->entryArray [4]->numberOfElement);
+        $this->assertEquals("Languages", $currentPage->entryArray [5]->title);
+        $this->assertEquals(1, $currentPage->entryArray [5]->numberOfElement);
+        $this->assertEquals("Virtual libraries", $currentPage->entryArray [6]->title);
+        $this->assertEquals(2, $currentPage->entryArray [6]->numberOfElement);
+        $this->assertEquals("All books", $currentPage->entryArray [7]->title);
+        $this->assertEquals(4, $currentPage->entryArray [7]->numberOfElement);
+        $this->assertEquals("Recent additions", $currentPage->entryArray [8]->title);
+        $this->assertEquals(4, $currentPage->entryArray [8]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+
+        Config::set('calibre_virtual_libraries', []);
+    }
+
     public function testPageAllCustom_Type4(): void
     {
         $page = PageId::ALL_CUSTOMS;

@@ -144,6 +144,46 @@ class JsonTest extends TestCase
         $this->assertEquals("La curée", $test["entries"][0]["title"]);
     }
 
+    public function testGetJsonIsPaginated(): void
+    {
+        Config::set('max_item_per_page', 5);
+        $page = PageId::AUTHOR_DETAIL;
+        $id = 1;
+
+        $request = new Request();
+        $request->set('page', $page);
+        $request->set('id', $id);
+        $test = JSONRenderer::getJson($request);
+
+        $this->assertEquals("Authors > Arthur Conan Doyle", $test["title"]);
+        $this->assertCount(5, $test["entries"]);
+        $this->assertEquals("The Lost World", $test["entries"][0]["title"]);
+
+        $this->assertEquals(1, $test["isPaginated"]);
+        $this->assertStringEndsWith("?page=3&id=1&n=2", $test["nextLink"]);
+
+        Config::set('max_item_per_page', 48);
+    }
+
+    public function testGetJsonHasFilter(): void
+    {
+        $page = PageId::ALL_RECENT_BOOKS;
+        $a = 1;
+
+        $request = new Request();
+        $request->set('page', $page);
+        $request->set('a', $a);
+        $test = JSONRenderer::getJson($request);
+
+        $this->assertEquals("Recent additions", $test["title"]);
+        $this->assertCount(8, $test["entries"]);
+        $this->assertEquals("The Hound of the Baskervilles", $test["entries"][0]["title"]);
+
+        $this->assertCount(1, $test["filters"]);
+        $this->assertEquals("Arthur Conan Doyle", $test["filters"][0]["title"]);
+        $this->assertStringEndsWith("?page=3&id=1&filter=1", $test["filters"][0]["navlink"]);
+    }
+
     public function testGetJsonSearch(): void
     {
         $page = PageId::OPENSEARCH_QUERY;

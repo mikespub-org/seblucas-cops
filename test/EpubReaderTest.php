@@ -171,4 +171,32 @@ class EpubReaderTest extends TestCase
         $check = 'application/xhtml+xml';
         $this->assertEquals($check, $data);
     }
+
+    /**
+     * Summary of testGetEpubjsReader
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testGetEpubjsReader(): void
+    {
+        $idData = 20;
+        $request = new Request();
+        $request->set('version', 'epubjs');
+
+        ob_start();
+        $data = EPubReader::getReader($idData, $request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $html = new DOMDocument();
+        $html->loadHTML($data);
+
+        $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
+        $check = "Alice's Adventures in Wonderland";
+        $this->assertEquals($check, $title);
+
+        $script = $html->getElementsByTagName('script')->item(2)->getAttribute('src');
+        $check = 'dist/js/libs/epub.min.js';
+        $this->assertStringContainsString($check, $script);
+    }
 }
