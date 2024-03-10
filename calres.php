@@ -17,14 +17,14 @@ require_once __DIR__ . '/config.php';
 $request = new Request(false);
 $path = $request->path();
 if (empty($path) || $path == '/') {
-    Request::notFound();
+    $request->notFound();
 }
 $path = substr($path, 1);
 if (!preg_match('/^\d+\/\w+\/\w+$/', $path)) {
-    Request::notFound();
+    $request->notFound();
 }
 [$database, $alg, $digest] = explode('/', $path);
 $hash = $alg . ':' . $digest;
 if (!Resource::sendImageResource($hash, null, intval($database))) {
-    Request::notFound();
+    $request->notFound();
 }

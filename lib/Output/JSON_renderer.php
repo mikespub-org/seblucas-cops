@@ -115,13 +115,13 @@ class JSONRenderer
         $database = $book->getDatabaseId();
 
         $cover = new Cover($book);
-        // set height for thumbnail here depending on opds vs. html
+        // set height for thumbnail here depending on opds vs. html (height x 2)
         if ($endpoint == Config::ENDPOINT['feed']) {
-            $height = intval(Config::get('opds_thumbnail_height')) * 2;
+            $thumb = "opds2";
         } else {
-            $height = intval(Config::get('html_thumbnail_height')) * 2;
+            $thumb = "html2";
         }
-        $out ["thumbnailurl"] = $cover->getThumbnailUri($endpoint, $height, false);
+        $out ["thumbnailurl"] = $cover->getThumbnailUri($endpoint, $thumb, false);
         $out ["coverurl"] = $cover->getCoverUri($endpoint) ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
         $out ["datas"] = [];
@@ -292,7 +292,7 @@ class JSONRenderer
             "url" => [
                 "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
                 "coverUrl" => Config::ENDPOINT["fetch"] . "?id={0}&db={1}",
-                "thumbnailUrl" => Config::ENDPOINT["fetch"] . "?height=" . Config::get('html_thumbnail_height') . "&id={0}&db={1}",
+                "thumbnailUrl" => Config::ENDPOINT["fetch"] . "?thumb=html&id={0}&db={1}",
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),
@@ -346,7 +346,7 @@ class JSONRenderer
         try {
             $currentPage->InitializeContent();
         } catch (Exception $e) {
-            Request::notFound(static::$endpoint, $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
+            $request->notFound(static::$endpoint, $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
         }
 
         // adapt endpoint based on $request e.g. for rest api

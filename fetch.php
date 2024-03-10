@@ -2,7 +2,7 @@
 /**
  * COPS (Calibre OPDS PHP Server) endpoint to fetch book covers or files
  * URL format: fetch.php?id={bookId}&type={type}&data={idData}&view={viewOnly}
- *          or fetch.php?id={bookId}&height={height} for book cover thumbnails
+ *          or fetch.php?id={bookId}&thumb={thumb} for book cover thumbnails
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
@@ -49,7 +49,7 @@ if (!$book) {
 // -DC- Add png type
 if ($type == 'jpg' || $type == 'png' || empty(Config::get('calibre_internal_directory'))) {
     if ($type == 'jpg' || $type == 'png') {
-        $file = $book->getFilePath($type);
+        $file = $book->getCoverFilePath($type);
     } else {
         $file = $book->getFilePath($type, $idData);
     }

@@ -81,13 +81,15 @@ $config['cops_subtitle_default'] = '';
 $config['cops_x_accel_redirect'] = '';
 
 /*
- * Height of thumbnail image for OPDS
+ * Height of thumbnail image for OPDS (thumb=opds)
+ * Note: book detail uses image height x 2 (thumb=opds2)
  */
 $config['cops_opds_thumbnail_height'] = '164';
 
 /*
-    * Height of thumbnail image for HTML
-    */
+ * Height of thumbnail image for HTML (thumb=html)
+ * Note: book detail uses image height x 2 (thumb=html2)
+ */
 $config['cops_html_thumbnail_height'] = '225';
 
 /*

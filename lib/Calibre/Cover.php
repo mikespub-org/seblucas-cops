@@ -82,9 +82,9 @@ class Cover
      */
     public function checkCoverFilePath()
     {
-        $cover = $this->book->getFilePath("jpg");
+        $cover = $this->book->getCoverFilePath("jpg");
         if ($cover === false || !file_exists($cover)) {
-            $cover = $this->book->getFilePath("png");
+            $cover = $this->book->getCoverFilePath("png");
         }
         if ($cover === false || !file_exists($cover)) {
             $this->coverFileName = null;
@@ -150,7 +150,7 @@ class Cover
         }
 
         // -DC- Use cover file name
-        //$file = $this->getFilePath('jpg');
+        //$file = $this->getCoverFilePath('jpg');
         $file = $this->coverFileName;
         // get image size
         if ($size = GetImageSize($file)) {
@@ -210,6 +210,27 @@ class Cover
         $type = $request->get('type', 'jpg');
         $width = $request->get('width');
         $height = $request->get('height');
+        $thumb = $request->get('thumb');
+        if (!empty($thumb) && empty($height)) {
+            switch ($thumb) {
+                case "opds2":
+                    $height = intval(Config::get('opds_thumbnail_height')) * 2;
+                    break;
+                case "opds":
+                    $height = intval(Config::get('opds_thumbnail_height'));
+                    break;
+                case "html2":
+                    $height = intval(Config::get('html_thumbnail_height')) * 2;
+                    break;
+                case "html":
+                    $height = intval(Config::get('html_thumbnail_height'));
+                    break;
+                default:
+                    // do we still want to allow variable height here?
+                    $height = intval($thumb);
+                    break;
+            }
+        }
         $mime = ($type == 'jpg') ? 'image/jpeg' : 'image/png';
         $file = $this->coverFileName;
 
@@ -301,13 +322,13 @@ class Cover
     /**
      * Summary of getThumbnailUri
      * @param string $endpoint
-     * @param int $height
+     * @param string $thumb
      * @param bool $useDefault
      * @return ?string
      */
-    public function getThumbnailUri($endpoint, $height, $useDefault = true)
+    public function getThumbnailUri($endpoint, $thumb, $useDefault = true)
     {
-        $link = $this->getThumbnailLink($height, $useDefault);
+        $link = $this->getThumbnailLink($thumb, $useDefault);
         if ($link) {
             return $link->hrefXhtml($endpoint);
         }
@@ -316,11 +337,11 @@ class Cover
 
     /**
      * Summary of getThumbnailLink
-     * @param int $height
+     * @param string $thumb
      * @param bool $useDefault
      * @return ?LinkEntry
      */
-    public function getThumbnailLink($height, $useDefault = true)
+    public function getThumbnailLink($thumb, $useDefault = true)
     {
         if (Config::get('thumbnail_handling') != "1" &&
             !empty(Config::get('thumbnail_handling'))) {
@@ -342,7 +363,7 @@ class Cover
                 $params['type'] = $ext;
             }
             if (Config::get('thumbnail_handling') != "1") {
-                $params['height'] = $height;
+                $params['thumb'] = $thumb;
             }
             return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
@@ -376,7 +397,7 @@ class Cover
     public static function findCoverFileName($book, $line)
     {
         // -DC- Use cover file name
-        //if (!file_exists($this->getFilePath('jpg'))) {
+        //if (!file_exists($this->getCoverFilePath('jpg'))) {
         //    // double check
         //    $this->hasCover = 0;
         //}

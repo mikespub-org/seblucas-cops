@@ -85,7 +85,7 @@ class Route
         "/preferences" => PageId::REST_API,
         "/user/details" => PageId::REST_API,
         "/user" => PageId::REST_API,
-        // extra routes supported by other endpoints
+        // extra routes supported by other endpoints (path starts with endpoint param)
         "/calres/{db}/{alg}/{digest}" => [self::ENDPOINT_PARAM => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route
         "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [self::ENDPOINT_PARAM => "zipfs"],
@@ -93,6 +93,9 @@ class Route
         "/loader/{action}/{dbNum}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader/{action}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader" => [self::ENDPOINT_PARAM => "loader"],
+        // check if the path starts with the endpoint param here
+        "/thumbs/{thumb}/{db}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
+        "/covers/{db}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;

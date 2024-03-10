@@ -441,15 +441,7 @@ class Book
     public function getFilePath($extension, $idData = null, $relative = false)
     {
         if ($extension == "jpg" || $extension == "png") {
-            if (empty($this->coverFileName)) {
-                return $this->path . '/cover.' . $extension;
-            } else {
-                $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
-                if ($ext == $extension) {
-                    return $this->coverFileName;
-                }
-            }
-            return false;
+            return $this->getCoverFilePath($extension);
         }
         $data = $this->getDataById($idData);
         if (!$data) {
@@ -457,6 +449,24 @@ class Book
         }
         $file = $data->name . "." . strtolower($data->format);
         return $this->path . '/' . $file;
+    }
+
+    /**
+     * @checkme always returns absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
+     * @param string $extension
+     * @return string|false string for file path, false for missing cover
+     */
+    public function getCoverFilePath($extension)
+    {
+        if (empty($this->coverFileName)) {
+            return $this->path . '/cover.' . $extension;
+        } else {
+            $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
+            if ($ext == $extension) {
+                return $this->coverFileName;
+            }
+        }
+        return false;
     }
 
     /**
@@ -482,7 +492,7 @@ class Book
             $epub->setDescription($this->getComment(false));
             $epub->setSubjects($this->getTagsName());
             // -DC- Use cover file name
-            // $epub->Cover2($this->getFilePath('jpg'), 'image/jpeg');
+            // $epub->Cover2($this->getCoverFilePath('jpg'), 'image/jpeg');
             $epub->setCoverFile($this->coverFileName, 'image/jpeg');
             $epub->setCalibre($this->uuid);
             $se = $this->getSerie();
@@ -549,8 +559,8 @@ class Book
             array_push($linkArray, $coverLink);
         }
         // @todo set height for thumbnail here depending on opds vs. html
-        $height = (int) Config::get('html_thumbnail_height');
-        $thumbnailLink = $cover->getThumbnailLink($height);
+        $thumb = 'html';
+        $thumbnailLink = $cover->getThumbnailLink($thumb);
         if ($thumbnailLink) {
             array_push($linkArray, $thumbnailLink);
         }

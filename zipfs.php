@@ -19,20 +19,19 @@ if (php_sapi_name() === 'cli') {
 $request = new Request(false);
 $path = $request->path();
 if (empty($path) || $path == '/') {
-    Request::notFound();
+    $request->notFound();
 }
 $path = substr($path, 1);
 $matches = [];
 if (!preg_match('/^(\d+)\/(\d+)\/(.+)$/', $path, $matches)) {
-    Request::notFound();
+    $request->notFound();
 }
 $database = $matches[1];
 $idData = intval($matches[2]);
 $component = $matches[3];
-$request->set('db', $database);
 
 try {
-    $book = Book::getBookByDataId($idData, $request->database());
+    $book = Book::getBookByDataId($idData, intval($database));
     if (!$book) {
         throw new Exception('Unknown data ' . $idData);
     }

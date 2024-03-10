@@ -168,6 +168,9 @@ class RestApiTest extends TestCase
             "calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7" => "restapi.php/calres/0/xxh64/7c301792c52eebf7",
             "zipfs.php?db=0&idData=20&component=META-INF%2Fcontainer.xml" => "restapi.php/zipfs/0/20/META-INF/container.xml",
             "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "restapi.php/loader/wd_author/0/1?matchId=Q35610",
+            "fetch.php?thumb=html&db=0&id=20" => "restapi.php/thumbs/html/0/20.jpg",
+            "fetch.php?thumb=opds&db=0&id=20" => "restapi.php/thumbs/opds/0/20.jpg",
+            "fetch.php?db=0&id=20" => "restapi.php/covers/0/20.jpg",
         ];
     }
 
@@ -236,6 +239,11 @@ class RestApiTest extends TestCase
         $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
         $this->assertNull(Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
         $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::ENDPOINT_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
+        $this->assertEquals("/thumbs/html/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "html"]));
+        $this->assertEquals("/thumbs/opds/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "opds"]));
+        $this->assertEquals("/thumbs/html2/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "html2"]));
+        $this->assertEquals("/thumbs/opds2/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "opds2"]));
+        $this->assertEquals("/covers/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20]));
     }
 
     /**
@@ -247,10 +255,8 @@ class RestApiTest extends TestCase
         return [
             "fetch.php?data=1&type=epub" => "/download/1/ignore.epub",
             "fetch.php?data=1&type=epub&view=1" => "/view/1/ignore.epub",
-            "fetch.php?data=1&type=png&height=225" => "/download/1/ignore.png?height=225",
             "fetch.php?data=1&db=0&type=epub" => "/download/1/0/ignore.epub",
             "fetch.php?data=1&db=0&type=epub&view=1" => "/view/1/0/ignore.epub",
-            "fetch.php?data=1&db=0&type=png&height=225" => "/download/1/0/ignore.png?height=225",
         ];
     }
 
@@ -542,6 +548,35 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, strlen($output));
 
         RestApi::$doRunEndpoint = false;
+        Config::set('api_key', null);
+        unset($_SERVER['HTTP_X_API_KEY']);
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testRunEndpointDifferentRoot(): void
+    {
+        // generate api key and pass along in request
+        $apiKey = bin2hex(random_bytes(20));
+        Config::set('api_key', $apiKey);
+        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
+        $_SERVER['PATH_INFO'] = '/thumbs/html/0/17.jpg';
+        $request = new Request();
+
+        $apiHandler = new RestApi($request);
+        $expected = [
+            "endpoint" => "fetch.php",
+            // check if the path starts with the endpoint param here
+            "path" => "/thumbs/html/0/17.jpg",
+            "params" => [
+                "thumb" => "html",
+                "db" => "0",
+                "id" => "17",
+            ],
+        ];
+        $expected = json_encode($expected, JSON_UNESCAPED_SLASHES);
+        $test = $apiHandler->getOutput();
+        $this->assertEquals($expected, $test);
+
         Config::set('api_key', null);
         unset($_SERVER['HTTP_X_API_KEY']);
         unset($_SERVER['PATH_INFO']);

@@ -474,7 +474,7 @@ class BookTest extends TestCase
      * @param mixed $expectedHeight
      * @return void
      */
-    public function testGetThumbnailByWidth($width, $height, $expectedWidth, $expectedHeight)
+    public function testGetThumbnailBySize($width, $height, $expectedWidth, $expectedHeight)
     {
         $book = Book::getBookById(2);
         $cover = new Cover($book);
@@ -519,7 +519,7 @@ class BookTest extends TestCase
         Config::set('thumbnail_handling', "");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail(self::$endpoint);
-        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=2&height=225", $thumbnailurl);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=2&thumb=html", $thumbnailurl);
     }
 
     /**
@@ -580,7 +580,8 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(17);
         $cover = new Cover($book);
-        $request = Request::build(['height' => Config::get('html_thumbnail_height')]);
+        $thumb = 'html';
+        $request = Request::build(['thumb' => $thumb]);
         $expected = 15349;
 
         // no thumbnail cache
@@ -600,7 +601,8 @@ class BookTest extends TestCase
         $width = null;
         $height = Config::get('html_thumbnail_height');
         $type = 'jpg';
-        $request = Request::build(['height' => $height]);
+        $thumb = 'html';
+        $request = Request::build(['thumb' => $thumb]);
         $expected = 15349;
 
         // use thumbnail cache
@@ -631,7 +633,8 @@ class BookTest extends TestCase
         $width = null;
         $height = Config::get('html_thumbnail_height');
         $type = 'jpg';
-        $request = Request::build(['height' => $height]);
+        $thumb = 'html';
+        $request = Request::build(['thumb' => $thumb]);
         $expected = 15349;
 
         // use thumbnail cache
@@ -774,10 +777,11 @@ class BookTest extends TestCase
         $this->assertEquals(1046241, strlen($output));
     }
 
-    public function testGetFilePath_Cover(): void
+    public function testGetCoverFilePath(): void
     {
         $book = Book::getBookById(17);
 
+        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getCoverFilePath("jpg"));
         $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null));
     }
 

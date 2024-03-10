@@ -45,7 +45,7 @@ class JsonTest extends TestCase
         $this->assertArrayHasKey("config", $test ["c"]);
 
         $this->assertEquals(self::$endpoint . "?page=13&id={0}&db={1}", $test ["c"]["url"]["detailUrl"]);
-        $this->assertEquals(Config::ENDPOINT["fetch"] . "?height=225&id={0}&db={1}", $test ["c"]["url"]["thumbnailUrl"]);
+        $this->assertEquals(Config::ENDPOINT["fetch"] . "?thumb=html&id={0}&db={1}", $test ["c"]["url"]["thumbnailUrl"]);
         $this->assertFalse($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
@@ -104,7 +104,7 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
 
         $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17", $test ["coverurl"]);
-        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&height=450", $test ["thumbnailurl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&thumb=html2", $test ["thumbnailurl"]);
         $this->assertCount(1, $test ["authors"]);
         $this->assertEquals(Route::url(self::$endpoint) . "?page=3&id=3", $test ["authors"][0]["url"]);
         $this->assertCount(3, $test ["tags"]);
@@ -123,7 +123,7 @@ class JsonTest extends TestCase
         $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
 
         $this->assertEquals(Route::url("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
-        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&height=450", $test ["thumbnailurl"]);
+        $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&thumb=html2", $test ["thumbnailurl"]);
         // see bookTest for more tests on data links
         $this->assertEquals(Route::url("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $test ["datas"][2]["url"]);
 
