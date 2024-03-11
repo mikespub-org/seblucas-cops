@@ -774,7 +774,7 @@ class BookTest extends TestCase
         $output = ob_get_clean();
         //$this->assertStringStartsWith("Exception : Cannot modify header information", $output);
         $this->assertEquals(0, count($headers));
-        $this->assertEquals(1046241, strlen($output));
+        $this->assertEquals(1047437, strlen($output));
     }
 
     public function testGetCoverFilePath(): void

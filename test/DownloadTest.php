@@ -43,7 +43,7 @@ class DownloadTest extends TestCase
         $request = new Request();
         $request->set('page', $page);
         $request->set('type', 'any');
-        $expected = 1593669;
+        $expected = 1594886;
 
         $downloader = new Downloader($request);
         $valid = $downloader->isValid();
@@ -74,7 +74,7 @@ class DownloadTest extends TestCase
         $request = new Request();
         $request->set('author', $authorId);
         $request->set('type', 'any');
-        $expected = 1593669;
+        $expected = 1594886;
 
         $downloader = new Downloader($request);
         $valid = $downloader->isValid();
