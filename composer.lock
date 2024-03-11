@@ -89,16 +89,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2024.3.5",
+            "version": "2024.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0"
+                "reference": "4483ecac6e4d1130d329dc26facd01b432699871"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
-                "reference": "8f0c5cebf5d8a6c2b8d595f4a4decf9af7a74fe0",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/4483ecac6e4d1130d329dc26facd01b432699871",
+                "reference": "4483ecac6e4d1130d329dc26facd01b432699871",
                 "shasum": ""
             },
             "suggest": {
@@ -128,22 +128,22 @@
             ],
             "description": "Epub.js Reader with zipfs.php",
             "support": {
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.3.5"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.3.11"
             },
-            "time": "2024-03-04T15:08:36+00:00"
+            "time": "2024-03-11T12:32:35+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "2.2.2",
+            "version": "2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "f137bc1cd5dd91dcc295503cf2327d99bddba0e6"
+                "reference": "9cddc389aa29415caa0d8f8cf9fb3e375f8a4130"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/f137bc1cd5dd91dcc295503cf2327d99bddba0e6",
-                "reference": "f137bc1cd5dd91dcc295503cf2327d99bddba0e6",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/9cddc389aa29415caa0d8f8cf9fb3e375f8a4130",
+                "reference": "9cddc389aa29415caa0d8f8cf9fb3e375f8a4130",
                 "shasum": ""
             },
             "require": {
@@ -200,9 +200,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.2.2"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.2.3"
             },
-            "time": "2024-03-02T13:34:51+00:00"
+            "time": "2024-03-11T17:20:14+00:00"
         },
         {
             "name": "nikic/fast-route",
