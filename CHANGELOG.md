@@ -10,7 +10,15 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.5.x - 2024xxxx
+2.5.x - 2024xxxx 
+  * Get annotations from database or metadata.opf file
+  * Add Annotation and Metadata classes
+  * Add annotations in test data files
+  * Add cover and thumbnail route urls
+  * Match routes with endpoints in rest api
+  * Get user details in rest api
+
+2.5.1 - 20240307 User accounts database + route to endpoints
   * Changes in config_default.php file:
     - new $config['cops_http_auth_user']
     - new $config['calibre_user_database']

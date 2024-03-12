@@ -208,7 +208,7 @@ class PageCustomize extends Page
      */
     public function useSelectTag()
     {
-        return !preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent()); 
+        return !preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $this->request->agent());
     }
 
     /**

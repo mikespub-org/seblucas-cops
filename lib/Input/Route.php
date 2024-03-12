@@ -83,6 +83,12 @@ class Route
         "/notes" => PageId::REST_API,
         "/preferences/{key}" => PageId::REST_API,
         "/preferences" => PageId::REST_API,
+        "/annotations/{bookId}/{id}" => PageId::REST_API,
+        "/annotations/{bookId}" => PageId::REST_API,
+        "/annotations" => PageId::REST_API,
+        "/metadata/{bookId}/{element}/{name}" => PageId::REST_API,
+        "/metadata/{bookId}/{element}" => PageId::REST_API,
+        "/metadata/{bookId}" => PageId::REST_API,
         "/user/details" => PageId::REST_API,
         "/user" => PageId::REST_API,
         // extra routes supported by other endpoints (path starts with endpoint param)

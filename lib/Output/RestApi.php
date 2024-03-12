@@ -9,8 +9,10 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Calibre\Annotation;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
@@ -41,6 +43,8 @@ class RestApi
         "/routes" => [self::class, 'getRoutes'],
         "/notes" => [self::class, 'getNotes'],
         "/preferences" => [self::class, 'getPreferences'],
+        "/annotations" => [self::class, 'getAnnotations'],
+        "/metadata" => [self::class, 'getMetadata'],
         "/user" => [self::class, 'getUser'],
     ];
 
@@ -688,6 +692,132 @@ class RestApi
             "databaseId" => $db,
         ];
         $result = array_replace($result, (array) $preference);
+        return $result;
+    }
+
+    /**
+     * Summary of getAnnotations
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getAnnotations($request)
+    {
+        $bookId = $request->getId('bookId');
+        if (!empty($bookId)) {
+            return static::getAnnotationsByBookId($bookId, $request);
+        }
+        $db = $request->database();
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $result = [
+            "title" => "Annotations",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+            "entries" => [],
+        ];
+        foreach (Annotation::getCountByBookId($db) as $bookId => $count) {
+            array_push($result["entries"], [
+                "class" => "Annotations",
+                "title" => "Annotations for {$bookId}",
+                "navlink" => Route::url("{$endpoint}/annotations/{$bookId}", null, ["db" => $db]),
+                "number" => $count,
+            ]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getAnnotationsByBookId
+     * @param int $bookId
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getAnnotationsByBookId($bookId, $request)
+    {
+        $id = $request->getId('id');
+        if (!empty($id)) {
+            return static::getAnnotationById($bookId, $id, $request);
+        }
+        $db = $request->database();
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $result = [
+            "title" => "Annotations for {$bookId}",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+            "entries" => [],
+        ];
+        // @todo get item from annotations + corresponding title from instance
+        foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
+            $entry = $instance->getEntry();
+            array_push($result["entries"], ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink($endpoint)]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getAnnotationById
+     * @param int $bookId
+     * @param int $id
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getAnnotationById($bookId, $id, $request)
+    {
+        $db = $request->database();
+        /** @var Annotation $annotation */
+        $annotation = Annotation::getInstanceById($id, $db);
+        if (empty($annotation->id)) {
+            return ["error" => "Invalid annotation id"];
+        }
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $result = [
+            "title" => $annotation->getTitle(),
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+        ];
+        $result = array_replace($result, get_object_vars($annotation));
+        return $result;
+    }
+
+    /**
+     * Summary of getMetadata
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getMetadata($request)
+    {
+        $bookId = $request->getId('bookId');
+        if (empty($bookId)) {
+            return ["error" => "Invalid book id"];
+        }
+        $db = $request->database();
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $metadata = Metadata::getInstanceByBookId($bookId, $db);
+        if (empty($metadata)) {
+            $result["error"] = "Invalid metadata for book id";
+            return $result;
+        }
+        $result = [
+            "title" => "Metadata for {$bookId}",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+        ];
+        $element = $request->get('element');
+        if (empty($element)) {
+            $result["entries"] = $metadata;
+            return $result;
+        }
+        $result["element"] = $element;
+        $name = $request->get('name');
+        if (empty($name)) {
+            $result["entries"] = $metadata->getElement($element);
+            return $result;
+        }
+        $result["name"] = $name;
+        $result["entries"] = $metadata->getElementName($element, $name);
         return $result;
     }
 

@@ -47,6 +47,9 @@ class PageId
     public const ALL_PREFERENCES = "48";
     public const PREFERENCE_DETAIL = "49";
     public const ALL_BOOKS_YEAR = "50";
+    public const ALL_ANNOTATIONS = "61";
+    public const ANNOTATIONS_BOOK = "62";
+    public const ANNOTATION_DETAIL = "63";
     public const EPUBJS_ZIPFS = "95";
     public const CALIBRE_RESOURCE = "97";
     public const REST_API = "98";
@@ -71,6 +74,7 @@ class PageId
     public const ALL_LIBRARIES_ID = "cops:libraries";
     public const ALL_NOTES_ID = "cops:notes";
     public const ALL_PREFERENCES_ID = "cops:preferences";
+    public const ALL_ANNOTATIONS_ID = "cops:annotations";
 
     /**
      * Summary of getPage

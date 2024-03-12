@@ -125,4 +125,12 @@ class EpubFsTest extends TestCase
         }
         $this->assertEquals('#anchor', $src);
     }
+
+    public function testEncodeDecode(): void
+    {
+        $decoded = 'images/logo-feedbooks-tiny.png';
+        $encoded = 'images~SLASH~logo~DASH~feedbooks~DASH~tiny.png';
+        $this->assertEquals($encoded, EPubReader::encode($decoded));
+        $this->assertEquals($decoded, EPubReader::decode($encoded));
+    }
 }

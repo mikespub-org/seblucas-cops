@@ -454,6 +454,59 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["val"]);
     }
 
+    public function testGetAnnotations(): void
+    {
+        $request = new Request();
+        $expected = "Annotations";
+        $test = RestApi::getAnnotations($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 1;
+        $this->assertCount($expected, $test["entries"]);
+        $expected = "Annotations for 17";
+        $this->assertEquals($expected, $test["entries"][0]["title"]);
+        $expected = static::$script . "/annotations/17";
+        $this->assertEquals($expected, $test["entries"][0]["navlink"]);
+        $expected = 5;
+        $this->assertEquals($expected, $test["entries"][0]["number"]);
+    }
+
+    public function testGetAnnotationsByBookId(): void
+    {
+        $request = new Request();
+        $request->set('bookId', 17);
+        $expected = "Annotations for 17";
+        $test = RestApi::getAnnotations($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 5;
+        $this->assertCount($expected, $test["entries"]);
+        $expected = "(17) Bookmark About #1";
+        $this->assertEquals($expected, $test["entries"][0]["title"]);
+        // @todo use route urls
+        $expected = static::$script . '?page=63&bookId=17&id=1';
+        $this->assertEquals($expected, $test["entries"][0]["navlink"]);
+    }
+
+    public function testGetAnnotationById(): void
+    {
+        $request = new Request();
+        $request->set('bookId', 17);
+        $request->set('id', 1);
+        $expected = "(17) Bookmark About #1";
+        $test = RestApi::getAnnotations($request);
+        $expected = "EPUB";
+        $this->assertEquals($expected, $test["format"]);
+        $expected = "viewer";
+        $this->assertEquals($expected, $test["user"]);
+        $expected = [
+            'title' => 'About #1',
+            'pos_type' => 'epubcfi',
+            'pos' => 'epubcfi(/6/2/4/2/6/2:38)',
+            'timestamp' => '2024-03-11T11:54:35.128396+00:00',
+            'type' => 'bookmark',
+        ];
+        $this->assertEquals($expected, $test["data"]);
+    }
+
     public function testGetUserNoAuth(): void
     {
         $request = new Request();

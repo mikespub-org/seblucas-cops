@@ -180,6 +180,21 @@ class EPubReader
     }
 
     /**
+     * Decode the component name (to replace / and -)
+     * @param mixed $src
+     * @return string
+     */
+    public static function decode($src)
+    {
+        $decodeReplace = static::$epubClass::$decodeNameReplace;
+        return str_replace(
+            $decodeReplace[0],
+            $decodeReplace[1],
+            $src
+        );
+    }
+
+    /**
      * Summary of getEpubjsReader
      * @param int $idData
      * @param Request $request

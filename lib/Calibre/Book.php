@@ -79,6 +79,8 @@ class Book
     public $identifiers = null;
     /** @var ?string */
     public $languages = null;
+    /** @var ?array<Annotation> */
+    public $annotations = null;
     /** @var array<mixed> */
     public $format = [];
     /** @var ?string */
@@ -319,6 +321,31 @@ class Book
             $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->identifiers;
+    }
+
+    /**
+     * @return array<Annotation>
+     */
+    public function getAnnotations()
+    {
+        if (is_null($this->annotations)) {
+            $this->annotations = Annotation::getInstancesByBookId($this->id, $this->databaseId);
+        }
+        return $this->annotations;
+    }
+
+    /**
+     * @param string $source from metadata.opf file (default)
+     * @return Metadata|false
+     */
+    public function getMetadata($source = 'file')
+    {
+        $file = realpath($this->path . '/metadata.opf');
+        if (empty($file) || !file_exists($file)) {
+            return false;
+        }
+        $content = file_get_contents($file);
+        return Metadata::parseData($content);
     }
 
     /**
