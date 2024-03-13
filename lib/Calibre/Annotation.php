@@ -116,4 +116,90 @@ where book = ?';
         }
         return $annotationArray;
     }
+
+    /**
+     * Forget about converting annotations
+     *
+     * Epub CFIs are *not* compatible between Calibre, Kobo, epub.js, readium.js etc.
+     * See https://github.com/futurepress/epub.js/issues/1358 for comments and links
+     *
+     * @return void
+     */
+    private static function forgetAboutConvertAnnotations()
+    {
+        /**
+        From Calibre annotations:
+        {
+            "id": 2,
+            "book": 17,
+            "format": "EPUB",
+            "userType": "local",
+            "user": "viewer",
+            "timestamp": 1710158035.583,
+            "type": "highlight",
+            "data": {
+                "end_cfi": "/2/4/2/2/6/1:24",
+                "highlighted_text": "Charles Lutwidge Dodgson",
+                "notes": "Full author name",
+                "spine_index": 2,
+                "spine_name": "OPS/about.xml",
+                "start_cfi": "/2/4/2/2/6/1:0",
+                "style": {
+                    "kind": "color",
+                    "type": "builtin",
+                    "which": "yellow"
+                },
+                "timestamp": "2024-03-11T11:53:55.583Z",
+                "toc_family_titles": [
+                    "About"
+                ],
+                "type": "highlight",
+                "uuid": "5HHGuoCOtpA-umaIbBuc0Q"
+            }
+        }
+        From epub.js local storage in Chrome:
+        {
+            "restore": true,
+            "bookPath": "/cops/zipfs.php/0/20/",
+            "flow": "paginated",
+            "history": true,
+            "reload": false,
+            "bookmarks": [
+                "epubcfi(/6/8!/4/2/2[chapter_458]/2/2/2/1:0)",
+                "epubcfi(/6/10!/4/2/2[chapter_460]/4/26/1:372)"
+            ],
+            "annotations": [
+                {
+                    "cfi": "epubcfi(/6/6!/4/2/2/2,/1:0,/1:13)",
+                    "date": "2024-03-13T10:11:48.731Z",
+                    "text": "About author",
+                    "uuid": "60c92408-81b9-47d9-f705-66f26317f2ee"
+                },
+                {
+                    "cfi": "epubcfi(/6/6!/4/2/2/6,/1:0,/1:24)",
+                    "date": "2024-03-13T10:19:09.443Z",
+                    "text": "Actual person",
+                    "uuid": "71aad015-28f9-4088-abce-48762492b52e"
+                },
+                {
+                    "cfi": "epubcfi(/6/6!/4/2/2/6,/1:93,/1:106)",
+                    "date": "2024-03-13T10:19:31.777Z",
+                    "text": "Pen name",
+                    "uuid": "66f559ae-f8a5-4b39-b3cc-673a08d67f00"
+                }
+            ],
+            "sectionId": "level1-about",
+            "spread": {
+                "mod": "auto",
+                "min": 800
+            },
+            "styles": {
+                "fontSize": 100
+            },
+            "pagination": false,
+            "language": "en",
+            "previousLocationCfi": "epubcfi(/6/6!/4/2/2/2/1:0)"
+        }
+         */
+    }
 }
