@@ -410,6 +410,7 @@ __metadata:
     lru-fast: "npm:^0.2.2"
     magnific-popup: "npm:^1.1.0"
     normalize.css: "npm:^8.0.1"
+    swagger-ui-dist: "npm:^5.12.0"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -427,6 +428,13 @@ __metadata:
   dependencies:
     safe-buffer: "npm:~5.1.0"
   checksum: 10c0/b4f89f3a92fd101b5653ca3c99550e07bdf9e13b35037e9e2a1c7b47cec4e55e06ff3fc468e314a0b5e80bfbaf65c1ca5a84978764884ae9413bec1fc6ca924e
+  languageName: node
+  linkType: hard
+
+"swagger-ui-dist@npm:^5.12.0":
+  version: 5.12.0
+  resolution: "swagger-ui-dist@npm:5.12.0"
+  checksum: 10c0/ba4f5bd742b1c005e900333c083062e6e6df702854498a054740196232907c034a0ee48f568048360500fdd2a7ddb03e79468c0c14d3f990bbbf95c5f9b54a75
   languageName: node
   linkType: hard
 
