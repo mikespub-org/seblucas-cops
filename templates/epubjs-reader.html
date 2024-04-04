@@ -24,7 +24,23 @@
 
 	<!-- Initialize bookPath -->
 	<script>
-		window.bookPath = "{{=it.link}}";
+		const bookPath = "{{=it.link}}";
+
+		window.onload = (e) => {
+			epubreader.main(bookPath, {
+				restore: true,
+				/**
+				controls: {
+					arrows: true,
+					openbook: false,
+					bookmarks: true,
+					annotations: false,
+					fullscreen: false
+				}
+				*/
+			});
+			e.stopPropagation();
+		};
 	</script>
 </head>
 

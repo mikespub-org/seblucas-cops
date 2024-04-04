@@ -27,7 +27,7 @@
         "ext-xmlwriter": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "mikespub/epubjs-reader": "^2024.3",
+        "mikespub/epubjs-reader": "^2024.4",
         "mikespub/php-epub-meta": "^2.2",
         "nikic/fast-route": "^2.0-dev",
         "npm-asset/bootstrap": "^3.4",
