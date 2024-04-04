@@ -11,6 +11,12 @@ x.x.x - TODO
   * ...
 
 2.5.x - 2024xxxx 
+  * ...
+
+2.5.3 - 20240404 Expand rest api + update epubjs reader
+  * Upgrade mikespub/epubjs-reader from @intity theme - see issue #76
+  * Upgrade mikespub/epub-loader to 3.0 for wikidata (dev only)
+  * Upgrade swagger-ui-dist package and link to 5.12.0
   * Get annotations from database or metadata.opf file
   * Add Annotation and Metadata classes
   * Add annotations in test data files
