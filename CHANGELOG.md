@@ -10,7 +10,10 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.5.x - 2024xxxx 
+2.5.x - 2024xxxx
+  * ...
+
+2.5.4 - 20240409 Add settings for epubjs-reader 
   * Changes in config_default.php file:
     - new $config['cops_epubjs_reader_settings']
   * Configurable epubjs-reader settings - see issue mikespub-org/intity-epubjs-reader#2 by @intity
