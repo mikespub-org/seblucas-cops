@@ -89,16 +89,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2024.4.4",
+            "version": "2024.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "addd27d9544b1df3c089d1d36846a0c5cd8fd771"
+                "reference": "903ba12a686a5135515484100879e670ba33d699"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/addd27d9544b1df3c089d1d36846a0c5cd8fd771",
-                "reference": "addd27d9544b1df3c089d1d36846a0c5cd8fd771",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/903ba12a686a5135515484100879e670ba33d699",
+                "reference": "903ba12a686a5135515484100879e670ba33d699",
                 "shasum": ""
             },
             "suggest": {
@@ -128,9 +128,10 @@
             ],
             "description": "Epub.js Reader with zipfs.php",
             "support": {
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.4.4"
+                "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.4.9"
             },
-            "time": "2024-04-04T09:32:46+00:00"
+            "time": "2024-04-09T08:29:31+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
@@ -270,10 +271,10 @@
         },
         {
             "name": "npm-asset/babel--runtime",
-            "version": "7.24.1",
+            "version": "7.24.4",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.24.1.tgz"
+                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.24.4.tgz"
             },
             "require": {
                 "npm-asset/regenerator-runtime": ">=0.14.0,<0.15.0"
@@ -400,10 +401,10 @@
         },
         {
             "name": "npm-asset/locutus",
-            "version": "2.0.16",
+            "version": "2.0.32",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/locutus/-/locutus-2.0.16.tgz"
+                "url": "https://registry.npmjs.org/locutus/-/locutus-2.0.32.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -2590,16 +2591,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.16",
+            "version": "10.5.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "18f8d4a5f52b61fdd9370aaae3167daa0eeb69cd"
+                "reference": "c1f736a473d21957ead7e94fcc029f571895abf5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/18f8d4a5f52b61fdd9370aaae3167daa0eeb69cd",
-                "reference": "18f8d4a5f52b61fdd9370aaae3167daa0eeb69cd",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c1f736a473d21957ead7e94fcc029f571895abf5",
+                "reference": "c1f736a473d21957ead7e94fcc029f571895abf5",
                 "shasum": ""
             },
             "require": {
@@ -2671,7 +2672,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.16"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.17"
             },
             "funding": [
                 {
@@ -2687,7 +2688,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-28T10:08:10+00:00"
+            "time": "2024-04-05T04:39:01+00:00"
         },
         {
             "name": "psr/container",

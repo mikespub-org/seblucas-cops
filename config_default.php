@@ -561,3 +561,38 @@ $config['cops_api_key'] = '';
  * 'epubjs'
  */
 $config['cops_epub_reader'] = 'monocle';
+
+/*
+ * Configure epubjs-reader as used in templates/epubjs-reader.html
+ * This is a javascript object stored as text string for the template
+ *
+ * const settings = {{=it.settings}};
+ *
+ * Note: we could put this into a separate .json file that is downloaded
+ * by the template javascript at some point
+ *
+ * See https://github.com/mikespub-org/intity-epubjs-reader/issues/2#issuecomment-2043469571
+ * for examples
+ * 
+$config['cops_epubjs_reader_settings'] = '{
+    arrows: "content", // none | content | toolbar - depending on this.isMobile
+    restore: true,
+    history: true,
+    openbook: true,
+    language: "en",
+    sectionId: undefined,
+    bookmarks: [],   // array | false
+    annotations: [], // array | false
+    flow: "paginated", // paginated | scrolled
+    spread: {
+        mod: "auto", // auto | none
+        min: 800
+    },
+    styles: {
+        fontSize: 100
+    },
+    pagination: undefined, // not implemented
+    fullscreen: document.fullscreenEnabled // default behaviour
+}';
+ */
+$config['cops_epubjs_reader_settings'] = '{}';

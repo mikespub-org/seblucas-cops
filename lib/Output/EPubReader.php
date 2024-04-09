@@ -215,6 +215,8 @@ class EPubReader
         // URL format: zipfs.php/{db}/{idData}/{component}
         $db = $book->getDatabaseId() ?? 0;
         $link = Route::url($endpoint . "/{$db}/{$idData}/");
+        // Configurable settings (javascript object as text)
+        $settings = Config::get('epubjs_reader_settings');
 
         $dist = Route::url(dirname(Config::get('assets')) . '/mikespub/epubjs-reader/dist');
         $data = [
@@ -222,6 +224,7 @@ class EPubReader
             'version'    => Config::VERSION,
             'dist'       => $dist,
             'link'       => $link,
+            'settings'   => $settings,
         ];
 
         return Format::template($data, $template);

@@ -11,7 +11,9 @@ x.x.x - TODO
   * ...
 
 2.5.x - 2024xxxx 
-  * ...
+  * Changes in config_default.php file:
+    - new $config['cops_epubjs_reader_settings']
+  * Configurable epubjs-reader settings - see issue mikespub-org/intity-epubjs-reader#2 by @intity
 
 2.5.3 - 20240404 Expand rest api + update epubjs reader
   * Upgrade mikespub/epubjs-reader from @intity theme - see issue #76
