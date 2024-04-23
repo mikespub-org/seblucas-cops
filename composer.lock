@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc59fb8a0e3fbf88892014e2b817cdd5",
+    "content-hash": "61fe1129316b68037cb9fc46ad771650",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -89,16 +89,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2024.4.9",
+            "version": "2024.4.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "903ba12a686a5135515484100879e670ba33d699"
+                "reference": "372b3d3a033b72ddeb1527480bbe094826aaa6b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/903ba12a686a5135515484100879e670ba33d699",
-                "reference": "903ba12a686a5135515484100879e670ba33d699",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/372b3d3a033b72ddeb1527480bbe094826aaa6b6",
+                "reference": "372b3d3a033b72ddeb1527480bbe094826aaa6b6",
                 "shasum": ""
             },
             "suggest": {
@@ -117,7 +117,7 @@
                 },
                 {
                     "name": "intity",
-                    "homepage": "https://github.com/intity/epubjs-reader",
+                    "homepage": "https://github.com/intity/epubreader-js",
                     "role": "Developer"
                 },
                 {
@@ -129,9 +129,9 @@
             "description": "Epub.js Reader with zipfs.php",
             "support": {
                 "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.4.9"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.4.23"
             },
-            "time": "2024-04-09T08:29:31+00:00"
+            "time": "2024-04-23T15:12:43+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
@@ -640,6 +640,73 @@
             "time": "2021-10-29T13:26:27+00:00"
         },
         {
+            "name": "symfony/deprecation-contracts",
+            "version": "v3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/deprecation-contracts.git",
+                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "3.4-dev"
+                },
+                "thanks": {
+                    "name": "symfony/contracts",
+                    "url": "https://github.com/symfony/contracts"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "function.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A generic function and convention to trigger deprecation notices",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-05-23T14:45:45+00:00"
+        },
+        {
             "name": "symfony/polyfill-ctype",
             "version": "v1.29.0",
             "source": {
@@ -880,30 +947,37 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.8.0",
+            "version": "v3.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "9d15f0ac07f44dc4217883ec6ae02fd555c6f71d"
+                "reference": "a842d75fed59cdbcbd3a3ad7fb9eb768fc350d58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/9d15f0ac07f44dc4217883ec6ae02fd555c6f71d",
-                "reference": "9d15f0ac07f44dc4217883ec6ae02fd555c6f71d",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a842d75fed59cdbcbd3a3ad7fb9eb768fc350d58",
+                "reference": "a842d75fed59cdbcbd3a3ad7fb9eb768fc350d58",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.5|^3",
                 "symfony/polyfill-ctype": "^1.8",
                 "symfony/polyfill-mbstring": "^1.3",
                 "symfony/polyfill-php80": "^1.22"
             },
             "require-dev": {
                 "psr/container": "^1.0|^2.0",
-                "symfony/phpunit-bridge": "^5.4.9|^6.3|^7.0"
+                "symfony/phpunit-bridge": "^5.4.9|^6.4|^7.0"
             },
             "type": "library",
             "autoload": {
+                "files": [
+                    "src/Resources/core.php",
+                    "src/Resources/debug.php",
+                    "src/Resources/escaper.php",
+                    "src/Resources/string_loader.php"
+                ],
                 "psr-4": {
                     "Twig\\": "src/"
                 }
@@ -936,7 +1010,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.8.0"
+                "source": "https://github.com/twigphp/Twig/tree/v3.9.3"
             },
             "funding": [
                 {
@@ -948,7 +1022,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-21T18:54:41+00:00"
+            "time": "2024-04-18T11:59:33+00:00"
         }
     ],
     "packages-dev": [
@@ -1279,7 +1353,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v10.48.7",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -1334,7 +1408,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v10.48.7",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1380,7 +1454,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v10.48.7",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1428,7 +1502,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v10.48.7",
+            "version": "v10.48.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -2591,16 +2665,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.18",
+            "version": "10.5.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "835df1709ac6c968ba34bf23f3c30e5d5a266de8"
+                "reference": "c726f0de022368f6ed103e452a765d3304a996a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/835df1709ac6c968ba34bf23f3c30e5d5a266de8",
-                "reference": "835df1709ac6c968ba34bf23f3c30e5d5a266de8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c726f0de022368f6ed103e452a765d3304a996a4",
+                "reference": "c726f0de022368f6ed103e452a765d3304a996a4",
                 "shasum": ""
             },
             "require": {
@@ -2672,7 +2746,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.18"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.19"
             },
             "funding": [
                 {
@@ -2688,7 +2762,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-14T07:05:31+00:00"
+            "time": "2024-04-17T14:06:18+00:00"
         },
         {
             "name": "psr/container",
@@ -4111,73 +4185,6 @@
                 }
             ],
             "time": "2024-01-23T15:02:46+00:00"
-        },
-        {
-            "name": "symfony/deprecation-contracts",
-            "version": "v3.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/7c3aff79d10325257a001fcf92d991f24fc967cf",
-                "reference": "7c3aff79d10325257a001fcf92d991f24fc967cf",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "3.4-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A generic function and convention to trigger deprecation notices",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2023-05-23T14:45:45+00:00"
         },
         {
             "name": "symfony/dom-crawler",

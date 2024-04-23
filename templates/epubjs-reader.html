@@ -20,43 +20,13 @@
 	<script src="{{=it.dist}}/js/libs/epub.min.js?v={{=it.version}}"></script>
 
 	<!-- Reader -->
-	<script src="{{=it.dist}}/js/epubreader.js?v={{=it.version}}"></script>
-
-	<!-- Initialize bookPath and settings -->
-	<script>
+	<script type="module">
+		import { Reader } from "{{=it.dist}}/js/epubreader.min.js?v={{=it.version}}";
 		// string containing the initial book path - link / to get content from file /{component}
-		const bookPath = "{{=it.link}}";
+		const path = "{{=it.link}}";
 		// js object containing the initial settings (use text for template variable)
 		const settings = {{=it.settings}};
-		/**
-		 * See https://github.com/mikespub-org/intity-epubjs-reader/issues/2#issuecomment-2043469571
-		 * for examples
-		 * 
-		{
-			arrows: "content", // none | content | toolbar - depending on this.isMobile
-			restore: true,
-			history: true,
-			openbook: true,
-			language: "en",
-			sectionId: undefined,
-			bookmarks: [],   // array | false
-			annotations: [], // array | false
-			flow: "paginated", // paginated | scrolled
-			spread: {
-				mod: "auto", // auto | none
-				min: 800
-			},
-			styles: {
-				fontSize: 100
-			},
-			pagination: undefined, // not implemented
-			fullscreen: document.fullscreenEnabled // default behaviour
-		}
-		*/
-		window.onload = (e) => {
-			epubreader.main(bookPath, settings);
-			e.stopPropagation();
-		};
+		window.onload = (e) => new Reader(path, settings);
 	</script>
 </head>
 

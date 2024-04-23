@@ -578,7 +578,7 @@ $config['cops_epubjs_reader_settings'] = '{
     arrows: "content", // none | content | toolbar - depending on this.isMobile
     restore: true,
     history: true,
-    openbook: true,
+    openbook: false,
     language: "en",
     sectionId: undefined,
     bookmarks: [],   // array | false
@@ -595,4 +595,4 @@ $config['cops_epubjs_reader_settings'] = '{
     fullscreen: document.fullscreenEnabled // default behaviour
 }';
  */
-$config['cops_epubjs_reader_settings'] = '{}';
+$config['cops_epubjs_reader_settings'] = '{ openbook: false }';
