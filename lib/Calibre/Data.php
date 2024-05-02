@@ -67,6 +67,7 @@ class Data
         'svg'   => 'image/svg+xml',
         'ttf'   => 'application/x-font-truetype',
         'tpz'   => 'application/x-topaz-ebook',
+        'txt'   => 'text/plain',
         'wav'   => 'audio/wav',
         'wmf'   => 'image/wmf',
         'xhtml' => 'application/xhtml+xml',
