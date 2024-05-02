@@ -11,7 +11,7 @@ x.x.x - TODO
   * ...
 
 2.5.x - 2024xxxx
-  * ...
+  * Fix Opds connection under docker deployment cannot display books in TXT files - see #79 by @shaoyangx
 
 2.5.5 - 20240423 Update epubjs-reader
   * Update epubjs-reader version + template
