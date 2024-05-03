@@ -594,7 +594,9 @@ class Book
 
         foreach ($this->getDatas() as $data) {
             if ($data->isKnownType()) {
-                array_push($linkArray, $data->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, $data->format));
+                $linkEntry = $data->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, $data->format);
+                $linkEntry->addFileInfo($data->getLocalPath());
+                array_push($linkArray, $linkEntry);
             }
         }
 

@@ -219,7 +219,14 @@ class OPDSRenderer
         if (!is_null($link->title)) {
             $this->getXmlStream()->writeAttribute("title", $link->title);
         }
-        if ($link instanceof LinkFacet) {
+        if ($link instanceof LinkEntry) {
+            if (!empty($link->length)) {
+                $this->getXmlStream()->writeAttribute("length", $link->length);
+            }
+            if (!empty($link->mtime)) {
+                $this->getXmlStream()->writeAttribute("mtime", $link->mtime);
+            }
+        } elseif ($link instanceof LinkFacet) {
             if (!is_null($link->facetGroup)) {
                 $this->getXmlStream()->writeAttribute("opds:facetGroup", $link->facetGroup);
             }

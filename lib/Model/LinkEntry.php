@@ -19,6 +19,10 @@ class LinkEntry extends Link
     public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
     public const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
     public const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
+    /** @var ?string */
+    public $length;
+    /** @var ?string */
+    public $mtime;
 
     /**
      * Summary of hrefXhtml
@@ -29,5 +33,19 @@ class LinkEntry extends Link
     {
         // LinkEntry()->href includes the endpoint here
         return $this->href;
+    }
+
+    /**
+     * Summary of addFileInfo
+     * @param string $filepath
+     * @return void
+     */
+    public function addFileInfo($filepath)
+    {
+        if (!file_exists($filepath)) {
+            return;
+        }
+        $this->length = (string) filesize($filepath);
+        $this->mtime = date(DATE_ATOM, filemtime($filepath));
     }
 }
