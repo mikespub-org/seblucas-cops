@@ -1,0 +1,18 @@
+# Use latest linuxserver/cops image from linuxserver.io:
+# docker compose -f docker-compose-lsio.yaml up -d
+# See https://github.com/linuxserver/docker-cops for setup and usage
+services:
+  cops:
+    image: lscr.io/linuxserver/cops:latest
+    #image: linuxserver/cops
+    container_name: cops
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./test/config:/config
+      - ./test/BaseWithSomeBooks:/books
+    ports:
+      - 8080:80
+    restart: unless-stopped
