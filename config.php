@@ -10,7 +10,13 @@
 require_once __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config_default.php';
 if (file_exists(__DIR__ . '/config_local.php') && (php_sapi_name() !== 'cli')) {
-    require __DIR__ . '/config_local.php';
+    try {
+        require __DIR__ . '/config_local.php';
+    } catch (Throwable $e) {
+        echo "Error loading config_local.php<br>\n";
+        echo $e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+        exit;
+    }
 }
 /** @var array<mixed> $config */
 
