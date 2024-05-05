@@ -224,7 +224,8 @@ class OPDSRenderer
                 $this->getXmlStream()->writeAttribute("length", $link->length);
             }
             if (!empty($link->mtime)) {
-                $this->getXmlStream()->writeAttribute("mtime", $link->mtime);
+                // this corresponds to "mtime" in Calibre content server (= non-standard)
+                $this->getXmlStream()->writeAttribute("dcterms:modified", $link->mtime);
             }
         } elseif ($link instanceof LinkFacet) {
             if (!is_null($link->facetGroup)) {
