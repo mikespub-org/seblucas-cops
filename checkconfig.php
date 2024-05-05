@@ -202,13 +202,13 @@ echo 'Full URL specified in $config[\'cops_full_url\']: ' . $config['cops_full_u
 if (Route::hasTrustedProxies()) {
     echo 'Trusted proxies configured: ' . $config['cops_trusted_proxies'] . '<br>';
     echo 'Trusted headers configured: ' . json_encode($config['cops_trusted_headers']) . '<br>';
-    echo 'REMOTE_ADDR: ' . ($_SERVER['REMOTE_ADDR'] ?? '') . '<br>';
     foreach ($config['cops_trusted_headers'] as $name) {
         $header = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
         echo $header . ': ' . ($_SERVER[$header] ?? '') . '<br>';
     }
     echo 'Base URL via trusted proxies: ' . Route::base() . '<br>';
 }
+echo 'REMOTE_ADDR: ' . ($_SERVER['REMOTE_ADDR'] ?? '') . '<br>';
 echo '<br>';
 echo 'SCRIPT_NAME: ' . ($_SERVER['SCRIPT_NAME'] ?? '') . '<br>';
 echo 'HTTP_HOST: ' . ($_SERVER['HTTP_HOST'] ?? '') . '<br>';
