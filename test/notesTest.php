@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 
 class NotesTest extends TestCase
 {
@@ -72,6 +73,7 @@ class NotesTest extends TestCase
     public function testFixResourceLinks(): void
     {
         Config::set('full_url', '/cops/');
+        Route::setBaseUrl(null);
 
         $note = self::$author->getNote();
         $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
@@ -79,6 +81,7 @@ class NotesTest extends TestCase
         $this->assertStringContainsString($expected, $html);
 
         Config::set('full_url', '');
+        Route::setBaseUrl(null);
     }
 
     public function testGetResources(): void

@@ -22,8 +22,12 @@ use function FastRoute\simpleDispatcher;
 class Route
 {
     public const ENDPOINT_PARAM = "endpoint";
-    //public static $endpoint = Config::ENDPOINT["index"];
+    public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
 
+    /** @var ?\Symfony\Component\HttpFoundation\Request */
+    protected static $proxyRequest = null;
+    /** @var ?string */
+    protected static $baseUrl = null;
     /**
      * Summary of routes
      * @var array<string, mixed>
@@ -341,10 +345,21 @@ class Route
      */
     public static function base()
     {
-        $base = Config::get('full_url') ?: dirname($_SERVER['SCRIPT_NAME']);
+        if (isset(static::$baseUrl)) {
+            return static::$baseUrl;
+        }
+        if (!empty(Config::get('full_url'))) {
+            $base = Config::get('full_url');
+        } elseif (static::hasTrustedProxies()) {
+            // use scheme and host + base path here to apply potential forwarded values
+            $base = static::$proxyRequest->getSchemeAndHttpHost() . static::$proxyRequest->getBasePath();
+        } else {
+            $base = dirname($_SERVER['SCRIPT_NAME']);
+        }
         if (!str_ends_with($base, '/')) {
             $base .= '/';
         }
+        static::setBaseUrl($base);
         return $base;
     }
 
@@ -555,5 +570,65 @@ class Route
             static::$endpoints[$endpoint][$route] = $fixed;
         }
         return static::$endpoints;
+    }
+
+    /**
+     * Summary of setBaseUrl
+     * @param ?string $base
+     * @return void
+     */
+    public static function setBaseUrl($base)
+    {
+        static::$baseUrl = $base;
+        static::$proxyRequest = null;
+    }
+
+    /**
+     * Check if we have trusted proxies defined in config_local.php
+     * @see https://github.com/symfony/symfony/blob/7.1/src/Symfony/Component/HttpKernel/Kernel.php#L741
+     * @return bool
+     */
+    public static function hasTrustedProxies()
+    {
+        $class = static::SYMFONY_REQUEST;
+        if (!class_exists($class)) {
+            return false;
+        }
+        if (empty(Config::get('trusted_proxies')) || empty(Config::get('trusted_headers'))) {
+            return false;
+        }
+        if (!isset(static::$proxyRequest)) {
+            $proxies = Config::get('trusted_proxies');
+            $headers = Config::get('trusted_headers');
+            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map('trim', explode(',', $proxies)), static::resolveTrustedHeaders($headers));
+            static::$proxyRequest = $class::createFromGlobals();
+        }
+        return true;
+    }
+
+    /**
+     * Convert trusted headers into bit field of Request::HEADER_*
+     * @see https://github.com/symfony/symfony/blob/7.1/src/Symfony/Bundle/FrameworkBundle/DependencyInjection/FrameworkExtension.php#L3054
+     * @param string[] $headers 
+     * @return int
+     */
+    protected static function resolveTrustedHeaders(array $headers)
+    {
+        $class = static::SYMFONY_REQUEST;
+        $trustedHeaders = 0;
+
+        foreach ($headers as $h) {
+            $trustedHeaders |= match ($h) {
+                'forwarded' => $class::HEADER_FORWARDED,
+                'x-forwarded-for' => $class::HEADER_X_FORWARDED_FOR,
+                'x-forwarded-host' => $class::HEADER_X_FORWARDED_HOST,
+                'x-forwarded-proto' => $class::HEADER_X_FORWARDED_PROTO,
+                'x-forwarded-port' => $class::HEADER_X_FORWARDED_PORT,
+                'x-forwarded-prefix' => $class::HEADER_X_FORWARDED_PREFIX,
+                default => 0,
+            };
+        }
+
+        return $trustedHeaders;
     }
 }

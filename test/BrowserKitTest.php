@@ -47,11 +47,13 @@ class BrowserKitTest extends TestCase
         $this->userAgent ??= 'Chrome';
         $this->createBrowser($this->template, $this->userAgent);
         Config::set('full_url', static::$baseDir);
+        Route::setBaseUrl(null);
     }
 
     public function tearDown(): void
     {
         Config::set('full_url', '');
+        Route::setBaseUrl(null);
     }
 
     /**

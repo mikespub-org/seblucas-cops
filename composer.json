@@ -49,6 +49,7 @@
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^6.4||^7.0",
         "symfony/http-client": "^6.4||^7.0",
+        "symfony/http-foundation": "^6.4||^7.0",
         "mikespub/epub-loader": "^1.5||^2.5||^3.0",
         "opis/json-schema": "^2.3"
     },

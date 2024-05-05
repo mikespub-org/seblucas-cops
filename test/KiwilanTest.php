@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
 
@@ -37,6 +38,7 @@ class KiwilanTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         Config::set('full_url', static::$baseUrl);
+        Route::setBaseUrl(null);
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
 
@@ -54,6 +56,7 @@ class KiwilanTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         Config::set('full_url', '');
+        Route::setBaseUrl(null);
         if (!file_exists(self::TEST_FEED)) {
             return;
         }

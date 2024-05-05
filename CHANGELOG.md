@@ -11,7 +11,12 @@ x.x.x - TODO
   * ...
 
 2.5.x - 2024xxxx
+  * Changes in config_default.php file:
+    - new $config['cops_trusted_proxies'] (dev only)
+    - new $config['cops_trusted_headers'] (dev only)
   * ...
+  * Use dcterms:modified instead of mtime as link attribute in OPDS feeds
+  * Support X-Forwarded-* and Forwarded headers from trusted proxies (dev only)
 
 2.5.6 - 20240503 Support TXT files in OPDS feeds + add length and mtime
   * Add length + mtime to OPDS acquisition links - perhaps for #79
