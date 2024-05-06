@@ -10,7 +10,7 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.5.x - 2024xxxx
+2.6.x - 2024xxxx
   * Changes in config_default.php file:
     - new $config['cops_trusted_proxies'] (dev only)
     - new $config['cops_trusted_headers'] (dev only)

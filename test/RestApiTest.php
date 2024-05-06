@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Output\RestApi;
 
 require_once __DIR__ . '/config_test.php';
@@ -505,6 +506,75 @@ class RestApiTest extends TestCase
             'type' => 'bookmark',
         ];
         $this->assertEquals($expected, $test["data"]);
+    }
+
+    public function testGetMetadata(): void
+    {
+        $request = new Request();
+        $request->set('bookId', 17);
+        $expected = "Metadata for 17";
+        $test = RestApi::getMetadata($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = Metadata::class;
+        $this->assertEquals($expected, get_class($test["entries"]));
+        $expected = "2.0";
+        $this->assertEquals($expected, $test["entries"]->version);
+        $expected = 24;
+        $this->assertCount($expected, $test["entries"]->metadata);
+        $identifiers = $test["entries"]->getIdentifiers();
+        $expected = 2;
+        $this->assertCount($expected, $identifiers);
+        $expected = [
+            'scheme' => 'calibre',
+            'id' => 'calibre_id',
+            'value' => '17',
+        ];
+        $this->assertEquals($expected, $identifiers[0]);
+        $annotations = $test["entries"]->getAnnotations();
+        $expected = 5;
+        $this->assertCount($expected, $annotations);
+        $expected = "bookmark";
+        $this->assertEquals($expected, $annotations[0]["annotation"]["type"]);
+        $expected = "About #1";
+        $this->assertEquals($expected, $annotations[0]["annotation"]["title"]);
+    }
+
+    public function testGetMetadataElement(): void
+    {
+        $element = "dc:title";
+        $request = new Request();
+        $request->set('bookId', 17);
+        $request->set('element', $element);
+        $expected = "Metadata for 17";
+        $test = RestApi::getMetadata($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = $element;
+        $this->assertEquals($expected, $test["element"]);
+        $expected = "Alice's Adventures in Wonderland";
+        $this->assertEquals($expected, $test["entries"][0]);
+    }
+
+    public function testGetMetadataElementName(): void
+    {
+        $element = "meta";
+        $name = "calibre:annotation";
+        $request = new Request();
+        $request->set('bookId', 17);
+        $request->set('element', $element);
+        $request->set('name', $name);
+        $expected = "Metadata for 17";
+        $test = RestApi::getMetadata($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = $element;
+        $this->assertEquals($expected, $test["element"]);
+        $expected = $name;
+        $this->assertEquals($expected, $test["name"]);
+        $expected = 5;
+        $this->assertCount($expected, $test["entries"]);
+        $expected = "bookmark";
+        $this->assertEquals($expected, $test["entries"][0]["annotation"]["type"]);
+        $expected = "About #1";
+        $this->assertEquals($expected, $test["entries"][0]["annotation"]["title"]);
     }
 
     public function testGetUserNoAuth(): void
