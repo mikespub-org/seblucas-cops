@@ -27,7 +27,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Pages\PageId;
 use Exception;
 
@@ -935,7 +935,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $book = Book::getBookById(223);
-        $json = JSONRenderer::getBookContentArray($book, self::$endpoint);
+        $json = JsonRenderer::getBookContentArray($book, self::$endpoint);
 
         /* @var CustomColumn[] $custom */
         $custom = $json["customcolumns_list"];

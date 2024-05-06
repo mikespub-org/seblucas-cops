@@ -12,9 +12,7 @@ require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Output\JSONRenderer;
-use SebLucas\Template\doT;
+use SebLucas\Cops\Output\HtmlRenderer;
 
 class ConfigTest extends TestCase
 {
@@ -116,27 +114,8 @@ class ConfigTest extends TestCase
         Config::set('template', $templateName);
         $request = new Request();
 
-        $headcontent = file_get_contents(__DIR__ . '/../templates/' . Config::get('template') . '/file.html');
-        $template = new doT();
-        $tpl = $template->template($headcontent, null);
-        $data = [
-            "title"                 => Config::get('title_default'),
-            "version"               => Config::VERSION,
-            "opds_url"              => Route::url(Config::ENDPOINT["feed"]),
-            "customHeader"          => "",
-            "template"              => Config::get('template'),
-            "server_side_rendering" => $request->render(),
-            "current_css"           => $request->style(),
-            "favico"                => Config::get('icon'),
-            "assets"                => Route::url(Config::get('assets')),
-            "images"                => Route::url('images'),
-            "resources"             => Route::url('resources'),
-            "templates"             => Route::url('templates'),
-            "basedir"               => Route::url('.'),
-            "getjson_url"           => JSONRenderer::getCurrentUrl($request),
-        ];
-
-        $head = $tpl($data);
+        $renderer = new HtmlRenderer();
+        $head = $renderer->render($request);
 
         $this->assertStringContainsString($templateName . ".min.css", $head);
         $this->assertStringContainsString($templateName . ".min.js", $head);

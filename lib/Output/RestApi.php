@@ -123,7 +123,7 @@ class RestApi
      */
     public function getJson()
     {
-        return JSONRenderer::getJson($this->request);
+        return JsonRenderer::getJson($this->request);
     }
 
     /**

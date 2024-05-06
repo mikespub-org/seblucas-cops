@@ -16,9 +16,9 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Output\HtmlRenderer;
+use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Language\Translation;
-use SebLucas\Template\doT;
 use DOMDocument;
 use Exception;
 
@@ -70,7 +70,7 @@ class BaseTest extends TestCase
         $this->assertNull(Format::serverSideRender(null, $template));
 
         $request = new Request();
-        $data = JSONRenderer::getJson($request, true);
+        $data = JsonRenderer::getJson($request, true);
         $output = Format::serverSideRender($data, $template);
 
         $old = libxml_use_internal_errors(true);
@@ -91,32 +91,6 @@ class BaseTest extends TestCase
     }
 
     /**
-     * Summary of getTemplateData
-     * @param mixed $request
-     * @param mixed $templateName
-     * @return array<string, mixed>
-     */
-    public function getTemplateData($request, $templateName)
-    {
-        return [
-            "title"                 => Config::get('title_default'),
-            "version"               => Config::VERSION,
-            "opds_url"              => Route::url(Config::ENDPOINT["feed"]),
-            "customHeader"          => "",
-            "template"              => $templateName,
-            "server_side_rendering" => $request->render(),
-            "current_css"           => $request->style(),
-            "favico"                => Config::get('icon'),
-            "assets"                => Route::url(Config::get('assets')),
-            "images"                => Route::url('images'),
-            "resources"             => Route::url('resources'),
-            "templates"             => Route::url('templates'),
-            "basedir"               => Route::url('.'),
-            "getjson_url"           => JSONRenderer::getCurrentUrl($request),
-        ];
-    }
-
-    /**
      * The function for the head of the HTML catalog
      * @dataProvider providerTemplate
      * @param mixed $templateName
@@ -125,15 +99,17 @@ class BaseTest extends TestCase
     public function testGenerateHeader($templateName)
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
+        $_COOKIE["template"] = $templateName;
         $request = new Request();
-        $headcontent = file_get_contents(__DIR__ . '/../templates/' . $templateName . '/file.html');
-        $template = new doT();
-        $tpl = $template->template($headcontent, null);
-        $data = $this->getTemplateData($request, $templateName);
+        $renderer = new HtmlRenderer();
+        $tpl = $renderer->getDotTemplate(__DIR__ . '/../templates/' . $templateName . '/file.html');
+        $data = $renderer->getTemplateData($request);
 
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);
         $this->assertStringContainsString("</head>", $head);
+
+        unset($_COOKIE["template"]);
     }
 
     /**

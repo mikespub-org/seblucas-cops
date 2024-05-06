@@ -22,7 +22,7 @@ use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use Exception;
 
-class JSONRenderer
+class JsonRenderer
 {
     public static string $endpoint = Config::ENDPOINT["index"];
 

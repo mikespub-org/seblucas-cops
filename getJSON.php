@@ -8,7 +8,7 @@
  * @author     mikespub
  */
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Output\JsonRenderer;
 
 require_once __DIR__ . '/config.php';
 
@@ -16,4 +16,4 @@ $request = new Request();
 
 header('Content-Type:application/json;charset=utf-8');
 
-echo json_encode(JSONRenderer::getJson($request));
+echo json_encode(JsonRenderer::getJson($request));

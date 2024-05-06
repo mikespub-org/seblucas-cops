@@ -15,6 +15,8 @@ x.x.x - TODO
     - new $config['cops_trusted_proxies'] (dev only)
     - new $config['cops_trusted_headers'] (dev only)
   * ...
+  * Rename JSON_renderer and OPDS_renderer files and classes
+  * Add HtmlRenderer class and move html template rendering from index.php
   * Use dcterms:modified instead of mtime as link attribute in OPDS feeds
   * Support X-Forwarded-* and Forwarded headers from trusted proxies (dev only)
 

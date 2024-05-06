@@ -17,7 +17,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Pages\PageId;
 
 class RestApiTest extends TestCase
@@ -109,7 +109,7 @@ class RestApiTest extends TestCase
     {
         $request = new Request();
         $apiHandler = new RestApi($request);
-        $expected = JSONRenderer::getJson($request);
+        $expected = JsonRenderer::getJson($request);
         $test = $apiHandler->getJson();
         $this->assertEquals($expected, $test);
     }

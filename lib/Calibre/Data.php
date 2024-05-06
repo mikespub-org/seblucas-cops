@@ -99,7 +99,7 @@ class Data
     {
         $this->book = $book;
         $this->databaseId = ($nullsafeVariable1 = $book) ? $nullsafeVariable1->getDatabaseId() : null;
-        // this is set on book in JSONRenderer now
+        // this is set on book in JsonRenderer now
         if (!is_null($book) && $book->updateForKepub && $this->isEpubValidOnKobo()) {
             $this->updateForKepub = true;
         }
@@ -246,7 +246,7 @@ class Data
         }
         $href = $prefix . "/" . $this->id . "/" . $database;
 
-        // this is set on book in JSONRenderer now
+        // this is set on book in JsonRenderer now
         if ($this->updateForKepub) {
             $href .= rawurlencode($this->getUpdatedFilenameKepub());
         } else {

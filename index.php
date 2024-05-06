@@ -11,11 +11,8 @@
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Output\HtmlRenderer;
 use SebLucas\Cops\Pages\PageId;
-use SebLucas\Template\doT;
 
 require_once __DIR__ . '/config.php';
 
@@ -48,63 +45,11 @@ if (Config::get('fetch_protect') == '1') {
 
 header('Content-Type:text/html;charset=utf-8');
 
-$assets = Route::url(Config::get('assets'));
-$data = ['title'                 => Config::get('title_default'),
-              'version'               => Config::VERSION,
-              'opds_url'              => Route::url(Config::ENDPOINT["feed"]),
-              'customHeader'          => '',
-              'template'              => $request->template(),
-              'server_side_rendering' => $request->render(),
-              'current_css'           => Route::url($request->style()),
-              'favico'                => Route::url(Config::get('icon')),
-              'assets'                => $assets,
-              'images'                => Route::url('images'),
-              'resources'             => Route::url('resources'),
-              'templates'             => Route::url('templates'),
-              'basedir'               => Route::url('.'),
-              'getjson_url'           => JSONRenderer::getCurrentUrl($request)];
-if (preg_match('/Kindle/', $request->agent())) {
-    $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
-}
-if ($request->template() == 'twigged') {
-    $loader = new \Twig\Loader\FilesystemLoader('templates/twigged');
-    $twig = new \Twig\Environment($loader);
-    $function = new \Twig\TwigFunction('str_format', function ($format, ...$args) {
-        //return str_format($format, ...$args);
-        return Format::str_format($format, ...$args);
-    });
-    $twig->addFunction($function);
-    $function = new \Twig\TwigFunction('asset', function ($file) use ($assets) {
-        return $assets . '/' . $file . '?v=' . Config::VERSION;
-    });
-    $twig->addFunction($function);
-    if ($request->render()) {
-        // Get the page data
-        $data['page_it'] = JSONRenderer::getJson($request, true);
-        if ($data['title'] != $data['page_it']['title']) {
-            $data['title'] .= ' - ' . $data['page_it']['title'];
-        }
-    }
-    echo $twig->render('index.html', ['it' => $data]);
-    return;
-}
-error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-$headcontent = file_get_contents('templates/' . $request->template() . '/file.html');
-$template = new doT();
-$dot = $template->template($headcontent, null);
-if ($request->render()) {
-    // Get the page data
-    $page_it = JSONRenderer::getJson($request, true);
-    if ($data['title'] != $page_it['title']) {
-        $data['title'] .= ' - ' . $page_it['title'];
-    }
-    echo($dot($data));
-    echo "<body>\n";
+$html = new HtmlRenderer();
 
-    echo Format::serverSideRender($page_it, $request->template());
-    echo "</body>\n</html>\n";
-    return;
+try {
+    echo $html->render($request);
+} catch (Throwable $e) {
+    error_log($e);
+    echo $e->getMessage();
 }
-echo($dot($data));
-echo "<body>\n";
-echo "</body>\n</html>\n";

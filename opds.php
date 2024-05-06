@@ -9,8 +9,8 @@
  */
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-//use SebLucas\Cops\Output\OPDSRenderer;
-use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
+//use SebLucas\Cops\Output\OpdsRenderer;
+use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 use SebLucas\Cops\Pages\PageId;
 
 require_once __DIR__ . '/config.php';
@@ -37,7 +37,7 @@ if (Config::get('fetch_protect') == '1') {
     }
 }
 
-$OPDSRender = new OPDSRenderer();
+$OPDSRender = new OpdsRenderer();
 
 switch ($page) {
     case PageId::OPENSEARCH :

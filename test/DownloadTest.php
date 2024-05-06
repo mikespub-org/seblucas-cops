@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Output\JsonRenderer;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;

@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Output\OPDSRenderer;
+use SebLucas\Cops\Output\OpdsRenderer;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
@@ -146,7 +146,7 @@ class OpdsTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED));
@@ -177,12 +177,12 @@ class OpdsTest extends TestCase
         $request = new Request();
         $request->set('page', $page);
         $request->set('query', $query);
-        $_SERVER['REQUEST_URI'] = OPDSRenderer::$endpoint . "?" . $request->query();
+        $_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -221,7 +221,7 @@ class OpdsTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -235,7 +235,7 @@ class OpdsTest extends TestCase
     {
         $request = new Request();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->getOpenSearch($request));
         $this->AssertTrue($this->jingValidateSchema(self::TEST_FEED, self::OPENSEARCHDESCRIPTION_RELAX_NG));
@@ -254,7 +254,7 @@ class OpdsTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -278,7 +278,7 @@ class OpdsTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -290,7 +290,7 @@ class OpdsTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -312,7 +312,7 @@ class OpdsTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -332,7 +332,7 @@ class OpdsTest extends TestCase
         $currentPage->InitializeContent();
         $currentPage->idPage = null;
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));

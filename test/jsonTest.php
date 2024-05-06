@@ -8,7 +8,7 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Output\JSONRenderer;
+use SebLucas\Cops\Output\JsonRenderer;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ class JsonTest extends TestCase
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $test = [];
         $request = new Request();
-        $test = JSONRenderer::addCompleteArray($test, $request, self::$endpoint);
+        $test = JsonRenderer::addCompleteArray($test, $request, self::$endpoint);
         $this->assertArrayHasKey("c", $test);
         $this->assertArrayHasKey("version", $test ["c"]);
         $this->assertArrayHasKey("i18n", $test ["c"]);
@@ -51,7 +51,7 @@ class JsonTest extends TestCase
         // The thumbnails should be the same as the covers
         Config::set('thumbnail_handling', "1");
         $test = [];
-        $test = JSONRenderer::addCompleteArray($test, $request, self::$endpoint);
+        $test = JsonRenderer::addCompleteArray($test, $request, self::$endpoint);
 
         $this->assertEquals(Config::ENDPOINT["fetch"] . "?id={0}&db={1}", $test ["c"]["url"]["thumbnailUrl"]);
         $this->assertTrue($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
@@ -59,7 +59,7 @@ class JsonTest extends TestCase
         // The thumbnails should be the same as the covers
         Config::set('thumbnail_handling', "/images.png");
         $test = [];
-        $test = JSONRenderer::addCompleteArray($test, $request, self::$endpoint);
+        $test = JsonRenderer::addCompleteArray($test, $request, self::$endpoint);
 
         $this->assertEquals("/images.png", $test ["c"]["url"]["thumbnailUrl"]);
 
@@ -69,7 +69,7 @@ class JsonTest extends TestCase
     public function testGetBookContentArrayWithoutSeries(): void
     {
         $book = Book::getBookById(17);
-        $test = JSONRenderer::getBookContentArray($book, self::$endpoint);
+        $test = JsonRenderer::getBookContentArray($book, self::$endpoint);
 
         $this->assertCount(2, $test ["preferedData"]);
         $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&type=epub&data=20", $test ["preferedData"][0]["url"]);
@@ -85,7 +85,7 @@ class JsonTest extends TestCase
     {
         $book = Book::getBookById(2);
 
-        $test = JSONRenderer::getBookContentArray($book, self::$endpoint);
+        $test = JsonRenderer::getBookContentArray($book, self::$endpoint);
 
         $this->assertCount(1, $test ["preferedData"]);
         $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=2&type=epub&data=1", $test ["preferedData"][0]["url"]);
@@ -101,7 +101,7 @@ class JsonTest extends TestCase
     {
         $book = Book::getBookById(17);
 
-        $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
+        $test = JsonRenderer::getFullBookContentArray($book, self::$endpoint);
 
         $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17", $test ["coverurl"]);
         $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&thumb=html2", $test ["thumbnailurl"]);
@@ -120,7 +120,7 @@ class JsonTest extends TestCase
         Database::clearDb();
         $book = Book::getBookById(17);
 
-        $test = JSONRenderer::getFullBookContentArray($book, self::$endpoint);
+        $test = JsonRenderer::getFullBookContentArray($book, self::$endpoint);
 
         $this->assertEquals(Route::url("./test/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
         $this->assertEquals(Route::url(Config::ENDPOINT["fetch"]) . "?id=17&thumb=html2", $test ["thumbnailurl"]);
@@ -137,7 +137,7 @@ class JsonTest extends TestCase
 
         $request = new Request();
         $request->set('page', $page);
-        $test = JSONRenderer::getJson($request);
+        $test = JsonRenderer::getJson($request);
 
         $this->assertEquals("Recent additions", $test["title"]);
         $this->assertCount(15, $test["entries"]);
@@ -153,7 +153,7 @@ class JsonTest extends TestCase
         $request = new Request();
         $request->set('page', $page);
         $request->set('id', $id);
-        $test = JSONRenderer::getJson($request);
+        $test = JsonRenderer::getJson($request);
 
         $this->assertEquals("Authors > Arthur Conan Doyle", $test["title"]);
         $this->assertCount(5, $test["entries"]);
@@ -173,7 +173,7 @@ class JsonTest extends TestCase
         $request = new Request();
         $request->set('page', $page);
         $request->set('a', $a);
-        $test = JSONRenderer::getJson($request);
+        $test = JsonRenderer::getJson($request);
 
         $this->assertEquals("Recent additions", $test["title"]);
         $this->assertCount(8, $test["entries"]);
@@ -193,7 +193,7 @@ class JsonTest extends TestCase
         $request->set('page', $page);
         $request->set('query', $query);
         $request->set('search', 1);
-        $test = JSONRenderer::getJson($request);
+        $test = JsonRenderer::getJson($request);
         $check = [
             [
                 'class' => 'tt-header',
@@ -220,7 +220,7 @@ class JsonTest extends TestCase
 
         $request = new Request();
         $request->set('page', $page);
-        $test = JSONRenderer::getJson($request, true);
+        $test = JsonRenderer::getJson($request, true);
 
         $this->assertEquals("Recent additions", $test["title"]);
         $this->assertCount(15, $test["entries"]);

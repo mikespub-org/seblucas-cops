@@ -9,7 +9,7 @@
  */
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\OPDSRenderer;
+use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Pages\PageId;
 
 require_once __DIR__ . '/config.php';
@@ -32,7 +32,7 @@ if (Config::get('fetch_protect') == '1') {
 
 header('Content-Type:application/xml');
 
-$OPDSRender = new OPDSRenderer();
+$OPDSRender = new OpdsRenderer();
 
 switch ($page) {
     case PageId::OPENSEARCH :

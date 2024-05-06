@@ -10,8 +10,8 @@ namespace SebLucas\Cops\Tests;
 
 use Opis\JsonSchema\Validator;
 use Opis\JsonSchema\Errors\ErrorFormatter;
-//use SebLucas\Cops\Output\OPDSRenderer;
-use SebLucas\Cops\Output\KiwilanOPDS as OPDSRenderer;
+//use SebLucas\Cops\Output\OpdsRenderer;
+use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
@@ -155,7 +155,7 @@ class KiwilanTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -186,12 +186,12 @@ class KiwilanTest extends TestCase
         $request = new Request();
         $request->set('page', $page);
         $request->set('query', $query);
-        $_SERVER['REQUEST_URI'] = OPDSRenderer::$endpoint . "?" . $request->query();
+        $_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -231,7 +231,7 @@ class KiwilanTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -246,7 +246,7 @@ class KiwilanTest extends TestCase
     {
         $request = new Request();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->getOpenSearch($request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -268,7 +268,7 @@ class KiwilanTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -293,7 +293,7 @@ class KiwilanTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -306,7 +306,7 @@ class KiwilanTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -329,7 +329,7 @@ class KiwilanTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -350,7 +350,7 @@ class KiwilanTest extends TestCase
         $currentPage->InitializeContent();
         $currentPage->idPage = null;
 
-        $OPDSRender = new OPDSRenderer();
+        $OPDSRender = new OpdsRenderer();
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());

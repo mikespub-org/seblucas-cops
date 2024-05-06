@@ -22,7 +22,7 @@ use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 
-class OPDSRenderer
+class OpdsRenderer
 {
     public static string $endpoint = Config::ENDPOINT["feed"];
     /** @var ?XMLWriter */
