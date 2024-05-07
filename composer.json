@@ -45,7 +45,7 @@
     "require-dev": {
         "kiwilan/php-opds": "^2.0",
         "phpunit/phpunit": "^10.5",
-        "phing/phing": "^2.17",
+        "phing/phing": "^3.0",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^6.4||^7.0",
         "symfony/http-client": "^6.4||^7.0",

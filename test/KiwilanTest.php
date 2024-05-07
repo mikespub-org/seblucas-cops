@@ -22,6 +22,9 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
 
+/**
+ * @requires function \Opis\JsonSchema\Validator::__construct
+ */
 class KiwilanTest extends TestCase
 {
     public const OPDS_SCHEMAS = __DIR__ . "/schema/opds";

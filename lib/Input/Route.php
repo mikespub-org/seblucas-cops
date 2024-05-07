@@ -580,7 +580,9 @@ class Route
     public static function setBaseUrl($base)
     {
         static::$baseUrl = $base;
-        static::$proxyRequest = null;
+        if (is_null($base)) {
+            static::$proxyRequest = null;
+        }
     }
 
     /**

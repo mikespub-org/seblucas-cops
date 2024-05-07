@@ -31,6 +31,9 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpClient\HttpClient;
 use Exception;
 
+/**
+ * @requires function \Symfony\Component\BrowserKit\HttpBrowser::__construct
+ */
 class BrowserKitTest extends TestCase
 {
     public static string $baseDir = '/cops/';

@@ -23,16 +23,16 @@ class Request
      */
     public $urlParams = [];
     protected string $queryString = '';
-    protected bool $online = true;
+    protected bool $parsed = true;
+    protected ?string $content = null;
 
     /**
      * Summary of __construct
-     * @param bool $online
+     * @param bool $parse
      */
-    public function __construct($online = true)
+    public function __construct($parse = true)
     {
-        $this->online = $online;
-        $this->init();
+        $this->parseParams($parse);
     }
 
     /**
@@ -103,14 +103,16 @@ class Request
     }
 
     /**
-     * Summary of init
+     * Summary of parseParams
+     * @param bool $parse
      * @return void
      */
-    public function init()
+    public function parseParams($parse = true)
     {
+        $this->parsed = $parse;
         $this->urlParams = [];
         $this->queryString = '';
-        if (!$this->online) {
+        if (!$this->parsed) {
             return;
         }
         $path = $this->path();
@@ -253,6 +255,18 @@ class Request
     public function files($name)
     {
         return $_FILES[$name] ?? null;
+    }
+
+    /**
+     * Summary of content
+     * @return mixed
+     */
+    public function content()
+    {
+        if (!isset($this->content)) {
+            $this->content = file_get_contents('php://input');
+        }
+        return $this->content;
     }
 
     /**

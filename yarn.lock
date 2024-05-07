@@ -14,13 +14,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikespub/epubjs-reader@npm:^2024.3.5":
-  version: 2024.3.5
-  resolution: "@mikespub/epubjs-reader@npm:2024.3.5"
+"@mikespub/epubjs-reader@npm:^2024.4.23":
+  version: 2024.4.23
+  resolution: "@mikespub/epubjs-reader@npm:2024.4.23"
   dependencies:
     epubjs: "npm:^0.3.93"
-    js-md5: "npm:^0.7.3"
-  checksum: 10c0/cdbbdaae1e83a30c3ebfd0c6acaad24fe809fb3ef6107054c4ac26e35f344d5c864072b6f2d90f5fdd7d143f53fd8bb04290688b654c53f7d08d0e7d521a8f3b
+    js-md5: "npm:^0.8.3"
+  checksum: 10c0/f9a6b0f1265e9945fceb474cc6464909c56757950fa4470d95801143523286450f87c508e79d15fe043e49598e21b7e1d1c8efb5549879613018946860b99d37
   languageName: node
   linkType: hard
 
@@ -243,10 +243,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-md5@npm:^0.7.3":
-  version: 0.7.3
-  resolution: "js-md5@npm:0.7.3"
-  checksum: 10c0/3e7048590c40edb0b8fb290e13a81d6eebbd682c70c520c4853820ae8fe3a3c5e375cfa0ca9a731aa8d8e0ba82cd8f922fea34c737caf72a7f9ab819bb8382a7
+"js-md5@npm:^0.8.3":
+  version: 0.8.3
+  resolution: "js-md5@npm:0.8.3"
+  checksum: 10c0/f7e41e95f8e5eb5eeb43085bec3832ae3dfe0020c42fcca5a4efe571213391a9e9594db31bd34624b7280af4f1f12c751b6a50074a15346ecf40a0d54115d77f
   languageName: node
   linkType: hard
 
@@ -401,7 +401,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "seblucas-cops@workspace:."
   dependencies:
-    "@mikespub/epubjs-reader": "npm:^2024.3.5"
+    "@mikespub/epubjs-reader": "npm:^2024.4.23"
     bootstrap: "npm:^3.4.1"
     corejs-typeahead: "npm:^1.3.4"
     dot: "npm:^1.1.3"
@@ -410,7 +410,7 @@ __metadata:
     lru-fast: "npm:^0.2.2"
     magnific-popup: "npm:^1.1.0"
     normalize.css: "npm:^8.0.1"
-    swagger-ui-dist: "npm:^5.12.0"
+    swagger-ui-dist: "npm:^5.17.6"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -431,10 +431,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.12.0":
-  version: 5.12.0
-  resolution: "swagger-ui-dist@npm:5.12.0"
-  checksum: 10c0/ba4f5bd742b1c005e900333c083062e6e6df702854498a054740196232907c034a0ee48f568048360500fdd2a7ddb03e79468c0c14d3f990bbbf95c5f9b54a75
+"swagger-ui-dist@npm:^5.17.6":
+  version: 5.17.6
+  resolution: "swagger-ui-dist@npm:5.17.6"
+  checksum: 10c0/6bd64a7a14e913dfdbe960843f364d0fc474822436c8361d674694376b5a4604b9abd3672cee06c284686911e180c55488661b2cd5b408dcd5a9269480ce804e
   languageName: node
   linkType: hard
 
