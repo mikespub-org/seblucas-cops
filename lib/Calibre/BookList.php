@@ -296,10 +296,10 @@ class BookList
         $i = 0;
         $critArray = [];
         foreach ([PageQueryResult::SCOPE_AUTHOR,
-                       PageQueryResult::SCOPE_TAG,
-                       PageQueryResult::SCOPE_SERIES,
-                       PageQueryResult::SCOPE_PUBLISHER,
-                       PageQueryResult::SCOPE_BOOK] as $key) {
+            PageQueryResult::SCOPE_TAG,
+            PageQueryResult::SCOPE_SERIES,
+            PageQueryResult::SCOPE_PUBLISHER,
+            PageQueryResult::SCOPE_BOOK] as $key) {
             if (in_array($key, $ignoredCategories) ||
                 (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
                 $critArray[$i] = static::BAD_SEARCH;

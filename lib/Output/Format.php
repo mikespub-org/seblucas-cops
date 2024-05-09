@@ -134,9 +134,9 @@ class Format
         // Generate the function for the template
         $template = new doT();
         $dot = $template->template($page, ['bookdetail' => $bookdetail,
-                                                  'header' => $header,
-                                                  'footer' => $footer,
-                                                  'main' => $main]);
+            'header' => $header,
+            'footer' => $footer,
+            'main' => $main]);
         // If there is a syntax error in the function created
         // $dot will be equal to FALSE
         if (!$dot) {

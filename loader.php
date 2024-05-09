@@ -7,15 +7,15 @@
  * @author     mikespub
  */
 
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use Marsender\EPubLoader\RequestHandler;
 use Marsender\EPubLoader\App\ExtraActions;
 
 require_once __DIR__ . '/config.php';
 
-if (!class_exists('Marsender\EPubLoader\RequestHandler')) {
+if (!class_exists('\Marsender\EPubLoader\RequestHandler')) {
     echo 'This endpoint is an example for development only';
     return;
 }
@@ -70,7 +70,7 @@ foreach ($calibreDir as $name => $path) {
 }
 
 // don't try to match path params here
-$request = new Request();
+$request = Framework::getRequest();
 $path = $request->path('/');
 $path = substr($path, 1);
 [$action, $dbNum, $itemId, $other] = explode('/', $path . '///', 4);

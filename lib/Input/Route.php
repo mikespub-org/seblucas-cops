@@ -629,7 +629,7 @@ class Route
     /**
      * Convert trusted headers into bit field of Request::HEADER_*
      * @see https://github.com/symfony/symfony/blob/7.1/src/Symfony/Bundle/FrameworkBundle/DependencyInjection/FrameworkExtension.php#L3054
-     * @param string[] $headers 
+     * @param string[] $headers
      * @return int
      */
     protected static function resolveTrustedHeaders(array $headers)

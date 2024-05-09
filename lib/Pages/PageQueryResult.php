@@ -134,10 +134,10 @@ class PageQueryResult extends Page
                 Database::getDb($d);
             }
             foreach ([PageQueryResult::SCOPE_BOOK,
-                            PageQueryResult::SCOPE_AUTHOR,
-                            PageQueryResult::SCOPE_SERIES,
-                            PageQueryResult::SCOPE_TAG,
-                            PageQueryResult::SCOPE_PUBLISHER] as $key) {
+                PageQueryResult::SCOPE_AUTHOR,
+                PageQueryResult::SCOPE_SERIES,
+                PageQueryResult::SCOPE_TAG,
+                PageQueryResult::SCOPE_PUBLISHER] as $key) {
                 if (in_array($key, $this->getIgnoredCategories())) {
                     continue;
                 }

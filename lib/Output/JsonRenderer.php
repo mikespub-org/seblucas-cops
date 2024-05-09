@@ -43,7 +43,7 @@ class JsonRenderer
             if ($data) {
                 $i++;
                 array_push($preferedData, ["url" => $data->getHtmlLink(),
-                  "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
+                    "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
             }
         }
         $database = $book->getDatabaseId();
@@ -84,24 +84,24 @@ class JsonRenderer
         $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);
 
         return ["id" => $book->id,
-                      "detailurl" => $book->getDetailUrl($endpoint),
-                      "hasCover" => $book->hasCover,
-                      "preferedData" => $preferedData,
-                      "preferedCount" => count($preferedData),
-                      "rating" => $book->getRating(),
-                      "publisherName" => $pn,
-                      "publisherurl" => $pu,
-                      "pubDate" => $book->getPubDate(),
-                      "languagesName" => $book->getLanguages(),
-                      "authorsName" => $book->getAuthorsName(),
-                      "authors" => $authors,
-                      "tagsName" => $book->getTagsName(),
-                      "tags" => $tags,
-                      "seriesName" => $sn,
-                      "seriesIndex" => $book->seriesIndex,
-                      "seriesCompleteName" => $scn,
-                      "seriesurl" => $su,
-                      "customcolumns_list" => $cc];
+            "detailurl" => $book->getDetailUrl($endpoint),
+            "hasCover" => $book->hasCover,
+            "preferedData" => $preferedData,
+            "preferedCount" => count($preferedData),
+            "rating" => $book->getRating(),
+            "publisherName" => $pn,
+            "publisherurl" => $pu,
+            "pubDate" => $book->getPubDate(),
+            "languagesName" => $book->getLanguages(),
+            "authorsName" => $book->getAuthorsName(),
+            "authors" => $authors,
+            "tagsName" => $book->getTagsName(),
+            "tags" => $tags,
+            "seriesName" => $sn,
+            "seriesIndex" => $book->seriesIndex,
+            "seriesCompleteName" => $scn,
+            "seriesurl" => $su,
+            "customcolumns_list" => $cc];
     }
 
     /**

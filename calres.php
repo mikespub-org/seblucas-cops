@@ -8,25 +8,12 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Calibre\Resource;
+use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
 // don't try to match path params here
-$request = new Request(false);
-$path = $request->path();
-if (empty($path) || $path == '/') {
-    // this will call exit()
-    $request->notFound();
-}
-$path = substr($path, 1);
-if (!preg_match('/^\d+\/\w+\/\w+$/', $path)) {
-    // this will call exit()
-    $request->notFound();
-}
-[$database, $alg, $digest] = explode('/', $path);
-$hash = $alg . ':' . $digest;
-if (!Resource::sendImageResource($hash, null, intval($database))) {
-    $request->notFound();
-}
+$request = Framework::getRequest(false);
+
+$handler = Framework::getHandler('calres');
+$handler->handle($request);

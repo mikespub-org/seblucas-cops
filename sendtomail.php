@@ -8,28 +8,11 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\Mail;
+use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-if ($error = Mail::checkConfiguration()) {
-    echo $error;
-    return;
-}
+$request = Framework::getRequest();
 
-$request = new Request();
-$idData = (int) $request->post("data");
-$emailDest = $request->post("email");
-if ($error = Mail::checkRequest($idData, $emailDest)) {
-    echo $error;
-    return;
-}
-
-if ($error = Mail::sendMail($idData, $emailDest, $request)) {
-    echo localize("mail.messagenotsent");
-    echo $error;
-    return;
-}
-
-echo localize("mail.messagesent");
+$handler = Framework::getHandler('mail');
+$handler->handle($request);

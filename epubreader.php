@@ -8,22 +8,11 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\EPubReader;
+use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = new Request();
-$idData = $request->getId('data');
-if (empty($idData)) {
-    // this will call exit()
-    $request->notFound();
-}
+$request = Framework::getRequest();
 
-try {
-    header('Content-Type: text/html;charset=utf-8');
-    echo EPubReader::getReader($idData, $request);
-} catch (Exception $e) {
-    error_log($e);
-    $request->notFound();
-}
+$handler = Framework::getHandler('read');
+$handler->handle($request);

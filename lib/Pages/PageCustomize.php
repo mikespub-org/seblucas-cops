@@ -97,11 +97,11 @@ class PageCustomize extends Page
         $this->entryArray = [];
 
         $ignoredBaseArray = [PageQueryResult::SCOPE_AUTHOR,
-                                   PageQueryResult::SCOPE_TAG,
-                                   PageQueryResult::SCOPE_SERIES,
-                                   PageQueryResult::SCOPE_PUBLISHER,
-                                   PageQueryResult::SCOPE_RATING,
-                                   "language"];
+            PageQueryResult::SCOPE_TAG,
+            PageQueryResult::SCOPE_SERIES,
+            PageQueryResult::SCOPE_PUBLISHER,
+            PageQueryResult::SCOPE_RATING,
+            "language"];
 
         $database = $this->getDatabaseId();
         $content = "";

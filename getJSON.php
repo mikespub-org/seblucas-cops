@@ -7,13 +7,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */
-use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\JsonRenderer;
+
+use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = new Request();
+$request = Framework::getRequest();
 
-header('Content-Type:application/json;charset=utf-8');
-
-echo json_encode(JsonRenderer::getJson($request));
+$handler = Framework::getHandler('json');
+$handler->handle($request);

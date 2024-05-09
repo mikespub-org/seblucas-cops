@@ -12,6 +12,7 @@ x.x.x - TODO
 
 2.6.x - 2024xxxx
   * ...
+  * Add minimal framework + move endpoint code to handlers
   * Change restapi routes to use endpoint instead of dummy pageId
   * Add more endpoints to routes and return instead of exit
   * Add getUri() for annotations and notes

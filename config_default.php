@@ -583,7 +583,7 @@ $config['cops_epub_reader'] = 'monocle';
  *
  * See https://github.com/mikespub-org/intity-epubjs-reader/issues/2#issuecomment-2043469571
  * for examples
- * 
+ *
 $config['cops_epubjs_reader_settings'] = '{
     arrows: "content", // none | content | toolbar - depending on this.isMobile
     restore: true,

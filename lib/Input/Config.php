@@ -31,6 +31,7 @@ class Config
         "download" => "download.php",
         "calres" => "calres.php",
         "zipfs" => "zipfs.php",
+        "mail" => "sendtomail.php",
     ];
     protected const PREFIX = 'cops_';
 
