@@ -151,8 +151,13 @@ class RestApi
         // @todo run endpoint via handler someday
         $run ??= static::$doRunEndpoint;
         if ($run) {
+            $oldpath = $_SERVER['PATH_INFO'] ?? '';
+            $oldparams = $_GET;
             $_SERVER['PATH_INFO'] = $path;
+            $_GET = $params;
             require dirname(__DIR__, 2) . '/' . $endpoint;
+            $_SERVER['PATH_INFO'] = $oldpath;
+            $_GET = $oldparams;
             return null;
         }
         $result = ["endpoint" => $endpoint, "path" => $path, "params" => $params];
@@ -181,7 +186,7 @@ class RestApi
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
                 header('Location: ' . Route::url(static::$endpoint) . '/index');
-                exit;
+                return '';
             }
             if ($this->isExtra) {
                 $result = $params;
@@ -423,7 +428,9 @@ class RestApi
                         $schema["pattern"] = '^' . $pattern . '$';
                         $route = str_replace(':' . $pattern, '', $route);
                     }
-                    $queryString .= "&{$param}=" . '{' . $param . '}';
+                    if ($param !== 'ignore') {
+                        $queryString .= "&{$param}=" . '{' . $param . '}';
+                    }
                     array_push($params, [
                         "name" => $param,
                         "in" => "path",
@@ -432,8 +439,15 @@ class RestApi
                     ]);
                 }
             }
-            if (!empty($queryParams["page"]) && $queryParams["page"] == PageId::REST_API) {
+            if (!empty($queryParams[Route::ENDPOINT_PARAM]) && $queryParams[Route::ENDPOINT_PARAM] == "restapi") {
                 $queryString = substr($route, 1);
+            } elseif (!empty($queryParams[Route::ENDPOINT_PARAM])) {
+                $testpoint = $queryParams[Route::ENDPOINT_PARAM];
+                $script = Config::ENDPOINT[$testpoint];
+                $queryString = str_replace("endpoint=$testpoint", $script, $queryString);
+                $queryString = str_replace($script . '&', $script . '?', $queryString);
+            } else {
+                $queryString = 'getJSON.php?' . $queryString;
             }
             $result["paths"][$route] = [
                 "get" => [
@@ -458,7 +472,8 @@ class RestApi
             if (
                 !str_starts_with($route, "/databases") &&
                 !in_array($route, ["/openapi", "/routes", "/about"]) &&
-                empty($queryParams[Route::ENDPOINT_PARAM])
+                (empty($queryParams[Route::ENDPOINT_PARAM]) ||
+                in_array($queryParams[Route::ENDPOINT_PARAM], ['restapi', 'download']))
             ) {
                 array_push($params, [
                     '$ref' => "#/components/parameters/dbParam",
@@ -479,7 +494,7 @@ class RestApi
                     ["BasicAuth" => []],
                 ];
             }
-            if (!empty($queryParams[Route::ENDPOINT_PARAM])) {
+            if (!empty($queryParams[Route::ENDPOINT_PARAM]) && $queryParams[Route::ENDPOINT_PARAM] !== "restapi") {
                 $result["paths"][$route]["get"]["summary"] .= " - with api key";
                 $result["paths"][$route]["get"]["security"] = [
                     ["ApiKeyAuth" => []],

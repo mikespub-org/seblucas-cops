@@ -135,16 +135,16 @@
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "2.2.3",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "9cddc389aa29415caa0d8f8cf9fb3e375f8a4130"
+                "reference": "1647d90bfbaf41e8ff114aa08204b9de54c44c6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/9cddc389aa29415caa0d8f8cf9fb3e375f8a4130",
-                "reference": "9cddc389aa29415caa0d8f8cf9fb3e375f8a4130",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/1647d90bfbaf41e8ff114aa08204b9de54c44c6f",
+                "reference": "1647d90bfbaf41e8ff114aa08204b9de54c44c6f",
                 "shasum": ""
             },
             "require": {
@@ -201,9 +201,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.2.3"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/2.3.0"
             },
-            "time": "2024-03-11T17:20:14+00:00"
+            "time": "2024-05-08T13:51:52+00:00"
         },
         {
             "name": "nikic/fast-route",

@@ -15,7 +15,7 @@ require_once __DIR__ . '/config.php';
 
 if ($error = Mail::checkConfiguration()) {
     echo $error;
-    exit;
+    return;
 }
 
 $request = new Request();
@@ -23,13 +23,13 @@ $idData = (int) $request->post("data");
 $emailDest = $request->post("email");
 if ($error = Mail::checkRequest($idData, $emailDest)) {
     echo $error;
-    exit;
+    return;
 }
 
 if ($error = Mail::sendMail($idData, $emailDest, $request)) {
     echo localize("mail.messagenotsent");
     echo $error;
-    exit;
+    return;
 }
 
 echo localize("mail.messagesent");

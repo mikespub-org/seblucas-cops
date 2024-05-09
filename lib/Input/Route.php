@@ -75,37 +75,44 @@ class Route
         "/identifiers" => PageId::ALL_IDENTIFIERS,
         "/libraries" => PageId::ALL_LIBRARIES,
         // extra routes supported by REST API
-        "/custom" => PageId::REST_API,
-        "/databases/{db}/{name}" => PageId::REST_API,
-        "/databases/{db}" => PageId::REST_API,
-        "/databases" => PageId::REST_API,
-        "/openapi" => PageId::REST_API,
-        "/routes" => PageId::REST_API,
-        "/notes/{type}/{id}/{title}" => PageId::REST_API,
-        "/notes/{type}/{id}" => PageId::REST_API,
-        "/notes/{type}" => PageId::REST_API,
-        "/notes" => PageId::REST_API,
-        "/preferences/{key}" => PageId::REST_API,
-        "/preferences" => PageId::REST_API,
-        "/annotations/{bookId}/{id}" => PageId::REST_API,
-        "/annotations/{bookId}" => PageId::REST_API,
-        "/annotations" => PageId::REST_API,
-        "/metadata/{bookId}/{element}/{name}" => PageId::REST_API,
-        "/metadata/{bookId}/{element}" => PageId::REST_API,
-        "/metadata/{bookId}" => PageId::REST_API,
-        "/user/details" => PageId::REST_API,
-        "/user" => PageId::REST_API,
+        "/custom" => [self::ENDPOINT_PARAM => "restapi"],
+        "/databases/{db}/{name}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/databases/{db}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/databases" => [self::ENDPOINT_PARAM => "restapi"],
+        "/openapi" => [self::ENDPOINT_PARAM => "restapi"],
+        "/routes" => [self::ENDPOINT_PARAM => "restapi"],
+        "/notes/{type}/{id}/{title}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/notes/{type}/{id}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/notes/{type}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/notes" => [self::ENDPOINT_PARAM => "restapi"],
+        "/preferences/{key}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/preferences" => [self::ENDPOINT_PARAM => "restapi"],
+        "/annotations/{bookId}/{id}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/annotations/{bookId}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/annotations" => [self::ENDPOINT_PARAM => "restapi"],
+        "/metadata/{bookId}/{element}/{name}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/metadata/{bookId}/{element}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/metadata/{bookId}" => [self::ENDPOINT_PARAM => "restapi"],
+        "/user/details" => [self::ENDPOINT_PARAM => "restapi"],
+        "/user" => [self::ENDPOINT_PARAM => "restapi"],
         // extra routes supported by other endpoints (path starts with endpoint param)
-        "/calres/{db}/{alg}/{digest}" => [self::ENDPOINT_PARAM => "calres"],
+        "/calres/{db:\d+}/{alg}/{digest}" => [self::ENDPOINT_PARAM => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route
         "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [self::ENDPOINT_PARAM => "zipfs"],
-        "/loader/{action}/{dbNum}/{authorId}" => [self::ENDPOINT_PARAM => "loader"],
-        "/loader/{action}/{dbNum}" => [self::ENDPOINT_PARAM => "loader"],
+        "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [self::ENDPOINT_PARAM => "loader"],
+        "/loader/{action}/{dbNum:\d+}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader/{action}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader" => [self::ENDPOINT_PARAM => "loader"],
-        // check if the path starts with the endpoint param here
-        "/thumbs/{thumb}/{db}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
-        "/covers/{db}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
+        "/check" => [self::ENDPOINT_PARAM => "check"],
+        "/read/{db:\d+}/{data:\d+}" => [self::ENDPOINT_PARAM => "read"],
+        // check if the path starts with the endpoint param or not here
+        "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
+        "/covers/{db:\d+}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
+        "/view/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::ENDPOINT_PARAM => "fetch", "view" => 1],
+        "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::ENDPOINT_PARAM => "fetch"],
+        // handle endpoint with page param
+        "/download/{page}/{type}" => [self::ENDPOINT_PARAM => "download"],
+        "/download/{page}" => [self::ENDPOINT_PARAM => "download"],
     ];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
@@ -116,8 +123,8 @@ class Route
     protected static $rewrites = [
         // Format: route => endpoint, or route => [endpoint, [fixed => 1, ...]] with fixed params
         "/view/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"], ["view" => 1]],
-        "/download/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
         "/view/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"], ["view" => 1]],
+        "/download/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
         "/download/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
     ];
     /** @var array<string, mixed> */
@@ -165,6 +172,7 @@ class Route
         }
         // for normal routes, put fixed params at the start
         $params = array_merge($fixed, $params);
+        unset($params['ignore']);
         return $params;
     }
 
@@ -372,13 +380,20 @@ class Route
      */
     public static function getPageRoute($params, $prefix = '', $separator = null)
     {
-        $page = $params['page'] ?? '';
+        if (!empty($params[self::ENDPOINT_PARAM])) {
+            // keep page param and use endpoint as key here
+            $page = $params[self::ENDPOINT_PARAM];
+        } elseif (isset($params['page'])) {
+            $page = $params['page'];
+            unset($params['page']);
+        } else {
+            $page = '';
+        }
         $pages = static::getPages();
         $routes = $pages[$page] ?? [];
         if (count($routes) < 1) {
             return null;
         }
-        unset($params['page']);
         return static::findMatchingRoute($routes, $params, $prefix, $separator);
     }
 
@@ -398,7 +413,7 @@ class Route
                 continue;
             }
             $subst = $params;
-            // check and remove fixed params
+            // check and remove fixed params (incl. endpoint or page)
             foreach ($fixed as $key => $val) {
                 if (!isset($subst[$key]) || $subst[$key] != $val) {
                     continue 2;
@@ -426,7 +441,7 @@ class Route
                     if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', $value)) {
                         continue 2;
                     }
-                    if (in_array($param, ['title', 'author'])) {
+                    if (in_array($param, ['title', 'author', 'ignore'])) {
                         $value = static::slugify($value);
                     }
                     if (!empty($pattern)) {
@@ -459,6 +474,9 @@ class Route
             if (!is_array($params)) {
                 $page = $params;
                 $params = [];
+            } elseif (!empty($params[self::ENDPOINT_PARAM])) {
+                // keep page param and use endpoint as key here
+                $page = $params[self::ENDPOINT_PARAM];
             } else {
                 $page = $params["page"] ?? '';
                 unset($params["page"]);

@@ -47,6 +47,26 @@ class Note
     }
 
     /**
+     * Summary of getUri
+     * @param array<mixed> $params
+     * @return string
+     */
+    public function getUri($params = [])
+    {
+        return '/notes/' . $this->colname . '/' . $this->item;
+    }
+
+    /**
+     * Summary of getTitle
+     * @return string|null
+     */
+    public function getTitle()
+    {
+        // @todo get corresponding title from item instance
+        return '';
+    }
+
+    /**
      * Summary of getResources
      * @return array<mixed>
      */

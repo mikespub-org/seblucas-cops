@@ -85,6 +85,12 @@ $urlParams = $request->urlParams;
 $handler = new RequestHandler($gConfig, ExtraActions::class, $cacheDir);
 $result = $handler->request($action, $dbNum, $urlParams);
 
+if (method_exists($handler, 'isDone')) {
+    if ($handler->isDone()) {
+        return;
+    }
+}
+
 header('Content-Type:text/html;charset=utf-8');
 
 // handle the result yourself or let epub-loader generate the output

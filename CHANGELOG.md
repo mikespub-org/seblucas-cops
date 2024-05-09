@@ -12,13 +12,16 @@ x.x.x - TODO
 
 2.6.x - 2024xxxx
   * ...
+  * Change restapi routes to use endpoint instead of dummy pageId
+  * Add more endpoints to routes and return instead of exit
+  * Add getUri() for annotations and notes
 
 2.6.1 - 20240507 Reverse proxies, url rewriting with docker + clean-up
   * Changes in config_default.php file:
     - new $config['cops_trusted_proxies'] (dev only)
     - new $config['cops_trusted_headers'] (dev only)
   * Upgrade swagger-ui-dist package and link to 5.17.6
-  * Fix rewriting rules in nginx default site conf - see linuxserver/docker-cops#31
+  * Fix rewriting rules in nginx default site conf - see #79 and linuxserver/docker-cops#31
   * Support X-Forwarded-* and Forwarded headers from trusted proxies (dev only)
   * Add Wiki page to clarify [Reverse proxy configurations](https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations)
   * Rename JSON_renderer and OPDS_renderer files and classes

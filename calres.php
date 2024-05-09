@@ -17,10 +17,12 @@ require_once __DIR__ . '/config.php';
 $request = new Request(false);
 $path = $request->path();
 if (empty($path) || $path == '/') {
+    // this will call exit()
     $request->notFound();
 }
 $path = substr($path, 1);
 if (!preg_match('/^\d+\/\w+\/\w+$/', $path)) {
+    // this will call exit()
     $request->notFound();
 }
 [$database, $alg, $digest] = explode('/', $path);

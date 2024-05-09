@@ -346,6 +346,7 @@ class JsonRenderer
         try {
             $currentPage->InitializeContent();
         } catch (Exception $e) {
+            // this will call exit()
             $request->notFound(static::$endpoint, $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
         }
 

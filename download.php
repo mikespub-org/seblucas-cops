@@ -16,7 +16,7 @@ require_once __DIR__ . '/config.php';
 
 if (empty(Config::get('download_page')) && empty(Config::get('download_series')) && empty(Config::get('download_author'))) {
     echo 'Downloads by page, series or author are disabled in config';
-    exit();
+    return;
 }
 
 $request = new Request();
@@ -38,4 +38,3 @@ if ($downloader->isValid()) {
 } else {
     echo "Invalid download: " . $downloader->getMessage();
 }
-exit();

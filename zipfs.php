@@ -19,11 +19,13 @@ if (php_sapi_name() === 'cli') {
 $request = new Request(false);
 $path = $request->path();
 if (empty($path) || $path == '/') {
+    // this will call exit()
     $request->notFound();
 }
 $path = substr($path, 1);
 $matches = [];
 if (!preg_match('/^(\d+)\/(\d+)\/(.+)$/', $path, $matches)) {
+    // this will call exit()
     $request->notFound();
 }
 $database = $matches[1];

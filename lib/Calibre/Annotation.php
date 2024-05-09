@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
@@ -64,9 +65,12 @@ class Annotation extends Base
      */
     public function getUri($params = [])
     {
+        // @todo let restapi build route url, or change route to use page here?
+        if (Config::get('use_route_urls')) {
+            return '/annotations/' . $this->book . '/' . $this->id;
+        }
         $params['bookId'] = $this->book;
         $params['id'] = $this->id;
-        // @todo use route urls
         return Route::page(static::PAGE_DETAIL, $params);
     }
 

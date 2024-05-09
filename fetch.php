@@ -111,4 +111,3 @@ if (empty(Config::get('x_accel_redirect'))) {
 } else {
     header(Config::get('x_accel_redirect') . ': ' . $dir . $file);
 }
-exit();

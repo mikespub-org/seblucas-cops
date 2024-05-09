@@ -169,9 +169,14 @@ class RestApiTest extends TestCase
             "calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7" => "restapi.php/calres/0/xxh64/7c301792c52eebf7",
             "zipfs.php?db=0&idData=20&component=META-INF%2Fcontainer.xml" => "restapi.php/zipfs/0/20/META-INF/container.xml",
             "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "restapi.php/loader/wd_author/0/1?matchId=Q35610",
-            "fetch.php?thumb=html&db=0&id=20" => "restapi.php/thumbs/html/0/20.jpg",
-            "fetch.php?thumb=opds&db=0&id=20" => "restapi.php/thumbs/opds/0/20.jpg",
-            "fetch.php?db=0&id=20" => "restapi.php/covers/0/20.jpg",
+            "checkconfig.php" => "restapi.php/check",
+            "epubreader.php?db=0&data=20" => "restapi.php/read/0/20",
+            "fetch.php?thumb=html&db=0&id=17" => "restapi.php/thumbs/html/0/17.jpg",
+            "fetch.php?thumb=opds&db=0&id=17" => "restapi.php/thumbs/opds/0/17.jpg",
+            "fetch.php?db=0&id=17" => "restapi.php/covers/0/17.jpg",
+            "fetch.php?view=1&db=0&data=20&type=epub" => "restapi.php/view/0/20/ignore.epub",
+            "fetch.php?db=0&data=20&type=epub" => "restapi.php/fetch/0/20/ignore.epub",
+            "download.php?page=10&type=any" => "restapi.php/download/10/any",
         ];
     }
 
@@ -198,12 +203,19 @@ class RestApiTest extends TestCase
     public function testRouteLink($link, $expected)
     {
         $params = [];
-        parse_str(parse_url($link, PHP_URL_QUERY), $params);
+        parse_str(parse_url($link, PHP_URL_QUERY) ?? '', $params);
         $page = $params["page"] ?? null;
         unset($params["page"]);
         $endpoint = parse_url($link, PHP_URL_PATH);
         if ($endpoint !== RestApi::$endpoint) {
-            $params[Route::ENDPOINT_PARAM] = str_replace('.php', '', $endpoint);
+            $testpoint = str_replace('.php', '', $endpoint);
+            if (array_key_exists($testpoint, Config::ENDPOINT)) {
+                $params[Route::ENDPOINT_PARAM] = $testpoint;
+            } else {
+                // for epubreader.php, checkconfig.php etc.
+                $flipped = array_flip(Config::ENDPOINT);
+                $params[Route::ENDPOINT_PARAM] = $flipped[$endpoint];
+            }
         }
         $test = RestApi::$endpoint . Route::page($page, $params);
         $this->assertEquals($expected, $test);
@@ -223,11 +235,20 @@ class RestApiTest extends TestCase
         $endpoint = array_shift($parts);
         $path = '/' . implode('/', $parts);
         $params = Route::match($path);
+        if (is_null($params)) {
+            $this->fail('Invalid params for path ' . $path);
+        }
         if (!empty($params[Route::ENDPOINT_PARAM]) && array_key_exists($params[Route::ENDPOINT_PARAM], Config::ENDPOINT)) {
             $endpoint = Config::ENDPOINT[$params[Route::ENDPOINT_PARAM]];
             unset($params[Route::ENDPOINT_PARAM]);
         }
-        $test = $endpoint . '?' . http_build_query($params);
+        if (array_key_exists('ignore', $params)) {
+            unset($params['ignore']);
+        }
+        $test = $endpoint;
+        if (!empty($params)) {
+            $test .= '?' . http_build_query($params);
+        }
         if (!empty($query)) {
             $test .= '&' . $query;
         }
@@ -240,11 +261,14 @@ class RestApiTest extends TestCase
         $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
         $this->assertNull(Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
         $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::ENDPOINT_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
-        $this->assertEquals("/thumbs/html/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "html"]));
-        $this->assertEquals("/thumbs/opds/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "opds"]));
-        $this->assertEquals("/thumbs/html2/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "html2"]));
-        $this->assertEquals("/thumbs/opds2/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20, "thumb" => "opds2"]));
-        $this->assertEquals("/covers/0/20.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 20]));
+        $this->assertEquals("/thumbs/html/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"]));
+        $this->assertEquals("/thumbs/opds/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"]));
+        $this->assertEquals("/thumbs/html2/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"]));
+        $this->assertEquals("/thumbs/opds2/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"]));
+        $this->assertEquals("/covers/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17]));
+        $this->assertEquals("/view/0/20/ignore.epub", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
+        $this->assertEquals("/fetch/0/20/ignore.epub", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"]));
+        $this->assertEquals("/download/10/any", Route::getPageRoute([Route::ENDPOINT_PARAM => "download", "page" => 10, "type" => "any"]));
     }
 
     /**
@@ -254,10 +278,10 @@ class RestApiTest extends TestCase
     public static function getRewrites()
     {
         return [
-            "fetch.php?data=1&type=epub" => "/download/1/ignore.epub",
+            "fetch.php?data=1&db=0&type=epub&view=1" => "/view/1/0/ignore.epub",
             "fetch.php?data=1&type=epub&view=1" => "/view/1/ignore.epub",
             "fetch.php?data=1&db=0&type=epub" => "/download/1/0/ignore.epub",
-            "fetch.php?data=1&db=0&type=epub&view=1" => "/view/1/0/ignore.epub",
+            "fetch.php?data=1&type=epub" => "/download/1/ignore.epub",
         ];
     }
 
@@ -482,8 +506,7 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
         $expected = "(17) Bookmark About #1";
         $this->assertEquals($expected, $test["entries"][0]["title"]);
-        // @todo use route urls
-        $expected = static::$script . '?page=63&bookId=17&id=1';
+        $expected = static::$script . '/annotations/17/1';
         $this->assertEquals($expected, $test["entries"][0]["navlink"]);
     }
 
