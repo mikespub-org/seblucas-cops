@@ -21,6 +21,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Framework;
 use Exception;
 
 /**
@@ -147,15 +148,19 @@ class RestApi
             $parts = array_slice(explode('/', $path), 2);
             $path = '/' . implode('/', $parts);
         }
+        // run endpoint via handler now
+        $handler = Framework::getHandler($params[Route::ENDPOINT_PARAM]);
         unset($params[Route::ENDPOINT_PARAM]);
-        // @todo run endpoint via handler someday
         $run ??= static::$doRunEndpoint;
         if ($run) {
             $oldpath = $_SERVER['PATH_INFO'] ?? '';
             $oldparams = $_GET;
             $_SERVER['PATH_INFO'] = $path;
             $_GET = $params;
-            require dirname(__DIR__, 2) . '/' . $endpoint;
+            // @todo define when to parse request path or not - see calres, loader and zipfs
+            $request = Framework::getRequest(false);
+            $handler->handle($request);
+            //require dirname(__DIR__, 2) . '/' . $endpoint;
             $_SERVER['PATH_INFO'] = $oldpath;
             $_GET = $oldparams;
             return null;
