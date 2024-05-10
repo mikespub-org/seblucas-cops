@@ -357,7 +357,12 @@ class OpdsRenderer
             }
             // only show sorting when paginating
             if ($page->containsBook() && !empty(Config::get('opds_sort_links'))) {
-                $sortUrl = Route::query($page->getCleanQuery(), ['sort' => null]) . "&sort={0}";
+                $sortUrl = Route::query($page->getCleanQuery(), ['sort' => null]);
+                if (str_contains($sortUrl, '?')) {
+                    $sortUrl .= "&sort={0}";
+                } else {
+                    $sortUrl .= "?sort={0}";
+                }
                 $sortLabel = localize("sort.alternate");
                 $sortParam = $request->get('sort');
                 $sortOptions = $page->getSortOptions();
@@ -381,10 +386,11 @@ class OpdsRenderer
                 //$link = new LinkFacet($url, $title, $filterLabel, false, null, $database);
                 //$this->renderLink($link);
                 // Note: facets are only shown if there are books available, so we need to get a filter page here
-                $request->set('filter', 1);
-                $filterPage = PageId::getPage($request->get('page'), $request);
+                $req = Request::build($request->urlParams, 'feed');
+                $req->set('filter', 1);
+                $filterPage = PageId::getPage($request->get('page'), $req);
                 $filterPage->InitializeContent();
-                $request->set('filter', null);
+                //$request->set('filter', null);
                 $extraParams = $filterPage->filterParams;
                 if ($request->get('sort')) {
                     $extraParams['sort'] = $request->get('sort');
@@ -397,6 +403,7 @@ class OpdsRenderer
                     }
                     $group = strtolower($entry->className);
                     $group = localize($group . 's.title');
+                    // @todo this already includes base() . '', and LinkFacet renderLink adds base() . $endpoint
                     $url = $entry->getNavLink('', $extraParams);
                     $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
                     $this->renderLink($link);

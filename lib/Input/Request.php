@@ -17,12 +17,10 @@ use SebLucas\Cops\Output\Format;
  */
 class Request
 {
-    /**
-     * Summary of urlParams
-     * @var array<mixed>
-     */
+    /** @var array<mixed> */
     public $urlParams = [];
     protected string $queryString = '';
+    protected string $pathInfo = '';
     protected bool $parsed = true;
     protected ?string $content = null;
 
@@ -59,10 +57,7 @@ class Request
      */
     public function agent()
     {
-        if (isset($_SERVER['HTTP_USER_AGENT'])) {
-            return $_SERVER['HTTP_USER_AGENT'];
-        }
-        return "";
+        return $this->server('HTTP_USER_AGENT') ?? "";
     }
 
     /**
@@ -71,7 +66,7 @@ class Request
      */
     public function language()
     {
-        return $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null;
+        return $this->server('HTTP_ACCEPT_LANGUAGE');
     }
 
     /**
@@ -81,7 +76,7 @@ class Request
      */
     public function path($default = '')
     {
-        return $_SERVER['PATH_INFO'] ?? $default;
+        return $this->server('PATH_INFO') ?? $default;
     }
 
     /**
@@ -90,7 +85,7 @@ class Request
      */
     public function script()
     {
-        return $_SERVER['SCRIPT_NAME'] ?? null;
+        return $this->server('SCRIPT_NAME');
     }
 
     /**
@@ -99,7 +94,7 @@ class Request
      */
     public function uri()
     {
-        return $_SERVER['REQUEST_URI'] ?? null;
+        return $this->server('REQUEST_URI');
     }
 
     /**
@@ -144,6 +139,7 @@ class Request
             // @todo use restriction etc. from Calibre user database
         }
         $this->queryString = $_SERVER['QUERY_STRING'] ?? '';
+        $this->pathInfo = $_SERVER['PATH_INFO'] ?? '';
     }
 
     /**
@@ -276,11 +272,11 @@ class Request
      */
     public function option($option)
     {
-        if (isset($_COOKIE[$option])) {
+        if (!is_null($this->cookie($option))) {
             if (!is_null(Config::get($option)) && is_array(Config::get($option))) {
-                return explode(',', $_COOKIE[$option]);
-            } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', $_COOKIE[$option])) {
-                return $_COOKIE[$option];
+                return explode(',', $this->cookie($option));
+            } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', $this->cookie($option))) {
+                return $this->cookie($option);
             }
         }
         if (!is_null(Config::get($option))) {
@@ -488,14 +484,18 @@ class Request
     /**
      * Summary of build
      * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
+     * @param string $endpoint
      * @param ?array<mixed> $server
      * @param ?array<mixed> $cookie
      * @param ?array<mixed> $config
      * @return Request
      */
-    public static function build($params, $server = null, $cookie = null, $config = null)
+    public static function build($params = [], $endpoint = '', $server = null, $cookie = null, $config = null)
     {
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
+        if (!empty($endpoint) && Config::get('use_route_urls')) {
+            $params[Route::ENDPOINT_PARAM] ??= $endpoint;
+        }
         $request = new self(false);
         $request->urlParams = $params;
         $request->queryString = http_build_query($request->urlParams);

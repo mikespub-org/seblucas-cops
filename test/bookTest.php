@@ -563,7 +563,7 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(17);
         $cover = new Cover($book);
-        $request = Request::build([]);
+        $request = Request::build();
         $expected = filesize($cover->coverFileName);
 
         // no thumbnail resizing

@@ -56,6 +56,7 @@ class LinkFeed extends Link
     public function hrefXhtml($endpoint = '')
     {
         // LinkFeed()->href is relative to endpoint
+        // @todo take into account endpoint when building href, e.g. feed.php
         return Route::base() . $endpoint . $this->href;
     }
 }

@@ -38,12 +38,22 @@ class BrowserKitTest extends TestCase
 {
     public static string $baseDir = '/cops/';
     public static string $serverUrl = 'http://localhost';
+    /** @var array<mixed> */
+    public static array $localConfig = [];
     /** @var HttpBrowser */
     public $browser;
     /** @var ?string */
     public $userAgent = 'Kindle/2.0';  // Chrome by default, override here with 'Kindle/2.0'
     /** @var ?string */
     public $template = 'default';
+
+    public static function setUpBeforeClass(): void
+    {
+        // get config_local.php as used by webserver
+        $config = [];
+        include dirname(__DIR__) . '/config_local.php';
+        static::$localConfig = $config;
+    }
 
     public function setUp(): void
     {
@@ -167,7 +177,11 @@ class BrowserKitTest extends TestCase
         $uri = Route::url('index.php') . '?page=index';
         $crawler = $this->url($uri);
 
-        $uri = Route::url('getJSON.php') . '?page=index&complete=1';
+        if (!empty(static::$localConfig['cops_use_route_urls'])) {
+            $uri = Route::url('getJSON.php') . '/index?complete=1';
+        } else {
+            $uri = Route::url('getJSON.php') . '?page=index&complete=1';
+        }
         $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . Route::url("templates") . '");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
@@ -239,7 +253,11 @@ class BrowserKitTest extends TestCase
             if ($template == 'default') {
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
-            $this->assertEquals(Route::url('index.php') . '?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
+            if (!empty(static::$localConfig['cops_use_route_urls'])) {
+                $this->assertEquals(Route::url('index.php') . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
+            } else {
+                $this->assertEquals(Route::url('index.php') . '?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
+            }
         }
     }
 

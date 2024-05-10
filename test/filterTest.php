@@ -240,7 +240,7 @@ class FilterTest extends TestCase
         $siblings = $tag->getSiblingEntries();
         $this->assertCount(0, $siblings);
 
-        $request = Request::build([]);
+        $request = Request::build();
         $booklist = new BookList($request);
         $entries = $booklist->getBooksByInstanceOrChildren($tag, 1);
         $this->assertCount(2, $entries);
@@ -357,7 +357,7 @@ class FilterTest extends TestCase
 
     public function testGetEntryArray(): void
     {
-        $request = Request::build([]);
+        $request = Request::build();
         $entries = Filter::getEntryArray($request);
         $this->assertCount(0, $entries);
 
@@ -434,7 +434,7 @@ class FilterTest extends TestCase
 
     public function testCheckForFilters(): void
     {
-        $request = Request::build([]);
+        $request = Request::build();
         $filter = new Filter($request);
         $expected = [];
         $this->assertEquals($expected, $filter->getQueryParams());

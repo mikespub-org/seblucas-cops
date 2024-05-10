@@ -101,9 +101,11 @@ class Route
         "/loader/{action}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader" => [self::ENDPOINT_PARAM => "loader"],
         "/check" => [self::ENDPOINT_PARAM => "check"],
+        "/feed/{page}/{id}" => [self::ENDPOINT_PARAM => "feed"],
         "/feed/{page}" => [self::ENDPOINT_PARAM => "feed"],
         "/feed" => [self::ENDPOINT_PARAM => "feed"],
         "/mail" => [self::ENDPOINT_PARAM => "mail"],
+        "/opds/{page}/{id}" => [self::ENDPOINT_PARAM => "opds"],
         "/opds/{page}" => [self::ENDPOINT_PARAM => "opds"],
         "/opds" => [self::ENDPOINT_PARAM => "opds"],
         "/read/{db:\d+}/{data:\d+}" => [self::ENDPOINT_PARAM => "read"],
@@ -282,6 +284,7 @@ class Route
         if (!empty($endpoint) && substr($endpoint, 0, 1) === '/') {
             return $endpoint . static::page($page, $params, $separator);
         }
+        // @todo take into account endpoint when building page url, e.g. feed.php
         return static::base() . $endpoint . static::page($page, $params, $separator);
     }
 

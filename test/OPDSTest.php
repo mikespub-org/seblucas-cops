@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
 
@@ -28,16 +29,23 @@ class OpdsTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
+        Config::set('full_url', '/cops/');
+        Route::setBaseUrl(null);
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
+        // try out route urls
+        //Config::set('use_route_urls', true);
     }
 
     public static function tearDownAfterClass(): void
     {
+        Config::set('full_url', '');
+        Route::setBaseUrl(null);
         if (!file_exists(self::TEST_FEED)) {
             return;
         }
         unlink(self::TEST_FEED);
+        //Config::set('use_route_urls', null);
     }
 
     /**
@@ -141,7 +149,7 @@ class OpdsTest extends TestCase
         $page = PageId::INDEX;
 
         Config::set('subtitle_default', "My subtitle");
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'feed');
 
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -155,7 +163,7 @@ class OpdsTest extends TestCase
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'feed');
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED, self::OPDS_RELAX_NG, false));
@@ -174,8 +182,7 @@ class OpdsTest extends TestCase
      */
     public function testMostPages($page, $query)
     {
-        $request = new Request();
-        $request->set('page', $page);
+        $request = Request::build(['page' => $page], 'feed');
         $request->set('query', $query);
         $_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
@@ -215,7 +222,7 @@ class OpdsTest extends TestCase
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::INDEX;
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'feed');
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
@@ -233,7 +240,7 @@ class OpdsTest extends TestCase
 
     public function testOpenSearchDescription(): void
     {
-        $request = new Request();
+        $request = Request::build(['page', PageId::OPENSEARCH], 'feed');
 
         $OPDSRender = new OpdsRenderer();
 
@@ -247,7 +254,7 @@ class OpdsTest extends TestCase
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::AUTHOR_DETAIL;
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'feed');
         $request->set('id', "1");
         $request->set('db', "0");
 
@@ -269,7 +276,7 @@ class OpdsTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('max_item_per_page', 2);
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'feed');
         $request->set('id', "1");
         $request->set('n', "1");
 
@@ -305,7 +312,7 @@ class OpdsTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('books_filter', ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"]);
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'feed');
         $request->set('id', "1");
         $request->set('tag', "Short Stories");
 
@@ -325,7 +332,7 @@ class OpdsTest extends TestCase
     {
         $page = PageId::AUTHOR_DETAIL;
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'feed');
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);

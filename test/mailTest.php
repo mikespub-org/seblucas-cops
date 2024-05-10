@@ -105,7 +105,7 @@ class MailTest extends TestCase
 
     public function testSendMailNotFound(): void
     {
-        $request = Request::build([]);
+        $request = Request::build();
         $this->assertStringStartsWith("No", Mail::sendMail(12, "a@a.com", $request));
     }
 
@@ -113,14 +113,14 @@ class MailTest extends TestCase
     {
         $old = Mail::$maxSize;
         Mail::$maxSize = 0;
-        $request = Request::build([]);
+        $request = Request::build();
         $this->assertStringStartsWith("No", Mail::sendMail(20, "a@a.com", $request));
         Mail::$maxSize = $old;
     }
 
     public function testSendMailSomeday(): void
     {
-        $request = Request::build([]);
+        $request = Request::build();
         // use dryRun to run preSend() but not actually Send()
         $error = Mail::sendMail(20, "a@a.com", $request, true);
         $this->assertFalse($error);

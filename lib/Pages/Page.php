@@ -192,7 +192,10 @@ class Page
         $query = preg_replace("/(^|\&)n=.*?$/", "", preg_replace("/(^|\&)_=\d+/", "", $this->request->query()));
         if (!empty(Config::get('use_route_urls'))) {
             $path = $this->request->path();
-            return $path . '?' . $query;
+            if (!empty($query)) {
+                return $path . '?' . $query;
+            }
+            return $path;
         }
         return $query;
     }

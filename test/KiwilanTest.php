@@ -54,6 +54,8 @@ class KiwilanTest extends TestCase
         $resolver->registerPrefix('https://drafts.opds.io/schema/', self::OPDS_SCHEMAS);
 
         self::$schema = file_get_contents(self::FEED_SCHEMA);
+        // try out route urls
+        //Config::set('use_route_urls', true);
     }
 
     public static function tearDownAfterClass(): void
@@ -64,6 +66,7 @@ class KiwilanTest extends TestCase
             return;
         }
         unlink(self::TEST_FEED);
+        //Config::set('use_route_urls', null);
     }
 
     /**
@@ -153,7 +156,7 @@ class KiwilanTest extends TestCase
         $page = PageId::INDEX;
 
         Config::set('subtitle_default', "My subtitle");
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'opds');
 
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -167,7 +170,7 @@ class KiwilanTest extends TestCase
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'opds');
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -186,8 +189,7 @@ class KiwilanTest extends TestCase
      */
     public function testMostPages($page, $query)
     {
-        $request = new Request();
-        $request->set('page', $page);
+        $request = Request::build(['page' => $page], 'opds');
         $request->set('query', $query);
         $_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
@@ -228,7 +230,7 @@ class KiwilanTest extends TestCase
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::INDEX;
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'opds');
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
@@ -247,7 +249,7 @@ class KiwilanTest extends TestCase
 
     public function testOpenSearchDescription(): void
     {
-        $request = new Request();
+        $request = Request::build(['page', PageId::OPENSEARCH], 'opds');
 
         $OPDSRender = new OpdsRenderer();
 
@@ -264,7 +266,7 @@ class KiwilanTest extends TestCase
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::AUTHOR_DETAIL;
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'opds');
         $request->set('id', "1");
         $request->set('db', "0");
 
@@ -287,7 +289,7 @@ class KiwilanTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('max_item_per_page', 2);
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'opds');
         $request->set('id', "1");
         $request->set('n', "1");
 
@@ -325,7 +327,7 @@ class KiwilanTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('books_filter', ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"]);
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'opds');
         $request->set('id', "1");
         $request->set('tag', "Short Stories");
 
@@ -346,7 +348,7 @@ class KiwilanTest extends TestCase
     {
         $page = PageId::AUTHOR_DETAIL;
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
-        $request = new Request();
+        $request = Request::build(['page' => $page], 'opds');
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);

@@ -75,17 +75,18 @@ $request = Framework::getRequest();
 $path = $request->path('/');
 $path = substr($path, 1);
 [$action, $dbNum, $itemId, $other] = explode('/', $path . '///', 4);
- */
-$request = Framework::getRequest('loader');
-$action = $request->get('action');
-$dbNum = $request->getId('dbNum');
-$itemId = $request->getId('authorId');
 
 $action = $action ?: null;
 $dbNum = ($dbNum !== '') ? (int) $dbNum : null;
 if (!empty($itemId)) {
     $request->set('authorId', $itemId);
 }
+ */
+$request = Framework::getRequest('loader');
+$action = $request->get('action');
+$dbNum = $request->getId('dbNum');
+$itemId = $request->getId('authorId');
+
 $urlParams = $request->urlParams;
 
 // you can define extra actions for your app - see example.php
