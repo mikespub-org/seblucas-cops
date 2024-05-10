@@ -69,11 +69,18 @@ foreach ($calibreDir as $name => $path) {
     $gConfig['databases'][] = ['name' => $name, 'db_path' => rtrim($path, '/'), 'epub_path' => '.'];
 }
 
+/**
 // don't try to match path params here
 $request = Framework::getRequest();
 $path = $request->path('/');
 $path = substr($path, 1);
 [$action, $dbNum, $itemId, $other] = explode('/', $path . '///', 4);
+ */
+$request = Framework::getRequest('loader');
+$action = $request->get('action');
+$dbNum = $request->getId('dbNum');
+$itemId = $request->getId('authorId');
+
 $action = $action ?: null;
 $dbNum = ($dbNum !== '') ? (int) $dbNum : null;
 if (!empty($itemId)) {

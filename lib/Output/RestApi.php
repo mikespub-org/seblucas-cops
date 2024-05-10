@@ -142,14 +142,15 @@ class RestApi
         if (!$this->request->hasValidApiKey()) {
             return ["error" => "Invalid api key"];
         }
-        $endpoint = Config::ENDPOINT[$params[Route::ENDPOINT_PARAM]];
+        $name = $params[Route::ENDPOINT_PARAM];
+        $endpoint = Config::ENDPOINT[$name];
         // check if the path starts with the endpoint param here
-        if (str_starts_with($path, '/' . $params[Route::ENDPOINT_PARAM])) {
-            $parts = array_slice(explode('/', $path), 2);
-            $path = '/' . implode('/', $parts);
-        }
+        //if (str_starts_with($path, '/' . $name)) {
+        //    $parts = array_slice(explode('/', $path), 2);
+        //    $path = '/' . implode('/', $parts);
+        //}
         // run endpoint via handler now
-        $handler = Framework::getHandler($params[Route::ENDPOINT_PARAM]);
+        $handler = Framework::getHandler($name);
         unset($params[Route::ENDPOINT_PARAM]);
         $run ??= static::$doRunEndpoint;
         if ($run) {
@@ -158,14 +159,14 @@ class RestApi
             $_SERVER['PATH_INFO'] = $path;
             $_GET = $params;
             // @todo define when to parse request path or not - see calres, loader and zipfs
-            $request = Framework::getRequest(false);
+            $request = Framework::getRequest($name);
             $handler->handle($request);
             //require dirname(__DIR__, 2) . '/' . $endpoint;
             $_SERVER['PATH_INFO'] = $oldpath;
             $_GET = $oldparams;
             return null;
         }
-        $result = ["endpoint" => $endpoint, "path" => $path, "params" => $params];
+        $result = [Route::ENDPOINT_PARAM => $name, "path" => $path, "params" => $params];
         return $result;
     }
 
@@ -449,7 +450,7 @@ class RestApi
             } elseif (!empty($queryParams[Route::ENDPOINT_PARAM])) {
                 $testpoint = $queryParams[Route::ENDPOINT_PARAM];
                 $script = Config::ENDPOINT[$testpoint];
-                $queryString = str_replace("endpoint=$testpoint", $script, $queryString);
+                $queryString = str_replace(Route::ENDPOINT_PARAM . '=' . $testpoint, $script, $queryString);
                 $queryString = str_replace($script . '&', $script . '?', $queryString);
             } else {
                 $queryString = 'getJSON.php?' . $queryString;

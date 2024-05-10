@@ -12,7 +12,7 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest();
+$request = Framework::getRequest('mail');
 
 $handler = Framework::getHandler('mail');
 $handler->handle($request);

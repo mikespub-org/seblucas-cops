@@ -12,7 +12,7 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest();
+$request = Framework::getRequest('index');
 
 $handler = Framework::getHandler('index');
 $handler->handle($request);

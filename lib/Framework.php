@@ -37,11 +37,22 @@ class Framework
 
     /**
      * Get request instance
+     * @param string $name
      * @param bool $parse
      * @return Input\Request
      */
-    public static function getRequest($parse = true)
+    public static function getRequest($name = '', $parse = true)
     {
+        // fix PATH_INFO when accessed via traditional endpoint scripts
+        if (!empty($name) && Input\Route::addPrefix($name)) {
+            if (empty($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] == '/') {
+                $_SERVER['PATH_INFO'] =  '/' . $name;
+            } elseif (!str_starts_with($_SERVER['PATH_INFO'], '/' . $name . '/')) {
+                $_SERVER['PATH_INFO'] =  '/' . $name . $_SERVER['PATH_INFO'];
+                // @todo force parsing route urls here?
+                Input\Config::set('use_route_urls', 1);
+            }
+        }
         return new Input\Request($parse);
     }
 

@@ -433,6 +433,7 @@ function link_Clicked (event) {
     if (getCurrentOption ("use_fancyapps") === "1" &&
         (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
         before = new Date ();
+        // @todo handle 'json' routes correctly
         var jsonurl = url.replace ("index.php", "getJSON.php");
         $.getJSON(jsonurl, function(data) {
             data.c = currentData.c;

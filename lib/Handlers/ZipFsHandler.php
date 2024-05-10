@@ -25,21 +25,9 @@ class ZipFsHandler extends BaseHandler
             return;
         }
 
-        // don't try to match path params here
-        $path = $request->path();
-        if (empty($path) || $path == '/') {
-            // this will call exit()
-            $request->notFound();
-        }
-        $path = substr($path, 1);
-        $matches = [];
-        if (!preg_match('/^(\d+)\/(\d+)\/(.+)$/', $path, $matches)) {
-            // this will call exit()
-            $request->notFound();
-        }
-        $database = $matches[1];
-        $idData = intval($matches[2]);
-        $component = $matches[3];
+        $database = $request->getId('db');
+        $idData = $request->getId('idData');
+        $component = $request->get('component');
 
         try {
             $book = Book::getBookByDataId($idData, intval($database));

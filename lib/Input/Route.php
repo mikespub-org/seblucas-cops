@@ -21,17 +21,14 @@ use function FastRoute\simpleDispatcher;
  */
 class Route
 {
-    public const ENDPOINT_PARAM = "endpoint";
+    public const ENDPOINT_PARAM = "_handler";
     public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
     protected static $proxyRequest = null;
     /** @var ?string */
     protected static $baseUrl = null;
-    /**
-     * Summary of routes
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     protected static $routes = [
         // Format: route => page, or route => [page => page, fixed => 1, ...] with fixed params
         "/index" => PageId::INDEX,
@@ -104,6 +101,11 @@ class Route
         "/loader/{action}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader" => [self::ENDPOINT_PARAM => "loader"],
         "/check" => [self::ENDPOINT_PARAM => "check"],
+        "/feed/{page}" => [self::ENDPOINT_PARAM => "feed"],
+        "/feed" => [self::ENDPOINT_PARAM => "feed"],
+        "/mail" => [self::ENDPOINT_PARAM => "mail"],
+        "/opds/{page}" => [self::ENDPOINT_PARAM => "opds"],
+        "/opds" => [self::ENDPOINT_PARAM => "opds"],
         "/read/{db:\d+}/{data:\d+}" => [self::ENDPOINT_PARAM => "read"],
         // check if the path starts with the endpoint param or not here
         "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
@@ -114,6 +116,8 @@ class Route
         "/download/{page}/{type}" => [self::ENDPOINT_PARAM => "download"],
         "/download/{page}" => [self::ENDPOINT_PARAM => "download"],
     ];
+    /** @var string[] */
+    protected static $skipPrefix = ['index', 'fetch', 'restapi'];  // @todo handle 'json' routes correctly - see util.js
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
     /** @var array<string, mixed> */
@@ -215,6 +219,16 @@ class Route
         }
         $params["page"] = $page;
         static::$routes[$route] = $params;
+    }
+
+    /**
+     * Add prefix for paths with this endpoint
+     * @param string $name
+     * @return bool
+     */
+    public static function addPrefix($name)
+    {
+        return !in_array($name, static::$skipPrefix);
     }
 
     /**

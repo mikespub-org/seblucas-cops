@@ -10,8 +10,7 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-// don't try to match path params here
-$request = Framework::getRequest(false);
+$request = Framework::getRequest('zipfs');
 
 $handler = Framework::getHandler('zipfs');
 $handler->handle($request);

@@ -650,8 +650,8 @@ class RestApiTest extends TestCase
 
         $apiHandler = new RestApi($request);
         $expected = [
-            "endpoint" => "zipfs.php",
-            "path" => "/0/20/META-INF/container.xml",
+            Route::ENDPOINT_PARAM => "zipfs",
+            "path" => "/zipfs/0/20/META-INF/container.xml",
             "params" => [
                 "db" => "0",
                 "idData" => "20",
@@ -710,7 +710,7 @@ class RestApiTest extends TestCase
 
         $apiHandler = new RestApi($request);
         $expected = [
-            "endpoint" => "fetch.php",
+            Route::ENDPOINT_PARAM => "fetch",
             // check if the path starts with the endpoint param here
             "path" => "/thumbs/html/0/17.jpg",
             "params" => [

@@ -16,7 +16,7 @@ require_once __DIR__ . '/config.php';
 // try out route urls
 Config::set('use_route_urls', true);
 
-$request = Framework::getRequest();
+$request = Framework::getRequest('restapi');
 
 $handler = Framework::getHandler('restapi');
 $handler->handle($request);
