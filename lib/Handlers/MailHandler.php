@@ -17,6 +17,15 @@ use SebLucas\Cops\Output\Mail;
  */
 class MailHandler extends BaseHandler
 {
+    public const ENDPOINT = "mail";
+
+    public static function getRoutes()
+    {
+        return [
+            "/mail" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         if ($error = Mail::checkConfiguration()) {

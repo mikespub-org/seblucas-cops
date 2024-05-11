@@ -13,11 +13,22 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\Downloader;
 
 /**
- * Download all books for a page, series or author by format
- * URL format: download.php?page={page}&type={format}
+ * Download all books for a page, series or author by format (epub, mobi, any, ...)
+ * URL format: download.php?page={page}&type={type}
  */
 class DownloadHandler extends BaseHandler
 {
+    public const ENDPOINT = "download";
+
+    public static function getRoutes()
+    {
+        // handle endpoint with page param
+        return [
+            "/download/{page}/{type}" => [static::PARAM => static::ENDPOINT],
+            "/download/{page}" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         if (empty(Config::get('download_page')) &&

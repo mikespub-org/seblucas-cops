@@ -17,6 +17,16 @@ use SebLucas\Cops\Calibre\Resource;
  */
 class CalResHandler extends BaseHandler
 {
+    public const ENDPOINT = "calres";
+
+    public static function getRoutes()
+    {
+        // extra routes supported by other endpoints (path starts with endpoint param)
+        return [
+            "/calres/{db:\d+}/{alg}/{digest}" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         $database = $request->getId('db');

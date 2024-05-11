@@ -96,6 +96,7 @@ class Route
         "/calres/{db:\d+}/{alg}/{digest}" => [self::ENDPOINT_PARAM => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route
         "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [self::ENDPOINT_PARAM => "zipfs"],
+        "/epubfs/{data:\d+}/{comp:.+}" => [self::ENDPOINT_PARAM => "epubfs"],
         "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader/{action}/{dbNum:\d+}" => [self::ENDPOINT_PARAM => "loader"],
         "/loader/{action}" => [self::ENDPOINT_PARAM => "loader"],
@@ -112,7 +113,7 @@ class Route
         // check if the path starts with the endpoint param or not here
         "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
         "/covers/{db:\d+}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
-        "/view/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::ENDPOINT_PARAM => "fetch", "view" => 1],
+        "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::ENDPOINT_PARAM => "fetch", "view" => 1],
         "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::ENDPOINT_PARAM => "fetch"],
         // handle endpoint with page param
         "/download/{page}/{type}" => [self::ENDPOINT_PARAM => "download"],
@@ -268,6 +269,25 @@ class Route
             $routeMap[$route] = static::get($route);
         }
         return $routeMap;
+    }
+
+    /**
+     * Add routes and query params
+     * @param array<string, array<mixed>> $routes
+     * @return void
+     */
+    public static function addRoutes($routes)
+    {
+        static::$routes = array_merge(static::$routes, $routes);
+    }
+
+    /**
+     * Count routes
+     * @return int
+     */
+    public static function count()
+    {
+        return count(static::$routes);
     }
 
     /**

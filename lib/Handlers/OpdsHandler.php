@@ -20,6 +20,17 @@ use SebLucas\Cops\Pages\PageId;
  */
 class OpdsHandler extends BaseHandler
 {
+    public const ENDPOINT = "opds";
+
+    public static function getRoutes()
+    {
+        return [
+            "/opds/{page}/{id}" => [static::PARAM => static::ENDPOINT],
+            "/opds/{page}" => [static::PARAM => static::ENDPOINT],
+            "/opds" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         $page = $request->get('page', PageId::INDEX);

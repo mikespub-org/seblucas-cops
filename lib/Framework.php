@@ -43,6 +43,8 @@ class Framework
      */
     public static function getRequest($name = '', $parse = true)
     {
+        // initialize routes if needed
+        static::addRoutes();
         // fix PATH_INFO when accessed via traditional endpoint scripts
         if (!empty($name) && Input\Route::addPrefix($name)) {
             if (empty($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] == '/') {
@@ -54,6 +56,20 @@ class Framework
             }
         }
         return new Input\Request($parse);
+    }
+
+    /**
+     * Add routes for all handlers
+     * @return void
+     */
+    public static function addRoutes()
+    {
+        if (Input\Route::count() > 0) {
+            return;
+        }
+        foreach (static::$handlers as $name => $handler) {
+            Input\Route::addRoutes($handler::getRoutes());
+        }
     }
 
     /**

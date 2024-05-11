@@ -19,8 +19,15 @@ use Throwable;
  * HTML main handler
  * URL format: index.php?page={page}&...
  */
-class IndexHandler extends BaseHandler
+class IndexHandler extends PageHandler
 {
+    public const ENDPOINT = "index";
+
+    public static function getRoutes()
+    {
+        return parent::getRoutes();
+    }
+
     public function handle($request)
     {
         // If we detect that an OPDS reader try to connect try to redirect to feed.php

@@ -15,8 +15,17 @@ use SebLucas\Cops\Output\JsonRenderer;
  * Handle JSON ajax requests
  * URL format: getJSON.php?page={page}&...
  */
-class JsonHandler extends BaseHandler
+class JsonHandler extends PageHandler
 {
+    public const ENDPOINT = "json";
+
+    public static function getRoutes()
+    {
+        // @todo handle 'json' routes correctly - see util.js
+        //return parent::getRoutes();
+        return [];
+    }
+
     public function handle($request)
     {
         header('Content-Type:application/json;charset=utf-8');

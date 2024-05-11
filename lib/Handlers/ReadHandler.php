@@ -18,6 +18,15 @@ use Exception;
  */
 class ReadHandler extends BaseHandler
 {
+    public const ENDPOINT = "read";
+
+    public static function getRoutes()
+    {
+        return [
+            "/read/{db:\d+}/{data:\d+}" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         $idData = $request->getId('data');

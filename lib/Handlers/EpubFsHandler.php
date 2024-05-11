@@ -18,12 +18,23 @@ use Exception;
  */
 class EpubFsHandler extends BaseHandler
 {
+    public const ENDPOINT = "epubfs";
+
+    public static function getRoutes()
+    {
+        // support custom pattern for route placeholders - see nikic/fast-route
+        return [
+            "/epubfs/{data:\d+}/{comp:.+}" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         if (php_sapi_name() === 'cli') {
             return;
         }
 
+        //$database = $request->getId('db');
         $idData = $request->getId('data');
         if (empty($idData)) {
             // this will call exit()

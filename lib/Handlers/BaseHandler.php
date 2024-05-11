@@ -10,12 +10,24 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 
 /**
  * Summary of BaseHandler
  */
 abstract class BaseHandler
 {
+    public const PARAM = Route::ENDPOINT_PARAM;
+    public const ENDPOINT = "";
+
+    /**
+     * @return array<string, mixed>
+     */
+    public static function getRoutes()
+    {
+        return [];
+    }
+
     public function __construct()
     {
         // ...

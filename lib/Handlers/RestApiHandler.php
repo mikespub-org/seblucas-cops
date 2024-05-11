@@ -21,6 +21,35 @@ use Exception;
  */
 class RestApiHandler extends BaseHandler
 {
+    public const ENDPOINT = "restapi";
+
+    public static function getRoutes()
+    {
+        // extra routes supported by REST API
+        return [
+            "/custom" => [static::PARAM => static::ENDPOINT],
+            "/databases/{db}/{name}" => [static::PARAM => static::ENDPOINT],
+            "/databases/{db}" => [static::PARAM => static::ENDPOINT],
+            "/databases" => [static::PARAM => static::ENDPOINT],
+            "/openapi" => [static::PARAM => static::ENDPOINT],
+            "/routes" => [static::PARAM => static::ENDPOINT],
+            "/notes/{type}/{id}/{title}" => [static::PARAM => static::ENDPOINT],
+            "/notes/{type}/{id}" => [static::PARAM => static::ENDPOINT],
+            "/notes/{type}" => [static::PARAM => static::ENDPOINT],
+            "/notes" => [static::PARAM => static::ENDPOINT],
+            "/preferences/{key}" => [static::PARAM => static::ENDPOINT],
+            "/preferences" => [static::PARAM => static::ENDPOINT],
+            "/annotations/{bookId}/{id}" => [static::PARAM => static::ENDPOINT],
+            "/annotations/{bookId}" => [static::PARAM => static::ENDPOINT],
+            "/annotations" => [static::PARAM => static::ENDPOINT],
+            "/metadata/{bookId}/{element}/{name}" => [static::PARAM => static::ENDPOINT],
+            "/metadata/{bookId}/{element}" => [static::PARAM => static::ENDPOINT],
+            "/metadata/{bookId}" => [static::PARAM => static::ENDPOINT],
+            "/user/details" => [static::PARAM => static::ENDPOINT],
+            "/user" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         // override splitting authors and books by first letter here?
@@ -32,7 +61,7 @@ class RestApiHandler extends BaseHandler
         if (empty($path)) {
             header('Content-Type:text/html;charset=utf-8');
 
-            $data = ['link' => Route::url(Config::ENDPOINT["restapi"]) . '/openapi'];
+            $data = ['link' => Route::url(Config::ENDPOINT[static::ENDPOINT]) . '/openapi'];
             $template = dirname(__DIR__, 2) . '/templates/restapi.html';
             echo Format::template($data, $template);
             return;

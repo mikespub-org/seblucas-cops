@@ -19,6 +19,17 @@ use SebLucas\Cops\Pages\PageId;
  */
 class FeedHandler extends BaseHandler
 {
+    public const ENDPOINT = "feed";
+
+    public static function getRoutes()
+    {
+        return [
+            "/feed/{page}/{id}" => [static::PARAM => static::ENDPOINT],
+            "/feed/{page}" => [static::PARAM => static::ENDPOINT],
+            "/feed" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         $page = $request->get('page', PageId::INDEX);

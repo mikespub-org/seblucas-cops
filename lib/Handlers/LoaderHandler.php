@@ -14,6 +14,18 @@ namespace SebLucas\Cops\Handlers;
  */
 class LoaderHandler extends BaseHandler
 {
+    public const ENDPOINT = "loader";
+
+    public static function getRoutes()
+    {
+        return [
+            "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [static::PARAM => static::ENDPOINT],
+            "/loader/{action}/{dbNum:\d+}" => [static::PARAM => static::ENDPOINT],
+            "/loader/{action}" => [static::PARAM => static::ENDPOINT],
+            "/loader" => [static::PARAM => static::ENDPOINT],
+        ];
+    }
+
     public function handle($request)
     {
         // ...

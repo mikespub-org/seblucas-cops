@@ -174,7 +174,7 @@ class RestApiTest extends TestCase
             "fetch.php?thumb=html&db=0&id=17" => "restapi.php/thumbs/html/0/17.jpg",
             "fetch.php?thumb=opds&db=0&id=17" => "restapi.php/thumbs/opds/0/17.jpg",
             "fetch.php?db=0&id=17" => "restapi.php/covers/0/17.jpg",
-            "fetch.php?view=1&db=0&data=20&type=epub" => "restapi.php/view/0/20/ignore.epub",
+            "fetch.php?view=1&db=0&data=20&type=epub" => "restapi.php/inline/0/20/ignore.epub",
             "fetch.php?db=0&data=20&type=epub" => "restapi.php/fetch/0/20/ignore.epub",
             "download.php?page=10&type=any" => "restapi.php/download/10/any",
         ];
@@ -266,7 +266,7 @@ class RestApiTest extends TestCase
         $this->assertEquals("/thumbs/html2/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"]));
         $this->assertEquals("/thumbs/opds2/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"]));
         $this->assertEquals("/covers/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17]));
-        $this->assertEquals("/view/0/20/ignore.epub", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
+        $this->assertEquals("/inline/0/20/ignore.epub", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
         $this->assertEquals("/fetch/0/20/ignore.epub", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"]));
         $this->assertEquals("/download/10/any", Route::getPageRoute([Route::ENDPOINT_PARAM => "download", "page" => 10, "type" => "any"]));
     }
