@@ -154,13 +154,16 @@ class BookList
         $result = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
+        // get handler based on $this->request
+        $handler = $this->request->getHandler('index');
+        $href = Route::link($handler, Book::PAGE_ALL, $params);
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
-            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL, $params), "subsection")];
+            $linkArray = [new LinkNavigation($href, "subsection")];
         } elseif (!empty(Config::get('titles_split_publication_year'))) {
-            $linkArray = [new LinkNavigation(Route::page(Book::PAGE_ALL, $params), "subsection")];
+            $linkArray = [new LinkNavigation($href, "subsection")];
         } else {
-            $linkArray = [new LinkFeed(Route::page(Book::PAGE_ALL, $params), null)];
+            $linkArray = [new LinkFeed($href, null)];
         }
         $entry = new Entry(
             localize('allbooks.title'),
@@ -174,13 +177,14 @@ class BookList
         );
         array_push($result, $entry);
         if (Config::get('recentbooks_limit') > 0) {
+            $href = Route::link($handler, PageId::ALL_RECENT_BOOKS, $params);
             $count = ($nBooks > Config::get('recentbooks_limit')) ? Config::get('recentbooks_limit') : $nBooks;
             $entry = new Entry(
                 localize('recent.title'),
                 PageId::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $count),
                 'text',
-                [ new LinkFeed(Route::page(PageId::ALL_RECENT_BOOKS, $params), 'http://opds-spec.org/sort/new')],
+                [ new LinkFeed($href, 'http://opds-spec.org/sort/new')],
                 $this->databaseId,
                 '',
                 $count
@@ -355,6 +359,8 @@ class BookList
     {
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
+        // get handler based on $this->request
+        $handler = $this->request->getHandler('index');
         $params = $filter->getQueryParams();
 
         // check orderBy to sort by count
@@ -370,12 +376,13 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
+            $params = ['id' => $post->groupid, 'db' => $this->databaseId];
             array_push($entryArray, new Entry(
                 $post->groupid,
                 Book::PAGE_ID . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkFeed(Route::page($page, ['id' => $post->groupid]), "subsection", null, $this->databaseId)],
+                [new LinkFeed(Route::link($handler, $page, $params), "subsection")],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count
@@ -428,6 +435,8 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $filter = new Filter($this->request, $params, "books", $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
+        // get handler based on $this->request
+        $handler = $this->request->getHandler('index');
 
         if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
             if (strpos($query, 'order by') !== false) {
@@ -447,6 +456,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $this->databaseId);
+            $book->setHandler($handler);
             array_push($entryArray, $book->getEntry());
         }
         return [$entryArray, $totalNumber];

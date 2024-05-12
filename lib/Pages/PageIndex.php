@@ -90,54 +90,55 @@ class PageIndex extends Page
             $baselist = new BaseList(Author::class, $this->request, $this->databaseId);
             $count = $baselist->countRequestEntries();
             if ($count > 0) {
-                array_push($this->entryArray, Author::getCountEntry($count, $this->databaseId, null, $filterParams));
+                array_push($this->entryArray, Author::getCountEntry($count, $this->databaseId, null, $this->handler, $filterParams));
             }
         }
         if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
             $baselist = new BaseList(Serie::class, $this->request, $this->databaseId);
             $count = $baselist->countRequestEntries();
             if ($count > 0) {
-                array_push($this->entryArray, Serie::getCountEntry($count, $this->databaseId, null, $filterParams));
+                array_push($this->entryArray, Serie::getCountEntry($count, $this->databaseId, null, $this->handler, $filterParams));
             }
         }
         if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
             $baselist = new BaseList(Publisher::class, $this->request, $this->databaseId);
             $count = $baselist->countRequestEntries();
             if ($count > 0) {
-                array_push($this->entryArray, Publisher::getCountEntry($count, $this->databaseId, null, $filterParams));
+                array_push($this->entryArray, Publisher::getCountEntry($count, $this->databaseId, null, $this->handler, $filterParams));
             }
         }
         if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
             $baselist = new BaseList(Tag::class, $this->request, $this->databaseId);
             $count = $baselist->countRequestEntries();
             if ($count > 0) {
-                array_push($this->entryArray, Tag::getCountEntry($count, $this->databaseId, null, $filterParams));
+                array_push($this->entryArray, Tag::getCountEntry($count, $this->databaseId, null, $this->handler, $filterParams));
             }
         }
         if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
             $baselist = new BaseList(Rating::class, $this->request, $this->databaseId);
             $count = $baselist->countRequestEntries();
             if ($count > 0) {
-                array_push($this->entryArray, Rating::getCountEntry($count, $this->databaseId, "ratings", $filterParams));
+                array_push($this->entryArray, Rating::getCountEntry($count, $this->databaseId, "ratings", $this->handler, $filterParams));
             }
         }
         if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
             $baselist = new BaseList(Language::class, $this->request, $this->databaseId);
             $count = $baselist->countRequestEntries();
             if ($count > 0) {
-                array_push($this->entryArray, Language::getCountEntry($count, $this->databaseId, null, $filterParams));
+                array_push($this->entryArray, Language::getCountEntry($count, $this->databaseId, null, $this->handler, $filterParams));
             }
         }
         // @todo apply filter?
         $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
         foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
+            $customColumn->setHandler($this->handler);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
         if (!empty(Config::get('calibre_virtual_libraries')) && !in_array('libraries', $this->ignoredCategories)) {
-            $library = VirtualLibrary::getCount($this->databaseId);
+            $library = VirtualLibrary::getCount($this->databaseId, $this->handler);
             if (!is_null($library)) {
                 array_push($this->entryArray, $library);
             }
@@ -157,37 +158,37 @@ class PageIndex extends Page
     public function getTopCountEntries()
     {
         if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
-            $author = Author::getCount($this->databaseId);
+            $author = Author::getCount($this->databaseId, $this->handler);
             if (!is_null($author)) {
                 array_push($this->entryArray, $author);
             }
         }
         if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
-            $series = Serie::getCount($this->databaseId);
+            $series = Serie::getCount($this->databaseId, $this->handler);
             if (!is_null($series)) {
                 array_push($this->entryArray, $series);
             }
         }
         if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
-            $publisher = Publisher::getCount($this->databaseId);
+            $publisher = Publisher::getCount($this->databaseId, $this->handler);
             if (!is_null($publisher)) {
                 array_push($this->entryArray, $publisher);
             }
         }
         if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
-            $tags = Tag::getCount($this->databaseId);
+            $tags = Tag::getCount($this->databaseId, $this->handler);
             if (!is_null($tags)) {
                 array_push($this->entryArray, $tags);
             }
         }
         if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
-            $rating = Rating::getCount($this->databaseId);
+            $rating = Rating::getCount($this->databaseId, $this->handler);
             if (!is_null($rating)) {
                 array_push($this->entryArray, $rating);
             }
         }
         if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
-            $languages = Language::getCount($this->databaseId);
+            $languages = Language::getCount($this->databaseId, $this->handler);
             if (!is_null($languages)) {
                 array_push($this->entryArray, $languages);
             }
@@ -195,12 +196,13 @@ class PageIndex extends Page
         $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
         foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
+            $customColumn->setHandler($this->handler);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
         if (!empty(Config::get('calibre_virtual_libraries')) && !in_array('libraries', $this->ignoredCategories)) {
-            $library = VirtualLibrary::getCount($this->databaseId);
+            $library = VirtualLibrary::getCount($this->databaseId, $this->handler);
             if (!is_null($library)) {
                 array_push($this->entryArray, $library);
             }

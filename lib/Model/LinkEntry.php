@@ -26,10 +26,9 @@ class LinkEntry extends Link
 
     /**
      * Summary of hrefXhtml
-     * @param string $endpoint
      * @return string
      */
-    public function hrefXhtml($endpoint = '')
+    public function hrefXhtml()
     {
         // LinkEntry()->href includes the endpoint here
         return $this->href;

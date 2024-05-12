@@ -19,7 +19,7 @@ class Data
     public const SQL_LINK_TABLE = "data";
     public const SQL_LINK_COLUMN = "id";
     public const SQL_SORT = "name";
-    public static string $endpoint = Config::ENDPOINT["fetch"];
+    public static string $handler = "fetch";
     /** @var int */
     public $id;
     public string $name;
@@ -283,12 +283,15 @@ class Data
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
             ($type == "epub" && Config::get('update_epub-metadata'))) {
             $params = ['id' => $book->id, 'db' => $book->getDatabaseId()];
+            if (Config::get('use_route_urls') && is_null($params['db'])) {
+                $params['db'] = 0;
+            }
             $params['type'] = $type;
             $params['data'] = $idData;
             if ($view) {
                 $params['view'] = 1;
             }
-            return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, $rel, $title);
+            return new LinkEntry(Route::link(static::$handler, null, $params), $mime, $rel, $title);
         }
 
         return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($book->path . "/" . $filename))), $mime, $rel, $title);

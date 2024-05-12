@@ -447,6 +447,7 @@ class Filter
      */
     public static function getEntryArray($request, $database = null)
     {
+        $handler = $request->getHandler('index');
         $libraryId = $request->getVirtualLibrary();
         $entryArray = [];
         foreach (static::URL_PARAMS as $paramName => $className) {
@@ -459,7 +460,7 @@ class Filter
             }
             // @todo do we want to filter by virtual library etc. here?
             if ($className == BookList::class) {
-                $booklist = new BookList(Request::build([$paramName => $paramValue]), $database);
+                $booklist = new BookList(Request::build([$paramName => $paramValue], $handler), $database);
                 $groupFunc = ($paramName == 'f') ? 'getCountByFirstLetter' : 'getCountByPubYear';
                 $entryArray = array_merge($entryArray, $booklist->$groupFunc());
                 continue;
@@ -467,6 +468,7 @@ class Filter
             if ($className == CustomColumn::class) {
                 foreach ($paramValue as $customId => $valueId) {
                     $custom = CustomColumn::createCustom($customId, $valueId, $database);
+                    $custom->setHandler($handler);
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);
                 }
                 continue;
@@ -476,9 +478,9 @@ class Filter
                 $paramValue = substr($paramValue, 1);
             }
             if (!empty($libraryId)) {
-                $req = Request::build([$paramName => $paramValue, VirtualLibrary::URL_PARAM => $libraryId]);
+                $req = Request::build([$paramName => $paramValue, VirtualLibrary::URL_PARAM => $libraryId], $handler);
             } else {
-                $req = Request::build([$paramName => $paramValue]);
+                $req = Request::build([$paramName => $paramValue], $handler);
             }
             $baselist = new BaseList($className, $req, $database);
             $entries = $baselist->getEntriesByFilter();

@@ -14,12 +14,12 @@ namespace SebLucas\Cops\Handlers;
  */
 class CheckHandler extends BaseHandler
 {
-    public const ENDPOINT = "check";
+    public const HANDLER = "check";
 
     public static function getRoutes()
     {
         return [
-            "/check" => [static::PARAM => static::ENDPOINT],
+            "/check" => [static::PARAM => static::HANDLER],
         ];
     }
 

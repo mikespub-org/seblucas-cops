@@ -26,6 +26,7 @@ class OpdsTest extends TestCase
     public const JING_JAR = __DIR__ . "/jing.jar";
     public const OPDSVALIDATOR_JAR = __DIR__ . "/OPDSValidator.jar";
     public const TEST_FEED = __DIR__ . "/text.atom";
+    private static string $handler = 'feed';
 
     public static function setUpBeforeClass(): void
     {
@@ -34,7 +35,7 @@ class OpdsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
         // try out route urls
-        //Config::set('use_route_urls', true);
+        Config::set('use_route_urls', true);
     }
 
     public static function tearDownAfterClass(): void
@@ -45,7 +46,7 @@ class OpdsTest extends TestCase
             return;
         }
         unlink(self::TEST_FEED);
-        //Config::set('use_route_urls', null);
+        Config::set('use_route_urls', null);
     }
 
     /**
@@ -149,7 +150,7 @@ class OpdsTest extends TestCase
         $page = PageId::INDEX;
 
         Config::set('subtitle_default', "My subtitle");
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
 
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -163,7 +164,7 @@ class OpdsTest extends TestCase
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED, self::OPDS_RELAX_NG, false));
@@ -182,9 +183,9 @@ class OpdsTest extends TestCase
      */
     public function testMostPages($page, $query)
     {
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
         $request->set('query', $query);
-        $_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
+        //$_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
         $currentPage = PageId::getPage($page, $request);
         $currentPage->InitializeContent();
@@ -195,7 +196,7 @@ class OpdsTest extends TestCase
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
-        unset($_SERVER['REQUEST_URI']);
+        //unset($_SERVER['REQUEST_URI']);
     }
 
     /**
@@ -222,7 +223,7 @@ class OpdsTest extends TestCase
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::INDEX;
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
@@ -240,7 +241,7 @@ class OpdsTest extends TestCase
 
     public function testOpenSearchDescription(): void
     {
-        $request = Request::build(['page', PageId::OPENSEARCH], 'feed');
+        $request = Request::build(['page', PageId::OPENSEARCH], self::$handler);
 
         $OPDSRender = new OpdsRenderer();
 
@@ -254,7 +255,7 @@ class OpdsTest extends TestCase
                                               "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::AUTHOR_DETAIL;
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
         $request->set('id', "1");
         $request->set('db', "0");
 
@@ -276,7 +277,7 @@ class OpdsTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('max_item_per_page', 2);
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
         $request->set('id', "1");
         $request->set('n', "1");
 
@@ -312,7 +313,7 @@ class OpdsTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('books_filter', ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"]);
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
         $request->set('id', "1");
         $request->set('tag', "Short Stories");
 
@@ -332,7 +333,7 @@ class OpdsTest extends TestCase
     {
         $page = PageId::AUTHOR_DETAIL;
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
-        $request = Request::build(['page' => $page], 'feed');
+        $request = Request::build(['page' => $page], self::$handler);
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);

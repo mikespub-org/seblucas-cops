@@ -22,7 +22,7 @@ use Exception;
  */
 class EPubReader
 {
-    public static string $endpoint = Config::ENDPOINT["epubfs"];
+    public static string $handler = "epubfs";
     public static string $template = "templates/epubreader.html";
     public static string $epubClass = EPub::class;
 
@@ -36,9 +36,9 @@ class EPubReader
     public static function getComponentContent($book, $component, $params = [])
     {
         $data = $book->component($component);
-        $endpoint = Config::ENDPOINT["epubfs"];
+        $handler = "epubfs";
 
-        $callback = function ($m) use ($book, $component, $params, $endpoint) {
+        $callback = function ($m) use ($book, $component, $params, $handler) {
             $method = $m[1];
             $path = $m[2];
             $end = '';
@@ -58,7 +58,7 @@ class EPubReader
                 return $method . "'#'" . $end;
             }
             $params['comp'] = $comp;
-            $out = $method . "'" . Route::url($endpoint, null, $params) . $hash . "'" . $end;
+            $out = $method . "'" . Route::link($handler, null, $params) . $hash . "'" . $end;
             if ($end) {
                 return $out;
             }
@@ -132,7 +132,7 @@ class EPubReader
         }, $epub->contents()));
 
         $params['comp'] = '~COMP~';
-        $link = str_replace(urlencode('~COMP~'), '', Route::url(static::$endpoint, null, $params));
+        $link = str_replace(urlencode('~COMP~'), '', Route::link(static::$handler, null, $params));
 
         $data = [
             'title'      => $book->title,
@@ -202,7 +202,7 @@ class EPubReader
      */
     public static function getEpubjsReader($idData, $request)
     {
-        $endpoint = Config::ENDPOINT["zipfs"];
+        $handler = "zipfs";
         $template = "templates/epubjs-reader.html";
         $book = Book::getBookByDataId($idData, $request->database());
         if (!$book) {
@@ -214,7 +214,7 @@ class EPubReader
         }
         // URL format: zipfs.php/{db}/{idData}/{component}
         $db = $book->getDatabaseId() ?? 0;
-        $link = Route::url($endpoint . "/{$db}/{$idData}/");
+        $link = Route::link($handler) . "/{$db}/{$idData}/";
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');
 

@@ -18,12 +18,12 @@ use Exception;
  */
 class ReadHandler extends BaseHandler
 {
-    public const ENDPOINT = "read";
+    public const HANDLER = "read";
 
     public static function getRoutes()
     {
         return [
-            "/read/{db:\d+}/{data:\d+}" => [static::PARAM => static::ENDPOINT],
+            "/read/{db:\d+}/{data:\d+}" => [static::PARAM => static::HANDLER],
         ];
     }
 

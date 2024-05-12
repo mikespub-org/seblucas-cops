@@ -18,13 +18,13 @@ use Exception;
  */
 class EpubFsHandler extends BaseHandler
 {
-    public const ENDPOINT = "epubfs";
+    public const HANDLER = "epubfs";
 
     public static function getRoutes()
     {
         // support custom pattern for route placeholders - see nikic/fast-route
         return [
-            "/epubfs/{data:\d+}/{comp:.+}" => [static::PARAM => static::ENDPOINT],
+            "/epubfs/{data:\d+}/{comp:.+}" => [static::PARAM => static::HANDLER],
         ];
     }
 

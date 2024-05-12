@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\HtmlRenderer;
 use SebLucas\Cops\Pages\PageId;
 use Throwable;
@@ -21,7 +22,7 @@ use Throwable;
  */
 class IndexHandler extends PageHandler
 {
-    public const ENDPOINT = "index";
+    public const HANDLER = "index";
 
     public static function getRoutes()
     {
@@ -32,7 +33,7 @@ class IndexHandler extends PageHandler
     {
         // If we detect that an OPDS reader try to connect try to redirect to feed.php
         if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $_SERVER['HTTP_USER_AGENT'])) {
-            header('location: ' . Config::ENDPOINT["feed"]);
+            header('Location: ' . Route::link("feed"));
             return;
         }
 

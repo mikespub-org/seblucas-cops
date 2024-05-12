@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
 
 class Note
@@ -30,6 +31,7 @@ class Note
     public string $doc;
     public float $mtime;
     public ?int $databaseId = null;
+    protected string $handler = '';
 
     /**
      * Summary of __construct
@@ -53,7 +55,8 @@ class Note
      */
     public function getUri($params = [])
     {
-        return '/notes/' . $this->colname . '/' . $this->item;
+        // @todo get handler from somewhere
+        return Route::link($this->handler) . '/notes/' . $this->colname . '/' . $this->item;
     }
 
     /**

@@ -73,6 +73,7 @@ class Page
     protected $ignoredCategories = [];
     /** @var ?int */
     protected $databaseId = null;
+    protected string $handler = '';
 
     /**
      * Summary of getPage
@@ -113,6 +114,7 @@ class Page
         $this->numberPerPage = $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->database();
+        $this->handler = $this->request->getHandler('index');
     }
 
     /**
@@ -185,6 +187,7 @@ class Page
 
     /**
      * Summary of getCleanQuery
+     * @deprecated 2.7.0 use $this->request->getCleanParams() instead
      * @return string
      */
     public function getCleanQuery()
@@ -195,7 +198,8 @@ class Page
             if (!empty($query)) {
                 return $path . '?' . $query;
             }
-            return $path;
+            // Route::query() expects a query string as input
+            return $path . '?';
         }
         return $query;
     }
@@ -207,7 +211,8 @@ class Page
     public function getFirstLink()
     {
         if ($this->n > 1) {
-            return new LinkNavigation(Route::query($this->getCleanQuery()), "first", localize("paging.first.alternate"));
+            $params = $this->request->getCleanParams();
+            return new LinkNavigation(Route::link($this->handler, null, $params), "first", localize("paging.first.alternate"));
         }
         return null;
     }
@@ -219,7 +224,9 @@ class Page
     public function getLastLink()
     {
         if ($this->n < $this->getMaxPage()) {
-            return new LinkNavigation(Route::query($this->getCleanQuery(), ["n" => strval($this->getMaxPage())]), "last", localize("paging.last.alternate"));
+            $params = $this->request->getCleanParams();
+            $params['n'] = strval($this->getMaxPage());
+            return new LinkNavigation(Route::link($this->handler, null, $params), "last", localize("paging.last.alternate"));
         }
         return null;
     }
@@ -231,7 +238,9 @@ class Page
     public function getNextLink()
     {
         if ($this->n < $this->getMaxPage()) {
-            return new LinkNavigation(Route::query($this->getCleanQuery(), ["n" => strval($this->n + 1)]), "next", localize("paging.next.alternate"));
+            $params = $this->request->getCleanParams();
+            $params['n'] = strval($this->n + 1);
+            return new LinkNavigation(Route::link($this->handler, null, $params), "next", localize("paging.next.alternate"));
         }
         return null;
     }
@@ -243,7 +252,9 @@ class Page
     public function getPrevLink()
     {
         if ($this->n > 1) {
-            return new LinkNavigation(Route::query($this->getCleanQuery(), ["n" => strval($this->n - 1)]), "previous", localize("paging.previous.alternate"));
+            $params = $this->request->getCleanParams();
+            $params['n'] = strval($this->n - 1);
+            return new LinkNavigation(Route::link($this->handler, null, $params), "previous", localize("paging.previous.alternate"));
         }
         return null;
     }

@@ -17,22 +17,21 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use Exception;
 
 class JsonRenderer
 {
-    public static string $endpoint = Config::ENDPOINT["index"];
+    public static string $handler = "json";
 
     /**
      * @param Book $book
-     * @param string $endpoint
      * @return array<string, mixed>
      */
-    public static function getBookContentArray($book, $endpoint)
+    public static function getBookContentArray($book)
     {
+        $handler = $book->getHandler();
         $i = 0;
         $preferedData = [];
         foreach (Config::get('prefered_format') as $format) {
@@ -50,14 +49,14 @@ class JsonRenderer
 
         $authors = [];
         foreach ($book->getAuthors() as $author) {
-            $link = new LinkNavigation($author->getUri(), null, null, $database);
-            array_push($authors, ["name" => $author->name, "url" => $link->hrefXhtml($endpoint)]);
+            $author->setHandler($handler);
+            array_push($authors, ["name" => $author->name, "url" => $author->getUri()]);
         }
 
         $tags = [];
         foreach ($book->getTags() as $tag) {
-            $link = new LinkNavigation($tag->getUri(), null, null, $database);
-            array_push($tags, ["name" => $tag->name, "url" => $link->hrefXhtml($endpoint)]);
+            $tag->setHandler($handler);
+            array_push($tags, ["name" => $tag->name, "url" => $tag->getUri()]);
         }
 
         $publisher = $book->getPublisher();
@@ -65,9 +64,9 @@ class JsonRenderer
             $pn = "";
             $pu = "";
         } else {
+            $publisher->setHandler($handler);
             $pn = $publisher->name;
-            $link = new LinkNavigation($publisher->getUri(), null, null, $database);
-            $pu = $link->hrefXhtml($endpoint);
+            $pu = $publisher->getUri();
         }
 
         $serie = $book->getSerie();
@@ -76,15 +75,15 @@ class JsonRenderer
             $scn = "";
             $su = "";
         } else {
+            $serie->setHandler($handler);
             $sn = $serie->name;
             $scn = str_format(localize("content.series.data"), $book->seriesIndex, $serie->name);
-            $link = new LinkNavigation($serie->getUri(), null, null, $database);
-            $su = $link->hrefXhtml($endpoint);
+            $su = $serie->getUri();
         }
         $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);
 
         return ["id" => $book->id,
-            "detailurl" => $book->getDetailUrl($endpoint),
+            "detailurl" => $book->getDetailUrl($handler),
             "hasCover" => $book->hasCover,
             "preferedData" => $preferedData,
             "preferedCount" => count($preferedData),
@@ -106,23 +105,23 @@ class JsonRenderer
 
     /**
      * @param Book $book
-     * @param string $endpoint
      * @return array<string, mixed>
      */
-    public static function getFullBookContentArray($book, $endpoint)
+    public static function getFullBookContentArray($book)
     {
-        $out = static::getBookContentArray($book, $endpoint);
+        $handler = $book->getHandler();
+        $out = static::getBookContentArray($book);
         $database = $book->getDatabaseId();
 
         $cover = new Cover($book);
         // set height for thumbnail here depending on opds vs. html (height x 2)
-        if ($endpoint == Config::ENDPOINT['feed']) {
+        if (in_array($handler, ['feed', 'opds'])) {
             $thumb = "opds2";
         } else {
             $thumb = "html2";
         }
-        $out ["thumbnailurl"] = $cover->getThumbnailUri($endpoint, $thumb, false);
-        $out ["coverurl"] = $cover->getCoverUri($endpoint) ?? $out ["thumbnailurl"];
+        $out ["thumbnailurl"] = $cover->getThumbnailUri($thumb, false);
+        $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
@@ -137,19 +136,19 @@ class JsonRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = Route::url(Config::ENDPOINT["read"], null, ["data" => $data->id, "db" => $database]);
+                $tab ["readerUrl"] = Route::link("read", null, ["data" => $data->id, "db" => ($database ?? 0)]);
             }
             array_push($out ["datas"], $tab);
         }
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
-            $link = new LinkNavigation($author->getUri(), null, null, $database);
-            array_push($out ["authors"], ["name" => $author->name, "url" => $link->hrefXhtml($endpoint)]);
+            $author->setHandler($handler);
+            array_push($out ["authors"], ["name" => $author->name, "url" => $author->getUri()]);
         }
         $out ["tags"] = [];
         foreach ($book->getTags() as $tag) {
-            $link = new LinkNavigation($tag->getUri(), null, null, $database);
-            array_push($out ["tags"], ["name" => $tag->name, "url" => $link->hrefXhtml($endpoint)]);
+            $tag->setHandler($handler);
+            array_push($out ["tags"], ["name" => $tag->name, "url" => $tag->getUri()]);
         }
 
         $out ["identifiers"] = [];
@@ -165,20 +164,19 @@ class JsonRenderer
     /**
      * Summary of getContentArray
      * @param Entry|EntryBook|null $entry
-     * @param string $endpoint
      * @param array<string, mixed> $extraParams
      * @return array<string, mixed>|bool
      */
-    public static function getContentArray($entry, $endpoint, $extraParams = [])
+    public static function getContentArray($entry, $extraParams = [])
     {
         if (is_null($entry)) {
             return false;
         }
         if ($entry instanceof EntryBook) {
             $out = [ "title" => $entry->title];
-            $out ["book"] = static::getBookContentArray($entry->book, $endpoint);
-            $out ["thumbnailurl"] = $entry->getThumbnail($endpoint);
-            $out ["coverurl"] = $entry->getImage($endpoint) ?? $out ["thumbnailurl"];
+            $out ["book"] = static::getBookContentArray($entry->book);
+            $out ["thumbnailurl"] = $entry->getThumbnail();
+            $out ["coverurl"] = $entry->getImage() ?? $out ["thumbnailurl"];
             return $out;
         }
         switch ($entry->className) {
@@ -206,23 +204,22 @@ class JsonRenderer
             default:
                 $label = $entry->className;
         }
-        return [ "class" => $label, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($endpoint, $extraParams), "number" => $entry->numberOfElement ];
+        return [ "class" => $label, "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink($extraParams), "number" => $entry->numberOfElement ];
     }
 
     /**
      * Summary of getContentArrayTypeahead
      * @param Page $page
-     * @param string $endpoint
      * @return array<mixed>
      */
-    public static function getContentArrayTypeahead($page, $endpoint)
+    public static function getContentArrayTypeahead($page)
     {
         $out = [];
         foreach ($page->entryArray as $entry) {
             if ($entry instanceof EntryBook) {
                 array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
             } else {
-                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink($endpoint)]);
+                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
             }
         }
         return $out;
@@ -232,11 +229,11 @@ class JsonRenderer
      * Summary of addCompleteArray
      * @param array<string, mixed> $in
      * @param Request $request
-     * @param string $endpoint
      * @return array<string, mixed>
      */
-    public static function addCompleteArray($in, $request, $endpoint)
+    public static function addCompleteArray($in, $request)
     {
+        $handler = $request->getHandler(static::$handler);
         $out = $in;
         // check for it.c.config.ignored_categories.whatever in templates for category 'whatever'
         $ignoredCategories = ['dummy'];
@@ -290,9 +287,9 @@ class JsonRenderer
                 "downloadAllTooltip" => localize("downloadall.tooltip"),
             ],
             "url" => [
-                "detailUrl" => $endpoint . "?page=13&id={0}&db={1}",
-                "coverUrl" => Config::ENDPOINT["fetch"] . "?id={0}&db={1}",
-                "thumbnailUrl" => Config::ENDPOINT["fetch"] . "?thumb=html&id={0}&db={1}",
+                "detailUrl" => Route::link($handler) . "?page=13&id={0}&db={1}",
+                "coverUrl" => Route::link("fetch") . "?id={0}&db={1}",
+                "thumbnailUrl" => Route::link("fetch") . "?thumb=html&id={0}&db={1}",
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),
@@ -323,7 +320,7 @@ class JsonRenderer
     {
         $pathInfo = $request->path();
         $queryString = $request->query();
-        return Route::url(Config::ENDPOINT["json"] . $pathInfo) . Route::query($queryString, ['complete' => 1]);
+        return Route::link("json") . $pathInfo . Route::query($queryString, ['complete' => 1]);
     }
 
     /**
@@ -347,14 +344,14 @@ class JsonRenderer
             $currentPage->InitializeContent();
         } catch (Exception $e) {
             // this will call exit()
-            $request->notFound(static::$endpoint, $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
+            $request->notFound(Route::link(static::$handler), $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
         }
 
-        // adapt endpoint based on $request e.g. for rest api
-        $endpoint = $request->getEndpoint(static::$endpoint);
+        // adapt handler based on $request e.g. for rest api
+        $handler = $request->getHandler(static::$handler);
 
         if ($search) {
-            return static::getContentArrayTypeahead($currentPage, $endpoint);
+            return static::getContentArrayTypeahead($currentPage);
         }
 
         $out = [ "title" => $currentPage->title];
@@ -362,7 +359,7 @@ class JsonRenderer
         if (!empty($out ["parentTitle"])) {
             $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
         }
-        $out ["baseurl"] = Route::url($endpoint);
+        $out ["baseurl"] = Route::link($handler);
         $entries = [];
         $extraParams = [];
         $out ["isFilterPage"] = false;
@@ -371,14 +368,14 @@ class JsonRenderer
             $out ["isFilterPage"] = true;
         }
         foreach ($currentPage->entryArray as $entry) {
-            array_push($entries, static::getContentArray($entry, $endpoint, $extraParams));
+            array_push($entries, static::getContentArray($entry, $extraParams));
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
             if (Config::get('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
                 $currentPage->book->updateForKepub = true;
             }
-            $out ["book"] = static::getFullBookContentArray($currentPage->book, $endpoint);
+            $out ["book"] = static::getFullBookContentArray($currentPage->book);
         } elseif ($page == PageId::BOOK_DETAIL) {
             $page = PageId::INDEX;
         }
@@ -420,20 +417,20 @@ class JsonRenderer
             $out ["firstLink"] = "";
             $out ["prevLink"] = "";
             if (!is_null($prevLink)) {
-                $out ["firstLink"] = $currentPage->getFirstLink()->hrefXhtml($endpoint);
-                $out ["prevLink"] = $prevLink->hrefXhtml($endpoint);
+                $out ["firstLink"] = $currentPage->getFirstLink()->hrefXhtml();
+                $out ["prevLink"] = $prevLink->hrefXhtml();
             }
             $out ["nextLink"] = "";
             $out ["lastLink"] = "";
             if (!is_null($nextLink)) {
-                $out ["nextLink"] = $nextLink->hrefXhtml($endpoint);
-                $out ["lastLink"] = $currentPage->getLastLink()->hrefXhtml($endpoint);
+                $out ["nextLink"] = $nextLink->hrefXhtml();
+                $out ["lastLink"] = $currentPage->getLastLink()->hrefXhtml();
             }
             $out ["maxPage"] = $currentPage->getMaxPage();
             $out ["currentPage"] = $currentPage->n;
         }
         if (!is_null($request->get("complete")) || $complete) {
-            $out = static::addCompleteArray($out, $request, $endpoint);
+            $out = static::addCompleteArray($out, $request);
         }
 
         $out ["containsBook"] = 0;
@@ -447,22 +444,28 @@ class JsonRenderer
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
-            $out ["sorturl"] = $out["baseurl"] . str_replace('%7B0%7D', '{0}', Route::query($currentPage->getCleanQuery(), ['sort' => '{0}']));
+            $params = $request->getCleanParams();
+            $params['sort'] = '{0}';
+            $out ["sorturl"] = str_replace('%7B0%7D', '{0}', Route::link($handler, null, $params));
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-                $out ["filterurl"] = $out["baseurl"] . Route::query($currentPage->getCleanQuery(), ['filter' => 1]);
+                $params = $request->getCleanParams();
+                $params['filter'] = 1;
+                $out ["filterurl"] = Route::link($handler, null, $params);
             }
         } elseif (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-            $out ["filterurl"] = $out["baseurl"] . Route::query($currentPage->getCleanQuery(), ['filter' => null]);
+            $params = $request->getCleanParams();
+            $params['filter'] = null;
+            $out ["filterurl"] = Route::link($handler, null, $params);
         }
 
-        $out["abouturl"] = Route::url($endpoint, PageId::ABOUT, ['db' => $database]);
-        $out["customizeurl"] = Route::url($endpoint, PageId::CUSTOMIZE, ['db' => $database]);
+        $out["abouturl"] = Route::link($handler, PageId::ABOUT, ['db' => $database]);
+        $out["customizeurl"] = Route::link($handler, PageId::CUSTOMIZE, ['db' => $database]);
         $out["filters"] = false;
         if ($request->hasFilter()) {
             $out["filters"] = [];
             foreach (Filter::getEntryArray($request, $database) as $entry) {
-                array_push($out["filters"], static::getContentArray($entry, $endpoint, ['filter' => 1]));
+                array_push($out["filters"], static::getContentArray($entry, ['filter' => 1]));
             }
             if (empty($out["filters"])) {
                 $out["filters"] = false;
@@ -477,12 +480,12 @@ class JsonRenderer
         // multiple database setup
         if ($page != PageId::INDEX && !is_null($database)) {
             if ($homepage != PageId::INDEX) {
-                $out ["homeurl"] = Route::url($endpoint, PageId::INDEX, ['db' => $database]);
+                $out ["homeurl"] = Route::link($handler, PageId::INDEX, ['db' => $database]);
             } else {
-                $out ["homeurl"] = Route::url($endpoint, null, ['db' => $database]);
+                $out ["homeurl"] = Route::link($handler, null, ['db' => $database]);
             }
         } elseif ($homepage != PageId::INDEX) {
-            $out ["homeurl"] = Route::url($endpoint, PageId::INDEX);
+            $out ["homeurl"] = Route::link($handler, PageId::INDEX);
         } else {
             $out ["homeurl"] = $out["baseurl"];
         }
@@ -498,7 +501,7 @@ class JsonRenderer
             if ($request->hasFilter()) {
                 $filterParams = $request->getFilterParams();
                 $filterParams["db"] = $database;
-                $out ["parenturl"] = Route::url($endpoint, PageId::INDEX, $filterParams);
+                $out ["parenturl"] = Route::link($handler, PageId::INDEX, $filterParams);
             } else {
                 $out ["parenturl"] = $out["homeurl"];
             }
@@ -506,13 +509,13 @@ class JsonRenderer
         $out ["hierarchy"] = false;
         if ($currentPage->hierarchy) {
             $out ["hierarchy"] = [
-                "parent" => static::getContentArray($currentPage->hierarchy['parent'], $endpoint, $extraParams),
-                "current" => static::getContentArray($currentPage->hierarchy['current'], $endpoint, $extraParams),
+                "parent" => static::getContentArray($currentPage->hierarchy['parent'], $extraParams),
+                "current" => static::getContentArray($currentPage->hierarchy['current'], $extraParams),
                 "children" => [],
                 "hastree" => $request->get('tree', false),
             ];
             foreach ($currentPage->hierarchy['children'] as $entry) {
-                array_push($out ["hierarchy"]["children"], static::getContentArray($entry, $endpoint, $extraParams));
+                array_push($out ["hierarchy"]["children"], static::getContentArray($entry, $extraParams));
             }
         }
         $out ["extra"] = $currentPage->extra;
@@ -523,23 +526,31 @@ class JsonRenderer
             if (!empty(Config::get('download_page'))) {
                 $out ["download"] = [];
                 foreach (Config::get('download_page') as $format) {
-                    $pathInfo = $request->path();
-                    $query = preg_replace("/(^|\&)_=\d+/", "", $request->query());
-                    $url = Route::url(Config::ENDPOINT['download'] . $pathInfo) . Route::query($query, ['type' => strtolower($format)]);
+                    $params = $request->getCleanParams();
+                    $params['type'] = strtolower($format);
+                    $url = Route::link(Downloader::$handler, null, $params);
                     array_push($out ["download"], ['url' => $url, 'format' => $format]);
                 }
             } elseif (!empty($qid)) {
                 if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
                     $out ["download"] = [];
                     foreach (Config::get('download_series') as $format) {
-                        $url = Route::url(Config::ENDPOINT['download'], null, ['series' => $qid, 'type' => strtolower($format), 'db' => $database]);
+                        $params = [];
+                        $params['series'] = $qid;
+                        $params['type'] = strtolower($format);
+                        $params['db'] = $database;
+                        $url = Route::link(Downloader::$handler, null, $params);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }
                 if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
                     $out ["download"] = [];
                     foreach (Config::get('download_author') as $format) {
-                        $url = Route::url(Config::ENDPOINT['download'], null, ['author' => $qid, 'type' => strtolower($format), 'db' => $database]);
+                        $params = [];
+                        $params['author'] = $qid;
+                        $params['type'] = strtolower($format);
+                        $params['db'] = $database;
+                        $url = Route::link(Downloader::$handler, null, $params);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }

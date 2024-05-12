@@ -160,12 +160,13 @@ class CustomColumnTypeDate extends CustomColumnType
         $entryArray = [];
         $label = 'year';
         while ($post = $result->fetchObject()) {
+            $params = ['custom' => $this->customId, 'year' => $post->groupid, 'db' => $this->databaseId];
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->getEntryId() . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::page($page, ['custom' => $this->customId, 'year' => $post->groupid]), null, null, $this->databaseId)],
+                [new LinkNavigation(Route::link($this->handler, $page, $params), null, null)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

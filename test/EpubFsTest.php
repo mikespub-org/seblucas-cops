@@ -11,7 +11,6 @@ namespace SebLucas\Cops\Tests;
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\EPubMeta\EPub;
@@ -21,8 +20,7 @@ class EpubFsTest extends TestCase
     private static EPub $book;
     /** @var array<mixed> */
     private static array $params;
-    private static string $endpoint;
-
+    private static string $handler = 'epubfs';
 
     public static function setUpBeforeClass(): void
     {
@@ -32,8 +30,6 @@ class EpubFsTest extends TestCase
 
         self::$book = new EPub($myBook->getFilePath("EPUB", $idData));
         self::$book->initSpineComponent();
-
-        self::$endpoint = Config::ENDPOINT["epubfs"];
     }
 
     public function testUrlImage(): void
@@ -44,7 +40,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
             $src = $matches [1];
         }
-        $url = Route::url(self::$endpoint, null, ['data' => 20, 'comp' => EPubReader::encode('images/cover.png')], '&amp;');
+        $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('images/cover.png')], '&amp;');
         $this->assertEquals($url, $src);
     }
 
@@ -56,14 +52,14 @@ class EpubFsTest extends TestCase
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
             $src = $matches [1];
         }
-        $url = Route::url(self::$endpoint, null, ['data' => 20, 'comp' => EPubReader::encode('images/logo-feedbooks-tiny.png')], '&amp;');
+        $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('images/logo-feedbooks-tiny.png')], '&amp;');
         $this->assertEquals($url, $src);
 
         $href = "";
         if (preg_match("/href\=\'(.*?)\'/", $data, $matches)) {
             $href = $matches [1];
         }
-        $url = Route::url(self::$endpoint, null, ['data' => 20, 'comp' => EPubReader::encode('css/title.css')], '&amp;');
+        $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('css/title.css')], '&amp;');
         $this->assertEquals($url, $href);
     }
 
@@ -75,7 +71,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/import \'(.*?)\'/", $data, $matches)) {
             $import = $matches [1];
         }
-        $url = Route::url(self::$endpoint, null, ['data' => 20, 'comp' => EPubReader::encode('css/page.css')], '&amp;');
+        $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('css/page.css')], '&amp;');
         $this->assertEquals($url, $import);
     }
 
@@ -87,7 +83,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/url\s*\(\'(.*?)\'\)/", $data, $matches)) {
             $src = $matches [1];
         }
-        $url = Route::url(self::$endpoint, null, ['data' => 20, 'comp' => EPubReader::encode('fonts/times.ttf')]);
+        $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('fonts/times.ttf')]);
         $this->assertEquals($url, $src);
     }
 
@@ -99,7 +95,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/href\='(.*?)' title=\"Direct Link\"/", $data, $matches)) {
             $src = $matches [1];
         }
-        $url = Route::url(self::$endpoint, null, ['data' => 20, 'comp' => EPubReader::encode('main2.xml')], '&amp;');
+        $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('main2.xml')], '&amp;');
         $this->assertEquals($url, $src);
     }
 
@@ -111,7 +107,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/href\='(.*?)' title=\"Direct Link with anchor\"/", $data, $matches)) {
             $src = $matches [1];
         }
-        $url = Route::url(self::$endpoint, null, ['data' => 20, 'comp' => EPubReader::encode('main2.xml')], '&amp;');
+        $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('main2.xml')], '&amp;');
         $this->assertEquals($url . '#anchor', $src);
     }
 

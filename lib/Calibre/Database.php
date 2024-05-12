@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
 use Exception;
 use PDO;
@@ -165,7 +166,7 @@ class Database
     protected static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            header("location: " . Config::ENDPOINT["check"] . "?err=1");
+            header("Location: " . Route::link("check") . "?err=1");
         }
         throw new Exception("Database <{$database}> not found.");
     }

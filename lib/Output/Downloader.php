@@ -23,7 +23,7 @@ use ZipStream\ZipStream;
  */
 class Downloader
 {
-    public static string $endpoint = Config::ENDPOINT["download"];
+    public static string $handler = "download";
 
     /** @var Request */
     protected $request;

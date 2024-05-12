@@ -97,11 +97,10 @@ class Entry
 
     /**
      * Summary of getNavLink
-     * @param string $endpoint
      * @param array<string, mixed> $extraParams
      * @return string
      */
-    public function getNavLink($endpoint = "", $extraParams = [])
+    public function getNavLink($extraParams = [])
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkEntry|LinkFeed */
@@ -110,7 +109,7 @@ class Entry
                 continue;
             }
 
-            $uri = $link->hrefXhtml($endpoint);
+            $uri = $link->hrefXhtml();
             if (empty($extraParams)) {
                 return $uri;
             }
@@ -143,16 +142,15 @@ class Entry
 
     /**
      * Summary of getThumbnail
-     * @param string $endpoint
      * @return ?string
      */
-    public function getThumbnail($endpoint = '')
+    public function getThumbnail()
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkFeed|LinkEntry */
 
             if ($link->rel == LinkEntry::OPDS_THUMBNAIL_TYPE) {
-                return $link->hrefXhtml($endpoint);
+                return $link->hrefXhtml();
             }
         }
         return null;
@@ -160,16 +158,15 @@ class Entry
 
     /**
      * Summary of getImage
-     * @param string $endpoint
      * @return ?string
      */
-    public function getImage($endpoint = '')
+    public function getImage()
     {
         foreach ($this->linkArray as $link) {
             /** @var $link LinkFeed|LinkEntry */
 
             if ($link->rel == LinkEntry::OPDS_IMAGE_TYPE) {
-                return $link->hrefXhtml($endpoint);
+                return $link->hrefXhtml();
             }
         }
         return null;

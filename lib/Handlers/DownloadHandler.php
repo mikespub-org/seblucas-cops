@@ -18,14 +18,14 @@ use SebLucas\Cops\Output\Downloader;
  */
 class DownloadHandler extends BaseHandler
 {
-    public const ENDPOINT = "download";
+    public const HANDLER = "download";
 
     public static function getRoutes()
     {
         // handle endpoint with page param
         return [
-            "/download/{page}/{type}" => [static::PARAM => static::ENDPOINT],
-            "/download/{page}" => [static::PARAM => static::ENDPOINT],
+            "/download/{page}/{type}" => [static::PARAM => static::HANDLER],
+            "/download/{page}" => [static::PARAM => static::HANDLER],
         ];
     }
 

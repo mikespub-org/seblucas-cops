@@ -64,9 +64,10 @@ class PageQueryResult extends Page
         if (!Database::noDatabaseSelected($database)) {
             $libraryId = $this->request->getVirtualLibrary();
         }
-        $req = null;
         if (!empty($libraryId)) {
-            $req = Request::build(['vl' => $libraryId]);
+            $req = Request::build(['vl' => $libraryId], $this->handler);
+        } else {
+            $req = Request::build([], $this->handler);
         }
         switch ($scope) {
             case static::SCOPE_BOOK :
@@ -127,7 +128,7 @@ class PageQueryResult extends Page
                     "db:query:{$d}",
                     " ",
                     "text",
-                    [ new LinkNavigation(Route::page(null, ["db" => $d])) ],
+                    [ new LinkNavigation(Route::link($this->handler, null, ["db" => $d])) ],
                     null,
                     "tt-header"
                 ));
@@ -168,7 +169,7 @@ class PageQueryResult extends Page
                         "db:query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
-                        [ new LinkNavigation(Route::page($pagequery, $params)) ],
+                        [ new LinkNavigation(Route::link($this->handler, $pagequery, $params)) ],
                         $database,
                         Database::noDatabaseSelected($database) ? "" : "tt-header",
                         $total
@@ -260,7 +261,7 @@ class PageQueryResult extends Page
                 "db:query:{$d}",
                 str_format(localize("bookword", $totalNumber), $totalNumber),
                 "text",
-                [ new LinkNavigation(Route::page($pagequery, ['query' => $query, 'db' => $d])) ],
+                [ new LinkNavigation(Route::link($this->handler, $pagequery, ['query' => $query, 'db' => $d])) ],
                 null,
                 "",
                 $totalNumber

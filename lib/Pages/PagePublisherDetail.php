@@ -23,6 +23,7 @@ class PagePublisherDetail extends PageWithDetail
     {
         /** @var Publisher $instance */
         $instance = Publisher::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance->setHandler($this->handler);
         if ($this->request->get('filter')) {
             $this->filterParams = [Publisher::URL_PARAM => $this->idGet];
             $this->getFilters($instance);

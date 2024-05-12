@@ -33,7 +33,7 @@ use Exception;
 
 class CustomColumnsTest extends TestCase
 {
-    private static string $endpoint = 'phpunit';
+    private static string $handler = 'phpunit';
 
     public static function setUpBeforeClass(): void
     {
@@ -47,6 +47,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(8);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_01"));
 
@@ -56,7 +57,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=8", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=8", $coltype->getUri());
         $this->assertEquals("cops:custom:8", $coltype->getEntryId());
         $this->assertEquals("custom_01", $coltype->getTitle());
         $this->assertEquals("Custom column example 01 (text)", $coltype->getDatabaseDescription());
@@ -71,6 +72,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(16);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_01b"));
 
@@ -80,7 +82,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=16", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=16", $coltype->getUri());
         $this->assertEquals("cops:custom:16", $coltype->getEntryId());
         $this->assertEquals("custom_01b", $coltype->getTitle());
         $this->assertEquals(null, $coltype->getDatabaseDescription());
@@ -95,6 +97,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(6);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_02"));
 
@@ -104,7 +107,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=6", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=6", $coltype->getUri());
         $this->assertEquals("cops:custom:6", $coltype->getEntryId());
         $this->assertEquals("custom_02", $coltype->getTitle());
         $this->assertEquals("Custom column example 02 (csv)", $coltype->getDatabaseDescription());
@@ -119,6 +122,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(7);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_03"));
 
@@ -127,7 +131,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("comments", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeComment::class, get_class($coltype));
 
-        $this->assertEquals("?page=14&custom=7", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=7", $coltype->getUri());
         $this->assertEquals("cops:custom:7", $coltype->getEntryId());
         $this->assertEquals("custom_03", $coltype->getTitle());
         $this->assertEquals("Custom column example 03 (long_text)", $coltype->getDatabaseDescription());
@@ -142,6 +146,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(4);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_04"));
 
@@ -151,7 +156,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeSeries::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=4", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=4", $coltype->getUri());
         $this->assertEquals("cops:custom:4", $coltype->getEntryId());
         $this->assertEquals("custom_04", $coltype->getTitle());
         $this->assertEquals("Custom column example 04 (series_text)", $coltype->getDatabaseDescription());
@@ -167,6 +172,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(5);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_05"));
 
@@ -176,7 +182,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeEnumeration::class, get_class($coltype));
 
         $this->assertCount(4, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=5", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=5", $coltype->getUri());
         $this->assertEquals("cops:custom:5", $coltype->getEntryId());
         $this->assertEquals("custom_05", $coltype->getTitle());
         $this->assertEquals("Custom column example 05 (enum)", $coltype->getDatabaseDescription());
@@ -192,6 +198,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(12);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_06"));
 
@@ -201,7 +208,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeDate::class, get_class($coltype));
 
         $this->assertCount(5, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=12", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=12", $coltype->getUri());
         $this->assertEquals("cops:custom:12", $coltype->getEntryId());
         $this->assertEquals("custom_06", $coltype->getTitle());
         $this->assertEquals("Custom column example 06 (date)", $coltype->getDatabaseDescription());
@@ -216,6 +223,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(14);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_07"));
 
@@ -225,7 +233,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeFloat::class, get_class($coltype));
 
         $this->assertCount(6, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=14", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=14", $coltype->getUri());
         $this->assertEquals("cops:custom:14", $coltype->getEntryId());
         $this->assertEquals("custom_07", $coltype->getTitle());
         $this->assertEquals("Custom column example 07 (float)", $coltype->getDatabaseDescription());
@@ -240,6 +248,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(10);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_08"));
 
@@ -249,7 +258,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeInteger::class, get_class($coltype));
 
         $this->assertCount(4, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=10", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=10", $coltype->getUri());
         $this->assertEquals("cops:custom:10", $coltype->getEntryId());
         $this->assertEquals("custom_08", $coltype->getTitle());
         $this->assertEquals("Custom column example 08 (int)", $coltype->getDatabaseDescription());
@@ -264,6 +273,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(9);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_09"));
 
@@ -273,7 +283,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeRating::class, get_class($coltype));
 
         $this->assertCount(6, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=9", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=9", $coltype->getUri());
         $this->assertEquals("cops:custom:9", $coltype->getEntryId());
         $this->assertEquals("custom_09", $coltype->getTitle());
         $this->assertEquals("Custom column example 09 (rating)", $coltype->getDatabaseDescription());
@@ -288,6 +298,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $coltype = CustomColumnType::createByCustomID(11);
+        $coltype->setHandler(self::$handler);
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_10"));
 
@@ -297,7 +308,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeBool::class, get_class($coltype));
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals("?page=14&custom=11", $coltype->getUri());
+        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=11", $coltype->getUri());
         $this->assertEquals("cops:custom:11", $coltype->getEntryId());
         $this->assertEquals("custom_10", $coltype->getTitle());
         $this->assertEquals("Custom column example 10 (bool)", $coltype->getDatabaseDescription());
@@ -363,7 +374,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -385,7 +396,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -404,7 +415,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_02"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -423,7 +434,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_03"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -436,7 +447,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_04"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -455,7 +466,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_05"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -474,7 +485,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_06"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -493,7 +504,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_07"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -512,7 +523,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_08"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -531,7 +542,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_09"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -550,7 +561,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_10"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
         $currentPage->InitializeContent();
@@ -568,8 +579,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 8);
+        $request = Request::build(['custom' => 8], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
         $currentPage->InitializeContent();
@@ -579,7 +589,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:8:3", $currentPage->entryArray[0]->id);
         $this->assertEquals("other_text", $currentPage->entryArray[0]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=8&id=3", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=8&id=3", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:8:1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:8:2", $currentPage->entryArray[2]->id);
     }
@@ -588,8 +598,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 6);
+        $request = Request::build(['custom' => 6], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
         $currentPage->InitializeContent();
@@ -599,7 +608,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:6:1", $currentPage->entryArray[0]->id);
         $this->assertEquals("a", $currentPage->entryArray[0]->title);
         $this->assertEquals("6 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=6&id=1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=6&id=1", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:6:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:6:3", $currentPage->entryArray[2]->id);
     }
@@ -608,8 +617,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 4);
+        $request = Request::build(['custom' => 4], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
         $currentPage->InitializeContent();
@@ -619,7 +627,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:4:4", $currentPage->entryArray[0]->id);
         $this->assertEquals("GroupA", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=4&id=4", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=4&id=4", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:4:5", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:4:6", $currentPage->entryArray[2]->id);
     }
@@ -628,8 +636,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 5);
+        $request = Request::build(['custom' => 5], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
         $currentPage->InitializeContent();
@@ -639,7 +646,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:5:3", $currentPage->entryArray[0]->id);
         $this->assertEquals("val01", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=5&id=3", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=5&id=3", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:5:4", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:5:5", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:5:6", $currentPage->entryArray[3]->id);
@@ -649,8 +656,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 12);
+        $request = Request::build(['custom' => 12], self::$handler);
 
         Config::set('custom_date_split_year', '0');
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
@@ -661,7 +667,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:12:2000-01-01", $currentPage->entryArray[0]->id);
         $this->assertEquals("2000-01-01", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=12&id=2000-01-01", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=12&id=2000-01-01", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:12:2000-01-02", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:12:2000-01-03", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:12:2016-04-20", $currentPage->entryArray[3]->id);
@@ -677,7 +683,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("2000", $currentPage->entryArray[0]->title);
         $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
         // switched to using PAGE_DETAIL instead of PAGE_ALL
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=12&year=2000", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=12&year=2000", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:12:year:2016", $currentPage->entryArray[1]->id);
 
         Config::set('custom_date_split_year', '0');
@@ -689,9 +695,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         Config::set('custom_date_split_year', '1');
-        $request = new Request();
-        $request->set('custom', 12);
-        $request->set('year', "2000");
+        $request = Request::build(['custom' => 12, 'year' => "2000"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
         $currentPage->InitializeContent();
@@ -712,9 +716,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("2000-01-03", $columns[0]->id);
 
         Config::set('custom_date_split_year', '0');
-        $request = new Request();
-        $request->set('custom', 12);
-        $request->set('id', "2000-01-01");
+        $request = Request::build(['custom' => 12, 'id' => "2000-01-01"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
         $currentPage->InitializeContent();
@@ -729,8 +731,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 14);
+        $request = Request::build(['custom' => 14], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
         $currentPage->InitializeContent();
@@ -740,7 +741,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:14:-99", $currentPage->entryArray[0]->id);
         $this->assertEquals(-99.0, $currentPage->entryArray[0]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=14&id=-99", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=14&id=-99", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:14:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:14:0.1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:14:0.2", $currentPage->entryArray[3]->id);
@@ -752,8 +753,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 10);
+        $request = Request::build(['custom' => 10], self::$handler);
 
         Config::set('custom_integer_split_range', '0');
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
@@ -764,7 +764,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:10:-2", $currentPage->entryArray[0]->id);
         $this->assertEquals(-2, $currentPage->entryArray[0]->title);
         $this->assertEquals("3 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=10&id=-2", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=10&id=-2", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:10:-1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:10:1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:10:2", $currentPage->entryArray[3]->id);
@@ -778,7 +778,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:10:range:-2--1", $currentPage->entryArray[0]->id);
         $this->assertEquals("-2--1", $currentPage->entryArray[0]->title);
         $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=10&range=-2--1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=10&range=-2--1", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:10:range:1-2", $currentPage->entryArray[1]->id);
 
         Config::set('custom_integer_split_range', '0');
@@ -790,9 +790,7 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         Config::set('custom_integer_split_range', '4');
-        $request = new Request();
-        $request->set('custom', 10);
-        $request->set('range', "-2--1");
+        $request = Request::build(['custom' => 10, 'range' => "-2--1"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
         $currentPage->InitializeContent();
@@ -813,9 +811,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(-1, $columns[0]->id);
 
         Config::set('custom_integer_split_range', '0');
-        $request = new Request();
-        $request->set('custom', 10);
-        $request->set('id', "-2");
+        $request = Request::build(['custom' => 10, 'id' => "-2"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
         $currentPage->InitializeContent();
@@ -830,8 +826,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 9);
+        $request = Request::build(['custom' => 9], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
         $currentPage->InitializeContent();
@@ -841,7 +836,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:9:0", $currentPage->entryArray[0]->id);
         $this->assertEquals("No Stars", $currentPage->entryArray[0]->title);
         $this->assertEquals("12 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=9&id=0", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=9&id=0", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:9:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:9:4", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:9:6", $currentPage->entryArray[3]->id);
@@ -853,8 +848,7 @@ class CustomColumnsTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 11);
+        $request = Request::build(['custom' => 11], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
         $currentPage->InitializeContent();
@@ -864,7 +858,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:11:-1", $currentPage->entryArray[0]->id);
         $this->assertEquals("Not Set", $currentPage->entryArray[0]->title);
         $this->assertEquals("9 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::url(self::$endpoint) . "?page=15&custom=11&id=-1", $currentPage->entryArray[0]->getNavLink(self::$endpoint));
+        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=11&id=-1", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:11:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:11:1", $currentPage->entryArray[2]->id);
     }
@@ -893,9 +887,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
         Database::clearDb();
-        $request = new Request();
-        $request->set('custom', 11);
-        $request->set('id', "0");
+        $request = Request::build(['custom' => 11, 'id' => "0"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
         $currentPage->InitializeContent();
@@ -935,7 +927,8 @@ class CustomColumnsTest extends TestCase
         Database::clearDb();
 
         $book = Book::getBookById(223);
-        $json = JsonRenderer::getBookContentArray($book, self::$endpoint);
+        $book->setHandler(self::$handler);
+        $json = JsonRenderer::getBookContentArray($book);
 
         /* @var CustomColumn[] $custom */
         $custom = $json["customcolumns_list"];
@@ -980,7 +973,7 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
         Database::clearDb();
-        $request = new Request();
+        $request = Request::build([], self::$handler);
         $booklist = new BookList($request);
 
         [$query, $params] = CustomColumnType::createByLookup("custom_01")->getCustom("1")->getQuery();

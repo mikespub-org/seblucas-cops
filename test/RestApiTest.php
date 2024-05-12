@@ -210,14 +210,15 @@ class RestApiTest extends TestCase
         if ($endpoint !== RestApi::$endpoint) {
             $testpoint = str_replace('.php', '', $endpoint);
             if (array_key_exists($testpoint, Config::ENDPOINT)) {
-                $params[Route::ENDPOINT_PARAM] = $testpoint;
+                $params[Route::HANDLER_PARAM] = $testpoint;
             } else {
                 // for epubreader.php, checkconfig.php etc.
                 $flipped = array_flip(Config::ENDPOINT);
-                $params[Route::ENDPOINT_PARAM] = $flipped[$endpoint];
+                $params[Route::HANDLER_PARAM] = $flipped[$endpoint];
             }
         }
         $test = RestApi::$endpoint . Route::page($page, $params);
+        //$test = Route::link(RestApi::$handler, $page, $params);
         $this->assertEquals($expected, $test);
     }
 
@@ -238,9 +239,9 @@ class RestApiTest extends TestCase
         if (is_null($params)) {
             $this->fail('Invalid params for path ' . $path);
         }
-        if (!empty($params[Route::ENDPOINT_PARAM]) && array_key_exists($params[Route::ENDPOINT_PARAM], Config::ENDPOINT)) {
-            $endpoint = Config::ENDPOINT[$params[Route::ENDPOINT_PARAM]];
-            unset($params[Route::ENDPOINT_PARAM]);
+        if (!empty($params[Route::HANDLER_PARAM]) && array_key_exists($params[Route::HANDLER_PARAM], Config::ENDPOINT)) {
+            $endpoint = Config::ENDPOINT[$params[Route::HANDLER_PARAM]];
+            unset($params[Route::HANDLER_PARAM]);
         }
         if (array_key_exists('ignore', $params)) {
             unset($params['ignore']);
@@ -257,18 +258,18 @@ class RestApiTest extends TestCase
 
     public function testRouteGetPageRoute(): void
     {
-        $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute([Route::ENDPOINT_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
-        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
-        $this->assertNull(Route::getPageRoute([Route::ENDPOINT_PARAM => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
-        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::ENDPOINT_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
-        $this->assertEquals("/thumbs/html/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"]));
-        $this->assertEquals("/thumbs/opds/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"]));
-        $this->assertEquals("/thumbs/html2/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"]));
-        $this->assertEquals("/thumbs/opds2/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"]));
-        $this->assertEquals("/covers/0/17.jpg", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "id" => 17]));
-        $this->assertEquals("/inline/0/20/ignore.epub", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
-        $this->assertEquals("/fetch/0/20/ignore.epub", Route::getPageRoute([Route::ENDPOINT_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"]));
-        $this->assertEquals("/download/10/any", Route::getPageRoute([Route::ENDPOINT_PARAM => "download", "page" => 10, "type" => "any"]));
+        $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute([Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
+        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
+        $this->assertNull(Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
+        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
+        $this->assertEquals("/thumbs/html/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"]));
+        $this->assertEquals("/thumbs/opds/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"]));
+        $this->assertEquals("/thumbs/html2/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"]));
+        $this->assertEquals("/thumbs/opds2/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"]));
+        $this->assertEquals("/covers/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17]));
+        $this->assertEquals("/inline/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
+        $this->assertEquals("/fetch/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"]));
+        $this->assertEquals("/download/10/any", Route::getPageRoute([Route::HANDLER_PARAM => "download", "page" => 10, "type" => "any"]));
     }
 
     /**
@@ -335,7 +336,7 @@ class RestApiTest extends TestCase
 
     public function testGetOutput(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $apiHandler = new RestApi($request);
         $expected = true;
         $test = $apiHandler->getOutput();
@@ -344,7 +345,7 @@ class RestApiTest extends TestCase
 
     public function testGetCustomColumns(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $expected = "Custom Columns";
         $test = RestApi::getCustomColumns($request);
         $this->assertEquals($expected, $test["title"]);
@@ -352,7 +353,7 @@ class RestApiTest extends TestCase
 
     public function testGetDatabases(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $expected = "Databases";
         $test = RestApi::getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -362,8 +363,7 @@ class RestApiTest extends TestCase
 
     public function testGetDatabase(): void
     {
-        $request = new Request();
-        $request->set('db', 0);
+        $request = Request::build(['db' => 0], basename(self::$script));
         $expected = "Database Types";
         $test = RestApi::getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -373,9 +373,7 @@ class RestApiTest extends TestCase
 
     public function testGetDatabaseTable(): void
     {
-        $request = new Request();
-        $request->set('db', 0);
-        $request->set('type', 'table');
+        $request = Request::build(['db' => 0, 'type' => 'table'], basename(self::$script));
         $expected = "Database Type table";
         $test = RestApi::getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -385,9 +383,7 @@ class RestApiTest extends TestCase
 
     public function testGetTable(): void
     {
-        $request = new Request();
-        $request->set('db', 0);
-        $request->set('name', 'books');
+        $request = Request::build(['db' => 0, 'name' => 'books'], basename(self::$script));
         $expected = "Database Table books";
         $test = RestApi::getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -411,7 +407,7 @@ class RestApiTest extends TestCase
 
     public function testGetOpenApi(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $expected = "3.0.3";
         $test = RestApi::getOpenApi($request);
         $this->assertEquals($expected, $test["openapi"]);
@@ -419,7 +415,7 @@ class RestApiTest extends TestCase
 
     public function testGetRoutes(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $expected = "Routes";
         $test = RestApi::getRoutes($request);
         $this->assertEquals($expected, $test["title"]);
@@ -427,7 +423,7 @@ class RestApiTest extends TestCase
 
     public function testGetNotes(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $expected = "Notes";
         $test = RestApi::getNotes($request);
         $this->assertEquals($expected, $test["title"]);
@@ -437,8 +433,7 @@ class RestApiTest extends TestCase
 
     public function testGetNotesByType(): void
     {
-        $request = new Request();
-        $request->set('type', 'authors');
+        $request = Request::build(['type' => 'authors'], basename(self::$script));
         $expected = "Notes for authors";
         $test = RestApi::getNotes($request);
         $this->assertEquals($expected, $test["title"]);
@@ -448,9 +443,7 @@ class RestApiTest extends TestCase
 
     public function testGetNoteByTypeId(): void
     {
-        $request = new Request();
-        $request->set('type', 'authors');
-        $request->set('id', 3);
+        $request = Request::build(['type' => 'authors', 'id' => 3], basename(self::$script));
         $expected = "Note for authors #3";
         $test = RestApi::getNotes($request);
         $this->assertEquals($expected, $test["title"]);
@@ -460,7 +453,7 @@ class RestApiTest extends TestCase
 
     public function testGetPreferences(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $expected = "Preferences";
         $test = RestApi::getPreferences($request);
         $this->assertEquals($expected, $test["title"]);
@@ -470,7 +463,7 @@ class RestApiTest extends TestCase
 
     public function testGetPreferenceByKey(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $request->set('key', 'saved_searches');
         $expected = "Preference for saved_searches";
         $test = RestApi::getPreferences($request);
@@ -481,7 +474,7 @@ class RestApiTest extends TestCase
 
     public function testGetAnnotations(): void
     {
-        $request = new Request();
+        $request = Request::build([], basename(self::$script));
         $expected = "Annotations";
         $test = RestApi::getAnnotations($request);
         $this->assertEquals($expected, $test["title"]);
@@ -489,7 +482,7 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
         $expected = "Annotations for 17";
         $this->assertEquals($expected, $test["entries"][0]["title"]);
-        $expected = static::$script . "/annotations/17";
+        $expected = self::$script . "/annotations/17";
         $this->assertEquals($expected, $test["entries"][0]["navlink"]);
         $expected = 5;
         $this->assertEquals($expected, $test["entries"][0]["number"]);
@@ -497,8 +490,7 @@ class RestApiTest extends TestCase
 
     public function testGetAnnotationsByBookId(): void
     {
-        $request = new Request();
-        $request->set('bookId', 17);
+        $request = Request::build(['bookId' => 17], basename(self::$script));
         $expected = "Annotations for 17";
         $test = RestApi::getAnnotations($request);
         $this->assertEquals($expected, $test["title"]);
@@ -506,15 +498,13 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
         $expected = "(17) Bookmark About #1";
         $this->assertEquals($expected, $test["entries"][0]["title"]);
-        $expected = static::$script . '/annotations/17/1';
+        $expected = self::$script . '/annotations/17/1';
         $this->assertEquals($expected, $test["entries"][0]["navlink"]);
     }
 
     public function testGetAnnotationById(): void
     {
-        $request = new Request();
-        $request->set('bookId', 17);
-        $request->set('id', 1);
+        $request = Request::build(['bookId' => 17, 'id' => 1], basename(self::$script));
         $expected = "(17) Bookmark About #1";
         $test = RestApi::getAnnotations($request);
         $expected = "EPUB";
@@ -533,8 +523,7 @@ class RestApiTest extends TestCase
 
     public function testGetMetadata(): void
     {
-        $request = new Request();
-        $request->set('bookId', 17);
+        $request = Request::build(['bookId' => 17], basename(self::$script));
         $expected = "Metadata for 17";
         $test = RestApi::getMetadata($request);
         $this->assertEquals($expected, $test["title"]);
@@ -650,7 +639,7 @@ class RestApiTest extends TestCase
 
         $apiHandler = new RestApi($request);
         $expected = [
-            Route::ENDPOINT_PARAM => "zipfs",
+            Route::HANDLER_PARAM => "zipfs",
             "path" => "/zipfs/0/20/META-INF/container.xml",
             "params" => [
                 "db" => "0",
@@ -710,7 +699,7 @@ class RestApiTest extends TestCase
 
         $apiHandler = new RestApi($request);
         $expected = [
-            Route::ENDPOINT_PARAM => "fetch",
+            Route::HANDLER_PARAM => "fetch",
             // check if the path starts with the endpoint param here
             "path" => "/thumbs/html/0/17.jpg",
             "params" => [

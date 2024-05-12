@@ -117,6 +117,10 @@ class Request
                 // this will call exit()
                 $this->notFound();
             }
+            // @todo handle 'json' routes correctly - see util.js
+            if (empty($params[Route::HANDLER_PARAM]) && $this->isAjax()) {
+                $params[Route::HANDLER_PARAM] = 'json';
+            }
             foreach ($params as $name => $value) {
                 $this->urlParams[$name] = $value;
             }
@@ -388,18 +392,18 @@ class Request
 
     /**
      * Summary of getCurrentUrl
-     * @param ?string $endpoint
+     * @param ?string $handler
      * @return string
      */
-    public function getCurrentUrl($endpoint = null)
+    public function getCurrentUrl($handler = null)
     {
-        $endpoint ??= $this->getEndpoint(Config::ENDPOINT['index']);
+        $handler ??= $this->getHandler('index');
         $pathInfo = $this->path();
         $queryString = $this->query();
         if (empty($queryString)) {
-            return Route::url($endpoint . $pathInfo);
+            return Route::link($handler) . $pathInfo;
         }
-        return Route::url($endpoint . $pathInfo) . '?' . $queryString;
+        return Route::link($handler) . $pathInfo . '?' . $queryString;
     }
 
     /**
@@ -416,6 +420,46 @@ class Request
             return $default;
         }
         return $link;
+    }
+
+    /**
+     * Summary of getHandler
+     * @param string $default
+     * @return string
+     */
+    public function getHandler($default)
+    {
+        // we have a handler already
+        if (!empty($this->urlParams[Route::HANDLER_PARAM])) {
+            return $this->urlParams[Route::HANDLER_PARAM];
+        }
+        // try to find handler via endpoint
+        $endpoint = $this->getEndpoint(Config::ENDPOINT[$default]);
+        $flipped = array_flip(Config::ENDPOINT);
+        if (!empty($flipped[$endpoint])) {
+            return $flipped[$endpoint];
+        }
+        if ($endpoint == 'phpunit' || $endpoint == 'Standard input code') {
+            return $default;
+        }
+        // how did we end up here?
+        throw new \Exception('Unknown handler for endpoint ' . htmlspecialchars($endpoint));
+        //return $default;
+    }
+
+    /**
+     * Summary of getCleanParams
+     * @return array<string, mixed>
+     */
+    public function getCleanParams()
+    {
+        $params = $this->urlParams;
+        unset($params['title']);
+        unset($params['_']);
+        unset($params['n']);
+        unset($params['complete']);
+        //unset($params[Route::HANDLER_PARAM]);
+        return $params;
     }
 
     /**
@@ -443,13 +487,55 @@ class Request
     }
 
     /**
+     * Summary of isAjax
+     * @return bool
+     */
+    public function isAjax()
+    {
+        // for jquery etc. if passed along by proxy
+        if ($this->server('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest') {
+            return true;
+        }
+        // for fetch etc. if Accept header is specified
+        if (str_contains($this->server('HTTP_ACCEPT') ?? '', 'application/json')) {
+            return true;
+        }
+        // @todo https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Mode
+        return false;
+    }
+
+    /**
+     * Summary of isJson
+     * @return bool
+     */
+    public function isJson()
+    {
+        // using actual getJSON.php endpoint
+        $endpoint = $this->getEndpoint(Config::ENDPOINT['json']);
+        if ($endpoint == Config::ENDPOINT['json']) {
+            return true;
+        }
+        // set in parseParams() based on isAjax()
+        if (!empty($this->urlParams[Route::HANDLER_PARAM]) && $this->urlParams[Route::HANDLER_PARAM] == 'json') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Summary of isFeed
      * @return bool
      */
     public function isFeed()
     {
+        // using actual feed.php or opds.php endpoint
         $endpoint = $this->getEndpoint(Config::ENDPOINT['index']);
-        if ($endpoint == Config::ENDPOINT['feed']) {
+        if (in_array($endpoint, [Config::ENDPOINT['feed'], Config::ENDPOINT['opds']])) {
+            return true;
+        }
+        // set in parseParams() based on Route::match()
+        if (!empty($this->urlParams[Route::HANDLER_PARAM]) &&
+            in_array($this->urlParams[Route::HANDLER_PARAM], ['feed', 'opds'])) {
             return true;
         }
         return false;
@@ -484,17 +570,17 @@ class Request
     /**
      * Summary of build
      * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-     * @param string $endpoint
+     * @param string $handler
      * @param ?array<mixed> $server
      * @param ?array<mixed> $cookie
      * @param ?array<mixed> $config
      * @return Request
      */
-    public static function build($params = [], $endpoint = '', $server = null, $cookie = null, $config = null)
+    public static function build($params = [], $handler = '', $server = null, $cookie = null, $config = null)
     {
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-        if (!empty($endpoint) && Config::get('use_route_urls')) {
-            $params[Route::ENDPOINT_PARAM] ??= $endpoint;
+        if (!empty($handler)) {
+            $params[Route::HANDLER_PARAM] ??= $handler;
         }
         $request = new self(false);
         $request->urlParams = $params;

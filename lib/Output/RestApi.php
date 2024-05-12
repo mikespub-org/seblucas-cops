@@ -30,6 +30,7 @@ use Exception;
 class RestApi
 {
     public static string $endpoint = Config::ENDPOINT["restapi"];
+    public static string $handler = "restapi";
     public static int $numberPerPage = 100;
     public static bool $doRunEndpoint = false;  // @todo disabled for now
 
@@ -136,13 +137,13 @@ class RestApi
      */
     public function runEndpoint($path, $params, $run = null)
     {
-        if (empty($params[Route::ENDPOINT_PARAM]) || !array_key_exists($params[Route::ENDPOINT_PARAM], Config::ENDPOINT)) {
+        if (empty($params[Route::HANDLER_PARAM]) || !array_key_exists($params[Route::HANDLER_PARAM], Config::ENDPOINT)) {
             return ["error" => "Invalid endpoint"];
         }
         if (!$this->request->hasValidApiKey()) {
             return ["error" => "Invalid api key"];
         }
-        $name = $params[Route::ENDPOINT_PARAM];
+        $name = $params[Route::HANDLER_PARAM];
         $endpoint = Config::ENDPOINT[$name];
         // check if the path starts with the endpoint param here
         //if (str_starts_with($path, '/' . $name)) {
@@ -151,7 +152,7 @@ class RestApi
         //}
         // run endpoint via handler now
         $handler = Framework::getHandler($name);
-        unset($params[Route::ENDPOINT_PARAM]);
+        unset($params[Route::HANDLER_PARAM]);
         $run ??= static::$doRunEndpoint;
         if ($run) {
             $oldpath = $_SERVER['PATH_INFO'] ?? '';
@@ -166,7 +167,7 @@ class RestApi
             $_GET = $oldparams;
             return null;
         }
-        $result = [Route::ENDPOINT_PARAM => $name, "path" => $path, "params" => $params];
+        $result = [Route::HANDLER_PARAM => $name, "path" => $path, "params" => $params];
         return $result;
     }
 
@@ -191,20 +192,20 @@ class RestApi
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
-                header('Location: ' . Route::url(static::$endpoint) . '/index');
+                header('Location: ' . Route::link(static::$handler) . '/index');
                 return '';
             }
             if ($this->isExtra) {
                 $result = $params;
-            } elseif (!empty($params[Route::ENDPOINT_PARAM])) {
+            } elseif (empty($params[Route::HANDLER_PARAM]) || $params[Route::HANDLER_PARAM] == 'json') {
+                $this->setParams($params);
+                $result = $this->getJson();
+            } else {
                 // extra routes supported by other endpoints
                 $result = $this->runEndpoint($path, $params);
                 if (is_null($result)) {
                     return '';
                 }
-            } else {
-                $this->setParams($params);
-                $result = $this->getJson();
             }
         }
         $output = json_encode($result, JSON_UNESCAPED_SLASHES);
@@ -392,7 +393,7 @@ class RestApi
             ],
         ];
         $result["servers"] = [
-            ["url" => Route::url(static::$endpoint), "description" => "COPS REST API Endpoint"],
+            ["url" => Route::link(static::$handler), "description" => "COPS REST API Endpoint"],
         ];
         $result["components"] = [
             "securitySchemes" => [
@@ -445,12 +446,12 @@ class RestApi
                     ]);
                 }
             }
-            if (!empty($queryParams[Route::ENDPOINT_PARAM]) && $queryParams[Route::ENDPOINT_PARAM] == "restapi") {
+            if (!empty($queryParams[Route::HANDLER_PARAM]) && $queryParams[Route::HANDLER_PARAM] == "restapi") {
                 $queryString = substr($route, 1);
-            } elseif (!empty($queryParams[Route::ENDPOINT_PARAM])) {
-                $testpoint = $queryParams[Route::ENDPOINT_PARAM];
+            } elseif (!empty($queryParams[Route::HANDLER_PARAM])) {
+                $testpoint = $queryParams[Route::HANDLER_PARAM];
                 $script = Config::ENDPOINT[$testpoint];
-                $queryString = str_replace(Route::ENDPOINT_PARAM . '=' . $testpoint, $script, $queryString);
+                $queryString = str_replace(Route::HANDLER_PARAM . '=' . $testpoint, $script, $queryString);
                 $queryString = str_replace($script . '&', $script . '?', $queryString);
             } else {
                 $queryString = 'getJSON.php?' . $queryString;
@@ -478,8 +479,8 @@ class RestApi
             if (
                 !str_starts_with($route, "/databases") &&
                 !in_array($route, ["/openapi", "/routes", "/about"]) &&
-                (empty($queryParams[Route::ENDPOINT_PARAM]) ||
-                in_array($queryParams[Route::ENDPOINT_PARAM], ['restapi', 'download']))
+                (empty($queryParams[Route::HANDLER_PARAM]) ||
+                in_array($queryParams[Route::HANDLER_PARAM], ['restapi', 'download']))
             ) {
                 array_push($params, [
                     '$ref' => "#/components/parameters/dbParam",
@@ -500,7 +501,7 @@ class RestApi
                     ["BasicAuth" => []],
                 ];
             }
-            if (!empty($queryParams[Route::ENDPOINT_PARAM]) && $queryParams[Route::ENDPOINT_PARAM] !== "restapi") {
+            if (!empty($queryParams[Route::HANDLER_PARAM]) && $queryParams[Route::HANDLER_PARAM] !== "restapi") {
                 $result["paths"][$route]["get"]["summary"] .= " - with api key";
                 $result["paths"][$route]["get"]["security"] = [
                     ["ApiKeyAuth" => []],
@@ -635,7 +636,7 @@ class RestApi
         $result = array_replace($result, (array) $note);
         $result["size"] = strlen($result["doc"]);
         $result["resources"] = [];
-        $baseurl = Route::url(Resource::$endpoint);
+        $baseurl = Route::link(Resource::$handler);
         foreach ($note->getResources() as $hash => $resource) {
             $path = Resource::getResourcePath($hash, $db);
             $size = !empty($path) ? filesize($path) : 0;
@@ -760,8 +761,8 @@ class RestApi
             return static::getAnnotationById($bookId, $id, $request);
         }
         $db = $request->database();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $handler = $request->getHandler(static::$handler);
+        $baseurl = Route::link($handler);
         $result = [
             "title" => "Annotations for {$bookId}",
             "baseurl" => $baseurl,
@@ -770,8 +771,9 @@ class RestApi
         ];
         // @todo get item from annotations + corresponding title from instance
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
+            $instance->setHandler($handler);
             $entry = $instance->getEntry();
-            array_push($result["entries"], ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink($endpoint)]);
+            array_push($result["entries"], ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
         }
         return $result;
     }

@@ -20,14 +20,14 @@ use SebLucas\Cops\Pages\PageId;
  */
 class OpdsHandler extends BaseHandler
 {
-    public const ENDPOINT = "opds";
+    public const HANDLER = "opds";
 
     public static function getRoutes()
     {
         return [
-            "/opds/{page}/{id}" => [static::PARAM => static::ENDPOINT],
-            "/opds/{page}" => [static::PARAM => static::ENDPOINT],
-            "/opds" => [static::PARAM => static::ENDPOINT],
+            "/opds/{page}/{id}" => [static::PARAM => static::HANDLER],
+            "/opds/{page}" => [static::PARAM => static::HANDLER],
+            "/opds" => [static::PARAM => static::HANDLER],
         ];
     }
 
@@ -50,6 +50,7 @@ class OpdsHandler extends BaseHandler
 
         switch ($page) {
             case PageId::OPENSEARCH :
+            case PageId::SEARCH :
                 $response = $OPDSRender->getOpenSearch($request);
                 break;
             default:

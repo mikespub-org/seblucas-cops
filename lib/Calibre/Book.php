@@ -40,7 +40,6 @@ class Book
 
     public const BAD_SEARCH = 'QQQQQ';
 
-    public static string $endpoint = Config::ENDPOINT["index"];
     /** @var int */
     public $id;
     /** @var string */
@@ -86,6 +85,7 @@ class Book
     /** @var ?string */
     protected $coverFileName = null;
     public bool $updateForKepub = false;
+    protected string $handler = '';
 
     /**
      * Summary of __construct
@@ -178,32 +178,32 @@ class Book
     public function getUri($params = [])
     {
         $params['id'] = $this->id;
-        if (Config::get('use_route_urls')) {
-            $params['author'] = $this->getAuthorsName();
-            $params['title'] = $this->getTitle();
-            return Route::page(static::PAGE_DETAIL, $params);
-        }
-        return Route::page(static::PAGE_DETAIL, $params);
-    }
-
-    /**
-     * Summary of getDetailUrl
-     * @param string|null $endpoint
-     * @param array<mixed> $params
-     * @return string
-     */
-    public function getDetailUrl($endpoint = null, $params = [])
-    {
-        $endpoint ??= static::$endpoint;
-        $params['id'] = $this->id;
-        // we need databaseId here because we use Route::url with $endpoint
+        // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->databaseId;
         if (Config::get('use_route_urls')) {
             $params['author'] = $this->getAuthorsName();
             $params['title'] = $this->getTitle();
-            return Route::url($endpoint, static::PAGE_DETAIL, $params);
         }
-        return Route::url($endpoint, static::PAGE_DETAIL, $params);
+        return Route::link($this->handler, static::PAGE_DETAIL, $params);
+    }
+
+    /**
+     * Summary of getDetailUrl
+     * @param string|null $handler
+     * @param array<mixed> $params
+     * @return string
+     */
+    public function getDetailUrl($handler = null, $params = [])
+    {
+        $handler ??= $this->handler;
+        $params['id'] = $this->id;
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->databaseId;
+        if (Config::get('use_route_urls')) {
+            $params['author'] = $this->getAuthorsName();
+            $params['title'] = $this->getTitle();
+        }
+        return Route::link($handler, static::PAGE_DETAIL, $params);
     }
 
     /**
@@ -603,16 +603,37 @@ class Book
         // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
-            array_push($linkArray, new LinkFeed($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name), $database));
+            $author->setHandler($this->handler);
+            array_push($linkArray, new LinkFeed($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name)));
         }
 
         // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         $serie = $this->getSerie();
         if (!empty($serie)) {
-            array_push($linkArray, new LinkFeed($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name), $database));
+            $serie->setHandler($this->handler);
+            array_push($linkArray, new LinkFeed($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name)));
         }
 
         return $linkArray;
+    }
+
+    /**
+     * Summary of setHandler
+     * @param string $handler
+     * @return void
+     */
+    public function setHandler($handler)
+    {
+        $this->handler = $handler;
+    }
+
+    /**
+     * Summary of getHandler
+     * @return string
+     */
+    public function getHandler()
+    {
+        return $this->handler;
     }
 
     /**

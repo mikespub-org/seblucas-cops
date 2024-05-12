@@ -23,6 +23,7 @@ class PageSerieDetail extends PageWithDetail
     {
         /** @var Serie $instance */
         $instance = Serie::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance->setHandler($this->handler);
         if ($this->request->get('filter')) {
             $this->filterParams = [Serie::URL_PARAM => $this->idGet];
             $this->getFilters($instance);

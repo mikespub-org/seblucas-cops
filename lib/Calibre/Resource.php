@@ -31,7 +31,7 @@ class Resource
         'webp' => 'image/webp',
     ];
     public const RESOURCE_URL_SCHEME = 'calres';
-    public static string $endpoint = Config::ENDPOINT["calres"];
+    public static string $handler = "calres";
     public string $hash;
     public string $name;
     public ?int $databaseId = null;
@@ -56,7 +56,8 @@ class Resource
     public function getUri($params = [])
     {
         $database = $this->databaseId ?? 0;
-        return '/' . $database . '/' . str_replace(':', '/', $this->hash);
+        $baseurl = Route::link(static::$handler);
+        return $baseurl . '/' . $database . '/' . str_replace(':', '/', $this->hash);
     }
 
     /**
@@ -68,7 +69,7 @@ class Resource
     public static function fixResourceLinks($doc, $database = null)
     {
         $database ??= 0;
-        $baseurl = Route::url(static::$endpoint);
+        $baseurl = Route::link(static::$handler);
         return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/' . $database . '/', $doc);
     }
 

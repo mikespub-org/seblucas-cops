@@ -18,7 +18,6 @@ class Link
     //public const OPDS_NAVIGATION_FEED = "application/atom+xml;profile=opds-catalog;kind=navigation";
     //public const OPDS_ACQUISITION_FEED = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
-    public static string $endpoint = Config::ENDPOINT["index"];
     public string $href;
     public string $type;
     /** @var ?string */
@@ -43,10 +42,9 @@ class Link
 
     /**
      * Summary of hrefXhtml
-     * @param string $endpoint
      * @return string
      */
-    public function hrefXhtml($endpoint = '')
+    public function hrefXhtml()
     {
         // Link()->href includes the endpoint here
         return $this->href;

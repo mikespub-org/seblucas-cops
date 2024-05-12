@@ -24,7 +24,7 @@ use XMLWriter;
 
 class OpdsRenderer
 {
-    public static string $endpoint = Config::ENDPOINT["feed"];
+    public static string $handler = "feed";
     /** @var ?XMLWriter */
     protected $xmlStream = null;
     /** @var ?int */
@@ -93,7 +93,7 @@ class OpdsRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $params = ["query" => "{searchTerms}", "db" => $database];
-        $url = Route::url(static::$endpoint, null, $params);
+        $url = Route::link(static::$handler, null, $params);
         $url = str_replace("%7B", "{", $url);
         $url = str_replace("%7D", "}", $url);
         $xml->writeAttribute("template", $url);
@@ -160,23 +160,26 @@ class OpdsRenderer
         $this->getXmlStream()->text($page->authorEmail);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->endElement();
-        $link = new LinkNavigation("", "start", "Home");
+        $link = new LinkNavigation(Route::link(static::$handler), "start", "Home");
         $this->renderLink($link);
+        // @todo check with pathInfo
+        $url = Route::link(static::$handler, null, $request->urlParams);
+        //$url = $request->getCurrentUrl(static::$handler);
         if ($page->containsBook()) {
-            $link = new LinkFeed(Route::query($request->query()), "self");
+            $link = new LinkFeed($url, "self");
         } else {
-            $link = new LinkNavigation(Route::query($request->query()), "self");
+            $link = new LinkNavigation($url, "self");
         }
         $this->renderLink($link);
         $params = ["db" => $database];
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
-            $url = Route::url(static::$endpoint, PageId::OPENSEARCH, $params);
+            $url = Route::link(static::$handler, PageId::OPENSEARCH, $params);
             $link = new LinkEntry($url, "application/opensearchdescription+xml", "search", "Search here");
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "{searchTerms}";
-            $url = Route::url(static::$endpoint, null, $params);
+            $url = Route::link(static::$handler, null, $params);
             $url = str_replace("%7B", "{", $url);
             $url = str_replace("%7D", "}", $url);
             $link = new LinkEntry($url, "application/atom+xml", "search", "Search here");
@@ -185,7 +188,9 @@ class OpdsRenderer
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
-                $link = new LinkFacet(Route::query($request->query(), ["tag" => $filter]), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
+                //$link = new LinkFacet(Route::query($request->query(), ["tag" => $filter]), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
+                $params = array_replace($request->urlParams, ["tag" => $filter]);
+                $link = new LinkFacet(Route::link(static::$handler, null, $params), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
                 $this->renderLink($link);
             }
         }
@@ -211,7 +216,7 @@ class OpdsRenderer
     protected function renderLink($link, $number = null)
     {
         $this->getXmlStream()->startElement("link");
-        $this->getXmlStream()->writeAttribute("href", $link->hrefXhtml(static::$endpoint));
+        $this->getXmlStream()->writeAttribute("href", $link->hrefXhtml());
         $this->getXmlStream()->writeAttribute("type", $link->type);
         if (!is_null($link->rel)) {
             $this->getXmlStream()->writeAttribute("rel", $link->rel);
@@ -293,12 +298,13 @@ class OpdsRenderer
         }
 
         foreach ($entry->book->getAuthors() as $author) {
+            $author->setHandler($entry->book->getHandler());
             $this->getXmlStream()->startElement("author");
             $this->getXmlStream()->startElement("name");
             $this->getXmlStream()->text($author->name);
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->startElement("uri");
-            $this->getXmlStream()->text(Route::url(static::$endpoint . $author->getUri()));
+            $this->getXmlStream()->text($author->getUri());
             $this->getXmlStream()->endElement();
             $this->getXmlStream()->endElement();
         }
@@ -357,7 +363,9 @@ class OpdsRenderer
             }
             // only show sorting when paginating
             if ($page->containsBook() && !empty(Config::get('opds_sort_links'))) {
-                $sortUrl = Route::query($page->getCleanQuery(), ['sort' => null]);
+                $params = $request->getCleanParams();
+                $params['sort'] = null;
+                $sortUrl = Route::link(static::$handler, null, $params);
                 if (str_contains($sortUrl, '?')) {
                     $sortUrl .= "&sort={0}";
                 } else {
@@ -369,7 +377,7 @@ class OpdsRenderer
                 // @todo we can't use really facetGroups here, or OPDS reader thinks we're drilling down :-()
                 foreach ($sortOptions as $field => $title) {
                     $url = str_format($sortUrl, $field);
-                    $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null, $database);
+                    $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null);
                     //$link = new LinkNavigation($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
                     //$link = new LinkFeed($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
                     $this->renderLink($link);
@@ -380,13 +388,15 @@ class OpdsRenderer
         if ($page->containsBook()) {
             $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
             if (!empty($request->getId()) && !empty(Config::get('opds_filter_links')) && !in_array($page, $skipFilterUrl)) {
-                //$url = Route::query($page->getCleanQuery(), ['filter' => 1]);
+                //$params = $request->getCleanParams();
+                //$params['filter'] = 1;
+                //$url = Route::link(static::$handler, null, $params);
                 //$filterLabel = localize("cog.alternate");
                 //$title = localize("links.title");
                 //$link = new LinkFacet($url, $title, $filterLabel, false, null, $database);
                 //$this->renderLink($link);
                 // Note: facets are only shown if there are books available, so we need to get a filter page here
-                $req = Request::build($request->urlParams, 'feed');
+                $req = Request::build($request->urlParams, static::$handler);
                 $req->set('filter', 1);
                 $filterPage = PageId::getPage($request->get('page'), $req);
                 $filterPage->InitializeContent();
@@ -403,8 +413,7 @@ class OpdsRenderer
                     }
                     $group = strtolower($entry->className);
                     $group = localize($group . 's.title');
-                    // @todo this already includes base() . '', and LinkFacet renderLink adds base() . $endpoint
-                    $url = $entry->getNavLink('', $extraParams);
+                    $url = $entry->getNavLink($extraParams);
                     $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
                     $this->renderLink($link);
                 }

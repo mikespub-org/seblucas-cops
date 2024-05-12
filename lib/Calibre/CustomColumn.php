@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
@@ -43,6 +44,7 @@ class CustomColumn extends Category
         $this->customColumnType = $pcustomColumnType;
         $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value ?? '');
         $this->databaseId = $this->customColumnType->getDatabaseId();
+        $this->handler = $this->customColumnType->getHandler();
     }
 
     /**
@@ -64,7 +66,9 @@ class CustomColumn extends Category
     {
         $params['custom'] = $this->getCustomId();
         $params['id'] = $this->id;
-        return Route::page(static::PAGE_DETAIL, $params);
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->getDatabaseId();
+        return Route::link($this->handler, static::PAGE_DETAIL, $params);
     }
 
     /**

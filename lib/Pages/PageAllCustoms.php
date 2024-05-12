@@ -28,6 +28,7 @@ class PageAllCustoms extends Page
     {
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
+        $columnType->setHandler($this->handler);
 
         $this->idPage = $columnType->getEntryId();
         $this->title = $columnType->getTitle();
@@ -123,6 +124,7 @@ class PageAllCustoms extends Page
     public function addCustomNotSetEntry($columnType)
     {
         $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
+        $instance->setHandler($this->handler);
         // @todo support countWithoutEntries() for CustomColumn
         $booklist = new BookList($this->request);
         $booklist->orderBy = null;

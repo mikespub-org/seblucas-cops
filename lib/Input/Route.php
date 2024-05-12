@@ -21,7 +21,7 @@ use function FastRoute\simpleDispatcher;
  */
 class Route
 {
-    public const ENDPOINT_PARAM = "_handler";
+    public const HANDLER_PARAM = "_handler";
     public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
@@ -72,52 +72,52 @@ class Route
         "/identifiers" => PageId::ALL_IDENTIFIERS,
         "/libraries" => PageId::ALL_LIBRARIES,
         // extra routes supported by REST API
-        "/custom" => [self::ENDPOINT_PARAM => "restapi"],
-        "/databases/{db}/{name}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/databases/{db}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/databases" => [self::ENDPOINT_PARAM => "restapi"],
-        "/openapi" => [self::ENDPOINT_PARAM => "restapi"],
-        "/routes" => [self::ENDPOINT_PARAM => "restapi"],
-        "/notes/{type}/{id}/{title}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/notes/{type}/{id}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/notes/{type}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/notes" => [self::ENDPOINT_PARAM => "restapi"],
-        "/preferences/{key}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/preferences" => [self::ENDPOINT_PARAM => "restapi"],
-        "/annotations/{bookId}/{id}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/annotations/{bookId}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/annotations" => [self::ENDPOINT_PARAM => "restapi"],
-        "/metadata/{bookId}/{element}/{name}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/metadata/{bookId}/{element}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/metadata/{bookId}" => [self::ENDPOINT_PARAM => "restapi"],
-        "/user/details" => [self::ENDPOINT_PARAM => "restapi"],
-        "/user" => [self::ENDPOINT_PARAM => "restapi"],
+        "/custom" => [self::HANDLER_PARAM => "restapi"],
+        "/databases/{db}/{name}" => [self::HANDLER_PARAM => "restapi"],
+        "/databases/{db}" => [self::HANDLER_PARAM => "restapi"],
+        "/databases" => [self::HANDLER_PARAM => "restapi"],
+        "/openapi" => [self::HANDLER_PARAM => "restapi"],
+        "/routes" => [self::HANDLER_PARAM => "restapi"],
+        "/notes/{type}/{id}/{title}" => [self::HANDLER_PARAM => "restapi"],
+        "/notes/{type}/{id}" => [self::HANDLER_PARAM => "restapi"],
+        "/notes/{type}" => [self::HANDLER_PARAM => "restapi"],
+        "/notes" => [self::HANDLER_PARAM => "restapi"],
+        "/preferences/{key}" => [self::HANDLER_PARAM => "restapi"],
+        "/preferences" => [self::HANDLER_PARAM => "restapi"],
+        "/annotations/{bookId}/{id}" => [self::HANDLER_PARAM => "restapi"],
+        "/annotations/{bookId}" => [self::HANDLER_PARAM => "restapi"],
+        "/annotations" => [self::HANDLER_PARAM => "restapi"],
+        "/metadata/{bookId}/{element}/{name}" => [self::HANDLER_PARAM => "restapi"],
+        "/metadata/{bookId}/{element}" => [self::HANDLER_PARAM => "restapi"],
+        "/metadata/{bookId}" => [self::HANDLER_PARAM => "restapi"],
+        "/user/details" => [self::HANDLER_PARAM => "restapi"],
+        "/user" => [self::HANDLER_PARAM => "restapi"],
         // extra routes supported by other endpoints (path starts with endpoint param)
-        "/calres/{db:\d+}/{alg}/{digest}" => [self::ENDPOINT_PARAM => "calres"],
+        "/calres/{db:\d+}/{alg}/{digest}" => [self::HANDLER_PARAM => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route
-        "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [self::ENDPOINT_PARAM => "zipfs"],
-        "/epubfs/{data:\d+}/{comp:.+}" => [self::ENDPOINT_PARAM => "epubfs"],
-        "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [self::ENDPOINT_PARAM => "loader"],
-        "/loader/{action}/{dbNum:\d+}" => [self::ENDPOINT_PARAM => "loader"],
-        "/loader/{action}" => [self::ENDPOINT_PARAM => "loader"],
-        "/loader" => [self::ENDPOINT_PARAM => "loader"],
-        "/check" => [self::ENDPOINT_PARAM => "check"],
-        "/feed/{page}/{id}" => [self::ENDPOINT_PARAM => "feed"],
-        "/feed/{page}" => [self::ENDPOINT_PARAM => "feed"],
-        "/feed" => [self::ENDPOINT_PARAM => "feed"],
-        "/mail" => [self::ENDPOINT_PARAM => "mail"],
-        "/opds/{page}/{id}" => [self::ENDPOINT_PARAM => "opds"],
-        "/opds/{page}" => [self::ENDPOINT_PARAM => "opds"],
-        "/opds" => [self::ENDPOINT_PARAM => "opds"],
-        "/read/{db:\d+}/{data:\d+}" => [self::ENDPOINT_PARAM => "read"],
+        "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [self::HANDLER_PARAM => "zipfs"],
+        "/epubfs/{data:\d+}/{comp:.+}" => [self::HANDLER_PARAM => "epubfs"],
+        "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [self::HANDLER_PARAM => "loader"],
+        "/loader/{action}/{dbNum:\d+}" => [self::HANDLER_PARAM => "loader"],
+        "/loader/{action}" => [self::HANDLER_PARAM => "loader"],
+        "/loader" => [self::HANDLER_PARAM => "loader"],
+        "/check" => [self::HANDLER_PARAM => "check"],
+        "/feed/{page}/{id}" => [self::HANDLER_PARAM => "feed"],
+        "/feed/{page}" => [self::HANDLER_PARAM => "feed"],
+        "/feed" => [self::HANDLER_PARAM => "feed"],
+        "/mail" => [self::HANDLER_PARAM => "mail"],
+        "/opds/{page}/{id}" => [self::HANDLER_PARAM => "opds"],
+        "/opds/{page}" => [self::HANDLER_PARAM => "opds"],
+        "/opds" => [self::HANDLER_PARAM => "opds"],
+        "/read/{db:\d+}/{data:\d+}" => [self::HANDLER_PARAM => "read"],
         // check if the path starts with the endpoint param or not here
-        "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
-        "/covers/{db:\d+}/{id:\d+}.jpg" => [self::ENDPOINT_PARAM => "fetch"],
-        "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::ENDPOINT_PARAM => "fetch", "view" => 1],
-        "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::ENDPOINT_PARAM => "fetch"],
+        "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [self::HANDLER_PARAM => "fetch"],
+        "/covers/{db:\d+}/{id:\d+}.jpg" => [self::HANDLER_PARAM => "fetch"],
+        "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch", "view" => 1],
+        "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
         // handle endpoint with page param
-        "/download/{page}/{type}" => [self::ENDPOINT_PARAM => "download"],
-        "/download/{page}" => [self::ENDPOINT_PARAM => "download"],
+        "/download/{page}/{type}" => [self::HANDLER_PARAM => "download"],
+        "/download/{page}" => [self::HANDLER_PARAM => "download"],
     ];
     /** @var string[] */
     protected static $skipPrefix = ['index', 'fetch', 'restapi'];  // @todo handle 'json' routes correctly - see util.js
@@ -292,7 +292,7 @@ class Route
 
     /**
      * Get full url with endpoint for page with params
-     * @param string|null $endpoint
+     * @param string|null $endpoint after going through Config::ENDPOINT
      * @param string|int|null $page
      * @param array<mixed> $params
      * @param string|null $separator
@@ -304,7 +304,36 @@ class Route
         if (!empty($endpoint) && substr($endpoint, 0, 1) === '/') {
             return $endpoint . static::page($page, $params, $separator);
         }
-        // @todo take into account endpoint when building page url, e.g. feed.php
+        // @todo take into account endpoint when building page url, e.g. feed.php or download.php
+        return static::base() . $endpoint . static::page($page, $params, $separator);
+    }
+
+    /**
+     * Get full link for handler with page and params
+     * @param string|null $handler before going through Config::ENDPOINT
+     * @param string|int|null $page
+     * @param array<mixed> $params
+     * @param string|null $separator
+     * @return string
+     */
+    public static function link($handler = null, $page = null, $params = [], $separator = null)
+    {
+        $handler ??= 'index';
+        // @todo take into account handler when building page url, e.g. feed or download
+        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'restapi'])) {
+            $params[Route::HANDLER_PARAM] = $handler;
+        } else {
+            unset($params[Route::HANDLER_PARAM]);
+        }
+        if (array_key_exists($handler, Config::ENDPOINT)) {
+            $endpoint = Config::ENDPOINT[$handler];
+        } elseif ($handler == 'phpunit') {
+            $endpoint = $handler;
+        } elseif (empty($handler)) {
+            $endpoint = 'empty!';
+        } else {
+            throw new \Exception('Unknown handler ' . htmlspecialchars($handler));
+        }
         return static::base() . $endpoint . static::page($page, $params, $separator);
     }
 
@@ -380,6 +409,10 @@ class Route
                 return $route;
             }
         }
+        unset($params[Route::HANDLER_PARAM]);
+        if (empty($params)) {
+            return $prefix;
+        }
         $queryString = http_build_query($params, '', $separator);
         return $prefix . '?' . $queryString;
     }
@@ -417,9 +450,9 @@ class Route
      */
     public static function getPageRoute($params, $prefix = '', $separator = null)
     {
-        if (!empty($params[self::ENDPOINT_PARAM])) {
+        if (!empty($params[self::HANDLER_PARAM])) {
             // keep page param and use endpoint as key here
-            $page = $params[self::ENDPOINT_PARAM];
+            $page = $params[self::HANDLER_PARAM];
         } elseif (isset($params['page'])) {
             $page = $params['page'];
             unset($params['page']);
@@ -511,9 +544,9 @@ class Route
             if (!is_array($params)) {
                 $page = $params;
                 $params = [];
-            } elseif (!empty($params[self::ENDPOINT_PARAM])) {
+            } elseif (!empty($params[self::HANDLER_PARAM])) {
                 // keep page param and use endpoint as key here
-                $page = $params[self::ENDPOINT_PARAM];
+                $page = $params[self::HANDLER_PARAM];
             } else {
                 $page = $params["page"] ?? '';
                 unset($params["page"]);

@@ -48,6 +48,7 @@ abstract class Base
     protected $filterLimit = null;
     /** @var array<string, mixed> */
     protected $filterParams = [];
+    protected string $handler = '';
 
     /**
      * Summary of __construct
@@ -79,11 +80,12 @@ abstract class Base
     public function getUri($params = [])
     {
         $params['id'] = $this->id;
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->getDatabaseId();
         if (Config::get('use_route_urls')) {
             $params['title'] = $this->getTitle();
-            return Route::page(static::PAGE_DETAIL, $params);
         }
-        return Route::page(static::PAGE_DETAIL, $params);
+        return Route::link($this->handler, static::PAGE_DETAIL, $params);
     }
 
     /**
@@ -93,7 +95,9 @@ abstract class Base
      */
     public function getParentUri($params = [])
     {
-        return Route::page(static::PAGE_ALL, $params);
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->getDatabaseId();
+        return Route::link($this->handler, static::PAGE_ALL, $params);
     }
 
     /**
@@ -152,7 +156,26 @@ abstract class Base
     {
         // remove for Filter::getEntryArray() - see filterTest
         unset($params[static::URL_PARAM]);
-        return [ new LinkFeed($this->getUri($params), "subsection", null, $this->getDatabaseId()) ];
+        return [ new LinkFeed($this->getUri($params), "subsection") ];
+    }
+
+    /**
+     * Summary of setHandler
+     * @param string $handler
+     * @return void
+     */
+    public function setHandler($handler)
+    {
+        $this->handler = $handler;
+    }
+
+    /**
+     * Summary of getHandler
+     * @return string
+     */
+    public function getHandler()
+    {
+        return $this->handler;
     }
 
     /**
@@ -459,12 +482,13 @@ abstract class Base
     /**
      * Summary of getCount
      * @param ?int $database
+     * @param ?string $handler
      * @return ?Entry
      */
-    public static function getCount($database = null)
+    public static function getCount($database = null, $handler = null)
     {
         $count = Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
-        return static::getCountEntry($count, $database);
+        return static::getCountEntry($count, $database, null, $handler);
     }
 
     /**
@@ -472,10 +496,11 @@ abstract class Base
      * @param int $count
      * @param ?int $database
      * @param ?string $numberOfString
+     * @param ?string $handler
      * @param array<mixed> $params
      * @return ?Entry
      */
-    public static function getCountEntry($count, $database = null, $numberOfString = null, $params = [])
+    public static function getCountEntry($count, $database = null, $numberOfString = null, $handler = null, $params = [])
     {
         if ($count == 0) {
             return null;
@@ -484,14 +509,14 @@ abstract class Base
             $numberOfString = static::SQL_TABLE . ".alphabetical";
         }
         $params["db"] ??= $database;
+        $href = Route::link($handler, static::PAGE_ALL, $params);
         $entry = new Entry(
             localize(static::SQL_TABLE . ".title"),
             static::PAGE_ID,
             str_format(localize($numberOfString, $count), $count),
             "text",
             // issue #26 for koreader: section is not supported
-            //[ new LinkNavigation(Route::page(static::PAGE_ALL), "subsection", null, $database)],
-            [ new LinkNavigation(Route::page(static::PAGE_ALL, $params), "subsection")],
+            [ new LinkNavigation($href, "subsection")],
             $database,
             "",
             $count

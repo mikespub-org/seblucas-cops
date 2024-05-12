@@ -23,6 +23,7 @@ class PageTagDetail extends PageWithDetail
     {
         /** @var Tag $instance */
         $instance = Tag::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance->setHandler($this->handler);
         if ($this->request->get('filter')) {
             $this->filterParams = [Tag::URL_PARAM => $this->idGet];
             $this->getFilters($instance);

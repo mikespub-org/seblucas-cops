@@ -26,6 +26,7 @@ class PageBookDetail extends Page
             $this->title = 'Not Found';
             return;
         }
+        $this->book->setHandler($this->handler);
         $this->idPage = $this->book->getEntryId();
         $this->title = $this->book->getTitle();
         $this->currentUri = $this->book->getUri();

@@ -22,6 +22,7 @@ class PageId
     public const ALL_SERIES = "6";
     public const SERIE_DETAIL = "7";
     public const OPENSEARCH = "8";
+    public const SEARCH = "search";
     public const OPENSEARCH_QUERY = "9";
     public const ALL_RECENT_BOOKS = "10";
     public const ALL_TAGS = "11";

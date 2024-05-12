@@ -158,12 +158,13 @@ class CustomColumnTypeInteger extends CustomColumnType
         $label = 'range';
         while ($post = $result->fetchObject()) {
             $range = $post->min_value . "-" . $post->max_value;
+            $params = ['custom' => $this->customId, 'range' => $range, 'db' => $this->databaseId];
             array_push($entryArray, new Entry(
                 $range,
                 $this->getEntryId() . ':' . $label . ':' . $range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::page($page, ['custom' => $this->customId, 'range' => $range]), null, null, $this->databaseId)],
+                [new LinkNavigation(Route::link($this->handler, $page, $params), null, null)],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

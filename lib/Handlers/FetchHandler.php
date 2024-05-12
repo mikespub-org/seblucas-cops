@@ -20,16 +20,16 @@ use SebLucas\Cops\Calibre\Cover;
  */
 class FetchHandler extends BaseHandler
 {
-    public const ENDPOINT = "fetch";
+    public const HANDLER = "fetch";
 
     public static function getRoutes()
     {
         // check if the path starts with the endpoint param or not here
         return [
-            "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [static::PARAM => static::ENDPOINT],
-            "/covers/{db:\d+}/{id:\d+}.jpg" => [static::PARAM => static::ENDPOINT],
-            "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [static::PARAM => static::ENDPOINT, "view" => 1],
-            "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [static::PARAM => static::ENDPOINT],
+            "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [static::PARAM => static::HANDLER],
+            "/covers/{db:\d+}/{id:\d+}.jpg" => [static::PARAM => static::HANDLER],
+            "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [static::PARAM => static::HANDLER, "view" => 1],
+            "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [static::PARAM => static::HANDLER],
         ];
     }
 

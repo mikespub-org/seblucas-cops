@@ -67,11 +67,13 @@ class Annotation extends Base
     {
         // @todo let restapi build route url, or change route to use page here?
         if (Config::get('use_route_urls')) {
-            return '/annotations/' . $this->book . '/' . $this->id;
+            return Route::link($this->handler) . '/annotations/' . $this->book . '/' . $this->id;
         }
         $params['bookId'] = $this->book;
         $params['id'] = $this->id;
-        return Route::page(static::PAGE_DETAIL, $params);
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->getDatabaseId();
+        return Route::link($this->handler, static::PAGE_DETAIL, $params);
     }
 
     /**

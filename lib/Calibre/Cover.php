@@ -16,7 +16,7 @@ use SebLucas\Cops\Model\LinkEntry;
 
 class Cover
 {
-    public static string $endpoint = Config::ENDPOINT["fetch"];
+    public static string $handler = "fetch";
     /** @var Book */
     public $book;
     /** @var ?int */
@@ -281,14 +281,13 @@ class Cover
 
     /**
      * Summary of getCoverUri
-     * @param string $endpoint
      * @return ?string
      */
-    public function getCoverUri($endpoint)
+    public function getCoverUri()
     {
         $link = $this->getCoverLink();
         if ($link) {
-            return $link->hrefXhtml($endpoint);
+            return $link->hrefXhtml();
         }
         return null;
     }
@@ -310,10 +309,13 @@ class Cover
                 return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($this->book->path . "/" . $file))), $mime, LinkEntry::OPDS_IMAGE_TYPE);
             }
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
+            if (Config::get('use_route_urls') && is_null($params['db'])) {
+                $params['db'] = 0;
+            }
             if ($ext != 'jpg') {
                 $params['type'] = $ext;
             }
-            return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, LinkEntry::OPDS_IMAGE_TYPE);
+            return new LinkEntry(Route::link(static::$handler, null, $params), $mime, LinkEntry::OPDS_IMAGE_TYPE);
         }
 
         return null;
@@ -321,16 +323,15 @@ class Cover
 
     /**
      * Summary of getThumbnailUri
-     * @param string $endpoint
      * @param string $thumb
      * @param bool $useDefault
      * @return ?string
      */
-    public function getThumbnailUri($endpoint, $thumb, $useDefault = true)
+    public function getThumbnailUri($thumb, $useDefault = true)
     {
         $link = $this->getThumbnailLink($thumb, $useDefault);
         if ($link) {
-            return $link->hrefXhtml($endpoint);
+            return $link->hrefXhtml();
         }
         return null;
     }
@@ -359,13 +360,16 @@ class Cover
             //$file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
+            if (Config::get('use_route_urls') && is_null($params['db'])) {
+                $params['db'] = 0;
+            }
             if ($ext != 'jpg') {
                 $params['type'] = $ext;
             }
             if (Config::get('thumbnail_handling') != "1") {
                 $params['thumb'] = $thumb;
             }
-            return new LinkEntry(Route::url(static::$endpoint, null, $params), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(Route::link(static::$handler, null, $params), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
 
         if ($useDefault) {

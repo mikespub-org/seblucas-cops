@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
@@ -47,15 +48,13 @@ class VirtualLibrary extends Base
     {
         // get home page from Config
         $homepage = PageId::getHomePage();
-        if (empty($this->id)) {
-            return Route::page($homepage, $params);
+         // we need databaseId here because we use Route::link with $handler
+         $params['db'] = $this->getDatabaseId();
+         if (!empty($this->id)) {
+            // URL format: ...&vl=2.Short_Stories_in_English
+            $params[static::URL_PARAM] = static::formatParameter($this->id, $this->getTitle());
         }
-        // URL format: ...&vl=2.Short_Stories_in_English
-        $params[static::URL_PARAM] = static::formatParameter($this->id, $this->getTitle());
-        //if (Config::get('use_route_urls')) {
-        //    return Route::page($homepage, [static::URL_PARAM => $this->getTitle()]);
-        //}
-        return Route::page($homepage, $params);
+        return Route::link($this->handler, $homepage, $params);
     }
 
     /**
@@ -151,13 +150,14 @@ class VirtualLibrary extends Base
     /**
      * Summary of getCount
      * @param ?int $database
+     * @param ?string $handler
      * @return ?Entry
      */
-    public static function getCount($database = null)
+    public static function getCount($database = null, $handler = null)
     {
         $libraries = self::getLibraries($database);
         $count = count($libraries);
-        return static::getCountEntry($count, $database, "libraries");
+        return static::getCountEntry($count, $database, "libraries", $handler);
     }
 
     /**

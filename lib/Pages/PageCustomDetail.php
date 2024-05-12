@@ -28,6 +28,7 @@ class PageCustomDetail extends Page
         $this->idGet = $this->request->get('id');
         $customId = $this->request->get("custom", null);
         $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
+        $instance->setHandler($this->handler);
         $this->idPage = $instance->getEntryId();
         $this->title = $instance->getTitle();
         $this->currentUri = $instance->getUri();

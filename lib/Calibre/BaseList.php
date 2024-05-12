@@ -337,6 +337,8 @@ class BaseList
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         $filterString = $filter->getFilterString();
+        // get handler based on $this->request
+        $handler = $this->request->getHandler('index');
         $params = $filter->getQueryParams();
 
         if (!in_array($this->orderBy, ['groupid', 'count'])) {
@@ -358,12 +360,13 @@ class BaseList
         $params["db"] ??= $this->databaseId;
         while ($post = $result->fetchObject()) {
             $params["id"] = $post->groupid;
+            $href = Route::link($handler, $page, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::page($page, $params), "subsection")],
+                [new LinkNavigation($href, "subsection")],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count
@@ -511,6 +514,8 @@ class BaseList
     {
         $result = Database::queryFilter($query, $columns, $filter, $params, $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
+        // get handler based on $this->request
+        $handler = $this->request->getHandler('index');
         $params = [];
         if ($this->request->hasFilter()) {
             $params = $this->request->getFilterParams();
@@ -523,6 +528,7 @@ class BaseList
             }
 
             $instance = new $this->className($post, $this->databaseId);
+            $instance->setHandler($handler);
             array_push($entryArray, $instance->getEntry($post->count, $params));
         }
         return $entryArray;

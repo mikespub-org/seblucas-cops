@@ -27,7 +27,7 @@ use DateTime;
 
 class KiwilanOPDS
 {
-    public static string $endpoint = CopsConfig::ENDPOINT["opds"];
+    public static string $handler = "opds";
     public static OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
     /** @var ?DateTime */
     private $updated = null;
@@ -55,10 +55,10 @@ class KiwilanOPDS
             author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
             authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
             iconUrl: CopsConfig::get('icon'),
-            startUrl: CopsRoute::url(self::$endpoint),
+            startUrl: CopsRoute::link(self::$handler),
             // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
             //searchUrl: self::$endpoint . '?page=8',
-            searchUrl: CopsRoute::url(self::$endpoint . '/search'),
+            searchUrl: CopsRoute::link(self::$handler) . '/search',
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
             maxItemsPerPage: CopsConfig::get('max_item_per_page'),
@@ -75,9 +75,10 @@ class KiwilanOPDS
     {
         $authors = [];
         foreach ($entry->book->getAuthors() as $author) {
+            $author->setHandler($entry->book->getHandler());
             $opdsEntryAuthor = new OpdsEntryBookAuthor(
                 name: $author->name,
-                uri: CopsRoute::url(self::$endpoint . $author->getUri()),
+                uri: $author->getUri(),
             );
             array_push($authors, $opdsEntryAuthor);
         }
@@ -105,13 +106,13 @@ class KiwilanOPDS
         $opdsEntry = new OpdsEntryBook(
             id: $entry->id,
             title: $entry->title,
-            route: $entry->getNavLink(self::$endpoint),
+            route: $entry->getNavLink(),
             summary: OpdsEntryNavigation::handleContent($entry->content),
             content: $entry->content,
-            media: $entry->getImage(self::$endpoint),
+            media: $entry->getImage(),
             updated: new DateTime($entry->getUpdatedTime()),
             download: $download,
-            mediaThumbnail: $entry->getThumbnail(self::$endpoint),
+            mediaThumbnail: $entry->getThumbnail(),
             categories: $categories,
             authors: $authors,
             published: $published,
@@ -137,9 +138,9 @@ class KiwilanOPDS
         $opdsEntry = new OpdsEntryNavigation(
             id: $entry->id,
             title: $entry->title,
-            route: $entry->getNavLink(self::$endpoint),
+            route: $entry->getNavLink(),
             summary: $entry->content,
-            media: $entry->getThumbnail(self::$endpoint),
+            media: $entry->getThumbnail(),
             relation: $entry->getRelation(),
             //updated: $entry->getUpdatedTime(),
             updated: $this->getUpdatedTime(),
@@ -160,7 +161,7 @@ class KiwilanOPDS
     {
         $opds = Opds::make($this->getOpdsConfig())
             ->title('Search')
-            ->url(CopsRoute::url(self::$endpoint . '/search'))
+            ->url(CopsRoute::link(self::$handler) . '/search')
             ->isSearch()
             ->feeds([])
             ->get();
@@ -184,20 +185,22 @@ class KiwilanOPDS
                 array_push($feeds, $this->getOpdsEntry($entry));
             }
         }
-        $url = $request->getCurrentUrl(static::$endpoint);
+        // @todo check with pathInfo
+        //$url = Route::link(static::$handler, null, $request->urlParams)
+        $url = $request->getCurrentUrl(static::$handler);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {
-                $first = $page->getFirstLink()->hrefXhtml(self::$endpoint);
-                $previous = $prevLink->hrefXhtml(self::$endpoint);
+                $first = $page->getFirstLink()->hrefXhtml();
+                $previous = $prevLink->hrefXhtml();
             } else {
                 $first = null;
                 $previous = null;
             }
             $nextLink = $page->getNextLink();
             if (!is_null($nextLink)) {
-                $next = $nextLink->hrefXhtml(self::$endpoint);
-                $last = $page->getLastLink()->hrefXhtml(self::$endpoint);
+                $next = $nextLink->hrefXhtml();
+                $last = $page->getLastLink()->hrefXhtml();
             } else {
                 $next = null;
                 $last = null;

@@ -68,6 +68,7 @@ abstract class CustomColumnType
     protected $numberPerPage = -1;
     /** @var array<string, mixed> */
     protected $displaySettings = [];
+    protected string $handler = '';
 
     /**
      * Summary of __construct
@@ -115,7 +116,9 @@ abstract class CustomColumnType
     public function getUri($params = [])
     {
         $params['custom'] = $this->customId;
-        return Route::page(static::PAGE_ALL, $params);
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->getDatabaseId();
+        return Route::link($this->handler, static::PAGE_ALL, $params);
     }
 
     /**
@@ -156,7 +159,26 @@ abstract class CustomColumnType
     public function getLinkArray($params = [])
     {
         // issue #26 for koreader: section is not supported
-        return [ new LinkNavigation($this->getUri($params), "subsection", null, $this->getDatabaseId()) ];
+        return [ new LinkNavigation($this->getUri($params), "subsection") ];
+    }
+
+    /**
+     * Summary of setHandler
+     * @param string $handler
+     * @return void
+     */
+    public function setHandler($handler)
+    {
+        $this->handler = $handler;
+    }
+
+    /**
+     * Summary of getHandler
+     * @return string
+     */
+    public function getHandler()
+    {
+        return $this->handler;
     }
 
     /**
@@ -215,7 +237,7 @@ abstract class CustomColumnType
 
     /**
      * Return an entry array for all possible (in the DB used) values of this column
-     * These are the values used in the getUriAllCustoms() page
+     * These are the values used in the PageAllCustoms() page
      *
      * @param int $n
      * @param ?string $sort

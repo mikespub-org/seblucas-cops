@@ -17,8 +17,8 @@ use SebLucas\Cops\Input\Route;
  */
 abstract class BaseHandler
 {
-    public const PARAM = Route::ENDPOINT_PARAM;
-    public const ENDPOINT = "";
+    public const PARAM = Route::HANDLER_PARAM;
+    public const HANDLER = "";
 
     /**
      * @return array<string, mixed>

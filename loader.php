@@ -33,7 +33,7 @@ if (!is_writable($cacheDir)) {
 
 // get the global config for epub-loader from somewhere
 $gConfig = [];
-$gConfig['endpoint'] = Route::url(Config::ENDPOINT['loader']);
+$gConfig['endpoint'] = Route::link('loader');
 $gConfig['app_name'] = 'COPS Loader';
 $gConfig['version'] = Config::VERSION;
 $gConfig['admin_email'] = '';

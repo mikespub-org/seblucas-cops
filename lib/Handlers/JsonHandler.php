@@ -17,7 +17,7 @@ use SebLucas\Cops\Output\JsonRenderer;
  */
 class JsonHandler extends PageHandler
 {
-    public const ENDPOINT = "json";
+    public const HANDLER = "json";
 
     public static function getRoutes()
     {

@@ -17,12 +17,12 @@ use SebLucas\Cops\Output\Mail;
  */
 class MailHandler extends BaseHandler
 {
-    public const ENDPOINT = "mail";
+    public const HANDLER = "mail";
 
     public static function getRoutes()
     {
         return [
-            "/mail" => [static::PARAM => static::ENDPOINT],
+            "/mail" => [static::PARAM => static::HANDLER],
         ];
     }
 

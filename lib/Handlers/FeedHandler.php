@@ -19,14 +19,14 @@ use SebLucas\Cops\Pages\PageId;
  */
 class FeedHandler extends BaseHandler
 {
-    public const ENDPOINT = "feed";
+    public const HANDLER = "feed";
 
     public static function getRoutes()
     {
         return [
-            "/feed/{page}/{id}" => [static::PARAM => static::ENDPOINT],
-            "/feed/{page}" => [static::PARAM => static::ENDPOINT],
-            "/feed" => [static::PARAM => static::ENDPOINT],
+            "/feed/{page}/{id}" => [static::PARAM => static::HANDLER],
+            "/feed/{page}" => [static::PARAM => static::HANDLER],
+            "/feed" => [static::PARAM => static::HANDLER],
         ];
     }
 
@@ -53,6 +53,7 @@ class FeedHandler extends BaseHandler
 
         switch ($page) {
             case PageId::OPENSEARCH :
+            case PageId::SEARCH :
                 echo $OPDSRender->getOpenSearch($request);
                 return;
             default:

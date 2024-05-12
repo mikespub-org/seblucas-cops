@@ -16,7 +16,7 @@ require_once __DIR__ . '/config.php';
 
 header('Content-Type:text/html;charset=utf-8');
 
-$data = ['link' => Route::url(RestApi::$endpoint)];
+$data = ['link' => Route::link(RestApi::$handler)];
 $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';
 $data['tbody'] = '';
 foreach (Route::getRoutes() as $route => $queryParams) {

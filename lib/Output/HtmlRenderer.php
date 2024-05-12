@@ -16,7 +16,7 @@ use SebLucas\Template\doT;
 
 class HtmlRenderer
 {
-    public static string $endpoint = Config::ENDPOINT["index"];
+    public static string $handler = "index";
 
     /**
      * Summary of getTemplateData
@@ -28,7 +28,7 @@ class HtmlRenderer
         $data = [
             'title'                 => Config::get('title_default'),
             'version'               => Config::VERSION,
-            'opds_url'              => Route::url(Config::ENDPOINT["feed"]),
+            'opds_url'              => Route::link("feed"),
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),
