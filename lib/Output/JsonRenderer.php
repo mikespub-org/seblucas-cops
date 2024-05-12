@@ -23,7 +23,7 @@ use Exception;
 
 class JsonRenderer
 {
-    public static string $handler = "json";
+    public static string $handler = "index";
 
     /**
      * @param Book $book
@@ -493,10 +493,10 @@ class JsonRenderer
         $out ["parenturl"] = "";
         if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
             // if filtered, use the unfiltered uri as parent first
-            $out ["parenturl"] = $out["baseurl"] . Route::query($currentPage->currentUri, ['db' => $database]);
+            $out ["parenturl"] = $currentPage->currentUri;
         } elseif (!empty($currentPage->parentUri)) {
             // otherwise use the parent uri
-            $out ["parenturl"] = $out["baseurl"] . Route::query($currentPage->parentUri, ['db' => $database]);
+            $out ["parenturl"] = $currentPage->parentUri;
         } elseif ($page != PageId::INDEX) {
             if ($request->hasFilter()) {
                 $filterParams = $request->getFilterParams();

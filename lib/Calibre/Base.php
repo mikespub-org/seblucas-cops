@@ -9,6 +9,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -271,7 +272,8 @@ abstract class Base
     {
         $database ??= $this->databaseId;
         $numberPerPage ??= $this->filterLimit;
-        $baselist = new BaseList($className, null, $database, $numberPerPage);
+        $request = Request::build([], $this->handler);
+        $baselist = new BaseList($className, $request, $database, $numberPerPage);
         $baselist->orderBy = $sort;
         return $baselist->getEntriesByInstance($this, $n, $this->filterParams);
     }

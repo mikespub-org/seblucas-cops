@@ -636,12 +636,11 @@ class RestApi
         $result = array_replace($result, (array) $note);
         $result["size"] = strlen($result["doc"]);
         $result["resources"] = [];
-        $baseurl = Route::link(Resource::$handler);
         foreach ($note->getResources() as $hash => $resource) {
             $path = Resource::getResourcePath($hash, $db);
             $size = !empty($path) ? filesize($path) : 0;
             $mtime = !empty($path) ? filemtime($path) : 0;
-            $link = $baseurl . $resource->getUri();
+            $link = $resource->getUri();
             $result["resources"][$hash] = [
                 "hash" => $resource->hash,
                 "name" => $resource->name,

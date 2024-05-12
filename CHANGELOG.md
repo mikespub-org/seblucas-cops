@@ -10,8 +10,13 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.6.x - 2024xxxx
+2.7.x - 2024xxxx
   * ...
+
+2.7.0 - 20240512 Use handlers instead of endpoints
+  * Start front-end controller and router script (WIP)
+  * Use handlers instead of endpoints for route links
+  * Fix path_info for handlers when using route urls
   * Add minimal framework + move endpoint code to handlers
   * Change restapi routes to use endpoint instead of dummy pageId
   * Add more endpoints to routes and return instead of exit

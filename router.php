@@ -1,6 +1,6 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) router script for the PHP built-in web server
+ * COPS (Calibre OPDS PHP Server) router script for the PHP built-in web server @todo
  * with $config['cops_use_route_urls'] = '1' and no PHP script in URL (dev only)
  *
  * $ php -S 0.0.0.0:8080 router.php
@@ -29,5 +29,5 @@ if (str_contains($path, $script . '/') && file_exists(__DIR__ . $script)) {
 $_SERVER['SCRIPT_NAME'] = '/front.php';
 $_SERVER['PATH_INFO'] ??= parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-//var_dump($_SERVER);
+// @todo do not use front.php here yet
 include __DIR__ . '/front.php';

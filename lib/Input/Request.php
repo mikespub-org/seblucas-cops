@@ -439,6 +439,11 @@ class Request
         if (!empty($flipped[$endpoint])) {
             return $flipped[$endpoint];
         }
+        // @todo do not use front.php here yet
+        if ($endpoint == 'front.php') {
+            return $default;
+        }
+        // for phpunit tests
         if ($endpoint == 'phpunit' || $endpoint == 'Standard input code') {
             return $default;
         }

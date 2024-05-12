@@ -37,6 +37,7 @@ RewriteRule ^view/(\d+)/(\d+)/.*\.(.*)$ fetch.php?data=$1&db=$2&type=$3&view=1 [
 RewriteRule ^view/(\d+)/.*\.kepub\.epub$ fetch.php?data=$1&type=epub&view=1 [L]
 RewriteRule ^view/(\d+)/.*\.(.*)$ fetch.php?data=$1&type=$2&view=1 [L]
 # with $config['cops_use_route_urls'] = '1'
+# @todo do not use front.php here yet
 #RewriteCond %{REQUEST_FILENAME} !-d
 #RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteRule ^ front.php [L]
