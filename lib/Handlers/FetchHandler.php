@@ -30,6 +30,11 @@ class FetchHandler extends BaseHandler
             "/covers/{db:\d+}/{id:\d+}.jpg" => [static::PARAM => static::HANDLER],
             "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [static::PARAM => static::HANDLER, "view" => 1],
             "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [static::PARAM => static::HANDLER],
+            // @todo handle url rewriting if enabled separately - path parameters are different
+            "/view/{data}/{db}/{ignore}.{type}" => [static::PARAM => static::HANDLER, "view" => 1],
+            "/view/{data}/{ignore}.{type}" => [static::PARAM => static::HANDLER, "view" => 1],
+            "/download/{data}/{db}/{ignore}.{type}" => [static::PARAM => static::HANDLER],
+            "/download/{data}/{ignore}.{type}" => [static::PARAM => static::HANDLER],
         ];
     }
 

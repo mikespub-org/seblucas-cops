@@ -338,7 +338,7 @@ class BaseList
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         $filterString = $filter->getFilterString();
         // get handler based on $this->request
-        $handler = $this->request->getHandler('index');
+        $handler = $this->request->getHandler();
         $params = $filter->getQueryParams();
 
         if (!in_array($this->orderBy, ['groupid', 'count'])) {
@@ -515,7 +515,7 @@ class BaseList
         $result = Database::queryFilter($query, $columns, $filter, $params, $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
         // get handler based on $this->request
-        $handler = $this->request->getHandler('index');
+        $handler = $this->request->getHandler();
         $params = [];
         if ($this->request->hasFilter()) {
             $params = $this->request->getFilterParams();

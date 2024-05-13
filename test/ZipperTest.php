@@ -8,17 +8,15 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Output\JsonRenderer;
-
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\Downloader;
+use SebLucas\Cops\Output\Zipper;
 use SebLucas\Cops\Pages\PageId;
 
-class DownloadTest extends TestCase
+class ZipperTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -45,12 +43,12 @@ class DownloadTest extends TestCase
         $request->set('type', 'any');
         $expected = 1594886;
 
-        $downloader = new Downloader($request);
-        $valid = $downloader->isValid();
+        $zipper = new Zipper($request);
+        $valid = $zipper->isValid();
         $this->assertTrue($valid);
 
         ob_start();
-        $downloader->download();
+        $zipper->download();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -76,12 +74,12 @@ class DownloadTest extends TestCase
         $request->set('type', 'any');
         $expected = 1594886;
 
-        $downloader = new Downloader($request);
-        $valid = $downloader->isValid();
+        $zipper = new Zipper($request);
+        $valid = $zipper->isValid();
         $this->assertTrue($valid);
 
         ob_start();
-        $downloader->download();
+        $zipper->download();
         $headers = headers_list();
         $output = ob_get_clean();
         $headers = headers_list();
@@ -103,10 +101,10 @@ class DownloadTest extends TestCase
         $request->set('type', 'any');
         $expected = 'No files found';
 
-        $downloader = new Downloader($request);
-        $valid = $downloader->isValid();
+        $zipper = new Zipper($request);
+        $valid = $zipper->isValid();
         $this->assertFalse($valid);
-        $this->assertEquals($expected, $downloader->getMessage());
+        $this->assertEquals($expected, $zipper->getMessage());
 
         Config::set('download_series', ['']);
     }
@@ -122,10 +120,10 @@ class DownloadTest extends TestCase
         $request->set('type', 'epub');
         $expected = 'Invalid format for page';
 
-        $downloader = new Downloader($request);
-        $valid = $downloader->isValid();
+        $zipper = new Zipper($request);
+        $valid = $zipper->isValid();
         $this->assertFalse($valid);
-        $this->assertEquals($expected, $downloader->getMessage());
+        $this->assertEquals($expected, $zipper->getMessage());
 
         Config::set('download_page', ['']);
     }

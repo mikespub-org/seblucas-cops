@@ -116,8 +116,14 @@ class Route
         "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch", "view" => 1],
         "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
         // handle endpoint with page param
-        "/download/{page}/{type}" => [self::HANDLER_PARAM => "download"],
-        "/download/{page}" => [self::HANDLER_PARAM => "download"],
+        "/zipper/{page}/{type}/{id}" => [self::HANDLER_PARAM => "zipper"],
+        "/zipper/{page}/{type}" => [self::HANDLER_PARAM => "zipper"],
+        "/zipper/{page}" => [self::HANDLER_PARAM => "zipper"],
+        // @todo handle url rewriting if enabled separately - path parameters are different
+        "/view/{data}/{db}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch", "view" => 1],
+        "/view/{data}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch", "view" => 1],
+        "/download/{data}/{db}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
+        "/download/{data}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
     ];
     /** @var string[] */
     protected static $skipPrefix = ['index', 'fetch', 'restapi'];  // @todo handle 'json' routes correctly - see util.js
@@ -304,7 +310,7 @@ class Route
         if (!empty($endpoint) && substr($endpoint, 0, 1) === '/') {
             return $endpoint . static::page($page, $params, $separator);
         }
-        // @todo take into account endpoint when building page url, e.g. feed.php or download.php
+        // @todo take into account endpoint when building page url, e.g. feed.php or zipper.php
         return static::base() . $endpoint . static::page($page, $params, $separator);
     }
 

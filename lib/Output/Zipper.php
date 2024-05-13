@@ -19,11 +19,11 @@ use SebLucas\Cops\Pages\Page;
 use ZipStream\ZipStream;
 
 /**
- * Downloader for multiple books
+ * Zipper to download multiple books
  */
-class Downloader
+class Zipper
 {
-    public static string $handler = "download";
+    public static string $handler = "zipper";
 
     /** @var Request */
     protected $request;

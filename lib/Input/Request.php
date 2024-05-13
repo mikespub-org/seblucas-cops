@@ -397,7 +397,7 @@ class Request
      */
     public function getCurrentUrl($handler = null)
     {
-        $handler ??= $this->getHandler('index');
+        $handler ??= $this->getHandler();
         $pathInfo = $this->path();
         $queryString = $this->query();
         if (empty($queryString)) {
@@ -427,7 +427,7 @@ class Request
      * @param string $default
      * @return string
      */
-    public function getHandler($default)
+    public function getHandler($default = 'index')
     {
         // we have a handler already
         if (!empty($this->urlParams[Route::HANDLER_PARAM])) {

@@ -480,7 +480,7 @@ class RestApi
                 !str_starts_with($route, "/databases") &&
                 !in_array($route, ["/openapi", "/routes", "/about"]) &&
                 (empty($queryParams[Route::HANDLER_PARAM]) ||
-                in_array($queryParams[Route::HANDLER_PARAM], ['restapi', 'download']))
+                in_array($queryParams[Route::HANDLER_PARAM], ['restapi', 'zipper']))
             ) {
                 array_push($params, [
                     '$ref' => "#/components/parameters/dbParam",

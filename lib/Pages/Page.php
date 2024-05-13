@@ -114,7 +114,7 @@ class Page
         $this->numberPerPage = $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->database();
-        $this->handler = $this->request->getHandler('index');
+        $this->handler = $this->request->getHandler();
     }
 
     /**

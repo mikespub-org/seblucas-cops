@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Handlers;
 use SebLucas\Cops\Pages\PageId;
 
 /**
- * Generic page handler extended by IndexHandler and JsonHandler
+ * Generic page handler extended by HtmlHandler and JsonHandler
  * URL format: ...?page={page}&...
  */
 class PageHandler extends BaseHandler

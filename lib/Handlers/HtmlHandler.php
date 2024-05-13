@@ -20,7 +20,7 @@ use Throwable;
  * HTML main handler
  * URL format: index.php?page={page}&...
  */
-class IndexHandler extends PageHandler
+class HtmlHandler extends PageHandler
 {
     public const HANDLER = "index";
 

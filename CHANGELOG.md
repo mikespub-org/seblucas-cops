@@ -12,6 +12,8 @@ x.x.x - TODO
 
 2.7.x - 2024xxxx
   * ...
+  * Rename IndexHandler to HtmlHandler and use default 'index' in request
+  * Rename download.php etc. to zipper* to avoid conflict with url rewrite
 
 2.7.0 - 20240512 Use handlers instead of endpoints
   * Start front-end controller and router script (WIP)

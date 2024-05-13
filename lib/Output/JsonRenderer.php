@@ -528,7 +528,7 @@ class JsonRenderer
                 foreach (Config::get('download_page') as $format) {
                     $params = $request->getCleanParams();
                     $params['type'] = strtolower($format);
-                    $url = Route::link(Downloader::$handler, null, $params);
+                    $url = Route::link(Zipper::$handler, null, $params);
                     array_push($out ["download"], ['url' => $url, 'format' => $format]);
                 }
             } elseif (!empty($qid)) {
@@ -539,7 +539,7 @@ class JsonRenderer
                         $params['series'] = $qid;
                         $params['type'] = strtolower($format);
                         $params['db'] = $database;
-                        $url = Route::link(Downloader::$handler, null, $params);
+                        $url = Route::link(Zipper::$handler, null, $params);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }
@@ -550,7 +550,7 @@ class JsonRenderer
                         $params['author'] = $qid;
                         $params['type'] = strtolower($format);
                         $params['db'] = $database;
-                        $url = Route::link(Downloader::$handler, null, $params);
+                        $url = Route::link(Zipper::$handler, null, $params);
                         array_push($out ["download"], ['url' => $url, 'format' => $format]);
                     }
                 }

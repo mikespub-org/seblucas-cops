@@ -28,7 +28,7 @@ class Config
         "check" => "checkconfig.php",
         "opds" => "opds.php",
         "loader" => "loader.php",
-        "download" => "download.php",
+        "zipper" => "zipper.php",
         "calres" => "calres.php",
         "zipfs" => "zipfs.php",
         "mail" => "sendtomail.php",

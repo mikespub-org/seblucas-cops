@@ -155,7 +155,7 @@ class BookList
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
         // get handler based on $this->request
-        $handler = $this->request->getHandler('index');
+        $handler = $this->request->getHandler();
         $href = Route::link($handler, Book::PAGE_ALL, $params);
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
@@ -360,7 +360,7 @@ class BookList
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
         // get handler based on $this->request
-        $handler = $this->request->getHandler('index');
+        $handler = $this->request->getHandler();
         $params = $filter->getQueryParams();
 
         // check orderBy to sort by count
@@ -436,7 +436,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
         // get handler based on $this->request
-        $handler = $this->request->getHandler('index');
+        $handler = $this->request->getHandler();
 
         if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
             if (strpos($query, 'order by') !== false) {

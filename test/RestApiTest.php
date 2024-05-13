@@ -176,7 +176,7 @@ class RestApiTest extends TestCase
             "fetch.php?db=0&id=17" => "restapi.php/covers/0/17.jpg",
             "fetch.php?view=1&db=0&data=20&type=epub" => "restapi.php/inline/0/20/ignore.epub",
             "fetch.php?db=0&data=20&type=epub" => "restapi.php/fetch/0/20/ignore.epub",
-            "download.php?page=10&type=any" => "restapi.php/download/10/any",
+            "zipper.php?page=10&type=any" => "restapi.php/zipper/10/any",
         ];
     }
 
@@ -269,7 +269,8 @@ class RestApiTest extends TestCase
         $this->assertEquals("/covers/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17]));
         $this->assertEquals("/inline/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
         $this->assertEquals("/fetch/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"]));
-        $this->assertEquals("/download/10/any", Route::getPageRoute([Route::HANDLER_PARAM => "download", "page" => 10, "type" => "any"]));
+        $this->assertEquals("/zipper/3/any/3", Route::getPageRoute([Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3]));
+        $this->assertEquals("/zipper/10/any", Route::getPageRoute([Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"]));
     }
 
     /**

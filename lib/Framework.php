@@ -19,7 +19,7 @@ class Framework
      * @var array<string, mixed>
      */
     protected static $handlers = [
-        "index" => Handlers\IndexHandler::class,
+        "index" => Handlers\HtmlHandler::class,
         "feed" => Handlers\FeedHandler::class,
         "json" => Handlers\JsonHandler::class,
         "fetch" => Handlers\FetchHandler::class,
@@ -29,7 +29,7 @@ class Framework
         "check" => Handlers\CheckHandler::class,
         "opds" => Handlers\OpdsHandler::class,
         "loader" => Handlers\LoaderHandler::class,
-        "download" => Handlers\DownloadHandler::class,
+        "zipper" => Handlers\ZipperHandler::class,
         "calres" => Handlers\CalResHandler::class,
         "zipfs" => Handlers\ZipFsHandler::class,
         "mail" => Handlers\MailHandler::class,

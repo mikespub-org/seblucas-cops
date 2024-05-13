@@ -15,7 +15,7 @@ require_once __DIR__ . '/config.php';
 $request = Framework::getRequest();
 
 // @todo route to the right handler if needed
-$name = $request->getHandler('index');
+$name = $request->getHandler();
 $handler = Framework::getHandler($name);
 //$handler->handle($request);
 var_dump($_SERVER);

@@ -447,7 +447,7 @@ class Filter
      */
     public static function getEntryArray($request, $database = null)
     {
-        $handler = $request->getHandler('index');
+        $handler = $request->getHandler();
         $libraryId = $request->getVirtualLibrary();
         $entryArray = [];
         foreach (static::URL_PARAMS as $paramName => $className) {

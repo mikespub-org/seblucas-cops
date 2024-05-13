@@ -10,22 +10,23 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Output\Downloader;
+use SebLucas\Cops\Output\Zipper;
 
 /**
  * Download all books for a page, series or author by format (epub, mobi, any, ...)
- * URL format: download.php?page={page}&type={type}
+ * URL format: zipper.php?page={page}&type={type}&id={id}
  */
-class DownloadHandler extends BaseHandler
+class ZipperHandler extends BaseHandler
 {
-    public const HANDLER = "download";
+    public const HANDLER = "zipper";
 
     public static function getRoutes()
     {
         // handle endpoint with page param
         return [
-            "/download/{page}/{type}" => [static::PARAM => static::HANDLER],
-            "/download/{page}" => [static::PARAM => static::HANDLER],
+            "/zipper/{page}/{type}/{id}" => [static::PARAM => static::HANDLER],
+            "/zipper/{page}/{type}" => [static::PARAM => static::HANDLER],
+            "/zipper/{page}" => [static::PARAM => static::HANDLER],
         ];
     }
 
@@ -46,14 +47,14 @@ class DownloadHandler extends BaseHandler
             }
         }
 
-        $downloader = new Downloader($request);
+        $zipper = new Zipper($request);
 
-        if ($downloader->isValid()) {
+        if ($zipper->isValid()) {
             // disable nginx buffering by default
             header('X-Accel-Buffering: no');
-            $downloader->download();
+            $zipper->download();
         } else {
-            echo "Invalid download: " . $downloader->getMessage();
+            echo "Invalid download: " . $zipper->getMessage();
         }
     }
 }

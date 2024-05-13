@@ -1,7 +1,7 @@
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) download all books for a page, series or author by format (epub, mobi, any, ...)
- * URL format: download.php?page={page}&type={type}
+ * URL format: zipper.php?page={page}&type={type}
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
@@ -12,7 +12,7 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('download');
+$request = Framework::getRequest('zipper');
 
-$handler = Framework::getHandler('download');
+$handler = Framework::getHandler('zipper');
 $handler->handle($request);
