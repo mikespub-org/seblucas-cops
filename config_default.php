@@ -605,4 +605,4 @@ $config['cops_epubjs_reader_settings'] = '{
     fullscreen: document.fullscreenEnabled // default behaviour
 }';
  */
-$config['cops_epubjs_reader_settings'] = '{ openbook: false }';
+$config['cops_epubjs_reader_settings'] = '{ arrows: "content", flow: "paginated", openbook: false }';
