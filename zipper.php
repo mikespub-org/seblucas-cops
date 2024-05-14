@@ -12,7 +12,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('zipper');
-
-$handler = Framework::getHandler('zipper');
-$handler->handle($request);
+Framework::run('zipper');

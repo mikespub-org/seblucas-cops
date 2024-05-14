@@ -31,9 +31,9 @@ class PageAllVirtualLibraries extends Page
      */
     public function getEntries()
     {
-        $this->entryArray = VirtualLibrary::getEntries($this->getDatabaseId());
+        $this->entryArray = VirtualLibrary::getEntries($this->getDatabaseId(), $this->handler);
         $this->totalNumber = VirtualLibrary::countEntries($this->getDatabaseId());
         $this->sorted = null;
-        array_push($this->entryArray, VirtualLibrary::getWithoutEntry($this->getDatabaseId()));
+        array_push($this->entryArray, VirtualLibrary::getWithoutEntry($this->getDatabaseId(), $this->handler));
     }
 }

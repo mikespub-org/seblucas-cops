@@ -21,7 +21,4 @@ if (!class_exists('\Kiwilan\Opds\OpdsResponse')) {
 // try out route urls
 Config::set('use_route_urls', true);
 
-$request = Framework::getRequest('opds');
-
-$handler = Framework::getHandler('opds');
-$handler->handle($request);
+Framework::run('opds');

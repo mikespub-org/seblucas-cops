@@ -12,7 +12,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('calres');
-
-$handler = Framework::getHandler('calres');
-$handler->handle($request);
+Framework::run('calres');

@@ -126,7 +126,7 @@ class Route
         "/download/{data}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
     ];
     /** @var string[] */
-    protected static $skipPrefix = ['index', 'fetch', 'restapi'];  // @todo handle 'json' routes correctly - see util.js
+    protected static $skipPrefix = ['index', 'json', 'fetch', 'restapi'];  // @todo handle 'json' routes correctly - see util.js
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
     /** @var array<string, mixed> */
@@ -325,12 +325,27 @@ class Route
     public static function link($handler = null, $page = null, $params = [], $separator = null)
     {
         $handler ??= 'index';
-        // @todo take into account handler when building page url, e.g. feed or download
+        // @todo take into account handler when building page url, e.g. feed or zipper
         if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'restapi'])) {
             $params[Route::HANDLER_PARAM] = $handler;
         } else {
             unset($params[Route::HANDLER_PARAM]);
         }
+        // @todo handle 'json' routes correctly - see util.js
+        if ($handler == 'json') {
+            $handler = 'index';
+        }
+        $endpoint = static::endpoint($handler);
+        return static::base() . $endpoint . static::page($page, $params, $separator);
+    }
+
+    /**
+     * Get endpoint for handler
+     * @param string $handler
+     * @return string
+     */
+    public static function endpoint($handler)
+    {
         if (array_key_exists($handler, Config::ENDPOINT)) {
             $endpoint = Config::ENDPOINT[$handler];
         } elseif ($handler == 'phpunit') {
@@ -340,7 +355,7 @@ class Route
         } else {
             throw new \Exception('Unknown handler ' . htmlspecialchars($handler));
         }
-        return static::base() . $endpoint . static::page($page, $params, $separator);
+        return $endpoint;
     }
 
     /**

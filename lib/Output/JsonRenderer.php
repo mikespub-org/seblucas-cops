@@ -23,7 +23,7 @@ use Exception;
 
 class JsonRenderer
 {
-    public static string $handler = "index";
+    public static string $handler = "json";
 
     /**
      * @param Book $book
@@ -233,7 +233,7 @@ class JsonRenderer
      */
     public static function addCompleteArray($in, $request)
     {
-        $handler = $request->getHandler(static::$handler);
+        $handler = $request->getHandler();
         $out = $in;
         // check for it.c.config.ignored_categories.whatever in templates for category 'whatever'
         $ignoredCategories = ['dummy'];
@@ -320,7 +320,8 @@ class JsonRenderer
     {
         $pathInfo = $request->path();
         $queryString = $request->query();
-        return Route::link("json") . $pathInfo . Route::query($queryString, ['complete' => 1]);
+        //return Route::link(static::$handler) . $pathInfo . Route::query($queryString, ['complete' => 1]);
+        return Route::base() . Config::ENDPOINT[static::$handler] . $pathInfo . Route::query($queryString, ['complete' => 1]);
     }
 
     /**
@@ -344,11 +345,11 @@ class JsonRenderer
             $currentPage->InitializeContent();
         } catch (Exception $e) {
             // this will call exit()
-            $request->notFound(Route::link(static::$handler), $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
+            $request->notFound(Route::link("index"), $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
         }
 
         // adapt handler based on $request e.g. for rest api
-        $handler = $request->getHandler(static::$handler);
+        $handler = $request->getHandler();
 
         if ($search) {
             return static::getContentArrayTypeahead($currentPage);

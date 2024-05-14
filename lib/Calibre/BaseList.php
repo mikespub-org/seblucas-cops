@@ -28,6 +28,7 @@ class BaseList
     //protected $ignoredCategories = [];
     /** @var ?string */
     public $orderBy = null;
+    protected string $handler = '';
 
     /**
      * @param string $className
@@ -43,6 +44,8 @@ class BaseList
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         //$this->ignoredCategories = $this->request->option('ignored_categories');
         $this->setOrderBy();
+        // get handler based on $this->request
+        $this->handler = $this->request->getHandler();
     }
 
     /**
@@ -147,6 +150,7 @@ class BaseList
     {
         $count = $this->countWithoutEntries();
         $instance = $this->getInstanceById(null);
+        $instance->setHandler($this->handler);
         return $instance->getEntry($count);
     }
 
@@ -337,8 +341,6 @@ class BaseList
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         $filterString = $filter->getFilterString();
-        // get handler based on $this->request
-        $handler = $this->request->getHandler();
         $params = $filter->getQueryParams();
 
         if (!in_array($this->orderBy, ['groupid', 'count'])) {
@@ -360,7 +362,7 @@ class BaseList
         $params["db"] ??= $this->databaseId;
         while ($post = $result->fetchObject()) {
             $params["id"] = $post->groupid;
-            $href = Route::link($handler, $page, $params);
+            $href = Route::link($this->handler, $page, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,
@@ -514,8 +516,6 @@ class BaseList
     {
         $result = Database::queryFilter($query, $columns, $filter, $params, $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
-        // get handler based on $this->request
-        $handler = $this->request->getHandler();
         $params = [];
         if ($this->request->hasFilter()) {
             $params = $this->request->getFilterParams();
@@ -528,7 +528,7 @@ class BaseList
             }
 
             $instance = new $this->className($post, $this->databaseId);
-            $instance->setHandler($handler);
+            $instance->setHandler($this->handler);
             array_push($entryArray, $instance->getEntry($post->count, $params));
         }
         return $entryArray;
@@ -568,6 +568,7 @@ class BaseList
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $instance = new $this->className($post, $this->databaseId);
+            $instance->setHandler($this->handler);
             array_push($entryArray, $instance->getEntry($post->count));
         }
         return $entryArray;
@@ -615,6 +616,7 @@ class BaseList
                 $instances[$post->id] = new $this->className($post);
             } else {
                 $instances[$post->id] = new $this->className($post, $this->databaseId);
+                $instances[$post->id]->setHandler($this->handler);
             }
         }
         return $instances;

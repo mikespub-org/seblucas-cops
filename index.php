@@ -12,15 +12,5 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('index');
-
 // @todo handle 'json' routes correctly - see util.js
-// special case for json requests here
-if ($request->isJson()) {
-    $name = 'json';
-} else {
-    $name = 'index';
-}
-
-$handler = Framework::getHandler($name);
-$handler->handle($request);
+Framework::run('index');

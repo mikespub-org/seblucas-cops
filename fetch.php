@@ -13,7 +13,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('fetch');
-
-$handler = Framework::getHandler('fetch');
-$handler->handle($request);
+Framework::run('fetch');

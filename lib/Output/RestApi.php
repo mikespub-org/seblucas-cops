@@ -144,7 +144,7 @@ class RestApi
             return ["error" => "Invalid api key"];
         }
         $name = $params[Route::HANDLER_PARAM];
-        $endpoint = Config::ENDPOINT[$name];
+        //$endpoint = Config::ENDPOINT[$name];
         // check if the path starts with the endpoint param here
         //if (str_starts_with($path, '/' . $name)) {
         //    $parts = array_slice(explode('/', $path), 2);

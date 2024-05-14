@@ -12,7 +12,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('epubfs');
-
-$handler = Framework::getHandler('epubfs');
-$handler->handle($request);
+Framework::run('epubfs');

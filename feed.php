@@ -12,7 +12,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('feed');
-
-$handler = Framework::getHandler('feed');
-$handler->handle($request);
+Framework::run('feed');

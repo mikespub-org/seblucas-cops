@@ -10,7 +10,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-$request = Framework::getRequest('zipfs');
-
-$handler = Framework::getHandler('zipfs');
-$handler->handle($request);
+Framework::run('zipfs');

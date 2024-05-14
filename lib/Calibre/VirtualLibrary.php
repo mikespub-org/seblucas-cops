@@ -108,9 +108,10 @@ class VirtualLibrary extends Base
     /**
      * Summary of getEntries
      * @param ?int $database
+     * @param ?string $handler
      * @return array<Entry>
      */
-    public static function getEntries($database = null)
+    public static function getEntries($database = null, $handler = null)
     {
         $libraries = self::getLibraries($database);
         $entryArray = [];
@@ -119,6 +120,7 @@ class VirtualLibrary extends Base
             // @todo get book count filtered by value
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $value, 'count' => 0];
             $instance = new self($post, $database);
+            $instance->setHandler($handler);
             array_push($entryArray, $instance->getEntry($post->count));
             $id += 1;
         }
@@ -128,13 +130,15 @@ class VirtualLibrary extends Base
     /**
      * Summary of getWithoutEntry
      * @param ?int $database
+     * @param ?string $handler
      * @return ?Entry
      */
-    public static function getWithoutEntry($database = null)
+    public static function getWithoutEntry($database = null, $handler = null)
     {
         $booklist = new BookList(null, $database);
         $count = $booklist->getBookCount();
         $instance = self::getInstanceById(null, $database);
+        $instance->setHandler($handler);
         return $instance->getEntry($count);
     }
 

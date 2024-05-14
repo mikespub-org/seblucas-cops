@@ -36,6 +36,27 @@ class Framework
     ];
 
     /**
+     * Single request runner with optional handler name
+     * @param string $name
+     * @return void
+     */
+    public static function run($name = '')
+    {
+        $request = static::getRequest($name);
+
+        // @todo route to the right handler if needed
+        if (empty($name)) {
+            $name = $request->getHandler();
+        }
+        // special case for json requests here
+        if ($name == 'index' && $request->isJson()) {
+            $name = 'json';
+        }
+        $handler = Framework::getHandler($name);
+        $handler->handle($request);
+    }
+
+    /**
      * Get request instance
      * @param string $name
      * @param bool $parse

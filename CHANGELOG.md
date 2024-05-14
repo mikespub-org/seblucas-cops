@@ -12,6 +12,8 @@ x.x.x - TODO
 
 2.7.x - 2024xxxx
   * ...
+  * Pass along request handler in baselist, booklist and virtual libraries
+  * Adjust default settings for epubjs-reader - see pull request #81 from @dunxd
   * Rename IndexHandler to HtmlHandler and use default 'index' in request
   * Rename download.php etc. to zipper* to avoid conflict with url rewrite
 

@@ -306,6 +306,7 @@ class BookTest extends TestCase
     {
         // also check most of book's class methods
         $book = Book::getBookById(2);
+        $book->setHandler('phpunit');
 
         $linkArray = $book->getLinkArray();
         $this->assertCount(5, $linkArray);
@@ -426,6 +427,7 @@ class BookTest extends TestCase
     {
         Config::set('use_url_rewriting', "1");
         $book = Book::getBookById(2);
+        $book->setHandler('phpunit');
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -441,6 +443,7 @@ class BookTest extends TestCase
     {
         Config::set('use_url_rewriting', "0");
         $book = Book::getBookById(2);
+        $book->setHandler('phpunit');
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -503,6 +506,7 @@ class BookTest extends TestCase
     public function testGetThumbnailUri(): void
     {
         $book = Book::getBookById(2);
+        $book->setHandler('phpunit');
 
         // The thumbnails should be the same as the covers
         Config::set('thumbnail_handling', "1");
