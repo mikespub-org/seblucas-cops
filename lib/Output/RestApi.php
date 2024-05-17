@@ -72,7 +72,11 @@ class RestApi
      */
     public function getPathInfo()
     {
-        return $this->request->path("/index");
+        $path = $this->request->path("/index");
+        if (str_starts_with($path, '/restapi/')) {
+            $path = substr($path, strlen('/restapi'));
+        }
+        return $path;
     }
 
     /**

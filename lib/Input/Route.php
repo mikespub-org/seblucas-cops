@@ -92,6 +92,7 @@ class Route
         "/metadata/{bookId}" => [self::HANDLER_PARAM => "restapi"],
         "/user/details" => [self::HANDLER_PARAM => "restapi"],
         "/user" => [self::HANDLER_PARAM => "restapi"],
+        "/restapi/{route:.*}" => [self::HANDLER_PARAM => "restapi"],
         // extra routes supported by other endpoints (path starts with endpoint param)
         "/calres/{db:\d+}/{alg}/{digest}" => [self::HANDLER_PARAM => "calres"],
         // support custom pattern for route placeholders - see nikic/fast-route
@@ -331,12 +332,20 @@ class Route
         } else {
             unset($params[Route::HANDLER_PARAM]);
         }
+        // ?page=... or /route/...
+        $page = static::page($page, $params, $separator);
         // @todo handle 'json' routes correctly - see util.js
         if ($handler == 'json') {
             $handler = 'index';
         }
+        // endpoint.php or handler or empty
         $endpoint = static::endpoint($handler);
-        return static::base() . $endpoint . static::page($page, $params, $separator);
+        if (empty($endpoint) && str_starts_with($page, '/')) {
+            // URL format: /base/route/...
+            return static::base() . substr($page, 1);
+        }
+        // URL format: /base/endpoint.php?page=... or /base/handler/route/...
+        return static::base() . $endpoint . $page;
     }
 
     /**
@@ -346,6 +355,14 @@ class Route
      */
     public static function endpoint($handler)
     {
+        if (Config::get('use_front_controller')) {
+            // @todo special case for restapi
+            if (in_array($handler, ['restapi'])) {
+                return $handler;
+            }
+            // no endpoint prefix needed for other handlers
+            return '';
+        }
         if (array_key_exists($handler, Config::ENDPOINT)) {
             $endpoint = Config::ENDPOINT[$handler];
         } elseif ($handler == 'phpunit') {

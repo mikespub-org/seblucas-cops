@@ -58,7 +58,7 @@ class RestApiHandler extends BaseHandler
         //Config::set('titles_split_publication_year', '0');
 
         $path = $request->path();
-        if (empty($path)) {
+        if (empty($path) || $path == '/restapi/') {
             header('Content-Type:text/html;charset=utf-8');
 
             $data = ['link' => Route::link(static::HANDLER) . '/openapi'];

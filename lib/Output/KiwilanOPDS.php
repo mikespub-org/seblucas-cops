@@ -186,8 +186,8 @@ class KiwilanOPDS
             }
         }
         // @todo check with pathInfo
-        //$url = Route::link(static::$handler, null, $request->urlParams)
-        $url = $request->getCurrentUrl(static::$handler);
+        $url = CopsRoute::link(static::$handler, null, $request->urlParams);
+        //$url = $request->getCurrentUrl(static::$handler);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {

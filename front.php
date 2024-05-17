@@ -9,8 +9,19 @@
  */
 
 use SebLucas\Cops\Framework;
+use SebLucas\Cops\Input\Config;
 
 require_once __DIR__ . '/config.php';
+
+// tell COPS we use front controller here
+Config::set('use_front_controller', true);
+// by default when using front controller
+Config::set('use_route_urls', true);
+
+// when using Apache .htaccess redirect
+if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
+    $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
+}
 
 $request = Framework::getRequest();
 
@@ -20,6 +31,8 @@ $name = $request->getHandler();
 if ($name == 'index' && $request->isJson()) {
     $name = 'json';
 }
+// @todo special case for restapi
+
 $handler = Framework::getHandler($name);
-//$handler->handle($request);
-var_dump($_SERVER);
+$handler->handle($request);
+//var_dump($_SERVER);

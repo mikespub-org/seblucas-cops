@@ -1,4 +1,6 @@
 DirectoryIndex index.php
+# @todo do not use front.php here yet
+#DirectoryIndex front.php
 
 <IfModule mod_xsendfile.c>
 <Files fetch.php>
@@ -40,7 +42,7 @@ RewriteRule ^view/(\d+)/.*\.(.*)$ fetch.php?data=$1&type=$2&view=1 [L]
 # @todo do not use front.php here yet
 #RewriteCond %{REQUEST_FILENAME} !-d
 #RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteRule ^ front.php [L]
+#RewriteRule ^(.*) front.php [L,E=PATH_INFO:/$1]
 </IfModule>
 
 <IfModule mod_expires.c>

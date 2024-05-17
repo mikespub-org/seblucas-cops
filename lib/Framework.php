@@ -76,6 +76,7 @@ class Framework
                 Input\Config::set('use_route_urls', 1);
             }
         }
+        // @todo special case for restapi
         return new Input\Request($parse);
     }
 
