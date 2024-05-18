@@ -47,6 +47,7 @@ class RestApiHandler extends BaseHandler
             "/metadata/{bookId}" => [static::PARAM => static::HANDLER],
             "/user/details" => [static::PARAM => static::HANDLER],
             "/user" => [static::PARAM => static::HANDLER],
+            "/restapi/{route:.*}" => [static::PARAM => static::HANDLER],
         ];
     }
 

@@ -74,7 +74,7 @@ class BookTest extends TestCase
     public function testGetBookCount(): void
     {
         $booklist = new BookList(self::$request);
-        $this->assertEquals(15, $booklist->getBookCount());
+        $this->assertEquals(16, $booklist->getBookCount());
     }
 
     public function testGetCount(): void
@@ -85,10 +85,10 @@ class BookTest extends TestCase
         $this->assertEquals(2, count($entryArray));
 
         $entryAllBooks = $entryArray [0];
-        $this->assertEquals("Alphabetical index of the 15 books", $entryAllBooks->content);
+        $this->assertEquals("Alphabetical index of the 16 books", $entryAllBooks->content);
 
         $entryRecentBooks = $entryArray [1];
-        $this->assertEquals("15 most recent books", $entryRecentBooks->content);
+        $this->assertEquals("16 most recent books", $entryRecentBooks->content);
     }
 
     public function testGetCountRecent(): void
@@ -203,7 +203,7 @@ class BookTest extends TestCase
 
         // All books by first letter
         $entryArray = $booklist->getCountByFirstLetter();
-        $this->assertCount(9, $entryArray);
+        $this->assertCount(10, $entryArray);
     }
 
     public function testGetBooksByFirstLetter(): void
@@ -222,7 +222,7 @@ class BookTest extends TestCase
 
         // All books by publication year
         $entryArray = $booklist->getCountByPubYear();
-        $this->assertCount(5, $entryArray);
+        $this->assertCount(6, $entryArray);
     }
 
     public function testGetBooksByPubYear(): void
@@ -245,7 +245,7 @@ class BookTest extends TestCase
         };
 
         $entryArray = $booklist->getAllRecentBooks();
-        $this->assertCount(15, $entryArray);
+        $this->assertCount(16, $entryArray);
     }
 
     public function testGetBookByDataId(): void
@@ -270,7 +270,7 @@ class BookTest extends TestCase
         $booklist = new BookList($request);
 
         $entryArray = $booklist->getAllRecentBooks();
-        $this->assertCount(15, $entryArray);
+        $this->assertCount(16, $entryArray);
     }
 
     /**

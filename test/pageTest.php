@@ -38,19 +38,19 @@ class PageTest extends TestCase
         $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Alphabetical index of the 6 authors", $currentPage->entryArray [0]->content);
+        $this->assertEquals("Alphabetical index of the 7 authors", $currentPage->entryArray [0]->content);
         if (Config::get('show_icons') == 1) {
             $this->assertEquals(Route::url("images/author.png", null, ["v" => Config::VERSION]), $currentPage->entryArray [0]->getThumbnail());
         } else {
             $this->assertNull($currentPage->entryArray [0]->getThumbnail());
         }
-        $this->assertEquals(6, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals(7, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("Series", $currentPage->entryArray [1]->title);
         $this->assertEquals("Alphabetical index of the 4 series", $currentPage->entryArray [1]->content);
         $this->assertEquals(4, $currentPage->entryArray [1]->numberOfElement);
         $this->assertEquals("Publishers", $currentPage->entryArray [2]->title);
-        $this->assertEquals("Alphabetical index of the 6 publishers", $currentPage->entryArray [2]->content);
-        $this->assertEquals(6, $currentPage->entryArray [2]->numberOfElement);
+        $this->assertEquals("Alphabetical index of the 7 publishers", $currentPage->entryArray [2]->content);
+        $this->assertEquals(7, $currentPage->entryArray [2]->numberOfElement);
         $this->assertEquals("Tags", $currentPage->entryArray [3]->title);
         $this->assertEquals("Alphabetical index of the 11 tags", $currentPage->entryArray [3]->content);
         $this->assertEquals(11, $currentPage->entryArray [3]->numberOfElement);
@@ -58,14 +58,14 @@ class PageTest extends TestCase
         $this->assertEquals("3 ratings", $currentPage->entryArray [4]->content);
         $this->assertEquals(3, $currentPage->entryArray [4]->numberOfElement);
         $this->assertEquals("Languages", $currentPage->entryArray [5]->title);
-        $this->assertEquals("Alphabetical index of the 2 languages", $currentPage->entryArray [5]->content);
-        $this->assertEquals(2, $currentPage->entryArray [5]->numberOfElement);
+        $this->assertEquals("Alphabetical index of the 3 languages", $currentPage->entryArray [5]->content);
+        $this->assertEquals(3, $currentPage->entryArray [5]->numberOfElement);
         $this->assertEquals("All books", $currentPage->entryArray [6]->title);
-        $this->assertEquals("Alphabetical index of the 15 books", $currentPage->entryArray [6]->content);
-        $this->assertEquals(15, $currentPage->entryArray [6]->numberOfElement);
+        $this->assertEquals("Alphabetical index of the 16 books", $currentPage->entryArray [6]->content);
+        $this->assertEquals(16, $currentPage->entryArray [6]->numberOfElement);
         $this->assertEquals("Recent additions", $currentPage->entryArray [7]->title);
-        $this->assertEquals("15 most recent books", $currentPage->entryArray [7]->content);
-        $this->assertEquals(15, $currentPage->entryArray [7]->numberOfElement);
+        $this->assertEquals("16 most recent books", $currentPage->entryArray [7]->content);
+        $this->assertEquals(16, $currentPage->entryArray [7]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -83,9 +83,9 @@ class PageTest extends TestCase
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("Ratings", $currentPage->entryArray [0]->title);
         $this->assertEquals("All books", $currentPage->entryArray [1]->title);
-        $this->assertEquals("Alphabetical index of the 15 books", $currentPage->entryArray [1]->content);
+        $this->assertEquals("Alphabetical index of the 16 books", $currentPage->entryArray [1]->content);
         $this->assertEquals("Recent additions", $currentPage->entryArray [2]->title);
-        $this->assertEquals("15 most recent books", $currentPage->entryArray [2]->content);
+        $this->assertEquals("16 most recent books", $currentPage->entryArray [2]->content);
         $this->assertFalse($currentPage->containsBook());
 
         Config::set('ignored_categories', []);
@@ -225,7 +225,7 @@ class PageTest extends TestCase
         $this->assertEquals("SeriesLike", $currentPage->entryArray [0]->title);
         $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("Not Set", $currentPage->entryArray [2]->title);
-        $this->assertEquals(12, $currentPage->entryArray [2]->numberOfElement);
+        $this->assertEquals(13, $currentPage->entryArray [2]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -244,7 +244,7 @@ class PageTest extends TestCase
         $this->assertEquals("tag1", $currentPage->entryArray [0]->title);
         $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("Not Set", $currentPage->entryArray [3]->title);
-        $this->assertEquals(11, $currentPage->entryArray [3]->numberOfElement);
+        $this->assertEquals(12, $currentPage->entryArray [3]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -263,7 +263,7 @@ class PageTest extends TestCase
         $this->assertEquals("other", $currentPage->entryArray [0]->title);
         $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("Not Set", $currentPage->entryArray [2]->title);
-        $this->assertEquals(12, $currentPage->entryArray [2]->numberOfElement);
+        $this->assertEquals(13, $currentPage->entryArray [2]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -329,7 +329,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Authors", $currentPage->title);
-        $this->assertCount(6, $currentPage->entryArray);
+        $this->assertCount(7, $currentPage->entryArray);
         $this->assertEquals("Lewis Carroll", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->containsBook());
 
@@ -345,7 +345,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Authors", $currentPage->title);
-        $this->assertCount(5, $currentPage->entryArray);
+        $this->assertCount(6, $currentPage->entryArray);
         $this->assertEquals("C", $currentPage->entryArray [0]->title);
         $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
@@ -461,7 +461,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
-        $this->assertCount(15, $currentPage->entryArray);
+        $this->assertCount(16, $currentPage->entryArray);
         $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertEquals("Alice's Adventures in Wonderland", $currentPage->entryArray [1]->title);
         $this->assertTrue($currentPage->containsBook());
@@ -479,7 +479,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
-        $this->assertCount(9, $currentPage->entryArray);
+        $this->assertCount(10, $currentPage->entryArray);
         $this->assertEquals("A", $currentPage->entryArray [0]->title);
         $this->assertEquals("C", $currentPage->entryArray [1]->title);
         $this->assertFalse($currentPage->containsBook());
@@ -512,7 +512,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
-        $this->assertCount(5, $currentPage->entryArray);
+        $this->assertCount(6, $currentPage->entryArray);
         $this->assertEquals("1872", $currentPage->entryArray [0]->title);
         $this->assertEquals("1897", $currentPage->entryArray [1]->title);
         $this->assertFalse($currentPage->containsBook());
@@ -549,7 +549,7 @@ class PageTest extends TestCase
         $this->assertEquals("D'Artagnan Romances", $currentPage->entryArray [0]->title);
         $this->assertEquals(2, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("No series", $currentPage->entryArray [4]->title);
-        $this->assertEquals(4, $currentPage->entryArray [4]->numberOfElement);
+        $this->assertEquals(5, $currentPage->entryArray [4]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -595,7 +595,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Publishers", $currentPage->title);
-        $this->assertCount(6, $currentPage->entryArray);
+        $this->assertCount(7, $currentPage->entryArray);
         $this->assertEquals("D. Appleton and Company", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->containsBook());
     }
@@ -646,7 +646,7 @@ class PageTest extends TestCase
         $this->assertEquals("Action & Adventure", $currentPage->entryArray [0]->title);
         $this->assertEquals(4, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("No tags", $currentPage->entryArray [11]->title);
-        $this->assertEquals(0, $currentPage->entryArray [11]->numberOfElement);
+        $this->assertEquals(1, $currentPage->entryArray [11]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -691,7 +691,7 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Languages", $currentPage->title);
-        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("English", $currentPage->entryArray [0]->title);
         $this->assertEquals("French", $currentPage->entryArray [1]->title);
         $this->assertFalse($currentPage->containsBook());
@@ -787,11 +787,11 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Identifiers", $currentPage->title);
-        $this->assertCount(6, $currentPage->entryArray);
-        $this->assertEquals("Google Books", $currentPage->entryArray [0]->title);
+        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertEquals("Amazon", $currentPage->entryArray [0]->title);
         $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
-        $this->assertEquals("uri", $currentPage->entryArray [3]->title);
-        $this->assertEquals(13, $currentPage->entryArray [3]->numberOfElement);
+        $this->assertEquals("uri", $currentPage->entryArray [4]->title);
+        $this->assertEquals(13, $currentPage->entryArray [4]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -823,7 +823,7 @@ class PageTest extends TestCase
         $this->assertEquals("Action Fiction from this Century (TODO)", $currentPage->entryArray [0]->title);
         $this->assertEquals(0, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("No virtual libraries", $currentPage->entryArray [2]->title);
-        $this->assertEquals(15, $currentPage->entryArray [2]->numberOfElement);
+        $this->assertEquals(16, $currentPage->entryArray [2]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -836,8 +836,9 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
-        $this->assertCount(15, $currentPage->entryArray);
-        $this->assertEquals("La curée", $currentPage->entryArray [0]->title);
+        $this->assertCount(16, $currentPage->entryArray);
+        $this->assertEquals("孙子兵法", $currentPage->entryArray [0]->title);
+        $this->assertEquals("La curée", $currentPage->entryArray [1]->title);
         $this->assertTrue($currentPage->containsBook());
     }
 
@@ -866,8 +867,9 @@ class PageTest extends TestCase
         $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
-        $this->assertCount(13, $currentPage->entryArray);
-        $this->assertEquals("La curée", $currentPage->entryArray [0]->title);
+        $this->assertCount(14, $currentPage->entryArray);
+        $this->assertEquals("孙子兵法", $currentPage->entryArray [0]->title);
+        $this->assertEquals("La curée", $currentPage->entryArray [1]->title);
         $this->assertTrue($currentPage->containsBook());
     }
 

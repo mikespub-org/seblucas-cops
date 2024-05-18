@@ -398,7 +398,7 @@ class RestApiTest extends TestCase
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
 
         // less than RestApi::$numberPerPage;
-        $expected = 15;
+        $expected = 16;
         $test = RestApi::getDatabases($request);
         $this->assertCount($expected, $test["entries"]);
 

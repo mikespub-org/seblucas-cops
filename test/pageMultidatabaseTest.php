@@ -31,8 +31,8 @@ class PageMultiDatabaseTest extends TestCase
         $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("Some books", $currentPage->entryArray [0]->title);
-        $this->assertEquals("15 books", $currentPage->entryArray [0]->content);
-        $this->assertEquals(15, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("16 books", $currentPage->entryArray [0]->content);
+        $this->assertEquals(16, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("One book", $currentPage->entryArray [1]->title);
         $this->assertEquals("1 book", $currentPage->entryArray [1]->content);
         $this->assertEquals(1, $currentPage->entryArray [1]->numberOfElement);

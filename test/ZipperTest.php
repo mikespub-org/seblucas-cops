@@ -41,7 +41,7 @@ class ZipperTest extends TestCase
         $request = new Request();
         $request->set('page', $page);
         $request->set('type', 'any');
-        $expected = 1594886;
+        $expected = 1596525;
 
         $zipper = new Zipper($request);
         $valid = $zipper->isValid();

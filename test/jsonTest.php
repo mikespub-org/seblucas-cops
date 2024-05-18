@@ -146,8 +146,8 @@ class JsonTest extends TestCase
         $test = JsonRenderer::getJson($request);
 
         $this->assertEquals("Recent additions", $test["title"]);
-        $this->assertCount(15, $test["entries"]);
-        $this->assertEquals("La curée", $test["entries"][0]["title"]);
+        $this->assertCount(16, $test["entries"]);
+        $this->assertEquals("La curée", $test["entries"][1]["title"]);
     }
 
     public function testGetJsonIsPaginated(): void
@@ -221,8 +221,8 @@ class JsonTest extends TestCase
         $test = JsonRenderer::getJson($request, true);
 
         $this->assertEquals("Recent additions", $test["title"]);
-        $this->assertCount(15, $test["entries"]);
-        $this->assertEquals("La curée", $test["entries"][0]["title"]);
+        $this->assertCount(16, $test["entries"]);
+        $this->assertEquals("La curée", $test["entries"][1]["title"]);
         $this->assertCount(4, $test["c"]);
     }
 }
