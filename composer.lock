@@ -1548,16 +1548,16 @@
         },
         {
             "name": "kiwilan/php-opds",
-            "version": "2.0.0",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kiwilan/php-opds.git",
-                "reference": "179670f907c46b1da380128991bd2c8af351fc9f"
+                "reference": "99e020eedce81f6903e122644e9ef7882353ec8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/179670f907c46b1da380128991bd2c8af351fc9f",
-                "reference": "179670f907c46b1da380128991bd2c8af351fc9f",
+                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/99e020eedce81f6903e122644e9ef7882353ec8f",
+                "reference": "99e020eedce81f6903e122644e9ef7882353ec8f",
                 "shasum": ""
             },
             "require": {
@@ -1602,7 +1602,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kiwilan/php-opds/issues",
-                "source": "https://github.com/kiwilan/php-opds/tree/v2.0.0"
+                "source": "https://github.com/kiwilan/php-opds/tree/v2.0.10"
             },
             "funding": [
                 {
@@ -1610,7 +1610,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-02-17T09:30:11+00:00"
+            "time": "2024-05-18T11:32:06+00:00"
         },
         {
             "name": "masterminds/html5",
