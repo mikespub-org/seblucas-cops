@@ -100,6 +100,7 @@ class Route
         "/epubfs/{data:\d+}/{comp:.+}" => [self::HANDLER_PARAM => "epubfs"],
         "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [self::HANDLER_PARAM => "loader"],
         "/loader/{action}/{dbNum:\d+}" => [self::HANDLER_PARAM => "loader"],
+        "/loader/{action}/" => [self::HANDLER_PARAM => "loader"],
         "/loader/{action}" => [self::HANDLER_PARAM => "loader"],
         "/loader" => [self::HANDLER_PARAM => "loader"],
         "/check" => [self::HANDLER_PARAM => "check"],

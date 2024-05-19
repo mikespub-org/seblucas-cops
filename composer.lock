@@ -1681,16 +1681,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "3.0.0",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "bc81fce3d26aa3fe255be8ef3a64e477ad7dbef7"
+                "reference": "b2749afb6b3c769b6bdb8c1759b35ed8483cd9c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/bc81fce3d26aa3fe255be8ef3a64e477ad7dbef7",
-                "reference": "bc81fce3d26aa3fe255be8ef3a64e477ad7dbef7",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/b2749afb6b3c769b6bdb8c1759b35ed8483cd9c6",
+                "reference": "b2749afb6b3c769b6bdb8c1759b35ed8483cd9c6",
                 "shasum": ""
             },
             "require": {
@@ -1700,10 +1700,10 @@
                 "ext-xml": "*",
                 "ext-zip": "*",
                 "ext-zlib": "*",
-                "mikespub/php-epub-meta": "^2.2",
+                "mikespub/php-epub-meta": "^2.3",
                 "php": ">=8.2",
                 "survos/wikidata": "^4.0",
-                "twig/twig": "^3.8"
+                "twig/twig": "^3.9"
             },
             "suggest": {
                 "mikespub/seblucas-cops": "COPS - Calibre OPDS (and HTML) PHP Server"
@@ -1734,9 +1734,9 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/3.0.0"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/3.1.0"
             },
-            "time": "2024-03-14T19:10:19+00:00"
+            "time": "2024-05-08T18:15:51+00:00"
         },
         {
             "name": "myclabs/deep-copy",
