@@ -101,9 +101,13 @@ class Book
         //$this->path = Database::getDbDirectory() . $line->path;
         //$this->relativePath = $line->path;
         // -DC- Init relative or full path
-        $this->path = $line->path;
-        if (!is_dir($this->path)) {
-            $this->path = Database::getDbDirectory($database) . $line->path;
+        if (!empty(Config::get('calibre_external_storage'))) {
+            $this->path = Config::get('calibre_external_storage') . str_replace('%2F', '/', rawurlencode($line->path));
+        } else {
+            $this->path = $line->path;
+            if (!is_dir($this->path)) {
+                $this->path = Database::getDbDirectory($database) . $line->path;
+            }
         }
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment ?? '';
@@ -462,10 +466,10 @@ class Book
      * @checkme always returns absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
      * @param string $extension
      * @param int $idData
-     * @param false $relative Deprecated
+     * @param bool $encoded url encode filename
      * @return string|false|null string for file path, false for missing cover, null for missing data
      */
-    public function getFilePath($extension, $idData = null, $relative = false)
+    public function getFilePath($extension, $idData = null, $encoded = false)
     {
         if ($extension == "jpg" || $extension == "png") {
             return $this->getCoverFilePath($extension);
@@ -475,6 +479,9 @@ class Book
             return null;
         }
         $file = $data->name . "." . strtolower($data->format);
+        if ($encoded) {
+            return $this->path . '/' . rawurlencode($file);
+        }
         return $this->path . '/' . $file;
     }
 
@@ -595,7 +602,9 @@ class Book
         foreach ($this->getDatas() as $data) {
             if ($data->isKnownType()) {
                 $linkEntry = $data->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, $data->format);
-                $linkEntry->addFileInfo($data->getLocalPath());
+                if (empty(Config::get('calibre_external_storage'))) {
+                    $linkEntry->addFileInfo($data->getLocalPath());
+                }
                 array_push($linkArray, $linkEntry);
             }
         }

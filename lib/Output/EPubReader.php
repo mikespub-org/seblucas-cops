@@ -208,13 +208,21 @@ class EPubReader
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
-        $epub = $book->getFilePath('EPUB', $idData);
-        if (!$epub || !file_exists($epub)) {
-            throw new Exception('Unknown file ' . $epub);
+        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, Config::get('calibre_external_storage'))) {
+            // URL format: full url to external epub file
+            $link = $book->getFilePath('EPUB', $idData, true);
+            if (!$link) {
+                throw new Exception('Unknown link ' . $idData);
+            }
+        } else {
+            $epub = $book->getFilePath('EPUB', $idData);
+            if (!$epub || !file_exists($epub)) {
+                throw new Exception('Unknown file ' . $epub);
+            }
+            // URL format: zipfs.php/{db}/{idData}/{component}
+            $db = $book->getDatabaseId() ?? 0;
+            $link = Route::link($handler) . "/{$db}/{$idData}/";
         }
-        // URL format: zipfs.php/{db}/{idData}/{component}
-        $db = $book->getDatabaseId() ?? 0;
-        $link = Route::link($handler) . "/{$db}/{$idData}/";
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');
 

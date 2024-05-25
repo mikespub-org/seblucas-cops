@@ -83,6 +83,10 @@ class Cover
     public function checkCoverFilePath()
     {
         $cover = $this->book->getCoverFilePath("jpg");
+        if (!empty($cover) && !empty(Config::get('calibre_external_storage'))) {
+            $this->coverFileName = $cover;
+            return $this->coverFileName;
+        }
         if ($cover === false || !file_exists($cover)) {
             $cover = $this->book->getCoverFilePath("png");
         }
@@ -148,6 +152,7 @@ class Cover
         if (empty($this->coverFileName) || !is_file($this->coverFileName) || !is_readable($this->coverFileName)) {
             return false;
         }
+        // @todo support creating (and caching) thumbnails for external cover images someday
 
         // -DC- Use cover file name
         //$file = $this->getCoverFilePath('jpg');
@@ -303,6 +308,9 @@ class Cover
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', LinkEntry::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
+            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, Config::get('calibre_external_storage'))) {
+                return new LinkEntry($this->coverFileName, $mime, LinkEntry::OPDS_IMAGE_TYPE);
+            }
             $file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
@@ -357,6 +365,10 @@ class Cover
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', LinkEntry::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
+            // @todo support creating (and caching) thumbnails for external cover images someday
+            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, Config::get('calibre_external_storage'))) {
+                return new LinkEntry($this->coverFileName, $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            }
             //$file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];

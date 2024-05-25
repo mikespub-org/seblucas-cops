@@ -29,6 +29,19 @@ $config['calibre_directory'] = './';
  */
 $config['calibre_internal_directory'] = '';
 
+/**
+ * Custom configuration if your Calibre library is stored elsewhere and
+ * you cannot clone it or mount a remote volume to it on your COPS server.
+ * For example a static website, AWS S3 bucket, Nextcloud site, Google Drive, ...
+ * You will still need to copy the metadata.db database file to the calibre
+ * directory above for this to work though...
+ * Note: not all features will be available in this configuration, e.g.
+ * no kepub version or metadata updates, and no monocle epub reader 
+ * Example (test):
+ * $config['calibre_external_storage'] = 'http://localhost/cops/test/BaseWithSomeBooks/';
+ */
+$config['calibre_external_storage'] = '';
+
 /*
  * Full URL prefix (with trailing /)
  * useful where a full URL is required, COPS is behind a proxy or the script name shows the wrong place

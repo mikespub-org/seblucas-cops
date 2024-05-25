@@ -21,6 +21,7 @@ class LoaderHandler extends BaseHandler
         return [
             "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [static::PARAM => static::HANDLER],
             "/loader/{action}/{dbNum:\d+}" => [static::PARAM => static::HANDLER],
+            "/loader/{action}/" => [static::PARAM => static::HANDLER],
             "/loader/{action}" => [static::PARAM => static::HANDLER],
             "/loader" => [static::PARAM => static::HANDLER],
         ];
