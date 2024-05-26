@@ -11,9 +11,11 @@ x.x.x - TODO
   * ...
 
 2.7.x - 2024xxxx
+  * ...
+
+2.7.1 - 20240526 Use external storage + settings for epubjs reader
   * Changes in config_default.php file:
     - new $config['calibre_external_storage']
-  * ...
   * Support external storage for Calibre library - see seblucas/cops#506 and seblucas/cops#513
   * Pass along request handler in baselist, booklist and virtual libraries
   * Adjust default settings for epubjs-reader - see pull request #81 from @dunxd

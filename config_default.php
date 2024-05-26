@@ -31,7 +31,7 @@ $config['calibre_internal_directory'] = '';
 
 /**
  * Custom configuration if your Calibre library is stored elsewhere and
- * you cannot clone it or mount a remote volume to it on your COPS server.
+ * you cannot sync it or mount a remote volume to it on your COPS server.
  * For example a static website, AWS S3 bucket, Nextcloud site, Google Drive, ...
  * You will still need to copy the metadata.db database file to the calibre
  * directory above for this to work though...

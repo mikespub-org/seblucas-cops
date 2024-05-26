@@ -114,6 +114,9 @@ class EPubReader
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
+        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, Config::get('calibre_external_storage'))) {
+            return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
+        }
         $params = ['data' => $idData, 'db' => $book->getDatabaseId()];
 
         try {
@@ -209,7 +212,7 @@ class EPubReader
             throw new Exception('Unknown data ' . $idData);
         }
         if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, Config::get('calibre_external_storage'))) {
-            // URL format: full url to external epub file
+            // URL format: full url to external epub file here - let epubjs reader handle parsing etc. in browser
             $link = $book->getFilePath('EPUB', $idData, true);
             if (!$link) {
                 throw new Exception('Unknown link ' . $idData);
@@ -219,7 +222,7 @@ class EPubReader
             if (!$epub || !file_exists($epub)) {
                 throw new Exception('Unknown file ' . $epub);
             }
-            // URL format: zipfs.php/{db}/{idData}/{component}
+            // URL format: zipfs.php/{db}/{idData}/{component} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
             $link = Route::link($handler) . "/{$db}/{$idData}/";
         }
