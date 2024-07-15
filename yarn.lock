@@ -310,10 +310,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magnific-popup@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "magnific-popup@npm:1.1.0"
-  checksum: 10c0/3341ce714aac13a2bd5a7138ae05a428fdce2e782dcd0992c1303c3848b9f4525e44e8189e20d43fc8c19c57ad4d7af856703ac2fe6ef3bdfb81641dec209ca9
+"magnific-popup@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "magnific-popup@npm:1.2.0"
+  checksum: 10c0/a514020f16aa10310b774777a355caa73d39ad6670420ab59596194a15197162bc4f81704b20889275513380725c1d5f00a2c043a439050537600b17f5a0c623
   languageName: node
   linkType: hard
 
@@ -408,9 +408,9 @@ __metadata:
     jquery: "npm:^3.7.1"
     js-cookie: "npm:^2.2.1"
     lru-fast: "npm:^0.2.2"
-    magnific-popup: "npm:^1.1.0"
+    magnific-popup: "npm:^1.2.0"
     normalize.css: "npm:^8.0.1"
-    swagger-ui-dist: "npm:^5.17.6"
+    swagger-ui-dist: "npm:^5.17.14"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -431,10 +431,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.17.6":
-  version: 5.17.6
-  resolution: "swagger-ui-dist@npm:5.17.6"
-  checksum: 10c0/6bd64a7a14e913dfdbe960843f364d0fc474822436c8361d674694376b5a4604b9abd3672cee06c284686911e180c55488661b2cd5b408dcd5a9269480ce804e
+"swagger-ui-dist@npm:^5.17.14":
+  version: 5.17.14
+  resolution: "swagger-ui-dist@npm:5.17.14"
+  checksum: 10c0/cb61bba39e76d7d0d83da605a55e9504c1a5b421f9f13cced06d3e222f0a291594d417ec57b30a38aabe30d8a7e257c4977b8f0bba0e865d60f92b0a8ef4dfc1
   languageName: node
   linkType: hard
 

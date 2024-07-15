@@ -12,6 +12,9 @@ x.x.x - TODO
 
 2.7.x - 2024xxxx
   * ...
+  * Upgrade magnific-popup package to 1.2.0
+  * Upgrade swagger-ui-dist package and link to 5.17.14
+  * Update language files via Gitlocalize - see PRs from @horus68 and his intrepid band of translators ;-)
 
 2.7.1 - 20240526 Use external storage + settings for epubjs reader
   * Changes in config_default.php file:

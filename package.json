@@ -9,9 +9,9 @@
     "jquery": "^3.7.1",
     "js-cookie": "^2.2.1",
     "lru-fast": "^0.2.2",
-    "magnific-popup": "^1.1.0",
+    "magnific-popup": "^1.2.0",
     "normalize.css": "^8.0.1",
-    "swagger-ui-dist": "^5.17.6",
+    "swagger-ui-dist": "^5.17.14",
     "twig": "^1.17.1"
   },
   "license": "GPL-2.0-or-later"
