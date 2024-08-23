@@ -69,7 +69,7 @@ class PageIndex extends Page
                 "cops:{$i}:catalog",
                 str_format(localize("bookword", $nBooks), $nBooks),
                 "text",
-                [ new LinkNavigation(Route::page(null, ["db" => $i])) ],
+                [ new LinkNavigation(Route::link($this->handler, null, ["db" => $i])) ],
                 null,
                 "",
                 $nBooks
