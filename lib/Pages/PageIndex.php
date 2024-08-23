@@ -129,11 +129,12 @@ class PageIndex extends Page
             }
         }
         // @todo apply filter?
-        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
+        // for multi-database setup, not all databases may have all custom columns - see issue #89
+        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());
         foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
-            $customColumn->setHandler($this->handler);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
+                $customColumn->setHandler($this->handler);
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
@@ -193,11 +194,12 @@ class PageIndex extends Page
                 array_push($this->entryArray, $languages);
             }
         }
-        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'));
+        // for multi-database setup, not all databases may have all custom columns - see issue #89
+        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());
         foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
-            $customColumn->setHandler($this->handler);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
+                $customColumn->setHandler($this->handler);
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }

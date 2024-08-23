@@ -15,6 +15,8 @@ x.x.x - TODO
   * Upgrade magnific-popup package to 1.2.0
   * Upgrade swagger-ui-dist package and link to 5.17.14
   * Update language files via Gitlocalize - see PRs from @horus68 and his intrepid band of translators ;-)
+  * Fix transparent search suggestions box - see pull request #96 from @dunxd for issue #95 by @marioscube
+  * Catch potential null custom columns for multi-database setup - see issue #89 by @Chirishman
 
 2.7.1 - 20240526 Use external storage + settings for epubjs reader
   * Changes in config_default.php file:
