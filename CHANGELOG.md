@@ -4,7 +4,7 @@ For the original releases 0.0.1 to 1.1.3 see [CHANGELOG.seblucas](CHANGELOG.sebl
 or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 
 x.x.x - TODO
-  * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.0
+  * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.3
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
@@ -12,12 +12,15 @@ x.x.x - TODO
 
 2.7.x - 2024xxxx
   * ...
+
+2.7.3 - 20240823 Update language files + add fixes
   * Upgrade magnific-popup package to 1.2.0
   * Upgrade swagger-ui-dist package and link to 5.17.14
   * Update language files via Gitlocalize - see PRs from @horus68 and his intrepid band of translators ;-)
   * Fix transparent search suggestions box - see pull request #96 from @dunxd for issue #95 by @marioscube
   * Catch potential null custom columns for multi-database setup - see issue #89 by @Chirishman
   * Use link handler for database entries with multi-database setup - see issue #85 by @erdoking and @shaoyangx
+  * Upgrade kiwilan, mikespub, symfony and twig composer packages
 
 2.7.1 - 20240526 Use external storage + settings for epubjs reader
   * Changes in config_default.php file:
