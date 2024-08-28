@@ -1,29 +1,29 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Static method SebLucas\\\\Cops\\\\Calibre\\\\Annotation\\:\\:forgetAboutConvertAnnotations\\(\\) is unused\\.$#"
+			count: 1
+			path: lib/Calibre/Annotation.php
+
+		-
 			message: "#^Call to function is_null\\(\\) with SebLucas\\\\Cops\\\\Calibre\\\\CustomColumn will always evaluate to false\\.$#"
 			count: 1
 			path: lib/Calibre/Book.php
 
 		-
-			message: "#^If condition is always false\\.$#"
+			message: "#^Property SebLucas\\\\Cops\\\\Calibre\\\\CustomColumn\\:\\:\\$value \\(string\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
-			path: lib/Language/Transliteration.php
+			path: lib/Calibre/CustomColumn.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
+			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
 			count: 1
-			path: lib/Language/Transliteration.php
+			path: lib/Calibre/Metadata.php
 
 		-
-			message: "#^Offset string\\|null on array\\{\\} in isset\\(\\) does not exist\\.$#"
+			message: "#^Call to an undefined method DOMNode\\:\\:getElementsByTagName\\(\\)\\.$#"
 			count: 1
-			path: lib/Language/Transliteration.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: lib/Language/Transliteration.php
+			path: lib/Calibre/Metadata.php
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
@@ -32,10 +32,10 @@ parameters:
 
 		-
 			message: "#^Offset 'filters' on non\\-empty\\-array\\<string, mixed\\> in empty\\(\\) always exists and is always falsy\\.$#"
-			count: 1
-			path: lib/Output/JSON_renderer.php
+			count: 2
+			path: lib/Output/JsonRenderer.php
 
 		-
 			message: "#^Result of && is always false\\.$#"
 			count: 1
-			path: lib/Output/JSON_renderer.php
+			path: lib/Output/JsonRenderer.php
