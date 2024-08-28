@@ -7,6 +7,9 @@
 
 namespace SebLucas\Cops\Language;
 
+/**
+ * @deprecated 2.7.4 use PHP Transliterator instead
+ */
 class Transliteration
 {
     public const BASE_DIR = './resources/transliteration-data';

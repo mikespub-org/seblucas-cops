@@ -11,7 +11,9 @@ x.x.x - TODO
   * ...
 
 2.7.x - 2024xxxx
-  * ...
+  * Support splitting books or authors by non-ascii first letter
+  * Add kepubify tool to linuxserver docker image - see issue #77 by @SenorSmartyPants and linuxserver/docker-cops#56
+  * Drop old Transliteration class and use PHP Transliterator for normalized search option
 
 2.7.3 - 20240823 Update language files + add fixes
   * Upgrade magnific-popup package to 1.2.0

@@ -14,6 +14,8 @@ use SebLucas\Cops\Input\Config;
 class Translation
 {
     public const BASE_DIR = './lang';
+    /** @var ?\Transliterator */
+    protected static $transliterator;
     /** @var ?string */
     protected $acceptLanguageHeader;
 
@@ -174,7 +176,21 @@ class Translation
      */
     public static function normalizeUtf8String($s)
     {
-        return Transliteration::process($s);
+        //return Transliteration::process($s);
+
+        // ASCII is always valid NFC! If we're only ever given plain ASCII, we can
+        // avoid the overhead of initializing the transliterator by skipping
+        // out early.
+        if (!preg_match('/[\x80-\xff]/', $s)) {
+            return $s;
+        }
+
+        // see https://www.drupal.org/project/rename_admin_paths/issues/3275140 for different order
+        if (!isset(static::$transliterator)) {
+            static::$transliterator = transliterator_create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
+            //static::$transliterator = transliterator_create("Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;");
+        }
+        return transliterator_transliterate(static::$transliterator, $s);
     }
 
     /**
