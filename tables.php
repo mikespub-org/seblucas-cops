@@ -14,7 +14,7 @@ use SebLucas\Cops\Output\RestApi;
 
 require_once __DIR__ . '/config.php';
 
-header('Content-Type:text/html;charset=utf-8');
+header('Content-Type: text/html;charset=utf-8');
 
 $data = ['link' => Route::link(RestApi::$handler)];
 $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';

@@ -60,7 +60,7 @@ class RestApiHandler extends BaseHandler
 
         $path = $request->path();
         if (empty($path) || $path == '/restapi/') {
-            header('Content-Type:text/html;charset=utf-8');
+            header('Content-Type: text/html;charset=utf-8');
 
             $data = ['link' => Route::link(static::HANDLER) . '/openapi'];
             $template = dirname(__DIR__, 2) . '/templates/restapi.html';
@@ -70,7 +70,7 @@ class RestApiHandler extends BaseHandler
 
         $apiHandler = new RestApi($request);
 
-        header('Content-Type:application/json;charset=utf-8');
+        header('Content-Type: application/json;charset=utf-8');
 
         try {
             echo $apiHandler->getOutput();

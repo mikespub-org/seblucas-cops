@@ -28,7 +28,7 @@ class JsonHandler extends PageHandler
 
     public function handle($request)
     {
-        header('Content-Type:application/json;charset=utf-8');
+        header('Content-Type: application/json;charset=utf-8');
 
         echo json_encode(JsonRenderer::getJson($request));
     }

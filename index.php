@@ -12,5 +12,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config.php';
 
-// @todo handle 'json' routes correctly - see util.js
 Framework::run('index');

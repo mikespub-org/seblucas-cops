@@ -33,7 +33,7 @@ class HtmlHandler extends PageHandler
     {
         // If we detect that an OPDS reader try to connect try to redirect to feed.php
         if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $_SERVER['HTTP_USER_AGENT'])) {
-            header('Location: ' . Route::link("feed"));
+            header('Location: ' . Route::link("feed", null, ["db" => $request->database()]));
             return;
         }
 
@@ -57,7 +57,7 @@ class HtmlHandler extends PageHandler
             }
         }
 
-        header('Content-Type:text/html;charset=utf-8');
+        header('Content-Type: text/html;charset=utf-8');
 
         $html = new HtmlRenderer();
 

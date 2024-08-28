@@ -25,6 +25,9 @@ class CheckHandler extends BaseHandler
 
     public function handle($request)
     {
-        // ...
+        header('Content-Type: text/plain;charset=utf-8');
+
+        echo date(DATE_COOKIE) . "\n\n";
+        echo var_export($request, true);
     }
 }

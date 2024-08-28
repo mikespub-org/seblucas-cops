@@ -86,7 +86,7 @@ if (method_exists($handler, 'isDone')) {
     }
 }
 
-header('Content-Type:text/html;charset=utf-8');
+header('Content-Type: text/html;charset=utf-8');
 
 // handle the result yourself or let epub-loader generate the output
 $result = array_merge($gConfig, $result);
