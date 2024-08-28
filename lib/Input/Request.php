@@ -115,7 +115,7 @@ class Request
             $params = Route::match($path);
             if (is_null($params)) {
                 // this will call exit()
-                $this->notFound();
+                $this->notFound(null, "Invalid request path '$path'");
             }
             // @todo handle 'json' routes correctly - see util.js
             if (empty($params[Route::HANDLER_PARAM]) && $this->isAjax()) {

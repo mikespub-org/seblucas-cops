@@ -271,18 +271,18 @@
         },
         {
             "name": "npm-asset/babel--runtime",
-            "version": "v7.25.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/babel/babel.git",
-                "reference": "787c7cd6baa7f2bf691f52ea65a0f69105e9f27c"
-            },
+            "version": "7.25.4",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/babel/babel/zipball/787c7cd6baa7f2bf691f52ea65a0f69105e9f27c",
-                "reference": "787c7cd6baa7f2bf691f52ea65a0f69105e9f27c"
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.25.4.tgz"
             },
-            "type": "npm-asset"
+            "require": {
+                "npm-asset/regenerator-runtime": ">=0.14.0,<0.15.0"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "npm-asset/balanced-match",
@@ -456,6 +456,18 @@
             "dist": {
                 "type": "tar",
                 "url": "https://registry.npmjs.org/normalize.css/-/normalize.css-8.0.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/regenerator-runtime",
+            "version": "0.14.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -2190,12 +2202,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-webdriver/php-webdriver.git",
-                "reference": "11923b4ba312fc9d137266ae67438be65d4d500f"
+                "reference": "4c18b78d93e4a724ad2dd6427ed658e61a45c569"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/11923b4ba312fc9d137266ae67438be65d4d500f",
-                "reference": "11923b4ba312fc9d137266ae67438be65d4d500f",
+                "url": "https://api.github.com/repos/php-webdriver/php-webdriver/zipball/4c18b78d93e4a724ad2dd6427ed658e61a45c569",
+                "reference": "4c18b78d93e4a724ad2dd6427ed658e61a45c569",
                 "shasum": ""
             },
             "require": {
@@ -2249,7 +2261,7 @@
                 "issues": "https://github.com/php-webdriver/php-webdriver/issues",
                 "source": "https://github.com/php-webdriver/php-webdriver/tree/main"
             },
-            "time": "2024-04-26T16:49:05+00:00"
+            "time": "2024-08-27T08:23:19+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

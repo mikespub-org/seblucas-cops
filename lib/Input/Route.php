@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Input;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Pages\PageId;
 
 use function FastRoute\simpleDispatcher;
 
@@ -29,104 +28,7 @@ class Route
     /** @var ?string */
     protected static $baseUrl = null;
     /** @var array<string, mixed> */
-    protected static $routes = [
-        // Format: route => page, or route => [page => page, fixed => 1, ...] with fixed params
-        "/index" => PageId::INDEX,
-        "/authors/letter/{id}" => PageId::AUTHORS_FIRST_LETTER,
-        "/authors/letter" => ["page" => PageId::ALL_AUTHORS, "letter" => 1],
-        "/authors/{id}/{title}" => PageId::AUTHOR_DETAIL,
-        "/authors/{id}" => PageId::AUTHOR_DETAIL,
-        "/authors" => PageId::ALL_AUTHORS,
-        "/books/letter/{id}" => PageId::ALL_BOOKS_LETTER,
-        "/books/letter" => ["page" => PageId::ALL_BOOKS, "letter" => 1],
-        "/books/year/{id}" => PageId::ALL_BOOKS_YEAR,
-        "/books/year" => ["page" => PageId::ALL_BOOKS, "year" => 1],
-        "/books/{id}/{author}/{title}" => PageId::BOOK_DETAIL,
-        "/books/{id}" => PageId::BOOK_DETAIL,
-        "/books" => PageId::ALL_BOOKS,
-        "/series/{id}/{title}" => PageId::SERIE_DETAIL,
-        "/series/{id}" => PageId::SERIE_DETAIL,
-        "/series" => PageId::ALL_SERIES,
-        "/search/{query}/{scope}" => PageId::OPENSEARCH_QUERY,
-        "/search/{query}" => PageId::OPENSEARCH_QUERY,
-        "/search" => PageId::OPENSEARCH,
-        "/recent" => PageId::ALL_RECENT_BOOKS,
-        "/tags/{id}/{title}" => PageId::TAG_DETAIL,
-        "/tags/{id}" => PageId::TAG_DETAIL,
-        "/tags" => PageId::ALL_TAGS,
-        "/custom/{custom}/{id}" => PageId::CUSTOM_DETAIL,
-        "/custom/{custom}" => PageId::ALL_CUSTOMS,
-        "/about" => PageId::ABOUT,
-        "/languages/{id}/{title}" => PageId::LANGUAGE_DETAIL,
-        "/languages/{id}" => PageId::LANGUAGE_DETAIL,
-        "/languages" => PageId::ALL_LANGUAGES,
-        "/customize" => PageId::CUSTOMIZE,
-        "/publishers/{id}/{title}" => PageId::PUBLISHER_DETAIL,
-        "/publishers/{id}" => PageId::PUBLISHER_DETAIL,
-        "/publishers" => PageId::ALL_PUBLISHERS,
-        "/ratings/{id}/{title}" => PageId::RATING_DETAIL,
-        "/ratings/{id}" => PageId::RATING_DETAIL,
-        "/ratings" => PageId::ALL_RATINGS,
-        "/identifiers/{id}/{title}" => PageId::IDENTIFIER_DETAIL,
-        "/identifiers/{id}" => PageId::IDENTIFIER_DETAIL,
-        "/identifiers" => PageId::ALL_IDENTIFIERS,
-        "/libraries" => PageId::ALL_LIBRARIES,
-        // extra routes supported by REST API
-        "/custom" => [self::HANDLER_PARAM => "restapi"],
-        "/databases/{db}/{name}" => [self::HANDLER_PARAM => "restapi"],
-        "/databases/{db}" => [self::HANDLER_PARAM => "restapi"],
-        "/databases" => [self::HANDLER_PARAM => "restapi"],
-        "/openapi" => [self::HANDLER_PARAM => "restapi"],
-        "/routes" => [self::HANDLER_PARAM => "restapi"],
-        "/notes/{type}/{id}/{title}" => [self::HANDLER_PARAM => "restapi"],
-        "/notes/{type}/{id}" => [self::HANDLER_PARAM => "restapi"],
-        "/notes/{type}" => [self::HANDLER_PARAM => "restapi"],
-        "/notes" => [self::HANDLER_PARAM => "restapi"],
-        "/preferences/{key}" => [self::HANDLER_PARAM => "restapi"],
-        "/preferences" => [self::HANDLER_PARAM => "restapi"],
-        "/annotations/{bookId}/{id}" => [self::HANDLER_PARAM => "restapi"],
-        "/annotations/{bookId}" => [self::HANDLER_PARAM => "restapi"],
-        "/annotations" => [self::HANDLER_PARAM => "restapi"],
-        "/metadata/{bookId}/{element}/{name}" => [self::HANDLER_PARAM => "restapi"],
-        "/metadata/{bookId}/{element}" => [self::HANDLER_PARAM => "restapi"],
-        "/metadata/{bookId}" => [self::HANDLER_PARAM => "restapi"],
-        "/user/details" => [self::HANDLER_PARAM => "restapi"],
-        "/user" => [self::HANDLER_PARAM => "restapi"],
-        "/restapi/{route:.*}" => [self::HANDLER_PARAM => "restapi"],
-        // extra routes supported by other endpoints (path starts with endpoint param)
-        "/calres/{db:\d+}/{alg}/{digest}" => [self::HANDLER_PARAM => "calres"],
-        // support custom pattern for route placeholders - see nikic/fast-route
-        "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [self::HANDLER_PARAM => "zipfs"],
-        "/epubfs/{data:\d+}/{comp:.+}" => [self::HANDLER_PARAM => "epubfs"],
-        "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [self::HANDLER_PARAM => "loader"],
-        "/loader/{action}/{dbNum:\d+}" => [self::HANDLER_PARAM => "loader"],
-        "/loader/{action}/" => [self::HANDLER_PARAM => "loader"],
-        "/loader/{action}" => [self::HANDLER_PARAM => "loader"],
-        "/loader" => [self::HANDLER_PARAM => "loader"],
-        "/check" => [self::HANDLER_PARAM => "check"],
-        "/feed/{page}/{id}" => [self::HANDLER_PARAM => "feed"],
-        "/feed/{page}" => [self::HANDLER_PARAM => "feed"],
-        "/feed" => [self::HANDLER_PARAM => "feed"],
-        "/mail" => [self::HANDLER_PARAM => "mail"],
-        "/opds/{page}/{id}" => [self::HANDLER_PARAM => "opds"],
-        "/opds/{page}" => [self::HANDLER_PARAM => "opds"],
-        "/opds" => [self::HANDLER_PARAM => "opds"],
-        "/read/{db:\d+}/{data:\d+}" => [self::HANDLER_PARAM => "read"],
-        // check if the path starts with the endpoint param or not here
-        "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [self::HANDLER_PARAM => "fetch"],
-        "/covers/{db:\d+}/{id:\d+}.jpg" => [self::HANDLER_PARAM => "fetch"],
-        "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch", "view" => 1],
-        "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
-        // handle endpoint with page param
-        "/zipper/{page}/{type}/{id}" => [self::HANDLER_PARAM => "zipper"],
-        "/zipper/{page}/{type}" => [self::HANDLER_PARAM => "zipper"],
-        "/zipper/{page}" => [self::HANDLER_PARAM => "zipper"],
-        // @todo handle url rewriting if enabled separately - path parameters are different
-        "/view/{data}/{db}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch", "view" => 1],
-        "/view/{data}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch", "view" => 1],
-        "/download/{data}/{db}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
-        "/download/{data}/{ignore}.{type}" => [self::HANDLER_PARAM => "fetch"],
-    ];
+    protected static $routes = [];
     /** @var string[] */
     protected static $skipPrefix = ['index', 'json', 'fetch', 'restapi'];  // @todo handle 'json' routes correctly - see util.js
     /** @var Dispatcher|null */
@@ -287,6 +189,16 @@ class Route
     public static function addRoutes($routes)
     {
         static::$routes = array_merge(static::$routes, $routes);
+    }
+
+    /**
+     * Set routes
+     * @param array<string, array<mixed>> $routes
+     * @return void
+     */
+    public static function setRoutes($routes = [])
+    {
+        static::$routes = $routes;
     }
 
     /**

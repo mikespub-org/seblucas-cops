@@ -26,18 +26,7 @@ class FrameworkTest extends TestCase
      */
     public function testAddRoutes(): void
     {
-        $expected = 89;
-        $this->assertEquals($expected, Route::count());
-        $routes = Route::getRoutes();
-
-        // change protected property using closure bind & call or use reflection
-        $resetRoutes = static function () {
-            Route::$routes = [];
-            return true;
-        };
-        $resetRoutes = \Closure::bind($resetRoutes, null, Route::class);
-        $result = $resetRoutes();
-        $this->assertTrue($result);
+        Route::setRoutes();
 
         $expected = 0;
         $this->assertEquals($expected, Route::count());
@@ -46,8 +35,5 @@ class FrameworkTest extends TestCase
 
         $expected = 89;
         $this->assertEquals($expected, Route::count());
-
-        $expected = $routes;
-        $this->assertEquals($expected, Route::getRoutes());
     }
 }

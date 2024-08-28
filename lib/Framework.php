@@ -47,6 +47,8 @@ class Framework
         // @todo route to the right handler if needed
         if (empty($name)) {
             $name = $request->getHandler();
+        } elseif (Input\Config::get('use_route_urls')) {
+            $name = $request->getHandler($name);
         }
         // special case for json requests here
         if ($name == 'index' && $request->isJson()) {

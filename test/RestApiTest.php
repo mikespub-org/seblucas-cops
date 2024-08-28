@@ -20,6 +20,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Framework;
 
 class RestApiTest extends TestCase
 {
@@ -32,6 +33,7 @@ class RestApiTest extends TestCase
         self::$script = $_SERVER["SCRIPT_NAME"];
         // try out route urls
         Config::set('use_route_urls', true);
+        Framework::addRoutes();
     }
 
     public static function tearDownAfterClass(): void
