@@ -187,8 +187,8 @@ class Translation
 
         // see https://www.drupal.org/project/rename_admin_paths/issues/3275140 for different order
         if (!isset(static::$transliterator)) {
-            static::$transliterator = transliterator_create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
-            //static::$transliterator = transliterator_create("Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;");
+            //static::$transliterator = transliterator_create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
+            static::$transliterator = transliterator_create("Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;");
         }
         return transliterator_transliterate(static::$transliterator, $s);
     }

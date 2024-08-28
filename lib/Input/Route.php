@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Input;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Language\Translation;
 
 use function FastRoute\simpleDispatcher;
 
@@ -515,19 +516,9 @@ class Route
      */
     public static function slugify($string)
     {
-        static $transliterator;
-
         $string = str_replace([' ', '&', '"'], ['_', '-', ''], trim($string));
-        if (!preg_match('/[\x80-\xff]/', $string)) {
-            return $string;
-        }
 
-        // see https://www.drupal.org/project/rename_admin_paths/issues/3275140 for different order
-        if (!isset($transliterator)) {
-            $transliterator = transliterator_create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
-            //$transliterator = transliterator_create("Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;");
-        }
-        return transliterator_transliterate($transliterator, $string);
+        return Translation::normalizeUtf8String($string);
     }
 
     /**
