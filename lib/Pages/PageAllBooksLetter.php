@@ -23,7 +23,7 @@ class PageAllBooksLetter extends Page
     public function InitializeContent()
     {
         // this would be the first letter - override here
-        $this->idGet = $this->request->get('id', null, '/^\w$/');
+        $this->idGet = $this->request->get('id', null, '/^\p{L}$/u');
         $this->getEntries();
         $this->idPage = Book::getEntryIdByLetter($this->idGet);
         $count = $this->totalNumber;
