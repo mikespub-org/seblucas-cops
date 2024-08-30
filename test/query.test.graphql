@@ -1,0 +1,71 @@
+query getCombo {
+  authors {
+    id
+    title
+  }
+  publishers {
+    id
+    title
+    books {
+      id
+      title
+      path
+      authors {
+        id
+        title
+      }
+    }
+  }
+}
+query getAuthor($id: ID) {
+  author(id: $id) {
+    id
+    title
+    books {
+      id
+      title
+      path
+      content
+      linkArray {
+        href
+        type
+        rel
+        title
+      }
+    }
+  }
+}
+query getBooks {
+  books {
+    id
+    title
+    path
+    authors {
+      id
+      title
+    }
+    linkArray {
+      href
+      type
+      rel
+      title
+    }
+  }
+}
+query getData($id: ID) {
+  data(id: $id) {
+    id
+    name
+    format
+    uncompressedSize
+    book {
+      id
+      title
+      path
+      authors {
+        id
+        title
+      }
+    }
+  }
+}

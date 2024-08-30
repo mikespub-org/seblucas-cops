@@ -40,7 +40,7 @@
         "npm-asset/corejs-typeahead": "^1.3",
         "npm-asset/twig": "^1.17",
         "phpmailer/phpmailer": "^6.9",
-        "twig/twig": "^3.11"
+        "twig/twig": "^3.12"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.1",
@@ -51,7 +51,8 @@
         "symfony/http-client": "^6.4||^7.1",
         "symfony/http-foundation": "^6.4||^7.1",
         "mikespub/epub-loader": "^1.5||^2.5||^3.1",
-        "opis/json-schema": "^2.3"
+        "opis/json-schema": "^2.3",
+        "webonyx/graphql-php": "^15.13"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks",

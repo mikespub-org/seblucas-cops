@@ -273,9 +273,9 @@ class BaseList
     public function getRequestEntries($n = 1)
     {
         if ($this->request->hasFilter()) {
-            return static::getEntriesByFilter($n);
+            return $this->getEntriesByFilter($n);
         }
-        return static::getAllEntries($n);
+        return $this->getAllEntries($n);
     }
 
     /**

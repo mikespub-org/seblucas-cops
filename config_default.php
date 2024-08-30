@@ -310,6 +310,13 @@ $config['calibre_categories_using_hierarchy'] = [];
 $config['cops_provide_kepub'] = '0';
 
 /*
+ * Use external 'kepubify' tool to convert .epub files to .kepub.epub format for Kobo - @todo
+ * Example:
+ * $config['cops_kepubify_path'] = '/usr/bin/kepubify';
+ */
+$config['cops_kepubify_path'] = '';
+
+/*
  * Enable and configure Send To Kindle (or Email) feature.
  *
  * Don't forget to authorize the sender email you configured in your Kindle's  Approved Personal Document E-mail List.

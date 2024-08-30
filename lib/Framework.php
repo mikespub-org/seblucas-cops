@@ -33,6 +33,7 @@ class Framework
         "calres" => Handlers\CalResHandler::class,
         "zipfs" => Handlers\ZipFsHandler::class,
         "mail" => Handlers\MailHandler::class,
+        "graphql" => Handlers\GraphQLHandler::class,
     ];
 
     /**

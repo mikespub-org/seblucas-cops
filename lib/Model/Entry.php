@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Model;
 
+use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
@@ -30,6 +31,8 @@ class Entry
     protected static $updated = null;
     /** @var ?int */
     protected $databaseId;
+    /** @var ?Base */
+    public $instance;
 
     /** @var array<string, string> */
     public static $icons = [

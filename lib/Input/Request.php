@@ -22,7 +22,7 @@ class Request
     protected string $queryString = '';
     protected string $pathInfo = '';
     protected bool $parsed = true;
-    protected ?string $content = null;
+    public ?string $content = null;
 
     /**
      * Summary of __construct
@@ -49,6 +49,15 @@ class Request
     public function query()
     {
         return $this->queryString;
+    }
+
+    /**
+     * Summary of method
+     * @return ?string
+     */
+    public function method()
+    {
+        return $this->server('REQUEST_METHOD');
     }
 
     /**

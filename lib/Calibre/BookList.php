@@ -325,7 +325,7 @@ class BookList
      * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
-    public function getAllBooks($n)
+    public function getAllBooks($n = 1)
     {
         [$entryArray, $totalNumber] = $this->getEntryArray(static::SQL_BOOKS_ALL, [], $n);
         return [$entryArray, $totalNumber];

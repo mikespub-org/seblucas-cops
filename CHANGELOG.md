@@ -11,6 +11,12 @@ x.x.x - TODO
   * ...
 
 2.7.x - 2024xxxx
+  * Changes in config_default.php file:
+    - new $config['cops_kepubify_path']
+  * Start experimental GraphQL interface (dev only) (TODO)
+  * Upgrade twig/twig package and add webonyx/graphql-php package (dev only)
+
+2.7.4 - 20240828 Replace Transliteration + prepare using kepubify
   * Support splitting books or authors by non-ascii first letter
   * Add kepubify tool to linuxserver docker image - see issue #77 by @SenorSmartyPants and linuxserver/docker-cops#56
   * Drop old Transliteration class and use PHP Transliterator for normalized search option

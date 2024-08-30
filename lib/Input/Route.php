@@ -31,7 +31,7 @@ class Route
     /** @var array<string, mixed> */
     protected static $routes = [];
     /** @var string[] */
-    protected static $skipPrefix = ['index', 'json', 'fetch', 'restapi'];  // @todo handle 'json' routes correctly - see util.js
+    protected static $skipPrefix = ['index', 'json', 'fetch', 'restapi', 'graphql'];  // @todo handle 'json' routes correctly - see util.js
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
     /** @var array<string, mixed> */
@@ -241,7 +241,7 @@ class Route
     {
         $handler ??= 'index';
         // @todo take into account handler when building page url, e.g. feed or zipper
-        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'restapi'])) {
+        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'restapi', 'graphql'])) {
             $params[Route::HANDLER_PARAM] = $handler;
         } else {
             unset($params[Route::HANDLER_PARAM]);

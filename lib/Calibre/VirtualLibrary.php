@@ -48,9 +48,9 @@ class VirtualLibrary extends Base
     {
         // get home page from Config
         $homepage = PageId::getHomePage();
-         // we need databaseId here because we use Route::link with $handler
-         $params['db'] = $this->getDatabaseId();
-         if (!empty($this->id)) {
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->getDatabaseId();
+        if (!empty($this->id)) {
             // URL format: ...&vl=2.Short_Stories_in_English
             $params[static::URL_PARAM] = static::formatParameter($this->id, $this->getTitle());
         }

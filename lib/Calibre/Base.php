@@ -199,7 +199,7 @@ abstract class Base
      */
     public function getEntry($count = 0, $params = [])
     {
-        return new Entry(
+        $entry = new Entry(
             $this->getTitle(),
             $this->getEntryId(),
             $this->getContent($count),
@@ -209,6 +209,8 @@ abstract class Base
             $this->getClassName(),
             $count
         );
+        $entry->instance = $this;
+        return $entry;
     }
 
     /** Use inherited class methods to get entries from <Whatever> by instance (linked via books) */
