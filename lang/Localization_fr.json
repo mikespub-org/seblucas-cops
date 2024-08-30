@@ -55,6 +55,7 @@
   "downloadall.title": "Télécharger tout",
   "downloadall.tooltip": "Téléchargez un fichier zip contenant tous les livres de cette page dans ce format",
   "extra.content": "Description",
+  "extra.files": "Fichiers",
   "extra.link": "Lien",
   "extra.title": "Informations supplémentaires",
   "filter.clearall": "Effacer tout",
