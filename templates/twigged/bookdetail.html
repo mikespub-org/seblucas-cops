@@ -85,6 +85,11 @@
         <h4>{{column.customColumnType.columnTitle}}: {{column.htmlvalue}}</h4>
     </p>
     {% endfor %}
+    {% if it.book.extraFiles != "" %}
+    <p>
+        <h4>{{it.c.i18n.filesTitle}}: {% for extraFile in it.book.extraFiles %}<a href="{{extraFile.url}}">{{extraFile.name|escape}}</a> {% endfor %}</h4>
+    </p>
+    {% endif %}
 
 </div>
 

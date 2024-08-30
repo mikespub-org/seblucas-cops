@@ -70,6 +70,11 @@
         <h4>{{=column.customColumnType.columnTitle}}: </h4>{{=column.htmlvalue}}
     </p>
     {{~}}
+    {{? it.book.extraFiles != ""}}
+    <p>
+        <h4>{{=it.c.i18n.filesTitle}}: </h4>{{~it.book.extraFiles:extraFile:i}}<a href="{{=extraFile.url}}">{{=htmlspecialchars (extraFile.name)}}</a> {{~}}
+    </p>
+    {{?}}
     {{? it.book.content != ""}}
     <br />
     <h4>{{=it.c.i18n.contentTitle}}</h4>

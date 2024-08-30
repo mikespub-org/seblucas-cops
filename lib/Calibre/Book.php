@@ -39,6 +39,7 @@ class Book
     left outer join ratings on books_ratings_link.rating = ratings.id ';
 
     public const BAD_SEARCH = 'QQQQQ';
+    public const DATA_DIR_NAME = 'data';
 
     /** @var int */
     public $id;
@@ -66,6 +67,8 @@ class Book
     protected $databaseId = null;
     /** @var ?array<Data> */
     public $datas = null;
+    /** @var ?array<string> */
+    public $extraFiles = null;
     /** @var ?array<Author> */
     public $authors = null;
     /** @var Publisher|false|null */
@@ -361,6 +364,28 @@ class Book
             $this->datas = static::getDataByBook($this);
         }
         return $this->datas;
+    }
+
+    /**
+     * Get extra data files associated with this book
+     * @see https://manual.calibre-ebook.com/metadata.html#data-files
+     * @return array<string>
+     */
+    public function getExtraFiles()
+    {
+        if (is_null($this->extraFiles)) {
+            $this->extraFiles = [];
+            $dataPath = $this->path . '/' . static::DATA_DIR_NAME . '/';
+            if (empty(Config::get('calibre_external_storage')) && is_dir($dataPath)) {
+                $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dataPath));
+                foreach ($iterator as $file) {
+                    if ($file->isDir()) continue;
+                    if (!str_starts_with($file->getPathname(), $dataPath)) continue;
+                    array_push($this->extraFiles, substr($file->getPathname(), strlen($dataPath)));
+                }
+            }
+        }
+        return $this->extraFiles;
     }
 
     /**

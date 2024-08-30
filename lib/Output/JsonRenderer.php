@@ -140,6 +140,15 @@ class JsonRenderer
             }
             array_push($out ["datas"], $tab);
         }
+        $out ["extraFiles"] = [];
+        $dataPath = $book->path . '/' . Book::DATA_DIR_NAME;
+        foreach ($book->getExtraFiles() as $fileName) {
+            // @todo use LinkEntry format in the future?
+            $filePath = $dataPath . '/' . $fileName;
+            $length = filesize($filePath);
+            $mtime = date(DATE_ATOM, filemtime($filePath));
+            array_push($out ["extraFiles"], ["name" => $fileName, "length" => $length, "mtime" => $mtime, "url" => 'TODO']);
+        }
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
             $author->setHandler($handler);
@@ -281,6 +290,7 @@ class JsonRenderer
                 "librariesTitle" => localize("libraries.title"),
                 "libraryTitle" => localize("library.title"),
                 "linkTitle" => localize("extra.link"),
+                "filesTitle" => localize("extra.files"),
                 "titleTitle" => localize("title.title"),
                 "filtersTitle" => localize("filters.title"),
                 "downloadAllTitle" => localize("downloadall.title"),

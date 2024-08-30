@@ -55,6 +55,7 @@
     "downloadall.title": "Download all",
     "downloadall.tooltip": "Download a zip file containing all books on this page in this format",
     "extra.content": "Description",
+    "extra.files": "Files",
     "extra.link": "Link",
     "extra.title": "Extra Information",
     "filter.clearall": "Clear all",

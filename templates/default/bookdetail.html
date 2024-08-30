@@ -73,6 +73,14 @@
     {{?}}
     </p>
     {{~}}
+    {{? it.book.extraFiles != ""}}
+    <p class="popupless">
+        <h3>{{=it.c.i18n.filesTitle}}: </h3>
+        {{~it.book.extraFiles:extraFile:i}}
+        <a href="{{=extraFile.url}}" {{=it.c.config.kindleHack}}>{{=htmlspecialchars (extraFile.name)}}</a>
+        {{~}}
+    </p>
+    {{?}}
     {{? it.book.content != ""}}
     <br />
     <h4>{{=it.c.i18n.contentTitle}}</h4>

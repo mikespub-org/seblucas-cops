@@ -57,6 +57,9 @@
             {{~it.book.customcolumns_preview :column:column_index}}
             <p><span class="fw-bold">{{=column.customColumnType.columnTitle}}</span>: {{=column.htmlvalue}}</p>
             {{~}}
+            {{? it.book.extraFiles != ""}}
+            <p><span class="fw-bold">{{=it.c.i18n.filesTitle}}</span>: {{~it.book.extraFiles:extraFile:i}}<a href="{{=extraFile.url}}">{{=htmlspecialchars (extraFile.name)}}</a> {{~}}</p>
+            {{?}}
         </div>
     </div>
 </div>
