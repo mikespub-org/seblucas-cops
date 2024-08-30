@@ -12,11 +12,13 @@ namespace SebLucas\Cops\Handlers;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
+use SebLucas\Cops\Calibre\Data;
 
 /**
  * Fetch book covers or files
  * URL format: fetch.php?id={bookId}&type={type}&data={idData}&view={viewOnly}
  *          or fetch.php?id={bookId}&thumb={thumb} for book cover thumbnails
+ *          or fetch.php?id={bookId}&file={file} for extra data file for this book
  */
 class FetchHandler extends BaseHandler
 {
@@ -26,6 +28,8 @@ class FetchHandler extends BaseHandler
     {
         // check if the path starts with the endpoint param or not here
         return [
+            // support custom pattern for route placeholders - see nikic/fast-route
+            "/files/{db:\d+}/{id:\d+}/{file:.+}" => [static::PARAM => static::HANDLER],
             "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [static::PARAM => static::HANDLER],
             "/covers/{db:\d+}/{id:\d+}.jpg" => [static::PARAM => static::HANDLER],
             "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => [static::PARAM => static::HANDLER, "view" => 1],
@@ -57,6 +61,7 @@ class FetchHandler extends BaseHandler
         $idData   = $request->getId('data');
         $viewOnly = $request->get('view', false);
         $database = $request->database();
+        $file     = $request->get('file');
 
         if (is_null($bookId)) {
             $book = Book::getBookByDataId($idData, $database);
@@ -67,6 +72,27 @@ class FetchHandler extends BaseHandler
         if (!$book) {
             // this will call exit()
             $request->notFound();
+        }
+
+        if (!empty($file)) {
+            $extraFiles = $book->getExtraFiles();
+            if ($file == 'zipped') {
+                // @todo zip all extra files and send back
+                echo 'TODO: zip all extra files and send back';
+                return;
+            }
+            if (!in_array($file, $extraFiles)) {
+                // this will call exit()
+                $request->notFound();
+            }
+            // send back extra file
+            $filepath = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $file;
+            if (!file_exists($filepath)) {
+                // this will call exit()
+                $request->notFound();
+            }
+            $this->sendFile($filepath);
+            return;
         }
 
         // -DC- Add png type
@@ -127,12 +153,41 @@ class FetchHandler extends BaseHandler
         //}
         $dir = '';
 
+        // @todo clean up nginx x_accel_redirect
         if (empty(Config::get('x_accel_redirect'))) {
             $filename = $dir . $file;
             header('Content-Length: ' . filesize($filename));
             readfile($filename);
         } else {
             header(Config::get('x_accel_redirect') . ': ' . $dir . $file);
+        }
+    }
+
+    public function sendFile($filepath)
+    {
+        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
+        if (array_key_exists($extension, Data::$mimetypes)) {
+            $mimetype = Data::$mimetypes[$extension];
+        } else {
+            $mimetype = mime_content_type($filepath);
+            if (!$mimetype) {
+                $mimetype = 'application/octet-stream';
+            }
+        }
+
+        $expires = 60 * 60 * 24 * 14;
+        header('Pragma: public');
+        header('Cache-Control: max-age=' . $expires);
+        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+        header('Content-Type: ' . $mimetype);
+        header('Content-Disposition: attachment; filepath="' . basename($filepath) . '"');
+
+        // @todo clean up nginx x_accel_redirect
+        if (empty(Config::get('x_accel_redirect'))) {
+            header('Content-Length: ' . filesize($filepath));
+            readfile($filepath);
+        } else {
+            header(Config::get('x_accel_redirect') . ': ' . $filepath);
         }
     }
 }

@@ -141,13 +141,9 @@ class JsonRenderer
             array_push($out ["datas"], $tab);
         }
         $out ["extraFiles"] = [];
-        $dataPath = $book->path . '/' . Book::DATA_DIR_NAME;
         foreach ($book->getExtraFiles() as $fileName) {
-            // @todo use LinkEntry format in the future?
-            $filePath = $dataPath . '/' . $fileName;
-            $length = filesize($filePath);
-            $mtime = date(DATE_ATOM, filemtime($filePath));
-            array_push($out ["extraFiles"], ["name" => $fileName, "length" => $length, "mtime" => $mtime, "url" => 'TODO']);
+            $link = $book->getExtraFileLink($fileName);
+            array_push($out ["extraFiles"], ["name" => $link->title, "url" => $link->hrefXhtml(), "length" => $link->length, "mtime" => $link->mtime]);
         }
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {

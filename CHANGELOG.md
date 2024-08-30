@@ -15,6 +15,7 @@ x.x.x - TODO
     - new $config['cops_kepubify_path']
   * Start experimental GraphQL interface (dev only) (TODO)
   * Upgrade twig/twig package and add webonyx/graphql-php package (dev only)
+  * Show extra data files in book detail - see feature #97 by @russell-phillips
 
 2.7.4 - 20240828 Replace Transliteration + prepare using kepubify
   * Support splitting books or authors by non-ascii first letter

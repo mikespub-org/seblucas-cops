@@ -389,6 +389,38 @@ class Book
     }
 
     /**
+     * Summary of getExtraFileLink
+     * @param string $fileName
+     * @return LinkEntry
+     */
+    public function getExtraFileLink($fileName)
+    {
+        $filePath = $this->path . '/' . static::DATA_DIR_NAME . '/' . $fileName;
+        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+        if (array_key_exists($extension, Data::$mimetypes)) {
+            $mimetype = Data::$mimetypes[$extension];
+        } else {
+            $mimetype = mime_content_type($filePath);
+            if (!$mimetype) {
+                $mimetype = 'application/octet-stream';
+            }
+        }
+        if (Database::useAbsolutePath($this->databaseId)) {
+            $params = ['id' => $this->id, 'db' => $this->databaseId];
+            if (Config::get('use_route_urls') && is_null($params['db'])) {
+                $params['db'] = 0;
+            }
+            $params['file'] = $fileName;
+            $url = Route::link("fetch", null, $params);
+        } else {
+            $url = Route::url(str_replace('%2F', '/', rawurlencode($filePath)));
+        }
+        $linkEntry = new LinkEntry($url, $mimetype, 'related', $fileName);
+        $linkEntry->addFileInfo($filePath);
+        return $linkEntry;
+    }
+
+    /**
      * Summary of GetMostInterestingDataToSendToKindle
      * @return ?Data
      */
