@@ -8,13 +8,14 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Output\Zipper;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\Zipper;
 use SebLucas\Cops\Pages\PageId;
 
 class ZipperTest extends TestCase

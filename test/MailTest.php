@@ -8,13 +8,14 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Output\Mail;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Output\Mail;
 
 class MailTest extends TestCase
 {

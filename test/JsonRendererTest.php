@@ -20,7 +20,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
 
-class JsonTest extends TestCase
+class JsonRendererTest extends TestCase
 {
     private static string $handler = 'phpunit';
 

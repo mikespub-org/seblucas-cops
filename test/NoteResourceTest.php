@@ -8,18 +8,19 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Calibre\Note;
+use SebLucas\Cops\Calibre\Resource;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Calibre\Note;
-use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 
-class NotesTest extends TestCase
+class NoteResourceTest extends TestCase
 {
     private static Author $author;
     /** @var array<string, int> */

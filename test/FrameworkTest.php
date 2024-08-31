@@ -8,9 +8,10 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Framework;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Route;
 
 class FrameworkTest extends TestCase
@@ -65,5 +66,21 @@ class FrameworkTest extends TestCase
 
         $expected = 15;
         $this->assertCount($expected, $handlers);
+    }
+
+    /**
+     * Summary of testRun
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testRun(): void
+    {
+        ob_start();
+        Framework::run();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = "<title>COPS</title>";
+        $this->assertStringContainsString($expected, $output);
     }
 }

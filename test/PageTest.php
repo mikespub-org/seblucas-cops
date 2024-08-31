@@ -8,15 +8,15 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Pages\PageId;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
-use SebLucas\Cops\Pages\PageId;
 
 class PageTest extends TestCase
 {
@@ -1173,25 +1173,5 @@ class PageTest extends TestCase
         $this->assertEquals("Template", $currentPage->entryArray [0]->title);
         $this->assertEquals("Virtual library", $currentPage->entryArray [7]->title);
         $this->assertFalse($currentPage->containsBook());
-    }
-
-    /**
-     * Summary of testHtmlHandler
-     * @runInSeparateProcess
-     * @return void
-     */
-    public function testHtmlHandler(): void
-    {
-        $page = PageId::ALL_RECENT_BOOKS;
-        $request = Request::build(['page' => $page]);
-        $handler = Framework::getHandler('index');
-
-        ob_start();
-        $handler->handle($request);
-        $headers = headers_list();
-        $output = ob_get_clean();
-
-        $expected = "getJSON.php?page=10&complete=1";
-        $this->assertStringContainsString($expected, $output);
     }
 }

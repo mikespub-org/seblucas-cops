@@ -8,12 +8,13 @@
 
 namespace SebLucas\Cops\Tests;
 
-require_once __DIR__ . '/config_test.php';
-use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Cover;
+
+require_once __DIR__ . '/config_test.php';
+use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;

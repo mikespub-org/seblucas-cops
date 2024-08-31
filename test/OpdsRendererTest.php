@@ -20,7 +20,7 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
 
-class OpdsTest extends TestCase
+class OpdsRendererTest extends TestCase
 {
     public const OPDS_RELAX_NG = __DIR__ . "/opds-relax-ng/opds_catalog_1_2.rng";
     public const OPENSEARCHDESCRIPTION_RELAX_NG = __DIR__ . "/opds-relax-ng/opensearchdescription.rng";

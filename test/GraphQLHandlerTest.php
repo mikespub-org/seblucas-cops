@@ -9,17 +9,17 @@
 
 namespace SebLucas\Cops\Tests;
 
-use GraphQL\Type\Schema;
-use SebLucas\Cops\Framework;
 use SebLucas\Cops\Handlers\GraphQLHandler;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use GraphQL\Type\Schema;
 
-class GraphQLTest extends TestCase
+class GraphQLHandlerTest extends TestCase
 {
     private static string $handler = 'graphql';
     private static int $numberPerPage;

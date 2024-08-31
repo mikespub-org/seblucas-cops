@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Calibre\Filter;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
@@ -19,7 +21,6 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\CustomColumn;
-use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Input\Config;

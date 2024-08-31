@@ -8,12 +8,13 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Pages\PageId;
+
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Pages\PageId;
 
 class PageMultiDatabaseTest extends TestCase
 {
