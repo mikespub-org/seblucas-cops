@@ -11,12 +11,15 @@ x.x.x - TODO
   * ...
 
 2.7.x - 2024xxxx
+  * ...
+
+2.7.5 - 20240831 Show extra data files in book detail + start GraphQL
   * Changes in config_default.php file:
     - new $config['cops_kepubify_path']
-  * Start experimental GraphQL interface (dev only) (TODO)
+  * Start experimental GraphQL interface (dev only)
   * Upgrade twig/twig package and add webonyx/graphql-php package (dev only)
   * Show extra data files in book detail - see feature #97 by @russell-phillips
-  * Add tests for new handler classes
+  * Add tests for new handler classes + clean-up tests
   * Remove deprecated methods for releases older than 2.7.4
 
 2.7.4 - 20240828 Replace Transliteration + prepare using kepubify
