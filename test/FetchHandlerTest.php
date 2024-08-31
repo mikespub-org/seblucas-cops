@@ -25,7 +25,7 @@ class FetchHandlerTest extends TestCase
         'thumb' => 15349,
         'original' => 1598906,
         'updated' => 1047437,
-        'kepubify' => 1608349,
+        'kepubify' => 1608245,
         'allinone' => 1055260,
         'file' => 12,
         'zipped' => 344,

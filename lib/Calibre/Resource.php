@@ -16,8 +16,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Output\FileRenderer;
 
 class Resource
 {
@@ -114,13 +114,7 @@ class Resource
         }
         $mime = static::IMAGE_EXTENSIONS[$ext];
 
-        $expires = 60 * 60 * 24 * 14;
-        header('Pragma: public');
-        header('Cache-Control: max-age=' . $expires);
-        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
-        header('Content-Type: ' . $mime);
-
-        readfile($path);
+        FileRenderer::sendFile($path, null, $mime, true);
         return true;
     }
 }

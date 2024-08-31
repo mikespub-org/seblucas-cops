@@ -35,7 +35,6 @@ class BookTest extends TestCase
     private const COVER_HEIGHT = 600;
 
     private static string $handler = 'phpunit';
-    private static Request $request;
     /** @var array<string, int> */
     protected static $expectedSize = [
         'cover' => 200128,
@@ -47,7 +46,6 @@ class BookTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
-        self::$request = new Request();
         Database::clearDb();
 
         $book = Book::getBookById(2);

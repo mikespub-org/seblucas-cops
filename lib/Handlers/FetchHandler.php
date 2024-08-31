@@ -14,6 +14,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Output\FileRenderer;
 use SebLucas\Cops\Output\Zipper;
 
 /**
@@ -92,71 +93,39 @@ class FetchHandler extends BaseHandler
         }
 
         // -DC- Add png type
-        if ($type == 'jpg' || $type == 'png' || empty(Config::get('calibre_internal_directory'))) {
-            if ($type == 'jpg' || $type == 'png') {
-                $file = $book->getCoverFilePath($type);
-            } else {
-                $file = $book->getFilePath($type, $idData);
-            }
-            if (is_null($file) || !file_exists($file)) {
-                // this will call exit()
-                $request->notFound();
-            }
-        }
-
-        switch ($type) {
-            // -DC- Add png type
-            case 'jpg':
-            case 'png':
-                $cover = new Cover($book);
-                $cover->sendThumbnail($request);
-                return;
-            default:
-                break;
-        }
-
-        $expires = 60 * 60 * 24 * 14;
-        header('Pragma: public');
-        header('Cache-Control: max-age=' . $expires);
-        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
-
-        $data = $book->getDataById($idData);
-        header('Content-Type: ' . $data->getMimeType());
-
-        // absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
-        $file = $book->getFilePath($type, $idData);
-        if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
-            // update epub metadata + provide kepub if needed (with update of opf properties for cover-image in EPub)
-            if (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
-                $book->updateForKepub = true;
-            }
-            $book->getUpdatedEpub($idData);
+        if (in_array($type, ['jpg', 'png'])) {
+            $this->sendThumbnail($request, $book, $type);
             return;
         }
+
+        if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
+            $this->sendUpdatedEpub($request, $book, $idData);
+            return;
+        }
+
+        $data = $book->getDataById($idData);
+        // absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
+        $file = $book->getFilePath($type, $idData);
+
         if ($viewOnly) {
-            header('Content-Disposition: inline');
-        } elseif (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
-            // provide kepub if needed (without update of opf properties for cover-image in Epub)
-            header('Content-Disposition: attachment; filename="' . basename($data->getUpdatedFilenameKepub()) . '"');
-        } else {
-            header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+            FileRenderer::sendFile($file, '', $data->getMimeType());
+            return;
         }
 
-        // -DC- File is a full path
-        //$dir = Config::get('calibre_internal_directory');
-        //if (empty(Config::get('calibre_internal_directory'))) {
-        //    $dir = Database::getDbDirectory();
-        //}
-        $dir = '';
-
-        // @todo clean up nginx x_accel_redirect
-        if (empty(Config::get('x_accel_redirect'))) {
-            $filename = $dir . $file;
-            header('Content-Length: ' . filesize($filename));
-            readfile($filename);
-        } else {
-            header(Config::get('x_accel_redirect') . ': ' . $dir . $file);
+        if ($type == 'epub' && Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
+            // run kepubify on original Epub file and send converted tmpfile
+            if (!empty(Config::get('kepubify_path'))) {
+                $kepubFile = $book->runKepubify($file, $data->getUpdatedFilenameKepub());
+                if (empty($kepubFile)) {
+                    echo 'Error: failed to convert epub file';
+                }
+                return;
+            }
+            // provide kepub in name only (without update of opf properties for cover-image in Epub)
+            FileRenderer::sendFile($file, basename($data->getUpdatedFilenameKepub()), $data->getMimeType());
         }
+
+        FileRenderer::sendFile($file, basename($file), $data->getMimeType());
     }
 
     /**
@@ -198,39 +167,41 @@ class FetchHandler extends BaseHandler
             // this will call exit()
             $request->notFound();
         }
-        $this->sendFile($filepath);
+        FileRenderer::sendFile($filepath, basename($filepath));
     }
 
     /**
-     * Summary of sendFile
-     * @param string $filepath
+     * Summary of sendThumbnail
+     * @param Request $request
+     * @param Book $book
+     * @param string $type
      * @return void
      */
-    public function sendFile($filepath)
+    public function sendThumbnail($request, $book, $type)
     {
-        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
-        if (array_key_exists($extension, Data::$mimetypes)) {
-            $mimetype = Data::$mimetypes[$extension];
-        } else {
-            $mimetype = mime_content_type($filepath);
-            if (!$mimetype) {
-                $mimetype = 'application/octet-stream';
-            }
+        $file = $book->getCoverFilePath($type);
+        if (empty($file) || !file_exists($file)) {
+            // this will call exit()
+            $request->notFound();
         }
+        $cover = new Cover($book);
+        $cover->sendThumbnail($request);
+    }
 
-        $expires = 60 * 60 * 24 * 14;
-        header('Pragma: public');
-        header('Cache-Control: max-age=' . $expires);
-        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
-        header('Content-Type: ' . $mimetype);
-        header('Content-Disposition: attachment; filepath="' . basename($filepath) . '"');
-
-        // @todo clean up nginx x_accel_redirect
-        if (empty(Config::get('x_accel_redirect'))) {
-            header('Content-Length: ' . filesize($filepath));
-            readfile($filepath);
-        } else {
-            header(Config::get('x_accel_redirect') . ': ' . $filepath);
+    /**
+     * Summary of sendUpdatedEpub
+     * @param Request $request
+     * @param Book $book
+     * @param mixed $idData
+     * @return void
+     */
+    public function sendUpdatedEpub($request, $book, $idData)
+    {
+        // update epub metadata + provide kepub if needed (with update of opf properties for cover-image in EPub)
+        if (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
+            $book->updateForKepub = true;
         }
+        // this will also use kepubify_path internally if defined
+        $book->getUpdatedEpub($idData);
     }
 }

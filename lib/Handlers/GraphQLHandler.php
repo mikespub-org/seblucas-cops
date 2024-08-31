@@ -282,6 +282,7 @@ class GraphQLHandler extends BaseHandler
             if ($objectValue instanceof Book) {
                 $objectValue = $objectValue->getEntry();
             }
+            /** @var Book $book */
             $book = $objectValue->book;
             switch ($fieldName) {
                 case 'path':

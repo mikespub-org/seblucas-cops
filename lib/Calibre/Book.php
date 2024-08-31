@@ -574,8 +574,22 @@ class Book
     {
         $data = $this->getDataById($idData);
 
+        // if we want to update metadata and then use kepubify, we need to save the updated Epub first
+        if ($this->updateForKepub && !empty(Config::get('kepubify_path'))) {
+            // make a temp copy for the updated Epub file
+            $tmpdir = sys_get_temp_dir();
+            $tmpfile = tempnam($tmpdir, 'COPS') . '.epub';
+            if (!copy($data->getLocalPath(), $tmpfile)) {
+                echo 'Error: unable to copy epub file';
+                return;
+            }
+            $filePath = $tmpfile;
+        } else {
+            $filePath = $data->getLocalPath();
+        }
+
         try {
-            $epub = new EPub($data->getLocalPath(), ZipEdit::class);
+            $epub = new EPub($filePath, ZipEdit::class);
 
             $epub->setTitle($this->title);
             $authorArray = [];
@@ -598,13 +612,54 @@ class Book
             $filename = $data->getUpdatedFilenameEpub();
             // @checkme this is set in fetch.php now
             if ($this->updateForKepub) {
-                $epub->updateForKepub();
                 $filename = $data->getUpdatedFilenameKepub();
+                // save updated Epub file and convert to kepub
+                if (!empty(Config::get('kepubify_path'))) {
+                    $epub->save();
+
+                    // run kepubify on updated Epub file and send converted tmpfile
+                    $kepubFile = $this->runKepubify($filePath, $filename);
+                    if (empty($kepubFile)) {
+                        echo 'Error: failed to convert epub file';
+                    }
+                    return;
+                }
+                $epub->updateForKepub();
             }
             $epub->download($filename, $sendHeaders);
         } catch (Exception $e) {
             echo 'Exception : ' . $e->getMessage();
         }
+    }
+
+    /**
+     * Summary of runKepubify
+     * @param string $filepath
+     * @param ?string $sendfile
+     * @return string|null
+     */
+    public function runKepubify($filepath, $sendfile = null)
+    {
+        if (empty(Config::get('kepubify_path'))) {
+            return null;
+        }
+        $tmpdir = sys_get_temp_dir();
+        $tmpfile = tempnam($tmpdir, 'COPS') . '.kepub.epub';
+        $cmd = escapeshellarg(Config::get('kepubify_path'));
+        $cmd .= ' -o ' . escapeshellarg($tmpfile);
+        $cmd .= ' ' . escapeshellarg($filepath);
+        exec($cmd, $output, $return);
+        if ($return == 0 && file_exists($tmpfile)) {
+            if (!empty($sendfile)) {
+                header('Content-Type: ' . EPub::MIME_TYPE);
+                header('Content-Disposition: attachment; filename="' . basename($sendfile) . '"');
+                // don't use x_accel_redirect since we deal with a tmpfile here
+                header('Content-Length: ' . filesize($tmpfile));
+                readfile($tmpfile);
+            }
+            return $tmpfile;
+        }
+        return null;
     }
 
     /**
@@ -625,12 +680,10 @@ class Book
             $col = CustomColumnType::createByLookup($lookup, $database);
             if (!is_null($col)) {
                 $cust = $col->getCustomByBook($this);
-                if (!is_null($cust)) {
-                    if ($asArray) {
-                        array_push($result, $cust->toArray());
-                    } else {
-                        array_push($result, $cust);
-                    }
+                if ($asArray) {
+                    array_push($result, $cust->toArray());
+                } else {
+                    array_push($result, $cust);
                 }
             }
         }
