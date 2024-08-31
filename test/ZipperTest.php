@@ -12,6 +12,7 @@ use SebLucas\Cops\Output\Zipper;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
@@ -24,6 +25,7 @@ class ZipperTest extends TestCase
     protected static $expectedSize = [
         'recent' => 1596525,
         'author' => 1594886,
+        'zipped' => 344,
     ];
 
     public static function setUpBeforeClass(): void
@@ -51,7 +53,7 @@ class ZipperTest extends TestCase
         $request->set('type', 'any');
 
         $zipper = new Zipper($request);
-        $valid = $zipper->isValid();
+        $valid = $zipper->isValidForDownload();
         $this->assertTrue($valid);
 
         ob_start();
@@ -82,7 +84,7 @@ class ZipperTest extends TestCase
         $request->set('type', 'any');
 
         $zipper = new Zipper($request);
-        $valid = $zipper->isValid();
+        $valid = $zipper->isValidForDownload();
         $this->assertTrue($valid);
 
         ob_start();
@@ -110,7 +112,7 @@ class ZipperTest extends TestCase
         $expected = 'No files found';
 
         $zipper = new Zipper($request);
-        $valid = $zipper->isValid();
+        $valid = $zipper->isValidForDownload();
         $this->assertFalse($valid);
         $this->assertEquals($expected, $zipper->getMessage());
 
@@ -129,11 +131,35 @@ class ZipperTest extends TestCase
         $expected = 'Invalid format for page';
 
         $zipper = new Zipper($request);
-        $valid = $zipper->isValid();
+        $valid = $zipper->isValidForDownload();
         $this->assertFalse($valid);
         $this->assertEquals($expected, $zipper->getMessage());
 
         Config::set('download_page', ['']);
+    }
+
+    /**
+     * Summary of testZipExtraFiles
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testZipExtraFiles(): void
+    {
+        $request = new Request();
+        $book = Book::getBookById(17);
+
+        $zipper = new Zipper($request);
+        $valid = $zipper->isValidForExtraFiles($book);
+        $this->assertTrue($valid);
+
+        ob_start();
+        $zipper->download();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['zipped'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
     }
 
     /**

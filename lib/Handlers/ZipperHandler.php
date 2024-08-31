@@ -49,7 +49,7 @@ class ZipperHandler extends BaseHandler
 
         $zipper = new Zipper($request);
 
-        if ($zipper->isValid()) {
+        if ($zipper->isValidForDownload()) {
             // disable nginx buffering by default
             header('X-Accel-Buffering: no');
             $zipper->download();

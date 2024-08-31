@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -51,10 +52,10 @@ class Zipper
     }
 
     /**
-     * Summary of isValid
+     * Summary of isValidForDownload
      * @return bool
      */
-    public function isValid()
+    public function isValidForDownload()
     {
         $entries = $this->hasPage();
         if (!$entries) {
@@ -231,6 +232,34 @@ class Zipper
         }
         if (count($this->fileList) < 1) {
             $this->message = 'No files found';
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Summary of isValidForExtraFiles
+     * @param Book $book
+     * @return bool
+     */
+    public function isValidForExtraFiles($book)
+    {
+        $extraFiles = $book->getExtraFiles();
+        if (empty($extraFiles)) {
+            $this->message = 'No files found for book';
+            return false;
+        }
+        $this->fileName = 'data.zip';
+        $this->fileList = [];
+        foreach ($extraFiles as $name) {
+            $path = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $name;
+            if (!file_exists($path)) {
+                continue;
+            }
+            $this->fileList[$name] = $path;
+        }
+        if (count($this->fileList) < 1) {
+            $this->message = 'No files found for book';
             return false;
         }
         return true;

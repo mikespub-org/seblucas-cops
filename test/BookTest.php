@@ -52,7 +52,7 @@ class BookTest extends TestCase
         'original' => 1598906,
         'updated' => 1047437,
         'file' => 12,
-        'zipped' => 39,  // @todo
+        'zipped' => 344,
     ];
 
     public static function setUpBeforeClass(): void
@@ -1163,7 +1163,7 @@ class BookTest extends TestCase
     }
 
     /**
-     * Summary of testFetchHandlerZipped - @todo
+     * Summary of testFetchHandlerZipped
      * @runInSeparateProcess
      * @return void
      */

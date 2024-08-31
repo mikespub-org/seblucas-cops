@@ -10,9 +10,11 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Output\Zipper;
 
 /**
  * Fetch book covers or files
@@ -42,6 +44,11 @@ class FetchHandler extends BaseHandler
         ];
     }
 
+    /**
+     * Summary of handle
+     * @param Request $request
+     * @return void
+     */
     public function handle($request)
     {
         if (Config::get('fetch_protect') == '1') {
@@ -75,23 +82,12 @@ class FetchHandler extends BaseHandler
         }
 
         if (!empty($file)) {
-            $extraFiles = $book->getExtraFiles();
             if ($file == 'zipped') {
-                // @todo zip all extra files and send back
-                echo 'TODO: zip all extra files and send back';
+                // zip all extra files and send back
+                $this->zipExtraFiles($request, $book);
                 return;
             }
-            if (!in_array($file, $extraFiles)) {
-                // this will call exit()
-                $request->notFound();
-            }
-            // send back extra file
-            $filepath = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $file;
-            if (!file_exists($filepath)) {
-                // this will call exit()
-                $request->notFound();
-            }
-            $this->sendFile($filepath);
+            $this->sendExtraFile($request, $book, $file);
             return;
         }
 
@@ -161,6 +157,48 @@ class FetchHandler extends BaseHandler
         } else {
             header(Config::get('x_accel_redirect') . ': ' . $dir . $file);
         }
+    }
+
+    /**
+     * Summary of zipExtraFiles
+     * @param Request $request
+     * @param Book $book
+     * @return void
+     */
+    public function zipExtraFiles($request, $book)
+    {
+        $zipper = new Zipper($request);
+
+        if ($zipper->isValidForExtraFiles($book)) {
+            // disable nginx buffering by default
+            header('X-Accel-Buffering: no');
+            $zipper->download();
+        } else {
+            echo "Invalid zipped: " . $zipper->getMessage();
+        }
+    }
+
+    /**
+     * Summary of sendExtraFile
+     * @param Request $request
+     * @param Book $book
+     * @param string $file
+     * @return void
+     */
+    public function sendExtraFile($request, $book, $file)
+    {
+        $extraFiles = $book->getExtraFiles();
+        if (!in_array($file, $extraFiles)) {
+            // this will call exit()
+            $request->notFound();
+        }
+        // send back extra file
+        $filepath = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $file;
+        if (!file_exists($filepath)) {
+            // this will call exit()
+            $request->notFound();
+        }
+        $this->sendFile($filepath);
     }
 
     /**

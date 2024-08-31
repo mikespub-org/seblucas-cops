@@ -145,6 +145,10 @@ class JsonRenderer
             $link = $book->getExtraFileLink($fileName);
             array_push($out ["extraFiles"], ["name" => $link->title, "url" => $link->hrefXhtml(), "length" => $link->length, "mtime" => $link->mtime]);
         }
+        if (count($out ["extraFiles"]) > 0) {
+            $url = Route::link("fetch", null, ["id" => $book->id, "db" => ($database ?? 0), "file" => "zipped"]);
+            array_unshift($out ["extraFiles"], ["name" => " * ", "url" => $url]);
+        }
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
             $author->setHandler($handler);

@@ -183,6 +183,7 @@ class RestApiTest extends TestCase
             "fetch.php?view=1&db=0&data=20&type=epub" => "restapi.php/inline/0/20/ignore.epub",
             "fetch.php?db=0&data=20&type=epub" => "restapi.php/fetch/0/20/ignore.epub",
             "fetch.php?db=0&id=17&file=hello.txt" => "restapi.php/files/0/17/hello.txt",
+            "fetch.php?db=0&id=17&file=zipped" => "restapi.php/files/0/17/zipped",
             "zipper.php?page=10&type=any" => "restapi.php/zipper/10/any",
         ];
     }
