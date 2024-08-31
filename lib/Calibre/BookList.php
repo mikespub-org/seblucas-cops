@@ -197,7 +197,7 @@ class BookList
 
     /**
      * Summary of getBooksByInstance
-     * @param Base|Author|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @param Base|Author|Identifier|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
      * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */

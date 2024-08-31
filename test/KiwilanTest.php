@@ -16,6 +16,7 @@ use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -227,8 +228,9 @@ class KiwilanTest extends TestCase
 
     public function testPageIndexMultipleDatabase(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::INDEX;
         $request = Request::build(['page' => $page], self::$handler);
@@ -263,8 +265,9 @@ class KiwilanTest extends TestCase
 
     public function testPageAuthorMultipleDatabase(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::AUTHOR_DETAIL;
         $request = Request::build(['page' => $page], self::$handler);
@@ -364,5 +367,27 @@ class KiwilanTest extends TestCase
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
+    }
+
+    /**
+     * Summary of testOpdsHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testOpdsHandler(): void
+    {
+        $page = PageId::ALL_RECENT_BOOKS;
+        $request = Request::build(['page' => $page]);
+        $handler = Framework::getHandler('opds');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $result = json_decode($output, true);
+
+        $expected = "Calibre OPDS: Recent additions";
+        $this->assertEquals($expected, $result['metadata']['title']);
     }
 }

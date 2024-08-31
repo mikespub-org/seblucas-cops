@@ -52,7 +52,7 @@ class FetchHandler extends BaseHandler
             }
         }
         // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
-        if (ob_get_length() !== false) {
+        if (ob_get_length() !== false && $request->getHandler() !== 'phpunit') {
             ob_end_clean();
         }
 
@@ -163,6 +163,11 @@ class FetchHandler extends BaseHandler
         }
     }
 
+    /**
+     * Summary of sendFile
+     * @param string $filepath
+     * @return void
+     */
     public function sendFile($filepath)
     {
         $extension = pathinfo($filepath, PATHINFO_EXTENSION);

@@ -186,25 +186,6 @@ class Page
     }
 
     /**
-     * Summary of getCleanQuery
-     * @deprecated 2.7.0 use $this->request->getCleanParams() instead
-     * @return string
-     */
-    public function getCleanQuery()
-    {
-        $query = preg_replace("/(^|\&)n=.*?$/", "", preg_replace("/(^|\&)_=\d+/", "", $this->request->query()));
-        if (!empty(Config::get('use_route_urls'))) {
-            $path = $this->request->path();
-            if (!empty($query)) {
-                return $path . '?' . $query;
-            }
-            // Route::query() expects a query string as input
-            return $path . '?';
-        }
-        return $query;
-    }
-
-    /**
      * Summary of getFirstLink
      * @return ?LinkNavigation
      */

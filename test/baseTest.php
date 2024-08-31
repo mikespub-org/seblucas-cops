@@ -225,8 +225,9 @@ class BaseTest extends TestCase
         $this->assertFalse(Database::isMultipleDatabaseEnabled());
         $this->assertEquals(["" => __DIR__ . "/BaseWithSomeBooks/"], Database::getDbList());
 
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::isMultipleDatabaseEnabled());
@@ -245,8 +246,9 @@ class BaseTest extends TestCase
 
     public function testCheckDatabaseAvailability_2(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
@@ -261,8 +263,9 @@ class BaseTest extends TestCase
      */
     public function testCheckDatabaseAvailability_Exception1(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/OneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/OneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);
@@ -280,8 +283,9 @@ class BaseTest extends TestCase
      */
     public function testCheckDatabaseAvailability_Exception2(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/SomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/SomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
 
         $this->expectException(Exception::class);

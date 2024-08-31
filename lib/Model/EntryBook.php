@@ -31,24 +31,6 @@ class EntryBook extends Entry
     }
 
     /**
-     * @deprecated 1.4.0 use getThumbnail() instead
-     * @return ?string
-     */
-    public function getCoverThumbnail()
-    {
-        return $this->getThumbnail();
-    }
-
-    /**
-     * @deprecated 1.4.0 use getImage() instead
-     * @return ?string
-     */
-    public function getCover()
-    {
-        return $this->getImage();
-    }
-
-    /**
      * Summary of hasAcquisitionLink
      * @return bool
      */

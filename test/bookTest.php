@@ -20,6 +20,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -43,6 +44,15 @@ class BookTest extends TestCase
 
     private static string $handler = 'phpunit';
     private static Request $request;
+    /** @var array<string, int> */
+    protected static $expectedSize = [
+        'cover' => 200128,
+        'thumb' => 15349,
+        'original' => 1598906,
+        'updated' => 1047437,
+        'file' => 12,
+        'zipped' => 39,  // @todo
+    ];
 
     public static function setUpBeforeClass(): void
     {
@@ -299,7 +309,7 @@ class BookTest extends TestCase
             ['0100-12-31 23:00:00+00:00', ''],
             ['', ''],
             [null, ''],
-            ];
+        ];
     }
 
     public function testGetBookById(): void
@@ -568,7 +578,6 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $cover = new Cover($book);
         $request = Request::build();
-        $expected = filesize($cover->coverFileName);
 
         // no thumbnail resizing
         ob_start();
@@ -576,6 +585,7 @@ class BookTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
+        $expected = self::$expectedSize['cover'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
     }
@@ -586,7 +596,6 @@ class BookTest extends TestCase
         $cover = new Cover($book);
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
-        $expected = 15349;
 
         // no thumbnail cache
         ob_start();
@@ -594,6 +603,7 @@ class BookTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
+        $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
     }
@@ -607,7 +617,6 @@ class BookTest extends TestCase
         $type = 'jpg';
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
-        $expected = 15349;
 
         // use thumbnail cache
         Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
@@ -624,6 +633,7 @@ class BookTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
+        $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
 
@@ -639,7 +649,6 @@ class BookTest extends TestCase
         $type = 'jpg';
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
-        $expected = 15349;
 
         // use thumbnail cache
         Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
@@ -650,6 +659,7 @@ class BookTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
+        $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
 
@@ -776,9 +786,11 @@ class BookTest extends TestCase
         $book->getUpdatedEpub(20, false);
         $headers = headers_list();
         $output = ob_get_clean();
+
+        $expected = self::$expectedSize['updated'];
         //$this->assertStringStartsWith("Exception : Cannot modify header information", $output);
         $this->assertEquals(0, count($headers));
-        $this->assertEquals(1047437, strlen($output));
+        $this->assertEquals($expected, strlen($output));
     }
 
     public function testGetCoverFilePath(): void
@@ -1017,5 +1029,156 @@ class BookTest extends TestCase
     public function tearDown(): void
     {
         Database::clearDb();
+    }
+
+    /**
+     * Summary of testFetchHandlerCover
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFetchHandlerCover(): void
+    {
+        // set request handler to 'phpunit' to override output buffer check in handler
+        $request = Request::build(['id' => 17], 'phpunit');
+        $handler = Framework::getHandler('fetch');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['cover'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    /**
+     * Summary of testFetchHandlerThumb
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFetchHandlerThumb(): void
+    {
+        // set request handler to 'phpunit' to override output buffer check in handler
+        $request = Request::build(['id' => 17, 'thumb' => 'html'], 'phpunit');
+        $handler = Framework::getHandler('fetch');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['thumb'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    /**
+     * Summary of testFetchHandlerView
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFetchHandlerView(): void
+    {
+        // set request handler to 'phpunit' to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub', 'view' => 1], 'phpunit');
+        $handler = Framework::getHandler('fetch');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['original'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    /**
+     * Summary of testFetchHandlerFetch
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFetchHandlerFetch(): void
+    {
+        // set request handler to 'phpunit' to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], 'phpunit');
+        $handler = Framework::getHandler('fetch');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['original'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    /**
+     * Summary of testFetchHandlerUpdated
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFetchHandlerUpdated(): void
+    {
+        Config::set('update_epub-metadata', '1');
+
+        // set request handler to 'phpunit' to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], 'phpunit');
+        $handler = Framework::getHandler('fetch');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['updated'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+
+        Config::set('update_epub-metadata', '0');
+    }
+
+    /**
+     * Summary of testFetchHandlerFile
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFetchHandlerFile(): void
+    {
+        // set request handler to 'phpunit' to override output buffer check in handler
+        $request = Request::build(['id' => 17, 'file' => 'hello.txt'], 'phpunit');
+        $handler = Framework::getHandler('fetch');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['file'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    /**
+     * Summary of testFetchHandlerZipped - @todo
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFetchHandlerZipped(): void
+    {
+        // set request handler to 'phpunit' to override output buffer check in handler
+        $request = Request::build(['id' => 17, 'file' => 'zipped'], 'phpunit');
+        $handler = Framework::getHandler('fetch');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['zipped'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
     }
 }

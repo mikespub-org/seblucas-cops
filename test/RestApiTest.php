@@ -24,7 +24,11 @@ use SebLucas\Cops\Framework;
 
 class RestApiTest extends TestCase
 {
-    public static string $script;
+    protected static string $script;
+    /** @var array<string, int> */
+    protected static $expectedSize = [
+        'calres' => 37341,
+    ];
 
     public static function setUpBeforeClass(): void
     {
@@ -682,7 +686,7 @@ class RestApiTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = 37341;
+        $expected = self::$expectedSize['calres'];
         $this->assertEquals('', $test);
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));

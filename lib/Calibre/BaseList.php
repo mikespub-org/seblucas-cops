@@ -31,7 +31,7 @@ class BaseList
     protected string $handler = '';
 
     /**
-     * @param string $className
+     * @param class-string $className
      * @param ?Request $request
      * @param ?int $database
      * @param ?int $numberPerPage

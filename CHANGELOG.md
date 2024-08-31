@@ -16,6 +16,8 @@ x.x.x - TODO
   * Start experimental GraphQL interface (dev only) (TODO)
   * Upgrade twig/twig package and add webonyx/graphql-php package (dev only)
   * Show extra data files in book detail - see feature #97 by @russell-phillips
+  * Add tests for new handler classes
+  * Remove deprecated methods for releases older than 2.7.4
 
 2.7.4 - 20240828 Replace Transliteration + prepare using kepubify
   * Support splitting books or authors by non-ascii first letter

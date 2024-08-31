@@ -30,7 +30,7 @@ class EpubFsHandler extends BaseHandler
 
     public function handle($request)
     {
-        if (php_sapi_name() === 'cli') {
+        if (php_sapi_name() === 'cli' && $request->getHandler() !== 'phpunit') {
             return;
         }
 

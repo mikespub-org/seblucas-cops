@@ -40,7 +40,9 @@ class MailHandler extends BaseHandler
             return;
         }
 
-        if ($error = Mail::sendMail($idData, $emailDest, $request)) {
+        // set request handler to 'phpunit' to run preSend() but not actually Send()
+        $dryRun = ($request->getHandler() === 'phpunit') ? true : false;
+        if ($error = Mail::sendMail($idData, $emailDest, $request, $dryRun)) {
             echo localize("mail.messagenotsent");
             echo $error;
             return;

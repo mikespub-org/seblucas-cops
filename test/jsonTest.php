@@ -14,6 +14,7 @@ require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -193,7 +194,7 @@ class JsonTest extends TestCase
 
         $request = Request::build(['page' => $page, 'query' => $query, 'search' => 1], self::$handler);
         $test = JsonRenderer::getJson($request);
-        $check = [
+        $expected = [
             [
                 'class' => 'tt-header',
                 'title' => 'Search result for *fic* in tags',
@@ -210,7 +211,7 @@ class JsonTest extends TestCase
                 'navlink' => Route::link(self::$handler) . '?page=12&id=7',
             ],
         ];
-        $this->assertEquals($check, $test);
+        $this->assertEquals($expected, $test);
     }
 
     public function testGetJsonComplete(): void
@@ -224,5 +225,27 @@ class JsonTest extends TestCase
         $this->assertCount(16, $test["entries"]);
         $this->assertEquals("La curée", $test["entries"][1]["title"]);
         $this->assertCount(4, $test["c"]);
+    }
+
+    /**
+     * Summary of testJsonHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testJsonHandler(): void
+    {
+        $page = PageId::ALL_RECENT_BOOKS;
+        $request = Request::build(['page' => $page]);
+        $handler = Framework::getHandler('json');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $result = json_decode($output, true);
+
+        $expected = "Recent additions";
+        $this->assertEquals($expected, $result['title']);
     }
 }

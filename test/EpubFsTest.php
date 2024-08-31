@@ -11,6 +11,8 @@ namespace SebLucas\Cops\Tests;
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Framework;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\EPubMeta\EPub;
@@ -128,5 +130,45 @@ class EpubFsTest extends TestCase
         $encoded = 'images~SLASH~logo~DASH~feedbooks~DASH~tiny.png';
         $this->assertEquals($encoded, EPubReader::encode($decoded));
         $this->assertEquals($decoded, EPubReader::decode($encoded));
+    }
+
+    /**
+     * Summary of testEpubFsHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testEpubFsHandler(): void
+    {
+        // set request handler to 'phpunit' to override cli check in handler
+        $request = Request::build(['data' => 20, 'comp' => EPubReader::encode('title.xml')], 'phpunit');
+        $handler = Framework::getHandler('epubfs');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = "<h1>Alice's Adventures in Wonderland</h1>";
+        $this->assertStringContainsString($expected, $output);
+    }
+
+    /**
+     * Summary of testZipFsHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testZipFsHandler(): void
+    {
+        // set request handler to 'phpunit' to override cli check in handler
+        $request = Request::build(['db' => 0, 'idData' => 20, 'component' => 'META-INF/container.xml'], 'phpunit');
+        $handler = Framework::getHandler('zipfs');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = '<rootfile full-path="OPS/fb.opf" media-type="application/oebps-package+xml"/>';
+        $this->assertStringContainsString($expected, $output);
     }
 }

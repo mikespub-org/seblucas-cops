@@ -36,4 +36,34 @@ class FrameworkTest extends TestCase
         $expected = 91;
         $this->assertEquals($expected, Route::count());
     }
+
+    /**
+     * Summary of getHandlers
+     * @return array<array<mixed>>
+     */
+    public static function getHandlers(): array
+    {
+        // test protected method using closure bind & call or use reflection
+        // @see https://www.php.net/manual/en/closure.bind.php
+        $getHandlers = \Closure::bind(static function () {
+            return Framework::$handlers;
+        }, null, Framework::class);
+        $result = [];
+        foreach ($getHandlers() as $handler => $className) {
+            array_push($result, [$handler, $className]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of testGetHandlers
+     * @return void
+     */
+    public function testGetHandlers(): void
+    {
+        $handlers = $this->getHandlers();
+
+        $expected = 15;
+        $this->assertCount($expected, $handlers);
+    }
 }

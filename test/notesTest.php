@@ -14,13 +14,19 @@ use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 
 class NotesTest extends TestCase
 {
     private static Author $author;
-
+    /** @var array<string, int> */
+    protected static $expectedSize = [
+        'note' => 227,
+        'calres' => 37341,
+    ];
 
     public static function setUpBeforeClass(): void
     {
@@ -66,7 +72,7 @@ class NotesTest extends TestCase
         $this->assertEquals(Note::class, get_class($note));
         $this->assertEquals(3, $note->item);
         $this->assertEquals("authors", $note->colname);
-        $this->assertEquals(227, strlen($note->doc));
+        $this->assertEquals(self::$expectedSize['note'], strlen($note->doc));
         $this->assertEquals(1708880895.654, $note->mtime);
     }
 
@@ -117,9 +123,28 @@ class NotesTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = 37341;
+        $expected = self::$expectedSize['calres'];
         $this->assertTrue($result);
         $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
+
+    /**
+     * Summary of testCalResHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testCalResHandler(): void
+    {
+        $request = Request::build(["db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]);
+        $handler = Framework::getHandler('calres');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['calres'];
         $this->assertEquals($expected, strlen($output));
     }
 }

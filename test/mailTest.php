@@ -10,8 +10,10 @@ namespace SebLucas\Cops\Tests;
 
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Mail;
 
 class MailTest extends TestCase
@@ -124,5 +126,30 @@ class MailTest extends TestCase
         // use dryRun to run preSend() but not actually Send()
         $error = Mail::sendMail(20, "a@a.com", $request, true);
         $this->assertFalse($error);
+    }
+
+    /**
+     * Summary of testMailHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testMailHandler(): void
+    {
+        $_POST = ['data' => '20', 'email' => 'a@a.com'];
+        // set request handler to 'phpunit' to run preSend() but not actually Send()
+        $_GET = [Route::HANDLER_PARAM => 'phpunit'];
+        $request = new Request();
+        $handler = Framework::getHandler('mail');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = localize("mail.messagesent");
+        $this->assertEquals($expected, $output);
+
+        $_GET = [];
+        $_POST = [];
     }
 }

@@ -19,8 +19,9 @@ class PageMultiDatabaseTest extends TestCase
 {
     public function testPageIndex(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::INDEX;
         $request = new Request();
@@ -46,8 +47,9 @@ class PageMultiDatabaseTest extends TestCase
      */
     public function testPageSearchXXX($maxItem)
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::OPENSEARCH_QUERY;
         $request = new Request();

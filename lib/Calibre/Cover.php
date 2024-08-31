@@ -272,6 +272,8 @@ class Cover
         //    $dir = Database::getDbDirectory();
         //}
         //$file = $dir . $file;
+
+        // @todo clean up nginx x_accel_redirect
         if (empty(Config::get('x_accel_redirect'))) {
             if ($sendHeaders) {
                 header('Content-Disposition: filename="' . basename($file) . '"');

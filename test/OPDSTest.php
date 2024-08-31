@@ -13,6 +13,7 @@ use SebLucas\Cops\Output\OpdsRenderer;
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -219,8 +220,9 @@ class OpdsTest extends TestCase
 
     public function testPageIndexMultipleDatabase(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::INDEX;
         $request = Request::build(['page' => $page], self::$handler);
@@ -251,8 +253,9 @@ class OpdsTest extends TestCase
 
     public function testPageAuthorMultipleDatabase(): void
     {
-        Config::set('calibre_directory', ["Some books" => __DIR__ . "/BaseWithSomeBooks/",
-                                              "One book" => __DIR__ . "/BaseWithOneBook/"]);
+        Config::set('calibre_directory', [
+            "Some books" => __DIR__ . "/BaseWithSomeBooks/",
+            "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::AUTHOR_DETAIL;
         $request = Request::build(['page' => $page], self::$handler);
@@ -347,5 +350,25 @@ class OpdsTest extends TestCase
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
         unset($_SERVER['REQUEST_URI']);
+    }
+
+    /**
+     * Summary of testFeedHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testFeedHandler(): void
+    {
+        $page = PageId::ALL_RECENT_BOOKS;
+        $request = Request::build(['page' => $page]);
+        $handler = Framework::getHandler('feed');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = "<title>Recent additions</title>";
+        $this->assertStringContainsString($expected, $output);
     }
 }

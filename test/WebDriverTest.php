@@ -96,15 +96,15 @@ class WebDriverTest extends WebDriverTestCase
             'desiredCapabilities' => [
                 'version' => '33',
                 'platform' => 'Linux',
-          ],
+            ],
         ],
 
 
         // run Chrome locally
         //array(
-            //'browserName' => 'chrome',
-            //'local' => true,
-            //'sessionStrategy' => 'shared'
+        //'browserName' => 'chrome',
+        //'local' => true,
+        //'sessionStrategy' => 'shared'
         //)
     ];
 

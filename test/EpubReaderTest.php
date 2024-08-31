@@ -13,6 +13,7 @@ use SebLucas\Cops\Output\EPubReader;
 require_once __DIR__ . '/config_test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Request;
 use SebLucas\EPubMeta\EPub;
 use DOMDocument;
@@ -49,12 +50,12 @@ class EpubReaderTest extends TestCase
         $html->loadHTML($data);
 
         $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
-        $check = "COPS EPub Reader";
-        $this->assertEquals($check, $title);
+        $expected = "COPS EPub Reader";
+        $this->assertEquals($expected, $title);
 
         $script = $html->getElementsByTagName('script')->item(2)->nodeValue;
-        $check = 'title: "Alice\'s Adventures in Wonderland"';
-        $this->assertStringContainsString($check, $script);
+        $expected = 'title: "Alice\'s Adventures in Wonderland"';
+        $this->assertStringContainsString($expected, $script);
     }
 
     /**
@@ -77,18 +78,18 @@ class EpubReaderTest extends TestCase
         $html->loadHTML($data);
 
         $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
-        $check = "Title Page";
-        $this->assertEquals($check, $title);
+        $expected = "Title Page";
+        $this->assertEquals($expected, $title);
 
         $h1 = $html->getElementsByTagName('h1')->item(0)->nodeValue;
-        $check = "Alice's Adventures in Wonderland";
-        $this->assertStringContainsString($check, $h1);
+        $expected = "Alice's Adventures in Wonderland";
+        $this->assertStringContainsString($expected, $h1);
     }
 
     public function testComponents(): void
     {
         $data = self::$book->components();
-        $check = [
+        $expected = [
             "cover.xml",
             "title.xml",
             "about.xml",
@@ -108,13 +109,13 @@ class EpubReaderTest extends TestCase
             "feedbooks.xml",
         ];
 
-        $this->assertEquals($check, $data);
+        $this->assertEquals($expected, $data);
     }
 
     public function testContents(): void
     {
         $data = self::$book->contents();
-        $check = [
+        $expected = [
             [ "title" => "Title", "src" => "title.xml" ],
             [ "title" => "About", "src" => "about.xml" ],
             [ "title" => "Chapter 1 - Down the Rabbit Hole", "src" => "main0.xml" ],
@@ -132,7 +133,7 @@ class EpubReaderTest extends TestCase
             [ "title" => "Recommendations", "src" => "similar.xml" ],
         ];
 
-        $this->assertEquals($check, $data);
+        $this->assertEquals($expected, $data);
     }
 
     /**
@@ -143,8 +144,8 @@ class EpubReaderTest extends TestCase
     public function testComponent($component = 'cover.xml')
     {
         $data = self::$book->component($component);
-        $check = 532;
-        $this->assertEquals($check, strlen($data));
+        $expected = 532;
+        $this->assertEquals($expected, strlen($data));
     }
 
     /**
@@ -156,8 +157,8 @@ class EpubReaderTest extends TestCase
     public function testGetComponentName($component = 'cover.xml', $element = 'images/cover.png')
     {
         $data = self::$book->getComponentName($component, $element);
-        $check = 'images~SLASH~cover.png';
-        $this->assertEquals($check, $data);
+        $expected = 'images~SLASH~cover.png';
+        $this->assertEquals($expected, $data);
     }
 
     /**
@@ -168,8 +169,8 @@ class EpubReaderTest extends TestCase
     public function testComponentContentType($component = 'cover.xml')
     {
         $data = self::$book->componentContentType($component);
-        $check = 'application/xhtml+xml';
-        $this->assertEquals($check, $data);
+        $expected = 'application/xhtml+xml';
+        $this->assertEquals($expected, $data);
     }
 
     /**
@@ -192,11 +193,30 @@ class EpubReaderTest extends TestCase
         $html->loadHTML($data);
 
         $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
-        $check = "Alice's Adventures in Wonderland";
-        $this->assertEquals($check, $title);
+        $expected = "Alice's Adventures in Wonderland";
+        $this->assertEquals($expected, $title);
 
         $script = $html->getElementsByTagName('script')->item(2)->getAttribute('src');
-        $check = 'dist/js/libs/epub.min.js';
-        $this->assertStringContainsString($check, $script);
+        $expected = 'dist/js/libs/epub.min.js';
+        $this->assertStringContainsString($expected, $script);
+    }
+
+    /**
+     * Summary of testReadHandler
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function testReadHandler(): void
+    {
+        $request = Request::build(['data' => 20]);
+        $handler = Framework::getHandler('read');
+
+        ob_start();
+        $handler->handle($request);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = "{title: 'Chapter 1 - Down the Rabbit Hole', src: 'main0.xml'}";
+        $this->assertStringContainsString($expected, $output);
     }
 }

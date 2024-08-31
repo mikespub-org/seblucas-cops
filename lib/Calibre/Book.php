@@ -379,8 +379,12 @@ class Book
             if (empty(Config::get('calibre_external_storage')) && is_dir($dataPath)) {
                 $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dataPath));
                 foreach ($iterator as $file) {
-                    if ($file->isDir()) continue;
-                    if (!str_starts_with($file->getPathname(), $dataPath)) continue;
+                    if ($file->isDir()) {
+                        continue;
+                    }
+                    if (!str_starts_with($file->getPathname(), $dataPath)) {
+                        continue;
+                    }
                     array_push($this->extraFiles, substr($file->getPathname(), strlen($dataPath)));
                 }
             }

@@ -263,7 +263,7 @@ abstract class Base
 
     /**
      * Summary of getEntriesByInstance
-     * @param string $className
+     * @param class-string $className
      * @param int $n
      * @param ?string $sort
      * @param ?int $database

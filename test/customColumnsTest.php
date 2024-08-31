@@ -868,18 +868,18 @@ class CustomColumnsTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         $columns = CustomColumnType::getAllCustomColumns();
 
-        $check = [
-           'id' => 8,
-           'label' => 'custom_01',
-           'name' => 'custom_01',
-           'datatype' => 'text',
-           'display' => '{"use_decorations": 0, "description": "Custom column example 01 (text)"}',
-           'is_multiple' => 0,
-           'normalized' => 1,
+        $expected = [
+            'id' => 8,
+            'label' => 'custom_01',
+            'name' => 'custom_01',
+            'datatype' => 'text',
+            'display' => '{"use_decorations": 0, "description": "Custom column example 01 (text)"}',
+            'is_multiple' => 0,
+            'normalized' => 1,
         ];
 
         $this->assertCount(16, $columns);
-        $this->assertEquals($check, $columns["custom_01"]);
+        $this->assertEquals($expected, $columns["custom_01"]);
     }
 
     public function testDetailTypeAllEntryIDs(): void
