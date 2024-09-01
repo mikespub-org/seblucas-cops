@@ -57,10 +57,14 @@ class ZipFsHandler extends BaseHandler
             if ($res === false) {
                 throw new Exception('Unknown component ' . $component);
             }
-            $expires = 60 * 60 * 24 * 14;
-            header('Pragma: public');
-            header('Cache-Control: maxage=' . $expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+
+            $sendHeaders = headers_sent() ? false : true;
+            if ($sendHeaders) {
+                $expires = 60 * 60 * 24 * 14;
+                header('Pragma: public');
+                header('Cache-Control: maxage=' . $expires);
+                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+            }
 
             echo $zip->getFromName($component);
             $zip->close();

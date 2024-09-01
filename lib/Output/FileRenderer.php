@@ -34,6 +34,22 @@ class FileRenderer
     }
 
     /**
+     * Summary of getTempFile
+     * @param string $extension
+     * @return string
+     */
+    public static function getTempFile($extension = '')
+    {
+        $tmpdir = sys_get_temp_dir();
+        $tmpfile = tempnam($tmpdir, 'COPS');
+        if (empty($extension)) {
+            return $tmpfile;
+        }
+        rename($tmpfile, $tmpfile . '.' . $extension);
+        return $tmpfile . '.' . $extension;
+    }
+
+    /**
      * Summary of sendFile
      * @param string $filepath actual filepath
      * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filepath

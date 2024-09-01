@@ -49,10 +49,13 @@ class EpubFsHandler extends BaseHandler
         try {
             $data = EPubReader::getContent($idData, $component, $request);
 
-            $expires = 60 * 60 * 24 * 14;
-            header('Pragma: public');
-            header('Cache-Control: maxage=' . $expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+            $sendHeaders = headers_sent() ? false : true;
+            if ($sendHeaders) {
+                $expires = 60 * 60 * 24 * 14;
+                header('Pragma: public');
+                header('Cache-Control: maxage=' . $expires);
+                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+            }
 
             echo $data;
         } catch (Exception $e) {

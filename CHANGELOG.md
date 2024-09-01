@@ -10,8 +10,14 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.7.x - 2024xxxx
+2.8.x - 2024xxxx
   * ...
+
+2.8.0 - 20240901 Support 'kepubify' tool for Kobo
+  * Add FileRenderer class to send files + use sendHeaders
+  * Fix Zipper to allow unicode chars in file names
+  * Refactor FetchHandler and getUpdatedEpub to support kepubify
+  * Use optional kepubify tool to convert EPUB files for Kobo - see #77 by @SenorSmartyPants
 
 2.7.5 - 20240831 Show extra data files in book detail + start GraphQL
   * Changes in config_default.php file:

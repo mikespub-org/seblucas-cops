@@ -374,7 +374,7 @@ class BookTest extends TestCase
 
         // no thumbnail resizing
         ob_start();
-        $cover->sendThumbnail($request, false);
+        $cover->sendThumbnail($request);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -392,7 +392,7 @@ class BookTest extends TestCase
 
         // no thumbnail cache
         ob_start();
-        $cover->sendThumbnail($request, false);
+        $cover->sendThumbnail($request);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -422,7 +422,7 @@ class BookTest extends TestCase
 
         // 1. cache miss
         ob_start();
-        $cover->sendThumbnail($request, false);
+        $cover->sendThumbnail($request);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -448,7 +448,7 @@ class BookTest extends TestCase
 
         // 2. cache hit
         ob_start();
-        $cover->sendThumbnail($request, false);
+        $cover->sendThumbnail($request);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -576,7 +576,7 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
 
         ob_start();
-        $book->getUpdatedEpub(20, false);
+        $book->getUpdatedEpub(20);
         $headers = headers_list();
         $output = ob_get_clean();
 

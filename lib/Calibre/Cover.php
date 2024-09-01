@@ -207,10 +207,9 @@ class Cover
     /**
      * Summary of sendThumbnail
      * @param Request $request
-     * @param bool $sendHeaders
      * @return void
      */
-    public function sendThumbnail($request, $sendHeaders = true)
+    public function sendThumbnail($request)
     {
         $type = $request->get('type', 'jpg');
         $width = $request->get('width');
@@ -239,6 +238,7 @@ class Cover
         $mime = ($type == 'jpg') ? 'image/jpeg' : 'image/png';
         $file = $this->coverFileName;
 
+        $sendHeaders = headers_sent() ? false : true;
         if ($sendHeaders) {
             $expires = 60 * 60 * 24 * 14;
             header('Pragma: public');

@@ -132,11 +132,6 @@ class EpubFsTest extends TestCase
         $this->assertEquals($decoded, EPubReader::decode($encoded));
     }
 
-    /**
-     * Summary of testEpubFsHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testEpubFsHandler(): void
     {
         // set request handler to 'phpunit' to override cli check in handler
@@ -152,11 +147,6 @@ class EpubFsTest extends TestCase
         $this->assertStringContainsString($expected, $output);
     }
 
-    /**
-     * Summary of testZipFsHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testZipFsHandler(): void
     {
         // set request handler to 'phpunit' to override cli check in handler

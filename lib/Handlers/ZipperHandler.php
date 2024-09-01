@@ -50,9 +50,12 @@ class ZipperHandler extends BaseHandler
         $zipper = new Zipper($request);
 
         if ($zipper->isValidForDownload()) {
+            $sendHeaders = headers_sent() ? false : true;
             // disable nginx buffering by default
-            header('X-Accel-Buffering: no');
-            $zipper->download();
+            if ($sendHeaders) {
+                header('X-Accel-Buffering: no');
+            }
+            $zipper->download(null, $sendHeaders);
         } else {
             echo "Invalid download: " . $zipper->getMessage();
         }

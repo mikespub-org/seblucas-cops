@@ -17,13 +17,14 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\FileRenderer;
 use SebLucas\Cops\Pages\PageId;
 
 class ZipperTest extends TestCase
 {
     /** @var array<string, int> */
     protected static $expectedSize = [
-        'recent' => 1596525,
+        'recent' => 1596561,
         'author' => 1594886,
         'zipped' => 344,
     ];
@@ -37,11 +38,6 @@ class ZipperTest extends TestCase
         Database::clearDb();
     }
 
-    /**
-     * Summary of testDownloadPageRecent
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testDownloadPageRecent(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;
@@ -57,7 +53,7 @@ class ZipperTest extends TestCase
         $this->assertTrue($valid);
 
         ob_start();
-        $zipper->download();
+        $zipper->download(null, false);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -68,11 +64,6 @@ class ZipperTest extends TestCase
         Config::set('download_page', ['']);
     }
 
-    /**
-     * Summary of testDownloadAuthor
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testDownloadAuthor(): void
     {
         $authorId = 3;
@@ -88,10 +79,9 @@ class ZipperTest extends TestCase
         $this->assertTrue($valid);
 
         ob_start();
-        $zipper->download();
+        $zipper->download(null, false);
         $headers = headers_list();
         $output = ob_get_clean();
-        $headers = headers_list();
 
         $expected = self::$expectedSize['author'];
         $this->assertEquals(0, count($headers));
@@ -138,11 +128,6 @@ class ZipperTest extends TestCase
         Config::set('download_page', ['']);
     }
 
-    /**
-     * Summary of testZipExtraFiles
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testZipExtraFiles(): void
     {
         $request = new Request();
@@ -153,20 +138,32 @@ class ZipperTest extends TestCase
         $this->assertTrue($valid);
 
         ob_start();
-        $zipper->download();
+        $zipper->download(null, false);
         $headers = headers_list();
         $output = ob_get_clean();
 
         $expected = self::$expectedSize['zipped'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
+
+        $expected = [
+            'hello.txt',
+            'sub/copied.txt',
+        ];
+        // make a temp file to analyze the zip file
+        $tmpfile = FileRenderer::getTempFile('zip');
+        file_put_contents($tmpfile, $output);
+        $zip = new \ZipArchive();
+        $result = $zip->open($tmpfile, \ZipArchive::RDONLY);
+        $this->assertTrue($result);
+        $result = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $result[] = $zip->getNameIndex($i);
+        }
+        $this->assertEquals($expected, $result);
+        $zip->close();
     }
 
-    /**
-     * Summary of testZipperHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testZipperHandler(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;

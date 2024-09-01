@@ -83,11 +83,6 @@ class FetchHandler extends BaseHandler
         }
 
         if (!empty($file)) {
-            if ($file == 'zipped') {
-                // zip all extra files and send back
-                $this->zipExtraFiles($request, $book);
-                return;
-            }
             $this->sendExtraFile($request, $book, $file);
             return;
         }
@@ -113,19 +108,39 @@ class FetchHandler extends BaseHandler
         }
 
         if ($type == 'epub' && Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
-            // run kepubify on original Epub file and send converted tmpfile
-            if (!empty(Config::get('kepubify_path'))) {
-                $kepubFile = $book->runKepubify($file, $data->getUpdatedFilenameKepub());
-                if (empty($kepubFile)) {
-                    echo 'Error: failed to convert epub file';
-                }
-                return;
-            }
-            // provide kepub in name only (without update of opf properties for cover-image in Epub)
-            FileRenderer::sendFile($file, basename($data->getUpdatedFilenameKepub()), $data->getMimeType());
+            $this->sendConvertedKepub($book, $file, $data);
+            return;
         }
 
         FileRenderer::sendFile($file, basename($file), $data->getMimeType());
+    }
+
+    /**
+     * Summary of sendExtraFile
+     * @param Request $request
+     * @param Book $book
+     * @param string $file
+     * @return void
+     */
+    public function sendExtraFile($request, $book, $file)
+    {
+        if ($file == 'zipped') {
+            // zip all extra files and send back
+            $this->zipExtraFiles($request, $book);
+            return;
+        }
+        $extraFiles = $book->getExtraFiles();
+        if (!in_array($file, $extraFiles)) {
+            // this will call exit()
+            $request->notFound();
+        }
+        // send back extra file
+        $filepath = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $file;
+        if (!file_exists($filepath)) {
+            // this will call exit()
+            $request->notFound();
+        }
+        FileRenderer::sendFile($filepath, basename($filepath));
     }
 
     /**
@@ -139,35 +154,15 @@ class FetchHandler extends BaseHandler
         $zipper = new Zipper($request);
 
         if ($zipper->isValidForExtraFiles($book)) {
+            $sendHeaders = headers_sent() ? false : true;
             // disable nginx buffering by default
-            header('X-Accel-Buffering: no');
-            $zipper->download();
+            if ($sendHeaders) {
+                header('X-Accel-Buffering: no');
+            }
+            $zipper->download(null, $sendHeaders);
         } else {
             echo "Invalid zipped: " . $zipper->getMessage();
         }
-    }
-
-    /**
-     * Summary of sendExtraFile
-     * @param Request $request
-     * @param Book $book
-     * @param string $file
-     * @return void
-     */
-    public function sendExtraFile($request, $book, $file)
-    {
-        $extraFiles = $book->getExtraFiles();
-        if (!in_array($file, $extraFiles)) {
-            // this will call exit()
-            $request->notFound();
-        }
-        // send back extra file
-        $filepath = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $file;
-        if (!file_exists($filepath)) {
-            // this will call exit()
-            $request->notFound();
-        }
-        FileRenderer::sendFile($filepath, basename($filepath));
     }
 
     /**
@@ -203,5 +198,26 @@ class FetchHandler extends BaseHandler
         }
         // this will also use kepubify_path internally if defined
         $book->getUpdatedEpub($idData);
+    }
+
+    /**
+     * Summary of sendConvertedKepub
+     * @param Book $book
+     * @param string $file
+     * @param Data $data
+     * @return void
+     */
+    public function sendConvertedKepub($book, $file, $data)
+    {
+        // run kepubify on original Epub file and send converted tmpfile
+        if (!empty(Config::get('kepubify_path'))) {
+            $kepubFile = $book->runKepubify($file, $data->getUpdatedFilenameKepub());
+            if (empty($kepubFile)) {
+                echo 'Error: failed to convert epub file';
+            }
+            return;
+        }
+        // provide kepub in name only (without update of opf properties for cover-image in Epub)
+        FileRenderer::sendFile($file, basename($data->getUpdatedFilenameKepub()), $data->getMimeType());
     }
 }
