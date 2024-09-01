@@ -217,6 +217,7 @@ class Zipper
                 continue;
             }
             //$name = basename($path);
+            // @todo use normalizeUtf8String() on author, series and title or not?
             // Using {author} - {series} #{series_index} - {title} with .{format}
             $author = $entry->book->getAuthorsName();
             $name = explode(', ', $author)[0];
@@ -227,7 +228,8 @@ class Zipper
             $name .= ' - ' . $entry->book->title;
             $info = pathinfo($path);
             $name .= '.' . $info['extension'];
-            $name = preg_replace('/[^\w\s\d\'\.\-\/_,#\[\]\(\)]/', '', $name);
+            // allow unicode characters here
+            $name = preg_replace('/[^\w\s\d\'\.\-\/_,#\[\]\(\)]/u', '', $name);
             $this->fileList[$name] = $path;
         }
         if (count($this->fileList) < 1) {
@@ -267,14 +269,18 @@ class Zipper
 
     /**
      * Summary of download
+     * @param ?string $fileName
+     * @param bool $sendHeaders
      * @return void
      */
-    public function download()
+    public function download($fileName = null, $sendHeaders = true)
     {
+        $fileName ??= $this->fileName;
+
         // keep it simple for now, and use the basic options
         $zip = new ZipStream(
-            outputName: $this->fileName,
-            sendHttpHeaders: true,
+            outputName: $fileName,
+            sendHttpHeaders: $sendHeaders,
         );
         foreach ($this->fileList as $name => $path) {
             $zip->addFileFromPath(
