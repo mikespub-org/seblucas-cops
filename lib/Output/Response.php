@@ -130,11 +130,11 @@ class Response
     /**
      * Summary of redirect
      * @param string $location
-     * @return never
+     * @return void
      */
     public static function redirect($location)
     {
         header('Location: ' . $location);
-        exit;
+        //exit;
     }
 }
