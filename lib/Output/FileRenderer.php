@@ -75,7 +75,7 @@ class FileRenderer
         } elseif (empty($filename)) {
             header('Content-Disposition: inline');
         } else {
-            header('Content-Disposition: attachment; filepath="' . basename($filename) . '"');
+            header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
         }
 
         // @todo clean up nginx x_accel_redirect

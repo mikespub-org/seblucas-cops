@@ -13,6 +13,9 @@ x.x.x - TODO
 2.8.x - 2024xxxx
   * ...
 
+2.8.1 - 20240902 Fix download filenames
+  * Fix FileRenderer to send the right Content-Disposition - see issue #102 by @Chirishman
+
 2.8.0 - 20240901 Support 'kepubify' tool for Kobo
   * Add FileRenderer class to send files + use sendHeaders
   * Fix Zipper to allow unicode chars in file names
