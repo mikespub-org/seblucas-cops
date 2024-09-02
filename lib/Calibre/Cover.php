@@ -13,6 +13,8 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Output\FileRenderer;
+use SebLucas\Cops\Output\Response;
 
 class Cover
 {
@@ -189,6 +191,12 @@ class Cover
         if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
             return false;
         }
+        //if we don't cache the thumbnail, this already returns the image data
+        if (is_null($outputfile)) {
+            $mimetype = ($inType == 'png') ? 'image/png' : 'image/jpeg';
+            // use cache control here
+            Response::sendHeaders($mimetype, 0);
+        }
         if ($inType == 'png') {
             if (!imagepng($dst_img, $outputfile, 9)) {
                 return false;
@@ -238,20 +246,11 @@ class Cover
         $mime = ($type == 'jpg') ? 'image/jpeg' : 'image/png';
         $file = $this->coverFileName;
 
-        $sendHeaders = headers_sent() ? false : true;
-        if ($sendHeaders) {
-            $expires = 60 * 60 * 24 * 14;
-            header('Pragma: public');
-            header('Cache-Control: max-age=' . $expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
-            header('Content-Type: ' . $mime);
-        }
-
         $cachePath = $this->getThumbnailCachePath($width, $height, $type);
 
         if ($cachePath !== null && file_exists($cachePath)) {
             //return the already cached thumbnail
-            readfile($cachePath);
+            FileRenderer::sendFile($cachePath, null, $mime, true);
             return;
         }
 
@@ -262,27 +261,11 @@ class Cover
                 return;
             }
             //return the just cached thumbnail
-            readfile($cachePath);
+            FileRenderer::sendFile($cachePath, null, $mime, true);
             return;
         }
 
-        // -DC- File is a full path
-        //$dir = Config::get('calibre_internal_directory');
-        //if (empty(Config::get('calibre_internal_directory'))) {
-        //    $dir = Database::getDbDirectory();
-        //}
-        //$file = $dir . $file;
-
-        // @todo clean up nginx x_accel_redirect
-        if (empty(Config::get('x_accel_redirect'))) {
-            if ($sendHeaders) {
-                header('Content-Disposition: filename="' . basename($file) . '"');
-                header('Content-Length: ' . filesize($file));
-            }
-            readfile($file);
-        } else {
-            header(Config::get('x_accel_redirect') . ': ' . $file);
-        }
+        FileRenderer::sendFile($file, null, $mime);
         return;
     }
 

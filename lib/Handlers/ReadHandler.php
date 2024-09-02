@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Output\EPubReader;
+use SebLucas\Cops\Output\Response;
 use Exception;
 
 /**
@@ -32,7 +33,7 @@ class ReadHandler extends BaseHandler
         $idData = $request->getId('data');
         if (empty($idData)) {
             // this will call exit()
-            $request->notFound();
+            Response::notFound($request);
         }
 
         try {
@@ -40,7 +41,7 @@ class ReadHandler extends BaseHandler
             echo EPubReader::getReader($idData, $request);
         } catch (Exception $e) {
             error_log($e);
-            $request->notFound();
+            Response::sendError($request, $e->getMessage());
         }
     }
 }

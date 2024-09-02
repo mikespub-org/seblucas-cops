@@ -9,8 +9,8 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Calibre\Book;
-use ZipArchive;
+use SebLucas\Cops\Output\EPubReader;
+use SebLucas\Cops\Output\Response;
 use Exception;
 
 /**
@@ -35,42 +35,24 @@ class ZipFsHandler extends BaseHandler
             return;
         }
 
-        $database = $request->getId('db');
+        //$database = $request->getId('db');
         $idData = $request->getId('idData');
+        if (empty($idData)) {
+            // this will call exit()
+            Response::notFound($request);
+        }
         $component = $request->get('component');
+        if (empty($component)) {
+            // this will call exit()
+            Response::notFound($request);
+        }
 
         try {
-            $book = Book::getBookByDataId($idData, intval($database));
-            if (!$book) {
-                throw new Exception('Unknown data ' . $idData);
-            }
-            $epub = $book->getFilePath('EPUB', $idData);
-            if (!$epub || !file_exists($epub)) {
-                throw new Exception('Unknown file ' . $epub);
-            }
-            $zip = new ZipArchive();
-            $res = $zip->open($epub, ZipArchive::RDONLY);
-            if ($res !== true) {
-                throw new Exception('Invalid file ' . $epub);
-            }
-            $res = $zip->locateName($component);
-            if ($res === false) {
-                throw new Exception('Unknown component ' . $component);
-            }
+            EPubReader::sendZipContent($idData, $component, $request);
 
-            $sendHeaders = headers_sent() ? false : true;
-            if ($sendHeaders) {
-                $expires = 60 * 60 * 24 * 14;
-                header('Pragma: public');
-                header('Cache-Control: maxage=' . $expires);
-                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
-            }
-
-            echo $zip->getFromName($component);
-            $zip->close();
         } catch (Exception $e) {
             error_log($e);
-            $request->notFound();
+            Response::sendError($request, $e->getMessage());
         }
     }
 }

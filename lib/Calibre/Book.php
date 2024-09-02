@@ -15,6 +15,7 @@ use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Output\FileRenderer;
 use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Tools\ZipEdit;
@@ -401,15 +402,7 @@ class Book
     public function getExtraFileLink($fileName)
     {
         $filePath = $this->path . '/' . static::DATA_DIR_NAME . '/' . $fileName;
-        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-        if (array_key_exists($extension, Data::$mimetypes)) {
-            $mimetype = Data::$mimetypes[$extension];
-        } else {
-            $mimetype = mime_content_type($filePath);
-            if (!$mimetype) {
-                $mimetype = 'application/octet-stream';
-            }
-        }
+        $mimetype = Response::getMimeType($filePath) ?? 'application/octet-stream';
         if (Database::useAbsolutePath($this->databaseId)) {
             $params = ['id' => $this->id, 'db' => $this->databaseId];
             if (Config::get('use_route_urls') && is_null($params['db'])) {
@@ -658,6 +651,8 @@ class Book
                     header('Content-Length: ' . filesize($tmpfile));
                 }
                 readfile($tmpfile);
+                // @todo no cache control here!?
+                //FileRenderer::sendFile($tmpfile, basename($sendFile), EPub::MIME_TYPE, true, null);
             }
             return $tmpfile;
         }

@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\HtmlRenderer;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
 use Throwable;
 
@@ -33,7 +34,7 @@ class HtmlHandler extends PageHandler
     {
         // If we detect that an OPDS reader try to connect try to redirect to feed.php
         if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $request->agent())) {
-            header('Location: ' . Route::link("feed", null, ["db" => $request->database()]));
+            Response::redirect(Route::link("feed", null, ["db" => $request->database()]));
             return;
         }
 
@@ -65,7 +66,7 @@ class HtmlHandler extends PageHandler
             echo $html->render($request);
         } catch (Throwable $e) {
             error_log($e);
-            echo $e->getMessage();
+            Response::sendError($request, $e->getMessage());
         }
     }
 }

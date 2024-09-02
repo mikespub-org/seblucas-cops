@@ -11,7 +11,11 @@ x.x.x - TODO
   * ...
 
 2.8.x - 2024xxxx
-  * ...
+  * Expand Data mimetypes to cover common EPUB file components
+  * Add Response class + move notFound() + add redirect() and sendError()
+  * Use FileRenderer::sendFile() for covers and thumbnails
+  * Fix monocle epub reader when using route urls
+  * Move getting zip content from ZipFsHandler to EPubReader
 
 2.8.1 - 20240902 Fix download filenames
   * Fix FileRenderer to send the right Content-Disposition - see issue #102 by @Chirishman

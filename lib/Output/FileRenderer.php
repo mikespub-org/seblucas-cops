@@ -10,29 +10,9 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Calibre\Data;
 
-class FileRenderer
+class FileRenderer extends Response
 {
-    /**
-     * Summary of getMimeType
-     * @param string $filepath
-     * @return string
-     */
-    public static function getMimeType($filepath)
-    {
-        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
-        if (array_key_exists($extension, Data::$mimetypes)) {
-            $mimetype = Data::$mimetypes[$extension];
-        } else {
-            $mimetype = mime_content_type($filepath);
-            if (!$mimetype) {
-                $mimetype = 'application/octet-stream';
-            }
-        }
-        return $mimetype;
-    }
-
     /**
      * Summary of getTempFile
      * @param string $extension
@@ -51,32 +31,23 @@ class FileRenderer
 
     /**
      * Summary of sendFile
+     * @todo align params order with Response::sendData() if/when it makes sense
      * @param string $filepath actual filepath
-     * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filepath
+     * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
      * @param ?string $mimetype with null = detect from filepath, '...' = actual mimetype for Content-Type
      * @param bool $istmpfile with true if this is a temp file, false otherwise
+     * @param ?int $expires use default expiration for files
      * @return void
      */
-    public static function sendFile($filepath, $filename = null, $mimetype = null, $istmpfile = false)
+    public static function sendFile($filepath, $filename = null, $mimetype = null, $istmpfile = false, $expires = 0)
     {
+        // detect mimetype from filepath here if needed
         if (empty($mimetype)) {
             $mimetype = static::getMimeType($filepath);
         }
 
         // @todo do we send cache control for tmpfile too?
-        $expires = 60 * 60 * 24 * 14;
-        header('Pragma: public');
-        header('Cache-Control: max-age=' . $expires);
-        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
-
-        header('Content-Type: ' . $mimetype);
-        if (is_null($filename)) {
-            // no content disposition
-        } elseif (empty($filename)) {
-            header('Content-Disposition: inline');
-        } else {
-            header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
-        }
+        static::sendHeaders($mimetype, $expires, $filename);
 
         // @todo clean up nginx x_accel_redirect
         if (!empty($istmpfile) || empty(Config::get('x_accel_redirect'))) {

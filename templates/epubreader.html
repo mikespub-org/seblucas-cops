@@ -20,7 +20,7 @@
             return [{{=it.contents}}];
           },
           getComponent: function (componentId) {
-            return { url: "{{=it.link}}" + componentId };
+            return { url: "{{=it.link}}".replace('~COMP~', componentId) };
           },
           getMetaData: function(key) {
             return {

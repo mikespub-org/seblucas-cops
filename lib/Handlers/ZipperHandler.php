@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
 /**
@@ -43,7 +44,7 @@ class ZipperHandler extends BaseHandler
             session_start();
             if (!isset($_SESSION['connected'])) {
                 // this will call exit()
-                $request->notFound();
+                Response::notFound($request);
             }
         }
 
@@ -57,7 +58,7 @@ class ZipperHandler extends BaseHandler
             }
             $zipper->download(null, $sendHeaders);
         } else {
-            echo "Invalid download: " . $zipper->getMessage();
+            Response::sendError($request, "Invalid download: " . $zipper->getMessage());
         }
     }
 }

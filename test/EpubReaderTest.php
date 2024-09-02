@@ -70,12 +70,12 @@ class EpubReaderTest extends TestCase
         $request = new Request();
 
         ob_start();
-        $data = EPubReader::getContent($idData, $component, $request);
+        EPubReader::sendContent($idData, $component, $request);
         $headers = headers_list();
         $output = ob_get_clean();
 
         $html = new DOMDocument();
-        $html->loadHTML($data);
+        $html->loadHTML($output);
 
         $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
         $expected = "Title Page";

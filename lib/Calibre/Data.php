@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Output\Response;
 
 class Data
 {
@@ -41,12 +42,16 @@ class Data
         'azw3'  => 'application/x-mobi8-ebook',
         'cbz'   => 'application/x-cbz',
         'cbr'   => 'application/x-cbr',
+        'css'   => 'text/css',
         'djv'   => 'image/vnd.djvu',
         'djvu'  => 'image/vnd.djvu',
         'doc'   => 'application/msword',
         'epub'  => 'application/epub+zip',
         'fb2'   => 'text/fb2+xml',
+        'gif'   => 'image/gif',
         'ibooks' => 'application/x-ibooks+zip',
+        'jpeg'  => 'image/jpeg',
+        'jpg'   => 'image/jpeg',
         'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
         'm4a'   => 'audio/mp4',
@@ -59,18 +64,23 @@ class Data
         'lrx'   => 'application/x-sony-bbeb',
         'ncx'   => 'application/x-dtbncx+xml',
         'opf'   => 'application/oebps-package+xml',
-        'otf'   => 'application/x-font-opentype',
+        'otf'   => 'font/otf',
         'pdb'   => 'application/vnd.palm',
         'pdf'   => 'application/pdf',
+        'png'   => 'image/png',
         'prc'   => 'application/x-mobipocket-ebook',
         'rtf'   => 'application/rtf',
         'svg'   => 'image/svg+xml',
-        'ttf'   => 'application/x-font-truetype',
+        'ttf'   => 'font/ttf',
         'tpz'   => 'application/x-topaz-ebook',
         'txt'   => 'text/plain',
         'wav'   => 'audio/wav',
+        'webp'  => 'image/webp',
         'wmf'   => 'image/wmf',
+        'woff'  => 'font/woff',
+        'woff2' => 'font/woff2',
         'xhtml' => 'application/xhtml+xml',
+        'xml'   => 'application/xhtml+xml',
         'xpgt'  => 'application/adobe-page-template+xml',
         'zip'   => 'application/zip',
     ];
@@ -116,22 +126,15 @@ class Data
 
     /**
      * Summary of getMimeType
-     * @return bool|string
+     * @return string
      */
     public function getMimeType()
     {
-        $result = "application/octet-stream";
         if ($this->isKnownType()) {
-            return static::$mimetypes [$this->extension];
-        } elseif (function_exists('finfo_open') === true) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-
-            if ($finfo !== false) {
-                $result = finfo_file($finfo, $this->getLocalPath());
-                finfo_close($finfo);
-            }
+            return static::$mimetypes[$this->extension];
         }
-        return $result;
+        $default = "application/octet-stream";
+        return Response::getMimeType($this->getLocalPath()) ?? $default;
     }
 
     /**

@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Output\EPubReader;
+use SebLucas\Cops\Output\Response;
 use Exception;
 
 /**
@@ -38,29 +39,20 @@ class EpubFsHandler extends BaseHandler
         $idData = $request->getId('data');
         if (empty($idData)) {
             // this will call exit()
-            $request->notFound();
+            Response::notFound($request);
         }
         $component = $request->get('comp', null);
         if (empty($component)) {
             // this will call exit()
-            $request->notFound();
+            Response::notFound($request);
         }
 
         try {
-            $data = EPubReader::getContent($idData, $component, $request);
+            EPubReader::sendContent($idData, $component, $request);
 
-            $sendHeaders = headers_sent() ? false : true;
-            if ($sendHeaders) {
-                $expires = 60 * 60 * 24 * 14;
-                header('Pragma: public');
-                header('Cache-Control: maxage=' . $expires);
-                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
-            }
-
-            echo $data;
         } catch (Exception $e) {
             error_log($e);
-            $request->notFound();
+            Response::sendError($request, $e->getMessage());
         }
     }
 }

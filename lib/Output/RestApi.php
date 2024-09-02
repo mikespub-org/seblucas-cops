@@ -196,7 +196,7 @@ class RestApi
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
-                header('Location: ' . Route::link(static::$handler) . '/index');
+                Response::redirect(Route::link(static::$handler) . '/index');
                 return '';
             }
             if ($this->isExtra) {

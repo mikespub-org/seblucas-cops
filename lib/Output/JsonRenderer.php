@@ -362,7 +362,7 @@ class JsonRenderer
             $currentPage->InitializeContent();
         } catch (Exception $e) {
             // this will call exit()
-            $request->notFound(Route::link("index"), $e->getMessage(), ['page' => 'index', 'db' => 0, 'vl' => 0]);
+            Response::sendError($request, $e->getMessage());
         }
 
         // adapt handler based on $request e.g. for rest api

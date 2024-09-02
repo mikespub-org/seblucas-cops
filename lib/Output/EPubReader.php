@@ -15,6 +15,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
+use ZipArchive;
 use Exception;
 
 /**
@@ -28,17 +29,17 @@ class EPubReader
 
     /**
      * Summary of getComponentContent
-     * @param EPub $book
+     * @param EPub $epub
      * @param string $component
      * @param array<mixed> $params
      * @return ?string
      */
-    public static function getComponentContent($book, $component, $params = [])
+    public static function getComponentContent($epub, $component, $params = [])
     {
-        $data = $book->component($component);
+        $data = $epub->component($component);
         $handler = "epubfs";
 
-        $callback = function ($m) use ($book, $component, $params, $handler) {
+        $callback = function ($m) use ($epub, $component, $params, $handler) {
             $method = $m[1];
             $path = $m[2];
             $end = '';
@@ -53,7 +54,7 @@ class EPubReader
                 $path = $matches[1];
                 $hash = '#' . $matches[2];
             }
-            $comp = $book->getComponentName($component, $path);
+            $comp = $epub->getComponentName($component, $path);
             if (!$comp) {
                 return $method . "'#'" . $end;
             }
@@ -74,13 +75,13 @@ class EPubReader
     }
 
     /**
-     * Summary of getContent
+     * Summary of sendContent
      * @param int $idData
      * @param string $component
      * @param Request $request
-     * @return string
+     * @return void
      */
-    public static function getContent($idData, $component, $request)
+    public static function sendContent($idData, $component, $request)
     {
         $book = Book::getBookByDataId($idData, $request->database());
         if (!$book) {
@@ -93,9 +94,11 @@ class EPubReader
 
         $data = static::getComponentContent($epub, $component, $params);
 
-        header('Content-Type: ' . $epub->componentContentType($component));
+        // get mimetype for $component from EPub manifest here
+        $mimetype = $epub->componentContentType($component);
 
-        return $data;
+        // use cache control here
+        Response::sendData($data, $mimetype, 0);
     }
 
     /**
@@ -135,7 +138,7 @@ class EPubReader
         }, $epub->contents()));
 
         $params['comp'] = '~COMP~';
-        $link = str_replace(urlencode('~COMP~'), '', Route::link(static::$handler, null, $params));
+        $link = str_replace(urlencode('~COMP~'), '~COMP~', Route::link(static::$handler, null, $params));
 
         $data = [
             'title'      => $book->title,
@@ -239,5 +242,55 @@ class EPubReader
         ];
 
         return Format::template($data, $template);
+    }
+
+    /**
+     * Summary of getZipContent
+     * @param string $filePath
+     * @param string $component
+     * @return ?string
+     */
+    public static function getZipFileContent($filePath, $component)
+    {
+        $zip = new ZipArchive();
+        $res = $zip->open($filePath, ZipArchive::RDONLY);
+        if ($res !== true) {
+            throw new Exception('Invalid file ' . $filePath);
+        }
+        $res = $zip->locateName($component);
+        if ($res === false) {
+            throw new Exception('Unknown component ' . $component);
+        }
+        $data = $zip->getFromName($component);
+        $zip->close();
+
+        return $data;
+    }
+
+    /**
+     * Summary of sendZipContent
+     * @param int $idData
+     * @param string $component
+     * @param Request $request
+     * @return void
+     */
+    public static function sendZipContent($idData, $component, $request)
+    {
+        $book = Book::getBookByDataId($idData, $request->database());
+        if (!$book) {
+            throw new Exception('Unknown data ' . $idData);
+        }
+        $filePath = $book->getFilePath('EPUB', $idData);
+        if (!$filePath || !file_exists($filePath)) {
+            throw new Exception('Unknown file ' . $filePath);
+        }
+
+        $data = static::getZipFileContent($filePath, $component);
+
+        // get mimetype based on $component name alone here
+        $mimetype = Response::getMimeType($component);
+
+        // use cache control here
+        Response::sendData($data, $mimetype, 0);
     }
 }

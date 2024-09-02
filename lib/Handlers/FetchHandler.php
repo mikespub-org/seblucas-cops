@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Output\FileRenderer;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
 /**
@@ -56,7 +57,7 @@ class FetchHandler extends BaseHandler
             session_start();
             if (!isset($_SESSION['connected'])) {
                 // this will call exit()
-                $request->notFound();
+                Response::notFound($request);
             }
         }
         // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
@@ -79,7 +80,7 @@ class FetchHandler extends BaseHandler
 
         if (!$book) {
             // this will call exit()
-            $request->notFound();
+            Response::notFound($request);
         }
 
         if (!empty($file)) {
@@ -132,13 +133,13 @@ class FetchHandler extends BaseHandler
         $extraFiles = $book->getExtraFiles();
         if (!in_array($file, $extraFiles)) {
             // this will call exit()
-            $request->notFound();
+            Response::notFound($request);
         }
         // send back extra file
         $filepath = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $file;
         if (!file_exists($filepath)) {
             // this will call exit()
-            $request->notFound();
+            Response::notFound($request);
         }
         FileRenderer::sendFile($filepath, basename($filepath));
     }
@@ -177,7 +178,7 @@ class FetchHandler extends BaseHandler
         $file = $book->getCoverFilePath($type);
         if (empty($file) || !file_exists($file)) {
             // this will call exit()
-            $request->notFound();
+            Response::notFound($request);
         }
         $cover = new Cover($book);
         $cover->sendThumbnail($request);

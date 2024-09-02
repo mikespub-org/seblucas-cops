@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Resource;
+use SebLucas\Cops\Output\Response;
 
 /**
  * Handle calres:// resources for Calibre notes
@@ -35,7 +36,7 @@ class CalResHandler extends BaseHandler
 
         $hash = $alg . ':' . $digest;
         if (!Resource::sendImageResource($hash, null, intval($database))) {
-            $request->notFound();
+            Response::notFound($request);
         }
     }
 }
