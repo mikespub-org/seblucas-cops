@@ -116,7 +116,8 @@ class RestApiTest extends TestCase
     {
         $request = new Request();
         $apiHandler = new RestApi($request);
-        $expected = JsonRenderer::getJson($request);
+        $renderer = new JsonRenderer();
+        $expected = $renderer->getJson($request);
         $test = $apiHandler->getJson();
         $this->assertEquals($expected, $test);
     }

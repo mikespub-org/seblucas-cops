@@ -33,7 +33,8 @@ class JsonHandler extends PageHandler
         $response = new Response('application/json;charset=utf-8');
 
         try {
-            $response->sendData(json_encode(JsonRenderer::getJson($request)));
+            $json = new JsonRenderer();
+            $response->sendData(json_encode($json->getJson($request)));
         } catch (Throwable $e) {
             error_log($e);
             Response::sendError($request, $e->getMessage());

@@ -82,7 +82,8 @@ class HtmlRenderer
         $data = $this->getTemplateData($request);
         if ($request->render()) {
             // Get the page data
-            $data['page_it'] = JsonRenderer::getJson($request, true);
+            $json = new JsonRenderer();
+            $data['page_it'] = $json->getJson($request, true);
             if ($data['title'] != $data['page_it']['title']) {
                 $data['title'] .= ' - ' . $data['page_it']['title'];
             }
@@ -117,7 +118,8 @@ class HtmlRenderer
         $data = $this->getTemplateData($request);
         if ($request->render()) {
             // Get the page data
-            $page_it = JsonRenderer::getJson($request, true);
+            $json = new JsonRenderer();
+            $page_it = $json->getJson($request, true);
             if ($data['title'] != $page_it['title']) {
                 $data['title'] .= ' - ' . $page_it['title'];
             }

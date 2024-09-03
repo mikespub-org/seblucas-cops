@@ -928,10 +928,11 @@ class CustomColumnsTest extends TestCase
 
         $book = Book::getBookById(223);
         $book->setHandler(self::$handler);
-        $json = JsonRenderer::getBookContentArray($book);
+        $renderer = new JsonRenderer();
+        $result = $renderer->getBookContentArray($book);
 
         /* @var CustomColumn[] $custom */
-        $custom = $json["customcolumns_list"];
+        $custom = $result["customcolumns_list"];
 
         $this->assertEquals("custom_01", $custom[0]['customColumnType']['columnTitle']);
         $this->assertEquals("text_2", $custom[0]['htmlvalue']);

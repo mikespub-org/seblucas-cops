@@ -69,7 +69,8 @@ class BaseTest extends TestCase
         $this->assertNull(Format::serverSideRender(null, $template));
 
         $request = new Request();
-        $data = JsonRenderer::getJson($request, true);
+        $renderer = new JsonRenderer();
+        $data = $renderer->getJson($request, true);
         $output = Format::serverSideRender($data, $template);
 
         $old = libxml_use_internal_errors(true);
