@@ -81,7 +81,7 @@ class EPubReader
      * @param Request $request
      * @return void
      */
-    public static function sendContent($idData, $component, $request)
+    public function sendContent($idData, $component, $request)
     {
         $book = Book::getBookByDataId($idData, $request->database());
         if (!$book) {
@@ -108,11 +108,11 @@ class EPubReader
      * @param Request $request
      * @return string
      */
-    public static function getReader($idData, $request)
+    public function getReader($idData, $request)
     {
         $version = $request->get('version', Config::get('epub_reader', 'monocle'));
         if ($version == 'epubjs') {
-            return static::getEpubjsReader($idData, $request);
+            return $this->getEpubjsReader($idData, $request);
         }
         $book = Book::getBookByDataId($idData, $request->database());
         if (!$book) {
@@ -207,7 +207,7 @@ class EPubReader
      * @param Request $request
      * @return string
      */
-    public static function getEpubjsReader($idData, $request)
+    public function getEpubjsReader($idData, $request)
     {
         $handler = "zipfs";
         $template = "templates/epubjs-reader.html";
@@ -251,7 +251,7 @@ class EPubReader
      * @param string $component
      * @return ?string
      */
-    public static function getZipFileContent($filePath, $component)
+    public function getZipFileContent($filePath, $component)
     {
         $zip = new ZipArchive();
         $res = $zip->open($filePath, ZipArchive::RDONLY);
@@ -275,7 +275,7 @@ class EPubReader
      * @param Request $request
      * @return void
      */
-    public static function sendZipContent($idData, $component, $request)
+    public function sendZipContent($idData, $component, $request)
     {
         $book = Book::getBookByDataId($idData, $request->database());
         if (!$book) {
@@ -286,7 +286,7 @@ class EPubReader
             throw new Exception('Unknown file ' . $filePath);
         }
 
-        $data = static::getZipFileContent($filePath, $component);
+        $data = $this->getZipFileContent($filePath, $component);
 
         // get mimetype based on $component name alone here
         $mimetype = Response::getMimeType($component);

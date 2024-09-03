@@ -36,9 +36,12 @@ class ReadHandler extends BaseHandler
             Response::notFound($request);
         }
 
+        $response = new Response('text/html;charset=utf-8');
+
+        $reader = new EPubReader();
+
         try {
-            $response = new Response('text/html;charset=utf-8');
-            $response->sendData(EPubReader::getReader($idData, $request));
+            $response->sendData($reader->getReader($idData, $request));
         } catch (Exception $e) {
             error_log($e);
             Response::sendError($request, $e->getMessage());

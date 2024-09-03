@@ -35,9 +35,10 @@ class EpubReaderTest extends TestCase
     {
         $idData = 20;
         $request = new Request();
+        $reader = new EPubReader();
 
         ob_start();
-        $data = EPubReader::getReader($idData, $request);
+        $data = $reader->getReader($idData, $request);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -58,9 +59,10 @@ class EpubReaderTest extends TestCase
         $idData = 20;
         $component = 'title.xml';
         $request = new Request();
+        $reader = new EPubReader();
 
         ob_start();
-        EPubReader::sendContent($idData, $component, $request);
+        $reader->sendContent($idData, $component, $request);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -168,9 +170,10 @@ class EpubReaderTest extends TestCase
         $idData = 20;
         $request = new Request();
         $request->set('version', 'epubjs');
+        $reader = new EPubReader();
 
         ob_start();
-        $data = EPubReader::getReader($idData, $request);
+        $data = $reader->getReader($idData, $request);
         $headers = headers_list();
         $output = ob_get_clean();
 
