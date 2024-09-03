@@ -45,7 +45,6 @@ class JsonRenderer
                     "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
             }
         }
-        $database = $book->getDatabaseId();
 
         $authors = [];
         foreach ($book->getAuthors() as $author) {
@@ -342,6 +341,258 @@ class JsonRenderer
     }
 
     /**
+     * Summary of addPagination
+     * @param array<string, mixed> $in
+     * @param Page $currentPage
+     * @return array<string, mixed>
+     */
+    public static function addPagination($in, $currentPage)
+    {
+        $out = $in;
+        if (!$currentPage->isPaginated()) {
+            $out ["isPaginated"] = 0;
+            return $out;
+        }
+        $prevLink = $currentPage->getPrevLink();
+        $nextLink = $currentPage->getNextLink();
+        $out ["isPaginated"] = 1;
+        $out ["firstLink"] = "";
+        $out ["prevLink"] = "";
+        if (!is_null($prevLink)) {
+            $out ["firstLink"] = $currentPage->getFirstLink()->hrefXhtml();
+            $out ["prevLink"] = $prevLink->hrefXhtml();
+        }
+        $out ["nextLink"] = "";
+        $out ["lastLink"] = "";
+        if (!is_null($nextLink)) {
+            $out ["nextLink"] = $nextLink->hrefXhtml();
+            $out ["lastLink"] = $currentPage->getLastLink()->hrefXhtml();
+        }
+        $out ["maxPage"] = $currentPage->getMaxPage();
+        $out ["currentPage"] = $currentPage->n;
+        return $out;
+    }
+
+    /**
+     * Summary of addSortFilter
+     * @param array<string, mixed> $in
+     * @param Request $request
+     * @param Page $currentPage
+     * @param int|string $page
+     * @param string $handler
+     * @return array<string, mixed>
+     */
+    public static function addSortFilter($in, $request, $currentPage, $page, $handler)
+    {
+        $out = $in;
+        $out ["sorted"] = $currentPage->sorted ?? '';
+        $out ["sortedBy"] = explode(' ', $out ["sorted"])[0];
+        $out ["sortedDir"] = '';
+        if (!empty($out ["sortedBy"])) {
+            if (in_array($out ["sortedBy"], ['title', 'author', 'sort', 'name', 'type', 'lang_code', 'letter', 'year', 'range', 'value', 'groupid', 'series_index'])) {
+                // default ascending order for anything vaguely alphabetical or grouped
+                $out ["sortedDir"] = str_contains($out ["sorted"], 'desc') ? 'desc' : 'asc';
+            } elseif (in_array($out ["sortedBy"], ['pubdate', 'rating', 'timestamp', 'count', 'series'])) {
+                // default descending order for anything vaguely numerical or recent
+                $out ["sortedDir"] = str_contains($out ["sorted"], 'asc') ? 'asc' : 'desc';
+            } else {
+                // default descending order for anything else we forgot above :-)
+                $out ["sortedDir"] = str_contains($out ["sorted"], 'asc') ? 'asc' : 'desc';
+            }
+        }
+        $qid = $request->getId();
+        $out ["containsBook"] = 0;
+        $out ["filterurl"] = false;
+        if ($request->isFeed()) {
+            $filterLinks = Config::get('opds_filter_links');
+        } else {
+            $filterLinks = Config::get('html_filter_links');
+        }
+        $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
+        if ($currentPage->containsBook()) {
+            $out ["containsBook"] = 1;
+            // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
+            $params = $request->getCleanParams();
+            $params['sort'] = '{0}';
+            $out ["sorturl"] = str_replace('%7B0%7D', '{0}', Route::link($handler, null, $params));
+            $out ["sortoptions"] = $currentPage->getSortOptions();
+            if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
+                $params = $request->getCleanParams();
+                $params['filter'] = 1;
+                $out ["filterurl"] = Route::link($handler, null, $params);
+            }
+        } elseif (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
+            $params = $request->getCleanParams();
+            $params['filter'] = null;
+            $out ["filterurl"] = Route::link($handler, null, $params);
+        }
+        return $out;
+    }
+
+    /**
+     * Summary of getFiltersArray
+     * @param Request $request
+     * @param int|null $database
+     * @return array<mixed>|false
+     */
+    public static function getFiltersArray($request, $database)
+    {
+        $filters = false;
+        if (!$request->hasFilter()) {
+            return $filters;
+        }
+        $filters = [];
+        foreach (Filter::getEntryArray($request, $database) as $entry) {
+            array_push($filters, static::getContentArray($entry, ['filter' => 1]));
+        }
+        if (empty($filters)) {
+            $filters = false;
+        }
+        return $filters;
+    }
+
+    /**
+     * Summary of getHomeUrl
+     * @param array<string, mixed> $out
+     * @param int|string $page
+     * @param string $handler
+     * @param int|null $database
+     * @return string
+     */
+    public static function getHomeUrl($out, $page, $handler, $database)
+    {
+        $homepage = PageId::getHomePage();
+        // multiple database setup
+        if ($page != PageId::INDEX && !is_null($database)) {
+            if ($homepage != PageId::INDEX) {
+                $homeurl = Route::link($handler, PageId::INDEX, ['db' => $database]);
+            } else {
+                $homeurl = Route::link($handler, null, ['db' => $database]);
+            }
+        } elseif ($homepage != PageId::INDEX) {
+            $homeurl = Route::link($handler, PageId::INDEX);
+        } else {
+            $homeurl = $out["baseurl"];
+        }
+        return $homeurl;
+    }
+
+    /**
+     * Summary of getParentLink
+     * @param array<string, mixed> $out
+     * @param Request $request
+     * @param Page $currentPage
+     * @param int|string $page
+     * @param string $handler
+     * @param int|null $database
+     * @return string
+     */
+    public static function getParentUrl($out, $request, $currentPage, $page, $handler, $database)
+    {
+        $parenturl = "";
+        if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
+            // if filtered, use the unfiltered uri as parent first
+            $parenturl = $currentPage->currentUri;
+        } elseif (!empty($currentPage->parentUri)) {
+            // otherwise use the parent uri
+            $parenturl = $currentPage->parentUri;
+        } elseif ($page != PageId::INDEX) {
+            if ($request->hasFilter()) {
+                $filterParams = $request->getFilterParams();
+                $filterParams["db"] = $database;
+                $parenturl = Route::link($handler, PageId::INDEX, $filterParams);
+            } else {
+                $parenturl = $out["homeurl"];
+            }
+        }
+        return $parenturl;
+    }
+
+    /**
+     * Summary of getHierarchy
+     * @param Request $request
+     * @param Page $currentPage
+     * @param array<string, mixed> $extraParams
+     * @return array<mixed>|false
+     */
+    public static function getHierarchy($request, $currentPage, $extraParams)
+    {
+        $hierarchy = false;
+        if (!$currentPage->hierarchy) {
+            return $hierarchy;
+        }
+        $hierarchy = [
+            "parent" => static::getContentArray($currentPage->hierarchy['parent'], $extraParams),
+            "current" => static::getContentArray($currentPage->hierarchy['current'], $extraParams),
+            "children" => [],
+            "hastree" => $request->get('tree', false),
+        ];
+        foreach ($currentPage->hierarchy['children'] as $entry) {
+            array_push($hierarchy["children"], static::getContentArray($entry, $extraParams));
+        }
+        return $hierarchy;
+    }
+
+    /**
+     * Summary of getDownloadLinks
+     * @param Request $request
+     * @param Page $currentPage
+     * @param int|string $page
+     * @param int|null $database
+     * @return array<mixed>|false
+     */
+    public static function getDownloadLinks($request, $currentPage, $page, $database)
+    {
+        // avoid messy Javascript issue with empty array being truthy or falsy - see #40
+        $download = false;
+        if (!$currentPage->containsBook()) {
+            return $download;
+        }
+        // download per page
+        if (!empty(Config::get('download_page'))) {
+            $download = [];
+            foreach (Config::get('download_page') as $format) {
+                $params = $request->getCleanParams();
+                $params['type'] = strtolower($format);
+                $url = Route::link(Zipper::$handler, null, $params);
+                array_push($download, ['url' => $url, 'format' => $format]);
+            }
+            return $download;
+        }
+        $qid = $request->getId();
+        if (empty($qid)) {
+            return $download;
+        }
+        // download per series
+        if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
+            $download = [];
+            foreach (Config::get('download_series') as $format) {
+                $params = [];
+                $params['series'] = $qid;
+                $params['type'] = strtolower($format);
+                $params['db'] = $database;
+                $url = Route::link(Zipper::$handler, null, $params);
+                array_push($download, ['url' => $url, 'format' => $format]);
+            }
+            return $download;
+        }
+        // download per author
+        if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
+            $download = [];
+            foreach (Config::get('download_author') as $format) {
+                $params = [];
+                $params['author'] = $qid;
+                $params['type'] = strtolower($format);
+                $params['db'] = $database;
+                $url = Route::link(Zipper::$handler, null, $params);
+                array_push($download, ['url' => $url, 'format' => $format]);
+            }
+            return $download;
+        }
+        return $download;
+    }
+
+    /**
      * Summary of getJson
      * @param Request $request
      * @param bool $complete
@@ -412,168 +663,27 @@ class JsonRenderer
         $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
         $out ["entries"] = $entries;
         $out ["entriesCount"] = count($entries);
-        $out ["sorted"] = $currentPage->sorted ?? '';
-        $out ["sortedBy"] = explode(' ', $out ["sorted"])[0];
-        $out ["sortedDir"] = '';
-        if (!empty($out ["sortedBy"])) {
-            if (in_array($out ["sortedBy"], ['title', 'author', 'sort', 'name', 'type', 'lang_code', 'letter', 'year', 'range', 'value', 'groupid', 'series_index'])) {
-                // default ascending order for anything vaguely alphabetical or grouped
-                $out ["sortedDir"] = str_contains($out ["sorted"], 'desc') ? 'desc' : 'asc';
-            } elseif (in_array($out ["sortedBy"], ['pubdate', 'rating', 'timestamp', 'count', 'series'])) {
-                // default descending order for anything vaguely numerical or recent
-                $out ["sortedDir"] = str_contains($out ["sorted"], 'asc') ? 'asc' : 'desc';
-            } else {
-                // default descending order for anything else we forgot above :-)
-                $out ["sortedDir"] = str_contains($out ["sorted"], 'asc') ? 'asc' : 'desc';
-            }
-        }
-        $out ["isPaginated"] = 0;
-        if ($currentPage->isPaginated()) {
-            $prevLink = $currentPage->getPrevLink();
-            $nextLink = $currentPage->getNextLink();
-            $out ["isPaginated"] = 1;
-            $out ["firstLink"] = "";
-            $out ["prevLink"] = "";
-            if (!is_null($prevLink)) {
-                $out ["firstLink"] = $currentPage->getFirstLink()->hrefXhtml();
-                $out ["prevLink"] = $prevLink->hrefXhtml();
-            }
-            $out ["nextLink"] = "";
-            $out ["lastLink"] = "";
-            if (!is_null($nextLink)) {
-                $out ["nextLink"] = $nextLink->hrefXhtml();
-                $out ["lastLink"] = $currentPage->getLastLink()->hrefXhtml();
-            }
-            $out ["maxPage"] = $currentPage->getMaxPage();
-            $out ["currentPage"] = $currentPage->n;
-        }
+        $out = static::addPagination($out, $currentPage);
         if (!is_null($request->get("complete")) || $complete) {
             $out = static::addCompleteArray($out, $request);
         }
 
-        $out ["containsBook"] = 0;
-        $out ["filterurl"] = false;
-        if ($request->isFeed()) {
-            $filterLinks = Config::get('opds_filter_links');
-        } else {
-            $filterLinks = Config::get('html_filter_links');
-        }
-        $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
-        if ($currentPage->containsBook()) {
-            $out ["containsBook"] = 1;
-            // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
-            $params = $request->getCleanParams();
-            $params['sort'] = '{0}';
-            $out ["sorturl"] = str_replace('%7B0%7D', '{0}', Route::link($handler, null, $params));
-            $out ["sortoptions"] = $currentPage->getSortOptions();
-            if (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-                $params = $request->getCleanParams();
-                $params['filter'] = 1;
-                $out ["filterurl"] = Route::link($handler, null, $params);
-            }
-        } elseif (!empty($qid) && !empty($filterLinks) && !in_array($page, $skipFilterUrl)) {
-            $params = $request->getCleanParams();
-            $params['filter'] = null;
-            $out ["filterurl"] = Route::link($handler, null, $params);
-        }
+        $out = static::addSortFilter($out, $request, $currentPage, $page, $handler);
+        $out["filters"] = static::getFiltersArray($request, $database);
 
         $out["abouturl"] = Route::link($handler, PageId::ABOUT, ['db' => $database]);
         $out["customizeurl"] = Route::link($handler, PageId::CUSTOMIZE, ['db' => $database]);
-        $out["filters"] = false;
-        if ($request->hasFilter()) {
-            $out["filters"] = [];
-            foreach (Filter::getEntryArray($request, $database) as $entry) {
-                array_push($out["filters"], static::getContentArray($entry, ['filter' => 1]));
-            }
-            if (empty($out["filters"])) {
-                $out["filters"] = false;
-            }
-        }
 
         if ($page == PageId::ABOUT) {
-            $temp = preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('templates/about.html'));
-            $out ["fullhtml"] = $temp;
+            $out ["fullhtml"] = $currentPage->getContent();
         }
 
-        // multiple database setup
-        if ($page != PageId::INDEX && !is_null($database)) {
-            if ($homepage != PageId::INDEX) {
-                $out ["homeurl"] = Route::link($handler, PageId::INDEX, ['db' => $database]);
-            } else {
-                $out ["homeurl"] = Route::link($handler, null, ['db' => $database]);
-            }
-        } elseif ($homepage != PageId::INDEX) {
-            $out ["homeurl"] = Route::link($handler, PageId::INDEX);
-        } else {
-            $out ["homeurl"] = $out["baseurl"];
-        }
-
-        $out ["parenturl"] = "";
-        if (!empty($out["filters"]) && !empty($currentPage->currentUri)) {
-            // if filtered, use the unfiltered uri as parent first
-            $out ["parenturl"] = $currentPage->currentUri;
-        } elseif (!empty($currentPage->parentUri)) {
-            // otherwise use the parent uri
-            $out ["parenturl"] = $currentPage->parentUri;
-        } elseif ($page != PageId::INDEX) {
-            if ($request->hasFilter()) {
-                $filterParams = $request->getFilterParams();
-                $filterParams["db"] = $database;
-                $out ["parenturl"] = Route::link($handler, PageId::INDEX, $filterParams);
-            } else {
-                $out ["parenturl"] = $out["homeurl"];
-            }
-        }
-        $out ["hierarchy"] = false;
-        if ($currentPage->hierarchy) {
-            $out ["hierarchy"] = [
-                "parent" => static::getContentArray($currentPage->hierarchy['parent'], $extraParams),
-                "current" => static::getContentArray($currentPage->hierarchy['current'], $extraParams),
-                "children" => [],
-                "hastree" => $request->get('tree', false),
-            ];
-            foreach ($currentPage->hierarchy['children'] as $entry) {
-                array_push($out ["hierarchy"]["children"], static::getContentArray($entry, $extraParams));
-            }
-        }
+        $out ["homeurl"] = static::getHomeUrl($out, $page, $handler, $database);
+        $out ["parenturl"] = static::getParentUrl($out, $request, $currentPage, $page, $handler, $database);
+        $out ["hierarchy"] = static::getHierarchy($request, $currentPage, $extraParams);
         $out ["extra"] = $currentPage->extra;
         $out ["assets"] = Route::url(Config::get('assets'));
-        // avoid messy Javascript issue with empty array being truthy or falsy - see #40
-        $out ["download"] = false;
-        if ($currentPage->containsBook()) {
-            if (!empty(Config::get('download_page'))) {
-                $out ["download"] = [];
-                foreach (Config::get('download_page') as $format) {
-                    $params = $request->getCleanParams();
-                    $params['type'] = strtolower($format);
-                    $url = Route::link(Zipper::$handler, null, $params);
-                    array_push($out ["download"], ['url' => $url, 'format' => $format]);
-                }
-            } elseif (!empty($qid)) {
-                if ($page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
-                    $out ["download"] = [];
-                    foreach (Config::get('download_series') as $format) {
-                        $params = [];
-                        $params['series'] = $qid;
-                        $params['type'] = strtolower($format);
-                        $params['db'] = $database;
-                        $url = Route::link(Zipper::$handler, null, $params);
-                        array_push($out ["download"], ['url' => $url, 'format' => $format]);
-                    }
-                }
-                if ($page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
-                    $out ["download"] = [];
-                    foreach (Config::get('download_author') as $format) {
-                        $params = [];
-                        $params['author'] = $qid;
-                        $params['type'] = strtolower($format);
-                        $params['db'] = $database;
-                        $url = Route::link(Zipper::$handler, null, $params);
-                        array_push($out ["download"], ['url' => $url, 'format' => $format]);
-                    }
-                }
-            }
-        }
+        $out ["download"] = static::getDownloadLinks($request, $currentPage, $page, $database);
 
         /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {

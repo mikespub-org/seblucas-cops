@@ -8,6 +8,8 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Input\Config;
+
 class PageAbout extends Page
 {
     public const PAGE_ID = PageId::ABOUT_ID;
@@ -20,5 +22,14 @@ class PageAbout extends Page
     {
         $this->idPage = static::PAGE_ID;
         $this->title = localize("about.title");
+    }
+
+    /**
+     * Summary of getContent
+     * @return string
+     */
+    public function getContent()
+    {
+        return preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('templates/about.html'));
     }
 }

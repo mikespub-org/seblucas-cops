@@ -105,7 +105,7 @@ class FetchHandler extends BaseHandler
 
         if ($viewOnly) {
             // disposition inline here
-            $response = new FileResponse($data->getMimeType(), 0 , '');
+            $response = new FileResponse($data->getMimeType(), 0, '');
             $response->sendFile($file);
             return;
         }
