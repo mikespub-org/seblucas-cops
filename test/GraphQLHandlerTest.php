@@ -181,6 +181,10 @@ class GraphQLHandlerTest extends TestCase
         $this->assertEquals($expected, $book['title']);
     }
 
+    /**
+     * Summary of getQueryFields
+     * @return array<mixed>
+     */
     public static function getQueryFields()
     {
         $request = Request::build();
@@ -199,6 +203,7 @@ class GraphQLHandlerTest extends TestCase
             $operation = 'get' . ucfirst($name);
             $field = $queryType->getField($name);
             if ($field->getType() instanceof ListOfType) {
+                $type = $field->getType()->getWrappedType()->toString();
                 if ($name == 'datas') {
                     $vars = ['bookId' => 17];
                     $query = 'query ' . $operation . "(\$bookId: ID) {\n";
@@ -208,8 +213,7 @@ class GraphQLHandlerTest extends TestCase
                     $query = 'query ' . $operation . " {\n";
                     $query .= '  ' . $name . " {\n";
                 }
-                $wrapped = $field->getType()->getWrappedType()->toString();
-                switch ($wrapped) {
+                switch ($type) {
                     case 'Entry':
                         $query .= "    id\n";
                         $query .= "    title\n";
@@ -227,6 +231,7 @@ class GraphQLHandlerTest extends TestCase
                 $query .= "  }\n";
                 $query .= '}';
             } else {
+                $type = $field->getType()->toString();
                 switch ($name) {
                     case 'book':
                         $vars = ['id' => 17];
@@ -240,7 +245,7 @@ class GraphQLHandlerTest extends TestCase
                 }
                 $query = 'query ' . $operation . "(\$id: ID) {\n";
                 $query .= '  ' . $name . "(id: \$id) {\n";
-                switch ($wrapped) {
+                switch ($type) {
                     case 'Entry':
                         $query .= "    id\n";
                         $query .= "    title\n";

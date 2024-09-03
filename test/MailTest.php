@@ -21,21 +21,24 @@ class MailTest extends TestCase
 {
     public function testCheckConfigurationOk(): void
     {
-        $this->assertFalse(Mail::checkConfiguration());
+        $mailer = new Mail();
+        $this->assertFalse($mailer->checkConfiguration());
     }
 
     public function testCheckConfigurationNull(): void
     {
         Config::set('mail_configuration', null);
 
-        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
+        $mailer = new Mail();
+        $this->assertStringStartsWith("NOK", $mailer->checkConfiguration());
     }
 
     public function testCheckConfigurationNotArray(): void
     {
         Config::set('mail_configuration', "Test");
 
-        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
+        $mailer = new Mail();
+        $this->assertStringStartsWith("NOK", $mailer->checkConfiguration());
     }
 
     public function testCheckConfigurationSmtpEmpty(): void
@@ -46,7 +49,8 @@ class MailTest extends TestCase
         $mailConfig["smtp.host"] = "";
         Config::set('mail_configuration', $mailConfig);
 
-        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
+        $mailer = new Mail();
+        $this->assertStringStartsWith("NOK", $mailer->checkConfiguration());
     }
 
     public function testCheckConfigurationEmailEmpty(): void
@@ -57,7 +61,8 @@ class MailTest extends TestCase
         $mailConfig["address.from"] = "";
         Config::set('mail_configuration', $mailConfig);
 
-        $this->assertStringStartsWith("NOK", Mail::checkConfiguration());
+        $mailer = new Mail();
+        $this->assertStringStartsWith("NOK", $mailer->checkConfiguration());
     }
 
     public function testCheckConfigurationEmailNotEmpty(): void
@@ -67,8 +72,9 @@ class MailTest extends TestCase
         $mailConfig["address.from"] = $email;
         Config::set('mail_configuration', $mailConfig);
 
+        $mailer = new Mail();
         //$this->assertStringContainsString($email, $mailConfig["address.from"]);
-        $this->assertFalse(Mail::checkConfiguration());
+        $this->assertFalse($mailer->checkConfiguration());
 
         // reload test config
         require __DIR__ . '/config_test.php';
@@ -88,28 +94,33 @@ class MailTest extends TestCase
 
     public function testCheckRequest(): void
     {
-        $this->assertFalse(Mail::checkRequest(12, "a@a.com"));
+        $mailer = new Mail();
+        $this->assertFalse($mailer->checkRequest(12, "a@a.com"));
     }
 
     public function testCheckRequestNoData(): void
     {
-        $this->assertStringStartsWith("No", Mail::checkRequest(null, "a@a.com"));
+        $mailer = new Mail();
+        $this->assertStringStartsWith("No", $mailer->checkRequest(null, "a@a.com"));
     }
 
     public function testCheckRequestNoEmail(): void
     {
-        $this->assertStringStartsWith("No", Mail::checkRequest(12, ""));
+        $mailer = new Mail();
+        $this->assertStringStartsWith("No", $mailer->checkRequest(12, ""));
     }
 
     public function testCheckRequestEmailNotValid(): void
     {
-        $this->assertStringStartsWith("No", Mail::checkRequest(12, "a@b"));
+        $mailer = new Mail();
+        $this->assertStringStartsWith("No", $mailer->checkRequest(12, "a@b"));
     }
 
     public function testSendMailNotFound(): void
     {
         $request = Request::build();
-        $this->assertStringStartsWith("No", Mail::sendMail(12, "a@a.com", $request));
+        $mailer = new Mail();
+        $this->assertStringStartsWith("No", $mailer->sendMail(12, "a@a.com", $request));
     }
 
     public function testSendMailTooBig(): void
@@ -117,15 +128,17 @@ class MailTest extends TestCase
         $old = Mail::$maxSize;
         Mail::$maxSize = 0;
         $request = Request::build();
-        $this->assertStringStartsWith("No", Mail::sendMail(20, "a@a.com", $request));
+        $mailer = new Mail();
+        $this->assertStringStartsWith("No", $mailer->sendMail(20, "a@a.com", $request));
         Mail::$maxSize = $old;
     }
 
     public function testSendMailSomeday(): void
     {
         $request = Request::build();
+        $mailer = new Mail();
         // use dryRun to run preSend() but not actually Send()
-        $error = Mail::sendMail(20, "a@a.com", $request, true);
+        $error = $mailer->sendMail(20, "a@a.com", $request, true);
         $this->assertFalse($error);
     }
 

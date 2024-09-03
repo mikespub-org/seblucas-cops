@@ -20,9 +20,10 @@ class Mail
 
     /**
      * Summary of checkConfiguration
+     * @todo initialize & check in constructor
      * @return bool|string
      */
-    public static function checkConfiguration()
+    public function checkConfiguration()
     {
         $mailConfig = Config::get('mail_configuration');
 
@@ -41,7 +42,7 @@ class Mail
      * @param string $emailDest
      * @return bool|string
      */
-    public static function checkRequest($idData, $emailDest)
+    public function checkRequest($idData, $emailDest)
     {
         if (empty($idData)) {
             return 'No data sent.';
@@ -64,7 +65,7 @@ class Mail
      * @param bool $dryRun
      * @return bool|string
      */
-    public static function sendMail($idData, $emailDest, $request, $dryRun = false)
+    public function sendMail($idData, $emailDest, $request, $dryRun = false)
     {
         $book = Book::getBookByDataId($idData, $request->database());
         if (!$book) {
