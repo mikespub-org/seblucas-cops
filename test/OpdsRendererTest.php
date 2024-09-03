@@ -352,11 +352,6 @@ class OpdsRendererTest extends TestCase
         unset($_SERVER['REQUEST_URI']);
     }
 
-    /**
-     * Summary of testFeedHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testFeedHandler(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;

@@ -129,11 +129,6 @@ class MailTest extends TestCase
         $this->assertFalse($error);
     }
 
-    /**
-     * Summary of testMailHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testMailHandler(): void
     {
         $_POST = ['data' => '20', 'email' => 'a@a.com'];

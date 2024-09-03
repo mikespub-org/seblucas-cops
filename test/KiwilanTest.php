@@ -369,11 +369,6 @@ class KiwilanTest extends TestCase
         unset($_SERVER['REQUEST_URI']);
     }
 
-    /**
-     * Summary of testOpdsHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testOpdsHandler(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;

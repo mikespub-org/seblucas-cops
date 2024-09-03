@@ -68,11 +68,6 @@ class FrameworkTest extends TestCase
         $this->assertCount($expected, $handlers);
     }
 
-    /**
-     * Summary of testRun
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testRun(): void
     {
         ob_start();

@@ -40,11 +40,6 @@ class GraphQLHandlerTest extends TestCase
         Config::set('max_item_per_page', self::$numberPerPage);
     }
 
-    /**
-     * Summary of testRenderPlayground
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testRenderPlayground(): void
     {
         $_SERVER['REQUEST_METHOD'] = "GET";
@@ -61,11 +56,6 @@ class GraphQLHandlerTest extends TestCase
         $this->assertStringContainsString($expected, $output);
     }
 
-    /**
-     * Summary of testHandleRequest
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testHandleRequest(): void
     {
         $_SERVER['REQUEST_METHOD'] = "POST";

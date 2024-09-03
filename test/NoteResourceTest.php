@@ -108,11 +108,6 @@ class NoteResourceTest extends TestCase
         $this->assertEquals($expected, $resources[$hash]->getUri());
     }
 
-    /**
-     * Summary of testSendImageResource
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testSendImageResource(): void
     {
         $hash = "xxh64:7c301792c52eebf7";
@@ -130,11 +125,6 @@ class NoteResourceTest extends TestCase
         $this->assertEquals($expected, strlen($output));
     }
 
-    /**
-     * Summary of testCalResHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testCalResHandler(): void
     {
         $request = Request::build(["db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]);

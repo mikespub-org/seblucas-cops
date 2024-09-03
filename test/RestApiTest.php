@@ -666,11 +666,6 @@ class RestApiTest extends TestCase
         unset($_SERVER['PATH_INFO']);
     }
 
-    /**
-     * Summary of testRunEndpointTrue
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testRunEndpointTrue(): void
     {
         // generate api key and pass along in request

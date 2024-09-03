@@ -31,11 +31,6 @@ class EpubReaderTest extends TestCase
         self::$book->initSpineComponent();
     }
 
-    /**
-     * Summary of testGetReader
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testGetReader(): void
     {
         $idData = 20;
@@ -58,11 +53,6 @@ class EpubReaderTest extends TestCase
         $this->assertStringContainsString($expected, $script);
     }
 
-    /**
-     * Summary of testGetContent
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testGetContent(): void
     {
         $idData = 20;
@@ -173,11 +163,6 @@ class EpubReaderTest extends TestCase
         $this->assertEquals($expected, $data);
     }
 
-    /**
-     * Summary of testGetEpubjsReader
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testGetEpubjsReader(): void
     {
         $idData = 20;
@@ -201,11 +186,6 @@ class EpubReaderTest extends TestCase
         $this->assertStringContainsString($expected, $script);
     }
 
-    /**
-     * Summary of testReadHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testReadHandler(): void
     {
         $request = Request::build(['data' => 20]);

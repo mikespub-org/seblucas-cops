@@ -18,6 +18,7 @@ x.x.x - TODO
   * Use FileResponse::sendFile() for covers and thumbnails
   * Fix monocle epub reader when using route urls
   * Move getting zip content from ZipFsHandler to EPubReader
+  * Add GraphQL query field tests
 
 2.8.1 - 20240902 Fix download filenames
   * Fix FileRenderer to send the right Content-Disposition - see issue #102 by @Chirishman

@@ -227,11 +227,6 @@ class JsonRendererTest extends TestCase
         $this->assertCount(4, $test["c"]);
     }
 
-    /**
-     * Summary of testJsonHandler
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testJsonHandler(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;

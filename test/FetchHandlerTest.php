@@ -37,11 +37,6 @@ class FetchHandlerTest extends TestCase
         Database::clearDb();
     }
 
-    /**
-     * Summary of testCover
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testCover(): void
     {
         // set request handler to 'phpunit' to override output buffer check in handler
@@ -58,11 +53,6 @@ class FetchHandlerTest extends TestCase
         $this->assertEquals($expected, strlen($output));
     }
 
-    /**
-     * Summary of testThumb
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testThumb(): void
     {
         // set request handler to 'phpunit' to override output buffer check in handler
@@ -79,11 +69,6 @@ class FetchHandlerTest extends TestCase
         $this->assertEquals($expected, strlen($output));
     }
 
-    /**
-     * Summary of testView
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testView(): void
     {
         // set request handler to 'phpunit' to override output buffer check in handler
@@ -100,11 +85,6 @@ class FetchHandlerTest extends TestCase
         $this->assertEquals($expected, strlen($output));
     }
 
-    /**
-     * Summary of testFetch
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testFetch(): void
     {
         // set request handler to 'phpunit' to override output buffer check in handler
@@ -122,11 +102,6 @@ class FetchHandlerTest extends TestCase
         //file_put_contents(__DIR__ . '/file.original.epub', $output);
     }
 
-    /**
-     * Summary of testUpdated
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testUpdated(): void
     {
         Config::set('update_epub-metadata', '1');
@@ -148,11 +123,6 @@ class FetchHandlerTest extends TestCase
         Config::set('update_epub-metadata', '0');
     }
 
-    /**
-     * Summary of testKepubify
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testKepubify(): void
     {
         Config::set('provide_kepub', '1');
@@ -178,11 +148,6 @@ class FetchHandlerTest extends TestCase
         Config::set('provide_kepub', '0');
     }
 
-    /**
-     * Summary of testAllInOne
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testAllInOne(): void
     {
         Config::set('update_epub-metadata', '1');
@@ -210,11 +175,6 @@ class FetchHandlerTest extends TestCase
         Config::set('update_epub-metadata', '0');
     }
 
-    /**
-     * Summary of testFile
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testFile(): void
     {
         // set request handler to 'phpunit' to override output buffer check in handler
@@ -231,11 +191,6 @@ class FetchHandlerTest extends TestCase
         $this->assertEquals($expected, strlen($output));
     }
 
-    /**
-     * Summary of testZipped
-     * @runInSeparateProcess
-     * @return void
-     */
     public function testZipped(): void
     {
         // set request handler to 'phpunit' to override output buffer check in handler
