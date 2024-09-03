@@ -1,0 +1,6 @@
+query getLanguage($id: ID) {
+  language(id: $id) {
+    id
+    title
+  }
+}

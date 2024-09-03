@@ -1,0 +1,7 @@
+{
+    "operationName": "getDatas",
+    "variables": {
+        "bookId": 17
+    },
+    "query": "query getDatas($bookId: ID) {\n  datas(bookId: $bookId) {\n    id\n    name\n    format\n  }\n}"
+}

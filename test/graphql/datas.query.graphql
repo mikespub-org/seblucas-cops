@@ -1,0 +1,7 @@
+query getDatas($bookId: ID) {
+  datas(bookId: $bookId) {
+    id
+    name
+    format
+  }
+}

@@ -1,0 +1,5 @@
+{
+    "operationName": "getPreferences",
+    "variables": [],
+    "query": "query getPreferences {\n  preferences {\n    id\n    title\n  }\n}"
+}

@@ -1,0 +1,18 @@
+{
+    "data": {
+        "languages": [
+            {
+                "id": "cops:languages:1",
+                "title": "English"
+            },
+            {
+                "id": "cops:languages:2",
+                "title": "French"
+            },
+            {
+                "id": "cops:languages:3",
+                "title": "Chinese"
+            }
+        ]
+    }
+}

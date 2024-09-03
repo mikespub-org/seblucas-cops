@@ -1,0 +1,6 @@
+query getIdentifiers {
+  identifiers {
+    id
+    title
+  }
+}

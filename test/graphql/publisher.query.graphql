@@ -1,0 +1,6 @@
+query getPublisher($id: ID) {
+  publisher(id: $id) {
+    id
+    title
+  }
+}

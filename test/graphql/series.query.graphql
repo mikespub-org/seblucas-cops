@@ -1,0 +1,6 @@
+query getSeries {
+  series {
+    id
+    title
+  }
+}

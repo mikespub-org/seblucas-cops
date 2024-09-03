@@ -1,0 +1,6 @@
+query getSerie($id: ID) {
+  serie(id: $id) {
+    id
+    title
+  }
+}

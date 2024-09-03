@@ -1,0 +1,34 @@
+{
+    "data": {
+        "publishers": [
+            {
+                "id": "cops:publishers:3",
+                "title": "D. Appleton and Company"
+            },
+            {
+                "id": "cops:publishers:9",
+                "title": "Georges Charpentier & Eugène Fasquelle"
+            },
+            {
+                "id": "cops:publishers:2",
+                "title": "Macmillan and Co. London"
+            },
+            {
+                "id": "cops:publishers:4",
+                "title": "Macmillan Publishers USA"
+            },
+            {
+                "id": "cops:publishers:5",
+                "title": "Pierson's Magazine"
+            },
+            {
+                "id": "cops:publishers:6",
+                "title": "Strand Magazine"
+            },
+            {
+                "id": "cops:publishers:10",
+                "title": "青苹果数据中心"
+            }
+        ]
+    }
+}

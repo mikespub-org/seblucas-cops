@@ -1,0 +1,7 @@
+{
+    "operationName": "getPublisher",
+    "variables": {
+        "id": 2
+    },
+    "query": "query getPublisher($id: ID) {\n  publisher(id: $id) {\n    id\n    title\n  }\n}"
+}

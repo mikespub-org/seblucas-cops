@@ -1,0 +1,6 @@
+query getCustomColumn($id: ID) {
+  customColumn(id: $id) {
+    id
+    title
+  }
+}

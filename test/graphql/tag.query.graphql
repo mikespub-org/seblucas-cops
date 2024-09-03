@@ -1,0 +1,6 @@
+query getTag($id: ID) {
+  tag(id: $id) {
+    id
+    title
+  }
+}

@@ -1,0 +1,6 @@
+query getRating($id: ID) {
+  rating(id: $id) {
+    id
+    title
+  }
+}

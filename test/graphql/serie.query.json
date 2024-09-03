@@ -1,0 +1,7 @@
+{
+    "operationName": "getSerie",
+    "variables": {
+        "id": 1
+    },
+    "query": "query getSerie($id: ID) {\n  serie(id: $id) {\n    id\n    title\n  }\n}"
+}

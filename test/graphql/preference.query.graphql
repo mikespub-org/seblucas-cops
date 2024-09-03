@@ -1,0 +1,6 @@
+query getPreference($id: ID) {
+  preference(id: $id) {
+    id
+    title
+  }
+}

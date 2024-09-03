@@ -1,0 +1,70 @@
+{
+    "data": {
+        "books": [
+            {
+                "id": "urn:uuid:be99a102-8275-47a0-9bb5-7c341d6a7dda",
+                "title": "The Adventures of Sherlock Holmes"
+            },
+            {
+                "id": "urn:uuid:d74fec58-06bc-4ba8-b8b4-24a91a58e6f9",
+                "title": "Alice's Adventures in Wonderland"
+            },
+            {
+                "id": "urn:uuid:bc4f5571-347f-4d2f-b1f6-22d2861b572c",
+                "title": "The Call of the Wild"
+            },
+            {
+                "id": "urn:uuid:518730a4-a16c-4666-8afb-eef4812b11b1",
+                "title": "The Casebook of Sherlock Holmes"
+            },
+            {
+                "id": "urn:uuid:08d43a34-fb89-446f-94ef-16bac6d8aa28",
+                "title": "La curée"
+            },
+            {
+                "id": "urn:uuid:28ba9d8f-6f1b-4b72-9150-d2933ebe13b5",
+                "title": "The Hound of the Baskervilles"
+            },
+            {
+                "id": "urn:uuid:0fed7c33-5e1b-4af2-b0be-016fe9a37b77",
+                "title": "The Lost World"
+            },
+            {
+                "id": "urn:uuid:af1d960b-7167-47f2-a1d8-6a38c8c893fd",
+                "title": "The Memoirs of Sherlock Holmes"
+            },
+            {
+                "id": "urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f",
+                "title": "The Return of Sherlock Holmes"
+            },
+            {
+                "id": "urn:uuid:54fdfca5-51e1-4562-8b1d-c05b64f99ca6",
+                "title": "The Sign of the Four"
+            },
+            {
+                "id": "urn:uuid:f3a4534e-d7bc-415a-8887-ba2b2810c980",
+                "title": "A Study in Scarlet"
+            },
+            {
+                "id": "urn:uuid:fc81dbcf-f1bf-4aef-93ea-1cb58c662d9a",
+                "title": "The Three Musketeers"
+            },
+            {
+                "id": "urn:uuid:95029a0f-c537-4d8d-b4d0-b478ad4de645",
+                "title": "Through the Looking Glass (And What Alice Found There)"
+            },
+            {
+                "id": "urn:uuid:6c9b800c-4cda-49ba-a110-82d8fafb2c48",
+                "title": "Twenty Years After"
+            },
+            {
+                "id": "urn:uuid:282cd2d2-c37e-492d-ae4f-412d95adee79",
+                "title": "The War of the Worlds"
+            },
+            {
+                "id": "urn:uuid:bb33f1fd-3d54-4491-b9c5-182348a19ddd",
+                "title": "孙子兵法"
+            }
+        ]
+    }
+}

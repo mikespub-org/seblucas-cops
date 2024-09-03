@@ -18,6 +18,7 @@ use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use GraphQL\Type\Schema;
+use GraphQL\Type\Definition\ListOfType;
 
 class GraphQLHandlerTest extends TestCase
 {
@@ -97,6 +98,10 @@ class GraphQLHandlerTest extends TestCase
         $expected = [];
         $errors = $schema->validate();
         $this->assertEquals($expected, $errors);
+
+        $queryType = $schema->getQueryType();
+        $expected = 24;
+        $this->assertCount($expected, $queryType->getFieldNames());
     }
 
     public function testRunQuery(): void
@@ -148,7 +153,7 @@ class GraphQLHandlerTest extends TestCase
      */
     protected function getQueryString()
     {
-        return file_get_contents(__DIR__ . '/query.test.graphql');
+        return file_get_contents(__DIR__ . '/graphql/test.query.graphql');
     }
 
     /**
@@ -184,5 +189,119 @@ class GraphQLHandlerTest extends TestCase
 
         $expected = "The Adventures of Sherlock Holmes";
         $this->assertEquals($expected, $book['title']);
+    }
+
+    public static function getQueryFields()
+    {
+        $request = Request::build();
+        $handler = new GraphQLHandler();
+        $schema = $handler->getSchema($request);
+
+        $data = [];
+        $queryType = $schema->getQueryType();
+        foreach ($queryType->getFieldNames() as $name) {
+            $queryFile = __DIR__ . '/graphql/' . $name . '.query.json';
+            $resultFile = __DIR__ . '/graphql/' . $name . '.result.json';
+            if (file_exists($queryFile)) {
+                array_push($data, [$name, $queryFile, $resultFile]);
+                continue;
+            }
+            $operation = 'get' . ucfirst($name);
+            $field = $queryType->getField($name);
+            if ($field->getType() instanceof ListOfType) {
+                if ($name == 'datas') {
+                    $vars = ['bookId' => 17];
+                    $query = 'query ' . $operation . "(\$bookId: ID) {\n";
+                    $query .= '  ' . $name . "(bookId: \$bookId) {\n";
+                } else {
+                    $vars = [];
+                    $query = 'query ' . $operation . " {\n";
+                    $query .= '  ' . $name . " {\n";
+                }
+                $wrapped = $field->getType()->getWrappedType()->toString();
+                switch ($wrapped) {
+                    case 'Entry':
+                        $query .= "    id\n";
+                        $query .= "    title\n";
+                        break;
+                    case 'EntryBook':
+                        $query .= "    id\n";
+                        $query .= "    title\n";
+                        break;
+                    case 'Data':
+                        $query .= "    id\n";
+                        $query .= "    name\n";
+                        $query .= "    format\n";
+                        break;
+                }
+                $query .= "  }\n";
+                $query .= '}';
+            } else {
+                switch ($name) {
+                    case 'book':
+                        $vars = ['id' => 17];
+                        break;
+                    case 'publisher':
+                        $vars = ['id' => 2];
+                        break;
+                    default:
+                        $vars = ['id' => 1];
+                        break;
+                }
+                $query = 'query ' . $operation . "(\$id: ID) {\n";
+                $query .= '  ' . $name . "(id: \$id) {\n";
+                switch ($wrapped) {
+                    case 'Entry':
+                        $query .= "    id\n";
+                        $query .= "    title\n";
+                        break;
+                    case 'EntryBook':
+                        $query .= "    id\n";
+                        $query .= "    title\n";
+                        break;
+                    case 'Data':
+                        $query .= "    id\n";
+                        $query .= "    name\n";
+                        $query .= "    format\n";
+                        break;
+                }
+                $query .= "  }\n";
+                $query .= '}';
+            }
+            $params = [
+                'operationName' => $operation,
+                'variables' => $vars,
+                'query' => $query,
+            ];
+            file_put_contents(str_replace('.json', '.graphql', $queryFile), $query);
+            $contents = json_encode($params, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            file_put_contents($queryFile, $contents);
+            array_push($data, [$name, $queryFile, $resultFile]);
+        }
+        return $data;
+    }
+
+    /**
+     * Summary of testQueryFields
+     * @dataProvider getQueryFields
+     * @param string $name
+     * @param string $queryFile
+     * @param string $resultFile
+     * @return void
+     */
+    public function testQueryFields($name, $queryFile, $resultFile): void
+    {
+        $this->assertTrue(file_exists($queryFile));
+
+        $request = Request::build();
+        $request->content = file_get_contents($queryFile);
+
+        $handler = new GraphQLHandler();
+        $result = $handler->runQuery($request);
+        if (!file_exists($resultFile)) {
+            file_put_contents($resultFile, json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+        $expected = json_decode(file_get_contents($resultFile), true);
+        $this->assertEquals($expected, $result);
     }
 }

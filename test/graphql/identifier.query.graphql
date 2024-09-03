@@ -1,0 +1,6 @@
+query getIdentifier($id: ID) {
+  identifier(id: $id) {
+    id
+    title
+  }
+}

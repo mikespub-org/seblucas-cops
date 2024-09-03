@@ -1,0 +1,50 @@
+{
+    "data": {
+        "tags": [
+            {
+                "id": "cops:tags:4",
+                "title": "Action & Adventure"
+            },
+            {
+                "id": "cops:tags:5",
+                "title": "Fantasy"
+            },
+            {
+                "id": "cops:tags:1",
+                "title": "Fiction"
+            },
+            {
+                "id": "cops:tags:10",
+                "title": "Historical"
+            },
+            {
+                "id": "cops:tags:6",
+                "title": "Juvenile"
+            },
+            {
+                "id": "cops:tags:12",
+                "title": "Littérature"
+            },
+            {
+                "id": "cops:tags:3",
+                "title": "Mystery & Detective"
+            },
+            {
+                "id": "cops:tags:9",
+                "title": "Romance"
+            },
+            {
+                "id": "cops:tags:7",
+                "title": "Science Fiction"
+            },
+            {
+                "id": "cops:tags:2",
+                "title": "Short Stories"
+            },
+            {
+                "id": "cops:tags:8",
+                "title": "War & Military"
+            }
+        ]
+    }
+}

@@ -1,0 +1,7 @@
+query getData($id: ID) {
+  data(id: $id) {
+    id
+    name
+    format
+  }
+}

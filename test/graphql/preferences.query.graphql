@@ -1,0 +1,6 @@
+query getPreferences {
+  preferences {
+    id
+    title
+  }
+}

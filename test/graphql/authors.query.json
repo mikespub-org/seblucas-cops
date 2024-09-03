@@ -1,0 +1,5 @@
+{
+    "operationName": "getAuthors",
+    "variables": [],
+    "query": "query getAuthors {\n  authors {\n    id\n    title\n  }\n}"
+}

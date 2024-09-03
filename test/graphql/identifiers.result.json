@@ -1,0 +1,34 @@
+{
+    "data": {
+        "identifiers": [
+            {
+                "id": "cops:identifiers:amazon",
+                "title": "Amazon"
+            },
+            {
+                "id": "cops:identifiers:google",
+                "title": "Google Books"
+            },
+            {
+                "id": "cops:identifiers:isbn",
+                "title": "ISBN"
+            },
+            {
+                "id": "cops:identifiers:olid",
+                "title": "OpenLibrary"
+            },
+            {
+                "id": "cops:identifiers:uri",
+                "title": "uri"
+            },
+            {
+                "id": "cops:identifiers:urn",
+                "title": "urn"
+            },
+            {
+                "id": "cops:identifiers:wd",
+                "title": "Wikidata"
+            }
+        ]
+    }
+}

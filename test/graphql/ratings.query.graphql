@@ -1,0 +1,6 @@
+query getRatings {
+  ratings {
+    id
+    title
+  }
+}

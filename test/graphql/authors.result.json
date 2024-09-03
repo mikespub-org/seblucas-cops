@@ -1,0 +1,34 @@
+{
+    "data": {
+        "authors": [
+            {
+                "id": "cops:authors:3",
+                "title": "Lewis Carroll"
+            },
+            {
+                "id": "cops:authors:1",
+                "title": "Arthur Conan Doyle"
+            },
+            {
+                "id": "cops:authors:5",
+                "title": "Alexandre Dumas"
+            },
+            {
+                "id": "cops:authors:2",
+                "title": "Jack London"
+            },
+            {
+                "id": "cops:authors:4",
+                "title": "H. G. Wells"
+            },
+            {
+                "id": "cops:authors:7",
+                "title": "Émile Zola"
+            },
+            {
+                "id": "cops:authors:9",
+                "title": "孙武"
+            }
+        ]
+    }
+}

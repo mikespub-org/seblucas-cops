@@ -1,0 +1,5 @@
+{
+    "operationName": "getTags",
+    "variables": [],
+    "query": "query getTags {\n  tags {\n    id\n    title\n  }\n}"
+}

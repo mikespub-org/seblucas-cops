@@ -1,0 +1,18 @@
+{
+    "data": {
+        "ratings": [
+            {
+                "id": "cops:rating:3",
+                "title": "2 stars"
+            },
+            {
+                "id": "cops:rating:2",
+                "title": "4 stars"
+            },
+            {
+                "id": "cops:rating:1",
+                "title": "5 stars"
+            }
+        ]
+    }
+}

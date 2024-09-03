@@ -1,0 +1,22 @@
+{
+    "data": {
+        "series": [
+            {
+                "id": "cops:series:3",
+                "title": "D'Artagnan Romances"
+            },
+            {
+                "id": "cops:series:2",
+                "title": "Professor Challenger"
+            },
+            {
+                "id": "cops:series:1",
+                "title": "Sherlock Holmes"
+            },
+            {
+                "id": "cops:series:5",
+                "title": "Série des Rougon-Macquart"
+            }
+        ]
+    }
+}

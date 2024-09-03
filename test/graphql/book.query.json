@@ -1,0 +1,7 @@
+{
+    "operationName": "getBook",
+    "variables": {
+        "id": 17
+    },
+    "query": "query getBook($id: ID) {\n  book(id: $id) {\n    id\n    title\n  }\n}"
+}

@@ -1,0 +1,5 @@
+{
+    "operationName": "getRatings",
+    "variables": [],
+    "query": "query getRatings {\n  ratings {\n    id\n    title\n  }\n}"
+}
