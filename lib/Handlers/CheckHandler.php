@@ -9,6 +9,8 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Output\Response;
+
 /**
  * Summary of CheckHandler
  */
@@ -25,9 +27,10 @@ class CheckHandler extends BaseHandler
 
     public function handle($request)
     {
-        header('Content-Type: text/plain;charset=utf-8');
+        $message = date(DATE_COOKIE) . "\n\n";
+        $message .= var_export($request, true);
 
-        echo date(DATE_COOKIE) . "\n\n";
-        echo var_export($request, true);
+        $response = new Response('text/plain;charset=utf-8');
+        $response->sendData($message);
     }
 }

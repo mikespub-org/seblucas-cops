@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Input\Config;
 
-class FileRenderer extends Response
+class FileResponse extends Response
 {
     /**
      * Summary of getTempFile
@@ -31,25 +31,22 @@ class FileRenderer extends Response
 
     /**
      * Summary of sendFile
-     * @todo align params order with Response::sendData() if/when it makes sense
      * @param string $filepath actual filepath
-     * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
-     * @param ?string $mimetype with null = detect from filepath, '...' = actual mimetype for Content-Type
      * @param bool $istmpfile with true if this is a temp file, false otherwise
-     * @param ?int $expires use default expiration for files
      * @return void
      */
-    public static function sendFile($filepath, $filename = null, $mimetype = null, $istmpfile = false, $expires = 0)
+    public function sendFile($filepath, $istmpfile = false)
     {
         // detect mimetype from filepath here if needed
-        if (empty($mimetype)) {
-            $mimetype = static::getMimeType($filepath);
+        if (empty($this->mimetype)) {
+            $this->mimetype = static::getMimeType($filepath);
         }
 
         // @todo do we send cache control for tmpfile too?
-        static::sendHeaders($mimetype, $expires, $filename);
+        $this->sendHeaders();
 
         // @todo clean up nginx x_accel_redirect
+        // don't use x_accel_redirect if we deal with a tmpfile here
         if (!empty($istmpfile) || empty(Config::get('x_accel_redirect'))) {
             header('Content-Length: ' . filesize($filepath));
             readfile($filepath);

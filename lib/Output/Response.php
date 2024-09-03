@@ -15,6 +15,11 @@ use SebLucas\Cops\Input\Route;
 
 class Response
 {
+    protected int $status = 200;
+    protected ?string $mimetype;
+    protected ?int $expires;
+    protected ?string $filename;
+
     /**
      * Summary of getMimeType
      * @param string $filepath
@@ -38,54 +43,62 @@ class Response
     }
 
     /**
-     * Summary of sendHeaders
+     * Summary of __construct
      * @param ?string $mimetype with null = no mimetype, '...' = actual mimetype for Content-Type
      * @param ?int $expires with null = no cache control, 0 = default expiration, > 0 actual expiration
      * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
      * @return void
      */
-    public static function sendHeaders($mimetype = null, $expires = null, $filename = null)
+    public function __construct($mimetype = null, $expires = null, $filename = null)
+    {
+        $this->mimetype = $mimetype;
+        $this->expires = $expires;
+        $this->filename = $filename;
+    }
+
+    /**
+     * Summary of sendHeaders
+     * @return void
+     */
+    public function sendHeaders()
     {
         if (headers_sent()) {
             return;
         }
 
-        if (is_null($expires)) {
+        if (is_null($this->expires)) {
             // no cache control
-        } elseif (empty($expires)) {
+        } elseif (empty($this->expires)) {
             // use default expiration (14 days)
-            $expires = 60 * 60 * 24 * 14;
+            $this->expires = 60 * 60 * 24 * 14;
         }
-        if (!empty($expires)) {
+        if (!empty($this->expires)) {
             header('Pragma: public');
-            header('Cache-Control: max-age=' . $expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+            header('Cache-Control: max-age=' . $this->expires);
+            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $this->expires) . ' GMT');
         }
 
-        if (!empty($mimetype)) {
-            header('Content-Type: ' . $mimetype);
+        if (!empty($this->mimetype)) {
+            header('Content-Type: ' . $this->mimetype);
         }
 
-        if (is_null($filename)) {
+        if (is_null($this->filename)) {
             // no content disposition
-        } elseif (empty($filename)) {
+        } elseif (empty($this->filename)) {
             header('Content-Disposition: inline');
         } else {
-            header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+            header('Content-Disposition: attachment; filename="' . basename($this->filename) . '"');
         }
     }
 
     /**
      * Summary of sendData
      * @param string $data actual data
-     * @param ?string $mimetype with null = no mimetype, '...' = actual mimetype for Content-Type
-     * @param ?int $expires with null = no cache control, 0 = default expiration, >0 actual expiration
-     * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
      * @return void
      */
-    public static function sendData($data, $mimetype = null, $expires = null, $filename = null)
+    public function sendData($data)
     {
-        static::sendHeaders($mimetype, $expires, $filename);
+        $this->sendHeaders();
 
         echo $data;
     }

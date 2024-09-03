@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApi;
 use Exception;
 
@@ -60,22 +61,22 @@ class RestApiHandler extends BaseHandler
 
         $path = $request->path();
         if (empty($path) || $path == '/restapi/') {
-            header('Content-Type: text/html;charset=utf-8');
-
             $data = ['link' => Route::link(static::HANDLER) . '/openapi'];
             $template = dirname(__DIR__, 2) . '/templates/restapi.html';
-            echo Format::template($data, $template);
+
+            $response = new Response('text/html;charset=utf-8');
+            $response->sendData(Format::template($data, $template));
             return;
         }
 
         $apiHandler = new RestApi($request);
 
-        header('Content-Type: application/json;charset=utf-8');
+        $response = new Response('application/json;charset=utf-8');
 
         try {
-            echo $apiHandler->getOutput();
+            $response->sendData($apiHandler->getOutput());
         } catch (Exception $e) {
-            echo json_encode(["Exception" => $e->getMessage()]);
+            $response->sendData(json_encode(["Exception" => $e->getMessage()]));
         }
     }
 }

@@ -13,7 +13,6 @@ use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
-use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -25,6 +24,7 @@ use SebLucas\Cops\Input\Context;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\Response;
 use GraphQL\GraphQL;
 use GraphQL\Utils\BuildSchema;
 use GraphQL\Language\AST\TypeDefinitionNode;
@@ -68,8 +68,8 @@ class GraphQLHandler extends BaseHandler
 
         $result = $this->runQuery($request);
 
-        header('Content-Type: application/json;charset=utf-8');
-        echo json_encode($result);
+        $response = new Response('application/json;charset=utf-8');
+        $response->sendData(json_encode($result));
     }
 
     /**
@@ -335,10 +335,10 @@ class GraphQLHandler extends BaseHandler
      */
     public function renderPlayground()
     {
-        header('Content-Type: text/html;charset=utf-8');
-
         $data = ['link' => Route::link(static::HANDLER)];
         $template = dirname(__DIR__, 2) . '/templates/graphql.html';
-        echo Format::template($data, $template);
+
+        $response = new Response('text/html;charset=utf-8');
+        $response->sendData(Format::template($data, $template));
     }
 }

@@ -37,8 +37,8 @@ class ReadHandler extends BaseHandler
         }
 
         try {
-            header('Content-Type: text/html;charset=utf-8');
-            echo EPubReader::getReader($idData, $request);
+            $response = new Response('text/html;charset=utf-8');
+            $response->sendData(EPubReader::getReader($idData, $request));
         } catch (Exception $e) {
             error_log($e);
             Response::sendError($request, $e->getMessage());

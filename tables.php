@@ -10,11 +10,10 @@
 
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApi;
 
 require_once __DIR__ . '/config.php';
-
-header('Content-Type: text/html;charset=utf-8');
 
 $data = ['link' => Route::link(RestApi::$handler)];
 $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';
@@ -27,4 +26,6 @@ foreach (Route::getRoutes() as $route => $queryParams) {
 }
 $data['tfoot'] = $data['thead'];
 $template = __DIR__ . '/templates/tables.html';
-echo Format::template($data, $template);
+
+$response = new Response('text/html;charset=utf-8');
+$response->sendData(Format::template($data, $template));

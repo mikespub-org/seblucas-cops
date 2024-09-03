@@ -17,7 +17,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\FileRenderer;
+use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Pages\PageId;
 
 class ZipperTest extends TestCase
@@ -151,7 +151,7 @@ class ZipperTest extends TestCase
             'sub/copied.txt',
         ];
         // make a temp file to analyze the zip file
-        $tmpfile = FileRenderer::getTempFile('zip');
+        $tmpfile = FileResponse::getTempFile('zip');
         file_put_contents($tmpfile, $output);
         $zip = new \ZipArchive();
         $result = $zip->open($tmpfile, \ZipArchive::RDONLY);

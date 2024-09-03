@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\OpdsRenderer;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
 
 /**
@@ -47,19 +48,19 @@ class FeedHandler extends BaseHandler
             }
         }
 
-        header('Content-Type: application/xml;charset=utf-8');
+        $response = new Response('application/xml;charset=utf-8');
 
         $OPDSRender = new OpdsRenderer();
 
         switch ($page) {
             case PageId::OPENSEARCH :
             case PageId::SEARCH :
-                echo $OPDSRender->getOpenSearch($request);
+                $response->sendData($OPDSRender->getOpenSearch($request));
                 return;
             default:
                 $currentPage = PageId::getPage($page, $request);
                 $currentPage->InitializeContent();
-                echo $OPDSRender->render($currentPage, $request);
+                $response->sendData($OPDSRender->render($currentPage, $request));
                 return;
         }
     }

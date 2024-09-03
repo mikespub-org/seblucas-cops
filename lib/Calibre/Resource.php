@@ -17,7 +17,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Output\FileRenderer;
+use SebLucas\Cops\Output\FileResponse;
 
 class Resource
 {
@@ -114,7 +114,8 @@ class Resource
         }
         $mime = static::IMAGE_EXTENSIONS[$ext];
 
-        FileRenderer::sendFile($path, null, $mime, true);
+        $response = new FileResponse($mime, 0);
+        $response->sendFile($path, true);
         return true;
     }
 }

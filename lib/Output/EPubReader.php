@@ -98,7 +98,8 @@ class EPubReader
         $mimetype = $epub->componentContentType($component);
 
         // use cache control here
-        Response::sendData($data, $mimetype, 0);
+        $response = new Response($mimetype, 0);
+        $response->sendData($data);
     }
 
     /**
@@ -291,6 +292,7 @@ class EPubReader
         $mimetype = Response::getMimeType($component);
 
         // use cache control here
-        Response::sendData($data, $mimetype, 0);
+        $response = new Response($mimetype, 0);
+        $response->sendData($data);
     }
 }

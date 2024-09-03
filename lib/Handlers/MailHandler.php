@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Output\Mail;
+use SebLucas\Cops\Output\Response;
 
 /**
  * Send books by email
@@ -29,25 +30,25 @@ class MailHandler extends BaseHandler
     public function handle($request)
     {
         if ($error = Mail::checkConfiguration()) {
-            echo $error;
-            return;
+            // this will call exit()
+            Response::sendError($request, $error);
         }
 
         $idData = (int) $request->post("data");
         $emailDest = $request->post("email");
         if ($error = Mail::checkRequest($idData, $emailDest)) {
-            echo $error;
-            return;
+            // this will call exit()
+            Response::sendError($request, $error);
         }
 
         // set request handler to 'phpunit' to run preSend() but not actually Send()
         $dryRun = ($request->getHandler() === 'phpunit') ? true : false;
         if ($error = Mail::sendMail($idData, $emailDest, $request, $dryRun)) {
-            echo localize("mail.messagenotsent");
-            echo $error;
-            return;
+            // this will call exit()
+            Response::sendError($request, localize("mail.messagenotsent") . $error);
         }
 
-        echo localize("mail.messagesent");
+        $response = new Response('text/plain');
+        $response->sendData(localize("mail.messagesent"));
     }
 }

@@ -10,6 +10,8 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Output\JsonRenderer;
+use SebLucas\Cops\Output\Response;
+use Throwable;
 
 /**
  * Handle JSON ajax requests
@@ -28,8 +30,13 @@ class JsonHandler extends PageHandler
 
     public function handle($request)
     {
-        header('Content-Type: application/json;charset=utf-8');
+        $response = new Response('application/json;charset=utf-8');
 
-        echo json_encode(JsonRenderer::getJson($request));
+        try {
+            $response->sendData(json_encode(JsonRenderer::getJson($request)));
+        } catch (Throwable $e) {
+            error_log($e);
+            Response::sendError($request, $e->getMessage());
+        }
     }
 }

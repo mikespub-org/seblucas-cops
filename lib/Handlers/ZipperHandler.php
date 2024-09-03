@@ -37,8 +37,8 @@ class ZipperHandler extends BaseHandler
             empty(Config::get('download_series')) &&
             empty(Config::get('download_author'))
         ) {
-            echo 'Downloads by page, series or author are disabled in config';
-            return;
+            // this will call exit()
+            Response::sendError($request, 'Downloads by page, series or author are disabled in config');
         }
         if (Config::get('fetch_protect') == '1') {
             session_start();

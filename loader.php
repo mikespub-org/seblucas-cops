@@ -10,6 +10,7 @@
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Output\Response;
 use Marsender\EPubLoader\RequestHandler;
 use Marsender\EPubLoader\App\ExtraActions;
 
@@ -86,11 +87,11 @@ if (method_exists($handler, 'isDone')) {
     }
 }
 
-header('Content-Type: text/html;charset=utf-8');
-
 // handle the result yourself or let epub-loader generate the output
 $result = array_merge($gConfig, $result);
 //$templateDir = 'templates/twigged/loader';  // if you want to use custom templates
 $templateDir = null;
 $template = null;
-echo $handler->output($result, $templateDir, $template);
+
+$response = new Response('text/html;charset=utf-8');
+$response->sendData($handler->output($result, $templateDir, $template));

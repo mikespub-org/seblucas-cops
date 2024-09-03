@@ -13,7 +13,9 @@ x.x.x - TODO
 2.8.x - 2024xxxx
   * Expand Data mimetypes to cover common EPUB file components
   * Add Response class + move notFound() + add redirect() and sendError()
-  * Use FileRenderer::sendFile() for covers and thumbnails
+  * Rename FileRenderer to FileResponse and inherit from Response
+  * Replace header() and echo with Response() in handlers
+  * Use FileResponse::sendFile() for covers and thumbnails
   * Fix monocle epub reader when using route urls
   * Move getting zip content from ZipFsHandler to EPubReader
 

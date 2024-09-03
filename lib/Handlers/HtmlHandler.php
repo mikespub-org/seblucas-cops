@@ -58,12 +58,12 @@ class HtmlHandler extends PageHandler
             }
         }
 
-        header('Content-Type: text/html;charset=utf-8');
+        $response = new Response('text/html;charset=utf-8');
 
         $html = new HtmlRenderer();
 
         try {
-            echo $html->render($request);
+            $response->sendData($html->render($request));
         } catch (Throwable $e) {
             error_log($e);
             Response::sendError($request, $e->getMessage());

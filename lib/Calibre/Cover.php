@@ -13,7 +13,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
-use SebLucas\Cops\Output\FileRenderer;
+use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
 
 class Cover
@@ -195,7 +195,8 @@ class Cover
         if (is_null($outputfile)) {
             $mimetype = ($inType == 'png') ? 'image/png' : 'image/jpeg';
             // use cache control here
-            Response::sendHeaders($mimetype, 0);
+            $response = new Response($mimetype, 0);
+            $response->sendHeaders();
         }
         if ($inType == 'png') {
             if (!imagepng($dst_img, $outputfile, 9)) {
@@ -250,7 +251,8 @@ class Cover
 
         if ($cachePath !== null && file_exists($cachePath)) {
             //return the already cached thumbnail
-            FileRenderer::sendFile($cachePath, null, $mime, true);
+            $response = new FileResponse($mime, 0);
+            $response->sendFile($cachePath, true);
             return;
         }
 
@@ -261,11 +263,13 @@ class Cover
                 return;
             }
             //return the just cached thumbnail
-            FileRenderer::sendFile($cachePath, null, $mime, true);
+            $response = new FileResponse($mime, 0);
+            $response->sendFile($cachePath, true);
             return;
         }
 
-        FileRenderer::sendFile($file, null, $mime);
+        $response = new FileResponse($mime, 0);
+        $response->sendFile($file);
         return;
     }
 

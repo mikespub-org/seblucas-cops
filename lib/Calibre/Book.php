@@ -13,7 +13,7 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFeed;
-use SebLucas\Cops\Output\FileRenderer;
+use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
@@ -570,10 +570,10 @@ class Book
         // if we want to update metadata and then use kepubify, we need to save the updated Epub first
         if ($this->updateForKepub && !empty(Config::get('kepubify_path'))) {
             // make a temp copy for the updated Epub file
-            $tmpfile = FileRenderer::getTempFile('epub');
+            $tmpfile = FileResponse::getTempFile('epub');
             if (!copy($data->getLocalPath(), $tmpfile)) {
-                echo 'Error: unable to copy epub file';
-                return;
+                // this will call exit()
+                Response::sendError(null, 'Error: unable to copy epub file');
             }
             $filePath = $tmpfile;
         } else {
@@ -612,7 +612,8 @@ class Book
                     // run kepubify on updated Epub file and send converted tmpfile
                     $kepubFile = $this->runKepubify($filePath, $filename);
                     if (empty($kepubFile)) {
-                        echo 'Error: failed to convert epub file';
+                        // this will call exit()
+                        Response::sendError(null, 'Error: failed to convert epub file');
                     }
                     return;
                 }
@@ -621,7 +622,8 @@ class Book
             $sendHeaders = headers_sent() ? false : true;
             $epub->download($filename, $sendHeaders);
         } catch (Exception $e) {
-            echo 'Exception : ' . $e->getMessage();
+            // this will call exit()
+            Response::sendError(null, 'Exception: ' . $e->getMessage());
         }
     }
 
@@ -636,23 +638,16 @@ class Book
         if (empty(Config::get('kepubify_path'))) {
             return null;
         }
-        $tmpfile = FileRenderer::getTempFile('kepub.epub');
+        $tmpfile = FileResponse::getTempFile('kepub.epub');
         $cmd = escapeshellarg(Config::get('kepubify_path'));
         $cmd .= ' -o ' . escapeshellarg($tmpfile);
         $cmd .= ' ' . escapeshellarg($filepath);
         exec($cmd, $output, $return);
         if ($return == 0 && file_exists($tmpfile)) {
             if (!empty($sendFile)) {
-                // don't use x_accel_redirect since we deal with a tmpfile here
-                $sendHeaders = headers_sent() ? false : true;
-                if ($sendHeaders) {
-                    header('Content-Type: ' . EPub::MIME_TYPE);
-                    header('Content-Disposition: attachment; filename="' . basename($sendFile) . '"');
-                    header('Content-Length: ' . filesize($tmpfile));
-                }
-                readfile($tmpfile);
                 // @todo no cache control here!?
-                //FileRenderer::sendFile($tmpfile, basename($sendFile), EPub::MIME_TYPE, true, null);
+                $response = new FileResponse(EPub::MIME_TYPE, null, basename($sendFile));
+                $response->sendFile($tmpfile, true);
             }
             return $tmpfile;
         }

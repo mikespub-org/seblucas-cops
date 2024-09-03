@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
-use SebLucas\Cops\Output\FileRenderer;
+use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
@@ -104,7 +104,9 @@ class FetchHandler extends BaseHandler
         $file = $book->getFilePath($type, $idData);
 
         if ($viewOnly) {
-            FileRenderer::sendFile($file, '', $data->getMimeType());
+            // disposition inline here
+            $response = new FileResponse($data->getMimeType(), 0 , '');
+            $response->sendFile($file);
             return;
         }
 
@@ -113,7 +115,8 @@ class FetchHandler extends BaseHandler
             return;
         }
 
-        FileRenderer::sendFile($file, basename($file), $data->getMimeType());
+        $response = new FileResponse($data->getMimeType(), 0, basename($file));
+        $response->sendFile($file);
     }
 
     /**
@@ -141,7 +144,9 @@ class FetchHandler extends BaseHandler
             // this will call exit()
             Response::notFound($request);
         }
-        FileRenderer::sendFile($filepath, basename($filepath));
+        $mimetype = Response::getMimeType($filepath);
+        $response = new FileResponse($mimetype, 0, basename($filepath));
+        $response->sendFile($filepath);
     }
 
     /**
@@ -162,7 +167,7 @@ class FetchHandler extends BaseHandler
             }
             $zipper->download(null, $sendHeaders);
         } else {
-            echo "Invalid zipped: " . $zipper->getMessage();
+            Response::sendError($request, "Invalid zipped: " . $zipper->getMessage());
         }
     }
 
@@ -214,11 +219,12 @@ class FetchHandler extends BaseHandler
         if (!empty(Config::get('kepubify_path'))) {
             $kepubFile = $book->runKepubify($file, $data->getUpdatedFilenameKepub());
             if (empty($kepubFile)) {
-                echo 'Error: failed to convert epub file';
+                Response::sendError(null, 'Error: failed to convert epub file');
             }
             return;
         }
         // provide kepub in name only (without update of opf properties for cover-image in Epub)
-        FileRenderer::sendFile($file, basename($data->getUpdatedFilenameKepub()), $data->getMimeType());
+        $response = new FileResponse($data->getMimeType(), 0, basename($data->getUpdatedFilenameKepub()));
+        $response->sendFile($file);
     }
 }
