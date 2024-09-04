@@ -307,9 +307,9 @@ class Page
             array_push($this->entryArray, new Entry(
                 localize("authors.title"),
                 "",
-                "TODO",
+                localize("filters.title"),
                 "text",
-                [],
+                [ new LinkNavigation(Route::link($this->handler, Author::PAGE_ALL), "authors") ],
                 $this->getDatabaseId(),
                 "",
                 ""
@@ -321,9 +321,9 @@ class Page
             array_push($this->entryArray, new Entry(
                 localize("languages.title"),
                 "",
-                "TODO",
+                localize("filters.title"),
                 "text",
-                [],
+                [ new LinkNavigation(Route::link($this->handler, Language::PAGE_ALL), "languages") ],
                 $this->getDatabaseId(),
                 "",
                 ""
@@ -335,9 +335,9 @@ class Page
             array_push($this->entryArray, new Entry(
                 localize("publishers.title"),
                 "",
-                "TODO",
+                localize("filters.title"),
                 "text",
-                [],
+                [ new LinkNavigation(Route::link($this->handler, Publisher::PAGE_ALL), "publishers") ],
                 $this->getDatabaseId(),
                 "",
                 ""
@@ -349,9 +349,9 @@ class Page
             array_push($this->entryArray, new Entry(
                 localize("ratings.title"),
                 "",
-                "TODO",
+                localize("filters.title"),
                 "text",
-                [],
+                [ new LinkNavigation(Route::link($this->handler, Rating::PAGE_ALL), "ratings") ],
                 $this->getDatabaseId(),
                 "",
                 ""
@@ -363,9 +363,9 @@ class Page
             array_push($this->entryArray, new Entry(
                 localize("series.title"),
                 "",
-                "TODO",
+                localize("filters.title"),
                 "text",
-                [],
+                [ new LinkNavigation(Route::link($this->handler, Serie::PAGE_ALL), "series") ],
                 $this->getDatabaseId(),
                 "",
                 ""
@@ -377,9 +377,9 @@ class Page
             array_push($this->entryArray, new Entry(
                 localize("tags.title"),
                 "",
-                "TODO",
+                localize("filters.title"),
                 "text",
-                [],
+                [ new LinkNavigation(Route::link($this->handler, Tag::PAGE_ALL), "tags") ],
                 $this->getDatabaseId(),
                 "",
                 ""
@@ -395,9 +395,9 @@ class Page
             array_push($this->entryArray, new Entry(
                 localize("identifiers.title"),
                 "",
-                "TODO",
+                localize("filters.title"),
                 "text",
-                [],
+                [ new LinkNavigation(Route::link($this->handler, Identifier::PAGE_ALL), "identifiers") ],
                 $this->getDatabaseId(),
                 "",
                 ""
@@ -419,9 +419,9 @@ class Page
                 array_push($this->entryArray, new Entry(
                     $customType->getTitle(),
                     "",
-                    "TODO",
+                    localize("filters.title"),
                     "text",
-                    [],
+                    [ new LinkNavigation($customType->getUri(), Identifier::PAGE_ALL), $customType->getTitle()) ],
                     $this->getDatabaseId(),
                     "",
                     ""

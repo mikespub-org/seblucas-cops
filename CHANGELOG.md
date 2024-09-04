@@ -19,6 +19,8 @@ x.x.x - TODO
   * Fix monocle epub reader when using route urls
   * Move getting zip content from ZipFsHandler to EPubReader
   * Add GraphQL query field tests
+  * Show filters in main page for bootstrap2 and twigged templates
+  * Show links to PAGE_ALL in filters page to find all authors etc. for a filter
 
 2.8.1 - 20240902 Fix download filenames
   * Fix FileRenderer to send the right Content-Disposition - see issue #102 by @Chirishman

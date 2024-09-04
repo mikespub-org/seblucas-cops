@@ -22,6 +22,19 @@
         {% endfor %}
     {% endif %}
     </ul>
+    {% if it.filters %}
+    <ul>
+        <!-- show links to filter -->
+        <li>{{it.c.i18n.filtersTitle}}:</li>
+        {% for filter in it.filters %}
+        <li>
+            <a href="{{filter.navlink}}">
+                {{filter.class}} = {{filter.title}}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 </div>
 {% endblock hierarchy %}
 

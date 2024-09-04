@@ -2,11 +2,13 @@
 {% extends 'navlist.html' %}
 
 {% block entry %}
-{% if entry.navlink == "#" and entry.number == "" %}
+{% if entry.class == "" and entry.number == "" %}
     <div class="panel panel-default">
         <!-- fixme: show as separator on larger screens? -->
         <div class="panel-heading">
-            {{entry.title|escape}}
+            <a href="{{entry.navlink}}">
+                {{entry.title|escape}}
+            </a>
         </div>
     </div>
 {% else %}

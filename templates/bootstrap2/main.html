@@ -24,6 +24,19 @@
         {{~}}
     {{?}}
     </ul>
+    {{? it.filters}}
+    <ul>
+        <!-- show links to filter -->
+        <li>{{=it.c.i18n.filtersTitle}}:</li>
+        {{~it.filters:filter:idx}}
+        <li>
+            <a href="{{=filter.navlink}}">
+                {{=filter.class}} = {{=filter.title}}
+            </a>
+        </li>
+        {{~}}
+    </ul>
+    {{?}}
 </div>
 
 {{? it.containsBook == 0}}
@@ -40,10 +53,12 @@
                         {{=entry.content}}
                     </div>
                 {{??}}
-                    {{? entry.navlink == "#" && entry.number == ""}}
+                    {{? entry.class == "" && entry.number == ""}}
                         <!-- fixme: show as separator on larger screens? -->
                         <div class="panel-heading">
-                            {{=htmlspecialchars (entry.title)}}
+                            <a href="{{=entry.navlink}}">
+                                {{=htmlspecialchars (entry.title)}}
+                            </a>
                         </div>
                     {{??}}
                         <a href="{{=entry.navlink}}">

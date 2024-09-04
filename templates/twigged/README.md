@@ -24,7 +24,7 @@ References:
 | Interpolate | {{= it.title }} | {{ it.title }} | |
 | Include/use | {{#def:header}} | {% include 'header.html' %} | use include statement |
 | Conditional | {{? it.containsBook == 0}}<br>...<br>{{??}}<br>...<br>{{?}} | {% if it.containsBook == 0 %}<br>...<br>{% else %}<br>...<br>{% endif %} | |
-| AND clause | {{? entry.navlink == "#" && entry.number == ""}} | {% if entry.navlink == "#" and entry.number == "" %} | |
+| AND clause | {{? entry.class == "" && entry.number == ""}} | {% if entry.class == "" and entry.number == "" %} | |
 | OR clause | {{? it.page == 13 \|\| it.page == 16}} | {% if it.page == 13 or it.page == 16 %} | |
 | Iterate | {{\~entry.book.preferedData:data:i}}<br>...<br>{{\~}} | {% for data in entry.book.preferedData %}<br>...<br>{% endfor %} | |
 | first iteration | {{? i == 0}} | {% if loop.first %} | |
