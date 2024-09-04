@@ -399,7 +399,6 @@ class OpdsRenderer
                 $req = Request::build($request->urlParams, static::$handler);
                 $req->set('filter', 1);
                 $filterPage = PageId::getPage($request->get('page'), $req);
-                $filterPage->InitializeContent();
                 //$request->set('filter', null);
                 $extraParams = $filterPage->filterParams;
                 if ($request->get('sort')) {

@@ -16,10 +16,10 @@ class PageRatingDetail extends PageWithDetail
     protected string $className = Rating::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         /** @var Rating $instance */
         $instance = Rating::getInstanceById($this->idGet, $this->getDatabaseId());

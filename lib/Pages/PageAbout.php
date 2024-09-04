@@ -15,10 +15,10 @@ class PageAbout extends Page
     public const PAGE_ID = PageId::ABOUT_ID;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->idPage = static::PAGE_ID;
         $this->title = localize("about.title");

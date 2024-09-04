@@ -19,10 +19,10 @@ class PageCustomDetail extends Page
     protected string $className = CustomColumn::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         // this could be string for some custom columns - override here
         $this->idGet = $this->request->get('id');

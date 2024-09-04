@@ -23,10 +23,10 @@ class PageIdentifierDetail extends Page
     protected string $className = Identifier::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         // this would be the identifier - override here
         $this->idGet = $this->request->get('id', null, '/^\w+$/');

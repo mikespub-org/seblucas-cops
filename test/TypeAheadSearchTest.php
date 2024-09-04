@@ -32,7 +32,6 @@ class TypeAheadSearchTest extends TestCase
         $request->set('search', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("2 tags", $currentPage->entryArray[0]->content);
@@ -48,7 +47,6 @@ class TypeAheadSearchTest extends TestCase
         $request->set('search', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
@@ -66,7 +64,6 @@ class TypeAheadSearchTest extends TestCase
         $request->set('search', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
         $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
@@ -84,7 +81,6 @@ class TypeAheadSearchTest extends TestCase
         $request->set('search', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("2 publishers", $currentPage->entryArray[0]->content);
@@ -101,7 +97,6 @@ class TypeAheadSearchTest extends TestCase
         $request->set('search', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
@@ -119,7 +114,6 @@ class TypeAheadSearchTest extends TestCase
         $request->set('search', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(2, $currentPage->entryArray);
         $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
@@ -139,7 +133,6 @@ class TypeAheadSearchTest extends TestCase
         $request->set('multi', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(5, $currentPage->entryArray);
         $this->assertEquals("Some books", $currentPage->entryArray[0]->title);

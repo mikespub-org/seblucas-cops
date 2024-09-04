@@ -91,7 +91,6 @@ class Zipper
             $this->message = 'Invalid page';
             return false;
         }
-        $instance->InitializeContent();
         if ($this->format == 'ANY') {
             $this->fileName = $instance->title . '.zip';
         } else {

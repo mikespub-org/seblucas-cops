@@ -97,6 +97,9 @@ class Page
         $this->authorName = Config::get('author_name') ?: 'Sébastien Lucas';
         $this->authorUri = Config::get('author_uri') ?: 'http://blog.slucas.fr';
         $this->authorEmail = Config::get('author_email') ?: 'sebastien@slucas.fr';
+
+        // move to constructor as this is always called directly after PageId::getPage()
+        $this->initializeContent();
     }
 
     /**
@@ -145,10 +148,10 @@ class Page
     }
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = static::PAGE_ID;

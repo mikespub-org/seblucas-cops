@@ -16,10 +16,10 @@ class PageAllAuthors extends Page
     protected string $className = Author::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Author::PAGE_ID;

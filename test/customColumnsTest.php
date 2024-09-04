@@ -377,7 +377,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(15, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_01", $currentPage->entryArray[ 4]->title);
@@ -399,7 +398,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_01", $currentPage->entryArray[4]->title);
@@ -418,7 +416,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_02", $currentPage->entryArray[4]->title);
@@ -437,7 +434,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(6, $currentPage->entryArray); // Authors, Series, Publishers, Languages, All, Recent
     }
@@ -450,7 +446,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_04", $currentPage->entryArray[4]->title);
@@ -469,7 +464,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_05", $currentPage->entryArray[4]->title);
@@ -488,7 +482,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_06", $currentPage->entryArray[4]->title);
@@ -507,7 +500,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_07", $currentPage->entryArray[4]->title);
@@ -526,7 +518,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_08", $currentPage->entryArray[4]->title);
@@ -545,7 +536,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_09", $currentPage->entryArray[4]->title);
@@ -564,7 +554,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build([], self::$handler);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
         $this->assertEquals("custom_10", $currentPage->entryArray[4]->title);
@@ -582,7 +571,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 8], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_01", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -601,7 +589,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 6], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_02", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -620,7 +607,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 4], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_04", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -639,7 +625,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 5], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_05", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
@@ -660,7 +645,6 @@ class CustomColumnsTest extends TestCase
 
         Config::set('custom_date_split_year', '0');
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_06", $currentPage->title);
         $this->assertCount(5, $currentPage->entryArray);
@@ -675,7 +659,6 @@ class CustomColumnsTest extends TestCase
 
         Config::set('custom_date_split_year', '1');
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_06", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -698,7 +681,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 12, 'year' => "2000"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
-        $currentPage->InitializeContent();
 
         // we have entries for different dates in year 2000
         $this->assertEquals("2000", $currentPage->title);
@@ -719,7 +701,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 12, 'id' => "2000-01-01"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("2000-01-01", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -734,7 +715,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 14], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_07", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
@@ -757,7 +737,6 @@ class CustomColumnsTest extends TestCase
 
         Config::set('custom_integer_split_range', '0');
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_08", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
@@ -771,7 +750,6 @@ class CustomColumnsTest extends TestCase
 
         Config::set('custom_integer_split_range', '4');
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_08", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -793,7 +771,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 10, 'range' => "-2--1"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
-        $currentPage->InitializeContent();
 
         // we have entries for different integers in range -2 to -1
         $this->assertEquals("-2--1", $currentPage->title);
@@ -814,7 +791,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 10, 'id' => "-2"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("-2", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -829,7 +805,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 9], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_09", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
@@ -851,7 +826,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 11], self::$handler);
 
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("custom_10", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -890,7 +864,6 @@ class CustomColumnsTest extends TestCase
         $request = Request::build(['custom' => 11, 'id' => "0"], self::$handler);
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
-        $currentPage->InitializeContent();
 
         /** @var EntryBook[] $entries */
         $entries = $currentPage->entryArray;

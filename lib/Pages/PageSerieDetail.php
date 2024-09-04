@@ -16,10 +16,10 @@ class PageSerieDetail extends PageWithDetail
     protected string $className = Serie::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         /** @var Serie $instance */
         $instance = Serie::getInstanceById($this->idGet, $this->getDatabaseId());

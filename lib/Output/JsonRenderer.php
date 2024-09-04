@@ -605,9 +605,8 @@ class JsonRenderer
         $database = $request->database();
         $libraryId = $request->getVirtualLibrary();
 
-        $currentPage = PageId::getPage($page, $request);
         try {
-            $currentPage->InitializeContent();
+            $currentPage = PageId::getPage($page, $request);
         } catch (Exception $e) {
             // this will call exit()
             Response::sendError($request, $e->getMessage());

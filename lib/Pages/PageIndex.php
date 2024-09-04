@@ -27,10 +27,10 @@ use SebLucas\Cops\Model\LinkNavigation;
 class PageIndex extends Page
 {
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = static::PAGE_ID;

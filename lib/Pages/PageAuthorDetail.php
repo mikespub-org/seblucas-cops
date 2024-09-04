@@ -16,10 +16,10 @@ class PageAuthorDetail extends PageWithDetail
     protected string $className = Author::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         /** @var Author $instance */
         $instance = Author::getInstanceById($this->idGet, $this->getDatabaseId());

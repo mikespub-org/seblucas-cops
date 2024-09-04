@@ -17,10 +17,10 @@ class PageAllSeries extends Page
     protected string $className = Serie::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Serie::PAGE_ID;

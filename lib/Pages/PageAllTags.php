@@ -17,10 +17,10 @@ class PageAllTags extends Page
     protected string $className = Tag::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Tag::PAGE_ID;

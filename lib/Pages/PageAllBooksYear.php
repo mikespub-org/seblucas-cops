@@ -17,10 +17,10 @@ class PageAllBooksYear extends Page
     protected string $className = Book::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Book::getEntryIdByYear($this->idGet);

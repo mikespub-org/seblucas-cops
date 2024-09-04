@@ -16,10 +16,10 @@ class PageTagDetail extends PageWithDetail
     protected string $className = Tag::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         /** @var Tag $instance */
         $instance = Tag::getInstanceById($this->idGet, $this->getDatabaseId());

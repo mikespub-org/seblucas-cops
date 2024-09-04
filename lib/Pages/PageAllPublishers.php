@@ -16,10 +16,10 @@ class PageAllPublishers extends Page
     protected string $className = Publisher::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Publisher::PAGE_ID;

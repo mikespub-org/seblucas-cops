@@ -15,10 +15,10 @@ class PageBookDetail extends Page
     protected string $className = Book::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->book = Book::getBookById($this->idGet, $this->getDatabaseId());
         if (is_null($this->book)) {

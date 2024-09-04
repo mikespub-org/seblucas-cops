@@ -17,10 +17,10 @@ class PageAllRating extends Page
     protected string $className = Rating::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Rating::PAGE_ID;

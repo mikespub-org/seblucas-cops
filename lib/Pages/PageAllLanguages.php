@@ -16,10 +16,10 @@ class PageAllLanguages extends Page
     protected string $className = Language::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Language::PAGE_ID;

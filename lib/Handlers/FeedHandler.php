@@ -59,7 +59,6 @@ class FeedHandler extends BaseHandler
                 return;
             default:
                 $currentPage = PageId::getPage($page, $request);
-                $currentPage->InitializeContent();
                 $response->sendData($OPDSRender->render($currentPage, $request));
                 return;
         }

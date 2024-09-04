@@ -28,7 +28,6 @@ class PageMultiDatabaseTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -59,7 +58,6 @@ class PageMultiDatabaseTest extends TestCase
         // Issue 124
         Config::set('max_item_per_page', $maxItem);
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *art*", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);

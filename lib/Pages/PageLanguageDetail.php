@@ -16,10 +16,10 @@ class PageLanguageDetail extends PageWithDetail
     protected string $className = Language::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         /** @var Language $instance */
         $instance = Language::getInstanceById($this->idGet, $this->getDatabaseId());

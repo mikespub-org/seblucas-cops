@@ -34,7 +34,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
@@ -78,7 +77,6 @@ class PageTest extends TestCase
         Config::set('ignored_categories', ["author", "series", "tag", "publisher", "language"]);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals(Config::get('title_default'), $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -100,7 +98,6 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', ["type1"]);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(9, $currentPage->entryArray);
         $this->assertEquals("Type1", $currentPage->entryArray [6]->title);
@@ -118,7 +115,6 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', ["type2"]);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(9, $currentPage->entryArray);
         $this->assertEquals("Type2", $currentPage->entryArray [6]->title);
@@ -136,7 +132,6 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', ["type4"]);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(9, $currentPage->entryArray);
         $this->assertEquals("Type4", $currentPage->entryArray [6]->title);
@@ -154,7 +149,6 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', ["type1", "type2", "type4"]);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(11, $currentPage->entryArray);
 
@@ -169,7 +163,6 @@ class PageTest extends TestCase
         Config::set('calibre_custom_column', ["*"]);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(11, $currentPage->entryArray);
 
@@ -185,7 +178,6 @@ class PageTest extends TestCase
         $request->set('vl', '2.Short_Stories_in_English');
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertCount(9, $currentPage->entryArray);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
@@ -219,7 +211,6 @@ class PageTest extends TestCase
         $request->set('custom', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Type4", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -238,7 +229,6 @@ class PageTest extends TestCase
         $request->set('custom', 2);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Type2", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
@@ -257,7 +247,6 @@ class PageTest extends TestCase
         $request->set('custom', 3);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Type1", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -277,7 +266,6 @@ class PageTest extends TestCase
         $request->set('custom', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("SeriesLike", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -294,7 +282,6 @@ class PageTest extends TestCase
         $request->set('custom', 2);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("tag1", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -311,7 +298,6 @@ class PageTest extends TestCase
         $request->set('id', "2");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("other", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -327,7 +313,6 @@ class PageTest extends TestCase
         Config::set('author_split_first_letter', "0");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Authors", $currentPage->title);
         $this->assertCount(7, $currentPage->entryArray);
@@ -343,7 +328,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Authors", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
@@ -360,7 +344,6 @@ class PageTest extends TestCase
 
         // Author Lewis Carroll
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("1 author starting with C", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -378,7 +361,6 @@ class PageTest extends TestCase
         // First page
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertEquals(4, $currentPage->getMaxPage());
@@ -401,7 +383,6 @@ class PageTest extends TestCase
         $request->set('n', "2");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertEquals(2, $currentPage->getMaxPage());
@@ -424,7 +405,6 @@ class PageTest extends TestCase
         Config::set('max_item_per_page', -1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
@@ -440,7 +420,6 @@ class PageTest extends TestCase
         $request->set('filter', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
@@ -459,7 +438,6 @@ class PageTest extends TestCase
         Config::set('titles_split_publication_year', 0);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
         $this->assertCount(16, $currentPage->entryArray);
@@ -477,7 +455,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
         $this->assertCount(10, $currentPage->entryArray);
@@ -493,7 +470,6 @@ class PageTest extends TestCase
         $request->set('id', "C");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("3 books starting with C", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -510,7 +486,6 @@ class PageTest extends TestCase
         Config::set('titles_split_publication_year', 1);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("All books", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
@@ -529,7 +504,6 @@ class PageTest extends TestCase
         $request->set('id', "2006");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("9 books published in 2006", $currentPage->title);
         $this->assertCount(9, $currentPage->entryArray);
@@ -543,7 +517,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Series", $currentPage->title);
         $this->assertCount(5, $currentPage->entryArray);
@@ -561,7 +534,6 @@ class PageTest extends TestCase
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Sherlock Holmes", $currentPage->title);
         $this->assertCount(7, $currentPage->entryArray);
@@ -577,7 +549,6 @@ class PageTest extends TestCase
         $request->set('filter', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Sherlock Holmes", $currentPage->title);
         $this->assertCount(12, $currentPage->entryArray);
@@ -593,7 +564,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Publishers", $currentPage->title);
         $this->assertCount(7, $currentPage->entryArray);
@@ -608,7 +578,6 @@ class PageTest extends TestCase
         $request->set('id', "6");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Strand Magazine", $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);
@@ -624,7 +593,6 @@ class PageTest extends TestCase
         $request->set('filter', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Strand Magazine", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
@@ -640,7 +608,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Tags", $currentPage->title);
         $this->assertCount(12, $currentPage->entryArray);
@@ -658,7 +625,6 @@ class PageTest extends TestCase
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Fiction", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
@@ -674,7 +640,6 @@ class PageTest extends TestCase
         $request->set('filter', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Fiction", $currentPage->title);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
@@ -689,7 +654,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Languages", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -705,7 +669,6 @@ class PageTest extends TestCase
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("English", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
@@ -721,7 +684,6 @@ class PageTest extends TestCase
         $request->set('filter', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("English", $currentPage->title);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
@@ -736,7 +698,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Ratings", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
@@ -754,7 +715,6 @@ class PageTest extends TestCase
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("5 stars", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
@@ -770,7 +730,6 @@ class PageTest extends TestCase
         $request->set('filter', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("5 stars", $currentPage->title);
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
@@ -785,7 +744,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Identifiers", $currentPage->title);
         $this->assertCount(7, $currentPage->entryArray);
@@ -803,7 +761,6 @@ class PageTest extends TestCase
         $request->set('id', "isbn");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("ISBN", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -817,7 +774,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Virtual libraries", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
@@ -834,7 +790,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
         $this->assertCount(16, $currentPage->entryArray);
@@ -850,7 +805,6 @@ class PageTest extends TestCase
 
         $request->set('tag', "Historical");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -865,7 +819,6 @@ class PageTest extends TestCase
 
         $request->set('tag', "!Romance");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Recent additions", $currentPage->title);
         $this->assertCount(14, $currentPage->entryArray);
@@ -881,7 +834,6 @@ class PageTest extends TestCase
         $request->set('id', "2");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("The Return of Sherlock Holmes", $currentPage->title);
         $this->assertCount(0, $currentPage->entryArray);
@@ -896,7 +848,6 @@ class PageTest extends TestCase
 
         // Only books returned
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *alice*", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -914,7 +865,6 @@ class PageTest extends TestCase
 
         Config::set('ignored_categories', ["author"]);
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *car*", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -933,7 +883,6 @@ class PageTest extends TestCase
         $request->set('query', "car");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *car*", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -958,7 +907,6 @@ class PageTest extends TestCase
         $request->set('query', $query);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *$query*", $currentPage->title);
         $this->assertCount($count, $currentPage->entryArray);
@@ -1002,7 +950,6 @@ class PageTest extends TestCase
         $request->set('query', $query);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *$query*", $currentPage->title);
         $this->assertCount($count, $currentPage->entryArray);
@@ -1040,7 +987,6 @@ class PageTest extends TestCase
         $request->set('scope', "author");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *Lewis Carroll* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -1056,7 +1002,6 @@ class PageTest extends TestCase
         $request->set('scope', "author");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *Carroll, Lewis* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -1073,7 +1018,6 @@ class PageTest extends TestCase
         // Match Lewis Carroll
         $request->set('query', "car");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *car* in authors", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -1090,7 +1034,6 @@ class PageTest extends TestCase
         // Match Holmes
         $request->set('query', "hol");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *hol* in series", $currentPage->title);
         $this->assertCount(1, $currentPage->entryArray);
@@ -1107,7 +1050,6 @@ class PageTest extends TestCase
         // Match Holmes
         $request->set('query', "hol");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *hol* in books", $currentPage->title);
         $this->assertCount(4, $currentPage->entryArray);
@@ -1123,7 +1065,6 @@ class PageTest extends TestCase
         // Match Holmes
         $request->set('query', "millan");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *millan* in publishers", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -1140,7 +1081,6 @@ class PageTest extends TestCase
         // Match Holmes
         $request->set('query', "fic");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Search result for *fic* in tags", $currentPage->title);
         $this->assertCount(2, $currentPage->entryArray);
@@ -1153,7 +1093,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("About COPS", $currentPage->title);
         $this->assertCount(0, $currentPage->entryArray);
@@ -1166,7 +1105,6 @@ class PageTest extends TestCase
         $request = new Request();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $this->assertEquals("Customize COPS UI", $currentPage->title);
         $this->assertCount(8, $currentPage->entryArray);

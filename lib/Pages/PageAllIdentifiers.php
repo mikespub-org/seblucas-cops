@@ -17,10 +17,10 @@ class PageAllIdentifiers extends Page
     protected string $className = Identifier::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = Identifier::PAGE_ID;

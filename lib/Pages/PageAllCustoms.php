@@ -21,10 +21,10 @@ class PageAllCustoms extends Page
     protected string $className = CustomColumnType::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());

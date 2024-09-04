@@ -16,10 +16,10 @@ class PagePublisherDetail extends PageWithDetail
     protected string $className = Publisher::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         /** @var Publisher $instance */
         $instance = Publisher::getInstanceById($this->idGet, $this->getDatabaseId());

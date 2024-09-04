@@ -55,7 +55,6 @@ class OpdsHandler extends BaseHandler
                 break;
             default:
                 $currentPage = PageId::getPage($page, $request);
-                $currentPage->InitializeContent();
                 $response = $OPDSRender->render($currentPage, $request);
         }
 

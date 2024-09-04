@@ -15,10 +15,10 @@ class PageAllVirtualLibraries extends Page
     protected string $className = VirtualLibrary::class;
 
     /**
-     * Summary of InitializeContent
+     * Summary of initializeContent
      * @return void
      */
-    public function InitializeContent()
+    public function initializeContent()
     {
         $this->getEntries();
         $this->idPage = VirtualLibrary::PAGE_ID;

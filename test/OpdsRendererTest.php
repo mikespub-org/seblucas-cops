@@ -154,7 +154,6 @@ class OpdsRendererTest extends TestCase
         $request = Request::build(['page' => $page], self::$handler);
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $OPDSRender = new OpdsRenderer();
 
@@ -189,7 +188,6 @@ class OpdsRendererTest extends TestCase
         //$_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $OPDSRender = new OpdsRenderer();
 
@@ -229,7 +227,6 @@ class OpdsRendererTest extends TestCase
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $OPDSRender = new OpdsRenderer();
 
@@ -263,7 +260,6 @@ class OpdsRendererTest extends TestCase
         $request->set('db', "0");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $OPDSRender = new OpdsRenderer();
 
@@ -287,7 +283,6 @@ class OpdsRendererTest extends TestCase
         // First page
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $OPDSRender = new OpdsRenderer();
 
@@ -299,7 +294,6 @@ class OpdsRendererTest extends TestCase
 
         $request->set('n', "2");
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $OPDSRender = new OpdsRenderer();
 
@@ -321,7 +315,6 @@ class OpdsRendererTest extends TestCase
         $request->set('tag', "Short Stories");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
 
         $OPDSRender = new OpdsRenderer();
 
@@ -340,7 +333,6 @@ class OpdsRendererTest extends TestCase
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
-        $currentPage->InitializeContent();
         $currentPage->idPage = null;
 
         $OPDSRender = new OpdsRenderer();
