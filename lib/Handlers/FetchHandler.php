@@ -195,7 +195,7 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param mixed $idData
-     * @return void
+     * @return FileResponse
      */
     public function sendUpdatedEpub($request, $book, $idData)
     {
@@ -206,7 +206,7 @@ class FetchHandler extends BaseHandler
         // create empty response to start with!?
         $response = new FileResponse();
         // this will also use kepubify_path internally if defined
-        $book->sendUpdatedEpub($idData, $response);
+        return $book->sendUpdatedEpub($idData, $response);
     }
 
     /**

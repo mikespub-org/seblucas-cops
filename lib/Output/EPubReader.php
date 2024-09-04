@@ -20,23 +20,11 @@ use Exception;
 /**
  * EPub Reader based on Monocle
  */
-class EPubReader
+class EPubReader extends BaseRenderer
 {
     public static string $handler = "epubfs";
     public static string $template = "templates/epubreader.html";
     public static string $epubClass = EPub::class;
-
-    /** @var ?Response */
-    protected $response;
-
-    /**
-     * Summary of __construct
-     * @param ?Response $response
-     */
-    public function __construct($response = null)
-    {
-        $this->response = $response;
-    }
 
     /**
      * Summary of getComponentContent

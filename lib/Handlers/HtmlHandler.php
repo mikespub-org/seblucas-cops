@@ -60,7 +60,7 @@ class HtmlHandler extends PageHandler
 
         $response = new Response('text/html;charset=utf-8');
 
-        $html = new HtmlRenderer();
+        $html = new HtmlRenderer($response);
 
         try {
             $response->sendData($html->render($request));

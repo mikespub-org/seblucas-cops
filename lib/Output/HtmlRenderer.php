@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Template\doT;
 
-class HtmlRenderer
+class HtmlRenderer extends BaseRenderer
 {
     public static string $handler = "index";
 

@@ -50,7 +50,7 @@ class FeedHandler extends BaseHandler
 
         $response = new Response('application/xml;charset=utf-8');
 
-        $OPDSRender = new OpdsRenderer();
+        $OPDSRender = new OpdsRenderer($response);
 
         switch ($page) {
             case PageId::OPENSEARCH :

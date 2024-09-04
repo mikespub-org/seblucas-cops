@@ -41,7 +41,7 @@ class ReadHandler extends BaseHandler
 
         $response = new Response('text/html;charset=utf-8');
 
-        $reader = new EPubReader();
+        $reader = new EPubReader($response);
 
         try {
             $response->sendData($reader->getReader($idData, $version, $database));

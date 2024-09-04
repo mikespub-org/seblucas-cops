@@ -27,7 +27,7 @@ use Exception;
 /**
  * Basic REST API routing to JSON Renderer
  */
-class RestApi
+class RestApi extends BaseRenderer
 {
     public static string $endpoint = Config::ENDPOINT["restapi"];
     public static string $handler = "restapi";
@@ -60,10 +60,12 @@ class RestApi
     /**
      * Summary of __construct
      * @param Request $request
+     * @param ?Response $response
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, $response = null)
     {
         $this->request = $request;
+        parent::__construct($response);
     }
 
     /**

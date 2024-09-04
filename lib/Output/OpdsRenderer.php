@@ -22,7 +22,7 @@ use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use XMLWriter;
 
-class OpdsRenderer
+class OpdsRenderer extends BaseRenderer
 {
     public static string $handler = "feed";
     /** @var ?XMLWriter */

@@ -69,9 +69,9 @@ class RestApiHandler extends BaseHandler
             return;
         }
 
-        $apiHandler = new RestApi($request);
-
         $response = new Response('application/json;charset=utf-8');
+
+        $apiHandler = new RestApi($request, $response);
 
         try {
             $response->sendData($apiHandler->getOutput());

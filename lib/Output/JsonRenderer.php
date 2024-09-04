@@ -21,7 +21,7 @@ use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use Exception;
 
-class JsonRenderer
+class JsonRenderer extends BaseRenderer
 {
     /** @var Request */
     protected $request;
