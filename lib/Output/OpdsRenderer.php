@@ -332,6 +332,113 @@ class OpdsRenderer
     }
 
     /**
+     * Summary of addPagination
+     * @param Page $page
+     * @return void
+     */
+    public function addPagination($page)
+    {
+        $this->getXmlStream()->startElement("opensearch:totalResults");
+        $this->getXmlStream()->text((string) $page->totalNumber);
+        $this->getXmlStream()->endElement();
+        $this->getXmlStream()->startElement("opensearch:itemsPerPage");
+        $this->getXmlStream()->text(Config::get('max_item_per_page'));
+        $this->getXmlStream()->endElement();
+        $this->getXmlStream()->startElement("opensearch:startIndex");
+        $this->getXmlStream()->text((string) (($page->n - 1) * Config::get('max_item_per_page') + 1));
+        $this->getXmlStream()->endElement();
+        $prevLink = $page->getPrevLink();
+        $nextLink = $page->getNextLink();
+        if (!is_null($prevLink)) {
+            $this->renderLink($page->getFirstLink());
+            $this->renderLink($prevLink);
+        }
+        if (!is_null($nextLink)) {
+            $this->renderLink($nextLink);
+            $this->renderLink($page->getLastLink());
+        }
+    }
+
+    /**
+     * Summary of addSort
+     * @param Page $page
+     * @param Request $request
+     * @return void
+     */
+    public function addSort($page, $request)
+    {
+        if (!$page->containsBook() || empty(Config::get('opds_sort_links'))) {
+            return;
+        }
+        $params = $request->getCleanParams();
+        $params['sort'] = null;
+        $sortUrl = Route::link(static::$handler, null, $params);
+        if (str_contains($sortUrl, '?')) {
+            $sortUrl .= "&sort={0}";
+        } else {
+            $sortUrl .= "?sort={0}";
+        }
+        $sortLabel = localize("sort.alternate");
+        $sortParam = $request->get('sort');
+        $sortOptions = $page->getSortOptions();
+        // @todo we can't use really facetGroups here, or OPDS reader thinks we're drilling down :-()
+        foreach ($sortOptions as $field => $title) {
+            $url = str_format($sortUrl, $field);
+            $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null);
+            //$link = new LinkNavigation($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
+            //$link = new LinkFeed($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
+            $this->renderLink($link);
+        }
+    }
+
+    /**
+     * Summary of addFilter
+     * @param Page $page
+     * @param Request $request
+     * @return void
+     */
+    public function addFilter($page, $request)
+    {
+        if (!$page->containsBook()) {
+            return;
+        }
+        $pageId = $request->get('page', PageId::INDEX);
+        $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
+        if (empty($request->getId()) || empty(Config::get('opds_filter_links')) || in_array($pageId, $skipFilterUrl)) {
+            return;
+        }
+        //$params = $request->getCleanParams();
+        //$params['filter'] = 1;
+        //$url = Route::link(static::$handler, null, $params);
+        //$filterLabel = localize("cog.alternate");
+        //$title = localize("links.title");
+        //$link = new LinkFacet($url, $title, $filterLabel, false, null, $database);
+        //$this->renderLink($link);
+        // Note: facets are only shown if there are books available, so we need to get a filter page here
+        $req = Request::build($request->urlParams, static::$handler);
+        $req->set('filter', 1);
+        $filterPage = PageId::getPage($request->get('page'), $req);
+        //$request->set('filter', null);
+        $extraParams = $filterPage->filterParams;
+        if ($request->get('sort')) {
+            $extraParams['sort'] = $request->get('sort');
+        }
+        // @todo handle special case of OPDS not expecting filter while HTML does better
+        unset($extraParams['filter']);
+        $database = $request->database();
+        foreach ($filterPage->entryArray as $entry) {
+            if (empty($entry->className)) {
+                continue;
+            }
+            $group = strtolower($entry->className);
+            $group = localize($group . 's.title');
+            $url = $entry->getNavLink($extraParams);
+            $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
+            $this->renderLink($link);
+        }
+    }
+
+    /**
      * Summary of render
      * @param Page $page
      * @param Request $request
@@ -339,85 +446,14 @@ class OpdsRenderer
      */
     public function render($page, $request)
     {
-        $database = $request->database();
         $this->startXmlDocument($page, $request);
         if ($page->isPaginated()) {
-            $this->getXmlStream()->startElement("opensearch:totalResults");
-            $this->getXmlStream()->text((string) $page->totalNumber);
-            $this->getXmlStream()->endElement();
-            $this->getXmlStream()->startElement("opensearch:itemsPerPage");
-            $this->getXmlStream()->text(Config::get('max_item_per_page'));
-            $this->getXmlStream()->endElement();
-            $this->getXmlStream()->startElement("opensearch:startIndex");
-            $this->getXmlStream()->text((string) (($page->n - 1) * Config::get('max_item_per_page') + 1));
-            $this->getXmlStream()->endElement();
-            $prevLink = $page->getPrevLink();
-            $nextLink = $page->getNextLink();
-            if (!is_null($prevLink)) {
-                $this->renderLink($page->getFirstLink());
-                $this->renderLink($prevLink);
-            }
-            if (!is_null($nextLink)) {
-                $this->renderLink($nextLink);
-                $this->renderLink($page->getLastLink());
-            }
+            $this->addPagination($page);
             // only show sorting when paginating
-            if ($page->containsBook() && !empty(Config::get('opds_sort_links'))) {
-                $params = $request->getCleanParams();
-                $params['sort'] = null;
-                $sortUrl = Route::link(static::$handler, null, $params);
-                if (str_contains($sortUrl, '?')) {
-                    $sortUrl .= "&sort={0}";
-                } else {
-                    $sortUrl .= "?sort={0}";
-                }
-                $sortLabel = localize("sort.alternate");
-                $sortParam = $request->get('sort');
-                $sortOptions = $page->getSortOptions();
-                // @todo we can't use really facetGroups here, or OPDS reader thinks we're drilling down :-()
-                foreach ($sortOptions as $field => $title) {
-                    $url = str_format($sortUrl, $field);
-                    $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null);
-                    //$link = new LinkNavigation($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
-                    //$link = new LinkFeed($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
-                    $this->renderLink($link);
-                }
-            }
+            $this->addSort($page, $request);
         }
         // always show filters even when not paginating
-        if ($page->containsBook()) {
-            $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
-            if (!empty($request->getId()) && !empty(Config::get('opds_filter_links')) && !in_array($page, $skipFilterUrl)) {
-                //$params = $request->getCleanParams();
-                //$params['filter'] = 1;
-                //$url = Route::link(static::$handler, null, $params);
-                //$filterLabel = localize("cog.alternate");
-                //$title = localize("links.title");
-                //$link = new LinkFacet($url, $title, $filterLabel, false, null, $database);
-                //$this->renderLink($link);
-                // Note: facets are only shown if there are books available, so we need to get a filter page here
-                $req = Request::build($request->urlParams, static::$handler);
-                $req->set('filter', 1);
-                $filterPage = PageId::getPage($request->get('page'), $req);
-                //$request->set('filter', null);
-                $extraParams = $filterPage->filterParams;
-                if ($request->get('sort')) {
-                    $extraParams['sort'] = $request->get('sort');
-                }
-                // @todo handle special case of OPDS not expecting filter while HTML does better
-                unset($extraParams['filter']);
-                foreach ($filterPage->entryArray as $entry) {
-                    if (empty($entry->className)) {
-                        continue;
-                    }
-                    $group = strtolower($entry->className);
-                    $group = localize($group . 's.title');
-                    $url = $entry->getNavLink($extraParams);
-                    $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
-                    $this->renderLink($link);
-                }
-            }
-        }
+        $this->addFilter($page, $request);
         foreach ($page->entryArray as $entry) {
             if (!$entry->isValidForOPDS()) {
                 continue;

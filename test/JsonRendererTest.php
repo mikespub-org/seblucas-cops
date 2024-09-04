@@ -240,6 +240,22 @@ class JsonRendererTest extends TestCase
         $this->assertCount(4, $test["c"]);
     }
 
+    public function testGetDownloadLinks(): void
+    {
+        Config::set('download_page', ['ANY']);
+        $page = PageId::ALL_RECENT_BOOKS;
+
+        $request = Request::build(['page' => $page], self::$handler);
+        $renderer = new JsonRenderer();
+        $test = $renderer->getJson($request);
+
+        $this->assertIsArray($test["download"]);
+        $this->assertCount(1, $test["download"]);
+        $this->assertStringEndsWith("zipper.php?page=10&type=any", $test["download"][0]["url"]);
+
+        Config::set('download_page', ['']);
+    }
+
     public function testJsonHandler(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;
