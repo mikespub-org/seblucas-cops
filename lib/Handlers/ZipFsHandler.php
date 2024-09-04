@@ -51,7 +51,7 @@ class ZipFsHandler extends BaseHandler
         // create empty response to start with!?
         $response = new Response();
 
-        $reader = new EPubReader($response);
+        $reader = new EPubReader($request, $response);
 
         try {
             $reader->sendZipContent($idData, $component, $database);

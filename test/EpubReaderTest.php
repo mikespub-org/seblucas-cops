@@ -63,7 +63,7 @@ class EpubReaderTest extends TestCase
         $database = null;
         $request = new Request();
         $response = new Response();
-        $reader = new EPubReader($response);
+        $reader = new EPubReader($request, $response);
 
         ob_start();
         $result = $reader->sendContent($idData, $component, $database);
@@ -204,7 +204,7 @@ class EpubReaderTest extends TestCase
         $database = null;
         $request = new Request();
         $response = new Response();
-        $reader = new EPubReader($response);
+        $reader = new EPubReader($request, $response);
 
         ob_start();
         $result = $reader->sendZipContent($idData, $component, $database);

@@ -51,7 +51,7 @@ class EpubFsHandler extends BaseHandler
         // create empty response to start with!?
         $response = new Response();
 
-        $reader = new EPubReader($response);
+        $reader = new EPubReader($request, $response);
 
         try {
             $reader->sendContent($idData, $component, $database);

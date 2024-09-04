@@ -32,7 +32,7 @@ class JsonHandler extends PageHandler
     {
         $response = new Response('application/json;charset=utf-8');
 
-        $json = new JsonRenderer($response);
+        $json = new JsonRenderer($request, $response);
 
         try {
             $response->sendData(json_encode($json->getJson($request)));

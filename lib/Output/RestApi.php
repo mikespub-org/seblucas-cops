@@ -50,23 +50,7 @@ class RestApi extends BaseRenderer
         "/user" => [self::class, 'getUser'],
     ];
 
-    /**
-     * Summary of request
-     * @var Request
-     */
-    protected Request $request;
     public bool $isExtra = false;
-
-    /**
-     * Summary of __construct
-     * @param Request $request
-     * @param ?Response $response
-     */
-    public function __construct(Request $request, $response = null)
-    {
-        $this->request = $request;
-        parent::__construct($response);
-    }
 
     /**
      * Summary of getPathInfo
