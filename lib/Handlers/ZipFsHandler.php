@@ -46,11 +46,15 @@ class ZipFsHandler extends BaseHandler
             // this will call exit()
             Response::notFound($request);
         }
+        $database = $request->database();
 
-        $reader = new EPubReader();
+        // create empty response to start with!?
+        $response = new Response();
+
+        $reader = new EPubReader($response);
 
         try {
-            $reader->sendZipContent($idData, $component, $request);
+            $reader->sendZipContent($idData, $component, $database);
 
         } catch (Exception $e) {
             error_log($e);

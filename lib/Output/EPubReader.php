@@ -11,7 +11,6 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
@@ -26,6 +25,18 @@ class EPubReader
     public static string $handler = "epubfs";
     public static string $template = "templates/epubreader.html";
     public static string $epubClass = EPub::class;
+
+    /** @var ?Response */
+    protected $response;
+
+    /**
+     * Summary of __construct
+     * @param ?Response $response
+     */
+    public function __construct($response = null)
+    {
+        $this->response = $response;
+    }
 
     /**
      * Summary of getComponentContent
@@ -78,12 +89,12 @@ class EPubReader
      * Summary of sendContent
      * @param int $idData
      * @param string $component
-     * @param Request $request
-     * @return void
+     * @param ?int $database
+     * @return Response
      */
-    public function sendContent($idData, $component, $request)
+    public function sendContent($idData, $component, $database = null)
     {
-        $book = Book::getBookByDataId($idData, $request->database());
+        $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
@@ -98,23 +109,24 @@ class EPubReader
         $mimetype = $epub->componentContentType($component);
 
         // use cache control here
-        $response = new Response($mimetype, 0);
-        $response->sendData($data);
+        $this->response->setHeaders($mimetype, 0);
+        return $this->response->sendData($data);
     }
 
     /**
      * Summary of getReader
      * @param int $idData
-     * @param Request $request
+     * @param ?string $version
+     * @param ?int $database
      * @return string
      */
-    public function getReader($idData, $request)
+    public function getReader($idData, $version = null, $database = null)
     {
-        $version = $request->get('version', Config::get('epub_reader', 'monocle'));
+        $version ??= Config::get('epub_reader', 'monocle');
         if ($version == 'epubjs') {
-            return $this->getEpubjsReader($idData, $request);
+            return $this->getEpubjsReader($idData, $database);
         }
-        $book = Book::getBookByDataId($idData, $request->database());
+        $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
@@ -204,14 +216,14 @@ class EPubReader
     /**
      * Summary of getEpubjsReader
      * @param int $idData
-     * @param Request $request
+     * @param ?int $database
      * @return string
      */
-    public function getEpubjsReader($idData, $request)
+    public function getEpubjsReader($idData, $database = null)
     {
         $handler = "zipfs";
         $template = "templates/epubjs-reader.html";
-        $book = Book::getBookByDataId($idData, $request->database());
+        $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
@@ -272,12 +284,12 @@ class EPubReader
      * Summary of sendZipContent
      * @param int $idData
      * @param string $component
-     * @param Request $request
-     * @return void
+     * @param ?int $database
+     * @return Response
      */
-    public function sendZipContent($idData, $component, $request)
+    public function sendZipContent($idData, $component, $database = null)
     {
-        $book = Book::getBookByDataId($idData, $request->database());
+        $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
@@ -292,7 +304,7 @@ class EPubReader
         $mimetype = Response::getMimeType($component);
 
         // use cache control here
-        $response = new Response($mimetype, 0);
-        $response->sendData($data);
+        $this->response->setHeaders($mimetype, 0);
+        return $this->response->sendData($data);
     }
 }

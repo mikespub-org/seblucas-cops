@@ -25,6 +25,8 @@ class Cover
     protected $databaseId;
     /** @var ?string */
     public $coverFileName = null;
+    /** @var ?FileResponse */
+    protected $response = null;
 
     /**
      * Summary of __construct
@@ -195,8 +197,8 @@ class Cover
         if (is_null($outputfile)) {
             $mimetype = ($inType == 'png') ? 'image/png' : 'image/jpeg';
             // use cache control here
-            $response = new Response($mimetype, 0);
-            $response->sendHeaders();
+            $this->response->setHeaders($mimetype, 0);
+            $this->response->sendHeaders();
         }
         if ($inType == 'png') {
             if (!imagepng($dst_img, $outputfile, 9)) {
@@ -216,9 +218,10 @@ class Cover
     /**
      * Summary of sendThumbnail
      * @param Request $request
-     * @return void
+     * @param FileResponse $response
+     * @return FileResponse
      */
-    public function sendThumbnail($request)
+    public function sendThumbnail($request, $response)
     {
         $type = $request->get('type', 'jpg');
         $width = $request->get('width');
@@ -251,26 +254,24 @@ class Cover
 
         if ($cachePath !== null && file_exists($cachePath)) {
             //return the already cached thumbnail
-            $response = new FileResponse($mime, 0);
-            $response->sendFile($cachePath, true);
-            return;
+            $response->setHeaders($mime, 0);
+            return $response->sendFile($cachePath, true);
         }
 
+        $this->response = $response;
         if ($this->getThumbnail($width, $height, $cachePath, $type)) {
             //if we don't cache the thumbnail, imagejpeg() in $cover->getThumbnail() already return the image data
             if ($cachePath === null) {
                 // The cover had to be resized
-                return;
+                return $this->response;
             }
             //return the just cached thumbnail
-            $response = new FileResponse($mime, 0);
-            $response->sendFile($cachePath, true);
-            return;
+            $response->setHeaders($mime, 0);
+            return $response->sendFile($cachePath, true);
         }
 
-        $response = new FileResponse($mime, 0);
-        $response->sendFile($file);
-        return;
+        $response->setHeaders($mime, 0);
+        return $response->sendFile($file);
     }
 
     /**

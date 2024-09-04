@@ -124,14 +124,13 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param string $file
-     * @return void
+     * @return FileResponse|Zipper
      */
     public function sendExtraFile($request, $book, $file)
     {
         if ($file == 'zipped') {
             // zip all extra files and send back
-            $this->zipExtraFiles($request, $book);
-            return;
+            return $this->zipExtraFiles($request, $book);
         }
         $extraFiles = $book->getExtraFiles();
         if (!in_array($file, $extraFiles)) {
@@ -146,14 +145,14 @@ class FetchHandler extends BaseHandler
         }
         $mimetype = Response::getMimeType($filepath);
         $response = new FileResponse($mimetype, 0, basename($filepath));
-        $response->sendFile($filepath);
+        return $response->sendFile($filepath);
     }
 
     /**
      * Summary of zipExtraFiles
      * @param Request $request
      * @param Book $book
-     * @return void
+     * @return Zipper
      */
     public function zipExtraFiles($request, $book)
     {
@@ -165,7 +164,7 @@ class FetchHandler extends BaseHandler
             if ($sendHeaders) {
                 header('X-Accel-Buffering: no');
             }
-            $zipper->download(null, $sendHeaders);
+            return $zipper->download(null, $sendHeaders);
         } else {
             Response::sendError($request, "Invalid zipped: " . $zipper->getMessage());
         }
@@ -176,7 +175,7 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param string $type
-     * @return void
+     * @return FileResponse
      */
     public function sendThumbnail($request, $book, $type)
     {
@@ -186,7 +185,9 @@ class FetchHandler extends BaseHandler
             Response::notFound($request);
         }
         $cover = new Cover($book);
-        $cover->sendThumbnail($request);
+        // create empty file response to start with!?
+        $response = new FileResponse();
+        return $cover->sendThumbnail($request, $response);
     }
 
     /**
@@ -202,8 +203,10 @@ class FetchHandler extends BaseHandler
         if (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
             $book->updateForKepub = true;
         }
+        // create empty response to start with!?
+        $response = new FileResponse();
         // this will also use kepubify_path internally if defined
-        $book->getUpdatedEpub($idData);
+        $book->sendUpdatedEpub($idData, $response);
     }
 
     /**
@@ -211,20 +214,22 @@ class FetchHandler extends BaseHandler
      * @param Book $book
      * @param string $file
      * @param Data $data
-     * @return void
+     * @return FileResponse
      */
     public function sendConvertedKepub($book, $file, $data)
     {
         // run kepubify on original Epub file and send converted tmpfile
         if (!empty(Config::get('kepubify_path'))) {
-            $kepubFile = $book->runKepubify($file, $data->getUpdatedFilenameKepub());
-            if (empty($kepubFile)) {
+            // @todo no cache control here!?
+            $response = new FileResponse($data->getMimeType(), null, basename($data->getUpdatedFilenameKepub()));
+            $result = $book->runKepubify($file, $response);
+            if (empty($result)) {
                 Response::sendError(null, 'Error: failed to convert epub file');
             }
-            return;
+            return $result;
         }
         // provide kepub in name only (without update of opf properties for cover-image in Epub)
         $response = new FileResponse($data->getMimeType(), 0, basename($data->getUpdatedFilenameKepub()));
-        $response->sendFile($file);
+        return $response->sendFile($file);
     }
 }

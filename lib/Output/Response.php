@@ -51,6 +51,18 @@ class Response
      */
     public function __construct($mimetype = null, $expires = null, $filename = null)
     {
+        $this->setHeaders($mimetype, $expires, $filename);
+    }
+
+    /**
+     * Summary of setHeaders
+     * @param ?string $mimetype with null = no mimetype, '...' = actual mimetype for Content-Type
+     * @param ?int $expires with null = no cache control, 0 = default expiration, > 0 actual expiration
+     * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
+     * @return void
+     */
+    public function setHeaders($mimetype = null, $expires = null, $filename = null)
+    {
         $this->mimetype = $mimetype;
         $this->expires = $expires;
         $this->filename = $filename;
@@ -94,13 +106,15 @@ class Response
     /**
      * Summary of sendData
      * @param string $data actual data
-     * @return void
+     * @return static
      */
     public function sendData($data)
     {
         $this->sendHeaders();
 
         echo $data;
+
+        return $this;
     }
 
     /**

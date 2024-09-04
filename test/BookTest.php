@@ -18,6 +18,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Output\FileResponse;
 
 /*
 Publishers:
@@ -371,16 +372,19 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $cover = new Cover($book);
         $request = Request::build();
+        $response = new FileResponse();
 
         // no thumbnail resizing
         ob_start();
-        $cover->sendThumbnail($request);
+        $result = $cover->sendThumbnail($request, $response);
         $headers = headers_list();
         $output = ob_get_clean();
 
         $expected = self::$expectedSize['cover'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
+        $expected = FileResponse::class;
+        $this->assertEquals($expected, $result::class);
     }
 
     public function testSendThumbnailResize(): void
@@ -389,16 +393,19 @@ class BookTest extends TestCase
         $cover = new Cover($book);
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
+        $response = new FileResponse();
 
         // no thumbnail cache
         ob_start();
-        $cover->sendThumbnail($request);
+        $result = $cover->sendThumbnail($request, $response);
         $headers = headers_list();
         $output = ob_get_clean();
 
         $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
+        $expected = FileResponse::class;
+        $this->assertEquals($expected, $result::class);
     }
 
     public function testSendThumbnailCacheMiss(): void
@@ -410,6 +417,7 @@ class BookTest extends TestCase
         $type = 'jpg';
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
+        $response = new FileResponse();
 
         // use thumbnail cache
         Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
@@ -422,13 +430,15 @@ class BookTest extends TestCase
 
         // 1. cache miss
         ob_start();
-        $cover->sendThumbnail($request);
+        $result = $cover->sendThumbnail($request, $response);
         $headers = headers_list();
         $output = ob_get_clean();
 
         $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
+        $expected = FileResponse::class;
+        $this->assertEquals($expected, $result::class);
 
         Config::set('thumbnail_cache_directory', '');
     }
@@ -442,19 +452,22 @@ class BookTest extends TestCase
         $type = 'jpg';
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
+        $response = new FileResponse();
 
         // use thumbnail cache
         Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
 
         // 2. cache hit
         ob_start();
-        $cover->sendThumbnail($request);
+        $result = $cover->sendThumbnail($request, $response);
         $headers = headers_list();
         $output = ob_get_clean();
 
         $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
+        $expected = FileResponse::class;
+        $this->assertEquals($expected, $result::class);
 
         $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
         if (file_exists($cachePath)) {
@@ -574,9 +587,10 @@ class BookTest extends TestCase
     {
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $book = Book::getBookById(17);
+        $response = new FileResponse();
 
         ob_start();
-        $book->getUpdatedEpub(20);
+        $result = $book->sendUpdatedEpub(20, $response);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -584,6 +598,8 @@ class BookTest extends TestCase
         //$this->assertStringStartsWith("Exception : Cannot modify header information", $output);
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
+        $expected = FileResponse::class;
+        $this->assertEquals($expected, $result::class);
     }
 
     public function testGetCoverFilePath(): void

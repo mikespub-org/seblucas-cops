@@ -19,6 +19,7 @@ use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Output\FileResponse;
 
 class NoteResourceTest extends TestCase
 {
@@ -113,16 +114,18 @@ class NoteResourceTest extends TestCase
         $hash = "xxh64:7c301792c52eebf7";
         $name = null;
         $database = 0;
+        $response = new FileResponse();
 
         ob_start();
-        $result = Resource::sendImageResource($hash, $name, $database);
+        $result = Resource::sendImageResource($hash, $response, $name, $database);
         $headers = headers_list();
         $output = ob_get_clean();
 
         $expected = self::$expectedSize['calres'];
-        $this->assertTrue($result);
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
+        $expected = FileResponse::class;
+        $this->assertEquals($expected, $result::class);
     }
 
     public function testCalResHandler(): void

@@ -33,7 +33,7 @@ class FileResponse extends Response
      * Summary of sendFile
      * @param string $filepath actual filepath
      * @param bool $istmpfile with true if this is a temp file, false otherwise
-     * @return void
+     * @return static
      */
     public function sendFile($filepath, $istmpfile = false)
     {
@@ -53,5 +53,7 @@ class FileResponse extends Response
         } else {
             header(Config::get('x_accel_redirect') . ': ' . $filepath);
         }
+
+        return $this;
     }
 }

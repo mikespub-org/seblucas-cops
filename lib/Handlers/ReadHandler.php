@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;
 use Exception;
@@ -35,13 +36,15 @@ class ReadHandler extends BaseHandler
             // this will call exit()
             Response::notFound($request);
         }
+        $version = $request->get('version', Config::get('epub_reader', 'monocle'));
+        $database = $request->database();
 
         $response = new Response('text/html;charset=utf-8');
 
         $reader = new EPubReader();
 
         try {
-            $response->sendData($reader->getReader($idData, $request));
+            $response->sendData($reader->getReader($idData, $version, $database));
         } catch (Exception $e) {
             error_log($e);
             Response::sendError($request, $e->getMessage());

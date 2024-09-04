@@ -93,15 +93,16 @@ class Resource
     /**
      * Summary of sendImageResource
      * @param string $hash
+     * @param FileResponse $response
      * @param ?string $name
      * @param ?int $database
-     * @return bool
+     * @return FileResponse|null
      */
-    public static function sendImageResource($hash, $name = null, $database = null)
+    public static function sendImageResource($hash, $response, $name = null, $database = null)
     {
         $path = static::getResourcePath($hash, $database);
         if (empty($path)) {
-            return false;
+            return null;
         }
         if (empty($name)) {
             $content = file_get_contents($path . '.metadata');
@@ -110,12 +111,11 @@ class Resource
         }
         $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
         if (!array_key_exists($ext, static::IMAGE_EXTENSIONS)) {
-            return false;
+            return null;
         }
         $mime = static::IMAGE_EXTENSIONS[$ext];
 
-        $response = new FileResponse($mime, 0);
-        $response->sendFile($path, true);
-        return true;
+        $response->setHeaders($mime, 0);
+        return $response->sendFile($path, true);
     }
 }

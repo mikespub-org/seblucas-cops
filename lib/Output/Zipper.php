@@ -270,7 +270,7 @@ class Zipper
      * Summary of download
      * @param ?string $fileName
      * @param bool $sendHeaders
-     * @return void
+     * @return static
      */
     public function download($fileName = null, $sendHeaders = true)
     {
@@ -288,6 +288,7 @@ class Zipper
             );
         }
         $zip->finish();
+        return $this;
     }
 
     /**

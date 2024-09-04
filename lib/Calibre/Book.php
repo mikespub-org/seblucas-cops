@@ -559,11 +559,12 @@ class Book
     }
 
     /**
-     * Summary of getUpdatedEpub
+     * Summary of sendUpdatedEpub
      * @param int $idData
-     * @return void
+     * @param FileResponse $response
+     * @return FileResponse
      */
-    public function getUpdatedEpub($idData)
+    public function sendUpdatedEpub($idData, $response)
     {
         $data = $this->getDataById($idData);
 
@@ -605,22 +606,27 @@ class Book
             // @checkme this is set in fetch.php now
             if ($this->updateForKepub) {
                 $filename = $data->getUpdatedFilenameKepub();
+                // @todo no cache control here!?
+                $response->setHeaders($data->getMimeType(), null, basename($filename));
                 // save updated Epub file and convert to kepub
                 if (!empty(Config::get('kepubify_path'))) {
                     $epub->save();
 
                     // run kepubify on updated Epub file and send converted tmpfile
-                    $kepubFile = $this->runKepubify($filePath, $filename);
-                    if (empty($kepubFile)) {
+                    $result = $this->runKepubify($filePath, $response);
+                    if (empty($result)) {
                         // this will call exit()
                         Response::sendError(null, 'Error: failed to convert epub file');
                     }
-                    return;
+                    return $result;
                 }
                 $epub->updateForKepub();
             }
+            // @todo no cache control here!?
+            //$response->setHeaders($data->getMimeType(), null, basename($filename));
             $sendHeaders = headers_sent() ? false : true;
             $epub->download($filename, $sendHeaders);
+            return $response;
         } catch (Exception $e) {
             // this will call exit()
             Response::sendError(null, 'Exception: ' . $e->getMessage());
@@ -630,10 +636,10 @@ class Book
     /**
      * Summary of runKepubify
      * @param string $filepath
-     * @param ?string $sendFile
-     * @return string|null
+     * @param ?FileResponse $response
+     * @return FileResponse|string|null
      */
-    public function runKepubify($filepath, $sendFile = null)
+    public function runKepubify($filepath, $response = null)
     {
         if (empty(Config::get('kepubify_path'))) {
             return null;
@@ -644,10 +650,8 @@ class Book
         $cmd .= ' ' . escapeshellarg($filepath);
         exec($cmd, $output, $return);
         if ($return == 0 && file_exists($tmpfile)) {
-            if (!empty($sendFile)) {
-                // @todo no cache control here!?
-                $response = new FileResponse(EPub::MIME_TYPE, null, basename($sendFile));
-                $response->sendFile($tmpfile, true);
+            if (!empty($response)) {
+                return $response->sendFile($tmpfile, true);
             }
             return $tmpfile;
         }

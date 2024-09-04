@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\Response;
 use SebLucas\EPubMeta\EPub;
 use DOMDocument;
 
@@ -36,9 +37,10 @@ class EpubReaderTest extends TestCase
         $idData = 20;
         $request = new Request();
         $reader = new EPubReader();
+        $version = null;
 
         ob_start();
-        $data = $reader->getReader($idData, $request);
+        $data = $reader->getReader($idData, $version);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -54,17 +56,22 @@ class EpubReaderTest extends TestCase
         $this->assertStringContainsString($expected, $script);
     }
 
-    public function testGetContent(): void
+    public function testSendContent(): void
     {
         $idData = 20;
         $component = 'title.xml';
+        $database = null;
         $request = new Request();
-        $reader = new EPubReader();
+        $response = new Response();
+        $reader = new EPubReader($response);
 
         ob_start();
-        $reader->sendContent($idData, $component, $request);
+        $result = $reader->sendContent($idData, $component, $database);
         $headers = headers_list();
         $output = ob_get_clean();
+
+        $expected = Response::class;
+        $this->assertEquals($expected, $result::class);
 
         $html = new DOMDocument();
         $html->loadHTML($output);
@@ -171,9 +178,10 @@ class EpubReaderTest extends TestCase
         $request = new Request();
         $request->set('version', 'epubjs');
         $reader = new EPubReader();
+        $version = 'epubjs';
 
         ob_start();
-        $data = $reader->getReader($idData, $request);
+        $data = $reader->getReader($idData, $version);
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -187,6 +195,35 @@ class EpubReaderTest extends TestCase
         $script = $html->getElementsByTagName('script')->item(2)->getAttribute('src');
         $expected = 'dist/js/libs/epub.min.js';
         $this->assertStringContainsString($expected, $script);
+    }
+
+    public function testSendZipContent(): void
+    {
+        $idData = 20;
+        $component = 'OPS/title.xml';
+        $database = null;
+        $request = new Request();
+        $response = new Response();
+        $reader = new EPubReader($response);
+
+        ob_start();
+        $result = $reader->sendZipContent($idData, $component, $database);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = Response::class;
+        $this->assertEquals($expected, $result::class);
+
+        $html = new DOMDocument();
+        $html->loadHTML($output);
+
+        $title = $html->getElementsByTagName('title')->item(0)->nodeValue;
+        $expected = "Title Page";
+        $this->assertEquals($expected, $title);
+
+        $h1 = $html->getElementsByTagName('h1')->item(0)->nodeValue;
+        $expected = "Alice's Adventures in Wonderland";
+        $this->assertStringContainsString($expected, $h1);
     }
 
     public function testReadHandler(): void
