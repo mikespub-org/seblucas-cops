@@ -36,7 +36,7 @@ $config['calibre_internal_directory'] = '';
  * You will still need to copy the metadata.db database file to the calibre
  * directory above for this to work though...
  * Note: not all features will be available in this configuration, e.g.
- * no kepub version or metadata updates, and no monocle epub reader 
+ * no kepub version or metadata updates, and no monocle epub reader
  * Example (test):
  * $config['calibre_external_storage'] = 'http://localhost/cops/test/BaseWithSomeBooks/';
  */

@@ -619,10 +619,7 @@ class JsonRenderer extends BaseRenderer
             return $this->getContentArrayTypeahead($currentPage);
         }
 
-        $this->request = $request;
-        $this->database = $database;
-        $this->handler = $handler;
-        $this->page = $page;
+        $this->setRequest($request);
 
         $out = [ "title" => $currentPage->title];
         $out ["parentTitle"] = $currentPage->parentTitle;

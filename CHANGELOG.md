@@ -10,7 +10,7 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-2.8.x - 2024xxxx
+2.8.2 - 20240905 More clean-up of handlers & renderers
   * Expand Data mimetypes to cover common EPUB file components
   * Add Response class + move notFound() + add redirect() and sendError()
   * Rename FileRenderer to FileResponse and inherit from Response
@@ -21,6 +21,7 @@ x.x.x - TODO
   * Add GraphQL query field tests
   * Show filters in main page for bootstrap2 and twigged templates
   * Show links to PAGE_ALL in filters page to find all authors etc. for a filter
+  * Pass along Response() from handler to renderer + align constructor args
 
 2.8.1 - 20240902 Fix download filenames
   * Fix FileRenderer to send the right Content-Disposition - see issue #102 by @Chirishman
