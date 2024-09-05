@@ -286,7 +286,7 @@ class OpdsRenderer extends BaseRenderer
         $this->getXmlStream()->text($entry->content);
         $this->getXmlStream()->endElement();
 
-        if (get_class($entry) != EntryBook::class) {
+        if ($entry::class != EntryBook::class) {
             foreach ($entry->linkArray as $link) {
                 $this->renderLink($link, $entry->numberOfElement);
             }

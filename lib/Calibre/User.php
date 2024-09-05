@@ -40,7 +40,7 @@ class User
         // ['library_restrictions' => []]
         try {
             $this->restriction = json_decode($post->restriction, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             $this->restriction = $post->restriction;
         }
         $this->userDbFile = $userDbFile;

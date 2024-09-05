@@ -58,7 +58,7 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getQueryByYear($year)
     {
-        if (!preg_match(static::GET_PATTERN, $year)) {
+        if (!preg_match(static::GET_PATTERN, (string) $year)) {
             throw new UnexpectedValueException();
         }
         $query = str_format(static::SQL_BOOKLIST_YEAR, "{0}", "{1}", $this->getTableName());
@@ -184,7 +184,7 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getCustomValuesByYear($year, $sort = null)
     {
-        if (!preg_match(static::GET_PATTERN, $year)) {
+        if (!preg_match(static::GET_PATTERN, (string) $year)) {
             throw new UnexpectedValueException();
         }
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} WHERE substr(date(value), 1, 4) = ? GROUP BY datevalue";

@@ -16,7 +16,7 @@
     "type": "project",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-dom": "*",
         "ext-gd": "*",
         "ext-intl": "*",
@@ -28,7 +28,7 @@
         "ext-zip": "*",
         "ext-zlib": "*",
         "mikespub/epubjs-reader": "^2024.7",
-        "mikespub/php-epub-meta": "^1.5||^2.3",
+        "mikespub/php-epub-meta": "^1.5||^2.3||^3.0",
         "nikic/fast-route": "^2.0-dev",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
@@ -44,13 +44,12 @@
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.1",
-        "phpunit/phpunit": "^10.5",
-        "phing/phing": "^3.0",
+        "phpunit/phpunit": "^11.3",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^6.4||^7.1",
         "symfony/http-client": "^6.4||^7.1",
         "symfony/http-foundation": "^6.4||^7.1",
-        "mikespub/epub-loader": "^1.5||^2.5||^3.1",
+        "mikespub/epub-loader": "^1.5||^2.5||^3.2",
         "opis/json-schema": "^2.3",
         "webonyx/graphql-php": "^15.13"
     },

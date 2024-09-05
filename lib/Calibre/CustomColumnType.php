@@ -343,7 +343,7 @@ abstract class CustomColumnType
         if (is_array($find)) {
             $queryFormat = "SELECT id, value, count FROM {0} WHERE id IN (" . str_repeat("?,", count($find) - 1) . "?) ORDER BY sort";
             $params = $find;
-        } elseif (strpos($find, '%') === false) {
+        } elseif (!str_contains($find, '%')) {
             $queryFormat = "SELECT id, value, count FROM {0} WHERE value = ? ORDER BY sort";
             $params = [$find];
         } else {
@@ -430,32 +430,21 @@ abstract class CustomColumnType
 
         [$datatype, $displaySettings] = static::getDatatypeAndDisplaySettingsByCustomID($customId, $database);
 
-        switch ($datatype) {
-            case static::TYPE_TEXT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_TEXT, $database, $displaySettings);
-            case static::TYPE_CSV:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, static::TYPE_CSV, $database, $displaySettings);
-            case static::TYPE_SERIES:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId, $database, $displaySettings);
-            case static::TYPE_ENUM:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId, $database, $displaySettings);
-            case static::TYPE_COMMENT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId, $database, $displaySettings);
-            case static::TYPE_DATE:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId, $database, $displaySettings);
-            case static::TYPE_FLOAT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId, $database, $displaySettings);
-            case static::TYPE_INT:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, static::TYPE_INT, $database, $displaySettings);
-            case static::TYPE_RATING:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId, $database, $displaySettings);
-            case static::TYPE_BOOL:
-                return static::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId, $database, $displaySettings);
-            case static::TYPE_COMPOSITE:
-                return null; //TODO Currently not supported
-            default:
-                throw new Exception("Unkown column type: " . $datatype);
-        }
+        static::$customColumnCacheID[$customId] = match ($datatype) {
+            static::TYPE_TEXT => new CustomColumnTypeText($customId, static::TYPE_TEXT, $database, $displaySettings),
+            static::TYPE_CSV => new CustomColumnTypeText($customId, static::TYPE_CSV, $database, $displaySettings),
+            static::TYPE_SERIES => new CustomColumnTypeSeries($customId, $database, $displaySettings),
+            static::TYPE_ENUM => new CustomColumnTypeEnumeration($customId, $database, $displaySettings),
+            static::TYPE_COMMENT => new CustomColumnTypeComment($customId, $database, $displaySettings),
+            static::TYPE_DATE => new CustomColumnTypeDate($customId, $database, $displaySettings),
+            static::TYPE_FLOAT => new CustomColumnTypeFloat($customId, $database, $displaySettings),
+            static::TYPE_INT => new CustomColumnTypeInteger($customId, static::TYPE_INT, $database, $displaySettings),
+            static::TYPE_RATING => new CustomColumnTypeRating($customId, $database, $displaySettings),
+            static::TYPE_BOOL => new CustomColumnTypeBool($customId, $database, $displaySettings),
+            static::TYPE_COMPOSITE => null,
+            default => throw new Exception("Unkown column type: " . $datatype),
+        };
+        return static::$customColumnCacheID[$customId];
     }
 
     /**

@@ -474,8 +474,8 @@ class Filter
                 continue;
             }
             // remove negative flag for filter entry here
-            if (preg_match('/^!\d+$/', $paramValue)) {
-                $paramValue = substr($paramValue, 1);
+            if (preg_match('/^!\d+$/', (string) $paramValue)) {
+                $paramValue = substr((string) $paramValue, 1);
             }
             if (!empty($libraryId)) {
                 $req = Request::build([$paramName => $paramValue, VirtualLibrary::URL_PARAM => $libraryId], $handler);

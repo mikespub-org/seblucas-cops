@@ -166,10 +166,10 @@ class BrowserKitTest extends TestCase
 
     /**
      * Summary of testClientSideRendering
-     * @dataProvider providerTemplates
      * @param string $template
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplates')]
     public function testClientSideRendering($template = 'default'): void
     {
         $this->createBrowser($template, 'Chrome');
@@ -198,11 +198,11 @@ class BrowserKitTest extends TestCase
 
     /**
      * Summary of testServerSideRendering
-     * @dataProvider providerTemplates
      * @param string $template
      * @param string $xpath
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplates')]
     public function testServerSideRendering($template = 'default', $xpath = '//body/div/section/article'): void
     {
         $this->createBrowser($template, 'Kindle/2.0');

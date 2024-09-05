@@ -109,7 +109,7 @@ class Resource
             $info = json_decode($content, true);
             $name = $info['name'];
         }
-        $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        $ext = strtolower(pathinfo((string) $name, PATHINFO_EXTENSION));
         if (!array_key_exists($ext, static::IMAGE_EXTENSIONS)) {
             return null;
         }

@@ -52,7 +52,7 @@ class PageQueryResult extends Page
     {
         $n = $this->n;
         $numberPerPage = null;
-        $queryNormedAndUp = trim($this->query);
+        $queryNormedAndUp = trim((string) $this->query);
         if (Translation::useNormAndUp()) {
             $queryNormedAndUp = Translation::normAndUp($this->query);
         }

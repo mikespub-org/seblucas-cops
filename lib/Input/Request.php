@@ -187,7 +187,7 @@ class Request
     public function get($name, $default = null, $pattern = null)
     {
         if (!empty($this->urlParams) && isset($this->urlParams[$name]) && $this->urlParams[$name] != '') {
-            if (!isset($pattern) || preg_match($pattern, $this->urlParams[$name])) {
+            if (!isset($pattern) || preg_match($pattern, (string) $this->urlParams[$name])) {
                 return $this->urlParams[$name];
             }
         }
@@ -287,8 +287,8 @@ class Request
     {
         if (!is_null($this->cookie($option))) {
             if (!is_null(Config::get($option)) && is_array(Config::get($option))) {
-                return explode(',', $this->cookie($option));
-            } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', $this->cookie($option))) {
+                return explode(',', (string) $this->cookie($option));
+            } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', (string) $this->cookie($option))) {
                 return $this->cookie($option);
             }
         }
@@ -306,7 +306,7 @@ class Request
     public function style()
     {
         $style = $this->option('style');
-        if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
+        if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $style)) {
             return 'templates/' . $this->template() . '/styles/style-' . $this->option('style') . '.css';
         }
         return 'templates/' . Config::get('template') . '/styles/style-' . Config::get('style') . '.css';
@@ -319,7 +319,7 @@ class Request
     public function template()
     {
         $template = $this->option('template');
-        if (!preg_match('/[^A-Za-z0-9\-_]/', $template) && is_dir("templates/{$template}/")) {
+        if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $template) && is_dir("templates/{$template}/")) {
             return $template;
         }
         return Config::get('template');
@@ -370,8 +370,8 @@ class Request
             return null;
         }
         // URL format: ...&vl=2.Short_Stories_in_English
-        if ($strip && str_contains($libraryId, '.')) {
-            [$libraryId, $slug] = explode('.', $libraryId);
+        if ($strip && str_contains((string) $libraryId, '.')) {
+            [$libraryId, $slug] = explode('.', (string) $libraryId);
         }
         return $libraryId;
     }

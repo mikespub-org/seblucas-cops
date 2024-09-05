@@ -445,7 +445,7 @@ class Page
         if (count($this->entryArray) == 0) {
             return false;
         }
-        if (get_class($this->entryArray [0]) == EntryBook::class) {
+        if ($this->entryArray [0]::class == EntryBook::class) {
             return true;
         }
         return false;

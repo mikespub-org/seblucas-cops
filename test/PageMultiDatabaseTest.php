@@ -41,10 +41,10 @@ class PageMultiDatabaseTest extends TestCase
     }
 
     /**
-     * @dataProvider providerSearch
      * @param int $maxItem
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerSearch')]
     public function testPageSearchXXX($maxItem)
     {
         Config::set('calibre_directory', [

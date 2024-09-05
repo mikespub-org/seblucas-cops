@@ -85,64 +85,37 @@ class PageId
      */
     public static function getPage($pageId, $request)
     {
-        switch ($pageId) {
-            case PageId::ALL_AUTHORS :
-                return new PageAllAuthors($request);
-            case PageId::AUTHORS_FIRST_LETTER :
-                return new PageAllAuthorsLetter($request);
-            case PageId::AUTHOR_DETAIL :
-                return new PageAuthorDetail($request);
-            case PageId::ALL_TAGS :
-                return new PageAllTags($request);
-            case PageId::TAG_DETAIL :
-                return new PageTagDetail($request);
-            case PageId::ALL_LANGUAGES :
-                return new PageAllLanguages($request);
-            case PageId::LANGUAGE_DETAIL :
-                return new PageLanguageDetail($request);
-            case PageId::ALL_CUSTOMS :
-                return new PageAllCustoms($request);
-            case PageId::CUSTOM_DETAIL :
-                return new PageCustomDetail($request);
-            case PageId::ALL_RATINGS :
-                return new PageAllRating($request);
-            case PageId::RATING_DETAIL :
-                return new PageRatingDetail($request);
-            case PageId::ALL_SERIES :
-                return new PageAllSeries($request);
-            case PageId::ALL_BOOKS :
-                return new PageAllBooks($request);
-            case PageId::ALL_BOOKS_LETTER:
-                return new PageAllBooksLetter($request);
-            case PageId::ALL_BOOKS_YEAR:
-                return new PageAllBooksYear($request);
-            case PageId::ALL_RECENT_BOOKS :
-                return new PageRecentBooks($request);
-            case PageId::SERIE_DETAIL :
-                return new PageSerieDetail($request);
-            case PageId::OPENSEARCH_QUERY :
-                return new PageQueryResult($request);
-            case PageId::BOOK_DETAIL :
-                return new PageBookDetail($request);
-            case PageId::ALL_PUBLISHERS:
-                return new PageAllPublishers($request);
-            case PageId::PUBLISHER_DETAIL :
-                return new PagePublisherDetail($request);
-            case PageId::ALL_IDENTIFIERS:
-                return new PageAllIdentifiers($request);
-            case PageId::IDENTIFIER_DETAIL :
-                return new PageIdentifierDetail($request);
-            case PageId::ALL_LIBRARIES:
-                return new PageAllVirtualLibraries($request);
-            //case PageId::LIBRARY_DETAIL :
-            //    return new PageVirtualLibraryDetail($request);
-            case PageId::ABOUT :
-                return new PageAbout($request);
-            case PageId::CUSTOMIZE :
-                return new PageCustomize($request);
-            default:
-                return new PageIndex($request);
-        }
+        // @see https://www.php.net/manual/en/control-structures.match.php
+        // Unlike switch, the comparison is an identity check (===) rather than a weak equality check (==)
+        return match ((string) $pageId) {
+            PageId::ALL_AUTHORS => new PageAllAuthors($request),
+            PageId::AUTHORS_FIRST_LETTER => new PageAllAuthorsLetter($request),
+            PageId::AUTHOR_DETAIL => new PageAuthorDetail($request),
+            PageId::ALL_TAGS => new PageAllTags($request),
+            PageId::TAG_DETAIL => new PageTagDetail($request),
+            PageId::ALL_LANGUAGES => new PageAllLanguages($request),
+            PageId::LANGUAGE_DETAIL => new PageLanguageDetail($request),
+            PageId::ALL_CUSTOMS => new PageAllCustoms($request),
+            PageId::CUSTOM_DETAIL => new PageCustomDetail($request),
+            PageId::ALL_RATINGS => new PageAllRating($request),
+            PageId::RATING_DETAIL => new PageRatingDetail($request),
+            PageId::ALL_SERIES => new PageAllSeries($request),
+            PageId::ALL_BOOKS => new PageAllBooks($request),
+            PageId::ALL_BOOKS_LETTER => new PageAllBooksLetter($request),
+            PageId::ALL_BOOKS_YEAR => new PageAllBooksYear($request),
+            PageId::ALL_RECENT_BOOKS => new PageRecentBooks($request),
+            PageId::SERIE_DETAIL => new PageSerieDetail($request),
+            PageId::OPENSEARCH_QUERY => new PageQueryResult($request),
+            PageId::BOOK_DETAIL => new PageBookDetail($request),
+            PageId::ALL_PUBLISHERS => new PageAllPublishers($request),
+            PageId::PUBLISHER_DETAIL => new PagePublisherDetail($request),
+            PageId::ALL_IDENTIFIERS => new PageAllIdentifiers($request),
+            PageId::IDENTIFIER_DETAIL => new PageIdentifierDetail($request),
+            PageId::ALL_LIBRARIES => new PageAllVirtualLibraries($request),
+            PageId::ABOUT => new PageAbout($request),
+            PageId::CUSTOMIZE => new PageCustomize($request),
+            default => new PageIndex($request),
+        };
     }
 
     /**

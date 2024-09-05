@@ -894,12 +894,12 @@ class PageTest extends TestCase
     }
 
     /**
-     * @dataProvider providerAccentuatedCharacters
      * @param string $query
      * @param int $count
      * @param string $content
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerAccentuatedCharacters')]
     public function testPageSearch_WithAccentuatedCharacters($query, $count, $content)
     {
         $page = PageId::OPENSEARCH_QUERY;
@@ -932,12 +932,12 @@ class PageTest extends TestCase
     }
 
     /**
-     * @dataProvider providerNormalizedSearch
      * @param string $query
      * @param int $count
      * @param string $content
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerNormalizedSearch')]
     public function testPageSearch_WithNormalizedSearch_Book($query, $count, $content)
     {
         $page = PageId::OPENSEARCH_QUERY;

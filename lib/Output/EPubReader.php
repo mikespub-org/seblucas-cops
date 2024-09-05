@@ -118,7 +118,7 @@ class EPubReader extends BaseRenderer
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
-        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, Config::get('calibre_external_storage'))) {
+        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
         }
         $params = ['data' => $idData, 'db' => $book->getDatabaseId()];
@@ -163,12 +163,12 @@ class EPubReader extends BaseRenderer
     public static function addContentItem($item)
     {
         if (empty($item['children'])) {
-            return "{title: '" . addslashes($item['title']) . "', src: '" . $item['src'] . "'}";
+            return "{title: '" . addslashes((string) $item['title']) . "', src: '" . $item['src'] . "'}";
         }
         foreach (array_keys($item['children']) as $idx) {
             $item['children'][$idx] = static::addContentItem($item['children'][$idx]);
         }
-        return "{title: '" . addslashes($item['title']) . "', src: '" . $item['src'] . "', children: [" . implode(', ', $item['children']) . "]}";
+        return "{title: '" . addslashes((string) $item['title']) . "', src: '" . $item['src'] . "', children: [" . implode(', ', $item['children']) . "]}";
     }
 
     /**
@@ -215,7 +215,7 @@ class EPubReader extends BaseRenderer
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
-        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, Config::get('calibre_external_storage'))) {
+        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
             // URL format: full url to external epub file here - let epubjs reader handle parsing etc. in browser
             $link = $book->getFilePath('EPUB', $idData, true);
             if (!$link) {
@@ -233,7 +233,7 @@ class EPubReader extends BaseRenderer
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');
 
-        $dist = Route::url(dirname(Config::get('assets')) . '/mikespub/epubjs-reader/dist');
+        $dist = Route::url(dirname((string) Config::get('assets')) . '/mikespub/epubjs-reader/dist');
         $data = [
             'title'      => htmlspecialchars($book->title),
             'version'    => Config::VERSION,

@@ -125,7 +125,6 @@ class WebDriverTest extends WebDriverTestCase
 
     /**
      * Summary of testScreenshots
-     * @dataProvider providerCombinations
      * @param string $name
      * @param string $url
      * @param string $template
@@ -133,6 +132,7 @@ class WebDriverTest extends WebDriverTestCase
      * @param int $height
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerCombinations')]
     public function testScreenshots($name, $url, $template, $width, $height)
     {
         $this->setTemplateName($template);
@@ -357,7 +357,7 @@ class WebDriverTest extends WebDriverTestCase
             try {
                 $this->byName("query");
                 return true;
-            } catch (Exception $e) {
+            } catch (Exception) {
                 return null;
             }
         });

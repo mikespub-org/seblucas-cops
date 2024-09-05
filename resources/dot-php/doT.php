@@ -30,7 +30,7 @@ class doT
             if (!array_key_exists($d, $me->def)) {
                 return "";
             }
-            if (preg_match("/\{\{#([\s\S]+?)\}\}/", $me->def [$d])) {
+            if (preg_match("/\{\{#([\s\S]+?)\}\}/", (string) $me->def [$d])) {
                 //return $me->resolveDefs($me->def [$d], $me->def);
                 return $me->resolveDefs($me->def [$d]);
             } else {

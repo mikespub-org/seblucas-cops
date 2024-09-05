@@ -222,7 +222,7 @@ class Route
     public static function url($endpoint = null, $page = null, $params = [], $separator = null)
     {
         $endpoint ??= Config::ENDPOINT['index'];
-        if (!empty($endpoint) && substr($endpoint, 0, 1) === '/') {
+        if (!empty($endpoint) && str_starts_with($endpoint, '/')) {
             return $endpoint . static::page($page, $params, $separator);
         }
         // @todo take into account endpoint when building page url, e.g. feed.php or zipper.php
@@ -324,10 +324,10 @@ class Route
     public static function query($query, $params = [], $separator = null)
     {
         $prefix = '';
-        $pos = strpos($query, '?');
+        $pos = strpos((string) $query, '?');
         if ($pos !== false) {
-            $prefix = substr($query, 0, $pos);
-            $query = substr($query, $pos + 1);
+            $prefix = substr((string) $query, 0, $pos);
+            $query = substr((string) $query, $pos + 1);
         }
         $queryParams = [];
         if (!empty($query)) {
@@ -384,9 +384,9 @@ class Route
             // use scheme and host + base path here to apply potential forwarded values
             $base = static::$proxyRequest->getSchemeAndHttpHost() . static::$proxyRequest->getBasePath();
         } else {
-            $base = dirname($_SERVER['SCRIPT_NAME']);
+            $base = dirname((string) $_SERVER['SCRIPT_NAME']);
         }
-        if (!str_ends_with($base, '/')) {
+        if (!str_ends_with((string) $base, '/')) {
             $base .= '/';
         }
         static::setBaseUrl($base);
@@ -460,7 +460,7 @@ class Route
                         continue 2;
                     }
                     $value = $subst[$param];
-                    if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', $value)) {
+                    if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', (string) $value)) {
                         continue 2;
                     }
                     if (in_array($param, ['title', 'author', 'ignore'])) {
@@ -632,7 +632,7 @@ class Route
         if (!isset(static::$proxyRequest)) {
             $proxies = Config::get('trusted_proxies');
             $headers = Config::get('trusted_headers');
-            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map('trim', explode(',', $proxies)), static::resolveTrustedHeaders($headers));
+            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map('trim', explode(',', (string) $proxies)), static::resolveTrustedHeaders($headers));
             static::$proxyRequest = $class::createFromGlobals();
         }
         return true;

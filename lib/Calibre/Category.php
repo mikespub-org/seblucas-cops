@@ -154,12 +154,12 @@ abstract class Category extends Base
         if (!$this->hasChildCategories()) {
             return [];
         }
-        $className = get_class($this);
+        $className = static::class;
         $tableName = 'tag_browser_' . static::CATEGORY;
         if (is_array($find)) {
             $queryFormat = "SELECT id, name, count FROM {0} WHERE id IN (" . str_repeat("?,", count($find) - 1) . "?) ORDER BY sort";
             $params = $find;
-        } elseif (strpos($find, '%') === false) {
+        } elseif (!str_contains($find, '%')) {
             $queryFormat = "SELECT id, name, count FROM {0} WHERE name = ? ORDER BY sort";
             $params = [$find];
         } else {

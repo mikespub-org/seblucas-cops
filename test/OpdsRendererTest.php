@@ -176,11 +176,11 @@ class OpdsRendererTest extends TestCase
     }
 
     /**
-     * @dataProvider providerPage
      * @param mixed $page
      * @param mixed $query
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerPage')]
     public function testMostPages($page, $query)
     {
         $request = Request::build(['page' => $page], self::$handler);

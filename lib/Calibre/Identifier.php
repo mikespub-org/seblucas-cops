@@ -66,7 +66,7 @@ class Identifier extends Base
         } elseif ($this->type == "asin") {
             $this->formattedType = $this->type;
             $this->uri = sprintf("https://amazon.com/dp/%s", $this->val);
-        } elseif (substr($this->type, 0, 7) == "amazon_") {
+        } elseif (str_starts_with($this->type, "amazon_")) {
             $this->formattedType = sprintf("Amazon.co.%s", substr($this->type, 7));
             $this->uri = sprintf("https://amazon.co.%s/dp/%s", substr($this->type, 7), $this->val);
         } elseif ($this->type == "isbn") {

@@ -48,7 +48,7 @@ class Zipper
         $this->request = $request;
         $this->databaseId = $this->request->database();
         $type = $this->request->get('type', 'any');
-        $this->format = strtoupper($type);
+        $this->format = strtoupper((string) $type);
     }
 
     /**
@@ -80,14 +80,14 @@ class Zipper
             $this->message ??= 'Invalid format for page';
             return false;
         }
-        $pageId = $this->request->getId('page');
+        $pageId = $this->request->get('page');
         if (empty($pageId)) {
             $this->message ??= 'Invalid page id';
             return false;
         }
         /** @var Page $instance */
         $instance = PageId::getPage($pageId, $this->request);
-        if (get_class($instance) == Page::class) {
+        if ($instance::class == Page::class) {
             $this->message = 'Invalid page';
             return false;
         }
@@ -198,7 +198,7 @@ class Zipper
         // @todo use download_template to format name
         //$template = Config::get('download_template');
         foreach ($entries as $entry) {
-            if (get_class($entry) != EntryBook::class) {
+            if ($entry::class != EntryBook::class) {
                 continue;
             }
             $data = false;

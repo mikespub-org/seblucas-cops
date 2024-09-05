@@ -40,7 +40,7 @@ class LinkFeed extends Link
         parent::__construct($phref, static::LINK_TYPE, $prel, $ptitle);
         //$this->href = Route::query($this->href, ['db' => $database]);
         if (!is_null($database)) {
-            if (strpos($this->href, '?') !== false) {
+            if (str_contains($this->href, '?')) {
                 $this->href .= '&db=' . $database;
             } else {
                 $this->href .= '?db=' . $database;

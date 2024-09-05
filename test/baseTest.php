@@ -59,10 +59,10 @@ class BaseTest extends TestCase
 
     /**
      * FALSE is returned if the create_function failed (meaning there was a syntax error)
-     * @dataProvider providerTemplate
      * @param mixed $template
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplate')]
     public function testServerSideRender($template)
     {
         $_COOKIE["template"] = $template;
@@ -92,10 +92,10 @@ class BaseTest extends TestCase
 
     /**
      * The function for the head of the HTML catalog
-     * @dataProvider providerTemplate
      * @param mixed $templateName
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplate')]
     public function testGenerateHeader($templateName)
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
@@ -153,11 +153,11 @@ class BaseTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetLangAndTranslationFile
      * @param mixed $acceptLanguage
      * @param mixed $result
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerGetLangAndTranslationFile')]
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
@@ -187,11 +187,11 @@ class BaseTest extends TestCase
     }
 
     /**
-     * @dataProvider providerGetAcceptLanguages
      * @param mixed $acceptLanguage
      * @param mixed $result
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerGetAcceptLanguages')]
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;

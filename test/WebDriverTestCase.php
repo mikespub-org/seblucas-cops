@@ -198,7 +198,7 @@ class WebDriverTestCase extends TestCase
     protected function using($strategy)
     {
         $dummy = new class ($strategy) {
-            private string $strategy;
+            private readonly string $strategy;
 
             public function __construct(string $strategy)
             {
@@ -213,26 +213,17 @@ class WebDriverTestCase extends TestCase
              */
             public function value($value)
             {
-                switch ($this->strategy) {
-                    case 'class name':
-                        return WebDriverBy::className($value);
-                    case 'css selector':
-                        return WebDriverBy::cssSelector($value);
-                    case 'id':
-                        return WebDriverBy::id($value);
-                    case 'link text':
-                        return WebDriverBy::linkText($value);
-                    case 'partial link text':
-                        return WebDriverBy::partialLinkText($value);
-                    case 'name':
-                        return WebDriverBy::name($value);
-                    case 'tag name':
-                        return WebDriverBy::tagName($value);
-                    case 'xpath':
-                        return WebDriverBy::xpath($value);
-                    default:
-                        throw new Exception('Unknown strategy ' . $this->strategy);
-                }
+                return match ($this->strategy) {
+                    'class name' => WebDriverBy::className($value),
+                    'css selector' => WebDriverBy::cssSelector($value),
+                    'id' => WebDriverBy::id($value),
+                    'link text' => WebDriverBy::linkText($value),
+                    'partial link text' => WebDriverBy::partialLinkText($value),
+                    'name' => WebDriverBy::name($value),
+                    'tag name' => WebDriverBy::tagName($value),
+                    'xpath' => WebDriverBy::xpath($value),
+                    default => throw new Exception('Unknown strategy ' . $this->strategy),
+                };
             }
         };
 

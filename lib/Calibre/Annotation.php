@@ -52,7 +52,7 @@ class Annotation extends Base
         $this->type = $post->annot_type;
         try {
             $this->data = json_decode($post->annot_data, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             $this->data = [ $post->annot_data ];
         }
         $this->databaseId = $database;

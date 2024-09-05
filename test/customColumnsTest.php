@@ -54,7 +54,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(8, $coltype->customId);
         $this->assertEquals("custom_01", $coltype->columnTitle);
         $this->assertEquals("text", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=8", $coltype->getUri());
@@ -79,7 +79,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(16, $coltype->customId);
         $this->assertEquals("custom_01b", $coltype->columnTitle);
         $this->assertEquals("text", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=16", $coltype->getUri());
@@ -104,7 +104,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(6, $coltype->customId);
         $this->assertEquals("custom_02", $coltype->columnTitle);
         $this->assertEquals("csv", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeText::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=6", $coltype->getUri());
@@ -129,7 +129,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(7, $coltype->customId);
         $this->assertEquals("custom_03", $coltype->columnTitle);
         $this->assertEquals("comments", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeComment::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeComment::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=7", $coltype->getUri());
         $this->assertEquals("cops:custom:7", $coltype->getEntryId());
@@ -153,7 +153,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(4, $coltype->customId);
         $this->assertEquals("custom_04", $coltype->columnTitle);
         $this->assertEquals("series", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeSeries::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeSeries::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=4", $coltype->getUri());
@@ -179,7 +179,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(5, $coltype->customId);
         $this->assertEquals("custom_05", $coltype->columnTitle);
         $this->assertEquals("enumeration", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeEnumeration::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeEnumeration::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(4, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=5", $coltype->getUri());
@@ -205,7 +205,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(12, $coltype->customId);
         $this->assertEquals("custom_06", $coltype->columnTitle);
         $this->assertEquals("datetime", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeDate::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeDate::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(5, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=12", $coltype->getUri());
@@ -230,7 +230,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(14, $coltype->customId);
         $this->assertEquals("custom_07", $coltype->columnTitle);
         $this->assertEquals("float", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeFloat::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeFloat::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(6, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=14", $coltype->getUri());
@@ -255,7 +255,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(10, $coltype->customId);
         $this->assertEquals("custom_08", $coltype->columnTitle);
         $this->assertEquals("int", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeInteger::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeInteger::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(4, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=10", $coltype->getUri());
@@ -280,7 +280,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(9, $coltype->customId);
         $this->assertEquals("custom_09", $coltype->columnTitle);
         $this->assertEquals("rating", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeRating::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeRating::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(6, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=9", $coltype->getUri());
@@ -305,7 +305,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(11, $coltype->customId);
         $this->assertEquals("custom_10", $coltype->columnTitle);
         $this->assertEquals("bool", $coltype->datatype);
-        $this->assertEquals(CustomColumnTypeBool::class, get_class($coltype));
+        $this->assertEquals(CustomColumnTypeBool::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=11", $coltype->getUri());
@@ -351,7 +351,7 @@ class CustomColumnsTest extends TestCase
         $catch = false;
         try {
             CustomColumnType::createByCustomID(999);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $catch = true;
         }
 

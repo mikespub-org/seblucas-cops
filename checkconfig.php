@@ -193,7 +193,7 @@ if (extension_loaded('zlib')) {
             <h2>Check if the base URL looks OK</h2>
             <h4>
             <?php
-$base = dirname($_SERVER['SCRIPT_NAME']);
+$base = dirname((string) $_SERVER['SCRIPT_NAME']);
 if (!str_ends_with($base, '/')) {
     $base .= '/';
 }
@@ -325,7 +325,7 @@ Please check
             ?>
             </h4>
         </article>
-        <?php
+<?php
         }
     }
     $i++;

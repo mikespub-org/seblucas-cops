@@ -195,7 +195,7 @@ class Database
                 } else {
                     static::error($database);
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 static::error($database);
             }
         }
@@ -430,7 +430,7 @@ class Database
         }
         static::getDb($database);
         // calibre_dir/.calnotes/notes.db
-        $dbFileName = dirname(static::$dbFileName) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_NAME;
+        $dbFileName = dirname((string) static::$dbFileName) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_NAME;
         if (!file_exists($dbFileName) || !is_readable($dbFileName)) {
             return null;
         }

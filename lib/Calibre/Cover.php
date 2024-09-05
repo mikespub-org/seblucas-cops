@@ -227,24 +227,13 @@ class Cover
         $height = $request->get('height');
         $thumb = $request->get('thumb');
         if (!empty($thumb) && empty($height)) {
-            switch ($thumb) {
-                case "opds2":
-                    $height = intval(Config::get('opds_thumbnail_height')) * 2;
-                    break;
-                case "opds":
-                    $height = intval(Config::get('opds_thumbnail_height'));
-                    break;
-                case "html2":
-                    $height = intval(Config::get('html_thumbnail_height')) * 2;
-                    break;
-                case "html":
-                    $height = intval(Config::get('html_thumbnail_height'));
-                    break;
-                default:
-                    // do we still want to allow variable height here?
-                    $height = intval($thumb);
-                    break;
-            }
+            $height = match ($thumb) {
+                "opds2" => intval(Config::get('opds_thumbnail_height')) * 2,
+                "opds" => intval(Config::get('opds_thumbnail_height')),
+                "html2" => intval(Config::get('html_thumbnail_height')) * 2,
+                "html" => intval(Config::get('html_thumbnail_height')),
+                default => intval($thumb),
+            };
         }
         $mime = ($type == 'jpg') ? 'image/jpeg' : 'image/png';
         $file = $this->coverFileName;
@@ -297,7 +286,7 @@ class Cover
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', LinkEntry::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, Config::get('calibre_external_storage'))) {
+            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
                 return new LinkEntry($this->coverFileName, $mime, LinkEntry::OPDS_IMAGE_TYPE);
             }
             $file = 'cover.' . $ext;
@@ -344,7 +333,7 @@ class Cover
         if (Config::get('thumbnail_handling') != "1" &&
             !empty(Config::get('thumbnail_handling'))) {
             $fileName = Config::get('thumbnail_handling');
-            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+            $ext = strtolower(pathinfo((string) $fileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             return new LinkEntry(Route::url($fileName), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
@@ -355,7 +344,7 @@ class Cover
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             // @todo support creating (and caching) thumbnails for external cover images someday
-            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, Config::get('calibre_external_storage'))) {
+            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
                 return new LinkEntry($this->coverFileName, $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
             }
             //$file = 'cover.' . $ext;
@@ -386,7 +375,7 @@ class Cover
     public function getDefaultLink()
     {
         if (!empty(Config::get('thumbnail_default'))) {
-            $ext = strtolower(pathinfo(Config::get('thumbnail_default'), PATHINFO_EXTENSION));
+            $ext = strtolower(pathinfo((string) Config::get('thumbnail_default'), PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             return new LinkEntry(Route::url(Config::get('thumbnail_default')), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }

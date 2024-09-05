@@ -26,12 +26,12 @@ class Format
         $args = func_get_args();
         $format = array_shift($args);
 
-        preg_match_all('/(?=\{)\{(\d+)\}(?!\})/', $format, $matches, PREG_OFFSET_CAPTURE);
+        preg_match_all('/(?=\{)\{(\d+)\}(?!\})/', (string) $format, $matches, PREG_OFFSET_CAPTURE);
         $offset = 0;
         foreach ($matches[1] as $data) {
             $i = $data[0];
             $format = substr_replace($format, @$args[(int) $i], $offset + $data[1] - 1, 2 + strlen($i));
-            $offset += strlen(@$args[(int) $i]) - 2 - strlen($i);
+            $offset += strlen((string) @$args[(int) $i]) - 2 - strlen($i);
         }
 
         return $format;
@@ -182,7 +182,7 @@ class Format
                             $html . '</body></html>'); // Load the HTML
         $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
         $output = static::xml2xhtml($output);
-        if (preg_match('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
+        if (preg_match('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', (string) $output, $matches)) {
             $output = $matches [1]; // Remove <html><body>
         }
         /*

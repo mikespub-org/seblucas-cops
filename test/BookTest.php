@@ -78,11 +78,11 @@ class BookTest extends TestCase
     }
 
     /**
-     * @dataProvider providerPublicationDate
      * @param mixed $pubdate
      * @param mixed $expectedYear
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerPublicationDate')]
     public function testGetPubDate($pubdate, $expectedYear)
     {
         $book = Book::getBookById(2);
@@ -274,13 +274,13 @@ class BookTest extends TestCase
     }
 
     /**
-     * @dataProvider providerThumbnail
      * @param mixed $width
      * @param mixed $height
      * @param mixed $expectedWidth
      * @param mixed $expectedHeight
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerThumbnail')]
     public function testGetThumbnailBySize($width, $height, $expectedWidth, $expectedHeight)
     {
         $book = Book::getBookById(2);
@@ -331,13 +331,13 @@ class BookTest extends TestCase
     }
 
     /**
-     * @dataProvider providerThumbnailCachePath
      * @param mixed $width
      * @param mixed $height
      * @param mixed $type
      * @param mixed $expectedCachePath
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providerThumbnailCachePath')]
     public function testGetThumbnailCachePath($width, $height, $type, $expectedCachePath): void
     {
         $book = Book::getBookById(2);
@@ -347,8 +347,8 @@ class BookTest extends TestCase
         $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
         $this->assertEquals($expectedCachePath, $cachePath);
 
-        rmdir(dirname($cachePath));
-        rmdir(dirname(dirname($cachePath)));
+        rmdir(dirname((string) $cachePath));
+        rmdir(dirname((string) $cachePath, 2));
 
         Config::set('thumbnail_cache_directory', '');
     }
@@ -424,8 +424,8 @@ class BookTest extends TestCase
         $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
         if (file_exists($cachePath)) {
             unlink($cachePath);
-            rmdir(dirname($cachePath));
-            rmdir(dirname(dirname($cachePath)));
+            rmdir(dirname((string) $cachePath));
+            rmdir(dirname((string) $cachePath, 2));
         }
 
         // 1. cache miss
@@ -472,8 +472,8 @@ class BookTest extends TestCase
         $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
         if (file_exists($cachePath)) {
             unlink($cachePath);
-            rmdir(dirname($cachePath));
-            rmdir(dirname(dirname($cachePath)));
+            rmdir(dirname((string) $cachePath));
+            rmdir(dirname((string) $cachePath, 2));
         }
 
         Config::set('thumbnail_cache_directory', '');

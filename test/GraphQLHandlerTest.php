@@ -232,17 +232,11 @@ class GraphQLHandlerTest extends TestCase
                 $query .= '}';
             } else {
                 $type = $field->getType()->toString();
-                switch ($name) {
-                    case 'book':
-                        $vars = ['id' => 17];
-                        break;
-                    case 'publisher':
-                        $vars = ['id' => 2];
-                        break;
-                    default:
-                        $vars = ['id' => 1];
-                        break;
-                }
+                $vars = match ($name) {
+                    'book' => ['id' => 17],
+                    'publisher' => ['id' => 2],
+                    default => ['id' => 1],
+                };
                 $query = 'query ' . $operation . "(\$id: ID) {\n";
                 $query .= '  ' . $name . "(id: \$id) {\n";
                 switch ($type) {
@@ -278,12 +272,12 @@ class GraphQLHandlerTest extends TestCase
 
     /**
      * Summary of testQueryFields
-     * @dataProvider getQueryFields
      * @param string $name
      * @param string $queryFile
      * @param string $resultFile
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getQueryFields')]
     public function testQueryFields($name, $queryFile, $resultFile): void
     {
         $this->assertTrue(file_exists($queryFile));

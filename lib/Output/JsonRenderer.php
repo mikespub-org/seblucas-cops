@@ -219,31 +219,16 @@ class JsonRenderer extends BaseRenderer
             $out ["coverurl"] ??= $out ["thumbnailurl"];
             return $out;
         }
-        switch ($entry->className) {
-            case 'Author':
-                $label = localize("authors.title");
-                break;
-            case 'Identifier':
-                $label = localize("identifiers.title");
-                break;
-            case 'Language':
-                $label = localize("languages.title");
-                break;
-            case 'Publisher':
-                $label = localize("publishers.title");
-                break;
-            case 'Rating':
-                $label = localize("ratings.title");
-                break;
-            case 'Serie':
-                $label = localize("series.title");
-                break;
-            case 'Tag':
-                $label = localize("tags.title");
-                break;
-            default:
-                $label = $entry->className;
-        }
+        $label = match ($entry->className) {
+            'Author' => localize("authors.title"),
+            'Identifier' => localize("identifiers.title"),
+            'Language' => localize("languages.title"),
+            'Publisher' => localize("publishers.title"),
+            'Rating' => localize("ratings.title"),
+            'Serie' => localize("series.title"),
+            'Tag' => localize("tags.title"),
+            default => $entry->className,
+        };
         return [
             "class" => $label,
             "title" => $entry->title,
@@ -551,7 +536,7 @@ class JsonRenderer extends BaseRenderer
             $download = [];
             foreach (Config::get('download_page') as $format) {
                 $params = $this->request->getCleanParams();
-                $params['type'] = strtolower($format);
+                $params['type'] = strtolower((string) $format);
                 $url = Route::link(Zipper::$handler, null, $params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
@@ -566,7 +551,7 @@ class JsonRenderer extends BaseRenderer
             foreach (Config::get('download_series') as $format) {
                 $params = [];
                 $params['series'] = $qid;
-                $params['type'] = strtolower($format);
+                $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
                 $url = Route::link(Zipper::$handler, null, $params);
                 array_push($download, ['url' => $url, 'format' => $format]);
@@ -579,7 +564,7 @@ class JsonRenderer extends BaseRenderer
             foreach (Config::get('download_author') as $format) {
                 $params = [];
                 $params['author'] = $qid;
-                $params['type'] = strtolower($format);
+                $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
                 $url = Route::link(Zipper::$handler, null, $params);
                 array_push($download, ['url' => $url, 'format' => $format]);

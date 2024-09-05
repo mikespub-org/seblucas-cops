@@ -79,7 +79,7 @@ class GraphQLHandler extends BaseHandler
      */
     public function runQuery($request)
     {
-        $input = json_decode($request->content(), true);
+        $input = json_decode((string) $request->content(), true);
 
         $schema = $this->getSchema($request);
 
@@ -141,9 +141,9 @@ class GraphQLHandler extends BaseHandler
     public function mapTypeFieldResolvers()
     {
         return [
-            'Query' => [$this, 'getQueryFieldResolver'],
-            'Entry' => [$this, 'getEntryFieldResolver'],
-            'EntryBook' => [$this, 'getEntryBookFieldResolver'],
+            'Query' => $this->getQueryFieldResolver(...),
+            'Entry' => $this->getEntryFieldResolver(...),
+            'EntryBook' => $this->getEntryBookFieldResolver(...),
         ];
     }
 

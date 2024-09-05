@@ -153,7 +153,7 @@ class Metadata
         $children = null;
         if ($node->hasChildNodes()) {
             if ($node->childNodes->length == 1 && $node->firstChild instanceof DOMText) {
-                $children = trim($node->firstChild->nodeValue);
+                $children = trim((string) $node->firstChild->nodeValue);
             } else {
                 $children = [];
                 foreach ($node->childNodes as $child) {
@@ -172,7 +172,7 @@ class Metadata
             if ($node->nodeName == 'meta' && $attr->name == 'content' && !empty($attr->value)) {
                 try {
                     $info[$attr->name] = json_decode($attr->value, true, 512, JSON_THROW_ON_ERROR);
-                } catch (JsonException $e) {
+                } catch (JsonException) {
                     $info[$attr->name] = $attr->value;
                 }
             } elseif ($attr->name == 'value') {

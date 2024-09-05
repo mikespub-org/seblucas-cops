@@ -186,7 +186,7 @@ abstract class Base
      */
     public function getClassName($className = null)
     {
-        $className ??= get_class($this);
+        $className ??= static::class;
         $classParts = explode('\\', $className);
         return end($classParts);
     }

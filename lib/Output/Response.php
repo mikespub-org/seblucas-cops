@@ -122,7 +122,7 @@ class Response
      * @param ?Request $request
      * @return never
      */
-    public static function notFound($request = null)
+    public static function notFound($request = null): never
     {
         header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1') . ' 404 Not Found');
         header('Status: 404 Not Found');
@@ -141,7 +141,7 @@ class Response
      * @param array<string, mixed> $params
      * @return never
      */
-    public static function sendError($request = null, $error = null, $params = ['page' => 'index', 'db' => 0, 'vl' => 0])
+    public static function sendError($request = null, $error = null, $params = ['page' => 'index', 'db' => 0, 'vl' => 0]): never
     {
         header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1') . ' 404 Not Found');
         header('Status: 404 Not Found');

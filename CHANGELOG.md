@@ -10,6 +10,12 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
+3.x.x - 2024xxxx
+  * ...
+
+3.0.0 - 20240905 Update requirements (PHP >= 8.2)
+  * Update phpunit tests + upgrade code with rector
+
 2.8.2 - 20240905 More clean-up of handlers & renderers
   * Expand Data mimetypes to cover common EPUB file components
   * Add Response class + move notFound() + add redirect() and sendError()

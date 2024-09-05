@@ -39,7 +39,7 @@ class EpubFsTest extends TestCase
         $data = EPubReader::getComponentContent(self::$book, EPubReader::encode('cover.xml'), self::$params);
 
         $src = "";
-        if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
+        if (preg_match("/src\=\'(.*?)\'/", (string) $data, $matches)) {
             $src = $matches [1];
         }
         $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('images/cover.png')], '&amp;');
@@ -51,14 +51,14 @@ class EpubFsTest extends TestCase
         $data = EPubReader::getComponentContent(self::$book, EPubReader::encode('title.xml'), self::$params);
 
         $src = "";
-        if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
+        if (preg_match("/src\=\'(.*?)\'/", (string) $data, $matches)) {
             $src = $matches [1];
         }
         $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('images/logo-feedbooks-tiny.png')], '&amp;');
         $this->assertEquals($url, $src);
 
         $href = "";
-        if (preg_match("/href\=\'(.*?)\'/", $data, $matches)) {
+        if (preg_match("/href\=\'(.*?)\'/", (string) $data, $matches)) {
             $href = $matches [1];
         }
         $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('css/title.css')], '&amp;');
@@ -70,7 +70,7 @@ class EpubFsTest extends TestCase
         $data = EPubReader::getComponentContent(self::$book, EPubReader::encode('css/title.css'), self::$params);
 
         $import = "";
-        if (preg_match("/import \'(.*?)\'/", $data, $matches)) {
+        if (preg_match("/import \'(.*?)\'/", (string) $data, $matches)) {
             $import = $matches [1];
         }
         $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('css/page.css')], '&amp;');
@@ -82,7 +82,7 @@ class EpubFsTest extends TestCase
         $data = EPubReader::getComponentContent(self::$book, EPubReader::encode('css/main.css'), self::$params);
 
         $src = "";
-        if (preg_match("/url\s*\(\'(.*?)\'\)/", $data, $matches)) {
+        if (preg_match("/url\s*\(\'(.*?)\'\)/", (string) $data, $matches)) {
             $src = $matches [1];
         }
         $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('fonts/times.ttf')]);
@@ -94,7 +94,7 @@ class EpubFsTest extends TestCase
         $data = EPubReader::getComponentContent(self::$book, EPubReader::encode('main10.xml'), self::$params);
 
         $src = "";
-        if (preg_match("/href\='(.*?)' title=\"Direct Link\"/", $data, $matches)) {
+        if (preg_match("/href\='(.*?)' title=\"Direct Link\"/", (string) $data, $matches)) {
             $src = $matches [1];
         }
         $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('main2.xml')], '&amp;');
@@ -106,7 +106,7 @@ class EpubFsTest extends TestCase
         $data = EPubReader::getComponentContent(self::$book, EPubReader::encode('main10.xml'), self::$params);
 
         $src = "";
-        if (preg_match("/href\='(.*?)' title=\"Direct Link with anchor\"/", $data, $matches)) {
+        if (preg_match("/href\='(.*?)' title=\"Direct Link with anchor\"/", (string) $data, $matches)) {
             $src = $matches [1];
         }
         $url = Route::link(self::$handler, null, ['data' => 20, 'comp' => EPubReader::encode('main2.xml')], '&amp;');
@@ -118,7 +118,7 @@ class EpubFsTest extends TestCase
         $data = EPubReader::getComponentContent(self::$book, EPubReader::encode('main10.xml'), self::$params);
 
         $src = "";
-        if (preg_match("/href\='(.*?)' title=\"Link to anchor\"/", $data, $matches)) {
+        if (preg_match("/href\='(.*?)' title=\"Link to anchor\"/", (string) $data, $matches)) {
             $src = $matches [1];
         }
         $this->assertEquals('#anchor', $src);

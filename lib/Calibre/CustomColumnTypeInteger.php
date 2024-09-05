@@ -28,16 +28,11 @@ class CustomColumnTypeInteger extends CustomColumnType
      */
     protected function __construct($pcustomId, $datatype = self::TYPE_INT, $database = null, $displaySettings = [])
     {
-        switch ($datatype) {
-            case static::TYPE_INT:
-                parent::__construct($pcustomId, static::TYPE_INT, $database, $displaySettings);
-                break;
-            case static::TYPE_FLOAT:
-                parent::__construct($pcustomId, static::TYPE_FLOAT, $database, $displaySettings);
-                break;
-            default:
-                throw new UnexpectedValueException();
-        }
+        match ($datatype) {
+            static::TYPE_INT => parent::__construct($pcustomId, static::TYPE_INT, $database, $displaySettings),
+            static::TYPE_FLOAT => parent::__construct($pcustomId, static::TYPE_FLOAT, $database, $displaySettings),
+            default => throw new UnexpectedValueException(),
+        };
     }
 
     /**

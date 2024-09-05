@@ -71,7 +71,7 @@ class NoteResourceTest extends TestCase
     public function testGetNotesById(): void
     {
         $note = self::$author->getNote();
-        $this->assertEquals(Note::class, get_class($note));
+        $this->assertEquals(Note::class, $note !== null ? $note::class : self::class);
         $this->assertEquals(3, $note->item);
         $this->assertEquals("authors", $note->colname);
         $this->assertEquals(self::$expectedSize['note'], strlen($note->doc));
@@ -98,7 +98,7 @@ class NoteResourceTest extends TestCase
         $resources = $note->getResources();
         $this->assertCount(1, $resources);
         $hash = "xxh64:7c301792c52eebf7";
-        $this->assertEquals(Resource::class, get_class($resources[$hash]));
+        $this->assertEquals(Resource::class, $resources[$hash]::class);
         $expected = $hash;
         $this->assertEquals($expected, $resources[$hash]->hash);
         $expected = "330px-LewisCarrollSelfPhoto.jpg";

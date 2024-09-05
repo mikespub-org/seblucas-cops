@@ -73,7 +73,7 @@ class Framework
         if (!empty($name) && Input\Route::addPrefix($name)) {
             if (empty($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] == '/') {
                 $_SERVER['PATH_INFO'] =  '/' . $name;
-            } elseif (!str_starts_with($_SERVER['PATH_INFO'], '/' . $name . '/')) {
+            } elseif (!str_starts_with((string) $_SERVER['PATH_INFO'], '/' . $name . '/')) {
                 $_SERVER['PATH_INFO'] =  '/' . $name . $_SERVER['PATH_INFO'];
                 // @todo force parsing route urls here?
                 Input\Config::set('use_route_urls', 1);

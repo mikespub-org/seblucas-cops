@@ -140,22 +140,13 @@ class CustomColumnTypeText extends CustomColumnType
      */
     public function getCustomByBook($book)
     {
-        switch ($this->datatype) {
-            case static::TYPE_TEXT:
-                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
-                break;
-            case static::TYPE_CSV:
-                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value";
-                break;
-            case static::TYPE_ENUM:
-                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
-                break;
-            case static::TYPE_SERIES:
-                $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
-                break;
-            default:
-                throw new UnexpectedValueException();
-        }
+        $queryFormat = match ($this->datatype) {
+            static::TYPE_TEXT => "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value",
+            static::TYPE_CSV => "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ? ORDER BY {0}.value",
+            static::TYPE_ENUM => "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?",
+            static::TYPE_SERIES => "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?",
+            default => throw new UnexpectedValueException(),
+        };
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = Database::query($query, [$book->id], $this->databaseId);

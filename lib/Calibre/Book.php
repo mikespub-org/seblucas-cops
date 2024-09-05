@@ -384,10 +384,10 @@ class Book
                     if ($file->isDir()) {
                         continue;
                     }
-                    if (!str_starts_with($file->getPathname(), $dataPath)) {
+                    if (!str_starts_with((string) $file->getPathname(), $dataPath)) {
                         continue;
                     }
-                    array_push($this->extraFiles, substr($file->getPathname(), strlen($dataPath)));
+                    array_push($this->extraFiles, substr((string) $file->getPathname(), strlen($dataPath)));
                 }
             }
         }
@@ -478,7 +478,7 @@ class Book
         if (empty($this->pubdate)) {
             return '';
         }
-        $dateY = (int) substr($this->pubdate, 0, 4);
+        $dateY = (int) substr((string) $this->pubdate, 0, 4);
         if ($dateY > 102) {
             return str_pad(strval($dateY), 4, '0', STR_PAD_LEFT);
         }
@@ -645,7 +645,7 @@ class Book
             return null;
         }
         $tmpfile = FileResponse::getTempFile('kepub.epub');
-        $cmd = escapeshellarg(Config::get('kepubify_path'));
+        $cmd = escapeshellarg((string) Config::get('kepubify_path'));
         $cmd .= ' -o ' . escapeshellarg($tmpfile);
         $cmd .= ' ' . escapeshellarg($filepath);
         exec($cmd, $output, $return);

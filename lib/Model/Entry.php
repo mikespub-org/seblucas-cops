@@ -117,7 +117,7 @@ class Entry
                 return $uri;
             }
             $separator = '&';
-            if (strpos($uri, '?') === false) {
+            if (!str_contains($uri, '?')) {
                 $separator = '?';
             }
             return $uri . $separator . http_build_query($extraParams);

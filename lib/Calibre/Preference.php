@@ -36,7 +36,7 @@ class Preference
         $this->key = $post->key;
         try {
             $this->val = json_decode($post->val, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             $this->val = $post->val;
         }
         $this->databaseId = $database;

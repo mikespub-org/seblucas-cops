@@ -64,14 +64,11 @@ class BaseList
      */
     protected function getOrderBy()
     {
-        switch ($this->orderBy) {
-            case 'title':
-                return 'sort';
-            case 'count':
-                return 'count desc, name';
-            default:
-                return $this->orderBy;
-        }
+        return match ($this->orderBy) {
+            'title' => 'sort',
+            'count' => 'count desc, name',
+            default => $this->orderBy,
+        };
     }
 
     /**
@@ -286,8 +283,8 @@ class BaseList
     public function getAllEntries($n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getCountColumns(), ' as ' . $this->orderBy) !== false) {
-            if (strpos($query, 'order by') !== false) {
+        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getCountColumns(), ' as ' . $this->orderBy)) {
+            if (str_contains($query, 'order by')) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';
@@ -490,8 +487,8 @@ class BaseList
     public function getFilteredEntries($filter, $n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && strpos($this->getCountColumns(), ' as ' . $this->orderBy) !== false) {
-            if (strpos($query, 'order by') !== false) {
+        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getCountColumns(), ' as ' . $this->orderBy)) {
+            if (str_contains($query, 'order by')) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';

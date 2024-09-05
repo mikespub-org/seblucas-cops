@@ -67,7 +67,7 @@ if (!is_array($calibreDir)) {
     $calibreDir = ['COPS Database' => $calibreDir];
 }
 foreach ($calibreDir as $name => $path) {
-    $gConfig['databases'][] = ['name' => $name, 'db_path' => rtrim($path, '/'), 'epub_path' => '.'];
+    $gConfig['databases'][] = ['name' => $name, 'db_path' => rtrim((string) $path, '/'), 'epub_path' => '.'];
 }
 
 $request = Framework::getRequest('loader');

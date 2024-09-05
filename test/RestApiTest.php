@@ -204,18 +204,18 @@ class RestApiTest extends TestCase
     }
 
     /**
-     * @dataProvider linkProvider
      * @param mixed $link
      * @param mixed $expected
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
     public function testRouteLink($link, $expected)
     {
         $params = [];
-        parse_str(parse_url($link, PHP_URL_QUERY) ?? '', $params);
+        parse_str(parse_url((string) $link, PHP_URL_QUERY) ?? '', $params);
         $page = $params["page"] ?? null;
         unset($params["page"]);
-        $endpoint = parse_url($link, PHP_URL_PATH);
+        $endpoint = parse_url((string) $link, PHP_URL_PATH);
         if ($endpoint !== RestApi::$endpoint) {
             $testpoint = str_replace('.php', '', $endpoint);
             if (array_key_exists($testpoint, Config::ENDPOINT)) {
@@ -232,15 +232,15 @@ class RestApiTest extends TestCase
     }
 
     /**
-     * @dataProvider linkProvider
      * @param mixed $expected
      * @param mixed $path
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
     public function testRouteMatch($expected, $path)
     {
-        $query = parse_url($path, PHP_URL_QUERY);
-        $path = parse_url($path, PHP_URL_PATH);
+        $query = parse_url((string) $path, PHP_URL_QUERY);
+        $path = parse_url((string) $path, PHP_URL_PATH);
         $parts = explode('/', $path);
         $endpoint = array_shift($parts);
         $path = '/' . implode('/', $parts);
@@ -312,30 +312,30 @@ class RestApiTest extends TestCase
     }
 
     /**
-     * @dataProvider rewriteProvider
      * @param mixed $link
      * @param mixed $expected
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rewriteProvider')]
     public function testRewriteLink($link, $expected)
     {
         $params = [];
-        parse_str(parse_url($link, PHP_URL_QUERY), $params);
-        $endpoint = parse_url($link, PHP_URL_PATH);
+        parse_str(parse_url((string) $link, PHP_URL_QUERY), $params);
+        $endpoint = parse_url((string) $link, PHP_URL_PATH);
         $test = Route::getUrlRewrite($endpoint, $params);
         $this->assertEquals($expected, $test);
     }
 
     /**
-     * @dataProvider rewriteProvider
      * @param mixed $expected
      * @param mixed $path
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rewriteProvider')]
     public function testRewriteMatch($expected, $path)
     {
-        $query = parse_url($path, PHP_URL_QUERY);
-        $path = parse_url($path, PHP_URL_PATH);
+        $query = parse_url((string) $path, PHP_URL_QUERY);
+        $path = parse_url((string) $path, PHP_URL_PATH);
         //$endpoint = parse_url($expected, PHP_URL_PATH);
         [$endpoint, $params] = Route::matchRewrite($path);
         $test = $endpoint . '?' . http_build_query($params);
@@ -351,7 +351,7 @@ class RestApiTest extends TestCase
         $apiHandler = new RestApi($request);
         $expected = true;
         $test = $apiHandler->getOutput();
-        $this->assertEquals($expected, strncmp($test, '{"title":"COPS",', strlen('{"title":"COPS",')) === 0);
+        $this->assertEquals($expected, str_starts_with($test, '{"title":"COPS",'));
     }
 
     public function testGetCustomColumns(): void
@@ -539,7 +539,7 @@ class RestApiTest extends TestCase
         $test = RestApi::getMetadata($request);
         $this->assertEquals($expected, $test["title"]);
         $expected = Metadata::class;
-        $this->assertEquals($expected, get_class($test["entries"]));
+        $this->assertEquals($expected, $test["entries"]::class);
         $expected = "2.0";
         $this->assertEquals($expected, $test["entries"]->version);
         $expected = 24;

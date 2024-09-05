@@ -87,40 +87,21 @@ class BookList
      */
     protected function getOrderBy()
     {
-        switch ($this->orderBy) {
-            case 'title asc':
-            case 'title':
-                return 'books.sort asc';
-            case 'title desc':
-                return 'books.sort desc';
-            case 'author asc':
-            case 'author':
-                return 'books.author_sort asc';
-            case 'author desc':
-                return 'books.author_sort desc';
-            case 'pubdate desc':
-            case 'pubdate':
-                return 'books.pubdate desc';
-            case 'pubdate asc':
-                return 'books.pubdate asc';
-            case 'rating desc':
-            case 'rating':
-                return 'ratings.rating desc';
-            case 'rating asc':
-                return 'ratings.rating asc';
-            case 'timestamp desc':
-            case 'timestamp':
-                return 'books.timestamp desc';
-            case 'timestamp asc':
-                return 'books.timestamp asc';
-            case 'count desc':
-            case 'count':
-                return 'count desc';
-            case 'count asc':
-                return 'count asc';
-            default:
-                return $this->orderBy;
-        }
+        return match ($this->orderBy) {
+            'title asc', 'title' => 'books.sort asc',
+            'title desc' => 'books.sort desc',
+            'author asc', 'author' => 'books.author_sort asc',
+            'author desc' => 'books.author_sort desc',
+            'pubdate desc', 'pubdate' => 'books.pubdate desc',
+            'pubdate asc' => 'books.pubdate asc',
+            'rating desc', 'rating' => 'ratings.rating desc',
+            'rating asc' => 'ratings.rating asc',
+            'timestamp desc', 'timestamp' => 'books.timestamp desc',
+            'timestamp asc' => 'books.timestamp asc',
+            'count desc', 'count' => 'count desc',
+            'count asc' => 'count asc',
+            default => $this->orderBy,
+        };
     }
 
     /**
@@ -203,7 +184,7 @@ class BookList
      */
     public function getBooksByInstance($instance, $n)
     {
-        if (empty($instance->id) && in_array(get_class($instance), [Rating::class, Serie::class, Tag::class, Identifier::class])) {
+        if (empty($instance->id) && in_array($instance::class, [Rating::class, Serie::class, Tag::class, Identifier::class])) {
             return $this->getBooksWithoutInstance($instance, $n);
         }
         [$query, $params] = $instance->getQuery();
@@ -436,7 +417,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $params = $filter->getQueryParams();
 
         if (isset($this->orderBy) && $this->orderBy !== Book::SQL_SORT) {
-            if (strpos($query, 'order by') !== false) {
+            if (str_contains($query, 'order by')) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
             } else {
                 $query .= ' order by ' . $this->getOrderBy() . ' ';
