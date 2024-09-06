@@ -88,6 +88,7 @@
                 <exclude name="*.zip" />
                 <exclude name="*.xml" />
                 <exclude name="config_local.php" />
+                <exclude name="config/local.php" />
                 <exclude name="composer*" />
                 <exclude name="*.cache" />
                 <exclude name="*.cache/**" />

@@ -1,8 +1,8 @@
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) default configuration
- * Settings can be overridden in config_local.php and
- * optional config_local.{remote_user}.php
+ * Settings can be overridden in config/local.php and
+ * optional config/local.{remote_user}.php
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
@@ -516,7 +516,7 @@ $config['cops_html_filter_limit'] = '8';
  * Show links to sort by title, author, pubdate, rating or timestamp in OPDS catalog (using facets)
  * Note: this will only work if your e-reader supports facets in OPDS feeds, like Thorium Reader for example
  * See https://specs.opds.io/opds-1.2.html#4-facets for specification details
- * To disable this feature, use an empty array in config_local.php:
+ * To disable this feature, use an empty array in config/local.php:
  * $config['cops_opds_sort_links'] = [];
  *
  * Available values: ['title', 'author', 'pubdate', 'rating', 'timestamp']
@@ -527,7 +527,7 @@ $config['cops_opds_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'time
  * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag in OPDS catalog (using facets)
  * Note: this will only work if your e-reader supports facets in OPDS feeds, like Thorium Reader for example
  * See https://specs.opds.io/opds-1.2.html#4-facets for specification details
- * To disable this feature, use an empty array in config_local.php:
+ * To disable this feature, use an empty array in config/local.php:
  * $config['cops_opds_filter_links'] = [];
  *
  * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag']
@@ -575,7 +575,7 @@ $config['cops_download_template'] = '{author} - {series} #{series_index} - {titl
  *  1 : enable
  *  0 : disable
  */
-$config['cops_use_route_urls'] = '0';
+$config['cops_use_route_urls'] = '1';
 
 /*
  * Specify api key to access some restricted features via REST API (dev only)

@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Tests;
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Output\RestApi;
 
-require_once __DIR__ . '/config_test.php';
+require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
@@ -29,6 +29,8 @@ class RestApiTest extends TestCase
     protected static $expectedSize = [
         'calres' => 37341,
     ];
+    /** @var mixed */
+    protected static $route;
 
     public static function setUpBeforeClass(): void
     {
@@ -36,6 +38,7 @@ class RestApiTest extends TestCase
         Database::clearDb();
         self::$script = $_SERVER["SCRIPT_NAME"];
         // try out route urls
+        static::$route = Config::get('use_route_urls');
         Config::set('use_route_urls', true);
         Framework::addRoutes();
     }
@@ -43,7 +46,7 @@ class RestApiTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         $_SERVER["SCRIPT_NAME"] = self::$script;
-        Config::set('use_route_urls', null);
+        Config::set('use_route_urls', static::$route);
     }
 
     public function testGetPathInfo(): void

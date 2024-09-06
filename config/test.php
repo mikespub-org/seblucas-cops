@@ -2,10 +2,10 @@
 
 use SebLucas\Cops\Input\Config;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require dirname(__DIR__) . '/config_default.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/default.php';
 
-$config['calibre_directory'] = __DIR__ . "/BaseWithSomeBooks/";
+$config['calibre_directory'] = dirname(__DIR__) . "/tests/BaseWithSomeBooks/";
 
 $config['cops_mail_configuration'] = [
     "smtp.host"     => "smtp.free.fr",

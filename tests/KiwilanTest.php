@@ -13,7 +13,8 @@ use Opis\JsonSchema\Errors\ErrorFormatter;
 //use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 
-require_once __DIR__ . '/config_test.php';
+require_once dirname(__DIR__) . '/config/test.php';
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework;

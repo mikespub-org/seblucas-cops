@@ -1,12 +1,24 @@
 # COPS for PHP 8.x
 
+## Breaking changes for 3.x release (PHP >= 8.2)
+
+### For everyone
+- move your customized *config_local.php* file to *config/local.php* on the web server/container
+- TODO replace any *feed.php* links with *index.php/feed* for OPDS feeds in your e-reader
+
+### Less common
+- if you map the *lib/* or *test/* directory somewhere, like a docker compose file, web server config etc. you'll need to replace that with *src/* or *tests/* respectively
+- if you use other endpoints for links elsewhere, like the REST API for a widget, you'll need to use route URLs and replace *restapi.php* with *index.php/restapi* etc.
+
 ## Prerequisites for this fork
+
 -	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML, XMLWriter and ZLib support (PHP 8.1 or later recommended)
 - Release 3.x.x will only work with PHP >= 8.2 - typical for most source code & docker image installs in 2024 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 2.x.x will only work with PHP >= 8.1 - typical for most source code & docker image installs in 2023 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 1.x.x still works with PHP 7.4 if necessary - earlier PHP 7.x (or 5.x) versions are *not* supported with this fork
 
-User support issues remain available at https://github.com/seblucas/cops/issues - please use it if you need help with COPS in general
+User support issues remain available at https://github.com/seblucas/cops/issues - please use it if you need help with COPS in general.
+For the 2.x and 3.x versions please report any new issues at https://github.com/mikespub-org/seblucas-cops/issues
 
 Pull requests should be against the latest source code at https://github.com/mikespub-org/seblucas-cops/pulls - thanks for any contributions :-)
 
@@ -36,7 +48,7 @@ Same options as original:
 
 The rest of the installation process is very similar to the original below. But if you install from source, just use your regular composer 2.x - you don't need to download an old composer 1.x version or install global asset plugins anymore :-)
 
-Notice: for a first-time installation, you still need to copy *[config_local.php.example](config_local.php.example)* to *config_local.php* and customize the calibre directory etc. as needed. Afterwards, if you get an error or blank page the first time you browse to COPS, you can check for common issues by browsing to http://.../checkconfig.php
+Notice: for a first-time installation, you need to copy *[config/local.php.example](config/local.php.example)* to *config/local.php* and customize the calibre directory etc. as needed. Afterwards, if you get an error or blank page the first time you browse to COPS, you can check for common issues by browsing to http://.../checkconfig.php
 
 ---
 
@@ -72,7 +84,7 @@ If you want to use the OPDS feed don't forget to specify feed.php at the end of 
 
 You just have to sync your Calibre directory to your COPS server the way you prefer (Dropbox, Bt Sync, Syncthing, use a directory shared with Nextcloud, ...).
 
-# Prerequisites
+# Prerequisites (outdated)
 
 1. 	PHP 5.3, 5.4, 5.5, 5.6, 7.X or hhvm with GD image processing, Libxml, Intl, Json & SQLite3 support (PHP 5.6 or later recommended).
 2. 	A web server with PHP support. I tested with various version of Nginx and Apache.

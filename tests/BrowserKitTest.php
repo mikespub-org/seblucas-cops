@@ -19,7 +19,8 @@
 
 namespace SebLucas\Cops\Tests;
 
-require_once __DIR__ . '/config_test.php';
+require_once dirname(__DIR__) . '/config/test.php';
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
@@ -46,9 +47,9 @@ class BrowserKitTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        // get config_local.php as used by webserver
+        // get config/local.php as used by webserver
         $config = [];
-        include dirname(__DIR__) . '/config_local.php';
+        include dirname(__DIR__) . '/config/local.php';
         static::$localConfig = $config;
     }
 

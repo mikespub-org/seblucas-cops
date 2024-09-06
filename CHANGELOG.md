@@ -14,6 +14,10 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Changes in config/default.php file:
+    - set $config['cops_use_route_urls'] = '1' as default
+  * BC: Enable route urls by default in config/default.php
+  * BC: Move config_*.php files to config/*.php to align dir structure
   * BC: Rename lib/ to src/ and test/ to tests/ to align dir structure
 
 3.0.0 - 20240905 Update requirements (PHP >= 8.2)

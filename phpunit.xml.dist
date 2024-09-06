@@ -21,8 +21,7 @@
       <directory suffix=".php">./resources</directory>
       <directory suffix=".php">./tests</directory>
       <directory suffix=".php">./vendor</directory>
-      <file>config.php</file>
-      <file>config_default.php</file>
+      <directory suffix=".php">./config</directory>
     </exclude>
   </source>
 </phpunit>

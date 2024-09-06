@@ -13,6 +13,6 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - ./config_local.php:/app/config_local.php
+      - ./config/local.php:/app/config/local.php
       - ./src:/app/src
       - ./tests:/app/tests

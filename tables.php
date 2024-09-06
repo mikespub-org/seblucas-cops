@@ -13,7 +13,7 @@ use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApi;
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/config/config.php';
 
 $data = ['link' => Route::link(RestApi::$handler)];
 $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';

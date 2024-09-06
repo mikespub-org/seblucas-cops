@@ -10,7 +10,7 @@ namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Output\Mail;
 
-require_once __DIR__ . '/config_test.php';
+require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
@@ -44,7 +44,7 @@ class MailTest extends TestCase
     public function testCheckConfigurationSmtpEmpty(): void
     {
         // reload test config
-        require __DIR__ . '/config_test.php';
+        require dirname(__DIR__) . '/config/test.php';
         $mailConfig = Config::get('mail_configuration');
         $mailConfig["smtp.host"] = "";
         Config::set('mail_configuration', $mailConfig);
@@ -56,7 +56,7 @@ class MailTest extends TestCase
     public function testCheckConfigurationEmailEmpty(): void
     {
         // reload test config
-        require __DIR__ . '/config_test.php';
+        require dirname(__DIR__) . '/config/test.php';
         $mailConfig = Config::get('mail_configuration');
         $mailConfig["address.from"] = "";
         Config::set('mail_configuration', $mailConfig);
@@ -77,7 +77,7 @@ class MailTest extends TestCase
         $this->assertFalse($mailer->checkConfiguration());
 
         // reload test config
-        require __DIR__ . '/config_test.php';
+        require dirname(__DIR__) . '/config/test.php';
     }
 
     public function testCheckConfigurationEmailNotValid(): void

@@ -7,15 +7,20 @@
  * @author     mikespub
  */
 
-require_once __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/config_default.php';
-if (file_exists(__DIR__ . '/config_local.php') && (php_sapi_name() !== 'cli')) {
-    try {
-        require __DIR__ . '/config_local.php';
-    } catch (Throwable $e) {
-        echo "Error loading config_local.php<br>\n";
-        echo $e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine();
-        exit;
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/default.php';
+if (php_sapi_name() !== 'cli') {
+    if (file_exists(__DIR__ . '/local.php')) {
+        try {
+            require __DIR__ . '/local.php';
+        } catch (Throwable $e) {
+            echo "Error loading local.php<br>\n";
+            echo $e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine();
+            exit;
+        }
+    } elseif (file_exists(dirname(__DIR__) . '/config_local.php')) {
+        // @deprecated 3.0.0 move config_local.php file to config/local.php
+        require dirname(__DIR__) . '/config_local.php';
     }
 }
 /** @var array<mixed> $config */
@@ -29,7 +34,7 @@ $remote_user = array_key_exists($http_auth_user, $_SERVER) ? $_SERVER[$http_auth
 // Clean username, only allow a-z, A-Z, 0-9, -_ chars
 $remote_user = preg_replace('/[^a-zA-Z0-9_-]/', '', $remote_user);
 if (!empty($remote_user)) {
-    $user_config_file = 'config_local.' . $remote_user . '.php';
+    $user_config_file = 'local.' . $remote_user . '.php';
     if (file_exists(__DIR__ . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
         require __DIR__ . '/' . $user_config_file;
     }

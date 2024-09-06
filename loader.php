@@ -14,7 +14,7 @@ use SebLucas\Cops\Output\Response;
 use Marsender\EPubLoader\RequestHandler;
 use Marsender\EPubLoader\App\ExtraActions;
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/config/config.php';
 
 if (!class_exists('\Marsender\EPubLoader\RequestHandler')) {
     echo 'This endpoint is an example for development only';

@@ -12,6 +12,6 @@
 
 use SebLucas\Cops\Framework;
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/config/config.php';
 
 Framework::run('fetch');

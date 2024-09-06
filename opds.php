@@ -11,7 +11,7 @@
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Framework;
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/config/config.php';
 
 if (!class_exists('\Kiwilan\Opds\OpdsResponse')) {
     echo 'This endpoint is an example for development only';

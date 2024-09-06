@@ -288,7 +288,7 @@ class Data
         // moved image-specific code from Data to Cover
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
             ($type == "epub" && Config::get('update_epub-metadata'))) {
-            $params = ['id' => $book->id, 'db' => $book->getDatabaseId()];
+            $params = ['db' => $book->getDatabaseId()];
             if (Config::get('use_route_urls') && is_null($params['db'])) {
                 $params['db'] = 0;
             }

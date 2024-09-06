@@ -11,7 +11,7 @@
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/config/config.php';
 
 // tell COPS we use front controller here
 Config::set('use_front_controller', true);
