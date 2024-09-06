@@ -315,9 +315,10 @@ class JsonRenderer extends BaseRenderer
                 "downloadAllTooltip" => localize("downloadall.tooltip"),
             ],
             "url" => [
-                "detailUrl" => Route::link($this->handler) . "?page=13&id={0}&db={1}",
-                "coverUrl" => Route::link("fetch") . "?id={0}&db={1}",
-                "thumbnailUrl" => Route::link("fetch") . "?thumb=html&id={0}&db={1}",
+                "detailUrl" => str_replace(['%7B', '%7D'], ['{', '}'], Route::link($this->handler, PageId::BOOK_DETAIL, ['id' => '{0}', 'db' => '{1}'])),
+                // route urls do not accept non-numeric id or db to find match here
+                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link("fetch", null, ['id' => '0', 'db' => '1'])),
+                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link("fetch", null, ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),

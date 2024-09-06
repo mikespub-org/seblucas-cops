@@ -40,7 +40,6 @@ class RestApiTest extends TestCase
         // try out route urls
         static::$route = Config::get('use_route_urls');
         Config::set('use_route_urls', true);
-        Framework::addRoutes();
     }
 
     public static function tearDownAfterClass(): void

@@ -14,10 +14,7 @@ namespace SebLucas\Cops;
  */
 class Framework
 {
-    /**
-     * Summary of handlers
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     protected static $handlers = [
         "index" => Handlers\HtmlHandler::class,
         "feed" => Handlers\FeedHandler::class,
@@ -35,6 +32,8 @@ class Framework
         "mail" => Handlers\MailHandler::class,
         "graphql" => Handlers\GraphQLHandler::class,
     ];
+    /** @var array<mixed> */
+    protected static $middlewares = [];
 
     /**
      * Single request runner with optional handler name
@@ -68,7 +67,7 @@ class Framework
     public static function getRequest($name = '', $parse = true)
     {
         // initialize routes if needed
-        static::addRoutes();
+        static::init();
         // fix PATH_INFO when accessed via traditional endpoint scripts
         if (!empty($name) && Input\Route::addPrefix($name)) {
             if (empty($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] == '/') {
@@ -81,6 +80,15 @@ class Framework
         }
         // @todo special case for restapi
         return new Input\Request($parse);
+    }
+
+    /**
+     * Initialize framework
+     * @return void
+     */
+    public static function init()
+    {
+        static::addRoutes();
     }
 
     /**

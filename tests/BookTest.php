@@ -117,7 +117,11 @@ class BookTest extends TestCase
 
         $this->assertEquals("The Return of Sherlock Holmes", $book->getTitle());
         $this->assertEquals("urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f", $book->getEntryId());
-        $this->assertEquals(Route::link(self::$handler) . "?page=13&id=2", $book->getDetailUrl(self::$handler));
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/books/2/Arthur_Conan_Doyle/The_Return_of_Sherlock_Holmes", $book->getDetailUrl(self::$handler));
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=13&id=2", $book->getDetailUrl(self::$handler));
+        }
         $this->assertEquals("Arthur Conan Doyle", $book->getAuthorsName());
         $this->assertEquals("Fiction, Mystery & Detective, Short Stories", $book->getTagsName());
         $this->assertEquals('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment(false));
@@ -252,7 +256,11 @@ class BookTest extends TestCase
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
-                $this->assertEquals(Route::link("fetch") . "?id=2&type=epub&data=1", $link->href);
+                if (Config::get('use_route_urls')) {
+                    $this->assertEquals(Route::link("fetch") . "/fetch/0/1/ignore.epub", $link->href);
+                } else {
+                    $this->assertEquals(Route::link("fetch") . "?type=epub&data=1", $link->href);
+                }
                 return;
             }
         }
@@ -316,18 +324,30 @@ class BookTest extends TestCase
         Config::set('thumbnail_handling', "1");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals(Route::link("fetch") . "?id=2", $thumbnailurl);
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link("fetch") . "/covers/0/2.jpg", $thumbnailurl);
+        } else {
+            $this->assertEquals(Route::link("fetch") . "?id=2", $thumbnailurl);
+        }
 
         // The thumbnails should be the same as the handling
         Config::set('thumbnail_handling', "/images.png");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals("/images.png", $thumbnailurl);
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals("/images.png", $thumbnailurl);
+        } else {
+            $this->assertEquals("/images.png", $thumbnailurl);
+        }
 
         Config::set('thumbnail_handling', "");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals(Route::link("fetch") . "?id=2&thumb=html", $thumbnailurl);
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link("fetch") . "/thumbs/html/0/2.jpg", $thumbnailurl);
+        } else {
+            $this->assertEquals(Route::link("fetch") . "?id=2&thumb=html", $thumbnailurl);
+        }
     }
 
     /**
@@ -580,7 +600,11 @@ class BookTest extends TestCase
         $this->assertEquals(Route::url("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $epub->getHtmlLink());
 
         Config::set('use_url_rewriting', "0");
-        $this->assertEquals(Route::link("fetch") . "?id=17&type=epub&data=20", $epub->getHtmlLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link("fetch") . "/fetch/0/20/ignore.epub", $epub->getHtmlLink());
+        } else {
+            $this->assertEquals(Route::link("fetch") . "?type=epub&data=20", $epub->getHtmlLink());
+        }
     }
 
     public function testGetUpdatedEpub(): void

@@ -57,7 +57,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=8", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/8", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=8", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:8", $coltype->getEntryId());
         $this->assertEquals("custom_01", $coltype->getTitle());
         $this->assertEquals("Custom column example 01 (text)", $coltype->getDatabaseDescription());
@@ -82,7 +86,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=16", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/16", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=16", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:16", $coltype->getEntryId());
         $this->assertEquals("custom_01b", $coltype->getTitle());
         $this->assertEquals(null, $coltype->getDatabaseDescription());
@@ -107,7 +115,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=6", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/6", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=6", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:6", $coltype->getEntryId());
         $this->assertEquals("custom_02", $coltype->getTitle());
         $this->assertEquals("Custom column example 02 (csv)", $coltype->getDatabaseDescription());
@@ -131,7 +143,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("comments", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeComment::class, $coltype !== null ? $coltype::class : self::class);
 
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=7", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/7", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=7", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:7", $coltype->getEntryId());
         $this->assertEquals("custom_03", $coltype->getTitle());
         $this->assertEquals("Custom column example 03 (long_text)", $coltype->getDatabaseDescription());
@@ -156,7 +172,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeSeries::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=4", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/4", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=4", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:4", $coltype->getEntryId());
         $this->assertEquals("custom_04", $coltype->getTitle());
         $this->assertEquals("Custom column example 04 (series_text)", $coltype->getDatabaseDescription());
@@ -182,7 +202,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeEnumeration::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(4, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=5", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/5", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=5", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:5", $coltype->getEntryId());
         $this->assertEquals("custom_05", $coltype->getTitle());
         $this->assertEquals("Custom column example 05 (enum)", $coltype->getDatabaseDescription());
@@ -208,7 +232,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeDate::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(5, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=12", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/12", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=12", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:12", $coltype->getEntryId());
         $this->assertEquals("custom_06", $coltype->getTitle());
         $this->assertEquals("Custom column example 06 (date)", $coltype->getDatabaseDescription());
@@ -233,7 +261,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeFloat::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(6, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=14", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/14", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=14", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:14", $coltype->getEntryId());
         $this->assertEquals("custom_07", $coltype->getTitle());
         $this->assertEquals("Custom column example 07 (float)", $coltype->getDatabaseDescription());
@@ -258,7 +290,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeInteger::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(4, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=10", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/10", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=10", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:10", $coltype->getEntryId());
         $this->assertEquals("custom_08", $coltype->getTitle());
         $this->assertEquals("Custom column example 08 (int)", $coltype->getDatabaseDescription());
@@ -283,7 +319,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeRating::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(6, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=9", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/9", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=9", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:9", $coltype->getEntryId());
         $this->assertEquals("custom_09", $coltype->getTitle());
         $this->assertEquals("Custom column example 09 (rating)", $coltype->getDatabaseDescription());
@@ -308,7 +348,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals(CustomColumnTypeBool::class, $coltype !== null ? $coltype::class : self::class);
 
         $this->assertCount(3, $coltype->getAllCustomValues());
-        $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=11", $coltype->getUri());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/11", $coltype->getUri());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=14&custom=11", $coltype->getUri());
+        }
         $this->assertEquals("cops:custom:11", $coltype->getEntryId());
         $this->assertEquals("custom_10", $coltype->getTitle());
         $this->assertEquals("Custom column example 10 (bool)", $coltype->getDatabaseDescription());
@@ -577,7 +621,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:8:3", $currentPage->entryArray[0]->id);
         $this->assertEquals("other_text", $currentPage->entryArray[0]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=8&id=3", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/8/3", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=8&id=3", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:8:1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:8:2", $currentPage->entryArray[2]->id);
     }
@@ -595,7 +643,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:6:1", $currentPage->entryArray[0]->id);
         $this->assertEquals("a", $currentPage->entryArray[0]->title);
         $this->assertEquals("6 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=6&id=1", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/6/1", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=6&id=1", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:6:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:6:3", $currentPage->entryArray[2]->id);
     }
@@ -613,7 +665,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:4:4", $currentPage->entryArray[0]->id);
         $this->assertEquals("GroupA", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=4&id=4", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/4/4", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=4&id=4", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:4:5", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:4:6", $currentPage->entryArray[2]->id);
     }
@@ -631,7 +687,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:5:3", $currentPage->entryArray[0]->id);
         $this->assertEquals("val01", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=5&id=3", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/5/3", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=5&id=3", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:5:4", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:5:5", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:5:6", $currentPage->entryArray[3]->id);
@@ -651,7 +711,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:12:2000-01-01", $currentPage->entryArray[0]->id);
         $this->assertEquals("2000-01-01", $currentPage->entryArray[0]->title);
         $this->assertEquals("2 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=12&id=2000-01-01", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/12/2000-01-01", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=12&id=2000-01-01", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:12:2000-01-02", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:12:2000-01-03", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:12:2016-04-20", $currentPage->entryArray[3]->id);
@@ -721,7 +785,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:14:-99", $currentPage->entryArray[0]->id);
         $this->assertEquals(-99.0, $currentPage->entryArray[0]->title);
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=14&id=-99", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/14/-99", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=14&id=-99", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:14:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:14:0.1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:14:0.2", $currentPage->entryArray[3]->id);
@@ -743,7 +811,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:10:-2", $currentPage->entryArray[0]->id);
         $this->assertEquals(-2, $currentPage->entryArray[0]->title);
         $this->assertEquals("3 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=10&id=-2", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/10/-2", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=10&id=-2", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:10:-1", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:10:1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:10:2", $currentPage->entryArray[3]->id);
@@ -811,7 +883,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:9:0", $currentPage->entryArray[0]->id);
         $this->assertEquals("No Stars", $currentPage->entryArray[0]->title);
         $this->assertEquals("12 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=9&id=0", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/9/0", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=9&id=0", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:9:2", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:9:4", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:9:6", $currentPage->entryArray[3]->id);
@@ -832,7 +908,11 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:11:-1", $currentPage->entryArray[0]->id);
         $this->assertEquals("Not Set", $currentPage->entryArray[0]->title);
         $this->assertEquals("9 books", $currentPage->entryArray[0]->content);
-        $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=11&id=-1", $currentPage->entryArray[0]->getNavLink());
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/custom/11/-1", $currentPage->entryArray[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=11&id=-1", $currentPage->entryArray[0]->getNavLink());
+        }
         $this->assertEquals("cops:custom:11:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:11:1", $currentPage->entryArray[2]->id);
     }
