@@ -11,6 +11,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Output\Response;
 
 /**
  * Summary of BaseHandler
@@ -35,7 +36,7 @@ abstract class BaseHandler
 
     /**
      * @param Request $request
-     * @return void
+     * @return Response|void
      */
     abstract public function handle($request);
 }

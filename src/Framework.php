@@ -55,7 +55,16 @@ class Framework
             $name = 'json';
         }
         $handler = Framework::getHandler($name);
-        $handler->handle($request);
+        if (empty(static::$middlewares)) {
+            $handler->handle($request);
+            return;
+        }
+        // @see https://www.php-fig.org/psr/psr-15/meta/#queue-based-request-handler
+        $queue = new Handlers\QueueBasedHandler($handler);
+        foreach (static::$middlewares as $middleware) {
+            $queue->add(new $middleware());
+        }
+        $queue->handle($request);
     }
 
     /**
