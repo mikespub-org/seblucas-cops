@@ -3,39 +3,39 @@ parameters:
 		-
 			message: "#^Static method SebLucas\\\\Cops\\\\Calibre\\\\Annotation\\:\\:forgetAboutConvertAnnotations\\(\\) is unused\\.$#"
 			count: 1
-			path: lib/Calibre/Annotation.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with SebLucas\\\\Cops\\\\Calibre\\\\CustomColumn will always evaluate to false\\.$#"
-			count: 1
-			path: lib/Calibre/Book.php
+			path: src/Calibre/Annotation.php
 
 		-
 			message: "#^Property SebLucas\\\\Cops\\\\Calibre\\\\CustomColumn\\:\\:\\$value \\(string\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
-			path: lib/Calibre/CustomColumn.php
+			path: src/Calibre/CustomColumn.php
 
 		-
 			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
 			count: 1
-			path: lib/Calibre/Metadata.php
+			path: src/Calibre/Metadata.php
 
 		-
 			message: "#^Call to an undefined method DOMNode\\:\\:getElementsByTagName\\(\\)\\.$#"
 			count: 1
-			path: lib/Calibre/Metadata.php
+			path: src/Calibre/Metadata.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$request\\.$#"
+			count: 1
+			path: src/Handlers/GraphQLHandler.php
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
-			path: lib/Output/Format.php
+			path: src/Output/Format.php
 
 		-
-			message: "#^Offset 'filters' on non\\-empty\\-array\\<string, mixed\\> in empty\\(\\) always exists and is always falsy\\.$#"
-			count: 2
-			path: lib/Output/JsonRenderer.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
+			message: "#^Call to an undefined method SebLucas\\\\Cops\\\\Pages\\\\Page\\:\\:getContent\\(\\)\\.$#"
 			count: 1
-			path: lib/Output/JsonRenderer.php
+			path: src/Output/JsonRenderer.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between 0 and 0 is always false\\.$#"
+			count: 1
+			path: src/Output/JsonRenderer.php

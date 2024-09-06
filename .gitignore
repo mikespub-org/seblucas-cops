@@ -1,10 +1,7 @@
-/feedbook/*
 /coverage/*
-/saucetest/*
-/thumbnails/*
 /vendor/
 /clover.xml
-/test/text.atom
+/tests/text.*
 /*.phar
 /cops.zip
 /cops-*.zip

@@ -477,7 +477,7 @@ $config['cops_language'] = '';
 
 /*
  * Set Home page for library
- * Can be any of the pages defined as constants in lib/Pages/PageId.php
+ * Can be any of the pages defined as constants in src/Pages/PageId.php
  * e.g. ALL_RECENT_BOOKS to get straight to most recent books
  *      AUTHORS_FIRST_LETTER to list all authors
  *      ALL_TAGS to list all tags

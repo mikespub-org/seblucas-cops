@@ -31,7 +31,7 @@
                 <include name="**" />
                 <exclude name="tables.php" />
                 <exclude name="templates/tables.html" />
-                <exclude name="test/**" />
+                <exclude name="tests/**" />
                 <exclude name=".git/**" />
                 <exclude name="docker/**" />
                 <exclude name="docker-*.yaml" />

@@ -331,7 +331,7 @@ class FilterTest extends TestCase
          * 2: Tree.More.Tag2
          * 3: Tree.More.Tag3
          *
-         * See test/BaseWithSomeBooks/hierarchical_type2.sql
+         * See tests/BaseWithSomeBooks/hierarchical_type2.sql
          */
         $custom = CustomColumn::createCustom(2, 4);
         $this->assertEquals("Type2", $custom->customColumnType->getTitle());

@@ -63,7 +63,7 @@ class Config
     public static function get($name, $default = null)
     {
         if (empty(static::$values)) {
-            throw new Exception('Config was not loaded correctly in config.php or test/config_test.php');
+            throw new Exception('Config was not loaded correctly in config.php or tests/config_test.php');
         }
         if (array_key_exists(static::PREFIX . $name, static::$values)) {
             return static::$values[static::PREFIX . $name];

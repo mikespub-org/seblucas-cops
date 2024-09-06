@@ -14,5 +14,5 @@ services:
       - '8080:80'
     volumes:
       - ./config_local.php:/app/config_local.php
-      - ./lib:/app/lib
-      - ./test:/app/test
+      - ./src:/app/src
+      - ./tests:/app/tests

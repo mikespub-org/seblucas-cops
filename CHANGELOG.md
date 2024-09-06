@@ -7,11 +7,14 @@ x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.3
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
+2.8.x - 2024xxxx Maintenance release for 2.x (PHP >= 8.1)
+  * ...
+
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
 3.x.x - 2024xxxx
-  * ...
+  * BC: Rename lib/ to src/ and test/ to tests/ to align dir structure
 
 3.0.0 - 20240905 Update requirements (PHP >= 8.2)
   * Update phpunit tests + upgrade code with rector

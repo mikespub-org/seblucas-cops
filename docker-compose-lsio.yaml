@@ -11,8 +11,8 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - ./test/config:/config
-      - ./test/BaseWithSomeBooks:/books
+      - ./tests/config:/config
+      - ./tests/BaseWithSomeBooks:/books
     ports:
       - 8080:80
     restart: unless-stopped

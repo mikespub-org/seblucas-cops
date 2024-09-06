@@ -9,8 +9,8 @@
   <logging/>
   <testsuites>
     <testsuite name="COPS">
-      <directory>./test/</directory>
-      <exclude>./test/WebDriverTest.php</exclude>
+      <directory>./tests/</directory>
+      <exclude>./tests/WebDriverTest.php</exclude>
     </testsuite>
   </testsuites>
   <source>
@@ -19,8 +19,7 @@
     </include>
     <exclude>
       <directory suffix=".php">./resources</directory>
-      <directory suffix=".php">./test</directory>
-      <directory suffix=".php">./saucetest</directory>
+      <directory suffix=".php">./tests</directory>
       <directory suffix=".php">./vendor</directory>
       <file>config.php</file>
       <file>config_default.php</file>

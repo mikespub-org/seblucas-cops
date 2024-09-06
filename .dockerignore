@@ -1,12 +1,12 @@
 .git/
 *.zip
-test/
+tests/
 # keep the test database in the image here
-!test/BaseWithSomeBooks/
-test/BaseWithSomeBooks/.calnotes/backup/
-test/BaseWithSomeBooks/.calnotes/retired/
-test/BaseWithSomeBooks/.caltrash/
-test/BaseWithSomeBooks/metadata_db_prefs_backup.json
+!tests/BaseWithSomeBooks/
+tests/BaseWithSomeBooks/.calnotes/backup/
+tests/BaseWithSomeBooks/.calnotes/retired/
+tests/BaseWithSomeBooks/.caltrash/
+tests/BaseWithSomeBooks/metadata_db_prefs_backup.json
 vendor/
 # remove docker files
 docker/

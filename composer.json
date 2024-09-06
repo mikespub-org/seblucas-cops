@@ -59,12 +59,12 @@
     },
     "autoload": {
         "classmap": [
-            "lib/",
+            "src/",
             "resources/",
-            "test/"
+            "tests/"
         ],
         "files": [
-            "lib/functions.php"
+            "src/functions.php"
         ]
     },
     "repositories": [
