@@ -22,7 +22,7 @@ if (!class_exists('\Marsender\EPubLoader\RequestHandler')) {
 }
 
 // specify a cache directory for any Google or Wikidata lookup
-$cacheDir = 'test/cache';
+$cacheDir = 'tests/cache';
 if (!is_dir($cacheDir) && !mkdir($cacheDir, 0o777, true)) {
     echo 'Please make sure the cache directory can be created';
     return;
@@ -32,34 +32,15 @@ if (!is_writable($cacheDir)) {
     return;
 }
 
-// get the global config for epub-loader from somewhere
-$gConfig = [];
+// get the global config for epub-loader from config/loader.php
+$gConfig = require __DIR__ . '/config/loader.php';
+// adapt for use with COPS
 $gConfig['endpoint'] = Route::link('loader');
 $gConfig['app_name'] = 'COPS Loader';
 $gConfig['version'] = Config::VERSION;
 $gConfig['admin_email'] = '';
 $gConfig['create_db'] = false;
 $gConfig['databases'] = [];
-$gConfig['actions'] = [];
-
-// specify the actions you want to support here
-$gConfig['actions']['csv_export'] = 'Csv export';
-// only if you start without an existing calibre database
-//$gConfig['actions']['db_load'] = 'Create database';
-$gConfig['actions']['authors'] = 'List authors in database';
-$gConfig['actions']['wd_author'] = 'Check authors in database';
-$gConfig['actions']['wd_books'] = 'Check books for author';
-$gConfig['actions']['wd_series'] = 'Check series for author';
-$gConfig['actions']['wd_entity'] = 'Check Wikidata entity';
-$gConfig['actions']['gb_books'] = 'Search Google Books';
-$gConfig['actions']['gb_volume'] = 'Search Google Books Volume';
-$gConfig['actions']['ol_author'] = 'Find OpenLibrary author';
-$gConfig['actions']['ol_books'] = 'Find OpenLibrary books';
-$gConfig['actions']['ol_work'] = 'Find OpenLibrary work';
-$gConfig['actions']['notes'] = 'Get Calibre Notes';
-$gConfig['actions']['resource'] = 'Get Calibre Resource';
-$gConfig['actions']['hello_world'] = 'Example: Hello, World - see app/example.php';
-//$gConfig['actions']['goodbye'] = 'Example: Goodbye - see app/example.php';
 
 // get the current COPS calibre directories
 $calibreDir = Config::get('calibre_directory');
