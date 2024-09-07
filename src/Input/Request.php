@@ -444,6 +444,9 @@ class Request
         }
         // try to find handler via endpoint
         $endpoint = $this->getEndpoint(Config::ENDPOINT[$default]);
+        if ($endpoint == Config::ENDPOINT['index']) {
+            return 'index';
+        }
         $flipped = array_flip(Config::ENDPOINT);
         if (!empty($flipped[$endpoint])) {
             return $flipped[$endpoint];

@@ -77,6 +77,7 @@ class RouteTest extends TestCase
             "zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml" => "index.php/zipfs/0/20/META-INF/container.xml",
             "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "index.php/loader/wd_author/0/1?matchId=Q35610",
             "checkconfig.php" => "index.php/check",
+            "epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland" => "index.php/read/0/20/Alice's_Adventures_in_Wonderland",
             "epubreader.php?db=0&data=20" => "index.php/read/0/20",
             "sendtomail.php" => "index.php/mail",
             "fetch.php?thumb=html&db=0&id=17" => "index.php/thumbs/html/0/17.jpg",
@@ -87,6 +88,11 @@ class RouteTest extends TestCase
             "fetch.php?db=0&id=17&file=hello.txt" => "index.php/files/0/17/hello.txt",
             "fetch.php?db=0&id=17&file=zipped" => "index.php/files/0/17/zipped",
             "zipper.php?page=10&type=any" => "index.php/zipper/10/any",
+            "feed.php?page=3&id=1&title=Arthur+Conan+Doyle" => "index.php/feed/3/1?title=Arthur+Conan+Doyle",
+            "feed.php?page=3&id=1" => "index.php/feed/3/1",
+            "feed.php?page=10" => "index.php/feed/10",
+            "restapi.php?route=openapi" => "index.php/restapi/openapi",
+            "graphql.php" => "index.php/graphql",
         ];
     }
 
@@ -166,26 +172,62 @@ class RouteTest extends TestCase
         $this->assertEquals($expected, $test);
     }
 
-    public function testRouteGetPageRoute(): void
+    /**
+     * Summary of getRoutes
+     * @return array<mixed>
+     */
+    public static function getRoutes()
     {
-        $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute([Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
-        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => 0, "data" => 20, "comp" => "META-INF/container.xml"]));
-        $this->assertNull(Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => "x", "data" => 20, "comp" => "META-INF/container.xml"]));
-        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
-        $this->assertEquals("/thumbs/html/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"]));
-        $this->assertEquals("/thumbs/opds/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"]));
-        $this->assertEquals("/thumbs/html2/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"]));
-        $this->assertEquals("/thumbs/opds2/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"]));
-        $this->assertEquals("/covers/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17]));
-        $this->assertEquals("/inline/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
-        $this->assertEquals("/fetch/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"]));
-        $this->assertEquals("/files/0/17/hello.txt", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "hello.txt"]));
-        $this->assertEquals("/zipper/3/any/3", Route::getPageRoute([Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3]));
-        $this->assertEquals("/zipper/10/any", Route::getPageRoute([Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"]));
-        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
-        $this->assertEquals("/check", Route::getPageRoute([Route::HANDLER_PARAM => "check"]));
-        $this->assertEquals("/read/0/20", Route::getPageRoute([Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20]));
-        $this->assertEquals("/mail", Route::getPageRoute([Route::HANDLER_PARAM => "mail"]));
+        return [
+            "/calres/0/xxh64/7c301792c52eebf7" => [Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"],
+            "/zipfs/0/20/META-INF/container.xml" => [Route::HANDLER_PARAM => "zipfs", "db" => 0, "data" => 20, "comp" => "META-INF/container.xml"],
+            null => [Route::HANDLER_PARAM => "zipfs", "db" => "x", "data" => 20, "comp" => "META-INF/container.xml"],
+            "/thumbs/html/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"],
+            "/thumbs/opds/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"],
+            "/thumbs/html2/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"],
+            "/thumbs/opds2/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"],
+            "/covers/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17],
+            "/inline/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1],
+            "/fetch/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"],
+            "/files/0/17/hello.txt" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "hello.txt"],
+            "/zipper/3/any/3" => [Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3],
+            "/zipper/10/any" => [Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"],
+            "/loader/wd_author/0/1?matchId=Q35610" => [Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"],
+            "/check" => [Route::HANDLER_PARAM => "check"],
+            "/read/0/20/Alice's_Adventures_in_Wonderland" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20, "title" => "Alice's Adventures in Wonderland"],
+            "/read/0/20" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20],
+            "/mail" => [Route::HANDLER_PARAM => "mail"],
+            "/feed/3/1?title=Arthur+Conan+Doyle" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1, "title" => "Arthur Conan Doyle"],
+            "/feed/3/1" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1],
+            "/feed/10" => [Route::HANDLER_PARAM => "feed", "page" => 10],
+            "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "route" => "openapi"],
+            "/graphql" => [Route::HANDLER_PARAM => "graphql"],
+        ];
+    }
+
+    /**
+     * Summary of routeProvider
+     * @return array<mixed>
+     */
+    public static function routeProvider()
+    {
+        $data = [];
+        $routes = static::getRoutes();
+        foreach ($routes as $from => $to) {
+            array_push($data, [$from, $to]);
+        }
+        return $data;
+    }
+
+    /**
+     * @param mixed $expected
+     * @param mixed $params
+     * @return void
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
+    public function testRouteGetPageRoute($expected, $params)
+    {
+        $this->assertEquals($expected, Route::getPageRoute($params));
     }
 
     /**

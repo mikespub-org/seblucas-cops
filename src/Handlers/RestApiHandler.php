@@ -28,6 +28,7 @@ class RestApiHandler extends BaseHandler
     {
         // extra routes supported by REST API
         return [
+            "/restapi/{route:.*}" => [static::PARAM => static::HANDLER],
             "/custom" => [static::PARAM => static::HANDLER],
             "/databases/{db}/{name}" => [static::PARAM => static::HANDLER],
             "/databases/{db}" => [static::PARAM => static::HANDLER],
@@ -49,7 +50,6 @@ class RestApiHandler extends BaseHandler
             "/metadata/{bookId}" => [static::PARAM => static::HANDLER],
             "/user/details" => [static::PARAM => static::HANDLER],
             "/user" => [static::PARAM => static::HANDLER],
-            "/restapi/{route:.*}" => [static::PARAM => static::HANDLER],
         ];
     }
 
