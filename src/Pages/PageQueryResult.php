@@ -32,6 +32,15 @@ class PageQueryResult extends Page
     public const SCOPE_PUBLISHER = "publisher";
     public const SCOPE_LANGUAGE = "language";
 
+    /** @var ?string */
+    public $query;
+
+    public function setRequest($request)
+    {
+        parent::setRequest($request);
+        $this->query = $this->request->get('query');
+    }
+
     /**
      * Summary of useTypeahead
      * @return bool

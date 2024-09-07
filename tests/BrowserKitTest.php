@@ -252,7 +252,7 @@ class BrowserKitTest extends TestCase
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
             if (!empty(static::$localConfig['cops_use_route_urls'])) {
-                $this->assertEquals(Route::url('index.php') . '/query/ali/book', $articles->filterXPath('//a')->attr('href'));
+                $this->assertEquals(Route::url('index.php') . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
             } else {
                 $this->assertEquals(Route::url('index.php') . '?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
             }
