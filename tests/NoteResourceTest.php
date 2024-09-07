@@ -85,7 +85,11 @@ class NoteResourceTest extends TestCase
 
         $note = self::$author->getNote();
         $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
-        $expected = '<img src="/cops/calres.php/calres/0/xxh64/7c301792c52eebf7?placement=';
+        if (Config::get('use_route_urls')) {
+            $expected = '<img src="/cops/index.php/calres/0/xxh64/7c301792c52eebf7?placement=';
+        } else {
+            $expected = '<img src="/cops/calres.php/calres/0/xxh64/7c301792c52eebf7?placement=';
+        }
         $this->assertStringContainsString($expected, $html);
 
         Config::set('full_url', '');

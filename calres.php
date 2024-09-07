@@ -8,8 +8,5 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('calres');
+$link = str_replace('calres.php', 'index.php/calres', $_SERVER['REQUEST_URI'] ?? '');
+header('Location: ' . $link);

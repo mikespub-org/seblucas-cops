@@ -8,8 +8,5 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('epubfs');
+$link = str_replace('epubfs.php', 'index.php/epubfs', $_SERVER['REQUEST_URI'] ?? '');
+header('Location: ' . $link);

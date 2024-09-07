@@ -8,8 +8,5 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('read');
+$link = str_replace('epubreader.php', 'index.php/read', $_SERVER['REQUEST_URI'] ?? '');
+header('Location: ' . $link);

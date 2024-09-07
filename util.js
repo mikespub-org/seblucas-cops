@@ -26,9 +26,11 @@ if (typeof Bloodhound === 'undefined') {
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         limit: 30,
         remote: {
-                    url: 'getJSON.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
+                    //url: 'getJSON.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
+                    url: 'index.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
                     replace: function (url, query) {
-                        url = url.replace('getJSON.php', currentData.baseurl.replace('index.php', 'getJSON.php'));
+                        //url = url.replace('getJSON.php', currentData.baseurl.replace('index.php', 'getJSON.php'));
+                        url = url.replace('index.php', currentData.baseurl);
                         if (currentData.libraryId) {
                             url = url.replace('%VL', encodeURIComponent(currentData.libraryId));
                         } else {
@@ -393,7 +395,8 @@ updatePage = function (data) {
 navigateTo = function (url) {
     $("h1").append (" <i class='fas fa-spinner fa-pulse'></i>");
     before = new Date ();
-    var jsonurl = url.replace ("index.php", "getJSON.php");
+    //var jsonurl = url.replace ("index.php", "getJSON.php");
+    var jsonurl = url;
     var cachedData = cache.get (jsonurl);
     if (cachedData) {
         window.history.pushState(jsonurl, "", url);
@@ -421,8 +424,12 @@ function link_Clicked (event) {
         currentData.page === "19") {
         return;
     }
-    event.preventDefault();
+    // let zipper do its thing
     var url = currentLink.attr('href');
+    if (url.includes('/zipper/')) {
+        return;
+    }
+    event.preventDefault();
 
     if ($(".mfp-ready").length)
     {
@@ -434,7 +441,8 @@ function link_Clicked (event) {
         (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
         before = new Date ();
         // @todo handle 'json' routes correctly
-        var jsonurl = url.replace ("index.php", "getJSON.php");
+        //var jsonurl = url.replace ("index.php", "getJSON.php");
+        var jsonurl = url;
         $.getJSON(jsonurl, function(data) {
             data.c = currentData.c;
             var detail = "";

@@ -6,8 +6,5 @@
  * @author mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('zipfs');
+$link = str_replace('zipfs.php', 'index.php/zipfs', $_SERVER['REQUEST_URI'] ?? '');
+header('Location: ' . $link);

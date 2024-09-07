@@ -241,7 +241,7 @@ class Route
     {
         $handler ??= 'index';
         // @todo take into account handler when building page url, e.g. feed or zipper
-        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'restapi', 'graphql', 'phpunit'])) {
+        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'restapi', 'phpunit'])) {
             $params[Route::HANDLER_PARAM] = $handler;
         } else {
             unset($params[Route::HANDLER_PARAM]);
@@ -276,6 +276,12 @@ class Route
             }
             // no endpoint prefix needed for other handlers
             return '';
+        }
+        if (Config::get('use_route_urls')) {
+            // use default endpoint for supported handlers - @todo for all
+            if (!in_array($handler, ['json', 'opds', 'loader'])) {
+                return Config::ENDPOINT['index'];
+            }
         }
         if (array_key_exists($handler, Config::ENDPOINT)) {
             $endpoint = Config::ENDPOINT[$handler];

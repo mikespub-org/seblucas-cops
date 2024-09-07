@@ -8,8 +8,5 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('zipper');
+$link = str_replace('zipper.php', 'index.php/zipper', $_SERVER['REQUEST_URI'] ?? '');
+header('Location: ' . $link);

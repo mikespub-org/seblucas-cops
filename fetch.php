@@ -10,8 +10,5 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('fetch');
+$link = str_replace('fetch.php', 'index.php/fetch', $_SERVER['REQUEST_URI'] ?? '');
+header('Location: ' . $link);

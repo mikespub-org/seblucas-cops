@@ -295,11 +295,11 @@ class RestApiTest extends TestCase
         $expected = "(17) Bookmark About #1";
         $this->assertEquals($expected, $test["entries"][0]["title"]);
         if (Config::get('use_route_urls')) {
-            $expected = self::$script . '/annotations/17/1';
+            $expected = 'index.php/annotations/17/1';
         } else {
             $expected = self::$script . '?page=63&bookId=17&id=1';
         }
-        $this->assertEquals($expected, $test["entries"][0]["navlink"]);
+        $this->assertStringEndsWith($expected, $test["entries"][0]["navlink"]);
     }
 
     public function testGetAnnotationById(): void

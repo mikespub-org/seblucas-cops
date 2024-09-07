@@ -264,7 +264,7 @@ class JsonRendererTest extends TestCase
             [
                 'class' => 'tt-header',
                 'title' => 'Search result for *fic* in tags',
-                'navlink' => Route::link(self::$handler) . (Config::get('use_route_urls') ? '/search/fic/tag' : '?page=9&query=fic&scope=tag'),
+                'navlink' => Route::link(self::$handler) . (Config::get('use_route_urls') ? '/query/fic/tag' : '?page=9&query=fic&scope=tag'),
             ],
             [
                 'class' => 'Tag',

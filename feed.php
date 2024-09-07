@@ -8,8 +8,5 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('feed');
+$link = str_replace('feed.php', 'index.php/feed', $_SERVER['REQUEST_URI'] ?? '');
+header('Location: ' . $link);

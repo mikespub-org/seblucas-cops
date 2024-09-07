@@ -8,8 +8,4 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config/config.php';
-
-Framework::run('graphql');
+header('Location: index.php/graphql');

@@ -57,7 +57,7 @@ class EpubReaderTest extends TestCase
         $this->assertStringContainsString($expected, $script);
 
         if (Config::get('use_route_urls')) {
-            $expected = 'epubfs.php/epubfs/0/20/';
+            $expected = 'index.php/epubfs/0/20/';
         } else {
             $expected = 'epubfs.php?db=0&data=20&comp=';
         }
@@ -204,7 +204,11 @@ class EpubReaderTest extends TestCase
         $expected = 'dist/js/libs/epub.min.js';
         $this->assertStringContainsString($expected, $script);
 
-        $expected = 'zipfs.php/zipfs/0/20/';
+        if (Config::get('use_route_urls')) {
+            $expected = 'index.php/zipfs/0/20/';
+        } else {
+            $expected = 'zipfs.php/zipfs/0/20/';
+        }
         $this->assertStringContainsString($expected, $data);
     }
 
