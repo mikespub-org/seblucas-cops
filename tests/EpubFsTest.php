@@ -150,7 +150,7 @@ class EpubFsTest extends TestCase
     public function testZipFsHandler(): void
     {
         // set request handler to 'phpunit' to override cli check in handler
-        $request = Request::build(['db' => 0, 'idData' => 20, 'component' => 'META-INF/container.xml'], 'phpunit');
+        $request = Request::build(['db' => 0, 'data' => 20, 'comp' => 'META-INF/container.xml'], 'phpunit');
         $handler = Framework::getHandler('zipfs');
 
         ob_start();

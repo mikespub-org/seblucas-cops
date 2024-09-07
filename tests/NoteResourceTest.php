@@ -85,7 +85,7 @@ class NoteResourceTest extends TestCase
 
         $note = self::$author->getNote();
         $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
-        $expected = '<img src="/cops/calres.php/0/xxh64/7c301792c52eebf7?placement=';
+        $expected = '<img src="/cops/calres.php/calres/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
 
         Config::set('full_url', '');
@@ -105,7 +105,7 @@ class NoteResourceTest extends TestCase
         $this->assertEquals($expected, $resources[$hash]->name);
         $expected = "/.calnotes/resources/7c/xxh64-7c301792c52eebf7";
         $this->assertStringEndsWith($expected, Resource::getResourcePath($resources[$hash]->hash));
-        $expected = Route::link("calres") . "/0/xxh64/7c301792c52eebf7";
+        $expected = Route::link("calres") . "/calres/0/xxh64/7c301792c52eebf7";
         $this->assertEquals($expected, $resources[$hash]->getUri());
     }
 

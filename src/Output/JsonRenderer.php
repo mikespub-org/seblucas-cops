@@ -164,7 +164,11 @@ class JsonRenderer extends BaseRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = Route::link("read", null, ["data" => $data->id, "db" => ($database ?? 0)]);
+                if (Config::get('use_route_urls')) {
+                    $tab ["readerUrl"] = Route::link("read", null, ["data" => $data->id, "db" => ($database ?? 0), "title" => $book->getTitle()]);
+                } else {
+                    $tab ["readerUrl"] = Route::link("read", null, ["data" => $data->id, "db" => ($database ?? 0)]);
+                }
             }
             array_push($out ["datas"], $tab);
         }

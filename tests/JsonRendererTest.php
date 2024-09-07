@@ -164,7 +164,7 @@ class JsonRendererTest extends TestCase
         if (Config::get('use_route_urls')) {
             $this->assertEquals(Route::link("fetch") . "/fetch/0/20/ignore.epub", $test ["datas"][2]["url"]);
             $this->assertEquals(Route::link("fetch") . "/inline/0/20/ignore.epub", $test ["datas"][2]["viewUrl"]);
-            $this->assertEquals(Route::link("read") . "/read/0/20", $test ["datas"][2]["readerUrl"]);
+            $this->assertEquals(Route::link("read") . "/read/0/20/Alice's_Adventures_in_Wonderland", $test ["datas"][2]["readerUrl"]);
         } else {
             $this->assertEquals(Route::link("fetch") . "?type=epub&data=20", $test ["datas"][2]["url"]);
             $this->assertEquals(Route::link("fetch") . "?type=epub&data=20&view=1", $test ["datas"][2]["viewUrl"]);

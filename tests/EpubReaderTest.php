@@ -14,6 +14,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Framework;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Response;
 use SebLucas\EPubMeta\EPub;
@@ -54,6 +55,13 @@ class EpubReaderTest extends TestCase
         $script = $html->getElementsByTagName('script')->item(2)->nodeValue;
         $expected = 'title: "Alice\'s Adventures in Wonderland"';
         $this->assertStringContainsString($expected, $script);
+
+        if (Config::get('use_route_urls')) {
+            $expected = 'epubfs.php/epubfs/0/20/';
+        } else {
+            $expected = 'epubfs.php?db=0&data=20&comp=';
+        }
+        $this->assertStringContainsString($expected, $data);
     }
 
     public function testSendContent(): void
@@ -195,6 +203,9 @@ class EpubReaderTest extends TestCase
         $script = $html->getElementsByTagName('script')->item(2)->getAttribute('src');
         $expected = 'dist/js/libs/epub.min.js';
         $this->assertStringContainsString($expected, $script);
+
+        $expected = 'zipfs.php/zipfs/0/20/';
+        $this->assertStringContainsString($expected, $data);
     }
 
     public function testSendZipContent(): void

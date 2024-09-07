@@ -176,7 +176,7 @@ class RestApiTest extends TestCase
             "restapi.php?page=22&a=1" => "restapi.php/ratings?a=1",
             "restapi.php?page=23&id=1&a=1" => "restapi.php/ratings/1?a=1",
             "calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7" => "restapi.php/calres/0/xxh64/7c301792c52eebf7",
-            "zipfs.php?db=0&idData=20&component=META-INF%2Fcontainer.xml" => "restapi.php/zipfs/0/20/META-INF/container.xml",
+            "zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml" => "restapi.php/zipfs/0/20/META-INF/container.xml",
             "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "restapi.php/loader/wd_author/0/1?matchId=Q35610",
             "checkconfig.php" => "restapi.php/check",
             "epubreader.php?db=0&data=20" => "restapi.php/read/0/20",
@@ -270,8 +270,8 @@ class RestApiTest extends TestCase
     public function testRouteGetPageRoute(): void
     {
         $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute([Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
-        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => 0, "idData" => 20, "component" => "META-INF/container.xml"]));
-        $this->assertNull(Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => "x", "idData" => 20, "component" => "META-INF/container.xml"]));
+        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => 0, "data" => 20, "comp" => "META-INF/container.xml"]));
+        $this->assertNull(Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => "x", "data" => 20, "comp" => "META-INF/container.xml"]));
         $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
         $this->assertEquals("/thumbs/html/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"]));
         $this->assertEquals("/thumbs/opds/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"]));
@@ -656,8 +656,8 @@ class RestApiTest extends TestCase
             "path" => "/zipfs/0/20/META-INF/container.xml",
             "params" => [
                 "db" => "0",
-                "idData" => "20",
-                "component" => "META-INF/container.xml",
+                "data" => "20",
+                "comp" => "META-INF/container.xml",
             ],
         ];
         $expected = json_encode($expected, JSON_UNESCAPED_SLASHES);

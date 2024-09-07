@@ -25,6 +25,7 @@ class ReadHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
+            "/read/{db:\d+}/{data:\d+}/{title}" => [static::PARAM => static::HANDLER],
             "/read/{db:\d+}/{data:\d+}" => [static::PARAM => static::HANDLER],
         ];
     }

@@ -43,6 +43,7 @@ class RestApi extends BaseRenderer
         "/databases" => [self::class, 'getDatabases'],
         "/openapi" => [self::class, 'getOpenApi'],
         "/routes" => [self::class, 'getRoutes'],
+        "/pages" => [self::class, 'getPages'],
         "/notes" => [self::class, 'getNotes'],
         "/preferences" => [self::class, 'getPreferences'],
         "/annotations" => [self::class, 'getAnnotations'],
@@ -469,7 +470,7 @@ class RestApi extends BaseRenderer
             }
             if (
                 !str_starts_with($route, "/databases") &&
-                !in_array($route, ["/openapi", "/routes", "/about"]) &&
+                !in_array($route, ["/openapi", "/routes", "/pages", "/about"]) &&
                 (empty($queryParams[Route::HANDLER_PARAM]) ||
                 in_array($queryParams[Route::HANDLER_PARAM], ['restapi', 'zipper']))
             ) {
@@ -520,6 +521,29 @@ class RestApi extends BaseRenderer
             array_push($result["entries"], [
                 "route" => $route,
                 "params" => $queryParams,
+            ]);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getPages
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public static function getPages($request)
+    {
+        $endpoint = static::getScriptName($request);
+        $baseurl = Route::url($endpoint);
+        $result = [
+            "title" => "Pages",
+            "baseurl" => $baseurl,
+            "entries" => [],
+        ];
+        foreach (Route::getPages() as $page => $routes) {
+            array_push($result["entries"], [
+                "page" => $page,
+                "routes" => $routes,
             ]);
         }
         return $result;

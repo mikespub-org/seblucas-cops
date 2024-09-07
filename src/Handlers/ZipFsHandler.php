@@ -15,7 +15,7 @@ use Exception;
 
 /**
  * Handle Epub filesystem for epubjs-reader
- * URL format: zipfs.php/{db}/{idData}/{component}
+ * URL format: zipfs.php/{db}/{data}/{comp}
  */
 class ZipFsHandler extends BaseHandler
 {
@@ -25,7 +25,7 @@ class ZipFsHandler extends BaseHandler
     {
         // support custom pattern for route placeholders - see nikic/fast-route
         return [
-            "/zipfs/{db:\d+}/{idData:\d+}/{component:.+}" => [static::PARAM => static::HANDLER],
+            "/zipfs/{db:\d+}/{data:\d+}/{comp:.+}" => [static::PARAM => static::HANDLER],
         ];
     }
 
@@ -36,12 +36,12 @@ class ZipFsHandler extends BaseHandler
         }
 
         //$database = $request->getId('db');
-        $idData = $request->getId('idData');
+        $idData = $request->getId('data');
         if (empty($idData)) {
             // this will call exit()
             Response::notFound($request);
         }
-        $component = $request->get('component');
+        $component = $request->get('comp');
         if (empty($component)) {
             // this will call exit()
             Response::notFound($request);

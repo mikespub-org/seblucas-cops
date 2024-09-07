@@ -828,6 +828,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("cops:custom:10:range:-2--1", $currentPage->entryArray[0]->id);
         $this->assertEquals("-2--1", $currentPage->entryArray[0]->title);
         $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
+        // @todo support with route urls?
         $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=10&range=-2--1", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:10:range:1-2", $currentPage->entryArray[1]->id);
 

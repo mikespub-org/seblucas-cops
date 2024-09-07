@@ -121,7 +121,6 @@ class EPubReader extends BaseRenderer
         if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
         }
-        $params = ['data' => $idData, 'db' => $book->getDatabaseId()];
 
         try {
             $epub = new static::$epubClass($book->getFilePath('EPUB', $idData));
@@ -138,7 +137,9 @@ class EPubReader extends BaseRenderer
             return static::addContentItem($content);
         }, $epub->contents()));
 
-        $params['comp'] = '~COMP~';
+        // URL format: epubfs.php/{db}/{data}/{comp} - let monocle reader retrieve individual components
+        $db = $book->getDatabaseId() ?? 0;
+        $params = ['db' => $db, 'data' => $idData, 'comp' => '~COMP~'];
         $link = str_replace(urlencode('~COMP~'), '~COMP~', Route::link(static::$handler, null, $params));
 
         $data = [
@@ -226,9 +227,15 @@ class EPubReader extends BaseRenderer
             if (!$epub || !file_exists($epub)) {
                 throw new Exception('Unknown file ' . $epub);
             }
-            // URL format: zipfs.php/{db}/{idData}/{component} - let epubjs reader retrieve individual components
+            // URL format: zipfs.php/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
-            $link = Route::link($handler) . "/{$db}/{$idData}/";
+            if (Config::get('use_route_urls')) {
+                $link = Route::link($handler, null, ['db' => $db, 'data' => $idData, 'comp' => '{component}']);
+                $link = str_replace('{component}', '', $link);
+            } else {
+                // @todo remove /{$handler} once link() is fixed
+                $link = Route::link($handler) . "/{$handler}/{$db}/{$idData}/";
+            }
         }
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');

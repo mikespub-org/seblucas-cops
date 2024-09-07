@@ -34,6 +34,7 @@ class RestApiHandler extends BaseHandler
             "/databases" => [static::PARAM => static::HANDLER],
             "/openapi" => [static::PARAM => static::HANDLER],
             "/routes" => [static::PARAM => static::HANDLER],
+            "/pages" => [static::PARAM => static::HANDLER],
             "/notes/{type}/{id}/{title}" => [static::PARAM => static::HANDLER],
             "/notes/{type}/{id}" => [static::PARAM => static::HANDLER],
             "/notes/{type}" => [static::PARAM => static::HANDLER],
