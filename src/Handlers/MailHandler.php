@@ -14,7 +14,7 @@ use SebLucas\Cops\Output\Response;
 
 /**
  * Send books by email
- * URL format: sendtomail.php (POST data and email)
+ * URL format: index.php/mail (POST data and email)
  */
 class MailHandler extends BaseHandler
 {

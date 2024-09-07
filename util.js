@@ -121,7 +121,7 @@ function sendToMailAddress (component, dataid) {
         }
         Cookies.set('email', email, { expires: 365 });
     }
-    var url = 'sendtomail.php';
+    var url = 'index.php/mail';
     if (currentData.databaseId) {
         url = url + '?db=' + currentData.databaseId;
     }

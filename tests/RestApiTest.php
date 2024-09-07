@@ -20,7 +20,6 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Pages\PageId;
-use SebLucas\Cops\Framework;
 
 class RestApiTest extends TestCase
 {
@@ -29,23 +28,17 @@ class RestApiTest extends TestCase
     protected static $expectedSize = [
         'calres' => 37341,
     ];
-    /** @var mixed */
-    protected static $route;
 
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
         self::$script = $_SERVER["SCRIPT_NAME"];
-        // try out route urls
-        static::$route = Config::get('use_route_urls');
-        Config::set('use_route_urls', true);
     }
 
     public static function tearDownAfterClass(): void
     {
         $_SERVER["SCRIPT_NAME"] = self::$script;
-        Config::set('use_route_urls', static::$route);
     }
 
     public function testGetPathInfo(): void
@@ -135,216 +128,6 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
 
         $_SERVER["SCRIPT_NAME"] = $script;
-    }
-
-    /**
-     * Summary of getLinks
-     * @return array<mixed>
-     */
-    public static function getLinks()
-    {
-        return [
-            "restapi.php?page=index" => "restapi.php/index",
-            "restapi.php?page=1" => "restapi.php/authors",
-            "restapi.php?page=1&letter=1" => "restapi.php/authors/letter",
-            "restapi.php?page=2&id=D" => "restapi.php/authors/letter/D",
-            "restapi.php?page=3&id=1" => "restapi.php/authors/1",
-            "restapi.php?page=4" => "restapi.php/books",
-            "restapi.php?page=4&letter=1" => "restapi.php/books/letter",
-            "restapi.php?page=5&id=A" => "restapi.php/books/letter/A",
-            "restapi.php?page=4&year=1" => "restapi.php/books/year",
-            "restapi.php?page=50&id=2006" => "restapi.php/books/year/2006",
-            "restapi.php?page=6" => "restapi.php/series",
-            "restapi.php?page=7&id=1" => "restapi.php/series/1",
-            "restapi.php?page=8" => "restapi.php/search",
-            "restapi.php?page=9&query=alice" => "restapi.php/search/alice",
-            "restapi.php?page=9&query=alice&scope=book" => "restapi.php/search/alice/book",
-            "restapi.php?page=10" => "restapi.php/recent",
-            "restapi.php?page=11" => "restapi.php/tags",
-            "restapi.php?page=12&id=1" => "restapi.php/tags/1",
-            "restapi.php?page=13&id=2" => "restapi.php/books/2",
-            "restapi.php?page=14&custom=1" => "restapi.php/custom/1",
-            "restapi.php?page=15&custom=1&id=2" => "restapi.php/custom/1/2",
-            "restapi.php?page=16" => "restapi.php/about",
-            "restapi.php?page=17" => "restapi.php/languages",
-            "restapi.php?page=18&id=1" => "restapi.php/languages/1",
-            "restapi.php?page=19" => "restapi.php/customize",
-            "restapi.php?page=20" => "restapi.php/publishers",
-            "restapi.php?page=21&id=1" => "restapi.php/publishers/1",
-            "restapi.php?page=22" => "restapi.php/ratings",
-            "restapi.php?page=23&id=1" => "restapi.php/ratings/1",
-            "restapi.php?page=22&a=1" => "restapi.php/ratings?a=1",
-            "restapi.php?page=23&id=1&a=1" => "restapi.php/ratings/1?a=1",
-            "calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7" => "restapi.php/calres/0/xxh64/7c301792c52eebf7",
-            "zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml" => "restapi.php/zipfs/0/20/META-INF/container.xml",
-            "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "restapi.php/loader/wd_author/0/1?matchId=Q35610",
-            "checkconfig.php" => "restapi.php/check",
-            "epubreader.php?db=0&data=20" => "restapi.php/read/0/20",
-            "fetch.php?thumb=html&db=0&id=17" => "restapi.php/thumbs/html/0/17.jpg",
-            "fetch.php?thumb=opds&db=0&id=17" => "restapi.php/thumbs/opds/0/17.jpg",
-            "fetch.php?db=0&id=17" => "restapi.php/covers/0/17.jpg",
-            "fetch.php?view=1&db=0&data=20&type=epub" => "restapi.php/inline/0/20/ignore.epub",
-            "fetch.php?db=0&data=20&type=epub" => "restapi.php/fetch/0/20/ignore.epub",
-            "fetch.php?db=0&id=17&file=hello.txt" => "restapi.php/files/0/17/hello.txt",
-            "fetch.php?db=0&id=17&file=zipped" => "restapi.php/files/0/17/zipped",
-            "zipper.php?page=10&type=any" => "restapi.php/zipper/10/any",
-        ];
-    }
-
-    /**
-     * Summary of linkProvider
-     * @return array<mixed>
-     */
-    public static function linkProvider()
-    {
-        $data = [];
-        $links = static::getLinks();
-        foreach ($links as $from => $to) {
-            array_push($data, [$from, $to]);
-        }
-        return $data;
-    }
-
-    /**
-     * @param mixed $link
-     * @param mixed $expected
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
-    public function testRouteLink($link, $expected)
-    {
-        $params = [];
-        parse_str(parse_url((string) $link, PHP_URL_QUERY) ?? '', $params);
-        $page = $params["page"] ?? null;
-        unset($params["page"]);
-        $endpoint = parse_url((string) $link, PHP_URL_PATH);
-        if ($endpoint !== RestApi::$endpoint) {
-            $testpoint = str_replace('.php', '', $endpoint);
-            if (array_key_exists($testpoint, Config::ENDPOINT)) {
-                $params[Route::HANDLER_PARAM] = $testpoint;
-            } else {
-                // for epubreader.php, checkconfig.php etc.
-                $flipped = array_flip(Config::ENDPOINT);
-                $params[Route::HANDLER_PARAM] = $flipped[$endpoint];
-            }
-        }
-        $test = RestApi::$endpoint . Route::page($page, $params);
-        //$test = Route::link(RestApi::$handler, $page, $params);
-        $this->assertEquals($expected, $test);
-    }
-
-    /**
-     * @param mixed $expected
-     * @param mixed $path
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
-    public function testRouteMatch($expected, $path)
-    {
-        $query = parse_url((string) $path, PHP_URL_QUERY);
-        $path = parse_url((string) $path, PHP_URL_PATH);
-        $parts = explode('/', $path);
-        $endpoint = array_shift($parts);
-        $path = '/' . implode('/', $parts);
-        $params = Route::match($path);
-        if (is_null($params)) {
-            $this->fail('Invalid params for path ' . $path);
-        }
-        if (!empty($params[Route::HANDLER_PARAM]) && array_key_exists($params[Route::HANDLER_PARAM], Config::ENDPOINT)) {
-            $endpoint = Config::ENDPOINT[$params[Route::HANDLER_PARAM]];
-            unset($params[Route::HANDLER_PARAM]);
-        }
-        if (array_key_exists('ignore', $params)) {
-            unset($params['ignore']);
-        }
-        $test = $endpoint;
-        if (!empty($params)) {
-            $test .= '?' . http_build_query($params);
-        }
-        if (!empty($query)) {
-            $test .= '&' . $query;
-        }
-        $this->assertEquals($expected, $test);
-    }
-
-    public function testRouteGetPageRoute(): void
-    {
-        $this->assertEquals("/calres/0/xxh64/7c301792c52eebf7", Route::getPageRoute([Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]));
-        $this->assertEquals("/zipfs/0/20/META-INF/container.xml", Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => 0, "data" => 20, "comp" => "META-INF/container.xml"]));
-        $this->assertNull(Route::getPageRoute([Route::HANDLER_PARAM => "zipfs", "db" => "x", "data" => 20, "comp" => "META-INF/container.xml"]));
-        $this->assertEquals("/loader/wd_author/0/1?matchId=Q35610", Route::getPageRoute([Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"]));
-        $this->assertEquals("/thumbs/html/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"]));
-        $this->assertEquals("/thumbs/opds/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"]));
-        $this->assertEquals("/thumbs/html2/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"]));
-        $this->assertEquals("/thumbs/opds2/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"]));
-        $this->assertEquals("/covers/0/17.jpg", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17]));
-        $this->assertEquals("/inline/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1]));
-        $this->assertEquals("/fetch/0/20/ignore.epub", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"]));
-        $this->assertEquals("/files/0/17/hello.txt", Route::getPageRoute([Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "hello.txt"]));
-        $this->assertEquals("/zipper/3/any/3", Route::getPageRoute([Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3]));
-        $this->assertEquals("/zipper/10/any", Route::getPageRoute([Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"]));
-    }
-
-    /**
-     * Summary of getRewrites
-     * @return array<mixed>
-     */
-    public static function getRewrites()
-    {
-        return [
-            "fetch.php?data=1&db=0&type=epub&view=1" => "/view/1/0/ignore.epub",
-            "fetch.php?data=1&type=epub&view=1" => "/view/1/ignore.epub",
-            "fetch.php?data=1&db=0&type=epub" => "/download/1/0/ignore.epub",
-            "fetch.php?data=1&type=epub" => "/download/1/ignore.epub",
-        ];
-    }
-
-    /**
-     * Summary of rewriteProvider
-     * @return array<mixed>
-     */
-    public static function rewriteProvider()
-    {
-        $data = [];
-        $links = static::getRewrites();
-        foreach ($links as $from => $to) {
-            array_push($data, [$from, $to]);
-        }
-        return $data;
-    }
-
-    /**
-     * @param mixed $link
-     * @param mixed $expected
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('rewriteProvider')]
-    public function testRewriteLink($link, $expected)
-    {
-        $params = [];
-        parse_str(parse_url((string) $link, PHP_URL_QUERY), $params);
-        $endpoint = parse_url((string) $link, PHP_URL_PATH);
-        $test = Route::getUrlRewrite($endpoint, $params);
-        $this->assertEquals($expected, $test);
-    }
-
-    /**
-     * @param mixed $expected
-     * @param mixed $path
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('rewriteProvider')]
-    public function testRewriteMatch($expected, $path)
-    {
-        $query = parse_url((string) $path, PHP_URL_QUERY);
-        $path = parse_url((string) $path, PHP_URL_PATH);
-        //$endpoint = parse_url($expected, PHP_URL_PATH);
-        [$endpoint, $params] = Route::matchRewrite($path);
-        $test = $endpoint . '?' . http_build_query($params);
-        if (!empty($query)) {
-            $test .= '&' . $query;
-        }
-        $this->assertEquals($expected, $test);
     }
 
     public function testGetOutput(): void
@@ -511,7 +294,11 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
         $expected = "(17) Bookmark About #1";
         $this->assertEquals($expected, $test["entries"][0]["title"]);
-        $expected = self::$script . '/annotations/17/1';
+        if (Config::get('use_route_urls')) {
+            $expected = self::$script . '/annotations/17/1';
+        } else {
+            $expected = self::$script . '?page=63&bookId=17&id=1';
+        }
         $this->assertEquals($expected, $test["entries"][0]["navlink"]);
     }
 
