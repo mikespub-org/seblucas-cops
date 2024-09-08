@@ -411,7 +411,7 @@ class Book
             $params['file'] = $fileName;
             $url = Route::link("fetch", null, $params);
         } else {
-            $url = Route::url(str_replace('%2F', '/', rawurlencode($filePath)));
+            $url = Route::path(str_replace('%2F', '/', rawurlencode($filePath)));
         }
         $linkEntry = new LinkEntry($url, $mimetype, 'related', $fileName);
         $linkEntry->addFileInfo($filePath);

@@ -145,9 +145,9 @@ class EPubReader extends BaseRenderer
         $data = [
             'title'      => $book->title,
             'version'    => Config::VERSION,
-            'resources'  => Route::url('resources'),
-            'styles'     => Route::url('styles'),
-            'favicon'    => Route::url(Config::get('icon')),
+            'resources'  => Route::path('resources'),
+            'styles'     => Route::path('styles'),
+            'favicon'    => Route::path(Config::get('icon')),
             'components' => $components,
             'contents'   => $contents,
             'link'       => $link,
@@ -240,7 +240,7 @@ class EPubReader extends BaseRenderer
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');
 
-        $dist = Route::url(dirname((string) Config::get('assets')) . '/mikespub/epubjs-reader/dist');
+        $dist = Route::path(dirname((string) Config::get('assets')) . '/mikespub/epubjs-reader/dist');
         $data = [
             'title'      => htmlspecialchars($book->title),
             'version'    => Config::VERSION,

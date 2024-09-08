@@ -255,7 +255,7 @@ class Data
         } else {
             $href .= rawurlencode($this->getFilename());
         }
-        return new LinkEntry(Route::url($href), $this->getMimeType(), LinkEntry::OPDS_ACQUISITION_TYPE, $title);
+        return new LinkEntry(Route::path($href), $this->getMimeType(), LinkEntry::OPDS_ACQUISITION_TYPE, $title);
     }
 
     /**
@@ -300,6 +300,6 @@ class Data
             return new LinkEntry(Route::link(static::$handler, null, $params), $mime, $rel, $title);
         }
 
-        return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($book->path . "/" . $filename))), $mime, $rel, $title);
+        return new LinkEntry(Route::path(str_replace('%2F', '/', rawurlencode($book->path . "/" . $filename))), $mime, $rel, $title);
     }
 }

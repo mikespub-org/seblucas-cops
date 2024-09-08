@@ -212,21 +212,39 @@ class Route
     }
 
     /**
-     * Get full url with endpoint for page with params
-     * @param string|null $endpoint after going through Config::ENDPOINT
-     * @param string|int|null $page
-     * @param array<mixed> $params
-     * @param string|null $separator
+     * Get full URL path for relative path with optional params
+     * @param string $path relative to base dir
+     * @param array<mixed> $params (optional)
      * @return string
      */
-    public static function url($endpoint = null, $page = null, $params = [], $separator = null)
+    public static function path($path = null, $params = [])
     {
-        $endpoint ??= Config::ENDPOINT['index'];
-        if (!empty($endpoint) && str_starts_with($endpoint, '/')) {
-            return $endpoint . static::page($page, $params, $separator);
+        if (!empty($path) && str_starts_with($path, '/')) {
+            return $path . static::params($params);
         }
-        // @todo take into account endpoint when building page url, e.g. feed.php or zipper.php
-        return static::base() . $endpoint . static::page($page, $params, $separator);
+        return static::base() . $path . static::params($params);
+    }
+
+    /**
+     * Get optional query string with ?
+     * @param array<mixed> $params
+     * @param string $prefix
+     * @return string
+     */
+    public static function params($params = [], $prefix = '')
+    {
+        $queryParams = array_filter($params, function ($val) {
+            if (empty($val) && strval($val) !== '0') {
+                return false;
+            }
+            return true;
+        });
+        if (empty($queryParams)) {
+            return $prefix;
+        }
+        $separator = null;
+        $queryString = http_build_query($queryParams, '', $separator);
+        return $prefix . '?' . $queryString;
     }
 
     /**
@@ -234,10 +252,9 @@ class Route
      * @param string|null $handler before going through Config::ENDPOINT
      * @param string|int|null $page
      * @param array<mixed> $params
-     * @param string|null $separator
      * @return string
      */
-    public static function link($handler = null, $page = null, $params = [], $separator = null)
+    public static function link($handler = null, $page = null, $params = [])
     {
         $handler ??= 'index';
         // @todo take into account handler when building page url, e.g. feed or zipper
@@ -247,7 +264,7 @@ class Route
             unset($params[Route::HANDLER_PARAM]);
         }
         // ?page=... or /route/...
-        $page = static::page($page, $params, $separator);
+        $page = static::page($page, $params);
         // @todo handle 'json' routes correctly - see util.js
         if ($handler == 'json') {
             $handler = 'index';
@@ -279,11 +296,15 @@ class Route
         }
         if (Config::get('use_route_urls')) {
             // use default endpoint for supported handlers - @todo for all
-            if (!in_array($handler, ['json', 'opds', 'loader'])) {
+            if (!in_array($handler, ['opds', 'loader'])) {
                 return Config::ENDPOINT['index'];
             }
         }
         if (array_key_exists($handler, Config::ENDPOINT)) {
+            // @todo special case for restapi
+            if (in_array($handler, ['restapi'])) {
+                return Config::ENDPOINT['index'];
+            }
             $endpoint = Config::ENDPOINT[$handler];
         } elseif ($handler == 'phpunit') {
             $endpoint = $handler;
@@ -299,10 +320,9 @@ class Route
      * Get uri for page with params
      * @param string|int|null $page
      * @param array<mixed> $params
-     * @param string|null $separator
      * @return string
      */
-    public static function page($page, $params = [], $separator = null)
+    public static function page($page, $params = [])
     {
         $queryParams = array_filter($params, function ($val) {
             if (empty($val) && strval($val) !== '0') {
@@ -317,17 +337,16 @@ class Route
         if (count($queryParams) < 1) {
             return $prefix;
         }
-        return static::route($queryParams, $prefix, $separator);
+        return static::route($queryParams, $prefix);
     }
 
     /**
      * Get uri for query with params
      * @param string|null $query
      * @param array<mixed> $params
-     * @param string|null $separator
      * @return string
      */
-    public static function query($query, $params = [], $separator = null)
+    public static function query($query, $params = [])
     {
         $prefix = '';
         $pos = strpos((string) $query, '?');
@@ -349,20 +368,19 @@ class Route
         if (count($queryParams) < 1) {
             return $prefix;
         }
-        return static::route($queryParams, $prefix, $separator);
+        return static::route($queryParams, $prefix);
     }
 
     /**
      * Summary of route
      * @param array<mixed> $params
      * @param string $prefix
-     * @param string|null $separator
      * @return string
      */
-    public static function route($params, $prefix = '', $separator = null)
+    public static function route($params, $prefix = '')
     {
         if (Config::get('use_route_urls')) {
-            $route = static::getPageRoute($params, $prefix, $separator);
+            $route = static::getPageRoute($params, $prefix);
             if (!is_null($route)) {
                 return $route;
             }
@@ -371,6 +389,7 @@ class Route
         if (empty($params)) {
             return $prefix;
         }
+        $separator = null;
         $queryString = http_build_query($params, '', $separator);
         return $prefix . '?' . $queryString;
     }
@@ -403,10 +422,9 @@ class Route
      * Summary of getPageRoute
      * @param array<mixed> $params
      * @param string $prefix
-     * @param string|null $separator
      * @return string|null
      */
-    public static function getPageRoute($params, $prefix = '', $separator = null)
+    public static function getPageRoute($params, $prefix = '')
     {
         if (!empty($params[self::HANDLER_PARAM])) {
             // keep page param and use endpoint as key here
@@ -422,7 +440,7 @@ class Route
         if (count($routes) < 1) {
             return null;
         }
-        return static::findMatchingRoute($routes, $params, $prefix, $separator);
+        return static::findMatchingRoute($routes, $params, $prefix);
     }
 
     /**
@@ -430,10 +448,9 @@ class Route
      * @param array<mixed> $routes
      * @param array<mixed> $params
      * @param string $prefix
-     * @param string|null $separator
      * @return string|null
      */
-    public static function findMatchingRoute($routes, $params, $prefix = '', $separator = null)
+    public static function findMatchingRoute($routes, $params, $prefix = '')
     {
         // find matching route based on fixed and/or path params - e.g. authors letter
         foreach ($routes as $route => $fixed) {
@@ -481,6 +498,7 @@ class Route
                 }
             }
             if (count($subst) > 0) {
+                $separator = null;
                 return $prefix . $route . '?' . http_build_query($subst, '', $separator);
             }
             return $prefix . $route;

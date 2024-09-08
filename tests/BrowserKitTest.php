@@ -172,15 +172,15 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Chrome');
 
-        $uri = Route::url('index.php') . '?page=index';
+        $uri = Route::link('index') . '?page=index';
         $crawler = $this->url($uri);
 
         if (!empty(static::$localConfig['cops_use_route_urls'])) {
-            $uri = Route::url('getJSON.php') . '/index?complete=1';
+            $uri = Route::link('json') . '/index?complete=1';
         } else {
-            $uri = Route::url('getJSON.php') . '?page=index&complete=1';
+            $uri = Route::link('json') . '?page=index&complete=1';
         }
-        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . Route::url("templates") . '");';
+        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . Route::path("templates") . '");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
 
@@ -205,7 +205,7 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Kindle/2.0');
 
-        $uri = Route::url('index.php') . '?page=index';
+        $uri = Route::link('index') . '?page=index';
         $crawler = $this->url($uri);
 
         $expected = 12;
@@ -252,9 +252,9 @@ class BrowserKitTest extends TestCase
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
             if (!empty(static::$localConfig['cops_use_route_urls'])) {
-                $this->assertEquals(Route::url('index.php') . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
+                $this->assertEquals(Route::link('index') . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
             } else {
-                $this->assertEquals(Route::url('index.php') . '?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
+                $this->assertEquals(Route::link('index') . '?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
             }
         }
     }

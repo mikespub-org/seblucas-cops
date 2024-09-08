@@ -292,7 +292,7 @@ class Cover
             $file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
-                return new LinkEntry(Route::url(str_replace('%2F', '/', rawurlencode($this->book->path . "/" . $file))), $mime, LinkEntry::OPDS_IMAGE_TYPE);
+                return new LinkEntry(Route::path(str_replace('%2F', '/', rawurlencode($this->book->path . "/" . $file))), $mime, LinkEntry::OPDS_IMAGE_TYPE);
             }
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
             if (Config::get('use_route_urls') && is_null($params['db'])) {
@@ -335,7 +335,7 @@ class Cover
             $fileName = Config::get('thumbnail_handling');
             $ext = strtolower(pathinfo((string) $fileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new LinkEntry(Route::url($fileName), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(Route::path($fileName), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
 
         if ($this->coverFileName) {
@@ -377,7 +377,7 @@ class Cover
         if (!empty(Config::get('thumbnail_default'))) {
             $ext = strtolower(pathinfo((string) Config::get('thumbnail_default'), PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new LinkEntry(Route::url(Config::get('thumbnail_default')), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(Route::path(Config::get('thumbnail_default')), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
         }
         return null;
     }

@@ -35,9 +35,9 @@ class HtmlRendererTest extends TestCase
         $output = $html->render($request);
 
         if (Config::get('use_route_urls')) {
-            $expected = "getJSON.php/recent?complete=1";
+            $expected = "index.php/recent?complete=1";
         } else {
-            $expected = "getJSON.php?page=10&complete=1";
+            $expected = "index.php?page=10&complete=1";
         }
         $this->assertStringContainsString($expected, $output);
     }
@@ -69,9 +69,9 @@ class HtmlRendererTest extends TestCase
         $output = $html->render($request);
 
         if (Config::get('use_route_urls')) {
-            $expected = "getJSON.php/recent?complete=1";
+            $expected = "index.php/recent?complete=1";
         } else {
-            $expected = "getJSON.php?page=10&complete=1";
+            $expected = "index.php?page=10&complete=1";
         }
         $this->assertStringContainsString($expected, $output);
 

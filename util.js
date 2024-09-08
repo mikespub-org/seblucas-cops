@@ -424,9 +424,13 @@ function link_Clicked (event) {
         currentData.page === "19") {
         return;
     }
-    // let zipper do its thing
+    // let read, fetch, zippper etc. do their thing
     var url = currentLink.attr('href');
-    if (url.includes('/zipper/')) {
+    if (url.includes('/read/') ||
+        url.includes('/fetch/') ||
+        url.includes('/zipper/') ||
+        url.includes('/covers/') ||
+        url.includes('/files/')) {
         return;
     }
     event.preventDefault();

@@ -77,6 +77,10 @@ class Framework
     {
         // initialize routes if needed
         static::init();
+        // when using Apache .htaccess redirect
+        if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
+            $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
+        }
         // fix PATH_INFO when accessed via traditional endpoint scripts
         if (!empty($name) && Input\Route::addPrefix($name)) {
             if (empty($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] == '/') {

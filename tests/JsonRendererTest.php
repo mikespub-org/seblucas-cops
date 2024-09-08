@@ -180,14 +180,14 @@ class JsonRendererTest extends TestCase
         $renderer = new JsonRenderer();
         $test = $renderer->getFullBookContentArray($book);
 
-        $this->assertEquals(Route::url("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
+        $this->assertEquals(Route::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
         if (Config::get('use_route_urls')) {
             $this->assertEquals(Route::link("fetch") . "/thumbs/html2/0/17.jpg", $test ["thumbnailurl"]);
         } else {
             $this->assertEquals(Route::link("fetch") . "?id=17&thumb=html2", $test ["thumbnailurl"]);
         }
         // see bookTest for more tests on data links
-        $this->assertEquals(Route::url("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $test ["datas"][2]["url"]);
+        $this->assertEquals(Route::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $test ["datas"][2]["url"]);
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();

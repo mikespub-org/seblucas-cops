@@ -40,7 +40,7 @@ class PageTest extends TestCase
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
         $this->assertEquals("Alphabetical index of the 7 authors", $currentPage->entryArray [0]->content);
         if (Config::get('show_icons') == 1) {
-            $this->assertEquals(Route::url("images/author.png", null, ["v" => Config::VERSION]), $currentPage->entryArray [0]->getThumbnail());
+            $this->assertEquals(Route::path("images/author.png", ["v" => Config::VERSION]), $currentPage->entryArray [0]->getThumbnail());
         } else {
             $this->assertNull($currentPage->entryArray [0]->getThumbnail());
         }

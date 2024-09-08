@@ -278,8 +278,12 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
         $expected = "Annotations for 17";
         $this->assertEquals($expected, $test["entries"][0]["title"]);
-        $expected = self::$script . "/annotations/17";
-        $this->assertEquals($expected, $test["entries"][0]["navlink"]);
+        if (Config::get('use_route_urls')) {
+            $expected = "index.php/annotations/17";
+        } else {
+            $expected = "index.php/annotations/17";
+        }
+        $this->assertStringEndsWith($expected, $test["entries"][0]["navlink"]);
         $expected = 5;
         $this->assertEquals($expected, $test["entries"][0]["number"]);
     }
@@ -297,7 +301,7 @@ class RestApiTest extends TestCase
         if (Config::get('use_route_urls')) {
             $expected = 'index.php/annotations/17/1';
         } else {
-            $expected = self::$script . '?page=63&bookId=17&id=1';
+            $expected = 'index.php?page=63&bookId=17&id=1';
         }
         $this->assertStringEndsWith($expected, $test["entries"][0]["navlink"]);
     }

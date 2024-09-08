@@ -106,6 +106,8 @@ class PageId
             PageId::ALL_RECENT_BOOKS => new PageRecentBooks($request),
             PageId::SERIE_DETAIL => new PageSerieDetail($request),
             PageId::OPENSEARCH_QUERY => new PageQueryResult($request),
+            // support ?query=... URL param by default for opensearch
+            PageId::OPENSEARCH => !empty($request->get('query')) ? new PageQueryResult($request) : new PageIndex($request),
             PageId::BOOK_DETAIL => new PageBookDetail($request),
             PageId::ALL_PUBLISHERS => new PageAllPublishers($request),
             PageId::PUBLISHER_DETAIL => new PagePublisherDetail($request),

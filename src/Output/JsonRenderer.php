@@ -51,7 +51,9 @@ class JsonRenderer extends BaseRenderer
             }
             return Route::base() . $uri;
         }
-        return Route::base() . Config::ENDPOINT["json"] . $uri;
+        $params = $request->urlParams;
+        $params['complete'] = 1;
+        return Route::link("json", null, $params);
     }
 
     /**
@@ -672,7 +674,7 @@ class JsonRenderer extends BaseRenderer
         $out ["parenturl"] = $this->getParentUrl($currentPage, $out["filters"], $out["homeurl"]);
         $out ["hierarchy"] = $this->getHierarchy($currentPage, $extraParams);
         $out ["extra"] = $currentPage->extra;
-        $out ["assets"] = Route::url(Config::get('assets'));
+        $out ["assets"] = Route::path(Config::get('assets'));
         $out ["download"] = $this->getDownloadLinks($currentPage, $qid);
 
         /** @phpstan-ignore-next-line */

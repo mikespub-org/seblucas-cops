@@ -124,7 +124,9 @@ class Request
             $params = Route::match($path);
             if (is_null($params)) {
                 // this will call exit()
-                Response::sendError($this, "Invalid request path '$path'");
+                //Response::sendError($this, "Invalid request path '$path'");
+                error_log("Invalid COPS request path '$path'");
+                $params = [];
             }
             // @todo handle 'json' routes correctly - see util.js
             if (empty($params[Route::HANDLER_PARAM]) && $this->isAjax()) {

@@ -72,7 +72,7 @@ class Entry
         if (Config::get('show_icons') == 1) {
             foreach (static::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $pid)) {
-                    array_push($this->linkArray, new LinkEntry(Route::url($image, null, ["v" => Config::VERSION]), "image/png", LinkEntry::OPDS_THUMBNAIL_TYPE));
+                    array_push($this->linkArray, new LinkEntry(Route::path($image) . "?v=" . Config::VERSION, "image/png", LinkEntry::OPDS_THUMBNAIL_TYPE));
                     break;
                 }
             }

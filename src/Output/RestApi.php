@@ -215,15 +215,14 @@ class RestApi extends BaseRenderer
     {
         $db = $request->database();
         $columns = CustomColumnType::getAllCustomColumns();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Custom Columns",
             "baseurl" => $baseurl,
             "entries" => [],
         ];
         foreach ($columns as $title => $column) {
-            $column["navlink"] = Route::url($endpoint . "/custom/" . $column["id"], null, ["db" => $db]);
+            $column["navlink"] = "{$baseurl}/custom/{$column['id']}" . Route::params(["db" => $db]);
             array_push($result["entries"], $column);
         }
         return $result;
@@ -240,8 +239,7 @@ class RestApi extends BaseRenderer
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
             return static::getDatabase($db, $request);
         }
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Databases",
             "baseurl" => $baseurl,
@@ -283,8 +281,7 @@ class RestApi extends BaseRenderer
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $type = $request->get('type', null, '/^\w+$/');
         if (in_array($type, ['table', 'view'])) {
             $title .= " Type $type";
@@ -338,8 +335,7 @@ class RestApi extends BaseRenderer
             $title .= " $dbName";
         }
         $title .= " Table $name";
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => $title,
             "baseurl" => $baseurl,
@@ -510,8 +506,7 @@ class RestApi extends BaseRenderer
      */
     public static function getRoutes($request)
     {
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Routes",
             "baseurl" => $baseurl,
@@ -533,8 +528,7 @@ class RestApi extends BaseRenderer
      */
     public static function getPages($request)
     {
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Pages",
             "baseurl" => $baseurl,
@@ -561,8 +555,7 @@ class RestApi extends BaseRenderer
             return static::getNotesByType($type, $request);
         }
         $db = $request->database();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Notes",
             "baseurl" => $baseurl,
@@ -573,7 +566,7 @@ class RestApi extends BaseRenderer
             array_push($result["entries"], [
                 "class" => "Notes Type",
                 "title" => $type,
-                "navlink" => Route::url("{$endpoint}/notes/{$type}", null, ["db" => $db]),
+                "navlink" => "{$baseurl}/notes/{$type}" . Route::params(["db" => $db]),
                 "number" => $count,
             ]);
         }
@@ -593,8 +586,7 @@ class RestApi extends BaseRenderer
             return static::getNoteByTypeId($type, $id, $request);
         }
         $db = $request->database();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Notes for {$type}",
             "baseurl" => $baseurl,
@@ -609,7 +601,7 @@ class RestApi extends BaseRenderer
                     "class" => "Notes",
                     "title" => $entry["title"],
                     "id" => $entry["item"],
-                    "navlink" => Route::url("{$endpoint}/notes/{$type}/{$entry['item']}/{$title}", null, ["db" => $db]),
+                    "navlink" => "{$baseurl}/notes/{$type}/{$entry['item']}/{$title}" . Route::params(["db" => $db]),
                     "size" => $entry["size"],
                     "timestamp" => $entry["mtime"],
                 ]);
@@ -618,7 +610,7 @@ class RestApi extends BaseRenderer
                     "class" => "Notes",
                     "title" => $type,
                     "id" => $entry["item"],
-                    "navlink" => Route::url("{$endpoint}/notes/{$type}/{$entry['item']}", null, ["db" => $db]),
+                    "navlink" => "{$baseurl}/notes/{$type}/{$entry['item']}" . Route::params(["db" => $db]),
                     "size" => $entry["size"],
                     "timestamp" => $entry["mtime"],
                 ]);
@@ -641,8 +633,7 @@ class RestApi extends BaseRenderer
         if (empty($note)) {
             return ["error" => "Invalid note type id"];
         }
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Note for {$type} #{$id}",
             "baseurl" => $baseurl,
@@ -679,8 +670,7 @@ class RestApi extends BaseRenderer
             return static::getPreferenceByKey($key, $request);
         }
         $db = $request->database();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Preferences",
             "baseurl" => $baseurl,
@@ -700,7 +690,7 @@ class RestApi extends BaseRenderer
             array_push($result["entries"], [
                 "class" => "Preference",
                 "title" => $key,
-                "navlink" => Route::url("{$endpoint}/preferences/" . rawurlencode($key), null, ["db" => $db]),
+                "navlink" => "{$baseurl}/preferences/" . rawurlencode($key) . Route::params(["db" => $db]),
                 "number" => $count,
             ]);
         }
@@ -720,8 +710,7 @@ class RestApi extends BaseRenderer
         if (empty($preference)) {
             return ["error" => "Invalid preference key"];
         }
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Preference for {$key}",
             "baseurl" => $baseurl,
@@ -743,8 +732,7 @@ class RestApi extends BaseRenderer
             return static::getAnnotationsByBookId($bookId, $request);
         }
         $db = $request->database();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Annotations",
             "baseurl" => $baseurl,
@@ -755,7 +743,7 @@ class RestApi extends BaseRenderer
             array_push($result["entries"], [
                 "class" => "Annotations",
                 "title" => "Annotations for {$bookId}",
-                "navlink" => Route::url("{$endpoint}/annotations/{$bookId}", null, ["db" => $db]),
+                "navlink" => "{$baseurl}/annotations/{$bookId}" . Route::params(["db" => $db]),
                 "number" => $count,
             ]);
         }
@@ -775,8 +763,7 @@ class RestApi extends BaseRenderer
             return static::getAnnotationById($bookId, $id, $request);
         }
         $db = $request->database();
-        $handler = $request->getHandler(static::$handler);
-        $baseurl = Route::link($handler);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "Annotations for {$bookId}",
             "baseurl" => $baseurl,
@@ -785,7 +772,7 @@ class RestApi extends BaseRenderer
         ];
         // @todo get item from annotations + corresponding title from instance
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
-            $instance->setHandler($handler);
+            $instance->setHandler(static::$handler);
             $entry = $instance->getEntry();
             array_push($result["entries"], ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
         }
@@ -807,8 +794,7 @@ class RestApi extends BaseRenderer
         if (empty($annotation->id)) {
             return ["error" => "Invalid annotation id"];
         }
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => $annotation->getTitle(),
             "baseurl" => $baseurl,
@@ -830,8 +816,7 @@ class RestApi extends BaseRenderer
             return ["error" => "Invalid book id"];
         }
         $db = $request->database();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $metadata = Metadata::getInstanceByBookId($bookId, $db);
         if (empty($metadata)) {
             $result["error"] = "Invalid metadata for book id";
@@ -870,8 +855,7 @@ class RestApi extends BaseRenderer
             return ["error" => "Invalid username"];
         }
         $db = $request->database();
-        $endpoint = static::getScriptName($request);
-        $baseurl = Route::url($endpoint);
+        $baseurl = Route::link(static::$handler);
         $result = [
             "title" => "User",
             "baseurl" => $baseurl,

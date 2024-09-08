@@ -32,13 +32,13 @@ class HtmlRenderer extends BaseRenderer
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),
-            'current_css'           => Route::url($request->style()),
-            'favico'                => Route::url(Config::get('icon')),
-            'assets'                => Route::url(Config::get('assets')),
-            'images'                => Route::url('images'),
-            'resources'             => Route::url('resources'),
-            'templates'             => Route::url('templates'),
-            'basedir'               => Route::url('.'),
+            'current_css'           => Route::path($request->style()),
+            'favico'                => Route::path(Config::get('icon')),
+            'assets'                => Route::path(Config::get('assets')),
+            'images'                => Route::path('images'),
+            'resources'             => Route::path('resources'),
+            'templates'             => Route::path('templates'),
+            'basedir'               => Route::path('.'),
             'getjson_url'           => JsonRenderer::getCurrentUrl($request),
         ];
         if (preg_match('/Kindle/', $request->agent())) {
@@ -61,7 +61,7 @@ class HtmlRenderer extends BaseRenderer
             return Format::str_format($format, ...$args);
         });
         $twig->addFunction($function);
-        $assets = Route::url(Config::get('assets'));
+        $assets = Route::path(Config::get('assets'));
         $function = new \Twig\TwigFunction('asset', function ($file) use ($assets) {
             return $assets . '/' . $file . '?v=' . Config::VERSION;
         });

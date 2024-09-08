@@ -26,8 +26,8 @@ if (str_contains($path, $script . '/') && file_exists(__DIR__ . $script)) {
     return false;
 }
 
-$_SERVER['SCRIPT_NAME'] = '/front.php';
+$_SERVER['SCRIPT_NAME'] = '/index.php';
 $_SERVER['PATH_INFO'] ??= parse_url((string) $_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// @todo do not use front.php here yet
-include __DIR__ . '/front.php';
+// @todo do not use index.php here yet
+include __DIR__ . '/index.php';
