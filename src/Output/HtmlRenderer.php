@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Template\doT;
 
 class HtmlRenderer extends BaseRenderer
 {
@@ -48,102 +47,18 @@ class HtmlRenderer extends BaseRenderer
     }
 
     /**
-     * Summary of getTwigEnvironment
-     * @param string|string[] $templateDir
-     * @return \Twig\Environment
-     */
-    public function getTwigEnvironment($templateDir = 'templates/twigged')
-    {
-        $loader = new \Twig\Loader\FilesystemLoader($templateDir);
-        $twig = new \Twig\Environment($loader);
-        $function = new \Twig\TwigFunction('str_format', function ($format, ...$args) {
-            //return str_format($format, ...$args);
-            return Format::str_format($format, ...$args);
-        });
-        $twig->addFunction($function);
-        $assets = Route::path(Config::get('assets'));
-        $function = new \Twig\TwigFunction('asset', function ($file) use ($assets) {
-            return $assets . '/' . $file . '?v=' . Config::VERSION;
-        });
-        $twig->addFunction($function);
-
-        return $twig;
-    }
-
-    /**
-     * Summary of renderTwigTemplate
-     * @param Request $request
-     * @return string
-     */
-    public function renderTwigTemplate($request)
-    {
-        // @todo support other Twig template directories too
-        $twig = $this->getTwigEnvironment('templates/twigged');
-        $data = $this->getTemplateData($request);
-        if ($request->render()) {
-            // Get the page data
-            $json = new JsonRenderer();
-            $data['page_it'] = $json->getJson($request, true);
-            if ($data['title'] != $data['page_it']['title']) {
-                $data['title'] .= ' - ' . $data['page_it']['title'];
-            }
-        }
-        return $twig->render('index.html', ['it' => $data]);
-    }
-
-    /**
-     * Summary of getDotTemplate
-     * @param string $templateFile
-     * @return \Closure
-     */
-    public function getDotTemplate($templateFile)
-    {
-        // production mode was required here for issue seblucas/cops#392
-        error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-        $headcontent = file_get_contents($templateFile);
-        $template = new doT();
-        $dot = $template->template($headcontent, null);
-
-        return $dot;
-    }
-
-    /**
-     * Summary of renderDotTemplate
-     * @param Request $request
-     * @return string
-     */
-    public function renderDotTemplate($request)
-    {
-        $dot = $this->getDotTemplate('templates/' . $request->template() . '/file.html');
-        $data = $this->getTemplateData($request);
-        if ($request->render()) {
-            // Get the page data
-            $json = new JsonRenderer();
-            $page_it = $json->getJson($request, true);
-            if ($data['title'] != $page_it['title']) {
-                $data['title'] .= ' - ' . $page_it['title'];
-            }
-            $output = $dot($data);
-            $output .= "<body>\n";
-            $output .= Format::serverSideRender($page_it, $request->template());
-            $output .= "</body>\n</html>\n";
-            return $output;
-        }
-        $output = $dot($data);
-        $output .= "<body>\n</body>\n</html>\n";
-        return $output;
-    }
-
-    /**
      * Summary of render
      * @param Request $request
      * @return string
      */
     public function render($request)
     {
-        if ($request->template() == 'twigged') {
-            return $this->renderTwigTemplate($request);
+        $data = $this->getTemplateData($request);
+        if (in_array($request->template(), Config::get('twig_templates'))) {
+            $template = new TwigTemplate($request);
+            return $template->renderPage($data, $request->template(), $request->render());
         }
-        return $this->renderDotTemplate($request);
+        $template = new DotPHPTemplate($request);
+        return $template->renderPage($data, $request->template(), $request->render());
     }
 }

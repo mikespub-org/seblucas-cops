@@ -14,8 +14,16 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * ...
+
+3.1.0 - 20240908 Breaking changes for 3.x
   * Changes in config/default.php file:
     - set $config['cops_use_route_urls'] = '1' as default
+    - new $config['cops_twig_templates'] = ['twigged'] list
+  * Split off templates from HtmlRenderer
+  * BC: Redirect other endpoints + add deprecations
+  * Split off RouteTest + fix route urls
+  * Add basic middleware dispatcher
   * BC: Enable route urls by default in config/default.php
   * BC: Move config_*.php files to config/*.php to align dir structure
   * BC: Rename lib/ to src/ and test/ to tests/ to align dir structure

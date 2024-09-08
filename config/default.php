@@ -451,6 +451,8 @@ $config['cops_basic_authentication'] = null;
  * 'default'
  * 'bootstrap'
  * 'bootstrap2'
+ * 'bootstrap5'
+ * 'twigged'
  */
 $config['cops_template'] = 'bootstrap2';
 
@@ -464,6 +466,12 @@ $config['cops_template'] = 'bootstrap2';
  * 'kindle' (only available for the 'default' template)
  */
 $config['cops_style'] = 'default';
+
+/*
+ * Which of these templates use the Twig template engine
+ * Only the 'twigged' template for now...
+ */
+$config['cops_twig_templates'] = ['twigged'];
 
 /*
  * Which URL prefix to use in templates for js & css assets (without trailing /)

@@ -212,9 +212,21 @@ class RestApiTest extends TestCase
     public function testGetRoutes(): void
     {
         $request = Request::build([], basename(self::$script));
-        $expected = "Routes";
         $test = RestApi::getRoutes($request);
+        $expected = "Routes";
         $this->assertEquals($expected, $test["title"]);
+        $expected = 95;
+        $this->assertCount($expected, $test["entries"]);
+    }
+
+    public function testGetPages(): void
+    {
+        $request = Request::build([], basename(self::$script));
+        $test = RestApi::getPages($request);
+        $expected = "Pages";
+        $this->assertEquals($expected, $test["title"]);
+        $expected = 41;
+        $this->assertCount($expected, $test["entries"]);
     }
 
     public function testGetNotes(): void

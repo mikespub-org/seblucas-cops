@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\HtmlRenderer;
 use SebLucas\Cops\Output\JsonRenderer;
@@ -27,111 +26,6 @@ class BaseTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
-    }
-
-    public function testRouteQuery(): void
-    {
-        $this->assertEquals("?db=0", Route::query("", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("key=value", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("key=value&otherKey", ["db" => "0"]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", Route::query("key=value&otherKey=other", ["db" => "0"]));
-        $this->assertEquals("?db=0", Route::query("?", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("?key=value", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("?key=value&otherKey", ["db" => "0"]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", Route::query("?key=value&otherKey=other", ["db" => "0"]));
-    }
-
-    public function testRoutePage(): void
-    {
-        $this->assertEquals("", Route::page(null, ['db' => null]));
-        $this->assertEquals("?db=0", Route::page(null, ['db' => 0]));
-        $this->assertEquals("?key=value", Route::page(null, ['key' => 'value', 'db' => null]));
-        $this->assertEquals("?key=value&db=0", Route::page(null, ['key' => 'value', 'db' => 0]));
-        $this->assertEquals("?key=value&db=0", Route::page(null, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", Route::page(null, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals("/authors", Route::page(1, ['db' => null]));
-            $this->assertEquals("/authors?db=0", Route::page(1, ['db' => 0]));
-            $this->assertEquals("/authors?key=value", Route::page(1, ['key' => 'value', 'db' => null]));
-            $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'db' => 0]));
-            $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
-            $this->assertEquals("/authors?key=value&otherKey=other&db=0", Route::page(1, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        } else {
-            $this->assertEquals("?page=1", Route::page(1, ['db' => null]));
-            $this->assertEquals("?page=1&db=0", Route::page(1, ['db' => 0]));
-            $this->assertEquals("?page=1&key=value", Route::page(1, ['key' => 'value', 'db' => null]));
-            $this->assertEquals("?page=1&key=value&db=0", Route::page(1, ['key' => 'value', 'db' => 0]));
-            $this->assertEquals("?page=1&key=value&db=0", Route::page(1, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
-            $this->assertEquals("?page=1&key=value&otherKey=other&db=0", Route::page(1, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        }
-    }
-
-    /**
-     * FALSE is returned if the create_function failed (meaning there was a syntax error)
-     * @param mixed $template
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplate')]
-    public function testServerSideRender($template)
-    {
-        $_COOKIE["template"] = $template;
-        $this->assertNull(Format::serverSideRender(null, $template));
-
-        $request = new Request();
-        $renderer = new JsonRenderer();
-        $data = $renderer->getJson($request, true);
-        $output = Format::serverSideRender($data, $template);
-
-        $old = libxml_use_internal_errors(true);
-        $html = new DOMDocument();
-        $html->loadHTML("<html><head></head><body>" . $output . "</body></html>");
-        $errors = libxml_get_errors();
-        foreach ($errors as $error) {
-            // ignore invalid tags from HTML5 which libxml doesn't know about
-            if ($error->code == 801) {
-                continue;
-            }
-            $this->fail("Error parsing output for server-side rendering of template " . $template . "\n" . $error->message . "\n" . $output);
-        }
-        libxml_clear_errors();
-        libxml_use_internal_errors($old);
-
-        unset($_COOKIE['template']);
-    }
-
-    /**
-     * The function for the head of the HTML catalog
-     * @param mixed $templateName
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplate')]
-    public function testGenerateHeader($templateName)
-    {
-        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
-        $_COOKIE["template"] = $templateName;
-        $request = new Request();
-        $renderer = new HtmlRenderer();
-        $tpl = $renderer->getDotTemplate(__DIR__ . '/../templates/' . $templateName . '/file.html');
-        $data = $renderer->getTemplateData($request);
-
-        $head = $tpl($data);
-        $this->assertStringContainsString("<head>", $head);
-        $this->assertStringContainsString("</head>", $head);
-
-        unset($_COOKIE["template"]);
-    }
-
-    /**
-     * Summary of providerTemplate
-     * @return array<mixed>
-     */
-    public static function providerTemplate()
-    {
-        return [
-            ["bootstrap2"],
-            ["bootstrap"],
-            ["default"],
-        ];
     }
 
     public function testLocalize(): void

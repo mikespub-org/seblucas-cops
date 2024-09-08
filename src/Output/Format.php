@@ -9,8 +9,6 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Input\Config;
-use SebLucas\Template\doT;
 use DOMDocument;
 
 class Format
@@ -35,52 +33,6 @@ class Format
         }
 
         return $format;
-    }
-
-    /**
-     * Summary of serverSideRender
-     * @param ?array<mixed> $data
-     * @param string $theme
-     * @return bool|string|null
-     */
-    public static function serverSideRender($data, $theme = 'default')
-    {
-        // Get the templates
-        $header = file_get_contents('templates/' . $theme . '/header.html');
-        $footer = file_get_contents('templates/' . $theme . '/footer.html');
-        $main = file_get_contents('templates/' . $theme . '/main.html');
-        $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
-        $page = file_get_contents('templates/' . $theme . '/page.html');
-
-        // Generate the function for the template
-        $template = new doT();
-        $dot = $template->template($page, ['bookdetail' => $bookdetail,
-            'header' => $header,
-            'footer' => $footer,
-            'main' => $main]);
-        // If there is a syntax error in the function created
-        // $dot will be equal to FALSE
-        if (!$dot) {
-            return false;
-        }
-        // Execute the template
-        if (!empty($data)) {
-            return $dot($data);
-        }
-
-        return null;
-    }
-
-    /**
-     * Summary of serverTwigRender
-     * @param \Twig\Environment $twig
-     * @param ?array<mixed> $data
-     * @param string $theme
-     * @return bool|string|null
-     */
-    public static function serverTwigRender($twig, $data, $theme = 'default')
-    {
-        return $twig->render('page.html', ['it' => $data]);
     }
 
     /**
