@@ -204,6 +204,9 @@ class RouteTest extends TestCase
             "/feed/10" => [Route::HANDLER_PARAM => "feed", "page" => 10],
             "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "route" => "openapi"],
             "/graphql" => [Route::HANDLER_PARAM => "graphql"],
+            // @todo handle url rewriting if enabled separately - path parameters are different
+            "/view/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "data" => 20, "type" => "epub", "view" => 1],
+            "/download/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "data" => 20, "type" => "epub"],
         ];
     }
 
@@ -233,64 +236,64 @@ class RouteTest extends TestCase
     }
 
     /**
-     * Summary of getRewrites
-     * @return array<mixed>
-     */
-    public static function getRewrites()
-    {
-        return [
-            "fetch.php?data=1&db=0&type=epub&view=1" => "/view/1/0/ignore.epub",
-            "fetch.php?data=1&type=epub&view=1" => "/view/1/ignore.epub",
-            "fetch.php?data=1&db=0&type=epub" => "/download/1/0/ignore.epub",
-            "fetch.php?data=1&type=epub" => "/download/1/ignore.epub",
-        ];
-    }
-
-    /**
      * Summary of rewriteProvider
      * @return array<mixed>
      */
     public static function rewriteProvider()
     {
-        $data = [];
-        $links = static::getRewrites();
-        foreach ($links as $from => $to) {
-            array_push($data, [$from, $to]);
-        }
+        $data = [
+            [
+                "/view/1/0/ignore.epub",
+                [Route::HANDLER_PARAM => "fetch", "data" => 1, "db" => 0, "type" => "epub", "view" => 1],
+                "index.php/inline/0/1/ignore.epub",
+            ],
+            [
+                "/view/1/ignore.epub",
+                [Route::HANDLER_PARAM => "fetch", "data" => 1, "type" => "epub", "view" => 1],
+                "index.php/view/1/ignore.epub",
+            ],
+            [
+                "/download/1/0/ignore.epub",
+                [Route::HANDLER_PARAM => "fetch", "data" => 1, "db" => 0, "type" => "epub"],
+                "index.php/fetch/0/1/ignore.epub",
+            ],
+            [
+                "/download/1/ignore.epub",
+                [Route::HANDLER_PARAM => "fetch", "data" => 1, "type" => "epub"],
+                "index.php/download/1/ignore.epub",
+            ],
+        ];
         return $data;
     }
 
     /**
-     * @param mixed $link
      * @param mixed $expected
+     * @param mixed $params
+     * @param mixed $route
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('rewriteProvider')]
-    public function testRewriteLink($link, $expected)
+    public function testRewriteLink($expected, $params, $route)
     {
-        $params = [];
-        parse_str(parse_url((string) $link, PHP_URL_QUERY), $params);
-        $endpoint = parse_url((string) $link, PHP_URL_PATH);
-        $test = Route::getUrlRewrite($endpoint, $params);
+        $handler = $params[Route::HANDLER_PARAM];
+        unset($params[Route::HANDLER_PARAM]);
+        $test = Route::getUrlRewrite($handler, $params);
         $this->assertEquals($expected, $test);
+        $link = Route::link($handler, null, $params);
+        $this->assertStringEndsWith($route, $link);
     }
 
     /**
-     * @param mixed $expected
      * @param mixed $path
+     * @param mixed $expected
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('rewriteProvider')]
-    public function testRewriteMatch($expected, $path)
+    public function testRewriteMatch($path, $expected)
     {
-        $query = parse_url((string) $path, PHP_URL_QUERY);
         $path = parse_url((string) $path, PHP_URL_PATH);
-        //$endpoint = parse_url($expected, PHP_URL_PATH);
-        [$endpoint, $params] = Route::matchRewrite($path);
-        $test = $endpoint . '?' . http_build_query($params);
-        if (!empty($query)) {
-            $test .= '&' . $query;
-        }
-        $this->assertEquals($expected, $test);
+        [$handler, $params] = Route::matchRewrite($path);
+        $params = array_merge([Route::HANDLER_PARAM => $handler], $params);
+        $this->assertEquals($expected, $params);
     }
 }

@@ -234,6 +234,7 @@ class Data
      * Summary of getHtmlLinkWithRewriting
      * @param ?string $title
      * @param bool $view
+     * @deprecated 3.1.0 use route urls instead
      * @return LinkEntry
      */
     public function getHtmlLinkWithRewriting($title = null, $view = false)

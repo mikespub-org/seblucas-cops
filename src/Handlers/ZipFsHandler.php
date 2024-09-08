@@ -15,7 +15,7 @@ use Exception;
 
 /**
  * Handle Epub filesystem for epubjs-reader
- * URL format: zipfs.php/{db}/{data}/{comp}
+ * URL format: index.php/zipfs/{db}/{data}/{comp}
  */
 class ZipFsHandler extends BaseHandler
 {

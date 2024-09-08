@@ -31,7 +31,7 @@ class Route
     /** @var array<string, mixed> */
     protected static $routes = [];
     /** @var string[] */
-    protected static $skipPrefix = ['index', 'json', 'fetch', 'restapi', 'graphql', 'phpunit'];  // @todo handle 'json' routes correctly - see util.js
+    protected static $skipPrefix = ['index', 'json', 'fetch', 'restapi', 'graphql', 'phpunit'];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
     /** @var array<string, mixed> */
@@ -39,14 +39,14 @@ class Route
     // with use_url_rewriting = 1 - basic rewrites only
     /** @var array<string, mixed> */
     protected static $rewrites = [
-        // Format: route => endpoint, or route => [endpoint, [fixed => 1, ...]] with fixed params
-        "/view/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"], ["view" => 1]],
-        "/view/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"], ["view" => 1]],
-        "/download/{data}/{db}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
-        "/download/{data}/{ignore}.{type}" => [Config::ENDPOINT["fetch"]],
+        // Format: route => handler, or route => [handler, [fixed => 1, ...]] with fixed params
+        "/view/{data}/{db}/{ignore}.{type}" => ["fetch", ["view" => 1]],
+        "/view/{data}/{ignore}.{type}" => ["fetch", ["view" => 1]],
+        "/download/{data}/{db}/{ignore}.{type}" => ["fetch"],
+        "/download/{data}/{ignore}.{type}" => ["fetch"],
     ];
     /** @var array<string, mixed> */
-    protected static $endpoints = [];
+    protected static $handlers = [];
 
     /**
      * Match pathinfo against routes and return query params
@@ -265,7 +265,7 @@ class Route
         }
         // ?page=... or /route/...
         $page = static::page($page, $params);
-        // @todo handle 'json' routes correctly - see util.js
+        // same routes as HtmlHandler - see util.js
         if ($handler == 'json') {
             $handler = 'index';
         }
@@ -300,6 +300,7 @@ class Route
                 return Config::ENDPOINT['index'];
             }
         }
+        // @deprecated 3.1.0 use index.php endpoint
         if (array_key_exists($handler, Config::ENDPOINT)) {
             // @todo special case for restapi
             if (in_array($handler, ['restapi'])) {
@@ -557,23 +558,23 @@ class Route
         });
 
         // match pattern
-        $endpoint = '';
+        $handler = '';
         $params = [];
         $method = 'GET';
         $routeInfo = $dispatcher->dispatch($method, $path);
 
         if ($routeInfo[0] !== Dispatcher::FOUND) {
-            return [$endpoint,  $params];
+            return [$handler,  $params];
         }
         $map = $routeInfo[1];
         $params = $routeInfo[2];
-        $endpoint = array_shift($map);
+        $handler = array_shift($map);
         $fixed = array_shift($map) ?? [];
         unset($params['ignore']);
 
         // for rewrite rules, put fixed params at the end
         $params = array_merge($params, $fixed);
-        return [$endpoint,  $params];
+        return [$handler,  $params];
     }
 
     /**
@@ -590,14 +591,14 @@ class Route
 
     /**
      * Summary of getUrlRewrite
-     * @param string $endpoint
+     * @param string $handler
      * @param array<mixed> $params
      * @return string|null
      */
-    public static function getUrlRewrite($endpoint, $params)
+    public static function getUrlRewrite($handler, $params)
     {
-        $endpoints = static::getEndpoints();
-        $routes = $endpoints[$endpoint] ?? [];
+        $handlers = static::getHandlers();
+        $routes = $handlers[$handler] ?? [];
         if (count($routes) < 1) {
             return null;
         }
@@ -605,25 +606,25 @@ class Route
     }
 
     /**
-     * Get mapping of endpoints to rewrites with fixed params
+     * Get mapping of handlers to rewrites with fixed params
      * @return array<string, array<mixed>>
      */
-    public static function getEndpoints()
+    public static function getHandlers()
     {
-        if (!empty(static::$endpoints)) {
-            return static::$endpoints;
+        if (!empty(static::$handlers)) {
+            return static::$handlers;
         }
-        static::$endpoints = [];
+        static::$handlers = [];
         foreach (static::$rewrites as $route => $map) {
             if (!is_array($map)) {
                 $map = [ $map ];
             }
-            $endpoint = array_shift($map);
+            $handler = array_shift($map);
             $fixed = array_shift($map) ?? [];
-            static::$endpoints[$endpoint] ??= [];
-            static::$endpoints[$endpoint][$route] = $fixed;
+            static::$handlers[$handler] ??= [];
+            static::$handlers[$handler][$route] = $fixed;
         }
-        return static::$endpoints;
+        return static::$handlers;
     }
 
     /**

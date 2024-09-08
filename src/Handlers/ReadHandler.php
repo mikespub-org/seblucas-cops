@@ -16,7 +16,7 @@ use Exception;
 
 /**
  * Handle epub reader with monocle
- * URL format: epubreader.php?data={idData}&version={version}
+ * URL format: index.php/read?data={idData}&version={version}
  */
 class ReadHandler extends BaseHandler
 {

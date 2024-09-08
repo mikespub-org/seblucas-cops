@@ -15,7 +15,8 @@ use Throwable;
 
 /**
  * Handle JSON ajax requests
- * URL format: getJSON.php?page={page}&...
+ * URL format: index.php?page={page}&...
+ * with Accept: application/json or X-Requested-With: XMLHttpRequest
  */
 class JsonHandler extends PageHandler
 {
@@ -23,7 +24,7 @@ class JsonHandler extends PageHandler
 
     public static function getRoutes()
     {
-        // @todo handle 'json' routes correctly - see util.js
+        // same routes as HtmlHandler - see util.js
         //return parent::getRoutes();
         return [];
     }

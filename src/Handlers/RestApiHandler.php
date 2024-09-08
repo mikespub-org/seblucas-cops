@@ -18,7 +18,7 @@ use Exception;
 
 /**
  * Handle REST API
- * URL format: restapi.php{/route}?db={db} etc.
+ * URL format: index.php/restapi{/route}?db={db} etc.
  */
 class RestApiHandler extends BaseHandler
 {
@@ -26,6 +26,7 @@ class RestApiHandler extends BaseHandler
 
     public static function getRoutes()
     {
+        // Note: this supports all other routes with /restapi prefix
         // extra routes supported by REST API
         return [
             "/restapi/{route:.*}" => [static::PARAM => static::HANDLER],
@@ -62,7 +63,7 @@ class RestApiHandler extends BaseHandler
 
         $path = $request->path();
         if (empty($path) || $path == '/restapi/') {
-            $data = ['link' => Route::link(static::HANDLER) . '/openapi'];
+            $data = ['link' => Route::link(static::HANDLER) . '/restapi/openapi'];
             $template = dirname(__DIR__, 2) . '/templates/restapi.html';
 
             $response = new Response('text/html;charset=utf-8');

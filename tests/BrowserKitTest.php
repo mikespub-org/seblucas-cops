@@ -268,7 +268,7 @@ class BrowserKitTest extends TestCase
     protected function checkJsonSearch($query, $expectedEntries)
     {
         // From util.js: index.php?page=9&current={0}&query={1}&db={2} -> replace ("index", "getJSON")
-        $uri = 'getJSON.php?page=9&current=index&query=' . $query . '&db=';
+        $uri = 'index.php?page=9&current=index&query=' . $query . '&db=';
         $result = $this->ajax($uri);
 
         $this->assertEquals($expectedEntries, $result['entries']);

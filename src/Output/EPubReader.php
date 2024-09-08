@@ -137,7 +137,7 @@ class EPubReader extends BaseRenderer
             return static::addContentItem($content);
         }, $epub->contents()));
 
-        // URL format: epubfs.php/{db}/{data}/{comp} - let monocle reader retrieve individual components
+        // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
         $db = $book->getDatabaseId() ?? 0;
         $params = ['db' => $db, 'data' => $idData, 'comp' => '~COMP~'];
         $link = str_replace(urlencode('~COMP~'), '~COMP~', Route::link(static::$handler, null, $params));
@@ -227,7 +227,7 @@ class EPubReader extends BaseRenderer
             if (!$epub || !file_exists($epub)) {
                 throw new Exception('Unknown file ' . $epub);
             }
-            // URL format: zipfs.php/{db}/{data}/{comp} - let epubjs reader retrieve individual components
+            // URL format: index.php/zipfs/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
             if (Config::get('use_route_urls')) {
                 $link = Route::link($handler, null, ['db' => $db, 'data' => $idData, 'comp' => '{component}']);

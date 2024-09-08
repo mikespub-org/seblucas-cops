@@ -15,7 +15,7 @@ use Exception;
 
 /**
  * Handle Epub filesystem for monocle epub reader
- * URL format: epubfs.php?data={idData}&comp={component}
+ * URL format: index.php/epubfs?data={idData}&comp={component}
  */
 class EpubFsHandler extends BaseHandler
 {

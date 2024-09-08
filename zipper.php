@@ -6,6 +6,7 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
+ * @deprecated 3.1.0 use index.php/zipper instead
  */
 
 $link = str_replace('zipper.php', 'index.php/zipper', $_SERVER['REQUEST_URI'] ?? '');

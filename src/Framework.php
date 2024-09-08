@@ -81,6 +81,7 @@ class Framework
         if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
             $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
         }
+        // @deprecated 3.1.0 use index.php/$name instead
         // fix PATH_INFO when accessed via traditional endpoint scripts
         if (!empty($name) && Input\Route::addPrefix($name)) {
             if (empty($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] == '/') {

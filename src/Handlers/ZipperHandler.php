@@ -15,7 +15,7 @@ use SebLucas\Cops\Output\Zipper;
 
 /**
  * Download all books for a page, series or author by format (epub, mobi, any, ...)
- * URL format: zipper.php?page={page}&type={type}&id={id}
+ * URL format: index.php/zipper?page={page}&type={type}&id={id}
  */
 class ZipperHandler extends BaseHandler
 {

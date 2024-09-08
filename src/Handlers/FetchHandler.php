@@ -20,9 +20,9 @@ use SebLucas\Cops\Output\Zipper;
 
 /**
  * Fetch book covers or files
- * URL format: fetch.php?id={bookId}&type={type}&data={idData}&view={viewOnly}
- *          or fetch.php?id={bookId}&thumb={thumb} for book cover thumbnails
- *          or fetch.php?id={bookId}&file={file} for extra data file for this book
+ * URL format: index.php/fetch?id={bookId}&type={type}&data={idData}&view={viewOnly}
+ *          or index.php/fetch?id={bookId}&thumb={thumb} for book cover thumbnails
+ *          or index.php/fetch?id={bookId}&file={file} for extra data file for this book
  */
 class FetchHandler extends BaseHandler
 {

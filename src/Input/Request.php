@@ -128,13 +128,15 @@ class Request
                 error_log("Invalid COPS request path '$path'");
                 $params = [];
             }
-            // @todo handle 'json' routes correctly - see util.js
+            // JsonHandler uses same routes as HtmlHandler - see util.js
             if (empty($params[Route::HANDLER_PARAM]) && $this->isAjax()) {
                 $params[Route::HANDLER_PARAM] = 'json';
             }
             foreach ($params as $name => $value) {
                 $this->urlParams[$name] = $value;
             }
+        //} elseif (empty($this->urlParams[Route::HANDLER_PARAM]) && $this->isAjax()) {
+        //    $this->urlParams[Route::HANDLER_PARAM] = 'json';
         }
         if (!empty($_GET)) {
             foreach ($_GET as $name => $value) {
@@ -420,6 +422,7 @@ class Request
     /**
      * Summary of getEndpoint
      * @param string $default
+     * @deprecated 3.1.0 use getHandler() instead
      * @return string
      */
     public function getEndpoint($default)
@@ -444,6 +447,7 @@ class Request
         if (!empty($this->urlParams[Route::HANDLER_PARAM])) {
             return $this->urlParams[Route::HANDLER_PARAM];
         }
+        // @deprecated 3.1.0 use index.php endpoint
         // try to find handler via endpoint
         $endpoint = $this->getEndpoint(Config::ENDPOINT[$default]);
         if ($endpoint == Config::ENDPOINT['index']) {
@@ -529,13 +533,11 @@ class Request
      */
     public function isJson()
     {
-        // using actual getJSON.php endpoint
-        $endpoint = $this->getEndpoint(Config::ENDPOINT['json']);
-        if ($endpoint == Config::ENDPOINT['json']) {
-            return true;
-        }
+        // @deprecated 3.1.0 use index.php endpoint
+        // using actual getJSON.php endpoint, or
         // set in parseParams() based on isAjax()
-        if (!empty($this->urlParams[Route::HANDLER_PARAM]) && $this->urlParams[Route::HANDLER_PARAM] == 'json') {
+        $handler = $this->getHandler();
+        if ($handler == 'json') {
             return true;
         }
         return false;
@@ -547,14 +549,11 @@ class Request
      */
     public function isFeed()
     {
-        // using actual feed.php or opds.php endpoint
-        $endpoint = $this->getEndpoint(Config::ENDPOINT['index']);
-        if (in_array($endpoint, [Config::ENDPOINT['feed'], Config::ENDPOINT['opds']])) {
-            return true;
-        }
+        // @deprecated 3.1.0 use index.php endpoint
+        // using actual feed.php or opds.php endpoint, or
         // set in parseParams() based on Route::match()
-        if (!empty($this->urlParams[Route::HANDLER_PARAM]) &&
-            in_array($this->urlParams[Route::HANDLER_PARAM], ['feed', 'opds'])) {
+        $handler = $this->getHandler();
+        if (in_array($handler, ['feed', 'opds'])) {
             return true;
         }
         return false;

@@ -15,7 +15,7 @@ use SebLucas\Cops\Output\Response;
 
 /**
  * Handle calres:// resources for Calibre notes
- * URL format: calres.php/{db}/{alg}/{digest} with {hash} = {alg}:{digest}
+ * URL format: index.php/calres/{db}/{alg}/{digest} with {hash} = {alg}:{digest}
  */
 class CalResHandler extends BaseHandler
 {

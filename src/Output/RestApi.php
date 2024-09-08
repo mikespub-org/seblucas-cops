@@ -26,10 +26,10 @@ use Exception;
 
 /**
  * Basic REST API routing to JSON Renderer
+ * Note: this supports all other routes with /restapi prefix
  */
 class RestApi extends BaseRenderer
 {
-    public static string $endpoint = Config::ENDPOINT["restapi"];
     public static string $handler = "restapi";
     public static int $numberPerPage = 100;
     public static bool $doRunEndpoint = false;  // @todo disabled for now
@@ -60,6 +60,7 @@ class RestApi extends BaseRenderer
     public function getPathInfo()
     {
         $path = $this->request->path("/index");
+        // Note: this supports all other routes with /restapi prefix
         if (str_starts_with($path, '/restapi/')) {
             $path = substr($path, strlen('/restapi'));
         }
@@ -166,11 +167,12 @@ class RestApi extends BaseRenderer
     /**
      * Summary of getScriptName
      * @param Request $request
+     * @deprecated 3.1.0 use index.php endpoint
      * @return string
      */
     public static function getScriptName($request)
     {
-        return $request->getEndpoint(static::$endpoint);
+        return $request->getEndpoint(Config::ENDPOINT["restapi"]);
     }
 
     /**
@@ -381,7 +383,7 @@ class RestApi extends BaseRenderer
             ],
         ];
         $result["servers"] = [
-            ["url" => Route::link(static::$handler), "description" => "COPS REST API Endpoint"],
+            ["url" => Route::link(static::$handler) . '/restapi', "description" => "COPS REST API Endpoint"],
         ];
         $result["components"] = [
             "securitySchemes" => [
@@ -438,11 +440,12 @@ class RestApi extends BaseRenderer
                 $queryString = substr($route, 1);
             } elseif (!empty($queryParams[Route::HANDLER_PARAM])) {
                 $testpoint = $queryParams[Route::HANDLER_PARAM];
-                $script = Config::ENDPOINT[$testpoint];
+                //$script = Config::ENDPOINT[$testpoint];
+                $script = $testpoint;
                 $queryString = str_replace(Route::HANDLER_PARAM . '=' . $testpoint, $script, $queryString);
-                $queryString = str_replace($script . '&', $script . '?', $queryString);
+                $queryString = str_replace($script . '&', $script . ' handler with ', $queryString);
             } else {
-                $queryString = 'getJSON.php?' . $queryString;
+                $queryString = 'page handler with ' . $queryString;
             }
             $result["paths"][$route] = [
                 "get" => [

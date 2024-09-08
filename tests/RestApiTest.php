@@ -120,7 +120,7 @@ class RestApiTest extends TestCase
     public function testGetScriptName(): void
     {
         $script = $_SERVER["SCRIPT_NAME"];
-        $_SERVER["SCRIPT_NAME"] = "/" . RestApi::$endpoint;
+        $_SERVER["SCRIPT_NAME"] = "/" . Config::ENDPOINT["restapi"];
         $request = new Request();
 
         $expected = "restapi.php";
