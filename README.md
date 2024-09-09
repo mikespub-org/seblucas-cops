@@ -4,7 +4,7 @@
 
 ### For everyone
 - move your customized *config_local.php* file to *config/local.php* on the web server/container
-- TODO replace any *feed.php* links with *index.php/feed* for OPDS feeds in your e-reader
+- replace any *feed.php* links with *index.php/feed* for OPDS feeds in your e-reader
 
 ### Less common
 - if you map the *lib/* or *test/* directory somewhere, like a docker compose file, web server config etc. you'll need to replace that with *src/* or *tests/* respectively
