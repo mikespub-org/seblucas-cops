@@ -257,8 +257,8 @@ class Route
     public static function link($handler = null, $page = null, $params = [])
     {
         $handler ??= 'index';
-        // @todo take into account handler when building page url, e.g. feed or zipper
-        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'restapi', 'phpunit'])) {
+        // take into account handler when building page url, e.g. feed or zipper
+        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'phpunit'])) {
             $params[Route::HANDLER_PARAM] = $handler;
         } else {
             unset($params[Route::HANDLER_PARAM]);
@@ -286,7 +286,7 @@ class Route
      */
     public static function endpoint($handler)
     {
-        if (Config::get('use_front_controller')) {
+        if (Config::get('front_controller')) {
             // @todo special case for restapi
             if (in_array($handler, ['restapi'])) {
                 return $handler;
@@ -296,7 +296,7 @@ class Route
         }
         if (Config::get('use_route_urls')) {
             // use default endpoint for supported handlers - @todo for all
-            if (!in_array($handler, ['opds', 'loader'])) {
+            if (!in_array($handler, ['loader'])) {
                 return Config::ENDPOINT['index'];
             }
         }

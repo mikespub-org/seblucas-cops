@@ -72,6 +72,19 @@ class RouteTest extends TestCase
         }
     }
 
+    public function testFrontController(): void
+    {
+        Config::set('front_controller', 'index.php');
+        $expected = Route::base() . 'recent';
+        $test = Route::link(null, 10);
+        $this->assertEquals($expected, $test);
+
+        Config::set('front_controller', '');
+        $expected = Route::base() . 'index.php/recent';
+        $test = Route::link(null, 10);
+        $this->assertEquals($expected, $test);
+    }
+
     /**
      * Summary of getLinks
      * @return array<mixed>
@@ -130,6 +143,9 @@ class RouteTest extends TestCase
             "feed.php?page=3&id=1&title=Arthur+Conan+Doyle" => "index.php/feed/3/1?title=Arthur+Conan+Doyle",
             "feed.php?page=3&id=1" => "index.php/feed/3/1",
             "feed.php?page=10" => "index.php/feed/10",
+            "opds.php?page=3&id=1&title=Arthur+Conan+Doyle" => "index.php/opds/3/1?title=Arthur+Conan+Doyle",
+            "opds.php?page=3&id=1" => "index.php/opds/3/1",
+            "opds.php?page=10" => "index.php/opds/10",
             "restapi.php?route=openapi" => "index.php/restapi/openapi",
             "graphql.php" => "index.php/graphql",
         ];
@@ -162,19 +178,22 @@ class RouteTest extends TestCase
         $page = $params["page"] ?? null;
         unset($params["page"]);
         $endpoint = parse_url((string) $link, PHP_URL_PATH);
+        $handler = "index";
         if ($endpoint !== Config::ENDPOINT["index"]) {
             $testpoint = str_replace('.php', '', $endpoint);
             if (array_key_exists($testpoint, Config::ENDPOINT)) {
                 $params[Route::HANDLER_PARAM] = $testpoint;
+                $handler = $testpoint;
             } else {
                 // for epubreader.php, checkconfig.php etc.
                 $flipped = array_flip(Config::ENDPOINT);
                 $params[Route::HANDLER_PARAM] = $flipped[$endpoint];
+                $handler = $flipped[$endpoint];
             }
         }
-        $test = Config::ENDPOINT["index"] . Route::page($page, $params);
-        //$test = Route::link(RestApi::$handler, $page, $params);
-        $this->assertEquals($expected, $test);
+        //$test = Config::ENDPOINT["index"] . Route::page($page, $params);
+        $test = Route::link($handler, $page, $params);
+        $this->assertStringEndsWith($expected, $test);
     }
 
     /**

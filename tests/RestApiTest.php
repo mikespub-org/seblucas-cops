@@ -215,7 +215,7 @@ class RestApiTest extends TestCase
         $test = RestApi::getRoutes($request);
         $expected = "Routes";
         $this->assertEquals($expected, $test["title"]);
-        $expected = 95;
+        $expected = 96;
         $this->assertCount($expected, $test["entries"]);
     }
 

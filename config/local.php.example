@@ -33,6 +33,19 @@ $config['cops_title_default'] = "COPS";
 $config['cops_use_url_rewriting'] = "0";
 
 /*
+ * Set front controller to remove index.php/ from route URLs generated in COPS
+ *
+ * Note: this assumes your web server config will rewrite /... to /index.php/...
+ * - Apache: .htaccess 
+ * - Nginx: nginx.conf
+ * - PHP built-in: router.php
+ * - ...
+ *
+ * $config['cops_front_controller'] = 'index.php';
+ */
+$config['cops_front_controller'] = '';
+
+/*
  * Specify the ignored formats that will never display in COPS
  */
 $config['cops_ignored_formats'] = ['ORIGINAL_EPUB', 'ORIGINAL_AZW3'];

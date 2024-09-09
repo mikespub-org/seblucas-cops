@@ -14,7 +14,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
-  * ...
+  * Changes in config/default.php file:
+    - new $config['cops_front_controller'] = '' value
+  * Set front controller to remove index.php/ from route URLs
 
 3.1.0 - 20240908 Breaking changes for 3.x
   * Changes in config/default.php file:

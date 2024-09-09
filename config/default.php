@@ -587,6 +587,19 @@ $config['cops_download_template'] = '{author} - {series} #{series_index} - {titl
 $config['cops_use_route_urls'] = '1';
 
 /*
+ * Set front controller to remove index.php/ from route URLs generated in COPS
+ *
+ * Note: this assumes your web server config will rewrite /... to /index.php/...
+ * - Apache: .htaccess 
+ * - Nginx: nginx.conf
+ * - PHP built-in: router.php
+ * - ...
+ *
+ * $config['cops_front_controller'] = 'index.php';
+ */
+$config['cops_front_controller'] = '';
+
+/*
  * Specify api key to access some restricted features via REST API (dev only)
  *
  * Example: generate a random api key once via command line

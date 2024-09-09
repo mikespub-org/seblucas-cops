@@ -1,6 +1,4 @@
 DirectoryIndex index.php
-# @todo do not use front.php here yet
-#DirectoryIndex front.php
 
 <IfModule mod_xsendfile.c>
 <Files fetch.php>
@@ -31,19 +29,14 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
 RewriteEngine on
 # @deprecated 3.1.0 use route urls instead
-RewriteRule ^download/(\d+)/(\d+)/.*\.kepub\.epub$ index.php/fetch/$2/$1/ignore.epub [L]
 RewriteRule ^download/(\d+)/(\d+)/.*\.(.*)$ index.php/fetch/$2/$1/ignore.$3 [L]
-RewriteRule ^download/(\d+)/.*\.kepub\.epub$ index.php/fetch/0/$1/ignore.epub [L]
 RewriteRule ^download/(\d+)/.*\.(.*)$ index.php/fetch/0/$1/ignore.$2 [L]
-RewriteRule ^view/(\d+)/(\d+)/.*\.kepub\.epub$ index.php/inline/$2/$1/ignore.epub [L]
 RewriteRule ^view/(\d+)/(\d+)/.*\.(.*)$ index.php/inline/$2/$1/ignore.$3 [L]
-RewriteRule ^view/(\d+)/.*\.kepub\.epub$ index.php/inline/0/$1/ignore.epub [L]
 RewriteRule ^view/(\d+)/.*\.(.*)$ index.php/inline/0/$1/ignore.$2 [L]
-# with $config['cops_use_route_urls'] = '1'
-# @todo do not use index.php here yet
-#RewriteCond %{REQUEST_FILENAME} !-d
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteRule ^(.*) index.php [L,E=PATH_INFO:/$1]
+# with $config['cops_front_controller'] = 'index.php'
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*) index.php [L,E=PATH_INFO:/$1]
 </IfModule>
 
 <IfModule mod_expires.c>

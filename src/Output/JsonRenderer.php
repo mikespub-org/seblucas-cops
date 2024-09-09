@@ -41,16 +41,18 @@ class JsonRenderer extends BaseRenderer
      */
     public static function getCurrentUrl($request)
     {
+        /**
         $pathInfo = $request->path();
         $queryString = $request->query();
         //return Route::link(static::$handler) . $pathInfo . Route::query($queryString, ['complete' => 1]);
         $uri = $pathInfo . Route::query($queryString, ['complete' => 1]);
-        if (Config::get('use_front_controller')) {
+        if (Config::get('front_controller')) {
             if (str_starts_with($uri, '/')) {
                 return Route::base() . substr($uri, 1);
             }
             return Route::base() . $uri;
         }
+         */
         $params = $request->urlParams;
         $params['complete'] = 1;
         return Route::link("json", null, $params);
