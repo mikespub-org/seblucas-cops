@@ -295,10 +295,8 @@ class Route
             return '';
         }
         if (Config::get('use_route_urls')) {
-            // use default endpoint for supported handlers - @todo for all
-            if (!in_array($handler, ['loader'])) {
-                return Config::ENDPOINT['index'];
-            }
+            // use default endpoint for supported handlers
+            return Config::ENDPOINT['index'];
         }
         // @deprecated 3.1.0 use index.php endpoint
         if (array_key_exists($handler, Config::ENDPOINT)) {
