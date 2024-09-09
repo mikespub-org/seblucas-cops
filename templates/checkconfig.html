@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COPS Configuration Check</title>
+    <link rel="stylesheet" type="text/css" href="{{=it.style}}" media="screen" />
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="headcenter">
+            <h1>COPS Configuration Check</h1>
+        </div>
+    </header>
+    <div id="content" style="display: none;"></div>
+    <section>
+        {{=it.error}}
+        <article class="frontpage">
+            <h2>Check if PHP version is correct</h2>
+            <h4>{{=it.phpversion}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if GD is properly installed and loaded</h2>
+            <h4>{{=it.extension_gd}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if Sqlite is properly installed and loaded</h2>
+            <h4>{{=it.extension_sqlite}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if libxml is properly installed and loaded</h2>
+            <h4>{{=it.extension_libxml}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if DOM is properly installed and loaded</h2>
+            <h4>{{=it.extension_dom}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if XMLWriter is properly installed and loaded</h2>
+            <h4>{{=it.extension_xmlwriter}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if Json is properly installed and loaded</h2>
+            <h4>{{=it.extension_json}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if mbstring is properly installed and loaded</h2>
+            <h4>{{=it.extension_mbstring}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if intl is properly installed and loaded</h2>
+            <h4>{{=it.extension_intl}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if Normalizer class is properly installed and loaded</h2>
+            <h4>{{=it.extension_Normalizer}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if zlib is properly installed and loaded</h2>
+            <h4>{{=it.extension_zlib}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if the base URL looks OK</h2>
+            <h4>{{=it.baseurl}}</h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if the rendering will be done on client side or server side</h2>
+            <h4>{{=it.render}}</h4>
+            <h2>User agent detected</h2>
+            <h4>{{=it.agent}}</h4>
+        </article>
+        {{=it.databases}}
+    </section>
+    <footer></footer>
+</div>
+</body>
+</html>

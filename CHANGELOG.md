@@ -16,6 +16,10 @@ x.x.x - TODO
 3.x.x - 2024xxxx
   * ...
 
+3.1.2 - 20240909 Minor fix for docker release
+  * Handle index.php/check to check configuration
+  * Upgrade twig/twig package to 3.14.0
+
 3.1.1 - 20240909 Release candidate for 3.x
   * Changes in config/default.php file:
     - new $config['cops_front_controller'] = '' value
