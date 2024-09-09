@@ -383,7 +383,7 @@ class RestApi extends BaseRenderer
             ],
         ];
         $result["servers"] = [
-            ["url" => Route::link(static::$handler) . '/restapi', "description" => "COPS REST API Endpoint"],
+            ["url" => Route::link(static::$handler), "description" => "COPS REST API Endpoint"],
         ];
         $result["components"] = [
             "securitySchemes" => [
@@ -411,6 +411,9 @@ class RestApi extends BaseRenderer
         ];
         $result["paths"] = [];
         foreach (Route::getRoutes() as $route => $queryParams) {
+            if (str_starts_with($route, '/restapi')) {
+                continue;
+            }
             $params = [];
             $found = [];
             $queryString = http_build_query($queryParams);

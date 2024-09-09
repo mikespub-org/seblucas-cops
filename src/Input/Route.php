@@ -287,11 +287,7 @@ class Route
     public static function endpoint($handler)
     {
         if (Config::get('front_controller')) {
-            // @todo special case for restapi
-            if (in_array($handler, ['restapi'])) {
-                return $handler;
-            }
-            // no endpoint prefix needed for other handlers
+            // no endpoint prefix for supported handlers
             return '';
         }
         if (Config::get('use_route_urls')) {

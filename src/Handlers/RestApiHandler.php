@@ -29,7 +29,9 @@ class RestApiHandler extends BaseHandler
         // Note: this supports all other routes with /restapi prefix
         // extra routes supported by REST API
         return [
+            // add default routes for handler to generate links
             "/restapi/{route:.*}" => [static::PARAM => static::HANDLER],
+            "/restapi" => [static::PARAM => static::HANDLER],
             "/custom" => [static::PARAM => static::HANDLER],
             "/databases/{db}/{name}" => [static::PARAM => static::HANDLER],
             "/databases/{db}" => [static::PARAM => static::HANDLER],
@@ -63,7 +65,7 @@ class RestApiHandler extends BaseHandler
 
         $path = $request->path();
         if (empty($path) || $path == '/restapi/') {
-            $data = ['link' => Route::link(static::HANDLER) . '/restapi/openapi'];
+            $data = ['link' => Route::link(static::HANDLER, null, ['route' => 'openapi'])];
             $template = dirname(__DIR__, 2) . '/templates/restapi.html';
 
             $response = new Response('text/html;charset=utf-8');

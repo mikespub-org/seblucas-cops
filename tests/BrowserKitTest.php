@@ -175,7 +175,9 @@ class BrowserKitTest extends TestCase
         $uri = Route::link('index') . '?page=index';
         $crawler = $this->url($uri);
 
-        if (!empty(static::$localConfig['cops_use_route_urls'])) {
+        if (!empty(static::$localConfig['cops_front_controller'])) {
+            $uri = Route::base() . 'index?complete=1';
+        } elseif (!empty(static::$localConfig['cops_use_route_urls'])) {
             $uri = Route::link('json') . '/index?complete=1';
         } else {
             $uri = Route::link('json') . '?page=index&complete=1';
@@ -251,7 +253,9 @@ class BrowserKitTest extends TestCase
             if ($template == 'default') {
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
-            if (!empty(static::$localConfig['cops_use_route_urls'])) {
+            if (!empty(static::$localConfig['cops_front_controller'])) {
+                $this->assertEquals(Route::base() . 'search/ali/book', $articles->filterXPath('//a')->attr('href'));
+            } elseif (!empty(static::$localConfig['cops_use_route_urls'])) {
                 $this->assertEquals(Route::link('index') . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
             } else {
                 $this->assertEquals(Route::link('index') . '?page=9&query=ali&scope=book', $articles->filterXPath('//a')->attr('href'));
