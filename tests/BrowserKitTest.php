@@ -49,6 +49,7 @@ class BrowserKitTest extends TestCase
     {
         // get config/local.php as used by webserver
         $config = [];
+        include dirname(__DIR__) . '/config/default.php';
         include dirname(__DIR__) . '/config/local.php';
         static::$localConfig = $config;
     }
@@ -172,7 +173,7 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Chrome');
 
-        $uri = Route::link('index') . '?page=index';
+        $uri = Route::link('index') . '/index';
         $crawler = $this->url($uri);
 
         if (!empty(static::$localConfig['cops_front_controller'])) {
@@ -186,7 +187,8 @@ class BrowserKitTest extends TestCase
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
 
-        $expected = 12;
+        // with standard local.php.example
+        $expected = 8;
         $result = $this->ajax($uri);
         $this->assertCount($expected, $result['entries']);
 
@@ -207,10 +209,11 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Kindle/2.0');
 
-        $uri = Route::link('index') . '?page=index';
+        $uri = Route::link('index') . '/index';
         $crawler = $this->url($uri);
 
-        $expected = 12;
+        // with standard local.php.example
+        $expected = 8;
         $articles = $crawler->filterXPath($xpath);
         $this->assertCount($expected, $articles);
 
