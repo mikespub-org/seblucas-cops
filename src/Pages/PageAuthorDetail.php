@@ -30,12 +30,8 @@ class PageAuthorDetail extends PageWithDetail
         } else {
             $this->getEntries($instance);
         }
-        $this->idPage = $instance->getEntryId();
+        $this->setInstance($instance);
         $this->title = $instance->name;  // not by getTitle() = $instance->sort here
-        $this->currentUri = $instance->getUri();
-        $this->parentTitle = $instance->getParentTitle();
-        $filterParams = $this->request->getFilterParams();
-        $this->parentUri = $instance->getParentUri($filterParams);
     }
 
     /**

@@ -29,9 +29,8 @@ class PageCustomDetail extends Page
         $customId = $this->request->get("custom", null);
         $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);
-        $this->idPage = $instance->getEntryId();
-        $this->title = $instance->getTitle();
-        $this->currentUri = $instance->getUri();
+        // $this->title may get updated below here
+        $this->setInstance($instance);
         if ($this->request->get('filter')) {
             $this->filterParams = [CustomColumn::URL_PARAM . '[' . $customId . ']' => $this->idGet];
             $this->getFilters($instance);
@@ -40,9 +39,6 @@ class PageCustomDetail extends Page
         } else {
             $this->getCustomEntries($instance);
         }
-        $this->parentTitle = $instance->getParentTitle();
-        $filterParams = $this->request->getFilterParams();
-        $this->parentUri = $instance->getParentUri($filterParams);
         if ($instance->hasChildCategories()) {
             $this->hierarchy = [
                 "parent" => $instance->getParentEntry(),

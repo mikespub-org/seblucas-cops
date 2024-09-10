@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 
@@ -81,38 +82,39 @@ class PageId
      * Summary of getPage
      * @param string|int|null $pageId
      * @param ?Request $request
+     * @param ?Base $instance @todo investigate potential use as alternative to getEntry()
      * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
      */
-    public static function getPage($pageId, $request)
+    public static function getPage($pageId, $request, $instance = null)
     {
         // @see https://www.php.net/manual/en/control-structures.match.php
         // Unlike switch, the comparison is an identity check (===) rather than a weak equality check (==)
         return match ((string) $pageId) {
             PageId::ALL_AUTHORS => new PageAllAuthors($request),
             PageId::AUTHORS_FIRST_LETTER => new PageAllAuthorsLetter($request),
-            PageId::AUTHOR_DETAIL => new PageAuthorDetail($request),
+            PageId::AUTHOR_DETAIL => new PageAuthorDetail($request, $instance),
             PageId::ALL_TAGS => new PageAllTags($request),
-            PageId::TAG_DETAIL => new PageTagDetail($request),
+            PageId::TAG_DETAIL => new PageTagDetail($request, $instance),
             PageId::ALL_LANGUAGES => new PageAllLanguages($request),
-            PageId::LANGUAGE_DETAIL => new PageLanguageDetail($request),
+            PageId::LANGUAGE_DETAIL => new PageLanguageDetail($request, $instance),
             PageId::ALL_CUSTOMS => new PageAllCustoms($request),
-            PageId::CUSTOM_DETAIL => new PageCustomDetail($request),
+            PageId::CUSTOM_DETAIL => new PageCustomDetail($request, $instance),
             PageId::ALL_RATINGS => new PageAllRating($request),
-            PageId::RATING_DETAIL => new PageRatingDetail($request),
+            PageId::RATING_DETAIL => new PageRatingDetail($request, $instance),
             PageId::ALL_SERIES => new PageAllSeries($request),
             PageId::ALL_BOOKS => new PageAllBooks($request),
             PageId::ALL_BOOKS_LETTER => new PageAllBooksLetter($request),
             PageId::ALL_BOOKS_YEAR => new PageAllBooksYear($request),
             PageId::ALL_RECENT_BOOKS => new PageRecentBooks($request),
-            PageId::SERIE_DETAIL => new PageSerieDetail($request),
+            PageId::SERIE_DETAIL => new PageSerieDetail($request, $instance),
             PageId::OPENSEARCH_QUERY => new PageQueryResult($request),
             // support ?query=... URL param by default for opensearch
             PageId::OPENSEARCH => !empty($request->get('query')) ? new PageQueryResult($request) : new PageIndex($request),
             PageId::BOOK_DETAIL => new PageBookDetail($request),
             PageId::ALL_PUBLISHERS => new PageAllPublishers($request),
-            PageId::PUBLISHER_DETAIL => new PagePublisherDetail($request),
+            PageId::PUBLISHER_DETAIL => new PagePublisherDetail($request, $instance),
             PageId::ALL_IDENTIFIERS => new PageAllIdentifiers($request),
-            PageId::IDENTIFIER_DETAIL => new PageIdentifierDetail($request),
+            PageId::IDENTIFIER_DETAIL => new PageIdentifierDetail($request, $instance),
             PageId::ALL_LIBRARIES => new PageAllVirtualLibraries($request),
             PageId::ABOUT => new PageAbout($request),
             PageId::CUSTOMIZE => new PageCustomize($request),

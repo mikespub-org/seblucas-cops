@@ -16,6 +16,7 @@ use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Pages\Page;
 
 abstract class Base
 {
@@ -211,6 +212,38 @@ abstract class Base
         );
         $entry->instance = $this;
         return $entry;
+    }
+
+    /**
+     * Summary of getParentTitle
+     * @return string
+     */
+    public function getParentTitle()
+    {
+        return localize("title.title");
+    }
+
+    /**
+     * Summary of getPage
+     * @param int $count
+     * @param array<mixed> $params
+     * @todo investigate potential use as alternative to getEntry()
+     * @return Page
+     */
+    public function getPage($count = 0, $params = [])
+    {
+        $params['id'] = $this->id;
+        // we need databaseId here because we use Route::link with $handler
+        $params['db'] = $this->getDatabaseId();
+        if (Config::get('use_route_urls')) {
+            $params['title'] = $this->getTitle();
+        }
+        $request = Request::build($params, $this->handler);
+        $page = PageId::getPage(static::PAGE_DETAIL, $request, $this);
+        if (!empty($count)) {
+            $page->totalNumber = $count;
+        }
+        return $page;
     }
 
     /** Use inherited class methods to get entries from <Whatever> by instance (linked via books) */

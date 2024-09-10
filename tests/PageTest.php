@@ -8,10 +8,12 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Pages\PageAuthorDetail;
 use SebLucas\Cops\Pages\PageId;
 
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -427,6 +429,27 @@ class PageTest extends TestCase
         $this->assertEquals("English", $currentPage->entryArray [1]->title);
         $this->assertEquals("8 books", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageAuthorsDetail_Instance(): void
+    {
+        $author = Author::getInstanceById(1);
+        $params = ['n' => 2];
+
+        // navlink contains the paginated uri
+        $entry = $author->getEntry(8, $params);
+        $this->assertEquals($author->getUri($params), $entry->getNavLink());
+
+        $currentPage = $author->getPage(8, $params);
+
+        $this->assertEquals(PageAuthorDetail::class, $currentPage::class);
+        $this->assertEquals("Arthur Conan Doyle", $currentPage->title);
+        $this->assertCount(0, $currentPage->entryArray);
+        // currentUri contains the unfiltered uri
+        $this->assertEquals($author->getUri(), $currentPage->currentUri);
+        $this->assertEquals("cops:authors:1", $currentPage->idPage);
+        $this->assertEquals(8, $currentPage->totalNumber);
+        $this->assertEquals(2, $currentPage->n);
     }
 
     public function testPageAllBooks_WithFullName(): void

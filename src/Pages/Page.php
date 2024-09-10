@@ -87,8 +87,9 @@ class Page
     /**
      * Summary of __construct
      * @param ?Request $request
+     * @param ?Base $instance @todo investigate potential use as alternative to getEntry()
      */
-    public function __construct($request = null)
+    public function __construct($request = null, $instance = null)
     {
         $this->setRequest($request);
         $this->favicon = Config::get('icon');
@@ -97,7 +98,12 @@ class Page
         $this->authorEmail = Config::get('author_email') ?: 'sebastien@slucas.fr';
 
         // move to constructor as this is always called directly after PageId::getPage()
-        $this->initializeContent();
+        if (empty($instance)) {
+            $this->initializeContent();
+        } else {
+            // do not call getEntries() here
+            $this->setInstance($instance);
+        }
     }
 
     /**
@@ -115,6 +121,22 @@ class Page
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->database();
         $this->handler = $this->request->getHandler();
+    }
+
+    /**
+     * Summary of setInstance
+     * @param ?Base $instance
+     * @return void
+     */
+    public function setInstance($instance)
+    {
+        $this->idPage = $instance->getEntryId();
+        $this->title = $instance->getTitle();
+        // this is the unfiltered uri here, used in JsonRenderer - @todo do we want to use request->urlParams?
+        $this->currentUri = $instance->getUri();
+        $this->parentTitle = $instance->getParentTitle();
+        $filterParams = $this->request->getFilterParams();
+        $this->parentUri = $instance->getParentUri($filterParams);
     }
 
     /**

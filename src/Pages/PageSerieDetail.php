@@ -33,12 +33,7 @@ class PageSerieDetail extends PageWithDetail
         } else {
             $this->getEntries($instance);
         }
-        $this->idPage = $instance->getEntryId();
-        $this->title = $instance->getTitle();
-        $this->currentUri = $instance->getUri();
-        $this->parentTitle = $instance->getParentTitle();
-        $filterParams = $this->request->getFilterParams();
-        $this->parentUri = $instance->getParentUri($filterParams);
+        $this->setInstance($instance);
         //if ($instance->hasChildCategories()) {
         //    $this->hierarchy = [
         //        "parent" => $instance->getParentEntry(),
