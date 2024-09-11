@@ -419,6 +419,7 @@ class OpdsRenderer extends BaseRenderer
         $req->set('filter', 1);
         $filterPage = PageId::getPage($request->get('page'), $req);
         //$request->set('filter', null);
+        // @todo get rid of extraParams as filters should be included in navlink now
         $extraParams = $filterPage->filterParams;
         if ($request->get('sort')) {
             $extraParams['sort'] = $request->get('sort');

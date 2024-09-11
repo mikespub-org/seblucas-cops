@@ -307,7 +307,9 @@ abstract class Base
     {
         $database ??= $this->databaseId;
         $numberPerPage ??= $this->filterLimit;
-        $request = Request::build([], $this->handler);
+        // @todo get rid of extraParams in JsonRenderer and OpdsRenderer as filters should be included in navlink now
+        $params = $this->getExtraParams();
+        $request = Request::build($params, $this->handler);
         $baselist = new BaseList($className, $request, $database, $numberPerPage);
         $baselist->orderBy = $sort;
         return $baselist->getEntriesByInstance($this, $n, $this->filterParams);
@@ -425,6 +427,7 @@ abstract class Base
 
     /**
      * Summary of setFilterParams if we want to filter by virtual library etc.
+     * @see Page::getFilters()
      * @param array<string, mixed> $filterParams
      * @return void
      */
@@ -440,6 +443,15 @@ abstract class Base
     public function getFilterParams()
     {
         return $this->filterParams;
+    }
+
+    /**
+     * Summary of getExtraParams if we want to add extra params to entry links etc.
+     * @return array<string, mixed>
+     */
+    public function getExtraParams()
+    {
+        return array_merge([static::URL_PARAM => $this->id], $this->filterParams);
     }
 
     /**
@@ -472,7 +484,8 @@ abstract class Base
             }
         }
         $default = static::getDefaultName();
-        return new $className((object) ['id' => null, 'name' => $default, 'sort' => $default], $database);
+        // use id = 0 to support route urls
+        return new $className((object) ['id' => 0, 'name' => $default, 'sort' => $default], $database);
     }
 
     /**

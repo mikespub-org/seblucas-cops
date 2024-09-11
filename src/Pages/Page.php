@@ -325,111 +325,73 @@ class Page
         if (!empty($libraryId)) {
             $instance->setFilterParams([VirtualLibrary::URL_PARAM => $libraryId]);
         }
+        // @todo get rid of extraParams in JsonRenderer and OpdsRenderer as filters should be included in navlink now
+        $params = $instance->getExtraParams();
+        $params['db'] = $this->getDatabaseId();
+        $filtersTitle = localize("filters.title");
         if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
-            array_push($this->entryArray, new Entry(
-                localize("authors.title"),
-                "",
-                localize("filters.title"),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, Author::PAGE_ALL), "authors") ],
-                $this->getDatabaseId(),
-                "",
-                ""
-            ));
+            $title = localize(phrase: "authors.title");
+            $href = Route::link($this->handler, Author::PAGE_ALL, $params);
+            $relation = "authors";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['a'] ??= 1;
-            $this->entryArray = array_merge($this->entryArray, $instance->getAuthors($paging['a']));
+            $this->addEntries($instance->getAuthors($paging['a']));
         }
         if (!($instance instanceof Language) && in_array('language', $filterLinks)) {
-            array_push($this->entryArray, new Entry(
-                localize("languages.title"),
-                "",
-                localize("filters.title"),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, Language::PAGE_ALL), "languages") ],
-                $this->getDatabaseId(),
-                "",
-                ""
-            ));
+            $title = localize("languages.title");
+            $href = Route::link($this->handler, Language::PAGE_ALL, $params);
+            $relation = "languages";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['l'] ??= 1;
-            $this->entryArray = array_merge($this->entryArray, $instance->getLanguages($paging['l']));
+            $this->addEntries($instance->getLanguages($paging['l']));
         }
         if (!($instance instanceof Publisher) && in_array('publisher', $filterLinks)) {
-            array_push($this->entryArray, new Entry(
-                localize("publishers.title"),
-                "",
-                localize("filters.title"),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, Publisher::PAGE_ALL), "publishers") ],
-                $this->getDatabaseId(),
-                "",
-                ""
-            ));
+            $title = localize("publishers.title");
+            $href = Route::link($this->handler, Publisher::PAGE_ALL, $params);
+            $relation = "publishers";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['p'] ??= 1;
-            $this->entryArray = array_merge($this->entryArray, $instance->getPublishers($paging['p']));
+            $this->addEntries($instance->getPublishers($paging['p']));
         }
         if (!($instance instanceof Rating) && in_array('rating', $filterLinks)) {
-            array_push($this->entryArray, new Entry(
-                localize("ratings.title"),
-                "",
-                localize("filters.title"),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, Rating::PAGE_ALL), "ratings") ],
-                $this->getDatabaseId(),
-                "",
-                ""
-            ));
+            $title = localize("ratings.title");
+            $href = Route::link($this->handler, Rating::PAGE_ALL, $params);
+            $relation = "ratings";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['r'] ??= 1;
-            $this->entryArray = array_merge($this->entryArray, $instance->getRatings($paging['r']));
+            $this->addEntries($instance->getRatings($paging['r']));
         }
         if (!($instance instanceof Serie) && in_array('series', $filterLinks)) {
-            array_push($this->entryArray, new Entry(
-                localize("series.title"),
-                "",
-                localize("filters.title"),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, Serie::PAGE_ALL), "series") ],
-                $this->getDatabaseId(),
-                "",
-                ""
-            ));
+            $title = localize("series.title");
+            $href = Route::link($this->handler, Serie::PAGE_ALL, $params);
+            $relation = "series";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['s'] ??= 1;
-            $this->entryArray = array_merge($this->entryArray, $instance->getSeries($paging['s']));
+            $this->addEntries($instance->getSeries($paging['s']));
         }
         if (in_array('tag', $filterLinks)) {
-            array_push($this->entryArray, new Entry(
-                localize("tags.title"),
-                "",
-                localize("filters.title"),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, Tag::PAGE_ALL), "tags") ],
-                $this->getDatabaseId(),
-                "",
-                ""
-            ));
+            $title = localize("tags.title");
+            $href = Route::link($this->handler, Tag::PAGE_ALL, $params);
+            $relation = "tags";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['t'] ??= 1;
             // special case if we want to find other tags applied to books where this tag applies
             if ($instance instanceof Tag) {
                 $instance->limitSelf = false;
             }
-            $this->entryArray = array_merge($this->entryArray, $instance->getTags($paging['t']));
+            $this->addEntries($instance->getTags($paging['t']));
         }
         if (in_array('identifier', $filterLinks)) {
-            array_push($this->entryArray, new Entry(
-                localize("identifiers.title"),
-                "",
-                localize("filters.title"),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, Identifier::PAGE_ALL), "identifiers") ],
-                $this->getDatabaseId(),
-                "",
-                ""
-            ));
+            $title = localize("identifiers.title");
+            $href = Route::link($this->handler, Identifier::PAGE_ALL, $params);
+            $relation = "identifiers";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['i'] ??= 1;
             // special case if we want to find other identifiers applied to books where this identifier applies
             if ($instance instanceof Identifier) {
                 $instance->limitSelf = false;
             }
-            $this->entryArray = array_merge($this->entryArray, $instance->getIdentifiers($paging['i']));
+            $this->addEntries($instance->getIdentifiers($paging['i']));
         }
         /**
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
@@ -438,21 +400,66 @@ class Page
             $paging['c'] ??= [];
             foreach ($columns as $label => $column) {
                 $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());
-                array_push($this->entryArray, new Entry(
-                    $customType->getTitle(),
-                    "",
-                    localize("filters.title"),
-                    "text",
-                    [ new LinkNavigation($customType->getUri(), Identifier::PAGE_ALL), $customType->getTitle()) ],
-                    $this->getDatabaseId(),
-                    "",
-                    ""
-                ));
+                $title = $customType->getTitle();
+                $href = $customType->getParentUri();
+                $relation = $customType->getTitle();
+                $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
                 $paging['c'][$column['id']] ??= 1;
                 $entries = $instance->getCustomValues($customType);
+                // @todo
             }
         }
          */
+    }
+
+    /**
+     * Summary of addEntries
+     * @param array<Entry> $entries
+     * @return void
+     */
+    public function addEntries($entries)
+    {
+        $this->entryArray = array_merge($this->entryArray, $entries);
+    }
+
+    /**
+     * Summary of addHeaderEntry
+     * @param string $title
+     * @param string $content
+     * @param ?string $href
+     * @param ?string $relation
+     * @return void
+     */
+    public function addHeaderEntry($title, $content, $href = null, $relation = null)
+    {
+        array_push($this->entryArray, $this->getHeaderEntry($title, $content, $href, $relation));
+    }
+
+    /**
+     * Summary of getHeaderEntry
+     * @param string $title
+     * @param string $content
+     * @param ?string $href
+     * @param ?string $relation
+     * @return Entry
+     */
+    public function getHeaderEntry($title, $content, $href = null, $relation = null)
+    {
+        if (empty($href)) {
+            $linkArray = [];
+        } else {
+            $linkArray = [ new LinkNavigation($href, $relation) ];
+        }
+        return new Entry(
+            $title,
+            "",
+            $content,
+            "text",
+            $linkArray,
+            $this->getDatabaseId(),
+            "",
+            ""
+        );
     }
 
     /**

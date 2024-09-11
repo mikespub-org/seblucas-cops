@@ -202,6 +202,22 @@ class PageTest extends TestCase
         $this->assertEquals(4, $currentPage->entryArray [8]->numberOfElement);
         $this->assertFalse($currentPage->containsBook());
 
+        $this->assertEquals(['vl' => '2.Short_Stories_in_English'], $currentPage->filterParams);
+        $this->assertStringEndsWith("index.php/authors?vl=2.Short_Stories_in_English", $currentPage->entryArray [0]->getNavLink());
+        $this->assertStringEndsWith("index.php/series?vl=2.Short_Stories_in_English", $currentPage->entryArray [1]->getNavLink());
+
+        $request->set('a', 1);
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertCount(9, $currentPage->entryArray);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+
+        $this->assertEquals(['a' => 1, 'vl' => '2.Short_Stories_in_English'], $currentPage->filterParams);
+        $this->assertStringEndsWith("index.php/authors?vl=2.Short_Stories_in_English&a=1", $currentPage->entryArray [0]->getNavLink());
+        $this->assertStringEndsWith("index.php/series?vl=2.Short_Stories_in_English&a=1", $currentPage->entryArray [1]->getNavLink());
+
         Config::set('calibre_virtual_libraries', []);
     }
 
@@ -429,6 +445,10 @@ class PageTest extends TestCase
         $this->assertEquals("English", $currentPage->entryArray [1]->title);
         $this->assertEquals("8 books", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
+
+        $this->assertEquals(['a' => 1], $currentPage->filterParams);
+        $this->assertStringEndsWith("index.php/languages?a=1", $currentPage->entryArray [0]->getNavLink());
+        $this->assertStringEndsWith("index.php/languages/1/English?a=1", $currentPage->entryArray [1]->getNavLink());
     }
 
     public function testPageAuthorsDetail_Instance(): void

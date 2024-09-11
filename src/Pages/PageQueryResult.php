@@ -257,7 +257,6 @@ class PageQueryResult extends Page
     public function getDatabaseEntries()
     {
         $ignoredCategories = $this->getIgnoredCategories();
-        $pagequery = $this->idPage;
         $query = $this->query;
         $crit = "%" . $this->query . "%";
         $d = 0;
@@ -265,17 +264,43 @@ class PageQueryResult extends Page
             Database::clearDb();
             $booklist = new BookList($this->request, $d, 1);
             [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
-            array_push($this->entryArray, new Entry(
-                $key,
-                "db:query:{$d}",
-                str_format(localize("bookword", $totalNumber), $totalNumber),
-                "text",
-                [ new LinkNavigation(Route::link($this->handler, $pagequery, ['query' => $query, 'db' => $d])) ],
-                null,
-                "",
-                $totalNumber
-            ));
+            $this->addDatabaseEntry($key, $d, $totalNumber, $query);
             $d++;
         }
+    }
+
+    /**
+     * Summary of addDatabaseEntry
+     * @param string $name
+     * @param int $idx
+     * @param int $count
+     * @param string $query
+     * @return void
+     */
+    public function addDatabaseEntry($name, $idx, $count, $query)
+    {
+        array_push($this->entryArray, $this->getDatabaseEntry($name, $idx, $count, $query));
+    }
+
+    /**
+     * Summary of getDatabaseEntry
+     * @param string $name
+     * @param int $idx
+     * @param int $count
+     * @param string $query
+     * @return Entry
+     */
+    public function getDatabaseEntry($name, $idx, $count, $query)
+    {
+        return new Entry(
+            $name,
+            "db:query:{$idx}",
+            str_format(localize("bookword", $count), $count),
+            "text",
+            [ new LinkNavigation(Route::link($this->handler, $this->idPage, ['query' => $query, 'db' => $idx])) ],
+            null,
+            "",
+            $count
+        );
     }
 }

@@ -104,6 +104,8 @@ class PageCustomize extends Page
             "language"];
 
         $database = $this->getDatabaseId();
+
+        $title = localize("customize.template");
         $content = "";
         if ($this->useSelectTag()) {
             $content .= "<select id='template' onchange='updateCookie (this); window.location=window.location;'>";
@@ -117,15 +119,9 @@ class PageCustomize extends Page
                 $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=window.location;' id='template-{$filename}' name='template' value='{$filename}' " . $this->isChecked("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label><br>";
             }
         }
-        array_push($this->entryArray, new Entry(
-            localize("customize.template"),
-            "",
-            $content,
-            "text",
-            [],
-            $database
-        ));
+        $this->addHeaderEntry($title, $content);
 
+        $title = localize("customize.style");
         $content = "";
         if ($this->useSelectTag()) {
             $content .= '<select id="style" name="style" onchange="updateCookie (this); window.location=window.location;">';
@@ -138,66 +134,33 @@ class PageCustomize extends Page
                 $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);window.location=window.location;' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label><br>";
             }
         }
-        array_push($this->entryArray, new Entry(
-            localize("customize.style"),
-            "",
-            $content,
-            "text",
-            [],
-            $database
-        ));
+        $this->addHeaderEntry($title, $content);
+
         if (!$this->request->render()) {
+            $title = localize("customize.fancybox");
             $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $this->isChecked("use_fancyapps") . ' />';
-            array_push($this->entryArray, new Entry(
-                localize("customize.fancybox"),
-                "",
-                $content,
-                "text",
-                [],
-                $database
-            ));
+            $this->addHeaderEntry($title, $content);
         }
+
+        $title = localize("customize.paging");
         $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . strval($this->getNumberPerPage()) . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
-        array_push($this->entryArray, new Entry(
-            localize("customize.paging"),
-            "",
-            $content,
-            "text",
-            [],
-            $database
-        ));
+        $this->addHeaderEntry($title, $content);
+
+        $title = localize("customize.email");
         $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . $this->request->option("email") . '" />';
-        array_push($this->entryArray, new Entry(
-            localize("customize.email"),
-            "",
-            $content,
-            "text",
-            [],
-            $database
-        ));
+        $this->addHeaderEntry($title, $content);
+
+        $title = localize("customize.filter");
         $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $this->isChecked("html_tag_filter") . ' />';
-        array_push($this->entryArray, new Entry(
-            localize("customize.filter"),
-            "",
-            $content,
-            "text",
-            [],
-            $database
-        ));
+        $this->addHeaderEntry($title, $content);
+
+        $title = localize("customize.ignored");
         $content = "";
         foreach ($ignoredBaseArray as $key) {
             $keyPlural = preg_replace('/(ss)$/', 's', $key . "s");
             $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $this->isChecked("ignored_categories", $key) . ' > ' . localize("{$keyPlural}.title") . '</input><br>';
         }
-
-        array_push($this->entryArray, new Entry(
-            localize("customize.ignored"),
-            "",
-            $content,
-            "text",
-            [],
-            $database
-        ));
+        $this->addHeaderEntry($title, $content);
 
         $this->addVirtualLibraries($database);
     }
@@ -222,6 +185,7 @@ class PageCustomize extends Page
         if (empty($libraries)) {
             return;
         }
+        $title = localize("library.title");
         $content = "";
         $id = 1;
         if ($this->useSelectTag()) {
@@ -241,13 +205,6 @@ class PageCustomize extends Page
                 $id += 1;
             }
         }
-        array_push($this->entryArray, new Entry(
-            localize("library.title"),
-            "",
-            $content,
-            "text",
-            [],
-            $database
-        ));
+        $this->addHeaderEntry($title, $content);
     }
 }
