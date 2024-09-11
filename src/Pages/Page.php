@@ -215,7 +215,11 @@ class Page
     {
         if ($this->n > 1) {
             $params = $this->request->getCleanParams();
-            return new LinkNavigation(Route::link($this->handler, null, $params), "first", localize("paging.first.alternate"));
+            return new LinkNavigation(
+                Route::link($this->handler, null, $params),
+                "first",
+                localize("paging.first.alternate")
+            );
         }
         return null;
     }
@@ -229,7 +233,11 @@ class Page
         if ($this->n < $this->getMaxPage()) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->getMaxPage());
-            return new LinkNavigation(Route::link($this->handler, null, $params), "last", localize("paging.last.alternate"));
+            return new LinkNavigation(
+                Route::link($this->handler, null, $params),
+                "last",
+                localize("paging.last.alternate")
+            );
         }
         return null;
     }
@@ -243,7 +251,11 @@ class Page
         if ($this->n < $this->getMaxPage()) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n + 1);
-            return new LinkNavigation(Route::link($this->handler, null, $params), "next", localize("paging.next.alternate"));
+            return new LinkNavigation(
+                Route::link($this->handler, null, $params),
+                "next",
+                localize("paging.next.alternate")
+            );
         }
         return null;
     }
@@ -257,7 +269,11 @@ class Page
         if ($this->n > 1) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n - 1);
-            return new LinkNavigation(Route::link($this->handler, null, $params), "previous", localize("paging.previous.alternate"));
+            return new LinkNavigation(
+                Route::link($this->handler, null, $params),
+                "previous",
+                localize("paging.previous.alternate")
+            );
         }
         return null;
     }
@@ -474,6 +490,15 @@ class Page
         if ($this->entryArray [0]::class == EntryBook::class) {
             return true;
         }
+        return false;
+    }
+
+    /**
+     * Summary of canFilter
+     * @return bool
+     */
+    public function canFilter()
+    {
         return false;
     }
 }

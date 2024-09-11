@@ -160,7 +160,8 @@ class OpdsRenderer extends BaseRenderer
         $this->getXmlStream()->text($page->authorEmail);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->endElement();
-        $link = new LinkNavigation(Route::link(static::$handler), "start", "Home");
+        $url = Route::link(static::$handler);
+        $link = new LinkNavigation($url, "start", "Home");
         $this->renderLink($link);
         // @todo check with pathInfo
         $url = Route::link(static::$handler, null, $request->urlParams);
@@ -175,14 +176,24 @@ class OpdsRenderer extends BaseRenderer
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             $url = Route::link(static::$handler, PageId::OPENSEARCH, $params);
-            $link = new LinkEntry($url, "application/opensearchdescription+xml", "search", "Search here");
+            $link = new LinkEntry(
+                $url,
+                "application/opensearchdescription+xml",
+                "search",
+                "Search here"
+            );
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "{searchTerms}";
             $url = Route::link(static::$handler, null, $params);
             $url = str_replace("%7B", "{", $url);
             $url = str_replace("%7D", "}", $url);
-            $link = new LinkEntry($url, "application/atom+xml", "search", "Search here");
+            $link = new LinkEntry(
+                $url,
+                "application/atom+xml",
+                "search",
+                "Search here"
+            );
         }
         $this->renderLink($link);
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
@@ -190,7 +201,15 @@ class OpdsRenderer extends BaseRenderer
             foreach (Config::get('books_filter') as $lib => $filter) {
                 //$link = new LinkFacet(Route::query($request->query(), ["tag" => $filter]), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
                 $params = array_replace($request->urlParams, ["tag" => $filter]);
-                $link = new LinkFacet(Route::link(static::$handler, null, $params), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
+                $url = Route::link(static::$handler, null, $params);
+                $link = new LinkFacet(
+                    $url,
+                    $lib,
+                    localize("tagword.title"),
+                    $filter == $Urlfilter,
+                    null,
+                    $database
+                );
                 $this->renderLink($link);
             }
         }
@@ -384,7 +403,13 @@ class OpdsRenderer extends BaseRenderer
         // @todo we can't use really facetGroups here, or OPDS reader thinks we're drilling down :-()
         foreach ($sortOptions as $field => $title) {
             $url = str_format($sortUrl, $field);
-            $link = new LinkFacet($url, $title, $sortLabel, $field == $sortParam, null);
+            $link = new LinkFacet(
+                $url,
+                $title,
+                $sortLabel,
+                $field == $sortParam,
+                null
+            );
             //$link = new LinkNavigation($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
             //$link = new LinkFeed($url, 'http://opds-spec.org/sort/' . $field, $sortLabel . ' ' . $title);
             $this->renderLink($link);
@@ -402,9 +427,7 @@ class OpdsRenderer extends BaseRenderer
         if (!$page->containsBook()) {
             return;
         }
-        $pageId = $request->get('page', PageId::INDEX);
-        $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
-        if (empty($request->getId()) || empty(Config::get('opds_filter_links')) || in_array($pageId, $skipFilterUrl)) {
+        if (!$page->canFilter()) {
             return;
         }
         //$params = $request->getCleanParams();
@@ -434,7 +457,14 @@ class OpdsRenderer extends BaseRenderer
             $group = strtolower($entry->className);
             $group = localize($group . 's.title');
             $url = $entry->getNavLink($extraParams);
-            $link = new LinkFacet($url, $entry->title, $group, false, $entry->numberOfElement, $database);
+            $link = new LinkFacet(
+                $url,
+                $entry->title,
+                $group,
+                false,
+                $entry->numberOfElement,
+                $database
+            );
             $this->renderLink($link);
         }
     }

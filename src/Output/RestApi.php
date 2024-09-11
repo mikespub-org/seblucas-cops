@@ -780,7 +780,11 @@ class RestApi extends BaseRenderer
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
             $instance->setHandler(static::$handler);
             $entry = $instance->getEntry();
-            array_push($result["entries"], ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
+            array_push($result["entries"], [
+                "class" => $entry->className,
+                "title" => $entry->title,
+                "navlink" => $entry->getNavLink(),
+            ]);
         }
         return $result;
     }

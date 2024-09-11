@@ -74,21 +74,30 @@ class JsonRenderer extends BaseRenderer
             $data = $book->getDataFormat($format);
             if ($data) {
                 $i++;
-                array_push($preferedData, ["url" => $data->getHtmlLink(),
-                    "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
+                array_push($preferedData, [
+                    "name" => $format,
+                    "url" => $data->getHtmlLink(),
+                    "viewUrl" => $data->getViewHtmlLink(),
+                ]);
             }
         }
 
         $authors = [];
         foreach ($book->getAuthors() as $author) {
             $author->setHandler($handler);
-            array_push($authors, ["name" => $author->name, "url" => $author->getUri()]);
+            array_push($authors, [
+                "name" => $author->name,
+                "url" => $author->getUri(),
+            ]);
         }
 
         $tags = [];
         foreach ($book->getTags() as $tag) {
             $tag->setHandler($handler);
-            array_push($tags, ["name" => $tag->name, "url" => $tag->getUri()]);
+            array_push($tags, [
+                "name" => $tag->name,
+                "url" => $tag->getUri(),
+            ]);
         }
 
         $publisher = $book->getPublisher();
@@ -114,7 +123,8 @@ class JsonRenderer extends BaseRenderer
         }
         $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);
 
-        return ["id" => $book->id,
+        return [
+            "id" => $book->id,
             "detailurl" => $book->getDetailUrl($handler),
             "hasCover" => $book->hasCover,
             "preferedData" => $preferedData,
@@ -132,7 +142,8 @@ class JsonRenderer extends BaseRenderer
             "seriesIndex" => $book->seriesIndex,
             "seriesCompleteName" => $scn,
             "seriesurl" => $su,
-            "customcolumns_list" => $cc];
+            "customcolumns_list" => $cc,
+        ];
     }
 
     /**
@@ -158,12 +169,14 @@ class JsonRenderer extends BaseRenderer
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
         foreach ($book->getDatas() as $data) {
-            $tab = ["id" => $data->id,
+            $tab = [
+                "id" => $data->id,
                 "format" => $data->format,
                 "url" => $data->getHtmlLink(),
                 "viewUrl" => $data->getViewHtmlLink(),
                 "mail" => 0,
-                "readerUrl" => ""];
+                "readerUrl" => "",
+            ];
             if (!empty(Config::get('mail_configuration')) && !is_null($dataKindle) && $data->id == $dataKindle->id) {
                 $tab ["mail"] = 1;
             }
@@ -179,26 +192,43 @@ class JsonRenderer extends BaseRenderer
         $out ["extraFiles"] = [];
         foreach ($book->getExtraFiles() as $fileName) {
             $link = $book->getExtraFileLink($fileName);
-            array_push($out ["extraFiles"], ["name" => $link->title, "url" => $link->hrefXhtml(), "length" => $link->length, "mtime" => $link->mtime]);
+            array_push($out ["extraFiles"], [
+                "name" => $link->title,
+                "url" => $link->hrefXhtml(),
+                "length" => $link->length,
+                "mtime" => $link->mtime,
+            ]);
         }
         if (count($out ["extraFiles"]) > 0) {
             $url = Route::link("fetch", null, ["id" => $book->id, "db" => ($database ?? 0), "file" => "zipped"]);
-            array_unshift($out ["extraFiles"], ["name" => " * ", "url" => $url]);
+            array_unshift($out ["extraFiles"], [
+                "name" => " * ",
+                "url" => $url,
+            ]);
         }
         $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
             $author->setHandler($handler);
-            array_push($out ["authors"], ["name" => $author->name, "url" => $author->getUri()]);
+            array_push($out ["authors"], [
+                "name" => $author->name,
+                "url" => $author->getUri(),
+            ]);
         }
         $out ["tags"] = [];
         foreach ($book->getTags() as $tag) {
             $tag->setHandler($handler);
-            array_push($out ["tags"], ["name" => $tag->name, "url" => $tag->getUri()]);
+            array_push($out ["tags"], [
+                "name" => $tag->name,
+                "url" => $tag->getUri(),
+            ]);
         }
 
         $out ["identifiers"] = [];
         foreach ($book->getIdentifiers() as $ident) {
-            array_push($out ["identifiers"], ["name" => $ident->formattedType, "url" => $ident->getLink()]);
+            array_push($out ["identifiers"], [
+                "name" => $ident->formattedType,
+                "url" => $ident->getLink(),
+            ]);
         }
 
         $out ["customcolumns_preview"] = $book->getCustomColumnValues(Config::get('calibre_custom_column_preview'), true);
@@ -256,9 +286,17 @@ class JsonRenderer extends BaseRenderer
         $out = [];
         foreach ($currentPage->entryArray as $entry) {
             if ($entry instanceof EntryBook) {
-                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
+                array_push($out, [
+                    "class" => $entry->className,
+                    "title" => $entry->title,
+                    "navlink" => $entry->book->getDetailUrl(),
+                ]);
             } else {
-                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
+                array_push($out, [
+                    "class" => $entry->className,
+                    "title" => $entry->title,
+                    "navlink" => $entry->getNavLink(),
+                ]);
             }
         }
         return $out;
@@ -383,10 +421,9 @@ class JsonRenderer extends BaseRenderer
     /**
      * Summary of addSortFilter
      * @param Page $currentPage
-     * @param ?int $qid
      * @return array<string, mixed>
      */
-    public function addSortFilter($currentPage, $qid)
+    public function addSortFilter($currentPage)
     {
         $out = [];
         $out ["sorted"] = $currentPage->sorted ?? '';
@@ -406,12 +443,6 @@ class JsonRenderer extends BaseRenderer
         }
         $out ["containsBook"] = 0;
         $out ["filterurl"] = false;
-        if ($this->request->isFeed()) {
-            $filterLinks = Config::get('opds_filter_links');
-        } else {
-            $filterLinks = Config::get('html_filter_links');
-        }
-        $skipFilterUrl = [PageId::AUTHORS_FIRST_LETTER, PageId::ALL_BOOKS_LETTER, PageId::ALL_BOOKS_YEAR, PageId::ALL_RECENT_BOOKS, PageId::BOOK_DETAIL];
         if ($currentPage->containsBook()) {
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
@@ -419,12 +450,12 @@ class JsonRenderer extends BaseRenderer
             $params['sort'] = '{0}';
             $out ["sorturl"] = str_replace('%7B0%7D', '{0}', Route::link($this->handler, null, $params));
             $out ["sortoptions"] = $currentPage->getSortOptions();
-            if (!empty($qid) && !empty($filterLinks) && !in_array($this->page, $skipFilterUrl)) {
+            if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
                 $params['filter'] = 1;
                 $out ["filterurl"] = Route::link($this->handler, null, $params);
             }
-        } elseif (!empty($qid) && !empty($filterLinks) && !in_array($this->page, $skipFilterUrl)) {
+        } elseif ($currentPage->canFilter()) {
             $params = $this->request->getCleanParams();
             $params['filter'] = null;
             $out ["filterurl"] = Route::link($this->handler, null, $params);
@@ -663,7 +694,7 @@ class JsonRenderer extends BaseRenderer
             $out ["c"] = $this->getCompleteArray();
         }
 
-        $out = array_replace($out, $this->addSortFilter($currentPage, $qid));
+        $out = array_replace($out, $this->addSortFilter($currentPage));
         $out["filters"] = $this->getFiltersArray();
 
         $out["abouturl"] = Route::link($handler, PageId::ABOUT, ['db' => $database]);

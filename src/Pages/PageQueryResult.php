@@ -132,12 +132,13 @@ class PageQueryResult extends Page
         }
         foreach ($dbArray as $key) {
             if (Database::noDatabaseSelected($database)) {
+                $url = Route::link($this->handler, null, ["db" => $d]);
                 array_push($this->entryArray, new Entry(
                     $key,
                     "db:query:{$d}",
                     " ",
                     "text",
-                    [ new LinkNavigation(Route::link($this->handler, null, ["db" => $d])) ],
+                    [ new LinkNavigation($url) ],
                     null,
                     "tt-header"
                 ));
@@ -173,12 +174,13 @@ class PageQueryResult extends Page
                     if (!empty($libraryId)) {
                         $params['vl'] = $libraryId;
                     }
+                    $url = Route::link($this->handler, $pagequery, $params);
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$key}"), $this->query),
                         "db:query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
-                        [ new LinkNavigation(Route::link($this->handler, $pagequery, $params)) ],
+                        [ new LinkNavigation($url) ],
                         $database,
                         Database::noDatabaseSelected($database) ? "" : "tt-header",
                         $total
@@ -292,12 +294,13 @@ class PageQueryResult extends Page
      */
     public function getDatabaseEntry($name, $idx, $count, $query)
     {
+        $url = Route::link($this->handler, $this->idPage, ['query' => $query, 'db' => $idx]);
         return new Entry(
             $name,
             "db:query:{$idx}",
             str_format(localize("bookword", $count), $count),
             "text",
-            [ new LinkNavigation(Route::link($this->handler, $this->idPage, ['query' => $query, 'db' => $idx])) ],
+            [ new LinkNavigation($url) ],
             null,
             "",
             $count

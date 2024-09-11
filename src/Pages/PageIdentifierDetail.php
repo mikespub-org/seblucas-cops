@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Identifier;
 /**
  * This shows the books with a particular identifier type, e.g. amazon, isbn, url, ...
  */
-class PageIdentifierDetail extends Page
+class PageIdentifierDetail extends PageWithDetail
 {
     /**
      * Summary of className

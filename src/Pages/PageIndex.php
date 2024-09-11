@@ -91,12 +91,13 @@ class PageIndex extends Page
      */
     public function getDatabaseEntry($name, $idx, $count)
     {
+        $url = Route::link($this->handler, null, ["db" => $idx]);
         return new Entry(
             $name,
             "cops:{$idx}:catalog",
             str_format(localize("bookword", $count), $count),
             "text",
-            [ new LinkNavigation(Route::link($this->handler, null, ["db" => $idx])) ],
+            [ new LinkNavigation($url) ],
             null,
             "",
             $count

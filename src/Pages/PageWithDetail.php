@@ -10,6 +10,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Resource;
+use SebLucas\Cops\Input\Config;
 
 class PageWithDetail extends Page
 {
@@ -34,5 +35,22 @@ class PageWithDetail extends Page
                 ];
             }
         }
+    }
+
+    /**
+     * Summary of canFilter
+     * @return bool
+     */
+    public function canFilter()
+    {
+        if ($this->request->isFeed()) {
+            $filterLinks = Config::get('opds_filter_links');
+        } else {
+            $filterLinks = Config::get('html_filter_links');
+        }
+        if (!empty($filterLinks)) {
+            return true;
+        }
+        return false;
     }
 }
