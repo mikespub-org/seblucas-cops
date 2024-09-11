@@ -30,14 +30,14 @@ class LinkFeed extends Link
 
     /**
      * Summary of __construct
-     * @param string $phref ?queryString relative to current endpoint
-     * @param ?string $prel relation in the OPDS catalog
-     * @param ?string $ptitle title in the OPDS catalog and elsewhere
+     * @param string $href ?queryString relative to current endpoint
+     * @param ?string $rel relation in the OPDS catalog
+     * @param ?string $title title in the OPDS catalog and elsewhere
      * @param ?int $database current database in multiple database setup
      */
-    public function __construct($phref, $prel = null, $ptitle = null, $database = null)
+    public function __construct($href, $rel = null, $title = null, $database = null)
     {
-        parent::__construct($phref, static::LINK_TYPE, $prel, $ptitle);
+        parent::__construct($href, static::LINK_TYPE, $rel, $title);
         //$this->href = Route::query($this->href, ['db' => $database]);
         if (!is_null($database)) {
             if (str_contains($this->href, '?')) {

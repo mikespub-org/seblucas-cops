@@ -50,29 +50,33 @@ class Entry
 
     /**
      * Summary of __construct
-     * @param string $ptitle
-     * @param string $pid
-     * @param string $pcontent
-     * @param string $pcontentType
-     * @param array<LinkEntry|LinkFeed> $plinkArray
+     * @param string $title
+     * @param string $id
+     * @param string $content
+     * @param string $contentType
+     * @param array<LinkEntry|LinkFeed> $linkArray
      * @param string|int|null $database
-     * @param string $pclass
-     * @param string|int $pcount
+     * @param string $className
+     * @param string|int $count
      */
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType = "text", $plinkArray = [], $database = null, $pclass = "", $pcount = 0)
+    public function __construct($title, $id, $content, $contentType = "text", $linkArray = [], $database = null, $className = "", $count = 0)
     {
-        $this->title = $ptitle;
-        $this->id = $pid;
-        $this->content = $pcontent;
-        $this->contentType = $pcontentType;
-        $this->linkArray = $plinkArray;
-        $this->className = $pclass;
-        $this->numberOfElement = $pcount;
+        $this->title = $title;
+        $this->id = $id;
+        $this->content = $content;
+        $this->contentType = $contentType;
+        $this->linkArray = $linkArray;
+        $this->className = $className;
+        $this->numberOfElement = $count;
 
         if (Config::get('show_icons') == 1) {
             foreach (static::$icons as $reg => $image) {
-                if (preg_match("/" . $reg . "/", $pid)) {
-                    array_push($this->linkArray, new LinkEntry(Route::path($image) . "?v=" . Config::VERSION, "image/png", LinkEntry::OPDS_THUMBNAIL_TYPE));
+                if (preg_match("/" . $reg . "/", $id)) {
+                    array_push($this->linkArray, new LinkEntry(
+                        Route::path($image) . "?v=" . Config::VERSION,
+                        "image/png",
+                        LinkEntry::OPDS_THUMBNAIL_TYPE
+                    ));
                     break;
                 }
             }

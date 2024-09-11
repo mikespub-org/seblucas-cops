@@ -365,7 +365,7 @@ class BaseList
                 $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation($href, "subsection")],
+                [ new LinkNavigation($href, "subsection") ],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

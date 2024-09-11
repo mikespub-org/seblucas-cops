@@ -20,17 +20,17 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of __construct
-     * @param int $pcustomId
+     * @param int $customId
      * @param string $datatype
      * @param ?int $database
      * @param array<string, mixed> $displaySettings
      * @throws \UnexpectedValueException
      */
-    protected function __construct($pcustomId, $datatype = self::TYPE_INT, $database = null, $displaySettings = [])
+    protected function __construct($customId, $datatype = self::TYPE_INT, $database = null, $displaySettings = [])
     {
         match ($datatype) {
-            static::TYPE_INT => parent::__construct($pcustomId, static::TYPE_INT, $database, $displaySettings),
-            static::TYPE_FLOAT => parent::__construct($pcustomId, static::TYPE_FLOAT, $database, $displaySettings),
+            static::TYPE_INT => parent::__construct($customId, static::TYPE_INT, $database, $displaySettings),
+            static::TYPE_FLOAT => parent::__construct($customId, static::TYPE_FLOAT, $database, $displaySettings),
             default => throw new UnexpectedValueException(),
         };
     }
@@ -154,12 +154,13 @@ class CustomColumnTypeInteger extends CustomColumnType
         while ($post = $result->fetchObject()) {
             $range = $post->min_value . "-" . $post->max_value;
             $params = ['custom' => $this->customId, 'range' => $range, 'db' => $this->databaseId];
+            $href = Route::link($this->handler, $page, $params);
             array_push($entryArray, new Entry(
                 $range,
                 $this->getEntryId() . ':' . $label . ':' . $range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::link($this->handler, $page, $params), null, null)],
+                [ new LinkNavigation($href, null, null) ],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

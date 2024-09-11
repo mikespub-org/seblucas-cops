@@ -30,18 +30,18 @@ class LinkFacet extends LinkFeed
 
     /**
      * Summary of __construct
-     * @param string $phref ?queryString relative to current endpoint
-     * @param ?string $ptitle title in the OPDS catalog
-     * @param ?string $pfacetGroup facetGroup this facet belongs to
-     * @param bool $pactiveFacet is the facet currently active
-     * @param ?int $pthreadCount number of items expected
+     * @param string $href ?queryString relative to current endpoint
+     * @param ?string $title title in the OPDS catalog
+     * @param ?string $facetGroup facetGroup this facet belongs to
+     * @param bool $activeFacet is the facet currently active
+     * @param ?int $threadCount number of items expected
      * @param ?int $database current database in multiple database setup
      */
-    public function __construct($phref, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false, $pthreadCount = null, $database = null)
+    public function __construct($href, $title = null, $facetGroup = null, $activeFacet = false, $threadCount = null, $database = null)
     {
-        parent::__construct($phref, static::LINK_RELATION, $ptitle, $database);
-        $this->facetGroup = $pfacetGroup;
-        $this->activeFacet = $pactiveFacet;
-        $this->threadCount = $pthreadCount;
+        parent::__construct($href, static::LINK_RELATION, $title, $database);
+        $this->facetGroup = $facetGroup;
+        $this->activeFacet = $activeFacet;
+        $this->threadCount = $threadCount;
     }
 }

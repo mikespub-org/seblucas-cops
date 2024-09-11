@@ -413,7 +413,12 @@ class Book
         } else {
             $url = Route::path(str_replace('%2F', '/', rawurlencode($filePath)));
         }
-        $linkEntry = new LinkEntry($url, $mimetype, 'related', $fileName);
+        $linkEntry = new LinkEntry(
+            $url,
+            $mimetype,
+            'related',
+            $fileName
+        );
         $linkEntry->addFileInfo($filePath);
         return $linkEntry;
     }
@@ -723,14 +728,28 @@ class Book
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
             $author->setHandler($this->handler);
-            array_push($linkArray, new LinkFeed($author->getUri(), 'related', str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name)));
+            array_push(
+                $linkArray,
+                new LinkFeed(
+                    $author->getUri(),
+                    'related',
+                    str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name)
+                )
+            );
         }
 
         // don't use collection here, or OPDS reader will group all entries together - messes up recent books
         $serie = $this->getSerie();
         if (!empty($serie)) {
             $serie->setHandler($this->handler);
-            array_push($linkArray, new LinkFeed($serie->getUri(), 'related', str_format(localize('content.series.data'), $this->seriesIndex, $serie->name)));
+            array_push(
+                $linkArray,
+                new LinkFeed(
+                    $serie->getUri(),
+                    'related',
+                    str_format(localize('content.series.data'), $this->seriesIndex, $serie->name)
+                )
+            );
         }
 
         return $linkArray;

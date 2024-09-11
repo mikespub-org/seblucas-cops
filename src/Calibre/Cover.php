@@ -287,12 +287,20 @@ class Cover
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
-                return new LinkEntry($this->coverFileName, $mime, LinkEntry::OPDS_IMAGE_TYPE);
+                return new LinkEntry(
+                    $this->coverFileName,
+                    $mime,
+                    LinkEntry::OPDS_IMAGE_TYPE
+                );
             }
             $file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
-                return new LinkEntry(Route::path(str_replace('%2F', '/', rawurlencode($this->book->path . "/" . $file))), $mime, LinkEntry::OPDS_IMAGE_TYPE);
+                return new LinkEntry(
+                    Route::path(str_replace('%2F', '/', rawurlencode($this->book->path . "/" . $file))),
+                    $mime,
+                    LinkEntry::OPDS_IMAGE_TYPE
+                );
             }
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
             if (Config::get('use_route_urls') && is_null($params['db'])) {
@@ -301,7 +309,11 @@ class Cover
             if ($ext != 'jpg') {
                 $params['type'] = $ext;
             }
-            return new LinkEntry(Route::link(static::$handler, null, $params), $mime, LinkEntry::OPDS_IMAGE_TYPE);
+            return new LinkEntry(
+                Route::link(static::$handler, null, $params),
+                $mime,
+                LinkEntry::OPDS_IMAGE_TYPE
+            );
         }
 
         return null;
@@ -335,7 +347,11 @@ class Cover
             $fileName = Config::get('thumbnail_handling');
             $ext = strtolower(pathinfo((string) $fileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new LinkEntry(Route::path($fileName), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(
+                Route::path($fileName),
+                $mime,
+                LinkEntry::OPDS_THUMBNAIL_TYPE
+            );
         }
 
         if ($this->coverFileName) {
@@ -345,7 +361,11 @@ class Cover
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             // @todo support creating (and caching) thumbnails for external cover images someday
             if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
-                return new LinkEntry($this->coverFileName, $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+                return new LinkEntry(
+                    $this->coverFileName,
+                    $mime,
+                    LinkEntry::OPDS_THUMBNAIL_TYPE
+                );
             }
             //$file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
@@ -359,7 +379,11 @@ class Cover
             if (Config::get('thumbnail_handling') != "1") {
                 $params['thumb'] = $thumb;
             }
-            return new LinkEntry(Route::link(static::$handler, null, $params), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(
+                Route::link(static::$handler, null, $params),
+                $mime,
+                LinkEntry::OPDS_THUMBNAIL_TYPE
+            );
         }
 
         if ($useDefault) {
@@ -377,7 +401,11 @@ class Cover
         if (!empty(Config::get('thumbnail_default'))) {
             $ext = strtolower(pathinfo((string) Config::get('thumbnail_default'), PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new LinkEntry(Route::path(Config::get('thumbnail_default')), $mime, LinkEntry::OPDS_THUMBNAIL_TYPE);
+            return new LinkEntry(
+                Route::path(Config::get('thumbnail_default')),
+                $mime,
+                LinkEntry::OPDS_THUMBNAIL_TYPE
+            );
         }
         return null;
     }

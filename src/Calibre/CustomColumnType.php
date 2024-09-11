@@ -72,16 +72,16 @@ abstract class CustomColumnType
 
     /**
      * Summary of __construct
-     * @param int $pcustomId
-     * @param string $pdatatype
+     * @param int $customId
+     * @param string $datatype
      * @param ?int $database
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($pcustomId, $pdatatype, $database = null, $displaySettings = [])
+    protected function __construct($customId, $datatype, $database = null, $displaySettings = [])
     {
-        $this->columnTitle = static::getTitleByCustomID($pcustomId, $database);
-        $this->customId = $pcustomId;
-        $this->datatype = $pdatatype;
+        $this->columnTitle = static::getTitleByCustomID($customId, $database);
+        $this->customId = $customId;
+        $this->datatype = $datatype;
         $this->customValues = null;
         $this->databaseId = $database;
         $this->numberPerPage = Config::get('max_item_per_page');

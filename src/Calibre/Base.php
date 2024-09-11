@@ -566,7 +566,7 @@ abstract class Base
             str_format(localize($numberOfString, $count), $count),
             "text",
             // issue #26 for koreader: section is not supported
-            [ new LinkNavigation($href, "subsection")],
+            [ new LinkNavigation($href, "subsection") ],
             $database,
             "",
             $count

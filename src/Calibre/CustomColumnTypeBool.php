@@ -27,13 +27,13 @@ class CustomColumnTypeBool extends CustomColumnType
 
     /**
      * Summary of __construct
-     * @param int $pcustomId
+     * @param int $customId
      * @param ?int $database
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($pcustomId, $database = null, $displaySettings = [])
+    protected function __construct($customId, $database = null, $displaySettings = [])
     {
-        parent::__construct($pcustomId, static::TYPE_BOOL, $database, $displaySettings);
+        parent::__construct($customId, static::TYPE_BOOL, $database, $displaySettings);
     }
 
     /**

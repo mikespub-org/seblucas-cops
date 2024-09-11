@@ -33,15 +33,15 @@ class CustomColumn extends Category
     /**
      * CustomColumn constructor.
      *
-     * @param integer|string|null $pid id of the chosen value
-     * @param string $pvalue string representation of the value
-     * @param CustomColumnType $pcustomColumnType the CustomColumn this value lives in
+     * @param integer|string|null $id id of the chosen value
+     * @param string $value string representation of the value
+     * @param CustomColumnType $customColumnType the CustomColumn this value lives in
      */
-    public function __construct($pid, $pvalue, $pcustomColumnType)
+    public function __construct($id, $value, $customColumnType)
     {
-        $this->id = $pid;
-        $this->value = $pvalue;
-        $this->customColumnType = $pcustomColumnType;
+        $this->id = $id;
+        $this->value = $value;
+        $this->customColumnType = $customColumnType;
         $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value ?? '');
         $this->databaseId = $this->customColumnType->getDatabaseId();
         $this->handler = $this->customColumnType->getHandler();

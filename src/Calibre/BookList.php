@@ -141,11 +141,11 @@ class BookList
         $href = Route::link($this->handler, Book::PAGE_ALL, $params);
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
-            $linkArray = [new LinkNavigation($href, "subsection")];
+            $linkArray = [ new LinkNavigation($href, "subsection") ];
         } elseif (!empty(Config::get('titles_split_publication_year'))) {
-            $linkArray = [new LinkNavigation($href, "subsection")];
+            $linkArray = [ new LinkNavigation($href, "subsection") ];
         } else {
-            $linkArray = [new LinkFeed($href, null)];
+            $linkArray = [ new LinkFeed($href, null) ];
         }
         $entry = new Entry(
             localize('allbooks.title'),
@@ -357,12 +357,13 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $params = ['id' => $post->groupid, 'db' => $this->databaseId];
+            $href = Route::link($this->handler, $page, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 Book::PAGE_ID . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkFeed(Route::link($this->handler, $page, $params), "subsection")],
+                [ new LinkFeed($href, "subsection") ],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

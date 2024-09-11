@@ -25,13 +25,13 @@ class CustomColumnTypeDate extends CustomColumnType
 
     /**
      * Summary of __construct
-     * @param int $pcustomId
+     * @param int $customId
      * @param ?int $database
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($pcustomId, $database = null, $displaySettings = [])
+    protected function __construct($customId, $database = null, $displaySettings = [])
     {
-        parent::__construct($pcustomId, static::TYPE_DATE, $database, $displaySettings);
+        parent::__construct($customId, static::TYPE_DATE, $database, $displaySettings);
     }
 
     /**
@@ -161,12 +161,13 @@ class CustomColumnTypeDate extends CustomColumnType
         $label = 'year';
         while ($post = $result->fetchObject()) {
             $params = ['custom' => $this->customId, 'year' => $post->groupid, 'db' => $this->databaseId];
+            $href = Route::link($this->handler, $page, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->getEntryId() . ':' . $label . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                [new LinkNavigation(Route::link($this->handler, $page, $params), null, null)],
+                [ new LinkNavigation($href, null, null) ],
                 $this->databaseId,
                 ucfirst($label),
                 $post->count

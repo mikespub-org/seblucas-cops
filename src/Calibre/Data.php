@@ -256,7 +256,12 @@ class Data
         } else {
             $href .= rawurlencode($this->getFilename());
         }
-        return new LinkEntry(Route::path($href), $this->getMimeType(), LinkEntry::OPDS_ACQUISITION_TYPE, $title);
+        return new LinkEntry(
+            Route::path($href),
+            $this->getMimeType(),
+            LinkEntry::OPDS_ACQUISITION_TYPE,
+            $title
+        );
     }
 
     /**
@@ -284,7 +289,12 @@ class Data
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $view = false)
     {
         if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
-            return new LinkEntry($book->path . "/" . rawurlencode($filename), $mime, $rel, $title);
+            return new LinkEntry(
+                $book->path . "/" . rawurlencode($filename),
+                $mime,
+                $rel,
+                $title
+            );
         }
         // moved image-specific code from Data to Cover
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
@@ -298,9 +308,19 @@ class Data
             if ($view) {
                 $params['view'] = 1;
             }
-            return new LinkEntry(Route::link(static::$handler, null, $params), $mime, $rel, $title);
+            return new LinkEntry(
+                Route::link(static::$handler, null, $params),
+                $mime,
+                $rel,
+                $title
+            );
         }
 
-        return new LinkEntry(Route::path(str_replace('%2F', '/', rawurlencode($book->path . "/" . $filename))), $mime, $rel, $title);
+        return new LinkEntry(
+            Route::path(str_replace('%2F', '/', rawurlencode($book->path . "/" . $filename))),
+            $mime,
+            $rel,
+            $title
+        );
     }
 }

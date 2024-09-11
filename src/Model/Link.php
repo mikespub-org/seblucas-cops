@@ -27,17 +27,17 @@ class Link
 
     /**
      * Summary of __construct
-     * @param string $phref uri including the endpoint for images, books etc.
-     * @param string $ptype link type in the OPDS catalog
-     * @param ?string $prel relation in the OPDS catalog
-     * @param ?string $ptitle title in the OPDS catalog and elsewhere
+     * @param string $href uri including the endpoint for images, books etc.
+     * @param string $type link type in the OPDS catalog
+     * @param ?string $rel relation in the OPDS catalog
+     * @param ?string $title title in the OPDS catalog and elsewhere
      */
-    public function __construct($phref, $ptype, $prel = null, $ptitle = null)
+    public function __construct($href, $type, $rel = null, $title = null)
     {
-        $this->href = $phref;
-        $this->type = $ptype;
-        $this->rel = $prel;
-        $this->title = $ptitle;
+        $this->href = $href;
+        $this->type = $type;
+        $this->rel = $rel;
+        $this->title = $title;
     }
 
     /**

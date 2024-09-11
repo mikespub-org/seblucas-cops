@@ -16,18 +16,18 @@ class EntryBook extends Entry
 
     /**
      * EntryBook constructor.
-     * @param string $ptitle
-     * @param string $pid
-     * @param string $pcontent
-     * @param string $pcontentType
-     * @param array<LinkEntry|LinkFeed> $plinkArray
-     * @param Book $pbook
+     * @param string $title
+     * @param string $id
+     * @param string $content
+     * @param string $contentType
+     * @param array<LinkEntry|LinkFeed> $linkArray
+     * @param Book $book
      */
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook)
+    public function __construct($title, $id, $content, $contentType, $linkArray, $book)
     {
-        parent::__construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook->getDatabaseId());
-        $this->book = $pbook;
-        $this->localUpdated = $pbook->timestamp;
+        parent::__construct($title, $id, $content, $contentType, $linkArray, $book->getDatabaseId());
+        $this->book = $book;
+        $this->localUpdated = $book->timestamp;
     }
 
     /**
