@@ -13,6 +13,9 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
+3.x.x - 2024xxxx
+  * Replace graphql-playground with graphiql for security and future (dev only)
+
 3.1.3 - 20240912 Fix mail link + show list of series in author details
   * Fix mail link producing an [object Object] message - see issue #105 by @marioscube
   * Show list of series in author details for bootstrap2 and twigged templates

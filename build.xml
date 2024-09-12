@@ -39,6 +39,7 @@
                 <exclude name=".yarn/**" />
                 <exclude name=".yarnrc.yml" />
                 <exclude name=".pnp.*" />
+                <exclude name="yarn.lock" />
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
                 <exclude name="vendor/bin/**" />
