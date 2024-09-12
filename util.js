@@ -109,7 +109,20 @@ function elapsed () {
 
 function retourMail(data) {
     $("#mailButton :first-child").removeClass ("fas fa-spinner fa-pulse").addClass ("fas fa-envelope");
-    alert (data);
+    if (typeof data === 'string') {
+        alert ("Result: " + data);
+    } else {
+        alert ("Result: " + JSON.stringify(data, null, 4));
+    }
+}
+
+function errorMail(data) {
+    $("#mailButton :first-child").removeClass ("fas fa-spinner fa-pulse").addClass ("fas fa-envelope");
+    if (typeof data === 'string') {
+        alert ("Error: " + data);
+    } else {
+        alert ("Error: " + JSON.stringify(data, null, 4));
+    }
 }
 
 /*exported sendToMailAddress */
@@ -123,17 +136,17 @@ function sendToMailAddress (component, dataid) {
         }
         Cookies.set('email', email, { expires: 365 });
     }
-    var url = 'index.php/mail';
+    var url = currentData.baseurl + '/mail';
     if (currentData.databaseId) {
         url = url + '?db=' + currentData.databaseId;
     }
     $("#mailButton :first-child").removeClass ("fas fa-envelope").addClass ("fas fa-spinner fa-pulse");
-    $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail});
+    $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail, 'error': errorMail});
 }
 
 /*exported asset */
 function asset (file) {
-    var url = 'vendor/npm-asset/' + file;
+    var url = currentData.assets + '/' + file;
     if (currentData && currentData.version) {
         url = url + '?v=' + currentData.version;
     }

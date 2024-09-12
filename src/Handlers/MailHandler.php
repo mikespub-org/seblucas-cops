@@ -47,8 +47,9 @@ class MailHandler extends BaseHandler
         }
 
         if ($error = $mailer->sendMail($idData, $emailDest, $request, $dryRun)) {
-            // this will call exit()
-            Response::sendError($request, localize("mail.messagenotsent") . $error);
+            $response = new Response('text/plain');
+            $response->sendData(localize("mail.messagenotsent") . $error);
+            return;
         }
 
         $response = new Response('text/plain');
