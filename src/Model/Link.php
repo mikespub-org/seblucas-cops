@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Model;
 
-use SebLucas\Cops\Input\Config;
-
 class Link
 {
     //public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";

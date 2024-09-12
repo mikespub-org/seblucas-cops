@@ -87,3 +87,14 @@
     {% endfor %}
 </div>
 {% endblock content %}
+
+{% block extra %}
+  {% if it.extra %}
+    {% if it.extra.series %}
+      {% include 'extra_series.html' %}
+    {% endif %}
+    {% if it.extra.title %}
+      {% include 'extra.html' %}
+    {% endif %}
+  {% endif %}
+{% endblock extra %}

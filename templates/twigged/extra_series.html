@@ -1,0 +1,20 @@
+{# extra_series.html is included in booklist.html if it.extra.series is not empty #}
+
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-12 col-half-padding">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                {{it.c.i18n.seriesTitle}}
+              </div>
+              <div class="panel-body">
+                <ul>
+                  {% for series in it.extra.series %}
+                  <li><a href="{{series.navlink}}">{{series.title}}</a> ({{series.number}})</li>
+                  {% endfor %}
+                </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

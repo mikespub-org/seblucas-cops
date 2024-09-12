@@ -559,6 +559,25 @@ class JsonRenderer extends BaseRenderer
     }
 
     /**
+     * Summary of getSeries
+     * @param Page $currentPage
+     * @param array<string, mixed> $extraParams
+     * @return array<mixed>|false
+     */
+    public function getSeries($currentPage, $extraParams)
+    {
+        $series = false;
+        if (empty($currentPage->extra['series'])) {
+            return $series;
+        }
+        $series = [];
+        foreach ($currentPage->extra['series'] as $entry) {
+            array_push($series, $this->getContentArray($entry, $extraParams));
+        }
+        return $series;
+    }
+
+    /**
      * Summary of getDownloadLinks
      * @param Page $currentPage
      * @param ?int $qid
@@ -708,6 +727,9 @@ class JsonRenderer extends BaseRenderer
         $out ["parenturl"] = $this->getParentUrl($currentPage, $out["filters"], $out["homeurl"]);
         $out ["hierarchy"] = $this->getHierarchy($currentPage, $extraParams);
         $out ["extra"] = $currentPage->extra;
+        if (!empty($currentPage->extra['series'])) {
+            $out ["extra"]["series"] = $this->getSeries($currentPage, $extraParams);
+        }
         $out ["assets"] = Route::path(Config::get('assets'));
         $out ["download"] = $this->getDownloadLinks($currentPage, $qid);
 

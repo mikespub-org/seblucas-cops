@@ -45,5 +45,24 @@ class PageAuthorDetail extends PageWithDetail
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series desc";
         $this->getExtra($instance);
+        // add author series as extra info
+        $this->addExtraSeries($instance);
+    }
+
+    /**
+     * Summary of addSeries
+     * @param Author $instance
+     * @return void
+     */
+    public function addExtraSeries($instance = null)
+    {
+        $series = $instance->getSeries();
+        if (empty($series)) {
+            return;
+        }
+        if (empty($this->extra)) {
+            $this->extra = [];
+        }
+        $this->extra["series"] = $series;
     }
 }

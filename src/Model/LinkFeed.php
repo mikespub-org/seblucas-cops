@@ -8,8 +8,6 @@
 
 namespace SebLucas\Cops\Model;
 
-use SebLucas\Cops\Input\Route;
-
 /**
  * From https://specs.opds.io/opds-1.2#23-acquisition-feeds
  * An Acquisition Feed is an OPDS Catalog Feed Document that collects OPDS Catalog Entries

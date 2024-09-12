@@ -132,6 +132,27 @@
 </div>
 <div id="error"></div>
 {{? it.extra }}
+{{? it.extra.series }}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-half-padding">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                  {{=it.c.i18n.seriesTitle}}
+                </div>
+                <div class="panel-body">
+                  <ul>
+                    {{~it.extra.series:series:idx}}
+                    <li><a href="{{=series.navlink}}">{{=series.title}}</a> ({{=series.number}})</li>
+                    {{~}}
+                  </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+{{?}}
+{{? it.extra.title }}
 <div class="container-fluid">
     <div class="row">
         <div class="col-12 col-half-padding">
@@ -151,4 +172,5 @@
         </div>
     </div>
 </div>
+{{?}}
 {{?}}

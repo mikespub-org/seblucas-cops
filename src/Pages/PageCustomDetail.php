@@ -14,8 +14,7 @@ use SebLucas\Cops\Calibre\CustomColumnTypeBool;
 use SebLucas\Cops\Calibre\CustomColumnTypeDate;
 use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 
-// @todo extends PageWithDetail
-class PageCustomDetail extends Page
+class PageCustomDetail extends PageWithDetail
 {
     protected string $className = CustomColumn::class;
 

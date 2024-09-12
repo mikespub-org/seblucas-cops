@@ -11,7 +11,6 @@ namespace SebLucas\Cops\Model;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 
 class Entry
