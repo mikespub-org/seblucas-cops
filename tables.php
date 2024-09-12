@@ -8,6 +8,7 @@
  * @author     mikespub
  */
 
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
@@ -15,6 +16,7 @@ use SebLucas\Cops\Output\RestApi;
 
 require_once __DIR__ . '/config/config.php';
 
+Framework::init();
 $data = ['link' => Route::link(RestApi::$handler)];
 $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';
 $data['tbody'] = '';
