@@ -56,6 +56,7 @@ References:
       - [ratingdetail.html](ratingdetail.html) (page=23)
       - [seriedetail.html](seriedetail.html) (page=7)
       - [tagdetail.html](tagdetail.html) (page=12)
+      - include [extra_series.html](extra_series.html) and/or [extra_info.html](extra_info.html) if it.extra is available
     - [navlist.html](navlist.html)
       - [customize.html](customize.html) (page=19)
       - [filters.html](filters.html) (filter=1)
