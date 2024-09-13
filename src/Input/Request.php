@@ -10,13 +10,14 @@
 namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Calibre\Filter;
-use SebLucas\Cops\Output\Response;
 
 /**
  * Summary of Request
  */
 class Request
 {
+    public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
+
     /** @var array<mixed> */
     public $urlParams = [];
     protected string $queryString = '';
@@ -202,12 +203,13 @@ class Request
      * Summary of set
      * @param string $name
      * @param mixed $value
-     * @return void
+     * @return static
      */
     public function set($name, $value)
     {
         $this->urlParams[$name] = $value;
         $this->queryString = http_build_query($this->urlParams);
+        return $this;
     }
 
     /**

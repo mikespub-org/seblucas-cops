@@ -22,7 +22,6 @@ use function FastRoute\simpleDispatcher;
 class Route
 {
     public const HANDLER_PARAM = "_handler";
-    public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
     protected static $proxyRequest = null;
@@ -259,9 +258,9 @@ class Route
         $handler ??= 'index';
         // take into account handler when building page url, e.g. feed or zipper
         if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'phpunit'])) {
-            $params[Route::HANDLER_PARAM] = $handler;
+            $params[self::HANDLER_PARAM] = $handler;
         } else {
-            unset($params[Route::HANDLER_PARAM]);
+            unset($params[self::HANDLER_PARAM]);
         }
         // ?page=... or /route/...
         $page = static::page($page, $params);
@@ -380,7 +379,7 @@ class Route
                 return $route;
             }
         }
-        unset($params[Route::HANDLER_PARAM]);
+        unset($params[self::HANDLER_PARAM]);
         if (empty($params)) {
             return $prefix;
         }
@@ -641,7 +640,7 @@ class Route
      */
     public static function hasTrustedProxies()
     {
-        $class = static::SYMFONY_REQUEST;
+        $class = Request::SYMFONY_REQUEST;
         if (!class_exists($class)) {
             return false;
         }
@@ -665,7 +664,7 @@ class Route
      */
     protected static function resolveTrustedHeaders(array $headers)
     {
-        $class = static::SYMFONY_REQUEST;
+        $class = Request::SYMFONY_REQUEST;
         $trustedHeaders = 0;
 
         foreach ($headers as $h) {

@@ -124,7 +124,7 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param string $file
-     * @return FileResponse|Zipper
+     * @return FileResponse|Response
      */
     public function sendExtraFile($request, $book, $file)
     {
@@ -152,11 +152,13 @@ class FetchHandler extends BaseHandler
      * Summary of zipExtraFiles
      * @param Request $request
      * @param Book $book
-     * @return Zipper
+     * @return Response
      */
     public function zipExtraFiles($request, $book)
     {
-        $zipper = new Zipper($request);
+        // create empty file response to start with!?
+        $response = new FileResponse();
+        $zipper = new Zipper($request, $response);
 
         if ($zipper->isValidForExtraFiles($book)) {
             $sendHeaders = headers_sent() ? false : true;

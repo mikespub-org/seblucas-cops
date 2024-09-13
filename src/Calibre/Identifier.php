@@ -148,7 +148,7 @@ class Identifier extends Base
      * Summary of getInstanceById
      * @param string|int|null $id used for the type of identifier here
      * @param ?int $database
-     * @return object
+     * @return self
      */
     public static function getInstanceById($id, $database = null)
     {

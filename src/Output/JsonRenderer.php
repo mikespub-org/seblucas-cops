@@ -701,11 +701,11 @@ class JsonRenderer extends BaseRenderer
         $out ["libraryId"] = $libraryId ?? "";
         $out ["libraryName"] = Config::get('title_default');
         $out ["fullTitle"] = $out ["title"];
-        if ($out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
+        $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
+        if (!empty($out ["multipleDatabase"]) && $out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
         }
         $out ["page"] = $page;
-        $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
         $out ["entries"] = $entries;
         $out ["entriesCount"] = count($entries);
         $out = array_replace($out, $this->addPagination($currentPage));

@@ -631,6 +631,7 @@ class Book
             //$response->setHeaders($data->getMimeType(), null, basename($filename));
             $sendHeaders = headers_sent() ? false : true;
             $epub->download($filename, $sendHeaders);
+            // @todo do something with $response
             return $response;
         } catch (Exception $e) {
             // this will call exit()

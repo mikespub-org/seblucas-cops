@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
@@ -48,7 +49,10 @@ class ZipperHandler extends BaseHandler
             }
         }
 
-        $zipper = new Zipper($request);
+        // create empty file response to start with!?
+        $response = new FileResponse();
+
+        $zipper = new Zipper($request, $response);
 
         if ($zipper->isValidForDownload()) {
             $sendHeaders = headers_sent() ? false : true;

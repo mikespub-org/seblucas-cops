@@ -15,6 +15,8 @@ use SebLucas\Cops\Input\Route;
 
 class Response
 {
+    public const SYMFONY_RESPONSE = '\Symfony\Component\HttpFoundation\Response';
+
     protected int $status = 200;
     protected ?string $mimetype;
     protected ?int $expires;
@@ -59,13 +61,14 @@ class Response
      * @param ?string $mimetype with null = no mimetype, '...' = actual mimetype for Content-Type
      * @param ?int $expires with null = no cache control, 0 = default expiration, > 0 actual expiration
      * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
-     * @return void
+     * @return static
      */
     public function setHeaders($mimetype = null, $expires = null, $filename = null)
     {
         $this->mimetype = $mimetype;
         $this->expires = $expires;
         $this->filename = $filename;
+        return $this;
     }
 
     /**

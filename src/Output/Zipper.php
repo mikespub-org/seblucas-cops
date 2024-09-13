@@ -22,12 +22,10 @@ use ZipStream\ZipStream;
 /**
  * Zipper to download multiple books
  */
-class Zipper
+class Zipper extends BaseRenderer
 {
     public static string $handler = "zipper";
 
-    /** @var Request */
-    protected $request;
     /** @var ?int */
     protected $databaseId = null;
     /** @var string */
@@ -40,10 +38,11 @@ class Zipper
     protected $message = null;
 
     /**
-     * Summary of __construct
+     * Summary of setRequest
      * @param Request $request
+     * @return void
      */
-    public function __construct(Request $request)
+    public function setRequest($request)
     {
         $this->request = $request;
         $this->databaseId = $this->request->database();
@@ -270,7 +269,7 @@ class Zipper
      * Summary of download
      * @param ?string $fileName
      * @param bool $sendHeaders
-     * @return static
+     * @return Response
      */
     public function download($fileName = null, $sendHeaders = true)
     {
@@ -288,7 +287,8 @@ class Zipper
             );
         }
         $zip->finish();
-        return $this;
+        // @todo do something with $this->response
+        return $this->response;
     }
 
     /**

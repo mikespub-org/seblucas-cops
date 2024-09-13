@@ -471,7 +471,7 @@ abstract class Base
      * Summary of getInstanceById
      * @param string|int|null $id
      * @param ?int $database
-     * @return object
+     * @return static
      */
     public static function getInstanceById($id, $database = null)
     {
@@ -492,7 +492,7 @@ abstract class Base
      * Summary of getInstanceByName
      * @param string $name
      * @param ?int $database
-     * @return object|null
+     * @return static|null
      */
     public static function getInstanceByName($name, $database = null)
     {

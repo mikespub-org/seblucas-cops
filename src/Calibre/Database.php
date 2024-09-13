@@ -168,6 +168,7 @@ class Database
     {
         if (php_sapi_name() != "cli") {
             Response::redirect(Route::link("check") . "?err=1");
+            exit;
         }
         throw new Exception("Database <{$database}> not found.");
     }
@@ -193,9 +194,11 @@ class Database
                     }
                     static::$dbFileName = static::getDbFileName($database);
                 } else {
+                    // this will call exit()
                     static::error($database);
                 }
             } catch (Exception) {
+                // this will call exit()
                 static::error($database);
             }
         }
