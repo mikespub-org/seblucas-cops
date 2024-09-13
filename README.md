@@ -179,5 +179,5 @@ External libraries used :
 
 COPS - 2012-2019 (c) Sébastien Lucas
 
-See COPYING and file headers for license info
+See LICENSE and file headers for license info
 
