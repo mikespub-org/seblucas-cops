@@ -12,12 +12,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Output\HtmlRenderer;
-use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Language\Translation;
-use DOMDocument;
 use Exception;
 
 class BaseTest extends TestCase

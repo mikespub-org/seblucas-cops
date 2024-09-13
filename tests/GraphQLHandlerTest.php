@@ -51,7 +51,7 @@ class GraphQLHandlerTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = '<title>GraphQL Playground</title>';
+        $expected = '<title>GraphiQL</title>';
         $this->assertEquals(0, count($headers));
         $this->assertStringContainsString($expected, $output);
     }
