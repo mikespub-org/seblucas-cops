@@ -32,7 +32,7 @@ class RestApi extends BaseRenderer
 {
     public static string $handler = "restapi";
     public static int $numberPerPage = 100;
-    public static bool $doRunEndpoint = false;  // @todo disabled for now
+    public static bool $doRunHandler = true;
 
     /**
      * Summary of extra
@@ -122,45 +122,36 @@ class RestApi extends BaseRenderer
     }
 
     /**
-     * Summary of runEndpoint
+     * Summary of runHandler
      * @param string $path
      * @param array<string, mixed> $params
      * @param ?bool $run
-     * @return array<string, mixed>|null
+     * @return array<string, mixed>|Response|null
      */
-    public function runEndpoint($path, $params, $run = null)
+    public function runHandler($path, $params, $run = null)
     {
         if (empty($params[Route::HANDLER_PARAM]) || !array_key_exists($params[Route::HANDLER_PARAM], Config::ENDPOINT)) {
-            return ["error" => "Invalid endpoint"];
+            return ["error" => "Invalid handler"];
         }
         if (!$this->request->hasValidApiKey()) {
             return ["error" => "Invalid api key"];
         }
         $name = $params[Route::HANDLER_PARAM];
-        //$endpoint = Config::ENDPOINT[$name];
-        // check if the path starts with the endpoint param here
-        //if (str_starts_with($path, '/' . $name)) {
-        //    $parts = array_slice(explode('/', $path), 2);
-        //    $path = '/' . implode('/', $parts);
-        //}
-        // run endpoint via handler now
+        // run via handler now
         $handler = Framework::getHandler($name);
         unset($params[Route::HANDLER_PARAM]);
-        $run ??= static::$doRunEndpoint;
+        $run ??= static::$doRunHandler;
         if ($run) {
             $oldpath = $_SERVER['PATH_INFO'] ?? '';
             $oldparams = $_GET;
             $_SERVER['PATH_INFO'] = $path;
             $_GET = $params;
-            // @todo define when to parse request path or not - see calres, loader and zipfs
+            // @todo create request without using globals
             $request = Framework::getRequest($name);
             $response = $handler->handle($request);
-            // @todo return content
-            $response->send();
-            //require dirname(__DIR__, 2) . '/' . $endpoint;
             $_SERVER['PATH_INFO'] = $oldpath;
             $_GET = $oldparams;
-            return null;
+            return $response;
         }
         $result = [Route::HANDLER_PARAM => $name, "path" => $path, "params" => $params];
         return $result;
@@ -180,7 +171,7 @@ class RestApi extends BaseRenderer
     /**
      * Summary of getOutput
      * @param mixed $result
-     * @return string
+     * @return string|Response
      */
     public function getOutput($result = null)
     {
@@ -197,15 +188,17 @@ class RestApi extends BaseRenderer
                 $this->setParams($params);
                 $result = $this->getJson();
             } else {
-                // extra routes supported by other endpoints
-                $result = $this->runEndpoint($path, $params);
+                // extra routes supported by other handlers
+                $result = $this->runHandler($path, $params);
                 if (is_null($result)) {
                     return '';
+                }
+                if ($result instanceof Response) {
+                    return $result;
                 }
             }
         }
         $output = json_encode($result, JSON_UNESCAPED_SLASHES);
-        //$endpoint = static::getScriptName($this->request);
 
         return $output;
     }

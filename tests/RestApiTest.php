@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Calibre\Metadata;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApi;
 
 require_once dirname(__DIR__) . '/config/test.php';
@@ -444,7 +445,7 @@ class RestApiTest extends TestCase
         Config::set('calibre_user_database', null);
     }
 
-    public function testRunEndpointFalse(): void
+    public function testRunHandlerFalse(): void
     {
         // generate api key and pass along in request
         $apiKey = bin2hex(random_bytes(20));
@@ -452,6 +453,7 @@ class RestApiTest extends TestCase
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
         $_SERVER['PATH_INFO'] = '/zipfs/0/20/META-INF/container.xml';
         $request = new Request();
+        RestApi::$doRunHandler = false;
 
         $apiHandler = new RestApi($request);
         $expected = [
@@ -467,12 +469,13 @@ class RestApiTest extends TestCase
         $test = $apiHandler->getOutput();
         $this->assertEquals($expected, $test);
 
+        RestApi::$doRunHandler = true;
         Config::set('api_key', null);
         unset($_SERVER['HTTP_X_API_KEY']);
         unset($_SERVER['PATH_INFO']);
     }
 
-    public function testRunEndpointTrue(): void
+    public function testRunHandlerTrue(): void
     {
         // generate api key and pass along in request
         $apiKey = bin2hex(random_bytes(20));
@@ -480,26 +483,26 @@ class RestApiTest extends TestCase
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
         $_SERVER['PATH_INFO'] = '/calres/0/xxh64/7c301792c52eebf7';
         $request = new Request();
-        RestApi::$doRunEndpoint = true;
+        RestApi::$doRunHandler = true;
 
         ob_start();
         $apiHandler = new RestApi($request);
-        $test = $apiHandler->getOutput();
+        $result = $apiHandler->getOutput();
+        $result->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
         $expected = self::$expectedSize['calres'];
-        $this->assertEquals('', $test);
+        $this->assertTrue($result instanceof Response);
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
 
-        RestApi::$doRunEndpoint = false;
         Config::set('api_key', null);
         unset($_SERVER['HTTP_X_API_KEY']);
         unset($_SERVER['PATH_INFO']);
     }
 
-    public function testRunEndpointDifferentRoot(): void
+    public function testRunHandlerDifferentRoot(): void
     {
         // generate api key and pass along in request
         $apiKey = bin2hex(random_bytes(20));
@@ -507,11 +510,12 @@ class RestApiTest extends TestCase
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
         $_SERVER['PATH_INFO'] = '/thumbs/html/0/17.jpg';
         $request = new Request();
+        RestApi::$doRunHandler = false;
 
         $apiHandler = new RestApi($request);
         $expected = [
             Route::HANDLER_PARAM => "fetch",
-            // check if the path starts with the endpoint param here
+            // check if the path starts with the handler param here
             "path" => "/thumbs/html/0/17.jpg",
             "params" => [
                 "thumb" => "html",
@@ -523,6 +527,7 @@ class RestApiTest extends TestCase
         $test = $apiHandler->getOutput();
         $this->assertEquals($expected, $test);
 
+        RestApi::$doRunHandler = true;
         Config::set('api_key', null);
         unset($_SERVER['HTTP_X_API_KEY']);
         unset($_SERVER['PATH_INFO']);

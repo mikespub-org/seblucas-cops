@@ -14,6 +14,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Enble running other handlers in REST API and return response
   * Return response from most handlers to allow middleware to work on response
   * Add test middleware to check functionality (test only)
   * Replace graphql-playground with graphiql for security and future (dev only)

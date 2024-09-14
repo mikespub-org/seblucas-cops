@@ -77,7 +77,11 @@ class RestApiHandler extends BaseHandler
         $apiHandler = new RestApi($request, $response);
 
         try {
-            return $response->setContent($apiHandler->getOutput());
+            $output = $apiHandler->getOutput();
+            if ($output instanceof Response) {
+                return $output;
+            }
+            return $response->setContent($output);
         } catch (Exception $e) {
             return $response->setContent(json_encode(["Exception" => $e->getMessage()]));
         }

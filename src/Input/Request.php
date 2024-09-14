@@ -127,9 +127,10 @@ class Request
         if (!empty(Config::get('use_route_urls'))) {
             // check for relative paths somewhere in templates
             if (str_contains($path, '/index.php')) {
-                error_log("COPS: Invalid relative path '$path' from template " . $this->template());
+                $error = "Invalid relative path '$path' from '" . $this->template() . "' template";
+                error_log("COPS: " . $error);
                 // this will call exit()
-                Response::sendError($this, "Invalid relative path '" . rawurlencode($path) . "' from template " . rawurlencode($this->template()));
+                Response::sendError($this, $error);
             }
             $params = Route::match($path);
             if (is_null($params)) {
