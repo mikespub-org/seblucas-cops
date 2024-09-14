@@ -106,7 +106,7 @@ Route | PAGE_ID | Page # | Pages | Calibre
 /books/{id} | BOOK_DETAIL | 13 | PageBookDetail | Book
 ... | 
 
-Routes for pages are defined in `PageHandler::getRoutes()` and used by both `HtmlHandler` and `JsonHandler`.
+Routes for Pages are defined in `PageHandler::getRoutes()` and used by both `HtmlHandler` and `JsonHandler`.
 Other routes are defined in the corresponding handlers.
 
 The PAGE_ID and page=... values are defined in `PageId` and correspond to one of the Pages. Pages cover a particular Calibre entity like Author, Book etc. or a list of entities. Generic features like About or Customize are handled by their own Pages. 
@@ -143,6 +143,36 @@ With both template engines, the initial page template is rendered server-side by
 Users can choose between different sets of templates, and they may support different styles within a template set. If you want to develop or customize templates, the `twigged` template explains the difference in doT and Twig syntax in its [README.md](https://github.com/mikespub-org/seblucas-cops/blob/main/templates/twigged/README.md)
 
 The template syntax used in the COPS templates is deliberately limited to ensure compatibility. The main difference in how doT and Twig template sets are used is [template inheritance](https://twig.symfony.com/doc/3.x/templates.html#template-inheritance) (extends), something that doT doesn't really support but is a core feature for Twig templates.
+
+## Other Interfaces
+
+Besides the HTML and OPDS interface, COPS also supports the following interfaces:
+
+1. JSON Interface
+
+This is used internally by COPS for client-side rendering of all Page routes. You can use it directly in scripts, widgets or web pages by using an `Accept: application/json` header with the request.
+
+```sh
+$ curl -H 'Accept: application/json' http://localhost/cops/index.php/authors/1  # or  http://localhost/cops/authors/1
+```
+
+2. OPDS 2.0 Feeds (dev only)
+
+With `/index.php/opds` instead of `/index.php/feed` you'll get OPDS 2.0 (JSON) feeds instead of OPDS 1.2 (XML) ones to browse OPDS catalogs on your e-reader.
+
+3. REST API
+
+With `/index.php/restapi/` you'll see the OpenAPI Specification for the REST API of COPS (Swagger UI). In addition to the Page routes above, you'll also have access to *special* routes like notes, annotations and preferences, along with *utility* routes for listing routes, pages, database tables etc.
+
+For REST API access to *other* handlers you'll need to set an API key in `$config['cops_api_key']` and send it along with the request.
+
+```sh
+$ curl -H 'X-API-KEY: myApiKey' http://localhost/cops/index.php/restapi/fetch/...
+```
+
+4. GraphQL Interface (dev only)
+
+With `/index.php/graphql` you'll see the GraphiQL playground to explore the GraphQL schema for COPS. This gives you access to most data in the Calibre database, and allows you to retrieve exactly the data you want with custom queries like [test.query.graphql](https://github.com/mikespub-org/seblucas-cops/blob/main/tests/graphql/test.query.graphql)
 
 ## Dependencies
 
