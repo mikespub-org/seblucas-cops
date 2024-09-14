@@ -14,6 +14,12 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * ...
+
+3.2.1 - 20240914 Update bootstrap5 template
+  * Fix thumbnails and add series list to author page in bootstrap5 template - see PR #106 from @dunxd
+
+3.2.0 - 20240914 Return response from handlers + replace GraphQL Playground (dev only)
   * Enble running other handlers in REST API and return response
   * Return response from most handlers to allow middleware to work on response
   * Add test middleware to check functionality (test only)
