@@ -122,6 +122,7 @@ class NoteResourceTest extends TestCase
 
         ob_start();
         $result = Resource::sendImageResource($hash, $response, $name, $database);
+        $result->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -138,7 +139,8 @@ class NoteResourceTest extends TestCase
         $handler = Framework::getHandler('calres');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

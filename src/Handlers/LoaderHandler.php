@@ -88,6 +88,6 @@ class LoaderHandler extends BaseHandler
         $template = null;
 
         $response = new Response('text/html;charset=utf-8');
-        $response->sendData($handler->output($result, $templateDir, $template));
+        return $response->setContent($handler->output($result, $templateDir, $template));
     }
 }

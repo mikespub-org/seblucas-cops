@@ -321,7 +321,8 @@ class JsonRendererTest extends TestCase
         $handler = Framework::getHandler('json');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

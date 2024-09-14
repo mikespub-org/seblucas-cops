@@ -14,6 +14,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Return response from most handlers to allow middleware to work on response
+  * Add test middleware to check functionality (test only)
   * Replace graphql-playground with graphiql for security and future (dev only)
 
 3.1.3 - 20240912 Fix mail link + show list of series in author details

@@ -631,7 +631,8 @@ class Book
             //$response->setHeaders($data->getMimeType(), null, basename($filename));
             $sendHeaders = headers_sent() ? false : true;
             $epub->download($filename, $sendHeaders);
-            // @todo do something with $response
+            // tell response it's already sent
+            $response->isSent(true);
             return $response;
         } catch (Exception $e) {
             // this will call exit()
@@ -657,7 +658,7 @@ class Book
         exec($cmd, $output, $return);
         if ($return == 0 && file_exists($tmpfile)) {
             if (!empty($response)) {
-                return $response->sendFile($tmpfile, true);
+                return $response->setFile($tmpfile, true);
             }
             return $tmpfile;
         }

@@ -13,14 +13,21 @@ use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 
+/**
+ * Summary of Response
+ * @todo class Response extends \Symfony\Component\HttpFoundation\Response ?
+ */
 class Response
 {
     public const SYMFONY_RESPONSE = '\Symfony\Component\HttpFoundation\Response';
 
-    protected int $status = 200;
+    protected int $statusCode = 200;
     protected ?string $mimetype;
     protected ?int $expires;
     protected ?string $filename;
+    protected string $content;
+    protected ?\Closure $callback;
+    protected bool $sent = false;
 
     /**
      * Summary of getMimeType
@@ -54,6 +61,7 @@ class Response
     public function __construct($mimetype = null, $expires = null, $filename = null)
     {
         $this->setHeaders($mimetype, $expires, $filename);
+        $this->sent = false;
     }
 
     /**
@@ -63,7 +71,7 @@ class Response
      * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
      * @return static
      */
-    public function setHeaders($mimetype = null, $expires = null, $filename = null)
+    public function setHeaders($mimetype = null, $expires = null, $filename = null): static
     {
         $this->mimetype = $mimetype;
         $this->expires = $expires;
@@ -72,13 +80,29 @@ class Response
     }
 
     /**
-     * Summary of sendHeaders
-     * @return void
+     * Summary of setCallback
+     * @todo possibly use to send file or zipstream later in response handler?
+     * @param \Closure|callable $callback
+     * @return static
      */
-    public function sendHeaders()
+    public function setCallback($callback): static
+    {
+        if ($callback instanceof \Closure) {
+            $this->callback = $callback;
+        } else {
+            $this->callback = \Closure::fromCallable($callback);
+        }
+        return $this;
+    }
+
+    /**
+     * Summary of sendHeaders
+     * @return static
+     */
+    public function sendHeaders(?int $statusCode = null): static
     {
         if (headers_sent()) {
-            return;
+            return $this;
         }
 
         if (is_null($this->expires)) {
@@ -104,20 +128,86 @@ class Response
         } else {
             header('Content-Disposition: attachment; filename="' . basename($this->filename) . '"');
         }
+
+        return $this;
     }
 
     /**
-     * Summary of sendData
-     * @param string $data actual data
+     * Summary of setContent
+     * @param ?string $content actual data
      * @return static
      */
-    public function sendData($data)
+    public function setContent($content): static
     {
-        $this->sendHeaders();
-
-        echo $data;
+        $this->content = $content ?? '';
 
         return $this;
+    }
+
+    /**
+     * Summary of getContent
+     * @return string|false
+     */
+    public function getContent(): string|false
+    {
+        return $this->content ?? false;
+    }
+
+    /**
+     * Summary of sendContent
+     * @return static
+     */
+    public function sendContent(): static
+    {
+        // @todo check callback
+        echo $this->content;
+
+        return $this;
+    }
+
+    /**
+     * Summary of prepare
+     * @todo dummy method for now
+     * @see https://symfony.com/doc/current/components/http_foundation.html#sending-the-response
+     *
+     * @param Request $request
+     * @return static
+     */
+    public function prepare($request): static
+    {
+        return $this;
+    }
+
+    /**
+     * Summary of send
+     * @return static
+     */
+    public function send(bool $flush = true): static
+    {
+        if ($this->sent) {
+            return $this;
+        }
+        $this->sent = true;
+
+        $this->sendHeaders();
+        // @todo check callback
+        $this->sendContent();
+
+        return $this;
+    }
+
+    /**
+     * Summary of isSent
+     * @param ?bool $sent
+     * @return bool
+     */
+    public function isSent($sent = null): bool
+    {
+        // set sent for Zipper etc.
+        if (!is_null($sent)) {
+            $this->sent = $sent;
+        }
+        return $this->sent;
     }
 
     /**
@@ -162,7 +252,7 @@ class Response
      * @param string $location
      * @return void
      */
-    public static function redirect($location)
+    public static function redirect($location): void
     {
         header('Location: ' . $location);
         //exit;

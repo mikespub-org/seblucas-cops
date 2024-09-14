@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\Filter;
 
 /**
  * Summary of Request
+ * @todo class Request extends \Symfony\Component\HttpFoundation\Request ?
  */
 class Request
 {
@@ -21,9 +22,10 @@ class Request
     /** @var array<mixed> */
     public $urlParams = [];
     protected string $queryString = '';
-    protected string $pathInfo = '';
+    protected ?string $pathInfo = '';
     protected bool $parsed = true;
-    public ?string $content = null;
+    /** @var string|null */
+    public $content = null;
 
     /**
      * Summary of __construct
@@ -184,16 +186,16 @@ class Request
 
     /**
      * Summary of get
-     * @param string $name
+     * @param string $key
      * @param mixed $default
      * @param ?string $pattern
      * @return mixed
      */
-    public function get($name, $default = null, $pattern = null)
+    public function get($key, $default = null, $pattern = null): mixed
     {
-        if (!empty($this->urlParams) && isset($this->urlParams[$name]) && $this->urlParams[$name] != '') {
-            if (!isset($pattern) || preg_match($pattern, (string) $this->urlParams[$name])) {
-                return $this->urlParams[$name];
+        if (!empty($this->urlParams) && isset($this->urlParams[$key]) && $this->urlParams[$key] != '') {
+            if (!isset($pattern) || preg_match($pattern, (string) $this->urlParams[$key])) {
+                return $this->urlParams[$key];
             }
         }
         return $default;

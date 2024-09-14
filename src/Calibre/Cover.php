@@ -243,7 +243,7 @@ class Cover
         if ($cachePath !== null && file_exists($cachePath)) {
             //return the already cached thumbnail
             $response->setHeaders($mime, 0);
-            return $response->sendFile($cachePath, true);
+            return $response->setFile($cachePath, true);
         }
 
         $this->response = $response;
@@ -251,15 +251,17 @@ class Cover
             //if we don't cache the thumbnail, imagejpeg() in $cover->getThumbnail() already return the image data
             if ($cachePath === null) {
                 // The cover had to be resized
+                // tell response it's already sent
+                $this->response->isSent(true);
                 return $this->response;
             }
             //return the just cached thumbnail
             $response->setHeaders($mime, 0);
-            return $response->sendFile($cachePath, true);
+            return $response->setFile($cachePath, true);
         }
 
         $response->setHeaders($mime, 0);
-        return $response->sendFile($file);
+        return $response->setFile($file);
     }
 
     /**

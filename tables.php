@@ -30,4 +30,5 @@ $data['tfoot'] = $data['thead'];
 $template = __DIR__ . '/templates/tables.html';
 
 $response = new Response('text/html;charset=utf-8');
-$response->sendData(Format::template($data, $template));
+$response->setContent(Format::template($data, $template));
+$response->send();

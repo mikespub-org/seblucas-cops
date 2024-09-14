@@ -151,7 +151,8 @@ class MailTest extends TestCase
         $handler = Framework::getHandler('mail');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

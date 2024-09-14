@@ -33,7 +33,10 @@ class TestMiddleware extends BaseMiddleware
         // do something with $request before $handler
         $request->set('hello', 'world');
         $response = $handler->handle($request);
-        // @todo most handlers already finish sending response
+        if ($response instanceof Response && !$response->isSent()) {
+            // @todo do something with $response after $handler
+            $response->setContent($response->getContent() . "\nGoodbye!");
+        }
         return $response;
     }
 }

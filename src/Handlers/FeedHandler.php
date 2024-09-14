@@ -55,12 +55,10 @@ class FeedHandler extends BaseHandler
         switch ($page) {
             case PageId::OPENSEARCH :
             case PageId::SEARCH :
-                $response->sendData($OPDSRender->getOpenSearch($request));
-                return;
+                return $response->setContent($OPDSRender->getOpenSearch($request));
             default:
                 $currentPage = PageId::getPage($page, $request);
-                $response->sendData($OPDSRender->render($currentPage, $request));
-                return;
+                return $response->setContent($OPDSRender->render($currentPage, $request));
         }
     }
 }

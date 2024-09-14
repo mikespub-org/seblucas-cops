@@ -63,9 +63,10 @@ class HtmlHandler extends PageHandler
         $html = new HtmlRenderer($request, $response);
 
         try {
-            $response->sendData($html->render($request));
+            return $response->setContent($html->render($request));
         } catch (Throwable $e) {
             error_log($e);
+            // this will call exit()
             Response::sendError($request, $e->getMessage());
         }
     }

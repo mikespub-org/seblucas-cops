@@ -45,9 +45,10 @@ class ReadHandler extends BaseHandler
         $reader = new EPubReader($request, $response);
 
         try {
-            $response->sendData($reader->getReader($idData, $version, $database));
+            return $response->setContent($reader->getReader($idData, $version, $database));
         } catch (Exception $e) {
             error_log($e);
+            // this will call exit()
             Response::sendError($request, $e->getMessage());
         }
     }

@@ -54,10 +54,11 @@ class EpubFsHandler extends BaseHandler
         $reader = new EPubReader($request, $response);
 
         try {
-            $reader->sendContent($idData, $component, $database);
+            return $reader->sendContent($idData, $component, $database);
 
         } catch (Exception $e) {
             error_log($e);
+            // this will call exit()
             Response::sendError($request, $e->getMessage());
         }
     }

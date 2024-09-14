@@ -37,12 +37,11 @@ class CheckHandler extends BaseHandler
     {
         $more = $request->get('more');
         if ($more) {
-            $this->handleMore($request);
-            return;
+            return $this->handleMore($request);
         }
 
         try {
-            $this->checkConfig($request);
+            return $this->checkConfig($request);
         } catch (Exception $e) {
             echo "<h2>Error in normal handling:</h2>";
             echo "<h4>" . $e->getMessage() . "<h4><br/>";
@@ -53,7 +52,7 @@ class CheckHandler extends BaseHandler
     /**
      * Summary of checkConfig
      * @param Request $request
-     * @return void
+     * @return Response
      */
     public function checkConfig($request)
     {
@@ -74,7 +73,7 @@ class CheckHandler extends BaseHandler
         $template = dirname(__DIR__, 2) . '/templates/checkconfig.html';
 
         $response = new Response('text/html;charset=utf-8');
-        $response->sendData(Format::template($data, $template));
+        return $response->setContent(Format::template($data, $template));
     }
 
     /**
@@ -331,7 +330,7 @@ Please check
     /**
      * Summary of handleMore
      * @param Request $request
-     * @return void
+     * @return Response
      */
     public function handleMore($request)
     {
@@ -339,6 +338,6 @@ Please check
         $message .= var_export($request, true);
 
         $response = new Response('text/plain;charset=utf-8');
-        $response->sendData($message);
+        return $response->setContent($message);
     }
 }

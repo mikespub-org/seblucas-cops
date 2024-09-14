@@ -49,7 +49,7 @@ class FetchHandler extends BaseHandler
     /**
      * Summary of handle
      * @param Request $request
-     * @return void
+     * @return Response
      */
     public function handle($request)
     {
@@ -84,19 +84,16 @@ class FetchHandler extends BaseHandler
         }
 
         if (!empty($file)) {
-            $this->sendExtraFile($request, $book, $file);
-            return;
+            return $this->sendExtraFile($request, $book, $file);
         }
 
         // -DC- Add png type
         if (in_array($type, ['jpg', 'png'])) {
-            $this->sendThumbnail($request, $book, $type);
-            return;
+            return $this->sendThumbnail($request, $book, $type);
         }
 
         if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
-            $this->sendUpdatedEpub($request, $book, $idData);
-            return;
+            return $this->sendUpdatedEpub($request, $book, $idData);
         }
 
         $data = $book->getDataById($idData);
@@ -106,17 +103,15 @@ class FetchHandler extends BaseHandler
         if ($viewOnly) {
             // disposition inline here
             $response = new FileResponse($data->getMimeType(), 0, '');
-            $response->sendFile($file);
-            return;
+            return $response->setFile($file);
         }
 
         if ($type == 'epub' && Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
-            $this->sendConvertedKepub($book, $file, $data);
-            return;
+            return $this->sendConvertedKepub($book, $file, $data);
         }
 
         $response = new FileResponse($data->getMimeType(), 0, basename($file));
-        $response->sendFile($file);
+        return $response->setFile($file);
     }
 
     /**
@@ -145,7 +140,7 @@ class FetchHandler extends BaseHandler
         }
         $mimetype = Response::getMimeType($filepath);
         $response = new FileResponse($mimetype, 0, basename($filepath));
-        return $response->sendFile($filepath);
+        return $response->setFile($filepath);
     }
 
     /**
@@ -232,6 +227,6 @@ class FetchHandler extends BaseHandler
         }
         // provide kepub in name only (without update of opf properties for cover-image in Epub)
         $response = new FileResponse($data->getMimeType(), 0, basename($data->getUpdatedFilenameKepub()));
-        return $response->sendFile($file);
+        return $response->setFile($file);
     }
 }

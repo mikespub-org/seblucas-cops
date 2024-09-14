@@ -47,7 +47,8 @@ class GraphQLHandlerTest extends TestCase
 
         ob_start();
         $handler = Framework::getHandler(self::$handler);
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -64,7 +65,8 @@ class GraphQLHandlerTest extends TestCase
 
         ob_start();
         $handler = Framework::getHandler(self::$handler);
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

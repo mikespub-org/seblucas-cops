@@ -9,6 +9,8 @@
 
 namespace SebLucas\Cops;
 
+use SebLucas\Cops\Output\Response;
+
 /**
  * Minimal Framework
  */
@@ -56,7 +58,11 @@ class Framework
         }
         $handler = Framework::getHandler($name);
         if (empty(static::$middlewares)) {
-            $handler->handle($request);
+            $response = $handler->handle($request);
+            if ($response instanceof Response) {
+                //$response->prepare($request);
+                $response->send();
+            }
             return;
         }
         // @see https://www.php-fig.org/psr/psr-15/meta/#queue-based-request-handler
@@ -64,7 +70,11 @@ class Framework
         foreach (static::$middlewares as $middleware) {
             $queue->add(new $middleware());
         }
-        $queue->handle($request);
+        $response = $queue->handle($request);
+        if ($response instanceof Response) {
+            //$response->prepare($request);
+            $response->send();
+        }
     }
 
     /**

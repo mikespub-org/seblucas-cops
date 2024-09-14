@@ -8,6 +8,7 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
 require_once dirname(__DIR__) . '/config/test.php';
@@ -177,7 +178,8 @@ class ZipperTest extends TestCase
         $handler = Framework::getHandler('zipper');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

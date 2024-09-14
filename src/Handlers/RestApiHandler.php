@@ -69,8 +69,7 @@ class RestApiHandler extends BaseHandler
             $template = dirname(__DIR__, 2) . '/templates/restapi.html';
 
             $response = new Response('text/html;charset=utf-8');
-            $response->sendData(Format::template($data, $template));
-            return;
+            return $response->setContent(Format::template($data, $template));
         }
 
         $response = new Response('application/json;charset=utf-8');
@@ -78,9 +77,9 @@ class RestApiHandler extends BaseHandler
         $apiHandler = new RestApi($request, $response);
 
         try {
-            $response->sendData($apiHandler->getOutput());
+            return $response->setContent($apiHandler->getOutput());
         } catch (Exception $e) {
-            $response->sendData(json_encode(["Exception" => $e->getMessage()]));
+            return $response->setContent(json_encode(["Exception" => $e->getMessage()]));
         }
     }
 }

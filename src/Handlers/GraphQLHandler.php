@@ -50,13 +50,12 @@ class GraphQLHandler extends BaseHandler
     /**
      * Summary of handle
      * @param Request $request
-     * @return void
+     * @return Response
      */
     public function handle($request)
     {
         if ($request->method() !== 'POST') {
-            $this->renderPlayground();
-            return;
+            return $this->renderPlayground();
         }
 
         // override splitting authors and books by first letter here?
@@ -69,7 +68,7 @@ class GraphQLHandler extends BaseHandler
         $result = $this->runQuery($request);
 
         $response = new Response('application/json;charset=utf-8');
-        $response->sendData(json_encode($result));
+        return $response->setContent(json_encode($result));
     }
 
     /**
@@ -332,7 +331,7 @@ class GraphQLHandler extends BaseHandler
 
     /**
      * Render GraphQL Playground
-     * @return void
+     * @return Response
      */
     public function renderPlayground()
     {
@@ -340,6 +339,6 @@ class GraphQLHandler extends BaseHandler
         $template = dirname(__DIR__, 2) . '/templates/graphql.html';
 
         $response = new Response('text/html;charset=utf-8');
-        $response->sendData(Format::template($data, $template));
+        return $response->setContent(Format::template($data, $template));
     }
 }

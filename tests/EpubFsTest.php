@@ -145,7 +145,8 @@ class EpubFsTest extends TestCase
         $handler = Framework::getHandler('epubfs');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -160,7 +161,8 @@ class EpubFsTest extends TestCase
         $handler = Framework::getHandler('zipfs');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

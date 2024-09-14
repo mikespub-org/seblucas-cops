@@ -44,7 +44,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -60,7 +61,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -76,7 +78,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -92,7 +95,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -111,7 +115,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -134,7 +139,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -160,7 +166,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -182,7 +189,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -198,7 +206,8 @@ class FetchHandlerTest extends TestCase
         $handler = Framework::getHandler('fetch');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

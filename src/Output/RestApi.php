@@ -154,7 +154,9 @@ class RestApi extends BaseRenderer
             $_GET = $params;
             // @todo define when to parse request path or not - see calres, loader and zipfs
             $request = Framework::getRequest($name);
-            $handler->handle($request);
+            $response = $handler->handle($request);
+            // @todo return content
+            $response->send();
             //require dirname(__DIR__, 2) . '/' . $endpoint;
             $_SERVER['PATH_INFO'] = $oldpath;
             $_GET = $oldparams;

@@ -36,9 +36,10 @@ class JsonHandler extends PageHandler
         $json = new JsonRenderer($request, $response);
 
         try {
-            $response->sendData(json_encode($json->getJson($request)));
+            return $response->setContent(json_encode($json->getJson($request)));
         } catch (Throwable $e) {
             error_log($e);
+            // this will call exit()
             Response::sendError($request, $e->getMessage());
         }
     }

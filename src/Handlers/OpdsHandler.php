@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 use SebLucas\Cops\Input\Config;
 //use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
+use SebLucas\Cops\Output\Response as CopsResponse;
 use SebLucas\Cops\Pages\PageId;
 
 /**
@@ -58,11 +59,17 @@ class OpdsHandler extends BaseHandler
                 $response = $OPDSRender->render($currentPage, $request);
         }
 
+        // @todo convert OPDS Response to COPS Response?
         foreach ($response->getHeaders() as $type => $value) {
             header($type . ': ' . $value);
         }
         http_response_code($response->getStatus());
 
         echo $response->getContents();
+
+        $result = new CopsResponse();
+        // tell response it's already sent
+        $result->isSent(true);
+        return $result;
     }
 }

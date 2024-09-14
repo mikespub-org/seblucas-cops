@@ -75,6 +75,7 @@ class EpubReaderTest extends TestCase
 
         ob_start();
         $result = $reader->sendContent($idData, $component, $database);
+        $result->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -223,6 +224,7 @@ class EpubReaderTest extends TestCase
 
         ob_start();
         $result = $reader->sendZipContent($idData, $component, $database);
+        $result->send();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -247,7 +249,8 @@ class EpubReaderTest extends TestCase
         $handler = Framework::getHandler('read');
 
         ob_start();
-        $handler->handle($request);
+        $response = $handler->handle($request);
+        $response->send();
         $headers = headers_list();
         $output = ob_get_clean();
 

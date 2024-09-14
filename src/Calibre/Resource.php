@@ -133,6 +133,6 @@ class Resource
         $mime = static::IMAGE_EXTENSIONS[$ext];
 
         $response->setHeaders($mime, 0);
-        return $response->sendFile($path, true);
+        return $response->setFile($path, true);
     }
 }

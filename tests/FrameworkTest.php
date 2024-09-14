@@ -168,6 +168,8 @@ class FrameworkTest extends TestCase
 
         $expected = "queryString' => '_handler=check&more=more&hello=world'";
         $this->assertStringContainsString($expected, $output);
+        $expected = "Goodbye!";
+        $this->assertStringContainsString($expected, $output);
 
         // reset middleware again
         $middlewares = $addMiddleware(null);

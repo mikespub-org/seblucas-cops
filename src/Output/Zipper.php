@@ -287,7 +287,11 @@ class Zipper extends BaseRenderer
             );
         }
         $zip->finish();
-        // @todo do something with $this->response
+        // tell response it's already sent
+        if (empty($this->response)) {
+            $this->response = new Response();
+        }
+        $this->response->isSent(true);
         return $this->response;
     }
 

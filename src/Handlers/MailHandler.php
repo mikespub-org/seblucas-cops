@@ -48,11 +48,10 @@ class MailHandler extends BaseHandler
 
         if ($error = $mailer->sendMail($idData, $emailDest, $request, $dryRun)) {
             $response = new Response('text/plain');
-            $response->sendData(localize("mail.messagenotsent") . $error);
-            return;
+            return $response->setContent(localize("mail.messagenotsent") . $error);
         }
 
         $response = new Response('text/plain');
-        $response->sendData(localize("mail.messagesent"));
+        return $response->setContent(localize("mail.messagesent"));
     }
 }

@@ -60,9 +60,9 @@ class ZipperHandler extends BaseHandler
             if ($sendHeaders) {
                 header('X-Accel-Buffering: no');
             }
-            $zipper->download(null, $sendHeaders);
-        } else {
-            Response::sendError($request, "Invalid download: " . $zipper->getMessage());
+            return $zipper->download(null, $sendHeaders);
         }
+        // this will call exit()
+        Response::sendError($request, "Invalid download: " . $zipper->getMessage());
     }
 }

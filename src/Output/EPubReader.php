@@ -98,7 +98,7 @@ class EPubReader extends BaseRenderer
 
         // use cache control here
         $this->response->setHeaders($mimetype, 0);
-        return $this->response->sendData($data);
+        return $this->response->setContent($data);
     }
 
     /**
@@ -300,6 +300,6 @@ class EPubReader extends BaseRenderer
 
         // use cache control here
         $this->response->setHeaders($mimetype, 0);
-        return $this->response->sendData($data);
+        return $this->response->setContent($data);
     }
 }
