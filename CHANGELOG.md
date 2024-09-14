@@ -16,7 +16,8 @@ x.x.x - TODO
 3.x.x - 2024xxxx
   * ...
 
-3.2.1 - 20240914 Update bootstrap5 template
+3.2.2 - 20240914 Update bootstrap5 template + fix integrity
+  * Fix integrity checks for bootstrap5 template - see PR #106 from @dunxd
   * Fix thumbnails and add series list to author page in bootstrap5 template - see PR #106 from @dunxd
 
 3.2.0 - 20240914 Return response from handlers + replace GraphQL Playground (dev only)
