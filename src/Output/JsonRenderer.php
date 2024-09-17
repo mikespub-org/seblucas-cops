@@ -455,10 +455,22 @@ class JsonRenderer extends BaseRenderer
                 $params['filter'] = 1;
                 $out ["filterurl"] = Route::link($this->handler, null, $params);
             }
-        } elseif ($currentPage->canFilter()) {
-            $params = $this->request->getCleanParams();
-            $params['filter'] = null;
-            $out ["filterurl"] = Route::link($this->handler, null, $params);
+        } else {
+            if ($currentPage->isPaginated()) {
+                // support {{=str_format(it.sorturl, "count")}} etc. in templates (use double quotes for sort field)
+                $params = $this->request->getCleanParams();
+                $params['sort'] = '{0}';
+                $out ["sorturl"] = str_replace('%7B0%7D', '{0}', Route::link($this->handler, null, $params));
+                $out ["sortoptions"] = [
+                    'name' => localize("sort.names"),
+                    'count' => localize("sort.count"),
+                ];
+            }
+            if ($currentPage->canFilter()) {
+                $params = $this->request->getCleanParams();
+                $params['filter'] = null;
+                $out ["filterurl"] = Route::link($this->handler, null, $params);
+            }
         }
         return $out;
     }
