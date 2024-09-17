@@ -14,14 +14,15 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
-  * ...
+  * Support query list arguments (limit, offset, where, order) in GraphQL (dev only)
+  * Sort by book count in navigation lists if paginated for twigged template
 
 3.2.2 - 20240914 Update bootstrap5 template + fix integrity
   * Fix integrity checks for bootstrap5 template - see PR #106 from @dunxd
   * Fix thumbnails and add series list to author page in bootstrap5 template - see PR #106 from @dunxd
 
 3.2.0 - 20240914 Return response from handlers + replace GraphQL Playground (dev only)
-  * Enble running other handlers in REST API and return response
+  * Enable running other handlers in REST API and return response
   * Return response from most handlers to allow middleware to work on response
   * Add test middleware to check functionality (test only)
   * Replace graphql-playground with graphiql for security and future (dev only)

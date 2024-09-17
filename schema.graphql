@@ -230,7 +230,16 @@ type Entry {
   linkArray: [Link]
   className: String
   numberOfElement: String
-  books: [EntryBook]
+  books(
+    limit: Int
+    order: String
+
+    """
+    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [EntryBook]
 }
 
 type EntryBook {

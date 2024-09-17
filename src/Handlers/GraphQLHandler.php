@@ -9,10 +9,12 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use JsonException;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -158,8 +160,9 @@ class GraphQLHandler extends BaseHandler
             $fieldName = $info->fieldName;
             switch ($fieldName) {
                 case 'books':
-                    $booklist = new BookList($request);
-                    [$entryArray, $totalNumber] = $booklist->getAllBooks();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $booklist = new BookList($current, null, $numberPerPage);
+                    [$entryArray, $totalNumber] = $booklist->getAllBooks($n);
                     return $entryArray;
                 case 'book':
                     $book = Book::getBookById($args['id'], $request->database());
@@ -183,56 +186,63 @@ class GraphQLHandler extends BaseHandler
                     $data = $book->datas[0];
                     return $data;
                 case 'authors':
-                    $baselist = new BaseList(Author::class, $request);
-                    $entryArray = $baselist->getRequestEntries();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $baselist = new BaseList(Author::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
                 case 'author':
                     $instance = Author::getInstanceById($args['id'], $request->database());
                     $instance->setHandler("index");
                     return $instance->getEntry();
                 case 'identifiers':
-                    $baselist = new BaseList(Identifier::class, $request);
-                    $entryArray = $baselist->getRequestEntries();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $baselist = new BaseList(Identifier::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
                 case 'identifier':
                     $instance = Identifier::getInstanceById($args['id'], $request->database());
                     $instance->setHandler("index");
                     return $instance->getEntry();
                 case 'languages':
-                    $baselist = new BaseList(Language::class, $request);
-                    $entryArray = $baselist->getRequestEntries();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $baselist = new BaseList(Language::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
                 case 'language':
                     $instance = Language::getInstanceById($args['id'], $request->database());
                     $instance->setHandler("index");
                     return $instance->getEntry();
                 case 'publishers':
-                    $baselist = new BaseList(Publisher::class, $request);
-                    $entryArray = $baselist->getRequestEntries();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $baselist = new BaseList(Publisher::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
                 case 'publisher':
                     $instance = Publisher::getInstanceById($args['id'], $request->database());
                     $instance->setHandler("index");
                     return $instance->getEntry();
                 case 'ratings':
-                    $baselist = new BaseList(Rating::class, $request);
-                    $entryArray = $baselist->getRequestEntries();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $baselist = new BaseList(Rating::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
                 case 'rating':
                     $instance = Rating::getInstanceById($args['id'], $request->database());
                     $instance->setHandler("index");
                     return $instance->getEntry();
                 case 'series':
-                    $baselist = new BaseList(Serie::class, $request);
-                    $entryArray = $baselist->getRequestEntries();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $baselist = new BaseList(Serie::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
                 case 'serie':
                     $instance = Serie::getInstanceById($args['id'], $request->database());
                     $instance->setHandler("index");
                     return $instance->getEntry();
                 case 'tags':
-                    $baselist = new BaseList(Tag::class, $request);
-                    $entryArray = $baselist->getRequestEntries();
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $baselist = new BaseList(Tag::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
                 case 'tag':
                     $instance = Tag::getInstanceById($args['id'], $request->database());
@@ -257,8 +267,9 @@ class GraphQLHandler extends BaseHandler
                 case 'books':
                     // @todo get books for parent instance(s)
                     $instance = $objectValue->instance;
-                    $booklist = new BookList($request);
-                    [$entryArray, $totalNumber] = $booklist->getBooksByInstance($instance, 1);
+                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    $booklist = new BookList($current, null, $numberPerPage);
+                    [$entryArray, $totalNumber] = $booklist->getBooksByInstance($instance, $n);
                     return $entryArray;
             }
             return Executor::defaultFieldResolver($objectValue, $args, $context, $info);
@@ -327,6 +338,47 @@ class GraphQLHandler extends BaseHandler
             return Executor::defaultFieldResolver($objectValue, $args, $context, $info);
         };
         return $resolver;
+    }
+
+    /**
+     * Summary of parseListArgs
+     * @param array<string, mixed> $args
+     * @param Request $request
+     * @return array{0: ?int, 1: int, 2: Request}
+     */
+    public static function parseListArgs($args, $request)
+    {
+        if (empty($args)) {
+            return [null, 1, $request];
+        }
+        // input = {"query":"...","variables":{"limit":5,"offset":0,"where":"{\"l\": 2}","order":"sort"},"operationName":"getAuthors"}
+        $numberPerPage = null;
+        if (!empty($args['limit']) && is_int($args['limit']) && $args['limit'] > 0 && $args['limit'] < 1001) {
+            $numberPerPage = $args['limit'];
+        }
+        // offset only works by multiples of limit here, e.g. 0, 5, 10, ...
+        $n = 1;
+        if (!empty($args['offset']) && is_int($args['offset']) && $args['offset'] > 0) {
+            $n = intval($args['offset'] / $numberPerPage) + 1;
+        }
+        // handle where and order by updating $request
+        $current = clone $request;
+        if (!empty($args['where'])) {
+            try {
+                $filterParams = json_decode($args['where'], true, 512, JSON_THROW_ON_ERROR);
+                // see list of acceptable filter params in Filter.php
+                $find = Filter::URL_PARAMS;
+                $params = array_intersect_key($filterParams, $find);
+                $params['db'] = $request->database();
+                $current = Request::build($params, $request->getHandler());
+            } catch (JsonException $e) {
+                error_log('COPS: Invalid where argument ' . $args['where'] . ': ' . $e->getMessage());
+            }
+        }
+        if (!empty($args['order']) && preg_match('/^\w+(\s+(asc|desc)|)$/i', $args['order'])) {
+            $current->set('sort', $args['order']);
+        }
+        return [$numberPerPage, $n, $current];
     }
 
     /**
