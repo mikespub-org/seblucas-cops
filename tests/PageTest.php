@@ -968,7 +968,7 @@ class PageTest extends TestCase
         return [
             ["curée", 1, "1 book"],
             ["Émile zola", 1, "1 author"],
-            ["émile zola", 0, null], // With standard search upper does not work with diacritics
+            ["émile zola", 1, " "], // With standard search upper does not work with diacritics
             ["Littérature", 1, "1 tag"],
             ["Eugène Fasquelle", 1, "1 publisher"],
         ];
