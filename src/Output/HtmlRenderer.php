@@ -56,9 +56,9 @@ class HtmlRenderer extends BaseRenderer
         $data = $this->getTemplateData($request);
         if (in_array($request->template(), Config::get('twig_templates'))) {
             $template = new TwigTemplate($request);
-            return $template->renderPage($data, $request->template(), $request->render());
+            return $template->renderPage($data);
         }
         $template = new DotPHPTemplate($request);
-        return $template->renderPage($data, $request->template(), $request->render());
+        return $template->renderPage($data);
     }
 }

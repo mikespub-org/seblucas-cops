@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Input\Request;
 use SebLucas\Template\doT;
 
 /**
@@ -17,6 +18,23 @@ use SebLucas\Template\doT;
  */
 class DotPHPTemplate extends BaseRenderer
 {
+    /** @var string */
+    protected $theme = 'default';
+    /** @var bool */
+    protected $serverSide = false;
+
+    /**
+     * Summary of setRequest
+     * @param Request $request
+     * @return void
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+        $this->theme = $request->template();
+        $this->serverSide = $request->render() ? true : false;
+    }
+
     /**
      * Summary of getDotTemplate
      * @param string $templateFile
@@ -36,17 +54,17 @@ class DotPHPTemplate extends BaseRenderer
     /**
      * Summary of serverSide
      * @param ?array<mixed> $data
-     * @param string $theme
+     * @param string $name = page.html
      * @return bool|string|null
      */
-    public function serverSide($data, $theme = 'default')
+    public function serverSide($data, $name = 'page.html')
     {
         // Get the templates
-        $header = file_get_contents('templates/' . $theme . '/header.html');
-        $footer = file_get_contents('templates/' . $theme . '/footer.html');
-        $main = file_get_contents('templates/' . $theme . '/main.html');
-        $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
-        $page = file_get_contents('templates/' . $theme . '/page.html');
+        $header = file_get_contents('templates/' . $this->theme . '/header.html');
+        $footer = file_get_contents('templates/' . $this->theme . '/footer.html');
+        $main = file_get_contents('templates/' . $this->theme . '/main.html');
+        $bookdetail = file_get_contents('templates/' . $this->theme . '/bookdetail.html');
+        $page = file_get_contents('templates/' . $this->theme . '/' . $name);
 
         // Generate the function for the template
         $template = new doT();
@@ -70,14 +88,13 @@ class DotPHPTemplate extends BaseRenderer
     /**
      * Summary of renderPage
      * @param array<string, mixed> $data
-     * @param string $theme
-     * @param bool|int $serverSide
+     * @param string $name = file.html
      * @return string
      */
-    public function renderPage($data, $theme = 'default', $serverSide = false)
+    public function renderPage($data, $name = 'file.html')
     {
-        $dot = $this->getDotTemplate('templates/' . $theme . '/file.html');
-        if ($serverSide) {
+        $dot = $this->getDotTemplate('templates/' . $this->theme . '/' . $name);
+        if ($this->serverSide) {
             // Get the page data
             $json = new JsonRenderer();
             $page_it = $json->getJson($this->request, true);
@@ -87,7 +104,7 @@ class DotPHPTemplate extends BaseRenderer
             // insert 'page.html' template with data here
             $output = $dot($data);
             $output .= "<body>\n";
-            $output .= $this->serverSide($page_it, $theme);
+            $output .= $this->serverSide($page_it);
             $output .= "</body>\n</html>\n";
             return $output;
         }

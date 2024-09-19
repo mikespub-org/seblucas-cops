@@ -2,11 +2,11 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<div class="container-fluid">
+<div id="main" class="container-fluid">
 {% block hierarchy %}
 <div id="filter">
-    <ul>
     {% if it.hierarchy  %}
+    <ul>
         {% if it.hierarchy.parent  %}
             <li><a href="{{it.hierarchy.parent.navlink}}"><strong>{{it.hierarchy.parent.title}}</strong></a></li>
         {% endif %}
@@ -20,8 +20,8 @@
         {% for entry in it.hierarchy.children %}
             <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
         {% endfor %}
-    {% endif %}
     </ul>
+    {% endif %}
     {% if it.filters %}
     <ul>
         <!-- show links to filter -->
@@ -39,12 +39,14 @@
 {% endblock hierarchy %}
 
 {% block content %}
-This is the content block
+<div id="content">
+    This is the content block
+</div>
 {% endblock content %}
 
 {% block pager %}
 {% if it.isPaginated == 1 %}
-    <ul class="pager">
+    <ul id="pager" class="pager">
         {% if it.maxPage > 3 %}<li class="{% if it.firstLink == "" %}disabled{% endif %}"><a id="firstLink" href="{{it.firstLink}}"><span class="glyphicon glyphicon-step-backward"></span>{{it.c.i18n.firstAlt}}</a></li>{% endif %}
         <li class="{% if it.prevLink == "" %}disabled{% endif %}"><a id="prevLink" href="{{it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{it.c.i18n.previousAlt}}</a></li>
         <li> {{it.currentPage}} / {{it.maxPage}} </li>
