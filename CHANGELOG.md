@@ -14,6 +14,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Show search result text for no result - see issue #107 by @HaoSs07
   * Support query list arguments (limit, offset, where, order) in GraphQL (dev only)
   * Sort by book count in navigation lists if paginated for twigged template
 
