@@ -201,7 +201,7 @@ class PageQueryResult extends Page
                 Database::clearDb();
             }
         }
-        if (empty($this->entryArray)) {
+        if (empty($this->entryArray) && !$this->request->isFeed()) {
             array_push($this->entryArray, $this->getNoResultEntry($database));
         }
     }
@@ -253,7 +253,7 @@ class PageQueryResult extends Page
         } else {
             $this->entryArray = $array;
         }
-        if (empty($this->entryArray)) {
+        if (empty($this->entryArray) && !$this->request->isFeed()) {
             array_push($this->entryArray, $this->getNoResultEntry($database, $scope));
         }
     }
@@ -321,12 +321,14 @@ class PageQueryResult extends Page
      */
     public function getNoResultEntry($database = null, $scope = null)
     {
+        $params = ['db' => $database, 'scope' => $scope];
+        $url = Route::link($this->handler, PageId::OPENSEARCH, $params);
         return new Entry(
             str_format(localize("search.result.none"), $this->query),
             "db:query:{$database}:{$scope}",
             " ",
             "text",
-            [],
+            [ new LinkNavigation($url) ],
             null,
             "tt-header"
         );
