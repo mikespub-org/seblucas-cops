@@ -201,6 +201,9 @@ class PageQueryResult extends Page
                 Database::clearDb();
             }
         }
+        if (empty($this->entryArray)) {
+            array_push($this->entryArray, $this->getNoResultEntry($database));
+        }
     }
 
     /**
@@ -249,6 +252,9 @@ class PageQueryResult extends Page
             [$this->entryArray, $this->totalNumber] = $array;
         } else {
             $this->entryArray = $array;
+        }
+        if (empty($this->entryArray)) {
+            array_push($this->entryArray, $this->getNoResultEntry($database, $scope));
         }
     }
 
@@ -304,6 +310,25 @@ class PageQueryResult extends Page
             null,
             "",
             $count
+        );
+    }
+
+    /**
+     * Summary of getNoResultEntry
+     * @param ?int $database
+     * @param ?string $scope
+     * @return Entry
+     */
+    public function getNoResultEntry($database = null, $scope = null)
+    {
+        return new Entry(
+            str_format(localize("search.result.none"), $this->query),
+            "db:query:{$database}:{$scope}",
+            " ",
+            "text",
+            [],
+            null,
+            "tt-header"
         );
     }
 }

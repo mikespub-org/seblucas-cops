@@ -107,6 +107,7 @@
     "search.result": "Search result for *{0}*",
     "search.result.author": "Search result for *{0}* in authors",
     "search.result.book": "Search result for *{0}* in books",
+    "search.result.none": "No search result for *{0}*",
     "search.result.publisher": "Search result for *{0}* in publishers",
     "search.result.series": "Search result for *{0}* in series",
     "search.result.tag": "Search result for *{0}* in tags",
