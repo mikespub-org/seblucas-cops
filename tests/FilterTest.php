@@ -253,6 +253,39 @@ class FilterTest extends TestCase
         Config::set('calibre_categories_using_hierarchy', []);
     }
 
+    public function testTagWithout(): void
+    {
+        /** @var Tag $tag */
+        $tag = Tag::getInstanceById(null);
+        $this->assertEquals(0, $tag->id);
+
+        $books = $tag->getBooks();
+        $this->assertCount(1, $books);
+
+        $authors = $tag->getAuthors();
+        $this->assertCount(1, $authors);
+
+        $languages = $tag->getLanguages();
+        $this->assertCount(1, $languages);
+
+        $publishers = $tag->getPublishers();
+        $this->assertCount(1, $publishers);
+
+        $ratings = $tag->getRatings();
+        $this->assertCount(1, $ratings);
+
+        $series = $tag->getSeries();
+        $this->assertCount(0, $series);
+
+        // special case if we want to find other tags applied to books where this tag applies - not relevant here
+        $tag->limitSelf = false;
+        $tags = $tag->getTags();
+        $this->assertCount(0, $tags);
+
+        $identifiers = $tag->getIdentifiers();
+        $this->assertCount(1, $identifiers);
+    }
+
     public function testIdentifierFilters(): void
     {
         /** @var Identifier $identifier */
@@ -471,6 +504,30 @@ class FilterTest extends TestCase
         } else {
             $this->assertEquals(Route::link(self::$handler) . "?page=50&id=2006", $entries[0]->getNavLink());
         }
+
+        // @todo remove negative flag for filter entry here
+        $request = Request::build(['t' => '!2'], self::$handler);
+        $entries = Filter::getEntryArray($request);
+        $this->assertEquals("Tag", $entries[0]->className);
+        $this->assertEquals("Short Stories", $entries[0]->title);
+        $this->assertEquals("4 books", $entries[0]->content);
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/tags/2/Short_Stories", $entries[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=12&id=2", $entries[0]->getNavLink());
+        }
+
+        // apply Not Set filters here but skip other entries
+        $request = Request::build(['t' => '0'], self::$handler);
+        $entries = Filter::getEntryArray($request);
+        $this->assertEquals("Tag", $entries[0]->className);
+        $this->assertEquals("No tags", $entries[0]->title);
+        $this->assertEquals("1 book", $entries[0]->content);
+        if (Config::get('use_route_urls')) {
+            $this->assertEquals(Route::link(self::$handler) . "/tags/0/No_tags", $entries[0]->getNavLink());
+        } else {
+            $this->assertEquals(Route::link(self::$handler) . "?page=12&id=0", $entries[0]->getNavLink());
+        }
     }
 
     public function testCheckForFilters(): void
@@ -560,6 +617,16 @@ class FilterTest extends TestCase
         $expected = ['1'];
         $this->assertEquals($expected, $filter->getQueryParams());
         $expected = " and (not exists (select null from books_tags_link where books_tags_link.book = books.id and books_tags_link.tag = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+    }
+
+    public function testCheckForFiltersWithout(): void
+    {
+        $request = Request::build(['t' => '0']);
+        $filter = new Filter($request);
+        $expected = [];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from books_tags_link where books.id not in (select book from books_tags_link)))";
         $this->assertEquals($expected, $filter->getFilterString());
     }
 }

@@ -520,7 +520,7 @@ class Filter
                 }
                 continue;
             }
-            // remove negative flag for filter entry here
+            // @todo remove negative flag for filter entry here
             if (preg_match('/^!\d+$/', (string) $paramValue)) {
                 $paramValue = substr((string) $paramValue, 1);
             }

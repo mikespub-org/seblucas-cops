@@ -811,6 +811,25 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
+    public function testPageIdentifierDetail_Filter(): void
+    {
+        Config::set('html_filter_links', ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'identifier']);
+        $page = PageId::IDENTIFIER_DETAIL;
+        $request = new Request();
+        $request->set('id', "isbn");
+        $request->set('filter', "1");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("ISBN", $currentPage->title);
+        $this->assertCount(15, $currentPage->entryArray);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Émile Zola", $currentPage->entryArray [1]->title);
+        $this->assertEquals("1 book", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
+        Config::set('html_filter_links', ['author', 'language', 'publisher', 'rating', 'series', 'tag']);
+    }
+
     public function testPageAllLibraries(): void
     {
         $page = PageId::ALL_LIBRARIES;

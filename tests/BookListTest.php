@@ -14,6 +14,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
@@ -75,7 +76,7 @@ class BookListTest extends TestCase
 
     public function testGetBooksByAuthor(): void
     {
-        // All book by Arthur Conan Doyle
+        // All books by Arthur Conan Doyle
         Config::set('max_item_per_page', 5);
         $request = new Request();
         $booklist = new BookList($request);
@@ -105,9 +106,21 @@ class BookListTest extends TestCase
         /** @var Serie $series */
         $series = Serie::getInstanceById(1);
 
-        // All book from the Sherlock Holmes series
+        // All books from the Sherlock Holmes series
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($series, -1);
         $this->assertEquals(7, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksWithoutSeries(): void
+    {
+        $booklist = new BookList(self::$request);
+        /** @var Serie $series */
+        $series = Serie::getInstanceById(null);
+
+        // All books without series
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($series, -1);
+        $this->assertEquals(5, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
@@ -129,9 +142,21 @@ class BookListTest extends TestCase
         /** @var Tag $tag */
         $tag = Tag::getInstanceById(1);
 
-        // All book with the Fiction tag
+        // All books with the Fiction tag
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($tag, -1);
         $this->assertEquals(14, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksWithoutTag(): void
+    {
+        $booklist = new BookList(self::$request);
+        /** @var Tag $tag */
+        $tag = Tag::getInstanceById(null);
+
+        // All books without tag
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($tag, -1);
+        $this->assertEquals(1, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
@@ -141,7 +166,7 @@ class BookListTest extends TestCase
         /** @var Language $language */
         $language = Language::getInstanceById(1);
 
-        // All english book (= all books)
+        // All english books (= all books)
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($language, -1);
         $this->assertEquals(14, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
@@ -156,6 +181,42 @@ class BookListTest extends TestCase
         // All books with 4 stars
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($rating, -1);
         $this->assertEquals(4, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksWithoutRating(): void
+    {
+        $booklist = new BookList(self::$request);
+        /** @var Rating $rating */
+        $rating = Rating::getInstanceById(null);
+
+        // All books with no stars
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($rating, -1);
+        $this->assertEquals(9, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksByIdentifier(): void
+    {
+        $booklist = new BookList(self::$request);
+        /** @var Identifier $identifier */
+        $identifier = Identifier::getInstanceById("wd");
+
+        // All books with Wikidata identifier
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($identifier, -1);
+        $this->assertEquals(2, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksWithoutIdentifier(): void
+    {
+        $booklist = new BookList(self::$request);
+        /** @var Identifier $identifier */
+        $identifier = Identifier::getInstanceById(null);
+
+        // All books without identifier
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($identifier, -1);
+        $this->assertEquals(1, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
 
