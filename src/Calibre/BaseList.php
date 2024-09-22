@@ -270,7 +270,8 @@ class BaseList
     public function getRequestEntries($n = 1)
     {
         if ($this->request->hasFilter()) {
-            return $this->getEntriesByFilter($n);
+            // we *do* pass along parentClass here - see also Filter::getEntryArray()
+            return $this->getEntriesByFilter($n, $this->className);
         }
         return $this->getAllEntries($n);
     }
@@ -393,11 +394,12 @@ class BaseList
     /**
      * Summary of getEntriesByFilter
      * @param int $n
+     * @param ?string $parentClass - if we want to use limitSelf = false for tags/identifiers
      * @return array<Entry>
      */
-    public function getEntriesByFilter($n = 1)
+    public function getEntriesByFilter($n = 1, $parentClass = null)
     {
-        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId, $parentClass);
         return $this->getFilteredEntries($filter, $n);
     }
 
@@ -410,6 +412,7 @@ class BaseList
      */
     public function getEntriesByInstance($instance, $n = 1, $filterParams = [])
     {
+        // @todo handle Not Set instances here too?
         $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
         $entries = $this->getFilteredEntries($filter, $n);
@@ -429,8 +432,13 @@ class BaseList
         $className = $instance->getClassName($this->className);
         $title = strtolower($className);
         $title = localize($title . 's.title');
+        $href = $instance->getUri();
         if ($n > 1) {
-            $paging = '&filter=1';
+            if (str_contains($href, '?')) {
+                $paging = '&filter=1';
+            } else {
+                $paging = '?filter=1';
+            }
             if ($n > 2) {
                 $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n - 1);
             }
@@ -439,7 +447,7 @@ class BaseList
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
-                [ new LinkFeed($instance->getUri() . $paging) ],
+                [ new LinkFeed($href . $paging) ],
                 $this->databaseId,
                 $className,
                 $count
@@ -447,14 +455,18 @@ class BaseList
             array_push($entries, $entry);
         }
         if ($n < ceil($total / $limit)) {
-            $paging = '&filter=1';
+            if (str_contains($href, '?')) {
+                $paging = '&filter=1';
+            } else {
+                $paging = '?filter=1';
+            }
             $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n + 1);
             $entry = new Entry(
                 localize("paging.next.alternate") . " " . $title,
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
-                [ new LinkFeed($instance->getUri() . $paging) ],
+                [ new LinkFeed($href . $paging) ],
                 $this->databaseId,
                 $className,
                 $count
@@ -487,6 +499,32 @@ class BaseList
     public function getFilteredEntries($filter, $n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
+        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getCountColumns(), ' as ' . $this->orderBy)) {
+            if (str_contains($query, 'order by')) {
+                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
+            } else {
+                $query .= ' order by ' . $this->getOrderBy() . ' ';
+            }
+        }
+        $columns = $this->getCountColumns();
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+        return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+    }
+
+    /**
+     * Summary of getWithoutEntries - @todo not used
+     * @param Filter $filter
+     * @param int $n
+     * @return array<Entry>
+     */
+    public function getWithoutEntries($filter, $n = 1)
+    {
+        // @todo see BookList::getBooksWithoutCustom() to support CustomColumn
+        if (!in_array($this->className, [Rating::class, Serie::class, Tag::class, Identifier::class])) {
+            return [];
+        }
+        $query = $this->className::SQL_BOOKLIST_NULL;
         if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getCountColumns(), ' as ' . $this->orderBy)) {
             if (str_contains($query, 'order by')) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);

@@ -156,7 +156,8 @@ class Identifier extends Base
             return new Identifier((object) ['id' => $id, 'type' => $id, 'val' => ''], $database);
         }
         $default = static::getDefaultName();
-        return new Identifier((object) ['id' => null, 'type' => $default, 'val' => ''], $database);
+        // use id = 0 to support route urls
+        return new Identifier((object) ['id' => 0, 'type' => $default, 'val' => ''], $database);
     }
 
     /**

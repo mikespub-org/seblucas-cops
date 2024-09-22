@@ -283,7 +283,7 @@ class Database
     public static function queryTotal($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
         if (static::KEEP_STATS) {
-            array_push(static::$queries, $query);
+            array_push(static::$queries, [$query, $columns, $filter]);
         }
         $totalResult = -1;
 
@@ -323,7 +323,7 @@ class Database
     public static function queryFilter($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
         if (static::KEEP_STATS) {
-            array_push(static::$queries, $query);
+            array_push(static::$queries, [$query, $columns, $filter]);
         }
         if (Translation::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
@@ -357,7 +357,7 @@ class Database
     public static function countFilter($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
     {
         if (static::KEEP_STATS) {
-            array_push(static::$queries, $query);
+            array_push(static::$queries, [$query, $columns, $filter]);
         }
         // assuming order by ... is at the end of the query here
         $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|).*$/i', '', $query);

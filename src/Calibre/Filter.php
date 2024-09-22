@@ -55,8 +55,9 @@ class Filter
      * @param array<mixed> $params initial query params
      * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
      * @param ?int $database current database in multiple database setup
+     * @param ?string $parentClass current class the filter applies to, to limit results to self (or not for tags/identifiers)
      */
-    public function __construct($request, array $params = [], string $parent = "books", $database = null)
+    public function __construct($request, array $params = [], string $parent = "books", $database = null, $parentClass = null)
     {
         if (is_array($request)) {
             $request = Request::build($request);
@@ -67,7 +68,7 @@ class Filter
         $this->queryString = "";
         $this->databaseId = $database;
 
-        $this->checkForFilters();
+        $this->checkForFilters($parentClass);
     }
 
     /**
@@ -90,9 +91,10 @@ class Filter
 
     /**
      * Summary of checkForFilters
+     * @param ?string $parentClass
      * @return void
      */
-    public function checkForFilters()
+    public function checkForFilters($parentClass = null)
     {
         if (empty($this->request->urlParams)) {
             return;
@@ -126,23 +128,33 @@ class Filter
         }
 
         $ratingId = $this->request->get(Rating::URL_PARAM, null, '/^!?\d+$/');
-        if (!empty($ratingId)) {
+        if (isset($ratingId)) {
             $this->addRatingIdFilter($ratingId);
         }
 
         $seriesId = $this->request->get(Serie::URL_PARAM, null, '/^!?\d+$/');
-        if (!empty($seriesId)) {
+        if (isset($seriesId)) {
             $this->addSeriesIdFilter($seriesId);
         }
 
         $tagId = $this->request->get(Tag::URL_PARAM, null, '/^!?\d+$/');
-        if (!empty($tagId)) {
-            $this->addTagIdFilter($tagId);
+        if (isset($tagId)) {
+            // do *not* limit to self, e.g. in AllTags with t= filter
+            if (!empty($parentClass) && $parentClass == Tag::class) {
+                $this->addTagIdFilter($tagId, false);
+            } else {
+                $this->addTagIdFilter($tagId);
+            }
         }
 
         $identifierType = $this->request->get(Identifier::URL_PARAM, null, '/^!?\w+$/');
-        if (!empty($identifierType)) {
-            $this->addIdentifierTypeFilter($identifierType);
+        if (isset($identifierType)) {
+            // do *not* limit to self, e.g. in AllIdentifiers with i= filter
+            if (!empty($parentClass) && $parentClass == Identifier::class) {
+                $this->addIdentifierTypeFilter($identifierType, false);
+            } else {
+                $this->addIdentifierTypeFilter($identifierType);
+            }
         }
 
         $letter = $this->request->get(BookList::URL_PARAM_FIRST, null, '/^\w$/');
@@ -170,8 +182,13 @@ class Filter
      */
     public function addFilter($filter, $param)
     {
+        if (empty($filter)) {
+            return;
+        }
         $this->queryString .= ' and (' . $filter . ')';
-        array_push($this->params, $param);
+        if (isset($param)) {
+            array_push($this->params, $param);
+        }
     }
 
     /**
@@ -316,21 +333,23 @@ class Filter
     /**
      * Summary of addTagIdFilter
      * @param string|int $tagId
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
      * @return void
      */
-    public function addTagIdFilter($tagId)
+    public function addTagIdFilter($tagId, $limitSelf = true)
     {
-        $this->addLinkedIdFilter($tagId, Tag::SQL_LINK_TABLE, Tag::SQL_LINK_COLUMN);
+        $this->addLinkedIdFilter($tagId, Tag::SQL_LINK_TABLE, Tag::SQL_LINK_COLUMN, $limitSelf);
     }
 
     /**
      * Summary of addIdentifierTypeFilter
      * @param string $identifierType
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
      * @return void
      */
-    public function addIdentifierTypeFilter($identifierType)
+    public function addIdentifierTypeFilter($identifierType, $limitSelf = true)
     {
-        $this->addLinkedIdFilter($identifierType, Identifier::SQL_LINK_TABLE, Identifier::SQL_LINK_COLUMN);
+        $this->addLinkedIdFilter($identifierType, Identifier::SQL_LINK_TABLE, Identifier::SQL_LINK_COLUMN, $limitSelf);
     }
 
     /**
@@ -393,7 +412,7 @@ class Filter
      * @param string|int $linkId
      * @param string $linkTable
      * @param string $linkColumn
-     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
      * @return void
      */
     public function addLinkedIdFilter($linkId, $linkTable, $linkColumn, $limitSelf = true)
@@ -405,12 +424,19 @@ class Filter
             $linkId = $matches[1];
         }
 
-        $filter = $this->getLinkedIdFilter($linkTable, $linkColumn, $limitSelf);
+        if (empty($linkId)) {
+            $filter = $this->getNotLinkedIdFilter($linkTable, $linkColumn, $limitSelf);
+        } else {
+            $filter = $this->getLinkedIdFilter($linkTable, $linkColumn, $limitSelf);
+        }
 
         if (!$exists) {
             $filter = 'not ' . $filter;
         }
 
+        if (empty($linkId)) {
+            $linkId = null;
+        }
         $this->addFilter($filter, $linkId);
     }
 
@@ -418,7 +444,7 @@ class Filter
      * Summary of getLinkedIdFilter
      * @param string $linkTable
      * @param string $linkColumn
-     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags)
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
      * @return string
      */
     public function getLinkedIdFilter($linkTable, $linkColumn, $limitSelf = true)
@@ -434,6 +460,27 @@ class Filter
             $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
             $filter = "exists (select null from {$linkTable}, books where {$this->parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
+        }
+
+        return $filter;
+    }
+
+    /**
+     * Summary of getNotLinkedIdFilter
+     * @param string $linkTable
+     * @param string $linkColumn
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
+     * @return string
+     */
+    public function getNotLinkedIdFilter($linkTable, $linkColumn, $limitSelf = true)
+    {
+        // @todo doesn't make sense in this case
+        if ($this->parentTable == $linkTable) {
+            $filter = "false";
+        } elseif ($this->parentTable == "books") {
+            $filter = "exists (select null from {$linkTable} where books.id not in (select book from {$linkTable}))";
+        } else {
+            $filter = "exists (select null from {$linkTable}, books where {$this->parentTable}.book = books.id and books.id not in (select book from {$linkTable}))";
         }
 
         return $filter;
@@ -483,6 +530,12 @@ class Filter
                 $req = Request::build([$paramName => $paramValue], $handler);
             }
             $baselist = new BaseList($className, $req, $database);
+            // apply Not Set filters here but skip other entries
+            if (empty($paramValue)) {
+                array_push($entryArray, $baselist->getWithoutEntry());
+                continue;
+            }
+            // we do *not* pass along parentClass here - see also Baselist::getRequestEntries()
             $entries = $baselist->getEntriesByFilter();
             $entryArray = array_merge($entryArray, $entries);
         }
