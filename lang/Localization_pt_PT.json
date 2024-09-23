@@ -107,6 +107,7 @@
   "search.result": "Resultado da pesquisa por *{0}*",
   "search.result.author": "Resultado da pesquisa por *{0}* em autores",
   "search.result.book": "Resultado da pesquisa por *{0}* em livros",
+  "search.result.none": "Nenhum resultado para *{0}*",
   "search.result.publisher": "Resultado da pesquisa por *{0}* em editoras",
   "search.result.series": "Resultado da pesquisa por *{0}* em séries",
   "search.result.tag": "Resultado da pesquisa por *{0}* em etiquetas",
