@@ -421,13 +421,20 @@ class Route
     public static function getPageRoute($params, $prefix = '')
     {
         if (!empty($params[self::HANDLER_PARAM])) {
-            // keep page param and use endpoint as key here
+            // keep page param and use handler as key here
             $page = $params[self::HANDLER_PARAM];
         } elseif (isset($params['page'])) {
             $page = $params['page'];
             unset($params['page']);
         } else {
             $page = '';
+        }
+        // use page route with /restapi prefix instead
+        if ($page == 'restapi' && !empty($params['page'])) {
+            $prefix = $prefix . '/restapi';
+            $page = $params['page'];
+            unset($params[self::HANDLER_PARAM]);
+            unset($params['page']);
         }
         $pages = static::getPages();
         $routes = $pages[$page] ?? [];
@@ -452,7 +459,7 @@ class Route
                 continue;
             }
             $subst = $params;
-            // check and remove fixed params (incl. endpoint or page)
+            // check and remove fixed params (incl. handler or page)
             foreach ($fixed as $key => $val) {
                 if (!isset($subst[$key]) || $subst[$key] != $val) {
                     continue 2;
@@ -515,7 +522,7 @@ class Route
                 $page = $params;
                 $params = [];
             } elseif (!empty($params[self::HANDLER_PARAM])) {
-                // keep page param and use endpoint as key here
+                // keep page param and use handler as key here
                 $page = $params[self::HANDLER_PARAM];
             } else {
                 $page = $params["page"] ?? '';
@@ -540,7 +547,7 @@ class Route
     }
 
     /**
-     * Match rewrite rule for path and return endpoint with params
+     * Match rewrite rule for path and return handler with params
      * @param string $path
      * @return array<mixed>
      */
