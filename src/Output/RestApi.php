@@ -342,6 +342,8 @@ class RestApi extends BaseRenderer
             $result["error"] = "Invalid api key";
             return $result;
         }
+        // add dummy functions for selecting in meta and tag_browser_* views
+        Database::addSqliteFunctions($database);
         $query = "SELECT COUNT(*) FROM {$name}";
         $count = Database::querySingle($query, $database);
         $result["total"] = $count;

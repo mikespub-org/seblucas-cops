@@ -38,7 +38,12 @@ $gConfig['admin_email'] = '';
 $gConfig['create_db'] = false;
 
 /**
- * Databases infos
+ * Specify a cache directory for any Google or Wikidata lookup
+ */
+$gConfig['cache_dir'] = 'tests/cache';
+
+/**
+ * Databases infos - will be re-loaded from $config['calibre_directory']
  *
  * For each database:
  *   name: The database name to display

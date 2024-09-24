@@ -29,6 +29,8 @@ class Database
     protected static int $count = 0;
     /** @var array<string> */
     protected static $queries = [];
+    /** @var bool */
+    protected static $functions = false;
 
     /**
      * Summary of getDbStatistics
@@ -193,6 +195,7 @@ class Database
                         }, 1);
                     }
                     static::$dbFileName = static::getDbFileName($database);
+                    static::$functions = false;
                 } else {
                     // this will call exit()
                     static::error($database);
@@ -203,6 +206,44 @@ class Database
             }
         }
         return static::$db;
+    }
+
+    /**
+     * Summary of addSqliteFunctions
+     * @param ?int $database
+     * @return void
+     */
+    public static function addSqliteFunctions($database)
+    {
+        if (static::$functions) {
+            return;
+        }
+        static::getDb($database);
+        static::$functions = true;
+        // add dummy functions for selecting in meta and tag_browser_* views
+        static::$db->sqliteCreateFunction('title_sort', function ($s) {
+            return $s;
+        }, 1);
+        static::$db->sqliteCreateFunction('books_list_filter', function ($s) {
+            return 1;
+        }, 1);
+        static::$db->sqliteCreateAggregate('concat', function ($context, $row, $string) {
+            $context ??= [];
+            $context[] = $string;
+            return $context;
+        }, function ($context, $count) {
+            $context ??= [];
+            return implode(',', $context);
+        }, 1);
+        static::$db->sqliteCreateAggregate('sortconcat', function ($context, $row, $id, $string) {
+            $context ??= [];
+            $context[$id] = $string;
+            return $context;
+        }, function ($context, $count) {
+            $context ??= [];
+            sort($context);
+            return implode(',', $context);
+        }, 2);
     }
 
     /**

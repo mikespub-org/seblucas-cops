@@ -14,6 +14,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Add dummy sqlite functions for table views in REST API
+  * Update language files via Gitlocalize - see PRs from @horus68 + translators/moderators
+  * Improve filters for Not Set tags, ratings, series or identifiers
   * Show search result text for no result - see issue #107 by @HaoSs07
   * Support query list arguments (limit, offset, where, order) in GraphQL (dev only)
   * Sort by book count in navigation lists if paginated for twigged template
