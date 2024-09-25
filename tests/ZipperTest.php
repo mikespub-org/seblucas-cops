@@ -2,13 +2,13 @@
 /**
  * COPS (Calibre OPDS PHP Server) test file
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     mikespub
  */
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
 require_once dirname(__DIR__) . '/config/test.php';

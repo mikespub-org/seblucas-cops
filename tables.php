@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) endpoint for datatables (TODO)
  * URL format: tables.php
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */

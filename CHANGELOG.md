@@ -14,6 +14,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Clarify license GPL version 2 or later + fix file headers
   * Add dummy sqlite functions for table views in REST API
   * Update language files via Gitlocalize - see PRs from @horus68 + translators/moderators
   * Improve filters for Not Set tags, ratings, series or identifiers

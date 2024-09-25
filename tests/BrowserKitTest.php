@@ -13,7 +13,7 @@
  * It does not execute or even understand Javascript, so any client-side handling
  * has to be done inside the tests.
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     mikespub
  */
 

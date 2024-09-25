@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) Epub Loader (example)
  * URL format: loader.php/{action}/{dbNum}/{authorId}?...
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     mikespub
  */
 

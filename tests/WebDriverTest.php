@@ -22,7 +22,7 @@
  * See https://github.com/php-webdriver/php-webdriver/blob/main/example.php
  * for better ways to use WebDriver (php-webdriver/webdriver) natively instead.
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */

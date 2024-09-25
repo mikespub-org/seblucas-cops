@@ -4,7 +4,7 @@
  * Settings can be overridden in config/local.php and
  * optional config/local.{remote_user}.php
  *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */
