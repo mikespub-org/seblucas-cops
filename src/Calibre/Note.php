@@ -22,6 +22,7 @@ class Note
         'authors' => Author::class,
         //'languages' => Language::class,
         'publishers' => Publisher::class,
+        //'ratings' => Rating::class,
         'series' => Serie::class,
         'tags' => Tag::class,
     ];

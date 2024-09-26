@@ -456,6 +456,15 @@ class JsonRenderer extends BaseRenderer
                 $params['filter'] = 1;
                 $out ["filterurl"] = Route::link($this->handler, null, $params);
             }
+        } elseif (!empty($currentPage->extra)) {
+            // show extra info or series in Page*Detail (without books)
+            $out ["containsBook"] = 1;
+            $out ["sortoptions"] = [];
+            if ($currentPage->canFilter()) {
+                $params = $this->request->getCleanParams();
+                $params['filter'] = 1;
+                $out ["filterurl"] = Route::link($this->handler, null, $params);
+            }
         } else {
             if ($currentPage->isPaginated()) {
                 // support {{=str_format(it.sorturl, "count")}} etc. in templates (use double quotes for sort field)

@@ -31,6 +31,9 @@ class PageSerieDetail extends PageWithDetail
             // @todo needs title_sort function in sqlite for series
             //} elseif ($this->request->get('tree')) {
             //    $this->getHierarchy($instance);
+        } elseif ($this->request->get('extra')) {
+            // show extra information without books
+            $this->getExtra($instance);
         } else {
             $this->getEntries($instance);
         }
@@ -66,5 +69,6 @@ class PageSerieDetail extends PageWithDetail
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series_index";
+        $this->getExtra($instance);
     }
 }

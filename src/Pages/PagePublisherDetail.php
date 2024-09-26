@@ -28,6 +28,9 @@ class PagePublisherDetail extends PageWithDetail
         if ($this->request->get('filter')) {
             $this->filterParams = [Publisher::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
+        } elseif ($this->request->get('extra')) {
+            // show extra information without books
+            $this->getExtra($instance);
         } else {
             $this->getEntries($instance);
         }
@@ -44,5 +47,6 @@ class PagePublisherDetail extends PageWithDetail
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
+        $this->getExtra($instance);
     }
 }

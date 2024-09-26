@@ -28,6 +28,12 @@ class PageAuthorDetail extends PageWithDetail
         if ($this->request->get('filter')) {
             $this->filterParams = [Author::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
+        } elseif ($this->request->get('series')) {
+            // show author series without books
+            $this->addExtraSeries($instance);
+        } elseif ($this->request->get('extra')) {
+            // show extra information without books
+            $this->getExtra($instance);
         } else {
             $this->getEntries($instance);
         }
