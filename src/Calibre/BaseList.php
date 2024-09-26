@@ -284,13 +284,7 @@ class BaseList
     public function getAllEntries($n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getCountColumns(), ' as ' . $this->orderBy)) {
-            if (str_contains($query, 'order by')) {
-                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
-            } else {
-                $query .= ' order by ' . $this->getOrderBy() . ' ';
-            }
-        }
+        $query = $this->addOrderByClause($query);
         $columns = $this->getCountColumns();
         return $this->getEntryArrayWithBookNumber($query, $columns, "", [], $n);
     }
@@ -384,6 +378,11 @@ class BaseList
     public function getEntriesByFirstLetter($letter, $n = 1)
     {
         $query = $this->className::SQL_ROWS_BY_FIRST_LETTER;
+        // authors by first letter in sort
+        if ($this->orderBy == 'name') {
+            $this->orderBy = 'sort';
+        }
+        $query = $this->addOrderByClause($query);
         $columns = $this->getCountColumns();
         $filter = new Filter($this->request, [$letter . "%"], $this->getLinkTable(), $this->databaseId);
         $filterString = $filter->getFilterString();
@@ -499,13 +498,7 @@ class BaseList
     public function getFilteredEntries($filter, $n = 1)
     {
         $query = $this->className::SQL_ALL_ROWS;
-        if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getCountColumns(), ' as ' . $this->orderBy)) {
-            if (str_contains($query, 'order by')) {
-                $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
-            } else {
-                $query .= ' order by ' . $this->getOrderBy() . ' ';
-            }
-        }
+        $query = $this->addOrderByClause($query);
         $columns = $this->getCountColumns();
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
@@ -525,6 +518,20 @@ class BaseList
             return [];
         }
         $query = $this->className::SQL_BOOKLIST_NULL;
+        $query = $this->addOrderByClause($query);
+        $columns = $this->getCountColumns();
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+        return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+    }
+
+    /**
+     * Summary of addOrderByClause
+     * @param string $query
+     * @return string
+     */
+    public function addOrderByClause($query)
+    {
         if (!empty($this->orderBy) && $this->orderBy != $this->getSort() && str_contains($this->getCountColumns(), ' as ' . $this->orderBy)) {
             if (str_contains($query, 'order by')) {
                 $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|)\s*/i', ' order by ' . $this->getOrderBy() . ' ', $query);
@@ -532,10 +539,7 @@ class BaseList
                 $query .= ' order by ' . $this->getOrderBy() . ' ';
             }
         }
-        $columns = $this->getCountColumns();
-        $filterString = $filter->getFilterString();
-        $params = $filter->getQueryParams();
-        return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        return $query;
     }
 
     /**
