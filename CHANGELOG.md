@@ -20,7 +20,7 @@ x.x.x - TODO
   * Improve filters for Not Set tags, ratings, series or identifiers
   * Show search result text for no result - see issue #107 by @HaoSs07
   * Support query list arguments (limit, offset, where, order) in GraphQL (dev only)
-  * Sort by book count in navigation lists if paginated for twigged template
+  * Sort by book count in navigation lists if paginated for twigged and bootstrap2 template
 
 3.2.2 - 20240914 Update bootstrap5 template + fix integrity
   * Fix integrity checks for bootstrap5 template - see PR #106 from @dunxd
