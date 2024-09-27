@@ -541,7 +541,7 @@ class Route
      */
     public static function slugify($string)
     {
-        $string = str_replace([' ', '&', '"', '/', '?', '#'], ['_', '-', '', '.', '', '-'], trim($string));
+        $string = str_replace([' ', '&', '"', '/', '\\', '?', '#'], ['_', '-', '', '.', '.', '', '-'], trim($string));
 
         return Translation::normalizeUtf8String($string);
     }
