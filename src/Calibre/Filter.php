@@ -157,13 +157,15 @@ class Filter
             }
         }
 
-        $letter = $this->request->get(BookList::URL_PARAM_FIRST, null, '/^\w$/');
-        if (!empty($letter)) {
+        // this only works if books is part of the query
+        $letter = $this->request->get(BookList::URL_PARAM_FIRST, null, '/^[\p{L}\p{N}]$/u');
+        if (!empty($letter) && $this->parentTable == 'books') {
             $this->addFirstLetterFilter($letter);
         }
 
+        // this only works if books is part of the query
         $year = $this->request->get(BookList::URL_PARAM_YEAR, null, '/^\d+$/');
-        if (!empty($year)) {
+        if (!empty($year) && $this->parentTable == 'books') {
             $this->addPubYearFilter($year);
         }
 
