@@ -89,16 +89,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2024.7.15",
+            "version": "2024.9.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "52b5f5a295f96465352379481da8565aa778b4e2"
+                "reference": "38a6e0af934dff6a83986f5d130266a0699730ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/52b5f5a295f96465352379481da8565aa778b4e2",
-                "reference": "52b5f5a295f96465352379481da8565aa778b4e2",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/38a6e0af934dff6a83986f5d130266a0699730ab",
+                "reference": "38a6e0af934dff6a83986f5d130266a0699730ab",
                 "shasum": ""
             },
             "suggest": {
@@ -129,22 +129,22 @@
             "description": "Epub.js Reader with zipfs.php",
             "support": {
                 "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.7.15"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.9.29"
             },
-            "time": "2024-07-15T15:03:35+00:00"
+            "time": "2024-09-29T11:47:06+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "87813284bfa29cc7931a0e2723e2f3ebea9dae6b"
+                "reference": "63e8acb3f89623a78e5aef60237eff1c23d4fc29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/87813284bfa29cc7931a0e2723e2f3ebea9dae6b",
-                "reference": "87813284bfa29cc7931a0e2723e2f3ebea9dae6b",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/63e8acb3f89623a78e5aef60237eff1c23d4fc29",
+                "reference": "63e8acb3f89623a78e5aef60237eff1c23d4fc29",
                 "shasum": ""
             },
             "require": {
@@ -201,9 +201,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.0.0"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.0.1"
             },
-            "time": "2024-09-05T11:22:06+00:00"
+            "time": "2024-09-29T12:04:38+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -1024,16 +1024,16 @@
     "packages-dev": [
         {
             "name": "illuminate/collections",
-            "version": "v11.23.5",
+            "version": "v11.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "cbea9d7a82984bbc1a9376498533cc77513f9a09"
+                "reference": "465044f988f9a07c901388beeb15201d711387aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/cbea9d7a82984bbc1a9376498533cc77513f9a09",
-                "reference": "cbea9d7a82984bbc1a9376498533cc77513f9a09",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/465044f988f9a07c901388beeb15201d711387aa",
+                "reference": "465044f988f9a07c901388beeb15201d711387aa",
                 "shasum": ""
             },
             "require": {
@@ -1075,11 +1075,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-09-12T14:50:04+00:00"
+            "time": "2024-09-25T15:08:32+00:00"
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.23.5",
+            "version": "v11.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1125,16 +1125,16 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.23.5",
+            "version": "v11.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "5a4c6dcf633c1f69e1b70bbea1ef1b7d2186d3da"
+                "reference": "56312862af937bd6da8e6dc8bbd88188dfb478f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/5a4c6dcf633c1f69e1b70bbea1ef1b7d2186d3da",
-                "reference": "5a4c6dcf633c1f69e1b70bbea1ef1b7d2186d3da",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/56312862af937bd6da8e6dc8bbd88188dfb478f8",
+                "reference": "56312862af937bd6da8e6dc8bbd88188dfb478f8",
                 "shasum": ""
             },
             "require": {
@@ -1169,11 +1169,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-09-12T15:25:08+00:00"
+            "time": "2024-09-22T15:08:08+00:00"
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.23.5",
+            "version": "v11.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1352,16 +1352,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "3.2.0",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "9f5734ca0f0f1101aaa62a6ed5e5eda46cdacc72"
+                "reference": "0e019f062ef87fb9903d42f9c100883893f105b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/9f5734ca0f0f1101aaa62a6ed5e5eda46cdacc72",
-                "reference": "9f5734ca0f0f1101aaa62a6ed5e5eda46cdacc72",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/0e019f062ef87fb9903d42f9c100883893f105b9",
+                "reference": "0e019f062ef87fb9903d42f9c100883893f105b9",
                 "shasum": ""
             },
             "require": {
@@ -1372,9 +1372,9 @@
                 "ext-zip": "*",
                 "ext-zlib": "*",
                 "mikespub/php-epub-meta": "^2.3||^3.0",
+                "mikespub/survos-wikidata": "^4.0||^5.0",
                 "php": ">=8.2",
-                "survos/wikidata": "^4.0||^5.0",
-                "twig/twig": "^3.12"
+                "twig/twig": "^3.14"
             },
             "require-dev": {
                 "phpunit/phpunit": "^11.3"
@@ -1408,9 +1408,82 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/3.2.0"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/3.3.0"
             },
-            "time": "2024-09-05T11:38:21+00:00"
+            "time": "2024-09-29T13:01:25+00:00"
+        },
+        {
+            "name": "mikespub/survos-wikidata",
+            "version": "5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/survos-wikidata.git",
+                "reference": "5cf098807e8ea1bee6a36e994bb56b101e03867d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/5cf098807e8ea1bee6a36e994bb56b101e03867d",
+                "reference": "5cf098807e8ea1bee6a36e994bb56b101e03867d",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/collections": "^10.0|^11.0",
+                "php": "^8.2",
+                "symfony/http-client": "^6.4||^7.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.12",
+                "phpunit/phpunit": "^10.5",
+                "rector/rector": "^1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Wikidata\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arhey",
+                    "role": "developer"
+                },
+                {
+                    "name": "tacman",
+                    "role": "developer"
+                },
+                {
+                    "name": "mikespub",
+                    "role": "developer"
+                }
+            ],
+            "description": "A PHP client for working with Wikidata API.",
+            "homepage": "https://github.com/mikespub-org/survos-wikidata",
+            "keywords": [
+                "client",
+                "php",
+                "wikidata"
+            ],
+            "support": {
+                "source": "https://github.com/mikespub-org/survos-wikidata/tree/5.1"
+            },
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/arhey",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.paypal.me/arhey",
+                    "type": "custom"
+                }
+            ],
+            "time": "2024-09-29T12:45:18+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3423,75 +3496,6 @@
             "time": "2024-05-01T10:20:27+00:00"
         },
         {
-            "name": "survos/wikidata",
-            "version": "5.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/wikidata.git",
-                "reference": "3c0910ce79f000c20db215e57d1be39d21e9f3d2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/wikidata/zipball/3c0910ce79f000c20db215e57d1be39d21e9f3d2",
-                "reference": "3c0910ce79f000c20db215e57d1be39d21e9f3d2",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/collections": "^10.0|^11.0",
-                "php": "^8.2",
-                "symfony/http-client": "^6.4||^7.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.0",
-                "rector/rector": "^1.1"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "Wikidata\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arhey",
-                    "role": "developer"
-                },
-                {
-                    "name": "tacman",
-                    "role": "developer"
-                }
-            ],
-            "description": "A PHP client for working with Wikidata API.",
-            "homepage": "https://github.com/survos/wikidata",
-            "keywords": [
-                "client",
-                "php",
-                "wikidata"
-            ],
-            "support": {
-                "source": "https://github.com/survos/wikidata/tree/5.0"
-            },
-            "funding": [
-                {
-                    "url": "https://www.buymeacoffee.com/arhey",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://www.paypal.me/arhey",
-                    "type": "custom"
-                }
-            ],
-            "time": "2024-06-25T19:06:56+00:00"
-        },
-        {
             "name": "symfony/browser-kit",
             "version": "v7.1.1",
             "source": {
@@ -4147,16 +4151,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.14.0",
+            "version": "v15.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "87f956498895757f0808f22c193577ed090f7f3b"
+                "reference": "73542661e3aeaba6b2c60481e82d6b9ea4196908"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/87f956498895757f0808f22c193577ed090f7f3b",
-                "reference": "87f956498895757f0808f22c193577ed090f7f3b",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/73542661e3aeaba6b2c60481e82d6b9ea4196908",
+                "reference": "73542661e3aeaba6b2c60481e82d6b9ea4196908",
                 "shasum": ""
             },
             "require": {
@@ -4209,7 +4213,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.14.0"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.14.1"
             },
             "funding": [
                 {
@@ -4217,7 +4221,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-09-10T10:36:37+00:00"
+            "time": "2024-09-26T08:18:11+00:00"
         }
     ],
     "aliases": [],
