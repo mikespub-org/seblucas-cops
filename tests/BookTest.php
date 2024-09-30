@@ -509,6 +509,11 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $cover = new Cover($book);
 
+        // full url
+        $fileName = $cover->checkDatabaseFieldCover('http://localhost/' . $book->path . '/cover.jpg');
+        $expected = 'http://localhost/' . $book->path . '/cover.jpg';
+        $this->assertEquals($expected, $fileName);
+
         // full path
         $fileName = $cover->checkDatabaseFieldCover($book->path . '/cover.jpg');
         $expected = $book->path . '/cover.jpg';

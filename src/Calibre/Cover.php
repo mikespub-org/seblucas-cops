@@ -48,6 +48,10 @@ class Cover
      */
     public function checkDatabaseFieldCover($fileName)
     {
+        if (!empty($fileName) && str_contains($fileName, '://')) {
+            $this->coverFileName = $fileName;
+            return $this->coverFileName;
+        }
         $imgDirectory = Database::getImgDirectory($this->databaseId);
         $this->coverFileName = $fileName;
         if (!file_exists($this->coverFileName)) {
@@ -288,7 +292,13 @@ class Cover
             //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', LinkEntry::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+            if (!empty(Config::get('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
+                return new LinkEntry(
+                    $this->coverFileName,
+                    $mime,
+                    LinkEntry::OPDS_IMAGE_TYPE
+                );
+            } elseif (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
                 return new LinkEntry(
                     $this->coverFileName,
                     $mime,
@@ -362,7 +372,13 @@ class Cover
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             // @todo support creating (and caching) thumbnails for external cover images someday
-            if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+            if (!empty(Config::get('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
+                return new LinkEntry(
+                    $this->coverFileName,
+                    $mime,
+                    LinkEntry::OPDS_THUMBNAIL_TYPE
+                );
+            } elseif (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
                 return new LinkEntry(
                     $this->coverFileName,
                     $mime,
@@ -421,14 +437,11 @@ class Cover
     public static function findCoverFileName($book, $line)
     {
         // -DC- Use cover file name
-        //if (!file_exists($this->getCoverFilePath('jpg'))) {
-        //    // double check
-        //    $this->hasCover = 0;
-        //}
         $coverFileName = null;
         $cover = new Cover($book);
         if (!empty(Config::get('calibre_database_field_cover'))) {
-            $coverFileName = $cover->checkDatabaseFieldCover($line->cover);
+            $field = Config::get('calibre_database_field_cover');
+            $coverFileName = $cover->checkDatabaseFieldCover($line->{$field});
         }
         // Else try with default cover file name
         if (empty($coverFileName)) {

@@ -42,6 +42,14 @@ $config['calibre_internal_directory'] = '';
  */
 $config['calibre_external_storage'] = '';
 
+/**
+ * Custom configuration if your Calibre library was created with epub-loader,
+ * and it contains an extra 'cover' field in the books table for special covers
+ * Example (with epub-loader):
+ * $config['calibre_database_field_cover'] = 'cover';
+ */
+$config['calibre_database_field_cover'] = '';
+
 /*
  * Full URL prefix (with trailing /)
  * useful where a full URL is required, COPS is behind a proxy or the script name shows the wrong place

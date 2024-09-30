@@ -108,7 +108,11 @@ class Book
         //$this->relativePath = $line->path;
         // -DC- Init relative or full path
         if (!empty(Config::get('calibre_external_storage'))) {
-            $this->path = Config::get('calibre_external_storage') . str_replace('%2F', '/', rawurlencode($line->path));
+            if (str_starts_with($line->path, Config::get('calibre_external_storage'))) {
+                $this->path = $line->path;
+            } else {
+                $this->path = Config::get('calibre_external_storage') . str_replace('%2F', '/', rawurlencode($line->path));
+            }
         } else {
             $this->path = $line->path;
             if (!is_dir($this->path)) {

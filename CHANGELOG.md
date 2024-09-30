@@ -14,6 +14,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Changes in config/default.php file:
+    - new $config['calibre_database_field_cover'] for 'cover' field from epub-loader
   * Fix slugify for titles with slashes etc. in route urls
   * Get extra information for publisher, serie or tag + series for author without books
   * Clarify license GPL version 2 or later + fix file headers
