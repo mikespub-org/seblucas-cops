@@ -35,6 +35,11 @@ class LoaderHandler extends BaseHandler
 
     public function handle($request)
     {
+        if (!class_exists('\Marsender\EPubLoader\RequestHandler')) {
+            echo 'This handler is available in developer mode only (without --no-dev option):' . "<br/>\n";
+            echo '$ composer install -o';
+            return;
+        }
         // get the global config for epub-loader from config/loader.php
         $gConfig = require dirname(__DIR__, 2) . '/config/loader.php';
         // adapt for use with COPS

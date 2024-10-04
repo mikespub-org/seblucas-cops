@@ -34,6 +34,11 @@ class OpdsHandler extends BaseHandler
 
     public function handle($request)
     {
+        if (!class_exists('\Kiwilan\Opds\OpdsResponse')) {
+            echo 'This handler is available in developer mode only (without --no-dev option):' . "<br/>\n";
+            echo '$ composer install -o';
+            return;
+        }
         $page = $request->get('page', PageId::INDEX);
         $query = $request->get('query');  // 'q' by default for php-opds
         if ($query) {

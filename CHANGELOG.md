@@ -14,6 +14,10 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Remove deprecated COPS endpoints - see BC for COPS 3.x
+  * Fix sortoptions warning for server-side doT templates
+
+3.3.0 - 20241004 Fix issues, update languages, improvements & licensing
   * Changes in config/default.php file:
     - new $config['calibre_database_field_cover'] for 'cover' field from epub-loader
   * Filter out ignored formats in Book::getBookByDataId() - see issue #113 by @tomchiverton

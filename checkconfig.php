@@ -5,6 +5,8 @@
  * COPS (Calibre OPDS PHP Server) Configuration check
  * URL format: checkconfig.php?err={err}&full={full}
  *
+ * Keep as fallback endpoint for any CheckHandler issues for now
+ *
  * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub

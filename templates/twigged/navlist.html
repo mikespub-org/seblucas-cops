@@ -2,7 +2,7 @@
 {% extends 'mainlist.html' %}
 
 {% block sortlinks %}
-{% if it.sortoptions is defined %}
+{% if it.sortoptions ?? false %}
 <!-- show sort options -->
 <ul id="sortlinks" class="nav navbar-nav">
   {% if it.sortoptions.name is defined %}

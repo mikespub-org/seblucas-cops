@@ -475,6 +475,8 @@ class JsonRenderer extends BaseRenderer
                     'name' => localize("sort.names"),
                     'count' => localize("sort.count"),
                 ];
+            } else {
+                $out ["sortoptions"] = [];
             }
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
