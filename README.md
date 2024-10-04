@@ -103,9 +103,9 @@ On Centos you may have to add :
 # Install a release (Easiest way)
 
 1.  Extract the zip file you got from [the release page](https://github.com/seblucas/cops/releases) to a folder in web space (visible to the web server).
-2.  If you're doing a first-time install, copy config_local.php.example to config_local.php
-3.  Edit config_local.php to match your config.
-4.  If needed add other configuration item from config_default.php
+2.  If you're doing a first-time install, copy *[config/local.php.example](config/local.php.example)* to *config/local.php* (this differs from the original project)
+3.  Edit config/local.php to match your config.
+4.  If needed add other configuration item from config/default.php
 
 If you like Docker, you can also try this multiarch docker container from [linuxserver.io](https://hub.docker.com/r/linuxserver/cops/)  It has builds for x64 and arm64. 
 
