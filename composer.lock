@@ -1024,16 +1024,16 @@
     "packages-dev": [
         {
             "name": "illuminate/collections",
-            "version": "v11.25.0",
+            "version": "v11.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "465044f988f9a07c901388beeb15201d711387aa"
+                "reference": "4d333ea19a27230b424b9af56f34cd658b5bbce2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/465044f988f9a07c901388beeb15201d711387aa",
-                "reference": "465044f988f9a07c901388beeb15201d711387aa",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/4d333ea19a27230b424b9af56f34cd658b5bbce2",
+                "reference": "4d333ea19a27230b424b9af56f34cd658b5bbce2",
                 "shasum": ""
             },
             "require": {
@@ -1075,11 +1075,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2024-09-25T15:08:32+00:00"
+            "time": "2024-09-27T14:54:48+00:00"
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.25.0",
+            "version": "v11.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1125,7 +1125,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.25.0",
+            "version": "v11.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1173,7 +1173,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.25.0",
+            "version": "v11.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1352,16 +1352,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "3.3.1",
+            "version": "3.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "1297e790f15ae2aafc06f9e648abbff65cff8802"
+                "reference": "f70d07fb1da7d4c6548c132cd7939a71ae10f8fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/1297e790f15ae2aafc06f9e648abbff65cff8802",
-                "reference": "1297e790f15ae2aafc06f9e648abbff65cff8802",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/f70d07fb1da7d4c6548c132cd7939a71ae10f8fa",
+                "reference": "f70d07fb1da7d4c6548c132cd7939a71ae10f8fa",
                 "shasum": ""
             },
             "require": {
@@ -1408,9 +1408,9 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/3.3.1"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/3.3.3"
             },
-            "time": "2024-09-30T18:07:34+00:00"
+            "time": "2024-10-04T17:47:36+00:00"
         },
         {
             "name": "mikespub/survos-wikidata",
