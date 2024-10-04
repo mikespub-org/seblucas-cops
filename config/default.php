@@ -152,6 +152,7 @@ $config['cops_prefered_format'] = ['EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 
 
 /*
  * Specify the ignored formats that will never display in COPS
+ * This will also stop downloading them, unless the files are under the web directory
  */
 $config['cops_ignored_formats'] = [];
 

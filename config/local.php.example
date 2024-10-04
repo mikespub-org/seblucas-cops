@@ -47,6 +47,7 @@ $config['cops_front_controller'] = '';
 
 /*
  * Specify the ignored formats that will never display in COPS
+ * This will also stop downloading them, unless the files are under the web directory
  */
 $config['cops_ignored_formats'] = ['ORIGINAL_EPUB', 'ORIGINAL_AZW3'];
 

@@ -846,6 +846,12 @@ where books.id = ?';
         $query = 'select ' . static::getBookColumns() . ', data.name, data.format
 from data, books ' . static::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?';
+        $ignored_formats = Config::get('ignored_formats');
+        if (count($ignored_formats) > 0) {
+            $query .= " and data.format not in ('"
+            . implode("','", $ignored_formats)
+            . "')";
+        }
         $result = Database::query($query, [$dataId], $database);
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
