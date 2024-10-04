@@ -14,6 +14,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Update loader config + add table handler (dev only)
+  * Fix rewrite rules in web.config (IIS) - in theory at least
   * Remove deprecated COPS endpoints - see BC for COPS 3.x
   * Fix sortoptions warning for server-side doT templates
 

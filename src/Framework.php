@@ -33,6 +33,7 @@ class Framework
         "zipfs" => Handlers\ZipFsHandler::class,
         "mail" => Handlers\MailHandler::class,
         "graphql" => Handlers\GraphQLHandler::class,
+        "tables" => Handlers\TableHandler::class,
     ];
     /** @var array<mixed> */
     protected static $middlewares = [];

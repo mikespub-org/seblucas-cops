@@ -22,7 +22,7 @@ $gConfig['app_name'] = 'Epub Loader';
 /**
  * Application version
  */
-$gConfig['version'] = '3.0';
+$gConfig['version'] = '3.3';
 
 /**
  * Admin email
@@ -40,7 +40,7 @@ $gConfig['create_db'] = false;
 /**
  * Specify a cache directory for any Google or Wikidata lookup
  */
-$gConfig['cache_dir'] = 'tests/cache';
+$gConfig['cache_dir'] = dirname(__DIR__) . '/tests/cache';
 
 /**
  * Databases infos - will be re-loaded from $config['calibre_directory']
@@ -61,6 +61,8 @@ $gConfig['databases'][] = ['name' => 'Custom Columns', 'db_path' => dirname(__DI
 $gConfig['actions'] = [];
 $gConfig['actions']['csv_export'] = 'Csv export';
 // only if you start without an existing calibre database
+//$gConfig['actions']['csv_import'] = 'Csv import';
+//$gConfig['actions']['json_import'] = 'Json import';
 //$gConfig['actions']['db_load'] = 'Create database';
 $gConfig['actions']['authors'] = 'List authors in database';
 $gConfig['actions']['wd_author'] = 'Check authors in database';
@@ -72,9 +74,12 @@ $gConfig['actions']['gb_volume'] = 'Search Google Books Volume';
 $gConfig['actions']['ol_author'] = 'Find OpenLibrary author';
 $gConfig['actions']['ol_books'] = 'Find OpenLibrary books';
 $gConfig['actions']['ol_work'] = 'Find OpenLibrary work';
+$gConfig['actions']['gr_author'] = 'GoodReads authors';
+$gConfig['actions']['gr_books'] = 'GoodReads books';
 $gConfig['actions']['notes'] = 'Get Calibre Notes';
 $gConfig['actions']['resource'] = 'Get Calibre Resource';
 $gConfig['actions']['hello_world'] = 'Example: Hello, World - see app/example.php';
+// disable any other actions you don't want to use via COPS
 //$gConfig['actions']['goodbye'] = 'Example: Goodbye - see app/example.php';
 
 return $gConfig;

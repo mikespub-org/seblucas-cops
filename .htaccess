@@ -73,9 +73,9 @@ ExpiresByType text/javascript "access plus 1 year"
 # Uncomment if you wish to protect access with a password
 ###########################################
 # If your covers and books are not available as soon as you protect it
-# You can try replacing the FilesMatch directive by this one
-# <FilesMatch "(index|feed)\.php">
-# it helps for Sony PRS-TX and Aldiko, but beware fetch.php can be accessed
+# You can try replacing the FilesMatch directive by this one (negative look-ahead)
+# <LocationMatch "^/index\.php($|/(?!(fetch|inline|covers|thumbs|files))\w*)">
+# it helps for Sony PRS-TX and Aldiko, but beware index.php/fetch/ etc. can be accessed
 # without authentication (see $config ['cops_fetch_protect'] for a workaround).
 ###########################################
 #<FilesMatch "\.php$">

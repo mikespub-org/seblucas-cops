@@ -439,10 +439,8 @@ class Request
      */
     public function getEndpoint($default)
     {
-        $script = explode("/", $this->script() ?? "/" . $default);
-        $link = array_pop($script);
-        // see former LinkNavigation
-        if (preg_match("/(bookdetail|getJSON).php/", $link)) {
+        $link = basename($this->script() ?? "/" . $default);
+        if (empty($link)) {
             return $default;
         }
         return $link;
@@ -541,8 +539,6 @@ class Request
      */
     public function isJson()
     {
-        // @deprecated 3.1.0 use index.php endpoint
-        // using actual getJSON.php endpoint, or
         // set in parseParams() based on isAjax()
         $handler = $this->getHandler();
         if ($handler == 'json') {
@@ -557,8 +553,6 @@ class Request
      */
     public function isFeed()
     {
-        // @deprecated 3.1.0 use index.php endpoint
-        // using actual feed.php or opds.php endpoint, or
         // set in parseParams() based on Route::match()
         $handler = $this->getHandler();
         if (in_array($handler, ['feed', 'opds'])) {

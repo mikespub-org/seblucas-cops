@@ -416,9 +416,10 @@ $config ['cops_ignored_categories'] = [];
 /*
  * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
  * is password protected. A simple workaround is to leave fetch.php not protected (see .htaccess).
+ * @deprecated 3.1.0 use route urls instead
  * But In that case your COPS installation is not completely safe.
- * Setting this parameter to "1" ensure that nobody can access fetch.php before accessing
- * index.php or feed.php first.
+ * Setting this parameter to "1" ensure that nobody can access index.php/fetch before accessing
+ * index.php or index.php/feed first.
  * BEWARE : Do not touch this if you're not using password, not using PRS-TX or not using Aldiko.
  */
 $config ['cops_fetch_protect'] = '0';

@@ -37,6 +37,7 @@ class LinkFeed extends Link
     public function __construct($href, $rel = null, $title = null, $database = null)
     {
         parent::__construct($href, static::LINK_TYPE, $rel, $title);
+        // @todo check if/when we still need to add the database here
         //$this->href = Route::query($this->href, ['db' => $database]);
         if (!is_null($database)) {
             if (str_contains($this->href, '?')) {
@@ -53,9 +54,6 @@ class LinkFeed extends Link
      */
     public function hrefXhtml()
     {
-        // LinkFeed()->href is relative to endpoint
-        // @todo take into account endpoint when building href, e.g. feed.php
-        //return Route::base() . $endpoint . $this->href;
         // LinkFeed()->href includes the endpoint here
         return $this->href;
     }

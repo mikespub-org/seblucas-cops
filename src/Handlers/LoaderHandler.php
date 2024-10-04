@@ -51,7 +51,7 @@ class LoaderHandler extends BaseHandler
         $gConfig['databases'] = [];
 
         // specify a cache directory for any Google or Wikidata lookup
-        $cacheDir = $gConfig['cache_dir'] ?? 'tests/cache';
+        $cacheDir = $gConfig['cache_dir'] ?? dirname(__DIR__, 2) . '/cache';
         if (!is_dir($cacheDir) && !mkdir($cacheDir, 0o777, true)) {
             echo 'Please make sure the cache directory can be created';
             return;

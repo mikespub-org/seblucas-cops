@@ -33,6 +33,7 @@ class Config
         "zipfs" => "zipfs.php",
         "mail" => "sendtomail.php",
         "graphql" => "graphql.php",
+        "tables" => "tables.php",
     ];
     protected const PREFIX = 'cops_';
 

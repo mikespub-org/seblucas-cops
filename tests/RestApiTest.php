@@ -118,7 +118,12 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
     }
 
-    public function testGetScriptName(): void
+    /**
+     * Summary of skipTestGetScriptName
+     * @deprecated 3.1.0 use index.php endpoint
+     * @return void
+     */
+    protected function skipTestGetScriptName(): void
     {
         $script = $_SERVER["SCRIPT_NAME"];
         $_SERVER["SCRIPT_NAME"] = "/" . Config::ENDPOINT["restapi"];
@@ -216,7 +221,7 @@ class RestApiTest extends TestCase
         $test = RestApi::getRoutes($request);
         $expected = "Routes";
         $this->assertEquals($expected, $test["title"]);
-        $expected = 97;
+        $expected = 98;
         $this->assertCount($expected, $test["entries"]);
     }
 
@@ -226,7 +231,7 @@ class RestApiTest extends TestCase
         $test = RestApi::getPages($request);
         $expected = "Pages";
         $this->assertEquals($expected, $test["title"]);
-        $expected = 41;
+        $expected = 42;
         $this->assertCount($expected, $test["entries"]);
     }
 

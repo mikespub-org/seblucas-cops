@@ -32,7 +32,7 @@ class HtmlHandler extends PageHandler
 
     public function handle($request)
     {
-        // If we detect that an OPDS reader try to connect try to redirect to feed.php
+        // If we detect that an OPDS reader try to connect try to redirect to index.php/feed
         if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $request->agent())) {
             Response::redirect(Route::link("feed", null, ["db" => $request->database()]));
             return;

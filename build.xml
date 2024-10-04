@@ -30,7 +30,6 @@
             <fileset dir=".">
                 <include name="**" />
                 <exclude name="DESIGN.md" />
-                <exclude name="tables.php" />
                 <exclude name="templates/tables.html" />
                 <exclude name="tests/**" />
                 <exclude name=".git/**" />
