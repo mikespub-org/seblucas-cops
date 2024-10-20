@@ -14,6 +14,11 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * ...
+
+3.3.1 - 20241020 Update translations + remove old endpoints
+  * Update russian translation - see PR #116 from @Carmina16
+  * Add TRANSLATIONS.md for Gitlocalize - see PR #115 from @horus68
   * Update loader config + add table handler (dev only)
   * Fix rewrite rules in web.config (IIS) - in theory at least
   * Remove deprecated COPS endpoints - see BC for COPS 3.x

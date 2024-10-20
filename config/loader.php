@@ -17,12 +17,12 @@ $gConfig['endpoint'] = $_SERVER['SCRIPT_NAME'] ?? null;
 /**
  * Application name
  */
-$gConfig['app_name'] = 'Epub Loader';
+$gConfig['app_name'] = 'EPub Loader';
 
 /**
  * Application version
  */
-$gConfig['version'] = '3.3';
+$gConfig['version'] = '3.4';
 
 /**
  * Admin email
@@ -57,29 +57,50 @@ $gConfig['databases'][] = ['name' => 'Custom Columns', 'db_path' => dirname(__DI
 
 /**
  * Available actions
+ * @deprecated 3.3.0 use action groups instead
  */
 $gConfig['actions'] = [];
-$gConfig['actions']['csv_export'] = 'Csv export';
+
+/**
+ * Available action groups
+ */
+$gConfig['groups'] = [];
 // only if you start without an existing calibre database
-//$gConfig['actions']['csv_import'] = 'Csv import';
-//$gConfig['actions']['json_import'] = 'Json import';
-//$gConfig['actions']['db_load'] = 'Create database';
-$gConfig['actions']['authors'] = 'List authors in database';
-$gConfig['actions']['wd_author'] = 'Check authors in database';
-$gConfig['actions']['wd_books'] = 'Check books for author';
-$gConfig['actions']['wd_series'] = 'Check series for author';
-$gConfig['actions']['wd_entity'] = 'Check Wikidata entity';
-$gConfig['actions']['gb_books'] = 'Search Google Books';
-$gConfig['actions']['gb_volume'] = 'Search Google Books Volume';
-$gConfig['actions']['ol_author'] = 'Find OpenLibrary author';
-$gConfig['actions']['ol_books'] = 'Find OpenLibrary books';
-$gConfig['actions']['ol_work'] = 'Find OpenLibrary work';
-$gConfig['actions']['gr_author'] = 'GoodReads authors';
-$gConfig['actions']['gr_books'] = 'GoodReads books';
-$gConfig['actions']['notes'] = 'Get Calibre Notes';
-$gConfig['actions']['resource'] = 'Get Calibre Resource';
-$gConfig['actions']['hello_world'] = 'Example: Hello, World - see app/example.php';
-// disable any other actions you don't want to use via COPS
-//$gConfig['actions']['goodbye'] = 'Example: Goodbye - see app/example.php';
+$gConfig['groups']['Import'] = [
+    //'db_load' => 'Create Calibre database with available epub files',
+    //'csv_import' => 'Import CSV records into new Calibre database',
+    //'json_import' => 'Import JSON files from Lookup into new Calibre database',
+];
+$gConfig['groups']['Export'] = [
+    'csv_export' => 'Export CSV records with available epub files',
+    'csv_dump' => 'Dump CSV records from Calibre database',
+];
+$gConfig['groups']['Lookup'] = [
+    'authors' => 'Authors in database',
+    'wd_author' => 'WikiData authors',
+    'wd_books' => 'WikiData books for author',
+    'wd_series' => 'WikiData series for author',
+    'gb_books' => 'Google Books for author',
+    'ol_author' => 'OpenLibrary authors',
+    'ol_books' => 'OpenLibrary books for author',
+    'gr_author' => 'GoodReads authors',
+    'gr_books' => 'GoodReads books for author',
+    'gr_series' => 'GoodReads series',
+    'caches' => 'Cache statistics',
+];
+// internal actions are not shown on the main menu
+$gConfig['groups']['Internal'] = [
+    'test' => 'Test action (not visible)',
+    'wd_entity' => 'WikiData entity',
+    'gb_volume' => 'Google Books volume',
+    'ol_work' => 'OpenLibrary work',
+    'resource' => 'Get Calibre Resource',
+];
+$gConfig['groups']['Extra'] = [
+    'notes' => 'Get Calibre Notes',
+    'hello_world' => 'Example: Hello, World - see app/example.php',
+    // disable any other actions you don't want to use via COPS
+    //'goodbye' => 'Example: Goodbye - see app/example.php',
+];
 
 return $gConfig;

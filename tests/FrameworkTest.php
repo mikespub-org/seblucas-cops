@@ -138,7 +138,7 @@ class FrameworkTest extends TestCase
         $className = Framework::class;
         // test protected method using closure bind & call or use reflection
         // @see https://www.php.net/manual/en/closure.bind.php
-        $addMiddleware = \Closure::bind(static function ($add = null)  use ($className) {
+        $addMiddleware = \Closure::bind(static function ($add = null) use ($className) {
             if (!empty($add)) {
                 array_push($className::$middlewares, $add);
             } else {
