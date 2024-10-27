@@ -14,7 +14,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
-  * ...
+  * Attach notes database to sqlite connection on demand
+  * Update integration of epub-loader and php-epub-meta
+  * Update spanish translation - see PR #117 from @Dunhill69
 
 3.3.1 - 20241020 Update translations + remove old endpoints
   * Update russian translation - see PR #116 from @Carmina16

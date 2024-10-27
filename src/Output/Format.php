@@ -14,6 +14,21 @@ use DOMDocument;
 class Format
 {
     /**
+     * Summary of getTitleSort
+     * @param string $str
+     * @return string
+     */
+    public static function getTitleSort($str)
+    {
+        $str = trim($str, ' -.');
+        // @todo add articles to ignore in other languages
+        if (!preg_match('/^(The|A|An) /u', $str)) {
+            return $str;
+        }
+        return preg_replace('/^(The|A|An) (.+)$/u', '$2, $1', $str);
+    }
+
+    /**
      * This method is a direct copy-paste from
      * http://tmont.com/blargh/2010/1/string-format-in-php
      * @param string $format

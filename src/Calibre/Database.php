@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use Exception;
 use PDO;
@@ -19,14 +20,13 @@ use PDO;
 class Database
 {
     public const KEEP_STATS = false;
-    public const CALIBRE_DB_NAME = 'metadata.db';
+    public const CALIBRE_DB_FILE = 'metadata.db';
     public const NOTES_DIR_NAME = '.calnotes';
-    public const NOTES_DB_NAME = 'notes.db';
+    public const NOTES_DB_FILE = 'notes.db';
+    public const NOTES_DB_NAME = 'notes_db';
     /** @var ?PDO */
     protected static $db = null;
     protected static ?string $dbFileName = null;
-    /** @var ?PDO */
-    protected static $notesDb = null;
     protected static int $count = 0;
     /** @var array<string> */
     protected static $queries = [];
@@ -158,7 +158,7 @@ class Database
      */
     public static function getDbFileName($database)
     {
-        return static::getDbDirectory($database) . 'metadata.db';
+        return static::getDbDirectory($database) . static::CALIBRE_DB_FILE;
     }
 
     /**
@@ -190,11 +190,7 @@ class Database
             try {
                 if (is_readable(static::getDbFileName($database))) {
                     static::$db = new PDO('sqlite:' . static::getDbFileName($database));
-                    if (Translation::useNormAndUp()) {
-                        static::$db->sqliteCreateFunction('normAndUp', function ($s) {
-                            return Translation::normAndUp($s);
-                        }, 1);
-                    }
+                    static::createSqliteFunctions();
                     static::$dbFileName = static::getDbFileName($database);
                     static::$functions = false;
                 } else {
@@ -207,6 +203,57 @@ class Database
             }
         }
         return static::$db;
+    }
+
+    /**
+     * Summary of createSqliteFunctions
+     * @return void
+     */
+    public static function createSqliteFunctions()
+    {
+        // Use normalized search function
+        if (Translation::useNormAndUp()) {
+            static::$db->sqliteCreateFunction('normAndUp', function ($s) {
+                return Translation::normAndUp($s);
+            }, 1);
+        }
+        // Check if we need to add unixepoch() for notes_db.notes
+        $sql = 'SELECT sqlite_version() as version;';
+        $stmt = static::$db->prepare($sql);
+        $stmt->execute();
+        if ($post = $stmt->fetchObject()) {
+            if ($post->version >= '3.38') {
+                return;
+            }
+        }
+        // @todo no support for actual datetime conversion here
+        // mtime REAL DEFAULT (unixepoch('subsec')),
+        static::$db->sqliteCreateFunction('unixepoch', function ($s) {
+            if (!empty($s) && $s == 'subsec') {
+                return microtime(true);
+            }
+            return time();
+        }, 1);
+    }
+
+    /**
+     * Attach an sqlite database to existing db connection
+     * @param string $dbFileName Database file name
+     * @param string $attachDatabase
+     * @throws Exception if error
+     * @return void
+     */
+    protected static function attachDatabase($dbFileName, $attachDatabase)
+    {
+        // Attach the database file
+        try {
+            $sql = "ATTACH DATABASE '{$dbFileName}' AS {$attachDatabase};";
+            $stmt = static::$db->prepare($sql);
+            $stmt->execute();
+        } catch (Exception $e) {
+            $error = sprintf('Cannot attach %s database [%s]: %s', $attachDatabase, $dbFileName, $e->getMessage());
+            throw new Exception($error);
+        }
     }
 
     /**
@@ -223,7 +270,7 @@ class Database
         static::$functions = true;
         // add dummy functions for selecting in meta and tag_browser_* views
         static::$db->sqliteCreateFunction('title_sort', function ($s) {
-            return $s;
+            return Format::getTitleSort($s);
         }, 1);
         static::$db->sqliteCreateFunction('books_list_filter', function ($s) {
             return 1;
@@ -272,7 +319,6 @@ class Database
     public static function clearDb()
     {
         static::$db = null;
-        static::$notesDb = null;
     }
 
     /**
@@ -464,22 +510,58 @@ class Database
     }
 
     /**
+     * Get list of databases (open or attach) from SQLite
+     * @param ?int $database
+     * @return array<mixed>
+     */
+    public static function getDatabaseList($database = null)
+    {
+        // PRAGMA database_list;
+        $sql = 'select * from pragma_database_list;';
+        $stmt = static::getDb($database)->prepare($sql);
+        $stmt->execute();
+        $databases = [];
+        while ($post = $stmt->fetchObject()) {
+            $databases[$post->name] = (array) $post;
+        }
+        return $databases;
+    }
+
+    /**
+     * Summary of hasNotes
+     * @param ?int $database
+     * @return bool
+     */
+    public static function hasNotes($database = null)
+    {
+        // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
+        if (file_exists(dirname(static::getDbFileName($database)) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_FILE)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Summary of getNotesDb
      * @param ?int $database
      * @return PDO|null
      */
     public static function getNotesDb($database = null)
     {
-        if (!is_null(static::$notesDb)) {
-            return static::$notesDb;
-        }
-        static::getDb($database);
-        // calibre_dir/.calnotes/notes.db
-        $dbFileName = dirname((string) static::$dbFileName) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_NAME;
-        if (!file_exists($dbFileName) || !is_readable($dbFileName)) {
+        if (!static::hasNotes($database)) {
             return null;
         }
-        static::$notesDb = new PDO('sqlite:' . $dbFileName);
-        return static::$notesDb;
+        // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
+        $databases = static::getDatabaseList($database);
+        if (!empty($databases[static::NOTES_DB_NAME])) {
+            return static::getDb($database);
+        }
+        $notesFileName = dirname(static::getDbFileName($database)) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_FILE;
+        static::attachDatabase($notesFileName, static::NOTES_DB_NAME);
+        $databases = static::getDatabaseList($database);
+        if (!empty($databases[static::NOTES_DB_NAME])) {
+            return static::getDb($database);
+        }
+        return null;
     }
 }

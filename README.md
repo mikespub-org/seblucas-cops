@@ -12,7 +12,7 @@
 
 ## Prerequisites for this fork
 
--	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML, XMLWriter and ZLib support (PHP 8.1 or later recommended)
+-	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML, Zip and ZLib support (PHP 8.2 or later recommended)
 - Release 3.x.x will only work with PHP >= 8.2 - typical for most source code & docker image installs in 2024 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 2.x.x will only work with PHP >= 8.1 - typical for most source code & docker image installs in 2023 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 1.x.x still works with PHP 7.4 if necessary - earlier PHP 7.x (or 5.x) versions are *not* supported with this fork
@@ -31,7 +31,7 @@ Same options as original:
 1. Release package
   - get latest cops-3.x.x-php8x.zip file from https://github.com/mikespub-org/seblucas-cops/releases
 
-  Note: the release packages `cops-3.x.x-php8x.zip` include the vendor/ packages for a particular PHP version. If you have an older (supported) PHP version, you can download the `Source code (zip)` for that release, and run *composer* to update the dependencies:
+  Note: the release packages `cops-3.x.x-php8x.zip` include the vendor/ packages for a particular PHP version. If you have an older or newer (supported) PHP version, you can download the `Source code (zip)` for that release, and run *composer* to update the dependencies:
   ```
   $ wget -O cops-3.x.x.zip https://github.com/mikespub-org/seblucas-cops/archive/refs/tags/3.x.x.zip
   $ unzip cops-3.x.x.zip

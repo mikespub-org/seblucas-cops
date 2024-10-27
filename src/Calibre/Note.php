@@ -81,7 +81,7 @@ class Note
             return [];
         }
         $resources = [];
-        $query = 'select hash, name from resources, notes_resources_link where resources.hash = resource and note = ?';
+        $query = 'select hash, name from notes_db.resources, notes_db.notes_resources_link where hash = resource and note = ?';
         $params = [$this->id];
         $result = $notesDb->prepare($query);
         $result->execute($params);
@@ -103,7 +103,7 @@ class Note
             return [];
         }
         $entries = [];
-        $query = 'select colname as type, count(*) as count from notes group by colname order by colname';
+        $query = 'select colname as type, count(*) as count from notes_db.notes group by colname order by colname';
         $result = $notesDb->prepare($query);
         $result->execute();
         while ($post = $result->fetchObject()) {
@@ -128,7 +128,7 @@ class Note
             return [];
         }
         $entries = [];
-        $query = 'select item, length(doc) as size, mtime from notes where colname = ? order by item';
+        $query = 'select item, length(doc) as size, mtime from notes_db.notes where colname = ? order by item';
         $params = [$type];
         $result = $notesDb->prepare($query);
         $result->execute($params);
@@ -165,7 +165,7 @@ class Note
         if (is_null($notesDb)) {
             return null;
         }
-        $query = 'select id, item, colname, doc, mtime from notes where item = ? and colname = ?';
+        $query = 'select id, item, colname, doc, mtime from notes_db.notes where item = ? and colname = ?';
         $params = [$id, $type];
         $result = $notesDb->prepare($query);
         $result->execute($params);

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6de8498ab6011d022b2cd0fead48453c",
+    "content-hash": "eaad7f5a976baa96ac1c45b127259b82",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -85,16 +85,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2024.9.29",
+            "version": "2024.10.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "38a6e0af934dff6a83986f5d130266a0699730ab"
+                "reference": "7973de3199978e6b2c40fb25782ed9a394fe1bbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/38a6e0af934dff6a83986f5d130266a0699730ab",
-                "reference": "38a6e0af934dff6a83986f5d130266a0699730ab",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/7973de3199978e6b2c40fb25782ed9a394fe1bbd",
+                "reference": "7973de3199978e6b2c40fb25782ed9a394fe1bbd",
                 "shasum": ""
             },
             "suggest": {
@@ -125,22 +125,22 @@
             "description": "Epub.js Reader with zipfs.php",
             "support": {
                 "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.9.29"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2024.10.27"
             },
-            "time": "2024-09-29T11:47:06+00:00"
+            "time": "2024-10-27T18:08:57+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "3.0.1",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "63e8acb3f89623a78e5aef60237eff1c23d4fc29"
+                "reference": "348f904d88857b7d81448eaa29586c74d3740361"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/63e8acb3f89623a78e5aef60237eff1c23d4fc29",
-                "reference": "63e8acb3f89623a78e5aef60237eff1c23d4fc29",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/348f904d88857b7d81448eaa29586c74d3740361",
+                "reference": "348f904d88857b7d81448eaa29586c74d3740361",
                 "shasum": ""
             },
             "require": {
@@ -153,7 +153,7 @@
                 "php": ">=8.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.3"
+                "phpunit/phpunit": "^10.5||^11.4"
             },
             "suggest": {
                 "mikespub/epub-loader": "epub-loader is a utility resource for ebooks",
@@ -197,9 +197,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.0.1"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.3.1"
             },
-            "time": "2024-09-29T12:04:38+00:00"
+            "time": "2024-10-27T17:27:13+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -267,10 +267,10 @@
         },
         {
             "name": "npm-asset/babel--runtime",
-            "version": "7.25.7",
+            "version": "7.25.9",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.25.7.tgz"
+                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.25.9.tgz"
             },
             "require": {
                 "npm-asset/regenerator-runtime": ">=0.14.0,<0.15.0"
@@ -1020,7 +1020,7 @@
     "packages-dev": [
         {
             "name": "illuminate/collections",
-            "version": "v11.28.1",
+            "version": "v11.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -1075,7 +1075,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v11.28.1",
+            "version": "v11.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1121,7 +1121,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v11.28.1",
+            "version": "v11.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1169,7 +1169,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v11.28.1",
+            "version": "v11.29.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1348,16 +1348,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "3.4.1",
+            "version": "3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "74ff1aa1e79563f4300118545220c6b70cc2fbed"
+                "reference": "fc9d0a9892c777212a4e06b634a7a14de9097365"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/74ff1aa1e79563f4300118545220c6b70cc2fbed",
-                "reference": "74ff1aa1e79563f4300118545220c6b70cc2fbed",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/fc9d0a9892c777212a4e06b634a7a14de9097365",
+                "reference": "fc9d0a9892c777212a4e06b634a7a14de9097365",
                 "shasum": ""
             },
             "require": {
@@ -1367,13 +1367,13 @@
                 "ext-xml": "*",
                 "ext-zip": "*",
                 "ext-zlib": "*",
-                "mikespub/php-epub-meta": "^2.3||^3.0",
-                "mikespub/survos-wikidata": "^4.0||^5.1",
+                "mikespub/php-epub-meta": "^3.3",
+                "mikespub/survos-wikidata": "^5.2",
                 "php": ">=8.2",
                 "twig/twig": "^3.14"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.4"
+                "phpunit/phpunit": "^10.5||^11.4"
             },
             "suggest": {
                 "mikespub/seblucas-cops": "COPS - Calibre OPDS (and HTML) PHP Server"
@@ -1404,22 +1404,22 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/3.4.1"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/3.5.2"
             },
-            "time": "2024-10-20T17:52:42+00:00"
+            "time": "2024-10-27T17:40:46+00:00"
         },
         {
             "name": "mikespub/survos-wikidata",
-            "version": "5.1",
+            "version": "5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/survos-wikidata.git",
-                "reference": "5cf098807e8ea1bee6a36e994bb56b101e03867d"
+                "reference": "f7a4c4dd2ae15b8c212233c7c667fcfc16d43ae8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/5cf098807e8ea1bee6a36e994bb56b101e03867d",
-                "reference": "5cf098807e8ea1bee6a36e994bb56b101e03867d",
+                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/f7a4c4dd2ae15b8c212233c7c667fcfc16d43ae8",
+                "reference": "f7a4c4dd2ae15b8c212233c7c667fcfc16d43ae8",
                 "shasum": ""
             },
             "require": {
@@ -1429,7 +1429,7 @@
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.12",
-                "phpunit/phpunit": "^10.5",
+                "phpunit/phpunit": "^10.5||^11.4",
                 "rector/rector": "^1.2"
             },
             "type": "library",
@@ -1467,7 +1467,7 @@
                 "wikidata"
             ],
             "support": {
-                "source": "https://github.com/mikespub-org/survos-wikidata/tree/5.1"
+                "source": "https://github.com/mikespub-org/survos-wikidata/tree/5.2"
             },
             "funding": [
                 {
@@ -1479,7 +1479,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2024-09-29T12:45:18+00:00"
+            "time": "2024-10-27T17:34:55+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -3493,16 +3493,16 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v7.1.1",
+            "version": "v7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
-                "reference": "9c13742e3175b5815e272b981876ae329bec2040"
+                "reference": "714becc9ba9b20115ffededc58f6b7172dc394cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/9c13742e3175b5815e272b981876ae329bec2040",
-                "reference": "9c13742e3175b5815e272b981876ae329bec2040",
+                "url": "https://api.github.com/repos/symfony/browser-kit/zipball/714becc9ba9b20115ffededc58f6b7172dc394cf",
+                "reference": "714becc9ba9b20115ffededc58f6b7172dc394cf",
                 "shasum": ""
             },
             "require": {
@@ -3541,7 +3541,7 @@
             "description": "Simulates the behavior of a web browser, allowing you to make requests, click on links and submit forms programmatically",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/browser-kit/tree/v7.1.1"
+                "source": "https://github.com/symfony/browser-kit/tree/v7.1.6"
             },
             "funding": [
                 {
@@ -3557,20 +3557,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:57:53+00:00"
+            "time": "2024-10-25T15:11:02+00:00"
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v7.1.5",
+            "version": "v7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "b92af238457a7cdd2738f941cd525d76313e8283"
+                "reference": "794ddd5481ba15d8a04132c95e211cd5656e09fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/b92af238457a7cdd2738f941cd525d76313e8283",
-                "reference": "b92af238457a7cdd2738f941cd525d76313e8283",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/794ddd5481ba15d8a04132c95e211cd5656e09fb",
+                "reference": "794ddd5481ba15d8a04132c95e211cd5656e09fb",
                 "shasum": ""
             },
             "require": {
@@ -3608,7 +3608,7 @@
             "description": "Eases DOM navigation for HTML and XML documents",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/v7.1.5"
+                "source": "https://github.com/symfony/dom-crawler/tree/v7.1.6"
             },
             "funding": [
                 {
@@ -3624,20 +3624,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-15T06:48:17+00:00"
+            "time": "2024-10-25T15:11:02+00:00"
         },
         {
             "name": "symfony/http-client",
-            "version": "v7.1.5",
+            "version": "v7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-client.git",
-                "reference": "abca35865118edf35a23f2f24978a1784c831cb4"
+                "reference": "274e2f6886b43a36f8bd5dfeb67215f7ebf9e291"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-client/zipball/abca35865118edf35a23f2f24978a1784c831cb4",
-                "reference": "abca35865118edf35a23f2f24978a1784c831cb4",
+                "url": "https://api.github.com/repos/symfony/http-client/zipball/274e2f6886b43a36f8bd5dfeb67215f7ebf9e291",
+                "reference": "274e2f6886b43a36f8bd5dfeb67215f7ebf9e291",
                 "shasum": ""
             },
             "require": {
@@ -3702,7 +3702,7 @@
                 "http"
             ],
             "support": {
-                "source": "https://github.com/symfony/http-client/tree/v7.1.5"
+                "source": "https://github.com/symfony/http-client/tree/v7.1.6"
             },
             "funding": [
                 {
@@ -3718,7 +3718,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-20T13:35:23+00:00"
+            "time": "2024-10-22T09:40:50+00:00"
         },
         {
             "name": "symfony/http-client-contracts",
@@ -3800,16 +3800,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v7.1.5",
+            "version": "v7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "e30ef73b1e44eea7eb37ba69600a354e553f694b"
+                "reference": "3d7bbf071b25f802f7d55524d408bed414ea71e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/e30ef73b1e44eea7eb37ba69600a354e553f694b",
-                "reference": "e30ef73b1e44eea7eb37ba69600a354e553f694b",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/3d7bbf071b25f802f7d55524d408bed414ea71e2",
+                "reference": "3d7bbf071b25f802f7d55524d408bed414ea71e2",
                 "shasum": ""
             },
             "require": {
@@ -3857,7 +3857,7 @@
             "description": "Defines an object-oriented layer for the HTTP specification",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-foundation/tree/v7.1.5"
+                "source": "https://github.com/symfony/http-foundation/tree/v7.1.6"
             },
             "funding": [
                 {
@@ -3873,7 +3873,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-20T08:28:38+00:00"
+            "time": "2024-10-11T19:23:14+00:00"
         },
         {
             "name": "symfony/polyfill-php83",
@@ -3953,16 +3953,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "v7.1.5",
+            "version": "v7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "5c03ee6369281177f07f7c68252a280beccba847"
+                "reference": "6aaa189ddb4ff6b5de8fa3210f2fb42c87b4d12e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/5c03ee6369281177f07f7c68252a280beccba847",
-                "reference": "5c03ee6369281177f07f7c68252a280beccba847",
+                "url": "https://api.github.com/repos/symfony/process/zipball/6aaa189ddb4ff6b5de8fa3210f2fb42c87b4d12e",
+                "reference": "6aaa189ddb4ff6b5de8fa3210f2fb42c87b4d12e",
                 "shasum": ""
             },
             "require": {
@@ -3994,7 +3994,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/process/tree/v7.1.5"
+                "source": "https://github.com/symfony/process/tree/v7.1.6"
             },
             "funding": [
                 {
@@ -4010,7 +4010,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-19T21:48:23+00:00"
+            "time": "2024-09-25T14:20:29+00:00"
         },
         {
             "name": "symfony/service-contracts",
@@ -4147,16 +4147,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.14.3",
+            "version": "v15.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "fac6205e957c9fbe0145606bc82a32973db1a339"
+                "reference": "c1c9e5b5a4eaf8d6209bf33becdcc93d20f71912"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/fac6205e957c9fbe0145606bc82a32973db1a339",
-                "reference": "fac6205e957c9fbe0145606bc82a32973db1a339",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/c1c9e5b5a4eaf8d6209bf33becdcc93d20f71912",
+                "reference": "c1c9e5b5a4eaf8d6209bf33becdcc93d20f71912",
                 "shasum": ""
             },
             "require": {
@@ -4174,7 +4174,7 @@
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "1.12.6",
+                "phpstan/phpstan": "1.12.7",
                 "phpstan/phpstan-phpunit": "1.4.0",
                 "phpstan/phpstan-strict-rules": "1.6.1",
                 "phpunit/phpunit": "^9.5 || ^10.5.21 || ^11",
@@ -4209,7 +4209,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.14.3"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.17.0"
             },
             "funding": [
                 {
@@ -4217,7 +4217,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-10-17T13:03:37+00:00"
+            "time": "2024-10-26T10:54:35+00:00"
         }
     ],
     "aliases": [],
@@ -4237,7 +4237,6 @@
         "ext-mbstring": "*",
         "ext-pdo_sqlite": "*",
         "ext-xml": "*",
-        "ext-xmlwriter": "*",
         "ext-zip": "*",
         "ext-zlib": "*"
     },

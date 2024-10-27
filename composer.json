@@ -24,11 +24,10 @@
         "ext-mbstring": "*",
         "ext-pdo_sqlite": "*",
         "ext-xml": "*",
-        "ext-xmlwriter": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "mikespub/epubjs-reader": "^2024.9",
-        "mikespub/php-epub-meta": "^1.5||^2.3||^3.0",
+        "mikespub/epubjs-reader": "^2024.10",
+        "mikespub/php-epub-meta": "^3.3",
         "nikic/fast-route": "^2.0-dev",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
@@ -44,18 +43,17 @@
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.1",
-        "phpunit/phpunit": "^11.4",
+        "phpunit/phpunit": "^10.5||^11.4",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^6.4||^7.1",
         "symfony/http-client": "^6.4||^7.1",
         "symfony/http-foundation": "^6.4||^7.1",
-        "mikespub/epub-loader": "^1.5||^2.5||^3.4",
+        "mikespub/epub-loader": "^3.5",
         "opis/json-schema": "^2.3",
-        "webonyx/graphql-php": "^15.14"
+        "webonyx/graphql-php": "^15.17"
     },
     "suggest": {
-        "mikespub/epub-loader": "epub-loader is a utility package for ebooks",
-        "mikespub/epubjs-reader": "epub.js reader with zipfs.php"
+        "mikespub/epub-loader": "epub-loader is a utility package for ebooks"
     },
     "autoload": {
         "classmap": [
