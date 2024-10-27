@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eaad7f5a976baa96ac1c45b127259b82",
+    "content-hash": "b798cce21cf339741f824d84d3156840",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -385,10 +385,10 @@
         },
         {
             "name": "npm-asset/js-cookie",
-            "version": "2.2.1",
+            "version": "3.0.5",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/js-cookie/-/js-cookie-2.2.1.tgz"
+                "url": "https://registry.npmjs.org/js-cookie/-/js-cookie-3.0.5.tgz"
             },
             "type": "npm-asset",
             "license": [

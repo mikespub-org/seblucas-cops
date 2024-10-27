@@ -125,13 +125,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikespub/epubjs-reader@npm:^2024.4.23":
-  version: 2024.4.23
-  resolution: "@mikespub/epubjs-reader@npm:2024.4.23"
+"@mikespub/epubjs-reader@npm:^2024.10.27":
+  version: 2024.10.27
+  resolution: "@mikespub/epubjs-reader@npm:2024.10.27"
   dependencies:
     epubjs: "npm:^0.3.93"
     js-md5: "npm:^0.8.3"
-  checksum: 10c0/f9a6b0f1265e9945fceb474cc6464909c56757950fa4470d95801143523286450f87c508e79d15fe043e49598e21b7e1d1c8efb5549879613018946860b99d37
+  checksum: 10c0/e7e6578942c0420b3d862a4345acfca3201be4d18c1e6cf761a77b5a06365057f28fdc1766083e306ae6b5eebbd2d8a4cbd80e5defec2b052d0999d8b013f5ab
   languageName: node
   linkType: hard
 
@@ -923,22 +923,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"datatables.net-bs5@npm:^1.13.11":
-  version: 1.13.11
-  resolution: "datatables.net-bs5@npm:1.13.11"
+"datatables.net-bs5@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "datatables.net-bs5@npm:2.1.8"
   dependencies:
-    datatables.net: "npm:1.13.11"
-    jquery: "npm:1.8 - 4"
-  checksum: 10c0/a4757c3d1b215ec49d92b509e5041a54d0326d710d34645dc28dfa2e754c9999284ba7427691e5106e1a0777a71ea50ebdd1c337332275c5544557fffecfdc03
+    datatables.net: "npm:2.1.8"
+    jquery: "npm:>=1.7"
+  checksum: 10c0/8627fc9c599fae958478f67f49f9c14555afbb00b03621294edab57ff81b4edb7405afb6cd9be2872d622859e1a8bff4363b41cbdf45905035f4ff888b33f7d8
   languageName: node
   linkType: hard
 
-"datatables.net@npm:1.13.11, datatables.net@npm:^1.13.11":
-  version: 1.13.11
-  resolution: "datatables.net@npm:1.13.11"
+"datatables.net@npm:2.1.8, datatables.net@npm:^2.1.8":
+  version: 2.1.8
+  resolution: "datatables.net@npm:2.1.8"
   dependencies:
-    jquery: "npm:1.8 - 4"
-  checksum: 10c0/943e3d64943dde2740880f5c193c75472e7877b4c2f197d6c0e5a99fdb148770542b1e3f66016ad596a14aaf5dab4202c4585e7a1aa8b9c4b7dd8782dbcfa0ac
+    jquery: "npm:>=1.7"
+  checksum: 10c0/0c669c84c03bc63610bb885f5d0e84829221e26ae1e15d9568544b6acd9df3e89aac3b74f367af4267850498cd56feb591fbcf70c8cda0b114ca325ea94da473
   languageName: node
   linkType: hard
 
@@ -1201,13 +1201,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:1.8 - 4, jquery@npm:^3.7.1":
-  version: 3.7.1
-  resolution: "jquery@npm:3.7.1"
-  checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
-  languageName: node
-  linkType: hard
-
 "jquery@npm:>=1.11":
   version: 3.7.0
   resolution: "jquery@npm:3.7.0"
@@ -1215,10 +1208,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-cookie@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "js-cookie@npm:2.2.1"
-  checksum: 10c0/ee67fc0f8495d0800b851910b5eb5bf49d3033adff6493d55b5c097ca6da46f7fe666b10e2ecb13cfcaf5b88d71c205ce00a7e646de791689bfd053bbb36a376
+"jquery@npm:>=1.7, jquery@npm:^3.7.1":
+  version: 3.7.1
+  resolution: "jquery@npm:3.7.1"
+  checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "js-cookie@npm:3.0.5"
+  checksum: 10c0/04a0e560407b4489daac3a63e231d35f4e86f78bff9d792011391b49c59f721b513411cd75714c418049c8dc9750b20fcddad1ca5a2ca616c3aca4874cce5b3a
   languageName: node
   linkType: hard
 
@@ -1550,16 +1550,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "seblucas-cops@workspace:."
   dependencies:
-    "@mikespub/epubjs-reader": "npm:^2024.4.23"
+    "@mikespub/epubjs-reader": "npm:^2024.10.27"
     bootstrap: "npm:^3.4.1"
     corejs-typeahead: "npm:^1.3.4"
-    datatables.net: "npm:^1.13.11"
-    datatables.net-bs5: "npm:^1.13.11"
+    datatables.net: "npm:^2.1.8"
+    datatables.net-bs5: "npm:^2.1.8"
     dot: "npm:^1.1.3"
     graphiql: "npm:^3.7.1"
     graphql: "npm:^16.9.0"
     jquery: "npm:^3.7.1"
-    js-cookie: "npm:^2.2.1"
+    js-cookie: "npm:^3.0.5"
     lru-fast: "npm:^0.2.2"
     magnific-popup: "npm:^1.2.0"
     normalize.css: "npm:^8.0.1"

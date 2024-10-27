@@ -5,7 +5,6 @@ or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 
 x.x.x - TODO
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.3
-  * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
 
 2.8.x - 2024xxxx Maintenance release for 2.x (PHP >= 8.1)
   * ...
@@ -14,6 +13,11 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * ...
+
+3.4.0 - 20241028 Update package dependencies + translations
+  * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5
+  * Upgrade datatables 1.13.11 to 2.1.8 (dev only)
   * Add path parameter validation in page handler routes
   * Add error handler for invalid requests + return not found
   * Attach notes database to sqlite connection on demand
