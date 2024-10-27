@@ -31,9 +31,11 @@ Same options as original:
 1. Release package
   - get latest cops-3.x.x-php8x.zip file from https://github.com/mikespub-org/seblucas-cops/releases
 
-  Note: this includes the vendor/ packages for a particular PHP version, so if you have an older (supported) PHP version, you can download the `Source code (zip)` for that release, and run *composer* to update the dependencies:
+  Note: the release packages `cops-3.x.x-php8x.zip` include the vendor/ packages for a particular PHP version. If you have an older (supported) PHP version, you can download the `Source code (zip)` for that release, and run *composer* to update the dependencies:
   ```
-  $ cd seblucas-cops
+  $ wget -O cops-3.x.x.zip https://github.com/mikespub-org/seblucas-cops/archive/refs/tags/3.x.x.zip
+  $ unzip cops-3.x.x.zip
+  $ cd seblucas-cops-3.x.x
   $ composer update --no-dev -o
   ```
 
