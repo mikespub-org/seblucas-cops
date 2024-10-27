@@ -29,7 +29,13 @@ See [CHANGELOG](CHANGELOG.md) for changes compared to upstream repository https:
 Same options as original:
 
 1. Release package
-  - get latest cops-1.x.x.zip file from https://github.com/mikespub-org/seblucas-cops/releases
+  - get latest cops-3.x.x-php8x.zip file from https://github.com/mikespub-org/seblucas-cops/releases
+
+  Note: this includes the vendor/ packages for a particular PHP version, so if you have an older (supported) PHP version, you can download the `Source code (zip)` for that release, and run *composer* to update the dependencies:
+  ```
+  $ cd seblucas-cops
+  $ composer update --no-dev -o
+  ```
 
 2. Source code
   - git clone https://github.com/mikespub-org/seblucas-cops.git  # or download [latest main as zip](https://github.com/mikespub-org/seblucas-cops/archive/refs/heads/main.zip)
