@@ -484,6 +484,7 @@ class Route
                         continue 2;
                     }
                     $value = $subst[$param];
+                    // @todo support unicode pattern for first letter - but see https://github.com/nikic/FastRoute/issues/154
                     if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', (string) $value)) {
                         continue 2;
                     }

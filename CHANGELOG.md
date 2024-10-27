@@ -14,6 +14,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Add path parameter validation in page handler routes
+  * Add error handler for invalid requests + return not found
   * Attach notes database to sqlite connection on demand
   * Update integration of epub-loader and php-epub-meta
   * Update spanish translation - see PR #117 from @Dunhill69

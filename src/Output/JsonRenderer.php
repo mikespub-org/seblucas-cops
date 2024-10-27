@@ -362,8 +362,8 @@ class JsonRenderer extends BaseRenderer
                 "downloadAllTooltip" => localize("downloadall.tooltip"),
             ],
             "url" => [
-                "detailUrl" => str_replace(['%7B', '%7D'], ['{', '}'], Route::link($this->handler, PageId::BOOK_DETAIL, ['id' => '{0}', 'db' => '{1}'])),
                 // route urls do not accept non-numeric id or db to find match here
+                "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link($this->handler, PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
                 "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link("fetch", null, ['id' => '0', 'db' => '1'])),
                 "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link("fetch", null, ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
@@ -448,8 +448,8 @@ class JsonRenderer extends BaseRenderer
             $out ["containsBook"] = 1;
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $params = $this->request->getCleanParams();
-            $params['sort'] = '{0}';
-            $out ["sorturl"] = str_replace('%7B0%7D', '{0}', Route::link($this->handler, null, $params));
+            $params['sort'] = 'SORTED';
+            $out ["sorturl"] = str_replace('SORTED', '{0}', Route::link($this->handler, null, $params));
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
@@ -469,8 +469,8 @@ class JsonRenderer extends BaseRenderer
             if ($currentPage->isPaginated()) {
                 // support {{=str_format(it.sorturl, "count")}} etc. in templates (use double quotes for sort field)
                 $params = $this->request->getCleanParams();
-                $params['sort'] = '{0}';
-                $out ["sorturl"] = str_replace('%7B0%7D', '{0}', Route::link($this->handler, null, $params));
+                $params['sort'] = 'SORTED';
+                $out ["sorturl"] = str_replace('SORTED', '{0}', Route::link($this->handler, null, $params));
                 $out ["sortoptions"] = [
                     'name' => localize("sort.names"),
                     'count' => localize("sort.count"),

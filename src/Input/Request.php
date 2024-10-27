@@ -27,6 +27,7 @@ class Request
     protected bool $parsed = true;
     /** @var string|null */
     public $content = null;
+    public bool $invalid = false;
 
     /**
      * Summary of __construct
@@ -137,6 +138,8 @@ class Request
                 // this will call exit()
                 //Response::sendError($this, "Invalid request path '$path'");
                 error_log("COPS: Invalid request path '$path' from template " . $this->template());
+                // delay reporting error until we're back in Framework
+                $this->invalid = true;
                 $params = [];
             }
             // JsonHandler uses same routes as HtmlHandler - see util.js

@@ -34,6 +34,7 @@ class Framework
         "mail" => Handlers\MailHandler::class,
         "graphql" => Handlers\GraphQLHandler::class,
         "tables" => Handlers\TableHandler::class,
+        "error" => Handlers\ErrorHandler::class,
     ];
     /** @var array<mixed> */
     protected static $middlewares = [];
@@ -46,6 +47,16 @@ class Framework
     public static function run($name = '')
     {
         $request = static::getRequest($name);
+        if ($request->invalid) {
+            $name = 'error';
+            $handler = Framework::getHandler($name);
+            $response = $handler->handle($request);
+            if ($response instanceof Response) {
+                //$response->prepare($request);
+                $response->send();
+            }
+            return;
+        }
 
         // @todo route to the right handler if needed
         if (empty($name)) {
