@@ -1,7 +1,8 @@
 ## Replacing templates for epub-loader
 
 If you want to override the standard templates of epub-loader, you can place
-them here (or anywhere else really), and update $templateDir in ./loader.php
+them here (or anywhere else really), and update $gConfig['template_dir'] in
+`config/loader.php`
 
 Every action typically has its own template that extends [index.html](index.html)
 and defines its own 'content' block.

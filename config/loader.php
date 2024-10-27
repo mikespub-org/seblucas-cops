@@ -21,8 +21,9 @@ $gConfig['app_name'] = 'EPub Loader';
 
 /**
  * Application version
+ * @deprecated 3.5.1 see Config::VERSION
  */
-$gConfig['version'] = '3.4';
+//$gConfig['version'] = '3.5';
 
 /**
  * Admin email
@@ -41,6 +42,11 @@ $gConfig['create_db'] = false;
  * Specify a cache directory for any Google or Wikidata lookup
  */
 $gConfig['cache_dir'] = dirname(__DIR__) . '/tests/cache';
+
+/**
+ * Specify a template directory to override the standard templates
+ */
+//$gConfig['template_dir'] = dirname(__DIR__) . '/templates/twigged/loader';
 
 /**
  * Databases infos - will be re-loaded from $config['calibre_directory']
@@ -90,6 +96,8 @@ $gConfig['groups']['Lookup'] = [
 ];
 // internal actions are not shown on the main menu
 $gConfig['groups']['Internal'] = [
+    'books' => 'Books in database',
+    'series' => 'Series in database',
     'test' => 'Test action (not visible)',
     'wd_entity' => 'WikiData entity',
     'gb_volume' => 'Google Books volume',
@@ -98,6 +106,8 @@ $gConfig['groups']['Internal'] = [
 ];
 $gConfig['groups']['Extra'] = [
     'notes' => 'Get Calibre Notes',
+    // update metadata in epub files
+    //'meta' => 'EPub Metadata App',
     'hello_world' => 'Example: Hello, World - see app/example.php',
     // disable any other actions you don't want to use via COPS
     //'goodbye' => 'Example: Goodbye - see app/example.php',

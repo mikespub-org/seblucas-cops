@@ -1,12 +1,33 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<div><b>Select action</b></div>
+<div class="title">
+	<b>Select action</b>
+</div>
+{% if groups %}
 <ul>
-{% for action, actionInfo in actions %}
+	{% for group, actionList in groups %}
+	{% if group != "Internal" %}
+	<li>
+		{{group}}
+		<ul>
+			{% for action, actionInfo in actionList %}
+			<li>
+				<a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionInfo}}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+{% else %}
+<ul>
+	{% for action, actionInfo in actions %}
 	<li>
 		<a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionInfo}}</a>
 	</li>
-{% endfor %}
+	{% endfor %}
 </ul>
+{% endif %}
 {% endblock content %}

@@ -25,7 +25,8 @@ class LoaderHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/loader/{action}/{dbNum:\d+}/{authorId:\d+}" => [static::PARAM => static::HANDLER],
+            "/loader/{action}/{dbNum:\d+}/{authorId:\w+}/{urlPath:.*}" => [static::PARAM => static::HANDLER],
+            "/loader/{action}/{dbNum:\d+}/{authorId:\w*}" => [static::PARAM => static::HANDLER],
             "/loader/{action}/{dbNum:\d+}" => [static::PARAM => static::HANDLER],
             "/loader/{action}/" => [static::PARAM => static::HANDLER],
             "/loader/{action}" => [static::PARAM => static::HANDLER],
@@ -72,13 +73,14 @@ class LoaderHandler extends BaseHandler
 
         $action = $request->get('action');
         $dbNum = $request->getId('dbNum');
-        $itemId = $request->getId('authorId');
+        $itemId = $request->get('authorId');
+        $urlPath = $request->get('urlPath');
 
         $urlParams = $request->urlParams;
 
         // you can define extra actions for your app - see example.php
         $handler = new RequestHandler($gConfig, ExtraActions::class, $cacheDir);
-        $result = $handler->request($action, $dbNum, $urlParams);
+        $result = $handler->request($action, $dbNum, $urlParams, $urlPath);
 
         if (method_exists($handler, 'isDone')) {
             if ($handler->isDone()) {
@@ -89,7 +91,7 @@ class LoaderHandler extends BaseHandler
         // handle the result yourself or let epub-loader generate the output
         $result = array_merge($gConfig, $result);
         //$templateDir = 'templates/twigged/loader';  // if you want to use custom templates
-        $templateDir = null;
+        $templateDir = $gConfig['template_dir'] ?? null;
         $template = null;
 
         $response = new Response('text/html;charset=utf-8');
