@@ -18,21 +18,10 @@ use SebLucas\Cops\Input\Config;
 
 class RouteTest extends TestCase
 {
-    /** @var mixed */
-    protected static $route;
-
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
-        // try out route urls
-        static::$route = Config::get('use_route_urls');
-        Config::set('use_route_urls', true);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        Config::set('use_route_urls', static::$route);
     }
 
     public function testRouteQuery(): void
@@ -55,21 +44,12 @@ class RouteTest extends TestCase
         $this->assertEquals("?key=value&db=0", Route::page(null, ['key' => 'value', 'db' => 0]));
         $this->assertEquals("?key=value&db=0", Route::page(null, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
         $this->assertEquals("?key=value&otherKey=other&db=0", Route::page(null, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals("/authors", Route::page(1, ['db' => null]));
-            $this->assertEquals("/authors?db=0", Route::page(1, ['db' => 0]));
-            $this->assertEquals("/authors?key=value", Route::page(1, ['key' => 'value', 'db' => null]));
-            $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'db' => 0]));
-            $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
-            $this->assertEquals("/authors?key=value&otherKey=other&db=0", Route::page(1, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        } else {
-            $this->assertEquals("?page=1", Route::page(1, ['db' => null]));
-            $this->assertEquals("?page=1&db=0", Route::page(1, ['db' => 0]));
-            $this->assertEquals("?page=1&key=value", Route::page(1, ['key' => 'value', 'db' => null]));
-            $this->assertEquals("?page=1&key=value&db=0", Route::page(1, ['key' => 'value', 'db' => 0]));
-            $this->assertEquals("?page=1&key=value&db=0", Route::page(1, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
-            $this->assertEquals("?page=1&key=value&otherKey=other&db=0", Route::page(1, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        }
+        $this->assertEquals("/authors", Route::page(1, ['db' => null]));
+        $this->assertEquals("/authors?db=0", Route::page(1, ['db' => 0]));
+        $this->assertEquals("/authors?key=value", Route::page(1, ['key' => 'value', 'db' => null]));
+        $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'db' => 0]));
+        $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
+        $this->assertEquals("/authors?key=value&otherKey=other&db=0", Route::page(1, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
     }
 
     public function testFrontController(): void

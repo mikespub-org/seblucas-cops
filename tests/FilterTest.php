@@ -401,110 +401,70 @@ class FilterTest extends TestCase
         $this->assertEquals("Author", $entries[0]->className);
         $this->assertEquals("Arthur Conan Doyle", $entries[0]->title);
         $this->assertEquals("8 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/authors/1/Arthur_Conan_Doyle", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=3&id=1", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/authors/1/Arthur_Conan_Doyle", $entries[0]->getNavLink());
 
         $request = Request::build(['l' => '1'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Language", $entries[0]->className);
         $this->assertEquals("English", $entries[0]->title);
         $this->assertEquals("14 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/languages/1/English", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=18&id=1", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/languages/1/English", $entries[0]->getNavLink());
 
         $request = Request::build(['p' => '2'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Publisher", $entries[0]->className);
         $this->assertEquals("Macmillan and Co. London", $entries[0]->title);
         $this->assertEquals("2 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/publishers/2/Macmillan_and_Co._London", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=21&id=2", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/publishers/2/Macmillan_and_Co._London", $entries[0]->getNavLink());
 
         $request = Request::build(['r' => '1'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Rating", $entries[0]->className);
         $this->assertEquals("5 stars", $entries[0]->title);
         $this->assertEquals("4 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/ratings/1/5_stars", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=23&id=1", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/ratings/1/5_stars", $entries[0]->getNavLink());
 
         $request = Request::build(['s' => '1'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Serie", $entries[0]->className);
         $this->assertEquals("Sherlock Holmes", $entries[0]->title);
         $this->assertEquals("7 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/series/1/Sherlock_Holmes", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=7&id=1", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/series/1/Sherlock_Holmes", $entries[0]->getNavLink());
 
         $request = Request::build(['t' => '1'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Tag", $entries[0]->className);
         $this->assertEquals("Fiction", $entries[0]->title);
         $this->assertEquals("14 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/tags/1/Fiction", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=12&id=1", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/tags/1/Fiction", $entries[0]->getNavLink());
 
         $request = Request::build(['i' => 'uri'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Identifier", $entries[0]->className);
         $this->assertEquals("uri", $entries[0]->title);
         $this->assertEquals("13 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/identifiers/uri/uri", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=42&id=uri", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/identifiers/uri/uri", $entries[0]->getNavLink());
 
         $request = Request::build(['c' => [1 => 1]], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Type4", $entries[0]->className);
         $this->assertEquals("SeriesLike", $entries[0]->title);
         $this->assertEquals("2 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/custom/1/1", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=15&custom=1&id=1", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/custom/1/1", $entries[0]->getNavLink());
 
         $request = Request::build(['f' => 'C'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Letter", $entries[0]->className);
         $this->assertEquals("C", $entries[0]->title);
         $this->assertEquals("3 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/books/letter/C", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=5&id=C", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/books/letter/C", $entries[0]->getNavLink());
 
         $request = Request::build(['y' => '2006'], self::$handler);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Year", $entries[0]->className);
         $this->assertEquals("2006", $entries[0]->title);
         $this->assertEquals("9 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/books/year/2006", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=50&id=2006", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/books/year/2006", $entries[0]->getNavLink());
 
         // @todo remove negative flag for filter entry here
         $request = Request::build(['t' => '!2'], self::$handler);
@@ -512,11 +472,7 @@ class FilterTest extends TestCase
         $this->assertEquals("Tag", $entries[0]->className);
         $this->assertEquals("Short Stories", $entries[0]->title);
         $this->assertEquals("4 books", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/tags/2/Short_Stories", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=12&id=2", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/tags/2/Short_Stories", $entries[0]->getNavLink());
 
         // apply Not Set filters here but skip other entries
         $request = Request::build(['t' => '0'], self::$handler);
@@ -524,11 +480,7 @@ class FilterTest extends TestCase
         $this->assertEquals("Tag", $entries[0]->className);
         $this->assertEquals("No tags", $entries[0]->title);
         $this->assertEquals("1 book", $entries[0]->content);
-        if (Config::get('use_route_urls')) {
-            $this->assertEquals(Route::link(self::$handler) . "/tags/0/No_tags", $entries[0]->getNavLink());
-        } else {
-            $this->assertEquals(Route::link(self::$handler) . "?page=12&id=0", $entries[0]->getNavLink());
-        }
+        $this->assertEquals(Route::link(self::$handler) . "/tags/0/No_tags", $entries[0]->getNavLink());
     }
 
     public function testCheckForFilters(): void

@@ -36,8 +36,6 @@ class OpdsRendererTest extends TestCase
         Route::setBaseUrl(null);
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
-        // try out route urls
-        //Config::set('use_route_urls', true);
     }
 
     public static function tearDownAfterClass(): void
@@ -48,7 +46,6 @@ class OpdsRendererTest extends TestCase
             return;
         }
         unlink(self::TEST_FEED);
-        //Config::set('use_route_urls', null);
     }
 
     /**

@@ -20,8 +20,6 @@ use SebLucas\Cops\Input\Route;
 
 class RoutingTest extends TestCase
 {
-    /** @var mixed */
-    protected static $route;
     /** @var Routing */
     protected static $routing;
 
@@ -29,15 +27,7 @@ class RoutingTest extends TestCase
     {
         Config::set("calibre_directory", __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
-        // try out route urls
-        static::$route = Config::get("use_route_urls");
-        Config::set("use_route_urls", true);
         static::$routing = new Routing();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        Config::set("use_route_urls", static::$route);
     }
 
     public function testRouteLoader(): void

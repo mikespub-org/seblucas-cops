@@ -57,11 +57,7 @@ class EpubReaderTest extends TestCase
         $expected = 'title: "Alice\'s Adventures in Wonderland"';
         $this->assertStringContainsString($expected, $script);
 
-        if (Config::get('use_route_urls')) {
-            $expected = 'index.php/epubfs/0/20/';
-        } else {
-            $expected = 'epubfs.php?db=0&data=20&comp=';
-        }
+        $expected = 'index.php/epubfs/0/20/';
         $this->assertStringContainsString($expected, $data);
     }
 
@@ -206,11 +202,7 @@ class EpubReaderTest extends TestCase
         $expected = 'dist/js/libs/epub.min.js';
         $this->assertStringContainsString($expected, $script);
 
-        if (Config::get('use_route_urls')) {
-            $expected = 'index.php/zipfs/0/20/';
-        } else {
-            $expected = 'zipfs.php/zipfs/0/20/';
-        }
+        $expected = 'index.php/zipfs/0/20/';
         $this->assertStringContainsString($expected, $data);
     }
 

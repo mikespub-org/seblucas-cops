@@ -56,8 +56,6 @@ class KiwilanTest extends TestCase
         $resolver->registerPrefix('https://drafts.opds.io/schema/', self::OPDS_SCHEMAS);
 
         self::$schema = file_get_contents(self::FEED_SCHEMA);
-        // try out route urls
-        //Config::set('use_route_urls', true);
     }
 
     public static function tearDownAfterClass(): void
@@ -68,7 +66,6 @@ class KiwilanTest extends TestCase
             return;
         }
         unlink(self::TEST_FEED);
-        //Config::set('use_route_urls', null);
     }
 
     /**
