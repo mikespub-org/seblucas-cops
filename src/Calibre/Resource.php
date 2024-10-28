@@ -57,16 +57,11 @@ class Resource
     public function getUri($params = [])
     {
         $database = $this->databaseId ?? 0;
-        if (Config::get('use_route_urls')) {
-            [$alg, $digest] = explode(':', $this->hash);
-            $params['db'] = $database;
-            $params['alg'] = $alg;
-            $params['digest'] = $digest;
-            return Route::link(static::$handler, null, $params);
-        }
-        // @todo remove /handler once link() is fixed
-        $baseurl = Route::link(static::$handler) . '/' . static::$handler;
-        return $baseurl . '/' . $database . '/' . str_replace(':', '/', $this->hash);
+        [$alg, $digest] = explode(':', $this->hash);
+        $params['db'] = $database;
+        $params['alg'] = $alg;
+        $params['digest'] = $digest;
+        return Route::link(static::$handler, null, $params);
     }
 
     /**
@@ -78,16 +73,11 @@ class Resource
     public static function fixResourceLinks($doc, $database = null)
     {
         $database ??= 0;
-        if (Config::get('use_route_urls')) {
-            // create link to resource with dummy alg & digest
-            $baseurl = Route::link(static::$handler, null, ['db' => $database, 'alg' => '{alg}', 'digest' => '{digest}']);
-            // remove dummy alg & digest
-            $baseurl = str_replace(['/{alg}', '/{digest}'], [], $baseurl);
-            return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);
-        }
-        // @todo remove /handler once link() is fixed
-        $baseurl = Route::link(static::$handler) . '/' . static::$handler;
-        return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/' . $database . '/', $doc);
+        // create link to resource with dummy alg & digest
+        $baseurl = Route::link(static::$handler, null, ['db' => $database, 'alg' => '{alg}', 'digest' => '{digest}']);
+        // remove dummy alg & digest
+        $baseurl = str_replace(['/{alg}', '/{digest}'], [], $baseurl);
+        return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);
     }
 
     /**

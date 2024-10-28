@@ -315,7 +315,7 @@ class Cover
                 );
             }
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
-            if (Config::get('use_route_urls') && is_null($params['db'])) {
+            if (is_null($params['db'])) {
                 $params['db'] = 0;
             }
             if ($ext != 'jpg') {
@@ -388,7 +388,7 @@ class Cover
             //$file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
-            if (Config::get('use_route_urls') && is_null($params['db'])) {
+            if (is_null($params['db'])) {
                 $params['db'] = 0;
             }
             if ($ext != 'jpg') {

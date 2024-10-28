@@ -125,32 +125,28 @@ class Request
             return;
         }
         $path = $this->path();
-        if (!empty(Config::get('use_route_urls'))) {
-            // check for relative paths somewhere in templates
-            if (str_contains($path, '/index.php')) {
-                $error = "Invalid relative path '$path' from '" . $this->template() . "' template";
-                error_log("COPS: " . $error);
-                // this will call exit()
-                Response::sendError($this, $error);
-            }
-            $params = Route::match($path);
-            if (is_null($params)) {
-                // this will call exit()
-                //Response::sendError($this, "Invalid request path '$path'");
-                error_log("COPS: Invalid request path '$path' from template " . $this->template());
-                // delay reporting error until we're back in Framework
-                $this->invalid = true;
-                $params = [];
-            }
-            // JsonHandler uses same routes as HtmlHandler - see util.js
-            if (empty($params[Route::HANDLER_PARAM]) && $this->isAjax()) {
-                $params[Route::HANDLER_PARAM] = 'json';
-            }
-            foreach ($params as $name => $value) {
-                $this->urlParams[$name] = $value;
-            }
-        //} elseif (empty($this->urlParams[Route::HANDLER_PARAM]) && $this->isAjax()) {
-        //    $this->urlParams[Route::HANDLER_PARAM] = 'json';
+        // check for relative paths somewhere in templates
+        if (str_contains($path, '/index.php')) {
+            $error = "Invalid relative path '$path' from '" . $this->template() . "' template";
+            error_log("COPS: " . $error);
+            // this will call exit()
+            Response::sendError($this, $error);
+        }
+        $params = Route::match($path);
+        if (is_null($params)) {
+            // this will call exit()
+            //Response::sendError($this, "Invalid request path '$path'");
+            error_log("COPS: Invalid request path '$path' from template " . $this->template());
+            // delay reporting error until we're back in Framework
+            $this->invalid = true;
+            $params = [];
+        }
+        // JsonHandler uses same routes as HtmlHandler - see util.js
+        if (empty($params[Route::HANDLER_PARAM]) && $this->isAjax()) {
+            $params[Route::HANDLER_PARAM] = 'json';
+        }
+        foreach ($params as $name => $value) {
+            $this->urlParams[$name] = $value;
         }
         if (!empty($_GET)) {
             foreach ($_GET as $name => $value) {

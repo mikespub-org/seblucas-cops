@@ -229,13 +229,8 @@ class EPubReader extends BaseRenderer
             }
             // URL format: index.php/zipfs/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
-            if (Config::get('use_route_urls')) {
-                $link = Route::link($handler, null, ['db' => $db, 'data' => $idData, 'comp' => '{component}']);
-                $link = str_replace('{component}', '', $link);
-            } else {
-                // @todo remove /{$handler} once link() is fixed
-                $link = Route::link($handler) . "/{$handler}/{$db}/{$idData}/";
-            }
+            $link = Route::link($handler, null, ['db' => $db, 'data' => $idData, 'comp' => '{component}']);
+            $link = str_replace('{component}', '', $link);
         }
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');

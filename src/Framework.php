@@ -61,7 +61,7 @@ class Framework
         // @todo route to the right handler if needed
         if (empty($name)) {
             $name = $request->getHandler();
-        } elseif (Input\Config::get('use_route_urls')) {
+        } else {
             $name = $request->getHandler($name);
         }
         // special case for json requests here
@@ -102,17 +102,6 @@ class Framework
         // when using Apache .htaccess redirect
         if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
             $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
-        }
-        // @deprecated 3.1.0 use index.php/$name instead
-        // fix PATH_INFO when accessed via traditional endpoint scripts
-        if (!empty($name) && Input\Route::addPrefix($name)) {
-            if (empty($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] == '/') {
-                $_SERVER['PATH_INFO'] =  '/' . $name;
-            } elseif (!str_starts_with((string) $_SERVER['PATH_INFO'], '/' . $name . '/')) {
-                $_SERVER['PATH_INFO'] =  '/' . $name . $_SERVER['PATH_INFO'];
-                // @todo force parsing route urls here?
-                Input\Config::set('use_route_urls', 1);
-            }
         }
         // @todo special case for restapi
         return new Input\Request($parse);

@@ -194,10 +194,8 @@ class Book
         $params['id'] = $this->id;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->databaseId;
-        if (Config::get('use_route_urls')) {
-            $params['author'] = $this->getAuthorsName();
-            $params['title'] = $this->getTitle();
-        }
+        $params['author'] = $this->getAuthorsName();
+        $params['title'] = $this->getTitle();
         return Route::link($this->handler, static::PAGE_DETAIL, $params);
     }
 
@@ -213,10 +211,8 @@ class Book
         $params['id'] = $this->id;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->databaseId;
-        if (Config::get('use_route_urls')) {
-            $params['author'] = $this->getAuthorsName();
-            $params['title'] = $this->getTitle();
-        }
+        $params['author'] = $this->getAuthorsName();
+        $params['title'] = $this->getTitle();
         return Route::link($handler, static::PAGE_DETAIL, $params);
     }
 
@@ -410,7 +406,7 @@ class Book
         $mimetype = Response::getMimeType($filePath) ?? 'application/octet-stream';
         if (Database::useAbsolutePath($this->databaseId)) {
             $params = ['id' => $this->id, 'db' => $this->databaseId];
-            if (Config::get('use_route_urls') && is_null($params['db'])) {
+            if (is_null($params['db'])) {
                 $params['db'] = 0;
             }
             $params['file'] = $fileName;

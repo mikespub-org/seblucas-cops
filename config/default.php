@@ -593,6 +593,7 @@ $config['cops_download_template'] = '{author} - {series} #{series_index} - {titl
  * Note: this is independent of the URL rewriting for downloading ebooks (files) for Kobo
  *  1 : enable
  *  0 : disable
+ * @deprecated 3.4.0 this is always enabled now
  */
 $config['cops_use_route_urls'] = '1';
 

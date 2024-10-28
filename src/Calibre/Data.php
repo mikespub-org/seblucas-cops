@@ -301,7 +301,7 @@ class Data
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
             ($type == "epub" && Config::get('update_epub-metadata'))) {
             $params = ['db' => $book->getDatabaseId()];
-            if (Config::get('use_route_urls') && is_null($params['db'])) {
+            if (is_null($params['db'])) {
                 $params['db'] = 0;
             }
             $params['type'] = $type;

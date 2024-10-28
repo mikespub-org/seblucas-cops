@@ -85,9 +85,7 @@ abstract class Base
         $params['id'] = $this->id;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        if (Config::get('use_route_urls')) {
-            $params['title'] = $this->getTitle();
-        }
+        $params['title'] = $this->getTitle();
         return Route::link($this->handler, static::PAGE_DETAIL, $params);
     }
 
@@ -236,9 +234,7 @@ abstract class Base
         $params['id'] = $this->id;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        if (Config::get('use_route_urls')) {
-            $params['title'] = $this->getTitle();
-        }
+        $params['title'] = $this->getTitle();
         $request = Request::build($params, $this->handler);
         $page = PageId::getPage(static::PAGE_DETAIL, $request, $this);
         if (!empty($count)) {

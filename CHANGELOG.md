@@ -13,7 +13,10 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
-  * ...
+  * Changes in config/default.php file:
+    - set $config['cops_use_route_urls'] as deprecated (= always enabled)
+  * Remove code for generating links without route urls
+  * Remove tests for links generated without route urls
 
 3.4.0 - 20241028 Update package dependencies + translations
   * Upgrade npm-asset/js-cookie 2.2.1 to 3.0.5

@@ -257,7 +257,7 @@ class Route
     {
         $handler ??= 'index';
         // take into account handler when building page url, e.g. feed or zipper
-        if (Config::get('use_route_urls') && !in_array($handler, ['index', 'json', 'phpunit'])) {
+        if (!in_array($handler, ['index', 'json', 'phpunit'])) {
             $params[self::HANDLER_PARAM] = $handler;
         } else {
             unset($params[self::HANDLER_PARAM]);
@@ -289,25 +289,8 @@ class Route
             // no endpoint prefix for supported handlers
             return '';
         }
-        if (Config::get('use_route_urls')) {
-            // use default endpoint for supported handlers
-            return Config::ENDPOINT['index'];
-        }
-        // @deprecated 3.1.0 use index.php endpoint
-        if (array_key_exists($handler, Config::ENDPOINT)) {
-            // @todo special case for restapi
-            if (in_array($handler, ['restapi'])) {
-                return Config::ENDPOINT['index'];
-            }
-            $endpoint = Config::ENDPOINT[$handler];
-        } elseif ($handler == 'phpunit') {
-            $endpoint = $handler;
-        } elseif (empty($handler)) {
-            $endpoint = 'empty!';
-        } else {
-            throw new \Exception('Unknown handler ' . htmlspecialchars($handler));
-        }
-        return $endpoint;
+        // use default endpoint for supported handlers
+        return Config::ENDPOINT['index'];
     }
 
     /**
@@ -373,11 +356,9 @@ class Route
      */
     public static function route($params, $prefix = '')
     {
-        if (Config::get('use_route_urls')) {
-            $route = static::getPageRoute($params, $prefix);
-            if (!is_null($route)) {
-                return $route;
-            }
+        $route = static::getPageRoute($params, $prefix);
+        if (!is_null($route)) {
+            return $route;
         }
         unset($params[self::HANDLER_PARAM]);
         if (empty($params)) {
