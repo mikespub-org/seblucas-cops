@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
@@ -24,6 +25,7 @@ class Database
     public const NOTES_DIR_NAME = '.calnotes';
     public const NOTES_DB_FILE = 'notes.db';
     public const NOTES_DB_NAME = 'notes_db';
+
     /** @var ?PDO */
     protected static $db = null;
     protected static ?string $dbFileName = null;
@@ -170,7 +172,7 @@ class Database
     protected static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            Response::redirect(Route::link("check") . "?err=1");
+            Response::redirect(Route::link(CheckHandler::HANDLER) . "?err=1");
             exit;
         }
         throw new Exception("Database <{$database}> not found.");

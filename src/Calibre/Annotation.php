@@ -9,8 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
 
@@ -57,6 +56,7 @@ class Annotation extends Base
             $this->data = [ $post->annot_data ];
         }
         $this->databaseId = $database;
+        $this->handler = RestApiHandler::HANDLER;
     }
 
     /**
@@ -66,8 +66,9 @@ class Annotation extends Base
      */
     public function getUri($params = [])
     {
-        // @todo let restapi build route url, or change route to use page here?
-        return Route::link($this->handler) . '/annotations/' . $this->book . '/' . $this->id;
+        $params['bookId'] = $this->book;
+        $params['id'] = $this->id;
+        return RestApiHandler::getResourceLink($this::class, $params);
     }
 
     /**

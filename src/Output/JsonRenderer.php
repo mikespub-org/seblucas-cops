@@ -13,6 +13,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Handlers\ZipperHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -32,6 +33,8 @@ class JsonRenderer extends BaseRenderer
     protected $handler;
     /** @var int|string */
     protected $page;
+    /** @var int|string */
+    protected $homepage;
     /** @var array<string, mixed> */
     protected $extraParams = [];
 
@@ -42,18 +45,6 @@ class JsonRenderer extends BaseRenderer
      */
     public static function getCurrentUrl($request)
     {
-        /**
-        $pathInfo = $request->path();
-        $queryString = $request->query();
-        //return Route::link(static::$handler) . $pathInfo . Route::query($queryString, ['complete' => 1]);
-        $uri = $pathInfo . Route::query($queryString, ['complete' => 1]);
-        if (Config::get('front_controller')) {
-            if (str_starts_with($uri, '/')) {
-                return Route::base() . substr($uri, 1);
-            }
-            return Route::base() . $uri;
-        }
-         */
         $params = $request->urlParams;
         $params['complete'] = 1;
         return Route::link("json", null, $params);
@@ -155,7 +146,7 @@ class JsonRenderer extends BaseRenderer
     {
         $handler = $book->getHandler();
         $out = $this->getBookContentArray($book);
-        $database = $book->getDatabaseId();
+        $database = $book->getDatabaseId() ?? 0;
 
         $cover = new Cover($book);
         // set height for thumbnail here depending on opds vs. html (height x 2)
@@ -182,7 +173,11 @@ class JsonRenderer extends BaseRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = Route::link("read", null, ["data" => $data->id, "db" => ($database ?? 0), "title" => $book->getTitle()]);
+                $params = [];
+                $params['data'] = $data->id;
+                $params['db'] = $database;
+                $params['title'] = $book->getTitle();
+                $tab ["readerUrl"] = Route::link("read", null, $params);
             }
             array_push($out ["datas"], $tab);
         }
@@ -197,7 +192,11 @@ class JsonRenderer extends BaseRenderer
             ]);
         }
         if (count($out ["extraFiles"]) > 0) {
-            $url = Route::link("fetch", null, ["id" => $book->id, "db" => ($database ?? 0), "file" => "zipped"]);
+            $params = [];
+            $params['id'] = $book->id;
+            $params['db'] = $database;
+            $params['file'] = 'zipped';
+            $url = Route::link("fetch", null, $params);
             array_unshift($out ["extraFiles"], [
                 "name" => " * ",
                 "url" => $url,
@@ -510,15 +509,16 @@ class JsonRenderer extends BaseRenderer
      */
     public function getHomeUrl($baseurl)
     {
-        $homepage = PageId::getHomePage();
         // multiple database setup
         if ($this->page != PageId::INDEX && !is_null($this->database)) {
-            if ($homepage != PageId::INDEX) {
-                $homeurl = Route::link($this->handler, PageId::INDEX, ['db' => $this->database]);
+            $params = [];
+            $params['db'] = $this->database;
+            if ($this->homepage != PageId::INDEX) {
+                $homeurl = Route::link($this->handler, PageId::INDEX, $params);
             } else {
-                $homeurl = Route::link($this->handler, null, ['db' => $this->database]);
+                $homeurl = Route::link($this->handler, null, $params);
             }
-        } elseif ($homepage != PageId::INDEX) {
+        } elseif ($this->homepage != PageId::INDEX) {
             $homeurl = Route::link($this->handler, PageId::INDEX);
         } else {
             $homeurl = $baseurl;
@@ -616,7 +616,7 @@ class JsonRenderer extends BaseRenderer
             foreach (Config::get('download_page') as $format) {
                 $params = $this->request->getCleanParams();
                 $params['type'] = strtolower((string) $format);
-                $url = Route::link(Zipper::$handler, null, $params);
+                $url = Route::link(ZipperHandler::HANDLER, null, $params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -632,7 +632,7 @@ class JsonRenderer extends BaseRenderer
                 $params['series'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = Route::link(Zipper::$handler, null, $params);
+                $url = Route::link(ZipperHandler::HANDLER, null, $params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -645,7 +645,7 @@ class JsonRenderer extends BaseRenderer
                 $params['author'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = Route::link(Zipper::$handler, null, $params);
+                $url = Route::link(ZipperHandler::HANDLER, null, $params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -661,36 +661,28 @@ class JsonRenderer extends BaseRenderer
      */
     public function getJson($request, $complete = false)
     {
-        // Use the configured home page if needed
-        $homepage = PageId::getHomePage();
-        $page = $request->get("page", $homepage);
+        $this->setRequest($request);
         $search = $request->get("search");
         $qid = $request->getId();
-        $database = $request->database();
         $libraryId = $request->getVirtualLibrary();
 
         try {
-            $currentPage = PageId::getPage($page, $request);
+            $currentPage = PageId::getPage($this->page, $request);
         } catch (Exception $e) {
             // this will call exit()
             Response::sendError($request, $e->getMessage());
         }
 
-        // adapt handler based on $request e.g. for rest api
-        $handler = $request->getHandler();
-
         if ($search) {
             return $this->getContentArrayTypeahead($currentPage);
         }
-
-        $this->setRequest($request);
 
         $out = [ "title" => $currentPage->title];
         $out ["parentTitle"] = $currentPage->parentTitle;
         if (!empty($out ["parentTitle"])) {
             $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
         }
-        $out ["baseurl"] = Route::link($handler);
+        $out ["baseurl"] = Route::link($this->handler);
         $entries = [];
         $extraParams = [];
         $out ["isFilterPage"] = false;
@@ -708,13 +700,12 @@ class JsonRenderer extends BaseRenderer
                 $currentPage->book->updateForKepub = true;
             }
             $out ["book"] = $this->getFullBookContentArray($currentPage->book);
-        } elseif ($page == PageId::BOOK_DETAIL) {
-            $page = PageId::INDEX;
+        } elseif ($this->page == PageId::BOOK_DETAIL) {
+            $this->page = PageId::INDEX;
         }
-        $this->page = $page;
 
-        $out ["databaseId"] = $database ?? "";
-        $out ["databaseName"] = Database::getDbName($database);
+        $out ["databaseId"] = $this->database ?? "";
+        $out ["databaseName"] = Database::getDbName($this->database);
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
@@ -725,7 +716,7 @@ class JsonRenderer extends BaseRenderer
         if (!empty($out ["multipleDatabase"]) && $out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
         }
-        $out ["page"] = $page;
+        $out ["page"] = $this->page;
         $out ["entries"] = $entries;
         $out ["entriesCount"] = count($entries);
         $out = array_replace($out, $this->addPagination($currentPage));
@@ -736,10 +727,12 @@ class JsonRenderer extends BaseRenderer
         $out = array_replace($out, $this->addSortFilter($currentPage));
         $out["filters"] = $this->getFiltersArray();
 
-        $out["abouturl"] = Route::link($handler, PageId::ABOUT, ['db' => $database]);
-        $out["customizeurl"] = Route::link($handler, PageId::CUSTOMIZE, ['db' => $database]);
+        $params = [];
+        $params['db'] = $this->database;
+        $out["abouturl"] = Route::link($this->handler, PageId::ABOUT, $params);
+        $out["customizeurl"] = Route::link($this->handler, PageId::CUSTOMIZE, $params);
 
-        if ($page == PageId::ABOUT) {
+        if ($this->page == PageId::ABOUT) {
             $out ["fullhtml"] = $currentPage->getContent();
         }
 
@@ -770,9 +763,10 @@ class JsonRenderer extends BaseRenderer
     {
         $this->request = $request;
         $this->database = $request->database();
+        // Adapt handler based on $request e.g. for rest api
         $this->handler = $request->getHandler();
         // Use the configured home page if needed
-        $homepage = PageId::getHomePage();
-        $this->page = $request->get("page", $homepage);
+        $this->homepage = PageId::getHomePage();
+        $this->page = $request->get("page", $this->homepage);
     }
 }

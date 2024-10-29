@@ -26,7 +26,7 @@ class ErrorHandler extends BaseHandler
     public function handle($request)
     {
         if ($request->getHandler() == 'index' && $request->path() != '' && !$request->isJson()) {
-            //Response::redirect(Route::link("index", null, ["db" => $request->database()]));
+            //Response::redirect(Route::link(HtmlHandler::HANDLER, null, ["db" => $request->database()]));
             $error = "Invalid request path '" . $request->path() . "'";
             $ref = $request->server('HTTP_REFERER');
             if ($ref) {

@@ -10,6 +10,8 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Handlers\EpubFsHandler;
+use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
@@ -22,7 +24,6 @@ use Exception;
  */
 class EPubReader extends BaseRenderer
 {
-    public static string $handler = "epubfs";
     public static string $template = "templates/epubreader.html";
     public static string $epubClass = EPub::class;
 
@@ -36,7 +37,7 @@ class EPubReader extends BaseRenderer
     public static function getComponentContent($epub, $component, $params = [])
     {
         $data = $epub->component($component);
-        $handler = "epubfs";
+        $handler = EpubFsHandler::HANDLER;
 
         $callback = function ($m) use ($epub, $component, $params, $handler) {
             $method = $m[1];
@@ -138,9 +139,10 @@ class EPubReader extends BaseRenderer
         }, $epub->contents()));
 
         // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
+        $handler = EpubFsHandler::HANDLER;
         $db = $book->getDatabaseId() ?? 0;
-        $params = ['db' => $db, 'data' => $idData, 'comp' => '~COMP~'];
-        $link = str_replace(rawurlencode('~COMP~'), '~COMP~', Route::link(static::$handler, null, $params));
+        $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
+        $link = str_replace('COMPONENT', '~COMP~', Route::link($handler, null, $params));
 
         $data = [
             'title'      => $book->title,
@@ -210,7 +212,7 @@ class EPubReader extends BaseRenderer
      */
     public function getEpubjsReader($idData, $database = null)
     {
-        $handler = "zipfs";
+        $handler = ZipFsHandler::HANDLER;
         $template = "templates/epubjs-reader.html";
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {

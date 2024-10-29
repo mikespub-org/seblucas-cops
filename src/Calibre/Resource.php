@@ -16,7 +16,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Handlers\CalResHandler;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\FileResponse;
 
@@ -32,10 +32,11 @@ class Resource
         'webp' => 'image/webp',
     ];
     public const RESOURCE_URL_SCHEME = 'calres';
-    public static string $handler = "calres";
+
     public string $hash;
     public string $name;
     public ?int $databaseId = null;
+    protected string $handler = '';
 
     /**
      * Summary of __construct
@@ -47,6 +48,7 @@ class Resource
         $this->hash = $post->hash;
         $this->name = $post->name;
         $this->databaseId = $database;
+        $this->handler = CalResHandler::HANDLER;
     }
 
     /**
@@ -61,7 +63,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = $alg;
         $params['digest'] = $digest;
-        return Route::link(static::$handler, null, $params);
+        return Route::link($this->handler, null, $params);
     }
 
     /**
@@ -74,9 +76,13 @@ class Resource
     {
         $database ??= 0;
         // create link to resource with dummy alg & digest
-        $baseurl = Route::link(static::$handler, null, ['db' => $database, 'alg' => '{alg}', 'digest' => '{digest}']);
+        $params = [];
+        $params['db'] = $database;
+        $params['alg'] = 'ALG';
+        $params['digest'] = 'DIGEST';
+        $baseurl = Route::link(CalResHandler::HANDLER, null, $params);
         // remove dummy alg & digest
-        $baseurl = str_replace(['/{alg}', '/{digest}'], [], $baseurl);
+        $baseurl = str_replace(['/ALG', '/DIGEST'], [], $baseurl);
         return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);
     }
 

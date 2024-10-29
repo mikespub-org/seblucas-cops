@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
@@ -406,11 +407,9 @@ class Book
         $mimetype = Response::getMimeType($filePath) ?? 'application/octet-stream';
         if (Database::useAbsolutePath($this->databaseId)) {
             $params = ['id' => $this->id, 'db' => $this->databaseId];
-            if (is_null($params['db'])) {
-                $params['db'] = 0;
-            }
+            $params['db'] ??= 0;
             $params['file'] = $fileName;
-            $url = Route::link("fetch", null, $params);
+            $url = Route::link(FetchHandler::HANDLER, null, $params);
         } else {
             $url = Route::path(str_replace('%2F', '/', rawurlencode($filePath)));
         }

@@ -17,6 +17,7 @@ use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
+use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -30,7 +31,8 @@ use Exception;
  */
 class RestApi extends BaseRenderer
 {
-    public static string $handler = "restapi";
+    public static string $handler = RestApiHandler::HANDLER;
+    public static string $prefix = RestApiHandler::PREFIX;
     public static int $numberPerPage = 100;
     public static bool $doRunHandler = true;
 
@@ -61,8 +63,8 @@ class RestApi extends BaseRenderer
     {
         $path = $this->request->path("/index");
         // Note: this supports all other routes with /restapi prefix
-        if (str_starts_with($path, '/restapi/')) {
-            $path = substr($path, strlen('/restapi'));
+        if (str_starts_with($path, static::$prefix . '/')) {
+            $path = substr($path, strlen(static::$prefix));
         }
         return $path;
     }
@@ -168,7 +170,7 @@ class RestApi extends BaseRenderer
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
-                Response::redirect(Route::link(static::$handler) . '/index');
+                Response::redirect(RestApiHandler::getRouteLink(null, 'index'));
                 return '';
             }
             if ($this->isExtra) {
@@ -201,14 +203,18 @@ class RestApi extends BaseRenderer
     {
         $db = $request->database();
         $columns = CustomColumnType::getAllCustomColumns();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Custom Columns",
             "baseurl" => $baseurl,
             "entries" => [],
         ];
         foreach ($columns as $title => $column) {
-            $column["navlink"] = "{$baseurl}/custom/{$column['id']}" . Route::params(["db" => $db]);
+            $params = [];
+            $params["custom"] = $column['id'];
+            $params["db"] = $db;
+            // @todo find some better way to generate restapi links for pages and handlers?
+            $column["navlink"] = RestApiHandler::getRouteLink(null, PageId::ALL_CUSTOMS, $params);
             array_push($result["entries"], $column);
         }
         return $result;
@@ -225,19 +231,22 @@ class RestApi extends BaseRenderer
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
             return static::getDatabase($db, $request);
         }
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Databases",
             "baseurl" => $baseurl,
             "entries" => [],
         ];
+        $params = [];
         $id = 0;
         foreach (Database::getDbNameList() as $key) {
+            $params['db'] = $id;
+            $link = RestApiHandler::getResourceLink(Database::class, $params);
             array_push($result["entries"], [
                 "class" => "Database",
                 "title" => $key,
                 "id" => $id,
-                "navlink" => "{$baseurl}/databases/{$id}",
+                "navlink" => $link,
             ]);
             $id += 1;
         }
@@ -267,7 +276,8 @@ class RestApi extends BaseRenderer
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
+        $params = [];
         $type = $request->get('type', null, '/^\w+$/');
         if (in_array($type, ['table', 'view'])) {
             $title .= " Type $type";
@@ -276,9 +286,11 @@ class RestApi extends BaseRenderer
                 "baseurl" => $baseurl,
                 "entries" => [],
             ];
+            $params['db'] = $database;
             $entries = Database::getDbSchema($database, $type);
             foreach ($entries as $entry) {
-                $entry["navlink"] = "{$baseurl}/databases/{$database}/{$entry['tbl_name']}";
+                $params['name'] = $entry['tbl_name'];
+                $entry["navlink"] = RestApiHandler::getResourceLink(Database::class, $params);
                 unset($entry["sql"]);
                 array_push($result["entries"], $entry);
             }
@@ -291,15 +303,17 @@ class RestApi extends BaseRenderer
             "baseurl" => $baseurl,
             "entries" => [],
         ];
+        $params['db'] = $database;
         $metadata = [
             "table" => "Tables",
             "view" => "Views",
         ];
         foreach ($metadata as $name => $title) {
+            $params['type'] = $name;
             array_push($result["entries"], [
                 "class" => "Metadata",
                 "title" => $title,
-                "navlink" => "{$baseurl}/databases/{$database}?type={$name}",
+                "navlink" => RestApiHandler::getResourceLink(Database::class, $params),
             ]);
         }
         $result["version"] = Database::getUserVersion($database);
@@ -321,7 +335,7 @@ class RestApi extends BaseRenderer
             $title .= " $dbName";
         }
         $title .= " Table $name";
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => $title,
             "baseurl" => $baseurl,
@@ -331,6 +345,9 @@ class RestApi extends BaseRenderer
             $result["error"] = "Invalid api key";
             return $result;
         }
+        $params = [];
+        $params['db'] = $database;
+        $params['name'] = $name;
         // add dummy functions for selecting in meta and tag_browser_* views
         Database::addSqliteFunctions($database);
         $query = "SELECT COUNT(*) FROM {$name}";
@@ -347,7 +364,8 @@ class RestApi extends BaseRenderer
         $res = Database::query($query, [$start, static::$numberPerPage], $database);
         while ($post = $res->fetchObject()) {
             $entry = (array) $post;
-            $entry["navlink"] = "{$baseurl}/databases/{$database}/{$name}?id={$entry['id']}";
+            $params['id'] = $entry['id'];
+            $entry["navlink"] = RestApiHandler::getResourceLink(Database::class, $params);
             array_push($result["entries"], $entry);
         }
         $result["columns"] = Database::getTableInfo($database, $name);
@@ -369,7 +387,7 @@ class RestApi extends BaseRenderer
             ],
         ];
         $result["servers"] = [
-            ["url" => Route::link(static::$handler), "description" => "COPS REST API Endpoint"],
+            ["url" => RestApiHandler::getBaseUrl(), "description" => "COPS REST API Endpoint"],
         ];
         $result["components"] = [
             "securitySchemes" => [
@@ -397,8 +415,11 @@ class RestApi extends BaseRenderer
         ];
         $result["paths"] = [];
         foreach (Route::getRoutes() as $route => $queryParams) {
-            if (str_starts_with($route, '/restapi')) {
-                continue;
+            if (str_starts_with($route, static::$prefix . '/')) {
+                $route = substr($route, strlen(static::$prefix));
+                if (empty($route)) {
+                    continue;
+                }
             }
             $params = [];
             $found = [];
@@ -432,7 +453,11 @@ class RestApi extends BaseRenderer
                 //$script = Config::ENDPOINT[$testpoint];
                 $script = $testpoint;
                 $queryString = str_replace(Route::HANDLER_PARAM . '=' . $testpoint, $script, $queryString);
-                $queryString = str_replace($script . '&', $script . ' handler with ', $queryString);
+                if (str_contains($queryString, '&')) {
+                    $queryString = str_replace($script . '&', $script . ' handler with ', $queryString);
+                } else {
+                    $queryString .= ' handler';
+                }
             } else {
                 $queryString = 'page handler with ' . $queryString;
             }
@@ -498,7 +523,7 @@ class RestApi extends BaseRenderer
      */
     public static function getRoutes($request)
     {
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Routes",
             "baseurl" => $baseurl,
@@ -520,7 +545,7 @@ class RestApi extends BaseRenderer
      */
     public static function getPages($request)
     {
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Pages",
             "baseurl" => $baseurl,
@@ -547,18 +572,22 @@ class RestApi extends BaseRenderer
             return static::getNotesByType($type, $request);
         }
         $db = $request->database();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Notes",
             "baseurl" => $baseurl,
             "databaseId" => $db,
             "entries" => [],
         ];
+        $params = [];
+        $params['db'] = $db;
         foreach (Note::getCountByType($db) as $type => $count) {
+            $params['type'] = $type;
+            $link = RestApiHandler::getResourceLink(Note::class, $params);
             array_push($result["entries"], [
                 "class" => "Notes Type",
                 "title" => $type,
-                "navlink" => "{$baseurl}/notes/{$type}" . Route::params(["db" => $db]),
+                "navlink" => $link,
                 "number" => $count,
             ]);
         }
@@ -578,31 +607,39 @@ class RestApi extends BaseRenderer
             return static::getNoteByTypeId($type, $id, $request);
         }
         $db = $request->database();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Notes for {$type}",
             "baseurl" => $baseurl,
             "databaseId" => $db,
             "entries" => [],
         ];
+        $params = [];
+        $params['db'] = $db;
+        $params['type'] = $type;
         // @todo get item from notes + corresponding title from instance
         foreach (Note::getEntriesByType($type, $db) as $entry) {
+            $params['id'] = $entry['item'];
             if (!empty($entry["title"])) {
                 $title = Route::slugify($entry["title"]);
+                $params['title'] = $title;
+                $link = RestApiHandler::getResourceLink(Note::class, $params);
                 array_push($result["entries"], [
                     "class" => "Notes",
                     "title" => $entry["title"],
                     "id" => $entry["item"],
-                    "navlink" => "{$baseurl}/notes/{$type}/{$entry['item']}/{$title}" . Route::params(["db" => $db]),
+                    "navlink" => $link,
                     "size" => $entry["size"],
                     "timestamp" => $entry["mtime"],
                 ]);
             } else {
+                unset($params['title']);
+                $link = RestApiHandler::getResourceLink(Note::class, $params);
                 array_push($result["entries"], [
                     "class" => "Notes",
                     "title" => $type,
                     "id" => $entry["item"],
-                    "navlink" => "{$baseurl}/notes/{$type}/{$entry['item']}" . Route::params(["db" => $db]),
+                    "navlink" => $link,
                     "size" => $entry["size"],
                     "timestamp" => $entry["mtime"],
                 ]);
@@ -625,7 +662,7 @@ class RestApi extends BaseRenderer
         if (empty($note)) {
             return ["error" => "Invalid note type id"];
         }
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Note for {$type} #{$id}",
             "baseurl" => $baseurl,
@@ -662,13 +699,15 @@ class RestApi extends BaseRenderer
             return static::getPreferenceByKey($key, $request);
         }
         $db = $request->database();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Preferences",
             "baseurl" => $baseurl,
             "databaseId" => $db,
             "entries" => [],
         ];
+        $params = [];
+        $params['db'] = $db;
         foreach (Preference::getInstances($db) as $key => $preference) {
             if (is_array($preference->val)) {
                 $count = count($preference->val);
@@ -679,10 +718,12 @@ class RestApi extends BaseRenderer
             } else {
                 $count = 0;
             }
+            $params['key'] = rawurlencode($key);
+            $link = RestApiHandler::getResourceLink(Preference::class, $params);
             array_push($result["entries"], [
                 "class" => "Preference",
                 "title" => $key,
-                "navlink" => "{$baseurl}/preferences/" . rawurlencode($key) . Route::params(["db" => $db]),
+                "navlink" => $link,
                 "number" => $count,
             ]);
         }
@@ -702,7 +743,7 @@ class RestApi extends BaseRenderer
         if (empty($preference)) {
             return ["error" => "Invalid preference key"];
         }
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Preference for {$key}",
             "baseurl" => $baseurl,
@@ -724,7 +765,7 @@ class RestApi extends BaseRenderer
             return static::getAnnotationsByBookId($bookId, $request);
         }
         $db = $request->database();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Annotations",
             "baseurl" => $baseurl,
@@ -732,10 +773,14 @@ class RestApi extends BaseRenderer
             "entries" => [],
         ];
         foreach (Annotation::getCountByBookId($db) as $bookId => $count) {
+            $params = [];
+            $params['bookId'] = $bookId;
+            $params['db'] = $db;
+            $link = RestApiHandler::getResourceLink(Annotation::class, $params);
             array_push($result["entries"], [
                 "class" => "Annotations",
                 "title" => "Annotations for {$bookId}",
-                "navlink" => "{$baseurl}/annotations/{$bookId}" . Route::params(["db" => $db]),
+                "navlink" => $link,
                 "number" => $count,
             ]);
         }
@@ -755,7 +800,7 @@ class RestApi extends BaseRenderer
             return static::getAnnotationById($bookId, $id, $request);
         }
         $db = $request->database();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "Annotations for {$bookId}",
             "baseurl" => $baseurl,
@@ -790,7 +835,7 @@ class RestApi extends BaseRenderer
         if (empty($annotation->id)) {
             return ["error" => "Invalid annotation id"];
         }
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => $annotation->getTitle(),
             "baseurl" => $baseurl,
@@ -812,7 +857,7 @@ class RestApi extends BaseRenderer
             return ["error" => "Invalid book id"];
         }
         $db = $request->database();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $metadata = Metadata::getInstanceByBookId($bookId, $db);
         if (empty($metadata)) {
             $result["error"] = "Invalid metadata for book id";
@@ -851,14 +896,14 @@ class RestApi extends BaseRenderer
             return ["error" => "Invalid username"];
         }
         $db = $request->database();
-        $baseurl = Route::link(static::$handler);
+        $baseurl = RestApiHandler::getBaseUrl();
         $result = [
             "title" => "User",
             "baseurl" => $baseurl,
             "databaseId" => $db,
         ];
         $result["username"] = $username;
-        if ($request->path() == "/user/details") {
+        if ($request->path() == static::$prefix . "/user/details") {
             $user = User::getInstanceByName($username);
             $result = array_replace($result, (array) $user);
         }

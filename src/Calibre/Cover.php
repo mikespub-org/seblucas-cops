@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -17,11 +18,11 @@ use SebLucas\Cops\Output\FileResponse;
 
 class Cover
 {
-    public static string $handler = "fetch";
     /** @var Book */
     public $book;
     /** @var ?int */
     protected $databaseId;
+    protected string $handler = '';
     /** @var ?string */
     public $coverFileName = null;
     /** @var ?FileResponse */
@@ -39,6 +40,7 @@ class Cover
             $this->coverFileName = $book->getCoverFileName();
         }
         $this->databaseId = $database ?? $book->getDatabaseId();
+        $this->handler = FetchHandler::HANDLER;
     }
 
     /**
@@ -315,14 +317,12 @@ class Cover
                 );
             }
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
-            if (is_null($params['db'])) {
-                $params['db'] = 0;
-            }
+            $params['db'] ??= 0;
             if ($ext != 'jpg') {
                 $params['type'] = $ext;
             }
             return new LinkEntry(
-                Route::link(static::$handler, null, $params),
+                Route::link($this->handler, null, $params),
                 $mime,
                 LinkEntry::OPDS_IMAGE_TYPE
             );
@@ -388,9 +388,7 @@ class Cover
             //$file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             $params = ['id' => $this->book->id, 'db' => $this->databaseId];
-            if (is_null($params['db'])) {
-                $params['db'] = 0;
-            }
+            $params['db'] ??= 0;
             if ($ext != 'jpg') {
                 $params['type'] = $ext;
             }
@@ -398,7 +396,7 @@ class Cover
                 $params['thumb'] = $thumb;
             }
             return new LinkEntry(
-                Route::link(static::$handler, null, $params),
+                Route::link($this->handler, null, $params),
                 $mime,
                 LinkEntry::OPDS_THUMBNAIL_TYPE
             );

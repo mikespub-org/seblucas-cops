@@ -26,16 +26,6 @@ class LinkEntry extends Link
     public $mtime;
 
     /**
-     * Summary of hrefXhtml
-     * @return string
-     */
-    public function hrefXhtml()
-    {
-        // LinkEntry()->href includes the endpoint here
-        return $this->href;
-    }
-
-    /**
      * Summary of addFileInfo
      * @param string $filepath
      * @return void

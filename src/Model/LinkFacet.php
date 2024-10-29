@@ -36,11 +36,10 @@ class LinkFacet extends LinkFeed
      * @param ?string $facetGroup facetGroup this facet belongs to
      * @param bool $activeFacet is the facet currently active
      * @param ?int $threadCount number of items expected
-     * @param ?int $database current database in multiple database setup
      */
-    public function __construct($href, $title = null, $facetGroup = null, $activeFacet = false, $threadCount = null, $database = null)
+    public function __construct($href, $title = null, $facetGroup = null, $activeFacet = false, $threadCount = null)
     {
-        parent::__construct($href, static::LINK_RELATION, $title, $database);
+        parent::__construct($href, static::LINK_RELATION, $title);
         $this->facetGroup = $facetGroup;
         $this->activeFacet = $activeFacet;
         $this->threadCount = $threadCount;

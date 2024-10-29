@@ -114,7 +114,7 @@ class RoutingTest extends TestCase
             ["opds.php?page=3&id=1&title=Arthur%20Conan%20Doyle", "/opds/3/1?title=Arthur%20Conan%20Doyle", "opds-page-id", ["_handler" => "opds", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
             ["opds.php?page=3&id=1", "/opds/3/1", "opds-page-id", ["_handler" => "opds", "page" => "3", "id" => "1"]],
             ["opds.php?page=10", "/opds/10", "opds-page", ["_handler" => "opds", "page" => "10"]],
-            ["restapi.php?route=openapi", "/restapi/openapi", "restapi-route", ["_handler" => "restapi", "route" => "openapi"]],
+            ["restapi.php?route=openapi", "/restapi/openapi", "restapi-openapi", ["_handler" => "restapi", "_resource" => "openapi"]],
             ["graphql.php", "/graphql", "graphql", ["_handler" => "graphql"]],
         ];
     }
@@ -217,7 +217,7 @@ class RoutingTest extends TestCase
             ["/feed/3/1?title=Arthur%20Conan%20Doyle", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
             ["/feed/3/1", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1"]],
             ["/feed/10", "feed-page", ["_handler" => "feed", "page" => "10"]],
-            ["/restapi/openapi", "restapi-route", ["_handler" => "restapi", "route" => "openapi"]],
+            ["/restapi/openapi", "restapi-openapi", ["_handler" => "restapi", "_resource" => "openapi"]],
             ["/graphql", "graphql", ["_handler" => "graphql"]],
             ["/view/20/ignore.epub", "view-data-ignore.type", ["_handler" => "fetch", "view" => "1", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["/download/20/ignore.epub", "download-data-ignore.type", ["_handler" => "fetch", "data" => "20", "ignore" => "ignore", "type" => "epub"]],

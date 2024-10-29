@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Handlers;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
-use SebLucas\Cops\Output\RestApi;
 
 /**
  * Handle datatables
@@ -34,7 +33,7 @@ class TableHandler extends BaseHandler
 
     public function handle($request)
     {
-        $data = ['link' => Route::link(RestApi::$handler)];
+        $data = ['link' => Route::link(RestApiHandler::HANDLER)];
         $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';
         $data['tbody'] = '';
         foreach (Route::getRoutes() as $route => $queryParams) {

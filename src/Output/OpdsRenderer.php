@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Handlers\FeedHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -25,7 +26,7 @@ use XMLWriter;
 
 class OpdsRenderer extends BaseRenderer
 {
-    public static string $handler = "feed";
+    public static string $handler = FeedHandler::HANDLER;
     /** @var ?XMLWriter */
     protected $xmlStream = null;
     /** @var ?int */
@@ -93,10 +94,9 @@ class OpdsRenderer extends BaseRenderer
         $xml->endElement();
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
-        $params = ["query" => "{searchTerms}", "db" => $database];
+        $params = ["query" => "QUERY", "db" => $database];
         $url = Route::link(static::$handler, null, $params);
-        $url = str_replace("%7B", "{", $url);
-        $url = str_replace("%7D", "}", $url);
+        $url = str_replace("QUERY", "{searchTerms}", $url);
         $xml->writeAttribute("template", $url);
         $xml->endElement();
         $xml->startElement("Query");
@@ -185,10 +185,9 @@ class OpdsRenderer extends BaseRenderer
             );
         } else {
             // Bad way, will be removed when OPDS client are fixed
-            $params["query"] = "{searchTerms}";
+            $params["query"] = "QUERY";
             $url = Route::link(static::$handler, null, $params);
-            $url = str_replace("%7B", "{", $url);
-            $url = str_replace("%7D", "}", $url);
+            $url = str_replace("QUERY", "{searchTerms}", $url);
             $link = new LinkEntry(
                 $url,
                 "application/atom+xml",
@@ -200,7 +199,6 @@ class OpdsRenderer extends BaseRenderer
         if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
-                //$link = new LinkFacet(Route::query($request->query(), ["tag" => $filter]), $lib, localize("tagword.title"), $filter == $Urlfilter, null, $database);
                 $params = array_replace($request->urlParams, ["tag" => $filter]);
                 $url = Route::link(static::$handler, null, $params);
                 $link = new LinkFacet(
@@ -208,8 +206,7 @@ class OpdsRenderer extends BaseRenderer
                     $lib,
                     localize("tagword.title"),
                     $filter == $Urlfilter,
-                    null,
-                    $database
+                    null
                 );
                 $this->renderLink($link);
             }
@@ -436,7 +433,7 @@ class OpdsRenderer extends BaseRenderer
         //$url = Route::link(static::$handler, null, $params);
         //$filterLabel = localize("cog.alternate");
         //$title = localize("links.title");
-        //$link = new LinkFacet($url, $title, $filterLabel, false, null, $database);
+        //$link = new LinkFacet($url, $title, $filterLabel, false, null);
         //$this->renderLink($link);
         // Note: facets are only shown if there are books available, so we need to get a filter page here
         $req = Request::build($request->urlParams, static::$handler);
@@ -450,7 +447,6 @@ class OpdsRenderer extends BaseRenderer
         }
         // @todo handle special case of OPDS not expecting filter while HTML does better
         unset($extraParams['filter']);
-        $database = $request->database();
         foreach ($filterPage->entryArray as $entry) {
             if (empty($entry->className)) {
                 continue;
@@ -463,8 +459,7 @@ class OpdsRenderer extends BaseRenderer
                 $entry->title,
                 $group,
                 false,
-                $entry->numberOfElement,
-                $database
+                $entry->numberOfElement
             );
             $this->renderLink($link);
         }

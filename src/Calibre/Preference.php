@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
 
@@ -24,6 +25,7 @@ class Preference
     public string $key;
     public mixed $val;
     public ?int $databaseId = null;
+    protected string $handler = '';
 
     /**
      * Summary of __construct
@@ -40,6 +42,18 @@ class Preference
             $this->val = $post->val;
         }
         $this->databaseId = $database;
+        $this->handler = RestApiHandler::HANDLER;
+    }
+
+    /**
+     * Summary of getUri
+     * @param array<mixed> $params
+     * @return string
+     */
+    public function getUri($params = [])
+    {
+        $params['key'] = $this->key;
+        return RestApiHandler::getResourceLink($this::class, $params);
     }
 
     /**

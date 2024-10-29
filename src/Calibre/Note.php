@@ -9,7 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Pages\PageId;
 
 class Note
@@ -26,6 +26,7 @@ class Note
         'series' => Serie::class,
         'tags' => Tag::class,
     ];
+
     public int $id;
     public int $item;
     public string $colname;
@@ -47,6 +48,7 @@ class Note
         $this->doc = $post->doc;
         $this->mtime = $post->mtime;
         $this->databaseId = $database;
+        $this->handler = RestApiHandler::HANDLER;
     }
 
     /**
@@ -56,8 +58,9 @@ class Note
      */
     public function getUri($params = [])
     {
-        // @todo get handler from somewhere
-        return Route::link($this->handler) . '/notes/' . $this->colname . '/' . $this->item;
+        $params['type'] = $this->colname;
+        $params['item'] = $this->item;
+        return RestApiHandler::getResourceLink($this::class, $params);
     }
 
     /**
@@ -134,6 +137,8 @@ class Note
         $result->execute($params);
         while ($post = $result->fetchObject()) {
             $entries[$post->item] = (array) $post;
+            // @todo add link to resource
+            //$link = RestApiHandler::getResourceLink(static::class, $params);
         }
         $itemIdList = array_keys($entries);
         if (empty($itemIdList)) {
@@ -144,6 +149,8 @@ class Note
         while ($post = $result->fetchObject()) {
             if (array_key_exists($post->id, $entries)) {
                 $entries[$post->id]["title"] = $post->name;
+                // @todo add link to resource
+                //$link = RestApiHandler::getResourceLink(static::class, $params);
             }
         }
         return $entries;

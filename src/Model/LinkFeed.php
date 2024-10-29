@@ -32,29 +32,9 @@ class LinkFeed extends Link
      * @param string $href ?queryString relative to current endpoint
      * @param ?string $rel relation in the OPDS catalog
      * @param ?string $title title in the OPDS catalog and elsewhere
-     * @param ?int $database current database in multiple database setup
      */
-    public function __construct($href, $rel = null, $title = null, $database = null)
+    public function __construct($href, $rel = null, $title = null)
     {
         parent::__construct($href, static::LINK_TYPE, $rel, $title);
-        // @todo check if/when we still need to add the database here
-        //$this->href = Route::query($this->href, ['db' => $database]);
-        if (!is_null($database)) {
-            if (str_contains($this->href, '?')) {
-                $this->href .= '&db=' . $database;
-            } else {
-                $this->href .= '?db=' . $database;
-            }
-        }
-    }
-
-    /**
-     * Summary of hrefXhtml
-     * @return string
-     */
-    public function hrefXhtml()
-    {
-        // LinkFeed()->href includes the endpoint here
-        return $this->href;
     }
 }

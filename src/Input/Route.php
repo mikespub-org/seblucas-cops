@@ -247,7 +247,7 @@ class Route
 
     /**
      * Get full link for handler with page and params
-     * @param string|null $handler before going through Config::ENDPOINT
+     * @param string|null $handler
      * @param string|int|null $page
      * @param array<mixed> $params
      * @return string
@@ -282,7 +282,7 @@ class Route
      * @param string $handler
      * @return string
      */
-    public static function endpoint($handler)
+    public static function endpoint($handler = 'index')
     {
         if (Config::get('front_controller')) {
             // no endpoint prefix for supported handlers
@@ -310,37 +310,6 @@ class Route
             $queryParams = array_merge(['page' => $page], $queryParams);
         }
         $prefix = '';
-        if (count($queryParams) < 1) {
-            return $prefix;
-        }
-        return static::route($queryParams, $prefix);
-    }
-
-    /**
-     * Get uri for query with params
-     * @param string|null $query
-     * @param array<mixed> $params
-     * @return string
-     */
-    public static function query($query, $params = [])
-    {
-        $prefix = '';
-        $pos = strpos((string) $query, '?');
-        if ($pos !== false) {
-            $prefix = substr((string) $query, 0, $pos);
-            $query = substr((string) $query, $pos + 1);
-        }
-        $queryParams = [];
-        if (!empty($query)) {
-            parse_str($query, $queryParams);
-            $params = array_merge($queryParams, $params);
-        }
-        $queryParams = array_filter($params, function ($val) {
-            if (empty($val) && strval($val) !== '0') {
-                return false;
-            }
-            return true;
-        });
         if (count($queryParams) < 1) {
             return $prefix;
         }
@@ -413,13 +382,15 @@ class Route
             // keep page param and use handler as key here
             $page = $params[self::HANDLER_PARAM];
         } elseif (isset($params['page'])) {
+            // use page param as key here
             $page = $params['page'];
             unset($params['page']);
         } else {
+            // other routes
             $page = '';
         }
         // use page route with /restapi prefix instead
-        if ($page == 'restapi' && !empty($params['page'])) {
+        if ($page == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
             $prefix = $prefix . '/restapi';
             $page = $params['page'];
             unset($params[self::HANDLER_PARAM]);
@@ -508,12 +479,14 @@ class Route
         static::$pages = [];
         foreach (static::$routes as $route => $params) {
             if (!is_array($params)) {
+                // use page as key here
                 $page = $params;
                 $params = [];
             } elseif (!empty($params[self::HANDLER_PARAM])) {
                 // keep page param and use handler as key here
                 $page = $params[self::HANDLER_PARAM];
             } else {
+                // use page param as key here
                 $page = $params["page"] ?? '';
                 unset($params["page"]);
             }

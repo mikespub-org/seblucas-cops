@@ -24,18 +24,6 @@ class RouteTest extends TestCase
         Database::clearDb();
     }
 
-    public function testRouteQuery(): void
-    {
-        $this->assertEquals("?db=0", Route::query("", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("key=value", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("key=value&otherKey", ["db" => "0"]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", Route::query("key=value&otherKey=other", ["db" => "0"]));
-        $this->assertEquals("?db=0", Route::query("?", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("?key=value", ["db" => "0"]));
-        $this->assertEquals("?key=value&db=0", Route::query("?key=value&otherKey", ["db" => "0"]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", Route::query("?key=value&otherKey=other", ["db" => "0"]));
-    }
-
     public function testRoutePage(): void
     {
         $this->assertEquals("", Route::page(null, ['db' => null]));
@@ -126,7 +114,7 @@ class RouteTest extends TestCase
             "opds.php?page=3&id=1&title=Arthur%20Conan%20Doyle" => "index.php/opds/3/1?title=Arthur%20Conan%20Doyle",
             "opds.php?page=3&id=1" => "index.php/opds/3/1",
             "opds.php?page=10" => "index.php/opds/10",
-            "restapi.php?route=openapi" => "index.php/restapi/openapi",
+            "restapi.php?_resource=openapi" => "index.php/restapi/openapi",
             "graphql.php" => "index.php/graphql",
         ];
     }

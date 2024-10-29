@@ -216,7 +216,7 @@ class BaseTest extends TestCase
             $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
             $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
             $output = $slugger->slug($input, '_');
-    
+
             $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
             $this->assertEquals($expected, (string) $output);
         } else {

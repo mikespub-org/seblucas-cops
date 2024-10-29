@@ -72,7 +72,7 @@ class RestApiTest extends TestCase
         $test = $apiHandler->matchPathInfo($path);
         $this->assertEquals($expected, $test);
 
-        $_SERVER["PATH_INFO"] = "/openapi";
+        $_SERVER["PATH_INFO"] = "/restapi/openapi";
         $request = new Request();
         $apiHandler = new RestApi($request);
         $path = $apiHandler->getPathInfo();
@@ -203,7 +203,7 @@ class RestApiTest extends TestCase
         $test = RestApi::getRoutes($request);
         $expected = "Routes";
         $this->assertEquals($expected, $test["title"]);
-        $expected = 99;
+        $expected = 98;
         $this->assertCount($expected, $test["entries"]);
     }
 
@@ -409,7 +409,7 @@ class RestApiTest extends TestCase
         Config::set('calibre_user_database', __DIR__ . "/BaseWithSomeBooks/users.db");
         $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
         $_SERVER[$http_auth_user] = 'admin';
-        $_SERVER['PATH_INFO'] = '/user/details';
+        $_SERVER['PATH_INFO'] = '/restapi/user/details';
         $request = new Request();
 
         $expected = "admin";

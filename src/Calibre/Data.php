@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkEntry;
@@ -21,7 +22,6 @@ class Data
     public const SQL_LINK_TABLE = "data";
     public const SQL_LINK_COLUMN = "id";
     public const SQL_SORT = "name";
-    public static string $handler = "fetch";
     /** @var int */
     public $id;
     public string $name;
@@ -32,6 +32,7 @@ class Data
     public $book;
     /** @var ?int */
     protected $databaseId;
+    protected string $handler = '';
     public bool $updateForKepub = false;
 
     /** @var array<string, string> */
@@ -99,6 +100,7 @@ class Data
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
         $this->setBook($book);
+        $this->handler = FetchHandler::HANDLER;
     }
 
     /**
@@ -301,16 +303,14 @@ class Data
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
             ($type == "epub" && Config::get('update_epub-metadata'))) {
             $params = ['db' => $book->getDatabaseId()];
-            if (is_null($params['db'])) {
-                $params['db'] = 0;
-            }
+            $params['db'] ??= 0;
             $params['type'] = $type;
             $params['data'] = $idData;
             if ($view) {
                 $params['view'] = 1;
             }
             return new LinkEntry(
-                Route::link(static::$handler, null, $params),
+                Route::link(FetchHandler::HANDLER, null, $params),
                 $mime,
                 $rel,
                 $title
