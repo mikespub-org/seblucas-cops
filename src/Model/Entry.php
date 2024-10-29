@@ -122,12 +122,12 @@ class Entry
             }
             $query = parse_url($uri, PHP_URL_QUERY);
             if (is_null($query)) {
-                return $uri . '?' . http_build_query($extraParams);
+                return $uri . '?' . Route::getQueryString($extraParams);
             }
             // replace current params with extraParams where needed
             parse_str($query, $params);
             $params = array_replace($params, $extraParams);
-            return str_replace('?' . $query, '?' . http_build_query($params), $uri);
+            return str_replace('?' . $query, '?' . Route::getQueryString($params), $uri);
         }
         return "#";
     }

@@ -241,8 +241,7 @@ class Route
         if (empty($queryParams)) {
             return $prefix;
         }
-        $separator = null;
-        $queryString = http_build_query($queryParams, '', $separator);
+        $queryString = static::getQueryString($queryParams);
         return $prefix . '?' . $queryString;
     }
 
@@ -364,9 +363,18 @@ class Route
         if (empty($params)) {
             return $prefix;
         }
-        $separator = null;
-        $queryString = http_build_query($params, '', $separator);
+        $queryString = static::getQueryString($params);
         return $prefix . '?' . $queryString;
+    }
+
+    /**
+     * Summary of getQueryString
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function getQueryString($params)
+    {
+        return http_build_query($params, '', null, PHP_QUERY_RFC3986);
     }
 
     /**
@@ -481,8 +489,7 @@ class Route
                 }
             }
             if (count($subst) > 0) {
-                $separator = null;
-                return $prefix . $route . '?' . http_build_query($subst, '', $separator);
+                return $prefix . $route . '?' . static::getQueryString($subst);
             }
             return $prefix . $route;
         }
@@ -523,7 +530,24 @@ class Route
      */
     public static function slugify($string)
     {
-        $string = str_replace([' ', '&', '"', '/', '\\', '?', '#'], ['_', '-', '', '.', '.', '', '-'], trim($string));
+        $replace = [
+            ' ' => '_',
+            '&' => '-',
+            '#' => '-',
+            '"' => '',
+            //"'" => '',
+            ':' => '',
+            ';' => '',
+            '<' => '',
+            '>' => '',
+            '{' => '',
+            '}' => '',
+            '?' => '',
+            ',' => '',
+            '/' => '.',
+            '\\' => '.',
+        ];
+        $string = str_replace(array_keys($replace), array_values($replace), trim($string));
 
         return Translation::normalizeUtf8String($string);
     }

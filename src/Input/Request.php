@@ -31,7 +31,7 @@ class Request
 
     /**
      * Summary of __construct
-     * @param bool $parse
+     * @param bool $parse used by build()
      */
     public function __construct($parse = true)
     {
@@ -113,7 +113,7 @@ class Request
 
     /**
      * Summary of parseParams
-     * @param bool $parse
+     * @param bool $parse used by build()
      * @return void
      */
     public function parseParams($parse = true)
@@ -217,7 +217,7 @@ class Request
     public function set($name, $value)
     {
         $this->urlParams[$name] = $value;
-        $this->queryString = http_build_query($this->urlParams);
+        $this->queryString = Route::getQueryString($this->urlParams);
         return $this;
     }
 
@@ -431,48 +431,17 @@ class Request
     }
 
     /**
-     * Summary of getEndpoint
-     * @param string $default
-     * @deprecated 3.1.0 use getHandler() instead
-     * @return string
-     */
-    public function getEndpoint($default)
-    {
-        $link = basename($this->script() ?? "/" . $default);
-        if (empty($link)) {
-            return $default;
-        }
-        return $link;
-    }
-
-    /**
      * Summary of getHandler
-     * @param string $default
      * @return string
      */
-    public function getHandler($default = 'index')
+    public function getHandler()
     {
         // we have a handler already
         if (!empty($this->urlParams[Route::HANDLER_PARAM])) {
             return $this->urlParams[Route::HANDLER_PARAM];
         }
-        // @deprecated 3.1.0 use index.php endpoint
-        // try to find handler via endpoint
-        $endpoint = $this->getEndpoint(Config::ENDPOINT[$default]);
-        if ($endpoint == Config::ENDPOINT['index']) {
-            return 'index';
-        }
-        $flipped = array_flip(Config::ENDPOINT);
-        if (!empty($flipped[$endpoint])) {
-            return $flipped[$endpoint];
-        }
-        // for phpunit tests
-        if ($endpoint == 'phpunit' || $endpoint == 'Standard input code') {
-            return $default;
-        }
-        // how did we end up here?
-        throw new \Exception('Unknown handler for endpoint ' . htmlspecialchars($endpoint));
-        //return $default;
+        // use default handler
+        return 'index';
     }
 
     /**
@@ -577,7 +546,7 @@ class Request
         }
         $request = new self(false);
         $request->urlParams = $params;
-        $request->queryString = http_build_query($request->urlParams);
+        $request->queryString = Route::getQueryString($request->urlParams);
         return $request;
     }
 }

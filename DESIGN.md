@@ -52,7 +52,7 @@ flowchart LR
 
 The Framework was introduced in COPS 2.7.0 to move all custom code from the Endpoint scripts to dedicated Handlers.
 
-Endpoint scripts in COPS 2.x now all share the same minimal code:
+Endpoint scripts in COPS 2.7.x all shared the same minimal code:
 ```php
 use SebLucas\Cops\Framework;
 
@@ -60,7 +60,7 @@ require_once __DIR__ . '/config.php';
 
 Framework::run('...');
 ```
-and they are only differentiated by the `name` of the handler to be called. With COPS 3.1.x this code is replaced with a redirect to `index.php/name` and they will be permanently removed in a future 3.2.x release.
+and they only differentiate by the `name` of the handler to be called. With COPS 3.1.x this code is replaced with a redirect to `index.php/name` and they are permanently removed in release 3.3.1.
 
 Within the Framework, the run() method is equally simple and basically covers the following steps:
 1. get Request based on input
@@ -70,7 +70,7 @@ Within the Framework, the run() method is equally simple and basically covers th
 
 In COPS 2.x both old-style URL parameters (getJSON.php?page=...&id=...) and new-style Route URLs (/authors/...) are supported by the Framework.
 
-COPS 3.x enables Route URLs by default. This gives us nicer-looking URLs, and it allows us to use a single front controller.
+COPS 3.x enables Route URLs by default. This gives us nicer-looking URLs, and it allows us to use a single front controller. Support for generating old-style URLs is removed in release 3.4.x.
 
 ## Endpoints, Handlers & Output
 

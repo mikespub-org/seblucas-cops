@@ -147,7 +147,7 @@ class RestApi extends BaseRenderer
             $_SERVER['PATH_INFO'] = $path;
             $_GET = $params;
             // @todo create request without using globals
-            $request = Framework::getRequest($name);
+            $request = Framework::getRequest();
             $response = $handler->handle($request);
             $_SERVER['PATH_INFO'] = $oldpath;
             $_GET = $oldparams;
@@ -155,17 +155,6 @@ class RestApi extends BaseRenderer
         }
         $result = [Route::HANDLER_PARAM => $name, "path" => $path, "params" => $params];
         return $result;
-    }
-
-    /**
-     * Summary of getScriptName
-     * @param Request $request
-     * @deprecated 3.1.0 use index.php endpoint
-     * @return string
-     */
-    public static function getScriptName($request)
-    {
-        return $request->getEndpoint(Config::ENDPOINT["restapi"]);
     }
 
     /**
@@ -413,7 +402,7 @@ class RestApi extends BaseRenderer
             }
             $params = [];
             $found = [];
-            $queryString = http_build_query($queryParams);
+            $queryString = Route::getQueryString($queryParams);
             // support custom pattern for route placeholders - see nikic/fast-route
             if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $route, $found)) {
                 foreach ($found[1] as $param) {

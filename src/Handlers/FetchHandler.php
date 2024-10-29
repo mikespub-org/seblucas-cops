@@ -163,6 +163,7 @@ class FetchHandler extends BaseHandler
             }
             return $zipper->download(null, $sendHeaders);
         } else {
+            // this will call exit()
             Response::sendError($request, "Invalid zipped: " . $zipper->getMessage());
         }
     }
@@ -221,6 +222,7 @@ class FetchHandler extends BaseHandler
             $response = new FileResponse($data->getMimeType(), null, basename($data->getUpdatedFilenameKepub()));
             $result = $book->runKepubify($file, $response);
             if (empty($result)) {
+                // this will call exit()
                 Response::sendError(null, 'Error: failed to convert epub file');
             }
             return $result;

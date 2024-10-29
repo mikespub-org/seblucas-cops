@@ -118,24 +118,6 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
     }
 
-    /**
-     * Summary of skipTestGetScriptName
-     * @deprecated 3.1.0 use index.php endpoint
-     * @return void
-     */
-    protected function skipTestGetScriptName(): void
-    {
-        $script = $_SERVER["SCRIPT_NAME"];
-        $_SERVER["SCRIPT_NAME"] = "/" . Config::ENDPOINT["restapi"];
-        $request = new Request();
-
-        $expected = "restapi.php";
-        $test = RestApi::getScriptName($request);
-        $this->assertEquals($expected, $test);
-
-        $_SERVER["SCRIPT_NAME"] = $script;
-    }
-
     public function testGetOutput(): void
     {
         $request = Request::build([], basename(self::$script));

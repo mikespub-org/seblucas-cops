@@ -18,12 +18,12 @@ if (php_sapi_name() !== 'cli-server') {
 // check if the requested path actually exists
 $path = parse_url((string) $_SERVER['REQUEST_URI'], PHP_URL_PATH);
 // parse_url() does not decode URL-encoded characters in the path
-$path = urldecode((string) $path);
+$path = rawurldecode((string) $path);
 if (!empty($path) && file_exists(__DIR__ . $path) && !is_dir(__DIR__ . $path)) {
     return false;
 }
 // route to the right PHP endpoint if needed
-$script = urldecode((string) $_SERVER['SCRIPT_NAME']);
+$script = rawurldecode((string) $_SERVER['SCRIPT_NAME']);
 if (str_contains($path, $script . '/') && file_exists(__DIR__ . $script)) {
     return false;
 }

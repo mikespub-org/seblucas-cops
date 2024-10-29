@@ -208,4 +208,19 @@ class BaseTest extends TestCase
             Translation::normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
         );
     }
+
+    public function testAsciiSluggerWithIntl(): void
+    {
+        if (class_exists('\Symfony\Component\String\Slugger\AsciiSlugger')) {
+            // @ignore class.notFound
+            $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
+            $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
+            $output = $slugger->slug($input, '_');
+    
+            $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
+            $this->assertEquals($expected, (string) $output);
+        } else {
+            $this->markTestSkipped('No symfony/string installed');
+        }
+    }
 }

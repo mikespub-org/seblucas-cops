@@ -72,6 +72,11 @@ class Routing
         return $context;
     }
 
+    /**
+     * Summary of match
+     * @param string $path
+     * @return array<mixed>
+     */
     public function match($path)
     {
         $matcher = $this->getRouter()->getMatcher();
@@ -87,6 +92,12 @@ class Routing
         return $attributes;
     }
 
+    /**
+     * Summary of generate
+     * @param string $name
+     * @param array<mixed> $params
+     * @return string
+     */
     public function generate($name, $params)
     {
         $generator = $this->getRouter()->getGenerator();

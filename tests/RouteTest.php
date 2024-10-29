@@ -120,10 +120,10 @@ class RouteTest extends TestCase
             "fetch.php?db=0&id=17&file=hello.txt" => "index.php/files/0/17/hello.txt",
             "fetch.php?db=0&id=17&file=zipped" => "index.php/files/0/17/zipped",
             "zipper.php?page=10&type=any" => "index.php/zipper/10/any",
-            "feed.php?page=3&id=1&title=Arthur+Conan+Doyle" => "index.php/feed/3/1?title=Arthur+Conan+Doyle",
+            "feed.php?page=3&id=1&title=Arthur%20Conan%20Doyle" => "index.php/feed/3/1?title=Arthur%20Conan%20Doyle",
             "feed.php?page=3&id=1" => "index.php/feed/3/1",
             "feed.php?page=10" => "index.php/feed/10",
-            "opds.php?page=3&id=1&title=Arthur+Conan+Doyle" => "index.php/opds/3/1?title=Arthur+Conan+Doyle",
+            "opds.php?page=3&id=1&title=Arthur%20Conan%20Doyle" => "index.php/opds/3/1?title=Arthur%20Conan%20Doyle",
             "opds.php?page=3&id=1" => "index.php/opds/3/1",
             "opds.php?page=10" => "index.php/opds/10",
             "restapi.php?route=openapi" => "index.php/restapi/openapi",
@@ -202,7 +202,7 @@ class RouteTest extends TestCase
         }
         $test = $endpoint;
         if (!empty($params)) {
-            $test .= '?' . http_build_query($params);
+            $test .= '?' . Route::getQueryString($params);
         }
         if (!empty($query)) {
             $test .= '&' . $query;
@@ -235,7 +235,7 @@ class RouteTest extends TestCase
             "/read/0/20/Alice's_Adventures_in_Wonderland" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20, "title" => "Alice's Adventures in Wonderland"],
             "/read/0/20" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20],
             "/mail" => [Route::HANDLER_PARAM => "mail"],
-            "/feed/3/1?title=Arthur+Conan+Doyle" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1, "title" => "Arthur Conan Doyle"],
+            "/feed/3/1?title=Arthur%20Conan%20Doyle" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1, "title" => "Arthur Conan Doyle"],
             "/feed/3/1" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1],
             "/feed/10" => [Route::HANDLER_PARAM => "feed", "page" => 10],
             "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "route" => "openapi"],

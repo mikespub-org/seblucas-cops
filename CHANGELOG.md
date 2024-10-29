@@ -15,6 +15,8 @@ x.x.x - TODO
 3.x.x - 2024xxxx
   * Changes in config/default.php file:
     - set $config['cops_use_route_urls'] as deprecated (= always enabled)
+  * Clean up query string build to align with RFC3986 (%20) instead of RFC1738 (+)
+  * Provide fallback for urls without intl extension - see issue #118 by @jillmess
   * Remove code for generating links without route urls
   * Remove tests for links generated without route urls
 

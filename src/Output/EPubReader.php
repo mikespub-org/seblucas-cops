@@ -140,7 +140,7 @@ class EPubReader extends BaseRenderer
         // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
         $db = $book->getDatabaseId() ?? 0;
         $params = ['db' => $db, 'data' => $idData, 'comp' => '~COMP~'];
-        $link = str_replace(urlencode('~COMP~'), '~COMP~', Route::link(static::$handler, null, $params));
+        $link = str_replace(rawurlencode('~COMP~'), '~COMP~', Route::link(static::$handler, null, $params));
 
         $data = [
             'title'      => $book->title,

@@ -44,9 +44,9 @@ class Framework
      * @param string $name
      * @return void
      */
-    public static function run($name = '')
+    public static function run($name = 'index')
     {
-        $request = static::getRequest($name);
+        $request = static::getRequest();
         if ($request->invalid) {
             $name = 'error';
             $handler = Framework::getHandler($name);
@@ -58,12 +58,9 @@ class Framework
             return;
         }
 
-        // @todo route to the right handler if needed
-        if (empty($name)) {
-            $name = $request->getHandler();
-        } else {
-            $name = $request->getHandler($name);
-        }
+        // route to the right handler if needed
+        $name = $request->getHandler();
+
         // special case for json requests here
         if ($name == 'index' && $request->isJson()) {
             $name = 'json';
@@ -91,11 +88,9 @@ class Framework
 
     /**
      * Get request instance
-     * @param string $name
-     * @param bool $parse
      * @return Input\Request
      */
-    public static function getRequest($name = '', $parse = true)
+    public static function getRequest()
     {
         // initialize routes if needed
         static::init();
@@ -103,8 +98,7 @@ class Framework
         if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
             $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
         }
-        // @todo special case for restapi
-        return new Input\Request($parse);
+        return new Input\Request();
     }
 
     /**

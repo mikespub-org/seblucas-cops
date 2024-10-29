@@ -12,4 +12,4 @@ use SebLucas\Cops\Framework;
 
 require_once __DIR__ . '/config/config.php';
 
-Framework::run('index');
+Framework::run();

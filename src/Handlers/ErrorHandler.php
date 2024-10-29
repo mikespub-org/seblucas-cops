@@ -32,8 +32,8 @@ class ErrorHandler extends BaseHandler
             if ($ref) {
                 $error .= ' from ' . $ref;
             }
+            // this will call exit()
             Response::sendError($request, $error, ["db" => $request->database()]);
-            return;
         }
         Response::notFound($request);
     }
