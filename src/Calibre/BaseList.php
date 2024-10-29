@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -200,6 +201,9 @@ class BaseList
     public function countEntriesByFirstLetter($letter)
     {
         $filterString = 'upper(' . $this->getTable() . '.' . $this->getSort() . ') like ?';
+        if (Translation::useNormAndUp()) {
+            $filterString = preg_replace("/upper/", "normAndUp", $filterString);
+        }
         $param =  $letter . "%";
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         $filter->addFilter($filterString, $param);
