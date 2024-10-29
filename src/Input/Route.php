@@ -35,17 +35,6 @@ class Route
     protected static $dispatcher = null;
     /** @var array<string, mixed> */
     protected static $pages = [];
-    // with use_url_rewriting = 1 - basic rewrites only
-    /** @var array<string, mixed> */
-    protected static $rewrites = [
-        // Format: route => handler, or route => [handler, [fixed => 1, ...]] with fixed params
-        "/view/{data}/{db}/{ignore}.{type}" => ["fetch", ["view" => 1]],
-        "/view/{data}/{ignore}.{type}" => ["fetch", ["view" => 1]],
-        "/download/{data}/{db}/{ignore}.{type}" => ["fetch"],
-        "/download/{data}/{ignore}.{type}" => ["fetch"],
-    ];
-    /** @var array<string, mixed> */
-    protected static $handlers = [];
 
     /**
      * Match pathinfo against routes and return query params
@@ -523,87 +512,6 @@ class Route
         $string = str_replace(array_keys($replace), array_values($replace), trim($string));
 
         return Translation::normalizeUtf8String($string);
-    }
-
-    /**
-     * Match rewrite rule for path and return handler with params
-     * @param string $path
-     * @return array<mixed>
-     */
-    public static function matchRewrite($path)
-    {
-        $dispatcher = simpleDispatcher(function (RouteCollector $r) {
-            static::addRewriteRules($r);
-        });
-
-        // match pattern
-        $handler = '';
-        $params = [];
-        $method = 'GET';
-        $routeInfo = $dispatcher->dispatch($method, $path);
-
-        if ($routeInfo[0] !== Dispatcher::FOUND) {
-            return [$handler,  $params];
-        }
-        $map = $routeInfo[1];
-        $params = $routeInfo[2];
-        $handler = array_shift($map);
-        $fixed = array_shift($map) ?? [];
-        unset($params['ignore']);
-
-        // for rewrite rules, put fixed params at the end
-        $params = array_merge($params, $fixed);
-        return [$handler,  $params];
-    }
-
-    /**
-     * Summary of addRewriteRules
-     * @param RouteCollector $r
-     * @return void
-     */
-    public static function addRewriteRules($r)
-    {
-        foreach (static::$rewrites as $route => $map) {
-            $r->addRoute('GET', $route, $map);
-        }
-    }
-
-    /**
-     * Summary of getUrlRewrite
-     * @param string $handler
-     * @param array<mixed> $params
-     * @return string|null
-     */
-    public static function getUrlRewrite($handler, $params)
-    {
-        $handlers = static::getHandlers();
-        $routes = $handlers[$handler] ?? [];
-        if (count($routes) < 1) {
-            return null;
-        }
-        return static::findMatchingRoute($routes, $params);
-    }
-
-    /**
-     * Get mapping of handlers to rewrites with fixed params
-     * @return array<string, array<mixed>>
-     */
-    public static function getHandlers()
-    {
-        if (!empty(static::$handlers)) {
-            return static::$handlers;
-        }
-        static::$handlers = [];
-        foreach (static::$rewrites as $route => $map) {
-            if (!is_array($map)) {
-                $map = [ $map ];
-            }
-            $handler = array_shift($map);
-            $fixed = array_shift($map) ?? [];
-            static::$handlers[$handler] ??= [];
-            static::$handlers[$handler][$route] = $fixed;
-        }
-        return static::$handlers;
     }
 
     /**

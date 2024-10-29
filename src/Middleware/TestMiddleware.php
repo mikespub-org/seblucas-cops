@@ -34,7 +34,7 @@ class TestMiddleware extends BaseMiddleware
         $request->set('hello', 'world');
         $response = $handler->handle($request);
         if ($response instanceof Response && !$response->isSent()) {
-            // @todo do something with $response after $handler
+            // do something with $response after $handler
             $response->setContent($response->getContent() . "\nGoodbye!");
         }
         return $response;
