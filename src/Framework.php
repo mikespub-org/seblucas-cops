@@ -123,6 +123,8 @@ class Framework
         foreach (static::$handlers as $handler) {
             Input\Route::addRoutes($handler::getRoutes(), $handler::HANDLER);
         }
+        // @todo add cors options after the last handler or use middleware or...
+        //'cors' => ['/{route:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
     }
 
     /**

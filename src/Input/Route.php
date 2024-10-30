@@ -32,6 +32,8 @@ class Route
     protected static $baseUrl = null;
     /** @var array<string, mixed> */
     protected static $routes = [];
+    /** @var array<string, mixed> */
+    protected static $static = [];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
     /** @var array<string, class-string> */
@@ -84,36 +86,38 @@ class Route
     }
 
     /**
-     * Check if static route exists
-     * @param string $route
+     * Check if static path exists
+     * @param string $path
      * @return bool
      */
-    public static function has($route)
+    public static function has($path)
     {
-        return array_key_exists($route, static::$routes);
+        return array_key_exists($path, static::$static);
     }
 
     /**
-     * Get query params for static route
-     * @param string $route
+     * Get route params for static path
+     * @param string $path
      * @return array<mixed>
      */
-    public static function get($route)
+    public static function get($path)
     {
-        return static::$routes[$route];
+        $name = static::$static[$path];
+        return static::$routes[$name][1];
     }
 
     /**
-     * Set route to page with optional static params
-     * @param string $route
-     * @param string $page
+     * Set route to path with optional static params, methods and options
+     * @param string $name
+     * @param string $path
      * @param array<mixed> $params
+     * @param array<mixed> $methods
+     * @param array<mixed> $options
      * @return void
      */
-    public static function set($route, $page, $params = [])
+    public static function set($name, $path, $params = [], $methods = [], $options = [])
     {
-        $params["page"] = $page;
-        static::$routes[$route] = $params;
+        static::$routes[$name] = [$path, $params, $methods, $options];
     }
 
     /**
@@ -135,8 +139,11 @@ class Route
      */
     public static function addRouteCollection($r)
     {
-        foreach (static::getRoutes() as $route => $queryParams) {
-            $r->addRoute('GET', $route, $queryParams);
+        foreach (static::getRoutes() as $name => $route) {
+            [$path, $params, $methods, $options] = $route;
+            //$handler = $params[static::HANDLER_PARAM] ?? '';
+            //$r->addRoute($methods, $path, $handler, $params);
+            $r->addRoute($methods, $path, $params);
         }
     }
 
@@ -146,27 +153,38 @@ class Route
      */
     public static function getRoutes()
     {
-        $routeMap = [];
-        foreach (array_keys(static::$routes) as $route) {
-            $routeMap[$route] = static::get($route);
-        }
-        return $routeMap;
+        return static::$routes;
     }
 
     /**
-     * Add routes and query params
+     * Add routes with name, path, params, methods and options
      * @param array<string, array<mixed>> $routes
      * @param string $handler
      * @return void
      */
     public static function addRoutes($routes, $handler)
     {
-        if ($handler != "html") {
-            // Add ["_handler" => $handler] to $params
-            foreach ($routes as $path => $params) {
-                $params[static::HANDLER_PARAM] ??= $handler;
-                $routes[$path] = $params;
+        foreach ($routes as $name => $route) {
+            // Add params, methods and options if needed
+            array_push($route, [], [], []);
+            [$path, $params, $methods, $options] = $route;
+            // Add static paths to $static
+            if (!str_contains($path, '{')) {
+                static::$static[$path] = $name;
             }
+            // Add ["_handler" => $handler] to params
+            if ($handler != "html") {
+                $params[static::HANDLER_PARAM] ??= $handler;
+            }
+            // Add default GET method
+            if (empty($methods)) {
+                $methods[] = 'GET';
+            }
+            if (isset(static::$routes[$name])) {
+                var_dump(static::$routes[$name]);
+                throw new Exception('Duplicate route name ' . $name . ' for ' . $handler);
+            }
+            $routes[$name] = [$path, $params, $methods, $options];
         }
         static::$routes = array_merge(static::$routes, $routes);
     }
@@ -395,7 +413,7 @@ class Route
             return $prefix . $route . '?' . static::getQueryString($params);
         }
 
-        $class = static::getHandlerClass($handler); 
+        $class = static::getHandlerClass($handler);
         $route = $class::findRoute($params);
         if (!isset($route)) {
             return $route;
@@ -413,7 +431,10 @@ class Route
     public static function findMatchingRoute($routes, $params, $prefix = '')
     {
         // find matching route based on fixed and/or path params - e.g. authors letter
-        foreach ($routes as $route => $fixed) {
+        foreach ($routes as $name => $route) {
+            // Add fixed if needed
+            $route[] = [];
+            [$path, $fixed] = $route;
             if (count($fixed) > count($params)) {
                 continue;
             }
@@ -427,7 +448,7 @@ class Route
             }
             $found = [];
             // check and replace path params + support custom patterns - see nikic/fast-route
-            if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $route, $found)) {
+            if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found)) {
                 if (in_array('ignore', $found[1])) {
                     $subst['ignore'] = 'ignore';
                 }
@@ -451,17 +472,17 @@ class Route
                         $value = static::slugify($value);
                     }
                     if (!empty($pattern)) {
-                        $route = str_replace('{' . $param . ':' . $pattern . '}', "$value", $route);
+                        $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
                     } else {
-                        $route = str_replace('{' . $param . '}', "$value", $route);
+                        $path = str_replace('{' . $param . '}', "$value", $path);
                     }
                     unset($subst[$param]);
                 }
             }
             if (count($subst) > 0) {
-                return $prefix . $route . '?' . static::getQueryString($subst);
+                return $prefix . $path . '?' . static::getQueryString($subst);
             }
-            return $prefix . $route;
+            return $prefix . $path;
         }
         return null;
     }

@@ -26,9 +26,9 @@ class FeedHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/feed/{page}/{id}" => [],
-            "/feed/{page}" => [],
-            "/feed" => [],
+            "feed-page-id" => ["/feed/{page}/{id}"],
+            "feed-page" => ["/feed/{page}"],
+            "feed" => ["/feed"],
         ];
     }
 

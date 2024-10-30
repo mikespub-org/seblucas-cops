@@ -24,9 +24,8 @@ class CalResHandler extends BaseHandler
 
     public static function getRoutes()
     {
-        // extra routes supported by other endpoints (path starts with endpoint param)
         return [
-            "/calres/{db:\d+}/{alg}/{digest}" => [],
+            "calres" => ["/calres/{db:\d+}/{alg}/{digest}"],
         ];
     }
 

@@ -26,10 +26,10 @@ class TableHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            //"/tables/{db:\d+}/{name:\w+}/{id}" => [],
-            //"/tables/{db:\d+}/{name:\w+}" => [],
-            //"/tables/{db:\d+}" => [],
-            "/tables" => [],
+            //"tables-db-name-id" => ["/tables/{db:\d+}/{name:\w+}/{id}"],
+            //"tables-db-name" => ["/tables/{db:\d+}/{name:\w+}"],
+            //"tables-db" => ["/tables/{db:\d+}"],
+            "tables" => ["/tables"],
         ];
     }
 
@@ -38,11 +38,12 @@ class TableHandler extends BaseHandler
         $data = ['link' => RestApiHandler::getBaseUrl()];
         $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';
         $data['tbody'] = '';
-        foreach (Route::getRoutes() as $route => $queryParams) {
-            if (str_contains($route, '{')) {
+        foreach (Route::getRoutes() as $name => $route) {
+            $path = reset($route);
+            if (str_contains($path, '{')) {
                 continue;
             }
-            $data['tbody'] .= '<tr><td><a href="#" class="route">' . $route . '</a></td><td></td></tr>';
+            $data['tbody'] .= '<tr><td><a href="#" class="route">' . $name . '</a></td><td></td></tr>';
         }
         $data['tfoot'] = $data['thead'];
 

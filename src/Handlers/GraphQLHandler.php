@@ -46,7 +46,7 @@ class GraphQLHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/graphql" => [],
+            "graphql" => ["/graphql", [], ["GET", "POST"]],
         ];
     }
 

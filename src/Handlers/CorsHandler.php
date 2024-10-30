@@ -10,17 +10,18 @@
 namespace SebLucas\Cops\Handlers;
 
 /**
- * Summary of TestHandler
+ * Summary of CorsHandler
  */
-class TestHandler extends BaseHandler
+class CorsHandler extends BaseHandler
 {
-    public const HANDLER = "phpunit";
+    public const HANDLER = "cors";
     public const PARAMLIST = [];
 
     public static function getRoutes()
     {
         return [
-            "test" => ["/test"],
+            // @todo add cors options after the last handler or use middleware or...
+            //'cors' => ['/{route:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
         ];
     }
 

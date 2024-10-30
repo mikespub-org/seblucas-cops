@@ -26,8 +26,8 @@ class ReadHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/read/{db:\d+}/{data:\d+}/{title}" => [],
-            "/read/{db:\d+}/{data:\d+}" => [],
+            "read-title" => ["/read/{db:\d+}/{data:\d+}/{title}"],
+            "read" => ["/read/{db:\d+}/{data:\d+}"],
         ];
     }
 

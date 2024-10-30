@@ -29,8 +29,8 @@ class CheckHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/check/{more:.*}" => [],
-            "/check" => [],
+            "check-more" => ["/check/{more:.*}"],
+            "check" => ["/check"],
         ];
     }
 

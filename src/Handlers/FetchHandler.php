@@ -31,19 +31,16 @@ class FetchHandler extends BaseHandler
 
     public static function getRoutes()
     {
-        // check if the path starts with the endpoint param or not here
         return [
             // support custom pattern for route placeholders - see nikic/fast-route
-            "/files/{db:\d+}/{id:\d+}/{file:.+}" => [],
-            "/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg" => [],
-            "/covers/{db:\d+}/{id:\d+}.jpg" => [],
-            "/inline/{db:\d+}/{data:\d+}/{ignore}.{type}" => ["view" => 1],
-            "/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}" => [],
+            "fetch-file" => ["/files/{db:\d+}/{id:\d+}/{file:.+}"],
+            "fetch-thumb" => ["/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg"],
+            "fetch-cover" => ["/covers/{db:\d+}/{id:\d+}.jpg"],
+            "fetch-inline" => ["/inline/{db:\d+}/{data:\d+}/{ignore}.{type}", ["view" => 1]],
+            "fetch-data" => ["/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}"],
             // @todo handle url rewriting if enabled separately - path parameters are different
-            "/view/{data}/{db}/{ignore}.{type}" => ["view" => 1],
-            "/view/{data}/{ignore}.{type}" => ["view" => 1],
-            "/download/{data}/{db}/{ignore}.{type}" => [],
-            "/download/{data}/{ignore}.{type}" => [],
+            "fetch-view" => ["/view/{data}/{db}/{ignore}.{type}", ["view" => 1]],
+            "fetch-download" => ["/download/{data}/{db}/{ignore}.{type}"],
         ];
     }
 

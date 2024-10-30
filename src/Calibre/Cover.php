@@ -395,8 +395,10 @@ class Cover
             }
             if (Config::get('thumbnail_handling') != "1") {
                 $params['thumb'] = $thumb;
+                $params['_route'] = 'fetch-thumb';
+            } else {
+                $params['_route'] = 'fetch-cover';
             }
-            $params['_route'] = 'fetch-thumb';
             return new LinkEntry(
                 FetchHandler::getLink($params),
                 $mime,

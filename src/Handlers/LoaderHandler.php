@@ -25,12 +25,13 @@ class LoaderHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/loader/{action}/{dbNum:\d+}/{authorId:\w+}/{urlPath:.*}" => [],
-            "/loader/{action}/{dbNum:\d+}/{authorId:\w*}" => [],
-            "/loader/{action}/{dbNum:\d+}" => [],
-            "/loader/{action}/" => [],
-            "/loader/{action}" => [],
-            "/loader" => [],
+            "loader-action-dbNum-authorId-urlPath" => ["/loader/{action}/{dbNum:\d+}/{authorId:\w+}/{urlPath:.*}"],
+            "loader-action-dbNum-authorId" => ["/loader/{action}/{dbNum:\d+}/{authorId:\w*}"],
+            "loader-action-dbNum" => ["/loader/{action}/{dbNum:\d+}"],
+            // with trailing / from templates
+            "loader-action-" => ["/loader/{action}/"],
+            "loader-action" => ["/loader/{action}"],
+            "loader" => ["/loader"],
         ];
     }
 

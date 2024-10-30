@@ -245,6 +245,8 @@ class Data
         $database = "";
         if (!is_null($this->databaseId)) {
             $database = $this->databaseId . "/";
+        } else {
+            $database = "0/";
         }
 
         $prefix = "download";

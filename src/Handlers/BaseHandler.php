@@ -49,8 +49,14 @@ abstract class BaseHandler
     public static function findRoute($params = [])
     {
         $routes = static::getRoutes();
-        // @todo use _route later
-        unset($params["_route"]);
+        // use _route if available
+        if (!empty($params["_route"])) {
+            $name = $params["_route"];
+            unset($params["_route"]);
+            if (!empty($routes[$name])) {
+                return Route::findMatchingRoute([$name => $routes[$name]], $params);
+            }
+        }
         return Route::findMatchingRoute($routes, $params);
     }
 
@@ -64,7 +70,7 @@ abstract class BaseHandler
         if (!empty($params["_route"])) {
             return $params["_route"];
         }
-        $name = static::HANDLER; 
+        $name = static::HANDLER;
         if (count(static::getRoutes()) > 1) {
             $accept = array_intersect(array_keys($params), static::PARAMLIST);
             if (!empty($accept)) {

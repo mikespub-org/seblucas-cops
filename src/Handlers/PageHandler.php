@@ -23,51 +23,53 @@ class PageHandler extends BaseHandler
 
     public static function getRoutes()
     {
-        // Format: route => [page => page], or route => [page => page, fixed => 1, ...] with fixed params
+        // Format: name => [path, [page => page, fixed => 1, ...], ['GET', ...], ['utf8' => true]] with page & fixed params, methods and options
         return [
-            "/index" => ["page" => PageId::INDEX],
+            "page-index" => ["/index", ["page" => PageId::INDEX]],
             // @todo support unicode pattern \pL for first letter - but see https://github.com/nikic/FastRoute/issues/154
-            "/authors/letter/{id}" => ["page" => PageId::AUTHORS_FIRST_LETTER],
-            "/authors/letter" => ["page" => PageId::ALL_AUTHORS, "letter" => 1],
-            "/authors/{id:\d+}/{title}" => ["page" => PageId::AUTHOR_DETAIL],
-            "/authors/{id:\d+}" => ["page" => PageId::AUTHOR_DETAIL],
-            "/authors" => ["page" => PageId::ALL_AUTHORS],
-            "/books/letter/{id:\w}" => ["page" => PageId::ALL_BOOKS_LETTER],
-            "/books/letter" => ["page" => PageId::ALL_BOOKS, "letter" => 1],
-            "/books/year/{id:\d+}" => ["page" => PageId::ALL_BOOKS_YEAR],
-            "/books/year" => ["page" => PageId::ALL_BOOKS, "year" => 1],
-            "/books/{id:\d+}/{author}/{title}" => ["page" => PageId::BOOK_DETAIL],
-            "/books/{id:\d+}" => ["page" => PageId::BOOK_DETAIL],
-            "/books" => ["page" => PageId::ALL_BOOKS],
-            "/series/{id:\d+}/{title}" => ["page" => PageId::SERIE_DETAIL],
-            "/series/{id:\d+}" => ["page" => PageId::SERIE_DETAIL],
-            "/series" => ["page" => PageId::ALL_SERIES],
-            "/query/{query}/{scope}" => ["page" => PageId::OPENSEARCH_QUERY, "search" => 1],
-            "/query/{query}" => ["page" => PageId::OPENSEARCH_QUERY, "search" => 1],
-            "/search/{query}/{scope}" => ["page" => PageId::OPENSEARCH_QUERY],
-            "/search/{query}" => ["page" => PageId::OPENSEARCH_QUERY],
-            "/search" => ["page" => PageId::OPENSEARCH],
-            "/recent" => ["page" => PageId::ALL_RECENT_BOOKS],
-            "/tags/{id:\d+}/{title}" => ["page" => PageId::TAG_DETAIL],
-            "/tags/{id:\d+}" => ["page" => PageId::TAG_DETAIL],
-            "/tags" => ["page" => PageId::ALL_TAGS],
-            "/custom/{custom:\d+}/{id}" => ["page" => PageId::CUSTOM_DETAIL],
-            "/custom/{custom:\d+}" => ["page" => PageId::ALL_CUSTOMS],
-            "/about" => ["page" => PageId::ABOUT],
-            "/languages/{id:\d+}/{title}" => ["page" => PageId::LANGUAGE_DETAIL],
-            "/languages/{id:\d+}" => ["page" => PageId::LANGUAGE_DETAIL],
-            "/languages" => ["page" => PageId::ALL_LANGUAGES],
-            "/customize" => ["page" => PageId::CUSTOMIZE],
-            "/publishers/{id:\d+}/{title}" => ["page" => PageId::PUBLISHER_DETAIL],
-            "/publishers/{id:\d+}" => ["page" => PageId::PUBLISHER_DETAIL],
-            "/publishers" => ["page" => PageId::ALL_PUBLISHERS],
-            "/ratings/{id:\d+}/{title}" => ["page" => PageId::RATING_DETAIL],
-            "/ratings/{id:\d+}" => ["page" => PageId::RATING_DETAIL],
-            "/ratings" => ["page" => PageId::ALL_RATINGS],
-            "/identifiers/{id:\w+}/{title}" => ["page" => PageId::IDENTIFIER_DETAIL],
-            "/identifiers/{id:\w+}" => ["page" => PageId::IDENTIFIER_DETAIL],
-            "/identifiers" => ["page" => PageId::ALL_IDENTIFIERS],
-            "/libraries" => ["page" => PageId::ALL_LIBRARIES],
+            "page-2-id" => ["/authors/letter/{id}", ["page" => PageId::AUTHORS_FIRST_LETTER]],
+            "page-1-letter" => ["/authors/letter", ["page" => PageId::ALL_AUTHORS, "letter" => 1]],
+            "page-3-id-title" => ["/authors/{id:\d+}/{title}", ["page" => PageId::AUTHOR_DETAIL]],
+            "page-3-id" => ["/authors/{id:\d+}", ["page" => PageId::AUTHOR_DETAIL]],
+            "page-1" => ["/authors", ["page" => PageId::ALL_AUTHORS]],
+            "page-5-id" => ["/books/letter/{id:\w}", ["page" => PageId::ALL_BOOKS_LETTER]],
+            "page-4-letter" => ["/books/letter", ["page" => PageId::ALL_BOOKS, "letter" => 1]],
+            "page-50-id" => ["/books/year/{id:\d+}", ["page" => PageId::ALL_BOOKS_YEAR]],
+            "page-4-year" => ["/books/year", ["page" => PageId::ALL_BOOKS, "year" => 1]],
+            "page-13-id-author-title" => ["/books/{id:\d+}/{author}/{title}", ["page" => PageId::BOOK_DETAIL]],
+            "page-13-id" => ["/books/{id:\d+}", ["page" => PageId::BOOK_DETAIL]],
+            "page-4" => ["/books", ["page" => PageId::ALL_BOOKS]],
+            "page-7-id-title" => ["/series/{id:\d+}/{title}", ["page" => PageId::SERIE_DETAIL]],
+            "page-7-id" => ["/series/{id:\d+}", ["page" => PageId::SERIE_DETAIL]],
+            "page-6" => ["/series", ["page" => PageId::ALL_SERIES]],
+            // this is for type-ahead (with search param)
+            "page-9-query-scope" => ["/query/{query}/{scope}", ["page" => PageId::OPENSEARCH_QUERY, "search" => 1]],
+            "page-9-query" => ["/query/{query}", ["page" => PageId::OPENSEARCH_QUERY, "search" => 1]],
+            // this is for the user (nicer looking)
+            "page-9-search-scope" => ["/search/{query}/{scope}", ["page" => PageId::OPENSEARCH_QUERY]],
+            "page-9-search" => ["/search/{query}", ["page" => PageId::OPENSEARCH_QUERY]],
+            "page-8" => ["/search", ["page" => PageId::OPENSEARCH]],
+            "page-10" => ["/recent", ["page" => PageId::ALL_RECENT_BOOKS]],
+            "page-12-id-title" => ["/tags/{id:\d+}/{title}", ["page" => PageId::TAG_DETAIL]],
+            "page-12-id" => ["/tags/{id:\d+}", ["page" => PageId::TAG_DETAIL]],
+            "page-11" => ["/tags", ["page" => PageId::ALL_TAGS]],
+            "page-15-custom-id" => ["/custom/{custom:\d+}/{id}", ["page" => PageId::CUSTOM_DETAIL]],
+            "page-14-custom" => ["/custom/{custom:\d+}", ["page" => PageId::ALL_CUSTOMS]],
+            "page-16" => ["/about", ["page" => PageId::ABOUT]],
+            "page-18-id-title" => ["/languages/{id:\d+}/{title}", ["page" => PageId::LANGUAGE_DETAIL]],
+            "page-18-id" => ["/languages/{id:\d+}", ["page" => PageId::LANGUAGE_DETAIL]],
+            "page-17" => ["/languages", ["page" => PageId::ALL_LANGUAGES]],
+            "page-19" => ["/customize", ["page" => PageId::CUSTOMIZE]],
+            "page-21-id-title" => ["/publishers/{id:\d+}/{title}", ["page" => PageId::PUBLISHER_DETAIL]],
+            "page-21-id" => ["/publishers/{id:\d+}", ["page" => PageId::PUBLISHER_DETAIL]],
+            "page-20" => ["/publishers", ["page" => PageId::ALL_PUBLISHERS]],
+            "page-23-id-title" => ["/ratings/{id:\d+}/{title}", ["page" => PageId::RATING_DETAIL]],
+            "page-23-id" => ["/ratings/{id:\d+}", ["page" => PageId::RATING_DETAIL]],
+            "page-22" => ["/ratings", ["page" => PageId::ALL_RATINGS]],
+            "page-42-id-title" => ["/identifiers/{id:\w+}/{title}", ["page" => PageId::IDENTIFIER_DETAIL]],
+            "page-42-id" => ["/identifiers/{id:\w+}", ["page" => PageId::IDENTIFIER_DETAIL]],
+            "page-41" => ["/identifiers", ["page" => PageId::ALL_IDENTIFIERS]],
+            "page-43" => ["/libraries", ["page" => PageId::ALL_LIBRARIES]],
         ];
     }
 
@@ -106,11 +108,20 @@ class PageHandler extends BaseHandler
             }
         }
          */
-        // @todo use _route later
-        unset($params["_route"]);
+        // use _route if available
+        if (!empty($params["_route"])) {
+            $name = $params["_route"];
+            unset($params["_route"]);
+            if (!empty($routes[$name])) {
+                return Route::findMatchingRoute([$name => $routes[$name]], $params);
+            }
+        }
         $match = $params["page"] ?? '';
         // filter routes by page before matching
-        $group = array_filter($routes, function ($fixed) use ($match) {
+        $group = array_filter($routes, function ($route) use ($match) {
+            // Add fixed if needed
+            $route[] = [];
+            [$path, $fixed] = $route;
             return $match == ($fixed["page"] ?? '');
         });
         if (count($group) < 1) {

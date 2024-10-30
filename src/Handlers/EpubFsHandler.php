@@ -26,7 +26,7 @@ class EpubFsHandler extends BaseHandler
     {
         // support custom pattern for route placeholders - see nikic/fast-route
         return [
-            "/epubfs/{db:\d+}/{data:\d+}/{comp:.+}" => [],
+            "epubfs" => ["/epubfs/{db:\d+}/{data:\d+}/{comp:.+}"],
         ];
     }
 

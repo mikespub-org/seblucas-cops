@@ -23,7 +23,7 @@ class MailHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/mail" => [],
+            "mail" => ["/mail", [], ["POST"]],
         ];
     }
 

@@ -44,13 +44,20 @@ class RouteLoader extends Loader
     public static function addRouteCollection($routes)
     {
         $seen = [];
-        foreach (Route::getRoutes() as $path => $queryParams) {
+        foreach (Route::getRoutes() as $name => $route) {
+            [$path, $params, $methods, $options] = $route;
             [$path, $requirements] = static::parsePath($path);
-            $route = new SymfonyRoute($path, $queryParams);
+            $route = new SymfonyRoute($path, $params);
             if (!empty($requirements)) {
                 $route->setRequirements($requirements);
             }
-            $name = static::getPathName($path);
+            if (!empty($methods)) {
+                $route->setMethods($methods);
+            }
+            if (!empty($options)) {
+                $route->setOptions($options);
+            }
+            //$name = static::getPathName($path);
             if (!empty($seen[$name])) {
                 throw new Exception('Duplicate route name ' . $name . ' for ' . $path);
             }

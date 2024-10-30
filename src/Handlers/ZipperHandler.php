@@ -25,11 +25,10 @@ class ZipperHandler extends BaseHandler
 
     public static function getRoutes()
     {
-        // handle endpoint with page param
         return [
-            "/zipper/{page}/{type}/{id}" => [],
-            "/zipper/{page}/{type}" => [],
-            "/zipper/{page}" => [],
+            "zipper-page-type-id" => ["/zipper/{page}/{type}/{id}"],
+            "zipper-page-type" => ["/zipper/{page}/{type}"],
+            "zipper-page" => ["/zipper/{page}"],
         ];
     }
 

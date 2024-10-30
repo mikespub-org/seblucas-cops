@@ -15,6 +15,7 @@ x.x.x - TODO
 3.x.x - 2024xxxx
   * Changes in config/default.php file:
     - set $config['cops_use_route_urls'] as deprecated (= always enabled)
+  * Change route definitions for handlers + add a few _route params
   * Find route for params via handlers with findRoute() method
   * Move pages to handlers in REST API + add getLink() and request() methods
   * BC: Add `_resource` param to REST API links and move under /restapi prefix

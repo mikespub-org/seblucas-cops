@@ -180,6 +180,7 @@ class JsonRenderer extends BaseRenderer
                 $params['data'] = $data->id;
                 $params['db'] = $database;
                 $params['title'] = $book->getTitle();
+                $params['_route'] = 'read-title';
                 $tab ["readerUrl"] = ReadHandler::getLink($params);
             }
             array_push($out ["datas"], $tab);

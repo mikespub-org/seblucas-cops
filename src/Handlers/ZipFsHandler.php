@@ -26,7 +26,7 @@ class ZipFsHandler extends BaseHandler
     {
         // support custom pattern for route placeholders - see nikic/fast-route
         return [
-            "/zipfs/{db:\d+}/{data:\d+}/{comp:.+}" => [],
+            "zipfs" => ["/zipfs/{db:\d+}/{data:\d+}/{comp:.+}"],
         ];
     }
 

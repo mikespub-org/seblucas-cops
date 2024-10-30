@@ -27,7 +27,7 @@ class RestApiHandler extends PageHandler
     public const RESOURCE = "_resource";
     public const PARAMLIST = [
         // @todo support paramlist by resource here?
-        "CustomColumnType" => ["db", "name"],
+        "Database" => ["db", "name"],
         "Note" => ["type", "id", "title"],
         "Preference" => ["key"],
         "Annotation" => ["bookId", "id"],
@@ -43,30 +43,30 @@ class RestApiHandler extends PageHandler
         // Note: this supports all other routes with /restapi prefix
         // extra routes supported by REST API
         return [
-            static::PREFIX . "/custom" => [static::RESOURCE => "CustomColumnType"],
-            static::PREFIX . "/databases/{db}/{name}" => [static::RESOURCE => "Database"],
-            static::PREFIX . "/databases/{db}" => [static::RESOURCE => "Database"],
-            static::PREFIX . "/databases" => [static::RESOURCE => "Database"],
-            static::PREFIX . "/openapi" => [static::RESOURCE => "openapi"],
-            static::PREFIX . "/routes" => [static::RESOURCE => "route"],
-            static::PREFIX . "/handlers" => [static::RESOURCE => "handler"],
-            static::PREFIX . "/notes/{type}/{id}/{title}" => [static::RESOURCE => "Note"],
-            static::PREFIX . "/notes/{type}/{id}" => [static::RESOURCE => "Note"],
-            static::PREFIX . "/notes/{type}" => [static::RESOURCE => "Note"],
-            static::PREFIX . "/notes" => [static::RESOURCE => "Note"],
-            static::PREFIX . "/preferences/{key}" => [static::RESOURCE => "Preference"],
-            static::PREFIX . "/preferences" => [static::RESOURCE => "Preference"],
-            static::PREFIX . "/annotations/{bookId}/{id}" => [static::RESOURCE => "Annotation"],
-            static::PREFIX . "/annotations/{bookId}" => [static::RESOURCE => "Annotation"],
-            static::PREFIX . "/annotations" => [static::RESOURCE => "Annotation"],
-            static::PREFIX . "/metadata/{bookId}/{element}/{name}" => [static::RESOURCE => "Metadata"],
-            static::PREFIX . "/metadata/{bookId}/{element}" => [static::RESOURCE => "Metadata"],
-            static::PREFIX . "/metadata/{bookId}" => [static::RESOURCE => "Metadata"],
-            static::PREFIX . "/user/details" => [static::RESOURCE => "User"],
-            static::PREFIX . "/user" => [static::RESOURCE => "User"],
+            "restapi-CustomColumnType" => [static::PREFIX . "/custom", [static::RESOURCE => "CustomColumnType"]],
+            "restapi-Database-db-name" => [static::PREFIX . "/databases/{db}/{name}", [static::RESOURCE => "Database"]],
+            "restapi-Database-db" => [static::PREFIX . "/databases/{db}", [static::RESOURCE => "Database"]],
+            "restapi-Database" => [static::PREFIX . "/databases", [static::RESOURCE => "Database"]],
+            "restapi-openapi" => [static::PREFIX . "/openapi", [static::RESOURCE => "openapi"]],
+            "restapi-route" => [static::PREFIX . "/routes", [static::RESOURCE => "route"]],
+            "restapi-handler" => [static::PREFIX . "/handlers", [static::RESOURCE => "handler"]],
+            "restapi-Note-type-id-title" => [static::PREFIX . "/notes/{type}/{id}/{title}", [static::RESOURCE => "Note"]],
+            "restapi-Note-type-id" => [static::PREFIX . "/notes/{type}/{id}", [static::RESOURCE => "Note"]],
+            "restapi-Note-type" => [static::PREFIX . "/notes/{type}", [static::RESOURCE => "Note"]],
+            "restapi-Note" => [static::PREFIX . "/notes", [static::RESOURCE => "Note"]],
+            "restapi-Preference-key" => [static::PREFIX . "/preferences/{key}", [static::RESOURCE => "Preference"]],
+            "restapi-Preference" => [static::PREFIX . "/preferences", [static::RESOURCE => "Preference"]],
+            "restapi-Annotation-bookId-id" => [static::PREFIX . "/annotations/{bookId}/{id}", [static::RESOURCE => "Annotation"]],
+            "restapi-Annotation-bookId" => [static::PREFIX . "/annotations/{bookId}", [static::RESOURCE => "Annotation"]],
+            "restapi-Annotation" => [static::PREFIX . "/annotations", [static::RESOURCE => "Annotation"]],
+            "restapi-Metadata-bookId-element-name" => [static::PREFIX . "/metadata/{bookId}/{element}/{name}", [static::RESOURCE => "Metadata"]],
+            "restapi-Metadata-bookId-element" => [static::PREFIX . "/metadata/{bookId}/{element}", [static::RESOURCE => "Metadata"]],
+            "restapi-Metadata-bookId" => [static::PREFIX . "/metadata/{bookId}", [static::RESOURCE => "Metadata"]],
+            "restapi-User-details" => [static::PREFIX . "/user/details", [static::RESOURCE => "User"]],
+            "restapi-User" => [static::PREFIX . "/user", [static::RESOURCE => "User"]],
             // add default routes for handler to generate links
-            static::PREFIX . "/{route:.*}" => [],
-            //static::PREFIX . "" => [],
+            "restapi-other" => [static::PREFIX . "/{route:.*}"],  // [static::RESOURCE => "other"]
+            //"restapi-none" => [static::PREFIX . ""],
         ];
     }
 
