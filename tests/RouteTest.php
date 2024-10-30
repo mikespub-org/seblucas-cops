@@ -254,8 +254,8 @@ class RouteTest extends TestCase
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
-    public function testRouteGetPageRoute($expected, $params)
+    public function testGetRouteForParams($expected, $params)
     {
-        $this->assertEquals($expected, Route::getPageRoute($params));
+        $this->assertEquals($expected, Route::getRouteForParams($params));
     }
 }

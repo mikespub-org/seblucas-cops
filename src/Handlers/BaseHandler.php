@@ -29,6 +29,26 @@ abstract class BaseHandler
         return [];
     }
 
+    /**
+     * Summary of getLink
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function getLink($params = [])
+    {
+        return Route::link(static::HANDLER, null, $params);
+    }
+
+    /**
+     * Summary of request
+     * @param array<mixed> $params
+     * @return Request
+     */
+    public static function request($params = [])
+    {
+        return Request::build($params, static::HANDLER);
+    }
+
     public function __construct()
     {
         // ...

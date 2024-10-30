@@ -37,9 +37,8 @@ class EPubReader extends BaseRenderer
     public static function getComponentContent($epub, $component, $params = [])
     {
         $data = $epub->component($component);
-        $handler = EpubFsHandler::HANDLER;
 
-        $callback = function ($m) use ($epub, $component, $params, $handler) {
+        $callback = function ($m) use ($epub, $component, $params) {
             $method = $m[1];
             $path = $m[2];
             $end = '';
@@ -59,7 +58,7 @@ class EPubReader extends BaseRenderer
                 return $method . "'#'" . $end;
             }
             $params['comp'] = $comp;
-            $out = $method . "'" . Route::link($handler, null, $params) . $hash . "'" . $end;
+            $out = $method . "'" . EpubFsHandler::getLink($params) . $hash . "'" . $end;
             if ($end) {
                 return $out;
             }
@@ -139,10 +138,9 @@ class EPubReader extends BaseRenderer
         }, $epub->contents()));
 
         // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
-        $handler = EpubFsHandler::HANDLER;
         $db = $book->getDatabaseId() ?? 0;
         $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
-        $link = str_replace('COMPONENT', '~COMP~', Route::link($handler, null, $params));
+        $link = str_replace('COMPONENT', '~COMP~', EpubFsHandler::getLink($params));
 
         $data = [
             'title'      => $book->title,
@@ -212,7 +210,6 @@ class EPubReader extends BaseRenderer
      */
     public function getEpubjsReader($idData, $database = null)
     {
-        $handler = ZipFsHandler::HANDLER;
         $template = "templates/epubjs-reader.html";
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
@@ -231,8 +228,9 @@ class EPubReader extends BaseRenderer
             }
             // URL format: index.php/zipfs/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
-            $link = Route::link($handler, null, ['db' => $db, 'data' => $idData, 'comp' => '{component}']);
-            $link = str_replace('{component}', '', $link);
+            $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
+            $link = ZipFsHandler::getLink($params);
+            $link = str_replace('COMPONENT', '', $link);
         }
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');

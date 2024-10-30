@@ -63,7 +63,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = $alg;
         $params['digest'] = $digest;
-        return Route::link($this->handler, null, $params);
+        return CalResHandler::getLink($params);
     }
 
     /**
@@ -80,7 +80,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = 'ALG';
         $params['digest'] = 'DIGEST';
-        $baseurl = Route::link(CalResHandler::HANDLER, null, $params);
+        $baseurl = CalResHandler::getLink($params);
         // remove dummy alg & digest
         $baseurl = str_replace(['/ALG', '/DIGEST'], [], $baseurl);
         return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);

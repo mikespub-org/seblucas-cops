@@ -66,7 +66,7 @@ return [
     'restapi-databases' => [[], ['_handler' => 'restapi', '_resource' => 'Database'], [], [['text', '/restapi/databases']], [], [], []],
     'restapi-openapi' => [[], ['_handler' => 'restapi', '_resource' => 'openapi'], [], [['text', '/restapi/openapi']], [], [], []],
     'restapi-routes' => [[], ['_handler' => 'restapi', '_resource' => 'route'], [], [['text', '/restapi/routes']], [], [], []],
-    'restapi-pages' => [[], ['_handler' => 'restapi', '_resource' => 'page'], [], [['text', '/restapi/pages']], [], [], []],
+    'restapi-groups' => [[], ['_handler' => 'restapi', '_resource' => 'group'], [], [['text', '/restapi/groups']], [], [], []],
     'restapi-notes-type-id-title' => [['type', 'id', 'title'], ['_handler' => 'restapi', '_resource' => 'Note'], [], [['variable', '/', '[^/]++', 'title'], ['variable', '/', '[^/]++', 'id'], ['variable', '/', '[^/]++', 'type'], ['text', '/restapi/notes']], [], [], []],
     'restapi-notes-type-id' => [['type', 'id'], ['_handler' => 'restapi', '_resource' => 'Note'], [], [['variable', '/', '[^/]++', 'id'], ['variable', '/', '[^/]++', 'type'], ['text', '/restapi/notes']], [], [], []],
     'restapi-notes-type' => [['type'], ['_handler' => 'restapi', '_resource' => 'Note'], [], [['variable', '/', '[^/]++', 'type'], ['text', '/restapi/notes']], [], [], []],

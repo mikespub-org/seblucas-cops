@@ -172,7 +172,7 @@ class Database
     protected static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            Response::redirect(Route::link(CheckHandler::HANDLER) . "?err=1");
+            Response::redirect(CheckHandler::getLink(['err' => 1]));
             exit;
         }
         throw new Exception("Database <{$database}> not found.");

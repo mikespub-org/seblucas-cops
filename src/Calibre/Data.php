@@ -310,7 +310,7 @@ class Data
                 $params['view'] = 1;
             }
             return new LinkEntry(
-                Route::link(FetchHandler::HANDLER, null, $params),
+                FetchHandler::getLink($params),
                 $mime,
                 $rel,
                 $title

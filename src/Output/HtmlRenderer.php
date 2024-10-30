@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Handlers\FeedHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -27,7 +28,7 @@ class HtmlRenderer extends BaseRenderer
         $data = [
             'title'                 => Config::get('title_default'),
             'version'               => Config::VERSION,
-            'opds_url'              => Route::link("feed"),
+            'opds_url'              => FeedHandler::getLink(),
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),

@@ -10,8 +10,8 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 
 /**
  * Summary of Response
@@ -221,7 +221,7 @@ class Response
         header('Status: 404 Not Found');
 
         $_SERVER['REDIRECT_STATUS'] = 404;
-        $data = ['link' => Route::link("index")];
+        $data = ['link' => HtmlHandler::getLink()];
         $template = 'templates/notfound.html';
         echo Format::template($data, $template);
         exit;
@@ -240,7 +240,7 @@ class Response
         header('Status: 404 Not Found');
 
         $_SERVER['REDIRECT_STATUS'] = 404;
-        $data = ['link' => Route::link("index", null, $params)];
+        $data = ['link' => HtmlHandler::getLink($params)];
         $data['error'] = htmlspecialchars($error ?? 'Unknown Error');
         $template = 'templates/error.html';
         echo Format::template($data, $template);

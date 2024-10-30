@@ -18,7 +18,7 @@ use SebLucas\Cops\Pages\PageId;
  * Handle OPDS 1.2 feed
  * URL format: index.php/feed?page={page}&query={query}&...
  */
-class FeedHandler extends BaseHandler
+class FeedHandler extends PageHandler
 {
     public const HANDLER = "feed";
 

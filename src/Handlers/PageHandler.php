@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
 
 /**
@@ -65,6 +66,17 @@ class PageHandler extends BaseHandler
             "/identifiers" => PageId::ALL_IDENTIFIERS,
             "/libraries" => PageId::ALL_LIBRARIES,
         ];
+    }
+
+    /**
+     * Summary of getPageLink
+     * @param string|int|null $page
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function getPageLink($page = null, $params = [])
+    {
+        return Route::link(static::HANDLER, $page, $params);
     }
 
     public function handle($request)

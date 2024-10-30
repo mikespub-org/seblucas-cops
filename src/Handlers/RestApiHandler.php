@@ -20,7 +20,7 @@ use Exception;
  * Handle REST API
  * URL format: index.php/restapi{/route}?db={db} etc.
  */
-class RestApiHandler extends BaseHandler
+class RestApiHandler extends PageHandler
 {
     public const HANDLER = "restapi";
     public const PREFIX = "/restapi";
@@ -40,7 +40,7 @@ class RestApiHandler extends BaseHandler
             static::PREFIX . "/databases" => [static::PARAM => static::HANDLER, static::RESOURCE => "Database"],
             static::PREFIX . "/openapi" => [static::PARAM => static::HANDLER, static::RESOURCE => "openapi"],
             static::PREFIX . "/routes" => [static::PARAM => static::HANDLER, static::RESOURCE => "route"],
-            static::PREFIX . "/pages" => [static::PARAM => static::HANDLER, static::RESOURCE => "page"],
+            static::PREFIX . "/groups" => [static::PARAM => static::HANDLER, static::RESOURCE => "group"],
             static::PREFIX . "/notes/{type}/{id}/{title}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Note"],
             static::PREFIX . "/notes/{type}/{id}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Note"],
             static::PREFIX . "/notes/{type}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Note"],
@@ -83,7 +83,7 @@ class RestApiHandler extends BaseHandler
     public static function getResourceLink($className, $params = [])
     {
         $params = static::addResourceParam($className, $params);
-        return Route::link(static::HANDLER, null, $params);
+        return static::getLink($params);
     }
 
     /**
@@ -93,7 +93,7 @@ class RestApiHandler extends BaseHandler
      * @param array<mixed> $params
      * @return string
      */
-    public static function getRouteLink($handler = null, $page = null, $params = [])
+    public static function getHandlerLink($handler = null, $page = null, $params = [])
     {
         $link = Route::link($handler, $page, $params);
         return str_replace(Route::base() . Route::endpoint(), static::getBaseUrl(), $link);
@@ -107,7 +107,7 @@ class RestApiHandler extends BaseHandler
     {
         if (!isset(static::$baseUrl)) {
             // Route::link(static::HANDLER) doesn't contain prefix anymore without route
-            $link = Route::link(static::HANDLER, null, ['route' => 'ROUTE']);
+            $link = static::getLink(['route' => 'ROUTE']);
             static::$baseUrl = str_replace('/ROUTE', '', $link);
         }
         return static::$baseUrl;
@@ -146,7 +146,7 @@ class RestApiHandler extends BaseHandler
      */
     public function getSwaggerUI()
     {
-        $data = ['link' => Route::link(static::HANDLER, null, ['route' => 'openapi'])];
+        $data = ['link' => static::getLink([static::RESOURCE => 'openapi'])];
         $template = dirname(__DIR__, 2) . '/templates/restapi.html';
 
         $response = new Response('text/html;charset=utf-8');

@@ -207,11 +207,11 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
     }
 
-    public function testGetPages(): void
+    public function testGetGroups(): void
     {
         $request = Request::build([], basename(self::$script));
-        $test = RestApi::getPages($request);
-        $expected = "Pages";
+        $test = RestApi::getGroups($request);
+        $expected = "Groups";
         $this->assertEquals($expected, $test["title"]);
         $expected = 42;
         $this->assertCount($expected, $test["entries"]);

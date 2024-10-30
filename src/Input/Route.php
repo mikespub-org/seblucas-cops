@@ -34,7 +34,7 @@ class Route
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
     /** @var array<string, mixed> */
-    protected static $pages = [];
+    protected static $groups = [];
 
     /**
      * Match pathinfo against routes and return query params
@@ -251,19 +251,19 @@ class Route
             unset($params[self::HANDLER_PARAM]);
         }
         // ?page=... or /route/...
-        $page = static::page($page, $params);
+        $uri = static::page($page, $params);
         // same routes as HtmlHandler - see util.js
         if ($handler == 'json') {
             $handler = 'index';
         }
         // endpoint.php or handler or empty
         $endpoint = static::endpoint($handler);
-        if (empty($endpoint) && str_starts_with($page, '/')) {
+        if (empty($endpoint) && str_starts_with($uri, '/')) {
             // URL format: /base/route/...
-            return static::base() . substr($page, 1);
+            return static::base() . substr($uri, 1);
         }
         // URL format: /base/endpoint.php?page=... or /base/handler/route/...
-        return static::base() . $endpoint . $page;
+        return static::base() . $endpoint . $uri;
     }
 
     /**
@@ -313,7 +313,7 @@ class Route
      */
     public static function route($params, $prefix = '')
     {
-        $route = static::getPageRoute($params, $prefix);
+        $route = static::getRouteForParams($params, $prefix);
         if (!is_null($route)) {
             return $route;
         }
@@ -360,33 +360,33 @@ class Route
     }
 
     /**
-     * Summary of getPageRoute
+     * Summary of getRouteForParams
      * @param array<mixed> $params
      * @param string $prefix
      * @return string|null
      */
-    public static function getPageRoute($params, $prefix = '')
+    public static function getRouteForParams($params, $prefix = '')
     {
         if (!empty($params[self::HANDLER_PARAM])) {
             // keep page param and use handler as key here
-            $page = $params[self::HANDLER_PARAM];
+            $group = $params[self::HANDLER_PARAM];
         } elseif (isset($params['page'])) {
             // use page param as key here
-            $page = $params['page'];
+            $group = $params['page'];
             unset($params['page']);
         } else {
             // other routes
-            $page = '';
+            $group = '';
         }
         // use page route with /restapi prefix instead
-        if ($page == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
+        if ($group == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
             $prefix = $prefix . '/restapi';
-            $page = $params['page'];
+            $group = $params['page'];
             unset($params[self::HANDLER_PARAM]);
             unset($params['page']);
         }
-        $pages = static::getPages();
-        $routes = $pages[$page] ?? [];
+        $groups = static::getGroups();
+        $routes = $groups[$group] ?? [];
         if (count($routes) < 1) {
             return null;
         }
@@ -457,32 +457,32 @@ class Route
     }
 
     /**
-     * Get mapping of pages to routes with fixed params
+     * Get mapping of pages or handlers to routes with fixed params
      * @return array<string, array<mixed>>
      */
-    public static function getPages()
+    public static function getGroups()
     {
-        if (!empty(static::$pages)) {
-            return static::$pages;
+        if (!empty(static::$groups)) {
+            return static::$groups;
         }
-        static::$pages = [];
+        static::$groups = [];
         foreach (static::$routes as $route => $params) {
             if (!is_array($params)) {
                 // use page as key here
-                $page = $params;
+                $group = $params;
                 $params = [];
             } elseif (!empty($params[self::HANDLER_PARAM])) {
                 // keep page param and use handler as key here
-                $page = $params[self::HANDLER_PARAM];
+                $group = $params[self::HANDLER_PARAM];
             } else {
                 // use page param as key here
-                $page = $params["page"] ?? '';
+                $group = $params["page"] ?? '';
                 unset($params["page"]);
             }
-            static::$pages[$page] ??= [];
-            static::$pages[$page][$route] = $params;
+            static::$groups[$group] ??= [];
+            static::$groups[$group][$route] = $params;
         }
-        return static::$pages;
+        return static::$groups;
     }
 
     /**

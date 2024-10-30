@@ -20,7 +20,6 @@ use Kiwilan\Opds\Enums\OpdsVersionEnum;
 use SebLucas\Cops\Handlers\OpdsHandler;
 use SebLucas\Cops\Input\Config as CopsConfig;
 use SebLucas\Cops\Input\Request as CopsRequest;
-use SebLucas\Cops\Input\Route as CopsRoute;
 use SebLucas\Cops\Model\Entry as CopsEntry;
 use SebLucas\Cops\Model\EntryBook as CopsEntryBook;
 use SebLucas\Cops\Pages\Page as CopsPage;
@@ -28,7 +27,6 @@ use DateTime;
 
 class KiwilanOPDS
 {
-    public static string $handler = OpdsHandler::HANDLER;
     public static OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
     /** @var ?DateTime */
     private $updated = null;
@@ -56,9 +54,9 @@ class KiwilanOPDS
             author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
             authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
             iconUrl: CopsConfig::get('icon'),
-            startUrl: CopsRoute::link(static::$handler),
+            startUrl: OpdsHandler::getLink(),
             // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
-            searchUrl: CopsRoute::link(static::$handler) . '/search',
+            searchUrl: OpdsHandler::getLink() . '/search',
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
             maxItemsPerPage: CopsConfig::get('max_item_per_page'),
@@ -161,7 +159,7 @@ class KiwilanOPDS
     {
         $opds = Opds::make($this->getOpdsConfig())
             ->title('Search')
-            ->url(CopsRoute::link(static::$handler) . '/search')
+            ->url(OpdsHandler::getLink() . '/search')
             ->isSearch()
             ->feeds([])
             ->get();
@@ -186,8 +184,7 @@ class KiwilanOPDS
             }
         }
         // @todo check with pathInfo
-        $url = CopsRoute::link(static::$handler, null, $request->urlParams);
-        //$url = $request->getCurrentUrl(static::$handler);
+        $url = OpdsHandler::getPageLink(null, $request->urlParams);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {

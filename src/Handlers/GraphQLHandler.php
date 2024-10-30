@@ -387,7 +387,7 @@ class GraphQLHandler extends BaseHandler
      */
     public function renderPlayground()
     {
-        $data = ['link' => Route::link(static::HANDLER)];
+        $data = ['link' => static::getLink()];
         $template = dirname(__DIR__, 2) . '/templates/graphql.html';
 
         $response = new Response('text/html;charset=utf-8');

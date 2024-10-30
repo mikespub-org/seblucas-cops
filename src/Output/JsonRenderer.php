@@ -13,6 +13,9 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Handlers\FetchHandler;
+use SebLucas\Cops\Handlers\JsonHandler;
+use SebLucas\Cops\Handlers\ReadHandler;
 use SebLucas\Cops\Handlers\ZipperHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -47,7 +50,7 @@ class JsonRenderer extends BaseRenderer
     {
         $params = $request->urlParams;
         $params['complete'] = 1;
-        return Route::link("json", null, $params);
+        return JsonHandler::getPageLink(null, $params);
     }
 
     /**
@@ -177,7 +180,7 @@ class JsonRenderer extends BaseRenderer
                 $params['data'] = $data->id;
                 $params['db'] = $database;
                 $params['title'] = $book->getTitle();
-                $tab ["readerUrl"] = Route::link("read", null, $params);
+                $tab ["readerUrl"] = ReadHandler::getLink($params);
             }
             array_push($out ["datas"], $tab);
         }
@@ -196,7 +199,7 @@ class JsonRenderer extends BaseRenderer
             $params['id'] = $book->id;
             $params['db'] = $database;
             $params['file'] = 'zipped';
-            $url = Route::link("fetch", null, $params);
+            $url = FetchHandler::getLink($params);
             array_unshift($out ["extraFiles"], [
                 "name" => " * ",
                 "url" => $url,
@@ -359,8 +362,8 @@ class JsonRenderer extends BaseRenderer
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here
                 "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link($this->handler, PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
-                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link("fetch", null, ['id' => '0', 'db' => '1'])),
-                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link("fetch", null, ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
+                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['id' => '0', 'db' => '1'])),
+                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),
@@ -616,7 +619,7 @@ class JsonRenderer extends BaseRenderer
             foreach (Config::get('download_page') as $format) {
                 $params = $this->request->getCleanParams();
                 $params['type'] = strtolower((string) $format);
-                $url = Route::link(ZipperHandler::HANDLER, null, $params);
+                $url = ZipperHandler::getLink($params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -632,7 +635,7 @@ class JsonRenderer extends BaseRenderer
                 $params['series'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = Route::link(ZipperHandler::HANDLER, null, $params);
+                $url = ZipperHandler::getLink($params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -645,7 +648,7 @@ class JsonRenderer extends BaseRenderer
                 $params['author'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = Route::link(ZipperHandler::HANDLER, null, $params);
+                $url = ZipperHandler::getLink($params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;

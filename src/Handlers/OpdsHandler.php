@@ -19,7 +19,7 @@ use SebLucas\Cops\Pages\PageId;
  * Handle OPDS 2.0 feed (dev only)
  * URL format: index.php/opds{/route}?query={query} etc.
  */
-class OpdsHandler extends BaseHandler
+class OpdsHandler extends PageHandler
 {
     public const HANDLER = "opds";
 

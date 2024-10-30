@@ -30,7 +30,7 @@ return [
         '/restapi/databases' => [[['_route' => 'restapi-databases', '_handler' => 'restapi', '_resource' => 'Database'], null, null, null, false, false, null]],
         '/restapi/openapi' => [[['_route' => 'restapi-openapi', '_handler' => 'restapi', '_resource' => 'openapi'], null, null, null, false, false, null]],
         '/restapi/routes' => [[['_route' => 'restapi-routes', '_handler' => 'restapi', '_resource' => 'route'], null, null, null, false, false, null]],
-        '/restapi/pages' => [[['_route' => 'restapi-pages', '_handler' => 'restapi', '_resource' => 'page'], null, null, null, false, false, null]],
+        '/restapi/groups' => [[['_route' => 'restapi-groups', '_handler' => 'restapi', '_resource' => 'group'], null, null, null, false, false, null]],
         '/restapi/notes' => [[['_route' => 'restapi-notes', '_handler' => 'restapi', '_resource' => 'Note'], null, null, null, false, false, null]],
         '/restapi/preferences' => [[['_route' => 'restapi-preferences', '_handler' => 'restapi', '_resource' => 'Preference'], null, null, null, false, false, null]],
         '/restapi/annotations' => [[['_route' => 'restapi-annotations', '_handler' => 'restapi', '_resource' => 'Annotation'], null, null, null, false, false, null]],

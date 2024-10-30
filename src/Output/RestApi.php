@@ -31,7 +31,6 @@ use Exception;
  */
 class RestApi extends BaseRenderer
 {
-    public static string $handler = RestApiHandler::HANDLER;
     public static string $prefix = RestApiHandler::PREFIX;
     public static int $numberPerPage = 100;
     public static bool $doRunHandler = true;
@@ -45,7 +44,7 @@ class RestApi extends BaseRenderer
         "/databases" => [self::class, 'getDatabases'],
         "/openapi" => [self::class, 'getOpenApi'],
         "/routes" => [self::class, 'getRoutes'],
-        "/pages" => [self::class, 'getPages'],
+        "/groups" => [self::class, 'getGroups'],
         "/notes" => [self::class, 'getNotes'],
         "/preferences" => [self::class, 'getPreferences'],
         "/annotations" => [self::class, 'getAnnotations'],
@@ -170,7 +169,7 @@ class RestApi extends BaseRenderer
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
-                Response::redirect(RestApiHandler::getRouteLink(null, 'index'));
+                Response::redirect(RestApiHandler::getHandlerLink(null, 'index'));
                 return '';
             }
             if ($this->isExtra) {
@@ -214,7 +213,7 @@ class RestApi extends BaseRenderer
             $params["custom"] = $column['id'];
             $params["db"] = $db;
             // @todo find some better way to generate restapi links for pages and handlers?
-            $column["navlink"] = RestApiHandler::getRouteLink(null, PageId::ALL_CUSTOMS, $params);
+            $column["navlink"] = RestApiHandler::getHandlerLink(null, PageId::ALL_CUSTOMS, $params);
             array_push($result["entries"], $column);
         }
         return $result;
@@ -483,7 +482,7 @@ class RestApi extends BaseRenderer
             }
             if (
                 !str_starts_with($route, "/databases") &&
-                !in_array($route, ["/openapi", "/routes", "/pages", "/about"]) &&
+                !in_array($route, ["/openapi", "/routes", "/groups", "/about"]) &&
                 (empty($queryParams[Route::HANDLER_PARAM]) ||
                 in_array($queryParams[Route::HANDLER_PARAM], ['restapi', 'zipper']))
             ) {
@@ -539,21 +538,21 @@ class RestApi extends BaseRenderer
     }
 
     /**
-     * Summary of getPages
+     * Summary of getGroups
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getPages($request)
+    public static function getGroups($request)
     {
         $baseurl = RestApiHandler::getBaseUrl();
         $result = [
-            "title" => "Pages",
+            "title" => "Groups",
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach (Route::getPages() as $page => $routes) {
+        foreach (Route::getGroups() as $group => $routes) {
             array_push($result["entries"], [
-                "page" => $page,
+                "group" => $group,
                 "routes" => $routes,
             ]);
         }
@@ -809,7 +808,7 @@ class RestApi extends BaseRenderer
         ];
         // @todo get item from annotations + corresponding title from instance
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
-            $instance->setHandler(static::$handler);
+            $instance->setHandler(RestApiHandler::HANDLER);
             $entry = $instance->getEntry();
             array_push($result["entries"], [
                 "class" => $entry->className,

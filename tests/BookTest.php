@@ -15,6 +15,8 @@ use SebLucas\Cops\Calibre\Cover;
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Handlers\FetchHandler;
+use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -36,7 +38,6 @@ class BookTest extends TestCase
     private const COVER_WIDTH = 400;
     private const COVER_HEIGHT = 600;
 
-    private static string $handler = 'phpunit';
     /** @var array<string, int> */
     protected static $expectedSize = [
         'cover' => 200128,
@@ -118,7 +119,7 @@ class BookTest extends TestCase
 
         $this->assertEquals("The Return of Sherlock Holmes", $book->getTitle());
         $this->assertEquals("urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f", $book->getEntryId());
-        $this->assertEquals(Route::link(self::$handler) . "/books/2/Arthur_Conan_Doyle/The_Return_of_Sherlock_Holmes", $book->getDetailUrl(self::$handler));
+        $this->assertEquals(TestHandler::getLink() . "/books/2/Arthur_Conan_Doyle/The_Return_of_Sherlock_Holmes", $book->getDetailUrl(TestHandler::HANDLER));
         $this->assertEquals("Arthur Conan Doyle", $book->getAuthorsName());
         $this->assertEquals("Fiction, Mystery & Detective, Short Stories", $book->getTagsName());
         $this->assertEquals('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment(false));
@@ -253,7 +254,7 @@ class BookTest extends TestCase
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
-                $this->assertEquals(Route::link("fetch") . "/fetch/0/1/ignore.epub", $link->href);
+                $this->assertEquals(FetchHandler::getLink() . "/fetch/0/1/ignore.epub", $link->href);
                 return;
             }
         }
@@ -317,7 +318,7 @@ class BookTest extends TestCase
         Config::set('thumbnail_handling', "1");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals(Route::link("fetch") . "/covers/0/2.jpg", $thumbnailurl);
+        $this->assertEquals(FetchHandler::getLink() . "/covers/0/2.jpg", $thumbnailurl);
 
         // The thumbnails should be the same as the handling
         Config::set('thumbnail_handling', "/images.png");
@@ -328,7 +329,7 @@ class BookTest extends TestCase
         Config::set('thumbnail_handling', "");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals(Route::link("fetch") . "/thumbs/html/0/2.jpg", $thumbnailurl);
+        $this->assertEquals(FetchHandler::getLink() . "/thumbs/html/0/2.jpg", $thumbnailurl);
     }
 
     /**
@@ -590,7 +591,7 @@ class BookTest extends TestCase
         $this->assertEquals(Route::path("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $epub->getHtmlLink());
 
         Config::set('use_url_rewriting', "0");
-        $this->assertEquals(Route::link("fetch") . "/fetch/0/20/ignore.epub", $epub->getHtmlLink());
+        $this->assertEquals(FetchHandler::getLink() . "/fetch/0/20/ignore.epub", $epub->getHtmlLink());
     }
 
     public function testGetUpdatedEpub(): void

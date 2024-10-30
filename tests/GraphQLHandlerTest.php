@@ -22,7 +22,7 @@ use GraphQL\Type\Definition\ListOfType;
 
 class GraphQLHandlerTest extends TestCase
 {
-    private static string $handler = 'graphql';
+    private static string $handler = GraphQLHandler::HANDLER;
     private static int $numberPerPage;
 
     public static function setUpBeforeClass(): void

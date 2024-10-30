@@ -424,6 +424,7 @@ class Request
         $handler ??= $this->getHandler();
         $pathInfo = $this->path();
         $queryString = $this->query();
+        // @todo fix this for handlers without base link
         if (empty($queryString)) {
             return Route::link($handler) . $pathInfo;
         }

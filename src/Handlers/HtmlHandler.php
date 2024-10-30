@@ -11,7 +11,6 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\HtmlRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
@@ -34,7 +33,7 @@ class HtmlHandler extends PageHandler
     {
         // If we detect that an OPDS reader try to connect try to redirect to index.php/feed
         if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $request->agent())) {
-            Response::redirect(Route::link(FeedHandler::HANDLER, null, ["db" => $request->database()]));
+            Response::redirect(FeedHandler::getPageLink(null, ["db" => $request->database()]));
             return;
         }
 

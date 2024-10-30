@@ -33,7 +33,7 @@ class TableHandler extends BaseHandler
 
     public function handle($request)
     {
-        $data = ['link' => Route::link(RestApiHandler::HANDLER)];
+        $data = ['link' => RestApiHandler::getBaseUrl()];
         $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';
         $data['tbody'] = '';
         foreach (Route::getRoutes() as $route => $queryParams) {

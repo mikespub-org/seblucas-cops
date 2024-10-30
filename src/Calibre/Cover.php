@@ -322,7 +322,7 @@ class Cover
                 $params['type'] = $ext;
             }
             return new LinkEntry(
-                Route::link($this->handler, null, $params),
+                FetchHandler::getLink($params),
                 $mime,
                 LinkEntry::OPDS_IMAGE_TYPE
             );
@@ -396,7 +396,7 @@ class Cover
                 $params['thumb'] = $thumb;
             }
             return new LinkEntry(
-                Route::link($this->handler, null, $params),
+                FetchHandler::getLink($params),
                 $mime,
                 LinkEntry::OPDS_THUMBNAIL_TYPE
             );
