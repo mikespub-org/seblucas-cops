@@ -413,10 +413,11 @@ class RestApi extends BaseRenderer
             ],
         ];
         $result["paths"] = [];
-        foreach (Route::getRoutes() as $route => $queryParams) {
-            if (str_starts_with($route, static::$prefix . '/')) {
-                $route = substr($route, strlen(static::$prefix));
-                if (empty($route)) {
+        foreach (Route::getRoutes() as $name => $route) {
+            [$path, $queryParams, $methods, $options] = $route;
+            if (str_starts_with($path, static::$prefix . '/')) {
+                $path = substr($path, strlen(static::$prefix));
+                if (empty($path)) {
                     continue;
                 }
             }
@@ -424,7 +425,7 @@ class RestApi extends BaseRenderer
             $found = [];
             $queryString = Route::getQueryString($queryParams);
             // support custom pattern for route placeholders - see nikic/fast-route
-            if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $route, $found)) {
+            if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found)) {
                 foreach ($found[1] as $param) {
                     $schema = [
                         "type" => "string",
@@ -432,7 +433,7 @@ class RestApi extends BaseRenderer
                     if (str_contains($param, ':')) {
                         [$param, $pattern] = explode(':', $param);
                         $schema["pattern"] = '^' . $pattern . '$';
-                        $route = str_replace(':' . $pattern, '', $route);
+                        $path = str_replace(':' . $pattern, '', $path);
                     }
                     if ($param !== 'ignore') {
                         $queryString .= "&{$param}=" . '{' . $param . '}';
@@ -446,7 +447,7 @@ class RestApi extends BaseRenderer
                 }
             }
             if (!empty($queryParams[Route::HANDLER_PARAM]) && $queryParams[Route::HANDLER_PARAM] == "restapi") {
-                $queryString = substr($route, 1);
+                $queryString = substr($path, 1);
             } elseif (!empty($queryParams[Route::HANDLER_PARAM])) {
                 $testpoint = $queryParams[Route::HANDLER_PARAM];
                 //$script = Config::ENDPOINT[$testpoint];
@@ -460,17 +461,10 @@ class RestApi extends BaseRenderer
             } else {
                 $queryString = 'page handler with ' . $queryString;
             }
-            $result["paths"][$route] = [
-                "get" => [
-                    "summary" => "Route to " . $queryString,
-                    "responses" => [
-                        "200" => [
-                            "description" => "Result of " . $queryString,
-                        ],
-                    ],
-                ],
-            ];
-            if ($route == "/databases/{db}") {
+            if (empty($methods)) {
+                $methods = ['GET'];
+            }
+            if ($path == "/databases/{db}") {
                 array_push($params, [
                     "name" => "type",
                     "in" => "query",
@@ -481,8 +475,8 @@ class RestApi extends BaseRenderer
                 ]);
             }
             if (
-                !str_starts_with($route, "/databases") &&
-                !in_array($route, ["/openapi", "/routes", "/groups", "/about"]) &&
+                !str_starts_with($path, "/databases") &&
+                !in_array($path, ["/openapi", "/routes", "/handlers", "/about"]) &&
                 (empty($queryParams[Route::HANDLER_PARAM]) ||
                 in_array($queryParams[Route::HANDLER_PARAM], ['restapi', 'zipper']))
             ) {
@@ -490,26 +484,38 @@ class RestApi extends BaseRenderer
                     '$ref' => "#/components/parameters/dbParam",
                 ]);
             }
-            if (!empty($params)) {
-                $result["paths"][$route]["get"]["parameters"] = $params;
-            }
-            if ($route == "/databases/{db}/{name}") {
-                $result["paths"][$route]["get"]["summary"] .= " - with api key";
-                $result["paths"][$route]["get"]["security"] = [
-                    ["ApiKeyAuth" => []],
+            $result["paths"][$path] = [];
+            foreach ($methods as $method) {
+                $method = strtolower($method);
+                $result["paths"][$path][$method] = [
+                    "summary" => "Route to " . $queryString,
+                    "responses" => [
+                        "200" => [
+                            "description" => "Result of " . $queryString,
+                        ],
+                    ],
                 ];
-            }
-            if ($route == "/user" || $route == "/user/details") {
-                $result["paths"][$route]["get"]["summary"] .= " - with basic authentication";
-                $result["paths"][$route]["get"]["security"] = [
-                    ["BasicAuth" => []],
-                ];
-            }
-            if (!empty($queryParams[Route::HANDLER_PARAM]) && $queryParams[Route::HANDLER_PARAM] !== "restapi") {
-                $result["paths"][$route]["get"]["summary"] .= " - with api key";
-                $result["paths"][$route]["get"]["security"] = [
-                    ["ApiKeyAuth" => []],
-                ];
+                if (!empty($params)) {
+                    $result["paths"][$path][$method]["parameters"] = $params;
+                }
+                if ($path == "/databases/{db}/{name}") {
+                    $result["paths"][$path][$method]["summary"] .= " - with api key";
+                    $result["paths"][$path][$method]["security"] = [
+                        ["ApiKeyAuth" => []],
+                    ];
+                }
+                if ($path == "/user" || $path == "/user/details") {
+                    $result["paths"][$path][$method]["summary"] .= " - with basic authentication";
+                    $result["paths"][$path][$method]["security"] = [
+                        ["BasicAuth" => []],
+                    ];
+                }
+                if (!empty($queryParams[Route::HANDLER_PARAM]) && $queryParams[Route::HANDLER_PARAM] !== "restapi") {
+                    $result["paths"][$path][$method]["summary"] .= " - with api key";
+                    $result["paths"][$path][$method]["security"] = [
+                        ["ApiKeyAuth" => []],
+                    ];
+                }
             }
         }
         return $result;
@@ -528,10 +534,10 @@ class RestApi extends BaseRenderer
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach (Route::getRoutes() as $route => $queryParams) {
+        foreach (Route::getRoutes() as $name => $route) {
             array_push($result["entries"], [
+                "name" => $name,
                 "route" => $route,
-                "params" => $queryParams,
             ]);
         }
         return $result;

@@ -356,7 +356,7 @@ class BaseList
         $entryArray = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
-        $params["_route"] = 'page-' . $page . '-' . $label . '-id';
+        $params["_route"] = 'page-' . $page . '-id';
         while ($post = $result->fetchObject()) {
             $params["id"] = $post->groupid;
             $href = Route::link($this->handler, $page, $params);

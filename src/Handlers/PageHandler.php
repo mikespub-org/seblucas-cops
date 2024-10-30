@@ -109,10 +109,10 @@ class PageHandler extends BaseHandler
         }
          */
         // use _route if available
-        if (!empty($params["_route"])) {
+        if (isset($params["_route"])) {
             $name = $params["_route"];
             unset($params["_route"]);
-            if (!empty($routes[$name])) {
+            if (!empty($name) && !empty($routes[$name])) {
                 return Route::findMatchingRoute([$name => $routes[$name]], $params);
             }
         }

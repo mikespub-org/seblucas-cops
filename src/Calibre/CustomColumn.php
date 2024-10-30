@@ -68,6 +68,7 @@ class CustomColumn extends Category
         $params['id'] = $this->id;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
+        $params['_route'] = 'page-' . static::PAGE_DETAIL . '-custom-id';
         return Route::link($this->handler, static::PAGE_DETAIL, $params);
     }
 

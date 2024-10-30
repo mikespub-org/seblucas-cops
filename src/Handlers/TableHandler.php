@@ -43,7 +43,7 @@ class TableHandler extends BaseHandler
             if (str_contains($path, '{')) {
                 continue;
             }
-            $data['tbody'] .= '<tr><td><a href="#" class="route">' . $name . '</a></td><td></td></tr>';
+            $data['tbody'] .= '<tr><td><a href="#" class="route">' . $path . '</a></td><td></td></tr>';
         }
         $data['tfoot'] = $data['thead'];
 

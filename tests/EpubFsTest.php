@@ -27,7 +27,7 @@ class EpubFsTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $idData = 20;
-        self::$params = ["data" => $idData];
+        self::$params = ["data" => $idData, "db" => 0];
         $myBook = Book::getBookByDataId($idData);
 
         self::$book = new EPub($myBook->getFilePath("EPUB", $idData));
@@ -43,7 +43,7 @@ class EpubFsTest extends TestCase
             $src = $matches [1];
         }
         $src = str_replace('&amp;', '&', $src);
-        $url = EpubFsHandler::getLink(['data' => 20, 'comp' => EPubReader::encode('images/cover.png')]);
+        $url = EpubFsHandler::getLink(['db' => 0, 'data' => 20, 'comp' => EPubReader::encode('images/cover.png')]);
         $this->assertEquals($url, $src);
     }
 
@@ -56,7 +56,7 @@ class EpubFsTest extends TestCase
             $src = $matches [1];
         }
         $src = str_replace('&amp;', '&', $src);
-        $url = EpubFsHandler::getLink(['data' => 20, 'comp' => EPubReader::encode('images/logo-feedbooks-tiny.png')]);
+        $url = EpubFsHandler::getLink(['db' => 0, 'data' => 20, 'comp' => EPubReader::encode('images/logo-feedbooks-tiny.png')]);
         $this->assertEquals($url, $src);
 
         $href = "";
@@ -64,7 +64,7 @@ class EpubFsTest extends TestCase
             $href = $matches [1];
         }
         $href = str_replace('&amp;', '&', $href);
-        $url = EpubFsHandler::getLink(['data' => 20, 'comp' => EPubReader::encode('css/title.css')]);
+        $url = EpubFsHandler::getLink(['db' => 0, 'data' => 20, 'comp' => EPubReader::encode('css/title.css')]);
         $this->assertEquals($url, $href);
     }
 
@@ -77,7 +77,7 @@ class EpubFsTest extends TestCase
             $import = $matches [1];
         }
         $import = str_replace('&amp;', '&', $import);
-        $url = EpubFsHandler::getLink(['data' => 20, 'comp' => EPubReader::encode('css/page.css')]);
+        $url = EpubFsHandler::getLink(['db' => 0, 'data' => 20, 'comp' => EPubReader::encode('css/page.css')]);
         $this->assertEquals($url, $import);
     }
 
@@ -89,7 +89,7 @@ class EpubFsTest extends TestCase
         if (preg_match("/url\s*\(\'(.*?)\'\)/", (string) $data, $matches)) {
             $src = $matches [1];
         }
-        $url = EpubFsHandler::getLink(['data' => 20, 'comp' => EPubReader::encode('fonts/times.ttf')]);
+        $url = EpubFsHandler::getLink(['db' => 0, 'data' => 20, 'comp' => EPubReader::encode('fonts/times.ttf')]);
         $this->assertEquals($url, $src);
     }
 
@@ -102,7 +102,7 @@ class EpubFsTest extends TestCase
             $src = $matches [1];
         }
         $src = str_replace('&amp;', '&', $src);
-        $url = EpubFsHandler::getLink(['data' => 20, 'comp' => EPubReader::encode('main2.xml')]);
+        $url = EpubFsHandler::getLink(['db' => 0, 'data' => 20, 'comp' => EPubReader::encode('main2.xml')]);
         $this->assertEquals($url, $src);
     }
 
@@ -115,7 +115,7 @@ class EpubFsTest extends TestCase
             $src = $matches [1];
         }
         $src = str_replace('&amp;', '&', $src);
-        $url = EpubFsHandler::getLink(['data' => 20, 'comp' => EPubReader::encode('main2.xml')]);
+        $url = EpubFsHandler::getLink(['db' => 0, 'data' => 20, 'comp' => EPubReader::encode('main2.xml')]);
         $this->assertEquals($url . '#anchor', $src);
     }
 

@@ -86,7 +86,8 @@ class EPubReader extends BaseRenderer
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
-        $params = ['data' => $idData, 'db' => $book->getDatabaseId()];
+        $db = $book->getDatabaseId() ?? 0;
+        $params = ['data' => $idData, 'db' => $db];
 
         $epub = new static::$epubClass($book->getFilePath('EPUB', $idData));
         $epub->initSpineComponent();

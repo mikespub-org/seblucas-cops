@@ -327,6 +327,7 @@ class Route
             return $route;
         }
         unset($params[self::HANDLER_PARAM]);
+        unset($params[self::ROUTE_PARAM]);
         if (empty($params)) {
             return $prefix;
         }
@@ -407,6 +408,7 @@ class Route
         } else {
             // no page or handler, e.g. index.php?complete=1
             $route = '';
+            unset($params[self::ROUTE_PARAM]);
             if (empty($params)) {
                 return $prefix . $route;
             }
