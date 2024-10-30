@@ -20,12 +20,13 @@ use SebLucas\Cops\Output\Response;
 class CalResHandler extends BaseHandler
 {
     public const HANDLER = "calres";
+    public const PARAMLIST = ["db", "alg", "digest"];
 
     public static function getRoutes()
     {
         // extra routes supported by other endpoints (path starts with endpoint param)
         return [
-            "/calres/{db:\d+}/{alg}/{digest}" => [static::PARAM => static::HANDLER],
+            "/calres/{db:\d+}/{alg}/{digest}" => [],
         ];
     }
 

@@ -357,6 +357,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $params = ['id' => $post->groupid, 'db' => $this->databaseId];
+            $params['_route'] = 'page-' . $page . '-' . $label . '-id';
             $href = Route::link($this->handler, $page, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,

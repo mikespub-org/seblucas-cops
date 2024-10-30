@@ -94,7 +94,7 @@ class OpdsRenderer extends BaseRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $params = ["query" => "QUERY", "db" => $database];
-        $url = FeedHandler::getPageLink(null, $params);
+        $url = FeedHandler::getLink($params);
         $url = str_replace("QUERY", "{searchTerms}", $url);
         $xml->writeAttribute("template", $url);
         $xml->endElement();
@@ -164,7 +164,7 @@ class OpdsRenderer extends BaseRenderer
         $link = new LinkNavigation($url, "start", "Home");
         $this->renderLink($link);
         // @todo check with pathInfo
-        $url = FeedHandler::getPageLink(null, $request->urlParams);
+        $url = FeedHandler::getLink($request->urlParams);
         if ($page->containsBook()) {
             $link = new LinkFeed($url, "self");
         } else {
@@ -174,7 +174,8 @@ class OpdsRenderer extends BaseRenderer
         $params = ["db" => $database];
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
-            $url = FeedHandler::getPageLink(PageId::OPENSEARCH, $params);
+            $params["page"] = PageId::OPENSEARCH;
+            $url = FeedHandler::getLink($params);
             $link = new LinkEntry(
                 $url,
                 "application/opensearchdescription+xml",
@@ -184,7 +185,7 @@ class OpdsRenderer extends BaseRenderer
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "QUERY";
-            $url = FeedHandler::getPageLink(null, $params);
+            $url = FeedHandler::getLink($params);
             $url = str_replace("QUERY", "{searchTerms}", $url);
             $link = new LinkEntry(
                 $url,
@@ -198,7 +199,7 @@ class OpdsRenderer extends BaseRenderer
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
                 $params = array_replace($request->urlParams, ["tag" => $filter]);
-                $url = FeedHandler::getPageLink(null, $params);
+                $url = FeedHandler::getLink($params);
                 $link = new LinkFacet(
                     $url,
                     $lib,
@@ -387,7 +388,7 @@ class OpdsRenderer extends BaseRenderer
         }
         $params = $request->getCleanParams();
         $params['sort'] = null;
-        $sortUrl = FeedHandler::getPageLink(null, $params);
+        $sortUrl = FeedHandler::getLink($params);
         if (str_contains($sortUrl, '?')) {
             $sortUrl .= "&sort={0}";
         } else {
@@ -428,7 +429,7 @@ class OpdsRenderer extends BaseRenderer
         }
         //$params = $request->getCleanParams();
         //$params['filter'] = 1;
-        //$url = FeedHandler::getPageLink(null, $params);
+        //$url = FeedHandler::getLink($params);
         //$filterLabel = localize("cog.alternate");
         //$title = localize("links.title");
         //$link = new LinkFacet($url, $title, $filterLabel, false, null);

@@ -150,11 +150,11 @@ class RoutingTest extends TestCase
         // @todo check/add default route for each handler?
         $endpoint = parse_url((string) $queryUrl, PHP_URL_PATH);
         $flipped = array_flip(Config::ENDPOINT);
-        $handler = "index";
+        $handler = "html";
         if (!empty($flipped[$endpoint])) {
             $handler = $flipped[$endpoint];
         }
-        if ($handler == "index") {
+        if ($handler == "html") {
             return;
         }
         $path = "/$handler";
@@ -274,9 +274,12 @@ class RoutingTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    protected function todo(): void
+    /**
+     * @return array<mixed>
+     */
+    protected function getRoutes()
     {
-        $routes = [
+        return [
             // 'name' => ['path', [ defaults ], [ requirements ], [ methods ], [ options ], [ ... ]],
             'index' => ['/index', ['page' => 'index']],
             'authors-letter-id' => ['/authors/letter/{id}', ['page' => '2']],

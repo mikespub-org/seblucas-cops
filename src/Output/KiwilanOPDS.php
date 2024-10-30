@@ -184,7 +184,7 @@ class KiwilanOPDS
             }
         }
         // @todo check with pathInfo
-        $url = OpdsHandler::getPageLink(null, $request->urlParams);
+        $url = OpdsHandler::getLink($request->urlParams);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {

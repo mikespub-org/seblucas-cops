@@ -20,12 +20,13 @@ use Exception;
 class ZipFsHandler extends BaseHandler
 {
     public const HANDLER = "zipfs";
+    public const PARAMLIST = ["db", "data", "comp"];
 
     public static function getRoutes()
     {
         // support custom pattern for route placeholders - see nikic/fast-route
         return [
-            "/zipfs/{db:\d+}/{data:\d+}/{comp:.+}" => [static::PARAM => static::HANDLER],
+            "/zipfs/{db:\d+}/{data:\d+}/{comp:.+}" => [],
         ];
     }
 

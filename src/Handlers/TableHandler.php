@@ -19,15 +19,17 @@ use SebLucas\Cops\Output\Response;
 class TableHandler extends BaseHandler
 {
     public const HANDLER = "tables";
+    public const PARAMLIST = ["db", "name", "id"];
+
     public static string $template = "templates/tables.html";
 
     public static function getRoutes()
     {
         return [
-            //"/tables/{db:\d+}/{name:\w+}/{id}" => [static::PARAM => static::HANDLER],
-            //"/tables/{db:\d+}/{name:\w+}" => [static::PARAM => static::HANDLER],
-            //"/tables/{db:\d+}" => [static::PARAM => static::HANDLER],
-            "/tables" => [static::PARAM => static::HANDLER],
+            //"/tables/{db:\d+}/{name:\w+}/{id}" => [],
+            //"/tables/{db:\d+}/{name:\w+}" => [],
+            //"/tables/{db:\d+}" => [],
+            "/tables" => [],
         ];
     }
 

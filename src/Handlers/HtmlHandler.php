@@ -22,7 +22,7 @@ use Throwable;
  */
 class HtmlHandler extends PageHandler
 {
-    public const HANDLER = "index";
+    public const HANDLER = "html";
 
     public static function getRoutes()
     {
@@ -33,7 +33,7 @@ class HtmlHandler extends PageHandler
     {
         // If we detect that an OPDS reader try to connect try to redirect to index.php/feed
         if (preg_match('/(Librera|MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chunky|AlReader|EBookDroid|BookReader|CoolReader|PageTurner|books\.ebook\.pdf\.reader|com\.hiwapps\.ebookreader|OpenBook)/', $request->agent())) {
-            Response::redirect(FeedHandler::getPageLink(null, ["db" => $request->database()]));
+            Response::redirect(FeedHandler::getLink(["db" => $request->database()]));
             return;
         }
 

@@ -173,7 +173,7 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Chrome');
 
-        $uri = Route::link('index') . '/index';
+        $uri = Route::link() . '/index';
         $crawler = $this->url($uri);
 
         if (!empty(static::$localConfig['cops_front_controller'])) {
@@ -207,7 +207,7 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Kindle/2.0');
 
-        $uri = Route::link('index') . '/index';
+        $uri = Route::link() . '/index';
         $crawler = $this->url($uri);
 
         // with standard local.php.example
@@ -257,7 +257,7 @@ class BrowserKitTest extends TestCase
             if (!empty(static::$localConfig['cops_front_controller'])) {
                 $this->assertEquals(Route::base() . 'search/ali/book', $articles->filterXPath('//a')->attr('href'));
             } else {
-                $this->assertEquals(Route::link('index') . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
+                $this->assertEquals(Route::link() . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
             }
         }
     }

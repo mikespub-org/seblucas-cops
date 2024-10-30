@@ -24,12 +24,13 @@ use PDO;
 class CheckHandler extends BaseHandler
 {
     public const HANDLER = "check";
+    public const PARAMLIST = ["more"];
 
     public static function getRoutes()
     {
         return [
-            "/check/{more:.*}" => [static::PARAM => static::HANDLER],
-            "/check" => [static::PARAM => static::HANDLER],
+            "/check/{more:.*}" => [],
+            "/check" => [],
         ];
     }
 

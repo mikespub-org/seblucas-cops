@@ -146,8 +146,8 @@ class RouteTest extends TestCase
         $page = $params["page"] ?? null;
         unset($params["page"]);
         $endpoint = parse_url((string) $link, PHP_URL_PATH);
-        $handler = "index";
-        if ($endpoint !== Config::ENDPOINT["index"]) {
+        $handler = "html";
+        if ($endpoint !== Config::ENDPOINT["html"]) {
             $testpoint = str_replace('.php', '', $endpoint);
             if (array_key_exists($testpoint, Config::ENDPOINT)) {
                 $params[Route::HANDLER_PARAM] = $testpoint;
@@ -159,7 +159,7 @@ class RouteTest extends TestCase
                 $handler = $flipped[$endpoint];
             }
         }
-        //$test = Config::ENDPOINT["index"] . Route::page($page, $params);
+        //$test = Config::ENDPOINT["html"] . Route::page($page, $params);
         $test = Route::link($handler, $page, $params);
         $this->assertStringEndsWith($expected, $test);
     }

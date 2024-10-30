@@ -18,10 +18,12 @@ use SebLucas\Cops\Output\Response;
  */
 abstract class BaseHandler
 {
-    public const PARAM = Route::HANDLER_PARAM;
     public const HANDLER = "";
+    public const PARAMLIST = [];
 
     /**
+     * Array of path => params for this handler
+     * Note: Route will add Route::HANDLER_PARAM => static::HANDLER to params
      * @return array<string, mixed>
      */
     public static function getRoutes()
@@ -37,6 +39,39 @@ abstract class BaseHandler
     public static function getLink($params = [])
     {
         return Route::link(static::HANDLER, null, $params);
+    }
+
+    /**
+     * Summary of findRoute
+     * @param array<mixed> $params
+     * @return string|null
+     */
+    public static function findRoute($params = [])
+    {
+        $routes = static::getRoutes();
+        // @todo use _route later
+        unset($params["_route"]);
+        return Route::findMatchingRoute($routes, $params);
+    }
+
+    /**
+     * Summary of findRouteName
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function findRouteName($params)
+    {
+        if (!empty($params["_route"])) {
+            return $params["_route"];
+        }
+        $name = static::HANDLER; 
+        if (count(static::getRoutes()) > 1) {
+            $accept = array_intersect(array_keys($params), static::PARAMLIST);
+            if (!empty($accept)) {
+                $name = $name . '-' . implode('-', $accept);
+            }
+        }
+        return $name;
     }
 
     /**

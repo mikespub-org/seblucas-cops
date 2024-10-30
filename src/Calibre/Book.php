@@ -409,6 +409,7 @@ class Book
             $params = ['id' => $this->id, 'db' => $this->databaseId];
             $params['db'] ??= 0;
             $params['file'] = $fileName;
+            $params['_route'] = 'fetch-file';
             $url = FetchHandler::getLink($params);
         } else {
             $url = Route::path(str_replace('%2F', '/', rawurlencode($filePath)));

@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Calibre\Metadata;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApi;
 
@@ -203,17 +204,17 @@ class RestApiTest extends TestCase
         $test = RestApi::getRoutes($request);
         $expected = "Routes";
         $this->assertEquals($expected, $test["title"]);
-        $expected = 98;
+        $expected = Route::count();
         $this->assertCount($expected, $test["entries"]);
     }
 
-    public function testGetGroups(): void
+    public function testGetHandlers(): void
     {
         $request = Request::build([], basename(self::$script));
-        $test = RestApi::getGroups($request);
-        $expected = "Groups";
+        $test = RestApi::getHandlers($request);
+        $expected = "Handlers";
         $this->assertEquals($expected, $test["title"]);
-        $expected = 42;
+        $expected = count(Framework::getHandlers());
         $this->assertCount($expected, $test["entries"]);
     }
 

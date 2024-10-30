@@ -18,7 +18,7 @@ class Config
 {
     public const VERSION = '3.4.0';
     public const ENDPOINT = [
-        "index" => "index.php",
+        "html" => "index.php",
         "feed" => "feed.php",
         "json" => "getJSON.php",
         "fetch" => "fetch.php",

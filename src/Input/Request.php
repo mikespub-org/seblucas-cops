@@ -442,7 +442,7 @@ class Request
             return $this->urlParams[Route::HANDLER_PARAM];
         }
         // use default handler
-        return 'index';
+        return 'html';
     }
 
     /**

@@ -88,9 +88,13 @@ class PageId
      */
     public static function getPage($pageId, $request, $instance = null)
     {
+        $pageId ??= PageId::getHomePage();
+
         // @see https://www.php.net/manual/en/control-structures.match.php
         // Unlike switch, the comparison is an identity check (===) rather than a weak equality check (==)
         return match ((string) $pageId) {
+            '' => new PageIndex($request),
+            PageId::INDEX => new PageIndex($request),
             PageId::ALL_AUTHORS => new PageAllAuthors($request),
             PageId::AUTHORS_FIRST_LETTER => new PageAllAuthorsLetter($request),
             PageId::AUTHOR_DETAIL => new PageAuthorDetail($request, $instance),
@@ -119,6 +123,7 @@ class PageId
             PageId::ALL_LIBRARIES => new PageAllVirtualLibraries($request),
             PageId::ABOUT => new PageAbout($request),
             PageId::CUSTOMIZE => new PageCustomize($request),
+            // @todo return error for unknown page
             default => new PageIndex($request),
         };
     }

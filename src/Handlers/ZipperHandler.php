@@ -21,14 +21,15 @@ use SebLucas\Cops\Output\Zipper;
 class ZipperHandler extends BaseHandler
 {
     public const HANDLER = "zipper";
+    public const PARAMLIST = ["page", "type", "id"];
 
     public static function getRoutes()
     {
         // handle endpoint with page param
         return [
-            "/zipper/{page}/{type}/{id}" => [static::PARAM => static::HANDLER],
-            "/zipper/{page}/{type}" => [static::PARAM => static::HANDLER],
-            "/zipper/{page}" => [static::PARAM => static::HANDLER],
+            "/zipper/{page}/{type}/{id}" => [],
+            "/zipper/{page}/{type}" => [],
+            "/zipper/{page}" => [],
         ];
     }
 

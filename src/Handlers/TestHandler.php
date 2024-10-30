@@ -15,10 +15,13 @@ namespace SebLucas\Cops\Handlers;
 class TestHandler extends BaseHandler
 {
     public const HANDLER = "phpunit";
+    public const PARAMLIST = [];
 
     public static function getRoutes()
     {
-        return [];
+        return [
+            '/test' => [],
+        ];
     }
 
     public function handle($request)

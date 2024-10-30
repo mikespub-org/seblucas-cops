@@ -21,6 +21,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Context;
 use SebLucas\Cops\Input\Request;
@@ -45,7 +46,7 @@ class GraphQLHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/graphql" => [static::PARAM => static::HANDLER],
+            "/graphql" => [],
         ];
     }
 
@@ -156,7 +157,8 @@ class GraphQLHandler extends BaseHandler
      */
     public function getQueryFieldResolver($request)
     {
-        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) use ($request) {
+        $handler = HtmlHandler::HANDLER;
+        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) use ($request, $handler) {
             $fieldName = $info->fieldName;
             switch ($fieldName) {
                 case 'books':
@@ -169,14 +171,14 @@ class GraphQLHandler extends BaseHandler
                     if (is_null($book)) {
                         return $book;
                     }
-                    $book->setHandler("index");
+                    $book->setHandler($handler);
                     return $book->getEntry();
                 case 'datas':
                     $book = Book::getBookById($args['bookId'], $request->database());
                     if (is_null($book)) {
                         return $book;
                     }
-                    $book->setHandler("index");
+                    $book->setHandler($handler);
                     return $book->getDatas();
                 case 'data':
                     $book = Book::getBookByDataId($args['id'], $request->database());
@@ -192,7 +194,7 @@ class GraphQLHandler extends BaseHandler
                     return $entryArray;
                 case 'author':
                     $instance = Author::getInstanceById($args['id'], $request->database());
-                    $instance->setHandler("index");
+                    $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'identifiers':
                     [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
@@ -201,7 +203,7 @@ class GraphQLHandler extends BaseHandler
                     return $entryArray;
                 case 'identifier':
                     $instance = Identifier::getInstanceById($args['id'], $request->database());
-                    $instance->setHandler("index");
+                    $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'languages':
                     [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
@@ -210,7 +212,7 @@ class GraphQLHandler extends BaseHandler
                     return $entryArray;
                 case 'language':
                     $instance = Language::getInstanceById($args['id'], $request->database());
-                    $instance->setHandler("index");
+                    $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'publishers':
                     [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
@@ -219,7 +221,7 @@ class GraphQLHandler extends BaseHandler
                     return $entryArray;
                 case 'publisher':
                     $instance = Publisher::getInstanceById($args['id'], $request->database());
-                    $instance->setHandler("index");
+                    $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'ratings':
                     [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
@@ -228,7 +230,7 @@ class GraphQLHandler extends BaseHandler
                     return $entryArray;
                 case 'rating':
                     $instance = Rating::getInstanceById($args['id'], $request->database());
-                    $instance->setHandler("index");
+                    $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'series':
                     [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
@@ -237,7 +239,7 @@ class GraphQLHandler extends BaseHandler
                     return $entryArray;
                 case 'serie':
                     $instance = Serie::getInstanceById($args['id'], $request->database());
-                    $instance->setHandler("index");
+                    $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'tags':
                     [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
@@ -246,7 +248,7 @@ class GraphQLHandler extends BaseHandler
                     return $entryArray;
                 case 'tag':
                     $instance = Tag::getInstanceById($args['id'], $request->database());
-                    $instance->setHandler("index");
+                    $instance->setHandler($handler);
                     return $instance->getEntry();
             }
             return Executor::defaultFieldResolver($objectValue, $args, $context, $info);

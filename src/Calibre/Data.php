@@ -248,8 +248,10 @@ class Data
         }
 
         $prefix = "download";
+        //$params['_route'] = 'fetch-download';
         if ($view) {
             $prefix = "view";
+            //$params['_route'] = 'fetch-view';
         }
         $href = $prefix . "/" . $this->id . "/" . $database;
 
@@ -306,8 +308,10 @@ class Data
             $params['db'] ??= 0;
             $params['type'] = $type;
             $params['data'] = $idData;
+            $params['_route'] = 'fetch-data';
             if ($view) {
                 $params['view'] = 1;
+                $params['_route'] = 'fetch-inline';
             }
             return new LinkEntry(
                 FetchHandler::getLink($params),

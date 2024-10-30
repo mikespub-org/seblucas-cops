@@ -21,12 +21,13 @@ use Exception;
 class ReadHandler extends BaseHandler
 {
     public const HANDLER = "read";
+    public const PARAMLIST = ["db", "data", "title"];
 
     public static function getRoutes()
     {
         return [
-            "/read/{db:\d+}/{data:\d+}/{title}" => [static::PARAM => static::HANDLER],
-            "/read/{db:\d+}/{data:\d+}" => [static::PARAM => static::HANDLER],
+            "/read/{db:\d+}/{data:\d+}/{title}" => [],
+            "/read/{db:\d+}/{data:\d+}" => [],
         ];
     }
 

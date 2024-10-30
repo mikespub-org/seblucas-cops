@@ -16,9 +16,9 @@ use SebLucas\Cops\Output\Response;
  */
 class Framework
 {
-    /** @var array<string, mixed> */
+    /** @var array<string, class-string> */
     protected static $handlers = [
-        "index" => Handlers\HtmlHandler::class,
+        "html" => Handlers\HtmlHandler::class,
         "feed" => Handlers\FeedHandler::class,
         "json" => Handlers\JsonHandler::class,
         "fetch" => Handlers\FetchHandler::class,
@@ -35,6 +35,7 @@ class Framework
         "graphql" => Handlers\GraphQLHandler::class,
         "tables" => Handlers\TableHandler::class,
         "error" => Handlers\ErrorHandler::class,
+        //"test" => Handlers\TestHandler::class,
     ];
     /** @var array<mixed> */
     protected static $middlewares = [];
@@ -44,7 +45,7 @@ class Framework
      * @param string $name
      * @return void
      */
-    public static function run($name = 'index')
+    public static function run($name = 'html')
     {
         $request = static::getRequest();
         if ($request->invalid) {
@@ -62,7 +63,7 @@ class Framework
         $name = $request->getHandler();
 
         // special case for json requests here
-        if ($name == 'index' && $request->isJson()) {
+        if ($name == 'html' && $request->isJson()) {
             $name = 'json';
         }
         $handler = Framework::getHandler($name);
@@ -119,9 +120,18 @@ class Framework
         if (Input\Route::count() > 0) {
             return;
         }
-        foreach (static::$handlers as $name => $handler) {
-            Input\Route::addRoutes($handler::getRoutes());
+        foreach (static::$handlers as $handler) {
+            Input\Route::addRoutes($handler::getRoutes(), $handler::HANDLER);
         }
+    }
+
+    /**
+     * Summary of getHandlers
+     * @return array<string, class-string>
+     */
+    public static function getHandlers()
+    {
+        return static::$handlers;
     }
 
     /**
@@ -132,6 +142,10 @@ class Framework
      */
     public static function getHandler($name, ...$args)
     {
+        if (!isset(static::$handlers[$name])) {
+            // this will call exit()
+            Response::sendError(null, "Invalid handler name '$name'");
+        }
         return new static::$handlers[$name](...$args);
     }
 }

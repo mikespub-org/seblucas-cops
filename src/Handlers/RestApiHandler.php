@@ -25,6 +25,15 @@ class RestApiHandler extends PageHandler
     public const HANDLER = "restapi";
     public const PREFIX = "/restapi";
     public const RESOURCE = "_resource";
+    public const PARAMLIST = [
+        // @todo support paramlist by resource here?
+        "CustomColumnType" => ["db", "name"],
+        "Note" => ["type", "id", "title"],
+        "Preference" => ["key"],
+        "Annotation" => ["bookId", "id"],
+        "Metadata" => ["bookId", "element", "name"],
+        "" => ["route"],
+    ];
 
     /** @var ?string */
     protected static $baseUrl = null;
@@ -34,30 +43,30 @@ class RestApiHandler extends PageHandler
         // Note: this supports all other routes with /restapi prefix
         // extra routes supported by REST API
         return [
-            static::PREFIX . "/custom" => [static::PARAM => static::HANDLER, static::RESOURCE => "CustomColumnType"],
-            static::PREFIX . "/databases/{db}/{name}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Database"],
-            static::PREFIX . "/databases/{db}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Database"],
-            static::PREFIX . "/databases" => [static::PARAM => static::HANDLER, static::RESOURCE => "Database"],
-            static::PREFIX . "/openapi" => [static::PARAM => static::HANDLER, static::RESOURCE => "openapi"],
-            static::PREFIX . "/routes" => [static::PARAM => static::HANDLER, static::RESOURCE => "route"],
-            static::PREFIX . "/groups" => [static::PARAM => static::HANDLER, static::RESOURCE => "group"],
-            static::PREFIX . "/notes/{type}/{id}/{title}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Note"],
-            static::PREFIX . "/notes/{type}/{id}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Note"],
-            static::PREFIX . "/notes/{type}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Note"],
-            static::PREFIX . "/notes" => [static::PARAM => static::HANDLER, static::RESOURCE => "Note"],
-            static::PREFIX . "/preferences/{key}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Preference"],
-            static::PREFIX . "/preferences" => [static::PARAM => static::HANDLER, static::RESOURCE => "Preference"],
-            static::PREFIX . "/annotations/{bookId}/{id}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Annotation"],
-            static::PREFIX . "/annotations/{bookId}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Annotation"],
-            static::PREFIX . "/annotations" => [static::PARAM => static::HANDLER, static::RESOURCE => "Annotation"],
-            static::PREFIX . "/metadata/{bookId}/{element}/{name}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Metadata"],
-            static::PREFIX . "/metadata/{bookId}/{element}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Metadata"],
-            static::PREFIX . "/metadata/{bookId}" => [static::PARAM => static::HANDLER, static::RESOURCE => "Metadata"],
-            static::PREFIX . "/user/details" => [static::PARAM => static::HANDLER, static::RESOURCE => "User"],
-            static::PREFIX . "/user" => [static::PARAM => static::HANDLER, static::RESOURCE => "User"],
+            static::PREFIX . "/custom" => [static::RESOURCE => "CustomColumnType"],
+            static::PREFIX . "/databases/{db}/{name}" => [static::RESOURCE => "Database"],
+            static::PREFIX . "/databases/{db}" => [static::RESOURCE => "Database"],
+            static::PREFIX . "/databases" => [static::RESOURCE => "Database"],
+            static::PREFIX . "/openapi" => [static::RESOURCE => "openapi"],
+            static::PREFIX . "/routes" => [static::RESOURCE => "route"],
+            static::PREFIX . "/handlers" => [static::RESOURCE => "handler"],
+            static::PREFIX . "/notes/{type}/{id}/{title}" => [static::RESOURCE => "Note"],
+            static::PREFIX . "/notes/{type}/{id}" => [static::RESOURCE => "Note"],
+            static::PREFIX . "/notes/{type}" => [static::RESOURCE => "Note"],
+            static::PREFIX . "/notes" => [static::RESOURCE => "Note"],
+            static::PREFIX . "/preferences/{key}" => [static::RESOURCE => "Preference"],
+            static::PREFIX . "/preferences" => [static::RESOURCE => "Preference"],
+            static::PREFIX . "/annotations/{bookId}/{id}" => [static::RESOURCE => "Annotation"],
+            static::PREFIX . "/annotations/{bookId}" => [static::RESOURCE => "Annotation"],
+            static::PREFIX . "/annotations" => [static::RESOURCE => "Annotation"],
+            static::PREFIX . "/metadata/{bookId}/{element}/{name}" => [static::RESOURCE => "Metadata"],
+            static::PREFIX . "/metadata/{bookId}/{element}" => [static::RESOURCE => "Metadata"],
+            static::PREFIX . "/metadata/{bookId}" => [static::RESOURCE => "Metadata"],
+            static::PREFIX . "/user/details" => [static::RESOURCE => "User"],
+            static::PREFIX . "/user" => [static::RESOURCE => "User"],
             // add default routes for handler to generate links
-            static::PREFIX . "/{route:.*}" => [static::PARAM => static::HANDLER],
-            //static::PREFIX . "" => [static::PARAM => static::HANDLER],
+            static::PREFIX . "/{route:.*}" => [],
+            //static::PREFIX . "" => [],
         ];
     }
 

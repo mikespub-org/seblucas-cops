@@ -11,8 +11,10 @@ namespace SebLucas\Cops\Input;
 
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Translation;
+use Exception;
 
 use function FastRoute\simpleDispatcher;
 
@@ -22,6 +24,7 @@ use function FastRoute\simpleDispatcher;
 class Route
 {
     public const HANDLER_PARAM = "_handler";
+    public const ROUTE_PARAM = "_route";
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
     protected static $proxyRequest = null;
@@ -29,12 +32,10 @@ class Route
     protected static $baseUrl = null;
     /** @var array<string, mixed> */
     protected static $routes = [];
-    /** @var string[] */
-    protected static $skipPrefix = ['index', 'json', 'fetch', 'restapi', 'graphql', 'phpunit'];
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
-    /** @var array<string, mixed> */
-    protected static $groups = [];
+    /** @var array<string, class-string> */
+    protected static $handlers = [];
 
     /**
      * Match pathinfo against routes and return query params
@@ -99,11 +100,7 @@ class Route
      */
     public static function get($route)
     {
-        $page = static::$routes[$route];
-        if (is_array($page)) {
-            return $page;
-        }
-        return ["page" => $page];
+        return static::$routes[$route];
     }
 
     /**
@@ -115,22 +112,8 @@ class Route
      */
     public static function set($route, $page, $params = [])
     {
-        if (empty($params)) {
-            static::$routes[$route] = $page;
-            return;
-        }
         $params["page"] = $page;
         static::$routes[$route] = $params;
-    }
-
-    /**
-     * Add prefix for paths with this endpoint
-     * @param string $name
-     * @return bool
-     */
-    public static function addPrefix($name)
-    {
-        return !in_array($name, static::$skipPrefix);
     }
 
     /**
@@ -173,10 +156,18 @@ class Route
     /**
      * Add routes and query params
      * @param array<string, array<mixed>> $routes
+     * @param string $handler
      * @return void
      */
-    public static function addRoutes($routes)
+    public static function addRoutes($routes, $handler)
     {
+        if ($handler != "html") {
+            // Add ["_handler" => $handler] to $params
+            foreach ($routes as $path => $params) {
+                $params[static::HANDLER_PARAM] ??= $handler;
+                $routes[$path] = $params;
+            }
+        }
         static::$routes = array_merge(static::$routes, $routes);
     }
 
@@ -243,9 +234,9 @@ class Route
      */
     public static function link($handler = null, $page = null, $params = [])
     {
-        $handler ??= 'index';
+        $handler ??= 'html';
         // take into account handler when building page url, e.g. feed or zipper
-        if (!in_array($handler, ['index', 'json', 'phpunit'])) {
+        if (!in_array($handler, ['html', 'json', 'phpunit'])) {
             $params[self::HANDLER_PARAM] = $handler;
         } else {
             unset($params[self::HANDLER_PARAM]);
@@ -254,7 +245,7 @@ class Route
         $uri = static::page($page, $params);
         // same routes as HtmlHandler - see util.js
         if ($handler == 'json') {
-            $handler = 'index';
+            $handler = 'html';
         }
         // endpoint.php or handler or empty
         $endpoint = static::endpoint($handler);
@@ -271,14 +262,14 @@ class Route
      * @param string $handler
      * @return string
      */
-    public static function endpoint($handler = 'index')
+    public static function endpoint($handler = 'html')
     {
         if (Config::get('front_controller')) {
             // no endpoint prefix for supported handlers
             return '';
         }
         // use default endpoint for supported handlers
-        return Config::ENDPOINT['index'];
+        return Config::ENDPOINT['html'];
     }
 
     /**
@@ -360,6 +351,22 @@ class Route
     }
 
     /**
+     * Get handler class based on name
+     * @param string $name
+     * @return class-string
+     */
+    public static function getHandlerClass($name)
+    {
+        if (empty(static::$handlers)) {
+            static::$handlers = Framework::getHandlers();
+        }
+        if (!isset(static::$handlers[$name])) {
+            throw new Exception('Invalid handler name');
+        }
+        return static::$handlers[$name];
+    }
+
+    /**
      * Summary of getRouteForParams
      * @param array<mixed> $params
      * @param string $prefix
@@ -368,29 +375,32 @@ class Route
     public static function getRouteForParams($params, $prefix = '')
     {
         if (!empty($params[self::HANDLER_PARAM])) {
-            // keep page param and use handler as key here
-            $group = $params[self::HANDLER_PARAM];
-        } elseif (isset($params['page'])) {
-            // use page param as key here
-            $group = $params['page'];
-            unset($params['page']);
-        } else {
-            // other routes
-            $group = '';
-        }
-        // use page route with /restapi prefix instead
-        if ($group == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
-            $prefix = $prefix . '/restapi';
-            $group = $params['page'];
+            $handler = $params[self::HANDLER_PARAM];
+            // use page route with /restapi prefix instead
+            if ($handler == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
+                $prefix = $prefix . '/restapi';
+                $handler = 'html';
+            }
             unset($params[self::HANDLER_PARAM]);
-            unset($params['page']);
+        } elseif (isset($params['page'])) {
+            // use default handler for page route
+            $handler = 'html';
+            // @todo use _route later - see PageHandler::findRouteName()
+        } else {
+            // no page or handler, e.g. index.php?complete=1
+            $route = '';
+            if (empty($params)) {
+                return $prefix . $route;
+            }
+            return $prefix . $route . '?' . static::getQueryString($params);
         }
-        $groups = static::getGroups();
-        $routes = $groups[$group] ?? [];
-        if (count($routes) < 1) {
-            return null;
+
+        $class = static::getHandlerClass($handler); 
+        $route = $class::findRoute($params);
+        if (!isset($route)) {
+            return $route;
         }
-        return static::findMatchingRoute($routes, $params, $prefix);
+        return $prefix . $route;
     }
 
     /**
@@ -454,35 +464,6 @@ class Route
             return $prefix . $route;
         }
         return null;
-    }
-
-    /**
-     * Get mapping of pages or handlers to routes with fixed params
-     * @return array<string, array<mixed>>
-     */
-    public static function getGroups()
-    {
-        if (!empty(static::$groups)) {
-            return static::$groups;
-        }
-        static::$groups = [];
-        foreach (static::$routes as $route => $params) {
-            if (!is_array($params)) {
-                // use page as key here
-                $group = $params;
-                $params = [];
-            } elseif (!empty($params[self::HANDLER_PARAM])) {
-                // keep page param and use handler as key here
-                $group = $params[self::HANDLER_PARAM];
-            } else {
-                // use page param as key here
-                $group = $params["page"] ?? '';
-                unset($params["page"]);
-            }
-            static::$groups[$group] ??= [];
-            static::$groups[$group][$route] = $params;
-        }
-        return static::$groups;
     }
 
     /**

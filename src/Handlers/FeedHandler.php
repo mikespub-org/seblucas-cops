@@ -18,16 +18,17 @@ use SebLucas\Cops\Pages\PageId;
  * Handle OPDS 1.2 feed
  * URL format: index.php/feed?page={page}&query={query}&...
  */
-class FeedHandler extends PageHandler
+class FeedHandler extends BaseHandler
 {
     public const HANDLER = "feed";
+    public const PARAMLIST = ["page", "id"];
 
     public static function getRoutes()
     {
         return [
-            "/feed/{page}/{id}" => [static::PARAM => static::HANDLER],
-            "/feed/{page}" => [static::PARAM => static::HANDLER],
-            "/feed" => [static::PARAM => static::HANDLER],
+            "/feed/{page}/{id}" => [],
+            "/feed/{page}" => [],
+            "/feed" => [],
         ];
     }
 

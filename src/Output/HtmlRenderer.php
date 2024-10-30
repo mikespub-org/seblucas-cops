@@ -16,7 +16,7 @@ use SebLucas\Cops\Input\Route;
 
 class HtmlRenderer extends BaseRenderer
 {
-    public static string $handler = "index";
+    public static string $handler = "html";
 
     /**
      * Summary of getTemplateData

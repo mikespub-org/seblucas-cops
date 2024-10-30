@@ -50,7 +50,7 @@ class JsonRenderer extends BaseRenderer
     {
         $params = $request->urlParams;
         $params['complete'] = 1;
-        return JsonHandler::getPageLink(null, $params);
+        return JsonHandler::getLink($params);
     }
 
     /**
@@ -199,6 +199,7 @@ class JsonRenderer extends BaseRenderer
             $params['id'] = $book->id;
             $params['db'] = $database;
             $params['file'] = 'zipped';
+            $params['_route'] = 'fetch-file';
             $url = FetchHandler::getLink($params);
             array_unshift($out ["extraFiles"], [
                 "name" => " * ",
@@ -362,8 +363,8 @@ class JsonRenderer extends BaseRenderer
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here
                 "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link($this->handler, PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
-                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['id' => '0', 'db' => '1'])),
-                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['thumb' => 'html', 'id' => '0', 'db' => '1'])),
+                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['_route' => 'fetch-cover', 'id' => '0', 'db' => '1'])),
+                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['_route' => 'fetch-thumb', 'thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),

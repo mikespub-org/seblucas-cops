@@ -44,7 +44,7 @@ class RestApi extends BaseRenderer
         "/databases" => [self::class, 'getDatabases'],
         "/openapi" => [self::class, 'getOpenApi'],
         "/routes" => [self::class, 'getRoutes'],
-        "/groups" => [self::class, 'getGroups'],
+        "/handlers" => [self::class, 'getHandlers'],
         "/notes" => [self::class, 'getNotes'],
         "/preferences" => [self::class, 'getPreferences'],
         "/annotations" => [self::class, 'getAnnotations'],
@@ -169,7 +169,7 @@ class RestApi extends BaseRenderer
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
-                Response::redirect(RestApiHandler::getHandlerLink(null, 'index'));
+                Response::redirect(RestApiHandler::getHandlerLink(null, PageId::INDEX));
                 return '';
             }
             if ($this->isExtra) {
@@ -538,21 +538,22 @@ class RestApi extends BaseRenderer
     }
 
     /**
-     * Summary of getGroups
+     * Summary of getHandlers
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getGroups($request)
+    public static function getHandlers($request)
     {
         $baseurl = RestApiHandler::getBaseUrl();
         $result = [
-            "title" => "Groups",
+            "title" => "Handlers",
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach (Route::getGroups() as $group => $routes) {
+        foreach (Framework::getHandlers() as $name => $class) {
+            $routes = $class::getRoutes();
             array_push($result["entries"], [
-                "group" => $group,
+                "handler" => $name,
                 "routes" => $routes,
             ]);
         }

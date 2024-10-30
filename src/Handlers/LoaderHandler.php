@@ -25,12 +25,12 @@ class LoaderHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "/loader/{action}/{dbNum:\d+}/{authorId:\w+}/{urlPath:.*}" => [static::PARAM => static::HANDLER],
-            "/loader/{action}/{dbNum:\d+}/{authorId:\w*}" => [static::PARAM => static::HANDLER],
-            "/loader/{action}/{dbNum:\d+}" => [static::PARAM => static::HANDLER],
-            "/loader/{action}/" => [static::PARAM => static::HANDLER],
-            "/loader/{action}" => [static::PARAM => static::HANDLER],
-            "/loader" => [static::PARAM => static::HANDLER],
+            "/loader/{action}/{dbNum:\d+}/{authorId:\w+}/{urlPath:.*}" => [],
+            "/loader/{action}/{dbNum:\d+}/{authorId:\w*}" => [],
+            "/loader/{action}/{dbNum:\d+}" => [],
+            "/loader/{action}/" => [],
+            "/loader/{action}" => [],
+            "/loader" => [],
         ];
     }
 
