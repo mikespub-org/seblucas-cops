@@ -24,8 +24,6 @@ use ZipStream\ZipStream;
  */
 class Zipper extends BaseRenderer
 {
-    public static string $handler = "zipper";
-
     /** @var ?int */
     protected $databaseId = null;
     /** @var string */

@@ -37,7 +37,7 @@ class FrameworkTest extends TestCase
 
         Framework::loadRoutes();
 
-        $expected = 97;
+        $expected = 98;
         $this->assertEquals($expected, Route::count());
     }
 
@@ -69,7 +69,7 @@ class FrameworkTest extends TestCase
     {
         $handlers = $this->getHandlers();
 
-        $expected = 17;
+        $expected = 18;
         $this->assertCount($expected, $handlers);
     }
 
@@ -78,7 +78,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PATH_INFO'] = '/check';
         $request = Framework::getRequest();
 
-        $expected = 'check';
+        $expected = CheckHandler::class;
         $this->assertEquals($expected, $request->getHandler());
 
         unset($_SERVER['PATH_INFO']);
@@ -86,7 +86,7 @@ class FrameworkTest extends TestCase
 
     public function testgetHandler(): void
     {
-        $handler = Framework::getHandler('check');
+        $handler = Framework::createHandler('check');
 
         $expected = CheckHandler::class;
         $this->assertEquals($expected, $handler::class);
@@ -167,7 +167,7 @@ class FrameworkTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = "queryString' => '_handler=check&more=more&hello=world'";
+        $expected = "queryString' => 'more=more&hello=world'";
         $this->assertStringContainsString($expected, $output);
         $expected = "Goodbye!";
         $this->assertStringContainsString($expected, $output);

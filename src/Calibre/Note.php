@@ -33,7 +33,8 @@ class Note
     public string $doc;
     public float $mtime;
     public ?int $databaseId = null;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of __construct
@@ -48,7 +49,7 @@ class Note
         $this->doc = $post->doc;
         $this->mtime = $post->mtime;
         $this->databaseId = $database;
-        $this->handler = RestApiHandler::HANDLER;
+        $this->handler = RestApiHandler::class;
     }
 
     /**

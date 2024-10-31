@@ -175,7 +175,7 @@ class ZipperTest extends TestCase
         $request->set('page', $page);
         $request->set('type', 'any');
 
-        $handler = Framework::getHandler('zipper');
+        $handler = Framework::createHandler('zipper');
 
         ob_start();
         $response = $handler->handle($request);

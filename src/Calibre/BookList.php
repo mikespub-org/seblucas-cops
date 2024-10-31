@@ -53,7 +53,8 @@ class BookList
     public $orderBy = null;
     /** @var array<int, mixed> */
     public $bookList = [];
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * @param ?Request $request

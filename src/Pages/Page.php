@@ -63,7 +63,8 @@ class Page
     protected $ignoredCategories = [];
     /** @var ?int */
     protected $databaseId = null;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of getPage

@@ -239,7 +239,7 @@ class EpubReaderTest extends TestCase
     public function testReadHandler(): void
     {
         $request = Request::build(['data' => 20]);
-        $handler = Framework::getHandler('read');
+        $handler = Framework::createHandler('read');
 
         ob_start();
         $response = $handler->handle($request);

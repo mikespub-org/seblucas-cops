@@ -35,7 +35,8 @@ class Resource
     public string $hash;
     public string $name;
     public ?int $databaseId = null;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of __construct
@@ -47,7 +48,7 @@ class Resource
         $this->hash = $post->hash;
         $this->name = $post->name;
         $this->databaseId = $database;
-        $this->handler = CalResHandler::HANDLER;
+        $this->handler = CalResHandler::class;
     }
 
     /**

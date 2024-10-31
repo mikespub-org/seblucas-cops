@@ -570,12 +570,14 @@ $config['cops_download_page'] = [];
 /*
  * Allow downloading all books of a series for a specific format or 'ANY'
  * Example: $config['cops_download_series'] = ['EPUB', 'MOBI'];
+ * @deprecated 3.4.1 use $config['cops_download_page'] instead
  */
 $config['cops_download_series'] = [];
 
 /*
  * Allow downloading all books of an author for a specific format or 'ANY'
  * Example: $config['cops_download_author'] = ['EPUB'];
+ * @deprecated 3.4.1 use $config['cops_download_page'] instead
  */
 $config['cops_download_author'] = [];
 

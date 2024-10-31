@@ -27,6 +27,7 @@ class Route
     public const HANDLER_PARAM = "_handler";
     public const ROUTE_PARAM = "_route";
     public const ROUTES_CACHE_FILE = 'url_cached_routes.php';
+    public const KEEP_STATS = true;
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
     protected static $proxyRequest = null;
@@ -40,6 +41,18 @@ class Route
     protected static $dispatcher = null;
     /** @var array<string, class-string> */
     protected static $handlers = [];
+    /** @var array<string, mixed> */
+    public static $counters = [
+        'link' => 0,
+        'empty' => 0,
+        'path' => 0,
+        'match' => 0,
+        'find' => 0,
+        'baseLink' => 0,
+        'pageLink' => 0,
+        'generate' => 0,
+        'other' => 0,
+    ];
 
     /**
      * Match pathinfo against routes and return query params
@@ -48,6 +61,10 @@ class Route
      */
     public static function match($path)
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            self::$counters['match'] += 1;
+        }
         if (empty($path) || $path == '/') {
             return [];
         }
@@ -167,13 +184,13 @@ class Route
         $groups = [];
         foreach (self::getRoutes() as $name => $route) {
             [$path, $params, $methods, $options] = $route;
-            $group = $params[self::HANDLER_PARAM] ?? 'page';
+            $group = $params[self::HANDLER_PARAM] ?? self::getHandler('html');
             $groups[$group] ??= [];
-            if ($group == 'page') {
+            if ($group::HANDLER == 'html') {
                 $page = $params["page"] ?? '';
                 $groups[$group][$page] ??= [];
                 $groups[$group][$page][] = $name;
-            } elseif ($group == 'restapi') {
+            } elseif ($group::HANDLER == 'restapi') {
                 $resource = $params["_resource"] ?? '';
                 $groups[$group][$resource] ??= [];
                 $groups[$group][$resource][] = $name;
@@ -194,14 +211,14 @@ class Route
             return;
         }
         foreach (Framework::getHandlers() as $handler) {
-            self::addRoutes($handler::getRoutes(), $handler::HANDLER);
+            self::addRoutes($handler::getRoutes(), $handler);
         }
     }
 
     /**
      * Add routes with name, path, params, methods and options
      * @param array<string, array<mixed>> $routes
-     * @param string $handler
+     * @param class-string $handler
      * @return void
      */
     public static function addRoutes($routes, $handler)
@@ -215,8 +232,10 @@ class Route
                 self::$static[$path] = $name;
             }
             // Add ["_handler" => $handler] to params
-            if ($handler != "html") {
+            if ($handler::HANDLER !== 'html') {
                 $params[self::HANDLER_PARAM] ??= $handler;
+            } else {
+                // default routes can be used by html, json, phpunit, restapi without _resource, ...
             }
             // Add default GET method
             if (empty($methods)) {
@@ -301,6 +320,10 @@ class Route
      */
     public static function path($path = null, $params = [])
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            self::$counters['path'] += 1;
+        }
         if (!empty($path) && str_starts_with($path, '/')) {
             return $path . self::params($params);
         }
@@ -334,18 +357,26 @@ class Route
      * The handler takes precedence over page or _route here, as it
      * will be variable (html/json or feed/opds or restapi or ...)
      *
-     * @param string|null $handler
+     * @param class-string|null $handler
      * @param string|int|null $page
      * @param array<mixed> $params
      * @return string
      */
     public static function link($handler = null, $page = null, $params = [])
     {
-        $handler ??= 'html';
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            self::$counters['link'] += 1;
+            if (empty($handler)) {
+                self::$counters['empty'] += 1;
+            }
+        }
+        $handler ??= Route::getHandler('html');
         // take into account handler when building page url, e.g. feed or zipper
-        if (!in_array($handler, ['html', 'json', 'phpunit'])) {
+        if (!in_array($handler::HANDLER, ['html', 'json', 'phpunit'])) {
             $params[self::HANDLER_PARAM] = $handler;
         } else {
+            // @todo do we still want to get rid of this here?
             unset($params[self::HANDLER_PARAM]);
         }
         return self::process($handler, $page, $params);
@@ -353,7 +384,7 @@ class Route
 
     /**
      * Process link with defined handler, page and params
-     * @param string $handler defined in Route::link() or BaseHandler::getLink()
+     * @param class-string $handler defined in Route::link() or BaseHandler::getLink()
      * @param string|int|null $page
      * @param array<mixed> $params
      * @return string
@@ -362,10 +393,6 @@ class Route
     {
         // ?page=... or /route/...
         $uri = self::page($page, $params);
-        // same routes as HtmlHandler - see util.js
-        if ($handler == 'json') {
-            $handler = 'html';
-        }
         // endpoint.php or handler or empty
         $endpoint = self::endpoint($handler);
         if (empty($endpoint) && str_starts_with($uri, '/')) {
@@ -378,6 +405,7 @@ class Route
 
     /**
      * Get endpoint for handler
+     * @todo get rid of param here
      * @param string $handler
      * @return string
      */
@@ -443,6 +471,7 @@ class Route
      */
     public static function getQueryString($params)
     {
+        unset($params[self::HANDLER_PARAM]);
         return http_build_query($params, '', null, PHP_QUERY_RFC3986);
     }
 
@@ -472,16 +501,20 @@ class Route
 
     /**
      * Get handler class based on name
-     * @param string $name
+     * @param string|class-string $name
      * @return class-string
      */
-    public static function getHandlerClass($name)
+    public static function getHandler($name)
     {
         if (empty(self::$handlers)) {
             self::$handlers = Framework::getHandlers();
         }
+        // we already have a handler class-string
+        if (in_array($name, array_values(self::$handlers))) {
+            return $name;
+        }
         if (!isset(self::$handlers[$name])) {
-            throw new Exception('Invalid handler name');
+            throw new Exception('Invalid handler name ' . htmlspecialchars($name));
         }
         return self::$handlers[$name];
     }
@@ -494,19 +527,20 @@ class Route
      */
     public static function getRouteForParams($params, $prefix = '')
     {
+        $default = self::getHandler('html');
         if (!empty($params[self::HANDLER_PARAM])) {
             $handler = $params[self::HANDLER_PARAM];
             // use page route with /restapi prefix instead
-            if ($handler == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
+            if ($handler::HANDLER == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
                 $prefix = $prefix . '/restapi';
-                $handler = 'html';
-            } elseif ($handler == 'phpunit') {
-                $handler = 'html';
+                $handler = $default;
+            } elseif ($handler::HANDLER == 'phpunit') {
+                $handler = $default;
             }
             unset($params[self::HANDLER_PARAM]);
         } elseif (isset($params['page'])) {
             // use default handler for page route
-            $handler = 'html';
+            $handler = $default;
             // @todo use _route later - see PageHandler::findRouteName()
         } else {
             // no page or handler, e.g. index.php?complete=1
@@ -518,8 +552,7 @@ class Route
             return $prefix . $route . '?' . self::getQueryString($params);
         }
 
-        $class = self::getHandlerClass($handler);
-        $route = $class::findRoute($params);
+        $route = $handler::findRoute($params);
         if (!isset($route)) {
             return $route;
         }
@@ -535,6 +568,10 @@ class Route
      */
     public static function findMatchingRoute($routes, $params, $prefix = '')
     {
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            self::$counters['find'] += 1;
+        }
         // find matching route based on fixed and/or path params - e.g. authors letter
         foreach ($routes as $name => $route) {
             // Add fixed if needed

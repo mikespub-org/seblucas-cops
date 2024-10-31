@@ -107,10 +107,10 @@ class VirtualLibrary extends Base
     /**
      * Summary of getEntries
      * @param ?int $database
-     * @param ?string $handler
+     * @param class-string $handler
      * @return array<Entry>
      */
-    public static function getEntries($database = null, $handler = null)
+    public static function getEntries($database, $handler)
     {
         $libraries = self::getLibraries($database);
         $entryArray = [];
@@ -129,10 +129,10 @@ class VirtualLibrary extends Base
     /**
      * Summary of getWithoutEntry
      * @param ?int $database
-     * @param ?string $handler
+     * @param class-string $handler
      * @return ?Entry
      */
-    public static function getWithoutEntry($database = null, $handler = null)
+    public static function getWithoutEntry($database, $handler)
     {
         $booklist = new BookList(null, $database);
         $count = $booklist->getBookCount();
@@ -153,10 +153,10 @@ class VirtualLibrary extends Base
     /**
      * Summary of getCount
      * @param ?int $database
-     * @param ?string $handler
+     * @param class-string $handler
      * @return ?Entry
      */
-    public static function getCount($database = null, $handler = null)
+    public static function getCount($database, $handler)
     {
         $libraries = self::getLibraries($database);
         $count = count($libraries);

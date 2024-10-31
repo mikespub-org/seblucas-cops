@@ -80,9 +80,13 @@ class PageHandler extends BaseHandler
      */
     public static function getLink($params = [])
     {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['pageLink'] += 1;
+        }
         // use default page handler to find the route for html and json
         unset($params[Route::HANDLER_PARAM]);
-        return Route::process(static::HANDLER, null, $params);
+        return Route::process(static::class, null, $params);
     }
 
     /**
@@ -93,9 +97,13 @@ class PageHandler extends BaseHandler
      */
     public static function getPageLink($page = null, $params = [])
     {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['pageLink'] += 1;
+        }
         // use default page handler to find the route for html and json
         unset($params[Route::HANDLER_PARAM]);
-        return Route::process(static::HANDLER, $page, $params);
+        return Route::process(static::class, $page, $params);
     }
 
     /**

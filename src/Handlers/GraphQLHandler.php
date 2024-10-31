@@ -157,7 +157,7 @@ class GraphQLHandler extends BaseHandler
      */
     public function getQueryFieldResolver($request)
     {
-        $handler = HtmlHandler::HANDLER;
+        $handler = HtmlHandler::class;
         $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) use ($request, $handler) {
             $fieldName = $info->fieldName;
             switch ($fieldName) {

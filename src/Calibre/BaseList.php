@@ -29,7 +29,8 @@ class BaseList
     //protected $ignoredCategories = [];
     /** @var ?string */
     public $orderBy = null;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * @param class-string $className

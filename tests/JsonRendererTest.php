@@ -18,7 +18,7 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\ReadHandler;
-use SebLucas\Cops\Handlers\TestHandler;
+use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -26,7 +26,8 @@ use SebLucas\Cops\Pages\PageId;
 
 class JsonRendererTest extends TestCase
 {
-    private static string $handler = TestHandler::HANDLER;
+    /** @var class-string */
+    private static $handler = JsonHandler::class;
 
     public static function setUpBeforeClass(): void
     {
@@ -42,7 +43,7 @@ class JsonRendererTest extends TestCase
     public function testCompleteArray(): void
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
-        $request = TestHandler::request([]);
+        $request = JsonHandler::request([]);
         $renderer = new JsonRenderer();
         $renderer->setRequest($request);
         $test = [];
@@ -53,7 +54,7 @@ class JsonRendererTest extends TestCase
         $this->assertArrayHasKey("url", $test ["c"]);
         $this->assertArrayHasKey("config", $test ["c"]);
 
-        $this->assertEquals(TestHandler::getLink() . "/books/{0}?db={1}", $test ["c"]["url"]["detailUrl"]);
+        $this->assertEquals(JsonHandler::getLink() . "/books/{0}?db={1}", $test ["c"]["url"]["detailUrl"]);
         $this->assertEquals(FetchHandler::getLink() . "/thumbs/{1}/{0}/html.jpg", $test ["c"]["url"]["thumbnailUrl"]);
         $this->assertFalse($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
@@ -87,7 +88,7 @@ class JsonRendererTest extends TestCase
 
         $this->assertCount(2, $test ["preferedData"]);
         $this->assertEquals(FetchHandler::getLink() . "/fetch/0/20/ignore.epub", $test ["preferedData"][0]["url"]);
-        $this->assertEquals(TestHandler::getLink() . "/publishers/2/Macmillan_and_Co._London", $test ["publisherurl"]);
+        $this->assertEquals(JsonHandler::getLink() . "/publishers/2/Macmillan_and_Co._London", $test ["publisherurl"]);
 
         $this->assertEquals("", $test ["seriesName"]);
         $this->assertEquals("1.0", $test ["seriesIndex"]);
@@ -105,12 +106,12 @@ class JsonRendererTest extends TestCase
 
         $this->assertCount(1, $test ["preferedData"]);
         $this->assertEquals(FetchHandler::getLink() . "/fetch/0/1/ignore.epub", $test ["preferedData"][0]["url"]);
-        $this->assertEquals(TestHandler::getLink() . "/publishers/6/Strand_Magazine", $test ["publisherurl"]);
+        $this->assertEquals(JsonHandler::getLink() . "/publishers/6/Strand_Magazine", $test ["publisherurl"]);
 
         $this->assertEquals("Sherlock Holmes", $test ["seriesName"]);
         $this->assertEquals("6.0", $test ["seriesIndex"]);
         $this->assertEquals("Book 6 in the Sherlock Holmes series", $test ["seriesCompleteName"]);
-        $this->assertEquals(TestHandler::getLink() . "/series/1/Sherlock_Holmes", $test ["seriesurl"]);
+        $this->assertEquals(JsonHandler::getLink() . "/series/1/Sherlock_Holmes", $test ["seriesurl"]);
     }
 
     public function testGetFullBookContentArray(): void
@@ -124,9 +125,9 @@ class JsonRendererTest extends TestCase
         $this->assertEquals(FetchHandler::getLink() . "/covers/0/17.jpg", $test ["coverurl"]);
         $this->assertEquals(FetchHandler::getLink() . "/thumbs/0/17/html2.jpg", $test ["thumbnailurl"]);
         $this->assertCount(1, $test ["authors"]);
-        $this->assertEquals(TestHandler::getLink() . "/authors/3/Lewis_Carroll", $test ["authors"][0]["url"]);
+        $this->assertEquals(JsonHandler::getLink() . "/authors/3/Lewis_Carroll", $test ["authors"][0]["url"]);
         $this->assertCount(3, $test ["tags"]);
-        $this->assertEquals(TestHandler::getLink() . "/tags/5/Fantasy", $test ["tags"][0]["url"]);
+        $this->assertEquals(JsonHandler::getLink() . "/tags/5/Fantasy", $test ["tags"][0]["url"]);
         $this->assertCount(0, $test ["identifiers"]);
         $this->assertCount(3, $test ["datas"]);
         $this->assertEquals(FetchHandler::getLink() . "/fetch/0/20/ignore.epub", $test ["datas"][2]["url"]);
@@ -155,7 +156,7 @@ class JsonRendererTest extends TestCase
     {
         $page = PageId::ALL_RECENT_BOOKS;
 
-        $request = TestHandler::request(['page' => $page]);
+        $request = JsonHandler::request(['page' => $page]);
         $renderer = new JsonRenderer();
         $test = $renderer->getJson($request);
 
@@ -170,7 +171,7 @@ class JsonRendererTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
         $id = 1;
 
-        $request = TestHandler::request(['page' => $page, 'id' => $id]);
+        $request = JsonHandler::request(['page' => $page, 'id' => $id]);
         $renderer = new JsonRenderer();
         $test = $renderer->getJson($request);
 
@@ -189,7 +190,7 @@ class JsonRendererTest extends TestCase
         $page = PageId::ALL_RECENT_BOOKS;
         $a = 1;
 
-        $request = TestHandler::request(['page' => $page, 'a' => $a]);
+        $request = JsonHandler::request(['page' => $page, 'a' => $a]);
         $renderer = new JsonRenderer();
         $test = $renderer->getJson($request);
 
@@ -207,24 +208,24 @@ class JsonRendererTest extends TestCase
         $page = PageId::OPENSEARCH_QUERY;
         $query = "fic";
 
-        $request = TestHandler::request(['page' => $page, 'query' => $query, 'search' => 1]);
+        $request = JsonHandler::request(['page' => $page, 'query' => $query, 'search' => 1]);
         $renderer = new JsonRenderer();
         $test = $renderer->getJson($request);
         $expected = [
             [
                 'class' => 'tt-header',
                 'title' => 'Search result for *fic* in tags',
-                'navlink' => TestHandler::getLink() . '/search/fic/tag',
+                'navlink' => JsonHandler::getLink() . '/search/fic/tag',
             ],
             [
                 'class' => 'Tag',
                 'title' => 'Fiction',
-                'navlink' => TestHandler::getLink() . '/tags/1/Fiction',
+                'navlink' => JsonHandler::getLink() . '/tags/1/Fiction',
             ],
             [
                 'class' => 'Tag',
                 'title' => 'Science Fiction',
-                'navlink' => TestHandler::getLink() . '/tags/7/Science_Fiction',
+                'navlink' => JsonHandler::getLink() . '/tags/7/Science_Fiction',
             ],
         ];
         $this->assertEquals($expected, $test);
@@ -234,7 +235,7 @@ class JsonRendererTest extends TestCase
     {
         $page = PageId::ALL_RECENT_BOOKS;
 
-        $request = TestHandler::request(['page' => $page]);
+        $request = JsonHandler::request(['page' => $page]);
         $renderer = new JsonRenderer();
         $test = $renderer->getJson($request, true);
 
@@ -249,7 +250,7 @@ class JsonRendererTest extends TestCase
         Config::set('download_page', ['ANY']);
         $page = PageId::ALL_RECENT_BOOKS;
 
-        $request = TestHandler::request(['page' => $page]);
+        $request = JsonHandler::request(['page' => $page]);
         $renderer = new JsonRenderer();
         $test = $renderer->getJson($request);
 
@@ -264,7 +265,7 @@ class JsonRendererTest extends TestCase
     {
         $page = PageId::ALL_RECENT_BOOKS;
         $request = Request::build(['page' => $page]);
-        $handler = Framework::getHandler('json');
+        $handler = Framework::createHandler('json');
 
         ob_start();
         $response = $handler->handle($request);

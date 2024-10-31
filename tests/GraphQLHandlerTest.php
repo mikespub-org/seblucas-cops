@@ -22,7 +22,8 @@ use GraphQL\Type\Definition\ListOfType;
 
 class GraphQLHandlerTest extends TestCase
 {
-    private static string $handler = GraphQLHandler::HANDLER;
+    /** @var class-string */
+    private static $handler = GraphQLHandler::class;
     private static int $numberPerPage;
 
     public static function setUpBeforeClass(): void
@@ -46,7 +47,7 @@ class GraphQLHandlerTest extends TestCase
         $request = Request::build();
 
         ob_start();
-        $handler = Framework::getHandler(self::$handler);
+        $handler = Framework::createHandler(self::$handler);
         $response = $handler->handle($request);
         $response->send();
         $headers = headers_list();
@@ -64,7 +65,7 @@ class GraphQLHandlerTest extends TestCase
         $request->content = $this->getBasicQuery();
 
         ob_start();
-        $handler = Framework::getHandler(self::$handler);
+        $handler = Framework::createHandler(self::$handler);
         $response = $handler->handle($request);
         $response->send();
         $headers = headers_list();

@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Output\Mail;
 use SebLucas\Cops\Output\Response;
 
@@ -29,8 +30,8 @@ class MailHandler extends BaseHandler
 
     public function handle($request)
     {
-        // set request handler to 'phpunit' to run preSend() but not actually Send()
-        $dryRun = ($request->getHandler() === 'phpunit') ? true : false;
+        // set request handler to 'TestHandler' class to run preSend() but not actually Send()
+        $dryRun = ($request->getHandler() === TestHandler::class) ? true : false;
 
         $mailer = new Mail();
 

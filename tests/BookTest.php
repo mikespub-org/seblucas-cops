@@ -16,7 +16,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Handlers\FetchHandler;
-use SebLucas\Cops\Handlers\TestHandler;
+use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -112,14 +112,14 @@ class BookTest extends TestCase
     {
         // also check most of book's class methods
         $book = Book::getBookById(2);
-        $book->setHandler('phpunit');
+        $book->setHandler(JsonHandler::class);
 
         $linkArray = $book->getLinkArray();
         $this->assertCount(5, $linkArray);
 
         $this->assertEquals("The Return of Sherlock Holmes", $book->getTitle());
         $this->assertEquals("urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f", $book->getEntryId());
-        $this->assertEquals(TestHandler::getLink() . "/books/2/Arthur_Conan_Doyle/The_Return_of_Sherlock_Holmes", $book->getDetailUrl(TestHandler::HANDLER));
+        $this->assertEquals(JsonHandler::getLink() . "/books/2/Arthur_Conan_Doyle/The_Return_of_Sherlock_Holmes", $book->getDetailUrl(JsonHandler::class));
         $this->assertEquals("Arthur Conan Doyle", $book->getAuthorsName());
         $this->assertEquals("Fiction, Mystery & Detective, Short Stories", $book->getTagsName());
         $this->assertEquals('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment(false));
@@ -233,7 +233,7 @@ class BookTest extends TestCase
     {
         Config::set('use_url_rewriting', "1");
         $book = Book::getBookById(2);
-        $book->setHandler('phpunit');
+        $book->setHandler(JsonHandler::class);
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -249,7 +249,7 @@ class BookTest extends TestCase
     {
         Config::set('use_url_rewriting', "0");
         $book = Book::getBookById(2);
-        $book->setHandler('phpunit');
+        $book->setHandler(JsonHandler::class);
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -312,7 +312,7 @@ class BookTest extends TestCase
     public function testGetThumbnailUri(): void
     {
         $book = Book::getBookById(2);
-        $book->setHandler('phpunit');
+        $book->setHandler(JsonHandler::class);
 
         // The thumbnails should be the same as the covers
         Config::set('thumbnail_handling', "1");

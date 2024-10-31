@@ -20,6 +20,7 @@ $handlers = [
   'graphql' => 'SebLucas\\Cops\\Handlers\\GraphQLHandler',
   'tables' => 'SebLucas\\Cops\\Handlers\\TableHandler',
   'error' => 'SebLucas\\Cops\\Handlers\\ErrorHandler',
+  'phpunit' => 'SebLucas\\Cops\\Handlers\\TestHandler',
 ];
 
 $static = [
@@ -59,6 +60,7 @@ $static = [
   '/mail' => 'mail',
   '/graphql' => 'graphql',
   '/tables' => 'tables',
+  '/test' => 'test',
 ];
 
 $routes = [
@@ -490,7 +492,7 @@ $routes = [
   'feed-page-id' => [
     '/feed/{page}/{id}',
     [
-      '_handler' => 'feed',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
     ],
     [
       'GET',
@@ -501,7 +503,7 @@ $routes = [
     '/feed/search',
     [
       'page' => 'search',
-      '_handler' => 'feed',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
     ],
     [
       'GET',
@@ -511,7 +513,7 @@ $routes = [
   'feed-page' => [
     '/feed/{page}',
     [
-      '_handler' => 'feed',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
     ],
     [
       'GET',
@@ -521,7 +523,7 @@ $routes = [
   'feed' => [
     '/feed',
     [
-      '_handler' => 'feed',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
     ],
     [
       'GET',
@@ -531,7 +533,7 @@ $routes = [
   'fetch-file' => [
     '/files/{db:\\d+}/{id:\\d+}/{file:.+}',
     [
-      '_handler' => 'fetch',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
     ],
     [
       'GET',
@@ -541,7 +543,7 @@ $routes = [
   'fetch-thumb' => [
     '/thumbs/{db:\\d+}/{id:\\d+}/{thumb}.jpg',
     [
-      '_handler' => 'fetch',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
     ],
     [
       'GET',
@@ -551,7 +553,7 @@ $routes = [
   'fetch-cover' => [
     '/covers/{db:\\d+}/{id:\\d+}.jpg',
     [
-      '_handler' => 'fetch',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
     ],
     [
       'GET',
@@ -562,7 +564,7 @@ $routes = [
     '/inline/{db:\\d+}/{data:\\d+}/{ignore}.{type}',
     [
       'view' => 1,
-      '_handler' => 'fetch',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
     ],
     [
       'GET',
@@ -572,7 +574,7 @@ $routes = [
   'fetch-data' => [
     '/fetch/{db:\\d+}/{data:\\d+}/{ignore}.{type}',
     [
-      '_handler' => 'fetch',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
     ],
     [
       'GET',
@@ -583,7 +585,7 @@ $routes = [
     '/view/{data}/{db}/{ignore}.{type}',
     [
       'view' => 1,
-      '_handler' => 'fetch',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
     ],
     [
       'GET',
@@ -593,7 +595,7 @@ $routes = [
   'fetch-download' => [
     '/download/{data}/{db}/{ignore}.{type}',
     [
-      '_handler' => 'fetch',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
     ],
     [
       'GET',
@@ -603,7 +605,7 @@ $routes = [
   'read-title' => [
     '/read/{db:\\d+}/{data:\\d+}/{title}',
     [
-      '_handler' => 'read',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler',
     ],
     [
       'GET',
@@ -613,7 +615,7 @@ $routes = [
   'read' => [
     '/read/{db:\\d+}/{data:\\d+}',
     [
-      '_handler' => 'read',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler',
     ],
     [
       'GET',
@@ -623,7 +625,7 @@ $routes = [
   'epubfs' => [
     '/epubfs/{db:\\d+}/{data:\\d+}/{comp:.+}',
     [
-      '_handler' => 'epubfs',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\EpubFsHandler',
     ],
     [
       'GET',
@@ -634,7 +636,7 @@ $routes = [
     '/restapi/custom',
     [
       '_resource' => 'CustomColumnType',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -645,7 +647,7 @@ $routes = [
     '/restapi/databases/{db}/{name}',
     [
       '_resource' => 'Database',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -656,7 +658,7 @@ $routes = [
     '/restapi/databases/{db}',
     [
       '_resource' => 'Database',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -667,7 +669,7 @@ $routes = [
     '/restapi/databases',
     [
       '_resource' => 'Database',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -678,7 +680,7 @@ $routes = [
     '/restapi/openapi',
     [
       '_resource' => 'openapi',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -689,7 +691,7 @@ $routes = [
     '/restapi/routes',
     [
       '_resource' => 'route',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -700,7 +702,7 @@ $routes = [
     '/restapi/handlers',
     [
       '_resource' => 'handler',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -711,7 +713,7 @@ $routes = [
     '/restapi/notes/{type}/{id}/{title}',
     [
       '_resource' => 'Note',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -722,7 +724,7 @@ $routes = [
     '/restapi/notes/{type}/{id}',
     [
       '_resource' => 'Note',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -733,7 +735,7 @@ $routes = [
     '/restapi/notes/{type}',
     [
       '_resource' => 'Note',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -744,7 +746,7 @@ $routes = [
     '/restapi/notes',
     [
       '_resource' => 'Note',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -755,7 +757,7 @@ $routes = [
     '/restapi/preferences/{key}',
     [
       '_resource' => 'Preference',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -766,7 +768,7 @@ $routes = [
     '/restapi/preferences',
     [
       '_resource' => 'Preference',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -777,7 +779,7 @@ $routes = [
     '/restapi/annotations/{bookId}/{id}',
     [
       '_resource' => 'Annotation',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -788,7 +790,7 @@ $routes = [
     '/restapi/annotations/{bookId}',
     [
       '_resource' => 'Annotation',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -799,7 +801,7 @@ $routes = [
     '/restapi/annotations',
     [
       '_resource' => 'Annotation',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -810,7 +812,7 @@ $routes = [
     '/restapi/metadata/{bookId}/{element}/{name}',
     [
       '_resource' => 'Metadata',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -821,7 +823,7 @@ $routes = [
     '/restapi/metadata/{bookId}/{element}',
     [
       '_resource' => 'Metadata',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -832,7 +834,7 @@ $routes = [
     '/restapi/metadata/{bookId}',
     [
       '_resource' => 'Metadata',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -843,7 +845,7 @@ $routes = [
     '/restapi/user/details',
     [
       '_resource' => 'User',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -854,7 +856,7 @@ $routes = [
     '/restapi/user',
     [
       '_resource' => 'User',
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -864,7 +866,7 @@ $routes = [
   'restapi-other' => [
     '/restapi/{route:.*}',
     [
-      '_handler' => 'restapi',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
     [
       'GET',
@@ -874,7 +876,7 @@ $routes = [
   'check-more' => [
     '/check/{more:.*}',
     [
-      '_handler' => 'check',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler',
     ],
     [
       'GET',
@@ -884,7 +886,7 @@ $routes = [
   'check' => [
     '/check',
     [
-      '_handler' => 'check',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler',
     ],
     [
       'GET',
@@ -894,7 +896,7 @@ $routes = [
   'opds-page-id' => [
     '/opds/{page}/{id}',
     [
-      '_handler' => 'opds',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
     ],
     [
       'GET',
@@ -905,7 +907,7 @@ $routes = [
     '/opds/search',
     [
       'page' => 'search',
-      '_handler' => 'opds',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
     ],
     [
       'GET',
@@ -915,7 +917,7 @@ $routes = [
   'opds-page' => [
     '/opds/{page}',
     [
-      '_handler' => 'opds',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
     ],
     [
       'GET',
@@ -925,7 +927,7 @@ $routes = [
   'opds' => [
     '/opds',
     [
-      '_handler' => 'opds',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
     ],
     [
       'GET',
@@ -935,7 +937,7 @@ $routes = [
   'loader-action-dbNum-authorId-urlPath' => [
     '/loader/{action}/{dbNum:\\d+}/{authorId:\\w+}/{urlPath:.*}',
     [
-      '_handler' => 'loader',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler',
     ],
     [
       'GET',
@@ -945,7 +947,7 @@ $routes = [
   'loader-action-dbNum-authorId' => [
     '/loader/{action}/{dbNum:\\d+}/{authorId:\\w*}',
     [
-      '_handler' => 'loader',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler',
     ],
     [
       'GET',
@@ -955,7 +957,7 @@ $routes = [
   'loader-action-dbNum' => [
     '/loader/{action}/{dbNum:\\d+}',
     [
-      '_handler' => 'loader',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler',
     ],
     [
       'GET',
@@ -965,7 +967,7 @@ $routes = [
   'loader-action-' => [
     '/loader/{action}/',
     [
-      '_handler' => 'loader',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler',
     ],
     [
       'GET',
@@ -975,7 +977,7 @@ $routes = [
   'loader-action' => [
     '/loader/{action}',
     [
-      '_handler' => 'loader',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler',
     ],
     [
       'GET',
@@ -985,7 +987,7 @@ $routes = [
   'loader' => [
     '/loader',
     [
-      '_handler' => 'loader',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler',
     ],
     [
       'GET',
@@ -995,7 +997,7 @@ $routes = [
   'zipper-page-id-type' => [
     '/zipper/{page}/{id}/{type}.zip',
     [
-      '_handler' => 'zipper',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ZipperHandler',
     ],
     [
       'GET',
@@ -1005,7 +1007,7 @@ $routes = [
   'zipper-page-type' => [
     '/zipper/{page}/{type}.zip',
     [
-      '_handler' => 'zipper',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ZipperHandler',
     ],
     [
       'GET',
@@ -1015,7 +1017,7 @@ $routes = [
   'calres' => [
     '/calres/{db:\\d+}/{alg}/{digest}',
     [
-      '_handler' => 'calres',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\CalResHandler',
     ],
     [
       'GET',
@@ -1025,7 +1027,7 @@ $routes = [
   'zipfs' => [
     '/zipfs/{db:\\d+}/{data:\\d+}/{comp:.+}',
     [
-      '_handler' => 'zipfs',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler',
     ],
     [
       'GET',
@@ -1035,7 +1037,7 @@ $routes = [
   'mail' => [
     '/mail',
     [
-      '_handler' => 'mail',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\MailHandler',
     ],
     [
       'POST',
@@ -1045,7 +1047,7 @@ $routes = [
   'graphql' => [
     '/graphql',
     [
-      '_handler' => 'graphql',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\GraphQLHandler',
     ],
     [
       'GET',
@@ -1056,7 +1058,17 @@ $routes = [
   'tables' => [
     '/tables',
     [
-      '_handler' => 'tables',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'test' => [
+    '/test',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TestHandler',
     ],
     [
       'GET',

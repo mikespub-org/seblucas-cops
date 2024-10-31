@@ -17,6 +17,7 @@ x.x.x - TODO
     - set $config['cops_use_route_urls'] as deprecated (= always enabled)
     - set $config['cops_download_series'] as deprecated (use $config['cops_download_page'] instead)
     - set $config['cops_download_author'] as deprecated (use $config['cops_download_page'] instead)
+  * Use handler class in params instead of handler name + adapt $handler properties/params
   * Generate openapi.json and dump/load cached routes file (info only)
   * Clean up fetch-thumb and zipper-page-* routes in handler & renderers
   * Change route definitions for handlers + add a few _route params

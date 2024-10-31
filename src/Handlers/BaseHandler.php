@@ -23,7 +23,7 @@ abstract class BaseHandler
 
     /**
      * Array of path => params for this handler
-     * Note: Route will add Route::HANDLER_PARAM => static::HANDLER to params
+     * Note: Route will add Route::HANDLER_PARAM => static::class to params
      * @return array<string, mixed>
      */
     public static function getRoutes()
@@ -38,9 +38,30 @@ abstract class BaseHandler
      */
     public static function getLink($params = [])
     {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['baseLink'] += 1;
+        }
         // use this specific handler to find the route
-        $params[Route::HANDLER_PARAM] = static::HANDLER;
-        return Route::process(static::HANDLER, null, $params);
+        $params[Route::HANDLER_PARAM] = static::class;
+        return Route::process(static::class, null, $params);
+    }
+
+    /**
+     * Summary of getPageLink - currently unused (all calls set page in params)
+     * @param string|int|null $page
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function getPageLink($page = null, $params = [])
+    {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['pageLink'] += 1;
+        }
+        // use this specific handler to find the route
+        $params[Route::HANDLER_PARAM] = static::class;
+        return Route::process(static::class, $page, $params);
     }
 
     /**
@@ -51,6 +72,10 @@ abstract class BaseHandler
      */
     public static function generate($routeName, $params = [])
     {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['generate'] += 1;
+        }
         $params[Route::ROUTE_PARAM] = $routeName;
         return static::getLink($params);
     }
@@ -101,7 +126,7 @@ abstract class BaseHandler
      */
     public static function request($params = [])
     {
-        return Request::build($params, static::HANDLER);
+        return Request::build($params, static::class);
     }
 
     public function __construct()

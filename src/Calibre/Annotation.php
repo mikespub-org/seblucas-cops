@@ -56,7 +56,7 @@ class Annotation extends Base
             $this->data = [ $post->annot_data ];
         }
         $this->databaseId = $database;
-        $this->handler = RestApiHandler::HANDLER;
+        $this->handler = RestApiHandler::class;
     }
 
     /**

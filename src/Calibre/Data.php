@@ -32,7 +32,8 @@ class Data
     public $book;
     /** @var ?int */
     protected $databaseId;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
     public bool $updateForKepub = false;
 
     /** @var array<string, string> */
@@ -100,7 +101,7 @@ class Data
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
         $this->setBook($book);
-        $this->handler = FetchHandler::HANDLER;
+        $this->handler = FetchHandler::class;
     }
 
     /**

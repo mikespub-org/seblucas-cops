@@ -346,7 +346,7 @@ class OpdsRendererTest extends TestCase
     {
         $page = PageId::ALL_RECENT_BOOKS;
         $request = Request::build(['page' => $page]);
-        $handler = Framework::getHandler('feed');
+        $handler = Framework::createHandler('feed');
 
         ob_start();
         $response = $handler->handle($request);

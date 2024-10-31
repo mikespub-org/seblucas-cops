@@ -92,22 +92,30 @@ class RestApiHandler extends BaseHandler
      */
     public static function getResourceLink($className, $params = [])
     {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['other'] += 1;
+        }
         $params = static::addResourceParam($className, $params);
         return static::getLink($params);
     }
 
     /**
      * Get REST API link for handler, page, params handled elsewhere
-     * @param string|null $handler
+     * @param class-string|null $handler
      * @param string|int|null $page
      * @param array<mixed> $params
      * @return string
      */
     public static function getHandlerLink($handler = null, $page = null, $params = [])
     {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['other'] += 1;
+        }
         // use page route with /restapi prefix instead
-        $handler ??= 'html';
-        $params[Route::HANDLER_PARAM] = static::HANDLER;
+        $handler ??= Route::getHandler('html');
+        $params[Route::HANDLER_PARAM] = static::class;
         $link = Route::process($handler, $page, $params);
         return $link;
         //return str_replace(Route::base() . Route::endpoint(), static::getBaseUrl(), $link);
@@ -120,7 +128,7 @@ class RestApiHandler extends BaseHandler
     public static function getBaseUrl()
     {
         if (!isset(static::$baseUrl)) {
-            // Route::link(static::HANDLER) doesn't contain prefix anymore without route
+            // Route::link(static::class) doesn't contain prefix anymore without route
             $link = static::getLink(['route' => 'ROUTE']);
             static::$baseUrl = str_replace('/ROUTE', '', $link);
         }

@@ -146,23 +146,25 @@ class OpenApi
         }
         [$path, $params, $queryString] = $this->getPathParams($path, $queryParams);
 
-        if (!empty($queryParams[Route::HANDLER_PARAM]) && $queryParams[Route::HANDLER_PARAM] == "restapi") {
+        // @todo clean up queryString with handler_param here
+        $handler = 'default';
+        if (!empty($queryParams[Route::HANDLER_PARAM])) {
+            $handler = $queryParams[Route::HANDLER_PARAM]::HANDLER;
+        }
+        if ($handler == "restapi") {
             $queryString = substr($path, 1) . ' api';
         } elseif (!empty($queryParams[Route::HANDLER_PARAM])) {
-            $handler = $queryParams[Route::HANDLER_PARAM];
-            $queryString = str_replace(Route::HANDLER_PARAM . '=' . $handler, $handler, $queryString);
-            if (str_contains($queryString, '&')) {
-                $queryString = str_replace($handler . '&', $handler . ' handler with ', $queryString);
+            if (!empty($queryString)) {
+                $queryString = $handler . ' handler with ' . trim($queryString, '&');
             } else {
-                $queryString .= ' handler';
+                $queryString = $handler . ' handler';
             }
         } else {
-            $queryString = 'page handler with ' . $queryString;
+            $queryString = 'page handler with ' . trim($queryString, '&');
         }
         if (empty($methods)) {
             $methods = ['GET'];
         }
-        $handler = $queryParams[Route::HANDLER_PARAM] ?? 'default';
         foreach ($methods as $method) {
             $method = strtolower($method);
             $operationId = $method . '_' . $name;
@@ -241,7 +243,7 @@ class OpenApi
             !str_starts_with($path, "/databases") &&
             !in_array($path, ["/openapi", "/routes", "/handlers", "/about"]) &&
             (empty($queryParams[Route::HANDLER_PARAM]) ||
-            in_array($queryParams[Route::HANDLER_PARAM], ['restapi', 'zipper']))
+            in_array($queryParams[Route::HANDLER_PARAM]::HANDLER, ['restapi', 'zipper']))
         ) {
             array_push($params, [
                 '$ref' => "#/components/parameters/dbParam",
@@ -294,11 +296,14 @@ class OpenApi
                 ["BasicAuth" => []],
             ];
         }
-        if (!empty($queryParams[Route::HANDLER_PARAM]) && $queryParams[Route::HANDLER_PARAM] !== "restapi") {
-            $operation["summary"] .= " - with api key";
-            $operation["security"] = [
-                ["ApiKeyAuth" => []],
-            ];
+        if (!empty($queryParams[Route::HANDLER_PARAM])) {
+            $handler = $queryParams[Route::HANDLER_PARAM]::HANDLER;
+            if (!in_array($handler, ["restapi", "check", "phpunit"])) {
+                $operation["summary"] .= " - with api key";
+                $operation["security"] = [
+                    ["ApiKeyAuth" => []],
+                ];
+            }
         }
     }
 }

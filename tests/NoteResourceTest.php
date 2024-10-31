@@ -134,7 +134,7 @@ class NoteResourceTest extends TestCase
     public function testCalResHandler(): void
     {
         $request = Request::build(["db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]);
-        $handler = Framework::getHandler('calres');
+        $handler = Framework::createHandler('calres');
 
         ob_start();
         $response = $handler->handle($request);

@@ -22,7 +22,8 @@ class Cover
     public $book;
     /** @var ?int */
     protected $databaseId;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
     /** @var ?string */
     public $coverFileName = null;
     /** @var ?FileResponse */
@@ -40,7 +41,7 @@ class Cover
             $this->coverFileName = $book->getCoverFileName();
         }
         $this->databaseId = $database ?? $book->getDatabaseId();
-        $this->handler = FetchHandler::HANDLER;
+        $this->handler = FetchHandler::class;
     }
 
     /**

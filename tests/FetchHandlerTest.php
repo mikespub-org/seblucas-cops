@@ -13,6 +13,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework;
+use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 
@@ -40,9 +41,9 @@ class FetchHandlerTest extends TestCase
 
     public function testCover(): void
     {
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['id' => 17], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['id' => 17], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -57,9 +58,9 @@ class FetchHandlerTest extends TestCase
 
     public function testThumb(): void
     {
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['id' => 17, 'thumb' => 'html'], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['id' => 17, 'thumb' => 'html'], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -74,9 +75,9 @@ class FetchHandlerTest extends TestCase
 
     public function testView(): void
     {
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub', 'view' => 1], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub', 'view' => 1], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -91,9 +92,9 @@ class FetchHandlerTest extends TestCase
 
     public function testFetch(): void
     {
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -111,9 +112,9 @@ class FetchHandlerTest extends TestCase
     {
         Config::set('update_epub-metadata', '1');
 
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -135,9 +136,9 @@ class FetchHandlerTest extends TestCase
         Config::set('kepubify_path', self::$kepubifyPath);
         $_SERVER['HTTP_USER_AGENT'] = "Kobo";
 
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -162,9 +163,9 @@ class FetchHandlerTest extends TestCase
         Config::set('kepubify_path', self::$kepubifyPath);
         $_SERVER['HTTP_USER_AGENT'] = "Kobo";
 
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -185,9 +186,9 @@ class FetchHandlerTest extends TestCase
 
     public function testFile(): void
     {
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['id' => 17, 'file' => 'hello.txt'], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['id' => 17, 'file' => 'hello.txt'], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);
@@ -202,9 +203,9 @@ class FetchHandlerTest extends TestCase
 
     public function testZipped(): void
     {
-        // set request handler to 'phpunit' to override output buffer check in handler
-        $request = Request::build(['id' => 17, 'file' => 'zipped'], 'phpunit');
-        $handler = Framework::getHandler('fetch');
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['id' => 17, 'file' => 'zipped'], TestHandler::class);
+        $handler = Framework::createHandler('fetch');
 
         ob_start();
         $response = $handler->handle($request);

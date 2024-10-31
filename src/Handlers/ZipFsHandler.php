@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;
 use Exception;
@@ -32,7 +33,7 @@ class ZipFsHandler extends BaseHandler
 
     public function handle($request)
     {
-        if (php_sapi_name() === 'cli' && $request->getHandler() !== 'phpunit') {
+        if (php_sapi_name() === 'cli' && $request->getHandler() !== TestHandler::class) {
             return;
         }
 

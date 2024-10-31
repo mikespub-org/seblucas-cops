@@ -22,6 +22,7 @@ namespace SebLucas\Cops\Tests;
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use Symfony\Component\BrowserKit\Cookie;
@@ -176,11 +177,8 @@ class BrowserKitTest extends TestCase
         $uri = Route::link() . '/index';
         $crawler = $this->url($uri);
 
-        if (!empty(self::$localConfig['cops_front_controller'])) {
-            $uri = Route::base() . 'index?complete=1';
-        } else {
-            $uri = Route::link('json') . '/index?complete=1';
-        }
+        $uri = JsonHandler::getLink() . '/index?complete=1';
+
         $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . Route::path("templates") . '");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);

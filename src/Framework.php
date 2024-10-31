@@ -35,7 +35,7 @@ class Framework
         "graphql" => Handlers\GraphQLHandler::class,
         "tables" => Handlers\TableHandler::class,
         "error" => Handlers\ErrorHandler::class,
-        //"test" => Handlers\TestHandler::class,
+        "phpunit" => Handlers\TestHandler::class,
     ];
     /** @var array<mixed> */
     protected static $middlewares = [];
@@ -50,7 +50,7 @@ class Framework
         $request = static::getRequest();
         if ($request->invalid) {
             $name = 'error';
-            $handler = Framework::getHandler($name);
+            $handler = Framework::createHandler($name);
             $response = $handler->handle($request);
             if ($response instanceof Response) {
                 //$response->prepare($request);
@@ -60,13 +60,13 @@ class Framework
         }
 
         // route to the right handler if needed
-        $name = $request->getHandler();
+        $name = $request->getHandler()::HANDLER;
 
         // special case for json requests here
         if ($name == 'html' && $request->isJson()) {
             $name = 'json';
         }
-        $handler = Framework::getHandler($name);
+        $handler = Framework::createHandler($name);
         if (empty(static::$middlewares)) {
             $response = $handler->handle($request);
             if ($response instanceof Response) {
@@ -133,13 +133,16 @@ class Framework
     }
 
     /**
-     * Get handler instance based on name
-     * @param string $name
+     * Create handler instance based on name or class-string
+     * @param string|class-string $name
      * @param mixed $args
      * @return mixed
      */
-    public static function getHandler($name, ...$args)
+    public static function createHandler($name, ...$args)
     {
+        if (in_array($name, array_values(static::$handlers))) {
+            return new $name(...$args);
+        }
         if (!isset(static::$handlers[$name])) {
             // this will call exit()
             Response::sendError(null, "Invalid handler name '$name'");

@@ -69,7 +69,8 @@ abstract class CustomColumnType
     protected $numberPerPage = -1;
     /** @var array<string, mixed> */
     protected $displaySettings = [];
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of __construct
@@ -166,7 +167,7 @@ abstract class CustomColumnType
 
     /**
      * Summary of setHandler
-     * @param string $handler
+     * @param class-string $handler
      * @return void
      */
     public function setHandler($handler)
@@ -176,7 +177,7 @@ abstract class CustomColumnType
 
     /**
      * Summary of getHandler
-     * @return string
+     * @return class-string
      */
     public function getHandler()
     {

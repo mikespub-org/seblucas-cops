@@ -141,9 +141,13 @@ class Request
             $this->invalid = true;
             $params = [];
         }
+        $default = Route::getHandler('html');
+        if (empty($params[Route::HANDLER_PARAM])) {
+            $params[Route::HANDLER_PARAM] = $default;
+        }
         // JsonHandler uses same routes as HtmlHandler - see util.js
-        if (empty($params[Route::HANDLER_PARAM]) && $this->isAjax()) {
-            $params[Route::HANDLER_PARAM] = 'json';
+        if ($params[Route::HANDLER_PARAM] == $default && $this->isAjax()) {
+            $params[Route::HANDLER_PARAM] = Route::getHandler('json');
         }
         foreach ($params as $name => $value) {
             $this->urlParams[$name] = $value;
@@ -151,7 +155,8 @@ class Request
         if (!empty($_GET)) {
             foreach ($_GET as $name => $value) {
                 // remove ajax timestamp for jQuery cache = false
-                if ($name == '_') {
+                // remove internal _handler, _route, _resource etc. params
+                if (str_starts_with($name, '_')) {
                     continue;
                 }
                 $this->urlParams[$name] = $_GET[$name];
@@ -416,7 +421,7 @@ class Request
 
     /**
      * Summary of getCurrentUrl
-     * @param ?string $handler
+     * @param class-string|null $handler
      * @return string
      */
     public function getCurrentUrl($handler = null)
@@ -432,17 +437,21 @@ class Request
     }
 
     /**
-     * Summary of getHandler
-     * @return string
+     * Get handler class corresponding to _handler param
+     * @return class-string
      */
     public function getHandler()
     {
         // we have a handler already
         if (!empty($this->urlParams[Route::HANDLER_PARAM])) {
-            return $this->urlParams[Route::HANDLER_PARAM];
+            //return $this->urlParams[Route::HANDLER_PARAM];
+            return Route::getHandler($this->urlParams[Route::HANDLER_PARAM]);
+        }
+        if ($this->isAjax()) {
+            return Route::getHandler('json');
         }
         // use default handler
-        return 'html';
+        return Route::getHandler('html');
     }
 
     /**
@@ -510,7 +519,7 @@ class Request
     {
         // set in parseParams() based on isAjax()
         $handler = $this->getHandler();
-        if ($handler == 'json') {
+        if ($handler::HANDLER == 'json') {
             return true;
         }
         return false;
@@ -524,7 +533,8 @@ class Request
     {
         // set in parseParams() based on Route::match()
         $handler = $this->getHandler();
-        if (in_array($handler, ['feed', 'opds'])) {
+        $feedHandlers = [Route::getHandler('feed'), Route::getHandler('opds')];
+        if (in_array($handler, $feedHandlers)) {
             return true;
         }
         return false;
@@ -533,16 +543,18 @@ class Request
     /**
      * Summary of build
      * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-     * @param string $handler
+     * @param class-string|null $handler
      * @param ?array<mixed> $server
      * @param ?array<mixed> $cookie
      * @param ?array<mixed> $config
      * @return Request
      */
-    public static function build($params = [], $handler = '', $server = null, $cookie = null, $config = null)
+    public static function build($params = [], $handler = null, $server = null, $cookie = null, $config = null)
     {
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
         if (!empty($handler)) {
+            // @todo double-check we use an actual class-string here
+            $handler = Route::getHandler($handler);
             $params[Route::HANDLER_PARAM] ??= $handler;
         }
         $request = new self(false);

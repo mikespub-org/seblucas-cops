@@ -336,6 +336,7 @@ Please check
     public function handleMore($request)
     {
         $message = date(DATE_COOKIE) . "\n\n";
+        unset($request->urlParams[Route::HANDLER_PARAM]);
         $message .= var_export($request, true);
 
         $response = new Response('text/plain;charset=utf-8');

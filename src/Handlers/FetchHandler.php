@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
@@ -59,7 +60,7 @@ class FetchHandler extends BaseHandler
             }
         }
         // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
-        if (ob_get_length() !== false && $request->getHandler() !== 'phpunit') {
+        if (ob_get_length() !== false && $request->getHandler() !== TestHandler::class) {
             ob_end_clean();
         }
 

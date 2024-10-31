@@ -32,7 +32,7 @@ class JsonRenderer extends BaseRenderer
     protected $request;
     /** @var ?int */
     protected $database = null;
-    /** @var string */
+    /** @var class-string */
     protected $handler;
     /** @var int|string */
     protected $page;
@@ -120,7 +120,7 @@ class JsonRenderer extends BaseRenderer
 
         return [
             "id" => $book->id,
-            "detailurl" => $book->getDetailUrl($handler),
+            "detailurl" => $book->getDetailUrl(),
             "hasCover" => $book->hasCover,
             "preferedData" => $preferedData,
             "preferedCount" => count($preferedData),
@@ -756,6 +756,10 @@ class JsonRenderer extends BaseRenderer
         /** @phpstan-ignore-next-line */
         if (Database::KEEP_STATS) {
             $out ["dbstats"] = Database::getDbStatistics();
+        }
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            $out ["counters"] = Route::$counters;
         }
 
         return $out;

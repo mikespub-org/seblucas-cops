@@ -24,7 +24,7 @@ use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
-use SebLucas\Cops\Handlers\TestHandler;
+use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 
@@ -390,95 +390,95 @@ class FilterTest extends TestCase
 
     public function testGetEntryArray(): void
     {
-        $request = TestHandler::request([]);
+        $request = JsonHandler::request([]);
         $entries = Filter::getEntryArray($request);
         $this->assertCount(0, $entries);
 
-        $request = TestHandler::request(['a' => '1']);
+        $request = JsonHandler::request(['a' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Author", $entries[0]->className);
         $this->assertEquals("Arthur Conan Doyle", $entries[0]->title);
         $this->assertEquals("8 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/authors/1/Arthur_Conan_Doyle", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/authors/1/Arthur_Conan_Doyle", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['l' => '1']);
+        $request = JsonHandler::request(['l' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Language", $entries[0]->className);
         $this->assertEquals("English", $entries[0]->title);
         $this->assertEquals("14 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/languages/1/English", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/languages/1/English", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['p' => '2']);
+        $request = JsonHandler::request(['p' => '2']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Publisher", $entries[0]->className);
         $this->assertEquals("Macmillan and Co. London", $entries[0]->title);
         $this->assertEquals("2 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/publishers/2/Macmillan_and_Co._London", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/publishers/2/Macmillan_and_Co._London", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['r' => '1']);
+        $request = JsonHandler::request(['r' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Rating", $entries[0]->className);
         $this->assertEquals("5 stars", $entries[0]->title);
         $this->assertEquals("4 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/ratings/1/5_stars", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/ratings/1/5_stars", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['s' => '1']);
+        $request = JsonHandler::request(['s' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Serie", $entries[0]->className);
         $this->assertEquals("Sherlock Holmes", $entries[0]->title);
         $this->assertEquals("7 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/series/1/Sherlock_Holmes", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/series/1/Sherlock_Holmes", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['t' => '1']);
+        $request = JsonHandler::request(['t' => '1']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Tag", $entries[0]->className);
         $this->assertEquals("Fiction", $entries[0]->title);
         $this->assertEquals("14 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/tags/1/Fiction", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/tags/1/Fiction", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['i' => 'uri']);
+        $request = JsonHandler::request(['i' => 'uri']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Identifier", $entries[0]->className);
         $this->assertEquals("uri", $entries[0]->title);
         $this->assertEquals("13 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/identifiers/uri/uri", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/identifiers/uri/uri", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['c' => [1 => 1]]);
+        $request = JsonHandler::request(['c' => [1 => 1]]);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Type4", $entries[0]->className);
         $this->assertEquals("SeriesLike", $entries[0]->title);
         $this->assertEquals("2 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/custom/1/1", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/custom/1/1", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['f' => 'C']);
+        $request = JsonHandler::request(['f' => 'C']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Letter", $entries[0]->className);
         $this->assertEquals("C", $entries[0]->title);
         $this->assertEquals("3 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/books/letter/C", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/books/letter/C", $entries[0]->getNavLink());
 
-        $request = TestHandler::request(['y' => '2006']);
+        $request = JsonHandler::request(['y' => '2006']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Year", $entries[0]->className);
         $this->assertEquals("2006", $entries[0]->title);
         $this->assertEquals("9 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/books/year/2006", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/books/year/2006", $entries[0]->getNavLink());
 
         // @todo remove negative flag for filter entry here
-        $request = TestHandler::request(['t' => '!2']);
+        $request = JsonHandler::request(['t' => '!2']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Tag", $entries[0]->className);
         $this->assertEquals("Short Stories", $entries[0]->title);
         $this->assertEquals("4 books", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/tags/2/Short_Stories", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/tags/2/Short_Stories", $entries[0]->getNavLink());
 
         // apply Not Set filters here but skip other entries
-        $request = TestHandler::request(['t' => '0']);
+        $request = JsonHandler::request(['t' => '0']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Tag", $entries[0]->className);
         $this->assertEquals("No tags", $entries[0]->title);
         $this->assertEquals("1 book", $entries[0]->content);
-        $this->assertEquals(TestHandler::getLink() . "/tags/0/No_tags", $entries[0]->getNavLink());
+        $this->assertEquals(JsonHandler::getLink() . "/tags/0/No_tags", $entries[0]->getNavLink());
     }
 
     public function testCheckForFilters(): void

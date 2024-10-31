@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Route;
 
 require_once dirname(__DIR__) . '/config/test.php';
@@ -58,7 +59,7 @@ class RouteTest extends TestCase
         $groups = Route::getGroups();
         $names = [];
         foreach ($groups as $group => $items) {
-            if (in_array($group, ['page', 'restapi'])) {
+            if (in_array($group::HANDLER, ['html', 'restapi'])) {
                 foreach ($items as $subgroup => $routes) {
                     foreach ($routes as $name) {
                         $names[] = $name;
@@ -176,6 +177,7 @@ class RouteTest extends TestCase
         $page = $params["page"] ?? null;
         unset($params["page"]);
         $endpoint = parse_url((string) $link, PHP_URL_PATH);
+        // 1. this will find handler name based on old endpoints
         $handler = "html";
         if ($endpoint !== Config::ENDPOINT["html"]) {
             $testpoint = str_replace('.php', '', $endpoint);
@@ -189,6 +191,8 @@ class RouteTest extends TestCase
                 $handler = $flipped[$endpoint];
             }
         }
+        // 2. we pass handler class-string as param now
+        $handler = Route::getHandler($handler);
         //$test = Config::ENDPOINT["html"] . Route::page($page, $params);
         $test = Route::link($handler, $page, $params);
         $this->assertStringEndsWith($expected, $test);
@@ -211,8 +215,10 @@ class RouteTest extends TestCase
         if (is_null($params)) {
             $this->fail('Invalid params for path ' . $path);
         }
-        if (!empty($params[Route::HANDLER_PARAM]) && array_key_exists($params[Route::HANDLER_PARAM], Config::ENDPOINT)) {
-            $endpoint = Config::ENDPOINT[$params[Route::HANDLER_PARAM]];
+        // this contains handler class-string now
+        if (!empty($params[Route::HANDLER_PARAM]) && in_array($params[Route::HANDLER_PARAM], Framework::getHandlers())) {
+            $name = $params[Route::HANDLER_PARAM]::HANDLER;
+            $endpoint = Config::ENDPOINT[$name];
             unset($params[Route::HANDLER_PARAM]);
         }
         if (array_key_exists('ignore', $params)) {
@@ -234,6 +240,8 @@ class RouteTest extends TestCase
      */
     public static function getRoutes()
     {
+        // @todo replace handler name with class-string
+        //$handlers = Framework::getHandlers();
         return [
             "/calres/0/xxh64/7c301792c52eebf7" => [Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"],
             "/zipfs/0/20/META-INF/container.xml" => [Route::HANDLER_PARAM => "zipfs", "db" => 0, "data" => 20, "comp" => "META-INF/container.xml"],
@@ -286,6 +294,10 @@ class RouteTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
     public function testGetRouteForParams($expected, $params)
     {
+        // pass handler class-string as param here
+        if (!empty($params[Route::HANDLER_PARAM])) {
+            $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
+        }
         $this->assertEquals($expected, Route::getRouteForParams($params));
     }
 }

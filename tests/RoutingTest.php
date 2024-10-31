@@ -156,7 +156,9 @@ class RoutingTest extends TestCase
         $expected = $route;
         $this->assertEquals($expected, $result[Route::ROUTE_PARAM]);
         unset($result[Route::ROUTE_PARAM]);
+        unset($result[Route::HANDLER_PARAM]);
         $expected = $params;
+        unset($expected[Route::HANDLER_PARAM]);
         $this->assertEquals($expected, $result);
 
         // @todo check/add default route for each handler?
@@ -270,7 +272,9 @@ class RoutingTest extends TestCase
         $expected = $route;
         $this->assertEquals($expected, $result[Route::ROUTE_PARAM]);
         unset($result[Route::ROUTE_PARAM]);
+        unset($result[Route::HANDLER_PARAM]);
         $expected = $params;
+        unset($expected[Route::HANDLER_PARAM]);
         $this->assertEquals($expected, $result);
     }
 

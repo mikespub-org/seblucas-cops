@@ -117,6 +117,8 @@ class RestApiTest extends TestCase
         $renderer = new JsonRenderer();
         $expected = $renderer->getJson($request);
         $test = $apiHandler->getJson();
+        unset($expected['counters']);
+        unset($test['counters']);
         $this->assertEquals($expected, $test);
     }
 
@@ -448,7 +450,7 @@ class RestApiTest extends TestCase
 
         $apiHandler = new RestApi($request);
         $expected = [
-            Route::HANDLER_PARAM => "zipfs",
+            Route::HANDLER_PARAM => Route::getHandler("zipfs"),
             "path" => "/zipfs/0/20/META-INF/container.xml",
             "params" => [
                 "db" => "0",
@@ -485,7 +487,7 @@ class RestApiTest extends TestCase
 
         $expected = self::$expectedSize['calres'];
         $this->assertTrue($result instanceof Response);
-        $this->assertEquals(0, count($headers));
+        $this->assertEquals(0, actual: count($headers));
         $this->assertEquals($expected, strlen($output));
 
         Config::set('api_key', null);
@@ -505,7 +507,7 @@ class RestApiTest extends TestCase
 
         $apiHandler = new RestApi($request);
         $expected = [
-            Route::HANDLER_PARAM => "fetch",
+            Route::HANDLER_PARAM => Route::getHandler("fetch"),
             // check if the path starts with the handler param here
             "path" => "/thumbs/0/17/html.jpg",
             "params" => [

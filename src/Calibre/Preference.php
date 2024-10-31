@@ -25,7 +25,8 @@ class Preference
     public string $key;
     public mixed $val;
     public ?int $databaseId = null;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of __construct
@@ -42,7 +43,7 @@ class Preference
             $this->val = $post->val;
         }
         $this->databaseId = $database;
-        $this->handler = RestApiHandler::HANDLER;
+        $this->handler = RestApiHandler::class;
     }
 
     /**

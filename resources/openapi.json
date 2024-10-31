@@ -1183,14 +1183,14 @@
         },
         "/feed/search": {
             "get": {
-                "summary": "Route to page=search&feed - with api key",
+                "summary": "Route to feed handler with page=search - with api key",
                 "operationId": "get_feed-search",
                 "tags": [
                     "feed"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page=search&feed"
+                        "description": "Result of feed handler with page=search"
                     }
                 },
                 "security": [
@@ -1384,14 +1384,14 @@
         },
         "/inline/{db}/{data}/{ignore}.{type}": {
             "get": {
-                "summary": "Route to view=1&fetch handler with db={db}&data={data}&type={type} - with api key",
+                "summary": "Route to fetch handler with view=1&db={db}&data={data}&type={type} - with api key",
                 "operationId": "get_fetch-inline",
                 "tags": [
                     "fetch"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of view=1&fetch handler with db={db}&data={data}&type={type}"
+                        "description": "Result of fetch handler with view=1&db={db}&data={data}&type={type}"
                     }
                 },
                 "parameters": [
@@ -1494,14 +1494,14 @@
         },
         "/view/{data}/{db}/{ignore}.{type}": {
             "get": {
-                "summary": "Route to view=1&fetch handler with data={data}&db={db}&type={type} - with api key",
+                "summary": "Route to fetch handler with view=1&data={data}&db={db}&type={type} - with api key",
                 "operationId": "get_fetch-view",
                 "tags": [
                     "fetch"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of view=1&fetch handler with data={data}&db={db}&type={type}"
+                        "description": "Result of fetch handler with view=1&data={data}&db={db}&type={type}"
                     }
                 },
                 "parameters": [
@@ -2314,7 +2314,7 @@
         },
         "/check/{more}": {
             "get": {
-                "summary": "Route to check handler with more={more} - with api key",
+                "summary": "Route to check handler with more={more}",
                 "operationId": "get_check-more",
                 "tags": [
                     "check"
@@ -2334,17 +2334,12 @@
                             "pattern": "^.*$"
                         }
                     }
-                ],
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
                 ]
             }
         },
         "/check": {
             "get": {
-                "summary": "Route to check handler - with api key",
+                "summary": "Route to check handler",
                 "operationId": "get_check",
                 "tags": [
                     "check"
@@ -2353,12 +2348,7 @@
                     "200": {
                         "description": "Result of check handler"
                     }
-                },
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ]
+                }
             }
         },
         "/opds/{page}/{id}": {
@@ -2400,14 +2390,14 @@
         },
         "/opds/search": {
             "get": {
-                "summary": "Route to page=search&opds - with api key",
+                "summary": "Route to opds handler with page=search - with api key",
                 "operationId": "get_opds-search",
                 "tags": [
                     "opds"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page=search&opds"
+                        "description": "Result of opds handler with page=search"
                     }
                 },
                 "security": [
@@ -2937,6 +2927,20 @@
                         "ApiKeyAuth": []
                     }
                 ]
+            }
+        },
+        "/test": {
+            "get": {
+                "summary": "Route to phpunit handler",
+                "operationId": "get_test",
+                "tags": [
+                    "phpunit"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of phpunit handler"
+                    }
+                }
             }
         }
     }

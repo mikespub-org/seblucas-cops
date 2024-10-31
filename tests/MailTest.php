@@ -14,9 +14,9 @@ use SebLucas\Cops\Output\Mail;
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Framework;
+use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 
 class MailTest extends TestCase
 {
@@ -146,10 +146,9 @@ class MailTest extends TestCase
     public function testMailHandler(): void
     {
         $_POST = ['data' => '20', 'email' => 'a@a.com'];
-        // set request handler to 'phpunit' to run preSend() but not actually Send()
-        $_GET = [Route::HANDLER_PARAM => 'phpunit'];
-        $request = new Request();
-        $handler = Framework::getHandler('mail');
+        // set request handler to 'TestHandler' class to run preSend() but not actually Send()
+        $request = Request::build([], TestHandler::class);
+        $handler = Framework::createHandler('mail');
 
         ob_start();
         $response = $handler->handle($request);

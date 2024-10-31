@@ -362,7 +362,7 @@ class KiwilanTest extends TestCase
     {
         $page = PageId::ALL_RECENT_BOOKS;
         $request = Request::build(['page' => $page]);
-        $handler = Framework::getHandler('opds');
+        $handler = Framework::createHandler('opds');
 
         ob_start();
         $response = $handler->handle($request);

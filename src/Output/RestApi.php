@@ -135,15 +135,17 @@ class RestApi extends BaseRenderer
      */
     public function runHandler($path, $params, $run = null)
     {
-        if (empty($params[Route::HANDLER_PARAM]) || !array_key_exists($params[Route::HANDLER_PARAM], Config::ENDPOINT)) {
+        // we are using class-string now
+        if (empty($params[Route::HANDLER_PARAM]) || !in_array($params[Route::HANDLER_PARAM], Framework::getHandlers())) {
             return ["error" => "Invalid handler"];
         }
-        if (!$this->request->hasValidApiKey()) {
+        $handler = $params[Route::HANDLER_PARAM]::HANDLER;
+        if (!in_array($handler, ["check", "phpunit"]) && !$this->request->hasValidApiKey()) {
             return ["error" => "Invalid api key"];
         }
         $name = $params[Route::HANDLER_PARAM];
         // run via handler now
-        $handler = Framework::getHandler($name);
+        $handler = Framework::createHandler($name);
         unset($params[Route::HANDLER_PARAM]);
         $run ??= static::$doRunHandler;
         if ($run) {
@@ -169,28 +171,29 @@ class RestApi extends BaseRenderer
      */
     public function getOutput($result = null)
     {
-        if (!isset($result)) {
-            $path = $this->getPathInfo();
-            $params = $this->matchPathInfo($path);
-            if (!isset($params)) {
-                // @todo find some better way to handle this
-                Response::redirect(RestApiHandler::getHandlerLink(null, PageId::INDEX));
+        if (isset($result)) {
+            return json_encode($result, JSON_UNESCAPED_SLASHES);
+        }
+        $path = $this->getPathInfo();
+        $params = $this->matchPathInfo($path);
+        if (!isset($params)) {
+            // @todo find some better way to handle this
+            Response::redirect(RestApiHandler::getHandlerLink(null, PageId::INDEX));
+            return '';
+        }
+        if ($this->isExtra) {
+            $result = $params;
+        } elseif (empty($params[Route::HANDLER_PARAM]) || $params[Route::HANDLER_PARAM]::HANDLER == 'json') {
+            $this->setParams($params);
+            $result = $this->getJson();
+        } else {
+            // extra routes supported by other handlers
+            $result = $this->runHandler($path, $params);
+            if (is_null($result)) {
                 return '';
             }
-            if ($this->isExtra) {
-                $result = $params;
-            } elseif (empty($params[Route::HANDLER_PARAM]) || $params[Route::HANDLER_PARAM] == 'json') {
-                $this->setParams($params);
-                $result = $this->getJson();
-            } else {
-                // extra routes supported by other handlers
-                $result = $this->runHandler($path, $params);
-                if (is_null($result)) {
-                    return '';
-                }
-                if ($result instanceof Response) {
-                    return $result;
-                }
+            if ($result instanceof Response) {
+                return $result;
             }
         }
         $output = json_encode($result, JSON_UNESCAPED_SLASHES);
@@ -681,7 +684,7 @@ class RestApi extends BaseRenderer
         ];
         // @todo get item from annotations + corresponding title from instance
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
-            $instance->setHandler(RestApiHandler::HANDLER);
+            $instance->setHandler(RestApiHandler::class);
             $entry = $instance->getEntry();
             array_push($result["entries"], [
                 "class" => $entry->className,

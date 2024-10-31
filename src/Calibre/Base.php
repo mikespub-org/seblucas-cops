@@ -51,7 +51,8 @@ abstract class Base
     protected $filterLimit = null;
     /** @var array<string, mixed> */
     protected $filterParams = [];
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of __construct
@@ -162,7 +163,7 @@ abstract class Base
 
     /**
      * Summary of setHandler
-     * @param string $handler
+     * @param class-string $handler
      * @return void
      */
     public function setHandler($handler)
@@ -172,7 +173,7 @@ abstract class Base
 
     /**
      * Summary of getHandler
-     * @return string
+     * @return class-string
      */
     public function getHandler()
     {
@@ -529,10 +530,10 @@ abstract class Base
     /**
      * Summary of getCount
      * @param ?int $database
-     * @param ?string $handler
+     * @param class-string $handler
      * @return ?Entry
      */
-    public static function getCount($database = null, $handler = null)
+    public static function getCount($database, $handler)
     {
         $count = Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
         return static::getCountEntry($count, $database, null, $handler);
@@ -543,11 +544,11 @@ abstract class Base
      * @param int $count
      * @param ?int $database
      * @param ?string $numberOfString
-     * @param ?string $handler
+     * @param class-string $handler
      * @param array<mixed> $params
      * @return ?Entry
      */
-    public static function getCountEntry($count, $database = null, $numberOfString = null, $handler = null, $params = [])
+    public static function getCountEntry($count, $database, $numberOfString, $handler, $params = [])
     {
         if ($count == 0) {
             return null;

@@ -92,7 +92,8 @@ class Book
     /** @var ?string */
     protected $coverFileName = null;
     public bool $updateForKepub = false;
-    protected string $handler = '';
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of __construct
@@ -202,7 +203,7 @@ class Book
 
     /**
      * Summary of getDetailUrl
-     * @param string|null $handler
+     * @param class-string|null $handler
      * @param array<mixed> $params
      * @return string
      */
@@ -759,7 +760,7 @@ class Book
 
     /**
      * Summary of setHandler
-     * @param string $handler
+     * @param class-string $handler
      * @return void
      */
     public function setHandler($handler)
@@ -769,7 +770,7 @@ class Book
 
     /**
      * Summary of getHandler
-     * @return string
+     * @return class-string
      */
     public function getHandler()
     {
