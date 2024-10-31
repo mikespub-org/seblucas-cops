@@ -42,7 +42,7 @@ class KiwilanTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        Config::set('full_url', static::$baseUrl);
+        Config::set('full_url', self::$baseUrl);
         Route::setBaseUrl(null);
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();

@@ -40,6 +40,7 @@ use GraphQL\Error\DebugFlag;
 class GraphQLHandler extends BaseHandler
 {
     public const HANDLER = "graphql";
+    public const DEFINITION_FILE = 'resources/schema.graphql';
     public const DEBUG = DebugFlag::INCLUDE_DEBUG_MESSAGE;
 
     public static function getRoutes()
@@ -129,7 +130,7 @@ class GraphQLHandler extends BaseHandler
             return $typeConfig;
         };
 
-        $contents = file_get_contents(dirname(__DIR__, 2) . '/schema.graphql');
+        $contents = file_get_contents(dirname(__DIR__, 2) . '/' . static::DEFINITION_FILE);
         //$schema = BuildSchema::build($contents);
         $schema = BuildSchema::build($contents, $typeConfigDecorator);
 

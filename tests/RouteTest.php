@@ -53,6 +53,36 @@ class RouteTest extends TestCase
         $this->assertEquals($expected, $test);
     }
 
+    public function testGetGroups(): void
+    {
+        $groups = Route::getGroups();
+        $names = [];
+        foreach ($groups as $group => $items) {
+            if (in_array($group, ['page', 'restapi'])) {
+                foreach ($items as $subgroup => $routes) {
+                    foreach ($routes as $name) {
+                        $names[] = $name;
+                    }
+                }
+                continue;
+            }
+            foreach ($items as $name) {
+                $names[] = $name;
+            }
+        }
+        $expected = Route::count();
+        $this->assertCount($expected, $names);
+    }
+
+    public function testDump(): void
+    {
+        $expected = Route::count();
+        Route::dump();
+        Route::load();
+        $test = Route::count();
+        $this->assertEquals($expected, $test);
+    }
+
     /**
      * Summary of getLinks
      * @return array<mixed>
@@ -100,14 +130,14 @@ class RouteTest extends TestCase
             "epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland" => "index.php/read/0/20/Alice's_Adventures_in_Wonderland",
             "epubreader.php?db=0&data=20" => "index.php/read/0/20",
             "sendtomail.php" => "index.php/mail",
-            "fetch.php?thumb=html&db=0&id=17" => "index.php/thumbs/html/0/17.jpg",
-            "fetch.php?thumb=opds&db=0&id=17" => "index.php/thumbs/opds/0/17.jpg",
+            "fetch.php?db=0&id=17&thumb=html" => "index.php/thumbs/0/17/html.jpg",
+            "fetch.php?db=0&id=17&thumb=opds" => "index.php/thumbs/0/17/opds.jpg",
             "fetch.php?db=0&id=17" => "index.php/covers/0/17.jpg",
             "fetch.php?view=1&db=0&data=20&type=epub" => "index.php/inline/0/20/ignore.epub",
             "fetch.php?db=0&data=20&type=epub" => "index.php/fetch/0/20/ignore.epub",
             "fetch.php?db=0&id=17&file=hello.txt" => "index.php/files/0/17/hello.txt",
             "fetch.php?db=0&id=17&file=zipped" => "index.php/files/0/17/zipped",
-            "zipper.php?page=10&type=any" => "index.php/zipper/10/any",
+            "zipper.php?page=10&type=any" => "index.php/zipper/10/any.zip",
             "feed.php?page=3&id=1&title=Arthur%20Conan%20Doyle" => "index.php/feed/3/1?title=Arthur%20Conan%20Doyle",
             "feed.php?page=3&id=1" => "index.php/feed/3/1",
             "feed.php?page=10" => "index.php/feed/10",
@@ -126,7 +156,7 @@ class RouteTest extends TestCase
     public static function linkProvider()
     {
         $data = [];
-        $links = static::getLinks();
+        $links = self::getLinks();
         foreach ($links as $from => $to) {
             array_push($data, [$from, $to]);
         }
@@ -208,16 +238,16 @@ class RouteTest extends TestCase
             "/calres/0/xxh64/7c301792c52eebf7" => [Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"],
             "/zipfs/0/20/META-INF/container.xml" => [Route::HANDLER_PARAM => "zipfs", "db" => 0, "data" => 20, "comp" => "META-INF/container.xml"],
             null => [Route::HANDLER_PARAM => "zipfs", "db" => "x", "data" => 20, "comp" => "META-INF/container.xml"],
-            "/thumbs/html/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"],
-            "/thumbs/opds/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"],
-            "/thumbs/html2/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"],
-            "/thumbs/opds2/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"],
+            "/thumbs/0/17/html.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"],
+            "/thumbs/0/17/opds.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"],
+            "/thumbs/0/17/html2.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"],
+            "/thumbs/0/17/opds2.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"],
             "/covers/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17],
             "/inline/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1],
             "/fetch/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"],
             "/files/0/17/hello.txt" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "hello.txt"],
-            "/zipper/3/any/3" => [Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3],
-            "/zipper/10/any" => [Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"],
+            "/zipper/3/3/any.zip" => [Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3],
+            "/zipper/10/any.zip" => [Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"],
             "/loader/wd_author/0/1?matchId=Q35610" => [Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"],
             "/check" => [Route::HANDLER_PARAM => "check"],
             "/read/0/20/Alice's_Adventures_in_Wonderland" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20, "title" => "Alice's Adventures in Wonderland"],
@@ -241,7 +271,7 @@ class RouteTest extends TestCase
     public static function routeProvider()
     {
         $data = [];
-        $routes = static::getRoutes();
+        $routes = self::getRoutes();
         foreach ($routes as $from => $to) {
             array_push($data, [$from, $to]);
         }

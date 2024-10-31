@@ -20,6 +20,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Pages\PageId;
 
@@ -196,6 +197,16 @@ class RestApiTest extends TestCase
         $expected = "3.0.3";
         $test = RestApi::getOpenApi($request);
         $this->assertEquals($expected, $test["openapi"]);
+
+        $cacheFile = dirname(__DIR__) . '/resources/openapi.json';
+        if (file_exists($cacheFile)) {
+            $content = file_get_contents($cacheFile);
+            $expected = json_decode($content, true);
+            $this->assertEquals($expected, $test);
+        } else {
+            $content = Format::json($test);
+            file_put_contents($cacheFile, $content);
+        }
     }
 
     public function testGetRoutes(): void
@@ -488,7 +499,7 @@ class RestApiTest extends TestCase
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
-        $_SERVER['PATH_INFO'] = '/thumbs/html/0/17.jpg';
+        $_SERVER['PATH_INFO'] = '/thumbs/0/17/html.jpg';
         $request = new Request();
         RestApi::$doRunHandler = false;
 
@@ -496,11 +507,11 @@ class RestApiTest extends TestCase
         $expected = [
             Route::HANDLER_PARAM => "fetch",
             // check if the path starts with the handler param here
-            "path" => "/thumbs/html/0/17.jpg",
+            "path" => "/thumbs/0/17/html.jpg",
             "params" => [
-                "thumb" => "html",
                 "db" => "0",
                 "id" => "17",
+                "thumb" => "html",
             ],
         ];
         $expected = json_encode($expected, JSON_UNESCAPED_SLASHES);

@@ -34,7 +34,7 @@ class FetchHandler extends BaseHandler
         return [
             // support custom pattern for route placeholders - see nikic/fast-route
             "fetch-file" => ["/files/{db:\d+}/{id:\d+}/{file:.+}"],
-            "fetch-thumb" => ["/thumbs/{thumb}/{db:\d+}/{id:\d+}.jpg"],
+            "fetch-thumb" => ["/thumbs/{db:\d+}/{id:\d+}/{thumb}.jpg"],
             "fetch-cover" => ["/covers/{db:\d+}/{id:\d+}.jpg"],
             "fetch-inline" => ["/inline/{db:\d+}/{data:\d+}/{ignore}.{type}", ["view" => 1]],
             "fetch-data" => ["/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}"],

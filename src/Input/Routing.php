@@ -8,13 +8,14 @@
 
 namespace SebLucas\Cops\Input;
 
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
-use Exception;
 
 /**
  * Routing based on Symfony routing component (test)
@@ -67,7 +68,7 @@ class Routing
 
     /**
      * Set router context or reset it
-     * @param ?RequestContext
+     * @param ?RequestContext $context
      * @return void
      */
     public function setContext($context = null)
@@ -132,9 +133,6 @@ class Routing
         } catch (MethodNotAllowedException $e) {
             // ...
             throw $e;
-        } catch (Exception $e) {
-            // ...
-            throw $e;
         }
         return $attributes;
     }
@@ -153,7 +151,10 @@ class Routing
         } catch (RouteNotFoundException $e) {
             // ...
             throw $e;
-        } catch (Exception $e) {
+        } catch (InvalidParameterException $e) {
+            // ...
+            throw $e;
+        } catch (MissingMandatoryParametersException $e) {
             // ...
             throw $e;
         }

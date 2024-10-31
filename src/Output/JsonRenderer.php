@@ -620,7 +620,7 @@ class JsonRenderer extends BaseRenderer
                 $params = $this->request->getCleanParams();
                 $params['type'] = strtolower((string) $format);
                 if (!empty($params['id'])) {
-                    $url = ZipperHandler::generate('zipper-page-type-id', $params);
+                    $url = ZipperHandler::generate('zipper-page-id-type', $params);
                 } else {
                     $url = ZipperHandler::generate('zipper-page-type', $params);
                 }

@@ -27,7 +27,7 @@ class RoutingTest extends TestCase
     {
         Config::set("calibre_directory", __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
-        static::$routing = new Routing();
+        self::$routing = new Routing();
     }
 
     public function testRouteLoader(): void
@@ -100,14 +100,14 @@ class RoutingTest extends TestCase
             ["epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland", "/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
             ["epubreader.php?db=0&data=20", "/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
             ["sendtomail.php", "/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
-            ["fetch.php?thumb=html&db=0&id=17", "/thumbs/html/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
-            ["fetch.php?thumb=opds&db=0&id=17", "/thumbs/opds/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds", "db" => "0", "id" => "17"]],
+            ["fetch.php?thumb=html&db=0&id=17", "/thumbs/0/17/html.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
+            ["fetch.php?thumb=opds&db=0&id=17", "/thumbs/0/17/opds.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds", "db" => "0", "id" => "17"]],
             ["fetch.php?db=0&id=17", "/covers/0/17.jpg", "fetch-cover", ["_handler" => "fetch", "db" => "0", "id" => "17"]],
             ["fetch.php?view=1&db=0&data=20&type=epub", "/inline/0/20/ignore.epub", "fetch-inline", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["fetch.php?db=0&data=20&type=epub", "/fetch/0/20/ignore.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["fetch.php?db=0&id=17&file=hello.txt", "/files/0/17/hello.txt", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "hello.txt"]],
             ["fetch.php?db=0&id=17&file=zipped", "/files/0/17/zipped", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "zipped"]],
-            ["zipper.php?page=10&type=any", "/zipper/10/any", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
+            ["zipper.php?page=10&type=any", "/zipper/10/any.zip", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
             ["feed.php?page=3&id=1&title=Arthur%20Conan%20Doyle", "/feed/3/1?title=Arthur%20Conan%20Doyle", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
             ["feed.php?page=3&id=1", "/feed/3/1", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1"]],
             ["feed.php?page=10", "/feed/10", "feed-page", ["_handler" => "feed", "page" => "10"]],
@@ -139,7 +139,7 @@ class RoutingTest extends TestCase
             unset($params["_method"]);
         }
         try {
-            $result = static::$routing->match($path, $method);
+            $result = self::$routing->match($path, $method);
         } catch (Exception $e) {
             echo $e->getMessage();
             $this->assertNull($routeUrl);
@@ -171,7 +171,7 @@ class RoutingTest extends TestCase
         }
         $path = "/$handler";
         try {
-            $result = static::$routing->match($path);
+            $result = self::$routing->match($path);
         } catch (Exception) {
             // echo "Endpoint handler not supported: $handler\n";
         }
@@ -192,7 +192,7 @@ class RoutingTest extends TestCase
         unset($params[Route::HANDLER_PARAM]);
         unset($params["_method"]);
         try {
-            $result = static::$routing->generate($route, $params);
+            $result = self::$routing->generate($route, $params);
         } catch (Exception) {
             $this->assertNull($routeUrl);
             return;
@@ -212,16 +212,16 @@ class RoutingTest extends TestCase
             ["/calres/0/xxh64/7c301792c52eebf7", "calres", ["_handler" => "calres", "db" => "0", "alg" => "xxh64", "digest" => "7c301792c52eebf7"]],
             ["/zipfs/0/20/META-INF/container.xml", "zipfs", ["_handler" => "zipfs", "db" => "0", "data" => "20", "comp" => "META-INF/container.xml"]],
             [null, "zipfs", ["_handler" => "zipfs", "db" => "x", "data" => "20", "comp" => "META-INF/container.xml"]],
-            ["/thumbs/html/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
-            ["/thumbs/opds/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds", "db" => "0", "id" => "17"]],
-            ["/thumbs/html2/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html2", "db" => "0", "id" => "17"]],
-            ["/thumbs/opds2/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds2", "db" => "0", "id" => "17"]],
+            ["/thumbs/0/17/html.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
+            ["/thumbs/0/17/opds.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds", "db" => "0", "id" => "17"]],
+            ["/thumbs/0/17/html2.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html2", "db" => "0", "id" => "17"]],
+            ["/thumbs/0/17/opds2.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds2", "db" => "0", "id" => "17"]],
             ["/covers/0/17.jpg", "fetch-cover", ["_handler" => "fetch", "db" => "0", "id" => "17"]],
             ["/inline/0/20/ignore.epub", "fetch-inline", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["/fetch/0/20/ignore.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["/files/0/17/hello.txt", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "hello.txt"]],
-            ["/zipper/3/any/3", "zipper-page-type-id", ["_handler" => "zipper", "page" => "3", "type" => "any", "id" => "3"]],
-            ["/zipper/10/any", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
+            ["/zipper/3/3/any.zip", "zipper-page-id-type", ["_handler" => "zipper", "page" => "3", "type" => "any", "id" => "3"]],
+            ["/zipper/10/any.zip", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
             ["/loader/wd_author/0/1?matchId=Q35610", "loader-action-dbNum-authorId", ["_handler" => "loader", "action" => "wd_author", "dbNum" => "0", "authorId" => "1", "matchId" => "Q35610"]],
             ["/check", "check", ["_handler" => "check"]],
             ["/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
@@ -256,7 +256,7 @@ class RoutingTest extends TestCase
             unset($params["_method"]);
         }
         try {
-            $result = static::$routing->match($path, $method);
+            $result = self::$routing->match($path, $method);
         } catch (Exception $e) {
             echo $e->getMessage();
             $this->assertNull($routeUrl);
@@ -286,7 +286,7 @@ class RoutingTest extends TestCase
         unset($params[Route::HANDLER_PARAM]);
         unset($params["_method"]);
         try {
-            $result = static::$routing->generate($route, $params);
+            $result = self::$routing->generate($route, $params);
         } catch (Exception) {
             $this->assertNull($routeUrl);
             return;
@@ -348,7 +348,7 @@ class RoutingTest extends TestCase
             'feed-page' => ['/feed/{page}', ['_handler' => 'feed']],
             'feed' => ['/feed', ['_handler' => 'feed']],
             'files-db-id-file' => ['/files/{db}/{id}/{file}', ['_handler' => 'fetch'], ['db' => '\d+', 'id' => '\d+', 'file' => '.+']],
-            'thumbs-thumb-db-id' => ['/thumbs/{thumb}/{db}/{id}.jpg', ['_handler' => 'fetch'], ['db' => '\d+', 'id' => '\d+']],
+            'thumbs-db-id-thumb' => ['/thumbs/{db}/{id}/{thumb}.jpg', ['_handler' => 'fetch'], ['db' => '\d+', 'id' => '\d+']],
             'covers-db-id' => ['/covers/{db}/{id}.jpg', ['_handler' => 'fetch'], ['db' => '\d+', 'id' => '\d+']],
             'inline-db-data-ignore.type' => ['/inline/{db}/{data}/{ignore}.{type}', ['_handler' => 'fetch', 'view' => 1], ['db' => '\d+', 'data' => '\d+']],
             'fetch-db-data-ignore.type' => ['/fetch/{db}/{data}/{ignore}.{type}', ['_handler' => 'fetch'], ['db' => '\d+', 'data' => '\d+']],
@@ -392,9 +392,8 @@ class RoutingTest extends TestCase
             'loader-action-' => ['/loader/{action}/', ['_handler' => 'loader']],
             'loader-action' => ['/loader/{action}', ['_handler' => 'loader']],
             'loader' => ['/loader', ['_handler' => 'loader']],
-            'zipper-page-type-id' => ['/zipper/{page}/{type}/{id}', ['_handler' => 'zipper']],
-            'zipper-page-type' => ['/zipper/{page}/{type}', ['_handler' => 'zipper']],
-            'zipper-page' => ['/zipper/{page}', ['_handler' => 'zipper']],
+            'zipper-page-id-type' => ['/zipper/{page}/{id}/{type}.zip', ['_handler' => 'zipper']],
+            'zipper-page-type' => ['/zipper/{page}/{type}.zip', ['_handler' => 'zipper']],
             'calres-db-alg-digest' => ['/calres/{db}/{alg}/{digest}', ['_handler' => 'calres'], ['db' => '\d+']],
             'zipfs-db-data-comp' => ['/zipfs/{db}/{data}/{comp}', ['_handler' => 'zipfs'], ['db' => '\d+', 'data' => '\d+', 'comp' => '.+']],
             // @todo 'name' => ['path', [ defaults ], [ requirements ], [ methods ], [ options ], [ ... ]],

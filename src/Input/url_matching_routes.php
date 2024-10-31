@@ -76,110 +76,107 @@ return [
                         .'|(\\d+)/([^/]++)(*:329)'
                         .'|(\\d+)(*:342)'
                     .')'
-                    .'|humbs/([^/]++)/(\\d+)/(\\d+)\\.jpg(*:382)'
+                    .'|humbs/(\\d+)/(\\d+)/([^/\\.]++)\\.jpg(*:384)'
                 .')'
                 .'|/c(?'
                     .'|ustom/(?'
-                        .'|(\\d+)/([^/]++)(*:419)'
-                        .'|(\\d+)(*:432)'
+                        .'|(\\d+)/([^/]++)(*:421)'
+                        .'|(\\d+)(*:434)'
                     .')'
-                    .'|overs/(\\d+)/(\\d+)\\.jpg(*:463)'
+                    .'|overs/(\\d+)/(\\d+)\\.jpg(*:465)'
                     .'|heck(?'
-                        .'|/(.*)(*:483)'
-                        .'|(*:491)'
+                        .'|/(.*)(*:485)'
+                        .'|(*:493)'
                     .')'
-                    .'|alres/(\\d+)/([^/]++)/([^/]++)(*:529)'
+                    .'|alres/(\\d+)/([^/]++)/([^/]++)(*:531)'
                 .')'
                 .'|/l(?'
                     .'|anguages/(?'
-                        .'|(\\d+)/([^/]++)(*:569)'
-                        .'|(\\d+)(*:582)'
+                        .'|(\\d+)/([^/]++)(*:571)'
+                        .'|(\\d+)(*:584)'
                     .')'
                     .'|oader/([^/]++)(?'
                         .'|/(?'
-                            .'|(\\d+)/(\\w+)/(.*)(*:628)'
-                            .'|(\\d+)/(\\w*)(*:647)'
-                            .'|(\\d+)(*:660)'
+                            .'|(\\d+)/(\\w+)/(.*)(*:630)'
+                            .'|(\\d+)/(\\w*)(*:649)'
+                            .'|(\\d+)(*:662)'
                         .')'
-                        .'|(*:669)'
-                        .'|(*:677)'
+                        .'|(*:671)'
+                        .'|(*:679)'
                     .')'
                 .')'
                 .'|/publishers/(?'
-                    .'|(\\d+)/([^/]++)(*:716)'
-                    .'|(\\d+)(*:729)'
+                    .'|(\\d+)/([^/]++)(*:718)'
+                    .'|(\\d+)(*:731)'
                 .')'
                 .'|/r(?'
                     .'|atings/(?'
-                        .'|(\\d+)/([^/]++)(*:767)'
-                        .'|(\\d+)(*:780)'
+                        .'|(\\d+)/([^/]++)(*:769)'
+                        .'|(\\d+)(*:782)'
                     .')'
                     .'|e(?'
                         .'|ad/(?'
-                            .'|(\\d+)/(\\d+)/([^/]++)(*:819)'
-                            .'|(\\d+)/(\\d+)(*:838)'
+                            .'|(\\d+)/(\\d+)/([^/]++)(*:821)'
+                            .'|(\\d+)/(\\d+)(*:840)'
                         .')'
                         .'|stapi/(?'
                             .'|databases/([^/]++)(?'
-                                .'|/([^/]++)(*:886)'
-                                .'|(*:894)'
+                                .'|/([^/]++)(*:888)'
+                                .'|(*:896)'
                             .')'
                             .'|notes/([^/]++)(?'
                                 .'|/([^/]++)(?'
-                                    .'|/([^/]++)(*:941)'
-                                    .'|(*:949)'
+                                    .'|/([^/]++)(*:943)'
+                                    .'|(*:951)'
                                 .')'
-                                .'|(*:958)'
+                                .'|(*:960)'
                             .')'
-                            .'|preferences/([^/]++)(*:987)'
+                            .'|preferences/([^/]++)(*:989)'
                             .'|annotations/([^/]++)(?'
-                                .'|/([^/]++)(*:1027)'
-                                .'|(*:1036)'
+                                .'|/([^/]++)(*:1029)'
+                                .'|(*:1038)'
                             .')'
                             .'|metadata/([^/]++)(?'
                                 .'|/([^/]++)(?'
-                                    .'|/([^/]++)(*:1087)'
-                                    .'|(*:1096)'
+                                    .'|/([^/]++)(*:1089)'
+                                    .'|(*:1098)'
                                 .')'
-                                .'|(*:1106)'
+                                .'|(*:1108)'
                             .')'
-                            .'|(.*)(*:1120)'
+                            .'|(.*)(*:1122)'
                         .')'
                     .')'
                 .')'
                 .'|/i(?'
                     .'|dentifiers/(?'
-                        .'|(\\w+)/([^/]++)(*:1165)'
-                        .'|(\\w+)(*:1179)'
+                        .'|(\\w+)/([^/]++)(*:1167)'
+                        .'|(\\w+)(*:1181)'
                     .')'
-                    .'|nline/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:1227)'
+                    .'|nline/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:1229)'
                 .')'
                 .'|/f(?'
                     .'|e(?'
                         .'|ed/([^/]++)(?'
-                            .'|/([^/]++)(*:1269)'
-                            .'|(*:1278)'
+                            .'|/([^/]++)(*:1271)'
+                            .'|(*:1280)'
                         .')'
-                        .'|tch/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:1324)'
+                        .'|tch/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:1326)'
                     .')'
-                    .'|iles/(\\d+)/(\\d+)/(.+)(*:1355)'
+                    .'|iles/(\\d+)/(\\d+)/(.+)(*:1357)'
                 .')'
-                .'|/view/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1409)'
-                .'|/download/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1466)'
-                .'|/epubfs/(\\d+)/(\\d+)/(.+)(*:1499)'
+                .'|/view/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1411)'
+                .'|/download/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1468)'
+                .'|/epubfs/(\\d+)/(\\d+)/(.+)(*:1501)'
                 .'|/opds/([^/]++)(?'
-                    .'|/([^/]++)(*:1534)'
-                    .'|(*:1543)'
+                    .'|/([^/]++)(*:1536)'
+                    .'|(*:1545)'
                 .')'
                 .'|/zip(?'
-                    .'|per/([^/]++)(?'
-                        .'|/([^/]++)(?'
-                            .'|/([^/]++)(*:1596)'
-                            .'|(*:1605)'
-                        .')'
-                        .'|(*:1615)'
+                    .'|per/([^/]++)/(?'
+                        .'|([^/]++)/([^/\\.]++)\\.zip(*:1602)'
+                        .'|([^/\\.]++)\\.zip(*:1626)'
                     .')'
-                    .'|fs/(\\d+)/(\\d+)/(.+)(*:1644)'
+                    .'|fs/(\\d+)/(\\d+)/(.+)(*:1655)'
                 .')'
             .')/?$}sD',
     ],
@@ -199,54 +196,53 @@ return [
         294 => [[['_route' => 'page-9-query', 'page' => '9', 'search' => 1], ['query'], ['GET' => 0], null, false, true, null]],
         329 => [[['_route' => 'page-12-id-title', 'page' => '12'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
         342 => [[['_route' => 'page-12-id', 'page' => '12'], ['id'], ['GET' => 0], null, false, true, null]],
-        382 => [[['_route' => 'fetch-thumb', '_handler' => 'fetch'], ['thumb', 'db', 'id'], ['GET' => 0], null, false, false, null]],
-        419 => [[['_route' => 'page-15-custom-id', 'page' => '15'], ['custom', 'id'], ['GET' => 0], null, false, true, null]],
-        432 => [[['_route' => 'page-14-custom', 'page' => '14'], ['custom'], ['GET' => 0], null, false, true, null]],
-        463 => [[['_route' => 'fetch-cover', '_handler' => 'fetch'], ['db', 'id'], ['GET' => 0], null, false, false, null]],
-        483 => [[['_route' => 'check-more', '_handler' => 'check'], ['more'], ['GET' => 0], null, false, true, null]],
-        491 => [[['_route' => 'check', '_handler' => 'check'], [], ['GET' => 0], null, false, false, null]],
-        529 => [[['_route' => 'calres', '_handler' => 'calres'], ['db', 'alg', 'digest'], ['GET' => 0], null, false, true, null]],
-        569 => [[['_route' => 'page-18-id-title', 'page' => '18'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        582 => [[['_route' => 'page-18-id', 'page' => '18'], ['id'], ['GET' => 0], null, false, true, null]],
-        628 => [[['_route' => 'loader-action-dbNum-authorId-urlPath', '_handler' => 'loader'], ['action', 'dbNum', 'authorId', 'urlPath'], ['GET' => 0], null, false, true, null]],
-        647 => [[['_route' => 'loader-action-dbNum-authorId', '_handler' => 'loader'], ['action', 'dbNum', 'authorId'], ['GET' => 0], null, false, true, null]],
-        660 => [[['_route' => 'loader-action-dbNum', '_handler' => 'loader'], ['action', 'dbNum'], ['GET' => 0], null, false, true, null]],
-        669 => [[['_route' => 'loader-action-', '_handler' => 'loader'], ['action'], ['GET' => 0], null, true, true, null]],
-        677 => [[['_route' => 'loader-action', '_handler' => 'loader'], ['action'], ['GET' => 0], null, false, true, null]],
-        716 => [[['_route' => 'page-21-id-title', 'page' => '21'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        729 => [[['_route' => 'page-21-id', 'page' => '21'], ['id'], ['GET' => 0], null, false, true, null]],
-        767 => [[['_route' => 'page-23-id-title', 'page' => '23'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        780 => [[['_route' => 'page-23-id', 'page' => '23'], ['id'], ['GET' => 0], null, false, true, null]],
-        819 => [[['_route' => 'read-title', '_handler' => 'read'], ['db', 'data', 'title'], ['GET' => 0], null, false, true, null]],
-        838 => [[['_route' => 'read', '_handler' => 'read'], ['db', 'data'], ['GET' => 0], null, false, true, null]],
-        886 => [[['_route' => 'restapi-Database-db-name', '_resource' => 'Database', '_handler' => 'restapi'], ['db', 'name'], ['GET' => 0], null, false, true, null]],
-        894 => [[['_route' => 'restapi-Database-db', '_resource' => 'Database', '_handler' => 'restapi'], ['db'], ['GET' => 0], null, false, true, null]],
-        941 => [[['_route' => 'restapi-Note-type-id-title', '_resource' => 'Note', '_handler' => 'restapi'], ['type', 'id', 'title'], ['GET' => 0], null, false, true, null]],
-        949 => [[['_route' => 'restapi-Note-type-id', '_resource' => 'Note', '_handler' => 'restapi'], ['type', 'id'], ['GET' => 0], null, false, true, null]],
-        958 => [[['_route' => 'restapi-Note-type', '_resource' => 'Note', '_handler' => 'restapi'], ['type'], ['GET' => 0], null, false, true, null]],
-        987 => [[['_route' => 'restapi-Preference-key', '_resource' => 'Preference', '_handler' => 'restapi'], ['key'], ['GET' => 0], null, false, true, null]],
-        1027 => [[['_route' => 'restapi-Annotation-bookId-id', '_resource' => 'Annotation', '_handler' => 'restapi'], ['bookId', 'id'], ['GET' => 0], null, false, true, null]],
-        1036 => [[['_route' => 'restapi-Annotation-bookId', '_resource' => 'Annotation', '_handler' => 'restapi'], ['bookId'], ['GET' => 0], null, false, true, null]],
-        1087 => [[['_route' => 'restapi-Metadata-bookId-element-name', '_resource' => 'Metadata', '_handler' => 'restapi'], ['bookId', 'element', 'name'], ['GET' => 0], null, false, true, null]],
-        1096 => [[['_route' => 'restapi-Metadata-bookId-element', '_resource' => 'Metadata', '_handler' => 'restapi'], ['bookId', 'element'], ['GET' => 0], null, false, true, null]],
-        1106 => [[['_route' => 'restapi-Metadata-bookId', '_resource' => 'Metadata', '_handler' => 'restapi'], ['bookId'], ['GET' => 0], null, false, true, null]],
-        1120 => [[['_route' => 'restapi-other', '_handler' => 'restapi'], ['route'], ['GET' => 0], null, false, true, null]],
-        1165 => [[['_route' => 'page-42-id-title', 'page' => '42'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        1179 => [[['_route' => 'page-42-id', 'page' => '42'], ['id'], ['GET' => 0], null, false, true, null]],
-        1227 => [[['_route' => 'fetch-inline', 'view' => 1, '_handler' => 'fetch'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        1269 => [[['_route' => 'feed-page-id', '_handler' => 'feed'], ['page', 'id'], ['GET' => 0], null, false, true, null]],
-        1278 => [[['_route' => 'feed-page', '_handler' => 'feed'], ['page'], ['GET' => 0], null, false, true, null]],
-        1324 => [[['_route' => 'fetch-data', '_handler' => 'fetch'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        1355 => [[['_route' => 'fetch-file', '_handler' => 'fetch'], ['db', 'id', 'file'], ['GET' => 0], null, false, true, null]],
-        1409 => [[['_route' => 'fetch-view', 'view' => 1, '_handler' => 'fetch'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        1466 => [[['_route' => 'fetch-download', '_handler' => 'fetch'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        1499 => [[['_route' => 'epubfs', '_handler' => 'epubfs'], ['db', 'data', 'comp'], ['GET' => 0], null, false, true, null]],
-        1534 => [[['_route' => 'opds-page-id', '_handler' => 'opds'], ['page', 'id'], ['GET' => 0], null, false, true, null]],
-        1543 => [[['_route' => 'opds-page', '_handler' => 'opds'], ['page'], ['GET' => 0], null, false, true, null]],
-        1596 => [[['_route' => 'zipper-page-type-id', '_handler' => 'zipper'], ['page', 'type', 'id'], ['GET' => 0], null, false, true, null]],
-        1605 => [[['_route' => 'zipper-page-type', '_handler' => 'zipper'], ['page', 'type'], ['GET' => 0], null, false, true, null]],
-        1615 => [[['_route' => 'zipper-page', '_handler' => 'zipper'], ['page'], ['GET' => 0], null, false, true, null]],
-        1644 => [
+        384 => [[['_route' => 'fetch-thumb', '_handler' => 'fetch'], ['db', 'id', 'thumb'], ['GET' => 0], null, false, false, null]],
+        421 => [[['_route' => 'page-15-custom-id', 'page' => '15'], ['custom', 'id'], ['GET' => 0], null, false, true, null]],
+        434 => [[['_route' => 'page-14-custom', 'page' => '14'], ['custom'], ['GET' => 0], null, false, true, null]],
+        465 => [[['_route' => 'fetch-cover', '_handler' => 'fetch'], ['db', 'id'], ['GET' => 0], null, false, false, null]],
+        485 => [[['_route' => 'check-more', '_handler' => 'check'], ['more'], ['GET' => 0], null, false, true, null]],
+        493 => [[['_route' => 'check', '_handler' => 'check'], [], ['GET' => 0], null, false, false, null]],
+        531 => [[['_route' => 'calres', '_handler' => 'calres'], ['db', 'alg', 'digest'], ['GET' => 0], null, false, true, null]],
+        571 => [[['_route' => 'page-18-id-title', 'page' => '18'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        584 => [[['_route' => 'page-18-id', 'page' => '18'], ['id'], ['GET' => 0], null, false, true, null]],
+        630 => [[['_route' => 'loader-action-dbNum-authorId-urlPath', '_handler' => 'loader'], ['action', 'dbNum', 'authorId', 'urlPath'], ['GET' => 0], null, false, true, null]],
+        649 => [[['_route' => 'loader-action-dbNum-authorId', '_handler' => 'loader'], ['action', 'dbNum', 'authorId'], ['GET' => 0], null, false, true, null]],
+        662 => [[['_route' => 'loader-action-dbNum', '_handler' => 'loader'], ['action', 'dbNum'], ['GET' => 0], null, false, true, null]],
+        671 => [[['_route' => 'loader-action-', '_handler' => 'loader'], ['action'], ['GET' => 0], null, true, true, null]],
+        679 => [[['_route' => 'loader-action', '_handler' => 'loader'], ['action'], ['GET' => 0], null, false, true, null]],
+        718 => [[['_route' => 'page-21-id-title', 'page' => '21'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        731 => [[['_route' => 'page-21-id', 'page' => '21'], ['id'], ['GET' => 0], null, false, true, null]],
+        769 => [[['_route' => 'page-23-id-title', 'page' => '23'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        782 => [[['_route' => 'page-23-id', 'page' => '23'], ['id'], ['GET' => 0], null, false, true, null]],
+        821 => [[['_route' => 'read-title', '_handler' => 'read'], ['db', 'data', 'title'], ['GET' => 0], null, false, true, null]],
+        840 => [[['_route' => 'read', '_handler' => 'read'], ['db', 'data'], ['GET' => 0], null, false, true, null]],
+        888 => [[['_route' => 'restapi-Database-db-name', '_resource' => 'Database', '_handler' => 'restapi'], ['db', 'name'], ['GET' => 0], null, false, true, null]],
+        896 => [[['_route' => 'restapi-Database-db', '_resource' => 'Database', '_handler' => 'restapi'], ['db'], ['GET' => 0], null, false, true, null]],
+        943 => [[['_route' => 'restapi-Note-type-id-title', '_resource' => 'Note', '_handler' => 'restapi'], ['type', 'id', 'title'], ['GET' => 0], null, false, true, null]],
+        951 => [[['_route' => 'restapi-Note-type-id', '_resource' => 'Note', '_handler' => 'restapi'], ['type', 'id'], ['GET' => 0], null, false, true, null]],
+        960 => [[['_route' => 'restapi-Note-type', '_resource' => 'Note', '_handler' => 'restapi'], ['type'], ['GET' => 0], null, false, true, null]],
+        989 => [[['_route' => 'restapi-Preference-key', '_resource' => 'Preference', '_handler' => 'restapi'], ['key'], ['GET' => 0], null, false, true, null]],
+        1029 => [[['_route' => 'restapi-Annotation-bookId-id', '_resource' => 'Annotation', '_handler' => 'restapi'], ['bookId', 'id'], ['GET' => 0], null, false, true, null]],
+        1038 => [[['_route' => 'restapi-Annotation-bookId', '_resource' => 'Annotation', '_handler' => 'restapi'], ['bookId'], ['GET' => 0], null, false, true, null]],
+        1089 => [[['_route' => 'restapi-Metadata-bookId-element-name', '_resource' => 'Metadata', '_handler' => 'restapi'], ['bookId', 'element', 'name'], ['GET' => 0], null, false, true, null]],
+        1098 => [[['_route' => 'restapi-Metadata-bookId-element', '_resource' => 'Metadata', '_handler' => 'restapi'], ['bookId', 'element'], ['GET' => 0], null, false, true, null]],
+        1108 => [[['_route' => 'restapi-Metadata-bookId', '_resource' => 'Metadata', '_handler' => 'restapi'], ['bookId'], ['GET' => 0], null, false, true, null]],
+        1122 => [[['_route' => 'restapi-other', '_handler' => 'restapi'], ['route'], ['GET' => 0], null, false, true, null]],
+        1167 => [[['_route' => 'page-42-id-title', 'page' => '42'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        1181 => [[['_route' => 'page-42-id', 'page' => '42'], ['id'], ['GET' => 0], null, false, true, null]],
+        1229 => [[['_route' => 'fetch-inline', 'view' => 1, '_handler' => 'fetch'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        1271 => [[['_route' => 'feed-page-id', '_handler' => 'feed'], ['page', 'id'], ['GET' => 0], null, false, true, null]],
+        1280 => [[['_route' => 'feed-page', '_handler' => 'feed'], ['page'], ['GET' => 0], null, false, true, null]],
+        1326 => [[['_route' => 'fetch-data', '_handler' => 'fetch'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        1357 => [[['_route' => 'fetch-file', '_handler' => 'fetch'], ['db', 'id', 'file'], ['GET' => 0], null, false, true, null]],
+        1411 => [[['_route' => 'fetch-view', 'view' => 1, '_handler' => 'fetch'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        1468 => [[['_route' => 'fetch-download', '_handler' => 'fetch'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        1501 => [[['_route' => 'epubfs', '_handler' => 'epubfs'], ['db', 'data', 'comp'], ['GET' => 0], null, false, true, null]],
+        1536 => [[['_route' => 'opds-page-id', '_handler' => 'opds'], ['page', 'id'], ['GET' => 0], null, false, true, null]],
+        1545 => [[['_route' => 'opds-page', '_handler' => 'opds'], ['page'], ['GET' => 0], null, false, true, null]],
+        1602 => [[['_route' => 'zipper-page-id-type', '_handler' => 'zipper'], ['page', 'id', 'type'], ['GET' => 0], null, false, false, null]],
+        1626 => [[['_route' => 'zipper-page-type', '_handler' => 'zipper'], ['page', 'type'], ['GET' => 0], null, false, false, null]],
+        1655 => [
             [['_route' => 'zipfs', '_handler' => 'zipfs'], ['db', 'data', 'comp'], ['GET' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],

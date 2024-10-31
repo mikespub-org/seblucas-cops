@@ -15,6 +15,10 @@ x.x.x - TODO
 3.x.x - 2024xxxx
   * Changes in config/default.php file:
     - set $config['cops_use_route_urls'] as deprecated (= always enabled)
+    - set $config['cops_download_series'] as deprecated (use $config['cops_download_page'] instead)
+    - set $config['cops_download_author'] as deprecated (use $config['cops_download_page'] instead)
+  * Generate openapi.json and dump/load cached routes file (info only)
+  * Clean up fetch-thumb and zipper-page-* routes in handler & renderers
   * Change route definitions for handlers + add a few _route params
   * Find route for params via handlers with findRoute() method
   * Move pages to handlers in REST API + add getLink() and request() methods

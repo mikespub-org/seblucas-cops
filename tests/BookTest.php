@@ -329,7 +329,7 @@ class BookTest extends TestCase
         Config::set('thumbnail_handling', "");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals(FetchHandler::getLink() . "/thumbs/html/0/2.jpg", $thumbnailurl);
+        $this->assertEquals(FetchHandler::getLink() . "/thumbs/0/2/html.jpg", $thumbnailurl);
     }
 
     /**

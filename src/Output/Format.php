@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Output;
 
 use DOMDocument;
+use JsonException;
 
 class Format
 {
@@ -67,6 +68,43 @@ class Format
         }
         $filecontent = file_get_contents($template);
         return preg_replace($pattern, $replace, $filecontent);
+    }
+
+    /**
+     * Summary of json
+     * @param mixed $data
+     * @param int|null $flags
+     * @return string
+     */
+    public static function json($data, $flags = null)
+    {
+        $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR;
+        try {
+            return json_encode($data, $flags);
+        } catch (JsonException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * Export array in more readable format
+     * @param mixed $data
+     * @return string
+     */
+    public static function export($data)
+    {
+        $content = var_export($data, true) . ',';
+        // replace arrays with short format
+        $content = str_replace(['array (', '),'], ['[', '],'], $content);
+        // remove numeric keys from arrays
+        $content = preg_replace('/^(\s*)\d+ => /m', '$1', $content);
+        // strip empty lines after removing keys
+        $content = preg_replace('/\n\s+\n/', "\n", $content);
+        // collapse empty arrays
+        $content = preg_replace('/\[\s+\]/', '[]', $content);
+        // start array values on same line as key
+        $content = preg_replace('/ => \n\s*\[/', ' => [', $content);
+        return trim($content, ',');
     }
 
     /**

@@ -1,0 +1,2943 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "COPS REST API",
+        "version": "3.4.0"
+    },
+    "servers": [
+        {
+            "url": "vendor/bin/index.php/restapi",
+            "description": "COPS REST API Endpoint"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-API-KEY"
+            },
+            "BasicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            }
+        },
+        "parameters": {
+            "dbParam": {
+                "name": "db",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        }
+    },
+    "paths": {
+        "/index": {
+            "get": {
+                "summary": "Route to page handler with page=index",
+                "operationId": "get_page-index",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=index"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/authors/letter/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=2&id={id}",
+                "operationId": "get_page-2-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=2&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/authors/letter": {
+            "get": {
+                "summary": "Route to page handler with page=1&letter=1",
+                "operationId": "get_page-1-letter",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=1&letter=1"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/authors/{id}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=3&id={id}&title={title}",
+                "operationId": "get_page-3-id-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=3&id={id}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/authors/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=3&id={id}",
+                "operationId": "get_page-3-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=3&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/authors": {
+            "get": {
+                "summary": "Route to page handler with page=1",
+                "operationId": "get_page-1",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=1"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/books/letter/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=5&id={id}",
+                "operationId": "get_page-5-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=5&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/books/letter": {
+            "get": {
+                "summary": "Route to page handler with page=4&letter=1",
+                "operationId": "get_page-4-letter",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=4&letter=1"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/books/year/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=50&id={id}",
+                "operationId": "get_page-50-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=50&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/books/year": {
+            "get": {
+                "summary": "Route to page handler with page=4&year=1",
+                "operationId": "get_page-4-year",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=4&year=1"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/books/{id}/{author}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=13&id={id}&author={author}&title={title}",
+                "operationId": "get_page-13-id-author-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=13&id={id}&author={author}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "author",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/books/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=13&id={id}",
+                "operationId": "get_page-13-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=13&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/books": {
+            "get": {
+                "summary": "Route to page handler with page=4",
+                "operationId": "get_page-4",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=4"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/series/{id}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=7&id={id}&title={title}",
+                "operationId": "get_page-7-id-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=7&id={id}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/series/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=7&id={id}",
+                "operationId": "get_page-7-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=7&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/series": {
+            "get": {
+                "summary": "Route to page handler with page=6",
+                "operationId": "get_page-6",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=6"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/query/{query}/{scope}": {
+            "get": {
+                "summary": "Route to page handler with page=9&search=1&query={query}&scope={scope}",
+                "operationId": "get_page-9-query-scope",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=9&search=1&query={query}&scope={scope}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/query/{query}": {
+            "get": {
+                "summary": "Route to page handler with page=9&search=1&query={query}",
+                "operationId": "get_page-9-query",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=9&search=1&query={query}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/search/{query}/{scope}": {
+            "get": {
+                "summary": "Route to page handler with page=9&query={query}&scope={scope}",
+                "operationId": "get_page-9-search-scope",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=9&query={query}&scope={scope}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "scope",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/search/{query}": {
+            "get": {
+                "summary": "Route to page handler with page=9&query={query}",
+                "operationId": "get_page-9-search",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=9&query={query}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/search": {
+            "get": {
+                "summary": "Route to page handler with page=8",
+                "operationId": "get_page-8",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=8"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/recent": {
+            "get": {
+                "summary": "Route to page handler with page=10",
+                "operationId": "get_page-10",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=10"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/tags/{id}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=12&id={id}&title={title}",
+                "operationId": "get_page-12-id-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=12&id={id}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/tags/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=12&id={id}",
+                "operationId": "get_page-12-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=12&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/tags": {
+            "get": {
+                "summary": "Route to page handler with page=11",
+                "operationId": "get_page-11",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=11"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/custom/{custom}/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=15&custom={custom}&id={id}",
+                "operationId": "get_page-15-custom-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=15&custom={custom}&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/custom/{custom}": {
+            "get": {
+                "summary": "Route to page handler with page=14&custom={custom}",
+                "operationId": "get_page-14-custom",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=14&custom={custom}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "custom",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/about": {
+            "get": {
+                "summary": "Route to page handler with page=16",
+                "operationId": "get_page-16",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=16"
+                    }
+                }
+            }
+        },
+        "/languages/{id}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=18&id={id}&title={title}",
+                "operationId": "get_page-18-id-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=18&id={id}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/languages/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=18&id={id}",
+                "operationId": "get_page-18-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=18&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/languages": {
+            "get": {
+                "summary": "Route to page handler with page=17",
+                "operationId": "get_page-17",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=17"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/customize": {
+            "get": {
+                "summary": "Route to page handler with page=19",
+                "operationId": "get_page-19",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=19"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/publishers/{id}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=21&id={id}&title={title}",
+                "operationId": "get_page-21-id-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=21&id={id}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/publishers/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=21&id={id}",
+                "operationId": "get_page-21-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=21&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/publishers": {
+            "get": {
+                "summary": "Route to page handler with page=20",
+                "operationId": "get_page-20",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=20"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/ratings/{id}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=23&id={id}&title={title}",
+                "operationId": "get_page-23-id-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=23&id={id}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/ratings/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=23&id={id}",
+                "operationId": "get_page-23-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=23&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/ratings": {
+            "get": {
+                "summary": "Route to page handler with page=22",
+                "operationId": "get_page-22",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=22"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/identifiers/{id}/{title}": {
+            "get": {
+                "summary": "Route to page handler with page=42&id={id}&title={title}",
+                "operationId": "get_page-42-id-title",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=42&id={id}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/identifiers/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=42&id={id}",
+                "operationId": "get_page-42-id",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=42&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/identifiers": {
+            "get": {
+                "summary": "Route to page handler with page=41",
+                "operationId": "get_page-41",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=41"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/libraries": {
+            "get": {
+                "summary": "Route to page handler with page=43",
+                "operationId": "get_page-43",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=43"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/feed/{page}/{id}": {
+            "get": {
+                "summary": "Route to feed handler with page={page}&id={id} - with api key",
+                "operationId": "get_feed-page-id",
+                "tags": [
+                    "feed"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of feed handler with page={page}&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/feed/search": {
+            "get": {
+                "summary": "Route to page=search&feed - with api key",
+                "operationId": "get_feed-search",
+                "tags": [
+                    "feed"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page=search&feed"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/feed/{page}": {
+            "get": {
+                "summary": "Route to feed handler with page={page} - with api key",
+                "operationId": "get_feed-page",
+                "tags": [
+                    "feed"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of feed handler with page={page}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/feed": {
+            "get": {
+                "summary": "Route to feed handler - with api key",
+                "operationId": "get_feed",
+                "tags": [
+                    "feed"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of feed handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/files/{db}/{id}/{file}": {
+            "get": {
+                "summary": "Route to fetch handler with db={db}&id={id}&file={file} - with api key",
+                "operationId": "get_fetch-file",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with db={db}&id={id}&file={file}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "file",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/thumbs/{db}/{id}/{thumb}.jpg": {
+            "get": {
+                "summary": "Route to fetch handler with db={db}&id={id}&thumb={thumb} - with api key",
+                "operationId": "get_fetch-thumb",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with db={db}&id={id}&thumb={thumb}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "thumb",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/covers/{db}/{id}.jpg": {
+            "get": {
+                "summary": "Route to fetch handler with db={db}&id={id} - with api key",
+                "operationId": "get_fetch-cover",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with db={db}&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/inline/{db}/{data}/{ignore}.{type}": {
+            "get": {
+                "summary": "Route to view=1&fetch handler with db={db}&data={data}&type={type} - with api key",
+                "operationId": "get_fetch-inline",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of view=1&fetch handler with db={db}&data={data}&type={type}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "ignore",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/fetch/{db}/{data}/{ignore}.{type}": {
+            "get": {
+                "summary": "Route to fetch handler with db={db}&data={data}&type={type} - with api key",
+                "operationId": "get_fetch-data",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with db={db}&data={data}&type={type}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "ignore",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/view/{data}/{db}/{ignore}.{type}": {
+            "get": {
+                "summary": "Route to view=1&fetch handler with data={data}&db={db}&type={type} - with api key",
+                "operationId": "get_fetch-view",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of view=1&fetch handler with data={data}&db={db}&type={type}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ignore",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/download/{data}/{db}/{ignore}.{type}": {
+            "get": {
+                "summary": "Route to fetch handler with data={data}&db={db}&type={type} - with api key",
+                "operationId": "get_fetch-download",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with data={data}&db={db}&type={type}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "ignore",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/read/{db}/{data}/{title}": {
+            "get": {
+                "summary": "Route to read handler with db={db}&data={data}&title={title} - with api key",
+                "operationId": "get_read-title",
+                "tags": [
+                    "read"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of read handler with db={db}&data={data}&title={title}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/read/{db}/{data}": {
+            "get": {
+                "summary": "Route to read handler with db={db}&data={data} - with api key",
+                "operationId": "get_read",
+                "tags": [
+                    "read"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of read handler with db={db}&data={data}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/epubfs/{db}/{data}/{comp}": {
+            "get": {
+                "summary": "Route to epubfs handler with db={db}&data={data}&comp={comp} - with api key",
+                "operationId": "get_epubfs",
+                "tags": [
+                    "epubfs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of epubfs handler with db={db}&data={data}&comp={comp}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "comp",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/custom": {
+            "get": {
+                "summary": "Route to custom api",
+                "operationId": "get_restapi-CustomColumnType",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of custom api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/databases/{db}/{name}": {
+            "get": {
+                "summary": "Route to databases/{db}/{name} api - with api key",
+                "operationId": "get_restapi-Database-db-name",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of databases/{db}/{name} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/databases/{db}": {
+            "get": {
+                "summary": "Route to databases/{db} api",
+                "operationId": "get_restapi-Database-db",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of databases/{db} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "table",
+                                "view"
+                            ]
+                        },
+                        "example": "table"
+                    }
+                ]
+            }
+        },
+        "/databases": {
+            "get": {
+                "summary": "Route to databases api",
+                "operationId": "get_restapi-Database",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of databases api"
+                    }
+                }
+            }
+        },
+        "/openapi": {
+            "get": {
+                "summary": "Route to openapi api",
+                "operationId": "get_restapi-openapi",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of openapi api"
+                    }
+                }
+            }
+        },
+        "/routes": {
+            "get": {
+                "summary": "Route to routes api",
+                "operationId": "get_restapi-route",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of routes api"
+                    }
+                }
+            }
+        },
+        "/handlers": {
+            "get": {
+                "summary": "Route to handlers api",
+                "operationId": "get_restapi-handler",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of handlers api"
+                    }
+                }
+            }
+        },
+        "/notes/{type}/{id}/{title}": {
+            "get": {
+                "summary": "Route to notes/{type}/{id}/{title} api",
+                "operationId": "get_restapi-Note-type-id-title",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of notes/{type}/{id}/{title} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "title",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/notes/{type}/{id}": {
+            "get": {
+                "summary": "Route to notes/{type}/{id} api",
+                "operationId": "get_restapi-Note-type-id",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of notes/{type}/{id} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/notes/{type}": {
+            "get": {
+                "summary": "Route to notes/{type} api",
+                "operationId": "get_restapi-Note-type",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of notes/{type} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/notes": {
+            "get": {
+                "summary": "Route to notes api",
+                "operationId": "get_restapi-Note",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of notes api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/preferences/{key}": {
+            "get": {
+                "summary": "Route to preferences/{key} api",
+                "operationId": "get_restapi-Preference-key",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of preferences/{key} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/preferences": {
+            "get": {
+                "summary": "Route to preferences api",
+                "operationId": "get_restapi-Preference",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of preferences api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/annotations/{bookId}/{id}": {
+            "get": {
+                "summary": "Route to annotations/{bookId}/{id} api",
+                "operationId": "get_restapi-Annotation-bookId-id",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of annotations/{bookId}/{id} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/annotations/{bookId}": {
+            "get": {
+                "summary": "Route to annotations/{bookId} api",
+                "operationId": "get_restapi-Annotation-bookId",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of annotations/{bookId} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/annotations": {
+            "get": {
+                "summary": "Route to annotations api",
+                "operationId": "get_restapi-Annotation",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of annotations api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/metadata/{bookId}/{element}/{name}": {
+            "get": {
+                "summary": "Route to metadata/{bookId}/{element}/{name} api",
+                "operationId": "get_restapi-Metadata-bookId-element-name",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of metadata/{bookId}/{element}/{name} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "element",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/metadata/{bookId}/{element}": {
+            "get": {
+                "summary": "Route to metadata/{bookId}/{element} api",
+                "operationId": "get_restapi-Metadata-bookId-element",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of metadata/{bookId}/{element} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "element",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/metadata/{bookId}": {
+            "get": {
+                "summary": "Route to metadata/{bookId} api",
+                "operationId": "get_restapi-Metadata-bookId",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of metadata/{bookId} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "bookId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/user/details": {
+            "get": {
+                "summary": "Route to user/details api - with basic authentication",
+                "operationId": "get_restapi-User-details",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of user/details api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ],
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ]
+            }
+        },
+        "/user": {
+            "get": {
+                "summary": "Route to user api - with basic authentication",
+                "operationId": "get_restapi-User",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of user api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ],
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ]
+            }
+        },
+        "/{route}": {
+            "get": {
+                "summary": "Route to {route} api",
+                "operationId": "get_restapi-other",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of {route} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "route",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/check/{more}": {
+            "get": {
+                "summary": "Route to check handler with more={more} - with api key",
+                "operationId": "get_check-more",
+                "tags": [
+                    "check"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of check handler with more={more}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "more",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/check": {
+            "get": {
+                "summary": "Route to check handler - with api key",
+                "operationId": "get_check",
+                "tags": [
+                    "check"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of check handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/opds/{page}/{id}": {
+            "get": {
+                "summary": "Route to opds handler with page={page}&id={id} - with api key",
+                "operationId": "get_opds-page-id",
+                "tags": [
+                    "opds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of opds handler with page={page}&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/opds/search": {
+            "get": {
+                "summary": "Route to page=search&opds - with api key",
+                "operationId": "get_opds-search",
+                "tags": [
+                    "opds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page=search&opds"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/opds/{page}": {
+            "get": {
+                "summary": "Route to opds handler with page={page} - with api key",
+                "operationId": "get_opds-page",
+                "tags": [
+                    "opds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of opds handler with page={page}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/opds": {
+            "get": {
+                "summary": "Route to opds handler - with api key",
+                "operationId": "get_opds",
+                "tags": [
+                    "opds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of opds handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/loader/{action}/{dbNum}/{authorId}/{urlPath}": {
+            "get": {
+                "summary": "Route to loader handler with action={action}&dbNum={dbNum}&authorId={authorId}&urlPath={urlPath} - with api key",
+                "operationId": "get_loader-action-dbNum-authorId-urlPath",
+                "tags": [
+                    "loader"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of loader handler with action={action}&dbNum={dbNum}&authorId={authorId}&urlPath={urlPath}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dbNum",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "authorId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    },
+                    {
+                        "name": "urlPath",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/loader/{action}/{dbNum}/{authorId}": {
+            "get": {
+                "summary": "Route to loader handler with action={action}&dbNum={dbNum}&authorId={authorId} - with api key",
+                "operationId": "get_loader-action-dbNum-authorId",
+                "tags": [
+                    "loader"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of loader handler with action={action}&dbNum={dbNum}&authorId={authorId}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dbNum",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "authorId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w*$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/loader/{action}/{dbNum}": {
+            "get": {
+                "summary": "Route to loader handler with action={action}&dbNum={dbNum} - with api key",
+                "operationId": "get_loader-action-dbNum",
+                "tags": [
+                    "loader"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of loader handler with action={action}&dbNum={dbNum}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "dbNum",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/loader/{action}/": {
+            "get": {
+                "summary": "Route to loader handler with action={action} - with api key",
+                "operationId": "get_loader-action-",
+                "tags": [
+                    "loader"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of loader handler with action={action}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/loader/{action}": {
+            "get": {
+                "summary": "Route to loader handler with action={action} - with api key",
+                "operationId": "get_loader-action",
+                "tags": [
+                    "loader"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of loader handler with action={action}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/loader": {
+            "get": {
+                "summary": "Route to loader handler - with api key",
+                "operationId": "get_loader",
+                "tags": [
+                    "loader"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of loader handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/zipper/{page}/{id}/{type}.zip": {
+            "get": {
+                "summary": "Route to zipper handler with page={page}&id={id}&type={type} - with api key",
+                "operationId": "get_zipper-page-id-type",
+                "tags": [
+                    "zipper"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of zipper handler with page={page}&id={id}&type={type}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/zipper/{page}/{type}.zip": {
+            "get": {
+                "summary": "Route to zipper handler with page={page}&type={type} - with api key",
+                "operationId": "get_zipper-page-type",
+                "tags": [
+                    "zipper"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of zipper handler with page={page}&type={type}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/calres/{db}/{alg}/{digest}": {
+            "get": {
+                "summary": "Route to calres handler with db={db}&alg={alg}&digest={digest} - with api key",
+                "operationId": "get_calres",
+                "tags": [
+                    "calres"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of calres handler with db={db}&alg={alg}&digest={digest}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "alg",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "digest",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/zipfs/{db}/{data}/{comp}": {
+            "get": {
+                "summary": "Route to zipfs handler with db={db}&data={data}&comp={comp} - with api key",
+                "operationId": "get_zipfs",
+                "tags": [
+                    "zipfs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of zipfs handler with db={db}&data={data}&comp={comp}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "comp",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/mail": {
+            "post": {
+                "summary": "Route to mail handler - with api key",
+                "operationId": "post_mail",
+                "tags": [
+                    "mail"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of mail handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/graphql": {
+            "get": {
+                "summary": "Route to graphql handler - with api key",
+                "operationId": "get_graphql",
+                "tags": [
+                    "graphql"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of graphql handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to graphql handler - with api key",
+                "operationId": "post_graphql",
+                "tags": [
+                    "graphql"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of graphql handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/tables": {
+            "get": {
+                "summary": "Route to tables handler - with api key",
+                "operationId": "get_tables",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        }
+    }
+}

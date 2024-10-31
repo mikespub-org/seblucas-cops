@@ -108,21 +108,17 @@ class Framework
      */
     public static function init()
     {
-        static::addRoutes();
+        static::loadRoutes();
     }
 
     /**
-     * Add routes for all handlers
+     * Load routes for all handlers
      * @return void
      */
-    public static function addRoutes()
+    public static function loadRoutes()
     {
-        if (Input\Route::count() > 0) {
-            return;
-        }
-        foreach (static::$handlers as $handler) {
-            Input\Route::addRoutes($handler::getRoutes(), $handler::HANDLER);
-        }
+        //Input\Route::load();
+        Input\Route::init();
         // @todo add cors options after the last handler or use middleware or...
         //'cors' => ['/{route:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
     }

@@ -26,9 +26,8 @@ class ZipperHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "zipper-page-type-id" => ["/zipper/{page}/{type}/{id}"],
-            "zipper-page-type" => ["/zipper/{page}/{type}"],
-            "zipper-page" => ["/zipper/{page}"],
+            "zipper-page-id-type" => ["/zipper/{page}/{id}/{type}.zip"],
+            "zipper-page-type" => ["/zipper/{page}/{type}.zip"],
         ];
     }
 

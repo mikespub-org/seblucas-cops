@@ -51,14 +51,14 @@ class BrowserKitTest extends TestCase
         $config = [];
         include dirname(__DIR__) . '/config/default.php';
         include dirname(__DIR__) . '/config/local.php';
-        static::$localConfig = $config;
+        self::$localConfig = $config;
     }
 
     public function setUp(): void
     {
         $this->userAgent ??= 'Chrome';
         $this->createBrowser($this->template, $this->userAgent);
-        Config::set('full_url', static::$baseDir);
+        Config::set('full_url', self::$baseDir);
         Route::setBaseUrl(null);
     }
 
@@ -176,7 +176,7 @@ class BrowserKitTest extends TestCase
         $uri = Route::link() . '/index';
         $crawler = $this->url($uri);
 
-        if (!empty(static::$localConfig['cops_front_controller'])) {
+        if (!empty(self::$localConfig['cops_front_controller'])) {
             $uri = Route::base() . 'index?complete=1';
         } else {
             $uri = Route::link('json') . '/index?complete=1';
@@ -254,7 +254,7 @@ class BrowserKitTest extends TestCase
             if ($template == 'default') {
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
-            if (!empty(static::$localConfig['cops_front_controller'])) {
+            if (!empty(self::$localConfig['cops_front_controller'])) {
                 $this->assertEquals(Route::base() . 'search/ali/book', $articles->filterXPath('//a')->attr('href'));
             } else {
                 $this->assertEquals(Route::link() . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));

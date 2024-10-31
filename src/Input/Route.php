@@ -14,6 +14,7 @@ use FastRoute\RouteCollector;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Output\Format;
 use Exception;
 
 use function FastRoute\simpleDispatcher;
@@ -25,6 +26,7 @@ class Route
 {
     public const HANDLER_PARAM = "_handler";
     public const ROUTE_PARAM = "_route";
+    public const ROUTES_CACHE_FILE = 'url_cached_routes.php';
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
     protected static $proxyRequest = null;
@@ -51,8 +53,8 @@ class Route
         }
 
         // match exact path
-        if (static::has($path)) {
-            return static::get($path);
+        if (self::has($path)) {
+            return self::get($path);
         }
 
         // match pattern
@@ -60,7 +62,7 @@ class Route
         $params = [];
         $method = 'GET';
 
-        $dispatcher = static::getSimpleDispatcher();
+        $dispatcher = self::getSimpleDispatcher();
         $routeInfo = $dispatcher->dispatch($method, $path);
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
@@ -92,7 +94,7 @@ class Route
      */
     public static function has($path)
     {
-        return array_key_exists($path, static::$static);
+        return array_key_exists($path, self::$static);
     }
 
     /**
@@ -102,8 +104,8 @@ class Route
      */
     public static function get($path)
     {
-        $name = static::$static[$path];
-        return static::$routes[$name][1];
+        $name = self::$static[$path];
+        return self::$routes[$name][1];
     }
 
     /**
@@ -117,7 +119,7 @@ class Route
      */
     public static function set($name, $path, $params = [], $methods = [], $options = [])
     {
-        static::$routes[$name] = [$path, $params, $methods, $options];
+        self::$routes[$name] = [$path, $params, $methods, $options];
     }
 
     /**
@@ -126,10 +128,10 @@ class Route
      */
     public static function getSimpleDispatcher()
     {
-        static::$dispatcher ??= simpleDispatcher(function (RouteCollector $r) {
-            static::addRouteCollection($r);
+        self::$dispatcher ??= simpleDispatcher(function (RouteCollector $r) {
+            self::addRouteCollection($r);
         });
-        return static::$dispatcher;
+        return self::$dispatcher;
     }
 
     /**
@@ -139,9 +141,9 @@ class Route
      */
     public static function addRouteCollection($r)
     {
-        foreach (static::getRoutes() as $name => $route) {
+        foreach (self::getRoutes() as $name => $route) {
             [$path, $params, $methods, $options] = $route;
-            //$handler = $params[static::HANDLER_PARAM] ?? '';
+            //$handler = $params[self::HANDLER_PARAM] ?? '';
             //$r->addRoute($methods, $path, $handler, $params);
             $r->addRoute($methods, $path, $params);
         }
@@ -153,7 +155,47 @@ class Route
      */
     public static function getRoutes()
     {
-        return static::$routes;
+        return self::$routes;
+    }
+
+    /**
+     * Get routes by group
+     * @return array<string, array<mixed>>
+     */
+    public static function getGroups()
+    {
+        $groups = [];
+        foreach (self::getRoutes() as $name => $route) {
+            [$path, $params, $methods, $options] = $route;
+            $group = $params[self::HANDLER_PARAM] ?? 'page';
+            $groups[$group] ??= [];
+            if ($group == 'page') {
+                $page = $params["page"] ?? '';
+                $groups[$group][$page] ??= [];
+                $groups[$group][$page][] = $name;
+            } elseif ($group == 'restapi') {
+                $resource = $params["_resource"] ?? '';
+                $groups[$group][$resource] ??= [];
+                $groups[$group][$resource][] = $name;
+            } else {
+                $groups[$group][] = $name;
+            }
+        }
+        return $groups;
+    }
+
+    /**
+     * Add routes for all handlers
+     * @return void
+     */
+    public static function init()
+    {
+        if (self::count() > 0) {
+            return;
+        }
+        foreach (Framework::getHandlers() as $handler) {
+            self::addRoutes($handler::getRoutes(), $handler::HANDLER);
+        }
     }
 
     /**
@@ -170,23 +212,23 @@ class Route
             [$path, $params, $methods, $options] = $route;
             // Add static paths to $static
             if (!str_contains($path, '{')) {
-                static::$static[$path] = $name;
+                self::$static[$path] = $name;
             }
             // Add ["_handler" => $handler] to params
             if ($handler != "html") {
-                $params[static::HANDLER_PARAM] ??= $handler;
+                $params[self::HANDLER_PARAM] ??= $handler;
             }
             // Add default GET method
             if (empty($methods)) {
                 $methods[] = 'GET';
             }
-            if (isset(static::$routes[$name])) {
-                var_dump(static::$routes[$name]);
+            if (isset(self::$routes[$name])) {
+                var_dump(self::$routes[$name]);
                 throw new Exception('Duplicate route name ' . $name . ' for ' . $handler);
             }
             $routes[$name] = [$path, $params, $methods, $options];
         }
-        static::$routes = array_merge(static::$routes, $routes);
+        self::$routes = array_merge(self::$routes, $routes);
     }
 
     /**
@@ -196,7 +238,7 @@ class Route
      */
     public static function setRoutes($routes = [])
     {
-        static::$routes = $routes;
+        self::$routes = $routes;
     }
 
     /**
@@ -205,7 +247,50 @@ class Route
      */
     public static function count()
     {
-        return count(static::$routes);
+        return count(self::$routes);
+    }
+
+    /**
+     * Summary of dump
+     * @return void
+     */
+    public static function dump()
+    {
+        $cacheFile = __DIR__ . '/' . self::ROUTES_CACHE_FILE;
+        $content = '<?php' . "\n\n";
+        $content .= "// This file has been auto-generated by the COPS Input\Route class.\n\n";
+        $content .= '$handlers = ' . Format::export(Framework::getHandlers()) . ";\n\n";
+        $content .= '$static = ' . Format::export(self::$static) . ";\n\n";
+        $content .= '$routes = ' . Format::export(self::$routes) . ";\n\n";
+        $content .= "return [\n";
+        $content .= "    'handlers' => \$handlers,\n";
+        $content .= "    'static' => \$static,\n";
+        $content .= "    'routes' => \$routes,\n";
+        $content .= "];\n";
+        file_put_contents($cacheFile, $content);
+    }
+
+    /**
+     * Summary of load
+     * @param bool $refresh
+     * @return void
+     */
+    public static function load($refresh = false)
+    {
+        $cacheFile = __DIR__ . '/' . self::ROUTES_CACHE_FILE;
+        if ($refresh || !file_exists($cacheFile)) {
+            self::init();
+            self::dump();
+            return;
+        }
+        try {
+            $cache = require $cacheFile;
+            self::$handlers = $cache["handlers"];
+            self::$static = $cache["static"];
+            self::$routes = $cache["routes"];
+        } catch (Exception $e) {
+            echo '<pre>' . $e . '</pre>';
+        }
     }
 
     /**
@@ -217,9 +302,9 @@ class Route
     public static function path($path = null, $params = [])
     {
         if (!empty($path) && str_starts_with($path, '/')) {
-            return $path . static::params($params);
+            return $path . self::params($params);
         }
-        return static::base() . $path . static::params($params);
+        return self::base() . $path . self::params($params);
     }
 
     /**
@@ -239,7 +324,7 @@ class Route
         if (empty($queryParams)) {
             return $prefix;
         }
-        $queryString = static::getQueryString($queryParams);
+        $queryString = self::getQueryString($queryParams);
         return $prefix . '?' . $queryString;
     }
 
@@ -263,7 +348,7 @@ class Route
         } else {
             unset($params[self::HANDLER_PARAM]);
         }
-        return static::process($handler, $page, $params);
+        return self::process($handler, $page, $params);
     }
 
     /**
@@ -276,19 +361,19 @@ class Route
     public static function process($handler, $page, $params)
     {
         // ?page=... or /route/...
-        $uri = static::page($page, $params);
+        $uri = self::page($page, $params);
         // same routes as HtmlHandler - see util.js
         if ($handler == 'json') {
             $handler = 'html';
         }
         // endpoint.php or handler or empty
-        $endpoint = static::endpoint($handler);
+        $endpoint = self::endpoint($handler);
         if (empty($endpoint) && str_starts_with($uri, '/')) {
             // URL format: /base/route/...
-            return static::base() . substr($uri, 1);
+            return self::base() . substr($uri, 1);
         }
         // URL format: /base/endpoint.php?page=... or /base/handler/route/...
-        return static::base() . $endpoint . $uri;
+        return self::base() . $endpoint . $uri;
     }
 
     /**
@@ -327,7 +412,7 @@ class Route
         if (count($queryParams) < 1) {
             return $prefix;
         }
-        return static::route($queryParams, $prefix);
+        return self::route($queryParams, $prefix);
     }
 
     /**
@@ -338,7 +423,7 @@ class Route
      */
     public static function route($params, $prefix = '')
     {
-        $route = static::getRouteForParams($params, $prefix);
+        $route = self::getRouteForParams($params, $prefix);
         if (!is_null($route)) {
             return $route;
         }
@@ -347,7 +432,7 @@ class Route
         if (empty($params)) {
             return $prefix;
         }
-        $queryString = static::getQueryString($params);
+        $queryString = self::getQueryString($params);
         return $prefix . '?' . $queryString;
     }
 
@@ -367,21 +452,21 @@ class Route
      */
     public static function base()
     {
-        if (isset(static::$baseUrl)) {
-            return static::$baseUrl;
+        if (isset(self::$baseUrl)) {
+            return self::$baseUrl;
         }
         if (!empty(Config::get('full_url'))) {
             $base = Config::get('full_url');
-        } elseif (static::hasTrustedProxies()) {
+        } elseif (self::hasTrustedProxies()) {
             // use scheme and host + base path here to apply potential forwarded values
-            $base = static::$proxyRequest->getSchemeAndHttpHost() . static::$proxyRequest->getBasePath();
+            $base = self::$proxyRequest->getSchemeAndHttpHost() . self::$proxyRequest->getBasePath();
         } else {
             $base = dirname((string) $_SERVER['SCRIPT_NAME']);
         }
         if (!str_ends_with((string) $base, '/')) {
             $base .= '/';
         }
-        static::setBaseUrl($base);
+        self::setBaseUrl($base);
         return $base;
     }
 
@@ -392,13 +477,13 @@ class Route
      */
     public static function getHandlerClass($name)
     {
-        if (empty(static::$handlers)) {
-            static::$handlers = Framework::getHandlers();
+        if (empty(self::$handlers)) {
+            self::$handlers = Framework::getHandlers();
         }
-        if (!isset(static::$handlers[$name])) {
+        if (!isset(self::$handlers[$name])) {
             throw new Exception('Invalid handler name');
         }
-        return static::$handlers[$name];
+        return self::$handlers[$name];
     }
 
     /**
@@ -430,10 +515,10 @@ class Route
             if (empty($params)) {
                 return $prefix . $route;
             }
-            return $prefix . $route . '?' . static::getQueryString($params);
+            return $prefix . $route . '?' . self::getQueryString($params);
         }
 
-        $class = static::getHandlerClass($handler);
+        $class = self::getHandlerClass($handler);
         $route = $class::findRoute($params);
         if (!isset($route)) {
             return $route;
@@ -489,7 +574,7 @@ class Route
                         continue 2;
                     }
                     if (in_array($param, ['title', 'author', 'ignore'])) {
-                        $value = static::slugify($value);
+                        $value = self::slugify($value);
                     }
                     if (!empty($pattern)) {
                         $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
@@ -500,7 +585,7 @@ class Route
                 }
             }
             if (count($subst) > 0) {
-                return $prefix . $path . '?' . static::getQueryString($subst);
+                return $prefix . $path . '?' . self::getQueryString($subst);
             }
             return $prefix . $path;
         }
@@ -543,9 +628,9 @@ class Route
      */
     public static function setBaseUrl($base)
     {
-        static::$baseUrl = $base;
+        self::$baseUrl = $base;
         if (is_null($base)) {
-            static::$proxyRequest = null;
+            self::$proxyRequest = null;
         }
     }
 
@@ -563,11 +648,11 @@ class Route
         if (empty(Config::get('trusted_proxies')) || empty(Config::get('trusted_headers'))) {
             return false;
         }
-        if (!isset(static::$proxyRequest)) {
+        if (!isset(self::$proxyRequest)) {
             $proxies = Config::get('trusted_proxies');
             $headers = Config::get('trusted_headers');
-            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map('trim', explode(',', (string) $proxies)), static::resolveTrustedHeaders($headers));
-            static::$proxyRequest = $class::createFromGlobals();
+            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map('trim', explode(',', (string) $proxies)), self::resolveTrustedHeaders($headers));
+            self::$proxyRequest = $class::createFromGlobals();
         }
         return true;
     }

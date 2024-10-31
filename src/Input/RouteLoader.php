@@ -28,7 +28,7 @@ class RouteLoader extends Loader
     public function load(mixed $resource, string|null $type = null): mixed
     {
         $routes = new RouteCollection();
-        return static::addRouteCollection($routes);
+        return self::addRouteCollection($routes);
     }
 
     public function supports(mixed $resource, string|null $type = null): bool
@@ -46,7 +46,7 @@ class RouteLoader extends Loader
         $seen = [];
         foreach (Route::getRoutes() as $name => $route) {
             [$path, $params, $methods, $options] = $route;
-            [$path, $requirements] = static::getPathRequirements($path);
+            [$path, $requirements] = self::getPathRequirements($path);
             $route = new SymfonyRoute($path, $params);
             if (!empty($requirements)) {
                 $route->setRequirements($requirements);
@@ -57,7 +57,7 @@ class RouteLoader extends Loader
             if (!empty($options)) {
                 $route->setOptions($options);
             }
-            //$name = static::getPathName($path);
+            //$name = self::getPathName($path);
             if (!empty($seen[$name])) {
                 throw new Exception('Duplicate route name ' . $name . ' for ' . $path);
             }

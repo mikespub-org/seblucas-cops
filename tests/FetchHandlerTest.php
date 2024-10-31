@@ -132,7 +132,7 @@ class FetchHandlerTest extends TestCase
     public function testKepubify(): void
     {
         Config::set('provide_kepub', '1');
-        Config::set('kepubify_path', static::$kepubifyPath);
+        Config::set('kepubify_path', self::$kepubifyPath);
         $_SERVER['HTTP_USER_AGENT'] = "Kobo";
 
         // set request handler to 'phpunit' to override output buffer check in handler
@@ -159,7 +159,7 @@ class FetchHandlerTest extends TestCase
     {
         Config::set('update_epub-metadata', '1');
         Config::set('provide_kepub', '1');
-        Config::set('kepubify_path', static::$kepubifyPath);
+        Config::set('kepubify_path', self::$kepubifyPath);
         $_SERVER['HTTP_USER_AGENT'] = "Kobo";
 
         // set request handler to 'phpunit' to override output buffer check in handler

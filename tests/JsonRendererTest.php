@@ -54,7 +54,7 @@ class JsonRendererTest extends TestCase
         $this->assertArrayHasKey("config", $test ["c"]);
 
         $this->assertEquals(TestHandler::getLink() . "/books/{0}?db={1}", $test ["c"]["url"]["detailUrl"]);
-        $this->assertEquals(FetchHandler::getLink() . "/thumbs/html/{1}/{0}.jpg", $test ["c"]["url"]["thumbnailUrl"]);
+        $this->assertEquals(FetchHandler::getLink() . "/thumbs/{1}/{0}/html.jpg", $test ["c"]["url"]["thumbnailUrl"]);
         $this->assertFalse($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
@@ -122,7 +122,7 @@ class JsonRendererTest extends TestCase
         $test = $renderer->getFullBookContentArray($book);
 
         $this->assertEquals(FetchHandler::getLink() . "/covers/0/17.jpg", $test ["coverurl"]);
-        $this->assertEquals(FetchHandler::getLink() . "/thumbs/html2/0/17.jpg", $test ["thumbnailurl"]);
+        $this->assertEquals(FetchHandler::getLink() . "/thumbs/0/17/html2.jpg", $test ["thumbnailurl"]);
         $this->assertCount(1, $test ["authors"]);
         $this->assertEquals(TestHandler::getLink() . "/authors/3/Lewis_Carroll", $test ["authors"][0]["url"]);
         $this->assertCount(3, $test ["tags"]);
@@ -143,7 +143,7 @@ class JsonRendererTest extends TestCase
         $test = $renderer->getFullBookContentArray($book);
 
         $this->assertEquals(Route::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
-        $this->assertEquals(FetchHandler::getLink() . "/thumbs/html2/0/17.jpg", $test ["thumbnailurl"]);
+        $this->assertEquals(FetchHandler::getLink() . "/thumbs/0/17/html2.jpg", $test ["thumbnailurl"]);
         // see bookTest for more tests on data links
         $this->assertEquals(Route::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $test ["datas"][2]["url"]);
 
@@ -255,7 +255,7 @@ class JsonRendererTest extends TestCase
 
         $this->assertIsArray($test["download"]);
         $this->assertCount(1, $test["download"]);
-        $this->assertStringEndsWith("/zipper/10/any", $test["download"][0]["url"]);
+        $this->assertStringEndsWith("/zipper/10/any.zip", $test["download"][0]["url"]);
 
         Config::set('download_page', ['']);
     }
