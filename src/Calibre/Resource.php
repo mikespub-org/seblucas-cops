@@ -17,7 +17,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\CalResHandler;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\FileResponse;
 
 class Resource
@@ -63,7 +62,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = $alg;
         $params['digest'] = $digest;
-        return CalResHandler::getLink($params);
+        return CalResHandler::generate('calres', $params);
     }
 
     /**
@@ -80,7 +79,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = 'ALG';
         $params['digest'] = 'DIGEST';
-        $baseurl = CalResHandler::getLink($params);
+        $baseurl = CalResHandler::generate('calres', $params);
         // remove dummy alg & digest
         $baseurl = str_replace(['/ALG', '/DIGEST'], [], $baseurl);
         return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);

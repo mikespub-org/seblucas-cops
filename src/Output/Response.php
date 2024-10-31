@@ -240,7 +240,7 @@ class Response
         header('Status: 404 Not Found');
 
         $_SERVER['REDIRECT_STATUS'] = 404;
-        $data = ['link' => HtmlHandler::getLink($params)];
+        $data = ['link' => HtmlHandler::generate('page-index', $params)];
         $data['error'] = htmlspecialchars($error ?? 'Unknown Error');
         $template = 'templates/error.html';
         echo Format::template($data, $template);

@@ -109,6 +109,10 @@ class RestApi extends BaseRenderer
         foreach ($params as $param => $value) {
             $this->request->set($param, $value);
         }
+        // remove /restapi/{route:.*} param from current request
+        if (empty($params['route']) && $this->request->get('route')) {
+            $this->request->set('route', null);
+        }
         return $this->request;
     }
 
@@ -169,6 +173,7 @@ class RestApi extends BaseRenderer
             $path = $this->getPathInfo();
             $params = $this->matchPathInfo($path);
             if (!isset($params)) {
+                // @todo find some better way to handle this
                 Response::redirect(RestApiHandler::getHandlerLink(null, PageId::INDEX));
                 return '';
             }

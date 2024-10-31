@@ -11,7 +11,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
@@ -172,7 +171,7 @@ class Database
     protected static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            Response::redirect(CheckHandler::getLink(['err' => 1]));
+            Response::redirect(CheckHandler::generate('check', ['err' => 1]));
             exit;
         }
         throw new Exception("Database <{$database}> not found.");

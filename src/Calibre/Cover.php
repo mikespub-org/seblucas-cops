@@ -321,9 +321,8 @@ class Cover
             if ($ext != 'jpg') {
                 $params['type'] = $ext;
             }
-            $params['_route'] = 'fetch-cover';
             return new LinkEntry(
-                FetchHandler::getLink($params),
+                FetchHandler::generate('fetch-cover', $params),
                 $mime,
                 LinkEntry::OPDS_IMAGE_TYPE
             );
@@ -395,12 +394,12 @@ class Cover
             }
             if (Config::get('thumbnail_handling') != "1") {
                 $params['thumb'] = $thumb;
-                $params['_route'] = 'fetch-thumb';
+                $routeName = 'fetch-thumb';
             } else {
-                $params['_route'] = 'fetch-cover';
+                $routeName = 'fetch-cover';
             }
             return new LinkEntry(
-                FetchHandler::getLink($params),
+                FetchHandler::generate($routeName, $params),
                 $mime,
                 LinkEntry::OPDS_THUMBNAIL_TYPE
             );

@@ -160,7 +160,7 @@ class OpdsRenderer extends BaseRenderer
         $this->getXmlStream()->text($page->authorEmail);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->endElement();
-        $url = FeedHandler::getLink();
+        $url = FeedHandler::generate('feed');
         $link = new LinkNavigation($url, "start", "Home");
         $this->renderLink($link);
         // @todo check with pathInfo
@@ -174,8 +174,8 @@ class OpdsRenderer extends BaseRenderer
         $params = ["db" => $database];
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
-            $params["page"] = PageId::OPENSEARCH;
-            $url = FeedHandler::getLink($params);
+            //$params["page"] = PageId::SEARCH;
+            $url = FeedHandler::generate('feed-search', $params);
             $link = new LinkEntry(
                 $url,
                 "application/opensearchdescription+xml",
@@ -185,7 +185,7 @@ class OpdsRenderer extends BaseRenderer
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "QUERY";
-            $url = FeedHandler::getLink($params);
+            $url = FeedHandler::generate('feed', $params);
             $url = str_replace("QUERY", "{searchTerms}", $url);
             $link = new LinkEntry(
                 $url,

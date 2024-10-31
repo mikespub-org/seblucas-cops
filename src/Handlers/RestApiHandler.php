@@ -20,7 +20,7 @@ use Exception;
  * Handle REST API
  * URL format: index.php/restapi{/route}?db={db} etc.
  */
-class RestApiHandler extends PageHandler
+class RestApiHandler extends BaseHandler
 {
     public const HANDLER = "restapi";
     public const PREFIX = "/restapi";
@@ -84,7 +84,7 @@ class RestApiHandler extends PageHandler
     }
 
     /**
-     * Get REST API link to resource handled by RestApiHandler
+     * Get REST API link for resource handled by RestApiHandler
      * @param string $className
      * @param array<mixed> $params
      * @return string
@@ -104,8 +104,12 @@ class RestApiHandler extends PageHandler
      */
     public static function getHandlerLink($handler = null, $page = null, $params = [])
     {
-        $link = Route::link($handler, $page, $params);
-        return str_replace(Route::base() . Route::endpoint(), static::getBaseUrl(), $link);
+        // use page route with /restapi prefix instead
+        $handler ??= 'html';
+        $params[Route::HANDLER_PARAM] = static::HANDLER;
+        $link = Route::process($handler, $page, $params);
+        return $link;
+        //return str_replace(Route::base() . Route::endpoint(), static::getBaseUrl(), $link);
     }
 
     /**
@@ -120,6 +124,36 @@ class RestApiHandler extends PageHandler
             static::$baseUrl = str_replace('/ROUTE', '', $link);
         }
         return static::$baseUrl;
+    }
+
+    /**
+     * Summary of findRoute
+     * @param array<mixed> $params
+     * @return string|null
+     */
+    public static function findRoute($params = [])
+    {
+        $routes = static::getRoutes();
+        // use _route if available
+        if (isset($params[Route::ROUTE_PARAM])) {
+            $name = $params[Route::ROUTE_PARAM];
+            unset($params[Route::ROUTE_PARAM]);
+            if (!empty($name) && !empty($routes[$name])) {
+                return Route::findMatchingRoute([$name => $routes[$name]], $params);
+            }
+        }
+        $match = $params[static::RESOURCE] ?? '';
+        // filter routes by resource before matching
+        $group = array_filter($routes, function ($route) use ($match) {
+            // Add fixed if needed
+            $route[] = [];
+            [$path, $fixed] = $route;
+            return $match == ($fixed[static::RESOURCE] ?? '');
+        });
+        if (count($group) < 1) {
+            return null;
+        }
+        return Route::findMatchingRoute($group, $params);
     }
 
     public function handle($request)

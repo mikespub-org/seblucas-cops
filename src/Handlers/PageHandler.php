@@ -74,14 +74,28 @@ class PageHandler extends BaseHandler
     }
 
     /**
-     * Summary of getPageLink
+     * Get link for the default page handler with params (incl _route)
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function getLink($params = [])
+    {
+        // use default page handler to find the route for html and json
+        unset($params[Route::HANDLER_PARAM]);
+        return Route::process(static::HANDLER, null, $params);
+    }
+
+    /**
+     * Summary of getPageLink - currently unused (all calls set page in params)
      * @param string|int|null $page
      * @param array<mixed> $params
      * @return string
      */
     public static function getPageLink($page = null, $params = [])
     {
-        return Route::link(static::HANDLER, $page, $params);
+        // use default page handler to find the route for html and json
+        unset($params[Route::HANDLER_PARAM]);
+        return Route::process(static::HANDLER, $page, $params);
     }
 
     /**
@@ -98,20 +112,20 @@ class PageHandler extends BaseHandler
         }
         /**
         // @todo use _route later
-        if (!empty($params['page']) && empty($params['_route'])) {
-            $params['_route'] = self::HANDLER . '-' . $params['page'];
+        if (!empty($params['page']) && empty($params[Route::ROUTE_PARAM])) {
+            $params[Route::ROUTE_PARAM] = self::HANDLER . '-' . $params['page'];
             if (!empty($params['id'])) {
-                $params['_route'] .= '-id';
+                $params[Route::ROUTE_PARAM] .= '-id';
                 if (!empty($params['title'])) {
-                    $params['_route'] .= '-title';
+                    $params[Route::ROUTE_PARAM] .= '-title';
                 }
             }
         }
          */
         // use _route if available
-        if (isset($params["_route"])) {
-            $name = $params["_route"];
-            unset($params["_route"]);
+        if (isset($params[Route::ROUTE_PARAM])) {
+            $name = $params[Route::ROUTE_PARAM];
+            unset($params[Route::ROUTE_PARAM]);
             if (!empty($name) && !empty($routes[$name])) {
                 return Route::findMatchingRoute([$name => $routes[$name]], $params);
             }
@@ -137,8 +151,8 @@ class PageHandler extends BaseHandler
      */
     public static function findRouteName($params)
     {
-        if (!empty($params["_route"])) {
-            return $params["_route"];
+        if (!empty($params[Route::ROUTE_PARAM])) {
+            return $params[Route::ROUTE_PARAM];
         }
         $name = self::HANDLER;
         $name .= '-' . ($params["page"] ?? '');

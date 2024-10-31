@@ -27,6 +27,7 @@ class FeedHandler extends BaseHandler
     {
         return [
             "feed-page-id" => ["/feed/{page}/{id}"],
+            "feed-search" => ["/feed/search", ["page" => "search"]],
             "feed-page" => ["/feed/{page}"],
             "feed" => ["/feed"],
         ];

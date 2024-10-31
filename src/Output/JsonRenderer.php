@@ -180,8 +180,7 @@ class JsonRenderer extends BaseRenderer
                 $params['data'] = $data->id;
                 $params['db'] = $database;
                 $params['title'] = $book->getTitle();
-                $params['_route'] = 'read-title';
-                $tab ["readerUrl"] = ReadHandler::getLink($params);
+                $tab ["readerUrl"] = ReadHandler::generate('read-title', $params);
             }
             array_push($out ["datas"], $tab);
         }
@@ -200,8 +199,7 @@ class JsonRenderer extends BaseRenderer
             $params['id'] = $book->id;
             $params['db'] = $database;
             $params['file'] = 'zipped';
-            $params['_route'] = 'fetch-file';
-            $url = FetchHandler::getLink($params);
+            $url = FetchHandler::generate('fetch-file', $params);
             array_unshift($out ["extraFiles"], [
                 "name" => " * ",
                 "url" => $url,
@@ -364,8 +362,8 @@ class JsonRenderer extends BaseRenderer
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here
                 "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link($this->handler, PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
-                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['_route' => 'fetch-cover', 'id' => '0', 'db' => '1'])),
-                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::getLink(['_route' => 'fetch-thumb', 'thumb' => 'html', 'id' => '0', 'db' => '1'])),
+                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::generate('fetch-cover', ['id' => '0', 'db' => '1'])),
+                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::generate('fetch-thumb', ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),
@@ -621,7 +619,11 @@ class JsonRenderer extends BaseRenderer
             foreach (Config::get('download_page') as $format) {
                 $params = $this->request->getCleanParams();
                 $params['type'] = strtolower((string) $format);
-                $url = ZipperHandler::getLink($params);
+                if (!empty($params['id'])) {
+                    $url = ZipperHandler::generate('zipper-page-type-id', $params);
+                } else {
+                    $url = ZipperHandler::generate('zipper-page-type', $params);
+                }
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;

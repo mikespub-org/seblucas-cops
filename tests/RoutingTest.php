@@ -99,7 +99,7 @@ class RoutingTest extends TestCase
             ["checkconfig.php", "/check", "check", ["_handler" => "check"]],
             ["epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland", "/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
             ["epubreader.php?db=0&data=20", "/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
-            ["sendtomail.php", "/mail", "mail", ["_handler" => "mail"]],
+            ["sendtomail.php", "/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
             ["fetch.php?thumb=html&db=0&id=17", "/thumbs/html/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
             ["fetch.php?thumb=opds&db=0&id=17", "/thumbs/opds/0/17.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds", "db" => "0", "id" => "17"]],
             ["fetch.php?db=0&id=17", "/covers/0/17.jpg", "fetch-cover", ["_handler" => "fetch", "db" => "0", "id" => "17"]],
@@ -132,7 +132,19 @@ class RoutingTest extends TestCase
         //echo '["' . $queryUrl . '", "' . $routeUrl . '", "' . $route . '", ' . json_encode($params) . "],\n";
         $query = parse_url((string) $routeUrl, PHP_URL_QUERY);
         $path = parse_url((string) $routeUrl, PHP_URL_PATH);
-        $result = static::$routing->match($path);
+        // handle POST method for mail
+        $method = null;
+        if (!empty($params["_method"])) {
+            $method = $params["_method"];
+            unset($params["_method"]);
+        }
+        try {
+            $result = static::$routing->match($path, $method);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            $this->assertNull($routeUrl);
+            return;
+        }
         if (!empty($query)) {
             $extra = [];
             parse_str($query, $extra);
@@ -142,8 +154,8 @@ class RoutingTest extends TestCase
         //unset($result["ignore"]);
 
         $expected = $route;
-        $this->assertEquals($expected, $result["_route"]);
-        unset($result["_route"]);
+        $this->assertEquals($expected, $result[Route::ROUTE_PARAM]);
+        unset($result[Route::ROUTE_PARAM]);
         $expected = $params;
         $this->assertEquals($expected, $result);
 
@@ -177,7 +189,8 @@ class RoutingTest extends TestCase
     {
         // @todo handle ignore
         // @todo handle restapi/route...
-        unset($params["_handler"]);
+        unset($params[Route::HANDLER_PARAM]);
+        unset($params["_method"]);
         try {
             $result = static::$routing->generate($route, $params);
         } catch (Exception) {
@@ -213,7 +226,7 @@ class RoutingTest extends TestCase
             ["/check", "check", ["_handler" => "check"]],
             ["/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
             ["/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
-            ["/mail", "mail", ["_handler" => "mail"]],
+            ["/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
             ["/feed/3/1?title=Arthur%20Conan%20Doyle", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
             ["/feed/3/1", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1"]],
             ["/feed/10", "feed-page", ["_handler" => "feed", "page" => "10"]],
@@ -236,9 +249,16 @@ class RoutingTest extends TestCase
         //echo '["' . $routeUrl . '", "' . $route . '", ' . json_encode($params) . "],\n";
         $query = parse_url((string) $routeUrl, PHP_URL_QUERY);
         $path = parse_url((string) $routeUrl, PHP_URL_PATH);
+        // handle POST method for mail
+        $method = null;
+        if (!empty($params["_method"])) {
+            $method = $params["_method"];
+            unset($params["_method"]);
+        }
         try {
-            $result = static::$routing->match($path);
-        } catch (Exception) {
+            $result = static::$routing->match($path, $method);
+        } catch (Exception $e) {
+            echo $e->getMessage();
             $this->assertNull($routeUrl);
             return;
         }
@@ -248,8 +268,8 @@ class RoutingTest extends TestCase
             $result = array_merge($result, $extra);
         }
         $expected = $route;
-        $this->assertEquals($expected, $result["_route"]);
-        unset($result["_route"]);
+        $this->assertEquals($expected, $result[Route::ROUTE_PARAM]);
+        unset($result[Route::ROUTE_PARAM]);
         $expected = $params;
         $this->assertEquals($expected, $result);
     }
@@ -263,7 +283,8 @@ class RoutingTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
     public function testGenerateRoute($routeUrl, $route, $params)
     {
-        unset($params["_handler"]);
+        unset($params[Route::HANDLER_PARAM]);
+        unset($params["_method"]);
         try {
             $result = static::$routing->generate($route, $params);
         } catch (Exception) {

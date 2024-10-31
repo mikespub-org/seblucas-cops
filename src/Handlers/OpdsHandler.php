@@ -28,6 +28,7 @@ class OpdsHandler extends BaseHandler
     {
         return [
             "opds-page-id" => ["/opds/{page}/{id}"],
+            "opds-search" => ["/opds/search", ["page" => "search"]],
             "opds-page" => ["/opds/{page}"],
             "opds" => ["/opds"],
         ];

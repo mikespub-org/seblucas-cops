@@ -58,7 +58,7 @@ class EPubReader extends BaseRenderer
                 return $method . "'#'" . $end;
             }
             $params['comp'] = $comp;
-            $out = $method . "'" . EpubFsHandler::getLink($params) . $hash . "'" . $end;
+            $out = $method . "'" . EpubFsHandler::generate('epubfs', $params) . $hash . "'" . $end;
             if ($end) {
                 return $out;
             }
@@ -141,7 +141,7 @@ class EPubReader extends BaseRenderer
         // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
         $db = $book->getDatabaseId() ?? 0;
         $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
-        $link = str_replace('COMPONENT', '~COMP~', EpubFsHandler::getLink($params));
+        $link = str_replace('COMPONENT', '~COMP~', EpubFsHandler::generate('epubfs', $params));
 
         $data = [
             'title'      => $book->title,
@@ -230,7 +230,7 @@ class EPubReader extends BaseRenderer
             // URL format: index.php/zipfs/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
             $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
-            $link = ZipFsHandler::getLink($params);
+            $link = ZipFsHandler::generate('zipfs', $params);
             $link = str_replace('COMPONENT', '', $link);
         }
         // Configurable settings (javascript object as text)

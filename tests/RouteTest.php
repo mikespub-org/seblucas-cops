@@ -229,8 +229,8 @@ class RouteTest extends TestCase
             "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "route" => "openapi"],
             "/graphql" => [Route::HANDLER_PARAM => "graphql"],
             // @todo handle url rewriting if enabled separately - path parameters are different
-            "/view/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1, "_route" => "fetch-view"],
-            "/download/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "_route" => "fetch-download"],
+            "/view/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1, Route::ROUTE_PARAM => "fetch-view"],
+            "/download/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", Route::ROUTE_PARAM => "fetch-download"],
         ];
     }
 

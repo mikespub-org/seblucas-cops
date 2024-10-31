@@ -32,13 +32,27 @@ abstract class BaseHandler
     }
 
     /**
-     * Summary of getLink
+     * Get link for this specific handler and params (incl _route)
      * @param array<mixed> $params
      * @return string
      */
     public static function getLink($params = [])
     {
-        return Route::link(static::HANDLER, null, $params);
+        // use this specific handler to find the route
+        $params[Route::HANDLER_PARAM] = static::HANDLER;
+        return Route::process(static::HANDLER, null, $params);
+    }
+
+    /**
+     * Generate link based on pre-defined route name for this handler (make visible)
+     * @param string $routeName
+     * @param array<mixed> $params
+     * @return string|null
+     */
+    public static function generate($routeName, $params = [])
+    {
+        $params[Route::ROUTE_PARAM] = $routeName;
+        return static::getLink($params);
     }
 
     /**
@@ -50,9 +64,9 @@ abstract class BaseHandler
     {
         $routes = static::getRoutes();
         // use _route if available
-        if (isset($params["_route"])) {
-            $name = $params["_route"];
-            unset($params["_route"]);
+        if (isset($params[Route::ROUTE_PARAM])) {
+            $name = $params[Route::ROUTE_PARAM];
+            unset($params[Route::ROUTE_PARAM]);
             if (!empty($name) && !empty($routes[$name])) {
                 return Route::findMatchingRoute([$name => $routes[$name]], $params);
             }
@@ -67,8 +81,8 @@ abstract class BaseHandler
      */
     public static function findRouteName($params)
     {
-        if (!empty($params["_route"])) {
-            return $params["_route"];
+        if (!empty($params[Route::ROUTE_PARAM])) {
+            return $params[Route::ROUTE_PARAM];
         }
         $name = static::HANDLER;
         if (count(static::getRoutes()) > 1) {

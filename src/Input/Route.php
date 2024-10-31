@@ -244,7 +244,11 @@ class Route
     }
 
     /**
-     * Get full link for handler with page and params
+     * Get full link for handler with page and params (incl _route)
+     *
+     * The handler takes precedence over page or _route here, as it
+     * will be variable (html/json or feed/opds or restapi or ...)
+     *
      * @param string|null $handler
      * @param string|int|null $page
      * @param array<mixed> $params
@@ -259,6 +263,18 @@ class Route
         } else {
             unset($params[self::HANDLER_PARAM]);
         }
+        return static::process($handler, $page, $params);
+    }
+
+    /**
+     * Process link with defined handler, page and params
+     * @param string $handler defined in Route::link() or BaseHandler::getLink()
+     * @param string|int|null $page
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function process($handler, $page, $params)
+    {
         // ?page=... or /route/...
         $uri = static::page($page, $params);
         // same routes as HtmlHandler - see util.js
@@ -398,6 +414,8 @@ class Route
             // use page route with /restapi prefix instead
             if ($handler == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
                 $prefix = $prefix . '/restapi';
+                $handler = 'html';
+            } elseif ($handler == 'phpunit') {
                 $handler = 'html';
             }
             unset($params[self::HANDLER_PARAM]);

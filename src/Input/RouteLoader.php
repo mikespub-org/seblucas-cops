@@ -14,15 +14,15 @@ use Symfony\Component\Routing\Route as SymfonyRoute;
 use Exception;
 
 /**
- * Summary of RouteLoader
+ * Load routes from handlers with getRoutes()
  * @see https://github.com/symfony/symfony/blob/7.1/src/Symfony/Component/Routing/Loader/ClosureLoader.php
  */
 class RouteLoader extends Loader
 {
     /**
      * Summary of load
-     * @param mixed $resource
-     * @param string|null $type
+     * @param mixed $resource not used here
+     * @param string|null $type not used here
      * @return RouteCollection
      */
     public function load(mixed $resource, string|null $type = null): mixed
@@ -46,7 +46,7 @@ class RouteLoader extends Loader
         $seen = [];
         foreach (Route::getRoutes() as $name => $route) {
             [$path, $params, $methods, $options] = $route;
-            [$path, $requirements] = static::parsePath($path);
+            [$path, $requirements] = static::getPathRequirements($path);
             $route = new SymfonyRoute($path, $params);
             if (!empty($requirements)) {
                 $route->setRequirements($requirements);
@@ -78,7 +78,7 @@ class RouteLoader extends Loader
      * @param string $path
      * @return array{0: string, 1: array<mixed>}
      */
-    public static function parsePath($path)
+    public static function getPathRequirements($path)
     {
         $requirements = [];
         $found = [];

@@ -119,7 +119,7 @@ abstract class CustomColumnType
         $params['custom'] = $this->customId;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        $params['_route'] = 'page-' . static::PAGE_ALL . '-custom';
+        $params[Route::ROUTE_PARAM] = 'page-' . static::PAGE_ALL . '-custom';
         return Route::link($this->handler, static::PAGE_ALL, $params);
     }
 

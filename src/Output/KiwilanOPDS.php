@@ -53,10 +53,10 @@ class KiwilanOPDS
             name: 'Calibre',  // CopsConfig::get('title_default')
             author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
             authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
-            iconUrl: CopsConfig::get('icon'),
-            startUrl: OpdsHandler::getLink(),
+            iconUrl: CopsConfig::get(name: 'icon'),
+            startUrl: OpdsHandler::generate('opds'),
             // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
-            searchUrl: OpdsHandler::getLink() . '/search',
+            searchUrl: OpdsHandler::generate('opds-search'),
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
             maxItemsPerPage: CopsConfig::get('max_item_per_page'),
@@ -159,7 +159,7 @@ class KiwilanOPDS
     {
         $opds = Opds::make($this->getOpdsConfig())
             ->title('Search')
-            ->url(OpdsHandler::getLink() . '/search')
+            ->url(OpdsHandler::generate('opds-search'))
             ->isSearch()
             ->feeds([])
             ->get();
