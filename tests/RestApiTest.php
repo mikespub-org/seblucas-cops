@@ -97,7 +97,7 @@ class RestApiTest extends TestCase
         $apiHandler = new RestApi($request);
         $path = $apiHandler->getPathInfo();
         $params = $apiHandler->matchPathInfo($path);
-        $request = $apiHandler->setParams($params);
+        $request = $apiHandler->getRequest()->setParams($params);
 
         $expected = PageId::BOOK_DETAIL;
         $test = $request->get("page");

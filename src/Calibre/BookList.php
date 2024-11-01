@@ -22,6 +22,11 @@ use Exception;
 
 class BookList
 {
+    public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
+    public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
+    public const ROUTE_LETTER = "page-books-letter";
+    public const ROUTE_YEAR = "page-books-year";
+    public const ROUTE_RECENT = "page-recent";
     public const SQL_BOOKS_ALL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ';
     public const SQL_BOOKS_BY_FIRST_LETTER = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where upper (books.sort) like ? {1} order by books.sort';
@@ -139,7 +144,7 @@ class BookList
         $result = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
-        $href = Route::link($this->handler, Book::PAGE_ALL, $params);
+        $href = $this->handler::route(Book::ROUTE_ALL, $params);
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
             $linkArray = [ new LinkNavigation($href, "subsection") ];
@@ -160,7 +165,7 @@ class BookList
         );
         array_push($result, $entry);
         if (Config::get('recentbooks_limit') > 0) {
-            $href = Route::link($this->handler, PageId::ALL_RECENT_BOOKS, $params);
+            $href = $this->handler::route(static::ROUTE_RECENT, $params);
             $count = ($nBooks > Config::get('recentbooks_limit')) ? Config::get('recentbooks_limit') : $nBooks;
             $entry = new Entry(
                 localize('recent.title'),
@@ -319,7 +324,7 @@ class BookList
      */
     public function getCountByFirstLetter()
     {
-        return $this->getCountByGroup('substr(upper(books.sort), 1, 1)', Book::PAGE_LETTER, 'letter');
+        return $this->getCountByGroup('substr(upper(books.sort), 1, 1)', static::ROUTE_LETTER, 'letter');
     }
 
     /**
@@ -328,17 +333,17 @@ class BookList
      */
     public function getCountByPubYear()
     {
-        return $this->getCountByGroup('substr(date(books.pubdate), 1, 4)', Book::PAGE_YEAR, 'year');
+        return $this->getCountByGroup('substr(date(books.pubdate), 1, 4)', static::ROUTE_YEAR, 'year');
     }
 
     /**
      * Summary of getCountByGroup
      * @param string $groupField
-     * @param string $page
+     * @param string $routeName
      * @param string $label
      * @return array<Entry>
      */
-    public function getCountByGroup($groupField, $page, $label)
+    public function getCountByGroup($groupField, $routeName, $label)
     {
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
@@ -358,8 +363,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $params = ['id' => $post->groupid, 'db' => $this->databaseId];
-            $params[Route::ROUTE_PARAM] = 'page-' . $page . '-id';
-            $href = Route::link($this->handler, $page, $params);
+            $href = $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 Book::PAGE_ID . ':' . $label . ':' . $post->groupid,

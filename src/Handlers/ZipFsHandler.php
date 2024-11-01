@@ -21,6 +21,7 @@ use Exception;
 class ZipFsHandler extends BaseHandler
 {
     public const HANDLER = "zipfs";
+    public const PREFIX = "/zipfs";
     public const PARAMLIST = ["db", "data", "comp"];
 
     public static function getRoutes()

@@ -21,6 +21,7 @@ use Exception;
 class EpubFsHandler extends BaseHandler
 {
     public const HANDLER = "epubfs";
+    public const PREFIX = "/epubfs";
     public const PARAMLIST = ["db", "data", "comp"];
 
     public static function getRoutes()

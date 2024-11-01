@@ -175,6 +175,23 @@ class Request
     }
 
     /**
+     * Set params for match of /handler/{path:.*} with default page handler - see RestApi, FeedHandler etc.
+     * @param array<mixed> $params from Route::match('/' . $params['path'])
+     * @return Request
+     */
+    public function setParams($params)
+    {
+        foreach ($params as $param => $value) {
+            $this->set($param, $value);
+        }
+        // remove /handler/{path:.*} param from current request
+        if (empty($params['path']) && $this->get('path')) {
+            $this->set('path', null);
+        }
+        return $this;
+    }
+
+    /**
      * Summary of hasFilter
      * @return bool
      */
@@ -431,9 +448,9 @@ class Request
         $queryString = $this->query();
         // @todo fix this for handlers without base link
         if (empty($queryString)) {
-            return Route::link($handler) . $pathInfo;
+            return $handler::link() . $pathInfo;
         }
-        return Route::link($handler) . $pathInfo . '?' . $queryString;
+        return $handler::link() . $pathInfo . '?' . $queryString;
     }
 
     /**

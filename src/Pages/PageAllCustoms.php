@@ -72,12 +72,12 @@ class PageAllCustoms extends Page
     {
         $year = $this->request->get("year", null, $columnType::GET_PATTERN);
         if (empty($year)) {
-            // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
+            // can be $columnType::ROUTE_ALL or $columnType::ROUTE_DETAIL
             $this->sorted = $this->request->getSorted("year");
-            $this->entryArray = $columnType->getCountByYear($columnType::PAGE_DETAIL, $this->sorted);
+            $this->entryArray = $columnType->getCountByYear($columnType::ROUTE_ALL, $this->sorted);
             return;
         }
-        // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
+        // if we use $columnType::ROUTE_ALL in PageAllCustoms, otherwise see PageCustomDetail
         $this->sorted = $this->request->getSorted("value");
         $this->entryArray = $columnType->getCustomValuesByYear($year, $this->sorted);
         $count = 0;
@@ -99,12 +99,12 @@ class PageAllCustoms extends Page
     {
         $range = $this->request->get("range", null, $columnType::GET_PATTERN);
         if (empty($range)) {
-            // can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
+            // can be $columnType::ROUTE_ALL or $columnType::ROUTE_DETAIL
             $this->sorted = $this->request->getSorted("range");
-            $this->entryArray = $columnType->getCountByRange($columnType::PAGE_DETAIL, $this->sorted);
+            $this->entryArray = $columnType->getCountByRange($columnType::ROUTE_ALL, $this->sorted);
             return;
         }
-        // if we use $columnType::PAGE_ALL in PageAllCustoms, otherwise see PageCustomDetail
+        // if we use $columnType::ROUTE_ALL in PageAllCustoms, otherwise see PageCustomDetail
         $this->sorted = $this->request->getSorted("value");
         $this->entryArray = $columnType->getCustomValuesByRange($range, $this->sorted);
         $count = 0;

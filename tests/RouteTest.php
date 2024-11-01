@@ -106,8 +106,8 @@ class RouteTest extends TestCase
             "index.php?page=8" => "index.php/search",
             "index.php?page=9&query=alice" => "index.php/search/alice",
             "index.php?page=9&query=alice&scope=book" => "index.php/search/alice/book",
-            "index.php?page=9&search=1&query=alice" => "index.php/query/alice",
-            "index.php?page=9&search=1&query=alice&scope=book" => "index.php/query/alice/book",
+            "index.php?page=9&search=1&query=alice" => "index.php/typeahead?query=alice",
+            "index.php?page=9&search=1&query=alice&scope=book" => "index.php/typeahead?query=alice&scope=book",
             "index.php?page=10" => "index.php/recent",
             "index.php?page=11" => "index.php/tags",
             "index.php?page=12&id=1" => "index.php/tags/1",
@@ -139,12 +139,12 @@ class RouteTest extends TestCase
             "fetch.php?db=0&id=17&file=hello.txt" => "index.php/files/0/17/hello.txt",
             "fetch.php?db=0&id=17&file=zipped" => "index.php/files/0/17/zipped",
             "zipper.php?page=10&type=any" => "index.php/zipper/10/any.zip",
-            "feed.php?page=3&id=1&title=Arthur%20Conan%20Doyle" => "index.php/feed/3/1?title=Arthur%20Conan%20Doyle",
-            "feed.php?page=3&id=1" => "index.php/feed/3/1",
-            "feed.php?page=10" => "index.php/feed/10",
-            "opds.php?page=3&id=1&title=Arthur%20Conan%20Doyle" => "index.php/opds/3/1?title=Arthur%20Conan%20Doyle",
-            "opds.php?page=3&id=1" => "index.php/opds/3/1",
-            "opds.php?page=10" => "index.php/opds/10",
+            "feed.php?page=3&id=1&title=Arthur_Conan_Doyle" => "index.php/feed/authors/1/Arthur_Conan_Doyle",
+            "feed.php?page=3&id=1" => "index.php/feed/authors/1",
+            "feed.php?page=10" => "index.php/feed/recent",
+            "opds.php?page=3&id=1&title=Arthur_Conan_Doyle" => "index.php/opds/authors/1/Arthur_Conan_Doyle",
+            "opds.php?page=3&id=1" => "index.php/opds/authors/1",
+            "opds.php?page=10" => "index.php/opds/recent",
             "restapi.php?_resource=openapi" => "index.php/restapi/openapi",
             "graphql.php" => "index.php/graphql",
         ];
@@ -194,7 +194,7 @@ class RouteTest extends TestCase
         // 2. we pass handler class-string as param now
         $handler = Route::getHandler($handler);
         //$test = Config::ENDPOINT["html"] . Route::page($page, $params);
-        $test = Route::link($handler, $page, $params);
+        $test = $handler::page($page, $params);
         $this->assertStringEndsWith($expected, $test);
     }
 
@@ -220,6 +220,11 @@ class RouteTest extends TestCase
             $name = $params[Route::HANDLER_PARAM]::HANDLER;
             $endpoint = Config::ENDPOINT[$name];
             unset($params[Route::HANDLER_PARAM]);
+            // parse path parameter
+            if (in_array($name, ['feed', 'opds']) && !empty($params['path'])) {
+                $params = Route::match('/' . $params['path']);
+            }
+            // un-slugify parameter (minimal) - not tested here
         }
         if (array_key_exists('ignore', $params)) {
             unset($params['ignore']);
@@ -261,10 +266,10 @@ class RouteTest extends TestCase
             "/read/0/20/Alice's_Adventures_in_Wonderland" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20, "title" => "Alice's Adventures in Wonderland"],
             "/read/0/20" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20],
             "/mail" => [Route::HANDLER_PARAM => "mail"],
-            "/feed/3/1?title=Arthur%20Conan%20Doyle" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1, "title" => "Arthur Conan Doyle"],
-            "/feed/3/1" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1],
-            "/feed/10" => [Route::HANDLER_PARAM => "feed", "page" => 10],
-            "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "route" => "openapi"],
+            "/feed/authors/1/Arthur_Conan_Doyle" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1, "title" => "Arthur Conan Doyle"],
+            "/feed/authors/1" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1],
+            "/feed/recent" => [Route::HANDLER_PARAM => "feed", "page" => 10],
+            "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "path" => "openapi"],
             "/graphql" => [Route::HANDLER_PARAM => "graphql"],
             // @todo handle url rewriting if enabled separately - path parameters are different
             "/view/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1, Route::ROUTE_PARAM => "fetch-view"],

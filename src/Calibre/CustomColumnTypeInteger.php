@@ -125,11 +125,11 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     /**
      * Summary of getCountByRange
-     * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
+     * @param mixed $routeName can be $columnType::ROUTE_ALL or $columnType::ROUTE_DETAIL
      * @param ?string $sort
      * @return array<Entry>
      */
-    public function getCountByRange($page, $sort = null)
+    public function getCountByRange($routeName, $sort = null)
     {
         $numtiles = Config::get('custom_integer_split_range');
         if ($numtiles <= 1) {
@@ -155,7 +155,8 @@ class CustomColumnTypeInteger extends CustomColumnType
         while ($post = $result->fetchObject()) {
             $range = $post->min_value . "-" . $post->max_value;
             $params = ['custom' => $this->customId, 'range' => $range, 'db' => $this->databaseId];
-            $href = Route::link($this->handler, $page, $params);
+            // @todo if we want to use ROUTE_DETAIL we need to add id= here
+            $href = $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $range,
                 $this->getEntryId() . ':' . $label . ':' . $range,

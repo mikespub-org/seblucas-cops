@@ -24,6 +24,7 @@ use PDO;
 class CheckHandler extends BaseHandler
 {
     public const HANDLER = "check";
+    public const PREFIX = "/check";
     public const PARAMLIST = ["more"];
 
     public static function getRoutes()

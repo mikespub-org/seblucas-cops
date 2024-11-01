@@ -19,6 +19,8 @@ use JsonException;
  */
 class User
 {
+    public const ROUTE_ALL = "restapi-user";
+    public const ROUTE_DETAIL = "restapi-user-details";
     public const SQL_TABLE = "users";
     public const SQL_COLUMNS = "id, name, timestamp, session_data, restriction, readonly, misc_data";
 

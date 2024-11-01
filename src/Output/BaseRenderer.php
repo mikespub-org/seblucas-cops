@@ -16,6 +16,8 @@ use SebLucas\Cops\Input\Request;
  */
 abstract class BaseRenderer
 {
+    public const PREFIX = "";
+
     /** @var Request */
     protected $request;
     /** @var Response */
@@ -47,6 +49,15 @@ abstract class BaseRenderer
     }
 
     /**
+     * Summary of getRequest
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
      * Summary of setResponse
      * @param Response $response
      * @return void
@@ -54,5 +65,27 @@ abstract class BaseRenderer
     public function setResponse($response)
     {
         $this->response = $response;
+    }
+
+    /**
+     * Summary of getResponse
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Get path info without static::PREFIX for restapi etc.
+     * @return string
+     */
+    public function getPathInfo()
+    {
+        $path = $this->request->path("/index");
+        if (!empty(static::PREFIX) && str_starts_with($path, static::PREFIX . '/')) {
+            $path = substr($path, strlen(static::PREFIX));
+        }
+        return $path;
     }
 }

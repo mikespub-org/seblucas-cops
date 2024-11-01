@@ -57,7 +57,7 @@
         "/authors/letter/{id}": {
             "get": {
                 "summary": "Route to page handler with page=2&id={id}",
-                "operationId": "get_page-2-id",
+                "operationId": "get_page-authors-letter",
                 "tags": [
                     "default"
                 ],
@@ -103,7 +103,7 @@
         "/authors/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=3&id={id}&title={title}",
-                "operationId": "get_page-3-id-title",
+                "operationId": "get_page-author",
                 "tags": [
                     "default"
                 ],
@@ -167,7 +167,7 @@
         "/authors": {
             "get": {
                 "summary": "Route to page handler with page=1",
-                "operationId": "get_page-1",
+                "operationId": "get_page-authors",
                 "tags": [
                     "default"
                 ],
@@ -186,7 +186,7 @@
         "/books/letter/{id}": {
             "get": {
                 "summary": "Route to page handler with page=5&id={id}",
-                "operationId": "get_page-5-id",
+                "operationId": "get_page-books-letter",
                 "tags": [
                     "default"
                 ],
@@ -233,7 +233,7 @@
         "/books/year/{id}": {
             "get": {
                 "summary": "Route to page handler with page=50&id={id}",
-                "operationId": "get_page-50-id",
+                "operationId": "get_page-books-year",
                 "tags": [
                     "default"
                 ],
@@ -280,7 +280,7 @@
         "/books/{id}/{author}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=13&id={id}&author={author}&title={title}",
-                "operationId": "get_page-13-id-author-title",
+                "operationId": "get_page-book",
                 "tags": [
                     "default"
                 ],
@@ -352,7 +352,7 @@
         "/books": {
             "get": {
                 "summary": "Route to page handler with page=4",
-                "operationId": "get_page-4",
+                "operationId": "get_page-books",
                 "tags": [
                     "default"
                 ],
@@ -371,7 +371,7 @@
         "/series/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=7&id={id}&title={title}",
-                "operationId": "get_page-7-id-title",
+                "operationId": "get_page-serie",
                 "tags": [
                     "default"
                 ],
@@ -435,7 +435,7 @@
         "/series": {
             "get": {
                 "summary": "Route to page handler with page=6",
-                "operationId": "get_page-6",
+                "operationId": "get_page-series",
                 "tags": [
                     "default"
                 ],
@@ -451,62 +451,19 @@
                 ]
             }
         },
-        "/query/{query}/{scope}": {
+        "/typeahead": {
             "get": {
-                "summary": "Route to page handler with page=9&search=1&query={query}&scope={scope}",
-                "operationId": "get_page-9-query-scope",
+                "summary": "Route to page handler with page=9&search=1",
+                "operationId": "get_page-typeahead",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=9&search=1&query={query}&scope={scope}"
+                        "description": "Result of page handler with page=9&search=1"
                     }
                 },
                 "parameters": [
-                    {
-                        "name": "query",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "scope",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/dbParam"
-                    }
-                ]
-            }
-        },
-        "/query/{query}": {
-            "get": {
-                "summary": "Route to page handler with page=9&search=1&query={query}",
-                "operationId": "get_page-9-query",
-                "tags": [
-                    "default"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result of page handler with page=9&search=1&query={query}"
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "query",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
                     {
                         "$ref": "#/components/parameters/dbParam"
                     }
@@ -516,7 +473,7 @@
         "/search/{query}/{scope}": {
             "get": {
                 "summary": "Route to page handler with page=9&query={query}&scope={scope}",
-                "operationId": "get_page-9-search-scope",
+                "operationId": "get_page-query-scope",
                 "tags": [
                     "default"
                 ],
@@ -551,7 +508,7 @@
         "/search/{query}": {
             "get": {
                 "summary": "Route to page handler with page=9&query={query}",
-                "operationId": "get_page-9-search",
+                "operationId": "get_page-query",
                 "tags": [
                     "default"
                 ],
@@ -578,7 +535,7 @@
         "/search": {
             "get": {
                 "summary": "Route to page handler with page=8",
-                "operationId": "get_page-8",
+                "operationId": "get_page-search",
                 "tags": [
                     "default"
                 ],
@@ -597,7 +554,7 @@
         "/recent": {
             "get": {
                 "summary": "Route to page handler with page=10",
-                "operationId": "get_page-10",
+                "operationId": "get_page-recent",
                 "tags": [
                     "default"
                 ],
@@ -616,7 +573,7 @@
         "/tags/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=12&id={id}&title={title}",
-                "operationId": "get_page-12-id-title",
+                "operationId": "get_page-tag",
                 "tags": [
                     "default"
                 ],
@@ -680,7 +637,7 @@
         "/tags": {
             "get": {
                 "summary": "Route to page handler with page=11",
-                "operationId": "get_page-11",
+                "operationId": "get_page-tags",
                 "tags": [
                     "default"
                 ],
@@ -699,7 +656,7 @@
         "/custom/{custom}/{id}": {
             "get": {
                 "summary": "Route to page handler with page=15&custom={custom}&id={id}",
-                "operationId": "get_page-15-custom-id",
+                "operationId": "get_page-custom",
                 "tags": [
                     "default"
                 ],
@@ -735,7 +692,7 @@
         "/custom/{custom}": {
             "get": {
                 "summary": "Route to page handler with page=14&custom={custom}",
-                "operationId": "get_page-14-custom",
+                "operationId": "get_page-customtype",
                 "tags": [
                     "default"
                 ],
@@ -763,7 +720,7 @@
         "/about": {
             "get": {
                 "summary": "Route to page handler with page=16",
-                "operationId": "get_page-16",
+                "operationId": "get_page-about",
                 "tags": [
                     "default"
                 ],
@@ -777,7 +734,7 @@
         "/languages/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=18&id={id}&title={title}",
-                "operationId": "get_page-18-id-title",
+                "operationId": "get_page-language",
                 "tags": [
                     "default"
                 ],
@@ -841,7 +798,7 @@
         "/languages": {
             "get": {
                 "summary": "Route to page handler with page=17",
-                "operationId": "get_page-17",
+                "operationId": "get_page-languages",
                 "tags": [
                     "default"
                 ],
@@ -860,7 +817,7 @@
         "/customize": {
             "get": {
                 "summary": "Route to page handler with page=19",
-                "operationId": "get_page-19",
+                "operationId": "get_page-customize",
                 "tags": [
                     "default"
                 ],
@@ -879,7 +836,7 @@
         "/publishers/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=21&id={id}&title={title}",
-                "operationId": "get_page-21-id-title",
+                "operationId": "get_page-publisher",
                 "tags": [
                     "default"
                 ],
@@ -943,7 +900,7 @@
         "/publishers": {
             "get": {
                 "summary": "Route to page handler with page=20",
-                "operationId": "get_page-20",
+                "operationId": "get_page-publishers",
                 "tags": [
                     "default"
                 ],
@@ -962,7 +919,7 @@
         "/ratings/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=23&id={id}&title={title}",
-                "operationId": "get_page-23-id-title",
+                "operationId": "get_page-rating",
                 "tags": [
                     "default"
                 ],
@@ -1026,7 +983,7 @@
         "/ratings": {
             "get": {
                 "summary": "Route to page handler with page=22",
-                "operationId": "get_page-22",
+                "operationId": "get_page-ratings",
                 "tags": [
                     "default"
                 ],
@@ -1045,7 +1002,7 @@
         "/identifiers/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=42&id={id}&title={title}",
-                "operationId": "get_page-42-id-title",
+                "operationId": "get_page-identifier",
                 "tags": [
                     "default"
                 ],
@@ -1109,7 +1066,7 @@
         "/identifiers": {
             "get": {
                 "summary": "Route to page handler with page=41",
-                "operationId": "get_page-41",
+                "operationId": "get_page-identifiers",
                 "tags": [
                     "default"
                 ],
@@ -1128,7 +1085,7 @@
         "/libraries": {
             "get": {
                 "summary": "Route to page handler with page=43",
-                "operationId": "get_page-43",
+                "operationId": "get_page-libraries",
                 "tags": [
                     "default"
                 ],
@@ -1162,7 +1119,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
                         }
                     },
                     {
@@ -1218,7 +1176,38 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/feed/{path}": {
+            "get": {
+                "summary": "Route to feed handler with path={path} - with api key",
+                "operationId": "get_feed-path",
+                "tags": [
+                    "feed"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of feed handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
                         }
                     }
                 ],
@@ -1735,7 +1724,7 @@
         "/custom": {
             "get": {
                 "summary": "Route to custom api",
-                "operationId": "get_restapi-CustomColumnType",
+                "operationId": "get_restapi-customtypes",
                 "tags": [
                     "restapi"
                 ],
@@ -1754,7 +1743,7 @@
         "/databases/{db}/{name}": {
             "get": {
                 "summary": "Route to databases/{db}/{name} api - with api key",
-                "operationId": "get_restapi-Database-db-name",
+                "operationId": "get_restapi-database-table",
                 "tags": [
                     "restapi"
                 ],
@@ -1791,7 +1780,7 @@
         "/databases/{db}": {
             "get": {
                 "summary": "Route to databases/{db} api",
-                "operationId": "get_restapi-Database-db",
+                "operationId": "get_restapi-database",
                 "tags": [
                     "restapi"
                 ],
@@ -1827,7 +1816,7 @@
         "/databases": {
             "get": {
                 "summary": "Route to databases api",
-                "operationId": "get_restapi-Database",
+                "operationId": "get_restapi-databases",
                 "tags": [
                     "restapi"
                 ],
@@ -1883,7 +1872,7 @@
         "/notes/{type}/{id}/{title}": {
             "get": {
                 "summary": "Route to notes/{type}/{id}/{title} api",
-                "operationId": "get_restapi-Note-type-id-title",
+                "operationId": "get_restapi-note",
                 "tags": [
                     "restapi"
                 ],
@@ -1926,7 +1915,7 @@
         "/notes/{type}/{id}": {
             "get": {
                 "summary": "Route to notes/{type}/{id} api",
-                "operationId": "get_restapi-Note-type-id",
+                "operationId": "get_restapi-notes-type-id",
                 "tags": [
                     "restapi"
                 ],
@@ -1961,7 +1950,7 @@
         "/notes/{type}": {
             "get": {
                 "summary": "Route to notes/{type} api",
-                "operationId": "get_restapi-Note-type",
+                "operationId": "get_restapi-notes-type",
                 "tags": [
                     "restapi"
                 ],
@@ -1988,7 +1977,7 @@
         "/notes": {
             "get": {
                 "summary": "Route to notes api",
-                "operationId": "get_restapi-Note",
+                "operationId": "get_restapi-notes",
                 "tags": [
                     "restapi"
                 ],
@@ -2007,7 +1996,7 @@
         "/preferences/{key}": {
             "get": {
                 "summary": "Route to preferences/{key} api",
-                "operationId": "get_restapi-Preference-key",
+                "operationId": "get_restapi-preference",
                 "tags": [
                     "restapi"
                 ],
@@ -2034,7 +2023,7 @@
         "/preferences": {
             "get": {
                 "summary": "Route to preferences api",
-                "operationId": "get_restapi-Preference",
+                "operationId": "get_restapi-preferences",
                 "tags": [
                     "restapi"
                 ],
@@ -2053,7 +2042,7 @@
         "/annotations/{bookId}/{id}": {
             "get": {
                 "summary": "Route to annotations/{bookId}/{id} api",
-                "operationId": "get_restapi-Annotation-bookId-id",
+                "operationId": "get_restapi-annotation",
                 "tags": [
                     "restapi"
                 ],
@@ -2088,7 +2077,7 @@
         "/annotations/{bookId}": {
             "get": {
                 "summary": "Route to annotations/{bookId} api",
-                "operationId": "get_restapi-Annotation-bookId",
+                "operationId": "get_restapi-annotations-book",
                 "tags": [
                     "restapi"
                 ],
@@ -2115,7 +2104,7 @@
         "/annotations": {
             "get": {
                 "summary": "Route to annotations api",
-                "operationId": "get_restapi-Annotation",
+                "operationId": "get_restapi-annotations",
                 "tags": [
                     "restapi"
                 ],
@@ -2134,7 +2123,7 @@
         "/metadata/{bookId}/{element}/{name}": {
             "get": {
                 "summary": "Route to metadata/{bookId}/{element}/{name} api",
-                "operationId": "get_restapi-Metadata-bookId-element-name",
+                "operationId": "get_restapi-metadata-element-name",
                 "tags": [
                     "restapi"
                 ],
@@ -2177,7 +2166,7 @@
         "/metadata/{bookId}/{element}": {
             "get": {
                 "summary": "Route to metadata/{bookId}/{element} api",
-                "operationId": "get_restapi-Metadata-bookId-element",
+                "operationId": "get_restapi-metadata-element",
                 "tags": [
                     "restapi"
                 ],
@@ -2212,7 +2201,7 @@
         "/metadata/{bookId}": {
             "get": {
                 "summary": "Route to metadata/{bookId} api",
-                "operationId": "get_restapi-Metadata-bookId",
+                "operationId": "get_restapi-metadata",
                 "tags": [
                     "restapi"
                 ],
@@ -2239,7 +2228,7 @@
         "/user/details": {
             "get": {
                 "summary": "Route to user/details api - with basic authentication",
-                "operationId": "get_restapi-User-details",
+                "operationId": "get_restapi-user-details",
                 "tags": [
                     "restapi"
                 ],
@@ -2263,7 +2252,7 @@
         "/user": {
             "get": {
                 "summary": "Route to user api - with basic authentication",
-                "operationId": "get_restapi-User",
+                "operationId": "get_restapi-user",
                 "tags": [
                     "restapi"
                 ],
@@ -2284,21 +2273,21 @@
                 ]
             }
         },
-        "/{route}": {
+        "/{path}": {
             "get": {
-                "summary": "Route to {route} api",
-                "operationId": "get_restapi-other",
+                "summary": "Route to {path} api",
+                "operationId": "get_restapi-path",
                 "tags": [
                     "restapi"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of {route} api"
+                        "description": "Result of {path} api"
                     }
                 },
                 "parameters": [
                     {
-                        "name": "route",
+                        "name": "path",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -2369,7 +2358,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
                         }
                     },
                     {
@@ -2425,7 +2415,38 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/opds/{path}": {
+            "get": {
+                "summary": "Route to opds handler with path={path} - with api key",
+                "operationId": "get_opds-path",
+                "tags": [
+                    "opds"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of opds handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
                         }
                     }
                 ],

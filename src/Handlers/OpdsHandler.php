@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 //use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 use SebLucas\Cops\Output\Response as CopsResponse;
@@ -22,14 +23,16 @@ use SebLucas\Cops\Pages\PageId;
 class OpdsHandler extends BaseHandler
 {
     public const HANDLER = "opds";
+    public const PREFIX = "/opds";
     public const PARAMLIST = ["page", "id"];
 
     public static function getRoutes()
     {
         return [
-            "opds-page-id" => ["/opds/{page}/{id}"],
+            "opds-page-id" => ["/opds/{page:\d+}/{id}"],
             "opds-search" => ["/opds/search", ["page" => "search"]],
-            "opds-page" => ["/opds/{page}"],
+            "opds-page" => ["/opds/{page:\d+}"],
+            "opds-path" => ["/opds/{path:.*}"],
             "opds" => ["/opds"],
         ];
     }
@@ -40,6 +43,18 @@ class OpdsHandler extends BaseHandler
             echo 'This handler is available in developer mode only (without --no-dev option):' . "<br/>\n";
             echo '$ composer install -o';
             return;
+        }
+        // deal with /handler/{path:.*}
+        $path = $request->get('path');
+        if (!empty($path)) {
+            // match path against default page handler
+            $params = Route::match('/' . $path);
+            if (!isset($params)) {
+                // this will call exit()
+                CopsResponse::sendError($request, 'Unknown path for feed: ' . $path);
+            }
+            // set actual path params in request
+            $request->setParams($params);
         }
         $page = $request->get('page', PageId::INDEX);
         $query = $request->get('query');  // 'q' by default for php-opds

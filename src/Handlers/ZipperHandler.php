@@ -21,6 +21,7 @@ use SebLucas\Cops\Output\Zipper;
 class ZipperHandler extends BaseHandler
 {
     public const HANDLER = "zipper";
+    public const PREFIX = "/zipper";
     public const PARAMLIST = ["page", "type", "id"];
 
     public static function getRoutes()

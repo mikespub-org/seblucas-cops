@@ -27,7 +27,7 @@ class Route
     public const HANDLER_PARAM = "_handler";
     public const ROUTE_PARAM = "_route";
     public const ROUTES_CACHE_FILE = 'url_cached_routes.php';
-    public const KEEP_STATS = true;
+    public const KEEP_STATS = false;
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
     protected static $proxyRequest = null;
@@ -48,10 +48,17 @@ class Route
         'path' => 0,
         'match' => 0,
         'find' => 0,
+        'replace' => 0,
         'baseLink' => 0,
+        'basePage' => 0,
+        'baseRoute' => 0,
+        'route' => 0,
+        'single' => 0,
+        'group' => 0,
         'pageLink' => 0,
-        'generate' => 0,
-        'other' => 0,
+        'pagePage' => 0,
+        'resource' => 0,
+        'handler' => 0,
     ];
 
     /**
@@ -384,9 +391,9 @@ class Route
 
     /**
      * Process link with defined handler, page and params
-     * @param class-string $handler defined in Route::link() or BaseHandler::getLink()
+     * @param class-string $handler defined in Route::link(), BaseHandler::link() or PageHandler::link()
      * @param string|int|null $page
-     * @param array<mixed> $params
+     * @param array<mixed> $params with HANDLER_PARAM set (base), unset (page) or variable (link)
      * @return string
      */
     public static function process($handler, $page, $params)
@@ -472,6 +479,7 @@ class Route
     public static function getQueryString($params)
     {
         unset($params[self::HANDLER_PARAM]);
+        unset($params[self::ROUTE_PARAM]);
         return http_build_query($params, '', null, PHP_QUERY_RFC3986);
     }
 
@@ -531,13 +539,25 @@ class Route
         if (!empty($params[self::HANDLER_PARAM])) {
             $handler = $params[self::HANDLER_PARAM];
             // use page route with /restapi prefix instead
-            if ($handler::HANDLER == 'restapi' && empty($params['_resource']) && !empty($params['page'])) {
-                $prefix = $prefix . '/restapi';
-                $handler = $default;
+            if ($handler::HANDLER == 'restapi' && empty($params['_resource'])) {
+                if (!empty($params[self::ROUTE_PARAM]) || !empty($params['page'])) {
+                    $prefix = $prefix . $handler::PREFIX;
+                    $handler = $default;
+                }
+            } elseif (in_array($handler::HANDLER, ['feed', 'opds'])) {
+                // if we have a page, or if we have a route and it does *not* start with the handler name
+                if (!empty($params['page']) || (!empty($params[self::ROUTE_PARAM]) && !str_starts_with($params[self::ROUTE_PARAM], $handler::HANDLER))) {
+                    $prefix = $prefix . $handler::PREFIX;
+                    $handler = $default;
+                }
+                // @todo same for feed with /feed/{path:.*} ?
             } elseif ($handler::HANDLER == 'phpunit') {
                 $handler = $default;
             }
             unset($params[self::HANDLER_PARAM]);
+        } elseif (isset($params[self::ROUTE_PARAM])) {
+            // use default handler for page route
+            $handler = $default;
         } elseif (isset($params['page'])) {
             // use default handler for page route
             $handler = $default;
@@ -574,59 +594,90 @@ class Route
         }
         // find matching route based on fixed and/or path params - e.g. authors letter
         foreach ($routes as $name => $route) {
-            // Add fixed if needed
-            $route[] = [];
-            [$path, $fixed] = $route;
-            if (count($fixed) > count($params)) {
-                continue;
+            $result = self::replacePathParams($route, $params, $prefix);
+            if (isset($result)) {
+                return $result;
             }
-            $subst = $params;
-            // check and remove fixed params (incl. handler or page)
-            foreach ($fixed as $key => $val) {
+        }
+        return null;
+    }
+
+    /**
+     * Replace path params for known route
+     * @param array<mixed> $route
+     * @param array<mixed> $params
+     * @param string $prefix
+     * @param bool $checkFixed true if we need to check fixed params, false for known route - see PageHandler::findRoute()
+     * @return string|null
+     */
+    public static function replacePathParams($route, $params, $prefix = '', $checkFixed = true)
+    {
+        /** @phpstan-ignore-next-line */
+        if (Route::KEEP_STATS) {
+            Route::$counters['replace'] += 1;
+        }
+        // Add fixed if needed
+        $route[] = [];
+        [$path, $fixed] = $route;
+
+        $subst = $params;
+        // check and remove fixed params (incl. handler or page)
+        foreach ($fixed as $key => $val) {
+            if ($checkFixed) {
+                // this isn't the route you're looking for...
                 if (!isset($subst[$key]) || $subst[$key] != $val) {
-                    continue 2;
-                }
-                unset($subst[$key]);
-            }
-            $found = [];
-            // check and replace path params + support custom patterns - see nikic/fast-route
-            if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found)) {
-                if (in_array('ignore', $found[1])) {
-                    $subst['ignore'] = 'ignore';
-                }
-                if (count($found[1]) > count($subst)) {
-                    continue;
-                }
-                foreach ($found[1] as $param) {
-                    $pattern = '';
-                    if (str_contains($param, ':')) {
-                        [$param, $pattern] = explode(':', $param);
-                    }
-                    if (!isset($subst[$param])) {
-                        continue 2;
-                    }
-                    $value = $subst[$param];
-                    // @todo support unicode pattern for first letter - but see https://github.com/nikic/FastRoute/issues/154
-                    if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', (string) $value)) {
-                        continue 2;
-                    }
-                    if (in_array($param, ['title', 'author', 'ignore'])) {
-                        $value = self::slugify($value);
-                    }
-                    if (!empty($pattern)) {
-                        $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
-                    } else {
-                        $path = str_replace('{' . $param . '}', "$value", $path);
-                    }
-                    unset($subst[$param]);
+                    return null;
                 }
             }
+            unset($subst[$key]);
+        }
+        $found = [];
+        // check and replace path params + support custom patterns - see nikic/fast-route
+        $count = preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found);
+        if ($count === false) {
+            return null;
+        }
+        // no path parameters found in route - return what is left
+        if ($count === 0) {
             if (count($subst) > 0) {
-                return $prefix . $path . '?' . self::getQueryString($subst);
+                return $prefix . $path . '?' . Route::getQueryString($subst);
             }
             return $prefix . $path;
         }
-        return null;
+        // start checking path parameters
+        if (in_array('ignore', $found[1])) {
+            $subst['ignore'] = 'ignore';
+        }
+        if (count($found[1]) > count($subst)) {
+            return null;
+        }
+        foreach ($found[1] as $param) {
+            $pattern = '';
+            if (str_contains($param, ':')) {
+                [$param, $pattern] = explode(':', $param);
+            }
+            if (!isset($subst[$param])) {
+                return null;
+            }
+            $value = $subst[$param];
+            // @todo support unicode pattern for first letter - but see https://github.com/nikic/FastRoute/issues/154
+            if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', (string) $value)) {
+                return null;
+            }
+            if (in_array($param, ['title', 'author', 'ignore'])) {
+                $value = self::slugify($value);
+            }
+            if (!empty($pattern)) {
+                $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
+            } else {
+                $path = str_replace('{' . $param . '}', "$value", $path);
+            }
+            unset($subst[$param]);
+        }
+        if (count($subst) > 0) {
+            return $prefix . $path . '?' . self::getQueryString($subst);
+        }
+        return $prefix . $path;
     }
 
     /**
@@ -653,9 +704,11 @@ class Route
             '/' => '.',
             '\\' => '.',
         ];
-        $string = str_replace(array_keys($replace), array_values($replace), trim($string));
+        // normalize first
+        $string = Translation::normalizeUtf8String($string);
 
-        return Translation::normalizeUtf8String($string);
+        // then clean the new string - e.g. 'sun wu'
+        return str_replace(array_keys($replace), array_values($replace), trim($string));
     }
 
     /**

@@ -15,6 +15,7 @@ namespace SebLucas\Cops\Handlers;
 class TestHandler extends BaseHandler
 {
     public const HANDLER = "phpunit";
+    public const PREFIX = "/test";
     public const PARAMLIST = [];
 
     public static function getRoutes()

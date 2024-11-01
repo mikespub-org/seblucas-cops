@@ -317,7 +317,7 @@ class Data
                 $routeName = 'fetch-inline';
             }
             return new LinkEntry(
-                FetchHandler::generate($routeName, $params),
+                FetchHandler::route($routeName, $params),
                 $mime,
                 $rel,
                 $title

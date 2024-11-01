@@ -26,33 +26,34 @@ $handlers = [
 $static = [
   '/index' => 'page-index',
   '/authors/letter' => 'page-1-letter',
-  '/authors' => 'page-1',
+  '/authors' => 'page-authors',
   '/books/letter' => 'page-4-letter',
   '/books/year' => 'page-4-year',
-  '/books' => 'page-4',
-  '/series' => 'page-6',
-  '/search' => 'page-8',
-  '/recent' => 'page-10',
-  '/tags' => 'page-11',
-  '/about' => 'page-16',
-  '/languages' => 'page-17',
-  '/customize' => 'page-19',
-  '/publishers' => 'page-20',
-  '/ratings' => 'page-22',
-  '/identifiers' => 'page-41',
-  '/libraries' => 'page-43',
+  '/books' => 'page-books',
+  '/series' => 'page-series',
+  '/typeahead' => 'page-typeahead',
+  '/search' => 'page-search',
+  '/recent' => 'page-recent',
+  '/tags' => 'page-tags',
+  '/about' => 'page-about',
+  '/languages' => 'page-languages',
+  '/customize' => 'page-customize',
+  '/publishers' => 'page-publishers',
+  '/ratings' => 'page-ratings',
+  '/identifiers' => 'page-identifiers',
+  '/libraries' => 'page-libraries',
   '/feed/search' => 'feed-search',
   '/feed' => 'feed',
-  '/restapi/custom' => 'restapi-CustomColumnType',
-  '/restapi/databases' => 'restapi-Database',
+  '/restapi/custom' => 'restapi-customtypes',
+  '/restapi/databases' => 'restapi-databases',
   '/restapi/openapi' => 'restapi-openapi',
   '/restapi/routes' => 'restapi-route',
   '/restapi/handlers' => 'restapi-handler',
-  '/restapi/notes' => 'restapi-Note',
-  '/restapi/preferences' => 'restapi-Preference',
-  '/restapi/annotations' => 'restapi-Annotation',
-  '/restapi/user/details' => 'restapi-User-details',
-  '/restapi/user' => 'restapi-User',
+  '/restapi/notes' => 'restapi-notes',
+  '/restapi/preferences' => 'restapi-preferences',
+  '/restapi/annotations' => 'restapi-annotations',
+  '/restapi/user/details' => 'restapi-user-details',
+  '/restapi/user' => 'restapi-user',
   '/check' => 'check',
   '/opds/search' => 'opds-search',
   '/opds' => 'opds',
@@ -74,7 +75,7 @@ $routes = [
     ],
     [],
   ],
-  'page-2-id' => [
+  'page-authors-letter' => [
     '/authors/letter/{id}',
     [
       'page' => '2',
@@ -95,7 +96,7 @@ $routes = [
     ],
     [],
   ],
-  'page-3-id-title' => [
+  'page-author' => [
     '/authors/{id:\\d+}/{title}',
     [
       'page' => '3',
@@ -115,7 +116,7 @@ $routes = [
     ],
     [],
   ],
-  'page-1' => [
+  'page-authors' => [
     '/authors',
     [
       'page' => '1',
@@ -125,7 +126,7 @@ $routes = [
     ],
     [],
   ],
-  'page-5-id' => [
+  'page-books-letter' => [
     '/books/letter/{id:\\w}',
     [
       'page' => '5',
@@ -146,7 +147,7 @@ $routes = [
     ],
     [],
   ],
-  'page-50-id' => [
+  'page-books-year' => [
     '/books/year/{id:\\d+}',
     [
       'page' => '50',
@@ -167,7 +168,7 @@ $routes = [
     ],
     [],
   ],
-  'page-13-id-author-title' => [
+  'page-book' => [
     '/books/{id:\\d+}/{author}/{title}',
     [
       'page' => '13',
@@ -187,7 +188,7 @@ $routes = [
     ],
     [],
   ],
-  'page-4' => [
+  'page-books' => [
     '/books',
     [
       'page' => '4',
@@ -197,7 +198,7 @@ $routes = [
     ],
     [],
   ],
-  'page-7-id-title' => [
+  'page-serie' => [
     '/series/{id:\\d+}/{title}',
     [
       'page' => '7',
@@ -217,7 +218,7 @@ $routes = [
     ],
     [],
   ],
-  'page-6' => [
+  'page-series' => [
     '/series',
     [
       'page' => '6',
@@ -227,8 +228,8 @@ $routes = [
     ],
     [],
   ],
-  'page-9-query-scope' => [
-    '/query/{query}/{scope}',
+  'page-typeahead' => [
+    '/typeahead',
     [
       'page' => '9',
       'search' => 1,
@@ -238,18 +239,7 @@ $routes = [
     ],
     [],
   ],
-  'page-9-query' => [
-    '/query/{query}',
-    [
-      'page' => '9',
-      'search' => 1,
-    ],
-    [
-      'GET',
-    ],
-    [],
-  ],
-  'page-9-search-scope' => [
+  'page-query-scope' => [
     '/search/{query}/{scope}',
     [
       'page' => '9',
@@ -259,7 +249,7 @@ $routes = [
     ],
     [],
   ],
-  'page-9-search' => [
+  'page-query' => [
     '/search/{query}',
     [
       'page' => '9',
@@ -269,7 +259,7 @@ $routes = [
     ],
     [],
   ],
-  'page-8' => [
+  'page-search' => [
     '/search',
     [
       'page' => '8',
@@ -279,7 +269,7 @@ $routes = [
     ],
     [],
   ],
-  'page-10' => [
+  'page-recent' => [
     '/recent',
     [
       'page' => '10',
@@ -289,7 +279,7 @@ $routes = [
     ],
     [],
   ],
-  'page-12-id-title' => [
+  'page-tag' => [
     '/tags/{id:\\d+}/{title}',
     [
       'page' => '12',
@@ -309,7 +299,7 @@ $routes = [
     ],
     [],
   ],
-  'page-11' => [
+  'page-tags' => [
     '/tags',
     [
       'page' => '11',
@@ -319,7 +309,7 @@ $routes = [
     ],
     [],
   ],
-  'page-15-custom-id' => [
+  'page-custom' => [
     '/custom/{custom:\\d+}/{id}',
     [
       'page' => '15',
@@ -329,7 +319,7 @@ $routes = [
     ],
     [],
   ],
-  'page-14-custom' => [
+  'page-customtype' => [
     '/custom/{custom:\\d+}',
     [
       'page' => '14',
@@ -339,7 +329,7 @@ $routes = [
     ],
     [],
   ],
-  'page-16' => [
+  'page-about' => [
     '/about',
     [
       'page' => '16',
@@ -349,7 +339,7 @@ $routes = [
     ],
     [],
   ],
-  'page-18-id-title' => [
+  'page-language' => [
     '/languages/{id:\\d+}/{title}',
     [
       'page' => '18',
@@ -369,7 +359,7 @@ $routes = [
     ],
     [],
   ],
-  'page-17' => [
+  'page-languages' => [
     '/languages',
     [
       'page' => '17',
@@ -379,7 +369,7 @@ $routes = [
     ],
     [],
   ],
-  'page-19' => [
+  'page-customize' => [
     '/customize',
     [
       'page' => '19',
@@ -389,7 +379,7 @@ $routes = [
     ],
     [],
   ],
-  'page-21-id-title' => [
+  'page-publisher' => [
     '/publishers/{id:\\d+}/{title}',
     [
       'page' => '21',
@@ -409,7 +399,7 @@ $routes = [
     ],
     [],
   ],
-  'page-20' => [
+  'page-publishers' => [
     '/publishers',
     [
       'page' => '20',
@@ -419,7 +409,7 @@ $routes = [
     ],
     [],
   ],
-  'page-23-id-title' => [
+  'page-rating' => [
     '/ratings/{id:\\d+}/{title}',
     [
       'page' => '23',
@@ -439,7 +429,7 @@ $routes = [
     ],
     [],
   ],
-  'page-22' => [
+  'page-ratings' => [
     '/ratings',
     [
       'page' => '22',
@@ -449,7 +439,7 @@ $routes = [
     ],
     [],
   ],
-  'page-42-id-title' => [
+  'page-identifier' => [
     '/identifiers/{id:\\w+}/{title}',
     [
       'page' => '42',
@@ -469,7 +459,7 @@ $routes = [
     ],
     [],
   ],
-  'page-41' => [
+  'page-identifiers' => [
     '/identifiers',
     [
       'page' => '41',
@@ -479,7 +469,7 @@ $routes = [
     ],
     [],
   ],
-  'page-43' => [
+  'page-libraries' => [
     '/libraries',
     [
       'page' => '43',
@@ -490,7 +480,7 @@ $routes = [
     [],
   ],
   'feed-page-id' => [
-    '/feed/{page}/{id}',
+    '/feed/{page:\\d+}/{id}',
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
     ],
@@ -511,7 +501,17 @@ $routes = [
     [],
   ],
   'feed-page' => [
-    '/feed/{page}',
+    '/feed/{page:\\d+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'feed-path' => [
+    '/feed/{path:.+}',
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
     ],
@@ -632,7 +632,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-CustomColumnType' => [
+  'restapi-customtypes' => [
     '/restapi/custom',
     [
       '_resource' => 'CustomColumnType',
@@ -643,7 +643,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Database-db-name' => [
+  'restapi-database-table' => [
     '/restapi/databases/{db}/{name}',
     [
       '_resource' => 'Database',
@@ -654,7 +654,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Database-db' => [
+  'restapi-database' => [
     '/restapi/databases/{db}',
     [
       '_resource' => 'Database',
@@ -665,7 +665,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Database' => [
+  'restapi-databases' => [
     '/restapi/databases',
     [
       '_resource' => 'Database',
@@ -709,7 +709,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Note-type-id-title' => [
+  'restapi-note' => [
     '/restapi/notes/{type}/{id}/{title}',
     [
       '_resource' => 'Note',
@@ -720,7 +720,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Note-type-id' => [
+  'restapi-notes-type-id' => [
     '/restapi/notes/{type}/{id}',
     [
       '_resource' => 'Note',
@@ -731,7 +731,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Note-type' => [
+  'restapi-notes-type' => [
     '/restapi/notes/{type}',
     [
       '_resource' => 'Note',
@@ -742,7 +742,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Note' => [
+  'restapi-notes' => [
     '/restapi/notes',
     [
       '_resource' => 'Note',
@@ -753,7 +753,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Preference-key' => [
+  'restapi-preference' => [
     '/restapi/preferences/{key}',
     [
       '_resource' => 'Preference',
@@ -764,7 +764,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Preference' => [
+  'restapi-preferences' => [
     '/restapi/preferences',
     [
       '_resource' => 'Preference',
@@ -775,7 +775,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Annotation-bookId-id' => [
+  'restapi-annotation' => [
     '/restapi/annotations/{bookId}/{id}',
     [
       '_resource' => 'Annotation',
@@ -786,7 +786,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Annotation-bookId' => [
+  'restapi-annotations-book' => [
     '/restapi/annotations/{bookId}',
     [
       '_resource' => 'Annotation',
@@ -797,7 +797,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Annotation' => [
+  'restapi-annotations' => [
     '/restapi/annotations',
     [
       '_resource' => 'Annotation',
@@ -808,7 +808,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Metadata-bookId-element-name' => [
+  'restapi-metadata-element-name' => [
     '/restapi/metadata/{bookId}/{element}/{name}',
     [
       '_resource' => 'Metadata',
@@ -819,7 +819,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Metadata-bookId-element' => [
+  'restapi-metadata-element' => [
     '/restapi/metadata/{bookId}/{element}',
     [
       '_resource' => 'Metadata',
@@ -830,7 +830,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-Metadata-bookId' => [
+  'restapi-metadata' => [
     '/restapi/metadata/{bookId}',
     [
       '_resource' => 'Metadata',
@@ -841,7 +841,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-User-details' => [
+  'restapi-user-details' => [
     '/restapi/user/details',
     [
       '_resource' => 'User',
@@ -852,7 +852,7 @@ $routes = [
     ],
     [],
   ],
-  'restapi-User' => [
+  'restapi-user' => [
     '/restapi/user',
     [
       '_resource' => 'User',
@@ -863,8 +863,8 @@ $routes = [
     ],
     [],
   ],
-  'restapi-other' => [
-    '/restapi/{route:.*}',
+  'restapi-path' => [
+    '/restapi/{path:.*}',
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
     ],
@@ -894,7 +894,7 @@ $routes = [
     [],
   ],
   'opds-page-id' => [
-    '/opds/{page}/{id}',
+    '/opds/{page:\\d+}/{id}',
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
     ],
@@ -915,7 +915,17 @@ $routes = [
     [],
   ],
   'opds-page' => [
-    '/opds/{page}',
+    '/opds/{page:\\d+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'opds-path' => [
+    '/opds/{path:.*}',
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
     ],

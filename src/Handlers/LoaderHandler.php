@@ -20,6 +20,7 @@ use Marsender\EPubLoader\App\ExtraActions;
 class LoaderHandler extends BaseHandler
 {
     public const HANDLER = "loader";
+    public const PREFIX = "/loader";
 
     public static function getRoutes()
     {
@@ -44,7 +45,7 @@ class LoaderHandler extends BaseHandler
         // get the global config for epub-loader from config/loader.php
         $gConfig = require dirname(__DIR__, 2) . '/config/loader.php';
         // adapt for use with COPS
-        $gConfig['endpoint'] = static::getLink();
+        $gConfig['endpoint'] = static::link();
         $gConfig['app_name'] = 'COPS Loader';
         $gConfig['version'] = Config::VERSION;
         $gConfig['admin_email'] = '';

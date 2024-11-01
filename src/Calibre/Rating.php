@@ -17,6 +17,8 @@ class Rating extends Base
     public const PAGE_ID = PageId::ALL_RATING_ID;
     public const PAGE_ALL = PageId::ALL_RATINGS;
     public const PAGE_DETAIL = PageId::RATING_DETAIL;
+    public const ROUTE_ALL = "page-ratings";
+    public const ROUTE_DETAIL = "page-rating";
     public const SQL_TABLE = "ratings";
     public const SQL_LINK_TABLE = "books_ratings_link";
     public const SQL_LINK_COLUMN = "rating";

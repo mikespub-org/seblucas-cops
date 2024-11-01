@@ -16,6 +16,8 @@ class Publisher extends Base
     public const PAGE_ID = PageId::ALL_PUBLISHERS_ID;
     public const PAGE_ALL = PageId::ALL_PUBLISHERS;
     public const PAGE_DETAIL = PageId::PUBLISHER_DETAIL;
+    public const ROUTE_ALL = "page-publishers";
+    public const ROUTE_DETAIL = "page-publisher";
     public const SQL_TABLE = "publishers";
     public const SQL_LINK_TABLE = "books_publishers_link";
     public const SQL_LINK_COLUMN = "publisher";

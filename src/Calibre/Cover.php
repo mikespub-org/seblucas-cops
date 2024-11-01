@@ -323,7 +323,7 @@ class Cover
                 $params['type'] = $ext;
             }
             return new LinkEntry(
-                FetchHandler::generate('fetch-cover', $params),
+                $this->handler::route('fetch-cover', $params),
                 $mime,
                 LinkEntry::OPDS_IMAGE_TYPE
             );
@@ -400,7 +400,7 @@ class Cover
                 $routeName = 'fetch-cover';
             }
             return new LinkEntry(
-                FetchHandler::generate($routeName, $params),
+                $this->handler::route($routeName, $params),
                 $mime,
                 LinkEntry::OPDS_THUMBNAIL_TYPE
             );

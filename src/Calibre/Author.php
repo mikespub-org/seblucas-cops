@@ -15,8 +15,11 @@ class Author extends Base
 {
     public const PAGE_ID = PageId::ALL_AUTHORS_ID;
     public const PAGE_ALL = PageId::ALL_AUTHORS;
-    public const PAGE_LETTER = PageId::AUTHORS_FIRST_LETTER;
     public const PAGE_DETAIL = PageId::AUTHOR_DETAIL;
+    public const PAGE_LETTER = PageId::AUTHORS_FIRST_LETTER;
+    public const ROUTE_ALL = "page-authors";
+    public const ROUTE_DETAIL = "page-author";
+    public const ROUTE_LETTER = "page-authors-letter";
     public const SQL_TABLE = "authors";
     public const SQL_LINK_TABLE = "books_authors_link";
     public const SQL_LINK_COLUMN = "author";

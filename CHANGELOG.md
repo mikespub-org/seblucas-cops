@@ -17,6 +17,8 @@ x.x.x - TODO
     - set $config['cops_use_route_urls'] as deprecated (= always enabled)
     - set $config['cops_download_series'] as deprecated (use $config['cops_download_page'] instead)
     - set $config['cops_download_author'] as deprecated (use $config['cops_download_page'] instead)
+  * Switch to handler::route() in most places for Calibre and Pages classes
+  * Replace Route::link() with handler::page() and handler::link() and generate() with route()
   * Use handler class in params instead of handler name + adapt $handler properties/params
   * Generate openapi.json and dump/load cached routes file (info only)
   * Clean up fetch-thumb and zipper-page-* routes in handler & renderers

@@ -25,6 +25,11 @@ use SebLucas\Cops\Model\LinkNavigation;
 class PageQueryResult extends Page
 {
     public const PAGE_ID = PageId::OPENSEARCH_QUERY;
+    public const ROUTE_SEARCH = "page-search";
+    public const ROUTE_QUERY = "page-query";
+    public const ROUTE_SCOPE = "page-query-scope";
+    // specified in util.js as page=9&search=1&...
+    //public const ROUTE_TYPEAHEAD = "page-typeahead";
     public const SCOPE_TAG = "tag";
     public const SCOPE_RATING = "rating";
     public const SCOPE_SERIES = "series";
@@ -133,7 +138,7 @@ class PageQueryResult extends Page
         }
         foreach ($dbArray as $key) {
             if (Database::noDatabaseSelected($database)) {
-                $url = Route::link($this->handler, null, ["db" => $d]);
+                $url = $this->handler::link(["db" => $d]);
                 array_push($this->entryArray, new Entry(
                     $key,
                     "db:query:{$d}",
@@ -175,7 +180,7 @@ class PageQueryResult extends Page
                     if (!empty($libraryId)) {
                         $params['vl'] = $libraryId;
                     }
-                    $url = Route::link($this->handler, $pagequery, $params);
+                    $url = $this->handler::route(self::ROUTE_SCOPE, $params);
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$key}"), $this->query),
                         "db:query:{$d}:{$key}",
@@ -301,7 +306,7 @@ class PageQueryResult extends Page
      */
     public function getDatabaseEntry($name, $idx, $count, $query)
     {
-        $url = Route::link($this->handler, $this->idPage, ['query' => $query, 'db' => $idx]);
+        $url = $this->handler::route(self::ROUTE_QUERY, ['query' => $query, 'db' => $idx]);
         return new Entry(
             $name,
             "db:query:{$idx}",
@@ -323,7 +328,7 @@ class PageQueryResult extends Page
     public function getNoResultEntry($database = null, $scope = null)
     {
         $params = ['db' => $database, 'scope' => $scope];
-        $url = Route::link($this->handler, PageId::OPENSEARCH, $params);
+        $url = $this->handler::route(self::ROUTE_SEARCH, $params);
         return new Entry(
             str_format(localize("search.result.none"), $this->query),
             "db:query:{$database}:{$scope}",

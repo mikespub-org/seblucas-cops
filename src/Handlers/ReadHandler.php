@@ -21,6 +21,7 @@ use Exception;
 class ReadHandler extends BaseHandler
 {
     public const HANDLER = "read";
+    public const PREFIX = "/read";
     public const PARAMLIST = ["db", "data", "title"];
 
     public static function getRoutes()

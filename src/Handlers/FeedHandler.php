@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
@@ -21,20 +22,34 @@ use SebLucas\Cops\Pages\PageId;
 class FeedHandler extends BaseHandler
 {
     public const HANDLER = "feed";
-    public const PARAMLIST = ["page", "id"];
+    public const PREFIX = "/feed";
+    public const PARAMLIST = ["page", "id", "path"];
 
     public static function getRoutes()
     {
         return [
-            "feed-page-id" => ["/feed/{page}/{id}"],
+            "feed-page-id" => ["/feed/{page:\d+}/{id}"],
             "feed-search" => ["/feed/search", ["page" => "search"]],
-            "feed-page" => ["/feed/{page}"],
+            "feed-page" => ["/feed/{page:\d+}"],
+            "feed-path" => ["/feed/{path:.+}"],
             "feed" => ["/feed"],
         ];
     }
 
     public function handle($request)
     {
+        // deal with /handler/{path:.*}
+        $path = $request->get('path');
+        if (!empty($path)) {
+            // match path against default page handler
+            $params = Route::match('/' . $path);
+            if (!isset($params)) {
+                // this will call exit()
+                Response::sendError($request, 'Unknown path for feed: ' . $path);
+            }
+            // set actual path params in request
+            $request->setParams($params);
+        }
         $page = $request->get('page', PageId::INDEX);
         $query = $request->get('query');
         if ($query) {

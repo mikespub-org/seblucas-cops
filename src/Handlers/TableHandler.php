@@ -19,6 +19,7 @@ use SebLucas\Cops\Output\Response;
 class TableHandler extends BaseHandler
 {
     public const HANDLER = "tables";
+    public const PREFIX = "/tables";
     public const PARAMLIST = ["db", "name", "id"];
 
     public static string $template = "templates/tables.html";

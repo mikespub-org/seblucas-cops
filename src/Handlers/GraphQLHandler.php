@@ -40,6 +40,7 @@ use GraphQL\Error\DebugFlag;
 class GraphQLHandler extends BaseHandler
 {
     public const HANDLER = "graphql";
+    public const PREFIX = "/graphql";
     public const DEFINITION_FILE = 'resources/schema.graphql';
     public const DEBUG = DebugFlag::INCLUDE_DEBUG_MESSAGE;
 
@@ -389,7 +390,7 @@ class GraphQLHandler extends BaseHandler
      */
     public function renderPlayground()
     {
-        $data = ['link' => static::getLink()];
+        $data = ['link' => static::link()];
         $template = dirname(__DIR__, 2) . '/templates/graphql.html';
 
         $response = new Response('text/html;charset=utf-8');

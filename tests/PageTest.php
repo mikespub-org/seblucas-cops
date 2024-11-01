@@ -16,6 +16,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -455,6 +456,7 @@ class PageTest extends TestCase
     public function testPageAuthorsDetail_Instance(): void
     {
         $author = Author::getInstanceById(1);
+        $author->setHandler(JsonHandler::class);
         $params = ['n' => 2];
 
         // navlink contains the paginated uri

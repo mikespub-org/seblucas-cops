@@ -28,9 +28,9 @@ class Book
 {
     public const PAGE_ID = PageId::ALL_BOOKS_ID;
     public const PAGE_ALL = PageId::ALL_BOOKS;
-    public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
-    public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
     public const PAGE_DETAIL = PageId::BOOK_DETAIL;
+    public const ROUTE_ALL = "page-books";
+    public const ROUTE_DETAIL = "page-book";
     public const SQL_TABLE = "books";
     public const SQL_LINK_TABLE = "books";
     public const SQL_LINK_COLUMN = "id";
@@ -198,7 +198,7 @@ class Book
         $params['db'] = $this->databaseId;
         $params['author'] = $this->getAuthorsName();
         $params['title'] = $this->getTitle();
-        return Route::link($this->handler, static::PAGE_DETAIL, $params);
+        return $this->handler::route(static::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -215,7 +215,8 @@ class Book
         $params['db'] = $this->databaseId;
         $params['author'] = $this->getAuthorsName();
         $params['title'] = $this->getTitle();
-        return Route::link($handler, static::PAGE_DETAIL, $params);
+        // @todo keep as is for now - not referenced anymore
+        return $handler::page(static::PAGE_DETAIL, $params);
     }
 
     /**
@@ -410,7 +411,7 @@ class Book
             $params = ['id' => $this->id, 'db' => $this->databaseId];
             $params['db'] ??= 0;
             $params['file'] = $fileName;
-            $url = FetchHandler::generate('fetch-file', $params);
+            $url = FetchHandler::route('fetch-file', $params);
         } else {
             $url = Route::path(str_replace('%2F', '/', rawurlencode($filePath)));
         }

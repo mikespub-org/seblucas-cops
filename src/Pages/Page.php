@@ -196,7 +196,7 @@ class Page
         if ($this->n > 1) {
             $params = $this->request->getCleanParams();
             return new LinkNavigation(
-                Route::link($this->handler, null, $params),
+                $this->handler::link($params),
                 "first",
                 localize("paging.first.alternate")
             );
@@ -214,7 +214,7 @@ class Page
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->getMaxPage());
             return new LinkNavigation(
-                Route::link($this->handler, null, $params),
+                $this->handler::link($params),
                 "last",
                 localize("paging.last.alternate")
             );
@@ -232,7 +232,7 @@ class Page
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n + 1);
             return new LinkNavigation(
-                Route::link($this->handler, null, $params),
+                $this->handler::link($params),
                 "next",
                 localize("paging.next.alternate")
             );
@@ -250,7 +250,7 @@ class Page
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n - 1);
             return new LinkNavigation(
-                Route::link($this->handler, null, $params),
+                $this->handler::link($params),
                 "previous",
                 localize("paging.previous.alternate")
             );

@@ -17,6 +17,8 @@ class Identifier extends Base
     public const PAGE_ID = PageId::ALL_IDENTIFIERS_ID;
     public const PAGE_ALL = PageId::ALL_IDENTIFIERS;
     public const PAGE_DETAIL = PageId::IDENTIFIER_DETAIL;
+    public const ROUTE_ALL = "page-identifiers";
+    public const ROUTE_DETAIL = "page-identifier";
     public const SQL_TABLE = "identifiers";
     public const SQL_LINK_TABLE = "identifiers";
     public const SQL_LINK_COLUMN = "type";

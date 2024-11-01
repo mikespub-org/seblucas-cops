@@ -95,7 +95,7 @@ class PageWithDetail extends Page
         $filtersTitle = localize("filters.title");
         if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
             $title = localize(phrase: "authors.title");
-            $href = Route::link($this->handler, Author::PAGE_ALL, $params);
+            $href = $this->handler::page(Author::PAGE_ALL, $params);
             $relation = "authors";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['a'] ??= 1;
@@ -103,7 +103,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Language) && in_array('language', $filterLinks)) {
             $title = localize("languages.title");
-            $href = Route::link($this->handler, Language::PAGE_ALL, $params);
+            $href = $this->handler::page(Language::PAGE_ALL, $params);
             $relation = "languages";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['l'] ??= 1;
@@ -111,7 +111,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Publisher) && in_array('publisher', $filterLinks)) {
             $title = localize("publishers.title");
-            $href = Route::link($this->handler, Publisher::PAGE_ALL, $params);
+            $href = $this->handler::page(Publisher::PAGE_ALL, $params);
             $relation = "publishers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['p'] ??= 1;
@@ -119,7 +119,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Rating) && in_array('rating', $filterLinks)) {
             $title = localize("ratings.title");
-            $href = Route::link($this->handler, Rating::PAGE_ALL, $params);
+            $href = $this->handler::page(Rating::PAGE_ALL, $params);
             $relation = "ratings";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['r'] ??= 1;
@@ -127,7 +127,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Serie) && in_array('series', $filterLinks)) {
             $title = localize("series.title");
-            $href = Route::link($this->handler, Serie::PAGE_ALL, $params);
+            $href = $this->handler::page(Serie::PAGE_ALL, $params);
             $relation = "series";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['s'] ??= 1;
@@ -135,7 +135,7 @@ class PageWithDetail extends Page
         }
         if (in_array('tag', $filterLinks)) {
             $title = localize("tags.title");
-            $href = Route::link($this->handler, Tag::PAGE_ALL, $params);
+            $href = $this->handler::page(Tag::PAGE_ALL, $params);
             $relation = "tags";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['t'] ??= 1;
@@ -147,7 +147,7 @@ class PageWithDetail extends Page
         }
         if (in_array('identifier', $filterLinks)) {
             $title = localize("identifiers.title");
-            $href = Route::link($this->handler, Identifier::PAGE_ALL, $params);
+            $href = $this->handler::page(Identifier::PAGE_ALL, $params);
             $relation = "identifiers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging['i'] ??= 1;

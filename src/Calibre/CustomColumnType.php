@@ -24,6 +24,9 @@ abstract class CustomColumnType
     public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
     public const PAGE_ALL = PageId::ALL_CUSTOMS;
     public const PAGE_DETAIL = PageId::CUSTOM_DETAIL;
+    public const ROUTE_ALL = "page-customtype";
+    public const ROUTE_DETAIL = "page-custom";
+    public const ROUTE_TYPES = "restapi-customtypes";
     public const SQL_TABLE = "custom_columns";
     public const SQL_BOOKLIST_LINK = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where {2}.book = books.id and {2}.{3} = ? {1} order by books.sort';
@@ -120,8 +123,7 @@ abstract class CustomColumnType
         $params['custom'] = $this->customId;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        $params[Route::ROUTE_PARAM] = 'page-' . static::PAGE_ALL . '-custom';
-        return Route::link($this->handler, static::PAGE_ALL, $params);
+        return $this->handler::route(static::ROUTE_ALL, $params);
     }
 
     /**

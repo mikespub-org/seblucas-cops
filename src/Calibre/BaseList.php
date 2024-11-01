@@ -324,17 +324,17 @@ class BaseList
     {
         // substr(upper(authors.sort), 1, 1)
         $groupField = 'substr(upper(' . $this->getTable() . '.' . $this->getSort() . '), 1, 1)';
-        return $this->getCountByGroup($groupField, $this->className::PAGE_LETTER, 'letter');
+        return $this->getCountByGroup($groupField, $this->className::ROUTE_LETTER, 'letter');
     }
 
     /**
      * Summary of getCountByGroup
      * @param string $groupField
-     * @param string $page
+     * @param string $routeName
      * @param string $label
      * @return array<Entry>
      */
-    public function getCountByGroup($groupField, $page, $label)
+    public function getCountByGroup($groupField, $routeName, $label)
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         $filterString = $filter->getFilterString();
@@ -357,10 +357,9 @@ class BaseList
         $entryArray = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
-        $params[Route::ROUTE_PARAM] = 'page-' . $page . '-id';
         while ($post = $result->fetchObject()) {
             $params["id"] = $post->groupid;
-            $href = Route::link($this->handler, $page, $params);
+            $href = $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,

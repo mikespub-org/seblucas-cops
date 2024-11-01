@@ -15,13 +15,14 @@ namespace SebLucas\Cops\Handlers;
 class CorsHandler extends BaseHandler
 {
     public const HANDLER = "cors";
+    public const PREFIX = "";
     public const PARAMLIST = [];
 
     public static function getRoutes()
     {
         return [
             // @todo add cors options after the last handler or use middleware or...
-            //'cors' => ['/{route:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
+            //'cors' => ['/{path:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
         ];
     }
 

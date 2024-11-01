@@ -45,6 +45,10 @@ class BookTest extends TestCase
         'original' => 1598906,
         'updated' => 1047437,
     ];
+    /** @var class-string */
+    private static $handler = JsonHandler::class;
+    /** @var class-string */
+    private static $fetcher = FetchHandler::class;
 
     public static function setUpBeforeClass(): void
     {
@@ -112,14 +116,14 @@ class BookTest extends TestCase
     {
         // also check most of book's class methods
         $book = Book::getBookById(2);
-        $book->setHandler(JsonHandler::class);
+        $book->setHandler(self::$handler);
 
         $linkArray = $book->getLinkArray();
         $this->assertCount(5, $linkArray);
 
         $this->assertEquals("The Return of Sherlock Holmes", $book->getTitle());
         $this->assertEquals("urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f", $book->getEntryId());
-        $this->assertEquals(JsonHandler::getLink() . "/books/2/Arthur_Conan_Doyle/The_Return_of_Sherlock_Holmes", $book->getDetailUrl(JsonHandler::class));
+        $this->assertEquals(self::$handler::link() . "/books/2/Arthur_Conan_Doyle/The_Return_of_Sherlock_Holmes", $book->getDetailUrl(self::$handler));
         $this->assertEquals("Arthur Conan Doyle", $book->getAuthorsName());
         $this->assertEquals("Fiction, Mystery & Detective, Short Stories", $book->getTagsName());
         $this->assertEquals('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment(false));
@@ -233,7 +237,7 @@ class BookTest extends TestCase
     {
         Config::set('use_url_rewriting', "1");
         $book = Book::getBookById(2);
-        $book->setHandler(JsonHandler::class);
+        $book->setHandler(self::$handler);
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -249,12 +253,12 @@ class BookTest extends TestCase
     {
         Config::set('use_url_rewriting', "0");
         $book = Book::getBookById(2);
-        $book->setHandler(JsonHandler::class);
+        $book->setHandler(self::$handler);
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
-                $this->assertEquals(FetchHandler::getLink() . "/fetch/0/1/ignore.epub", $link->href);
+                $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/ignore.epub", $link->href);
                 return;
             }
         }
@@ -312,13 +316,13 @@ class BookTest extends TestCase
     public function testGetThumbnailUri(): void
     {
         $book = Book::getBookById(2);
-        $book->setHandler(JsonHandler::class);
+        $book->setHandler(self::$handler);
 
         // The thumbnails should be the same as the covers
         Config::set('thumbnail_handling', "1");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals(FetchHandler::getLink() . "/covers/0/2.jpg", $thumbnailurl);
+        $this->assertEquals(self::$fetcher::link() . "/covers/0/2.jpg", $thumbnailurl);
 
         // The thumbnails should be the same as the handling
         Config::set('thumbnail_handling', "/images.png");
@@ -329,7 +333,7 @@ class BookTest extends TestCase
         Config::set('thumbnail_handling', "");
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
-        $this->assertEquals(FetchHandler::getLink() . "/thumbs/0/2/html.jpg", $thumbnailurl);
+        $this->assertEquals(self::$fetcher::link() . "/thumbs/0/2/html.jpg", $thumbnailurl);
     }
 
     /**
@@ -591,7 +595,7 @@ class BookTest extends TestCase
         $this->assertEquals(Route::path("download/20/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $epub->getHtmlLink());
 
         Config::set('use_url_rewriting', "0");
-        $this->assertEquals(FetchHandler::getLink() . "/fetch/0/20/ignore.epub", $epub->getHtmlLink());
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $epub->getHtmlLink());
     }
 
     public function testGetUpdatedEpub(): void

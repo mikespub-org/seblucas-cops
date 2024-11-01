@@ -50,7 +50,7 @@ class JsonRenderer extends BaseRenderer
     {
         $params = $request->urlParams;
         $params['complete'] = 1;
-        return JsonHandler::getLink($params);
+        return JsonHandler::link($params);
     }
 
     /**
@@ -120,7 +120,7 @@ class JsonRenderer extends BaseRenderer
 
         return [
             "id" => $book->id,
-            "detailurl" => $book->getDetailUrl(),
+            "detailurl" => $book->getUri(),
             "hasCover" => $book->hasCover,
             "preferedData" => $preferedData,
             "preferedCount" => count($preferedData),
@@ -180,7 +180,7 @@ class JsonRenderer extends BaseRenderer
                 $params['data'] = $data->id;
                 $params['db'] = $database;
                 $params['title'] = $book->getTitle();
-                $tab ["readerUrl"] = ReadHandler::generate('read-title', $params);
+                $tab ["readerUrl"] = ReadHandler::route('read-title', $params);
             }
             array_push($out ["datas"], $tab);
         }
@@ -199,7 +199,7 @@ class JsonRenderer extends BaseRenderer
             $params['id'] = $book->id;
             $params['db'] = $database;
             $params['file'] = 'zipped';
-            $url = FetchHandler::generate('fetch-file', $params);
+            $url = FetchHandler::route('fetch-file', $params);
             array_unshift($out ["extraFiles"], [
                 "name" => " * ",
                 "url" => $url,
@@ -288,7 +288,7 @@ class JsonRenderer extends BaseRenderer
                 array_push($out, [
                     "class" => $entry->className,
                     "title" => $entry->title,
-                    "navlink" => $entry->book->getDetailUrl(),
+                    "navlink" => $entry->book->getUri(),
                 ]);
             } else {
                 array_push($out, [
@@ -361,9 +361,9 @@ class JsonRenderer extends BaseRenderer
             ],
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here
-                "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], Route::link($this->handler, PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
-                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::generate('fetch-cover', ['id' => '0', 'db' => '1'])),
-                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::generate('fetch-thumb', ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
+                "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], $this->handler::page(PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
+                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::route('fetch-cover', ['id' => '0', 'db' => '1'])),
+                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::route('fetch-thumb', ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),
@@ -447,12 +447,12 @@ class JsonRenderer extends BaseRenderer
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $params = $this->request->getCleanParams();
             $params['sort'] = 'SORTED';
-            $out ["sorturl"] = str_replace('SORTED', '{0}', Route::link($this->handler, null, $params));
+            $out ["sorturl"] = str_replace('SORTED', '{0}', $this->handler::link($params));
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
                 $params['filter'] = 1;
-                $out ["filterurl"] = Route::link($this->handler, null, $params);
+                $out ["filterurl"] = $this->handler::link($params);
             }
         } elseif (!empty($currentPage->extra)) {
             // show extra info or series in Page*Detail (without books)
@@ -461,14 +461,14 @@ class JsonRenderer extends BaseRenderer
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
                 $params['filter'] = 1;
-                $out ["filterurl"] = Route::link($this->handler, null, $params);
+                $out ["filterurl"] = $this->handler::link($params);
             }
         } else {
             if ($currentPage->isPaginated()) {
                 // support {{=str_format(it.sorturl, "count")}} etc. in templates (use double quotes for sort field)
                 $params = $this->request->getCleanParams();
                 $params['sort'] = 'SORTED';
-                $out ["sorturl"] = str_replace('SORTED', '{0}', Route::link($this->handler, null, $params));
+                $out ["sorturl"] = str_replace('SORTED', '{0}', $this->handler::link($params));
                 $out ["sortoptions"] = [
                     'name' => localize("sort.names"),
                     'count' => localize("sort.count"),
@@ -479,7 +479,7 @@ class JsonRenderer extends BaseRenderer
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
                 $params['filter'] = null;
-                $out ["filterurl"] = Route::link($this->handler, null, $params);
+                $out ["filterurl"] = $this->handler::link($params);
             }
         }
         return $out;
@@ -517,12 +517,12 @@ class JsonRenderer extends BaseRenderer
             $params = [];
             $params['db'] = $this->database;
             if ($this->homepage != PageId::INDEX) {
-                $homeurl = Route::link($this->handler, PageId::INDEX, $params);
+                $homeurl = $this->handler::route(PageId::ROUTE_INDEX, $params);
             } else {
-                $homeurl = Route::link($this->handler, null, $params);
+                $homeurl = $this->handler::link($params);
             }
         } elseif ($this->homepage != PageId::INDEX) {
-            $homeurl = Route::link($this->handler, PageId::INDEX);
+            $homeurl = $this->handler::route(PageId::ROUTE_INDEX);
         } else {
             $homeurl = $baseurl;
         }
@@ -549,7 +549,7 @@ class JsonRenderer extends BaseRenderer
             if ($this->request->hasFilter()) {
                 $filterParams = $this->request->getFilterParams();
                 $filterParams["db"] = $this->database;
-                $parenturl = Route::link($this->handler, PageId::INDEX, $filterParams);
+                $parenturl = $this->handler::route(PageId::ROUTE_INDEX, $filterParams);
             } else {
                 $parenturl = $homeurl;
             }
@@ -620,9 +620,9 @@ class JsonRenderer extends BaseRenderer
                 $params = $this->request->getCleanParams();
                 $params['type'] = strtolower((string) $format);
                 if (!empty($params['id'])) {
-                    $url = ZipperHandler::generate('zipper-page-id-type', $params);
+                    $url = ZipperHandler::route('zipper-page-id-type', $params);
                 } else {
-                    $url = ZipperHandler::generate('zipper-page-type', $params);
+                    $url = ZipperHandler::route('zipper-page-type', $params);
                 }
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
@@ -639,7 +639,7 @@ class JsonRenderer extends BaseRenderer
                 $params['series'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = ZipperHandler::getLink($params);
+                $url = ZipperHandler::link($params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -652,7 +652,7 @@ class JsonRenderer extends BaseRenderer
                 $params['author'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = ZipperHandler::getLink($params);
+                $url = ZipperHandler::link($params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -689,7 +689,7 @@ class JsonRenderer extends BaseRenderer
         if (!empty($out ["parentTitle"])) {
             $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
         }
-        $out ["baseurl"] = Route::link($this->handler);
+        $out ["baseurl"] = $this->handler::link();
         $entries = [];
         $extraParams = [];
         $out ["isFilterPage"] = false;
@@ -736,8 +736,8 @@ class JsonRenderer extends BaseRenderer
 
         $params = [];
         $params['db'] = $this->database;
-        $out["abouturl"] = Route::link($this->handler, PageId::ABOUT, $params);
-        $out["customizeurl"] = Route::link($this->handler, PageId::CUSTOMIZE, $params);
+        $out["abouturl"] = $this->handler::route(PageId::ROUTE_ABOUT, $params);
+        $out["customizeurl"] = $this->handler::route(PageId::ROUTE_CUSTOMIZE, $params);
 
         if ($this->page == PageId::ABOUT) {
             $out ["fullhtml"] = $currentPage->getContent();

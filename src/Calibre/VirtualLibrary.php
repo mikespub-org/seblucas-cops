@@ -18,6 +18,8 @@ class VirtualLibrary extends Base
     public const PAGE_ID = PageId::ALL_LIBRARIES_ID;
     public const PAGE_ALL = PageId::ALL_LIBRARIES;
     public const PAGE_DETAIL = PageId::LIBRARY_DETAIL;
+    public const ROUTE_ALL = "page-libraries";
+    public const ROUTE_DETAIL = "page-library";
     public const SQL_TABLE = "libraries";
     public const URL_PARAM = "vl";
 
@@ -53,7 +55,8 @@ class VirtualLibrary extends Base
             // URL format: ...&vl=2.Short_Stories_in_English
             $params[static::URL_PARAM] = static::formatParameter($this->id, $this->getTitle());
         }
-        return Route::link($this->handler, $homepage, $params);
+        // @todo keep as is for now
+        return $this->handler::page($homepage, $params);
     }
 
     /**

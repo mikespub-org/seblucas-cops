@@ -16,6 +16,8 @@ class Language extends Base
     public const PAGE_ID = PageId::ALL_LANGUAGES_ID;
     public const PAGE_ALL = PageId::ALL_LANGUAGES;
     public const PAGE_DETAIL = PageId::LANGUAGE_DETAIL;
+    public const ROUTE_ALL = "page-languages";
+    public const ROUTE_DETAIL = "page-language";
     public const SQL_TABLE = "languages";
     public const SQL_LINK_TABLE = "books_languages_link";
     public const SQL_LINK_COLUMN = "lang_code";

@@ -27,13 +27,15 @@ use Exception;
 
 /**
  * Basic REST API routing to JSON Renderer
- * Note: this supports all other routes with /restapi prefix
+ * Note: this supports all other paths with /restapi prefix
  */
 class RestApi extends BaseRenderer
 {
-    public static string $prefix = RestApiHandler::PREFIX;
+    public const PREFIX = RestApiHandler::PREFIX;
+    public static string $handler = RestApiHandler::class;
     public static int $numberPerPage = 100;
     public static bool $doRunHandler = true;
+    protected static ?string $baseUrl = null;
 
     /**
      * Summary of extra
@@ -53,20 +55,6 @@ class RestApi extends BaseRenderer
     ];
 
     public bool $isExtra = false;
-
-    /**
-     * Summary of getPathInfo
-     * @return string
-     */
-    public function getPathInfo()
-    {
-        $path = $this->request->path("/index");
-        // Note: this supports all other routes with /restapi prefix
-        if (str_starts_with($path, static::$prefix . '/')) {
-            $path = substr($path, strlen(static::$prefix));
-        }
-        return $path;
-    }
 
     /**
      * Summary of matchPathInfo
@@ -90,30 +78,13 @@ class RestApi extends BaseRenderer
             $this->isExtra = true;
             unset($params['page']);
             if (!empty($params)) {
-                $this->setParams($params);
+                $this->request->setParams($params);
             }
             return call_user_func(static::$extra[$root], $this->request);
         }
 
         // match path with routes
         return Route::match($path);
-    }
-
-    /**
-     * Summary of setParams
-     * @param array<mixed> $params
-     * @return Request
-     */
-    public function setParams($params)
-    {
-        foreach ($params as $param => $value) {
-            $this->request->set($param, $value);
-        }
-        // remove /restapi/{route:.*} param from current request
-        if (empty($params['route']) && $this->request->get('route')) {
-            $this->request->set('route', null);
-        }
-        return $this->request;
     }
 
     /**
@@ -174,6 +145,7 @@ class RestApi extends BaseRenderer
         if (isset($result)) {
             return json_encode($result, JSON_UNESCAPED_SLASHES);
         }
+        self::$baseUrl ??= RestApiHandler::getBaseUrl();
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
         if (!isset($params)) {
@@ -184,10 +156,10 @@ class RestApi extends BaseRenderer
         if ($this->isExtra) {
             $result = $params;
         } elseif (empty($params[Route::HANDLER_PARAM]) || $params[Route::HANDLER_PARAM]::HANDLER == 'json') {
-            $this->setParams($params);
+            $this->request->setParams($params);
             $result = $this->getJson();
         } else {
-            // extra routes supported by other handlers
+            // extra paths supported by other handlers
             $result = $this->runHandler($path, $params);
             if (is_null($result)) {
                 return '';
@@ -210,7 +182,7 @@ class RestApi extends BaseRenderer
     {
         $db = $request->database();
         $columns = CustomColumnType::getAllCustomColumns();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Custom Columns",
             "baseurl" => $baseurl,
@@ -238,7 +210,7 @@ class RestApi extends BaseRenderer
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
             return static::getDatabase($db, $request);
         }
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Databases",
             "baseurl" => $baseurl,
@@ -248,7 +220,7 @@ class RestApi extends BaseRenderer
         $id = 0;
         foreach (Database::getDbNameList() as $key) {
             $params['db'] = $id;
-            $link = RestApiHandler::getResourceLink(Database::class, $params);
+            $link = self::$handler::resource(Database::class, $params);
             array_push($result["entries"], [
                 "class" => "Database",
                 "title" => $key,
@@ -283,7 +255,7 @@ class RestApi extends BaseRenderer
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $params = [];
         $type = $request->get('type', null, '/^\w+$/');
         if (in_array($type, ['table', 'view'])) {
@@ -297,7 +269,7 @@ class RestApi extends BaseRenderer
             $entries = Database::getDbSchema($database, $type);
             foreach ($entries as $entry) {
                 $params['name'] = $entry['tbl_name'];
-                $entry["navlink"] = RestApiHandler::getResourceLink(Database::class, $params);
+                $entry["navlink"] = self::$handler::resource(Database::class, $params);
                 unset($entry["sql"]);
                 array_push($result["entries"], $entry);
             }
@@ -320,7 +292,7 @@ class RestApi extends BaseRenderer
             array_push($result["entries"], [
                 "class" => "Metadata",
                 "title" => $title,
-                "navlink" => RestApiHandler::getResourceLink(Database::class, $params),
+                "navlink" => self::$handler::resource(Database::class, $params),
             ]);
         }
         $result["version"] = Database::getUserVersion($database);
@@ -342,7 +314,7 @@ class RestApi extends BaseRenderer
             $title .= " $dbName";
         }
         $title .= " Table $name";
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => $title,
             "baseurl" => $baseurl,
@@ -372,7 +344,7 @@ class RestApi extends BaseRenderer
         while ($post = $res->fetchObject()) {
             $entry = (array) $post;
             $params['id'] = $entry['id'];
-            $entry["navlink"] = RestApiHandler::getResourceLink(Database::class, $params);
+            $entry["navlink"] = self::$handler::resource(Database::class, $params);
             array_push($result["entries"], $entry);
         }
         $result["columns"] = Database::getTableInfo($database, $name);
@@ -397,7 +369,7 @@ class RestApi extends BaseRenderer
      */
     public static function getRoutes($request)
     {
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Routes",
             "baseurl" => $baseurl,
@@ -419,7 +391,7 @@ class RestApi extends BaseRenderer
      */
     public static function getHandlers($request)
     {
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Handlers",
             "baseurl" => $baseurl,
@@ -447,7 +419,7 @@ class RestApi extends BaseRenderer
             return static::getNotesByType($type, $request);
         }
         $db = $request->database();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Notes",
             "baseurl" => $baseurl,
@@ -458,7 +430,7 @@ class RestApi extends BaseRenderer
         $params['db'] = $db;
         foreach (Note::getCountByType($db) as $type => $count) {
             $params['type'] = $type;
-            $link = RestApiHandler::getResourceLink(Note::class, $params);
+            $link = self::$handler::resource(Note::class, $params);
             array_push($result["entries"], [
                 "class" => "Notes Type",
                 "title" => $type,
@@ -482,7 +454,7 @@ class RestApi extends BaseRenderer
             return static::getNoteByTypeId($type, $id, $request);
         }
         $db = $request->database();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Notes for {$type}",
             "baseurl" => $baseurl,
@@ -498,7 +470,7 @@ class RestApi extends BaseRenderer
             if (!empty($entry["title"])) {
                 $title = Route::slugify($entry["title"]);
                 $params['title'] = $title;
-                $link = RestApiHandler::getResourceLink(Note::class, $params);
+                $link = self::$handler::resource(Note::class, $params);
                 array_push($result["entries"], [
                     "class" => "Notes",
                     "title" => $entry["title"],
@@ -509,7 +481,7 @@ class RestApi extends BaseRenderer
                 ]);
             } else {
                 unset($params['title']);
-                $link = RestApiHandler::getResourceLink(Note::class, $params);
+                $link = self::$handler::resource(Note::class, $params);
                 array_push($result["entries"], [
                     "class" => "Notes",
                     "title" => $type,
@@ -537,7 +509,7 @@ class RestApi extends BaseRenderer
         if (empty($note)) {
             return ["error" => "Invalid note type id"];
         }
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Note for {$type} #{$id}",
             "baseurl" => $baseurl,
@@ -574,7 +546,7 @@ class RestApi extends BaseRenderer
             return static::getPreferenceByKey($key, $request);
         }
         $db = $request->database();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Preferences",
             "baseurl" => $baseurl,
@@ -594,7 +566,7 @@ class RestApi extends BaseRenderer
                 $count = 0;
             }
             $params['key'] = rawurlencode($key);
-            $link = RestApiHandler::getResourceLink(Preference::class, $params);
+            $link = self::$handler::resource(Preference::class, $params);
             array_push($result["entries"], [
                 "class" => "Preference",
                 "title" => $key,
@@ -618,7 +590,7 @@ class RestApi extends BaseRenderer
         if (empty($preference)) {
             return ["error" => "Invalid preference key"];
         }
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Preference for {$key}",
             "baseurl" => $baseurl,
@@ -640,7 +612,7 @@ class RestApi extends BaseRenderer
             return static::getAnnotationsByBookId($bookId, $request);
         }
         $db = $request->database();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Annotations",
             "baseurl" => $baseurl,
@@ -651,7 +623,7 @@ class RestApi extends BaseRenderer
             $params = [];
             $params['bookId'] = $bookId;
             $params['db'] = $db;
-            $link = RestApiHandler::getResourceLink(Annotation::class, $params);
+            $link = self::$handler::resource(Annotation::class, $params);
             array_push($result["entries"], [
                 "class" => "Annotations",
                 "title" => "Annotations for {$bookId}",
@@ -675,7 +647,7 @@ class RestApi extends BaseRenderer
             return static::getAnnotationById($bookId, $id, $request);
         }
         $db = $request->database();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "Annotations for {$bookId}",
             "baseurl" => $baseurl,
@@ -684,7 +656,7 @@ class RestApi extends BaseRenderer
         ];
         // @todo get item from annotations + corresponding title from instance
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
-            $instance->setHandler(RestApiHandler::class);
+            $instance->setHandler(self::$handler);
             $entry = $instance->getEntry();
             array_push($result["entries"], [
                 "class" => $entry->className,
@@ -710,7 +682,7 @@ class RestApi extends BaseRenderer
         if (empty($annotation->id)) {
             return ["error" => "Invalid annotation id"];
         }
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => $annotation->getTitle(),
             "baseurl" => $baseurl,
@@ -732,7 +704,7 @@ class RestApi extends BaseRenderer
             return ["error" => "Invalid book id"];
         }
         $db = $request->database();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $metadata = Metadata::getInstanceByBookId($bookId, $db);
         if (empty($metadata)) {
             $result["error"] = "Invalid metadata for book id";
@@ -771,14 +743,14 @@ class RestApi extends BaseRenderer
             return ["error" => "Invalid username"];
         }
         $db = $request->database();
-        $baseurl = RestApiHandler::getBaseUrl();
+        $baseurl = self::$baseUrl;
         $result = [
             "title" => "User",
             "baseurl" => $baseurl,
             "databaseId" => $db,
         ];
         $result["username"] = $username;
-        if ($request->path() == static::$prefix . "/user/details") {
+        if ($request->path() == static::PREFIX . "/user/details") {
             $user = User::getInstanceByName($username);
             $result = array_replace($result, (array) $user);
         }

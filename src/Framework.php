@@ -120,7 +120,7 @@ class Framework
         //Input\Route::load();
         Input\Route::init();
         // @todo add cors options after the last handler or use middleware or...
-        //'cors' => ['/{route:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
+        //'cors' => ['/{path:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
     }
 
     /**

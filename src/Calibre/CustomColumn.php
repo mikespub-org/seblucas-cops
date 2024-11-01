@@ -21,6 +21,8 @@ class CustomColumn extends Category
     public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
     public const PAGE_ALL = PageId::ALL_CUSTOMS;
     public const PAGE_DETAIL = PageId::CUSTOM_DETAIL;
+    public const ROUTE_ALL = "page-customtype";
+    public const ROUTE_DETAIL = "page-custom";
     public const URL_PARAM = "c";
 
     /** @var string the (string) representation of the value */
@@ -68,8 +70,7 @@ class CustomColumn extends Category
         $params['id'] = $this->id;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        $params[Route::ROUTE_PARAM] = 'page-' . static::PAGE_DETAIL . '-custom-id';
-        return Route::link($this->handler, static::PAGE_DETAIL, $params);
+        return $this->handler::route(static::ROUTE_DETAIL, $params);
     }
 
     /**

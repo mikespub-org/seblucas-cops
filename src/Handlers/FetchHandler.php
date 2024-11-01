@@ -28,6 +28,7 @@ use SebLucas\Cops\Output\Zipper;
 class FetchHandler extends BaseHandler
 {
     public const HANDLER = "fetch";
+    public const PREFIX = "";  // we have multiple prefixes here
     public const PARAMLIST = ["db", "id", "file", "thumb", "data", "ignore", "type", "view"];
 
     public static function getRoutes()

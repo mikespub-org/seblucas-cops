@@ -78,6 +78,10 @@ class PageId
     public const ALL_NOTES_ID = "cops:notes";
     public const ALL_PREFERENCES_ID = "cops:preferences";
     public const ALL_ANNOTATIONS_ID = "cops:annotations";
+    // @todo move elsewhere
+    public const ROUTE_INDEX = "page-index";
+    public const ROUTE_ABOUT = "page-about";
+    public const ROUTE_CUSTOMIZE = "page-customize";
 
     /**
      * Summary of getPage

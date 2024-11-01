@@ -30,6 +30,9 @@ class OpdsRendererTest extends TestCase
     public const OPDSVALIDATOR_JAR = __DIR__ . "/OPDSValidator.jar";
     public const TEST_FEED = __DIR__ . "/text.atom";
 
+    /** @var class-string */
+    private static $handler = FeedHandler::class;
+
     public static function setUpBeforeClass(): void
     {
         Config::set('full_url', '/cops/');
@@ -89,7 +92,7 @@ class OpdsRendererTest extends TestCase
         if ($res != '') {
             if ($expected) {
                 copy($feed, $feed . '.bad');
-                echo 'OPDS validation error: ' . $res;
+                echo 'OPDS 1.2 validation error: ' . $res;
             }
             return false;
         } else {
@@ -149,7 +152,7 @@ class OpdsRendererTest extends TestCase
         $page = PageId::INDEX;
 
         Config::set('subtitle_default', "My subtitle");
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
 
         $currentPage = PageId::getPage($page, $request);
 
@@ -162,7 +165,7 @@ class OpdsRendererTest extends TestCase
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED, self::OPDS_RELAX_NG, false));
@@ -181,7 +184,7 @@ class OpdsRendererTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('providerPage')]
     public function testMostPages($page, $query)
     {
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
         $request->set('query', $query);
         //$_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
@@ -221,7 +224,7 @@ class OpdsRendererTest extends TestCase
             "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::INDEX;
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
@@ -238,7 +241,7 @@ class OpdsRendererTest extends TestCase
 
     public function testOpenSearchDescription(): void
     {
-        $request = FeedHandler::request(['page', PageId::OPENSEARCH]);
+        $request = self::$handler::request(['page', PageId::OPENSEARCH]);
 
         $OPDSRender = new OpdsRenderer();
 
@@ -253,7 +256,7 @@ class OpdsRendererTest extends TestCase
             "One book" => __DIR__ . "/BaseWithOneBook/"]);
         Database::clearDb();
         $page = PageId::AUTHOR_DETAIL;
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
         $request->set('id', "1");
         $request->set('db', "0");
 
@@ -274,7 +277,7 @@ class OpdsRendererTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('max_item_per_page', 2);
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
         $request->set('id', "1");
         $request->set('n', "1");
 
@@ -308,7 +311,7 @@ class OpdsRendererTest extends TestCase
         $page = PageId::AUTHOR_DETAIL;
 
         Config::set('books_filter', ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"]);
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
         $request->set('id', "1");
         $request->set('tag', "Short Stories");
 
@@ -327,7 +330,7 @@ class OpdsRendererTest extends TestCase
     {
         $page = PageId::AUTHOR_DETAIL;
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
-        $request = FeedHandler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page]);
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);

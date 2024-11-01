@@ -20,6 +20,7 @@ use SebLucas\Cops\Output\Response;
 class MailHandler extends BaseHandler
 {
     public const HANDLER = "mail";
+    public const PREFIX = "/mail";
 
     public static function getRoutes()
     {

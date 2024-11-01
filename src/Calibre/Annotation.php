@@ -19,6 +19,9 @@ class Annotation extends Base
     public const PAGE_ALL = PageId::ALL_ANNOTATIONS;
     public const PAGE_BOOK = PageId::ANNOTATIONS_BOOK;
     public const PAGE_DETAIL = PageId::ANNOTATION_DETAIL;
+    public const ROUTE_ALL = "restapi-annotations";
+    public const ROUTE_BOOK = "restapi-annotations-book";
+    public const ROUTE_DETAIL = "restapi-annotation";
     public const SQL_TABLE = "annotations";
     public const SQL_LINK_TABLE = "annotations";
     public const SQL_LINK_COLUMN = "id";
@@ -68,7 +71,7 @@ class Annotation extends Base
     {
         $params['bookId'] = $this->book;
         $params['id'] = $this->id;
-        return RestApiHandler::getResourceLink($this::class, $params);
+        return $this->handler::resource($this::class, $params);
     }
 
     /**

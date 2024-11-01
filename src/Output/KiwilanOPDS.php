@@ -54,9 +54,9 @@ class KiwilanOPDS
             author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
             authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
             iconUrl: CopsConfig::get(name: 'icon'),
-            startUrl: OpdsHandler::generate('opds'),
+            startUrl: OpdsHandler::route('opds'),
             // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
-            searchUrl: OpdsHandler::generate('opds-search'),
+            searchUrl: OpdsHandler::route('opds-search'),
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
             maxItemsPerPage: CopsConfig::get('max_item_per_page'),
@@ -159,7 +159,7 @@ class KiwilanOPDS
     {
         $opds = Opds::make($this->getOpdsConfig())
             ->title('Search')
-            ->url(OpdsHandler::generate('opds-search'))
+            ->url(OpdsHandler::route('opds-search'))
             ->isSearch()
             ->feeds([])
             ->get();
@@ -184,7 +184,7 @@ class KiwilanOPDS
             }
         }
         // @todo check with pathInfo
-        $url = OpdsHandler::getLink($request->urlParams);
+        $url = OpdsHandler::link($request->urlParams);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {

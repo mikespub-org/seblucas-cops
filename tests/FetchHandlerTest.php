@@ -32,6 +32,8 @@ class FetchHandlerTest extends TestCase
         'file' => 12,
         'zipped' => 344,
     ];
+    /** @var class-string */
+    private static $handler = TestHandler::class;
 
     public static function setUpBeforeClass(): void
     {
@@ -42,7 +44,7 @@ class FetchHandlerTest extends TestCase
     public function testCover(): void
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['id' => 17], TestHandler::class);
+        $request = Request::build(['id' => 17], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -59,7 +61,7 @@ class FetchHandlerTest extends TestCase
     public function testThumb(): void
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['id' => 17, 'thumb' => 'html'], TestHandler::class);
+        $request = Request::build(['id' => 17, 'thumb' => 'html'], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -76,7 +78,7 @@ class FetchHandlerTest extends TestCase
     public function testView(): void
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub', 'view' => 1], TestHandler::class);
+        $request = Request::build(['data' => 20, 'type' => 'epub', 'view' => 1], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -93,7 +95,7 @@ class FetchHandlerTest extends TestCase
     public function testFetch(): void
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -113,7 +115,7 @@ class FetchHandlerTest extends TestCase
         Config::set('update_epub-metadata', '1');
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -137,7 +139,7 @@ class FetchHandlerTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = "Kobo";
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -164,7 +166,7 @@ class FetchHandlerTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = "Kobo";
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], TestHandler::class);
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -187,7 +189,7 @@ class FetchHandlerTest extends TestCase
     public function testFile(): void
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['id' => 17, 'file' => 'hello.txt'], TestHandler::class);
+        $request = Request::build(['id' => 17, 'file' => 'hello.txt'], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -204,7 +206,7 @@ class FetchHandlerTest extends TestCase
     public function testZipped(): void
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['id' => 17, 'file' => 'zipped'], TestHandler::class);
+        $request = Request::build(['id' => 17, 'file' => 'zipped'], self::$handler);
         $handler = Framework::createHandler('fetch');
 
         ob_start();

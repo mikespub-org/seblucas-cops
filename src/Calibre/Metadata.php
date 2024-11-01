@@ -20,6 +20,9 @@ use JsonException;
  */
 class Metadata
 {
+    public const ROUTE_DETAIL = "restapi-metadata";
+    public const ROUTE_ELEMENT = "restapi-metadata-element";
+    public const ROUTE_ELEMENT_NAME = "restapi-metadata-element-name";
     public string $uniqueIdentifier;
     public string $version;
     /** @var array<mixed> */

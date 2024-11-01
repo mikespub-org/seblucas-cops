@@ -143,11 +143,11 @@ class CustomColumnTypeDate extends CustomColumnType
 
     /**
      * Summary of getCountByYear
-     * @param mixed $page can be $columnType::PAGE_ALL or $columnType::PAGE_DETAIL
+     * @param mixed $routeName can be $columnType::ROUTE_ALL or $columnType::ROUTE_DETAIL
      * @param ?string $sort
      * @return array<Entry>
      */
-    public function getCountByYear($page, $sort = null)
+    public function getCountByYear($routeName, $sort = null)
     {
         $queryFormat = "SELECT substr(date(value), 1, 4) AS groupid, count(*) AS count FROM {0} GROUP BY groupid";
         if (!empty($sort) && $sort == 'count') {
@@ -162,7 +162,8 @@ class CustomColumnTypeDate extends CustomColumnType
         $label = 'year';
         while ($post = $result->fetchObject()) {
             $params = ['custom' => $this->customId, 'year' => $post->groupid, 'db' => $this->databaseId];
-            $href = Route::link($this->handler, $page, $params);
+            // @todo if we want to use ROUTE_DETAIL we need to add id= here
+            $href = $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->getEntryId() . ':' . $label . ':' . $post->groupid,

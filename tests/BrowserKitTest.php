@@ -177,7 +177,7 @@ class BrowserKitTest extends TestCase
         $uri = Route::link() . '/index';
         $crawler = $this->url($uri);
 
-        $uri = JsonHandler::getLink() . '/index?complete=1';
+        $uri = JsonHandler::link() . '/index?complete=1';
 
         $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . Route::path("templates") . '");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();

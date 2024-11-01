@@ -20,6 +20,7 @@ use SebLucas\Cops\Output\Response;
 class CalResHandler extends BaseHandler
 {
     public const HANDLER = "calres";
+    public const PREFIX = "/calres";
     public const PARAMLIST = ["db", "alg", "digest"];
 
     public static function getRoutes()

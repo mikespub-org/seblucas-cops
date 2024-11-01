@@ -9,9 +9,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
@@ -25,6 +23,9 @@ abstract class Base
     public const PAGE_ALL = 0;
     public const PAGE_DETAIL = 0;
     public const PAGE_LETTER = 0;
+    public const ROUTE_ALL = "";
+    public const ROUTE_DETAIL = "";
+    public const ROUTE_LETTER = "";
     public const SQL_TABLE = "bases";
     public const SQL_LINK_TABLE = "books_bases_link";
     public const SQL_LINK_COLUMN = "base";
@@ -87,7 +88,7 @@ abstract class Base
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
         $params['title'] = $this->getTitle();
-        return Route::link($this->handler, static::PAGE_DETAIL, $params);
+        return $this->handler::route(static::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -99,7 +100,7 @@ abstract class Base
     {
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        return Route::link($this->handler, static::PAGE_ALL, $params);
+        return $this->handler::route(static::ROUTE_ALL, $params);
     }
 
     /**
@@ -557,7 +558,7 @@ abstract class Base
             $numberOfString = static::SQL_TABLE . ".alphabetical";
         }
         $params["db"] ??= $database;
-        $href = Route::link($handler, static::PAGE_ALL, $params);
+        $href = $handler::route(static::ROUTE_ALL, $params);
         $entry = new Entry(
             localize(static::SQL_TABLE . ".title"),
             static::PAGE_ID,

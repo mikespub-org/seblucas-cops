@@ -21,6 +21,7 @@ use SebLucas\Cops\Output\FileResponse;
 
 class Resource
 {
+    public const ROUTE_DETAIL = "calres";
     // https://github.com/kovidgoyal/calibre/blob/master/src/calibre/gui2/dialogs/edit_category_notes.py
     public const IMAGE_EXTENSIONS = [
         'png' => 'image/png',
@@ -63,7 +64,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = $alg;
         $params['digest'] = $digest;
-        return CalResHandler::generate('calres', $params);
+        return $this->handler::route(static::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -80,7 +81,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = 'ALG';
         $params['digest'] = 'DIGEST';
-        $baseurl = CalResHandler::generate('calres', $params);
+        $baseurl = CalResHandler::route('calres', $params);
         // remove dummy alg & digest
         $baseurl = str_replace(['/ALG', '/DIGEST'], [], $baseurl);
         return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);

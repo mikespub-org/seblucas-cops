@@ -16,6 +16,8 @@ class Serie extends Category
     public const PAGE_ID = PageId::ALL_SERIES_ID;
     public const PAGE_ALL = PageId::ALL_SERIES;
     public const PAGE_DETAIL = PageId::SERIE_DETAIL;
+    public const ROUTE_ALL = "page-series";
+    public const ROUTE_DETAIL = "page-serie";
     public const SQL_TABLE = "series";
     public const SQL_LINK_TABLE = "books_series_link";
     public const SQL_LINK_COLUMN = "series";

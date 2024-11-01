@@ -18,6 +18,8 @@ class Preference
     public const PAGE_ID = PageId::ALL_PREFERENCES_ID;
     public const PAGE_ALL = PageId::ALL_PREFERENCES;
     public const PAGE_DETAIL = PageId::PREFERENCE_DETAIL;
+    public const ROUTE_ALL = "restapi-preferences";
+    public const ROUTE_DETAIL = "restapi-preference";
     public const SQL_TABLE = "preferences";
     public const SQL_COLUMNS = "id, key, val";
 
@@ -54,7 +56,7 @@ class Preference
     public function getUri($params = [])
     {
         $params['key'] = $this->key;
-        return RestApiHandler::getResourceLink($this::class, $params);
+        return $this->handler::resource($this::class, $params);
     }
 
     /**

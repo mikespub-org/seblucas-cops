@@ -18,6 +18,9 @@ class Note
     public const PAGE_ALL = PageId::ALL_NOTES;
     public const PAGE_TYPE = PageId::ALL_NOTES_TYPE;
     public const PAGE_DETAIL = PageId::NOTE_DETAIL;
+    public const ROUTE_ALL = "restapi-notes";
+    public const ROUTE_TYPE = "restapi-notes-type";
+    public const ROUTE_DETAIL = "restapi-note";
     public const ALLOWED_FIELDS = [
         'authors' => Author::class,
         //'languages' => Language::class,
@@ -61,7 +64,7 @@ class Note
     {
         $params['type'] = $this->colname;
         $params['item'] = $this->item;
-        return RestApiHandler::getResourceLink($this::class, $params);
+        return $this->handler::resource($this::class, $params);
     }
 
     /**
@@ -139,7 +142,7 @@ class Note
         while ($post = $result->fetchObject()) {
             $entries[$post->item] = (array) $post;
             // @todo add link to resource
-            //$link = RestApiHandler::getResourceLink(static::class, $params);
+            //$link = RestApiHandler::resource(static::class, $params);
         }
         $itemIdList = array_keys($entries);
         if (empty($itemIdList)) {
@@ -151,7 +154,7 @@ class Note
             if (array_key_exists($post->id, $entries)) {
                 $entries[$post->id]["title"] = $post->name;
                 // @todo add link to resource
-                //$link = RestApiHandler::getResourceLink(static::class, $params);
+                //$link = RestApiHandler::resource(static::class, $params);
             }
         }
         return $entries;
