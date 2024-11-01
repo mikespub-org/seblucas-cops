@@ -64,7 +64,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = $alg;
         $params['digest'] = $digest;
-        return $this->handler::route(static::ROUTE_DETAIL, $params);
+        return $this->handler::route(self::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -81,10 +81,10 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = 'ALG';
         $params['digest'] = 'DIGEST';
-        $baseurl = CalResHandler::route('calres', $params);
+        $baseurl = CalResHandler::route(self::ROUTE_DETAIL, $params);
         // remove dummy alg & digest
         $baseurl = str_replace(['/ALG', '/DIGEST'], [], $baseurl);
-        return str_replace(static::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);
+        return str_replace(self::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);
     }
 
     /**
@@ -114,7 +114,7 @@ class Resource
      */
     public static function sendImageResource($hash, $response, $name = null, $database = null)
     {
-        $path = static::getResourcePath($hash, $database);
+        $path = self::getResourcePath($hash, $database);
         if (empty($path)) {
             return null;
         }
@@ -124,10 +124,10 @@ class Resource
             $name = $info['name'];
         }
         $ext = strtolower(pathinfo((string) $name, PATHINFO_EXTENSION));
-        if (!array_key_exists($ext, static::IMAGE_EXTENSIONS)) {
+        if (!array_key_exists($ext, self::IMAGE_EXTENSIONS)) {
             return null;
         }
-        $mime = static::IMAGE_EXTENSIONS[$ext];
+        $mime = self::IMAGE_EXTENSIONS[$ext];
 
         $response->setHeaders($mime, 0);
         return $response->setFile($path, true);

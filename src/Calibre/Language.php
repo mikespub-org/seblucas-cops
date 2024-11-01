@@ -34,7 +34,7 @@ class Language extends Base
      */
     public function getTitle()
     {
-        return static::getLanguageString($this->name);
+        return self::getLanguageString($this->name);
     }
 
     /**
@@ -80,14 +80,14 @@ class Language extends Base
     public static function getLanguagesByBookId($bookId, $database = null)
     {
         $lang = [];
-        $query = 'select ' . static::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database) . '
             from books_languages_link, languages
             where books_languages_link.lang_code = languages.id
             and book = ?
             order by item_order';
         $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
-            array_push($lang, static::getLanguageString($post->name));
+            array_push($lang, self::getLanguageString($post->name));
         }
         return implode(', ', $lang);
     }

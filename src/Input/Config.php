@@ -51,7 +51,7 @@ class Config
     public static function load($values)
     {
         // some phpunit tests re-load the config so we merge here
-        static::$values = array_merge(static::$values, $values);
+        self::$values = array_merge(self::$values, $values);
     }
 
     /**
@@ -63,13 +63,13 @@ class Config
      */
     public static function get($name, $default = null)
     {
-        if (empty(static::$values)) {
+        if (empty(self::$values)) {
             throw new Exception('Config was not loaded correctly in config/config.php or config/test.php');
         }
-        if (array_key_exists(static::PREFIX . $name, static::$values)) {
-            return static::$values[static::PREFIX . $name];
+        if (array_key_exists(self::PREFIX . $name, self::$values)) {
+            return self::$values[self::PREFIX . $name];
         }
-        return static::$values[$name] ?? $default;
+        return self::$values[$name] ?? $default;
     }
 
     /**
@@ -80,7 +80,7 @@ class Config
      */
     public static function set($name, $value)
     {
-        static::$values[static::PREFIX . $name] = $value;
+        self::$values[self::PREFIX . $name] = $value;
     }
 
     /**
@@ -89,6 +89,6 @@ class Config
      */
     public static function dump()
     {
-        return static::$values;
+        return self::$values;
     }
 }

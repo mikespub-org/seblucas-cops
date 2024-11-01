@@ -53,7 +53,7 @@ class VirtualLibrary extends Base
         $params['db'] = $this->getDatabaseId();
         if (!empty($this->id)) {
             // URL format: ...&vl=2.Short_Stories_in_English
-            $params[static::URL_PARAM] = static::formatParameter($this->id, $this->getTitle());
+            $params[self::URL_PARAM] = self::formatParameter($this->id, $this->getTitle());
         }
         // @todo keep as is for now
         return $this->handler::page($homepage, $params);
@@ -163,7 +163,7 @@ class VirtualLibrary extends Base
     {
         $libraries = self::getLibraries($database);
         $count = count($libraries);
-        return static::getCountEntry($count, $database, "libraries", $handler);
+        return self::getCountEntry($count, $database, "libraries", $handler);
     }
 
     /**
@@ -179,9 +179,9 @@ class VirtualLibrary extends Base
             // id = key position in array + 1
             $id = intval($id) - 1;
             $name = array_keys($libraries)[$id];
-            return static::getInstanceByName($name);
+            return self::getInstanceByName($name);
         }
-        $default = static::getDefaultName();
+        $default = self::getDefaultName();
         $post = (object) ['id' => null, 'name' => $default, 'value' => ''];
         return new self($post, $database);
     }

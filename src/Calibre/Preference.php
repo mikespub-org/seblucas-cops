@@ -67,7 +67,7 @@ class Preference
     public static function getInstances($database = null)
     {
         $preferences = [];
-        $query = 'select ' . static::SQL_COLUMNS . ' from ' . static::SQL_TABLE . ' order by key';
+        $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' order by key';
         $result = Database::query($query, [], $database);
         while ($post = $result->fetchObject()) {
             $preferences[$post->key] = new self($post, $database);
@@ -83,7 +83,7 @@ class Preference
      */
     public static function getInstanceByKey($key, $database = null)
     {
-        $query = 'select ' . static::SQL_COLUMNS . ' from ' . static::SQL_TABLE . ' where key = ?';
+        $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' where key = ?';
         $params = [$key];
         $result = Database::query($query, $params, $database);
         if ($post = $result->fetchObject()) {
@@ -105,7 +105,7 @@ class Preference
      */
     public static function getVirtualLibraries($database = null)
     {
-        return static::getInstanceByKey('virtual_libraries', $database);
+        return self::getInstanceByKey('virtual_libraries', $database);
     }
 
     /**
@@ -116,7 +116,7 @@ class Preference
     public static function getUserCategories($database = null)
     {
         // @todo investigate format
-        return static::getInstanceByKey('user_categories', $database);
+        return self::getInstanceByKey('user_categories', $database);
     }
 
     /**
@@ -130,6 +130,6 @@ class Preference
     public static function getSavedSearches($database = null)
     {
         // @todo map search string from saved search to filters
-        return static::getInstanceByKey('saved_searches', $database);
+        return self::getInstanceByKey('saved_searches', $database);
     }
 }

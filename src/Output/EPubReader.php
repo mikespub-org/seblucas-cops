@@ -24,6 +24,9 @@ use Exception;
  */
 class EPubReader extends BaseRenderer
 {
+    public const ROUTE_EPUBFS = EpubFsHandler::HANDLER;
+    public const ROUTE_ZIPFS = ZipFsHandler::HANDLER;
+
     public static string $template = "templates/epubreader.html";
     public static string $epubClass = EPub::class;
 
@@ -36,9 +39,10 @@ class EPubReader extends BaseRenderer
      */
     public static function getComponentContent($epub, $component, $params = [])
     {
+        $handler = EpubFsHandler::class;
         $data = $epub->component($component);
 
-        $callback = function ($m) use ($epub, $component, $params) {
+        $callback = function ($m) use ($epub, $component, $params, $handler) {
             $method = $m[1];
             $path = $m[2];
             $end = '';
@@ -58,7 +62,7 @@ class EPubReader extends BaseRenderer
                 return $method . "'#'" . $end;
             }
             $params['comp'] = $comp;
-            $out = $method . "'" . EpubFsHandler::route('epubfs', $params) . $hash . "'" . $end;
+            $out = $method . "'" . $handler::route(self::ROUTE_EPUBFS, $params) . $hash . "'" . $end;
             if ($end) {
                 return $out;
             }
@@ -89,10 +93,10 @@ class EPubReader extends BaseRenderer
         $db = $book->getDatabaseId() ?? 0;
         $params = ['data' => $idData, 'db' => $db];
 
-        $epub = new static::$epubClass($book->getFilePath('EPUB', $idData));
+        $epub = new self::$epubClass($book->getFilePath('EPUB', $idData));
         $epub->initSpineComponent();
 
-        $data = static::getComponentContent($epub, $component, $params);
+        $data = self::getComponentContent($epub, $component, $params);
 
         // get mimetype for $component from EPub manifest here
         $mimetype = $epub->componentContentType($component);
@@ -124,7 +128,7 @@ class EPubReader extends BaseRenderer
         }
 
         try {
-            $epub = new static::$epubClass($book->getFilePath('EPUB', $idData));
+            $epub = new self::$epubClass($book->getFilePath('EPUB', $idData));
             $epub->initSpineComponent();
         } catch (Exception $e) {
             return $e->getMessage();
@@ -135,13 +139,14 @@ class EPubReader extends BaseRenderer
         }, $epub->components()));
 
         $contents = implode(', ', array_map(function ($content) {
-            return static::addContentItem($content);
+            return self::addContentItem($content);
         }, $epub->contents()));
 
+        $handler = EpubFsHandler::class;
         // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
         $db = $book->getDatabaseId() ?? 0;
         $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
-        $link = str_replace('COMPONENT', '~COMP~', EpubFsHandler::route('epubfs', $params));
+        $link = str_replace('COMPONENT', '~COMP~', $handler::route(self::ROUTE_EPUBFS, $params));
 
         $data = [
             'title'      => $book->title,
@@ -154,7 +159,7 @@ class EPubReader extends BaseRenderer
             'link'       => $link,
         ];
 
-        return Format::template($data, static::$template);
+        return Format::template($data, self::$template);
     }
 
     /**
@@ -168,7 +173,7 @@ class EPubReader extends BaseRenderer
             return "{title: '" . addslashes((string) $item['title']) . "', src: '" . $item['src'] . "'}";
         }
         foreach (array_keys($item['children']) as $idx) {
-            $item['children'][$idx] = static::addContentItem($item['children'][$idx]);
+            $item['children'][$idx] = self::addContentItem($item['children'][$idx]);
         }
         return "{title: '" . addslashes((string) $item['title']) . "', src: '" . $item['src'] . "', children: [" . implode(', ', $item['children']) . "]}";
     }
@@ -180,7 +185,7 @@ class EPubReader extends BaseRenderer
      */
     public static function encode($src)
     {
-        $encodeReplace = static::$epubClass::$encodeNameReplace;
+        $encodeReplace = self::$epubClass::$encodeNameReplace;
         return str_replace(
             $encodeReplace[0],
             $encodeReplace[1],
@@ -195,7 +200,7 @@ class EPubReader extends BaseRenderer
      */
     public static function decode($src)
     {
-        $decodeReplace = static::$epubClass::$decodeNameReplace;
+        $decodeReplace = self::$epubClass::$decodeNameReplace;
         return str_replace(
             $decodeReplace[0],
             $decodeReplace[1],
@@ -227,10 +232,11 @@ class EPubReader extends BaseRenderer
             if (!$epub || !file_exists($epub)) {
                 throw new Exception('Unknown file ' . $epub);
             }
+            $handler = ZipFsHandler::class;
             // URL format: index.php/zipfs/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
             $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
-            $link = ZipFsHandler::route('zipfs', $params);
+            $link = $handler::route(self::ROUTE_ZIPFS, $params);
             $link = str_replace('COMPONENT', '', $link);
         }
         // Configurable settings (javascript object as text)

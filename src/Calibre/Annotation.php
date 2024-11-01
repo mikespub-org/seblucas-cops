@@ -110,7 +110,7 @@ class Annotation extends Base
     public static function getInstancesByBookId($bookId, $database = null)
     {
         // @todo filter by format, user, annotType etc.
-        $query = 'select ' . static::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database) . '
 from annotations
 where book = ?';
         $result = Database::query($query, [$bookId], $database);

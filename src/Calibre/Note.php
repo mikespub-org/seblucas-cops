@@ -127,7 +127,7 @@ class Note
      */
     public static function getEntriesByType($type, $database = null)
     {
-        if (!array_key_exists($type, static::ALLOWED_FIELDS)) {
+        if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return [];
         }
         $notesDb = Database::getNotesDb($database);
@@ -142,7 +142,7 @@ class Note
         while ($post = $result->fetchObject()) {
             $entries[$post->item] = (array) $post;
             // @todo add link to resource
-            //$link = RestApiHandler::resource(static::class, $params);
+            //$link = RestApiHandler::resource(self::class, $params);
         }
         $itemIdList = array_keys($entries);
         if (empty($itemIdList)) {
@@ -154,7 +154,7 @@ class Note
             if (array_key_exists($post->id, $entries)) {
                 $entries[$post->id]["title"] = $post->name;
                 // @todo add link to resource
-                //$link = RestApiHandler::resource(static::class, $params);
+                //$link = RestApiHandler::resource(self::class, $params);
             }
         }
         return $entries;
@@ -169,7 +169,7 @@ class Note
      */
     public static function getInstanceByTypeId($type, $id, $database = null)
     {
-        if (!array_key_exists($type, static::ALLOWED_FIELDS)) {
+        if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return null;
         }
         $notesDb = Database::getNotesDb($database);

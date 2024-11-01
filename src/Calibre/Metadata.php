@@ -103,7 +103,7 @@ class Metadata
             return false;
         }
         $content = file_get_contents($file);
-        return static::parseData($content);
+        return self::parseData($content);
     }
 
     /**
@@ -114,13 +114,13 @@ class Metadata
     {
         $doc = new DOMDocument();
         $doc->loadXML($data);
-        $root = static::getNode($doc, 'package');
+        $root = self::getNode($doc, 'package');
 
         $package = new self();
-        $package->uniqueIdentifier = static::getAttr($root, 'unique-identifier');
-        $package->version = static::getAttr($root, 'version');
-        $package->metadata = static::addNode(static::getNode($root, 'metadata'));
-        $package->guide = static::addNode(static::getNode($root, 'guide'));
+        $package->uniqueIdentifier = self::getAttr($root, 'unique-identifier');
+        $package->version = self::getAttr($root, 'version');
+        $package->metadata = self::addNode(self::getNode($root, 'metadata'));
+        $package->guide = self::addNode(self::getNode($root, 'guide'));
         return $package;
     }
 

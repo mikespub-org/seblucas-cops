@@ -131,7 +131,7 @@ class BookList
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return Database::countFilter(static::SQL_BOOKS_ALL, 'count(*)', $filterString, $params, $this->databaseId);
+        return Database::countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params, $this->databaseId);
     }
 
     /**
@@ -165,7 +165,7 @@ class BookList
         );
         array_push($result, $entry);
         if (Config::get('recentbooks_limit') > 0) {
-            $href = $this->handler::route(static::ROUTE_RECENT, $params);
+            $href = $this->handler::route(self::ROUTE_RECENT, $params);
             $count = ($nBooks > Config::get('recentbooks_limit')) ? Config::get('recentbooks_limit') : $nBooks;
             $entry = new Entry(
                 localize('recent.title'),
@@ -294,7 +294,7 @@ class BookList
             PageQueryResult::SCOPE_BOOK] as $key) {
             if (in_array($key, $ignoredCategories) ||
                 (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
-                $critArray[$i] = static::BAD_SEARCH;
+                $critArray[$i] = self::BAD_SEARCH;
             } else {
                 if (array_key_exists($key, $queryScope)) {
                     $critArray[$i] = $queryScope[$key];
@@ -304,7 +304,7 @@ class BookList
             }
             $i++;
         }
-        return $this->getEntryArray(static::SQL_BOOKS_QUERY, $critArray, $n);
+        return $this->getEntryArray(self::SQL_BOOKS_QUERY, $critArray, $n);
     }
 
     /**
@@ -314,7 +314,7 @@ class BookList
      */
     public function getAllBooks($n = 1)
     {
-        [$entryArray, $totalNumber] = $this->getEntryArray(static::SQL_BOOKS_ALL, [], $n);
+        [$entryArray, $totalNumber] = $this->getEntryArray(self::SQL_BOOKS_ALL, [], $n);
         return [$entryArray, $totalNumber];
     }
 
@@ -324,7 +324,7 @@ class BookList
      */
     public function getCountByFirstLetter()
     {
-        return $this->getCountByGroup('substr(upper(books.sort), 1, 1)', static::ROUTE_LETTER, 'letter');
+        return $this->getCountByGroup('substr(upper(books.sort), 1, 1)', self::ROUTE_LETTER, 'letter');
     }
 
     /**
@@ -333,7 +333,7 @@ class BookList
      */
     public function getCountByPubYear()
     {
-        return $this->getCountByGroup('substr(date(books.pubdate), 1, 4)', static::ROUTE_YEAR, 'year');
+        return $this->getCountByGroup('substr(date(books.pubdate), 1, 4)', self::ROUTE_YEAR, 'year');
     }
 
     /**
@@ -386,7 +386,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
      */
     public function getBooksByFirstLetter($letter, $n)
     {
-        return $this->getEntryArray(static::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n);
+        return $this->getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n);
     }
 
     /**
@@ -397,7 +397,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
      */
     public function getBooksByPubYear($year, $n)
     {
-        return $this->getEntryArray(static::SQL_BOOKS_BY_PUB_YEAR, [$year], $n);
+        return $this->getEntryArray(self::SQL_BOOKS_BY_PUB_YEAR, [$year], $n);
     }
 
     /**
@@ -406,7 +406,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
      */
     public function getAllRecentBooks()
     {
-        [$entryArray, ] = $this->getEntryArray(static::SQL_BOOKS_RECENT . Config::get('recentbooks_limit'), [], -1);
+        [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . Config::get('recentbooks_limit'), [], -1);
         return $entryArray;
     }
 
@@ -435,7 +435,8 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         /** @var \PDOStatement $result */
         [$totalNumber, $result] = Database::queryTotal($query, Book::getBookColumns(), $filterString, $params, $n, $this->databaseId, $this->numberPerPage);
 
-        if (static::BATCH_QUERY) {
+        /** @phpstan-ignore-next-line */
+        if (self::BATCH_QUERY) {
             return $this->batchQuery($totalNumber, $result);
         }
         $entryArray = [];

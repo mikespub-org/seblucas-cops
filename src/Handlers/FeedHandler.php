@@ -24,6 +24,7 @@ class FeedHandler extends BaseHandler
     public const HANDLER = "feed";
     public const PREFIX = "/feed";
     public const PARAMLIST = ["page", "id", "path"];
+    public const SEARCH = "feed-search";
 
     public static function getRoutes()
     {

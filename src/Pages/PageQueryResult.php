@@ -85,24 +85,24 @@ class PageQueryResult extends Page
             $req = Request::build([], $this->handler);
         }
         switch ($scope) {
-            case static::SCOPE_BOOK :
+            case self::SCOPE_BOOK :
                 $booklist = new BookList($req, $database, $numberPerPage);
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
-            case static::SCOPE_AUTHOR :
+            case self::SCOPE_AUTHOR :
                 $baselist = new BaseList(Author::class, $req, $database, $numberPerPage);
                 // we need to repeat the query x 2 here because Author checks both name and sort fields
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
-            case static::SCOPE_SERIES :
+            case self::SCOPE_SERIES :
                 $baselist = new BaseList(Serie::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
-            case static::SCOPE_TAG :
+            case self::SCOPE_TAG :
                 $baselist = new BaseList(Tag::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
-            case static::SCOPE_PUBLISHER :
+            case self::SCOPE_PUBLISHER :
                 $baselist = new BaseList(Publisher::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
@@ -218,7 +218,7 @@ class PageQueryResult extends Page
      */
     public function initializeContent()
     {
-        $this->idPage = static::PAGE_ID;
+        $this->idPage = self::PAGE_ID;
         $scope = $this->request->get("scope");
         if (empty($scope)) {
             $this->title = str_format(localize("search.result"), $this->query);

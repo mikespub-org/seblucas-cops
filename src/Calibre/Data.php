@@ -17,6 +17,8 @@ use SebLucas\Cops\Output\Response;
 
 class Data
 {
+    public const ROUTE_DATA = "fetch-data";
+    public const ROUTE_INLINE = "fetch-inline";
     public const SQL_TABLE = "data";
     public const SQL_COLUMNS = "id, name, format";
     public const SQL_LINK_TABLE = "data";
@@ -125,7 +127,7 @@ class Data
      */
     public function isKnownType()
     {
-        return array_key_exists($this->extension, static::$mimetypes);
+        return array_key_exists($this->extension, self::$mimetypes);
     }
 
     /**
@@ -135,7 +137,7 @@ class Data
     public function getMimeType()
     {
         if ($this->isKnownType()) {
-            return static::$mimetypes[$this->extension];
+            return self::$mimetypes[$this->extension];
         }
         $default = "application/octet-stream";
         return Response::getMimeType($this->getLocalPath()) ?? $default;
@@ -204,7 +206,7 @@ class Data
             return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
-        return static::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
+        return self::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
     }
 
     /**
@@ -311,10 +313,10 @@ class Data
             $params['db'] ??= 0;
             $params['type'] = $type;
             $params['data'] = $idData;
-            $routeName = 'fetch-data';
+            $routeName = self::ROUTE_DATA;
             if ($view) {
                 $params['view'] = 1;
-                $routeName = 'fetch-inline';
+                $routeName = self::ROUTE_INLINE;
             }
             return new LinkEntry(
                 FetchHandler::route($routeName, $params),

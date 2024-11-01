@@ -25,7 +25,7 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     protected function __construct($customId, $database = null, $displaySettings = [])
     {
-        parent::__construct($customId, static::TYPE_FLOAT, $database, $displaySettings);
+        parent::__construct($customId, self::TYPE_FLOAT, $database, $displaySettings);
     }
 
     /**
@@ -36,10 +36,10 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function getQuery($id)
     {
         if (empty($id) && strval($id) !== '0.0' && in_array("custom", Config::get('show_not_set_filter'))) {
-            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(static::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 
@@ -52,12 +52,12 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function getQueryByRange($range)
     {
         $matches = [];
-        if (!preg_match(static::GET_PATTERN, $range, $matches)) {
+        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
             throw new UnexpectedValueException();
         }
         $lower = $matches[1];
         $upper = $matches[2];
-        $query = str_format(static::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
         return [$query, [$lower, $upper]];
     }
 

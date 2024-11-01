@@ -16,6 +16,8 @@ use SebLucas\Cops\Input\Route;
 
 class HtmlRenderer extends BaseRenderer
 {
+    public const ROUTE_FEED = FeedHandler::HANDLER;
+
     /**
      * Summary of getTemplateData
      * @param Request $request
@@ -26,7 +28,7 @@ class HtmlRenderer extends BaseRenderer
         $data = [
             'title'                 => Config::get('title_default'),
             'version'               => Config::VERSION,
-            'opds_url'              => FeedHandler::route('feed'),
+            'opds_url'              => FeedHandler::route(self::ROUTE_FEED),
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),

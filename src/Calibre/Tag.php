@@ -61,7 +61,7 @@ class Tag extends Category
     public static function getInstancesByBookId($bookId, $database = null)
     {
         $tags = [];
-        $query = 'select ' . static::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database) . '
             from books_tags_link, tags
             where tag = tags.id
             and book = ?

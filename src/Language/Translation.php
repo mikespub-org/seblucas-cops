@@ -120,7 +120,7 @@ class Translation
         }
         $lang_file = null;
         foreach ($langs as $language => $val) {
-            $temp_file = static::BASE_DIR . '/Localization_' . $language . '.json';
+            $temp_file = self::BASE_DIR . '/Localization_' . $language . '.json';
             if (file_exists($temp_file)) {
                 $lang = $language;
                 $lang_file = $temp_file;
@@ -128,7 +128,7 @@ class Translation
             }
         }
         if (empty($lang_file)) {
-            $lang_file = static::BASE_DIR . '/Localization_' . $lang . '.json';
+            $lang_file = self::BASE_DIR . '/Localization_' . $lang . '.json';
         }
         return [$lang, $lang_file];
     }
@@ -163,7 +163,7 @@ class Translation
             $lang_file_en = null;
             [$lang, $lang_file] = $this->getLangAndTranslationFile();
             if ($lang != 'en') {
-                $lang_file_en = static::BASE_DIR . '/Localization_en.json';
+                $lang_file_en = self::BASE_DIR . '/Localization_en.json';
             }
 
             $lang_file_content = file_get_contents($lang_file);
@@ -219,11 +219,11 @@ class Translation
         }
 
         // see https://www.drupal.org/project/rename_admin_paths/issues/3275140 for different order
-        if (!isset(static::$transliterator)) {
-            //static::$transliterator = transliterator_create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
-            static::$transliterator = transliterator_create("Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;");
+        if (!isset(self::$transliterator)) {
+            //self::$transliterator = transliterator_create("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC;");
+            self::$transliterator = transliterator_create("Any-Latin; Latin-ASCII; NFD; [:Nonspacing Mark:] Remove; NFC;");
         }
-        return transliterator_transliterate(static::$transliterator, $s);
+        return transliterator_transliterate(self::$transliterator, $s);
     }
 
     /**
@@ -233,6 +233,6 @@ class Translation
      */
     public static function normAndUp($s)
     {
-        return mb_strtoupper(static::normalizeUtf8String($s), 'UTF-8');
+        return mb_strtoupper(self::normalizeUtf8String($s), 'UTF-8');
     }
 }

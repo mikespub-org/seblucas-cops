@@ -34,7 +34,7 @@ class CustomColumnTypeBool extends CustomColumnType
      */
     protected function __construct($customId, $database = null, $displaySettings = [])
     {
-        parent::__construct($customId, static::TYPE_BOOL, $database, $displaySettings);
+        parent::__construct($customId, self::TYPE_BOOL, $database, $displaySettings);
     }
 
     /**
@@ -45,13 +45,13 @@ class CustomColumnTypeBool extends CustomColumnType
     public function getQuery($id)
     {
         if ($id == -1 || $id === '') {
-            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 0) {
-            $query = str_format(static::SQL_BOOKLIST_FALSE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_FALSE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } elseif ($id == 1) {
-            $query = str_format(static::SQL_BOOKLIST_TRUE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_TRUE, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         } else {
             return null;

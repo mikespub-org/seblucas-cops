@@ -78,7 +78,7 @@ class Author extends Base
      */
     public static function getInstancesByBookId($bookId, $database = null)
     {
-        $query = 'select ' . static::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database) . '
 from authors, books_authors_link
 where author = authors.id
 and book = ? order by books_authors_link.id';

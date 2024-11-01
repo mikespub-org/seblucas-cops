@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Pages\PageId;
 
 /**
  * Summary of Response
@@ -20,6 +21,9 @@ use SebLucas\Cops\Input\Request;
 class Response
 {
     public const SYMFONY_RESPONSE = '\Symfony\Component\HttpFoundation\Response';
+
+    /** @var class-string */
+    public static $handler = HtmlHandler::class;
 
     protected int $statusCode = 200;
     protected ?string $mimetype;
@@ -221,7 +225,7 @@ class Response
         header('Status: 404 Not Found');
 
         $_SERVER['REDIRECT_STATUS'] = 404;
-        $data = ['link' => HtmlHandler::link()];
+        $data = ['link' => self::$handler::link()];
         $template = 'templates/notfound.html';
         echo Format::template($data, $template);
         exit;
@@ -240,7 +244,7 @@ class Response
         header('Status: 404 Not Found');
 
         $_SERVER['REDIRECT_STATUS'] = 404;
-        $data = ['link' => HtmlHandler::route('page-index', $params)];
+        $data = ['link' => self::$handler::route(PageId::ROUTE_INDEX, $params)];
         $data['error'] = htmlspecialchars($error ?? 'Unknown Error');
         $template = 'templates/error.html';
         echo Format::template($data, $template);

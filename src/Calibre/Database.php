@@ -24,6 +24,7 @@ class Database
     public const NOTES_DIR_NAME = '.calnotes';
     public const NOTES_DB_FILE = 'notes.db';
     public const NOTES_DB_NAME = 'notes_db';
+    public const ROUTE_CHECK = "check";
 
     /** @var ?PDO */
     protected static $db = null;
@@ -40,7 +41,7 @@ class Database
      */
     public static function getDbStatistics()
     {
-        return ['count' => static::$count, 'queries' => static::$queries];
+        return ['count' => self::$count, 'queries' => self::$queries];
     }
 
     /**
@@ -59,7 +60,7 @@ class Database
      */
     public static function useAbsolutePath($database)
     {
-        $path = static::getDbDirectory($database);
+        $path = self::getDbDirectory($database);
         return preg_match('/^\//', $path) || // Linux /
                preg_match('/^\w\:/', $path); // Windows X:
     }
@@ -71,7 +72,7 @@ class Database
      */
     public static function noDatabaseSelected($database)
     {
-        return static::isMultipleDatabaseEnabled() && is_null($database);
+        return self::isMultipleDatabaseEnabled() && is_null($database);
     }
 
     /**
@@ -80,7 +81,7 @@ class Database
      */
     public static function getDbList()
     {
-        if (static::isMultipleDatabaseEnabled()) {
+        if (self::isMultipleDatabaseEnabled()) {
             return Config::get('calibre_directory');
         } else {
             return ["" => Config::get('calibre_directory')];
@@ -93,7 +94,7 @@ class Database
      */
     public static function getDbNameList()
     {
-        if (static::isMultipleDatabaseEnabled()) {
+        if (self::isMultipleDatabaseEnabled()) {
             return array_keys(Config::get('calibre_directory'));
         } else {
             return [""];
@@ -107,7 +108,7 @@ class Database
      */
     public static function getDbName($database)
     {
-        if (static::isMultipleDatabaseEnabled()) {
+        if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
             }
@@ -124,7 +125,7 @@ class Database
      */
     public static function getDbDirectory($database)
     {
-        if (static::isMultipleDatabaseEnabled()) {
+        if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
             }
@@ -142,7 +143,7 @@ class Database
      */
     public static function getImgDirectory($database)
     {
-        if (static::isMultipleDatabaseEnabled()) {
+        if (self::isMultipleDatabaseEnabled()) {
             if (is_null($database)) {
                 $database = 0;
             }
@@ -159,7 +160,7 @@ class Database
      */
     public static function getDbFileName($database)
     {
-        return static::getDbDirectory($database) . static::CALIBRE_DB_FILE;
+        return self::getDbDirectory($database) . self::CALIBRE_DB_FILE;
     }
 
     /**
@@ -171,7 +172,7 @@ class Database
     protected static function error($database)
     {
         if (php_sapi_name() != "cli") {
-            Response::redirect(CheckHandler::route('check', ['err' => 1]));
+            Response::redirect(CheckHandler::route(self::ROUTE_CHECK, ['err' => 1]));
             exit;
         }
         throw new Exception("Database <{$database}> not found.");
@@ -184,26 +185,27 @@ class Database
      */
     public static function getDb($database = null)
     {
-        if (static::KEEP_STATS) {
-            static::$count += 1;
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            self::$count += 1;
         }
-        if (is_null(static::$db)) {
+        if (is_null(self::$db)) {
             try {
-                if (is_readable(static::getDbFileName($database))) {
-                    static::$db = new PDO('sqlite:' . static::getDbFileName($database));
-                    static::createSqliteFunctions();
-                    static::$dbFileName = static::getDbFileName($database);
-                    static::$functions = false;
+                if (is_readable(self::getDbFileName($database))) {
+                    self::$db = new PDO('sqlite:' . self::getDbFileName($database));
+                    self::createSqliteFunctions();
+                    self::$dbFileName = self::getDbFileName($database);
+                    self::$functions = false;
                 } else {
                     // this will call exit()
-                    static::error($database);
+                    self::error($database);
                 }
             } catch (Exception) {
                 // this will call exit()
-                static::error($database);
+                self::error($database);
             }
         }
-        return static::$db;
+        return self::$db;
     }
 
     /**
@@ -214,13 +216,13 @@ class Database
     {
         // Use normalized search function
         if (Translation::useNormAndUp()) {
-            static::$db->sqliteCreateFunction('normAndUp', function ($s) {
+            self::$db->sqliteCreateFunction('normAndUp', function ($s) {
                 return Translation::normAndUp($s);
             }, 1);
         }
         // Check if we need to add unixepoch() for notes_db.notes
         $sql = 'SELECT sqlite_version() as version;';
-        $stmt = static::$db->prepare($sql);
+        $stmt = self::$db->prepare($sql);
         $stmt->execute();
         if ($post = $stmt->fetchObject()) {
             if ($post->version >= '3.38') {
@@ -229,7 +231,7 @@ class Database
         }
         // @todo no support for actual datetime conversion here
         // mtime REAL DEFAULT (unixepoch('subsec')),
-        static::$db->sqliteCreateFunction('unixepoch', function ($s) {
+        self::$db->sqliteCreateFunction('unixepoch', function ($s) {
             if (!empty($s) && $s == 'subsec') {
                 return microtime(true);
             }
@@ -249,7 +251,7 @@ class Database
         // Attach the database file
         try {
             $sql = "ATTACH DATABASE '{$dbFileName}' AS {$attachDatabase};";
-            $stmt = static::$db->prepare($sql);
+            $stmt = self::$db->prepare($sql);
             $stmt->execute();
         } catch (Exception $e) {
             $error = sprintf('Cannot attach %s database [%s]: %s', $attachDatabase, $dbFileName, $e->getMessage());
@@ -264,19 +266,19 @@ class Database
      */
     public static function addSqliteFunctions($database)
     {
-        if (static::$functions) {
+        if (self::$functions) {
             return;
         }
-        static::getDb($database);
-        static::$functions = true;
+        self::getDb($database);
+        self::$functions = true;
         // add dummy functions for selecting in meta and tag_browser_* views
-        static::$db->sqliteCreateFunction('title_sort', function ($s) {
+        self::$db->sqliteCreateFunction('title_sort', function ($s) {
             return Format::getTitleSort($s);
         }, 1);
-        static::$db->sqliteCreateFunction('books_list_filter', function ($s) {
+        self::$db->sqliteCreateFunction('books_list_filter', function ($s) {
             return 1;
         }, 1);
-        static::$db->sqliteCreateAggregate('concat', function ($context, $row, $string) {
+        self::$db->sqliteCreateAggregate('concat', function ($context, $row, $string) {
             $context ??= [];
             $context[] = $string;
             return $context;
@@ -284,7 +286,7 @@ class Database
             $context ??= [];
             return implode(',', $context);
         }, 1);
-        static::$db->sqliteCreateAggregate('sortconcat', function ($context, $row, $id, $string) {
+        self::$db->sqliteCreateAggregate('sortconcat', function ($context, $row, $id, $string) {
             $context ??= [];
             $context[$id] = $string;
             return $context;
@@ -302,13 +304,13 @@ class Database
      */
     public static function checkDatabaseAvailability($database)
     {
-        if (static::noDatabaseSelected($database)) {
-            for ($i = 0; $i < count(static::getDbList()); $i++) {
-                static::getDb($i);
-                static::clearDb();
+        if (self::noDatabaseSelected($database)) {
+            for ($i = 0; $i < count(self::getDbList()); $i++) {
+                self::getDb($i);
+                self::clearDb();
             }
         } else {
-            static::getDb($database);
+            self::getDb($database);
         }
         return true;
     }
@@ -319,7 +321,7 @@ class Database
      */
     public static function clearDb()
     {
-        static::$db = null;
+        self::$db = null;
     }
 
     /**
@@ -330,10 +332,11 @@ class Database
      */
     public static function querySingle($query, $database = null)
     {
-        if (static::KEEP_STATS) {
-            array_push(static::$queries, $query);
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
         }
-        return static::getDb($database)->query($query)->fetchColumn();
+        return self::getDb($database)->query($query)->fetchColumn();
     }
 
 
@@ -346,14 +349,15 @@ class Database
      */
     public static function query($query, $params = [], $database = null)
     {
-        if (static::KEEP_STATS) {
-            array_push(static::$queries, $query);
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, $query);
         }
         if (count($params) > 0) {
-            $result = static::getDb($database)->prepare($query);
+            $result = self::getDb($database)->prepare($query);
             $result->execute($params);
         } else {
-            $result = static::getDb($database)->query($query);
+            $result = self::getDb($database)->query($query);
         }
         return $result;
     }
@@ -371,8 +375,9 @@ class Database
      */
     public static function queryTotal($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
-        if (static::KEEP_STATS) {
-            array_push(static::$queries, [$query, $columns, $filter]);
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, [$query, $columns, $filter]);
         }
         $totalResult = -1;
 
@@ -387,13 +392,13 @@ class Database
 
         if ($numberPerPage != -1 && $n != -1) {
             // First check total number of results
-            $totalResult = static::countFilter($query, 'count(*)', $filter, $params, $database);
+            $totalResult = self::countFilter($query, 'count(*)', $filter, $params, $database);
 
             // Next modify the query and params
             $query .= " limit ?, ?";
             array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
-        $result = static::getDb($database)->prepare(str_format($query, $columns, $filter));
+        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         return [$totalResult, $result];
     }
@@ -411,8 +416,9 @@ class Database
      */
     public static function queryFilter($query, $columns, $filter, $params, $n, $database = null, $numberPerPage = null)
     {
-        if (static::KEEP_STATS) {
-            array_push(static::$queries, [$query, $columns, $filter]);
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, [$query, $columns, $filter]);
         }
         if (Translation::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
@@ -429,7 +435,7 @@ class Database
             array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
 
-        $result = static::getDb($database)->prepare(str_format($query, $columns, $filter));
+        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         return $result;
     }
@@ -445,12 +451,13 @@ class Database
      */
     public static function countFilter($query, $columns = 'count(*)', $filter = '', $params = [], $database = null)
     {
-        if (static::KEEP_STATS) {
-            array_push(static::$queries, [$query, $columns, $filter]);
+        /** @phpstan-ignore-next-line */
+        if (self::KEEP_STATS) {
+            array_push(self::$queries, [$query, $columns, $filter]);
         }
         // assuming order by ... is at the end of the query here
         $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|).*$/i', '', $query);
-        $result = static::getDb($database)->prepare(str_format($query, $columns, $filter));
+        $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
         $totalResult = $result->fetchColumn();
         return $totalResult;
@@ -471,7 +478,7 @@ class Database
             $params[] = $type;
         }
         $entries = [];
-        $result = static::query($query, $params, $database);
+        $result = self::query($query, $params, $database);
         while ($post = $result->fetchObject()) {
             $entry = (array) $post;
             array_push($entries, $entry);
@@ -489,7 +496,7 @@ class Database
     {
         $query = "PRAGMA table_info({$name})";
         $params = [];
-        $result = static::query($query, $params, $database);
+        $result = self::query($query, $params, $database);
         $entries = [];
         while ($post = $result->fetchObject()) {
             $entry = (array) $post;
@@ -506,7 +513,7 @@ class Database
     public static function getUserVersion($database = null)
     {
         $query = "PRAGMA user_version";
-        $result = static::querySingle($query, $database);
+        $result = self::querySingle($query, $database);
         return $result;
     }
 
@@ -519,7 +526,7 @@ class Database
     {
         // PRAGMA database_list;
         $sql = 'select * from pragma_database_list;';
-        $stmt = static::getDb($database)->prepare($sql);
+        $stmt = self::getDb($database)->prepare($sql);
         $stmt->execute();
         $databases = [];
         while ($post = $stmt->fetchObject()) {
@@ -536,7 +543,7 @@ class Database
     public static function hasNotes($database = null)
     {
         // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
-        if (file_exists(dirname(static::getDbFileName($database)) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_FILE)) {
+        if (file_exists(dirname(self::getDbFileName($database)) . '/' . self::NOTES_DIR_NAME . '/' . self::NOTES_DB_FILE)) {
             return true;
         }
         return false;
@@ -549,19 +556,19 @@ class Database
      */
     public static function getNotesDb($database = null)
     {
-        if (!static::hasNotes($database)) {
+        if (!self::hasNotes($database)) {
             return null;
         }
         // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
-        $databases = static::getDatabaseList($database);
-        if (!empty($databases[static::NOTES_DB_NAME])) {
-            return static::getDb($database);
+        $databases = self::getDatabaseList($database);
+        if (!empty($databases[self::NOTES_DB_NAME])) {
+            return self::getDb($database);
         }
-        $notesFileName = dirname(static::getDbFileName($database)) . '/' . static::NOTES_DIR_NAME . '/' . static::NOTES_DB_FILE;
-        static::attachDatabase($notesFileName, static::NOTES_DB_NAME);
-        $databases = static::getDatabaseList($database);
-        if (!empty($databases[static::NOTES_DB_NAME])) {
-            return static::getDb($database);
+        $notesFileName = dirname(self::getDbFileName($database)) . '/' . self::NOTES_DIR_NAME . '/' . self::NOTES_DB_FILE;
+        self::attachDatabase($notesFileName, self::NOTES_DB_NAME);
+        $databases = self::getDatabaseList($database);
+        if (!empty($databases[self::NOTES_DB_NAME])) {
+            return self::getDb($database);
         }
         return null;
     }

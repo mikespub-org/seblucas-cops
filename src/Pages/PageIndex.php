@@ -34,7 +34,7 @@ class PageIndex extends Page
     public function initializeContent()
     {
         $this->getEntries();
-        $this->idPage = static::PAGE_ID;
+        $this->idPage = self::PAGE_ID;
         $this->title = Config::get('title_default');
         $this->subtitle = Config::get('subtitle_default');
     }

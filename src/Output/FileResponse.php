@@ -44,7 +44,7 @@ class FileResponse extends Response
         $this->istmpfile = $istmpfile;
         // detect mimetype from filepath here if needed
         if (empty($this->mimetype)) {
-            $this->mimetype = static::getMimeType($filepath);
+            $this->mimetype = self::getMimeType($filepath);
         }
         return $this;
     }

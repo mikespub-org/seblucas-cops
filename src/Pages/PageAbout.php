@@ -21,7 +21,7 @@ class PageAbout extends Page
      */
     public function initializeContent()
     {
-        $this->idPage = static::PAGE_ID;
+        $this->idPage = self::PAGE_ID;
         $this->title = localize("about.title");
     }
 

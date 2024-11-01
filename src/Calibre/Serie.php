@@ -51,7 +51,7 @@ class Serie extends Category
      */
     public static function getInstanceByBookId($bookId, $database = null)
     {
-        $query = 'select ' . static::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database) . '
 from books_series_link, series
 where series.id = series and book = ?';
         $result = Database::query($query, [$bookId], $database);

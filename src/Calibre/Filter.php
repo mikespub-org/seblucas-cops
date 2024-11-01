@@ -242,16 +242,16 @@ class Filter
         preg_match_all('/(?P<attr>#?\w+)\:(?P<value>\w+|"(?P<quoted>[^"]*)")/', $search, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
             // get search field
-            if (!array_key_exists($match['attr'], static::SEARCH_FIELDS)) {
+            if (!array_key_exists($match['attr'], self::SEARCH_FIELDS)) {
                 $match['attr'] .= 's';
-                if (!array_key_exists($match['attr'], static::SEARCH_FIELDS)) {
+                if (!array_key_exists($match['attr'], self::SEARCH_FIELDS)) {
                     throw new UnexpectedValueException('Unsupported search field: ' . $match['attr']);
                 }
             }
             // find exact match
             if (isset($match['quoted']) && str_starts_with($match['quoted'], '=')) {
                 $value = substr($match['quoted'], 1);
-                $className = static::SEARCH_FIELDS[$match['attr']];
+                $className = self::SEARCH_FIELDS[$match['attr']];
                 $instance = $className::getInstanceByName($value, $this->databaseId);
                 $filterString = $this->getLinkedIdFilter($instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
                 $replace = str_replace($match[0], $filterString, $replace);
@@ -500,7 +500,7 @@ class Filter
         $handler = $request->getHandler();
         $libraryId = $request->getVirtualLibrary();
         $entryArray = [];
-        foreach (static::URL_PARAMS as $paramName => $className) {
+        foreach (self::URL_PARAMS as $paramName => $className) {
             if ($className == VirtualLibrary::class) {
                 continue;
             }

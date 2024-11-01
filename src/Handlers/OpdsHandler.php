@@ -24,7 +24,8 @@ class OpdsHandler extends BaseHandler
 {
     public const HANDLER = "opds";
     public const PREFIX = "/opds";
-    public const PARAMLIST = ["page", "id"];
+    public const PARAMLIST = ["page", "id", "path"];
+    public const SEARCH = "opds-search";
 
     public static function getRoutes()
     {

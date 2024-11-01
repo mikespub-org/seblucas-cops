@@ -45,30 +45,30 @@ class RestApiHandler extends BaseHandler
         // Note: this supports all other routes with /restapi prefix
         // extra routes supported by REST API
         return [
-            "restapi-customtypes" => [static::PREFIX . "/custom", [static::RESOURCE => "CustomColumnType"]],
-            "restapi-database-table" => [static::PREFIX . "/databases/{db}/{name}", [static::RESOURCE => "Database"]],
-            "restapi-database" => [static::PREFIX . "/databases/{db}", [static::RESOURCE => "Database"]],
-            "restapi-databases" => [static::PREFIX . "/databases", [static::RESOURCE => "Database"]],
-            "restapi-openapi" => [static::PREFIX . "/openapi", [static::RESOURCE => "openapi"]],
-            "restapi-route" => [static::PREFIX . "/routes", [static::RESOURCE => "route"]],
-            "restapi-handler" => [static::PREFIX . "/handlers", [static::RESOURCE => "handler"]],
-            "restapi-note" => [static::PREFIX . "/notes/{type}/{id}/{title}", [static::RESOURCE => "Note"]],
-            "restapi-notes-type-id" => [static::PREFIX . "/notes/{type}/{id}", [static::RESOURCE => "Note"]],
-            "restapi-notes-type" => [static::PREFIX . "/notes/{type}", [static::RESOURCE => "Note"]],
-            "restapi-notes" => [static::PREFIX . "/notes", [static::RESOURCE => "Note"]],
-            "restapi-preference" => [static::PREFIX . "/preferences/{key}", [static::RESOURCE => "Preference"]],
-            "restapi-preferences" => [static::PREFIX . "/preferences", [static::RESOURCE => "Preference"]],
-            "restapi-annotation" => [static::PREFIX . "/annotations/{bookId}/{id}", [static::RESOURCE => "Annotation"]],
-            "restapi-annotations-book" => [static::PREFIX . "/annotations/{bookId}", [static::RESOURCE => "Annotation"]],
-            "restapi-annotations" => [static::PREFIX . "/annotations", [static::RESOURCE => "Annotation"]],
-            "restapi-metadata-element-name" => [static::PREFIX . "/metadata/{bookId}/{element}/{name}", [static::RESOURCE => "Metadata"]],
-            "restapi-metadata-element" => [static::PREFIX . "/metadata/{bookId}/{element}", [static::RESOURCE => "Metadata"]],
-            "restapi-metadata" => [static::PREFIX . "/metadata/{bookId}", [static::RESOURCE => "Metadata"]],
-            "restapi-user-details" => [static::PREFIX . "/user/details", [static::RESOURCE => "User"]],
-            "restapi-user" => [static::PREFIX . "/user", [static::RESOURCE => "User"]],
+            "restapi-customtypes" => [self::PREFIX . "/custom", [self::RESOURCE => "CustomColumnType"]],
+            "restapi-database-table" => [self::PREFIX . "/databases/{db}/{name}", [self::RESOURCE => "Database"]],
+            "restapi-database" => [self::PREFIX . "/databases/{db}", [self::RESOURCE => "Database"]],
+            "restapi-databases" => [self::PREFIX . "/databases", [self::RESOURCE => "Database"]],
+            "restapi-openapi" => [self::PREFIX . "/openapi", [self::RESOURCE => "openapi"]],
+            "restapi-route" => [self::PREFIX . "/routes", [self::RESOURCE => "route"]],
+            "restapi-handler" => [self::PREFIX . "/handlers", [self::RESOURCE => "handler"]],
+            "restapi-note" => [self::PREFIX . "/notes/{type}/{id}/{title}", [self::RESOURCE => "Note"]],
+            "restapi-notes-type-id" => [self::PREFIX . "/notes/{type}/{id}", [self::RESOURCE => "Note"]],
+            "restapi-notes-type" => [self::PREFIX . "/notes/{type}", [self::RESOURCE => "Note"]],
+            "restapi-notes" => [self::PREFIX . "/notes", [self::RESOURCE => "Note"]],
+            "restapi-preference" => [self::PREFIX . "/preferences/{key}", [self::RESOURCE => "Preference"]],
+            "restapi-preferences" => [self::PREFIX . "/preferences", [self::RESOURCE => "Preference"]],
+            "restapi-annotation" => [self::PREFIX . "/annotations/{bookId}/{id}", [self::RESOURCE => "Annotation"]],
+            "restapi-annotations-book" => [self::PREFIX . "/annotations/{bookId}", [self::RESOURCE => "Annotation"]],
+            "restapi-annotations" => [self::PREFIX . "/annotations", [self::RESOURCE => "Annotation"]],
+            "restapi-metadata-element-name" => [self::PREFIX . "/metadata/{bookId}/{element}/{name}", [self::RESOURCE => "Metadata"]],
+            "restapi-metadata-element" => [self::PREFIX . "/metadata/{bookId}/{element}", [self::RESOURCE => "Metadata"]],
+            "restapi-metadata" => [self::PREFIX . "/metadata/{bookId}", [self::RESOURCE => "Metadata"]],
+            "restapi-user-details" => [self::PREFIX . "/user/details", [self::RESOURCE => "User"]],
+            "restapi-user" => [self::PREFIX . "/user", [self::RESOURCE => "User"]],
             // add default routes for handler to generate links
-            "restapi-path" => [static::PREFIX . "/{path:.*}"],  // [static::RESOURCE => "path"]
-            //"restapi-none" => [static::PREFIX . ""],
+            "restapi-path" => [self::PREFIX . "/{path:.*}"],  // [self::RESOURCE => "path"]
+            //"restapi-none" => [self::PREFIX . ""],
         ];
     }
 
@@ -81,7 +81,7 @@ class RestApiHandler extends BaseHandler
     public static function addResourceParam($className, $params = [])
     {
         $classParts = explode('\\', $className);
-        $params[static::RESOURCE] ??= end($classParts);
+        $params[self::RESOURCE] ??= end($classParts);
         return $params;
     }
 
@@ -97,8 +97,8 @@ class RestApiHandler extends BaseHandler
         if (Route::KEEP_STATS) {
             Route::$counters['resource'] += 1;
         }
-        $params = static::addResourceParam($className, $params);
-        return static::link($params);
+        $params = self::addResourceParam($className, $params);
+        return self::link($params);
     }
 
     /**
@@ -116,10 +116,10 @@ class RestApiHandler extends BaseHandler
         }
         // use page route with /restapi prefix instead
         $handler ??= Route::getHandler('html');
-        $params[Route::HANDLER_PARAM] = static::class;
+        $params[Route::HANDLER_PARAM] = self::class;
         $link = Route::process($handler, $page, $params);
         return $link;
-        //return str_replace(Route::base() . Route::endpoint(), static::getBaseUrl(), $link);
+        //return str_replace(Route::base() . Route::endpoint(), self::getBaseUrl(), $link);
     }
 
     /**
@@ -128,12 +128,12 @@ class RestApiHandler extends BaseHandler
      */
     public static function getBaseUrl()
     {
-        if (!isset(static::$baseUrl)) {
-            // Route::link(static::class) doesn't contain prefix anymore without route
-            $link = static::link(['path' => 'PATH']);
-            static::$baseUrl = str_replace('/PATH', '', $link);
+        if (!isset(self::$baseUrl)) {
+            // Route::link(self::class) doesn't contain prefix anymore without route
+            $link = self::link(['path' => 'PATH']);
+            self::$baseUrl = str_replace('/PATH', '', $link);
         }
-        return static::$baseUrl;
+        return self::$baseUrl;
     }
 
     public function handle($request)
@@ -169,7 +169,7 @@ class RestApiHandler extends BaseHandler
      */
     public function getSwaggerUI()
     {
-        $data = ['link' => static::link([static::RESOURCE => 'openapi'])];
+        $data = ['link' => self::link([self::RESOURCE => 'openapi'])];
         $template = dirname(__DIR__, 2) . '/templates/restapi.html';
 
         $response = new Response('text/html;charset=utf-8');

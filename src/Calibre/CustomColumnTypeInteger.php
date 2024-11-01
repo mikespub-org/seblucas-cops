@@ -30,8 +30,8 @@ class CustomColumnTypeInteger extends CustomColumnType
     protected function __construct($customId, $datatype = self::TYPE_INT, $database = null, $displaySettings = [])
     {
         match ($datatype) {
-            static::TYPE_INT => parent::__construct($customId, static::TYPE_INT, $database, $displaySettings),
-            static::TYPE_FLOAT => parent::__construct($customId, static::TYPE_FLOAT, $database, $displaySettings),
+            self::TYPE_INT => parent::__construct($customId, self::TYPE_INT, $database, $displaySettings),
+            self::TYPE_FLOAT => parent::__construct($customId, self::TYPE_FLOAT, $database, $displaySettings),
             default => throw new UnexpectedValueException(),
         };
     }
@@ -44,10 +44,10 @@ class CustomColumnTypeInteger extends CustomColumnType
     public function getQuery($id)
     {
         if (empty($id) && strval($id) !== '0' && in_array("custom", Config::get('show_not_set_filter'))) {
-            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(static::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 
@@ -60,12 +60,12 @@ class CustomColumnTypeInteger extends CustomColumnType
     public function getQueryByRange($range)
     {
         $matches = [];
-        if (!preg_match(static::GET_PATTERN, $range, $matches)) {
+        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
             throw new UnexpectedValueException();
         }
         $lower = $matches[1];
         $upper = $matches[2];
-        $query = str_format(static::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
         return [$query, [$lower, $upper]];
     }
 
@@ -181,7 +181,7 @@ class CustomColumnTypeInteger extends CustomColumnType
     public function getCustomValuesByRange($range, $sort = null)
     {
         $matches = [];
-        if (!preg_match(static::GET_PATTERN, $range, $matches)) {
+        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
             throw new UnexpectedValueException();
         }
         $lower = $matches[1];

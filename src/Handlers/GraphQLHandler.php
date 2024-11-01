@@ -109,7 +109,7 @@ class GraphQLHandler extends BaseHandler
         );
         //$result = array_merge($result->toArray(), ['input' => $input]);
 
-        return $result->toArray(static::DEBUG);
+        return $result->toArray(self::DEBUG);
     }
 
     /**
@@ -131,7 +131,7 @@ class GraphQLHandler extends BaseHandler
             return $typeConfig;
         };
 
-        $contents = file_get_contents(dirname(__DIR__, 2) . '/' . static::DEFINITION_FILE);
+        $contents = file_get_contents(dirname(__DIR__, 2) . '/' . self::DEFINITION_FILE);
         //$schema = BuildSchema::build($contents);
         $schema = BuildSchema::build($contents, $typeConfigDecorator);
 
@@ -163,7 +163,7 @@ class GraphQLHandler extends BaseHandler
             $fieldName = $info->fieldName;
             switch ($fieldName) {
                 case 'books':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $booklist = new BookList($current, null, $numberPerPage);
                     [$entryArray, $totalNumber] = $booklist->getAllBooks($n);
                     return $entryArray;
@@ -189,7 +189,7 @@ class GraphQLHandler extends BaseHandler
                     $data = $book->datas[0];
                     return $data;
                 case 'authors':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Author::class, $current, null, $numberPerPage);
                     $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
@@ -198,7 +198,7 @@ class GraphQLHandler extends BaseHandler
                     $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'identifiers':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Identifier::class, $current, null, $numberPerPage);
                     $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
@@ -207,7 +207,7 @@ class GraphQLHandler extends BaseHandler
                     $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'languages':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Language::class, $current, null, $numberPerPage);
                     $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
@@ -216,7 +216,7 @@ class GraphQLHandler extends BaseHandler
                     $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'publishers':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Publisher::class, $current, null, $numberPerPage);
                     $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
@@ -225,7 +225,7 @@ class GraphQLHandler extends BaseHandler
                     $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'ratings':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Rating::class, $current, null, $numberPerPage);
                     $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
@@ -234,7 +234,7 @@ class GraphQLHandler extends BaseHandler
                     $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'series':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Serie::class, $current, null, $numberPerPage);
                     $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
@@ -243,7 +243,7 @@ class GraphQLHandler extends BaseHandler
                     $instance->setHandler($handler);
                     return $instance->getEntry();
                 case 'tags':
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Tag::class, $current, null, $numberPerPage);
                     $entryArray = $baselist->getRequestEntries($n);
                     return $entryArray;
@@ -270,7 +270,7 @@ class GraphQLHandler extends BaseHandler
                 case 'books':
                     // @todo get books for parent instance(s)
                     $instance = $objectValue->instance;
-                    [$numberPerPage, $n, $current] = static::parseListArgs($args, $request);
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $booklist = new BookList($current, null, $numberPerPage);
                     [$entryArray, $totalNumber] = $booklist->getBooksByInstance($instance, $n);
                     return $entryArray;
@@ -390,7 +390,7 @@ class GraphQLHandler extends BaseHandler
      */
     public function renderPlayground()
     {
-        $data = ['link' => static::link()];
+        $data = ['link' => self::link()];
         $template = dirname(__DIR__, 2) . '/templates/graphql.html';
 
         $response = new Response('text/html;charset=utf-8');

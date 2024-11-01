@@ -71,12 +71,12 @@ class User
     public static function getInstanceByName($name, $userDbFile = null)
     {
         try {
-            $db = static::getUserDb($userDbFile);
+            $db = self::getUserDb($userDbFile);
         } catch (Exception $e) {
             error_log($e->getMessage());
             return null;
         }
-        $query = 'select ' . static::SQL_COLUMNS . ' from ' . static::SQL_TABLE . ' where name = ?';
+        $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' where name = ?';
         $params = [$name];
         $result = $db->prepare($query);
         $result->execute($params);
@@ -103,11 +103,11 @@ class User
         }
         // array( "username" => "xxx", "password" => "secret")
         if (is_array($basicAuth)) {
-            return static::checkBasicAuthArray($basicAuth, $serverVars);
+            return self::checkBasicAuthArray($basicAuth, $serverVars);
         }
         // /config/.config/calibre/server-users.sqlite
         if (is_string($basicAuth)) {
-            return static::checkBasicAuthDatabase($basicAuth, $serverVars);
+            return self::checkBasicAuthDatabase($basicAuth, $serverVars);
         }
         return false;
     }
@@ -136,12 +136,12 @@ class User
     public static function checkBasicAuthDatabase($userDbFile, $serverVars)
     {
         try {
-            $db = static::getUserDb($userDbFile);
+            $db = self::getUserDb($userDbFile);
         } catch (Exception $e) {
             error_log($e->getMessage());
             return false;
         }
-        $query = 'select ' . static::SQL_COLUMNS . ' from ' . static::SQL_TABLE . ' where name = ? and pw = ?';
+        $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' where name = ? and pw = ?';
         $stmt = $db->prepare($query);
         $params = [ $serverVars['PHP_AUTH_USER'], $serverVars['PHP_AUTH_PW'] ];
         $stmt->execute($params);

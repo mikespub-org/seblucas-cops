@@ -28,6 +28,13 @@ use Exception;
 
 class JsonRenderer extends BaseRenderer
 {
+    /** @var class-string */
+    public static $fetcher = FetchHandler::class;
+    /** @var class-string */
+    public static $reader = ReadHandler::class;
+    /** @var class-string */
+    public static $zipper = ZipperHandler::class;
+
     /** @var Request */
     protected $request;
     /** @var ?int */
@@ -180,7 +187,7 @@ class JsonRenderer extends BaseRenderer
                 $params['data'] = $data->id;
                 $params['db'] = $database;
                 $params['title'] = $book->getTitle();
-                $tab ["readerUrl"] = ReadHandler::route('read-title', $params);
+                $tab ["readerUrl"] = self::$reader::route('read-title', $params);
             }
             array_push($out ["datas"], $tab);
         }
@@ -199,7 +206,7 @@ class JsonRenderer extends BaseRenderer
             $params['id'] = $book->id;
             $params['db'] = $database;
             $params['file'] = 'zipped';
-            $url = FetchHandler::route('fetch-file', $params);
+            $url = self::$fetcher::route(Book::ROUTE_FILE, $params);
             array_unshift($out ["extraFiles"], [
                 "name" => " * ",
                 "url" => $url,
@@ -362,8 +369,8 @@ class JsonRenderer extends BaseRenderer
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here
                 "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], $this->handler::page(PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
-                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::route('fetch-cover', ['id' => '0', 'db' => '1'])),
-                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], FetchHandler::route('fetch-thumb', ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
+                "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], self::$fetcher::route(Cover::ROUTE_COVER, ['id' => '0', 'db' => '1'])),
+                "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], self::$fetcher::route(Cover::ROUTE_THUMB, ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
             "config" => [
                 "use_fancyapps" => Config::get('use_fancyapps'),
@@ -620,9 +627,9 @@ class JsonRenderer extends BaseRenderer
                 $params = $this->request->getCleanParams();
                 $params['type'] = strtolower((string) $format);
                 if (!empty($params['id'])) {
-                    $url = ZipperHandler::route('zipper-page-id-type', $params);
+                    $url = self::$zipper::route('zipper-page-id-type', $params);
                 } else {
-                    $url = ZipperHandler::route('zipper-page-type', $params);
+                    $url = self::$zipper::route('zipper-page-type', $params);
                 }
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
@@ -639,7 +646,7 @@ class JsonRenderer extends BaseRenderer
                 $params['series'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = ZipperHandler::link($params);
+                $url = self::$zipper::link($params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;
@@ -652,7 +659,7 @@ class JsonRenderer extends BaseRenderer
                 $params['author'] = $qid;
                 $params['type'] = strtolower((string) $format);
                 $params['db'] = $this->database;
-                $url = ZipperHandler::link($params);
+                $url = self::$zipper::link($params);
                 array_push($download, ['url' => $url, 'format' => $format]);
             }
             return $download;

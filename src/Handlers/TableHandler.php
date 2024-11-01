@@ -49,6 +49,6 @@ class TableHandler extends BaseHandler
         $data['tfoot'] = $data['thead'];
 
         $response = new Response('text/html;charset=utf-8');
-        return $response->setContent(Format::template($data, static::$template));
+        return $response->setContent(Format::template($data, self::$template));
     }
 }

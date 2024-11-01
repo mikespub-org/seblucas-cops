@@ -186,7 +186,7 @@ class Format
         $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' .
                             $html . '</body></html>'); // Load the HTML
         $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
-        $output = static::xml2xhtml($output);
+        $output = self::xml2xhtml($output);
         if (preg_match('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', (string) $output, $matches)) {
             $output = $matches [1]; // Remove <html><body>
         }
@@ -195,11 +195,11 @@ class Format
         $errors = libxml_get_errors();
 
         foreach ($errors as $error) {
-            $output .= static::display_xml_error($error);
+            $output .= self::display_xml_error($error);
         }
         */
 
-        if (!static::are_libxml_errors_ok()) {
+        if (!self::are_libxml_errors_ok()) {
             $output = 'HTML code not valid.';
         }
 

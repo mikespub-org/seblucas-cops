@@ -70,7 +70,7 @@ class CustomColumn extends Category
         $params['id'] = $this->id;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        return $this->handler::route(static::ROUTE_DETAIL, $params);
+        return $this->handler::route(self::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -90,7 +90,7 @@ class CustomColumn extends Category
      */
     public function getEntryId()
     {
-        return static::PAGE_ID . ":" . strval($this->getCustomId()) . ":" . $this->id;
+        return self::PAGE_ID . ":" . strval($this->getCustomId()) . ":" . $this->id;
     }
 
     /**

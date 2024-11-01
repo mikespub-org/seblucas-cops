@@ -47,7 +47,7 @@ class Framework
      */
     public static function run($name = 'html')
     {
-        $request = static::getRequest();
+        $request = self::getRequest();
         if ($request->invalid) {
             $name = 'error';
             $handler = Framework::createHandler($name);
@@ -67,7 +67,7 @@ class Framework
             $name = 'json';
         }
         $handler = Framework::createHandler($name);
-        if (empty(static::$middlewares)) {
+        if (empty(self::$middlewares)) {
             $response = $handler->handle($request);
             if ($response instanceof Response) {
                 //$response->prepare($request);
@@ -77,7 +77,7 @@ class Framework
         }
         // @see https://www.php-fig.org/psr/psr-15/meta/#queue-based-request-handler
         $queue = new Handlers\QueueBasedHandler($handler);
-        foreach (static::$middlewares as $middleware) {
+        foreach (self::$middlewares as $middleware) {
             $queue->add(new $middleware());
         }
         $response = $queue->handle($request);
@@ -94,7 +94,7 @@ class Framework
     public static function getRequest()
     {
         // initialize routes if needed
-        static::init();
+        self::init();
         // when using Apache .htaccess redirect
         if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
             $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
@@ -108,7 +108,7 @@ class Framework
      */
     public static function init()
     {
-        static::loadRoutes();
+        self::loadRoutes();
     }
 
     /**
@@ -129,7 +129,7 @@ class Framework
      */
     public static function getHandlers()
     {
-        return static::$handlers;
+        return self::$handlers;
     }
 
     /**
@@ -140,13 +140,13 @@ class Framework
      */
     public static function createHandler($name, ...$args)
     {
-        if (in_array($name, array_values(static::$handlers))) {
+        if (in_array($name, array_values(self::$handlers))) {
             return new $name(...$args);
         }
-        if (!isset(static::$handlers[$name])) {
+        if (!isset(self::$handlers[$name])) {
             // this will call exit()
             Response::sendError(null, "Invalid handler name '$name'");
         }
-        return new static::$handlers[$name](...$args);
+        return new self::$handlers[$name](...$args);
     }
 }

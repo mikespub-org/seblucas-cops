@@ -22,7 +22,7 @@ class CustomColumnTypeComment extends CustomColumnType
      */
     protected function __construct($customId, $database = null, $displaySettings = [])
     {
-        parent::__construct($customId, static::TYPE_COMMENT, $database, $displaySettings);
+        parent::__construct($customId, self::TYPE_COMMENT, $database, $displaySettings);
     }
 
     /**
@@ -33,10 +33,10 @@ class CustomColumnTypeComment extends CustomColumnType
     public function getQuery($id)
     {
         if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
-            $query = str_format(static::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(static::SQL_BOOKLIST_ID, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_ID, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
     }
 

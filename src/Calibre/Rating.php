@@ -59,9 +59,9 @@ class Rating extends Base
      */
     public static function getCount($database, $handler)
     {
-        $count = Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
+        $count = Database::querySingle('select count(*) from ' . self::SQL_TABLE, $database);
         // str_format (localize("ratings", count(array))
-        return static::getCountEntry($count, $database, "ratings", $handler);
+        return self::getCountEntry($count, $database, "ratings", $handler);
     }
 
     /**

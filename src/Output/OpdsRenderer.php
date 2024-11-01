@@ -26,6 +26,12 @@ use XMLWriter;
 
 class OpdsRenderer extends BaseRenderer
 {
+    public const ROUTE_FEED = FeedHandler::HANDLER;
+    public const ROUTE_SEARCH = FeedHandler::SEARCH;
+
+    /** @var class-string */
+    public static $handler = FeedHandler::class;
+
     /** @var ?XMLWriter */
     protected $xmlStream = null;
     /** @var ?int */
@@ -94,7 +100,7 @@ class OpdsRenderer extends BaseRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $params = ["query" => "QUERY", "db" => $database];
-        $url = FeedHandler::link($params);
+        $url = self::$handler::link($params);
         $url = str_replace("QUERY", "{searchTerms}", $url);
         $xml->writeAttribute("template", $url);
         $xml->endElement();
@@ -160,11 +166,11 @@ class OpdsRenderer extends BaseRenderer
         $this->getXmlStream()->text($page->authorEmail);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->endElement();
-        $url = FeedHandler::route('feed');
+        $url = self::$handler::route(self::ROUTE_FEED);
         $link = new LinkNavigation($url, "start", "Home");
         $this->renderLink($link);
         // @todo check with pathInfo
-        $url = FeedHandler::link($request->urlParams);
+        $url = self::$handler::link($request->urlParams);
         if ($page->containsBook()) {
             $link = new LinkFeed($url, "self");
         } else {
@@ -175,7 +181,7 @@ class OpdsRenderer extends BaseRenderer
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             //$params["page"] = PageId::SEARCH;
-            $url = FeedHandler::route('feed-search', $params);
+            $url = self::$handler::route(self::ROUTE_SEARCH, $params);
             $link = new LinkEntry(
                 $url,
                 "application/opensearchdescription+xml",
@@ -185,7 +191,7 @@ class OpdsRenderer extends BaseRenderer
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "QUERY";
-            $url = FeedHandler::route('feed', $params);
+            $url = self::$handler::route(self::ROUTE_FEED, $params);
             $url = str_replace("QUERY", "{searchTerms}", $url);
             $link = new LinkEntry(
                 $url,
@@ -199,7 +205,7 @@ class OpdsRenderer extends BaseRenderer
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
                 $params = array_replace($request->urlParams, ["tag" => $filter]);
-                $url = FeedHandler::link($params);
+                $url = self::$handler::link($params);
                 $link = new LinkFacet(
                     $url,
                     $lib,
@@ -388,7 +394,7 @@ class OpdsRenderer extends BaseRenderer
         }
         $params = $request->getCleanParams();
         $params['sort'] = null;
-        $sortUrl = FeedHandler::link($params);
+        $sortUrl = self::$handler::link($params);
         if (str_contains($sortUrl, '?')) {
             $sortUrl .= "&sort={0}";
         } else {
@@ -429,13 +435,13 @@ class OpdsRenderer extends BaseRenderer
         }
         //$params = $request->getCleanParams();
         //$params['filter'] = 1;
-        //$url = FeedHandler::link($params);
+        //$url = self::$handler::link($params);
         //$filterLabel = localize("cog.alternate");
         //$title = localize("links.title");
         //$link = new LinkFacet($url, $title, $filterLabel, false, null);
         //$this->renderLink($link);
         // Note: facets are only shown if there are books available, so we need to get a filter page here
-        $req = FeedHandler::request($request->urlParams);
+        $req = self::$handler::request($request->urlParams);
         $req->set('filter', 1);
         $filterPage = PageId::getPage($request->get('page'), $req);
         //$request->set('filter', null);

@@ -31,6 +31,7 @@ class Book
     public const PAGE_DETAIL = PageId::BOOK_DETAIL;
     public const ROUTE_ALL = "page-books";
     public const ROUTE_DETAIL = "page-book";
+    public const ROUTE_FILE = "fetch-file";
     public const SQL_TABLE = "books";
     public const SQL_LINK_TABLE = "books";
     public const SQL_LINK_COLUMN = "id";
@@ -173,7 +174,7 @@ class Book
      */
     public static function getEntryIdByLetter($startingLetter)
     {
-        return static::PAGE_ID . ':letter:' . $startingLetter;
+        return self::PAGE_ID . ':letter:' . $startingLetter;
     }
 
     /**
@@ -183,7 +184,7 @@ class Book
      */
     public static function getEntryIdByYear($year)
     {
-        return static::PAGE_ID . ':year:' . $year;
+        return self::PAGE_ID . ':year:' . $year;
     }
 
     /**
@@ -198,7 +199,7 @@ class Book
         $params['db'] = $this->databaseId;
         $params['author'] = $this->getAuthorsName();
         $params['title'] = $this->getTitle();
-        return $this->handler::route(static::ROUTE_DETAIL, $params);
+        return $this->handler::route(self::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -216,7 +217,7 @@ class Book
         $params['author'] = $this->getAuthorsName();
         $params['title'] = $this->getTitle();
         // @todo keep as is for now - not referenced anymore
-        return $handler::page(static::PAGE_DETAIL, $params);
+        return $handler::page(self::PAGE_DETAIL, $params);
     }
 
     /**
@@ -367,7 +368,7 @@ class Book
     public function getDatas()
     {
         if (is_null($this->datas)) {
-            $this->datas = static::getDataByBook($this);
+            $this->datas = self::getDataByBook($this);
         }
         return $this->datas;
     }
@@ -381,7 +382,7 @@ class Book
     {
         if (is_null($this->extraFiles)) {
             $this->extraFiles = [];
-            $dataPath = $this->path . '/' . static::DATA_DIR_NAME . '/';
+            $dataPath = $this->path . '/' . self::DATA_DIR_NAME . '/';
             if (empty(Config::get('calibre_external_storage')) && is_dir($dataPath)) {
                 $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dataPath));
                 foreach ($iterator as $file) {
@@ -405,13 +406,13 @@ class Book
      */
     public function getExtraFileLink($fileName)
     {
-        $filePath = $this->path . '/' . static::DATA_DIR_NAME . '/' . $fileName;
+        $filePath = $this->path . '/' . self::DATA_DIR_NAME . '/' . $fileName;
         $mimetype = Response::getMimeType($filePath) ?? 'application/octet-stream';
         if (Database::useAbsolutePath($this->databaseId)) {
             $params = ['id' => $this->id, 'db' => $this->databaseId];
             $params['db'] ??= 0;
             $params['file'] = $fileName;
-            $url = FetchHandler::route('fetch-file', $params);
+            $url = FetchHandler::route(self::ROUTE_FILE, $params);
         } else {
             $url = Route::path(str_replace('%2F', '/', rawurlencode($filePath)));
         }
@@ -805,7 +806,7 @@ class Book
      */
     public static function getBookColumns()
     {
-        $res = static::SQL_COLUMNS;
+        $res = self::SQL_COLUMNS;
         if (!empty(Config::get('calibre_database_field_cover'))) {
             $res = str_replace('has_cover,', 'has_cover, ' . Config::get('calibre_database_field_cover') . ',', $res);
         }
@@ -821,8 +822,8 @@ class Book
      */
     public static function getBookById($bookId, $database = null)
     {
-        $query = 'select ' . static::getBookColumns() . '
-from books ' . static::SQL_BOOKS_LEFT_JOIN . '
+        $query = 'select ' . self::getBookColumns() . '
+from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?';
         $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
@@ -840,8 +841,8 @@ where books.id = ?';
      */
     public static function getBookByDataId($dataId, $database = null)
     {
-        $query = 'select ' . static::getBookColumns() . ', data.name, data.format
-from data, books ' . static::SQL_BOOKS_LEFT_JOIN . '
+        $query = 'select ' . self::getBookColumns() . ', data.name, data.format
+from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?';
         $ignored_formats = Config::get('ignored_formats');
         if (count($ignored_formats) > 0) {

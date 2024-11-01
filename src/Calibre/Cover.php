@@ -18,6 +18,9 @@ use SebLucas\Cops\Output\FileResponse;
 
 class Cover
 {
+    public const ROUTE_COVER = "fetch-cover";
+    public const ROUTE_THUMB = "fetch-thumb";
+
     /** @var Book */
     public $book;
     /** @var ?int */
@@ -323,7 +326,7 @@ class Cover
                 $params['type'] = $ext;
             }
             return new LinkEntry(
-                $this->handler::route('fetch-cover', $params),
+                $this->handler::route(self::ROUTE_COVER, $params),
                 $mime,
                 LinkEntry::OPDS_IMAGE_TYPE
             );
@@ -395,9 +398,9 @@ class Cover
             }
             if (Config::get('thumbnail_handling') != "1") {
                 $params['thumb'] = $thumb;
-                $routeName = 'fetch-thumb';
+                $routeName = self::ROUTE_THUMB;
             } else {
-                $routeName = 'fetch-cover';
+                $routeName = self::ROUTE_COVER;
             }
             return new LinkEntry(
                 $this->handler::route($routeName, $params),

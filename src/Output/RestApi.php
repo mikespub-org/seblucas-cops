@@ -70,7 +70,7 @@ class RestApi extends BaseRenderer
 
         // handle extra functions
         $root = '/' . explode('/', $path . '/')[1];
-        if (array_key_exists($root, static::$extra)) {
+        if (array_key_exists($root, self::$extra)) {
             $params = Route::match($path);
             if (!empty($params['page']) && $params['page'] != PageId::REST_API) {
                 return $params;
@@ -80,7 +80,7 @@ class RestApi extends BaseRenderer
             if (!empty($params)) {
                 $this->request->setParams($params);
             }
-            return call_user_func(static::$extra[$root], $this->request);
+            return call_user_func(self::$extra[$root], $this->request);
         }
 
         // match path with routes
@@ -118,7 +118,7 @@ class RestApi extends BaseRenderer
         // run via handler now
         $handler = Framework::createHandler($name);
         unset($params[Route::HANDLER_PARAM]);
-        $run ??= static::$doRunHandler;
+        $run ??= self::$doRunHandler;
         if ($run) {
             $oldpath = $_SERVER['PATH_INFO'] ?? '';
             $oldparams = $_GET;
@@ -145,12 +145,12 @@ class RestApi extends BaseRenderer
         if (isset($result)) {
             return json_encode($result, JSON_UNESCAPED_SLASHES);
         }
-        self::$baseUrl ??= RestApiHandler::getBaseUrl();
+        self::$baseUrl ??= self::$handler::getBaseUrl();
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
         if (!isset($params)) {
             // @todo find some better way to handle this
-            Response::redirect(RestApiHandler::getHandlerLink(null, PageId::INDEX));
+            Response::redirect(self::$handler::getHandlerLink(null, PageId::INDEX));
             return '';
         }
         if ($this->isExtra) {
@@ -193,7 +193,7 @@ class RestApi extends BaseRenderer
             $params["custom"] = $column['id'];
             $params["db"] = $db;
             // @todo find some better way to generate restapi links for pages and handlers?
-            $column["navlink"] = RestApiHandler::getHandlerLink(null, PageId::ALL_CUSTOMS, $params);
+            $column["navlink"] = self::$handler::getHandlerLink(null, PageId::ALL_CUSTOMS, $params);
             array_push($result["entries"], $column);
         }
         return $result;
@@ -208,7 +208,7 @@ class RestApi extends BaseRenderer
     {
         $db = $request->database();
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
-            return static::getDatabase($db, $request);
+            return self::getDatabase($db, $request);
         }
         $baseurl = self::$baseUrl;
         $result = [
@@ -248,7 +248,7 @@ class RestApi extends BaseRenderer
         }
         $name = $request->get('name', null, '/^\w+$/');
         if (!empty($name)) {
-            return static::getTable($database, $name, $request);
+            return self::getTable($database, $name, $request);
         }
         $title = "Database";
         $dbName = Database::getDbName($database);
@@ -332,15 +332,15 @@ class RestApi extends BaseRenderer
         $query = "SELECT COUNT(*) FROM {$name}";
         $count = Database::querySingle($query, $database);
         $result["total"] = $count;
-        $result["limit"] = static::$numberPerPage;
+        $result["limit"] = self::$numberPerPage;
         $start = 0;
         $n = (int) $request->get('n', 1, '/^\d+$/');
-        if ($n > 0 && $n < ceil($count / static::$numberPerPage)) {
-            $start = ($n - 1) * static::$numberPerPage;
+        if ($n > 0 && $n < ceil($count / self::$numberPerPage)) {
+            $start = ($n - 1) * self::$numberPerPage;
         }
         $result["offset"] = $start;
         $query = "SELECT * FROM {$name} LIMIT ?, ?";
-        $res = Database::query($query, [$start, static::$numberPerPage], $database);
+        $res = Database::query($query, [$start, self::$numberPerPage], $database);
         while ($post = $res->fetchObject()) {
             $entry = (array) $post;
             $params['id'] = $entry['id'];
@@ -416,7 +416,7 @@ class RestApi extends BaseRenderer
     {
         $type = $request->get('type', null, '/^\w+$/');
         if (!empty($type)) {
-            return static::getNotesByType($type, $request);
+            return self::getNotesByType($type, $request);
         }
         $db = $request->database();
         $baseurl = self::$baseUrl;
@@ -451,7 +451,7 @@ class RestApi extends BaseRenderer
     {
         $id = $request->getId('id');
         if (!empty($id)) {
-            return static::getNoteByTypeId($type, $id, $request);
+            return self::getNoteByTypeId($type, $id, $request);
         }
         $db = $request->database();
         $baseurl = self::$baseUrl;
@@ -543,7 +543,7 @@ class RestApi extends BaseRenderer
     {
         $key = $request->get('key', null, '/^[\w\s:]+$/');
         if (!empty($key)) {
-            return static::getPreferenceByKey($key, $request);
+            return self::getPreferenceByKey($key, $request);
         }
         $db = $request->database();
         $baseurl = self::$baseUrl;
@@ -609,7 +609,7 @@ class RestApi extends BaseRenderer
     {
         $bookId = $request->getId('bookId');
         if (!empty($bookId)) {
-            return static::getAnnotationsByBookId($bookId, $request);
+            return self::getAnnotationsByBookId($bookId, $request);
         }
         $db = $request->database();
         $baseurl = self::$baseUrl;
@@ -644,7 +644,7 @@ class RestApi extends BaseRenderer
     {
         $id = $request->getId('id');
         if (!empty($id)) {
-            return static::getAnnotationById($bookId, $id, $request);
+            return self::getAnnotationById($bookId, $id, $request);
         }
         $db = $request->database();
         $baseurl = self::$baseUrl;
@@ -750,7 +750,7 @@ class RestApi extends BaseRenderer
             "databaseId" => $db,
         ];
         $result["username"] = $username;
-        if ($request->path() == static::PREFIX . "/user/details") {
+        if ($request->path() == self::PREFIX . "/user/details") {
             $user = User::getInstanceByName($username);
             $result = array_replace($result, (array) $user);
         }

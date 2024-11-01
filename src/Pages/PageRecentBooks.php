@@ -23,7 +23,7 @@ class PageRecentBooks extends Page
     public function initializeContent()
     {
         $this->getEntries();
-        $this->idPage = static::PAGE_ID;
+        $this->idPage = self::PAGE_ID;
         $this->title = localize("recent.title");
     }
 
