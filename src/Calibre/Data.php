@@ -313,6 +313,8 @@ class Data
             $params['db'] ??= 0;
             $params['type'] = $type;
             $params['data'] = $idData;
+            //$params['ignore'] = rawurlencode(basename($filename));
+            $params['ignore'] = 'ignore';
             $routeName = self::ROUTE_DATA;
             if ($view) {
                 $params['view'] = 1;

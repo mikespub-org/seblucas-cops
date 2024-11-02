@@ -108,6 +108,18 @@ class PageHandler extends BaseHandler
     }
 
     /**
+     * Get index page
+     * @return string
+     */
+    public static function index()
+    {
+        $name = PageId::ROUTE_INDEX;
+        $route = self::getRoutes()[$name] ?? ["/index"];
+        $path = $route[0];
+        return Route::absolute($path);
+    }
+
+    /**
      * Find all routes for matching - include parent routes in page handler
      * @return array<string, mixed>
      */

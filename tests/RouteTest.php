@@ -45,12 +45,12 @@ class RouteTest extends TestCase
     {
         Config::set('front_controller', 'index.php');
         $expected = Route::base() . 'recent';
-        $test = Route::link(null, 10);
+        $test = Route::absolute(Route::page(10));
         $this->assertEquals($expected, $test);
 
         Config::set('front_controller', '');
         $expected = Route::base() . 'index.php/recent';
-        $test = Route::link(null, 10);
+        $test = Route::absolute(Route::page(10));
         $this->assertEquals($expected, $test);
     }
 
@@ -128,7 +128,7 @@ class RouteTest extends TestCase
             "zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml" => "index.php/zipfs/0/20/META-INF/container.xml",
             "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "index.php/loader/wd_author/0/1?matchId=Q35610",
             "checkconfig.php" => "index.php/check",
-            "epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland" => "index.php/read/0/20/Alice's_Adventures_in_Wonderland",
+            "epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland" => "index.php/read/0/20/Alice%27s_Adventures_in_Wonderland",
             "epubreader.php?db=0&data=20" => "index.php/read/0/20",
             "sendtomail.php" => "index.php/mail",
             "fetch.php?db=0&id=17&thumb=html" => "index.php/thumbs/0/17/html.jpg",
@@ -225,11 +225,18 @@ class RouteTest extends TestCase
                 $params = Route::match('/' . $params['path']);
             }
             // un-slugify parameter (minimal) - not tested here
+            foreach (['title', 'author'] as $param) {
+                if (isset($params[$param])) {
+                    $params[$param] = rawurldecode($params[$param]);
+                }
+            }
         }
         if (array_key_exists('ignore', $params)) {
             unset($params['ignore']);
         }
         $test = $endpoint;
+        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Route::ROUTE_PARAM]);
         if (!empty($params)) {
             $test .= '?' . Route::getQueryString($params);
         }
@@ -263,7 +270,7 @@ class RouteTest extends TestCase
             "/zipper/10/any.zip" => [Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"],
             "/loader/wd_author/0/1?matchId=Q35610" => [Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"],
             "/check" => [Route::HANDLER_PARAM => "check"],
-            "/read/0/20/Alice's_Adventures_in_Wonderland" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20, "title" => "Alice's Adventures in Wonderland"],
+            "/read/0/20/Alice%27s_Adventures_in_Wonderland" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20, "title" => "Alice's Adventures in Wonderland"],
             "/read/0/20" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20],
             "/mail" => [Route::HANDLER_PARAM => "mail"],
             "/feed/authors/1/Arthur_Conan_Doyle" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1, "title" => "Arthur Conan Doyle"],
@@ -272,8 +279,8 @@ class RouteTest extends TestCase
             "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "path" => "openapi"],
             "/graphql" => [Route::HANDLER_PARAM => "graphql"],
             // @todo handle url rewriting if enabled separately - path parameters are different
-            "/view/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1, Route::ROUTE_PARAM => "fetch-view"],
-            "/download/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", Route::ROUTE_PARAM => "fetch-download"],
+            "/view/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "ignore" => "ignore", "type" => "epub", "view" => 1, Route::ROUTE_PARAM => "fetch-view"],
+            "/download/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "ignore" => "ignore", "type" => "epub", Route::ROUTE_PARAM => "fetch-download"],
         ];
     }
 

@@ -132,6 +132,7 @@ class Request
             // this will call exit()
             Response::sendError($this, $error);
         }
+        // set route param in request once we find matching route
         $params = Route::match($path);
         if (is_null($params)) {
             // this will call exit()
@@ -478,11 +479,14 @@ class Request
     public function getCleanParams()
     {
         $params = $this->urlParams;
-        unset($params['title']);
+        // keep title for route links
+        //unset($params['title']);
         unset($params['_']);
         unset($params['n']);
         unset($params['complete']);
+        // override in $handler::route() etc. if needed
         //unset($params[Route::HANDLER_PARAM]);
+        //unset($params[Route::ROUTE_PARAM]);
         return $params;
     }
 

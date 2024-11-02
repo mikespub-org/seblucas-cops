@@ -169,7 +169,7 @@ class OpdsRenderer extends BaseRenderer
         $url = self::$handler::route(self::ROUTE_FEED);
         $link = new LinkNavigation($url, "start", "Home");
         $this->renderLink($link);
-        // @todo check with pathInfo
+        // with same _route param here
         $url = self::$handler::link($request->urlParams);
         if ($page->containsBook()) {
             $link = new LinkFeed($url, "self");

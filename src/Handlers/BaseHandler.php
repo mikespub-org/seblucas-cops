@@ -136,6 +136,8 @@ abstract class BaseHandler
         if (Route::KEEP_STATS) {
             Route::$counters['route'] += 1;
         }
+        // @todo test FastRoute\GenerateUri - some issues left to deal with ;-)
+        //return Route::generate($name, $params);
         $route = $routes[$name];
         // for known route, not all fixed params may be available (e.g. page) - ignore them
         $checkFixed = false;

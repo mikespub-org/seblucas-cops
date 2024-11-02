@@ -17,6 +17,8 @@ x.x.x - TODO
     - set $config['cops_use_route_urls'] as deprecated (= always enabled)
     - set $config['cops_download_series'] as deprecated (use $config['cops_download_page'] instead)
     - set $config['cops_download_author'] as deprecated (use $config['cops_download_page'] instead)
+  * Pin nikic/fast-route version to 2.0.0-beta1 and use recommended settings
+  * Pass _route param to request in Route::match() and deprecate Route::link()
   * Switch to handler::route() in most places for Calibre and Pages classes
   * Replace Route::link() with handler::page() and handler::link() and generate() with route()
   * Use handler class in params instead of handler name + adapt $handler properties/params

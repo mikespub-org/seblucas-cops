@@ -163,6 +163,7 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject()) {
             $params = ['custom' => $this->customId, 'year' => $post->groupid, 'db' => $this->databaseId];
             // @todo if we want to use ROUTE_DETAIL we need to add id= here
+            $params['id'] = '0';
             $href = $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,

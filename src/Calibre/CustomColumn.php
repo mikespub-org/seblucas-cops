@@ -42,9 +42,9 @@ class CustomColumn extends Category
     public function __construct($id, $value, $customColumnType)
     {
         $this->id = $id;
-        $this->value = $value;
+        $this->value = (string) $value;
         $this->customColumnType = $customColumnType;
-        $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value ?? '');
+        $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value);
         $this->databaseId = $this->customColumnType->getDatabaseId();
         $this->handler = $this->customColumnType->getHandler();
     }

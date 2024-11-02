@@ -134,7 +134,7 @@ class JsonRendererTest extends TestCase
         $this->assertCount(3, $test ["datas"]);
         $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $test ["datas"][2]["url"]);
         $this->assertEquals(self::$fetcher::link() . "/inline/0/20/ignore.epub", $test ["datas"][2]["viewUrl"]);
-        $this->assertEquals(ReadHandler::link() . "/read/0/20/Alice's_Adventures_in_Wonderland", $test ["datas"][2]["readerUrl"]);
+        $this->assertEquals(ReadHandler::link() . "/read/0/20/Alice%27s_Adventures_in_Wonderland", $test ["datas"][2]["readerUrl"]);
 
         // use relative path for calibre directory
         Config::set('calibre_directory', "./tests/BaseWithSomeBooks/");

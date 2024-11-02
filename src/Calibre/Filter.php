@@ -97,14 +97,14 @@ class Filter
      */
     public function checkForFilters($parentClass = null)
     {
-        if (empty($this->request->urlParams)) {
-            return;
-        }
-
         // See $config['cops_books_filter']
         $tagName = $this->request->get('tag', null);
         if (!empty($tagName)) {
             $this->addTagNameFilter($tagName);
+        }
+
+        if (!$this->request->hasFilter()) {
+            return;
         }
 
         // See $config['cops_calibre_virtual_libraries']

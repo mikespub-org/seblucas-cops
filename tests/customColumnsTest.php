@@ -668,7 +668,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("2000", $currentPage->entryArray[0]->title);
         $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
         // switched to using PAGE_DETAIL instead of PAGE_ALL
-        $this->assertEquals(self::$handler::link() . "/custom/12?year=2000", $currentPage->entryArray[0]->getNavLink());
+        $this->assertEquals(self::$handler::link() . "/custom/12/0?year=2000", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:12:year:2016", $currentPage->entryArray[1]->id);
 
         Config::set('custom_date_split_year', '0');
@@ -682,6 +682,7 @@ class CustomColumnsTest extends TestCase
         Config::set('custom_date_split_year', '1');
         $request = self::$handler::request(['custom' => 12, 'year' => "2000"]);
 
+        // @todo switch to ALL_CUSTOMS?
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
 
         // we have entries for different dates in year 2000
@@ -759,7 +760,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("-2--1", $currentPage->entryArray[0]->title);
         $this->assertEquals("4 books", $currentPage->entryArray[0]->content);
         // @todo support with route urls?
-        $this->assertEquals(self::$handler::link() . "/custom/10?range=-2--1", $currentPage->entryArray[0]->getNavLink());
+        $this->assertEquals(self::$handler::link() . "/custom/10/0?range=-2--1", $currentPage->entryArray[0]->getNavLink());
         $this->assertEquals("cops:custom:10:range:1-2", $currentPage->entryArray[1]->id);
 
         Config::set('custom_integer_split_range', '0');
@@ -773,6 +774,7 @@ class CustomColumnsTest extends TestCase
         Config::set('custom_integer_split_range', '4');
         $request = self::$handler::request(['custom' => 10, 'range' => "-2--1"]);
 
+        // @todo switch to ALL_CUSTOMS?
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
 
         // we have entries for different integers in range -2 to -1

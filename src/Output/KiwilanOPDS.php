@@ -189,7 +189,7 @@ class KiwilanOPDS
                 array_push($feeds, $this->getOpdsEntry($entry));
             }
         }
-        // @todo check with pathInfo
+        // with same _route param here
         $url = self::$handler::link($request->urlParams);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();

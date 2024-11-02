@@ -55,6 +55,7 @@ class JsonRenderer extends BaseRenderer
      */
     public static function getCurrentUrl($request)
     {
+        // with same _route param here
         $params = $request->urlParams;
         $params['complete'] = 1;
         return JsonHandler::link($params);
@@ -367,8 +368,8 @@ class JsonRenderer extends BaseRenderer
                 "downloadAllTooltip" => localize("downloadall.tooltip"),
             ],
             "url" => [
-                // route urls do not accept non-numeric id or db to find match here
-                "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], $this->handler::page(PageId::BOOK_DETAIL, ['id' => '0', 'db' => '1'])),
+                // route urls do not accept non-numeric id or db to find match here + url does not include author or title
+                "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], $this->handler::route(Book::ROUTE_PAGEID, ['id' => '0', 'db' => '1'])),
                 "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], self::$fetcher::route(Cover::ROUTE_COVER, ['id' => '0', 'db' => '1'])),
                 "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], self::$fetcher::route(Cover::ROUTE_THUMB, ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
@@ -626,6 +627,7 @@ class JsonRenderer extends BaseRenderer
             foreach (Config::get('download_page') as $format) {
                 $params = $this->request->getCleanParams();
                 $params['type'] = strtolower((string) $format);
+                unset($params['title']);
                 if (!empty($params['id'])) {
                     $url = self::$zipper::route('zipper-page-id-type', $params);
                 } else {

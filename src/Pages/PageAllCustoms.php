@@ -74,7 +74,7 @@ class PageAllCustoms extends Page
         if (empty($year)) {
             // can be $columnType::ROUTE_ALL or $columnType::ROUTE_DETAIL
             $this->sorted = $this->request->getSorted("year");
-            $this->entryArray = $columnType->getCountByYear($columnType::ROUTE_ALL, $this->sorted);
+            $this->entryArray = $columnType->getCountByYear($columnType::ROUTE_DETAIL, $this->sorted);
             return;
         }
         // if we use $columnType::ROUTE_ALL in PageAllCustoms, otherwise see PageCustomDetail
@@ -101,7 +101,7 @@ class PageAllCustoms extends Page
         if (empty($range)) {
             // can be $columnType::ROUTE_ALL or $columnType::ROUTE_DETAIL
             $this->sorted = $this->request->getSorted("range");
-            $this->entryArray = $columnType->getCountByRange($columnType::ROUTE_ALL, $this->sorted);
+            $this->entryArray = $columnType->getCountByRange($columnType::ROUTE_DETAIL, $this->sorted);
             return;
         }
         // if we use $columnType::ROUTE_ALL in PageAllCustoms, otherwise see PageCustomDetail

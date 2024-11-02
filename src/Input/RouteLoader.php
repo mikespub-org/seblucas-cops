@@ -46,7 +46,10 @@ class RouteLoader extends Loader
         $seen = [];
         foreach (Route::getRoutes() as $name => $route) {
             [$path, $params, $methods, $options] = $route;
+            // set route param in request once we find matching route
+            $params[Route::ROUTE_PARAM] ??= $name;
             [$path, $requirements] = self::getPathRequirements($path);
+            // use the 'defaults' to store any fixed params here
             $route = new SymfonyRoute($path, $params);
             if (!empty($requirements)) {
                 $route->setRequirements($requirements);
@@ -54,6 +57,7 @@ class RouteLoader extends Loader
             if (!empty($methods)) {
                 $route->setMethods($methods);
             }
+            // pass along extra options for Symfony Route - @todo
             if (!empty($options)) {
                 $route->setOptions($options);
             }

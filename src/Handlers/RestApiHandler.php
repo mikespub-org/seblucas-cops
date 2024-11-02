@@ -129,7 +129,6 @@ class RestApiHandler extends BaseHandler
     public static function getBaseUrl()
     {
         if (!isset(self::$baseUrl)) {
-            // Route::link(self::class) doesn't contain prefix anymore without route
             $link = self::link(['path' => 'PATH']);
             self::$baseUrl = str_replace('/PATH', '', $link);
         }

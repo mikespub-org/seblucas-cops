@@ -28,7 +28,7 @@
         "ext-zlib": "*",
         "mikespub/epubjs-reader": "^2024.10",
         "mikespub/php-epub-meta": "^3.3",
-        "nikic/fast-route": "^2.0-dev",
+        "nikic/fast-route": "2.0.0-beta1",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
         "npm-asset/jquery": "^3.7",
@@ -50,9 +50,11 @@
         "symfony/http-foundation": "^6.4||^7.1",
         "symfony/config": "^6.4||^7.1",
         "symfony/routing": "^6.4||^7.1",
+        "symfony/string": "^6.4||^7.1",
+        "symfony/translation-contracts": "^3.5",
         "mikespub/epub-loader": "^3.5",
         "opis/json-schema": "^2.3",
-        "webonyx/graphql-php": "^15.17"
+        "webonyx/graphql-php": "^15.18"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks"

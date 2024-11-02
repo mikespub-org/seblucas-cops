@@ -22,6 +22,7 @@ namespace SebLucas\Cops\Tests;
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
@@ -174,7 +175,7 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Chrome');
 
-        $uri = Route::link() . '/index';
+        $uri = HtmlHandler::index();
         $crawler = $this->url($uri);
 
         $uri = JsonHandler::link() . '/index?complete=1';
@@ -205,7 +206,7 @@ class BrowserKitTest extends TestCase
     {
         $this->createBrowser($template, 'Kindle/2.0');
 
-        $uri = Route::link() . '/index';
+        $uri = HtmlHandler::index();
         $crawler = $this->url($uri);
 
         // with standard local.php.example
@@ -252,11 +253,7 @@ class BrowserKitTest extends TestCase
             if ($template == 'default') {
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
-            if (!empty(self::$localConfig['cops_front_controller'])) {
-                $this->assertEquals(Route::base() . 'search/ali/book', $articles->filterXPath('//a')->attr('href'));
-            } else {
-                $this->assertEquals(Route::link() . '/search/ali/book', $articles->filterXPath('//a')->attr('href'));
-            }
+            $this->assertEquals(Route::absolute('/search/ali/book'), $articles->filterXPath('//a')->attr('href'));
         }
     }
 

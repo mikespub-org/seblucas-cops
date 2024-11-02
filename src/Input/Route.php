@@ -9,15 +9,17 @@
 
 namespace SebLucas\Cops\Input;
 
+use FastRoute\ConfigureRoutes;
 use FastRoute\Dispatcher;
-use FastRoute\RouteCollector;
+use FastRoute\FastRoute;
+use FastRoute\GenerateUri;
+use FastRoute\GenerateUri\UriCouldNotBeGenerated;
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Format;
 use Exception;
-
-use function FastRoute\simpleDispatcher;
+use Throwable;
 
 /**
  * Summary of Route
@@ -27,7 +29,7 @@ class Route
     public const HANDLER_PARAM = "_handler";
     public const ROUTE_PARAM = "_route";
     public const ROUTES_CACHE_FILE = 'url_cached_routes.php';
-    public const KEEP_STATS = false;
+    public const KEEP_STATS = true;
 
     /** @var ?\Symfony\Component\HttpFoundation\Request */
     protected static $proxyRequest = null;
@@ -37,8 +39,12 @@ class Route
     protected static $routes = [];
     /** @var array<string, mixed> */
     protected static $static = [];
+    /** @var FastRoute|null */
+    protected static $fastRoute = null;
     /** @var Dispatcher|null */
     protected static $dispatcher = null;
+    /** @var GenerateUri|null */
+    protected static $uriGenerator = null;
     /** @var array<string, class-string> */
     protected static $handlers = [];
     /** @var array<string, mixed> */
@@ -64,9 +70,10 @@ class Route
     /**
      * Match pathinfo against routes and return query params
      * @param string $path
+     * @param ?string $method
      * @return ?array<mixed> array of query params or null if not found
      */
-    public static function match($path)
+    public static function match($path, $method = null)
     {
         /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
@@ -84,9 +91,9 @@ class Route
         // match pattern
         $fixed = [];
         $params = [];
-        $method = 'GET';
+        $method ??= 'GET';
 
-        $dispatcher = self::getSimpleDispatcher();
+        $dispatcher = self::getDispatcher();
         $routeInfo = $dispatcher->dispatch($method, $path);
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
@@ -102,11 +109,19 @@ class Route
                 //throw new Exception("Invalid method " . htmlspecialchars($method) . " for route " . htmlspecialchars($path));
                 return null;
             case Dispatcher::FOUND:
+                // use the 'handler' to store any fixed params here, with _handler and _route
                 $fixed = $routeInfo[1];
+                // path params found by dispatcher
                 $params = $routeInfo[2];
+                // extra options defined in route (_name) or set by route collector (_route = regex path)
+                $extra = $routeInfo->extraParameters;
         }
         // for normal routes, put fixed params at the start
         $params = array_merge($fixed, $params);
+        // set _route param in request once we find matching route - FastRoute uses _name internally
+        if (isset($extra[ConfigureRoutes::ROUTE_NAME]) && !isset($params[self::ROUTE_PARAM])) {
+            $params[self::ROUTE_PARAM] = $extra[ConfigureRoutes::ROUTE_NAME];
+        }
         unset($params['ignore']);
         return $params;
     }
@@ -147,29 +162,91 @@ class Route
     }
 
     /**
-     * Summary of getSimpleDispatcher
+     * Summary of getFastRoute
+     * @param bool $useCache
+     * @return FastRoute
+     */
+    public static function getFastRoute($useCache = true)
+    {
+        if (isset(self::$fastRoute)) {
+            return self::$fastRoute;
+        }
+        $cacheKey = __DIR__ . '/url_fastroute_cache.php';
+        self::$fastRoute = FastRoute::recommendedSettings(self::addRouteCollection(...), $cacheKey);
+        if (!$useCache) {
+            self::$fastRoute = self::$fastRoute->disableCache();
+        }
+        return self::$fastRoute;
+    }
+
+    /**
+     * Summary of getDispatcher
      * @return Dispatcher
      */
-    public static function getSimpleDispatcher()
+    public static function getDispatcher()
     {
-        self::$dispatcher ??= simpleDispatcher(function (RouteCollector $r) {
-            self::addRouteCollection($r);
-        });
+        self::$dispatcher ??= self::getFastRoute()->dispatcher();
         return self::$dispatcher;
     }
 
     /**
+     * Summary of getUriGenerator
+     * @return GenerateUri
+     */
+    public static function getUriGenerator()
+    {
+        self::$uriGenerator ??= self::getFastRoute()->uriGenerator();
+        return self::$uriGenerator;
+    }
+
+    /**
      * Summary of addRouteCollection
-     * @param RouteCollector $r
+     * @see \FastRoute\RouteCollector
+     * //@phpstan-import-type ExtraParameters from \FastRoute\DataGenerator
+     * @phpstan-type ExtraParameters array<string, string|int|bool|float>
+     * @param ConfigureRoutes $r
      * @return void
      */
     public static function addRouteCollection($r)
     {
         foreach (self::getRoutes() as $name => $route) {
+            /** @var array<string, string|int|bool|float> $options */
             [$path, $params, $methods, $options] = $route;
+            // set route param in request once we find matching route
+            $params[self::ROUTE_PARAM] ??= $name;
+            // set route name in extra options for uri generator - FastRoute uses _name internally
+            $options[ConfigureRoutes::ROUTE_NAME] ??= $name;
             //$handler = $params[self::HANDLER_PARAM] ?? '';
             //$r->addRoute($methods, $path, $handler, $params);
-            $r->addRoute($methods, $path, $params);
+            // use the 'handler' to store any fixed params here, and pass along extra options for FastRoute
+            $r->addRoute($methods, $path, $params, $options);
+        }
+    }
+
+    /**
+     * Generate uri with FastRoute - @todo some issues left to deal with ;-)
+     * @param string $name
+     * @param array<mixed> $params
+     * @return string|null
+     */
+    public static function generate($name, $params)
+    {
+        $generator = self::getUriGenerator();
+        $params = array_map("strval", $params);
+        // @todo slugify & rawurlencode title & author
+        // @todo add fixed params!?
+        // @todo add remaining params in query string
+        try {
+            return $generator->forRoute($name, $params);
+        } catch (UriCouldNotBeGenerated $e) {
+            error_log($e);
+            echo $e;
+            return null;
+        } catch (Throwable $e) {
+            // preg_match() issue like TypeError if param wasn't a string
+            error_log($e);
+            echo $e;
+            return null;
         }
     }
 
@@ -244,6 +321,8 @@ class Route
             } else {
                 // default routes can be used by html, json, phpunit, restapi without _resource, ...
             }
+            // Add ["_route" => $name] to params
+            $params[self::ROUTE_PARAM] ??= $name;
             // Add default GET method
             if (empty($methods)) {
                 $methods[] = 'GET';
@@ -364,6 +443,7 @@ class Route
      * The handler takes precedence over page or _route here, as it
      * will be variable (html/json or feed/opds or restapi or ...)
      *
+     * @deprecated 3.4.2 use handler::route(), handler::page() or handler:link()
      * @param class-string|null $handler
      * @param string|int|null $page
      * @param array<mixed> $params
@@ -400,6 +480,17 @@ class Route
     {
         // ?page=... or /route/...
         $uri = self::page($page, $params);
+        return self::absolute($uri, $handler);
+    }
+
+    /**
+     * Return absolute path for uri
+     * @param string $uri
+     * @param mixed $handler - @todo get rid of this = unused
+     * @return string
+     */
+    public static function absolute($uri, $handler = 'html')
+    {
         // endpoint.php or handler or empty
         $endpoint = self::endpoint($handler);
         if (empty($endpoint) && str_starts_with($uri, '/')) {
@@ -412,7 +503,7 @@ class Route
 
     /**
      * Get endpoint for handler
-     * @todo get rid of param here
+     * @todo get rid of param here - prefix is already included
      * @param string $handler
      * @return string
      */
@@ -646,7 +737,7 @@ class Route
         }
         // start checking path parameters
         if (in_array('ignore', $found[1])) {
-            $subst['ignore'] = 'ignore';
+            $subst['ignore'] ??= 'ignore';
         }
         if (count($found[1]) > count($subst)) {
             return null;
@@ -666,6 +757,7 @@ class Route
             }
             if (in_array($param, ['title', 'author', 'ignore'])) {
                 $value = self::slugify($value);
+                $value = rawurlencode($value);
             }
             if (!empty($pattern)) {
                 $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
@@ -707,7 +799,7 @@ class Route
         // normalize first
         $string = Translation::normalizeUtf8String($string);
 
-        // then clean the new string - e.g. 'sun wu'
+        // then clean the new string - e.g. 'sun wu' to 'sun_wu'
         return str_replace(array_keys($replace), array_values($replace), trim($string));
     }
 

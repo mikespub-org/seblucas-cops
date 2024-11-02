@@ -70,7 +70,7 @@ class RestApiTest extends TestCase
         $apiHandler = new RestApi($request);
         $path = $apiHandler->getPathInfo();
 
-        $expected = ["page" => PageId::BOOK_DETAIL, "id" => 2];
+        $expected = ["page" => PageId::BOOK_DETAIL, "id" => 2, "_route" => "page-13-id"];
         $test = $apiHandler->matchPathInfo($path);
         $this->assertEquals($expected, $test);
 
@@ -453,6 +453,7 @@ class RestApiTest extends TestCase
             Route::HANDLER_PARAM => Route::getHandler("zipfs"),
             "path" => "/zipfs/0/20/META-INF/container.xml",
             "params" => [
+                "_route" => "zipfs",
                 "db" => "0",
                 "data" => "20",
                 "comp" => "META-INF/container.xml",
@@ -511,6 +512,7 @@ class RestApiTest extends TestCase
             // check if the path starts with the handler param here
             "path" => "/thumbs/0/17/html.jpg",
             "params" => [
+                "_route" => "fetch-thumb",
                 "db" => "0",
                 "id" => "17",
                 "thumb" => "html",
