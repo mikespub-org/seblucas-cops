@@ -6,8 +6,9 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Input;
+namespace SebLucas\Cops\Routing;
 
+use SebLucas\Cops\Input\Route;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route as SymfonyRoute;

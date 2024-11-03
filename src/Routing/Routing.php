@@ -6,8 +6,9 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Input;
+namespace SebLucas\Cops\Routing;
 
+use SebLucas\Cops\Input\Route;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -23,7 +24,7 @@ use Symfony\Component\Routing\Router;
  * Matching URLs is similar to nikic/fast-route, but generating URLs requires known route name
  * @see https://github.com/symfony/symfony/blob/7.1/src/Symfony/Component/Routing/Router.php
  */
-class Routing
+class Routing implements RouterInterface
 {
     public const HANDLER_PARAM = "_handler";
     public const MATCHER_CACHE_FILE = 'url_matching_routes.php';
@@ -114,7 +115,7 @@ class Routing
      * Match path with optional method
      * @param string $path
      * @param ?string $method
-     * @return array<mixed>
+     * @return ?array<mixed> array of query params or null if not found
      */
     public function match($path, $method = null)
     {
@@ -141,7 +142,7 @@ class Routing
      * Generate URL path for route name and params
      * @param string $name
      * @param array<mixed> $params
-     * @return string
+     * @return string|null
      */
     public function generate($name, $params)
     {

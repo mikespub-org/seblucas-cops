@@ -9,8 +9,8 @@
 namespace SebLucas\Cops\Tests;
 
 use Exception;
-use SebLucas\Cops\Input\RouteLoader;
-use SebLucas\Cops\Input\Routing;
+use SebLucas\Cops\Routing\RouteLoader;
+use SebLucas\Cops\Routing\Routing;
 
 require_once dirname(__DIR__) . "/config/test.php";
 use PHPUnit\Framework\TestCase;
