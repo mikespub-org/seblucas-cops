@@ -48,7 +48,7 @@ flowchart LR
   click model "https://github.com/mikespub-org/seblucas-cops/tree/main/src/Model" _blank
 ```
 
-## Framework & Input
+## Framework, Input & Routing
 
 The Framework was introduced in COPS 2.7.0 to move all custom code from the Endpoint scripts to dedicated Handlers.
 
@@ -63,10 +63,11 @@ Framework::run('...');
 and they only differentiate by the `name` of the handler to be called. With COPS 3.1.x this code is replaced with a redirect to `index.php/name` and they are permanently removed in release 3.3.1.
 
 Within the Framework, the run() method is equally simple and basically covers the following steps:
-1. get Request based on input
+1. get Request based on input + use Routing (3.4.x) to find parameters
 2. match Request to the right Handler based on name and Route
-3. get Handler
+3. create Handler
 4. let Handler handle the Request
+5. send back the Response (3.2.x)
 
 In COPS 2.x both old-style URL parameters (getJSON.php?page=...&id=...) and new-style Route URLs (/authors/...) are supported by the Framework.
 
