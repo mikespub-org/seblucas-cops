@@ -23,7 +23,10 @@ class Request
     /** @var array<mixed> */
     public $urlParams = [];
     protected string $queryString = '';
-    protected ?string $pathInfo = '';
+    protected string $pathInfo = '';
+    /** @var class-string|null */
+    protected $handlerClass = null;
+    protected string $routeName = '';
     protected bool $parsed = true;
     /** @var string|null */
     public $content = null;
@@ -150,6 +153,9 @@ class Request
         if ($params[Route::HANDLER_PARAM] == $default && $this->isAjax()) {
             $params[Route::HANDLER_PARAM] = Route::getHandler('json');
         }
+        // @todo in case we ever need these later
+        $this->handlerClass = $params[Route::HANDLER_PARAM];
+        $this->routeName = $params[Route::ROUTE_PARAM] ?? '';
         foreach ($params as $name => $value) {
             $this->urlParams[$name] = $value;
         }
@@ -178,15 +184,22 @@ class Request
     /**
      * Set params for match of /handler/{path:.*} with default page handler - see RestApi, FeedHandler etc.
      * @param array<mixed> $params from Route::match('/' . $params['path'])
+     * @param bool $clearPath remove 'path' from urlParams if not set here
      * @return Request
      */
-    public function setParams($params)
+    public function setParams($params, $clearPath = true)
     {
         foreach ($params as $param => $value) {
             $this->set($param, $value);
         }
+        if (!empty($params[Route::HANDLER_PARAM])) {
+            $this->handlerClass = $params[Route::HANDLER_PARAM];
+        } else {
+            $this->handlerClass = null;
+        }
+        $this->routeName = $params[Route::ROUTE_PARAM] ?? '';
         // remove /handler/{path:.*} param from current request
-        if (empty($params['path']) && $this->get('path')) {
+        if ($clearPath && empty($params['path']) && $this->get('path')) {
             $this->set('path', null);
         }
         return $this;
@@ -579,8 +592,7 @@ class Request
             $params[Route::HANDLER_PARAM] ??= $handler;
         }
         $request = new self(false);
-        $request->urlParams = $params;
-        $request->queryString = Route::getQueryString($request->urlParams);
+        $request->setParams($params, false);
         return $request;
     }
 }
