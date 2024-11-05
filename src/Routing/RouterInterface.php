@@ -17,7 +17,7 @@ interface RouterInterface
      * Match path with optional method
      * @param string $path
      * @param ?string $method
-     * @return ?array<mixed> array of query params or null if not found
+     * @return ?array<mixed> array of path params or null if not found
      */
     public function match($path, $method = null);
 
@@ -25,7 +25,8 @@ interface RouterInterface
      * Generate URL path for route name and params
      * @param string $name
      * @param array<mixed> $params
-     * @return string|null
+     * @throws \Throwable
+     * @return string
      */
     public function generate($name, $params);
 }

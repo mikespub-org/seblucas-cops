@@ -145,10 +145,8 @@ class RoutingTest extends TestCase
             $method = $params["_method"];
             unset($params["_method"]);
         }
-        try {
-            $result = self::$routing->match($path, $method);
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        $result = self::$routing->match($path, $method);
+        if (!isset($result)) {
             $this->assertNull($routeUrl);
             return;
         }
@@ -264,10 +262,8 @@ class RoutingTest extends TestCase
             $method = $params["_method"];
             unset($params["_method"]);
         }
-        try {
-            $result = self::$routing->match($path, $method);
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        $result = self::$routing->match($path, $method);
+        if (!isset($result)) {
             $this->assertNull($routeUrl);
             return;
         }

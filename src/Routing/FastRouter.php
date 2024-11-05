@@ -23,18 +23,22 @@ class FastRouter implements RouterInterface
 {
     public const FASTROUTE_CACHE_FILE = 'url_fastroute_cache.php';
 
-    /** @var FastRoute|null */
-    protected static $fastRoute = null;
-    /** @var Dispatcher|null */
-    protected static $dispatcher = null;
-    /** @var GenerateUri|null */
-    protected static $uriGenerator = null;
+    public ?string $cacheDir = null;
+    public ?FastRoute $router = null;
+    protected ?Dispatcher $dispatcher = null;
+    protected ?GenerateUri $uriGenerator = null;
+
+    public function __construct(?string $cacheDir = null)
+    {
+        // force cache generation
+        $this->cacheDir = $cacheDir ?? __DIR__;
+    }
 
     /**
-     * Match pathinfo against routes and return query params
+     * Match path with optional method
      * @param string $path
      * @param ?string $method
-     * @return ?array<mixed> array of query params or null if not found
+     * @return ?array<mixed> array of path params or null if not found
      */
     public function match($path, $method = null)
     {
@@ -43,29 +47,28 @@ class FastRouter implements RouterInterface
         $params = [];
         $method ??= 'GET';
 
-        $dispatcher = self::getDispatcher();
+        $dispatcher = $this->getDispatcher();
         $routeInfo = $dispatcher->dispatch($method, $path);
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
                 // ... 404 Not Found
                 //http_response_code(404);
-                //throw new Exception("Invalid route " . htmlspecialchars($path));
+                //throw new Exception("Invalid path " . htmlspecialchars($path));
                 return null;
             case Dispatcher::METHOD_NOT_ALLOWED:
                 //$allowedMethods = $routeInfo[1];
                 // ... 405 Method Not Allowed
                 //header('Allow: ' . implode(', ', $allowedMethods));
                 //http_response_code(405);
-                //throw new Exception("Invalid method " . htmlspecialchars($method) . " for route " . htmlspecialchars($path));
+                //throw new Exception("Invalid method " . htmlspecialchars($method) . " for path " . htmlspecialchars($path));
                 return null;
-            case Dispatcher::FOUND:
-                // use the 'handler' to store any fixed params here, with _handler and _route
-                $fixed = $routeInfo[1];
-                // path params found by dispatcher
-                $params = $routeInfo[2];
-                // extra options defined in route (_name) or set by route collector (_route = regex path)
-                $extra = $routeInfo->extraParameters;
         }
+        // use the 'handler' to store any fixed params here, with _handler and _route
+        $fixed = $routeInfo[1];
+        // path params found by dispatcher
+        $params = $routeInfo[2];
+        // extra options defined in route (_name) or set by route collector (_route = regex path)
+        $extra = $routeInfo->extraParameters;
         // for normal routes, put fixed params at the start
         $params = array_merge($fixed, $params);
         // set _route param in request once we find matching route - FastRoute uses _name internally
@@ -80,11 +83,12 @@ class FastRouter implements RouterInterface
      * Generate uri with FastRoute - @todo some issues left to deal with ;-)
      * @param string $name
      * @param array<mixed> $params
-     * @return string|null
+     * @throws UriCouldNotBeGenerated|Throwable
+     * @return string
      */
     public function generate($name, $params)
     {
-        $generator = self::getUriGenerator();
+        $generator = $this->getUriGenerator();
         $params = array_map("strval", $params);
         // @todo slugify & rawurlencode title & author
         // @todo add fixed params!?
@@ -92,53 +96,73 @@ class FastRouter implements RouterInterface
         try {
             return $generator->forRoute($name, $params);
         } catch (UriCouldNotBeGenerated $e) {
-            error_log($e);
-            echo $e;
-            return null;
+            error_log($e->getMessage());
+            throw $e;
         } catch (Throwable $e) {
             // preg_match() issue like TypeError if param wasn't a string
-            error_log($e);
-            echo $e;
-            return null;
+            error_log($e->getMessage());
+            throw $e;
         }
     }
 
     /**
-     * Summary of getFastRoute
-     * @param bool $useCache
+     * Get FastRoute router for handler routes (cached)
+     * @param bool $refresh
      * @return FastRoute
      */
-    public static function getFastRoute($useCache = true)
+    public function getRouter($refresh = false)
     {
-        if (isset(self::$fastRoute)) {
-            return self::$fastRoute;
+        if ($refresh) {
+            $this->resetCache();
         }
-        $cacheKey = __DIR__ . '/' . self::FASTROUTE_CACHE_FILE;
-        self::$fastRoute = FastRoute::recommendedSettings(self::addRouteCollection(...), $cacheKey);
-        if (!$useCache) {
-            self::$fastRoute = self::$fastRoute->disableCache();
+        if (isset($this->router)) {
+            return $this->router;
         }
-        return self::$fastRoute;
+        if (empty($this->cacheDir)) {
+            $cacheKey = self::FASTROUTE_CACHE_FILE;
+            $this->router = FastRoute::recommendedSettings(self::addRouteCollection(...), $cacheKey);
+            $this->router = $this->router->disableCache();
+        } else {
+            $cacheKey = $this->cacheDir . '/' . self::FASTROUTE_CACHE_FILE;
+            $this->router = FastRoute::recommendedSettings(self::addRouteCollection(...), $cacheKey);
+        }
+        return $this->router;
     }
 
     /**
      * Summary of getDispatcher
      * @return Dispatcher
      */
-    public static function getDispatcher()
+    public function getDispatcher()
     {
-        self::$dispatcher ??= self::getFastRoute()->dispatcher();
-        return self::$dispatcher;
+        $this->dispatcher ??= $this->getRouter()->dispatcher();
+        return $this->dispatcher;
     }
 
     /**
      * Summary of getUriGenerator
      * @return GenerateUri
      */
-    public static function getUriGenerator()
+    public function getUriGenerator()
     {
-        self::$uriGenerator ??= self::getFastRoute()->uriGenerator();
-        return self::$uriGenerator;
+        $this->uriGenerator ??= $this->getRouter()->uriGenerator();
+        return $this->uriGenerator;
+    }
+
+    /**
+     * Reset cache file used by FastRoute
+     * @return void
+     */
+    public function resetCache()
+    {
+        $this->router = null;
+        if (empty($this->cacheDir)) {
+            return;
+        }
+        $cacheFile = $this->cacheDir . '/' . self::FASTROUTE_CACHE_FILE;
+        if (file_exists($cacheFile)) {
+            unlink($cacheFile);
+        }
     }
 
     /**

@@ -30,38 +30,106 @@ class Routing implements RouterInterface
     public const MATCHER_CACHE_FILE = 'url_matching_routes.php';
     public const GENERATOR_CACHE_FILE = 'url_generating_routes.php';
 
-    public ?string $cacheDir;
-    public ?RequestContext $context;
-    public ?Router $router;
+    public ?string $cacheDir = null;
+    public ?Router $router = null;
 
-    public function __construct(?string $cacheDir = null, ?RequestContext $context = null)
+    public function __construct(?string $cacheDir = null)
     {
         // force cache generation
         $this->cacheDir = $cacheDir ?? __DIR__;
-        $this->context = $context;
+    }
+
+    /**
+     * Match path with optional method and context
+     * @param string $path
+     * @param ?string $method
+     * @param ?RequestContext $context
+     * @return ?array<mixed> array of path params or null if not found
+     */
+    public function match($path, $method = null, $context = null)
+    {
+        // reset router context to start fresh
+        $this->setContext($context);
+        if (!empty($method) && $method != 'GET') {
+            // set router context with method
+            $this->getRouter()->getContext()->setMethod($method);
+        }
+        $matcher = $this->getRouter()->getMatcher();
+        try {
+            $attributes = $matcher->match($path);
+        } catch (ResourceNotFoundException $e) {
+            // ... 404 Not Found
+            //http_response_code(404);
+            //throw new Exception("Invalid path " . htmlspecialchars($path));
+            return null;
+        } catch (MethodNotAllowedException $e) {
+            // ... 405 Method Not Allowed
+            //http_response_code(405);
+            //throw new Exception("Invalid method " . htmlspecialchars($method) . " for path " . htmlspecialchars($path));
+            return null;
+        }
+        return $attributes;
+    }
+
+    /**
+     * Generate URL path for route name and params
+     * @param string $name
+     * @param array<mixed> $params
+     * @throws RouteNotFoundException|InvalidParameterException|MissingMandatoryParametersException
+     * @return string
+     */
+    public function generate($name, $params)
+    {
+        $generator = $this->getRouter()->getGenerator();
+        try {
+            $url = $generator->generate($name, $params, UrlGeneratorInterface::ABSOLUTE_PATH);
+            return $url;
+        } catch (RouteNotFoundException $e) {
+            error_log($e->getMessage());
+            throw $e;
+        } catch (InvalidParameterException $e) {
+            error_log($e->getMessage());
+            throw $e;
+        } catch (MissingMandatoryParametersException $e) {
+            error_log($e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Summary of context - @todo
+     * @param mixed $request
+     * @return RequestContext
+     */
+    public function context($request)
+    {
+        $handler = $request->getHandler();
+        $endpoint = Route::endpoint($handler);
+        $baseUrl = Route::base() . $endpoint;
+        // @todo get scheme and host - see Symfony\Request::getSchemeAndHttpHost()
+        //$context = new RequestContext('/index.php', 'GET', 'localhost', 'http', 80, 443, '/', '');
+        $context = new RequestContext($baseUrl, $request->method(), 'localhost', 'http', 80, 443, $request->path, $request->query());
+        //$context->fromRequest($request);
+        return $context;
     }
 
     /**
      * Get Symfony router for handler routes (cached)
-     * @param ?RequestContext $context
      * @param bool $refresh
      * @return Router
      */
-    public function getRouter($context = null, $refresh = false)
+    public function getRouter($refresh = false)
     {
         if ($refresh) {
             $this->resetCache();
         }
         if (isset($this->router)) {
-            if (isset($context)) {
-                $this->router->setContext($context);
-            }
             return $this->router;
         }
         $loader = new RouteLoader();
         $resource = null;
         $options = ['cache_dir' => $this->cacheDir];
-        $context ??= $this->context;
+        $context = null;
 
         $this->router = new Router($loader, $resource, $options, $context);
         return $this->router;
@@ -84,6 +152,10 @@ class Routing implements RouterInterface
      */
     public function resetCache()
     {
+        $this->router = null;
+        if (empty($this->cacheDir)) {
+            return;
+        }
         $cacheFile = $this->cacheDir . '/' . self::MATCHER_CACHE_FILE;
         if (file_exists($cacheFile)) {
             unlink($cacheFile);
@@ -92,73 +164,5 @@ class Routing implements RouterInterface
         if (file_exists($cacheFile)) {
             unlink($cacheFile);
         }
-    }
-
-    /**
-     * Summary of context - @todo
-     * @param mixed $request
-     * @return RequestContext
-     */
-    public function context($request)
-    {
-        $handler = $request->getHandler();
-        $endpoint = Route::endpoint($handler);
-        $baseUrl = Route::base() . $endpoint;
-        // @todo get scheme and host - see Symfony\Request::getSchemeAndHttpHost()
-        //$context = new RequestContext('/index.php', 'GET', 'localhost', 'http', 80, 443, '/', '');
-        $context = new RequestContext($baseUrl, $request->method(), 'localhost', 'http', 80, 443, $request->path, $request->query());
-        //$context->fromRequest($request);
-        return $context;
-    }
-
-    /**
-     * Match path with optional method
-     * @param string $path
-     * @param ?string $method
-     * @return ?array<mixed> array of query params or null if not found
-     */
-    public function match($path, $method = null)
-    {
-        // reset router context to start fresh
-        $this->setContext();
-        if (!empty($method) && $method != 'GET') {
-            // set router context with method
-            $this->getRouter()->getContext()->setMethod($method);
-        }
-        $matcher = $this->getRouter()->getMatcher();
-        try {
-            $attributes = $matcher->match($path);
-        } catch (ResourceNotFoundException $e) {
-            // ...
-            throw $e;
-        } catch (MethodNotAllowedException $e) {
-            // ...
-            throw $e;
-        }
-        return $attributes;
-    }
-
-    /**
-     * Generate URL path for route name and params
-     * @param string $name
-     * @param array<mixed> $params
-     * @return string|null
-     */
-    public function generate($name, $params)
-    {
-        $generator = $this->getRouter()->getGenerator();
-        try {
-            $url = $generator->generate($name, $params, UrlGeneratorInterface::ABSOLUTE_PATH);
-        } catch (RouteNotFoundException $e) {
-            // ...
-            throw $e;
-        } catch (InvalidParameterException $e) {
-            // ...
-            throw $e;
-        } catch (MissingMandatoryParametersException $e) {
-            // ...
-            throw $e;
-        }
-        return $url;
     }
 }

@@ -72,6 +72,8 @@ class RestApi extends BaseRenderer
         $root = '/' . explode('/', $path . '/')[1];
         if (array_key_exists($root, self::$extra)) {
             $params = Route::match($path);
+            // @todo handle non-matching path here too!?
+            $params ??= [];
             if (!empty($params['page']) && $params['page'] != PageId::REST_API) {
                 return $params;
             }
