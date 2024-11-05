@@ -56,17 +56,17 @@ class Entry
      * @param string $contentType
      * @param array<LinkEntry|LinkFeed> $linkArray
      * @param string|int|null $database
-     * @param string $className
+     * @param string $classShortName
      * @param string|int $count
      */
-    public function __construct($title, $id, $content, $contentType = "text", $linkArray = [], $database = null, $className = "", $count = 0)
+    public function __construct($title, $id, $content, $contentType = "text", $linkArray = [], $database = null, $classShortName = "", $count = 0)
     {
         $this->title = $title;
         $this->id = $id;
         $this->content = $content;
         $this->contentType = $contentType;
         $this->linkArray = $linkArray;
-        $this->className = $className;
+        $this->className = $classShortName;
         $this->numberOfElement = $count;
 
         if (Config::get('show_icons') == 1) {

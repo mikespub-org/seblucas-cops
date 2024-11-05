@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\BookList;
 class PageRecentBooks extends Page
 {
     public const PAGE_ID = PageId::ALL_RECENT_BOOKS_ID;
-    //protected string $className = Book::class;
+    //protected $className = Book::class;
 
     /**
      * Summary of initializeContent

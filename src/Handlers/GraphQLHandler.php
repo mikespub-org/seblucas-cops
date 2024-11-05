@@ -114,7 +114,7 @@ class GraphQLHandler extends BaseHandler
 
     /**
      * Summary of getSchema
-     * @phpstan-import-type TypeConfigDecorator from \GraphQL\Utils\ASTDefinitionBuilder
+     * @phpstan-type TypeConfigDecorator callable(): array<string, mixed>
      * @param Request $request
      * @return \GraphQL\Type\Schema
      */

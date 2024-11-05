@@ -89,7 +89,8 @@ class CustomColumnTypeRating extends CustomColumnType
      */
     public function getCustom($id)
     {
-        return new CustomColumn($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);
+        $value = intval($id) / 2;
+        return new CustomColumn($id, str_format(localize("customcolumn.stars", $value), $value), $this);
     }
 
     /**

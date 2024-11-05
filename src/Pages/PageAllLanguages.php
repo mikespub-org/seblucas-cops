@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllLanguages extends Page
 {
-    protected string $className = Language::class;
+    protected $className = Language::class;
 
     /**
      * Summary of initializeContent

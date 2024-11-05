@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Config;
 
 class PageAllTags extends Page
 {
-    protected string $className = Tag::class;
+    protected $className = Tag::class;
 
     /**
      * Summary of initializeContent

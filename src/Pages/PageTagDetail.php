@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Tag;
 
 class PageTagDetail extends PageWithDetail
 {
-    protected string $className = Tag::class;
+    protected $className = Tag::class;
 
     /**
      * Summary of initializeContent

@@ -74,7 +74,7 @@ class RestApiHandler extends BaseHandler
 
     /**
      * Summary of addResourceParam
-     * @param string $className
+     * @param class-string $className
      * @param array<mixed> $params
      * @return array<mixed>
      */
@@ -87,7 +87,7 @@ class RestApiHandler extends BaseHandler
 
     /**
      * Get REST API link for resource handled by RestApiHandler
-     * @param string $className
+     * @param class-string $className
      * @param array<mixed> $params
      * @return string
      */

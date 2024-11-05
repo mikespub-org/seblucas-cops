@@ -56,7 +56,8 @@ class Page
 
     /** @var Request */
     protected $request = null;
-    protected string $className = Base::class;
+    /** @var class-string */
+    protected $className = Base::class;
     /** @var int */
     protected $numberPerPage = -1;
     /** @var array<string> */

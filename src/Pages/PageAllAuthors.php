@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllAuthors extends Page
 {
-    protected string $className = Author::class;
+    protected $className = Author::class;
 
     /**
      * Summary of initializeContent

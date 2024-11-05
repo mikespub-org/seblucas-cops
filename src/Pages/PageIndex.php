@@ -156,7 +156,7 @@ class PageIndex extends Page
 
     /**
      * Summary of addFilterCountEntry
-     * @param string $className
+     * @param class-string $className
      * @param ?string $numberOfString
      * @return void
      */

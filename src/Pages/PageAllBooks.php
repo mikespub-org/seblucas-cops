@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAllBooks extends Page
 {
-    protected string $className = Book::class;
+    protected $className = Book::class;
 
     /**
      * Summary of initializeContent

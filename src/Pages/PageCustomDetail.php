@@ -17,7 +17,7 @@ use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 
 class PageCustomDetail extends PageWithDetail
 {
-    protected string $className = CustomColumn::class;
+    protected $className = CustomColumn::class;
 
     /**
      * Summary of initializeContent

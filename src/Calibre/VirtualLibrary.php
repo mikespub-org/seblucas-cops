@@ -29,7 +29,7 @@ class VirtualLibrary extends Base
 
     /**
      * Summary of __construct
-     * @param object $post
+     * @param \stdClass $post
      * @param ?int $database
      */
     public function __construct($post, $database = null)

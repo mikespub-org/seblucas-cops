@@ -92,7 +92,7 @@ class Data
 
     /**
      * Summary of __construct
-     * @param object $post
+     * @param \stdClass $post
      * @param ?Book $book
      */
     public function __construct($post, $book = null)

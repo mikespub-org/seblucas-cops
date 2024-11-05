@@ -57,7 +57,7 @@ abstract class Base
 
     /**
      * Summary of __construct
-     * @param object $post
+     * @param \stdClass $post
      * @param ?int $database
      */
     public function __construct($post, $database = null)
@@ -183,7 +183,7 @@ abstract class Base
 
     /**
      * Summary of getClassName
-     * @param ?string $className
+     * @param ?class-string $className
      * @return string
      */
     public function getClassName($className = null)

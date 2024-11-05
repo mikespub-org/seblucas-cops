@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\BaseList;
 
 class PageAllPublishers extends Page
 {
-    protected string $className = Publisher::class;
+    protected $className = Publisher::class;
 
     /**
      * Summary of initializeContent

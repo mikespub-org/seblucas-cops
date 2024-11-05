@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Config;
 
 class PageAllRating extends Page
 {
-    protected string $className = Rating::class;
+    protected $className = Rating::class;
 
     /**
      * Summary of initializeContent

@@ -13,7 +13,7 @@ use SebLucas\Cops\Calibre\Book;
 
 class PageBookDetail extends Page
 {
-    protected string $className = Book::class;
+    protected $className = Book::class;
 
     /**
      * Summary of initializeContent

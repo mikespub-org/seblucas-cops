@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Route;
 
 class PageAllAuthorsLetter extends Page
 {
-    protected string $className = Author::class;
+    protected $className = Author::class;
 
     /**
      * Summary of initializeContent

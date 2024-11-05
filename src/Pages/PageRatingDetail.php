@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Rating;
 
 class PageRatingDetail extends PageWithDetail
 {
-    protected string $className = Rating::class;
+    protected $className = Rating::class;
 
     /**
      * Summary of initializeContent

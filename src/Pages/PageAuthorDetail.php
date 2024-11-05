@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\BookList;
 
 class PageAuthorDetail extends PageWithDetail
 {
-    protected string $className = Author::class;
+    protected $className = Author::class;
 
     /**
      * Summary of initializeContent

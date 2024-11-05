@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Publisher;
 
 class PagePublisherDetail extends PageWithDetail
 {
-    protected string $className = Publisher::class;
+    protected $className = Publisher::class;
 
     /**
      * Summary of initializeContent

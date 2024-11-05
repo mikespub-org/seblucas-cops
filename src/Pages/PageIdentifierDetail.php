@@ -17,16 +17,8 @@ use SebLucas\Cops\Calibre\Identifier;
  */
 class PageIdentifierDetail extends PageWithDetail
 {
-    /**
-     * Summary of className
-     * @var string
-     */
-    protected string $className = Identifier::class;
+    protected $className = Identifier::class;
 
-    /**
-     * Summary of initializeContent
-     * @return void
-     */
     public function initializeContent()
     {
         // this would be the identifier - override here

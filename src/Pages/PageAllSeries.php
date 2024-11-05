@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Config;
 
 class PageAllSeries extends Page
 {
-    protected string $className = Serie::class;
+    protected $className = Serie::class;
 
     /**
      * Summary of initializeContent

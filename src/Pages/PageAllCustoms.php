@@ -19,7 +19,7 @@ use SebLucas\Cops\Model\Entry;
 
 class PageAllCustoms extends Page
 {
-    protected string $className = CustomColumnType::class;
+    protected $className = CustomColumnType::class;
 
     /**
      * Summary of initializeContent

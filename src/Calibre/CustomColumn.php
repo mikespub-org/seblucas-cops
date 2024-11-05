@@ -113,7 +113,7 @@ class CustomColumn extends Category
 
     /**
      * Summary of getClassName
-     * @param ?string $className
+     * @param ?class-string $className
      * @return string
      */
     public function getClassName($className = null)

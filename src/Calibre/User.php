@@ -31,7 +31,7 @@ class User
 
     /**
      * Summary of __construct
-     * @param object $post
+     * @param \stdClass $post
      * @param ?string $userDbFile
      */
     public function __construct($post, $userDbFile = null)

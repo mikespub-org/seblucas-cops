@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Language;
 
 class PageLanguageDetail extends PageWithDetail
 {
-    protected string $className = Language::class;
+    protected $className = Language::class;
 
     /**
      * Summary of initializeContent

@@ -72,6 +72,9 @@ class Mail
             return 'No email sent. Unknown book data';
         }
         $data = $book->getDataById($idData);
+        if (!$data) {
+            return 'No email sent. Unknown data id';
+        }
 
         if (!file_exists($data->getLocalPath())) {
             return 'No email sent. Attachment not found';

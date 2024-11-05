@@ -93,6 +93,7 @@ class EPubReader extends BaseRenderer
         $db = $book->getDatabaseId() ?? 0;
         $params = ['data' => $idData, 'db' => $db];
 
+        /** @var EPub $epub */
         $epub = new self::$epubClass($book->getFilePath('EPUB', $idData));
         $epub->initSpineComponent();
 
@@ -128,6 +129,7 @@ class EPubReader extends BaseRenderer
         }
 
         try {
+            /** @var EPub $epub */
             $epub = new self::$epubClass($book->getFilePath('EPUB', $idData));
             $epub->initSpineComponent();
         } catch (Exception $e) {

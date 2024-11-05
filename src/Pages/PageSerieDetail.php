@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Serie;
 
 class PageSerieDetail extends PageWithDetail
 {
-    protected string $className = Serie::class;
+    protected $className = Serie::class;
 
     /**
      * Summary of initializeContent

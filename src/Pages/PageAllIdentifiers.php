@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Config;
 
 class PageAllIdentifiers extends Page
 {
-    protected string $className = Identifier::class;
+    protected $className = Identifier::class;
 
     /**
      * Summary of initializeContent

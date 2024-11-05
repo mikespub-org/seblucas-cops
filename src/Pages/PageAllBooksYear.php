@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Route;
 
 class PageAllBooksYear extends Page
 {
-    protected string $className = Book::class;
+    protected $className = Book::class;
 
     /**
      * Summary of initializeContent

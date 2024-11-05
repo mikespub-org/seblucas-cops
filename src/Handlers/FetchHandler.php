@@ -97,6 +97,10 @@ class FetchHandler extends BaseHandler
         }
 
         $data = $book->getDataById($idData);
+        if (!$data) {
+            // this will call exit()
+            Response::notFound($request);
+        }
         // absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
         $file = $book->getFilePath($type, $idData);
 

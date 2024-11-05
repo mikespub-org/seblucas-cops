@@ -100,7 +100,7 @@ class Book
 
     /**
      * Summary of __construct
-     * @param object $line
+     * @param \stdClass $line
      * @param ?int $database
      */
     public function __construct($line, $database = null)
@@ -577,6 +577,10 @@ class Book
     public function sendUpdatedEpub($idData, $response)
     {
         $data = $this->getDataById($idData);
+        if (!$data) {
+            // this will call exit()
+            Response::sendError(null, 'Error: unable to find epub file');
+        }
 
         // if we want to update metadata and then use kepubify, we need to save the updated Epub first
         if ($this->updateForKepub && !empty(Config::get('kepubify_path'))) {

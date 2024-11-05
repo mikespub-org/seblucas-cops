@@ -20,7 +20,8 @@ use SebLucas\Cops\Model\LinkNavigation;
 class BaseList
 {
     public Request $request;
-    public string $className;
+    /** @var class-string */
+    public $className;
     /** @var ?int */
     protected $databaseId = null;
     /** @var ?int */
@@ -566,11 +567,11 @@ class BaseList
             //$params["db"] ??= $this->databaseId;
         }
         while ($post = $result->fetchObject()) {
-            /** @var Author|Tag|Serie|Publisher|Language|Rating|Book $instance */
             if ($this->className == Book::class) {
                 $post->count = 1;
             }
 
+            /** @var Base|Book $instance */
             $instance = new $this->className($post, $this->databaseId);
             $instance->setHandler($this->handler);
             array_push($entryArray, $instance->getEntry($post->count, $params));
@@ -611,6 +612,7 @@ class BaseList
         $result = Database::queryFilter($query, "", "", [], $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
+            /** @var Base|Book $instance */
             $instance = new $this->className($post, $this->databaseId);
             $instance->setHandler($this->handler);
             array_push($entryArray, $instance->getEntry($post->count));

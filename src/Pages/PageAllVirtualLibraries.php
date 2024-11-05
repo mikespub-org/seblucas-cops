@@ -13,7 +13,7 @@ use SebLucas\Cops\Calibre\VirtualLibrary;
 
 class PageAllVirtualLibraries extends Page
 {
-    protected string $className = VirtualLibrary::class;
+    protected $className = VirtualLibrary::class;
 
     /**
      * Summary of initializeContent
