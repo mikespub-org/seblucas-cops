@@ -42,6 +42,15 @@
                 <exclude name="yarn.lock" />
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
+                <exclude name=".dockerignore" />
+                <exclude name=".editorconfig" />
+                <exclude name=".gitattributes" />
+                <exclude name=".gitignore" />
+                <exclude name=".gitremotes" />
+                <exclude name="CHANGELOG.seblucas.md" />
+                <exclude name="phpstan*" />
+                <exclude name="phpunit*" />
+                <exclude name="rector*" />
                 <exclude name="vendor/bin/**" />
                 <exclude name="vendor/maennchen/zipstream-php/.phive/**" />
                 <exclude name="vendor/maennchen/zipstream-php/.phpdoc/**" />
@@ -90,7 +99,7 @@
                 <exclude name="*.xml" />
                 <exclude name="config_local.php" />
                 <exclude name="config/local.php" />
-                <exclude name="composer*" />
+                <exclude name="composer.lock" />
                 <exclude name="*.cache" />
                 <exclude name="*.cache/**" />
             </fileset>

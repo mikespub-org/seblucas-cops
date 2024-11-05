@@ -13,10 +13,14 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * ...
+
+3.4.5 - 20241105 Use route names to generate links
   * Changes in config/default.php file:
     - set $config['cops_use_route_urls'] as deprecated (= always enabled)
     - set $config['cops_download_series'] as deprecated (use $config['cops_download_page'] instead)
     - set $config['cops_download_author'] as deprecated (use $config['cops_download_page'] instead)
+  * Upgrade swagger-ui-dist package and link to 5.18.0
   * Split off Routing namespace with interface to allow switching routers later
   * Pin nikic/fast-route version to 2.0.0-beta1 and use recommended settings
   * Pass _route param to request in Route::match() and deprecate Route::link()
