@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Tests;
 use SebLucas\Cops\Handlers\GraphQLHandler;
 
 require_once dirname(__DIR__) . '/config/test.php';
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework;
@@ -20,6 +21,7 @@ use SebLucas\Cops\Input\Request;
 use GraphQL\Type\Schema;
 use GraphQL\Type\Definition\ListOfType;
 
+#[RequiresMethod('\GraphQL\GraphQL', 'executeQuery')]
 class GraphQLHandlerTest extends TestCase
 {
     /** @var class-string */
@@ -190,6 +192,12 @@ class GraphQLHandlerTest extends TestCase
      */
     public static function getQueryFields()
     {
+        if (!class_exists('\GraphQL\GraphQL')) {
+            // dummy data to satisfy phpunit when graphql is not installed
+            return [
+                [],
+            ];
+        }
         $request = Request::build();
         $handler = new GraphQLHandler();
         $schema = $handler->getSchema($request);

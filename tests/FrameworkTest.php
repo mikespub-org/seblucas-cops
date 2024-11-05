@@ -14,6 +14,7 @@ use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Middleware\TestMiddleware;
 
 require_once dirname(__DIR__) . '/config/test.php';
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Route;
 
@@ -118,6 +119,7 @@ class FrameworkTest extends TestCase
         unset($_SERVER['PATH_INFO']);
     }
 
+    #[RequiresMethod('\Marsender\EPubLoader\RequestHandler', '__construct')]
     public function testRunLoader(): void
     {
         $_SERVER['PATH_INFO'] = '/loader';

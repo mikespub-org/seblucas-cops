@@ -13,11 +13,13 @@ use SebLucas\Cops\Routing\RouteLoader;
 use SebLucas\Cops\Routing\Routing;
 
 require_once dirname(__DIR__) . "/config/test.php";
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 
+#[RequiresMethod('\Symfony\Component\Routing\Router', '__construct')]
 class RoutingTest extends TestCase
 {
     /** @var Routing */
