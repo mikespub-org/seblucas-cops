@@ -13,7 +13,11 @@
 		<ul>
 			{% for action, actionInfo in actionList %}
 			<li>
-				<a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionInfo}}</a>
+				{% if action in actions|keys %}
+					<a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionInfo}}</a>
+				{% else %}
+					{{actionInfo}}
+				{% endif %}
 			</li>
 			{% endfor %}
 		</ul>

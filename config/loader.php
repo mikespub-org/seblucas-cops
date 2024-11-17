@@ -1,6 +1,6 @@
 <?php
 /**
- * Epub loader config
+ * EPub Loader config
  *
  * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  * @author     Didier Corbière <contact@atoll-digital-library.org>
@@ -18,12 +18,6 @@ $gConfig['endpoint'] = $_SERVER['SCRIPT_NAME'] ?? null;
  * Application name
  */
 $gConfig['app_name'] = 'EPub Loader';
-
-/**
- * Application version
- * @deprecated 3.5.1 see Config::VERSION
- */
-//$gConfig['version'] = '3.5';
 
 /**
  * Admin email
@@ -62,10 +56,15 @@ $gConfig['databases'][] = ['name' => 'One Book', 'db_path' => dirname(__DIR__) .
 $gConfig['databases'][] = ['name' => 'Custom Columns', 'db_path' => dirname(__DIR__) . '/tests/BaseWithCustomColumns', 'epub_path' => '.'];
 
 /**
- * Available actions
- * @deprecated 3.3.0 use action groups instead
+ * Define callbacks to update information here
  */
-$gConfig['actions'] = [];
+/**
+$gConfig['callbacks'] = [
+    'setAuthorInfo' => $this->setAuthorInfo(...),
+    'setSeriesInfo' => $this->setSeriesInfo(...),
+    'setBookInfo' => $this->setBookInfo(...),
+];
+*/
 
 /**
  * Available action groups
@@ -75,11 +74,16 @@ $gConfig['groups'] = [];
 $gConfig['groups']['Import'] = [
     //'db_load' => 'Create Calibre database with available epub files',
     //'csv_import' => 'Import CSV records into new Calibre database',
-    //'json_import' => 'Import JSON files from Lookup into new Calibre database',
+    //'json_import' => 'Import JSON records into new Calibre database',
+    //'cache_load' => 'Load JSON files from Lookup cache into new Calibre database',
 ];
 $gConfig['groups']['Export'] = [
     'csv_export' => 'Export CSV records with available epub files',
     'csv_dump' => 'Dump CSV records from Calibre database',
+    'json_export' => 'Export JSON records with available epub files',
+    'json_dump' => 'Dump JSON records from Calibre database',
+    // if configured by calling application
+    'callback' => 'Export metadata cache info via callbacks',
 ];
 $gConfig['groups']['Lookup'] = [
     'authors' => 'Authors in database',
@@ -105,6 +109,7 @@ $gConfig['groups']['Internal'] = [
     'resource' => 'Get Calibre Resource',
 ];
 $gConfig['groups']['Extra'] = [
+    'booklinks' => 'Book links by identifier',
     'notes' => 'Get Calibre Notes',
     // update metadata in epub files
     //'meta' => 'EPub Metadata App',
