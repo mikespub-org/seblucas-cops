@@ -50,6 +50,14 @@ $config['calibre_external_storage'] = '';
  */
 $config['calibre_database_field_cover'] = '';
 
+/**
+ * Custom configuration if your Calibre library was created with epub-loader,
+ * and it contains an extra 'image' field in the authors and/or series tables
+ * Example (with epub-loader):
+ * $config['calibre_database_field_image'] = 'image';
+ */
+$config['calibre_database_field_image'] = '';
+
 /*
  * Full URL prefix (with trailing /)
  * useful where a full URL is required, COPS is behind a proxy or the script name shows the wrong place
