@@ -13,7 +13,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
-  * ...
+  * Changes in config/default.php file:
+    - new $config['calibre_database_field_image'] for 'image' field from epub-loader
 
 3.4.5 - 20241105 Use route names to generate links
   * Changes in config/default.php file:

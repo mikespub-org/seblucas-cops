@@ -160,15 +160,15 @@ class LoaderHandler extends BaseHandler
             $image = true;
             if (empty(Config::get('thumbnail_handling')) ||
                 Config::get('thumbnail_handling') == "1") {
-                //$image = $appentity->saveThumbnail($authorInfo->image, $clipped);
+                $imageField = Config::get('calibre_database_field_image', '');
+                $image = $writer->setAuthorImage($authorInfo, $authorId, $imageField);
             }
             $result = $result && ($image ? true : false);
         }
         if (!empty($authorInfo->link) && str_contains($authorInfo->link, '://')) {
             // check for duplicate links
             if (empty($instance->link) || $instance->link != $authorInfo->link) {
-                //$link = $appentity->addLink($label, $authorInfo->link);
-                $link = true;
+                $link = $writer->setAuthorLink($authorInfo, $authorId);
             } else {
                 $link = true;
             }
@@ -181,8 +181,7 @@ class LoaderHandler extends BaseHandler
             $content = $authorInfo->note->parseHtml($urlPrefix);
             $curNote = $instance->getNote();
             if (empty($curNote) || $curNote->doc != $content) {
-                $writer->addNote($authorInfo->note);
-                $note = true;
+                $note = $writer->addNote($authorInfo->note);
             } else {
                 $note = true;
             }
@@ -220,15 +219,15 @@ class LoaderHandler extends BaseHandler
             $image = true;
             if (empty(Config::get('thumbnail_handling')) ||
                 Config::get('thumbnail_handling') == "1") {
-                //$image = $appentity->saveThumbnail($seriesInfo->image, $clipped);
+                $imageField = Config::get('calibre_database_field_image', '');
+                $image = $writer->setSeriesImage($seriesInfo, $seriesId, $imageField);
             }
             $result = $result && ($image ? true : false);
         }
         if (!empty($seriesInfo->link) && str_contains($seriesInfo->link, '://')) {
             // check for duplicate links
             if (empty($instance->link) || $instance->link != $seriesInfo->link) {
-                //$link = $appentity->addLink($label, $seriesInfo->link);
-                $link = true;
+                $link = $writer->setSeriesLink($seriesInfo, $seriesId);
             } else {
                 $link = true;
             }
@@ -241,8 +240,7 @@ class LoaderHandler extends BaseHandler
             $content = $seriesInfo->note->parseHtml($urlPrefix);
             $curNote = $instance->getNote();
             if (empty($curNote) || $curNote->doc != $content) {
-                $writer->addNote($seriesInfo->note);
-                $note = true;
+                $note = $writer->addNote($seriesInfo->note);
             } else {
                 $note = true;
             }
@@ -280,7 +278,8 @@ class LoaderHandler extends BaseHandler
             $image = true;
             if (empty(Config::get('thumbnail_handling')) ||
                 Config::get('thumbnail_handling') == "1") {
-                //$image = $appentity->saveThumbnail($bookInfo->cover, $clipped);
+                $coverField = Config::get('calibre_database_field_cover', '');
+                $image = $writer->setBookCover($bookInfo, $bookId, $coverField);
             }
             $result = $result && ($image ? true : false);
         }
@@ -290,8 +289,7 @@ class LoaderHandler extends BaseHandler
                 return $identifier->getLink() == $bookInfo->uri;
             });
             if (empty($links)) {
-                //$link = $appentity->addLink($label, $bookInfo->uri);
-                $link = true;
+                $link = $writer->setBookUri($bookInfo, $bookId);
             } else {
                 $link = true;
             }

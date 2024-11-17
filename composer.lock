@@ -1335,16 +1335,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "3.5.9",
+            "version": "3.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "bb605780a29b7e4c2544d45983b5acc4f50abc27"
+                "reference": "3de15d421007b8ccfd71dc6f5ce202651b85503f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/bb605780a29b7e4c2544d45983b5acc4f50abc27",
-                "reference": "bb605780a29b7e4c2544d45983b5acc4f50abc27",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/3de15d421007b8ccfd71dc6f5ce202651b85503f",
+                "reference": "3de15d421007b8ccfd71dc6f5ce202651b85503f",
                 "shasum": ""
             },
             "require": {
@@ -1391,9 +1391,9 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/3.5.9"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/3.5.11"
             },
-            "time": "2024-11-17T16:56:39+00:00"
+            "time": "2024-11-17T21:03:38+00:00"
         },
         {
             "name": "mikespub/survos-wikidata",
