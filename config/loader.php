@@ -10,22 +10,22 @@
 $gConfig = [];
 
 /**
- * URL endpoint for your application
+ * URL endpoint for your application - will be replaced by COPS endpoint
  */
 $gConfig['endpoint'] = $_SERVER['SCRIPT_NAME'] ?? null;
 
 /**
- * Application name
+ * Application name - will be replaced by COPS Loader
  */
 $gConfig['app_name'] = 'EPub Loader';
 
 /**
- * Admin email
+ * Admin email - will be set to empty
  */
 $gConfig['admin_email'] = '';
 
 /**
- * Create Calibre databases ?
+ * Create Calibre databases ? - will be set to false
  *
  * If true: databases are removed and recreated before loading ebooks
  * If false: append ebooks into databases
@@ -33,7 +33,7 @@ $gConfig['admin_email'] = '';
 $gConfig['create_db'] = false;
 
 /**
- * Specify a cache directory for any Google or Wikidata lookup
+ * Specify a cache directory for any Google or Wikidata lookup - defaults to ../cache if null
  */
 $gConfig['cache_dir'] = dirname(__DIR__) . '/tests/cache';
 
@@ -56,7 +56,7 @@ $gConfig['databases'][] = ['name' => 'One Book', 'db_path' => dirname(__DIR__) .
 $gConfig['databases'][] = ['name' => 'Custom Columns', 'db_path' => dirname(__DIR__) . '/tests/BaseWithCustomColumns', 'epub_path' => '.'];
 
 /**
- * Define callbacks to update information here
+ * Define callbacks to update information here - will be set to methods in LoaderHandler
  */
 /**
 $gConfig['callbacks'] = [
@@ -67,7 +67,7 @@ $gConfig['callbacks'] = [
 */
 
 /**
- * Available action groups
+ * Available action groups - customize which ones to show via COPS
  */
 $gConfig['groups'] = [];
 // only if you start without an existing calibre database

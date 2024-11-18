@@ -169,7 +169,7 @@ $config['cops_ignored_formats'] = [];
  * See Github wiki for more information
  *  1 : enable
  *  0 : disable
- * @deprecated 3.1.0 use route urls instead
+ * @deprecated 3.1.0 use route urls instead (= always enabled in 3.4+)
  */
 $config['cops_use_url_rewriting'] = '0';
 

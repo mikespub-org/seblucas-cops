@@ -101,7 +101,7 @@ class LoaderHandler extends BaseHandler
 
         $urlParams = $request->urlParams;
         if (!is_null($dbNum) && !empty($gConfig['databases'][$dbNum])) {
-            $this->dbFileName = $gConfig['databases'][$dbNum]['path'] . '/metadata.db';
+            $this->dbFileName = $gConfig['databases'][$dbNum]['db_path'] . '/metadata.db';
         }
 
         // you can define extra actions for your app - see example.php
