@@ -82,7 +82,15 @@
     {% endif %}
     {% for column in it.book.customcolumns_preview  %}
     <p>
-        <h4>{{column.customColumnType.columnTitle}}: {{column.htmlvalue}}</h4>
+        <h4>
+            {{column.customColumnType.columnTitle}}: 
+            {% if column.htmlvalue != "" and column.url %}
+                {# @todo handle series, csv text etc. links #}
+                {{column.htmlvalue}}
+            {% else %}
+                {{column.htmlvalue}}
+            {% endif %}
+        </h4>
     </p>
     {% endfor %}
     {% if it.book.extraFiles != "" %}

@@ -561,9 +561,19 @@ class BookTest extends TestCase
     public function testGetAllCustomColumnValues(): void
     {
         $book = Book::getBookById(17);
+        $book->setHandler(self::$handler);
+
         $data = $book->getCustomColumnValues(["*"], true);
 
         $this->assertCount(3, $data);
+
+        $this->assertEquals("SeriesLike [1]", $data[0]['htmlvalue']);
+        $this->assertEquals(self::$handler::link() . "/custom/1/1", $data[0]['url']);
+        // @todo handle case where we have several values, e.g. array of text for type 2 (csv)
+        $this->assertEquals("tag1,tag2", $data[1]['htmlvalue']);
+        $this->assertEquals(self::$handler::link() . "/custom/2/1,2", $data[1]['url']);
+        $this->assertEquals("text", $data[2]['htmlvalue']);
+        $this->assertEquals(self::$handler::link() . "/custom/3/1", $data[2]['url']);
     }
 
     public function testGetDataById(): void

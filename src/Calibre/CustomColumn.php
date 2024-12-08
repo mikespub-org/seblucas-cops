@@ -67,6 +67,7 @@ class CustomColumn extends Category
      */
     public function getUri($params = [])
     {
+        // @todo handle case where we have several values, e.g. array of text for type 2 (csv)
         $params['custom'] = $this->getCustomId();
         $params['id'] = $this->id ?? self::NOT_SET;
         // we need databaseId here because we use Route::link with $handler
@@ -226,6 +227,7 @@ class CustomColumn extends Category
             'value'            => $this->value,
             'customColumnType' => $this->customColumnType->toArray(),
             'htmlvalue'        => $this->htmlvalue,
+            'url'              => $this->getUri(),
         ];
     }
 }

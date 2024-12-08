@@ -416,7 +416,8 @@ class Book
             $params['file'] = $fileName;
             $url = FetchHandler::route(self::ROUTE_FILE, $params);
         } else {
-            $url = Route::path(str_replace('%2F', '/', rawurlencode($filePath)));
+            $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
+            $url = Route::path($urlPath);
         }
         $linkEntry = new LinkEntry(
             $url,
@@ -692,6 +693,7 @@ class Book
             $col = CustomColumnType::createByLookup($lookup, $database);
             if (!is_null($col)) {
                 $cust = $col->getCustomByBook($this);
+                $cust->setHandler($this->getHandler());
                 if ($asArray) {
                     array_push($result, $cust->toArray());
                 } else {
