@@ -13,8 +13,14 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * ...
+
+3.4.6 - 20241208 Fix issues + update css link
   * Changes in config/default.php file:
     - new $config['calibre_database_field_image'] for 'image' field from epub-loader
+  * Fix custom column detail page + not set entry - see issue #121 by @Mossop
+  * Use minified bootstrap icons css - see PR #120 from @dunxd
+  * Fix url-encode query for search in feeds - see issue #119 by @cebo29
 
 3.4.5 - 20241105 Use route names to generate links
   * Changes in config/default.php file:

@@ -1,6 +1,6 @@
 {
   "name": "seblucas-cops",
-  "packageManager": "yarn@4.4.1",
+  "packageManager": "yarn@4.5.3",
   "dependencies": {
     "@mikespub/epubjs-reader": "^2024.10.27",
     "bootstrap": "^3.4.1",
