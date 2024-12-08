@@ -89,6 +89,7 @@ class RoutingTest extends TestCase
             ["index.php?page=13&id=2&author=Author&title=Title", "/books/2/Author/Title", "page-book", ["page" => "13", "id" => "2", "author" => "Author", "title" => "Title"]],
             ["index.php?page=14&custom=1", "/custom/1", "page-customtype", ["page" => "14", "custom" => "1"]],
             ["index.php?page=15&custom=1&id=2", "/custom/1/2", "page-custom", ["page" => "15", "custom" => "1", "id" => "2"]],
+            ["index.php?page=15&custom=1&id=not_set", "/custom/1/not_set", "page-custom", ["page" => "15", "custom" => "1", "id" => "not_set"]],  // @todo id = null
             ["index.php?page=16", "/about", "page-about", ["page" => "16"]],
             ["index.php?page=17", "/languages", "page-languages", ["page" => "17"]],
             ["index.php?page=18&id=1", "/languages/1", "page-18-id", ["page" => "18", "id" => "1"]],
@@ -229,6 +230,7 @@ class RoutingTest extends TestCase
             ["/inline/0/20/ignore.epub", "fetch-inline", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["/fetch/0/20/ignore.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["/files/0/17/hello.txt", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "hello.txt"]],
+            ["/files/0/17/sub%20dir/hello%20world.txt", "fetch-file", ["_handler" => "fetch", "db" => 0, "id" => 17, "file" => "sub dir/hello world.txt"]],
             ["/zipper/3/3/any.zip", "zipper-page-id-type", ["_handler" => "zipper", "page" => "3", "type" => "any", "id" => "3"]],
             ["/zipper/10/any.zip", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
             ["/loader/wd_author/0/1?matchId=Q35610", "loader-action-dbNum-authorId", ["_handler" => "loader", "action" => "wd_author", "dbNum" => "0", "authorId" => "1", "matchId" => "Q35610"]],

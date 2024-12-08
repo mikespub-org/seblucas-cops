@@ -654,10 +654,15 @@ class Route
                 $value = self::slugify($value);
                 $value = rawurlencode($value);
             }
+            // search query
             if (in_array($param, ['query'])) {
                 $value = rawurlencode($value);
             }
-            // @todo do we need to handle 'comp', 'file' or 'path' anywhere?
+            // extra file
+            if (in_array($param, ['file'])) {
+                $value = implode('/', array_map('rawurlencode', explode('/', $value)));
+            }
+            // @todo do we need to handle 'comp' or 'path' anywhere?
             if (!empty($pattern)) {
                 $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
             } else {

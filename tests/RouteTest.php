@@ -114,6 +114,7 @@ class RouteTest extends TestCase
             "index.php?page=13&id=2" => "index.php/books/2",
             "index.php?page=14&custom=1" => "index.php/custom/1",
             "index.php?page=15&custom=1&id=2" => "index.php/custom/1/2",
+            "index.php?page=15&custom=1&id=not_set" => "index.php/custom/1/not_set",  // @todo id = null
             "index.php?page=16" => "index.php/about",
             "index.php?page=17" => "index.php/languages",
             "index.php?page=18&id=1" => "index.php/languages/1",
@@ -266,6 +267,7 @@ class RouteTest extends TestCase
             "/inline/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1],
             "/fetch/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"],
             "/files/0/17/hello.txt" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "hello.txt"],
+            "/files/0/17/sub%20dir/hello%20world.txt" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "sub dir/hello world.txt"],
             "/zipper/3/3/any.zip" => [Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3],
             "/zipper/10/any.zip" => [Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"],
             "/loader/wd_author/0/1?matchId=Q35610" => [Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"],
