@@ -43,7 +43,7 @@ class CustomColumnTypeInteger extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (empty($id) && strval($id) !== '0' && in_array("custom", Config::get('show_not_set_filter'))) {
+        if (is_null($id) && in_array("custom", Config::get('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }

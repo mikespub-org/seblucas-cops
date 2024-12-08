@@ -13,7 +13,9 @@ use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnTypeBool;
 use SebLucas\Cops\Calibre\CustomColumnTypeDate;
+use SebLucas\Cops\Calibre\CustomColumnTypeFloat;
 use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
+use SebLucas\Cops\Calibre\CustomColumnTypeRating;
 
 class PageCustomDetail extends PageWithDetail
 {
@@ -27,6 +29,9 @@ class PageCustomDetail extends PageWithDetail
     {
         // this could be string for some custom columns - override here
         $this->idGet = $this->request->get('id');
+        if ($this->idGet === CustomColumn::NOT_SET) {
+            $this->idGet = null;
+        }
         $customId = $this->request->get("custom", null);
         $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);
@@ -70,7 +75,13 @@ class PageCustomDetail extends PageWithDetail
     {
         $columnType = $instance->customColumnType;
         $booklist = new BookList($this->request);
-        if (!empty($this->idGet) || $columnType instanceof CustomColumnTypeBool) {
+        if (!empty($this->idGet)) {
+            [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
+            $this->sorted = $booklist->orderBy ?? "sort";
+            return;
+        }
+        // empty value is acceptable for bool, integer, float or rating
+        if (!is_null($this->idGet) && ($columnType instanceof CustomColumnTypeBool || $columnType instanceof CustomColumnTypeInteger || $columnType instanceof CustomColumnTypeFloat || $columnType instanceof CustomColumnTypeRating)) {
             [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
             $this->sorted = $booklist->orderBy ?? "sort";
             return;
@@ -94,6 +105,12 @@ class PageCustomDetail extends PageWithDetail
                 $this->sorted = $booklist->orderBy ?? "value";
                 return;
             }
+        }
+        // "Not Set" entry
+        if (is_null($this->idGet)) {
+            [$this->entryArray, $this->totalNumber] = $booklist->getBooksWithoutCustom($columnType, $this->n);
+            $this->sorted = $booklist->orderBy ?? "sort";
+            return;
         }
     }
 }

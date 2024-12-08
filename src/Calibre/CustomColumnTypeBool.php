@@ -102,6 +102,7 @@ class CustomColumnTypeBool extends CustomColumnType
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
+        // this includes the "Not Set" entry here
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());
         $result = Database::query($query, [], $this->databaseId);

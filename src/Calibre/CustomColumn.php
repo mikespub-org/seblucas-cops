@@ -24,6 +24,7 @@ class CustomColumn extends Category
     public const ROUTE_ALL = "page-customtype";
     public const ROUTE_DETAIL = "page-custom";
     public const URL_PARAM = "c";
+    public const NOT_SET = "not_set";
 
     /** @var string the (string) representation of the value */
     public $value;
@@ -67,7 +68,7 @@ class CustomColumn extends Category
     public function getUri($params = [])
     {
         $params['custom'] = $this->getCustomId();
-        $params['id'] = $this->id;
+        $params['id'] = $this->id ?? self::NOT_SET;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
         return $this->handler::route(self::ROUTE_DETAIL, $params);

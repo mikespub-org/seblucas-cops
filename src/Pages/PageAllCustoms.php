@@ -12,8 +12,10 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\CustomColumnTypeBool;
 use SebLucas\Cops\Calibre\CustomColumnTypeDate;
 use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
+use SebLucas\Cops\Calibre\CustomColumnTypeRating;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 
@@ -124,6 +126,10 @@ class PageAllCustoms extends Page
      */
     public function addCustomNotSetEntry($columnType)
     {
+        // already handled in getAllCustomValuesFromDatabase() for Bool and Rating
+        if ($columnType instanceof CustomColumnTypeBool || $columnType instanceof CustomColumnTypeRating) {
+            return;
+        }
         $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
         $instance->setHandler($this->handler);
         // @todo support countWithoutEntries() for CustomColumn

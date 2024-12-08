@@ -101,7 +101,8 @@ class CustomColumnTypeRating extends CustomColumnType
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
-        $queryFormat = "SELECT coalesce({0}.value, 0) AS value, count(*) AS count FROM books  LEFT JOIN {1} ON  books.id = {1}.book LEFT JOIN {0} ON {0}.id = {1}.value GROUP BY coalesce({0}.value, -1)";
+        // this includes the "Not Set" entry here
+        $queryFormat = "SELECT coalesce({0}.value, 0) AS value, count(*) AS count FROM books  LEFT JOIN {1} ON  books.id = {1}.book LEFT JOIN {0} ON {0}.id = {1}.value GROUP BY coalesce({0}.value, 0)";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName());
         $result = Database::query($query, [], $this->databaseId);
 
