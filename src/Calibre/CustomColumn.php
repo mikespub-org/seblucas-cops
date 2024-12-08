@@ -202,6 +202,18 @@ class CustomColumn extends Category
     }
 
     /**
+     * Summary of setHandler
+     * @param class-string $handler
+     * @return void
+     */
+    public function setHandler($handler)
+    {
+        // set handler for customColumnType too - see getParentUri()
+        $this->customColumnType->setHandler($handler);
+        $this->handler = $handler;
+    }
+
+    /**
      * Return this object as an array
      *
      * @return array<string, mixed>
