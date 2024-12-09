@@ -81,21 +81,11 @@ class PageCustomDetail extends PageWithDetail
             $this->sorted = $booklist->orderBy ?? "sort";
             return;
         }
-        // empty value is acceptable for bool, integer, float or rating
-        if (!is_null($this->idGet) && ($columnType instanceof CustomColumnTypeBool || $columnType instanceof CustomColumnTypeInteger || $columnType instanceof CustomColumnTypeFloat || $columnType instanceof CustomColumnTypeRating)) {
+        // empty value is acceptable for bool, float or rating
+        if (!is_null($this->idGet) && ($columnType instanceof CustomColumnTypeBool || $columnType instanceof CustomColumnTypeFloat || $columnType instanceof CustomColumnTypeRating)) {
             [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
             $this->sorted = $booklist->orderBy ?? "sort";
             return;
-        }
-        if ($columnType instanceof CustomColumnTypeDate) {
-            // if we use $columnType::PAGE_DETAIL in PageAllCustoms, otherwise see PageAllCustoms
-            $year = $this->request->get("year", null, $columnType::GET_PATTERN);
-            if (!empty($year)) {
-                [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustomYear($columnType, $year, $this->n);
-                $this->title = $year;
-                $this->sorted = $booklist->orderBy ?? "value";
-                return;
-            }
         }
         if ($columnType instanceof CustomColumnTypeInteger) {
             // if we use $columnType::PAGE_DETAIL in PageAllCustoms, otherwise see PageAllCustoms
@@ -103,6 +93,22 @@ class PageCustomDetail extends PageWithDetail
             if (!empty($range)) {
                 [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustomRange($columnType, $range, $this->n);
                 $this->title = $range;
+                $this->sorted = $booklist->orderBy ?? "value";
+                return;
+            }
+            // empty value is acceptable for integer if there is no range
+            if (!is_null($this->idGet)) {
+                [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
+                $this->sorted = $booklist->orderBy ?? "sort";
+                return;
+            }
+        }
+        if ($columnType instanceof CustomColumnTypeDate) {
+            // if we use $columnType::PAGE_DETAIL in PageAllCustoms, otherwise see PageAllCustoms
+            $year = $this->request->get("year", null, $columnType::GET_PATTERN);
+            if (!empty($year)) {
+                [$this->entryArray, $this->totalNumber] = $booklist->getBooksByCustomYear($columnType, $year, $this->n);
+                $this->title = $year;
                 $this->sorted = $booklist->orderBy ?? "value";
                 return;
             }
