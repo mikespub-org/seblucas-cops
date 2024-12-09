@@ -201,7 +201,7 @@ class CustomColumn extends Category
      * Create an CustomColumn by CustomColumnID and ValueID
      *
      * @param int $customId the id of the customColumn
-     * @param string|int $id the id of the chosen value
+     * @param string|int|null $id the id of the chosen value
      * @param ?int $database
      * @return ?CustomColumn
      */

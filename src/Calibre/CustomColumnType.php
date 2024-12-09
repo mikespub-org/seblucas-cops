@@ -549,14 +549,18 @@ abstract class CustomColumnType
      */
     public function getNotSetFilter($parentTable = null)
     {
-        $linkTable = $this->getTableLinkName();
+        if (method_exists($this, 'getTableLinkName')) {
+            $linkTable = $this->getTableLinkName();
+        } else {
+            $linkTable = $this->getTableName();
+        }
         // @todo doesn't make sense in this case
-        if ($parentTable == $linkTable) {
+        if (empty($parentTable) || $parentTable == $linkTable) {
             $filter = "false";
         } elseif ($parentTable == "books") {
-            $filter = "exists (select null from {$linkTable} where books.id not in (select book from {$linkTable}))";
+            $filter = "books.id not in (select book from {$linkTable})";
         } else {
-            $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and books.id not in (select book from {$linkTable}))";
+            $filter = "exists (select null from books where {$parentTable}.book = books.id and books.id not in (select book from {$linkTable}))";
         }
         return [$filter, []];
     }

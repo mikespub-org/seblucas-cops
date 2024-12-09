@@ -32,7 +32,7 @@ class PageCustomDetail extends PageWithDetail
         if ($this->idGet === CustomColumn::NOT_SET) {
             $this->idGet = null;
         }
-        // @todo handle case where we have several values, e.g. array of text for type 2 (csv)
+        // handle case where we have several values, e.g. array of text for type 2 (csv)
         $customId = $this->request->get("custom", null);
         $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);

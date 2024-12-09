@@ -569,7 +569,7 @@ class BookTest extends TestCase
 
         $this->assertEquals("SeriesLike [1]", $data[0]['htmlvalue']);
         $this->assertEquals(self::$handler::link() . "/custom/1/1", $data[0]['url']);
-        // @todo handle case where we have several values, e.g. array of text for type 2 (csv)
+        // handle case where we have several values, e.g. array of text for type 2 (csv)
         $this->assertEquals("tag1,tag2", $data[1]['htmlvalue']);
         $this->assertEquals(self::$handler::link() . "/custom/2/1,2", $data[1]['url']);
         $this->assertEquals("text", $data[2]['htmlvalue']);

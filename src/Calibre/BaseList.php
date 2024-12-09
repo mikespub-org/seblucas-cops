@@ -417,7 +417,6 @@ class BaseList
      */
     public function getEntriesByInstance($instance, $n = 1, $filterParams = [])
     {
-        // @todo handle Not Set instances here too?
         $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
         $entries = $this->getFilteredEntries($filter, $n);

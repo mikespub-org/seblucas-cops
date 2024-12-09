@@ -453,6 +453,13 @@ class FilterTest extends TestCase
         $this->assertEquals("2 books", $entries[0]->content);
         $this->assertEquals(self::$handler::link() . "/custom/1/1", $entries[0]->getNavLink());
 
+        $request = self::$handler::request(['c' => [1 => 'not_set']]);  // or => null
+        $entries = Filter::getEntryArray($request);
+        $this->assertEquals("Type4", $entries[0]->className);
+        $this->assertEquals("Not Set", $entries[0]->title);
+        $this->assertEquals("13 books", $entries[0]->content);
+        $this->assertEquals(self::$handler::link() . "/custom/1/not_set", $entries[0]->getNavLink());
+
         $request = self::$handler::request(['f' => 'C']);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Letter", $entries[0]->className);
@@ -547,6 +554,14 @@ class FilterTest extends TestCase
         $expected = [1];
         $this->assertEquals($expected, $filter->getQueryParams());
         $expected = " and (exists (select null from books_custom_column_1_link where books_custom_column_1_link.book = books.id and books_custom_column_1_link.value = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['c' => [1 => 'not_set']]);
+        $filter = new Filter($request);
+        $expected = [];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        //$expected = " and (exists (select null from books_custom_column_1_link where books.id not in (select book from books_custom_column_1_link)))";
+        $expected = " and (books.id not in (select book from books_custom_column_1_link))";
         $this->assertEquals($expected, $filter->getFilterString());
 
         $request = Request::build(['f' => 'C']);

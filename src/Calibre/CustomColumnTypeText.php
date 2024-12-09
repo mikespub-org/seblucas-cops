@@ -15,6 +15,9 @@ use UnexpectedValueException;
 
 class CustomColumnTypeText extends CustomColumnType
 {
+    public const SQL_BOOKLIST_CSV = 'select distinct {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and books.id in (select book from {2} where {3} = ? group by book having count(*) = {4}) {1} order by books.sort';
+
     /**
      * Summary of __construct
      * @param int $customId
@@ -76,6 +79,13 @@ class CustomColumnTypeText extends CustomColumnType
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
+        // handle case where we have several values, e.g. array of text for type 2 (csv)
+        if ($this->datatype == self::TYPE_CSV && str_contains((string) $id, ',')) {
+            $params = array_map('trim', explode(',', $id));
+            $query = str_format(self::SQL_BOOKLIST_CSV, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn(), count($params));
+            $query = str_replace(' = ? ', ' IN (' . str_repeat('?,', count($params) - 1) . '?) ', $query);
+            return [$query, $params];
+        }
         $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
     }
@@ -95,6 +105,14 @@ class CustomColumnTypeText extends CustomColumnType
         } else {
             $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         }
+        // @todo handle case where we have several values, e.g. array of text for type 2 (csv)
+        /**
+        if ($this->datatype == self::TYPE_CSV && str_contains((string) $id, ',')) {
+            $params = array_map('trim', explode(',', $id));
+            $filter = str_replace(' = ?', ' IN (' . str_repeat('?,', count($params) - 1) . '?)', $filter);
+            return [$filter, $params];
+        }
+         */
         return [$filter, [$id]];
     }
 
@@ -105,6 +123,20 @@ class CustomColumnTypeText extends CustomColumnType
      */
     public function getCustom($id)
     {
+        // handle case where we have several values, e.g. array of text for type 2 (csv)
+        if ($this->datatype == self::TYPE_CSV && str_contains((string) $id, ',')) {
+            $params = array_map('trim', explode(',', $id));
+            $query = str_format("SELECT id, value AS name FROM {0}", $this->getTableName());
+            $query .= ' WHERE id IN (' . str_repeat('?,', count($params) - 1) . '?)';
+            $result = Database::query($query, $params, $this->databaseId);
+            $idArray = [];
+            $nameArray = [];
+            while ($post = $result->fetchObject()) {
+                array_push($idArray, $post->id);
+                array_push($nameArray, $post->name);
+            }
+            return new CustomColumn(implode(",", $idArray), implode(",", $nameArray), $this);
+        }
         $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
         $result = Database::query($query, [$id], $this->databaseId);
         if ($post = $result->fetchObject()) {
