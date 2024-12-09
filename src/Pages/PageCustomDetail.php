@@ -39,7 +39,7 @@ class PageCustomDetail extends PageWithDetail
         // $this->title may get updated below here
         $this->setInstance($instance);
         if ($this->request->get('filter')) {
-            $this->filterParams = [CustomColumn::URL_PARAM . '[' . $customId . ']' => $this->idGet];
+            $this->filterParams = [CustomColumn::URL_PARAM => [strval($customId) => $this->idGet  ?? CustomColumn::NOT_SET]];
             $this->getFilters($instance);
         } elseif ($this->request->get('tree')) {
             $this->getHierarchy($instance);

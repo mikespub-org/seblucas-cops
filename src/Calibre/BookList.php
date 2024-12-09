@@ -213,7 +213,7 @@ class BookList
                 array_push($childIds, $child->id);
             }
             $params = array_merge($params, $childIds);
-            $query = str_replace(' = ? ', ' IN (' . str_repeat('?,', count($params) - 1) . '?)', $query);
+            $query = str_replace(' = ? ', ' IN (' . str_repeat('?,', count($params) - 1) . '?) ', $query);
             // use distinct here in case books belong to several child categories
             $query = str_ireplace('select ', 'select distinct ', $query);
         }

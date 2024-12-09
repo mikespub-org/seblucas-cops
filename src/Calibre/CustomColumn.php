@@ -164,7 +164,7 @@ class CustomColumn extends Category
      */
     public function getExtraParams()
     {
-        return array_merge([static::URL_PARAM . '[' . strval($this->getCustomId()) . ']' => $this->id], $this->filterParams);
+        return array_merge([static::URL_PARAM => [strval($this->getCustomId()) => $this->id ?? self::NOT_SET]], $this->filterParams);
     }
 
     /**

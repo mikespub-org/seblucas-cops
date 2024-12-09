@@ -401,7 +401,14 @@ class Filter
      */
     public function addCustomIdFilter($customType, $valueId)
     {
-        [$filter, $params] = $customType->getFilter($valueId, $this->parentTable);
+        if ($valueId == CustomColumn::NOT_SET) {
+            $valueId = null;
+        }
+        if (is_null($valueId)) {
+            [$filter, $params] = $customType->getNotSetFilter($this->parentTable);
+        } else {
+            [$filter, $params] = $customType->getFilter($valueId, $this->parentTable);
+        }
         if (!empty($filter)) {
             $this->queryString .= ' and (' . $filter . ')';
             foreach ($params as $param) {

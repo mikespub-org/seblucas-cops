@@ -543,6 +543,25 @@ abstract class CustomColumnType
     abstract public function getFilter($id, $parentTable = null);
 
     /**
+     * Summary of getNotSetFilter
+     * @param ?string $parentTable
+     * @return ?array{0: string, 1: array<mixed>}
+     */
+    public function getNotSetFilter($parentTable = null)
+    {
+        $linkTable = $this->getTableLinkName();
+        // @todo doesn't make sense in this case
+        if ($parentTable == $linkTable) {
+            $filter = "false";
+        } elseif ($parentTable == "books") {
+            $filter = "exists (select null from {$linkTable} where books.id not in (select book from {$linkTable}))";
+        } else {
+            $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and books.id not in (select book from {$linkTable}))";
+        }
+        return [$filter, []];
+    }
+
+    /**
      * Get a CustomColumn for a specified (by ID) value
      *
      * @param string|int|null $id the id of the searched value
