@@ -159,6 +159,15 @@ class CustomColumn extends Category
     }
 
     /**
+     * Summary of getExtraParams if we want to add extra params to entry links etc.
+     * @return array<string, mixed>
+     */
+    public function getExtraParams()
+    {
+        return array_merge([static::URL_PARAM . '[' . strval($this->getCustomId()) . ']' => $this->id], $this->filterParams);
+    }
+
+    /**
      * Return the value of this column as an HTML snippet
      *
      * @return string
