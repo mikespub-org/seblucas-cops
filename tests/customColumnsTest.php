@@ -1052,6 +1052,8 @@ class CustomColumnsTest extends TestCase
 
         $custom = CustomColumnType::createByLookup("custom_04")->getCustom("4");
         $this->assertEquals($custom->customColumnType->getQuery("4"), $custom->getQuery());
+        [$query, $params] = $custom->getQuery();
+        $this->assertStringEndsWith("_link.extra", $query);
 
         $custom = CustomColumnType::createByLookup("custom_05")->getCustom("6");
         $this->assertEquals($custom->customColumnType->getQuery("6"), $custom->getQuery());

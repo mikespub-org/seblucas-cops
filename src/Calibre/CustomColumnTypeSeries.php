@@ -14,6 +14,9 @@ use SebLucas\Cops\Model\Entry;
 
 class CustomColumnTypeSeries extends CustomColumnType
 {
+    public const SQL_BOOKLIST_LINK = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.{3} = ? {1} order by {2}.extra';
+
     /**
      * Summary of __construct
      * @param int $customId
