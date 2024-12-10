@@ -16,6 +16,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
+use Throwable;
 
 class RouteTest extends TestCase
 {
@@ -261,6 +262,37 @@ class RouteTest extends TestCase
     }
 
     /**
+     * @param mixed $queryUrl
+     * @param mixed $routeUrl
+     * @param mixed $route
+     * @param mixed $params
+     * @return void
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider("linkProvider")]
+    public function testGenerateLink($queryUrl, $routeUrl, $route, $params)
+    {
+        $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
+        // @todo handle ignore
+        // @todo handle restapi/route...
+        unset($params[Route::HANDLER_PARAM]);
+        unset($params["_method"]);
+        $prefix = "";
+        // use default page handler with prefix for opds-path + use _route in params to generate path
+        if ($route == "opds-path" && !empty($params[Route::ROUTE_PARAM])) {
+            $route = $params[Route::ROUTE_PARAM];
+            $prefix = "/opds";
+        }
+        try {
+            $result = Route::generate($route, $params);
+        } catch (Exception) {
+            $this->assertNull($routeUrl);
+            return;
+        }
+        $expected = $routeUrl;
+        $this->assertEquals($expected, $prefix . $result);
+    }
+
+    /**
      * Summary of routeProvider
      * @return array<mixed>
      */
@@ -328,5 +360,33 @@ class RouteTest extends TestCase
             $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
         }
         $this->assertEquals($expected, Route::getRouteForParams($params));
+    }
+
+    /**
+     * @param mixed $routeUrl
+     * @param mixed $route
+     * @param mixed $params
+     * @return void
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
+    public function testGenerateRoute($routeUrl, $route, $params)
+    {
+        $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
+        unset($params[Route::HANDLER_PARAM]);
+        unset($params["_method"]);
+        $prefix = "";
+        // use default page handler with prefix for feed-path + use _route in params to generate path
+        if ($route == "feed-path" && !empty($params[Route::ROUTE_PARAM])) {
+            $route = $params[Route::ROUTE_PARAM];
+            $prefix = "/feed";
+        }
+        try {
+            $result = Route::generate($route, $params);
+        } catch (Throwable) {
+            $this->assertNull($routeUrl);
+            return;
+        }
+        $expected = $routeUrl;
+        $this->assertEquals($expected, $prefix . $result);
     }
 }
