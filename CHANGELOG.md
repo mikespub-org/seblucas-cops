@@ -13,6 +13,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Use symfony/string package as alternative for slugify with Transliterator
+  * Get request locale based on Translation and HTTP_ACCEPT_LANGUAGE
+  * Clean up Route url methods and test generating route urls
   * Add Format class, pages and filters to select by book format
   * Fix custom column filters and handle csv with several values
   * Sort series custom column by extra field - see issue #124 by @Mossop

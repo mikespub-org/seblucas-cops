@@ -184,6 +184,7 @@ COPS requires both [PHP packages](https://packagist.org/) and [NPM assets](https
   - mikespub/php-epub-meta to open EPUB files
   - nikic/fast-route for URL routing
   - phpmailer/phpmailer to send mail to Kindle
+  - symfony/string as alternative for normAndUp and slugify
   - twig/twig to support Twig templates
 - NPM Assets
   - bootstrap 3
@@ -209,7 +210,6 @@ In development mode, some additional packages are used:
   - kiwilan/php-opds for OPDS 2.0 feeds
   - mikespub/epub-loader to search information on books, authors etc.
   - symfony/routing as alternative for nikic/fast-route (test)
-  - symfony/string as alternative for normAndUp and slugify with Transliterator (test)
   - webonyx/graphql-php for the GraphQL interface
 - Via CDN in templates
   - datatables.net with datatables.net-bs5

@@ -87,8 +87,8 @@ class RoutingTest extends TestCase
             $this->assertNull($routeUrl);
             return;
         }
+        $extra = [];
         if (!empty($query)) {
-            $extra = [];
             parse_str($query, $extra);
             $result = array_merge($result, $extra);
         }
@@ -105,6 +105,9 @@ class RoutingTest extends TestCase
             // match path for actual result
             $result = self::$routing->match('/' . $result['path'], $method);
             //unset($result[Route::ROUTE_PARAM]);
+        }
+        if (!empty($expected['title']) && empty($extra['title'])) {
+            $expected['title'] = Route::slugify($expected['title']);
         }
         $this->assertEquals($expected, $result);
 
@@ -146,6 +149,12 @@ class RoutingTest extends TestCase
             $route = $params[Route::ROUTE_PARAM];
             $prefix = "/opds";
         }
+        if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
+            $params['title'] = Route::slugify($params['title']);
+        }
+        //if (!empty($params['file'])) {
+        //    $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
+        //}
         try {
             $result = self::$routing->generate($route, $params);
         } catch (Exception) {
@@ -188,8 +197,8 @@ class RoutingTest extends TestCase
             $this->assertNull($routeUrl);
             return;
         }
+        $extra = [];
         if (!empty($query)) {
-            $extra = [];
             parse_str($query, $extra);
             $result = array_merge($result, $extra);
         }
@@ -204,6 +213,9 @@ class RoutingTest extends TestCase
             // match path for actual result
             $result = self::$routing->match('/' . $result['path'], $method);
             unset($result[Route::ROUTE_PARAM]);
+        }
+        if (!empty($expected['title']) && empty($extra['title'])) {
+            $expected['title'] = Route::slugify($expected['title']);
         }
         $this->assertEquals($expected, $result);
     }
@@ -225,6 +237,12 @@ class RoutingTest extends TestCase
             $route = $params[Route::ROUTE_PARAM];
             $prefix = "/feed";
         }
+        if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
+            $params['title'] = Route::slugify($params['title']);
+        }
+        //if (!empty($params['file'])) {
+        //    $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
+        //}
         try {
             $result = self::$routing->generate($route, $params);
         } catch (Exception) {

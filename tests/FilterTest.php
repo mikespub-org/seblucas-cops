@@ -477,7 +477,7 @@ class FilterTest extends TestCase
         $this->assertEquals("Publisher", $entries[0]->className);
         $this->assertEquals("Macmillan and Co. London", $entries[0]->title);
         $this->assertEquals("2 books", $entries[0]->content);
-        $this->assertEquals(self::$handler::link() . "/publishers/2/Macmillan_and_Co._London", $entries[0]->getNavLink());
+        $this->assertEquals(self::$handler::link() . "/publishers/2/Macmillan_and_Co_London", $entries[0]->getNavLink());
 
         $request = self::$handler::request(['r' => '1']);
         $entries = Filter::getEntryArray($request);

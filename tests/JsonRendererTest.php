@@ -90,7 +90,7 @@ class JsonRendererTest extends TestCase
 
         $this->assertCount(2, $test ["preferedData"]);
         $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $test ["preferedData"][0]["url"]);
-        $this->assertEquals(self::$handler::link() . "/publishers/2/Macmillan_and_Co._London", $test ["publisherurl"]);
+        $this->assertEquals(self::$handler::link() . "/publishers/2/Macmillan_and_Co_London", $test ["publisherurl"]);
 
         $this->assertEquals("", $test ["seriesName"]);
         $this->assertEquals("1.0", $test ["seriesIndex"]);
@@ -134,7 +134,7 @@ class JsonRendererTest extends TestCase
         $this->assertCount(3, $test ["datas"]);
         $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $test ["datas"][2]["url"]);
         $this->assertEquals(self::$fetcher::link() . "/inline/0/20/ignore.epub", $test ["datas"][2]["viewUrl"]);
-        $this->assertEquals(ReadHandler::link() . "/read/0/20/Alice%27s_Adventures_in_Wonderland", $test ["datas"][2]["readerUrl"]);
+        $this->assertEquals(ReadHandler::link() . "/read/0/20/Alice_s_Adventures_in_Wonderland", $test ["datas"][2]["readerUrl"]);
 
         // use relative path for calibre directory
         Config::set('calibre_directory', "./tests/BaseWithSomeBooks/");

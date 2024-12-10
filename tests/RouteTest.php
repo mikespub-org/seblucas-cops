@@ -142,7 +142,7 @@ class RouteTest extends TestCase
             ["zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml", "/zipfs/0/20/META-INF/container.xml", "zipfs", ["_handler" => "zipfs", "db" => "0", "data" => "20", "comp" => "META-INF/container.xml"]],
             ["loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610", "/loader/wd_author/0/1?matchId=Q35610", "loader-action-dbNum-authorId", ["_handler" => "loader", "action" => "wd_author", "dbNum" => "0", "authorId" => "1", "matchId" => "Q35610"]],
             ["checkconfig.php", "/check", "check", ["_handler" => "check"]],
-            ["epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland", "/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
+            ["epubreader.php?db=0&data=20&title=Alice%20s%20Adventures%20in%20Wonderland", "/read/0/20/Alice_s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's Adventures in Wonderland"]],
             ["epubreader.php?db=0&data=20", "/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
             ["sendtomail.php", "/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
             ["fetch.php?db=0&id=17&thumb=html", "/thumbs/0/17/html.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
@@ -162,7 +162,7 @@ class RouteTest extends TestCase
             ["opds.php?page=3&id=1", "/opds/3/1", "opds-page-id", ["_handler" => "opds", "page" => "3", "id" => "1"]],
             ["opds.php?page=10", "/opds/10", "opds-page", ["_handler" => "opds", "page" => "10"]],
             // use default page handler with prefix for opds-path + use _route in params to generate path
-            ["opds.php?page=3&id=1&title=Arthur_Conan_Doyle", "/opds/authors/1/Arthur_Conan_Doyle", "opds-path", ["_handler" => "opds", "page" => "3", "id" => "1", "title" => "Arthur_Conan_Doyle", "_route" => "page-author"]],
+            ["opds.php?page=3&id=1&title=Arthur%20Conan%20Doyle", "/opds/authors/1/Arthur_Conan_Doyle", "opds-path", ["_handler" => "opds", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle", "_route" => "page-author"]],
             ["opds.php?page=3&id=1", "/opds/authors/1", "opds-path", ["_handler" => "opds", "page" => "3", "id" => "1", "_route" => "page-3-id"]],
             ["opds.php?page=10", "/opds/recent", "opds-path", ["_handler" => "opds", "page" => "10", "_route" => "page-recent"]],
             ["restapi.php?_resource=openapi", "/restapi/openapi", "restapi-openapi", ["_handler" => "restapi", "_resource" => "openapi"]],
@@ -253,6 +253,9 @@ class RouteTest extends TestCase
         unset($params[Route::HANDLER_PARAM]);
         unset($params[Route::ROUTE_PARAM]);
         if (!empty($params)) {
+            if (!empty($params['title'])) {
+                $params['title'] = str_replace('_', ' ', $params['title']);
+            }
             $test .= '?' . Route::getQueryString($params);
         }
         if (!empty($query)) {
@@ -281,6 +284,12 @@ class RouteTest extends TestCase
         if ($route == "opds-path" && !empty($params[Route::ROUTE_PARAM])) {
             $route = $params[Route::ROUTE_PARAM];
             $prefix = "/opds";
+        }
+        if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
+            $params['title'] = Route::slugify($params['title']);
+        }
+        if (!empty($params['file'])) {
+            $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
         }
         try {
             $result = Route::generate($route, $params);
@@ -317,7 +326,7 @@ class RouteTest extends TestCase
             ["/zipper/10/any.zip", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
             ["/loader/wd_author/0/1?matchId=Q35610", "loader-action-dbNum-authorId", ["_handler" => "loader", "action" => "wd_author", "dbNum" => "0", "authorId" => "1", "matchId" => "Q35610"]],
             ["/check", "check", ["_handler" => "check"]],
-            ["/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
+            ["/read/0/20/Alice_s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's Adventures in Wonderland"]],
             ["/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
             ["/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
             // skip feed-page routes for Route::getRouteForParams() - use feed-path route with default page handler
@@ -325,7 +334,7 @@ class RouteTest extends TestCase
             ["/feed/3/1", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1"]],
             ["/feed/10", "feed-page", ["_handler" => "feed", "page" => "10"]],
             // use default page handler with prefix for feed-path + use _route in params to generate path
-            ["/feed/authors/1/Arthur_Conan_Doyle", "feed-path", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur_Conan_Doyle", "_route" => "page-author"]],
+            ["/feed/authors/1/Arthur_Conan_Doyle", "feed-path", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle", "_route" => "page-author"]],
             ["/feed/authors/1", "feed-path", ["_handler" => "feed", "page" => "3", "id" => "1", "_route" => "page-3-id"]],
             ["/feed/recent", "feed-path", ["_handler" => "feed", "page" => "10", "_route" => "page-recent"]],
             ["/restapi/openapi", "restapi-openapi", ["_handler" => "restapi", "_resource" => "openapi"]],
@@ -379,6 +388,12 @@ class RouteTest extends TestCase
         if ($route == "feed-path" && !empty($params[Route::ROUTE_PARAM])) {
             $route = $params[Route::ROUTE_PARAM];
             $prefix = "/feed";
+        }
+        if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
+            $params['title'] = Route::slugify($params['title']);
+        }
+        if (!empty($params['file'])) {
+            $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
         }
         try {
             $result = Route::generate($route, $params);

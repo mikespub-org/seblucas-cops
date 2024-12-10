@@ -41,6 +41,8 @@ class Route
     //protected static $routerClass = Routing::class;
     /** @var RouterInterface|null */
     protected static $router = null;
+    /** @var \Symfony\Component\String\Slugger\AsciiSlugger|bool|null */
+    protected static $slugger = null;
     /** @var array<string, class-string> */
     protected static $handlers = [];
     /** @var array<string, mixed> */
@@ -675,18 +677,41 @@ class Route
     }
 
     /**
-     * Summary of slug - @todo check transliteration
+     * Summary of getSlugger
+     * @param ?string $locale
+     * @return \Symfony\Component\String\Slugger\AsciiSlugger|bool|null
+     */
+    public static function getSlugger($locale = null)
+    {
+        if (!isset(self::$slugger)) {
+            if (class_exists('\Symfony\Component\String\Slugger\AsciiSlugger')) {
+                // @ignore class.notFound
+                self::$slugger = new \Symfony\Component\String\Slugger\AsciiSlugger($locale);
+            } else {
+                self::$slugger = false;
+            }
+        }
+        return self::$slugger;
+    }
+
+    /**
+     * Summary of slugify - @todo check transliteration
      * @param string $string
+     * @param ?string $locale
      * @return string
      */
-    public static function slugify($string)
+    public static function slugify($string, $locale = null)
     {
+        $slugger = self::getSlugger($locale);
+        if ($slugger) {
+            //return (string) $slugger->slug($string, '_');
+        }
         $replace = [
             ' ' => '_',
             '&' => '-',
             '#' => '-',
             '"' => '',
-            //"'" => '',
+            "'" => '_',
             ':' => '',
             ';' => '',
             '<' => '',
@@ -697,6 +722,7 @@ class Route
             ',' => '',
             '/' => '.',
             '\\' => '.',
+            '.' => '',
         ];
         // normalize first
         $string = Translation::normalizeUtf8String($string);
