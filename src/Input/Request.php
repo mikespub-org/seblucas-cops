@@ -10,6 +10,7 @@
 namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Response;
 
 /**
@@ -30,6 +31,8 @@ class Request
     protected bool $parsed = true;
     /** @var string|null */
     public $content = null;
+    /** @var string|null */
+    public $locale = null;
     public bool $invalid = false;
 
     /**
@@ -84,6 +87,19 @@ class Request
     public function language()
     {
         return $this->server('HTTP_ACCEPT_LANGUAGE');
+    }
+
+    /**
+     * Summary of locale
+     * @return string
+     */
+    public function locale()
+    {
+        if (!isset($this->locale)) {
+            $translator = new Translation($this->language());
+            [$this->locale, ] = $translator->getLangAndTranslationFile();
+        }
+        return $this->locale;
     }
 
     /**

@@ -741,6 +741,7 @@ class JsonRenderer extends BaseRenderer
         if (Route::KEEP_STATS) {
             $out ["counters"] = Route::$counters;
         }
+        $out ["locale"] = $this->request->locale();
 
         return $out;
     }
