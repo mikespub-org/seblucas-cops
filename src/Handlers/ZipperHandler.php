@@ -34,12 +34,9 @@ class ZipperHandler extends BaseHandler
 
     public function handle($request)
     {
-        if (empty(Config::get('download_page')) &&
-            empty(Config::get('download_series')) &&
-            empty(Config::get('download_author'))
-        ) {
+        if (empty(Config::get('download_page'))) {
             // this will call exit()
-            Response::sendError($request, 'Downloads by page, series or author are disabled in config');
+            Response::sendError($request, 'Downloads by page are disabled in config');
         }
         if (Config::get('fetch_protect') == '1') {
             session_start();

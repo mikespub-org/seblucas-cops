@@ -576,36 +576,9 @@ $config['cops_opds_filter_limit'] = '8';
 $config['cops_download_page'] = [];
 
 /*
- * Allow downloading all books of a series for a specific format or 'ANY'
- * Example: $config['cops_download_series'] = ['EPUB', 'MOBI'];
- * @deprecated 3.4.1 use $config['cops_download_page'] instead
- */
-$config['cops_download_series'] = [];
-
-/*
- * Allow downloading all books of an author for a specific format or 'ANY'
- * Example: $config['cops_download_author'] = ['EPUB'];
- * @deprecated 3.4.1 use $config['cops_download_page'] instead
- */
-$config['cops_download_author'] = [];
-
-/*
  * Save to disk template for book filenames inside the .zip download file - @todo
  */
 $config['cops_download_template'] = '{author} - {series} #{series_index} - {title}';
-
-/*
- * Use route URLs (/books/12/The_Author/My_Book) instead of URL parameters (?page=13&id=12)
- *
- * You may also need to specify the full_url if COPS is running in a sub-directory:
- * $config['cops_full_url'] = '/cops/';
- *
- * Note: this is independent of the URL rewriting for downloading ebooks (files) for Kobo
- *  1 : enable
- *  0 : disable
- * @deprecated 3.4.0 this is always enabled now
- */
-$config['cops_use_route_urls'] = '1';
 
 /*
  * Set front controller to remove index.php/ from route URLs generated in COPS

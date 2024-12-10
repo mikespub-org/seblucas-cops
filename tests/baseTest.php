@@ -207,6 +207,28 @@ class BaseTest extends TestCase
             "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn",
             Translation::normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
         );
+        $this->assertEquals(
+            "sun zi bing fa",
+            Translation::normalizeUtf8String("孙子兵法")
+        );
+    }
+
+    public function testNormalizeWithSymfonyString(): void
+    {
+        if (class_exists('\Symfony\Component\String\UnicodeString')) {
+            // @ignore class.notFound
+            $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
+            $output = (new \Symfony\Component\String\UnicodeString($input))->ascii();
+            $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
+            $this->assertEquals($expected, (string) $output);
+
+            $input = "孙子兵法";
+            $output = (new \Symfony\Component\String\UnicodeString($input))->ascii();
+            $expected = "sun zi bing fa";
+            $this->assertEquals($expected, (string) $output);
+        } else {
+            $this->markTestSkipped('No symfony/string installed');
+        }
     }
 
     public function testAsciiSluggerWithIntl(): void
@@ -216,8 +238,12 @@ class BaseTest extends TestCase
             $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
             $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
             $output = $slugger->slug($input, '_');
-
             $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
+            $this->assertEquals($expected, (string) $output);
+
+            $input = "孙子兵法";
+            $output = $slugger->slug($input, '_');
+            $expected = "sun_zi_bing_fa";
             $this->assertEquals($expected, (string) $output);
         } else {
             $this->markTestSkipped('No symfony/string installed');

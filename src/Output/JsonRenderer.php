@@ -622,49 +622,20 @@ class JsonRenderer extends BaseRenderer
             return $download;
         }
         // download per page
-        if (!empty(Config::get('download_page'))) {
-            $download = [];
-            foreach (Config::get('download_page') as $format) {
-                $params = $this->request->getCleanParams();
-                $params['type'] = strtolower((string) $format);
-                unset($params['title']);
-                if (!empty($params['id'])) {
-                    $url = self::$zipper::route('zipper-page-id-type', $params);
-                } else {
-                    $url = self::$zipper::route('zipper-page-type', $params);
-                }
-                array_push($download, ['url' => $url, 'format' => $format]);
-            }
+        if (empty(Config::get('download_page'))) {
             return $download;
         }
-        if (empty($qid)) {
-            return $download;
-        }
-        // download per series
-        if ($this->page == PageId::SERIE_DETAIL && !empty(Config::get('download_series'))) {
-            $download = [];
-            foreach (Config::get('download_series') as $format) {
-                $params = [];
-                $params['series'] = $qid;
-                $params['type'] = strtolower((string) $format);
-                $params['db'] = $this->database;
-                $url = self::$zipper::link($params);
-                array_push($download, ['url' => $url, 'format' => $format]);
+        $download = [];
+        foreach (Config::get('download_page') as $format) {
+            $params = $this->request->getCleanParams();
+            $params['type'] = strtolower((string) $format);
+            unset($params['title']);
+            if (!empty($params['id'])) {
+                $url = self::$zipper::route('zipper-page-id-type', $params);
+            } else {
+                $url = self::$zipper::route('zipper-page-type', $params);
             }
-            return $download;
-        }
-        // download per author
-        if ($this->page == PageId::AUTHOR_DETAIL && !empty(Config::get('download_author'))) {
-            $download = [];
-            foreach (Config::get('download_author') as $format) {
-                $params = [];
-                $params['author'] = $qid;
-                $params['type'] = strtolower((string) $format);
-                $params['db'] = $this->database;
-                $url = self::$zipper::link($params);
-                array_push($download, ['url' => $url, 'format' => $format]);
-            }
-            return $download;
+            array_push($download, ['url' => $url, 'format' => $format]);
         }
         return $download;
     }

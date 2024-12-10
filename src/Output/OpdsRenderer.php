@@ -453,6 +453,7 @@ class OpdsRenderer extends BaseRenderer
         // @todo handle special case of OPDS not expecting filter while HTML does better
         unset($extraParams['filter']);
         foreach ($filterPage->entryArray as $entry) {
+            // skip header entries in filterPage here
             if (empty($entry->className)) {
                 continue;
             }

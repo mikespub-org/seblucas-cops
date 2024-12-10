@@ -56,13 +56,7 @@ class Zipper extends BaseRenderer
     {
         $entries = $this->hasPage();
         if (!$entries) {
-            $entries = $this->hasSeries();
-            if (!$entries) {
-                $entries = $this->hasAuthor();
-                if (!$entries) {
-                    return false;
-                }
-            }
+            return false;
         }
         return $this->checkFileList($entries);
     }
@@ -102,74 +96,6 @@ class Zipper extends BaseRenderer
         $entries = $instance->entryArray;
         if (empty($entries)) {
             $this->message = 'No books found for page';
-            return false;
-        }
-        return $entries;
-    }
-
-    /**
-     * Summary of hasSeries
-     * @return array<mixed>|bool
-     */
-    public function hasSeries()
-    {
-        if (!in_array($this->format, Config::get('download_series'))) {
-            $this->message ??= 'Invalid format for series';
-            return false;
-        }
-        $seriesId = $this->request->getId('series');
-        if (empty($seriesId)) {
-            $this->message ??= 'Invalid series id';
-            return false;
-        }
-        /** @var Serie $instance */
-        $instance = Serie::getInstanceById($seriesId, $this->databaseId);
-        if (empty($instance->id)) {
-            $this->message = 'Invalid series';
-            return false;
-        }
-        if ($this->format == 'ANY') {
-            $this->fileName = $instance->name . '.zip';
-        } else {
-            $this->fileName = $instance->name . '.' . strtolower($this->format) . '.zip';
-        }
-        $entries = $instance->getBooks();  // -1
-        if (empty($entries)) {
-            $this->message = 'No books found for series';
-            return false;
-        }
-        return $entries;
-    }
-
-    /**
-     * Summary of hasAuthor
-     * @return array<mixed>|bool
-     */
-    public function hasAuthor()
-    {
-        if (!in_array($this->format, Config::get('download_author'))) {
-            $this->message ??= 'Invalid format for author';
-            return false;
-        }
-        $authorId = $this->request->getId('author');
-        if (empty($authorId)) {
-            $this->message ??= 'Invalid author id';
-            return false;
-        }
-        /** @var Author $instance */
-        $instance = Author::getInstanceById($authorId, $this->databaseId);
-        if (empty($instance->id)) {
-            $this->message = 'Invalid author';
-            return false;
-        }
-        if ($this->format == 'ANY') {
-            $this->fileName = $instance->name . '.zip';
-        } else {
-            $this->fileName = $instance->name . '.' . strtolower($this->format) . '.zip';
-        }
-        $entries = $instance->getBooks();  // -1
-        if (empty($entries)) {
-            $this->message = 'No books found for author';
             return false;
         }
         return $entries;

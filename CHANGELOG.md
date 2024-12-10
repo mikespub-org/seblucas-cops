@@ -16,6 +16,7 @@ x.x.x - TODO
   * Add Format class, pages and filters to select by book format
   * Fix custom column filters and handle csv with several values
   * Sort series custom column by extra field - see issue #124 by @Mossop
+  * Remove deprecated config/default.php settings and clean up Zipper
 
 3.4.6 - 20241208 Fix issues + update css link
   * Changes in config/default.php file:

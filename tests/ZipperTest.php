@@ -65,14 +65,16 @@ class ZipperTest extends TestCase
         Config::set('download_page', ['']);
     }
 
-    public function testDownloadAuthor(): void
+    public function testDownloadAuthorPage(): void
     {
+        $page = PageId::AUTHOR_DETAIL;
         $authorId = 3;
 
-        Config::set('download_author', ['ANY']);
+        Config::set('download_page', ['ANY']);
 
         $request = new Request();
-        $request->set('author', $authorId);
+        $request->set('page', $page);
+        $request->set('id', $authorId);
         $request->set('type', 'any');
 
         $zipper = new Zipper($request);
@@ -88,17 +90,19 @@ class ZipperTest extends TestCase
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
 
-        Config::set('download_author', ['']);
+        Config::set('download_page', ['']);
     }
 
     public function testDownloadWrongSeries(): void
     {
+        $page = PageId::SERIE_DETAIL;
         $seriesId = 1;
 
-        Config::set('download_series', ['ANY']);
+        Config::set('download_page', ['ANY']);
 
         $request = new Request();
-        $request->set('series', $seriesId);
+        $request->set('page', $page);
+        $request->set('id', $seriesId);
         $request->set('type', 'any');
         $expected = 'No files found';
 
@@ -107,7 +111,7 @@ class ZipperTest extends TestCase
         $this->assertFalse($valid);
         $this->assertEquals($expected, $zipper->getMessage());
 
-        Config::set('download_series', ['']);
+        Config::set('download_page', ['']);
     }
 
     public function testDownloadWrongFormat(): void

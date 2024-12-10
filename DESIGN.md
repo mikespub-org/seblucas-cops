@@ -108,7 +108,7 @@ Route | PAGE_ID | Page # | Pages | Calibre
 ... | 
 
 Routes for Pages are defined in `PageHandler::getRoutes()` and used by both `HtmlHandler` and `JsonHandler`.
-Other routes are defined in the corresponding handlers.
+Other routes are defined in the corresponding handlers. Since COPS 3.4.x route names are used to generate URLs.
 
 The PAGE_ID and page=... values are defined in `PageId` and correspond to one of the Pages. Pages cover a particular Calibre entity like Author, Book etc. or a list of entities. Generic features like About or Customize are handled by their own Pages. 
 
@@ -208,6 +208,8 @@ In development mode, some additional packages are used:
 - PHP Packages
   - kiwilan/php-opds for OPDS 2.0 feeds
   - mikespub/epub-loader to search information on books, authors etc.
+  - symfony/routing as alternative for nikic/fast-route (test)
+  - symfony/string as alternative for normAndUp and slugify with Transliterator (test)
   - webonyx/graphql-php for the GraphQL interface
 - Via CDN in templates
   - datatables.net with datatables.net-bs5
