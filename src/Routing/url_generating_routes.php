@@ -43,6 +43,8 @@ return [
     'page-identifier' => [['id', 'title'], ['page' => '42', '_route' => 'page-identifier'], ['id' => '\\w+'], [['variable', '/', '[^/]++', 'title'], ['variable', '/', '\\w+', 'id'], ['text', '/identifiers']], [], [], []],
     'page-42-id' => [['id'], ['page' => '42', '_route' => 'page-42-id'], ['id' => '\\w+'], [['variable', '/', '\\w+', 'id'], ['text', '/identifiers']], [], [], []],
     'page-identifiers' => [[], ['page' => '41', '_route' => 'page-identifiers'], [], [['text', '/identifiers']], [], [], []],
+    'page-format' => [['id'], ['page' => '52', '_route' => 'page-format'], ['id' => '\\w+'], [['variable', '/', '\\w+', 'id'], ['text', '/formats']], [], [], []],
+    'page-formats' => [[], ['page' => '51', '_route' => 'page-formats'], [], [['text', '/formats']], [], [], []],
     'page-libraries' => [[], ['page' => '43', '_route' => 'page-libraries'], [], [['text', '/libraries']], [], [], []],
     'feed-page-id' => [['page', 'id'], ['_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler', '_route' => 'feed-page-id'], ['page' => '\\d+'], [['variable', '/', '[^/]++', 'id'], ['variable', '/', '\\d+', 'page'], ['text', '/feed']], [], [], []],
     'feed-search' => [[], ['page' => 'search', '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler', '_route' => 'feed-search'], [], [['text', '/feed/search']], [], [], []],

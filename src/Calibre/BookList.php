@@ -184,13 +184,13 @@ class BookList
 
     /**
      * Summary of getBooksByInstance
-     * @param Base|Author|Identifier|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
+     * @param Base|Author|Format|Identifier|Language|Publisher|Rating|Serie|Tag|CustomColumn $instance
      * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
     public function getBooksByInstance($instance, $n)
     {
-        if (empty($instance->id) && in_array($instance::class, [Rating::class, Serie::class, Tag::class, Identifier::class])) {
+        if (empty($instance->id) && in_array($instance::class, [Rating::class, Serie::class, Tag::class, Identifier::class, Format::class])) {
             return $this->getBooksWithoutInstance($instance, $n);
         }
         [$query, $params] = $instance->getQuery();

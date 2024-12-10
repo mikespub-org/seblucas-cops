@@ -392,6 +392,17 @@ abstract class Base
     }
 
     /**
+     * Summary of getFormats
+     * @param int $n
+     * @param ?string $sort
+     * @return array<Entry>
+     */
+    public function getFormats($n = 1, $sort = null)
+    {
+        return $this->getEntriesByInstance(Format::class, $n, $sort);
+    }
+
+    /**
      * Summary of getCustomValues
      * @param CustomColumnType $customType
      * @return array<mixed>

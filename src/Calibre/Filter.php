@@ -27,6 +27,7 @@ class Filter
         Serie::URL_PARAM => Serie::class,
         Tag::URL_PARAM => Tag::class,
         Identifier::URL_PARAM => Identifier::class,
+        Format::URL_PARAM => Format::class,
         CustomColumn::URL_PARAM => CustomColumn::class,
         BookList::URL_PARAM_FIRST => BookList::class,
         BookList::URL_PARAM_YEAR => BookList::class,
@@ -158,6 +159,16 @@ class Filter
             }
         }
 
+        $format = $this->request->get(Format::URL_PARAM, null, '/^\w+$/');
+        if (isset($format)) {
+            // do *not* limit to self, e.g. in AllFormats with format= filter
+            if (!empty($parentClass) && $parentClass == Format::class) {
+                $this->addFormatFilter($format, false);
+            } else {
+                $this->addFormatFilter($format);
+            }
+        }
+
         // this only works if books is part of the query
         $letter = $this->request->get(BookList::URL_PARAM_FIRST, null, '/^[\p{L}\p{N}]$/u');
         if (!empty($letter) && $this->parentTable == 'books') {
@@ -253,6 +264,9 @@ class Filter
                 $value = substr($match['quoted'], 1);
                 $className = self::SEARCH_FIELDS[$match['attr']];
                 $instance = $className::getInstanceByName($value, $this->databaseId);
+                if (empty($instance)) {
+                    throw new UnexpectedValueException('Invalid search criteria: ' . $match['attr'] . '=' . $match['value']);
+                }
                 $filterString = $this->getLinkedIdFilter($instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
                 $replace = str_replace($match[0], $filterString, $replace);
                 array_push($params, $instance->id);
@@ -336,7 +350,7 @@ class Filter
     /**
      * Summary of addTagIdFilter
      * @param string|int $tagId
-     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers/formats)
      * @return void
      */
     public function addTagIdFilter($tagId, $limitSelf = true)
@@ -347,12 +361,23 @@ class Filter
     /**
      * Summary of addIdentifierTypeFilter
      * @param string $identifierType
-     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers/formats)
      * @return void
      */
     public function addIdentifierTypeFilter($identifierType, $limitSelf = true)
     {
         $this->addLinkedIdFilter($identifierType, Identifier::SQL_LINK_TABLE, Identifier::SQL_LINK_COLUMN, $limitSelf);
+    }
+
+    /**
+     * Summary of addFormatFilter
+     * @param string $format
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers/formats)
+     * @return void
+     */
+    public function addFormatFilter($format, $limitSelf = true)
+    {
+        $this->addLinkedIdFilter($format, Format::SQL_LINK_TABLE, Format::SQL_LINK_COLUMN, $limitSelf);
     }
 
     /**
@@ -422,7 +447,7 @@ class Filter
      * @param string|int $linkId
      * @param string $linkTable
      * @param string $linkColumn
-     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers/formats)
      * @return void
      */
     public function addLinkedIdFilter($linkId, $linkTable, $linkColumn, $limitSelf = true)
@@ -454,7 +479,7 @@ class Filter
      * Summary of getLinkedIdFilter
      * @param string $linkTable
      * @param string $linkColumn
-     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers/formats)
      * @return string
      */
     public function getLinkedIdFilter($linkTable, $linkColumn, $limitSelf = true)
@@ -463,7 +488,7 @@ class Filter
             if ($limitSelf) {
                 $filter = "{$linkTable}.{$linkColumn} = ?";
             } else {
-                // find other tags/identifiers applied to books where this tag/identifier applies
+                // find other tags/identifiers/formats applied to books where this tag/identifier/format applies
                 $filter = "exists (select null from {$linkTable} as filterself, books where {$this->parentTable}.book = books.id and {$this->parentTable}.{$linkColumn} != filterself.{$linkColumn} and filterself.book = books.id and filterself.{$linkColumn} = ?)";
             }
         } elseif ($this->parentTable == "books") {
@@ -479,7 +504,7 @@ class Filter
      * Summary of getNotLinkedIdFilter
      * @param string $linkTable
      * @param string $linkColumn
-     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers)
+     * @param bool $limitSelf if filtering on the same table as the parent, limit results to self (or not for tags/identifiers/formats)
      * @return string
      */
     public function getNotLinkedIdFilter($linkTable, $linkColumn, $limitSelf = true)

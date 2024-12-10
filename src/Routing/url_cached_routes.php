@@ -41,6 +41,7 @@ $static = [
   '/publishers' => 'page-publishers',
   '/ratings' => 'page-ratings',
   '/identifiers' => 'page-identifiers',
+  '/formats' => 'page-formats',
   '/libraries' => 'page-libraries',
   '/feed/search' => 'feed-search',
   '/feed' => 'feed',
@@ -503,6 +504,28 @@ $routes = [
     [
       'page' => '41',
       '_route' => 'page-identifiers',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-format' => [
+    '/formats/{id:\\w+}',
+    [
+      'page' => '52',
+      '_route' => 'page-format',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-formats' => [
+    '/formats',
+    [
+      'page' => '51',
+      '_route' => 'page-formats',
     ],
     [
       'GET',

@@ -50,6 +50,8 @@ class PageId
     public const ALL_PREFERENCES = "48";
     public const PREFERENCE_DETAIL = "49";
     public const ALL_BOOKS_YEAR = "50";
+    public const ALL_FORMATS = "51";
+    public const FORMAT_DETAIL = "52";
     public const ALL_ANNOTATIONS = "61";
     public const ANNOTATIONS_BOOK = "62";
     public const ANNOTATION_DETAIL = "63";
@@ -77,6 +79,7 @@ class PageId
     public const ALL_LIBRARIES_ID = "cops:libraries";
     public const ALL_NOTES_ID = "cops:notes";
     public const ALL_PREFERENCES_ID = "cops:preferences";
+    public const ALL_FORMATS_ID = "cops:formats";
     public const ALL_ANNOTATIONS_ID = "cops:annotations";
     // @todo move elsewhere
     public const ROUTE_INDEX = "page-index";
@@ -124,6 +127,8 @@ class PageId
             PageId::PUBLISHER_DETAIL => new PagePublisherDetail($request, $instance),
             PageId::ALL_IDENTIFIERS => new PageAllIdentifiers($request),
             PageId::IDENTIFIER_DETAIL => new PageIdentifierDetail($request, $instance),
+            PageId::ALL_FORMATS => new PageAllFormats($request),
+            PageId::FORMAT_DETAIL => new PageFormatDetail($request, $instance),
             PageId::ALL_LIBRARIES => new PageAllVirtualLibraries($request),
             PageId::ABOUT => new PageAbout($request),
             PageId::CUSTOMIZE => new PageCustomize($request),

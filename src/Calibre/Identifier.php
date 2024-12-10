@@ -155,7 +155,7 @@ class Identifier extends Base
      */
     public static function getInstanceById($id, $database = null)
     {
-        if (isset($id)) {
+        if (!empty($id)) {
             return new Identifier((object) ['id' => $id, 'type' => $id, 'val' => ''], $database);
         }
         $default = self::getDefaultName();

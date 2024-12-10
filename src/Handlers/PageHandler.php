@@ -70,6 +70,8 @@ class PageHandler extends BaseHandler
             "page-identifier" => ["/identifiers/{id:\w+}/{title}", ["page" => PageId::IDENTIFIER_DETAIL]],
             "page-42-id" => ["/identifiers/{id:\w+}", ["page" => PageId::IDENTIFIER_DETAIL]],
             "page-identifiers" => ["/identifiers", ["page" => PageId::ALL_IDENTIFIERS]],
+            "page-format" => ["/formats/{id:\w+}", ["page" => PageId::FORMAT_DETAIL]],
+            "page-formats" => ["/formats", ["page" => PageId::ALL_FORMATS]],
             "page-libraries" => ["/libraries", ["page" => PageId::ALL_LIBRARIES]],
         ];
     }

@@ -68,6 +68,9 @@ class FilterTest extends TestCase
 
         $identifiers = $author->getIdentifiers();
         $this->assertCount(2, $identifiers);
+
+        $formats = $author->getFormats();
+        $this->assertCount(1, $formats);
     }
 
     public function testLanguageFilters(): void
@@ -99,6 +102,9 @@ class FilterTest extends TestCase
 
         $identifiers = $language->getIdentifiers();
         $this->assertCount(4, $identifiers);
+
+        $formats = $language->getFormats();
+        $this->assertCount(3, $formats);
     }
 
     public function testPublisherFilters(): void
@@ -130,6 +136,9 @@ class FilterTest extends TestCase
 
         $identifiers = $publisher->getIdentifiers();
         $this->assertCount(2, $identifiers);
+
+        $formats = $publisher->getFormats();
+        $this->assertCount(1, $formats);
     }
 
     public function testRatingFilters(): void
@@ -161,6 +170,9 @@ class FilterTest extends TestCase
 
         $identifiers = $rating->getIdentifiers();
         $this->assertCount(2, $identifiers);
+
+        $formats = $rating->getFormats();
+        $this->assertCount(1, $formats);
     }
 
     public function testSerieFilters(): void
@@ -192,6 +204,9 @@ class FilterTest extends TestCase
 
         $identifiers = $serie->getIdentifiers();
         $this->assertCount(2, $identifiers);
+
+        $formats = $serie->getFormats();
+        $this->assertCount(1, $formats);
     }
 
     public function testTagFilters(): void
@@ -225,6 +240,9 @@ class FilterTest extends TestCase
 
         $identifiers = $tag->getIdentifiers();
         $this->assertCount(4, $identifiers);
+
+        $formats = $tag->getFormats();
+        $this->assertCount(3, $formats);
     }
 
     public function testTagHierarchy(): void
@@ -286,6 +304,9 @@ class FilterTest extends TestCase
 
         $identifiers = $tag->getIdentifiers();
         $this->assertCount(1, $identifiers);
+
+        $formats = $tag->getFormats();
+        $this->assertCount(1, $formats);
     }
 
     public function testIdentifierFilters(): void
@@ -319,6 +340,9 @@ class FilterTest extends TestCase
         $identifier->limitSelf = false;
         $identifiers = $identifier->getIdentifiers();
         $this->assertCount(3, $identifiers);
+
+        $formats = $identifier->getFormats();
+        $this->assertCount(1, $formats);
     }
 
     public function testCustomFilters(): void
@@ -446,6 +470,13 @@ class FilterTest extends TestCase
         $this->assertEquals("13 books", $entries[0]->content);
         $this->assertEquals(self::$handler::link() . "/identifiers/uri/uri", $entries[0]->getNavLink());
 
+        $request = self::$handler::request(['format' => 'EPUB']);
+        $entries = Filter::getEntryArray($request);
+        $this->assertEquals("Format", $entries[0]->className);
+        $this->assertEquals("EPUB", $entries[0]->title);
+        $this->assertEquals("16 books", $entries[0]->content);
+        $this->assertEquals(self::$handler::link() . "/formats/EPUB", $entries[0]->getNavLink());
+
         $request = self::$handler::request(['c' => [1 => 1]]);
         $entries = Filter::getEntryArray($request);
         $this->assertEquals("Type4", $entries[0]->className);
@@ -547,6 +578,13 @@ class FilterTest extends TestCase
         $expected = ['uri'];
         $this->assertEquals($expected, $filter->getQueryParams());
         $expected = " and (exists (select null from identifiers where identifiers.book = books.id and identifiers.type = ?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        $request = Request::build(['format' => 'EPUB']);
+        $filter = new Filter($request);
+        $expected = ['EPUB'];
+        $this->assertEquals($expected, $filter->getQueryParams());
+        $expected = " and (exists (select null from data where data.book = books.id and data.format = ?))";
         $this->assertEquals($expected, $filter->getFilterString());
 
         $request = Request::build(['c' => [1 => 1]]);

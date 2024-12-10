@@ -1082,6 +1082,53 @@
                 ]
             }
         },
+        "/formats/{id}": {
+            "get": {
+                "summary": "Route to page handler with page=52&id={id}",
+                "operationId": "get_page-format",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=52&id={id}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/formats": {
+            "get": {
+                "summary": "Route to page handler with page=51",
+                "operationId": "get_page-formats",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=51"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
         "/libraries": {
             "get": {
                 "summary": "Route to page handler with page=43",

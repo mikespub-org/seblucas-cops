@@ -260,7 +260,7 @@ class BaseList
     public function countWithoutEntries()
     {
         // @todo see BookList::getBooksWithoutCustom() to support CustomColumn
-        if (!in_array($this->className, [Rating::class, Serie::class, Tag::class, Identifier::class])) {
+        if (!in_array($this->className, [Rating::class, Serie::class, Tag::class, Identifier::class, Format::class])) {
             return 0;
         }
         $query = $this->className::SQL_BOOKLIST_NULL;
@@ -399,7 +399,7 @@ class BaseList
     /**
      * Summary of getEntriesByFilter
      * @param int $n
-     * @param ?string $parentClass - if we want to use limitSelf = false for tags/identifiers
+     * @param ?string $parentClass - if we want to use limitSelf = false for tags/identifiers/formats
      * @return array<Entry>
      */
     public function getEntriesByFilter($n = 1, $parentClass = null)
@@ -519,7 +519,7 @@ class BaseList
     public function getWithoutEntries($filter, $n = 1)
     {
         // @todo see BookList::getBooksWithoutCustom() to support CustomColumn
-        if (!in_array($this->className, [Rating::class, Serie::class, Tag::class, Identifier::class])) {
+        if (!in_array($this->className, [Rating::class, Serie::class, Tag::class, Identifier::class, Format::class])) {
             return [];
         }
         $query = $this->className::SQL_BOOKLIST_NULL;

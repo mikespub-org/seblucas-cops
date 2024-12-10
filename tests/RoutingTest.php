@@ -353,6 +353,8 @@ class RoutingTest extends TestCase
             'identifiers-id-title' => ['/identifiers/{id}/{title}', ['page' => '42'], ['id' => '\w+']],
             'identifiers-id' => ['/identifiers/{id}', ['page' => '42'], ['id' => '\w+']],
             'identifiers' => ['/identifiers', ['page' => '41']],
+            'formats-id' => ['/formats/{id}', ['page' => '52'], ['id' => '\w+']],
+            'formats' => ['/formats', ['page' => '51']],
             'libraries' => ['/libraries', ['page' => '43']],
             'feed-page-id' => ['/feed/{page}/{id}', ['_handler' => 'feed']],
             'feed-page' => ['/feed/{page}', ['_handler' => 'feed']],

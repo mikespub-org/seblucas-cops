@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\CustomColumn;
+use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -63,7 +64,7 @@ class PageWithDetail extends Page
 
     /**
      * Summary of getFilters
-     * @param Author|Language|Publisher|Rating|Serie|Tag|Identifier|CustomColumn $instance
+     * @param Author|Language|Publisher|Rating|Serie|Tag|Identifier|Format|CustomColumn $instance
      * @return void
      */
     public function getFilters($instance)
@@ -98,64 +99,76 @@ class PageWithDetail extends Page
             $href = $this->handler::page(Author::PAGE_ALL, $params);
             $relation = "authors";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $paging['a'] ??= 1;
-            $this->addEntries($instance->getAuthors($paging['a']));
+            $paging[Author::URL_PARAM] ??= 1;
+            $this->addEntries($instance->getAuthors($paging[Author::URL_PARAM]));
         }
         if (!($instance instanceof Language) && in_array('language', $filterLinks)) {
             $title = localize("languages.title");
             $href = $this->handler::page(Language::PAGE_ALL, $params);
             $relation = "languages";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $paging['l'] ??= 1;
-            $this->addEntries($instance->getLanguages($paging['l']));
+            $paging[Language::URL_PARAM] ??= 1;
+            $this->addEntries($instance->getLanguages($paging[Language::URL_PARAM]));
         }
         if (!($instance instanceof Publisher) && in_array('publisher', $filterLinks)) {
             $title = localize("publishers.title");
             $href = $this->handler::page(Publisher::PAGE_ALL, $params);
             $relation = "publishers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $paging['p'] ??= 1;
-            $this->addEntries($instance->getPublishers($paging['p']));
+            $paging[Publisher::URL_PARAM] ??= 1;
+            $this->addEntries($instance->getPublishers($paging[Publisher::URL_PARAM]));
         }
         if (!($instance instanceof Rating) && in_array('rating', $filterLinks)) {
             $title = localize("ratings.title");
             $href = $this->handler::page(Rating::PAGE_ALL, $params);
             $relation = "ratings";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $paging['r'] ??= 1;
-            $this->addEntries($instance->getRatings($paging['r']));
+            $paging[Rating::URL_PARAM] ??= 1;
+            $this->addEntries($instance->getRatings($paging[Rating::URL_PARAM]));
         }
         if (!($instance instanceof Serie) && in_array('series', $filterLinks)) {
             $title = localize("series.title");
             $href = $this->handler::page(Serie::PAGE_ALL, $params);
             $relation = "series";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $paging['s'] ??= 1;
-            $this->addEntries($instance->getSeries($paging['s']));
+            $paging[Serie::URL_PARAM] ??= 1;
+            $this->addEntries($instance->getSeries($paging[Serie::URL_PARAM]));
         }
         if (in_array('tag', $filterLinks)) {
             $title = localize("tags.title");
             $href = $this->handler::page(Tag::PAGE_ALL, $params);
             $relation = "tags";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $paging['t'] ??= 1;
+            $paging[Tag::URL_PARAM] ??= 1;
             // special case if we want to find other tags applied to books where this tag applies
             if ($instance instanceof Tag) {
                 $instance->limitSelf = false;
             }
-            $this->addEntries($instance->getTags($paging['t']));
+            $this->addEntries($instance->getTags($paging[Tag::URL_PARAM]));
         }
         if (in_array('identifier', $filterLinks)) {
             $title = localize("identifiers.title");
             $href = $this->handler::page(Identifier::PAGE_ALL, $params);
             $relation = "identifiers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $paging['i'] ??= 1;
+            $paging[Identifier::URL_PARAM] ??= 1;
             // special case if we want to find other identifiers applied to books where this identifier applies
             if ($instance instanceof Identifier) {
                 $instance->limitSelf = false;
             }
-            $this->addEntries($instance->getIdentifiers($paging['i']));
+            $this->addEntries($instance->getIdentifiers($paging[Identifier::URL_PARAM]));
+        }
+        if (in_array('format', $filterLinks)) {
+            $title = localize("formats.title");
+            $href = $this->handler::page(Format::PAGE_ALL, $params);
+            $relation = "formats";
+            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
+            $paging[Format::URL_PARAM] ??= 1;
+            // special case if we want to find other formats applied to books where this format applies
+            if ($instance instanceof Format) {
+                $instance->limitSelf = false;
+            }
+            $this->addEntries($instance->getFormats($paging[Format::URL_PARAM]));
         }
         /**
         // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
