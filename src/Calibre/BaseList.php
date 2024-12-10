@@ -512,6 +512,7 @@ class BaseList
 
     /**
      * Summary of getWithoutEntries - @todo not used
+     * @see BookList::getBooksWithoutInstance()
      * @param Filter $filter
      * @param int $n
      * @return array<Entry>

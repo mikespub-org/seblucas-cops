@@ -21,6 +21,7 @@ use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\Identifier;
+use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
@@ -343,6 +344,42 @@ class FilterTest extends TestCase
 
         $formats = $identifier->getFormats();
         $this->assertCount(1, $formats);
+    }
+
+    public function testFormatFilters(): void
+    {
+        /** @var Format $format */
+        $format = Format::getInstanceById('EPUB');
+        $this->assertEquals("EPUB", $format->id);
+
+        $books = $format->getBooks();
+        $this->assertCount(16, $books);
+
+        $authors = $format->getAuthors();
+        $this->assertCount(7, $authors);
+
+        $languages = $format->getLanguages();
+        $this->assertCount(3, $languages);
+
+        $publishers = $format->getPublishers();
+        $this->assertCount(7, $publishers);
+
+        $ratings = $format->getRatings();
+        $this->assertCount(3, $ratings);
+
+        $series = $format->getSeries();
+        $this->assertCount(4, $series);
+
+        $tags = $format->getTags();
+        $this->assertCount(11, $tags);
+
+        $identifiers = $format->getIdentifiers();
+        $this->assertCount(7, $identifiers);
+
+        // special case if we want to find other formats applied to books where this format applies
+        $format->limitSelf = false;
+        $formats = $format->getFormats();
+        $this->assertCount(2, $formats);
     }
 
     public function testCustomFilters(): void

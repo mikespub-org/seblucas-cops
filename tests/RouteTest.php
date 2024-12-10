@@ -43,6 +43,10 @@ class RouteTest extends TestCase
 
     public function testFrontController(): void
     {
+        $expected = '/recent';
+        $uri = Route::page(10);
+        $this->assertEquals($expected, $uri);
+
         Config::set('front_controller', 'index.php');
         $expected = Route::base() . 'recent';
         $test = Route::absolute(Route::page(10));
@@ -194,7 +198,6 @@ class RouteTest extends TestCase
         }
         // 2. we pass handler class-string as param now
         $handler = Route::getHandler($handler);
-        //$test = Config::ENDPOINT["html"] . Route::page($page, $params);
         $test = $handler::page($page, $params);
         $this->assertStringEndsWith($expected, $test);
     }

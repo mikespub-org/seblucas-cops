@@ -36,6 +36,7 @@ abstract class Base
     public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from bases, books_bases_link where base = bases.id and upper (bases.sort) like ? {1} group by bases.id, bases.name, bases.sort order by sort";
     public const SQL_BOOKLIST = 'select {0} from books_bases_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_bases_link.book = books.id and base = ? {1} order by books.sort';
+    //public const SQL_BOOKLIST_NULL = '';
     public const COMPATIBILITY_XML_ALDIKO = "aldiko";
     public const URL_PARAM = "b";
 
@@ -256,6 +257,9 @@ abstract class Base
      */
     public function getQuery()
     {
+        //if (empty($this->id) && !empty(static::SQL_BOOKLIST_NULL)) {
+        //    return [ static::SQL_BOOKLIST_NULL, []];
+        //}
         return [ static::SQL_BOOKLIST, [ $this->id ]];
     }
 

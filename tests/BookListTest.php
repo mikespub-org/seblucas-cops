@@ -15,6 +15,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -221,6 +222,30 @@ class BookListTest extends TestCase
         $this->assertEquals(-1, $totalNumber);
     }
 
+    public function testGetBooksByFormat(): void
+    {
+        $booklist = new BookList(self::$request);
+        /** @var Format $format */
+        $format = Format::getInstanceById("EPUB");
+
+        // All books with EPUB format
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($format, -1);
+        $this->assertEquals(16, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
+    public function testGetBooksWithoutFormat(): void
+    {
+        $booklist = new BookList(self::$request);
+        /** @var Format $format */
+        $format = Format::getInstanceById(null);
+
+        // All books without format
+        [$entryArray, $totalNumber] = $booklist->getBooksByInstance($format, -1);
+        $this->assertEquals(0, count($entryArray));
+        $this->assertEquals(-1, $totalNumber);
+    }
+
     public function testGetCountByFirstLetter(): void
     {
         $booklist = new BookList(self::$request);
@@ -264,12 +289,22 @@ class BookListTest extends TestCase
         // All recent books
         $request = new Request();
         // Use anonymous class to override class constant
-        $booklist = new class ($request) extends BookList {
-            public const BATCH_QUERY = true;
-        };
+        //$booklist = new class ($request) extends BookList {
+        //    public const BATCH_QUERY = true;
+        //};
+        $booklist = new BookList($request);
 
         $entryArray = $booklist->getAllRecentBooks();
         $this->assertCount(16, $entryArray);
+        foreach ($entryArray as $entry) {
+            $booklist->bookList[$entry->book->id] = $entry->book;
+        }
+        $booklist->setAuthors();
+        $booklist->setSerie();
+        $booklist->setPublisher();
+        $booklist->setTags();
+        $booklist->setLanguages();
+        $booklist->setDatas();
     }
 
     public function testGetAllRecentBooks(): void
