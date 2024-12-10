@@ -89,7 +89,7 @@ class PageHandler extends BaseHandler
         }
         // use default page handler to find the route for html and json
         unset($params[Route::HANDLER_PARAM]);
-        return Route::process(static::class, null, $params);
+        return Route::process(static::class, $params);
     }
 
     /**
@@ -104,9 +104,10 @@ class PageHandler extends BaseHandler
         if (Route::KEEP_STATS) {
             Route::$counters['pagePage'] += 1;
         }
-        // use default page handler to find the route for html and json
-        unset($params[Route::HANDLER_PARAM]);
-        return Route::process(static::class, $page, $params);
+        if (!empty($page)) {
+            $params['page'] = $page;
+        }
+        return static::link($params);
     }
 
     /**

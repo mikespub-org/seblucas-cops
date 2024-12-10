@@ -73,7 +73,7 @@ class Entry
             foreach (static::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $id)) {
                     array_push($this->linkArray, new LinkEntry(
-                        Route::path($image) . "?v=" . Config::VERSION,
+                        Route::path($image, ["v" => Config::VERSION]),
                         "image/png",
                         LinkEntry::OPDS_THUMBNAIL_TYPE
                     ));

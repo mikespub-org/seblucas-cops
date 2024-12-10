@@ -89,98 +89,106 @@ class RouteTest extends TestCase
     }
 
     /**
-     * Summary of getLinks
-     * @return array<mixed>
-     */
-    public static function getLinks()
-    {
-        return [
-            "index.php?page=index" => "index.php/index",
-            "index.php?page=1" => "index.php/authors",
-            "index.php?page=1&letter=1" => "index.php/authors/letter",
-            "index.php?page=2&id=D" => "index.php/authors/letter/D",
-            "index.php?page=3&id=1" => "index.php/authors/1",
-            "index.php?page=4" => "index.php/books",
-            "index.php?page=4&letter=1" => "index.php/books/letter",
-            "index.php?page=5&id=A" => "index.php/books/letter/A",
-            "index.php?page=4&year=1" => "index.php/books/year",
-            "index.php?page=50&id=2006" => "index.php/books/year/2006",
-            "index.php?page=6" => "index.php/series",
-            "index.php?page=7&id=1" => "index.php/series/1",
-            "index.php?page=8" => "index.php/search",
-            "index.php?page=9&query=alice" => "index.php/search/alice",
-            "index.php?page=9&query=alice&scope=book" => "index.php/search/alice/book",
-            "index.php?page=9&search=1&query=alice" => "index.php/typeahead?query=alice",
-            "index.php?page=9&search=1&query=alice&scope=book" => "index.php/typeahead?query=alice&scope=book",
-            "index.php?page=10" => "index.php/recent",
-            "index.php?page=11" => "index.php/tags",
-            "index.php?page=12&id=1" => "index.php/tags/1",
-            "index.php?page=13&id=2" => "index.php/books/2",
-            "index.php?page=14&custom=1" => "index.php/custom/1",
-            "index.php?page=15&custom=1&id=2" => "index.php/custom/1/2",
-            "index.php?page=15&custom=1&id=not_set" => "index.php/custom/1/not_set",  // @todo id = null
-            "index.php?page=16" => "index.php/about",
-            "index.php?page=17" => "index.php/languages",
-            "index.php?page=18&id=1" => "index.php/languages/1",
-            "index.php?page=19" => "index.php/customize",
-            "index.php?page=20" => "index.php/publishers",
-            "index.php?page=21&id=1" => "index.php/publishers/1",
-            "index.php?page=22" => "index.php/ratings",
-            "index.php?page=23&id=1" => "index.php/ratings/1",
-            "index.php?page=22&a=1" => "index.php/ratings?a=1",
-            "index.php?page=23&id=1&a=1" => "index.php/ratings/1?a=1",
-            "calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7" => "index.php/calres/0/xxh64/7c301792c52eebf7",
-            "zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml" => "index.php/zipfs/0/20/META-INF/container.xml",
-            "loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610" => "index.php/loader/wd_author/0/1?matchId=Q35610",
-            "checkconfig.php" => "index.php/check",
-            "epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland" => "index.php/read/0/20/Alice%27s_Adventures_in_Wonderland",
-            "epubreader.php?db=0&data=20" => "index.php/read/0/20",
-            "sendtomail.php" => "index.php/mail",
-            "fetch.php?db=0&id=17&thumb=html" => "index.php/thumbs/0/17/html.jpg",
-            "fetch.php?db=0&id=17&thumb=opds" => "index.php/thumbs/0/17/opds.jpg",
-            "fetch.php?db=0&id=17" => "index.php/covers/0/17.jpg",
-            "fetch.php?view=1&db=0&data=20&type=epub" => "index.php/inline/0/20/ignore.epub",
-            "fetch.php?db=0&data=20&type=epub" => "index.php/fetch/0/20/ignore.epub",
-            "fetch.php?db=0&id=17&file=hello.txt" => "index.php/files/0/17/hello.txt",
-            "fetch.php?db=0&id=17&file=zipped" => "index.php/files/0/17/zipped",
-            "zipper.php?page=10&type=any" => "index.php/zipper/10/any.zip",
-            "feed.php?page=3&id=1&title=Arthur_Conan_Doyle" => "index.php/feed/authors/1/Arthur_Conan_Doyle",
-            "feed.php?page=3&id=1" => "index.php/feed/authors/1",
-            "feed.php?page=10" => "index.php/feed/recent",
-            "opds.php?page=3&id=1&title=Arthur_Conan_Doyle" => "index.php/opds/authors/1/Arthur_Conan_Doyle",
-            "opds.php?page=3&id=1" => "index.php/opds/authors/1",
-            "opds.php?page=10" => "index.php/opds/recent",
-            "restapi.php?_resource=openapi" => "index.php/restapi/openapi",
-            "graphql.php" => "index.php/graphql",
-        ];
-    }
-
-    /**
      * Summary of linkProvider
      * @return array<mixed>
      */
     public static function linkProvider()
     {
-        $data = [];
-        $links = self::getLinks();
-        foreach ($links as $from => $to) {
-            array_push($data, [$from, $to]);
-        }
-        return $data;
+        //return RouteTest::linkProvider();
+        return [
+            ["index.php?page=index", "/index", "page-index", ["page" => "index"]],
+            ["index.php?page=1", "/authors", "page-authors", ["page" => "1"]],
+            ["index.php?page=1&letter=1", "/authors/letter", "page-1-letter", ["page" => "1", "letter" => "1"]],
+            ["index.php?page=2&id=D", "/authors/letter/D", "page-authors-letter", ["page" => "2", "id" => "D"]],
+            ["index.php?page=3&id=1", "/authors/1", "page-3-id", ["page" => "3", "id" => "1"]],
+            ["index.php?page=3&id=1&title=Title", "/authors/1/Title", "page-author", ["page" => "3", "id" => "1", "title" => "Title"]],
+            ["index.php?page=4", "/books", "page-books", ["page" => "4"]],
+            ["index.php?page=4&letter=1", "/books/letter", "page-4-letter", ["page" => "4", "letter" => "1"]],
+            ["index.php?page=5&id=A", "/books/letter/A", "page-books-letter", ["page" => "5", "id" => "A"]],
+            ["index.php?page=4&year=1", "/books/year", "page-4-year", ["page" => "4", "year" => "1"]],
+            ["index.php?page=50&id=2006", "/books/year/2006", "page-books-year", ["page" => "50", "id" => "2006"]],
+            ["index.php?page=6", "/series", "page-series", ["page" => "6"]],
+            ["index.php?page=7&id=1", "/series/1", "page-7-id", ["page" => "7", "id" => "1"]],
+            ["index.php?page=7&id=1&title=Title", "/series/1/Title", "page-serie", ["page" => "7", "id" => "1", "title" => "Title"]],
+            ["index.php?page=8", "/search", "page-search", ["page" => "8"]],
+            ["index.php?page=9&query=alice", "/search/alice", "page-query", ["page" => "9", "query" => "alice"]],
+            ["index.php?page=9&query=alice&scope=book", "/search/alice/book", "page-query-scope", ["page" => "9", "query" => "alice", "scope" => "book"]],
+            ["index.php?page=9&search=1&query=alice", "/typeahead?query=alice", "page-typeahead", ["page" => "9", "search" => "1", "query" => "alice"]],
+            ["index.php?page=9&search=1&query=alice&scope=book", "/typeahead?query=alice&scope=book", "page-typeahead", ["page" => "9", "search" => "1", "query" => "alice", "scope" => "book"]],
+            ["index.php?page=10", "/recent", "page-recent", ["page" => "10"]],
+            ["index.php?page=11", "/tags", "page-tags", ["page" => "11"]],
+            ["index.php?page=12&id=1", "/tags/1", "page-12-id", ["page" => "12", "id" => "1"]],
+            ["index.php?page=12&id=1&title=Title", "/tags/1/Title", "page-tag", ["page" => "12", "id" => "1", "title" => "Title"]],
+            ["index.php?page=13&id=2", "/books/2", "page-13-id", ["page" => "13", "id" => "2"]],
+            ["index.php?page=13&id=2&author=Author&title=Title", "/books/2/Author/Title", "page-book", ["page" => "13", "id" => "2", "author" => "Author", "title" => "Title"]],
+            ["index.php?page=14&custom=1", "/custom/1", "page-customtype", ["page" => "14", "custom" => "1"]],
+            ["index.php?page=15&custom=1&id=2", "/custom/1/2", "page-custom", ["page" => "15", "custom" => "1", "id" => "2"]],
+            ["index.php?page=15&custom=1&id=not_set", "/custom/1/not_set", "page-custom", ["page" => "15", "custom" => "1", "id" => "not_set"]],  // @todo id = null
+            ["index.php?page=16", "/about", "page-about", ["page" => "16"]],
+            ["index.php?page=17", "/languages", "page-languages", ["page" => "17"]],
+            ["index.php?page=18&id=1", "/languages/1", "page-18-id", ["page" => "18", "id" => "1"]],
+            ["index.php?page=18&id=1&title=Title", "/languages/1/Title", "page-language", ["page" => "18", "id" => "1", "title" => "Title"]],
+            ["index.php?page=19", "/customize", "page-customize", ["page" => "19"]],
+            ["index.php?page=20", "/publishers", "page-publishers", ["page" => "20"]],
+            ["index.php?page=21&id=1", "/publishers/1", "page-21-id", ["page" => "21", "id" => "1"]],
+            ["index.php?page=21&id=1&title=Title", "/publishers/1/Title", "page-publisher", ["page" => "21", "id" => "1", "title" => "Title"]],
+            ["index.php?page=22", "/ratings", "page-ratings", ["page" => "22"]],
+            ["index.php?page=23&id=1", "/ratings/1", "page-23-id", ["page" => "23", "id" => "1"]],
+            ["index.php?page=23&id=1&title=Title", "/ratings/1/Title", "page-rating", ["page" => "23", "id" => "1", "title" => "Title"]],
+            ["index.php?page=22&a=1", "/ratings?a=1", "page-ratings", ["page" => "22", "a" => "1"]],
+            ["index.php?page=23&id=1&a=1", "/ratings/1?a=1", "page-23-id", ["page" => "23", "id" => "1", "a" => "1"]],
+            ["calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7", "/calres/0/xxh64/7c301792c52eebf7", "calres", ["_handler" => "calres", "db" => "0", "alg" => "xxh64", "digest" => "7c301792c52eebf7"]],
+            ["zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml", "/zipfs/0/20/META-INF/container.xml", "zipfs", ["_handler" => "zipfs", "db" => "0", "data" => "20", "comp" => "META-INF/container.xml"]],
+            ["loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610", "/loader/wd_author/0/1?matchId=Q35610", "loader-action-dbNum-authorId", ["_handler" => "loader", "action" => "wd_author", "dbNum" => "0", "authorId" => "1", "matchId" => "Q35610"]],
+            ["checkconfig.php", "/check", "check", ["_handler" => "check"]],
+            ["epubreader.php?db=0&data=20&title=Alice%27s_Adventures_in_Wonderland", "/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
+            ["epubreader.php?db=0&data=20", "/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
+            ["sendtomail.php", "/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
+            ["fetch.php?db=0&id=17&thumb=html", "/thumbs/0/17/html.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
+            ["fetch.php?db=0&id=17&thumb=opds", "/thumbs/0/17/opds.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds", "db" => "0", "id" => "17"]],
+            ["fetch.php?db=0&id=17", "/covers/0/17.jpg", "fetch-cover", ["_handler" => "fetch", "db" => "0", "id" => "17"]],
+            ["fetch.php?view=1&db=0&data=20&type=epub", "/inline/0/20/ignore.epub", "fetch-inline", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
+            ["fetch.php?db=0&data=20&type=epub", "/fetch/0/20/ignore.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
+            ["fetch.php?db=0&id=17&file=hello.txt", "/files/0/17/hello.txt", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "hello.txt"]],
+            ["fetch.php?db=0&id=17&file=zipped", "/files/0/17/zipped", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "zipped"]],
+            ["zipper.php?page=10&type=any", "/zipper/10/any.zip", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
+            // skip feed-page routes for handler::page() - use feed-path route with default page handler
+            ["feed.php?page=3&id=1&title=Arthur%20Conan%20Doyle", "/feed/3/1?title=Arthur%20Conan%20Doyle", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
+            ["feed.php?page=3&id=1", "/feed/3/1", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1"]],
+            ["feed.php?page=10", "/feed/10", "feed-page", ["_handler" => "feed", "page" => "10"]],
+            // skip opds-page routes for handler::page() - use opds-path route with default page handler
+            ["opds.php?page=3&id=1&title=Arthur%20Conan%20Doyle", "/opds/3/1?title=Arthur%20Conan%20Doyle", "opds-page-id", ["_handler" => "opds", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
+            ["opds.php?page=3&id=1", "/opds/3/1", "opds-page-id", ["_handler" => "opds", "page" => "3", "id" => "1"]],
+            ["opds.php?page=10", "/opds/10", "opds-page", ["_handler" => "opds", "page" => "10"]],
+            // use default page handler with prefix for opds-path + use _route in params to generate path
+            ["opds.php?page=3&id=1&title=Arthur_Conan_Doyle", "/opds/authors/1/Arthur_Conan_Doyle", "opds-path", ["_handler" => "opds", "page" => "3", "id" => "1", "title" => "Arthur_Conan_Doyle", "_route" => "page-author"]],
+            ["opds.php?page=3&id=1", "/opds/authors/1", "opds-path", ["_handler" => "opds", "page" => "3", "id" => "1", "_route" => "page-3-id"]],
+            ["opds.php?page=10", "/opds/recent", "opds-path", ["_handler" => "opds", "page" => "10", "_route" => "page-recent"]],
+            ["restapi.php?_resource=openapi", "/restapi/openapi", "restapi-openapi", ["_handler" => "restapi", "_resource" => "openapi"]],
+            ["graphql.php", "/graphql", "graphql", ["_handler" => "graphql"]],
+        ];
     }
 
     /**
      * @param mixed $link
      * @param mixed $expected
+     * @param mixed $route
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
-    public function testRouteLink($link, $expected)
+    public function testHandlerLink($link, $expected, $route)
     {
+        // skip feed-page routes for handler::page() - use feed-path route with default page handler
+        if (str_starts_with($route, "feed-page")) {
+            $this->markTestSkipped("Skip feed-page routes here");
+        }
+        // skip opds-page routes for handler::page() - use opds-path route with default page handler
+        if (str_starts_with($route, "opds-page")) {
+            $this->markTestSkipped("Skip opds-page routes here");
+        }
+        $expected = "index.php" . $expected;
         $params = [];
         parse_str(parse_url((string) $link, PHP_URL_QUERY) ?? '', $params);
-        $page = $params["page"] ?? null;
-        unset($params["page"]);
         $endpoint = parse_url((string) $link, PHP_URL_PATH);
         // 1. this will find handler name based on old endpoints
         $handler = "html";
@@ -198,18 +206,20 @@ class RouteTest extends TestCase
         }
         // 2. we pass handler class-string as param now
         $handler = Route::getHandler($handler);
-        $test = $handler::page($page, $params);
+        $test = $handler::link($params);
         $this->assertStringEndsWith($expected, $test);
     }
 
     /**
      * @param mixed $expected
      * @param mixed $path
+     * @param mixed $route
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
-    public function testRouteMatch($expected, $path)
+    public function testRouteMatch($expected, $path, $route)
     {
+        $path = "index.php" . $path;
         $query = parse_url((string) $path, PHP_URL_QUERY);
         $path = parse_url((string) $path, PHP_URL_PATH);
         $parts = explode('/', $path);
@@ -251,66 +261,68 @@ class RouteTest extends TestCase
     }
 
     /**
-     * Summary of getRoutes
-     * @return array<mixed>
-     */
-    public static function getRoutes()
-    {
-        // @todo replace handler name with class-string
-        //$handlers = Framework::getHandlers();
-        return [
-            "/calres/0/xxh64/7c301792c52eebf7" => [Route::HANDLER_PARAM => "calres", "db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"],
-            "/zipfs/0/20/META-INF/container.xml" => [Route::HANDLER_PARAM => "zipfs", "db" => 0, "data" => 20, "comp" => "META-INF/container.xml"],
-            null => [Route::HANDLER_PARAM => "zipfs", "db" => "x", "data" => 20, "comp" => "META-INF/container.xml"],
-            "/thumbs/0/17/html.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html"],
-            "/thumbs/0/17/opds.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds"],
-            "/thumbs/0/17/html2.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "html2"],
-            "/thumbs/0/17/opds2.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "thumb" => "opds2"],
-            "/covers/0/17.jpg" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17],
-            "/inline/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub", "view" => 1],
-            "/fetch/0/20/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "type" => "epub"],
-            "/files/0/17/hello.txt" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "hello.txt"],
-            "/files/0/17/sub%20dir/hello%20world.txt" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "id" => 17, "file" => "sub dir/hello world.txt"],
-            "/zipper/3/3/any.zip" => [Route::HANDLER_PARAM => "zipper", "page" => 3, "type" => "any", "id" => 3],
-            "/zipper/10/any.zip" => [Route::HANDLER_PARAM => "zipper", "page" => 10, "type" => "any"],
-            "/loader/wd_author/0/1?matchId=Q35610" => [Route::HANDLER_PARAM => "loader", "action" => "wd_author", "dbNum" => 0, "authorId" => 1, "matchId" => "Q35610"],
-            "/check" => [Route::HANDLER_PARAM => "check"],
-            "/read/0/20/Alice%27s_Adventures_in_Wonderland" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20, "title" => "Alice's Adventures in Wonderland"],
-            "/read/0/20" => [Route::HANDLER_PARAM => "read", "db" => 0, "data" => 20],
-            "/mail" => [Route::HANDLER_PARAM => "mail"],
-            "/feed/authors/1/Arthur_Conan_Doyle" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1, "title" => "Arthur Conan Doyle"],
-            "/feed/authors/1" => [Route::HANDLER_PARAM => "feed", "page" => 3, "id" => 1],
-            "/feed/recent" => [Route::HANDLER_PARAM => "feed", "page" => 10],
-            "/restapi/openapi" => [Route::HANDLER_PARAM => "restapi", "path" => "openapi"],
-            "/graphql" => [Route::HANDLER_PARAM => "graphql"],
-            // @todo handle url rewriting if enabled separately - path parameters are different
-            "/view/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "ignore" => "ignore", "type" => "epub", "view" => 1, Route::ROUTE_PARAM => "fetch-view"],
-            "/download/20/0/ignore.epub" => [Route::HANDLER_PARAM => "fetch", "db" => 0, "data" => 20, "ignore" => "ignore", "type" => "epub", Route::ROUTE_PARAM => "fetch-download"],
-        ];
-    }
-
-    /**
      * Summary of routeProvider
      * @return array<mixed>
      */
     public static function routeProvider()
     {
-        $data = [];
-        $routes = self::getRoutes();
-        foreach ($routes as $from => $to) {
-            array_push($data, [$from, $to]);
-        }
-        return $data;
+        // @todo replace handler name with class-string
+        //$handlers = Framework::getHandlers();
+        return [
+            ["/calres/0/xxh64/7c301792c52eebf7", "calres", ["_handler" => "calres", "db" => "0", "alg" => "xxh64", "digest" => "7c301792c52eebf7"]],
+            ["/zipfs/0/20/META-INF/container.xml", "zipfs", ["_handler" => "zipfs", "db" => "0", "data" => "20", "comp" => "META-INF/container.xml"]],
+            [null, "zipfs", ["_handler" => "zipfs", "db" => "x", "data" => "20", "comp" => "META-INF/container.xml"]],
+            ["/thumbs/0/17/html.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html", "db" => "0", "id" => "17"]],
+            ["/thumbs/0/17/opds.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds", "db" => "0", "id" => "17"]],
+            ["/thumbs/0/17/html2.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "html2", "db" => "0", "id" => "17"]],
+            ["/thumbs/0/17/opds2.jpg", "fetch-thumb", ["_handler" => "fetch", "thumb" => "opds2", "db" => "0", "id" => "17"]],
+            ["/covers/0/17.jpg", "fetch-cover", ["_handler" => "fetch", "db" => "0", "id" => "17"]],
+            ["/inline/0/20/ignore.epub", "fetch-inline", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
+            ["/fetch/0/20/ignore.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
+            ["/files/0/17/hello.txt", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "hello.txt"]],
+            ["/files/0/17/sub%20dir/hello%20world.txt", "fetch-file", ["_handler" => "fetch", "db" => 0, "id" => 17, "file" => "sub dir/hello world.txt"]],
+            ["/zipper/3/3/any.zip", "zipper-page-id-type", ["_handler" => "zipper", "page" => "3", "type" => "any", "id" => "3"]],
+            ["/zipper/10/any.zip", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
+            ["/loader/wd_author/0/1?matchId=Q35610", "loader-action-dbNum-authorId", ["_handler" => "loader", "action" => "wd_author", "dbNum" => "0", "authorId" => "1", "matchId" => "Q35610"]],
+            ["/check", "check", ["_handler" => "check"]],
+            ["/read/0/20/Alice%27s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's_Adventures_in_Wonderland"]],
+            ["/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
+            ["/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
+            // skip feed-page routes for Route::getRouteForParams() - use feed-path route with default page handler
+            ["/feed/3/1?title=Arthur%20Conan%20Doyle", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
+            ["/feed/3/1", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1"]],
+            ["/feed/10", "feed-page", ["_handler" => "feed", "page" => "10"]],
+            // use default page handler with prefix for feed-path + use _route in params to generate path
+            ["/feed/authors/1/Arthur_Conan_Doyle", "feed-path", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur_Conan_Doyle", "_route" => "page-author"]],
+            ["/feed/authors/1", "feed-path", ["_handler" => "feed", "page" => "3", "id" => "1", "_route" => "page-3-id"]],
+            ["/feed/recent", "feed-path", ["_handler" => "feed", "page" => "10", "_route" => "page-recent"]],
+            ["/restapi/openapi", "restapi-openapi", ["_handler" => "restapi", "_resource" => "openapi"]],
+            ["/graphql", "graphql", ["_handler" => "graphql"]],
+            // @todo handle url rewriting if enabled separately - path parameters are different
+            ["/view/20/0/ignore.epub", "fetch-view", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub", "_route" => "fetch-view"]],
+            ["/download/20/0/ignore.epub", "fetch-download", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub", "_route" => "fetch-download"]],
+        ];
     }
 
     /**
      * @param mixed $expected
+     * @param mixed $route
      * @param mixed $params
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
-    public function testGetRouteForParams($expected, $params)
+    public function testGetRouteForParams($expected, $route, $params)
     {
+        // skip feed-page routes for Route::getRouteForParams() - use feed-path route with default page handler
+        if (str_starts_with($route, "feed-page")) {
+            $this->markTestSkipped("Skip feed-page routes here");
+        }
+        // handle POST method for mail
+        $method = null;
+        if (!empty($params["_method"])) {
+            $method = $params["_method"];
+            unset($params["_method"]);
+        }
         // pass handler class-string as param here
         if (!empty($params[Route::HANDLER_PARAM])) {
             $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);

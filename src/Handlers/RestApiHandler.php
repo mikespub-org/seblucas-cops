@@ -106,6 +106,7 @@ class RestApiHandler extends BaseHandler
      * @param class-string|null $handler
      * @param string|int|null $page
      * @param array<mixed> $params
+     * @deprecated 3.5.0 use handler::route(), handler::page() or handler:link()
      * @return string
      */
     public static function getHandlerLink($handler = null, $page = null, $params = [])
@@ -117,9 +118,11 @@ class RestApiHandler extends BaseHandler
         // use page route with /restapi prefix instead
         $handler ??= Route::getHandler('html');
         $params[Route::HANDLER_PARAM] = self::class;
-        $link = Route::process($handler, $page, $params);
+        if (!empty($page)) {
+            $params['page'] = $page;
+        }
+        $link = Route::process($handler, $params);
         return $link;
-        //return str_replace(Route::base() . Route::endpoint(), self::getBaseUrl(), $link);
     }
 
     /**

@@ -151,8 +151,7 @@ class RestApi extends BaseRenderer
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
         if (!isset($params)) {
-            // @todo find some better way to handle this
-            Response::redirect(self::$handler::getHandlerLink(null, PageId::INDEX));
+            Response::redirect(self::$handler::page(PageId::INDEX));
             return '';
         }
         if ($this->isExtra) {
@@ -194,8 +193,7 @@ class RestApi extends BaseRenderer
             $params = [];
             $params["custom"] = $column['id'];
             $params["db"] = $db;
-            // @todo find some better way to generate restapi links for pages and handlers?
-            $column["navlink"] = self::$handler::getHandlerLink(null, PageId::ALL_CUSTOMS, $params);
+            $column["navlink"] = self::$handler::page(PageId::ALL_CUSTOMS, $params);
             array_push($result["entries"], $column);
         }
         return $result;

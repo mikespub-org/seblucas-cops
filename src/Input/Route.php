@@ -299,37 +299,19 @@ class Route
      * @param array<mixed> $params (optional)
      * @return string
      */
-    public static function path($path = null, $params = [])
+    public static function path($path = '', $params = [])
     {
         /** @phpstan-ignore-next-line */
         if (self::KEEP_STATS) {
             self::$counters['path'] += 1;
         }
+        $queryParams = self::getQueryParams($params);
         if (!empty($path) && str_starts_with($path, '/')) {
-            return $path . self::params($params);
+            $prefix = $path;
+        } else {
+            $prefix = self::base() . $path;
         }
-        return self::base() . $path . self::params($params);
-    }
-
-    /**
-     * Get optional query string with ?
-     * @param array<mixed> $params
-     * @param string $prefix
-     * @return string
-     */
-    public static function params($params = [], $prefix = '')
-    {
-        $queryParams = array_filter($params, function ($val) {
-            if (empty($val) && strval($val) !== '0') {
-                return false;
-            }
-            return true;
-        });
-        if (empty($queryParams)) {
-            return $prefix;
-        }
-        $queryString = self::getQueryString($queryParams);
-        return $prefix . '?' . $queryString;
+        return self::getUriForParams($queryParams, $prefix);
     }
 
     /**
@@ -361,20 +343,23 @@ class Route
             // @todo do we still want to get rid of this here?
             unset($params[self::HANDLER_PARAM]);
         }
-        return self::process($handler, $page, $params);
+        if (!empty($page)) {
+            $params['page'] = $page;
+        }
+        return self::process($handler, $params);
     }
 
     /**
-     * Process link with defined handler, page and params
-     * @param class-string $handler defined in Route::link(), BaseHandler::link() or PageHandler::link()
-     * @param string|int|null $page
+     * Process link with defined handler and params (incl. page)
+     * @param class-string $handler defined in Route::link(), BaseHandler::link() or PageHandler::link() - @todo get rid of this = unused
      * @param array<mixed> $params with HANDLER_PARAM set (base), unset (page) or variable (link)
+     * @param string $prefix (optional)
      * @return string
      */
-    public static function process($handler, $page, $params)
+    public static function process($handler, $params, $prefix = '')
     {
         // ?page=... or /route/...
-        $uri = self::page($page, $params);
+        $uri = self::route($params, $prefix);
         return self::absolute($uri, $handler);
     }
 
@@ -416,9 +401,42 @@ class Route
      * Get uri for page with params
      * @param string|int|null $page
      * @param array<mixed> $params
+     * @param string $prefix (optional)
      * @return string
      */
-    public static function page($page, $params = [])
+    public static function page($page, $params = [], $prefix = '')
+    {
+        if (!empty($page)) {
+            $params['page'] = $page;
+        }
+        return self::route($params, $prefix);
+    }
+
+    /**
+     * Get uri for route with params
+     * @param array<mixed> $params
+     * @param string $prefix (optional)
+     * @return string
+     */
+    public static function route($params, $prefix = '')
+    {
+        $queryParams = self::getQueryParams($params);
+        if (count($queryParams) < 1) {
+            return $prefix;
+        }
+        $route = self::getRouteForParams($queryParams, $prefix);
+        if (!is_null($route)) {
+            return $route;
+        }
+        return self::getUriForParams($queryParams, $prefix);
+    }
+
+    /**
+     * Summary of getQueryParams
+     * @param array<mixed> $params
+     * @return array<mixed> filtered params with optional handler, route and page param
+     */
+    public static function getQueryParams($params)
     {
         $queryParams = array_filter($params, function ($val) {
             if (empty($val) && strval($val) !== '0') {
@@ -426,35 +444,7 @@ class Route
             }
             return true;
         });
-        if (!empty($page)) {
-            $queryParams = array_merge(['page' => $page], $queryParams);
-        }
-        $prefix = '';
-        if (count($queryParams) < 1) {
-            return $prefix;
-        }
-        return self::route($queryParams, $prefix);
-    }
-
-    /**
-     * Summary of route
-     * @param array<mixed> $params
-     * @param string $prefix
-     * @return string
-     */
-    public static function route($params, $prefix = '')
-    {
-        $route = self::getRouteForParams($params, $prefix);
-        if (!is_null($route)) {
-            return $route;
-        }
-        unset($params[self::HANDLER_PARAM]);
-        unset($params[self::ROUTE_PARAM]);
-        if (empty($params)) {
-            return $prefix;
-        }
-        $queryString = self::getQueryString($params);
-        return $prefix . '?' . $queryString;
+        return $queryParams;
     }
 
     /**
@@ -467,6 +457,21 @@ class Route
         unset($params[self::HANDLER_PARAM]);
         unset($params[self::ROUTE_PARAM]);
         return http_build_query($params, '', null, PHP_QUERY_RFC3986);
+    }
+
+    /**
+     * Summary of getUriForParams
+     * @param array<mixed> $params
+     * @param string $prefix
+     * @return string
+     */
+    public static function getUriForParams($params, $prefix = '')
+    {
+        $queryString = self::getQueryString($params);
+        if (empty($queryString)) {
+            return $prefix;
+        }
+        return $prefix . '?' . $queryString;
     }
 
     /**
@@ -514,7 +519,11 @@ class Route
     }
 
     /**
-     * Summary of getRouteForParams
+     * Get route for params based on:
+     * 1. handler param + use default page handler with prefix for page routes
+     * 2. route param
+     * 3. page param
+     * 4. other params as uri
      * @param array<mixed> $params
      * @param string $prefix
      * @return string|null
@@ -531,7 +540,7 @@ class Route
                     $handler = $default;
                 }
             } elseif (in_array($handler::HANDLER, ['feed', 'opds'])) {
-                // if we have a page, or if we have a route and it does *not* start with the handler name
+                // if we have a page, or if we have a route and it does *not* start with the handler name, e.g. _route=page-author
                 if (!empty($params['page']) || (!empty($params[self::ROUTE_PARAM]) && !str_starts_with($params[self::ROUTE_PARAM], $handler::HANDLER))) {
                     $prefix = $prefix . $handler::PREFIX;
                     $handler = $default;
@@ -550,12 +559,7 @@ class Route
             // @todo use _route later - see PageHandler::findRouteName()
         } else {
             // no page or handler, e.g. index.php?complete=1
-            $route = '';
-            unset($params[self::ROUTE_PARAM]);
-            if (empty($params)) {
-                return $prefix . $route;
-            }
-            return $prefix . $route . '?' . self::getQueryString($params);
+            return self::getUriForParams($params, $prefix);
         }
 
         $route = $handler::findRoute($params);
@@ -625,10 +629,7 @@ class Route
         }
         // no path parameters found in route - return what is left
         if ($count === 0) {
-            if (count($subst) > 0) {
-                return $prefix . $path . '?' . Route::getQueryString($subst);
-            }
-            return $prefix . $path;
+            return self::getUriForParams($subst, $prefix . $path);
         }
         // start checking path parameters
         if (in_array('ignore', $found[1])) {
@@ -670,10 +671,7 @@ class Route
             }
             unset($subst[$param]);
         }
-        if (count($subst) > 0) {
-            return $prefix . $path . '?' . self::getQueryString($subst);
-        }
-        return $prefix . $path;
+        return self::getUriForParams($subst, $prefix . $path);
     }
 
     /**

@@ -453,6 +453,7 @@ class Request
     /**
      * Summary of getCurrentUrl
      * @param class-string|null $handler
+     * @deprecated 3.1.0 use route urls instead
      * @return string
      */
     public function getCurrentUrl($handler = null)

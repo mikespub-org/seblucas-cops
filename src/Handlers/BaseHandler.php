@@ -46,7 +46,7 @@ abstract class BaseHandler
         }
         // use this specific handler to find the route
         $params[Route::HANDLER_PARAM] = static::class;
-        return Route::process(static::class, null, $params);
+        return Route::process(static::class, $params);
     }
 
     /**
@@ -61,9 +61,10 @@ abstract class BaseHandler
         if (Route::KEEP_STATS) {
             Route::$counters['basePage'] += 1;
         }
-        // use this specific handler to find the route
-        $params[Route::HANDLER_PARAM] = static::class;
-        return Route::process(static::class, $page, $params);
+        if (!empty($page)) {
+            $params['page'] = $page;
+        }
+        return static::link($params);
     }
 
     /**
