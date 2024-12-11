@@ -13,6 +13,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Group entries by filter group for twigged template - see 'filters.html'
+  * Split off ProxyRequest class to handle trusted proxy headers for base url
   * Use symfony/string package as alternative for normAndUp and slugify with Transliterator
   * Get request locale based on Translation and HTTP_ACCEPT_LANGUAGE
   * Clean up Route url methods and test generating route urls

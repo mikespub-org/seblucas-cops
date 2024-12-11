@@ -1,17 +1,31 @@
 {# filters.html is used for it.isFilterPage #}
-{% extends 'navlist.html' %}
+{% extends 'mainlist.html' %}
 
-{% block entry %}
-{% if entry.class == "" and entry.number == "" %}
-    <div class="panel panel-default">
-        <!-- fixme: show as separator on larger screens? -->
-        <div class="panel-heading">
-            <a href="{{entry.navlink}}">
-                {{entry.title|escape}}
-            </a>
+{% block content %}
+<div id="content" class="container-fluid">
+    <div class="row">
+        <!-- group entries by filter group -->
+        {% for group in it.filterGroups %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+            {% block filtergroup %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="{{group.header.navlink}}">
+                        {{group.header.title|escape}}
+                    </a>
+                </div>
+                {% for entry in group.entries %}
+                    <a href="{{entry.navlink}}">
+                        <div class="panel-body">
+                            {{entry.title|escape}}
+                            <span class="badge pull-right">{{entry.number}}</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+            {% endblock filtergroup %}
         </div>
+        {% endfor %}
     </div>
-{% else %}
-    {{ parent() }}
-{% endif %}
-{% endblock entry %}
+</div>
+{% endblock content %}

@@ -438,6 +438,7 @@ class BaseList
         $title = strtolower($className);
         $title = localize($title . 's.title');
         $href = $instance->getUri();
+        $maxPage = ceil($total / $limit);
         if ($n > 1) {
             if (str_contains($href, '?')) {
                 $paging = '&filter=1';
@@ -455,11 +456,11 @@ class BaseList
                 [ new LinkFeed($href . $paging) ],
                 $this->databaseId,
                 $className,
-                $count
+                strval($n - 1) . " / $maxPage"
             );
             array_push($entries, $entry);
         }
-        if ($n < ceil($total / $limit)) {
+        if ($n < $maxPage) {
             if (str_contains($href, '?')) {
                 $paging = '&filter=1';
             } else {
@@ -474,7 +475,7 @@ class BaseList
                 [ new LinkFeed($href . $paging) ],
                 $this->databaseId,
                 $className,
-                $count
+                strval($n + 1) . " / $maxPage"
             );
             array_push($entries, $entry);
         }

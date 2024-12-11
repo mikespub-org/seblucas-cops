@@ -59,4 +59,4 @@ References:
       - include [extra_series.html](extra_series.html) and/or [extra_info.html](extra_info.html) if it.extra is available
     - [navlist.html](navlist.html)
       - [customize.html](customize.html) (page=19)
-      - [filters.html](filters.html) (filter=1)
+    - [filters.html](filters.html) (filter=1)

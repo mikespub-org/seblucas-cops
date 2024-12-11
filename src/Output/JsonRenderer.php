@@ -642,6 +642,34 @@ class JsonRenderer extends BaseRenderer
     }
 
     /**
+     * Summary of getFilterGroups
+     * @param array<mixed> $entries
+     * @return array<mixed>
+     */
+    public function getFilterGroups($entries)
+    {
+        $filterGroups = [];
+        $group = ['header' => '', 'entries' => []];
+        foreach ($entries as $entry) {
+            if (!empty($entry["class"])) {
+                array_push($group['entries'], $entry);
+                continue;
+            }
+            if (!empty($group['header'])) {
+                array_push($filterGroups, $group);
+            }
+            $group = [
+                'header' => $entry,
+                'entries' => [],
+            ];
+        }
+        if (!empty($group['header'])) {
+            array_push($filterGroups, $group);
+        }
+        return $filterGroups;
+    }
+
+    /**
      * Summary of getJson
      * @param Request $request
      * @param bool $complete
@@ -681,6 +709,10 @@ class JsonRenderer extends BaseRenderer
         }
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, $this->getContentArray($entry, $extraParams));
+        }
+        // group entries by filter group for twigged template - see filters.html
+        if ($out["isFilterPage"] && $this->request->template() === "twigged") {
+            $out["filterGroups"] = $this->getFilterGroups($entries);
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
@@ -743,6 +775,7 @@ class JsonRenderer extends BaseRenderer
             $out ["counters"] = Route::$counters;
         }
         $out ["locale"] = $this->request->locale();
+        $out ["template"] = $this->request->template();
 
         return $out;
     }
