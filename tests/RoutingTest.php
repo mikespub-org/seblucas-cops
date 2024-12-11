@@ -9,7 +9,6 @@
 
 namespace SebLucas\Cops\Tests;
 
-use Exception;
 use SebLucas\Cops\Routing\RouteLoader;
 use SebLucas\Cops\Routing\Routing;
 
@@ -19,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
+use Exception;
 
 #[RequiresMethod('\Symfony\Component\Routing\Router', '__construct')]
 class RoutingTest extends TestCase

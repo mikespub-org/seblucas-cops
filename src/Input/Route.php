@@ -490,9 +490,9 @@ class Route
         }
         if (!empty(Config::get('full_url'))) {
             $base = Config::get('full_url');
-        } elseif (self::hasTrustedProxies()) {
+        } elseif (ProxyRequest::hasTrustedProxies()) {
             // use scheme and host + base path here to apply potential forwarded values
-            $base = self::$proxyRequest->getSchemeAndHttpHost() . self::$proxyRequest->getBasePath();
+            $base = ProxyRequest::getProxyBaseUrl();
         } else {
             $base = dirname((string) $_SERVER['SCRIPT_NAME']);
         }
@@ -727,56 +727,7 @@ class Route
     {
         self::$baseUrl = $base;
         if (is_null($base)) {
-            self::$proxyRequest = null;
+            ProxyRequest::$proxyRequest = null;
         }
-    }
-
-    /**
-     * Check if we have trusted proxies defined in config/local.php
-     * @see https://github.com/symfony/symfony/blob/7.1/src/Symfony/Component/HttpKernel/Kernel.php#L741
-     * @return bool
-     */
-    public static function hasTrustedProxies()
-    {
-        $class = Request::SYMFONY_REQUEST;
-        if (!class_exists($class)) {
-            return false;
-        }
-        if (empty(Config::get('trusted_proxies')) || empty(Config::get('trusted_headers'))) {
-            return false;
-        }
-        if (!isset(self::$proxyRequest)) {
-            $proxies = Config::get('trusted_proxies');
-            $headers = Config::get('trusted_headers');
-            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map('trim', explode(',', (string) $proxies)), self::resolveTrustedHeaders($headers));
-            self::$proxyRequest = $class::createFromGlobals();
-        }
-        return true;
-    }
-
-    /**
-     * Convert trusted headers into bit field of Request::HEADER_*
-     * @see https://github.com/symfony/symfony/blob/7.1/src/Symfony/Bundle/FrameworkBundle/DependencyInjection/FrameworkExtension.php#L3054
-     * @param string[] $headers
-     * @return int
-     */
-    protected static function resolveTrustedHeaders(array $headers)
-    {
-        $class = Request::SYMFONY_REQUEST;
-        $trustedHeaders = 0;
-
-        foreach ($headers as $h) {
-            $trustedHeaders |= match ($h) {
-                'forwarded' => $class::HEADER_FORWARDED,
-                'x-forwarded-for' => $class::HEADER_X_FORWARDED_FOR,
-                'x-forwarded-host' => $class::HEADER_X_FORWARDED_HOST,
-                'x-forwarded-proto' => $class::HEADER_X_FORWARDED_PROTO,
-                'x-forwarded-port' => $class::HEADER_X_FORWARDED_PORT,
-                'x-forwarded-prefix' => $class::HEADER_X_FORWARDED_PREFIX,
-                default => 0,
-            };
-        }
-
-        return $trustedHeaders;
     }
 }

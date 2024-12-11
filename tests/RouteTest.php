@@ -90,6 +90,49 @@ class RouteTest extends TestCase
         $this->assertEquals($expected, $test);
     }
 
+    public function testProxyBaseUrl(): void
+    {
+        Route::setBaseUrl(null);
+        Config::set('full_url', '');
+
+        $expected = 'vendor/bin/';
+        $base = Route::base();
+        $this->assertEquals($expected, $base);
+        Route::setBaseUrl(null);
+
+        // @see https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations
+        Config::set('trusted_proxies', 'private_ranges');
+        Config::set('trusted_headers', ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']);
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'www.example.com';
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = 8443;
+        $_SERVER['HTTP_X_FORWARDED_PREFIX'] = '/books/';
+        $_SERVER['REMOTE_ADDR'] = '::1';
+        //$_SERVER['REQUEST_URI'] = '/index.php/check';
+
+        $expected = 'https://www.example.com:8443/books/';
+        $base = Route::base();
+        $this->assertEquals($expected, $base);
+        Route::setBaseUrl(null);
+        unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
+        unset($_SERVER['HTTP_X_FORWARDED_HOST']);
+        unset($_SERVER['HTTP_X_FORWARDED_PORT']);
+        unset($_SERVER['HTTP_X_FORWARDED_PREFIX']);
+        unset($_SERVER['REMOTE_ADDR']);
+
+        // this has priority over trusted proxies or script name
+        Config::set('full_url', '/cops/');
+
+        $expected = '/cops/';
+        $base = Route::base();
+        $this->assertEquals($expected, $base);
+        Route::setBaseUrl(null);
+
+        Config::set('trusted_proxies', '');
+        Config::set('trusted_headers', []);
+        Config::set('full_url', '');
+    }
+
     /**
      * Summary of linkProvider
      * @return array<mixed>
@@ -297,7 +340,7 @@ class RouteTest extends TestCase
         }
         try {
             $result = Route::generate($route, $params);
-        } catch (Exception) {
+        } catch (Throwable) {
             $this->assertNull($routeUrl);
             return;
         }

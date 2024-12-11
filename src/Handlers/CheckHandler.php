@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
@@ -199,7 +200,7 @@ class CheckHandler extends BaseHandler
         $result = '';
         $result .= 'Base URL detected by the script: ' . $base . '<br>';
         $result .= 'Full URL specified in $config[\'cops_full_url\']: ' . Config::get('full_url') . '<br>';
-        if (Route::hasTrustedProxies()) {
+        if (ProxyRequest::hasTrustedProxies()) {
             $result .= 'Trusted proxies configured: ' . Config::get('trusted_proxies') . '<br>';
             $result .= 'Trusted headers configured: ' . json_encode(Config::get('trusted_headers')) . '<br>';
             foreach (Config::get('trusted_headers') as $name) {

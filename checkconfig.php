@@ -13,6 +13,7 @@
  */
 
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 
@@ -201,7 +202,7 @@ if (!str_ends_with($base, '/')) {
 }
 echo 'Base URL detected by the script: ' . $base . '<br>';
 echo 'Full URL specified in $config[\'cops_full_url\']: ' . $config['cops_full_url'] . '<br>';
-if (Route::hasTrustedProxies()) {
+if (ProxyRequest::hasTrustedProxies()) {
     echo 'Trusted proxies configured: ' . $config['cops_trusted_proxies'] . '<br>';
     echo 'Trusted headers configured: ' . json_encode($config['cops_trusted_headers']) . '<br>';
     foreach ($config['cops_trusted_headers'] as $name) {
