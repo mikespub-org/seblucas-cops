@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) class file
  *
@@ -18,7 +19,7 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 
@@ -68,8 +69,8 @@ class PageQueryResult extends Page
         $n = $this->n;
         $numberPerPage = null;
         $queryNormedAndUp = trim((string) $this->query);
-        if (Translation::useNormAndUp()) {
-            $queryNormedAndUp = Translation::normAndUp($this->query);
+        if (Normalizer::useNormAndUp()) {
+            $queryNormedAndUp = Normalizer::normAndUp($this->query);
         }
         if ($limit) {
             $n = 1;

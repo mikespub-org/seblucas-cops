@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) test file
  *
@@ -13,6 +14,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Language\Translation;
 use Exception;
 
@@ -205,11 +207,11 @@ class BaseTest extends TestCase
     {
         $this->assertEquals(
             "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn",
-            Translation::normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
+            Normalizer::normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
         );
         $this->assertEquals(
             "sun zi bing fa",
-            Translation::normalizeUtf8String("孙子兵法")
+            Normalizer::normalizeUtf8String("孙子兵法")
         );
     }
 
@@ -233,20 +235,15 @@ class BaseTest extends TestCase
 
     public function testAsciiSluggerWithIntl(): void
     {
-        if (class_exists('\Symfony\Component\String\Slugger\AsciiSlugger')) {
-            // @ignore class.notFound
-            $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
-            $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
-            $output = $slugger->slug($input, '_');
-            $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
-            $this->assertEquals($expected, (string) $output);
+        $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
+        $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
+        $output = $slugger->slug($input, '_');
+        $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
+        $this->assertEquals($expected, (string) $output);
 
-            $input = "孙子兵法";
-            $output = $slugger->slug($input, '_');
-            $expected = "sun_zi_bing_fa";
-            $this->assertEquals($expected, (string) $output);
-        } else {
-            $this->markTestSkipped('No symfony/string installed');
-        }
+        $input = "孙子兵法";
+        $output = $slugger->slug($input, '_');
+        $expected = "sun_zi_bing_fa";
+        $this->assertEquals($expected, (string) $output);
     }
 }

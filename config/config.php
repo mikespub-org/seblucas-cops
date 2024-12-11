@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) config loader
  *

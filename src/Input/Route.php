@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) class file
  *
@@ -11,7 +12,7 @@ namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Framework;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Language\Slugger;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Routing\FastRouter;
 use SebLucas\Cops\Routing\RouterInterface;
@@ -41,7 +42,9 @@ class Route
     //protected static $routerClass = Routing::class;
     /** @var RouterInterface|null */
     protected static $router = null;
-    /** @var \Symfony\Component\String\Slugger\AsciiSlugger|bool|null */
+    /** @var class-string */
+    protected static $sluggerClass = Slugger::class;
+    /** @var Slugger|bool|null */
     protected static $slugger = null;
     /** @var array<string, class-string> */
     protected static $handlers = [];
@@ -277,7 +280,7 @@ class Route
      * @param bool $refresh
      * @return void
      */
-    public static function load($refresh = false)
+    public static function load($refresh = false): void
     {
         $cacheFile = dirname(__DIR__) . '/Routing/' . self::ROUTES_CACHE_FILE;
         if ($refresh || !file_exists($cacheFile)) {
@@ -679,56 +682,40 @@ class Route
     /**
      * Summary of getSlugger
      * @param ?string $locale
-     * @return \Symfony\Component\String\Slugger\AsciiSlugger|bool|null
+     * @return Slugger|bool|null
      */
     public static function getSlugger($locale = null)
     {
         if (!isset(self::$slugger)) {
-            if (class_exists('\Symfony\Component\String\Slugger\AsciiSlugger')) {
-                // @ignore class.notFound
-                self::$slugger = new \Symfony\Component\String\Slugger\AsciiSlugger($locale);
-            } else {
-                self::$slugger = false;
-            }
+            self::$slugger = new self::$sluggerClass($locale);
         }
         return self::$slugger;
     }
 
     /**
-     * Summary of slugify - @todo check transliteration
+     * Summary of slugify
      * @param string $string
-     * @param ?string $locale
      * @return string
      */
-    public static function slugify($string, $locale = null)
+    public static function slugify($string)
     {
-        $slugger = self::getSlugger($locale);
-        if ($slugger) {
-            //return (string) $slugger->slug($string, '_');
-        }
-        $replace = [
-            ' ' => '_',
-            '&' => '-',
-            '#' => '-',
-            '"' => '',
-            "'" => '_',
-            ':' => '',
-            ';' => '',
-            '<' => '',
-            '>' => '',
-            '{' => '',
-            '}' => '',
-            '?' => '',
-            ',' => '',
-            '/' => '.',
-            '\\' => '.',
-            '.' => '',
-        ];
-        // normalize first
-        $string = Translation::normalizeUtf8String($string);
+        return (string) self::getSlugger()->slug($string, '_');
+        // @deprecated 3.5.1 use Slugger()->slug()
+        //return self::$sluggerClass::slugify($string);
+    }
 
-        // then clean the new string - e.g. 'sun wu' to 'sun_wu'
-        return str_replace(array_keys($replace), array_values($replace), trim($string));
+    /**
+     * Summary of setLocale
+     * @param ?string $locale
+     * @return void
+     */
+    public static function setLocale($locale)
+    {
+        if (is_null($locale)) {
+            self::$slugger = null;
+            return;
+        }
+        self::$slugger = new self::$sluggerClass($locale);
     }
 
     /**

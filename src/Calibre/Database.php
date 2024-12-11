@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) class file
  *
@@ -11,7 +12,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use Exception;
@@ -215,9 +216,9 @@ class Database
     public static function createSqliteFunctions()
     {
         // Use normalized search function
-        if (Translation::useNormAndUp()) {
+        if (Normalizer::useNormAndUp()) {
             self::$db->sqliteCreateFunction('normAndUp', function ($s) {
-                return Translation::normAndUp($s);
+                return Normalizer::normAndUp($s);
             }, 1);
         }
         // Check if we need to add unixepoch() for notes_db.notes
@@ -381,7 +382,7 @@ class Database
         }
         $totalResult = -1;
 
-        if (Translation::useNormAndUp()) {
+        if (Normalizer::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
             $columns = preg_replace("/upper/", "normAndUp", $columns);
         }
@@ -420,7 +421,7 @@ class Database
         if (self::KEEP_STATS) {
             array_push(self::$queries, [$query, $columns, $filter]);
         }
-        if (Translation::useNormAndUp()) {
+        if (Normalizer::useNormAndUp()) {
             $query = preg_replace("/upper/", "normAndUp", $query);
             $columns = preg_replace("/upper/", "normAndUp", $columns);
         }

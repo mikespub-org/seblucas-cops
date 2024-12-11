@@ -37,7 +37,7 @@ $config['cops_use_url_rewriting'] = "0";
  * Set front controller to remove index.php/ from route URLs generated in COPS
  *
  * Note: this assumes your web server config will rewrite /... to /index.php/...
- * - Apache: .htaccess 
+ * - Apache: .htaccess
  * - Nginx: nginx.conf
  * - PHP built-in: router.php
  * - ...

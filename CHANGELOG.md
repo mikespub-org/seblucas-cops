@@ -13,7 +13,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
-  * Use symfony/string package as alternative for slugify with Transliterator
+  * Use symfony/string package as alternative for normAndUp and slugify with Transliterator
   * Get request locale based on Translation and HTTP_ACCEPT_LANGUAGE
   * Clean up Route url methods and test generating route urls
   * Add Format class, pages and filters to select by book format

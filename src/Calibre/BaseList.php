@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) class file
  *
@@ -12,7 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -203,7 +204,7 @@ class BaseList
     public function countEntriesByFirstLetter($letter)
     {
         $filterString = 'upper(' . $this->getTable() . '.' . $this->getSort() . ') like ?';
-        if (Translation::useNormAndUp()) {
+        if (Normalizer::useNormAndUp()) {
             $filterString = preg_replace("/upper/", "normAndUp", $filterString);
         }
         $param =  $letter . "%";

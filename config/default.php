@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) default configuration
  * Settings can be overridden in config/local.php and
@@ -584,7 +585,7 @@ $config['cops_download_template'] = '{author} - {series} #{series_index} - {titl
  * Set front controller to remove index.php/ from route URLs generated in COPS
  *
  * Note: this assumes your web server config will rewrite /... to /index.php/...
- * - Apache: .htaccess 
+ * - Apache: .htaccess
  * - Nginx: nginx.conf
  * - PHP built-in: router.php
  * - ...

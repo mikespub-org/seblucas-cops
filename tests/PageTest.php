@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) test file
  *
@@ -20,7 +21,7 @@ use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Language\Normalizer;
 
 class PageTest extends TestCase
 {
@@ -1008,7 +1009,7 @@ class PageTest extends TestCase
         $page = PageId::OPENSEARCH_QUERY;
         Config::set('normalized_search', "1");
         Database::clearDb();
-        if (!Translation::useNormAndUp()) {
+        if (!Normalizer::useNormAndUp()) {
             $this->markTestIncomplete();
         }
         $request = new Request();
