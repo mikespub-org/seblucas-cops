@@ -83,4 +83,26 @@ class Format extends Base
     {
         return localize("formatword.none");
     }
+
+    /**
+     * Summary of getInstancesByBookId
+     * @param int $bookId
+     * @param ?int $database
+     * @return array<Format>
+     */
+    public static function getInstancesByBookId($bookId, $database = null)
+    {
+        $formats = [];
+
+        // get formats here, not actual data
+        $query = 'select ' . self::getInstanceColumns($database) . '
+            from data
+            where data.book = ?
+            order by data.format';
+        $result = Database::query($query, [$bookId], $database);
+        while ($post = $result->fetchObject()) {
+            array_push($formats, new Format($post, $database));
+        }
+        return $formats;
+    }
 }

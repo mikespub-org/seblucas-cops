@@ -13,7 +13,6 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Normalizer;
-use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use Exception;
 use PDO;
@@ -274,7 +273,7 @@ class Database
         self::$functions = true;
         // add dummy functions for selecting in meta and tag_browser_* views
         self::$db->sqliteCreateFunction('title_sort', function ($s) {
-            return Format::getTitleSort($s);
+            return Normalizer::getTitleSort($s);
         }, 1);
         self::$db->sqliteCreateFunction('books_list_filter', function ($s) {
             return 1;

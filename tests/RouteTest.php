@@ -223,6 +223,7 @@ class RouteTest extends TestCase
     {
         $path = "index.php" . $path;
         $query = parse_url((string) $path, PHP_URL_QUERY);
+        // parse_url() does not decode URL-encoded characters in the path
         $path = parse_url((string) $path, PHP_URL_PATH);
         $parts = explode('/', $path);
         $endpoint = array_shift($parts);
@@ -275,7 +276,9 @@ class RouteTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider("linkProvider")]
     public function testGenerateLink($queryUrl, $routeUrl, $route, $params)
     {
-        $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
+        if (!empty($routeUrl) && str_contains($routeUrl, '?')) {
+            $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
+        }
         // @todo handle ignore
         // @todo handle restapi/route...
         unset($params[Route::HANDLER_PARAM]);
@@ -381,7 +384,9 @@ class RouteTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
     public function testGenerateRoute($routeUrl, $route, $params)
     {
-        $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
+        if (!empty($routeUrl) && str_contains($routeUrl, '?')) {
+            $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
+        }
         unset($params[Route::HANDLER_PARAM]);
         unset($params["_method"]);
         $prefix = "";

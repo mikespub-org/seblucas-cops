@@ -1,0 +1,5 @@
+{
+    "operationName": "getFormats",
+    "variables": [],
+    "query": "query getFormats {\n  formats {\n    id\n    title\n  }\n}"
+}

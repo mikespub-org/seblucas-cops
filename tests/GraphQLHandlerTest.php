@@ -96,7 +96,7 @@ class GraphQLHandlerTest extends TestCase
         $this->assertEquals($expected, $errors);
 
         $queryType = $schema->getQueryType();
-        $expected = 24;
+        $expected = 26;
         $this->assertCount($expected, $queryType->getFieldNames());
     }
 
@@ -247,6 +247,8 @@ class GraphQLHandlerTest extends TestCase
                 $vars = match ($name) {
                     'book' => ['id' => 17],
                     'publisher' => ['id' => 2],
+                    'identifier' => ['id' => 'isbn'],
+                    'format' => ['id' => 'EPUB'],
                     default => ['id' => 1],
                 };
                 $query = 'query ' . $operation . "(\$id: ID) {\n";

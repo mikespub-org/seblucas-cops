@@ -1,0 +1,18 @@
+{
+    "data": {
+        "formats": [
+            {
+                "id": "cops:formats:EPUB",
+                "title": "EPUB"
+            },
+            {
+                "id": "cops:formats:MOBI",
+                "title": "MOBI"
+            },
+            {
+                "id": "cops:formats:PDF",
+                "title": "PDF"
+            }
+        ]
+    }
+}

@@ -1,7 +1,7 @@
 {
     "operationName": "getIdentifier",
     "variables": {
-        "id": 1
+        "id": "isbn"
     },
     "query": "query getIdentifier($id: ID) {\n  identifier(id: $id) {\n    id\n    title\n  }\n}"
 }

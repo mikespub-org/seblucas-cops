@@ -100,7 +100,10 @@ class Framework
         if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
             $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
         }
-        return new Input\Request();
+        $request = new Input\Request();
+        // @todo set locale for Route Slugger - must be done after init() and Request()
+        Input\Route::setLocale($request->locale());
+        return $request;
     }
 
     /**

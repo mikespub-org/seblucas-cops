@@ -76,6 +76,7 @@ class RoutingTest extends TestCase
     {
         //echo '["' . $queryUrl . '", "' . $routeUrl . '", "' . $route . '", ' . json_encode($params) . "],\n";
         $query = parse_url((string) $routeUrl, PHP_URL_QUERY);
+        // parse_url() does not decode URL-encoded characters in the path
         $path = parse_url((string) $routeUrl, PHP_URL_PATH);
         // handle POST method for mail
         $method = null;
@@ -186,6 +187,7 @@ class RoutingTest extends TestCase
     {
         //echo '["' . $routeUrl . '", "' . $route . '", ' . json_encode($params) . "],\n";
         $query = parse_url((string) $routeUrl, PHP_URL_QUERY);
+        // parse_url() does not decode URL-encoded characters in the path
         $path = parse_url((string) $routeUrl, PHP_URL_PATH);
         // handle POST method for mail
         $method = null;

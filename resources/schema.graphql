@@ -91,6 +91,24 @@ type Query {
     """
     where: SequelizeJSON
   ): Entry
+  formats(
+    limit: Int
+    order: String
+
+    """
+    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  format(
+    id: ID
+
+    """
+    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    """
+    where: SequelizeJSON
+  ): Entry
   identifiers(
     limit: Int
     order: String
@@ -254,6 +272,7 @@ type EntryBook {
   authors: [Entry]
   customColumns: [Entry]
   datas: [Data]
+  formats: [Entry]
   identifiers: [Entry]
   languages: String
   publisher: Entry

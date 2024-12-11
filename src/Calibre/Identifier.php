@@ -155,6 +155,7 @@ class Identifier extends Base
      */
     public static function getInstanceById($id, $database = null)
     {
+        // get identifier type here, not actual identifier
         if (!empty($id)) {
             return new Identifier((object) ['id' => $id, 'type' => $id, 'val' => ''], $database);
         }
@@ -182,6 +183,7 @@ class Identifier extends Base
     {
         $identifiers = [];
 
+        // get actual identifiers here, not identifier types
         $query = 'select type, val, id
             from identifiers
             where book = ?

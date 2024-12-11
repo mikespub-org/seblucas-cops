@@ -97,4 +97,19 @@ class Normalizer
         // @deprecated 3.5.1 use UnicodeString()->ascii()
         //return mb_strtoupper(self::normalizeUtf8String($s), 'UTF-8');
     }
+
+    /**
+     * Summary of getTitleSort
+     * @param string $str
+     * @return string
+     */
+    public static function getTitleSort($str)
+    {
+        $str = trim($str, ' -.');
+        // @todo add articles to ignore in other languages
+        if (!preg_match('/^(The|A|An) /u', $str)) {
+            return $str;
+        }
+        return preg_replace('/^(The|A|An) (.+)$/u', '$2, $1', $str);
+    }
 }

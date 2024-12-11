@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Normalizer;
+use SebLucas\Cops\Language\Slugger;
 use SebLucas\Cops\Language\Translation;
 use Exception;
 
@@ -233,12 +234,38 @@ class BaseTest extends TestCase
         }
     }
 
+    public function testSluggerSlugify(): void
+    {
+        $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
+        $output = Slugger::slugify($input);
+        $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
+        $this->assertEquals($expected, (string) $output);
+
+        $input = "孙子兵法";
+        $output = Slugger::slugify($input);
+        $expected = "sun_zi_bing_fa";
+        $this->assertEquals($expected, (string) $output);
+    }
+
     public function testAsciiSluggerWithIntl(): void
     {
-        $slugger = new \Symfony\Component\String\Slugger\AsciiSlugger();
+        $slugger = new Slugger();
         $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
         $output = $slugger->slug($input, '_');
         $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
+        $this->assertEquals($expected, (string) $output);
+
+        $input = "孙子兵法";
+        $output = $slugger->slug($input, '_');
+        $expected = "sun_zi_bing_fa";
+        $this->assertEquals($expected, (string) $output);
+
+        // handle umlauts with ö => oe etc.
+        $locale = 'de';
+        $slugger = new Slugger($locale);
+        $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
+        $output = $slugger->slug($input, '_');
+        $expected = "AAAAAEACEEEEIIIIOEOOOOOEUUUUEYaaaaaeaceeeeiiiioedoooooeuuuueyyn";
         $this->assertEquals($expected, (string) $output);
 
         $input = "孙子兵法";

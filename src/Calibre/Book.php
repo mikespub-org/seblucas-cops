@@ -17,7 +17,7 @@ use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkEntry;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Output\FileResponse;
-use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\Format as OutputFormat;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\EPubMeta\EPub;
@@ -87,6 +87,8 @@ class Book
     public $tags = null;
     /** @var ?array<Identifier> */
     public $identifiers = null;
+    /** @var ?array<Format> */
+    public $formats = null;
     /** @var ?string */
     public $languages = null;
     /** @var ?array<Annotation> */
@@ -341,6 +343,17 @@ class Book
     }
 
     /**
+     * @return array<Format>
+     */
+    public function getFormats()
+    {
+        if (is_null($this->formats)) {
+            $this->formats = Format::getInstancesByBookId($this->id, $this->databaseId);
+        }
+        return $this->formats;
+    }
+
+    /**
      * @return array<Annotation>
      */
     public function getAnnotations()
@@ -510,7 +523,7 @@ class Book
             $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
         //if (preg_match('/<\/(div|p|a|span)>/', $this->comment)) {
-        return $addition . Format::html2xhtml($this->comment);
+        return $addition . OutputFormat::html2xhtml($this->comment);
         //} else {
         //    return $addition . htmlspecialchars($this->comment);
         //}

@@ -1,0 +1,7 @@
+{
+    "operationName": "getFormat",
+    "variables": {
+        "id": "EPUB"
+    },
+    "query": "query getFormat($id: ID) {\n  format(id: $id) {\n    id\n    title\n  }\n}"
+}

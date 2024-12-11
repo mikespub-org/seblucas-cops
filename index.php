@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) HTML main endpoint
  * URL format: index.php?page={page}&...

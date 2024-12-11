@@ -834,6 +834,55 @@ class PageTest extends TestCase
         Config::set('html_filter_links', ['author', 'language', 'publisher', 'rating', 'series', 'tag']);
     }
 
+    public function testPageAllFormats(): void
+    {
+        $page = PageId::ALL_FORMATS;
+        $request = new Request();
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("Formats", $currentPage->title);
+        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertEquals("EPUB", $currentPage->entryArray [0]->title);
+        $this->assertEquals(16, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertEquals("PDF", $currentPage->entryArray [2]->title);
+        $this->assertEquals(1, $currentPage->entryArray [2]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageFormatDetail(): void
+    {
+        $page = PageId::FORMAT_DETAIL;
+        $request = new Request();
+        $request->set('id', "EPUB");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("EPUB", $currentPage->title);
+        $this->assertCount(16, $currentPage->entryArray);
+        $this->assertEquals("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
+        $this->assertTrue($currentPage->containsBook());
+    }
+
+    public function testPageFormatDetail_Filter(): void
+    {
+        Config::set('html_filter_links', ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'format']);
+        $page = PageId::FORMAT_DETAIL;
+        $request = new Request();
+        $request->set('id', "EPUB");
+        $request->set('filter', "1");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("EPUB", $currentPage->title);
+        $this->assertCount(42, $currentPage->entryArray);
+        $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Lewis Carroll", $currentPage->entryArray [1]->title);
+        $this->assertEquals("2 books", $currentPage->entryArray [1]->content);
+        $this->assertFalse($currentPage->containsBook());
+        Config::set('html_filter_links', ['author', 'language', 'publisher', 'rating', 'series', 'tag']);
+    }
+
     public function testPageAllLibraries(): void
     {
         $page = PageId::ALL_LIBRARIES;

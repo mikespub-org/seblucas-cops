@@ -16,6 +16,7 @@ use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
 use SebLucas\Cops\Calibre\Publisher;
@@ -26,7 +27,7 @@ use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Context;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\Format;
+use SebLucas\Cops\Output\Format as OutputFormat;
 use SebLucas\Cops\Output\Response;
 use GraphQL\GraphQL;
 use GraphQL\Utils\BuildSchema;
@@ -198,6 +199,15 @@ class GraphQLHandler extends BaseHandler
                     $instance = Author::getInstanceById($args['id'], $request->database());
                     $instance->setHandler($handler);
                     return $instance->getEntry();
+                case 'formats':
+                    [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
+                    $baselist = new BaseList(Format::class, $current, null, $numberPerPage);
+                    $entryArray = $baselist->getRequestEntries($n);
+                    return $entryArray;
+                case 'format':
+                    $instance = Format::getInstanceById($args['id'], $request->database());
+                    $instance->setHandler($handler);
+                    return $instance->getEntry();
                 case 'identifiers':
                     [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                     $baselist = new BaseList(Identifier::class, $current, null, $numberPerPage);
@@ -312,6 +322,13 @@ class GraphQLHandler extends BaseHandler
                 case 'datas':
                     $datas = $book->getDatas();
                     return $datas;
+                case 'formats':
+                    $formats = $book->getFormats();
+                    $entryArray = [];
+                    foreach ($formats as $format) {
+                        array_push($entryArray, $format->getEntry());
+                    }
+                    return $entryArray;
                 case 'identifiers':
                     $identifiers = $book->getIdentifiers();
                     $entryArray = [];
@@ -395,6 +412,6 @@ class GraphQLHandler extends BaseHandler
         $template = dirname(__DIR__, 2) . '/templates/graphql.html';
 
         $response = new Response('text/html;charset=utf-8');
-        return $response->setContent(Format::template($data, $template));
+        return $response->setContent(OutputFormat::template($data, $template));
     }
 }

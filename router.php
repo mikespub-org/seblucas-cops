@@ -1,4 +1,5 @@
 <?php
+
 /**
  * COPS (Calibre OPDS PHP Server) router script for the PHP built-in web server
  * with route urls (always enabled in 3.4.+) and no PHP script in URL (dev only)
@@ -30,6 +31,7 @@ if (str_contains($path, $script . '/') && file_exists(__DIR__ . $script)) {
 
 // set environment vars for the front controller
 $_SERVER['SCRIPT_NAME'] = '/index.php';
+// parse_url() does not decode URL-encoded characters in the path
 $_SERVER['PATH_INFO'] ??= parse_url((string) $_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // use index.php as front controller

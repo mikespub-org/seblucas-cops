@@ -1,0 +1,6 @@
+query getFormat($id: ID) {
+  format(id: $id) {
+    id
+    title
+  }
+}
