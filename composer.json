@@ -76,6 +76,7 @@
         }
     ],
     "config": {
+        "optimize-autoloader": true,
         "allow-plugins": {
         }
     }

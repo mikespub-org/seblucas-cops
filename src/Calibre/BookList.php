@@ -53,8 +53,6 @@ class BookList
     protected $databaseId = null;
     /** @var ?int */
     protected $numberPerPage = null;
-    /** @var array<string> */
-    //protected $ignoredCategories = [];
     /** @var ?string */
     public $orderBy = null;
     /** @var array<int, mixed> */
@@ -72,7 +70,6 @@ class BookList
         $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->database();
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
-        //$this->ignoredCategories = $this->request->option('ignored_categories');
         $this->setOrderBy();
         // get handler based on $this->request
         $this->handler = $this->request->getHandler();

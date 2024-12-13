@@ -38,6 +38,9 @@ class PageQueryResult extends Page
     public const SCOPE_BOOK = "book";
     public const SCOPE_PUBLISHER = "publisher";
     public const SCOPE_LANGUAGE = "language";
+    public const SCOPE_IDENTIFIER = "identifier";
+    public const SCOPE_FORMAT = "format";
+    public const SCOPE_LIBRARIES = "libraries";
 
     /** @var ?string */
     public $query;

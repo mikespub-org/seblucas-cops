@@ -48,6 +48,7 @@ class Author extends Base
         $this->name = str_replace("|", ",", $post->name);
         $this->sort = $post->sort;
         $this->link = property_exists($post, 'link') ? $post->link : null;
+        $this->count = property_exists($post, 'count') ? $post->count : null;
         $this->databaseId = $database;
     }
 

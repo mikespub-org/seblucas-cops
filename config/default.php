@@ -211,7 +211,7 @@ $config['cops_titles_split_first_letter'] = '1';
 $config['cops_titles_split_publication_year'] = '1';
 
 /*
- * Enable the Lightboxes (for popups)
+ * Enable the Lightboxes (for popups) in 'default' template with client side rendering
  * 1 : Yes (enable)
  * 0 : No
  */
@@ -531,7 +531,7 @@ $config['cops_html_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'time
  * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag in HTML page detail
  * Note: this replaces 'cops_show_filter_links' in previous release, and now expects an array
  *
- * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'identifier']
+ * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'identifier', 'format']
  */
 $config['cops_html_filter_links'] = ['author', 'language', 'publisher', 'rating', 'series', 'tag'];
 
@@ -558,7 +558,7 @@ $config['cops_opds_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'time
  * To disable this feature, use an empty array in config/local.php:
  * $config['cops_opds_filter_links'] = [];
  *
- * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag']
+ * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'identifier', 'format']
  */
 $config['cops_opds_filter_links'] = ['author', 'language', 'rating', 'tag'];
 

@@ -29,34 +29,34 @@ class RouteTest extends TestCase
 
     public function testRoutePage(): void
     {
-        $this->assertEquals("", Route::page(null, ['db' => null]));
-        $this->assertEquals("?db=0", Route::page(null, ['db' => 0]));
-        $this->assertEquals("?key=value", Route::page(null, ['key' => 'value', 'db' => null]));
-        $this->assertEquals("?key=value&db=0", Route::page(null, ['key' => 'value', 'db' => 0]));
-        $this->assertEquals("?key=value&db=0", Route::page(null, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", Route::page(null, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        $this->assertEquals("/authors", Route::page(1, ['db' => null]));
-        $this->assertEquals("/authors?db=0", Route::page(1, ['db' => 0]));
-        $this->assertEquals("/authors?key=value", Route::page(1, ['key' => 'value', 'db' => null]));
-        $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'db' => 0]));
-        $this->assertEquals("/authors?key=value&db=0", Route::page(1, ['key' => 'value', 'otherKey' => null, 'db' => 0]));
-        $this->assertEquals("/authors?key=value&otherKey=other&db=0", Route::page(1, ['key' => 'value', 'otherKey' => 'other', 'db' => 0]));
+        $this->assertEquals("", Route::route(['page' => null, 'db' => null]));
+        $this->assertEquals("?db=0", Route::route(['page' => null, 'db' => 0]));
+        $this->assertEquals("?key=value", Route::route(['page' => null, 'key' => 'value', 'db' => null]));
+        $this->assertEquals("?key=value&db=0", Route::route(['page' => null, 'key' => 'value', 'db' => 0]));
+        $this->assertEquals("?key=value&db=0", Route::route(['page' => null, 'key' => 'value', 'otherKey' => null, 'db' => 0]));
+        $this->assertEquals("?key=value&otherKey=other&db=0", Route::route(['page' => null, 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
+        $this->assertEquals("/authors", Route::route(['page' => 1, 'db' => null]));
+        $this->assertEquals("/authors?db=0", Route::route(['page' => 1, 'db' => 0]));
+        $this->assertEquals("/authors?key=value", Route::route(['page' => 1, 'key' => 'value', 'db' => null]));
+        $this->assertEquals("/authors?key=value&db=0", Route::route(['page' => 1, 'key' => 'value', 'db' => 0]));
+        $this->assertEquals("/authors?key=value&db=0", Route::route(['page' => 1, 'key' => 'value', 'otherKey' => null, 'db' => 0]));
+        $this->assertEquals("/authors?key=value&otherKey=other&db=0", Route::route(['page' => 1, 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
     }
 
     public function testFrontController(): void
     {
         $expected = '/recent';
-        $uri = Route::page(10);
+        $uri = Route::route(['_route' => 'page-recent']);
         $this->assertEquals($expected, $uri);
 
         Config::set('front_controller', 'index.php');
         $expected = Route::base() . 'recent';
-        $test = Route::absolute(Route::page(10));
+        $test = Route::absolute(Route::route(['_route' => 'page-recent']));
         $this->assertEquals($expected, $test);
 
         Config::set('front_controller', '');
         $expected = Route::base() . 'index.php/recent';
-        $test = Route::absolute(Route::page(10));
+        $test = Route::absolute(Route::route(['_route' => 'page-recent']));
         $this->assertEquals($expected, $test);
     }
 
@@ -197,11 +197,11 @@ class RouteTest extends TestCase
             ["fetch.php?db=0&id=17&file=hello.txt", "/files/0/17/hello.txt", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "hello.txt"]],
             ["fetch.php?db=0&id=17&file=zipped", "/files/0/17/zipped", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "zipped"]],
             ["zipper.php?page=10&type=any", "/zipper/10/any.zip", "zipper-page-type", ["_handler" => "zipper", "page" => "10", "type" => "any"]],
-            // skip feed-page routes for handler::page() - use feed-path route with default page handler
+            // skip feed-page routes for handler::link() - use feed-path route with default page handler
             ["feed.php?page=3&id=1&title=Arthur%20Conan%20Doyle", "/feed/3/1?title=Arthur%20Conan%20Doyle", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
             ["feed.php?page=3&id=1", "/feed/3/1", "feed-page-id", ["_handler" => "feed", "page" => "3", "id" => "1"]],
             ["feed.php?page=10", "/feed/10", "feed-page", ["_handler" => "feed", "page" => "10"]],
-            // skip opds-page routes for handler::page() - use opds-path route with default page handler
+            // skip opds-page routes for handler::link() - use opds-path route with default page handler
             ["opds.php?page=3&id=1&title=Arthur%20Conan%20Doyle", "/opds/3/1?title=Arthur%20Conan%20Doyle", "opds-page-id", ["_handler" => "opds", "page" => "3", "id" => "1", "title" => "Arthur Conan Doyle"]],
             ["opds.php?page=3&id=1", "/opds/3/1", "opds-page-id", ["_handler" => "opds", "page" => "3", "id" => "1"]],
             ["opds.php?page=10", "/opds/10", "opds-page", ["_handler" => "opds", "page" => "10"]],
@@ -223,11 +223,11 @@ class RouteTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
     public function testHandlerLink($link, $expected, $route)
     {
-        // skip feed-page routes for handler::page() - use feed-path route with default page handler
+        // skip feed-page routes for handler::link() - use feed-path route with default page handler
         if (str_starts_with($route, "feed-page")) {
             $this->markTestSkipped("Skip feed-page routes here");
         }
-        // skip opds-page routes for handler::page() - use opds-path route with default page handler
+        // skip opds-page routes for handler::link() - use opds-path route with default page handler
         if (str_starts_with($route, "opds-page")) {
             $this->markTestSkipped("Skip opds-page routes here");
         }

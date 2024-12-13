@@ -15,7 +15,6 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\Entry;
-use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 
 class BaseList
@@ -27,10 +26,9 @@ class BaseList
     protected $databaseId = null;
     /** @var ?int */
     protected $numberPerPage = null;
-    /** @var array<string> */
-    //protected $ignoredCategories = [];
     /** @var ?string */
     public $orderBy = null;
+    public bool $pagination = false;
     /** @var class-string */
     protected $handler;
 
@@ -46,7 +44,6 @@ class BaseList
         $this->request = $request ?? new Request();
         $this->databaseId = $database ?? $this->request->database();
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
-        //$this->ignoredCategories = $this->request->option('ignored_categories');
         $this->setOrderBy();
         // get handler based on $this->request
         $this->handler = $this->request->getHandler();
@@ -244,7 +241,11 @@ class BaseList
     public function countFilteredEntries($filter)
     {
         // select {0} from series, books_series_link where series.id = books_series_link.series {1}
-        $query = 'select {0} from ' . $this->getTable() . ', ' . $this->getLinkTable() . ' where ' . $this->getTable() . '.id = ' . $this->getLinkTable() . '.' . $this->getLinkColumn() . ' {1}';
+        if ($this->getTable() == $this->getLinkTable()) {
+            $query = 'select {0} from ' . $this->getTable() . ' where 1=1 {1}';
+        } else {
+            $query = 'select {0} from ' . $this->getTable() . ', ' . $this->getLinkTable() . ' where ' . $this->getTable() . '.id = ' . $this->getLinkTable() . '.' . $this->getLinkColumn() . ' {1}';
+        }
         // count(distinct series.id)
         $columns = 'count(distinct ' . $this->getTable() . '.id)';
         // and (exists (select null from books_authors_link, books where books_series_link.book = books.id and books_authors_link.book = books.id and books_authors_link.author = ?))
@@ -293,7 +294,13 @@ class BaseList
         $query = $this->className::SQL_ALL_ROWS;
         $query = $this->addOrderByClause($query);
         $columns = $this->getCountColumns();
-        return $this->getEntryArrayWithBookNumber($query, $columns, "", [], $n);
+        $entries = $this->getEntryArrayWithBookNumber($query, $columns, "", [], $n);
+        if (!$this->pagination) {
+            return $entries;
+        }
+        // let's see how many entries we're missing
+        $total = $this->countAllEntries();
+        return $this->addPagination($entries, $n, $total);
     }
 
     /**
@@ -406,7 +413,13 @@ class BaseList
     public function getEntriesByFilter($n = 1, $parentClass = null)
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId, $parentClass);
-        return $this->getFilteredEntries($filter, $n);
+        $entries = $this->getFilteredEntries($filter, $n);
+        if (!$this->pagination) {
+            return $entries;
+        }
+        // let's see how many entries we're missing
+        $total = $this->countEntriesByFilter();
+        return $this->addPagination($entries, $n, $total);
     }
 
     /**
@@ -421,13 +434,27 @@ class BaseList
         $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->databaseId);
         $filter->addInstanceFilter($instance);
         $entries = $this->getFilteredEntries($filter, $n);
+        if (!$this->pagination) {
+            return $entries;
+        }
+        // let's see how many entries we're missing
+        $total = $this->countEntriesByInstance($instance, $filterParams);
+        return $this->addPagination($entries, $n, $total, $instance);
+    }
+
+    public function addPagination($entries, $n = 1, $total = 0, $instance = null)
+    {
+        if (!isset($instance)) {
+            $instance = $this->getInstanceById(null);
+            $instance->setHandler($this->handler);
+            $instance->setFilterLimit($this->numberPerPage);
+        }
         $limit = $instance->getFilterLimit();
         // are we at the filter limit for this instance?
         if ($n == 1 && count($entries) < $limit) {
             return $entries;
         }
-        // if so, let's see how many entries we're missing
-        $total = $this->countEntriesByInstance($instance, $filterParams);
+        // let's see how many entries we're missing
         $count = $total - count($entries);
         if ($count < 1) {
             return $entries;
@@ -453,12 +480,12 @@ class BaseList
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
-                [ new LinkFeed($href . $paging) ],
+                [ new LinkNavigation($href . $paging) ],
                 $this->databaseId,
                 $className,
                 strval($n - 1) . " / $maxPage"
             );
-            array_push($entries, $entry);
+            array_unshift($entries, $entry);
         }
         if ($n < $maxPage) {
             if (str_contains($href, '?')) {
@@ -472,7 +499,7 @@ class BaseList
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
-                [ new LinkFeed($href . $paging) ],
+                [ new LinkNavigation($href . $paging) ],
                 $this->databaseId,
                 $className,
                 strval($n + 1) . " / $maxPage"
@@ -651,7 +678,7 @@ class BaseList
      */
     public function getInstancesByIds($instanceIds)
     {
-        $uniqueIds = static::getUniqueInstanceIds($instanceIds);
+        $uniqueIds = self::getUniqueInstanceIds($instanceIds);
         if (count($uniqueIds) < 1) {
             return [];
         }

@@ -70,7 +70,7 @@ $config['cops_opds_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'time
  * To disable this feature, use an empty array in config/local.php:
  * $config['cops_opds_filter_links'] = [];
  *
- * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag']
+ * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'identifier', 'format']
  */
 $config['cops_opds_filter_links'] = ['author', 'language', 'rating', 'tag'];
 

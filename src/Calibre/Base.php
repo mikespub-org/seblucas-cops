@@ -47,6 +47,8 @@ abstract class Base
     public $name;
     /** @var ?string */
     public $link;
+    /** @var ?int */
+    public $count;
     public bool $limitSelf = true;
     /** @var ?int */
     protected $databaseId = null;
@@ -67,6 +69,7 @@ abstract class Base
         $this->id = $post->id;
         $this->name = $post->name;
         $this->link = property_exists($post, 'link') ? $post->link : null;
+        $this->count = property_exists($post, 'count') ? $post->count : null;
         $this->databaseId = $database;
     }
 
@@ -316,6 +319,7 @@ abstract class Base
         $request = Request::build($params, $this->handler);
         $baselist = new BaseList($className, $request, $database, $numberPerPage);
         $baselist->orderBy = $sort;
+        $baselist->pagination = true;
         return $baselist->getEntriesByInstance($this, $n, $this->filterParams);
     }
 

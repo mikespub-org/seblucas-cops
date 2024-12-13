@@ -18,8 +18,6 @@ use SebLucas\Cops\Model\Entry;
 abstract class Category extends Base
 {
     public const CATEGORY = "categories";
-    /** @var ?int */
-    public $count;
     /** @var ?array<Category> */
     protected $children = null;
     /** @var Category|false|null */

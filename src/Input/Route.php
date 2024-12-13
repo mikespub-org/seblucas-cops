@@ -404,6 +404,7 @@ class Route
 
     /**
      * Get uri for page with params
+     * @deprecated 3.5.1 use handler::route(), handler::page() or handler:link()
      * @param string|int|null $page
      * @param array<mixed> $params
      * @param string $prefix (optional)

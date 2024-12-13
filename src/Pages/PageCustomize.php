@@ -98,12 +98,15 @@ class PageCustomize extends Page
     {
         $this->entryArray = [];
 
-        $ignoredBaseArray = [PageQueryResult::SCOPE_AUTHOR,
-            PageQueryResult::SCOPE_TAG,
-            PageQueryResult::SCOPE_SERIES,
-            PageQueryResult::SCOPE_PUBLISHER,
-            PageQueryResult::SCOPE_RATING,
-            "language"];
+        $ignoredBaseArray = [
+            PageQueryResult::SCOPE_AUTHOR => "authors",
+            PageQueryResult::SCOPE_SERIES => "series",
+            PageQueryResult::SCOPE_PUBLISHER => "publishers",
+            PageQueryResult::SCOPE_TAG => "tags",
+            PageQueryResult::SCOPE_RATING => "ratings",
+            PageQueryResult::SCOPE_LANGUAGE => "languages",
+            PageQueryResult::SCOPE_BOOK => "bookword",
+        ];
 
         $database = $this->getDatabaseId();
 
@@ -138,7 +141,8 @@ class PageCustomize extends Page
         }
         $this->addHeaderEntry($title, $content);
 
-        if (!$this->request->render()) {
+        // Enable the Lightboxes (for popups) in 'default' template with client side rendering
+        if (!$this->request->render() && $this->request->template() === 'default') {
             $title = localize("customize.fancybox");
             $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $this->isChecked("use_fancyapps") . ' />';
             $this->addHeaderEntry($title, $content);
@@ -158,8 +162,7 @@ class PageCustomize extends Page
 
         $title = localize("customize.ignored");
         $content = "";
-        foreach ($ignoredBaseArray as $key) {
-            $keyPlural = preg_replace('/(ss)$/', 's', $key . "s");
+        foreach ($ignoredBaseArray as $key => $keyPlural) {
             $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $this->isChecked("ignored_categories", $key) . ' > ' . localize("{$keyPlural}.title") . '</input><br>';
         }
         $this->addHeaderEntry($title, $content);

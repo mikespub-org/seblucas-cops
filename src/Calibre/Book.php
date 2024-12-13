@@ -221,8 +221,7 @@ class Book
         $params['db'] = $this->databaseId;
         $params['author'] = $this->getAuthorsName();
         $params['title'] = $this->getTitle();
-        // @todo keep as is for now - not referenced anymore
-        return $handler::page(self::PAGE_DETAIL, $params);
+        return $handler::route(self::ROUTE_DETAIL, $params);
     }
 
     /**
