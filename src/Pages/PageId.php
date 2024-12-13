@@ -58,13 +58,14 @@ class PageId
     public const ANNOTATION_DETAIL = "63";
     public const EPUBJS_ZIPFS = "95";
     public const CALIBRE_RESOURCE = "97";
-    public const REST_API = "98";
-    public const FILTER = "99";
-    public const ERROR = "100";
+    public const REST_API = "restapi";
+    public const FILTER = "filter";
+    public const ERROR = "error";
     public const INDEX_ID = "cops:catalog";
     public const ABOUT_ID = "cops:about";
     public const FILTER_ID = "cops:filter";
     public const ERROR_ID = "cops:error";
+    public const SEARCH_ID = "cops:search";
     public const ALL_AUTHORS_ID = "cops:authors";
     public const ALL_BASES_ID = "cops:bases";
     public const ALL_BOOKS_UUID = 'urn:uuid';
@@ -133,6 +134,7 @@ class PageId
             PageId::ALL_LIBRARIES => new PageAllVirtualLibraries($request),
             PageId::ABOUT => new PageAbout($request),
             PageId::CUSTOMIZE => new PageCustomize($request),
+            PageId::FILTER => new PageFilter($request),
             // @todo return error for unknown page
             default => new PageIndex($request),
         };

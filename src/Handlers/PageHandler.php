@@ -74,6 +74,7 @@ class PageHandler extends BaseHandler
             "page-format" => ["/formats/{id:\w+}", ["page" => PageId::FORMAT_DETAIL]],
             "page-formats" => ["/formats", ["page" => PageId::ALL_FORMATS]],
             "page-libraries" => ["/libraries", ["page" => PageId::ALL_LIBRARIES]],
+            "page-filter" => ["/filter", ["page" => PageId::FILTER]],
         ];
     }
 

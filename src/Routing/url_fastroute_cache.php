@@ -254,6 +254,19 @@
           '_name' => 'page-libraries',
         ),
       ),
+      '/filter' => 
+      array (
+        0 => 
+        array (
+          'page' => 'filter',
+          '_route' => 'page-filter',
+        ),
+        1 => 
+        array (
+          '_route' => '/filter',
+          '_name' => 'page-filter',
+        ),
+      ),
       '/feed/search' => 
       array (
         0 => 
@@ -2174,6 +2187,13 @@
       0 => 
       array (
         0 => '/libraries',
+      ),
+    ),
+    'page-filter' => 
+    array (
+      0 => 
+      array (
+        0 => '/filter',
       ),
     ),
     'feed-page-id' => 

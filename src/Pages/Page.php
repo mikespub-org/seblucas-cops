@@ -21,8 +21,6 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class Page
 {
-    public const PAGE_ID = "cops:catalog";
-
     /** @var string */
     public $title;
     public string $subtitle = "";
@@ -155,7 +153,7 @@ class Page
     public function initializeContent()
     {
         $this->getEntries();
-        $this->idPage = self::PAGE_ID;
+        $this->idPage = PageId::INDEX_ID;
         $this->title = Config::get('title_default');
         $this->subtitle = Config::get('subtitle_default');
     }

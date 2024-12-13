@@ -27,6 +27,7 @@ return [
         '/identifiers' => [[['_route' => 'page-identifiers', 'page' => '41'], null, ['GET' => 0], null, false, false, null]],
         '/formats' => [[['_route' => 'page-formats', 'page' => '51'], null, ['GET' => 0], null, false, false, null]],
         '/libraries' => [[['_route' => 'page-libraries', 'page' => '43'], null, ['GET' => 0], null, false, false, null]],
+        '/filter' => [[['_route' => 'page-filter', 'page' => 'filter'], null, ['GET' => 0], null, false, false, null]],
         '/feed/search' => [[['_route' => 'feed-search', 'page' => 'search', '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler'], null, ['GET' => 0], null, false, false, null]],
         '/feed' => [[['_route' => 'feed', '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler'], null, ['GET' => 0], null, false, false, null]],
         '/restapi/custom' => [[['_route' => 'restapi-customtypes', '_resource' => 'CustomColumnType', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], null, ['GET' => 0], null, false, false, null]],

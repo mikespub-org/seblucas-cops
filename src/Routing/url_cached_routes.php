@@ -43,6 +43,7 @@ $static = [
   '/identifiers' => 'page-identifiers',
   '/formats' => 'page-formats',
   '/libraries' => 'page-libraries',
+  '/filter' => 'page-filter',
   '/feed/search' => 'feed-search',
   '/feed' => 'feed',
   '/restapi/custom' => 'restapi-customtypes',
@@ -537,6 +538,17 @@ $routes = [
     [
       'page' => '43',
       '_route' => 'page-libraries',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-filter' => [
+    '/filter',
+    [
+      'page' => 'filter',
+      '_route' => 'page-filter',
     ],
     [
       'GET',

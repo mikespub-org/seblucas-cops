@@ -1148,6 +1148,25 @@
                 ]
             }
         },
+        "/filter": {
+            "get": {
+                "summary": "Route to page handler with page=filter",
+                "operationId": "get_page-filter",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=filter"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
         "/feed/{page}/{id}": {
             "get": {
                 "summary": "Route to feed handler with page={page}&id={id} - with api key",

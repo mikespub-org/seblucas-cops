@@ -18,7 +18,7 @@ use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
-use SebLucas\Cops\Pages\PageQueryResult;
+use SebLucas\Cops\Pages\PageQueryScope;
 use Exception;
 
 class BookList
@@ -285,11 +285,12 @@ class BookList
     {
         $i = 0;
         $critArray = [];
-        foreach ([PageQueryResult::SCOPE_AUTHOR,
-            PageQueryResult::SCOPE_TAG,
-            PageQueryResult::SCOPE_SERIES,
-            PageQueryResult::SCOPE_PUBLISHER,
-            PageQueryResult::SCOPE_BOOK] as $key) {
+        foreach ([PageQueryScope::AUTHOR,
+            PageQueryScope::TAG,
+            PageQueryScope::SERIES,
+            PageQueryScope::PUBLISHER,
+            PageQueryScope::BOOK] as $scope) {
+            $key = $scope->value;
             if (in_array($key, $ignoredCategories) ||
                 (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
                 $critArray[$i] = self::BAD_SEARCH;

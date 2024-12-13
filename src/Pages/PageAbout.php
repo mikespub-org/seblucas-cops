@@ -14,15 +14,13 @@ use SebLucas\Cops\Input\Config;
 
 class PageAbout extends Page
 {
-    public const PAGE_ID = PageId::ABOUT_ID;
-
     /**
      * Summary of initializeContent
      * @return void
      */
     public function initializeContent()
     {
-        $this->idPage = self::PAGE_ID;
+        $this->idPage = PageId::ABOUT_ID;
         $this->title = localize("about.title");
     }
 

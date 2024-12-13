@@ -99,13 +99,13 @@ class PageCustomize extends Page
         $this->entryArray = [];
 
         $ignoredBaseArray = [
-            PageQueryResult::SCOPE_AUTHOR => "authors",
-            PageQueryResult::SCOPE_SERIES => "series",
-            PageQueryResult::SCOPE_PUBLISHER => "publishers",
-            PageQueryResult::SCOPE_TAG => "tags",
-            PageQueryResult::SCOPE_RATING => "ratings",
-            PageQueryResult::SCOPE_LANGUAGE => "languages",
-            PageQueryResult::SCOPE_BOOK => "bookword",
+            PageQueryScope::AUTHOR,
+            PageQueryScope::SERIES,
+            PageQueryScope::PUBLISHER,
+            PageQueryScope::TAG,
+            PageQueryScope::RATING,
+            PageQueryScope::LANGUAGE,
+            PageQueryScope::BOOK,
         ];
 
         $database = $this->getDatabaseId();
@@ -162,8 +162,10 @@ class PageCustomize extends Page
 
         $title = localize("customize.ignored");
         $content = "";
-        foreach ($ignoredBaseArray as $key => $keyPlural) {
-            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $this->isChecked("ignored_categories", $key) . ' > ' . localize("{$keyPlural}.title") . '</input><br>';
+        foreach ($ignoredBaseArray as $scope) {
+            $value = $scope->value;
+            $label = $scope->title();
+            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $value . '" ' . $this->isChecked("ignored_categories", $value) . ' > ' . $label . '</input><br>';
         }
         $this->addHeaderEntry($title, $content);
 

@@ -25,22 +25,11 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class PageQueryResult extends Page
 {
-    public const PAGE_ID = PageId::OPENSEARCH_QUERY;
     public const ROUTE_SEARCH = "page-search";
     public const ROUTE_QUERY = "page-query";
     public const ROUTE_SCOPE = "page-query-scope";
     // specified in util.js as page=9&search=1&...
     //public const ROUTE_TYPEAHEAD = "page-typeahead";
-    public const SCOPE_TAG = "tag";
-    public const SCOPE_RATING = "rating";
-    public const SCOPE_SERIES = "series";
-    public const SCOPE_AUTHOR = "author";
-    public const SCOPE_BOOK = "book";
-    public const SCOPE_PUBLISHER = "publisher";
-    public const SCOPE_LANGUAGE = "language";
-    public const SCOPE_IDENTIFIER = "identifier";
-    public const SCOPE_FORMAT = "format";
-    public const SCOPE_LIBRARIES = "libraries";
 
     /** @var ?string */
     public $query;
@@ -62,7 +51,7 @@ class PageQueryResult extends Page
 
     /**
      * Summary of searchByScope
-     * @param string $scope
+     * @param PageQueryScope $scope
      * @param bool $limit
      * @param ?int $database
      * @return array<mixed>
@@ -89,24 +78,24 @@ class PageQueryResult extends Page
             $req = Request::build([], $this->handler);
         }
         switch ($scope) {
-            case self::SCOPE_BOOK :
+            case PageQueryScope::BOOK:
                 $booklist = new BookList($req, $database, $numberPerPage);
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
-            case self::SCOPE_AUTHOR :
+            case PageQueryScope::AUTHOR:
                 $baselist = new BaseList(Author::class, $req, $database, $numberPerPage);
                 // we need to repeat the query x 2 here because Author checks both name and sort fields
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
-            case self::SCOPE_SERIES :
+            case PageQueryScope::SERIES:
                 $baselist = new BaseList(Serie::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
-            case self::SCOPE_TAG :
+            case PageQueryScope::TAG:
                 $baselist = new BaseList(Tag::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
-            case self::SCOPE_PUBLISHER :
+            case PageQueryScope::PUBLISHER:
                 $baselist = new BaseList(Publisher::class, $req, $database, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
@@ -154,15 +143,16 @@ class PageQueryResult extends Page
                 ));
                 Database::getDb($d);
             }
-            foreach ([PageQueryResult::SCOPE_BOOK,
-                PageQueryResult::SCOPE_AUTHOR,
-                PageQueryResult::SCOPE_SERIES,
-                PageQueryResult::SCOPE_TAG,
-                PageQueryResult::SCOPE_PUBLISHER] as $key) {
-                if (in_array($key, $this->getIgnoredCategories())) {
+            foreach ([PageQueryScope::BOOK,
+                PageQueryScope::AUTHOR,
+                PageQueryScope::SERIES,
+                PageQueryScope::TAG,
+                PageQueryScope::PUBLISHER] as $scope) {
+                $value = $scope->value;
+                if (in_array($value, $this->getIgnoredCategories())) {
                     continue;
                 }
-                $array = $this->searchByScope($key, true, $database);
+                $array = $this->searchByScope($scope, true, $database);
 
                 $i = 0;
                 if (count($array) == 2 && is_array($array [0])) {
@@ -180,15 +170,15 @@ class PageQueryResult extends Page
                     // str_format (localize("seriesword", count($array))
                     // str_format (localize("tagword", count($array))
                     // str_format (localize("publisherword", count($array))
-                    $params = ['query' => $query, 'db' => $d, 'scope' => $key];
+                    $params = ['query' => $query, 'db' => $d, 'scope' => $value];
                     if (!empty($libraryId)) {
                         $params['vl'] = $libraryId;
                     }
                     $url = $this->handler::route(self::ROUTE_SCOPE, $params);
                     array_push($this->entryArray, new Entry(
-                        str_format(localize("search.result.{$key}"), $this->query),
-                        "db:query:{$d}:{$key}",
-                        str_format(localize("{$key}word", $total), $total),
+                        str_format(localize("search.result.{$value}"), $this->query),
+                        "db:query:{$d}:{$value}",
+                        str_format(localize("{$value}word", $total), $total),
                         "text",
                         [ new LinkNavigation($url) ],
                         $database,
@@ -222,18 +212,13 @@ class PageQueryResult extends Page
      */
     public function initializeContent()
     {
-        $this->idPage = self::PAGE_ID;
-        $scope = $this->request->get("scope");
-        if (empty($scope)) {
+        $this->idPage = PageId::SEARCH_ID;
+        $value = $this->request->get("scope");
+        if (empty($value)) {
             $this->title = str_format(localize("search.result"), $this->query);
         } else {
-            // Comment to help the perl i18n script
-            // str_format (localize ("search.result.author"), $this->query)
-            // str_format (localize ("search.result.tag"), $this->query)
-            // str_format (localize ("search.result.series"), $this->query)
-            // str_format (localize ("search.result.book"), $this->query)
-            // str_format (localize ("search.result.publisher"), $this->query)
-            $this->title = str_format(localize("search.result.{$scope}"), $this->query);
+            $scope = PageQueryScope::from($value);
+            $this->title = str_format($scope->result(), $this->query);
         }
         $this->getEntries();
     }
@@ -251,11 +236,12 @@ class PageQueryResult extends Page
             return;
         }
 
-        $scope = $this->request->get("scope");
-        if (empty($scope)) {
+        $value = $this->request->get("scope");
+        if (empty($value)) {
             $this->doSearchByCategory($database);
             return;
         }
+        $scope = PageQueryScope::from($value);
 
         $array = $this->searchByScope($scope, false, $database);
         if (count($array) == 2 && is_array($array [0])) {
@@ -264,7 +250,7 @@ class PageQueryResult extends Page
             $this->entryArray = $array;
         }
         if (empty($this->entryArray) && !$this->request->isFeed()) {
-            array_push($this->entryArray, $this->getNoResultEntry($database, $scope));
+            array_push($this->entryArray, $this->getNoResultEntry($database, $value));
         }
     }
 

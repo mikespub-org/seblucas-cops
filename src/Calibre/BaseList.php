@@ -442,6 +442,14 @@ class BaseList
         return $this->addPagination($entries, $n, $total, $instance);
     }
 
+    /**
+     * Summary of addPagination
+     * @param array<Entry> $entries
+     * @param int $n
+     * @param int $total
+     * @param Base|Category|null $instance
+     * @return array<Entry>
+     */
     public function addPagination($entries, $n = 1, $total = 0, $instance = null)
     {
         if (!isset($instance)) {

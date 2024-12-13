@@ -38,15 +38,12 @@ class PageIndex extends Page
     {
         if (Database::noDatabaseSelected($this->databaseId)) {
             $this->getDatabaseEntries();
-        } elseif ($this->request->get('filter')) {
-            $this->filterParams = [];
-            $this->getFilters();
         } elseif ($this->request->hasFilter()) {
             $this->getFilteredEntries();
         } else {
             $this->getEntries();
         }
-        $this->idPage = self::PAGE_ID;
+        $this->idPage = PageId::INDEX_ID;
         $this->title = Config::get('title_default');
         $this->subtitle = Config::get('subtitle_default');
     }
@@ -102,159 +99,28 @@ class PageIndex extends Page
     }
 
     /**
-     * Summary of getFilters - @todo get filter links
-     * @return void
-     */
-    public function getFilters()
-    {
-        if ($this->request->isFeed()) {
-            $filterLinks = Config::get('opds_filter_links');
-            $limit = Config::get('opds_filter_limit');
-        } else {
-            $filterLinks = Config::get('html_filter_links');
-            $limit = Config::get('html_filter_limit');
-        }
-        $this->entryArray = [];
-        if (empty($filterLinks)) {
-            return;
-        }
-        // we use g[a]=2 to indicate we want to paginate in facetgroup Authors
-        $paging = $this->request->get('g');
-        if (!is_array($paging)) {
-            $paging = [];
-        }
-        // if we want to filter by virtual library etc.
-        $libraryId = $this->request->getVirtualLibrary();
-        if (!empty($libraryId)) {
-            $this->filterParams = [VirtualLibrary::URL_PARAM => $libraryId];
-        }
-        // @todo get rid of extraParams in JsonRenderer and OpdsRenderer as filters should be included in navlink now
-        $params = $this->filterParams;
-        $params['db'] = $this->getDatabaseId();
-        $req = Request::build($params, $this->handler);
-        $filtersTitle = localize("filters.title");
-        if (in_array('author', $filterLinks)) {
-            $title = localize(phrase: "authors.title");
-            $href = $this->handler::route(Author::ROUTE_ALL, $params);
-            $relation = "authors";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Author::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Author::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Author::URL_PARAM]));
-        }
-        if (in_array('language', $filterLinks)) {
-            $title = localize("languages.title");
-            $href = $this->handler::route(Language::ROUTE_ALL, $params);
-            $relation = "languages";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Language::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Language::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Language::URL_PARAM]));
-        }
-        if (in_array('publisher', $filterLinks)) {
-            $title = localize("publishers.title");
-            $href = $this->handler::route(Publisher::ROUTE_ALL, $params);
-            $relation = "publishers";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Publisher::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Publisher::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Publisher::URL_PARAM]));
-        }
-        if (in_array('rating', $filterLinks)) {
-            $title = localize("ratings.title");
-            $href = $this->handler::route(Rating::ROUTE_ALL, $params);
-            $relation = "ratings";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Rating::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Rating::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Rating::URL_PARAM]));
-        }
-        if (in_array('series', $filterLinks)) {
-            $title = localize("series.title");
-            $href = $this->handler::route(Serie::ROUTE_ALL, $params);
-            $relation = "series";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Serie::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Serie::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Serie::URL_PARAM]));
-        }
-        if (in_array('tag', $filterLinks)) {
-            $title = localize("tags.title");
-            $href = $this->handler::route(Tag::ROUTE_ALL, $params);
-            $relation = "tags";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Tag::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Tag::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Tag::URL_PARAM]));
-        }
-        if (in_array('identifier', $filterLinks)) {
-            $title = localize("identifiers.title");
-            $href = $this->handler::route(Identifier::ROUTE_ALL, $params);
-            $relation = "identifiers";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Identifier::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Identifier::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Identifier::URL_PARAM]));
-        }
-        if (in_array('format', $filterLinks)) {
-            $title = localize("formats.title");
-            $href = $this->handler::route(Format::ROUTE_ALL, $params);
-            $relation = "formats";
-            $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Format::class, $req, $this->databaseId, $limit);
-            $baselist->pagination = true;
-            $paging[Format::URL_PARAM] ??= 1;
-            $this->addEntries($baselist->getRequestEntries($paging[Format::URL_PARAM]));
-        }
-        /**
-        // we'd need to apply getEntriesBy<Whatever>Id from $instance on $customType instance here - too messy
-        if (in_array('custom', $filterLinks)) {
-            $columns = CustomColumnType::getAllCustomColumns($this->getDatabaseId());
-            $paging['c'] ??= [];
-            foreach ($columns as $label => $column) {
-                $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());
-                $title = $customType->getTitle();
-                $href = $customType->getParentUri();
-                $relation = $customType->getTitle();
-                $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-                $paging['c'][$column['id']] ??= 1;
-                $entries = $instance->getCustomValues($customType);
-                // @todo
-            }
-        }
-         */
-    }
-
-    /**
      * Summary of getFilteredEntries
      * @return void
      */
     public function getFilteredEntries()
     {
         $this->filterParams = $this->request->getFilterParams();
-        if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::AUTHOR->value, $this->ignoredCategories)) {
             $this->addFilterCountEntry(Author::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::SERIES->value, $this->ignoredCategories)) {
             $this->addFilterCountEntry(Serie::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::PUBLISHER->value, $this->ignoredCategories)) {
             $this->addFilterCountEntry(Publisher::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::TAG->value, $this->ignoredCategories)) {
             $this->addFilterCountEntry(Tag::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::RATING->value, $this->ignoredCategories)) {
             $this->addFilterCountEntry(Rating::class, "ratings");
         }
-        if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::LANGUAGE->value, $this->ignoredCategories)) {
             $this->addFilterCountEntry(Language::class);
         }
         // @todo apply filter?
@@ -267,14 +133,14 @@ class PageIndex extends Page
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
-        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryResult::SCOPE_LIBRARIES, $this->ignoredCategories)) {
+        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
             $library = VirtualLibrary::getCount($this->databaseId, $this->handler);
             if (!is_null($library)) {
                 array_push($this->entryArray, $library);
             }
         }
         // @todo differentiate between ignored search & index categories
-        if (!in_array(PageQueryResult::SCOPE_BOOK, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::BOOK->value, $this->ignoredCategories)) {
             $booklist = new BookList($this->request);
             $this->addEntries($booklist->getCount());
         }
@@ -305,22 +171,22 @@ class PageIndex extends Page
      */
     public function getEntries()
     {
-        if (!in_array(PageQueryResult::SCOPE_AUTHOR, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::AUTHOR->value, $this->ignoredCategories)) {
             $this->addCountEntry(Author::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_SERIES, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::SERIES->value, $this->ignoredCategories)) {
             $this->addCountEntry(Serie::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_PUBLISHER, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::PUBLISHER->value, $this->ignoredCategories)) {
             $this->addCountEntry(Publisher::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_TAG, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::TAG->value, $this->ignoredCategories)) {
             $this->addCountEntry(className: Tag::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_RATING, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::RATING->value, $this->ignoredCategories)) {
             $this->addCountEntry(className: Rating::class);
         }
-        if (!in_array(PageQueryResult::SCOPE_LANGUAGE, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::LANGUAGE->value, $this->ignoredCategories)) {
             $this->addCountEntry(Language::class);
         }
         // for multi-database setup, not all databases may have all custom columns - see issue #89
@@ -332,11 +198,11 @@ class PageIndex extends Page
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
-        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryResult::SCOPE_LIBRARIES, $this->ignoredCategories)) {
+        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
             $this->addCountEntry(VirtualLibrary::class);
         }
         // @todo differentiate between ignored search & index categories
-        if (!in_array(PageQueryResult::SCOPE_BOOK, $this->ignoredCategories)) {
+        if (!in_array(PageQueryScope::BOOK->value, $this->ignoredCategories)) {
             $booklist = new BookList($this->request);
             $this->addEntries($booklist->getCount());
         }

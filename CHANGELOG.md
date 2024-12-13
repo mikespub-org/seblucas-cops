@@ -13,6 +13,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Add PageQueryScope enum and PageFilter class (wip)
   * Group entries by filter group for twigged template - see 'filters.html'
   * Split off ProxyRequest class to handle trusted proxy headers for base url
   * Use symfony/string package as alternative for normAndUp and slugify with Transliterator
