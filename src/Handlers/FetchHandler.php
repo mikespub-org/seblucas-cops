@@ -93,30 +93,26 @@ class FetchHandler extends BaseHandler
             return $this->sendThumbnail($request, $book, $type);
         }
 
-        if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
-            return $this->sendUpdatedEpub($request, $book, $idData);
-        }
-
         $data = $book->getDataById($idData);
         if (!$data) {
             // this will call exit()
             Response::notFound($request);
         }
-        // absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
-        $file = $book->getFilePath($type, $idData);
+
+        if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
+            return $this->sendUpdatedEpub($request, $book, $data);
+        }
 
         if ($viewOnly) {
             // disposition inline here
-            $response = new FileResponse($data->getMimeType(), 0, '');
-            return $response->setFile($file);
+            return $data->sendFile(true);
         }
 
         if ($type == 'epub' && Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
-            return $this->sendConvertedKepub($book, $file, $data);
+            return $data->sendConvertedKepub();
         }
 
-        $response = new FileResponse($data->getMimeType(), 0, basename($file));
-        return $response->setFile($file);
+        return $data->sendFile();
     }
 
     /**
@@ -197,43 +193,16 @@ class FetchHandler extends BaseHandler
      * Summary of sendUpdatedEpub
      * @param Request $request
      * @param Book $book
-     * @param mixed $idData
+     * @param Data $data
      * @return FileResponse
      */
-    public function sendUpdatedEpub($request, $book, $idData)
+    public function sendUpdatedEpub($request, $book, $data)
     {
         // update epub metadata + provide kepub if needed (with update of opf properties for cover-image in EPub)
         if (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
             $book->updateForKepub = true;
         }
-        // create empty response to start with!?
-        $response = new FileResponse();
-        // this will also use kepubify_path internally if defined
-        return $book->sendUpdatedEpub($idData, $response);
-    }
-
-    /**
-     * Summary of sendConvertedKepub
-     * @param Book $book
-     * @param string $file
-     * @param Data $data
-     * @return FileResponse
-     */
-    public function sendConvertedKepub($book, $file, $data)
-    {
-        // run kepubify on original Epub file and send converted tmpfile
-        if (!empty(Config::get('kepubify_path'))) {
-            // @todo no cache control here!?
-            $response = new FileResponse($data->getMimeType(), null, basename($data->getUpdatedFilenameKepub()));
-            $result = $book->runKepubify($file, $response);
-            if (empty($result)) {
-                // this will call exit()
-                Response::sendError(null, 'Error: failed to convert epub file');
-            }
-            return $result;
-        }
-        // provide kepub in name only (without update of opf properties for cover-image in Epub)
-        $response = new FileResponse($data->getMimeType(), 0, basename($data->getUpdatedFilenameKepub()));
-        return $response->setFile($file);
+        // set updateForKepub if necessary
+        return $data->sendUpdatedEpub($book->updateForKepub);
     }
 }

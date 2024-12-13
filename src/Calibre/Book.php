@@ -583,109 +583,49 @@ class Book
     }
 
     /**
+     * Summary of getUpdatedEpub
+     * @param string $filePath
+     * @return EPub
+     */
+    public function getUpdatedEpub($filePath)
+    {
+        $epub = new EPub($filePath, ZipEdit::class);
+
+        $epub->setTitle($this->title);
+        $authorArray = [];
+        foreach ($this->getAuthors() as $author) {
+            $authorArray[$author->sort] = $author->name;
+        }
+        $epub->setAuthors($authorArray);
+        $epub->setLanguage($this->getLanguages());
+        $epub->setDescription($this->getComment(false));
+        $epub->setSubjects($this->getTagsName());
+        // -DC- Use cover file name
+        // $epub->Cover2($this->getCoverFilePath('jpg'), 'image/jpeg');
+        $epub->setCoverFile($this->coverFileName, 'image/jpeg');
+        $epub->setCalibre($this->uuid);
+        $se = $this->getSerie();
+        if (!empty($se)) {
+            $epub->setSeries($se->name);
+            $epub->setSeriesIndex(strval($this->seriesIndex));
+        }
+        return $epub;
+    }
+
+    /**
      * Summary of sendUpdatedEpub
      * @param int $idData
-     * @param FileResponse $response
+     * @param ?FileResponse $response
      * @return FileResponse
      */
-    public function sendUpdatedEpub($idData, $response)
+    public function sendUpdatedEpub($idData, $response = null)
     {
         $data = $this->getDataById($idData);
         if (!$data) {
             // this will call exit()
             Response::sendError(null, 'Error: unable to find epub file');
         }
-
-        // if we want to update metadata and then use kepubify, we need to save the updated Epub first
-        if ($this->updateForKepub && !empty(Config::get('kepubify_path'))) {
-            // make a temp copy for the updated Epub file
-            $tmpfile = FileResponse::getTempFile('epub');
-            if (!copy($data->getLocalPath(), $tmpfile)) {
-                // this will call exit()
-                Response::sendError(null, 'Error: unable to copy epub file');
-            }
-            $filePath = $tmpfile;
-        } else {
-            $filePath = $data->getLocalPath();
-        }
-
-        try {
-            $epub = new EPub($filePath, ZipEdit::class);
-
-            $epub->setTitle($this->title);
-            $authorArray = [];
-            foreach ($this->getAuthors() as $author) {
-                $authorArray[$author->sort] = $author->name;
-            }
-            $epub->setAuthors($authorArray);
-            $epub->setLanguage($this->getLanguages());
-            $epub->setDescription($this->getComment(false));
-            $epub->setSubjects($this->getTagsName());
-            // -DC- Use cover file name
-            // $epub->Cover2($this->getCoverFilePath('jpg'), 'image/jpeg');
-            $epub->setCoverFile($this->coverFileName, 'image/jpeg');
-            $epub->setCalibre($this->uuid);
-            $se = $this->getSerie();
-            if (!empty($se)) {
-                $epub->setSeries($se->name);
-                $epub->setSeriesIndex(strval($this->seriesIndex));
-            }
-            $filename = $data->getUpdatedFilenameEpub();
-            // @checkme this is set in fetch.php now
-            if ($this->updateForKepub) {
-                $filename = $data->getUpdatedFilenameKepub();
-                // @todo no cache control here!?
-                $response->setHeaders($data->getMimeType(), null, basename($filename));
-                // save updated Epub file and convert to kepub
-                if (!empty(Config::get('kepubify_path'))) {
-                    $epub->save();
-
-                    // run kepubify on updated Epub file and send converted tmpfile
-                    $result = $this->runKepubify($filePath, $response);
-                    if (empty($result)) {
-                        // this will call exit()
-                        Response::sendError(null, 'Error: failed to convert epub file');
-                    }
-                    return $result;
-                }
-                $epub->updateForKepub();
-            }
-            // @todo no cache control here!?
-            //$response->setHeaders($data->getMimeType(), null, basename($filename));
-            $sendHeaders = headers_sent() ? false : true;
-            $epub->download($filename, $sendHeaders);
-            // tell response it's already sent
-            $response->isSent(true);
-            return $response;
-        } catch (Exception $e) {
-            // this will call exit()
-            Response::sendError(null, 'Exception: ' . $e->getMessage());
-        }
-    }
-
-    /**
-     * Summary of runKepubify
-     * @param string $filepath
-     * @param ?FileResponse $response
-     * @return FileResponse|string|null
-     */
-    public function runKepubify($filepath, $response = null)
-    {
-        if (empty(Config::get('kepubify_path'))) {
-            return null;
-        }
-        $tmpfile = FileResponse::getTempFile('kepub.epub');
-        $cmd = escapeshellarg((string) Config::get('kepubify_path'));
-        $cmd .= ' -o ' . escapeshellarg($tmpfile);
-        $cmd .= ' ' . escapeshellarg($filepath);
-        exec($cmd, $output, $return);
-        if ($return == 0 && file_exists($tmpfile)) {
-            if (!empty($response)) {
-                return $response->setFile($tmpfile, true);
-            }
-            return $tmpfile;
-        }
-        return null;
+        return $data->sendUpdatedEpub($this->updateForKepub, $response);
     }
 
     /**

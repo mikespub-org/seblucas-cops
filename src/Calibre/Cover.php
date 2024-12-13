@@ -113,6 +113,21 @@ class Cover
     }
 
     /**
+     * Summary of sendImage
+     * @param ?FileResponse $response
+     * @return FileResponse
+     */
+    public function sendImage($response = null)
+    {
+        $response ??= new FileResponse();
+        $file = $this->coverFileName;
+        $mime = FileResponse::getMimeType($file);
+
+        $response->setHeaders($mime, 0);
+        return $response->setFile($file);
+    }
+
+    /**
      * Summary of getThumbnailCachePath
      * @param ?int $width
      * @param ?int $height
@@ -228,11 +243,12 @@ class Cover
     /**
      * Summary of sendThumbnail
      * @param Request $request
-     * @param FileResponse $response
+     * @param ?FileResponse $response
      * @return FileResponse
      */
-    public function sendThumbnail($request, $response)
+    public function sendThumbnail($request, $response = null)
     {
+        $response ??= new FileResponse();
         $type = $request->get('type', 'jpg');
         $width = $request->get('width');
         $height = $request->get('height');

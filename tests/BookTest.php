@@ -374,6 +374,27 @@ class BookTest extends TestCase
         ];
     }
 
+    public function testSendImage(): void
+    {
+        $book = Book::getBookById(17);
+        $cover = new Cover($book);
+        $request = Request::build();
+        $response = new FileResponse();
+
+        // send cover image
+        ob_start();
+        $result = $cover->sendImage($response);
+        $result->send();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = self::$expectedSize['cover'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+        $expected = FileResponse::class;
+        $this->assertEquals($expected, $result::class);
+    }
+
     public function testSendThumbnailOriginal(): void
     {
         $book = Book::getBookById(17);
