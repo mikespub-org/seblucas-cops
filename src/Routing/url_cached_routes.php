@@ -25,10 +25,10 @@ $handlers = [
 
 $static = [
   '/index' => 'page-index',
-  '/authors/letter' => 'page-1-letter',
+  '/authors/letter' => 'page-authors-letters',
   '/authors' => 'page-authors',
-  '/books/letter' => 'page-4-letter',
-  '/books/year' => 'page-4-year',
+  '/books/letter' => 'page-books-letters',
+  '/books/year' => 'page-books-years',
   '/books' => 'page-books',
   '/series' => 'page-series',
   '/typeahead' => 'page-typeahead',
@@ -81,7 +81,7 @@ $routes = [
   'page-authors-letter' => [
     '/authors/letter/{id}',
     [
-      'page' => '2',
+      'page' => 'authors_letter',
       '_route' => 'page-authors-letter',
     ],
     [
@@ -89,12 +89,12 @@ $routes = [
     ],
     [],
   ],
-  'page-1-letter' => [
+  'page-authors-letters' => [
     '/authors/letter',
     [
-      'page' => '1',
+      'page' => 'authors',
       'letter' => 1,
-      '_route' => 'page-1-letter',
+      '_route' => 'page-authors-letters',
     ],
     [
       'GET',
@@ -104,7 +104,7 @@ $routes = [
   'page-author' => [
     '/authors/{id:\\d+}/{title}',
     [
-      'page' => '3',
+      'page' => 'author',
       '_route' => 'page-author',
     ],
     [
@@ -112,11 +112,11 @@ $routes = [
     ],
     [],
   ],
-  'page-3-id' => [
+  'page-author-id' => [
     '/authors/{id:\\d+}',
     [
-      'page' => '3',
-      '_route' => 'page-3-id',
+      'page' => 'author',
+      '_route' => 'page-author-id',
     ],
     [
       'GET',
@@ -126,7 +126,7 @@ $routes = [
   'page-authors' => [
     '/authors',
     [
-      'page' => '1',
+      'page' => 'authors',
       '_route' => 'page-authors',
     ],
     [
@@ -137,7 +137,7 @@ $routes = [
   'page-books-letter' => [
     '/books/letter/{id:\\w}',
     [
-      'page' => '5',
+      'page' => 'books_letter',
       '_route' => 'page-books-letter',
     ],
     [
@@ -145,12 +145,12 @@ $routes = [
     ],
     [],
   ],
-  'page-4-letter' => [
+  'page-books-letters' => [
     '/books/letter',
     [
-      'page' => '4',
+      'page' => 'books',
       'letter' => 1,
-      '_route' => 'page-4-letter',
+      '_route' => 'page-books-letters',
     ],
     [
       'GET',
@@ -160,7 +160,7 @@ $routes = [
   'page-books-year' => [
     '/books/year/{id:\\d+}',
     [
-      'page' => '50',
+      'page' => 'books_year',
       '_route' => 'page-books-year',
     ],
     [
@@ -168,12 +168,12 @@ $routes = [
     ],
     [],
   ],
-  'page-4-year' => [
+  'page-books-years' => [
     '/books/year',
     [
-      'page' => '4',
+      'page' => 'books',
       'year' => 1,
-      '_route' => 'page-4-year',
+      '_route' => 'page-books-years',
     ],
     [
       'GET',
@@ -183,7 +183,7 @@ $routes = [
   'page-book' => [
     '/books/{id:\\d+}/{author}/{title}',
     [
-      'page' => '13',
+      'page' => 'book',
       '_route' => 'page-book',
     ],
     [
@@ -191,11 +191,11 @@ $routes = [
     ],
     [],
   ],
-  'page-13-id' => [
+  'page-book-id' => [
     '/books/{id:\\d+}',
     [
-      'page' => '13',
-      '_route' => 'page-13-id',
+      'page' => 'book',
+      '_route' => 'page-book-id',
     ],
     [
       'GET',
@@ -205,7 +205,7 @@ $routes = [
   'page-books' => [
     '/books',
     [
-      'page' => '4',
+      'page' => 'books',
       '_route' => 'page-books',
     ],
     [
@@ -216,7 +216,7 @@ $routes = [
   'page-serie' => [
     '/series/{id:\\d+}/{title}',
     [
-      'page' => '7',
+      'page' => 'serie',
       '_route' => 'page-serie',
     ],
     [
@@ -224,11 +224,11 @@ $routes = [
     ],
     [],
   ],
-  'page-7-id' => [
+  'page-serie-id' => [
     '/series/{id:\\d+}',
     [
-      'page' => '7',
-      '_route' => 'page-7-id',
+      'page' => 'serie',
+      '_route' => 'page-serie-id',
     ],
     [
       'GET',
@@ -238,7 +238,7 @@ $routes = [
   'page-series' => [
     '/series',
     [
-      'page' => '6',
+      'page' => 'series',
       '_route' => 'page-series',
     ],
     [
@@ -249,7 +249,7 @@ $routes = [
   'page-typeahead' => [
     '/typeahead',
     [
-      'page' => '9',
+      'page' => 'query',
       'search' => 1,
       '_route' => 'page-typeahead',
     ],
@@ -261,7 +261,7 @@ $routes = [
   'page-query-scope' => [
     '/search/{query}/{scope}',
     [
-      'page' => '9',
+      'page' => 'query',
       '_route' => 'page-query-scope',
     ],
     [
@@ -272,7 +272,7 @@ $routes = [
   'page-query' => [
     '/search/{query}',
     [
-      'page' => '9',
+      'page' => 'query',
       '_route' => 'page-query',
     ],
     [
@@ -283,7 +283,7 @@ $routes = [
   'page-search' => [
     '/search',
     [
-      'page' => '8',
+      'page' => 'opensearch',
       '_route' => 'page-search',
     ],
     [
@@ -294,7 +294,7 @@ $routes = [
   'page-recent' => [
     '/recent',
     [
-      'page' => '10',
+      'page' => 'recent',
       '_route' => 'page-recent',
     ],
     [
@@ -305,7 +305,7 @@ $routes = [
   'page-tag' => [
     '/tags/{id:\\d+}/{title}',
     [
-      'page' => '12',
+      'page' => 'tag',
       '_route' => 'page-tag',
     ],
     [
@@ -313,11 +313,11 @@ $routes = [
     ],
     [],
   ],
-  'page-12-id' => [
+  'page-tag-id' => [
     '/tags/{id:\\d+}',
     [
-      'page' => '12',
-      '_route' => 'page-12-id',
+      'page' => 'tag',
+      '_route' => 'page-tag-id',
     ],
     [
       'GET',
@@ -327,7 +327,7 @@ $routes = [
   'page-tags' => [
     '/tags',
     [
-      'page' => '11',
+      'page' => 'tags',
       '_route' => 'page-tags',
     ],
     [
@@ -338,7 +338,7 @@ $routes = [
   'page-custom' => [
     '/custom/{custom:\\d+}/{id}',
     [
-      'page' => '15',
+      'page' => 'custom',
       '_route' => 'page-custom',
     ],
     [
@@ -349,7 +349,7 @@ $routes = [
   'page-customtype' => [
     '/custom/{custom:\\d+}',
     [
-      'page' => '14',
+      'page' => 'customtype',
       '_route' => 'page-customtype',
     ],
     [
@@ -360,7 +360,7 @@ $routes = [
   'page-about' => [
     '/about',
     [
-      'page' => '16',
+      'page' => 'about',
       '_route' => 'page-about',
     ],
     [
@@ -371,7 +371,7 @@ $routes = [
   'page-language' => [
     '/languages/{id:\\d+}/{title}',
     [
-      'page' => '18',
+      'page' => 'language',
       '_route' => 'page-language',
     ],
     [
@@ -379,11 +379,11 @@ $routes = [
     ],
     [],
   ],
-  'page-18-id' => [
+  'page-language-id' => [
     '/languages/{id:\\d+}',
     [
-      'page' => '18',
-      '_route' => 'page-18-id',
+      'page' => 'language',
+      '_route' => 'page-language-id',
     ],
     [
       'GET',
@@ -393,7 +393,7 @@ $routes = [
   'page-languages' => [
     '/languages',
     [
-      'page' => '17',
+      'page' => 'languages',
       '_route' => 'page-languages',
     ],
     [
@@ -404,7 +404,7 @@ $routes = [
   'page-customize' => [
     '/customize',
     [
-      'page' => '19',
+      'page' => 'customize',
       '_route' => 'page-customize',
     ],
     [
@@ -415,7 +415,7 @@ $routes = [
   'page-publisher' => [
     '/publishers/{id:\\d+}/{title}',
     [
-      'page' => '21',
+      'page' => 'publisher',
       '_route' => 'page-publisher',
     ],
     [
@@ -423,11 +423,11 @@ $routes = [
     ],
     [],
   ],
-  'page-21-id' => [
+  'page-publisher-id' => [
     '/publishers/{id:\\d+}',
     [
-      'page' => '21',
-      '_route' => 'page-21-id',
+      'page' => 'publisher',
+      '_route' => 'page-publisher-id',
     ],
     [
       'GET',
@@ -437,7 +437,7 @@ $routes = [
   'page-publishers' => [
     '/publishers',
     [
-      'page' => '20',
+      'page' => 'publishers',
       '_route' => 'page-publishers',
     ],
     [
@@ -448,7 +448,7 @@ $routes = [
   'page-rating' => [
     '/ratings/{id:\\d+}/{title}',
     [
-      'page' => '23',
+      'page' => 'rating',
       '_route' => 'page-rating',
     ],
     [
@@ -456,11 +456,11 @@ $routes = [
     ],
     [],
   ],
-  'page-23-id' => [
+  'page-rating-id' => [
     '/ratings/{id:\\d+}',
     [
-      'page' => '23',
-      '_route' => 'page-23-id',
+      'page' => 'rating',
+      '_route' => 'page-rating-id',
     ],
     [
       'GET',
@@ -470,7 +470,7 @@ $routes = [
   'page-ratings' => [
     '/ratings',
     [
-      'page' => '22',
+      'page' => 'ratings',
       '_route' => 'page-ratings',
     ],
     [
@@ -481,7 +481,7 @@ $routes = [
   'page-identifier' => [
     '/identifiers/{id:\\w+}/{title}',
     [
-      'page' => '42',
+      'page' => 'identifier',
       '_route' => 'page-identifier',
     ],
     [
@@ -489,11 +489,11 @@ $routes = [
     ],
     [],
   ],
-  'page-42-id' => [
+  'page-identifier-id' => [
     '/identifiers/{id:\\w+}',
     [
-      'page' => '42',
-      '_route' => 'page-42-id',
+      'page' => 'identifier',
+      '_route' => 'page-identifier-id',
     ],
     [
       'GET',
@@ -503,7 +503,7 @@ $routes = [
   'page-identifiers' => [
     '/identifiers',
     [
-      'page' => '41',
+      'page' => 'identifiers',
       '_route' => 'page-identifiers',
     ],
     [
@@ -514,7 +514,7 @@ $routes = [
   'page-format' => [
     '/formats/{id:\\w+}',
     [
-      'page' => '52',
+      'page' => 'format',
       '_route' => 'page-format',
     ],
     [
@@ -525,7 +525,7 @@ $routes = [
   'page-formats' => [
     '/formats',
     [
-      'page' => '51',
+      'page' => 'formats',
       '_route' => 'page-formats',
     ],
     [
@@ -536,7 +536,7 @@ $routes = [
   'page-libraries' => [
     '/libraries',
     [
-      'page' => '43',
+      'page' => 'libraries',
       '_route' => 'page-libraries',
     ],
     [
@@ -549,17 +549,6 @@ $routes = [
     [
       'page' => 'filter',
       '_route' => 'page-filter',
-    ],
-    [
-      'GET',
-    ],
-    [],
-  ],
-  'feed-page-id' => [
-    '/feed/{page:\\d+}/{id}',
-    [
-      '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
-      '_route' => 'feed-page-id',
     ],
     [
       'GET',
@@ -579,7 +568,7 @@ $routes = [
     [],
   ],
   'feed-page' => [
-    '/feed/{page:\\d+}',
+    '/feed/{page:\\w+}',
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
       '_route' => 'feed-page',
@@ -1008,17 +997,6 @@ $routes = [
     ],
     [],
   ],
-  'opds-page-id' => [
-    '/opds/{page:\\d+}/{id}',
-    [
-      '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
-      '_route' => 'opds-page-id',
-    ],
-    [
-      'GET',
-    ],
-    [],
-  ],
   'opds-search' => [
     '/opds/search',
     [
@@ -1032,7 +1010,7 @@ $routes = [
     [],
   ],
   'opds-page' => [
-    '/opds/{page:\\d+}',
+    '/opds/{page:\\w+}',
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
       '_route' => 'opds-page',

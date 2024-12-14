@@ -71,7 +71,7 @@ class RestApiTest extends TestCase
         $apiHandler = new RestApi($request);
         $path = $apiHandler->getPathInfo();
 
-        $expected = ["page" => PageId::BOOK_DETAIL, "id" => 2, "_route" => "page-13-id"];
+        $expected = ["page" => PageId::BOOK_DETAIL, "id" => 2, "_route" => "page-book-id"];
         $test = $apiHandler->matchPathInfo($path);
         $this->assertEquals($expected, $test);
 

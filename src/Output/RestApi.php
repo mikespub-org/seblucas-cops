@@ -152,7 +152,7 @@ class RestApi extends BaseRenderer
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
         if (!isset($params)) {
-            Response::redirect(self::$handler::page(PageId::INDEX));
+            Response::redirect(self::$handler::route(PageId::ROUTE_INDEX));
             return '';
         }
         if ($this->isExtra) {
@@ -194,7 +194,7 @@ class RestApi extends BaseRenderer
             $params = [];
             $params["custom"] = $column['id'];
             $params["db"] = $db;
-            $column["navlink"] = self::$handler::page(PageId::ALL_CUSTOMS, $params);
+            $column["navlink"] = self::$handler::route(CustomColumnType::ROUTE_ALL, $params);
             array_push($result["entries"], $column);
         }
         return $result;

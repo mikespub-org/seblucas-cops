@@ -1,6 +1,6 @@
 <div class="container-fluid p-1">
-{{? it.page == 13 || it.page == 16}}
-    {{? it.page == 13}}
+{{? it.page == "book" || it.page == "about"}}
+    {{? it.page == "book"}}
         {{#def.bookdetail}}
     {{??}}
         {{= it.fullhtml}}
@@ -13,7 +13,7 @@
         {{~it.entries:entry:i}}
         <div class="card">
             <div class="card-body">
-                {{? it.page == 19}}
+                {{? it.page == "customize"}}
                     <h5 class="card-title">
                         {{=htmlspecialchars (entry.title)}}
                     </h5>

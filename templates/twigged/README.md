@@ -25,7 +25,7 @@ References:
 | Include/use | {{#def:header}} | {% include 'header.html' %} | use include statement |
 | Conditional | {{? it.containsBook == 0}}<br>...<br>{{??}}<br>...<br>{{?}} | {% if it.containsBook == 0 %}<br>...<br>{% else %}<br>...<br>{% endif %} | |
 | AND clause | {{? entry.class == "" && entry.number == ""}} | {% if entry.class == "" and entry.number == "" %} | |
-| OR clause | {{? it.page == 13 \|\| it.page == 16}} | {% if it.page == 13 or it.page == 16 %} | |
+| OR clause | {{? it.page == "book" \|\| it.page == "about"}} | {% if it.page == "book" or it.page == "about" %} | |
 | Iterate | {{\~entry.book.preferedData:data:i}}<br>...<br>{{\~}} | {% for data in entry.book.preferedData %}<br>...<br>{% endfor %} | |
 | first iteration | {{? i == 0}} | {% if loop.first %} | |
 | last iteration | {{? i + 1 == entry.book.preferedCount}} | {% if loop.last %} | |
@@ -43,20 +43,20 @@ References:
 1. [index.html](index.html) is rendered server-side to generate the initial HTML page
 2. [page.html](page.html) is rendered client-side or server-side for each request, and it decides which template to include next
 3. [base.html](base.html) is extended by all other templates:
-  - [about.html](about.html) (page=16)
-  - [bookdetail.html](bookdetail.html) (page=13)
+  - [about.html](about.html) (page=about)
+  - [bookdetail.html](bookdetail.html) (page=book)
   - [mainlist.html](mainlist.html)
     - [booklist.html](booklist.html)
-      - [recent.html](recent.html) (page=10)
-      - [authordetail.html](authordetail.html) (page=3)
-      - [customdetail.html](customdetail.html) (page=15)
-      - [identifierdetail.html](identifierdetail.html) (page=42)
-      - [languagedetail.html](languagedetail.html) (page=18)
-      - [publisherdetail.html](publisherdetail.html) (page=21)
-      - [ratingdetail.html](ratingdetail.html) (page=23)
-      - [seriedetail.html](seriedetail.html) (page=7)
-      - [tagdetail.html](tagdetail.html) (page=12)
+      - [recent.html](recent.html) (page=recent)
+      - [authordetail.html](authordetail.html) (page=author)
+      - [customdetail.html](customdetail.html) (page=custom)
+      - [identifierdetail.html](identifierdetail.html) (page=identifier)
+      - [languagedetail.html](languagedetail.html) (page=language)
+      - [publisherdetail.html](publisherdetail.html) (page=publisher)
+      - [ratingdetail.html](ratingdetail.html) (page=rating)
+      - [seriedetail.html](seriedetail.html) (page=serie)
+      - [tagdetail.html](tagdetail.html) (page=tag)
       - include [extra_series.html](extra_series.html) and/or [extra_info.html](extra_info.html) if it.extra is available
     - [navlist.html](navlist.html)
-      - [customize.html](customize.html) (page=19)
+      - [customize.html](customize.html) (page=customize)
     - [filters.html](filters.html) (filter=1)

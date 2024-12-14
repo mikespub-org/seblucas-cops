@@ -28,7 +28,7 @@ class PageQueryResult extends Page
     public const ROUTE_SEARCH = "page-search";
     public const ROUTE_QUERY = "page-query";
     public const ROUTE_SCOPE = "page-query-scope";
-    // specified in util.js as page=9&search=1&...
+    // specified in util.js as page=query&search=1&...
     //public const ROUTE_TYPEAHEAD = "page-typeahead";
 
     /** @var ?string */

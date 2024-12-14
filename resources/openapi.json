@@ -56,14 +56,14 @@
         },
         "/authors/letter/{id}": {
             "get": {
-                "summary": "Route to page handler with page=2&id={id}",
+                "summary": "Route to page handler with page=authors_letter&id={id}",
                 "operationId": "get_page-authors-letter",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=2&id={id}"
+                        "description": "Result of page handler with page=authors_letter&id={id}"
                     }
                 },
                 "parameters": [
@@ -83,14 +83,14 @@
         },
         "/authors/letter": {
             "get": {
-                "summary": "Route to page handler with page=1&letter=1",
-                "operationId": "get_page-1-letter",
+                "summary": "Route to page handler with page=authors&letter=1",
+                "operationId": "get_page-authors-letters",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=1&letter=1"
+                        "description": "Result of page handler with page=authors&letter=1"
                     }
                 },
                 "parameters": [
@@ -102,14 +102,14 @@
         },
         "/authors/{id}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=3&id={id}&title={title}",
+                "summary": "Route to page handler with page=author&id={id}&title={title}",
                 "operationId": "get_page-author",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=3&id={id}&title={title}"
+                        "description": "Result of page handler with page=author&id={id}&title={title}"
                     }
                 },
                 "parameters": [
@@ -138,14 +138,14 @@
         },
         "/authors/{id}": {
             "get": {
-                "summary": "Route to page handler with page=3&id={id}",
-                "operationId": "get_page-3-id",
+                "summary": "Route to page handler with page=author&id={id}",
+                "operationId": "get_page-author-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=3&id={id}"
+                        "description": "Result of page handler with page=author&id={id}"
                     }
                 },
                 "parameters": [
@@ -166,14 +166,14 @@
         },
         "/authors": {
             "get": {
-                "summary": "Route to page handler with page=1",
+                "summary": "Route to page handler with page=authors",
                 "operationId": "get_page-authors",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=1"
+                        "description": "Result of page handler with page=authors"
                     }
                 },
                 "parameters": [
@@ -185,14 +185,14 @@
         },
         "/books/letter/{id}": {
             "get": {
-                "summary": "Route to page handler with page=5&id={id}",
+                "summary": "Route to page handler with page=books_letter&id={id}",
                 "operationId": "get_page-books-letter",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=5&id={id}"
+                        "description": "Result of page handler with page=books_letter&id={id}"
                     }
                 },
                 "parameters": [
@@ -213,14 +213,14 @@
         },
         "/books/letter": {
             "get": {
-                "summary": "Route to page handler with page=4&letter=1",
-                "operationId": "get_page-4-letter",
+                "summary": "Route to page handler with page=books&letter=1",
+                "operationId": "get_page-books-letters",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=4&letter=1"
+                        "description": "Result of page handler with page=books&letter=1"
                     }
                 },
                 "parameters": [
@@ -232,14 +232,14 @@
         },
         "/books/year/{id}": {
             "get": {
-                "summary": "Route to page handler with page=50&id={id}",
+                "summary": "Route to page handler with page=books_year&id={id}",
                 "operationId": "get_page-books-year",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=50&id={id}"
+                        "description": "Result of page handler with page=books_year&id={id}"
                     }
                 },
                 "parameters": [
@@ -260,14 +260,14 @@
         },
         "/books/year": {
             "get": {
-                "summary": "Route to page handler with page=4&year=1",
-                "operationId": "get_page-4-year",
+                "summary": "Route to page handler with page=books&year=1",
+                "operationId": "get_page-books-years",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=4&year=1"
+                        "description": "Result of page handler with page=books&year=1"
                     }
                 },
                 "parameters": [
@@ -279,14 +279,14 @@
         },
         "/books/{id}/{author}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=13&id={id}&author={author}&title={title}",
+                "summary": "Route to page handler with page=book&id={id}&author={author}&title={title}",
                 "operationId": "get_page-book",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=13&id={id}&author={author}&title={title}"
+                        "description": "Result of page handler with page=book&id={id}&author={author}&title={title}"
                     }
                 },
                 "parameters": [
@@ -323,14 +323,14 @@
         },
         "/books/{id}": {
             "get": {
-                "summary": "Route to page handler with page=13&id={id}",
-                "operationId": "get_page-13-id",
+                "summary": "Route to page handler with page=book&id={id}",
+                "operationId": "get_page-book-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=13&id={id}"
+                        "description": "Result of page handler with page=book&id={id}"
                     }
                 },
                 "parameters": [
@@ -351,14 +351,14 @@
         },
         "/books": {
             "get": {
-                "summary": "Route to page handler with page=4",
+                "summary": "Route to page handler with page=books",
                 "operationId": "get_page-books",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=4"
+                        "description": "Result of page handler with page=books"
                     }
                 },
                 "parameters": [
@@ -370,14 +370,14 @@
         },
         "/series/{id}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=7&id={id}&title={title}",
+                "summary": "Route to page handler with page=serie&id={id}&title={title}",
                 "operationId": "get_page-serie",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=7&id={id}&title={title}"
+                        "description": "Result of page handler with page=serie&id={id}&title={title}"
                     }
                 },
                 "parameters": [
@@ -406,14 +406,14 @@
         },
         "/series/{id}": {
             "get": {
-                "summary": "Route to page handler with page=7&id={id}",
-                "operationId": "get_page-7-id",
+                "summary": "Route to page handler with page=serie&id={id}",
+                "operationId": "get_page-serie-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=7&id={id}"
+                        "description": "Result of page handler with page=serie&id={id}"
                     }
                 },
                 "parameters": [
@@ -434,14 +434,14 @@
         },
         "/series": {
             "get": {
-                "summary": "Route to page handler with page=6",
+                "summary": "Route to page handler with page=series",
                 "operationId": "get_page-series",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=6"
+                        "description": "Result of page handler with page=series"
                     }
                 },
                 "parameters": [
@@ -453,14 +453,14 @@
         },
         "/typeahead": {
             "get": {
-                "summary": "Route to page handler with page=9&search=1",
+                "summary": "Route to page handler with page=query&search=1",
                 "operationId": "get_page-typeahead",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=9&search=1"
+                        "description": "Result of page handler with page=query&search=1"
                     }
                 },
                 "parameters": [
@@ -472,14 +472,14 @@
         },
         "/search/{query}/{scope}": {
             "get": {
-                "summary": "Route to page handler with page=9&query={query}&scope={scope}",
+                "summary": "Route to page handler with page=query&query={query}&scope={scope}",
                 "operationId": "get_page-query-scope",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=9&query={query}&scope={scope}"
+                        "description": "Result of page handler with page=query&query={query}&scope={scope}"
                     }
                 },
                 "parameters": [
@@ -507,14 +507,14 @@
         },
         "/search/{query}": {
             "get": {
-                "summary": "Route to page handler with page=9&query={query}",
+                "summary": "Route to page handler with page=query&query={query}",
                 "operationId": "get_page-query",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=9&query={query}"
+                        "description": "Result of page handler with page=query&query={query}"
                     }
                 },
                 "parameters": [
@@ -534,14 +534,14 @@
         },
         "/search": {
             "get": {
-                "summary": "Route to page handler with page=8",
+                "summary": "Route to page handler with page=opensearch",
                 "operationId": "get_page-search",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=8"
+                        "description": "Result of page handler with page=opensearch"
                     }
                 },
                 "parameters": [
@@ -553,14 +553,14 @@
         },
         "/recent": {
             "get": {
-                "summary": "Route to page handler with page=10",
+                "summary": "Route to page handler with page=recent",
                 "operationId": "get_page-recent",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=10"
+                        "description": "Result of page handler with page=recent"
                     }
                 },
                 "parameters": [
@@ -572,14 +572,14 @@
         },
         "/tags/{id}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=12&id={id}&title={title}",
+                "summary": "Route to page handler with page=tag&id={id}&title={title}",
                 "operationId": "get_page-tag",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=12&id={id}&title={title}"
+                        "description": "Result of page handler with page=tag&id={id}&title={title}"
                     }
                 },
                 "parameters": [
@@ -608,14 +608,14 @@
         },
         "/tags/{id}": {
             "get": {
-                "summary": "Route to page handler with page=12&id={id}",
-                "operationId": "get_page-12-id",
+                "summary": "Route to page handler with page=tag&id={id}",
+                "operationId": "get_page-tag-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=12&id={id}"
+                        "description": "Result of page handler with page=tag&id={id}"
                     }
                 },
                 "parameters": [
@@ -636,14 +636,14 @@
         },
         "/tags": {
             "get": {
-                "summary": "Route to page handler with page=11",
+                "summary": "Route to page handler with page=tags",
                 "operationId": "get_page-tags",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=11"
+                        "description": "Result of page handler with page=tags"
                     }
                 },
                 "parameters": [
@@ -655,14 +655,14 @@
         },
         "/custom/{custom}/{id}": {
             "get": {
-                "summary": "Route to page handler with page=15&custom={custom}&id={id}",
+                "summary": "Route to page handler with page=custom&custom={custom}&id={id}",
                 "operationId": "get_page-custom",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=15&custom={custom}&id={id}"
+                        "description": "Result of page handler with page=custom&custom={custom}&id={id}"
                     }
                 },
                 "parameters": [
@@ -691,14 +691,14 @@
         },
         "/custom/{custom}": {
             "get": {
-                "summary": "Route to page handler with page=14&custom={custom}",
+                "summary": "Route to page handler with page=customtype&custom={custom}",
                 "operationId": "get_page-customtype",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=14&custom={custom}"
+                        "description": "Result of page handler with page=customtype&custom={custom}"
                     }
                 },
                 "parameters": [
@@ -719,28 +719,28 @@
         },
         "/about": {
             "get": {
-                "summary": "Route to page handler with page=16",
+                "summary": "Route to page handler with page=about",
                 "operationId": "get_page-about",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=16"
+                        "description": "Result of page handler with page=about"
                     }
                 }
             }
         },
         "/languages/{id}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=18&id={id}&title={title}",
+                "summary": "Route to page handler with page=language&id={id}&title={title}",
                 "operationId": "get_page-language",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=18&id={id}&title={title}"
+                        "description": "Result of page handler with page=language&id={id}&title={title}"
                     }
                 },
                 "parameters": [
@@ -769,14 +769,14 @@
         },
         "/languages/{id}": {
             "get": {
-                "summary": "Route to page handler with page=18&id={id}",
-                "operationId": "get_page-18-id",
+                "summary": "Route to page handler with page=language&id={id}",
+                "operationId": "get_page-language-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=18&id={id}"
+                        "description": "Result of page handler with page=language&id={id}"
                     }
                 },
                 "parameters": [
@@ -797,14 +797,14 @@
         },
         "/languages": {
             "get": {
-                "summary": "Route to page handler with page=17",
+                "summary": "Route to page handler with page=languages",
                 "operationId": "get_page-languages",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=17"
+                        "description": "Result of page handler with page=languages"
                     }
                 },
                 "parameters": [
@@ -816,14 +816,14 @@
         },
         "/customize": {
             "get": {
-                "summary": "Route to page handler with page=19",
+                "summary": "Route to page handler with page=customize",
                 "operationId": "get_page-customize",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=19"
+                        "description": "Result of page handler with page=customize"
                     }
                 },
                 "parameters": [
@@ -835,14 +835,14 @@
         },
         "/publishers/{id}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=21&id={id}&title={title}",
+                "summary": "Route to page handler with page=publisher&id={id}&title={title}",
                 "operationId": "get_page-publisher",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=21&id={id}&title={title}"
+                        "description": "Result of page handler with page=publisher&id={id}&title={title}"
                     }
                 },
                 "parameters": [
@@ -871,14 +871,14 @@
         },
         "/publishers/{id}": {
             "get": {
-                "summary": "Route to page handler with page=21&id={id}",
-                "operationId": "get_page-21-id",
+                "summary": "Route to page handler with page=publisher&id={id}",
+                "operationId": "get_page-publisher-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=21&id={id}"
+                        "description": "Result of page handler with page=publisher&id={id}"
                     }
                 },
                 "parameters": [
@@ -899,14 +899,14 @@
         },
         "/publishers": {
             "get": {
-                "summary": "Route to page handler with page=20",
+                "summary": "Route to page handler with page=publishers",
                 "operationId": "get_page-publishers",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=20"
+                        "description": "Result of page handler with page=publishers"
                     }
                 },
                 "parameters": [
@@ -918,14 +918,14 @@
         },
         "/ratings/{id}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=23&id={id}&title={title}",
+                "summary": "Route to page handler with page=rating&id={id}&title={title}",
                 "operationId": "get_page-rating",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=23&id={id}&title={title}"
+                        "description": "Result of page handler with page=rating&id={id}&title={title}"
                     }
                 },
                 "parameters": [
@@ -954,14 +954,14 @@
         },
         "/ratings/{id}": {
             "get": {
-                "summary": "Route to page handler with page=23&id={id}",
-                "operationId": "get_page-23-id",
+                "summary": "Route to page handler with page=rating&id={id}",
+                "operationId": "get_page-rating-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=23&id={id}"
+                        "description": "Result of page handler with page=rating&id={id}"
                     }
                 },
                 "parameters": [
@@ -982,14 +982,14 @@
         },
         "/ratings": {
             "get": {
-                "summary": "Route to page handler with page=22",
+                "summary": "Route to page handler with page=ratings",
                 "operationId": "get_page-ratings",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=22"
+                        "description": "Result of page handler with page=ratings"
                     }
                 },
                 "parameters": [
@@ -1001,14 +1001,14 @@
         },
         "/identifiers/{id}/{title}": {
             "get": {
-                "summary": "Route to page handler with page=42&id={id}&title={title}",
+                "summary": "Route to page handler with page=identifier&id={id}&title={title}",
                 "operationId": "get_page-identifier",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=42&id={id}&title={title}"
+                        "description": "Result of page handler with page=identifier&id={id}&title={title}"
                     }
                 },
                 "parameters": [
@@ -1037,14 +1037,14 @@
         },
         "/identifiers/{id}": {
             "get": {
-                "summary": "Route to page handler with page=42&id={id}",
-                "operationId": "get_page-42-id",
+                "summary": "Route to page handler with page=identifier&id={id}",
+                "operationId": "get_page-identifier-id",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=42&id={id}"
+                        "description": "Result of page handler with page=identifier&id={id}"
                     }
                 },
                 "parameters": [
@@ -1065,14 +1065,14 @@
         },
         "/identifiers": {
             "get": {
-                "summary": "Route to page handler with page=41",
+                "summary": "Route to page handler with page=identifiers",
                 "operationId": "get_page-identifiers",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=41"
+                        "description": "Result of page handler with page=identifiers"
                     }
                 },
                 "parameters": [
@@ -1084,14 +1084,14 @@
         },
         "/formats/{id}": {
             "get": {
-                "summary": "Route to page handler with page=52&id={id}",
+                "summary": "Route to page handler with page=format&id={id}",
                 "operationId": "get_page-format",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=52&id={id}"
+                        "description": "Result of page handler with page=format&id={id}"
                     }
                 },
                 "parameters": [
@@ -1112,14 +1112,14 @@
         },
         "/formats": {
             "get": {
-                "summary": "Route to page handler with page=51",
+                "summary": "Route to page handler with page=formats",
                 "operationId": "get_page-formats",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=51"
+                        "description": "Result of page handler with page=formats"
                     }
                 },
                 "parameters": [
@@ -1131,14 +1131,14 @@
         },
         "/libraries": {
             "get": {
-                "summary": "Route to page handler with page=43",
+                "summary": "Route to page handler with page=libraries",
                 "operationId": "get_page-libraries",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=43"
+                        "description": "Result of page handler with page=libraries"
                     }
                 },
                 "parameters": [
@@ -1163,44 +1163,6 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/dbParam"
-                    }
-                ]
-            }
-        },
-        "/feed/{page}/{id}": {
-            "get": {
-                "summary": "Route to feed handler with page={page}&id={id} - with api key",
-                "operationId": "get_feed-page-id",
-                "tags": [
-                    "feed"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result of feed handler with page={page}&id={id}"
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "pattern": "^\\d+$"
-                        }
-                    },
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "security": [
-                    {
-                        "ApiKeyAuth": []
                     }
                 ]
             }
@@ -1243,7 +1205,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "pattern": "^\\d+$"
+                            "pattern": "^\\w+$"
                         }
                     }
                 ],
@@ -2406,44 +2368,6 @@
                 }
             }
         },
-        "/opds/{page}/{id}": {
-            "get": {
-                "summary": "Route to opds handler with page={page}&id={id} - with api key",
-                "operationId": "get_opds-page-id",
-                "tags": [
-                    "opds"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Result of opds handler with page={page}&id={id}"
-                    }
-                },
-                "parameters": [
-                    {
-                        "name": "page",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "pattern": "^\\d+$"
-                        }
-                    },
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ]
-            }
-        },
         "/opds/search": {
             "get": {
                 "summary": "Route to opds handler with page=search - with api key",
@@ -2482,7 +2406,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "pattern": "^\\d+$"
+                            "pattern": "^\\w+$"
                         }
                     }
                 ],

@@ -26,8 +26,8 @@ if (typeof Bloodhound === 'undefined') {
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         limit: 30,
         remote: {
-                    //url: 'getJSON.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
-                    url: 'index.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
+                    //url: 'getJSON.php?page=query&search=1&db=%DB&vl=%VL&query=%QUERY',
+                    url: 'index.php?page=query&search=1&db=%DB&vl=%VL&query=%QUERY',
                     replace: function (url, query) {
                         //url = url.replace('getJSON.php', currentData.baseurl.replace('index.php', 'getJSON.php'));
                         url = url.replace('index.php', currentData.baseurl);
@@ -434,7 +434,7 @@ navigateTo = function (url) {
 function link_Clicked (event) {
     var currentLink = $(this);
     if (!isPushStateEnabled ||
-        currentData.page === "19") {
+        currentData.page === "customize") {
         return;
     }
     // let read, fetch, zippper etc. do their thing
@@ -463,7 +463,7 @@ function link_Clicked (event) {
         $.getJSON(jsonurl, function(data) {
             data.c = currentData.c;
             var detail = "";
-            if (data.page === "16") {
+            if (data.page === "about") {
                 detail = data.fullhtml;
             } else {
                 detail = templateBookDetail (data);
@@ -483,11 +483,11 @@ function link_Clicked (event) {
 
 function search_Submitted (event) {
     if (!isPushStateEnabled ||
-        currentData.page === "19") {
+        currentData.page === "customize") {
         return;
     }
     event.preventDefault();
-    var url = str_format (currentData.baseurl + "?page=9&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
+    var url = str_format (currentData.baseurl + "?page=query&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
     if (currentData.libraryId) {
         url = url + '&vl=' + encodeURIComponent(currentData.libraryId);
     }

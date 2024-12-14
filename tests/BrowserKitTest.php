@@ -190,7 +190,7 @@ class BrowserKitTest extends TestCase
         $result = $this->ajax($uri);
         $this->assertCount($expected, $result['entries']);
 
-        // From util.js: index.php?page=9&current={0}&query={1}&db={2} -> replace ("index", "getJSON")
+        // From util.js: index.php?page=query&current={0}&query={1}&db={2} -> replace ("index", "getJSON")
         // ...
         // see checkJsonSearch()
         // ...
@@ -217,7 +217,7 @@ class BrowserKitTest extends TestCase
 
         $button = $crawler->selectButton('searchButton');
         $form = $button->form();
-        //$expected = ['page' => '9', 'query' => ''];
+        //$expected = ['page' => 'query', 'query' => ''];
         $this->assertArrayHasKey('query', $form->getValues());
 
         // for bootstrap & bootstrap2 the correct URI was set in util.js and there was no hidden 'page' field
@@ -228,14 +228,14 @@ class BrowserKitTest extends TestCase
                     'class' => 'tt-header',
                     'title' => 'Search result for *ali* in books',
                     'content' => '2 books',
-                    'navlink' => 'index.php?page=9&query=ali&scope=book',
+                    'navlink' => 'index.php?page=query&query=ali&scope=book',
                     'number' => 2,
                 ],
             ];
             $this->checkJsonSearch($query, $expected);
 
         } else {
-            $form['page'] = '9';
+            $form['page'] = 'query';
             $form['query'] = 'ali';
             //$form['scope'] = 'book';
             $crawler = $this->browser->submit($form);
@@ -266,8 +266,8 @@ class BrowserKitTest extends TestCase
      */
     protected function checkJsonSearch($query, $expectedEntries)
     {
-        // From util.js: index.php?page=9&current={0}&query={1}&db={2} -> replace ("index", "getJSON")
-        $uri = 'index.php?page=9&current=index&query=' . $query . '&db=';
+        // From util.js: index.php?page=query&current={0}&query={1}&db={2} -> replace ("index", "getJSON")
+        $uri = 'index.php?page=query&current=index&query=' . $query . '&db=';
         $result = $this->ajax($uri);
 
         $this->assertEquals($expectedEntries, $result['entries']);

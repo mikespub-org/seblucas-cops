@@ -30,9 +30,9 @@ class FeedHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "feed-page-id" => ["/feed/{page:\d+}/{id}"],
+            //"feed-page-id" => ["/feed/{page:\w+}/{id}"],
             "feed-search" => ["/feed/search", ["page" => "search"]],
-            "feed-page" => ["/feed/{page:\d+}"],
+            "feed-page" => ["/feed/{page:\w+}"],
             "feed-path" => ["/feed/{path:.+}"],
             "feed" => ["/feed"],
         ];

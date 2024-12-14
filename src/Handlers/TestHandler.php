@@ -23,6 +23,7 @@ class TestHandler extends BaseHandler
     {
         return [
             "test" => ["/test"],
+            //"other" => ["/{path:.*}"],
         ];
     }
 

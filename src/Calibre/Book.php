@@ -33,7 +33,7 @@ class Book
     public const ROUTE_ALL = "page-books";
     public const ROUTE_DETAIL = "page-book";
     // used to generate detailUrl in JsonRenderer
-    public const ROUTE_PAGEID = "page-13-id";
+    public const ROUTE_PAGEID = "page-book-id";
     public const ROUTE_FILE = "fetch-file";
     public const SQL_TABLE = "books";
     public const SQL_LINK_TABLE = "books";

@@ -1,6 +1,6 @@
 <div class="container-fluid">
-{{? it.page == 13 || it.page == 16}}
-    {{? it.page == 13}}
+{{? it.page == "book" || it.page == "about"}}
+    {{? it.page == "book"}}
         {{#def.bookdetail}}
     {{??}}
         {{= it.fullhtml}}
@@ -15,7 +15,7 @@
     {{? it.containsBook == 0}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
             <div class="panel panel-default" style="height: 70px;">
-                {{? it.page == 19}}
+                {{? it.page == "customize"}}
                     <div class="panel-heading">
                         {{=htmlspecialchars (entry.title)}}
                     </div>

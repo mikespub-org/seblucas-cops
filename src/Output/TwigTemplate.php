@@ -105,17 +105,17 @@ class TwigTemplate extends BaseRenderer
      */
     public function getTemplateName($data)
     {
-        if ($data['page'] == 13) {
+        if ($data['page'] == "book") {
             return 'bookdetail.html';
-        } elseif ($data['page'] == 16) {
+        } elseif ($data['page'] == "about") {
             return 'about.html';
-        } elseif ($data['page'] == 19) {
+        } elseif ($data['page'] == "customize") {
             return 'customize.html';
         } elseif ($data['isFilterPage']) {
             return 'filters.html';
         } elseif ($data['containsBook'] == 0) {
             return 'navlist.html';
-        } elseif ($data['page'] == 10) {
+        } elseif ($data['page'] == "recent") {
             return 'recent.html';
         } else {
             return 'booklist.html';

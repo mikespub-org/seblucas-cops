@@ -62,7 +62,7 @@ class KiwilanOPDS
             authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
             iconUrl: CopsConfig::get(name: 'icon'),
             startUrl: self::$handler::route(self::ROUTE_FEED),
-            // @todo php-opds uses this to identify search (not page=9) and adds '?q=' without checking for existing ? params
+            // @todo php-opds uses this to identify search (not page=query) and adds '?q=' without checking for existing ? params
             searchUrl: self::$handler::route(self::ROUTE_SEARCH),
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),

@@ -39,7 +39,7 @@ class FrameworkTest extends TestCase
 
         Framework::loadRoutes();
 
-        $expected = 102;
+        $expected = 100;
         $this->assertEquals($expected, Route::count());
     }
 

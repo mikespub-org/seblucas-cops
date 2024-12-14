@@ -259,7 +259,7 @@ class JsonRendererTest extends TestCase
 
         $this->assertIsArray($test["download"]);
         $this->assertCount(1, $test["download"]);
-        $this->assertStringEndsWith("/zipper/10/any.zip", $test["download"][0]["url"]);
+        $this->assertStringEndsWith("/zipper/recent/any.zip", $test["download"][0]["url"]);
 
         Config::set('download_page', ['']);
     }

@@ -31,9 +31,9 @@ class OpdsHandler extends BaseHandler
     public static function getRoutes()
     {
         return [
-            "opds-page-id" => ["/opds/{page:\d+}/{id}"],
+            //"opds-page-id" => ["/opds/{page:\w+}/{id}"],
             "opds-search" => ["/opds/search", ["page" => "search"]],
-            "opds-page" => ["/opds/{page:\d+}"],
+            "opds-page" => ["/opds/{page:\w+}"],
             "opds-path" => ["/opds/{path:.*}"],
             "opds" => ["/opds"],
         ];

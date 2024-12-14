@@ -16,7 +16,7 @@
         <div style="float: left; width: 50%">
             <form id="searchForm" action="{{=it.baseurl}}" method="get">
                 <div class="stop">
-                    <input type="hidden" name="page" value="9" />
+                    <input type="hidden" name="page" value="query" />
                     {{? it.databaseId != ""}}
                         <input type="hidden" name="db" value="{{=it.databaseId}}" />
                     {{?}}

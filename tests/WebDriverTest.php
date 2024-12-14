@@ -152,11 +152,11 @@ class WebDriverTest extends WebDriverTestCase
     {
         return [
             ['index', self::$serverUrl . '?page=index'],
-            ['recent', self::$serverUrl . '?page=10'],
-            ['allbooks', self::$serverUrl . '?page=4'],
-            ['authors', self::$serverUrl . '?page=1'],
-            ['customize', self::$serverUrl . '?page=19'],
-            ['about', self::$serverUrl . '?page=16'],
+            ['recent', self::$serverUrl . '?page=recent'],
+            ['allbooks', self::$serverUrl . '?page=books'],
+            ['authors', self::$serverUrl . '?page=authors'],
+            ['customize', self::$serverUrl . '?page=customize'],
+            ['about', self::$serverUrl . '?page=about'],
         ];
     }
 

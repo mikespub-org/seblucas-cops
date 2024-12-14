@@ -20,21 +20,21 @@
       array (
         0 => 
         array (
-          'page' => '1',
+          'page' => 'authors',
           'letter' => 1,
-          '_route' => 'page-1-letter',
+          '_route' => 'page-authors-letters',
         ),
         1 => 
         array (
           '_route' => '/authors/letter',
-          '_name' => 'page-1-letter',
+          '_name' => 'page-authors-letters',
         ),
       ),
       '/authors' => 
       array (
         0 => 
         array (
-          'page' => '1',
+          'page' => 'authors',
           '_route' => 'page-authors',
         ),
         1 => 
@@ -47,35 +47,35 @@
       array (
         0 => 
         array (
-          'page' => '4',
+          'page' => 'books',
           'letter' => 1,
-          '_route' => 'page-4-letter',
+          '_route' => 'page-books-letters',
         ),
         1 => 
         array (
           '_route' => '/books/letter',
-          '_name' => 'page-4-letter',
+          '_name' => 'page-books-letters',
         ),
       ),
       '/books/year' => 
       array (
         0 => 
         array (
-          'page' => '4',
+          'page' => 'books',
           'year' => 1,
-          '_route' => 'page-4-year',
+          '_route' => 'page-books-years',
         ),
         1 => 
         array (
           '_route' => '/books/year',
-          '_name' => 'page-4-year',
+          '_name' => 'page-books-years',
         ),
       ),
       '/books' => 
       array (
         0 => 
         array (
-          'page' => '4',
+          'page' => 'books',
           '_route' => 'page-books',
         ),
         1 => 
@@ -88,7 +88,7 @@
       array (
         0 => 
         array (
-          'page' => '6',
+          'page' => 'series',
           '_route' => 'page-series',
         ),
         1 => 
@@ -101,7 +101,7 @@
       array (
         0 => 
         array (
-          'page' => '9',
+          'page' => 'query',
           'search' => 1,
           '_route' => 'page-typeahead',
         ),
@@ -115,7 +115,7 @@
       array (
         0 => 
         array (
-          'page' => '8',
+          'page' => 'opensearch',
           '_route' => 'page-search',
         ),
         1 => 
@@ -128,7 +128,7 @@
       array (
         0 => 
         array (
-          'page' => '10',
+          'page' => 'recent',
           '_route' => 'page-recent',
         ),
         1 => 
@@ -141,7 +141,7 @@
       array (
         0 => 
         array (
-          'page' => '11',
+          'page' => 'tags',
           '_route' => 'page-tags',
         ),
         1 => 
@@ -154,7 +154,7 @@
       array (
         0 => 
         array (
-          'page' => '16',
+          'page' => 'about',
           '_route' => 'page-about',
         ),
         1 => 
@@ -167,7 +167,7 @@
       array (
         0 => 
         array (
-          'page' => '17',
+          'page' => 'languages',
           '_route' => 'page-languages',
         ),
         1 => 
@@ -180,7 +180,7 @@
       array (
         0 => 
         array (
-          'page' => '19',
+          'page' => 'customize',
           '_route' => 'page-customize',
         ),
         1 => 
@@ -193,7 +193,7 @@
       array (
         0 => 
         array (
-          'page' => '20',
+          'page' => 'publishers',
           '_route' => 'page-publishers',
         ),
         1 => 
@@ -206,7 +206,7 @@
       array (
         0 => 
         array (
-          'page' => '22',
+          'page' => 'ratings',
           '_route' => 'page-ratings',
         ),
         1 => 
@@ -219,7 +219,7 @@
       array (
         0 => 
         array (
-          'page' => '41',
+          'page' => 'identifiers',
           '_route' => 'page-identifiers',
         ),
         1 => 
@@ -232,7 +232,7 @@
       array (
         0 => 
         array (
-          'page' => '51',
+          'page' => 'formats',
           '_route' => 'page-formats',
         ),
         1 => 
@@ -245,7 +245,7 @@
       array (
         0 => 
         array (
-          'page' => '43',
+          'page' => 'libraries',
           '_route' => 'page-libraries',
         ),
         1 => 
@@ -563,14 +563,14 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/(\\w)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/(\\d+)/([^/]+)(*MARK:h)|/series/(\\d+)(*MARK:i)|/search/([^/]+)/([^/]+)(*MARK:j)|/search/([^/]+)(*MARK:k)|/tags/(\\d+)/([^/]+)(*MARK:l)|/tags/(\\d+)(*MARK:m)|/custom/(\\d+)/([^/]+)(*MARK:n)|/custom/(\\d+)(*MARK:o)|/languages/(\\d+)/([^/]+)(*MARK:p)|/languages/(\\d+)(*MARK:q)|/publishers/(\\d+)/([^/]+)(*MARK:r)|/publishers/(\\d+)(*MARK:s)|/ratings/(\\d+)/([^/]+)(*MARK:t)|/ratings/(\\d+)(*MARK:u)|/identifiers/(\\w+)/([^/]+)(*MARK:v)|/identifiers/(\\w+)(*MARK:w)|/formats/(\\w+)(*MARK:x)|/feed/(\\d+)/([^/]+)(*MARK:y)|/feed/(\\d+)(*MARK:z)|/feed/(.+)(*MARK:aa)|/files/(\\d+)/(\\d+)/(.+)(*MARK:ab)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ac)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:ad)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:ae))$~',
+        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/(\\w)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/(\\d+)/([^/]+)(*MARK:h)|/series/(\\d+)(*MARK:i)|/search/([^/]+)/([^/]+)(*MARK:j)|/search/([^/]+)(*MARK:k)|/tags/(\\d+)/([^/]+)(*MARK:l)|/tags/(\\d+)(*MARK:m)|/custom/(\\d+)/([^/]+)(*MARK:n)|/custom/(\\d+)(*MARK:o)|/languages/(\\d+)/([^/]+)(*MARK:p)|/languages/(\\d+)(*MARK:q)|/publishers/(\\d+)/([^/]+)(*MARK:r)|/publishers/(\\d+)(*MARK:s)|/ratings/(\\d+)/([^/]+)(*MARK:t)|/ratings/(\\d+)(*MARK:u)|/identifiers/(\\w+)/([^/]+)(*MARK:v)|/identifiers/(\\w+)(*MARK:w)|/formats/(\\w+)(*MARK:x)|/feed/(\\w+)(*MARK:y)|/feed/(.+)(*MARK:z)|/files/(\\d+)/(\\d+)/(.+)(*MARK:aa)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ab)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:ac)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:ad))$~',
         'routeMap' => 
         array (
           'a' => 
           array (
             0 => 
             array (
-              'page' => '2',
+              'page' => 'authors_letter',
               '_route' => 'page-authors-letter',
             ),
             1 => 
@@ -587,7 +587,7 @@
           array (
             0 => 
             array (
-              'page' => '3',
+              'page' => 'author',
               '_route' => 'page-author',
             ),
             1 => 
@@ -605,8 +605,8 @@
           array (
             0 => 
             array (
-              'page' => '3',
-              '_route' => 'page-3-id',
+              'page' => 'author',
+              '_route' => 'page-author-id',
             ),
             1 => 
             array (
@@ -615,14 +615,14 @@
             2 => 
             array (
               '_route' => '/authors/{id:\\d+}',
-              '_name' => 'page-3-id',
+              '_name' => 'page-author-id',
             ),
           ),
           'd' => 
           array (
             0 => 
             array (
-              'page' => '5',
+              'page' => 'books_letter',
               '_route' => 'page-books-letter',
             ),
             1 => 
@@ -639,7 +639,7 @@
           array (
             0 => 
             array (
-              'page' => '50',
+              'page' => 'books_year',
               '_route' => 'page-books-year',
             ),
             1 => 
@@ -656,7 +656,7 @@
           array (
             0 => 
             array (
-              'page' => '13',
+              'page' => 'book',
               '_route' => 'page-book',
             ),
             1 => 
@@ -675,8 +675,8 @@
           array (
             0 => 
             array (
-              'page' => '13',
-              '_route' => 'page-13-id',
+              'page' => 'book',
+              '_route' => 'page-book-id',
             ),
             1 => 
             array (
@@ -685,14 +685,14 @@
             2 => 
             array (
               '_route' => '/books/{id:\\d+}',
-              '_name' => 'page-13-id',
+              '_name' => 'page-book-id',
             ),
           ),
           'h' => 
           array (
             0 => 
             array (
-              'page' => '7',
+              'page' => 'serie',
               '_route' => 'page-serie',
             ),
             1 => 
@@ -710,8 +710,8 @@
           array (
             0 => 
             array (
-              'page' => '7',
-              '_route' => 'page-7-id',
+              'page' => 'serie',
+              '_route' => 'page-serie-id',
             ),
             1 => 
             array (
@@ -720,14 +720,14 @@
             2 => 
             array (
               '_route' => '/series/{id:\\d+}',
-              '_name' => 'page-7-id',
+              '_name' => 'page-serie-id',
             ),
           ),
           'j' => 
           array (
             0 => 
             array (
-              'page' => '9',
+              'page' => 'query',
               '_route' => 'page-query-scope',
             ),
             1 => 
@@ -745,7 +745,7 @@
           array (
             0 => 
             array (
-              'page' => '9',
+              'page' => 'query',
               '_route' => 'page-query',
             ),
             1 => 
@@ -762,7 +762,7 @@
           array (
             0 => 
             array (
-              'page' => '12',
+              'page' => 'tag',
               '_route' => 'page-tag',
             ),
             1 => 
@@ -780,8 +780,8 @@
           array (
             0 => 
             array (
-              'page' => '12',
-              '_route' => 'page-12-id',
+              'page' => 'tag',
+              '_route' => 'page-tag-id',
             ),
             1 => 
             array (
@@ -790,14 +790,14 @@
             2 => 
             array (
               '_route' => '/tags/{id:\\d+}',
-              '_name' => 'page-12-id',
+              '_name' => 'page-tag-id',
             ),
           ),
           'n' => 
           array (
             0 => 
             array (
-              'page' => '15',
+              'page' => 'custom',
               '_route' => 'page-custom',
             ),
             1 => 
@@ -815,7 +815,7 @@
           array (
             0 => 
             array (
-              'page' => '14',
+              'page' => 'customtype',
               '_route' => 'page-customtype',
             ),
             1 => 
@@ -832,7 +832,7 @@
           array (
             0 => 
             array (
-              'page' => '18',
+              'page' => 'language',
               '_route' => 'page-language',
             ),
             1 => 
@@ -850,8 +850,8 @@
           array (
             0 => 
             array (
-              'page' => '18',
-              '_route' => 'page-18-id',
+              'page' => 'language',
+              '_route' => 'page-language-id',
             ),
             1 => 
             array (
@@ -860,14 +860,14 @@
             2 => 
             array (
               '_route' => '/languages/{id:\\d+}',
-              '_name' => 'page-18-id',
+              '_name' => 'page-language-id',
             ),
           ),
           'r' => 
           array (
             0 => 
             array (
-              'page' => '21',
+              'page' => 'publisher',
               '_route' => 'page-publisher',
             ),
             1 => 
@@ -885,8 +885,8 @@
           array (
             0 => 
             array (
-              'page' => '21',
-              '_route' => 'page-21-id',
+              'page' => 'publisher',
+              '_route' => 'page-publisher-id',
             ),
             1 => 
             array (
@@ -895,14 +895,14 @@
             2 => 
             array (
               '_route' => '/publishers/{id:\\d+}',
-              '_name' => 'page-21-id',
+              '_name' => 'page-publisher-id',
             ),
           ),
           't' => 
           array (
             0 => 
             array (
-              'page' => '23',
+              'page' => 'rating',
               '_route' => 'page-rating',
             ),
             1 => 
@@ -920,8 +920,8 @@
           array (
             0 => 
             array (
-              'page' => '23',
-              '_route' => 'page-23-id',
+              'page' => 'rating',
+              '_route' => 'page-rating-id',
             ),
             1 => 
             array (
@@ -930,14 +930,14 @@
             2 => 
             array (
               '_route' => '/ratings/{id:\\d+}',
-              '_name' => 'page-23-id',
+              '_name' => 'page-rating-id',
             ),
           ),
           'v' => 
           array (
             0 => 
             array (
-              'page' => '42',
+              'page' => 'identifier',
               '_route' => 'page-identifier',
             ),
             1 => 
@@ -955,8 +955,8 @@
           array (
             0 => 
             array (
-              'page' => '42',
-              '_route' => 'page-42-id',
+              'page' => 'identifier',
+              '_route' => 'page-identifier-id',
             ),
             1 => 
             array (
@@ -965,14 +965,14 @@
             2 => 
             array (
               '_route' => '/identifiers/{id:\\w+}',
-              '_name' => 'page-42-id',
+              '_name' => 'page-identifier-id',
             ),
           ),
           'x' => 
           array (
             0 => 
             array (
-              'page' => '52',
+              'page' => 'format',
               '_route' => 'page-format',
             ),
             1 => 
@@ -990,24 +990,6 @@
             0 => 
             array (
               '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
-              '_route' => 'feed-page-id',
-            ),
-            1 => 
-            array (
-              'page' => 'page',
-              'id' => 'id',
-            ),
-            2 => 
-            array (
-              '_route' => '/feed/{page:\\d+}/{id}',
-              '_name' => 'feed-page-id',
-            ),
-          ),
-          'z' => 
-          array (
-            0 => 
-            array (
-              '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler',
               '_route' => 'feed-page',
             ),
             1 => 
@@ -1016,11 +998,11 @@
             ),
             2 => 
             array (
-              '_route' => '/feed/{page:\\d+}',
+              '_route' => '/feed/{page:\\w+}',
               '_name' => 'feed-page',
             ),
           ),
-          'aa' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1037,7 +1019,7 @@
               '_name' => 'feed-path',
             ),
           ),
-          'ab' => 
+          'aa' => 
           array (
             0 => 
             array (
@@ -1056,7 +1038,7 @@
               '_name' => 'fetch-file',
             ),
           ),
-          'ac' => 
+          'ab' => 
           array (
             0 => 
             array (
@@ -1075,7 +1057,7 @@
               '_name' => 'fetch-thumb',
             ),
           ),
-          'ad' => 
+          'ac' => 
           array (
             0 => 
             array (
@@ -1093,7 +1075,7 @@
               '_name' => 'fetch-cover',
             ),
           ),
-          'ae' => 
+          'ad' => 
           array (
             0 => 
             array (
@@ -1118,7 +1100,7 @@
       ),
       1 => 
       array (
-        'regex' => '~^(?|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:b)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)(*MARK:e)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:f)|/restapi/databases/([^/]+)/([^/]+)(*MARK:g)|/restapi/databases/([^/]+)(*MARK:h)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)(*MARK:k)|/restapi/preferences/([^/]+)(*MARK:l)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)(*MARK:n)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)(*MARK:q)|/restapi/(.*)(*MARK:r)|/check/(.*)(*MARK:s)|/opds/(\\d+)/([^/]+)(*MARK:t)|/opds/(\\d+)(*MARK:u)|/opds/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:w)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:x)|/loader/([^/]+)/(\\d+)(*MARK:y)|/loader/([^/]+)/(*MARK:z)|/loader/([^/]+)(*MARK:aa)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ac)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ad)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ae))$~',
+        'regex' => '~^(?|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:b)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)(*MARK:e)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:f)|/restapi/databases/([^/]+)/([^/]+)(*MARK:g)|/restapi/databases/([^/]+)(*MARK:h)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)(*MARK:k)|/restapi/preferences/([^/]+)(*MARK:l)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)(*MARK:n)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)(*MARK:q)|/restapi/(.*)(*MARK:r)|/check/(.*)(*MARK:s)|/opds/(\\w+)(*MARK:t)|/opds/(.*)(*MARK:u)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:w)|/loader/([^/]+)/(\\d+)(*MARK:x)|/loader/([^/]+)/(*MARK:y)|/loader/([^/]+)(*MARK:z)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:aa)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ac)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ad))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -1483,24 +1465,6 @@
             0 => 
             array (
               '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
-              '_route' => 'opds-page-id',
-            ),
-            1 => 
-            array (
-              'page' => 'page',
-              'id' => 'id',
-            ),
-            2 => 
-            array (
-              '_route' => '/opds/{page:\\d+}/{id}',
-              '_name' => 'opds-page-id',
-            ),
-          ),
-          'u' => 
-          array (
-            0 => 
-            array (
-              '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
               '_route' => 'opds-page',
             ),
             1 => 
@@ -1509,11 +1473,11 @@
             ),
             2 => 
             array (
-              '_route' => '/opds/{page:\\d+}',
+              '_route' => '/opds/{page:\\w+}',
               '_name' => 'opds-page',
             ),
           ),
-          'v' => 
+          'u' => 
           array (
             0 => 
             array (
@@ -1530,7 +1494,7 @@
               '_name' => 'opds-path',
             ),
           ),
-          'w' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -1550,7 +1514,7 @@
               '_name' => 'loader-action-dbNum-authorId-urlPath',
             ),
           ),
-          'x' => 
+          'w' => 
           array (
             0 => 
             array (
@@ -1569,7 +1533,7 @@
               '_name' => 'loader-action-dbNum-authorId',
             ),
           ),
-          'y' => 
+          'x' => 
           array (
             0 => 
             array (
@@ -1587,7 +1551,7 @@
               '_name' => 'loader-action-dbNum',
             ),
           ),
-          'z' => 
+          'y' => 
           array (
             0 => 
             array (
@@ -1604,7 +1568,7 @@
               '_name' => 'loader-action-',
             ),
           ),
-          'aa' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1621,7 +1585,7 @@
               '_name' => 'loader-action',
             ),
           ),
-          'ab' => 
+          'aa' => 
           array (
             0 => 
             array (
@@ -1640,7 +1604,7 @@
               '_name' => 'zipper-page-id-type',
             ),
           ),
-          'ac' => 
+          'ab' => 
           array (
             0 => 
             array (
@@ -1658,7 +1622,7 @@
               '_name' => 'zipper-page-type',
             ),
           ),
-          'ad' => 
+          'ac' => 
           array (
             0 => 
             array (
@@ -1677,7 +1641,7 @@
               '_name' => 'calres',
             ),
           ),
-          'ae' => 
+          'ad' => 
           array (
             0 => 
             array (
@@ -1721,7 +1685,7 @@
         ),
       ),
     ),
-    'page-1-letter' => 
+    'page-authors-letters' => 
     array (
       0 => 
       array (
@@ -1746,7 +1710,7 @@
         ),
       ),
     ),
-    'page-3-id' => 
+    'page-author-id' => 
     array (
       0 => 
       array (
@@ -1777,7 +1741,7 @@
         ),
       ),
     ),
-    'page-4-letter' => 
+    'page-books-letters' => 
     array (
       0 => 
       array (
@@ -1796,7 +1760,7 @@
         ),
       ),
     ),
-    'page-4-year' => 
+    'page-books-years' => 
     array (
       0 => 
       array (
@@ -1827,7 +1791,7 @@
         ),
       ),
     ),
-    'page-13-id' => 
+    'page-book-id' => 
     array (
       0 => 
       array (
@@ -1864,7 +1828,7 @@
         ),
       ),
     ),
-    'page-7-id' => 
+    'page-serie-id' => 
     array (
       0 => 
       array (
@@ -1952,7 +1916,7 @@
         ),
       ),
     ),
-    'page-12-id' => 
+    'page-tag-id' => 
     array (
       0 => 
       array (
@@ -2026,7 +1990,7 @@
         ),
       ),
     ),
-    'page-18-id' => 
+    'page-language-id' => 
     array (
       0 => 
       array (
@@ -2070,7 +2034,7 @@
         ),
       ),
     ),
-    'page-21-id' => 
+    'page-publisher-id' => 
     array (
       0 => 
       array (
@@ -2107,7 +2071,7 @@
         ),
       ),
     ),
-    'page-23-id' => 
+    'page-rating-id' => 
     array (
       0 => 
       array (
@@ -2144,7 +2108,7 @@
         ),
       ),
     ),
-    'page-42-id' => 
+    'page-identifier-id' => 
     array (
       0 => 
       array (
@@ -2196,24 +2160,6 @@
         0 => '/filter',
       ),
     ),
-    'feed-page-id' => 
-    array (
-      0 => 
-      array (
-        0 => '/feed/',
-        1 => 
-        array (
-          0 => 'page',
-          1 => '\\d+',
-        ),
-        2 => '/',
-        3 => 
-        array (
-          0 => 'id',
-          1 => '[^/]+',
-        ),
-      ),
-    ),
     'feed-search' => 
     array (
       0 => 
@@ -2229,7 +2175,7 @@
         1 => 
         array (
           0 => 'page',
-          1 => '\\d+',
+          1 => '\\w+',
         ),
       ),
     ),
@@ -2787,24 +2733,6 @@
         0 => '/check',
       ),
     ),
-    'opds-page-id' => 
-    array (
-      0 => 
-      array (
-        0 => '/opds/',
-        1 => 
-        array (
-          0 => 'page',
-          1 => '\\d+',
-        ),
-        2 => '/',
-        3 => 
-        array (
-          0 => 'id',
-          1 => '[^/]+',
-        ),
-      ),
-    ),
     'opds-search' => 
     array (
       0 => 
@@ -2820,7 +2748,7 @@
         1 => 
         array (
           0 => 'page',
-          1 => '\\d+',
+          1 => '\\w+',
         ),
       ),
     ),
