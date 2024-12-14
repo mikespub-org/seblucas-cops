@@ -23,7 +23,7 @@ class Entry
     /** @var string|int */
     public $numberOfElement;
     public string $contentType;
-    /** @var array<LinkEntry|LinkFeed> */
+    /** @var array<LinkFeed|LinkResource> */
     public $linkArray;
     /** @var ?int */
     public $localUpdated;
@@ -48,6 +48,30 @@ class Entry
         "cops:books:letter"              => 'images/allbook.png',
         PageId::ALL_PUBLISHERS_ID          => 'images/publisher.png',
     ];
+    /** @var array<string, LinkImage> */
+    public static $images = [];
+
+    /**
+     * Summary of getIcon
+     * @param string $reg
+     * @param string $image
+     * @return LinkImage
+     */
+    public static function getIcon($reg, $image)
+    {
+        if (isset(self::$images[$reg])) {
+            return self::$images[$reg];
+        }
+        $href = fn() => Route::path($image, ["v" => Config::VERSION]);
+        self::$images[$reg] = new LinkImage(
+            $href,
+            "image/png",
+            LinkImage::OPDS_THUMBNAIL_TYPE,
+            "icon",
+            $image
+        );
+        return self::$images[$reg];
+    }
 
     /**
      * Summary of __construct
@@ -55,7 +79,7 @@ class Entry
      * @param string $id
      * @param string $content
      * @param string $contentType
-     * @param array<LinkEntry|LinkFeed> $linkArray
+     * @param array<LinkFeed|LinkResource> $linkArray
      * @param string|int|null $database
      * @param string $classShortName
      * @param string|int $count
@@ -73,12 +97,7 @@ class Entry
         if (Config::get('show_icons') == 1) {
             foreach (static::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $id)) {
-                    $href = fn() => Route::path($image, ["v" => Config::VERSION]);
-                    array_push($this->linkArray, new LinkEntry(
-                        $href,
-                        "image/png",
-                        LinkEntry::OPDS_THUMBNAIL_TYPE
-                    ));
+                    array_push($this->linkArray, self::getIcon($reg, $image));
                     break;
                 }
             }
@@ -112,7 +131,7 @@ class Entry
     public function getNavLink($extraParams = [])
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkEntry|LinkFeed */
+            /** @var $link LinkFeed|LinkResource */
 
             if (!($link instanceof LinkFeed)) {
                 continue;
@@ -141,7 +160,7 @@ class Entry
     public function getRelation()
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkEntry|LinkFeed */
+            /** @var $link LinkFeed|LinkResource */
 
             if (!($link instanceof LinkFeed)) {
                 continue;
@@ -159,9 +178,9 @@ class Entry
     public function getThumbnail()
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkFeed|LinkEntry */
+            /** @var $link LinkFeed|LinkResource */
 
-            if ($link->rel == LinkEntry::OPDS_THUMBNAIL_TYPE) {
+            if ($link instanceof LinkImage && $link->rel == LinkImage::OPDS_THUMBNAIL_TYPE) {
                 return $link->getUri();
             }
         }
@@ -175,9 +194,9 @@ class Entry
     public function getImage()
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkFeed|LinkEntry */
+            /** @var $link LinkFeed|LinkResource */
 
-            if ($link->rel == LinkEntry::OPDS_IMAGE_TYPE) {
+            if ($link instanceof LinkImage && $link->rel == LinkImage::OPDS_IMAGE_TYPE) {
                 return $link->getUri();
             }
         }

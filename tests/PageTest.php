@@ -21,6 +21,7 @@ use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Language\Normalizer;
 
 class PageTest extends TestCase
@@ -35,6 +36,9 @@ class PageTest extends TestCase
 
     public function testPageIndex(): void
     {
+        // reset icon images
+        Entry::$images = [];
+
         $page = PageId::INDEX;
         $request = new Request();
 

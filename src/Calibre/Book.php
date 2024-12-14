@@ -14,7 +14,7 @@ use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Model\LinkResource;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Format as OutputFormat;
@@ -419,7 +419,7 @@ class Book
     /**
      * Summary of getExtraFileLink
      * @param string $fileName
-     * @return LinkEntry
+     * @return LinkResource
      */
     public function getExtraFileLink($fileName)
     {
@@ -434,14 +434,14 @@ class Book
             $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
             $href = fn() => Route::path($urlPath);
         }
-        $linkEntry = new LinkEntry(
+        $linkResource = new LinkResource(
             $href,
             $mimetype,
             'related',
-            $fileName
+            $fileName,
+            $filePath
         );
-        $linkEntry->addFileInfo($filePath);
-        return $linkEntry;
+        return $linkResource;
     }
 
     /**
@@ -663,7 +663,7 @@ class Book
     /**
      * Summary of getLinkArray
      * @param array<mixed> $params @todo is this useful here?
-     * @return array<LinkEntry|LinkFeed>
+     * @return array<LinkFeed|LinkResource>
      */
     public function getLinkArray($params = [])
     {
@@ -684,11 +684,8 @@ class Book
 
         foreach ($this->getDatas() as $data) {
             if ($data->isKnownType()) {
-                $linkEntry = $data->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, $data->format);
-                if (empty(Config::get('calibre_external_storage'))) {
-                    $linkEntry->addFileInfo($data->getLocalPath());
-                }
-                array_push($linkArray, $linkEntry);
+                $linkResource = $data->getDataLink($data->format);
+                array_push($linkArray, $linkResource);
             }
         }
 

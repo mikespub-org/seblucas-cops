@@ -22,7 +22,7 @@ class EntryBook extends Entry
      * @param string $id
      * @param string $content
      * @param string $contentType
-     * @param array<LinkEntry|LinkFeed> $linkArray
+     * @param array<LinkFeed|LinkResource> $linkArray
      * @param Book $book
      */
     public function __construct($title, $id, $content, $contentType, $linkArray, $book)
@@ -39,7 +39,7 @@ class EntryBook extends Entry
     public function hasAcquisitionLink()
     {
         foreach ($this->linkArray as $link) {
-            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE) {
+            if ($link instanceof LinkAcquisition) {
                 return true;
             }
         }

@@ -16,17 +16,28 @@ namespace SebLucas\Cops\Model;
  * defines new relations for linking from OPDS Catalog Entry Documents. They are defined in the
  * Sections Acquisition Relations and Artwork Relations.
  */
-class LinkEntry extends Link
+class LinkResource extends Link
 {
-    public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
-    public const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
-    public const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
+    /** @var ?string */
+    public $filepath = null;
     /** @var ?string */
     public $length = null;
     /** @var ?string */
     public $mtime = null;
-    /** @var ?string */
-    public $filepath = null;
+
+    /**
+     * Summary of __construct
+     * @param string|\Closure $href uri or closure including the endpoint
+     * @param string $type link type in the OPDS catalog
+     * @param ?string $rel relation in the OPDS catalog
+     * @param ?string $title title in the OPDS catalog and elsewhere
+     * @param ?string $filepath filepath of this resource
+     */
+    public function __construct($href, $type, $rel = null, $title = null, $filepath = null)
+    {
+        parent::__construct($href, $type, $rel, $title);
+        $this->addFileInfo($filepath);
+    }
 
     /**
      * Summary of addFileInfo
@@ -35,7 +46,7 @@ class LinkEntry extends Link
      */
     public function addFileInfo($filepath)
     {
-        if (!file_exists($filepath)) {
+        if (empty($filepath) || !file_exists($filepath)) {
             return;
         }
         $this->filepath = $filepath;

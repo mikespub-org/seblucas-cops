@@ -13,7 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
 use Exception;
@@ -317,18 +317,17 @@ class Data
 
     /**
      * Summary of getDataLink
-     * @param string $rel
      * @param ?string $title
      * @param bool $view
-     * @return LinkEntry
+     * @return LinkAcquisition
      */
-    public function getDataLink($rel, $title = null, $view = false)
+    public function getDataLink($title = null, $view = false)
     {
-        if ($rel == LinkEntry::OPDS_ACQUISITION_TYPE && Config::get('use_url_rewriting') == "1") {
+        if (Config::get('use_url_rewriting') == "1") {
             return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
-        return self::getLink($this->book, $this->extension, $this->getMimeType(), $rel, $this->getFilename(), $this->id, $title, $view);
+        return self::getLinkResource($this->book, $this->extension, $this->getMimeType(), $this->getFilename(), $this->id, $title, $view);
     }
 
     /**
@@ -337,7 +336,7 @@ class Data
      */
     public function getHtmlLink()
     {
-        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE)->getUri();
+        return $this->getDataLink()->getUri();
     }
 
     /**
@@ -346,7 +345,7 @@ class Data
      */
     public function getViewHtmlLink()
     {
-        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, null, true)->getUri();
+        return $this->getDataLink(null, true)->getUri();
     }
 
     /**
@@ -373,7 +372,7 @@ class Data
      * @param ?string $title
      * @param bool $view
      * @deprecated 3.1.0 use route urls instead
-     * @return LinkEntry
+     * @return LinkAcquisition
      */
     public function getHtmlLinkWithRewriting($title = null, $view = false)
     {
@@ -399,11 +398,12 @@ class Data
             $urlPath .= rawurlencode($this->getFilename());
         }
         $href = fn() => Route::path($urlPath);
-        return new LinkEntry(
+        return new LinkAcquisition(
             $href,
             $this->getMimeType(),
-            LinkEntry::OPDS_ACQUISITION_TYPE,
-            $title
+            LinkAcquisition::OPDS_ACQUISITION_TYPE,
+            $title,
+            null
         );
     }
 
@@ -418,30 +418,32 @@ class Data
     }
 
     /**
-     * Summary of getLink
+     * Summary of getLinkResource
      * @param Book $book
      * @param string $type
      * @param string $mime
-     * @param string $rel
      * @param string $filename
      * @param ?int $idData
      * @param ?string $title
      * @param bool $view
-     * @return LinkEntry
+     * @return LinkAcquisition
      */
-    public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $view = false)
+    public static function getLinkResource($book, $type, $mime, $filename, $idData, $title = null, $view = false)
     {
         if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
             // external storage is assumed to be already url-encoded if needed
             $href = $book->path . "/" . rawurlencode($filename);
-            return new LinkEntry(
+            return new LinkAcquisition(
                 $href,
                 $mime,
-                $rel,
-                $title
+                LinkAcquisition::OPDS_ACQUISITION_TYPE,
+                $title,
+                // no filepath here
+                null
             );
         }
-        // moved image-specific code from Data to Cover
+
+        $filePath = $book->path . "/" . $filename;
         if (Database::useAbsolutePath($book->getDatabaseId()) ||
             ($type == "epub" && Config::get('update_epub-metadata'))) {
             $params = ['db' => $book->getDatabaseId()];
@@ -456,22 +458,23 @@ class Data
                 $routeName = self::ROUTE_INLINE;
             }
             $href = fn() => FetchHandler::route($routeName, $params);
-            return new LinkEntry(
+            return new LinkAcquisition(
                 $href,
                 $mime,
-                $rel,
-                $title
+                LinkAcquisition::OPDS_ACQUISITION_TYPE,
+                $title,
+                $filePath
             );
         }
 
-        $filePath = $book->path . "/" . $filename;
         $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
         $href = fn() => Route::path($urlPath);
-        return new LinkEntry(
+        return new LinkAcquisition(
             $href,
             $mime,
-            $rel,
-            $title
+            LinkAcquisition::OPDS_ACQUISITION_TYPE,
+            $title,
+            $filePath
         );
     }
 }

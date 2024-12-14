@@ -40,7 +40,7 @@ enum PageQueryScope: string
 
     public function title(): string
     {
-        return match($this) {
+        return match ($this) {
             self::AUTHOR => localize("authors.title"),
             self::BOOK => localize("bookword.title"),
             self::FORMAT => localize("formats.title"),

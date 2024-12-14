@@ -17,7 +17,8 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Model\LinkAcquisition;
+use SebLucas\Cops\Model\LinkResource;
 use SebLucas\Cops\Model\LinkFacet;
 use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -183,7 +184,7 @@ class OpdsRenderer extends BaseRenderer
             // Good and compliant way of handling search
             //$params["page"] = PageId::SEARCH;
             $href = fn() => self::$handler::route(self::ROUTE_SEARCH, $params);
-            $link = new LinkEntry(
+            $link = new LinkResource(
                 $href,
                 "application/opensearchdescription+xml",
                 "search",
@@ -193,7 +194,7 @@ class OpdsRenderer extends BaseRenderer
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "QUERY";
             $href = fn() => str_replace("QUERY", "{searchTerms}", (string) self::$handler::route(self::ROUTE_FEED, $params));
-            $link = new LinkEntry(
+            $link = new LinkResource(
                 $href,
                 "application/atom+xml",
                 "search",
@@ -231,7 +232,7 @@ class OpdsRenderer extends BaseRenderer
 
     /**
      * Summary of renderLink
-     * @param LinkEntry|LinkFeed $link
+     * @param LinkFeed|LinkResource $link
      * @param ?int $number
      * @return void
      */
@@ -246,8 +247,8 @@ class OpdsRenderer extends BaseRenderer
         if (!is_null($link->title)) {
             $this->getXmlStream()->writeAttribute("title", $link->title);
         }
-        if ($link instanceof LinkEntry) {
-            if (!empty($link->hasFileInfo())) {
+        if ($link instanceof LinkResource) {
+            if ($link instanceof LinkAcquisition && !empty($link->hasFileInfo())) {
                 $this->getXmlStream()->writeAttribute("length", $link->getSize());
                 // this corresponds to "mtime" in Calibre content server (= non-standard)
                 $this->getXmlStream()->writeAttribute("dcterms:modified", $link->getLastModified());

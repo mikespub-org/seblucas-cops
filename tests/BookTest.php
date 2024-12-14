@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
+use SebLucas\Cops\Model\LinkImage;
 
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
@@ -21,7 +22,7 @@ use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Model\LinkEntry;
+use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\FileResponse;
 
 /*
@@ -242,7 +243,7 @@ class BookTest extends TestCase
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
-            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
+            if ($link instanceof LinkAcquisition && $link->title == "EPUB") {
                 $this->assertEquals(Route::path("download/1/0/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub"), $link->getUri());
                 return;
             }
@@ -258,7 +259,7 @@ class BookTest extends TestCase
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
-            if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
+            if ($link instanceof LinkAcquisition && $link->title == "EPUB") {
                 $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/ignore.epub", $link->getUri());
                 return;
             }
@@ -295,7 +296,7 @@ class BookTest extends TestCase
 
         $this->assertTrue($cover->getThumbnail($width, $height, self::TEST_THUMBNAIL));
 
-        $size = GetImageSize(self::TEST_THUMBNAIL);
+        $size = getimagesize(self::TEST_THUMBNAIL);
         $this->assertEquals($expectedWidth, $size [0]);
         $this->assertEquals($expectedHeight, $size [1]);
 
@@ -335,6 +336,23 @@ class BookTest extends TestCase
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
         $this->assertEquals(self::$fetcher::link() . "/thumbs/0/2/html.jpg", $thumbnailurl);
+    }
+
+    public function testGetLinkImageSize(): void
+    {
+        $book = Book::getBookById(17);
+        $book->setHandler(self::$handler);
+
+        $entry = $book->getEntry();
+        foreach ($entry->linkArray as $link) {
+            if ($link instanceof LinkImage && $link->hasFileInfo()) {
+                $width = $link->getWidth();
+                $height = $link->getHeight();
+                $size = getimagesize($link->filepath);
+                $this->assertEquals($size[0], intval($width));
+                $this->assertEquals($size[1], intval($height));
+            }
+        }
     }
 
     /**
