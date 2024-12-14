@@ -131,13 +131,13 @@ class PageQueryResult extends Page
         }
         foreach ($dbArray as $key) {
             if (Database::noDatabaseSelected($database)) {
-                $url = $this->handler::link(["db" => $d]);
+                $href = fn() => $this->handler::link(["db" => $d]);
                 array_push($this->entryArray, new Entry(
                     $key,
                     "db:query:{$d}",
                     " ",
                     "text",
-                    [ new LinkNavigation($url) ],
+                    [ new LinkNavigation($href) ],
                     null,
                     "tt-header"
                 ));
@@ -174,13 +174,13 @@ class PageQueryResult extends Page
                     if (!empty($libraryId)) {
                         $params['vl'] = $libraryId;
                     }
-                    $url = $this->handler::route(self::ROUTE_SCOPE, $params);
+                    $href = fn() => $this->handler::route(self::ROUTE_SCOPE, $params);
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$value}"), $this->query),
                         "db:query:{$d}:{$value}",
                         str_format(localize("{$value}word", $total), $total),
                         "text",
-                        [ new LinkNavigation($url) ],
+                        [ new LinkNavigation($href) ],
                         $database,
                         Database::noDatabaseSelected($database) ? "" : "tt-header",
                         $total
@@ -296,13 +296,13 @@ class PageQueryResult extends Page
      */
     public function getDatabaseEntry($name, $idx, $count, $query)
     {
-        $url = $this->handler::route(self::ROUTE_QUERY, ['query' => $query, 'db' => $idx]);
+        $href = fn() => $this->handler::route(self::ROUTE_QUERY, ['query' => $query, 'db' => $idx]);
         return new Entry(
             $name,
             "db:query:{$idx}",
             str_format(localize("bookword", $count), $count),
             "text",
-            [ new LinkNavigation($url) ],
+            [ new LinkNavigation($href) ],
             null,
             "",
             $count
@@ -318,13 +318,13 @@ class PageQueryResult extends Page
     public function getNoResultEntry($database = null, $scope = null)
     {
         $params = ['db' => $database, 'scope' => $scope];
-        $url = $this->handler::route(self::ROUTE_SEARCH, $params);
+        $href = fn() => $this->handler::route(self::ROUTE_SEARCH, $params);
         return new Entry(
             str_format(localize("search.result.none"), $this->query),
             "db:query:{$database}:{$scope}",
             " ",
             "text",
-            [ new LinkNavigation($url) ],
+            [ new LinkNavigation($href) ],
             null,
             "tt-header"
         );

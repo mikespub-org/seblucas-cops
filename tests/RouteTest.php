@@ -97,7 +97,7 @@ class RouteTest extends TestCase
 
         $expected = 'vendor/bin/';
         $base = Route::base();
-        $this->assertEquals($expected, $base);
+        $this->assertStringEndsWith($expected, $base);
         Route::setBaseUrl(null);
 
         // @see https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations

@@ -119,7 +119,9 @@ class Book
             if (str_starts_with($line->path, Config::get('calibre_external_storage'))) {
                 $this->path = $line->path;
             } else {
-                $this->path = Config::get('calibre_external_storage') . str_replace('%2F', '/', rawurlencode($line->path));
+                // external storage is assumed to be already url-encoded if needed
+                $urlPath = implode('/', array_map('rawurlencode', explode('/', $line->path)));
+                $this->path = Config::get('calibre_external_storage') . $urlPath;
             }
         } else {
             $this->path = $line->path;
@@ -427,13 +429,13 @@ class Book
             $params = ['id' => $this->id, 'db' => $this->databaseId];
             $params['db'] ??= 0;
             $params['file'] = $fileName;
-            $url = FetchHandler::route(self::ROUTE_FILE, $params);
+            $href = fn() => FetchHandler::route(self::ROUTE_FILE, $params);
         } else {
             $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
-            $url = Route::path($urlPath);
+            $href = fn() => Route::path($urlPath);
         }
         $linkEntry = new LinkEntry(
-            $url,
+            $href,
             $mimetype,
             'related',
             $fileName
@@ -557,11 +559,11 @@ class Book
         if (!$data) {
             return null;
         }
-        $file = $data->name . "." . strtolower($data->format);
         if ($encoded) {
-            return $this->path . '/' . rawurlencode($file);
+            // external storage is assumed to be already url-encoded if needed
+            return $data->getExternalPath();
         }
-        return $this->path . '/' . $file;
+        return $data->getLocalPath();
     }
 
     /**
@@ -694,10 +696,11 @@ class Book
         foreach ($this->getAuthors() as $author) {
             /** @var Author $author */
             $author->setHandler($this->handler);
+            $href = fn() => $author->getUri();
             array_push(
                 $linkArray,
                 new LinkFeed(
-                    $author->getUri(),
+                    $href,
                     'related',
                     str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name)
                 )
@@ -708,10 +711,11 @@ class Book
         $serie = $this->getSerie();
         if (!empty($serie)) {
             $serie->setHandler($this->handler);
+            $href = fn() => $serie->getUri();
             array_push(
                 $linkArray,
                 new LinkFeed(
-                    $serie->getUri(),
+                    $href,
                     'related',
                     str_format(localize('content.series.data'), $this->seriesIndex, $serie->name)
                 )

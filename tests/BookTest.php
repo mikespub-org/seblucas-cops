@@ -243,7 +243,7 @@ class BookTest extends TestCase
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
-                $this->assertEquals(Route::path("download/1/0/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub"), $link->href);
+                $this->assertEquals(Route::path("download/1/0/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub"), $link->getUri());
                 return;
             }
         }
@@ -259,7 +259,7 @@ class BookTest extends TestCase
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link->rel == LinkEntry::OPDS_ACQUISITION_TYPE && $link->title == "EPUB") {
-                $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/ignore.epub", $link->href);
+                $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/ignore.epub", $link->getUri());
                 return;
             }
         }

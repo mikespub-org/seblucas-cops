@@ -32,7 +32,7 @@ class LinkFacet extends LinkFeed
 
     /**
      * Summary of __construct
-     * @param string $href ?queryString relative to current endpoint
+     * @param string|\Closure $href uri or closure including the endpoint
      * @param ?string $title title in the OPDS catalog
      * @param ?string $facetGroup facetGroup this facet belongs to
      * @param bool $activeFacet is the facet currently active

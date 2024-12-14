@@ -142,7 +142,7 @@ class BookList
         $result = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
-        $href = $this->handler::route(Book::ROUTE_ALL, $params);
+        $href = fn() => $this->handler::route(Book::ROUTE_ALL, $params);
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
             $linkArray = [ new LinkNavigation($href, "subsection") ];
@@ -163,7 +163,7 @@ class BookList
         );
         array_push($result, $entry);
         if (Config::get('recentbooks_limit') > 0) {
-            $href = $this->handler::route(self::ROUTE_RECENT, $params);
+            $href = fn() => $this->handler::route(self::ROUTE_RECENT, $params);
             $count = ($nBooks > Config::get('recentbooks_limit')) ? Config::get('recentbooks_limit') : $nBooks;
             $entry = new Entry(
                 localize('recent.title'),
@@ -362,7 +362,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $params = ['id' => $post->groupid, 'db' => $this->databaseId];
-            $href = $this->handler::route($routeName, $params);
+            $href = fn() => $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 Book::PAGE_ID . ':' . $label . ':' . $post->groupid,

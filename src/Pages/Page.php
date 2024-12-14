@@ -195,8 +195,9 @@ class Page
     {
         if ($this->n > 1) {
             $params = $this->request->getCleanParams();
+            $href = fn() => $this->handler::link($params);
             return new LinkNavigation(
-                $this->handler::link($params),
+                $href,
                 "first",
                 localize("paging.first.alternate")
             );
@@ -213,8 +214,9 @@ class Page
         if ($this->n < $this->getMaxPage()) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->getMaxPage());
+            $href = fn() => $this->handler::link($params);
             return new LinkNavigation(
-                $this->handler::link($params),
+                $href,
                 "last",
                 localize("paging.last.alternate")
             );
@@ -231,8 +233,9 @@ class Page
         if ($this->n < $this->getMaxPage()) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n + 1);
+            $href = fn() => $this->handler::link($params);
             return new LinkNavigation(
-                $this->handler::link($params),
+                $href,
                 "next",
                 localize("paging.next.alternate")
             );
@@ -249,8 +252,9 @@ class Page
         if ($this->n > 1) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n - 1);
+            $href = fn() => $this->handler::link($params);
             return new LinkNavigation(
-                $this->handler::link($params),
+                $href,
                 "previous",
                 localize("paging.previous.alternate")
             );
@@ -307,7 +311,7 @@ class Page
      * Summary of addHeaderEntry
      * @param string $title
      * @param string $content
-     * @param ?string $href
+     * @param string|\Closure|null $href
      * @param ?string $relation
      * @return void
      */
@@ -320,7 +324,7 @@ class Page
      * Summary of getHeaderEntry
      * @param string $title
      * @param string $content
-     * @param ?string $href
+     * @param string|\Closure|null $href
      * @param ?string $relation
      * @return Entry
      */

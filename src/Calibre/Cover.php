@@ -299,7 +299,7 @@ class Cover
     {
         $link = $this->getCoverLink();
         if ($link) {
-            return $link->hrefXhtml();
+            return $link->getUri();
         }
         return null;
     }
@@ -316,14 +316,16 @@ class Cover
             $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             if (!empty(Config::get('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
+                $href = $this->coverFileName;
                 return new LinkEntry(
-                    $this->coverFileName,
+                    $href,
                     $mime,
                     LinkEntry::OPDS_IMAGE_TYPE
                 );
             } elseif (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+                $href = $this->coverFileName;
                 return new LinkEntry(
-                    $this->coverFileName,
+                    $href,
                     $mime,
                     LinkEntry::OPDS_IMAGE_TYPE
                 );
@@ -331,8 +333,11 @@ class Cover
             $file = 'cover.' . $ext;
             // moved image-specific code from Data to Cover
             if (!Database::useAbsolutePath($this->databaseId)) {
+                $filePath = $this->book->path . "/" . $file;
+                $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
+                $href = fn() => Route::path($urlPath);
                 return new LinkEntry(
-                    Route::path(str_replace('%2F', '/', rawurlencode($this->book->path . "/" . $file))),
+                    $href,
                     $mime,
                     LinkEntry::OPDS_IMAGE_TYPE
                 );
@@ -342,8 +347,9 @@ class Cover
             if ($ext != 'jpg') {
                 $params['type'] = $ext;
             }
+            $href = fn() => $this->handler::route(self::ROUTE_COVER, $params);
             return new LinkEntry(
-                $this->handler::route(self::ROUTE_COVER, $params),
+                $href,
                 $mime,
                 LinkEntry::OPDS_IMAGE_TYPE
             );
@@ -362,7 +368,7 @@ class Cover
     {
         $link = $this->getThumbnailLink($thumb, $useDefault);
         if ($link) {
-            return $link->hrefXhtml();
+            return $link->getUri();
         }
         return null;
     }
@@ -377,14 +383,7 @@ class Cover
     {
         if (Config::get('thumbnail_handling') != "1" &&
             !empty(Config::get('thumbnail_handling'))) {
-            $fileName = Config::get('thumbnail_handling');
-            $ext = strtolower(pathinfo((string) $fileName, PATHINFO_EXTENSION));
-            $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-            return new LinkEntry(
-                Route::path($fileName),
-                $mime,
-                LinkEntry::OPDS_THUMBNAIL_TYPE
-            );
+            return $this->getDefaultLink();
         }
 
         if ($this->coverFileName) {
@@ -394,14 +393,16 @@ class Cover
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
             // @todo support creating (and caching) thumbnails for external cover images someday
             if (!empty(Config::get('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
+                $href = $this->coverFileName;
                 return new LinkEntry(
-                    $this->coverFileName,
+                    $href,
                     $mime,
                     LinkEntry::OPDS_THUMBNAIL_TYPE
                 );
             } elseif (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+                $href = $this->coverFileName;
                 return new LinkEntry(
-                    $this->coverFileName,
+                    $href,
                     $mime,
                     LinkEntry::OPDS_THUMBNAIL_TYPE
                 );
@@ -419,8 +420,9 @@ class Cover
             } else {
                 $routeName = self::ROUTE_COVER;
             }
+            $href = fn() => $this->handler::route($routeName, $params);
             return new LinkEntry(
-                $this->handler::route($routeName, $params),
+                $href,
                 $mime,
                 LinkEntry::OPDS_THUMBNAIL_TYPE
             );
@@ -439,10 +441,12 @@ class Cover
     public function getDefaultLink()
     {
         if (!empty(Config::get('thumbnail_default'))) {
-            $ext = strtolower(pathinfo((string) Config::get('thumbnail_default'), PATHINFO_EXTENSION));
+            $fileName = (string) Config::get('thumbnail_handling');
+            $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
+            $href = fn() => Route::path($fileName);
             return new LinkEntry(
-                Route::path(Config::get('thumbnail_default')),
+                $href,
                 $mime,
                 LinkEntry::OPDS_THUMBNAIL_TYPE
             );

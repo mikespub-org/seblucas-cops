@@ -198,9 +198,9 @@ class JsonRenderer extends BaseRenderer
             $link = $book->getExtraFileLink($fileName);
             array_push($out ["extraFiles"], [
                 "name" => $link->title,
-                "url" => $link->hrefXhtml(),
-                "length" => $link->length,
-                "mtime" => $link->mtime,
+                "url" => $link->getUri(),
+                "length" => $link->getSize(),
+                "mtime" => $link->getLastModified(),
             ]);
         }
         if (count($out ["extraFiles"]) > 0) {
@@ -412,14 +412,14 @@ class JsonRenderer extends BaseRenderer
         $out ["firstLink"] = "";
         $out ["prevLink"] = "";
         if (!is_null($prevLink)) {
-            $out ["firstLink"] = $currentPage->getFirstLink()->hrefXhtml();
-            $out ["prevLink"] = $prevLink->hrefXhtml();
+            $out ["firstLink"] = $currentPage->getFirstLink()->getUri();
+            $out ["prevLink"] = $prevLink->getUri();
         }
         $out ["nextLink"] = "";
         $out ["lastLink"] = "";
         if (!is_null($nextLink)) {
-            $out ["nextLink"] = $nextLink->hrefXhtml();
-            $out ["lastLink"] = $currentPage->getLastLink()->hrefXhtml();
+            $out ["nextLink"] = $nextLink->getUri();
+            $out ["lastLink"] = $currentPage->getLastLink()->getUri();
         }
         $out ["maxPage"] = $currentPage->getMaxPage();
         $out ["currentPage"] = $currentPage->n;

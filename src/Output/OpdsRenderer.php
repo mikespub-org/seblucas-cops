@@ -167,24 +167,24 @@ class OpdsRenderer extends BaseRenderer
         $this->getXmlStream()->text($page->authorEmail);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->endElement();
-        $url = self::$handler::route(self::ROUTE_FEED);
-        $link = new LinkNavigation($url, "start", "Home");
+        $href = fn() => self::$handler::route(self::ROUTE_FEED);
+        $link = new LinkNavigation($href, "start", "Home");
         $this->renderLink($link);
         // with same _route param here
-        $url = self::$handler::link($request->urlParams);
+        $href = fn() => self::$handler::link($request->urlParams);
         if ($page->containsBook()) {
-            $link = new LinkFeed($url, "self");
+            $link = new LinkFeed($href, "self");
         } else {
-            $link = new LinkNavigation($url, "self");
+            $link = new LinkNavigation($href, "self");
         }
         $this->renderLink($link);
         $params = ["db" => $database];
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             //$params["page"] = PageId::SEARCH;
-            $url = self::$handler::route(self::ROUTE_SEARCH, $params);
+            $href = fn() => self::$handler::route(self::ROUTE_SEARCH, $params);
             $link = new LinkEntry(
-                $url,
+                $href,
                 "application/opensearchdescription+xml",
                 "search",
                 "Search here"
@@ -192,10 +192,9 @@ class OpdsRenderer extends BaseRenderer
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "QUERY";
-            $url = self::$handler::route(self::ROUTE_FEED, $params);
-            $url = str_replace("QUERY", "{searchTerms}", $url);
+            $href = fn() => str_replace("QUERY", "{searchTerms}", (string) self::$handler::route(self::ROUTE_FEED, $params));
             $link = new LinkEntry(
-                $url,
+                $href,
                 "application/atom+xml",
                 "search",
                 "Search here"
@@ -206,9 +205,9 @@ class OpdsRenderer extends BaseRenderer
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
                 $params = array_replace($request->urlParams, ["tag" => $filter]);
-                $url = self::$handler::link($params);
+                $href = fn() => self::$handler::link($params);
                 $link = new LinkFacet(
-                    $url,
+                    $href,
                     $lib,
                     localize("tagword.title"),
                     $filter == $Urlfilter,
@@ -239,7 +238,7 @@ class OpdsRenderer extends BaseRenderer
     protected function renderLink($link, $number = null)
     {
         $this->getXmlStream()->startElement("link");
-        $this->getXmlStream()->writeAttribute("href", $link->hrefXhtml());
+        $this->getXmlStream()->writeAttribute("href", $link->getUri());
         $this->getXmlStream()->writeAttribute("type", $link->type);
         if (!is_null($link->rel)) {
             $this->getXmlStream()->writeAttribute("rel", $link->rel);
@@ -248,12 +247,10 @@ class OpdsRenderer extends BaseRenderer
             $this->getXmlStream()->writeAttribute("title", $link->title);
         }
         if ($link instanceof LinkEntry) {
-            if (!empty($link->length)) {
-                $this->getXmlStream()->writeAttribute("length", $link->length);
-            }
-            if (!empty($link->mtime)) {
+            if (!empty($link->hasFileInfo())) {
+                $this->getXmlStream()->writeAttribute("length", $link->getSize());
                 // this corresponds to "mtime" in Calibre content server (= non-standard)
-                $this->getXmlStream()->writeAttribute("dcterms:modified", $link->mtime);
+                $this->getXmlStream()->writeAttribute("dcterms:modified", $link->getLastModified());
             }
         } elseif ($link instanceof LinkFacet) {
             if (!is_null($link->facetGroup)) {
@@ -436,10 +433,10 @@ class OpdsRenderer extends BaseRenderer
         }
         //$params = $request->getCleanParams();
         //$params['filter'] = 1;
-        //$url = self::$handler::link($params);
+        //$href = fn() => self::$handler::link($params);
         //$filterLabel = localize("cog.alternate");
         //$title = localize("links.title");
-        //$link = new LinkFacet($url, $title, $filterLabel, false, null);
+        //$link = new LinkFacet($href, $title, $filterLabel, false, null);
         //$this->renderLink($link);
         // Note: facets are only shown if there are books available, so we need to get a filter page here
         $req = self::$handler::request($request->urlParams);
@@ -460,13 +457,13 @@ class OpdsRenderer extends BaseRenderer
             }
             $group = strtolower($entry->className);
             $group = localize($group . 's.title');
-            $url = $entry->getNavLink($extraParams);
+            $href = fn() => $entry->getNavLink($extraParams);
             // replace "1 / N" pagination with "1" page number for OPDS feeds
             if (!empty($entry->numberOfElement) && is_string($entry->numberOfElement) && str_contains($entry->numberOfElement, '/')) {
                 $entry->numberOfElement = intval(array_map('trim', explode('/', $entry->numberOfElement))[0]);
             }
             $link = new LinkFacet(
-                $url,
+                $href,
                 $entry->title,
                 $group,
                 false,

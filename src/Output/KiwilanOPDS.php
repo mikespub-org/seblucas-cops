@@ -195,16 +195,16 @@ class KiwilanOPDS
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {
-                $first = $page->getFirstLink()->hrefXhtml();
-                $previous = $prevLink->hrefXhtml();
+                $first = $page->getFirstLink()->getUri();
+                $previous = $prevLink->getUri();
             } else {
                 $first = null;
                 $previous = null;
             }
             $nextLink = $page->getNextLink();
             if (!is_null($nextLink)) {
-                $next = $nextLink->hrefXhtml();
-                $last = $page->getLastLink()->hrefXhtml();
+                $next = $nextLink->getUri();
+                $last = $page->getLastLink()->getUri();
             } else {
                 $next = null;
                 $last = null;

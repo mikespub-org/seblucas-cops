@@ -18,7 +18,7 @@ class Link
     //public const OPDS_NAVIGATION_FEED = "application/atom+xml;profile=opds-catalog;kind=navigation";
     //public const OPDS_ACQUISITION_FEED = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
-    public string $href;
+    public string|\Closure $href;
     public string $type;
     /** @var ?string */
     public $rel;
@@ -27,7 +27,7 @@ class Link
 
     /**
      * Summary of __construct
-     * @param string $href uri including the endpoint for images, books etc.
+     * @param string|\Closure $href uri or closure including the endpoint
      * @param string $type link type in the OPDS catalog
      * @param ?string $rel relation in the OPDS catalog
      * @param ?string $title title in the OPDS catalog and elsewhere
@@ -41,11 +41,14 @@ class Link
     }
 
     /**
-     * Summary of hrefXhtml
+     * Summary of getUri
      * @return string
      */
-    public function hrefXhtml()
+    public function getUri()
     {
+        if ($this->href instanceof \Closure) {
+            $this->href = ($this->href)();
+        }
         // Link()->href includes the endpoint here
         return $this->href;
     }

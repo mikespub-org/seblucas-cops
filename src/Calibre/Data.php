@@ -337,7 +337,7 @@ class Data
      */
     public function getHtmlLink()
     {
-        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE)->href;
+        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE)->getUri();
     }
 
     /**
@@ -346,7 +346,7 @@ class Data
      */
     public function getViewHtmlLink()
     {
-        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, null, true)->href;
+        return $this->getDataLink(LinkEntry::OPDS_ACQUISITION_TYPE, null, true)->getUri();
     }
 
     /**
@@ -356,6 +356,16 @@ class Data
     public function getLocalPath()
     {
         return $this->book->path . "/" . $this->getFilename();
+    }
+
+    /**
+     * Summary of getExternalPath
+     * @return string
+     */
+    public function getExternalPath()
+    {
+        // external storage is assumed to be already url-encoded if needed
+        return $this->book->path . '/' . rawurlencode($this->getFilename());
     }
 
     /**
@@ -380,16 +390,17 @@ class Data
             $prefix = "view";
             //$routeName = 'fetch-view';
         }
-        $href = $prefix . "/" . $this->id . "/" . $database;
+        $urlPath = $prefix . "/" . $this->id . "/" . $database;
 
         // this is set on book in JsonRenderer now
         if ($this->updateForKepub) {
-            $href .= rawurlencode($this->getUpdatedFilenameKepub());
+            $urlPath .= rawurlencode($this->getUpdatedFilenameKepub());
         } else {
-            $href .= rawurlencode($this->getFilename());
+            $urlPath .= rawurlencode($this->getFilename());
         }
+        $href = fn() => Route::path($urlPath);
         return new LinkEntry(
-            Route::path($href),
+            $href,
             $this->getMimeType(),
             LinkEntry::OPDS_ACQUISITION_TYPE,
             $title
@@ -421,8 +432,10 @@ class Data
     public static function getLink($book, $type, $mime, $rel, $filename, $idData, $title = null, $view = false)
     {
         if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
+            // external storage is assumed to be already url-encoded if needed
+            $href = $book->path . "/" . rawurlencode($filename);
             return new LinkEntry(
-                $book->path . "/" . rawurlencode($filename),
+                $href,
                 $mime,
                 $rel,
                 $title
@@ -442,16 +455,20 @@ class Data
                 $params['view'] = 1;
                 $routeName = self::ROUTE_INLINE;
             }
+            $href = fn() => FetchHandler::route($routeName, $params);
             return new LinkEntry(
-                FetchHandler::route($routeName, $params),
+                $href,
                 $mime,
                 $rel,
                 $title
             );
         }
 
+        $filePath = $book->path . "/" . $filename;
+        $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
+        $href = fn() => Route::path($urlPath);
         return new LinkEntry(
-            Route::path(str_replace('%2F', '/', rawurlencode($book->path . "/" . $filename))),
+            $href,
             $mime,
             $rel,
             $title

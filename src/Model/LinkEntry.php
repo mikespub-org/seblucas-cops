@@ -22,9 +22,11 @@ class LinkEntry extends Link
     public const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
     public const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
     /** @var ?string */
-    public $length;
+    public $length = null;
     /** @var ?string */
-    public $mtime;
+    public $mtime = null;
+    /** @var ?string */
+    public $filepath = null;
 
     /**
      * Summary of addFileInfo
@@ -36,7 +38,41 @@ class LinkEntry extends Link
         if (!file_exists($filepath)) {
             return;
         }
-        $this->length = (string) filesize($filepath);
-        $this->mtime = date(DATE_ATOM, filemtime($filepath));
+        $this->filepath = $filepath;
+    }
+
+    /**
+     * Summary of hasFileInfo
+     * @return bool
+     */
+    public function hasFileInfo()
+    {
+        return isset($this->filepath);
+    }
+
+    /**
+     * Summary of getSize
+     * @return string|null
+     */
+    public function getSize()
+    {
+        if (!isset($this->filepath)) {
+            return $this->length;
+        }
+        $this->length ??= (string) filesize($this->filepath);
+        return $this->length;
+    }
+
+    /**
+     * Summary of getLastModified
+     * @return string|null
+     */
+    public function getLastModified()
+    {
+        if (!isset($this->filepath)) {
+            return $this->mtime;
+        }
+        $this->mtime ??= date(DATE_ATOM, filemtime($this->filepath));
+        return $this->mtime;
     }
 }

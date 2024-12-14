@@ -164,7 +164,8 @@ abstract class Base
     {
         // remove for Filter::getEntryArray() - see filterTest
         unset($params[static::URL_PARAM]);
-        return [ new LinkFeed($this->getUri($params), "subsection") ];
+        $href = fn() => $this->getUri($params);
+        return [ new LinkFeed($href, "subsection") ];
     }
 
     /**
@@ -578,7 +579,7 @@ abstract class Base
             $numberOfString = static::SQL_TABLE . ".alphabetical";
         }
         $params["db"] ??= $database;
-        $href = $handler::route(static::ROUTE_ALL, $params);
+        $href = fn() => $handler::route(static::ROUTE_ALL, $params);
         $entry = new Entry(
             localize(static::SQL_TABLE . ".title"),
             static::PAGE_ID,

@@ -368,7 +368,7 @@ class BaseList
         $params["db"] ??= $this->databaseId;
         while ($post = $result->fetchObject()) {
             $params["id"] = $post->groupid;
-            $href = $this->handler::route($routeName, $params);
+            $href = fn() => $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,
@@ -475,6 +475,7 @@ class BaseList
         $href = $instance->getUri();
         $maxPage = ceil($total / $limit);
         if ($n > 1) {
+            // @todo pass params to getUri() and use closure
             if (str_contains($href, '?')) {
                 $paging = '&filter=1';
             } else {
@@ -496,6 +497,7 @@ class BaseList
             array_unshift($entries, $entry);
         }
         if ($n < $maxPage) {
+            // @todo pass params to getUri() and use closure
             if (str_contains($href, '?')) {
                 $paging = '&filter=1';
             } else {

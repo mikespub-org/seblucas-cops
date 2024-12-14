@@ -97,7 +97,7 @@ class PageWithDetail extends Page
         $filtersTitle = localize("filters.title");
         if (!($instance instanceof Author) && in_array('author', $filterLinks)) {
             $title = localize(phrase: "authors.title");
-            $href = $this->handler::route(Author::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Author::ROUTE_ALL, $params);
             $relation = "authors";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Author::URL_PARAM] ??= 1;
@@ -105,7 +105,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Language) && in_array('language', $filterLinks)) {
             $title = localize("languages.title");
-            $href = $this->handler::route(Language::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Language::ROUTE_ALL, $params);
             $relation = "languages";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Language::URL_PARAM] ??= 1;
@@ -113,7 +113,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Publisher) && in_array('publisher', $filterLinks)) {
             $title = localize("publishers.title");
-            $href = $this->handler::route(Publisher::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Publisher::ROUTE_ALL, $params);
             $relation = "publishers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Publisher::URL_PARAM] ??= 1;
@@ -121,7 +121,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Rating) && in_array('rating', $filterLinks)) {
             $title = localize("ratings.title");
-            $href = $this->handler::route(Rating::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Rating::ROUTE_ALL, $params);
             $relation = "ratings";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Rating::URL_PARAM] ??= 1;
@@ -129,7 +129,7 @@ class PageWithDetail extends Page
         }
         if (!($instance instanceof Serie) && in_array('series', $filterLinks)) {
             $title = localize("series.title");
-            $href = $this->handler::route(Serie::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Serie::ROUTE_ALL, $params);
             $relation = "series";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Serie::URL_PARAM] ??= 1;
@@ -137,7 +137,7 @@ class PageWithDetail extends Page
         }
         if (in_array('tag', $filterLinks)) {
             $title = localize("tags.title");
-            $href = $this->handler::route(Tag::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Tag::ROUTE_ALL, $params);
             $relation = "tags";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Tag::URL_PARAM] ??= 1;
@@ -149,7 +149,7 @@ class PageWithDetail extends Page
         }
         if (in_array('identifier', $filterLinks)) {
             $title = localize("identifiers.title");
-            $href = $this->handler::route(Identifier::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Identifier::ROUTE_ALL, $params);
             $relation = "identifiers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Identifier::URL_PARAM] ??= 1;
@@ -161,7 +161,7 @@ class PageWithDetail extends Page
         }
         if (in_array('format', $filterLinks)) {
             $title = localize("formats.title");
-            $href = $this->handler::route(Format::ROUTE_ALL, $params);
+            $href = fn() => $this->handler::route(Format::ROUTE_ALL, $params);
             $relation = "formats";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
             $paging[Format::URL_PARAM] ??= 1;
@@ -179,7 +179,7 @@ class PageWithDetail extends Page
             foreach ($columns as $label => $column) {
                 $customType = CustomColumnType::createByCustomID($column["id"], $this->getDatabaseId());
                 $title = $customType->getTitle();
-                $href = $customType->getParentUri();
+                $href = fn() => $customType->getParentUri();
                 $relation = $customType->getTitle();
                 $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
                 $paging['c'][$column['id']] ??= 1;

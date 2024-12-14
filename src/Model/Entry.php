@@ -73,8 +73,9 @@ class Entry
         if (Config::get('show_icons') == 1) {
             foreach (static::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $id)) {
+                    $href = fn() => Route::path($image, ["v" => Config::VERSION]);
                     array_push($this->linkArray, new LinkEntry(
-                        Route::path($image, ["v" => Config::VERSION]),
+                        $href,
                         "image/png",
                         LinkEntry::OPDS_THUMBNAIL_TYPE
                     ));
@@ -117,7 +118,7 @@ class Entry
                 continue;
             }
 
-            $uri = $link->hrefXhtml();
+            $uri = $link->getUri();
             if (empty($extraParams)) {
                 return $uri;
             }
@@ -161,7 +162,7 @@ class Entry
             /** @var $link LinkFeed|LinkEntry */
 
             if ($link->rel == LinkEntry::OPDS_THUMBNAIL_TYPE) {
-                return $link->hrefXhtml();
+                return $link->getUri();
             }
         }
         return null;
@@ -177,7 +178,7 @@ class Entry
             /** @var $link LinkFeed|LinkEntry */
 
             if ($link->rel == LinkEntry::OPDS_IMAGE_TYPE) {
-                return $link->hrefXhtml();
+                return $link->getUri();
             }
         }
         return null;

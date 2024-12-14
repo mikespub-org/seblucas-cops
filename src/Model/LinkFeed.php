@@ -30,7 +30,7 @@ class LinkFeed extends Link
 
     /**
      * Summary of __construct
-     * @param string $href ?queryString relative to current endpoint
+     * @param string|\Closure $href uri or closure including the endpoint
      * @param ?string $rel relation in the OPDS catalog
      * @param ?string $title title in the OPDS catalog and elsewhere
      */
