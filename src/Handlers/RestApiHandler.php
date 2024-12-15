@@ -14,12 +14,12 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
-use SebLucas\Cops\Output\RestApi;
+use SebLucas\Cops\Output\RestApiProvider;
 use Exception;
 
 /**
  * Handle REST API
- * URL format: index.php/restapi{/route}?db={db} etc.
+ * URL format: index.php/restapi{/path}?db={db} etc.
  */
 class RestApiHandler extends BaseHandler
 {
@@ -34,7 +34,7 @@ class RestApiHandler extends BaseHandler
         "Preference" => ["key"],
         "Annotation" => ["bookId", "id"],
         "Metadata" => ["bookId", "element", "name"],
-        "" => ["route"],
+        "" => ["path"],
     ];
     public const GROUP_PARAM = "_resource";
 
@@ -153,10 +153,10 @@ class RestApiHandler extends BaseHandler
 
         $response = new Response('application/json;charset=utf-8');
 
-        $apiHandler = new RestApi($request, $response);
+        $apiProvider = new RestApiProvider($request, $response);
 
         try {
-            $output = $apiHandler->getOutput();
+            $output = $apiProvider->getOutput();
             if ($output instanceof Response) {
                 return $output;
             }

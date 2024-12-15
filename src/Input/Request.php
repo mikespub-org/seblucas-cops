@@ -199,7 +199,7 @@ class Request
     }
 
     /**
-     * Set params for match of /handler/{path:.*} with default page handler - see RestApi, FeedHandler etc.
+     * Set params for match of /handler/{path:.*} with default page handler - see RestApiHandler, FeedHandler etc.
      * @param array<mixed> $params from Route::match('/' . $params['path'])
      * @param bool $clearPath remove 'path' from urlParams if not set here
      * @return Request

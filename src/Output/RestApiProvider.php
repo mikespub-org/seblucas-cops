@@ -30,7 +30,7 @@ use Exception;
  * Basic REST API routing to JSON Renderer
  * Note: this supports all other paths with /restapi prefix
  */
-class RestApi extends BaseRenderer
+class RestApiProvider extends BaseRenderer
 {
     public const PREFIX = RestApiHandler::PREFIX;
     public static string $handler = RestApiHandler::class;
@@ -751,7 +751,7 @@ class RestApi extends BaseRenderer
             "databaseId" => $db,
         ];
         $result["username"] = $username;
-        if ($request->path() == self::PREFIX . "/user/details") {
+        if ($request->path() == RestApiHandler::PREFIX . "/user/details") {
             $user = User::getInstanceByName($username);
             $result = array_replace($result, (array) $user);
         }

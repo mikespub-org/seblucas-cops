@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Framework;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Route;
 
 require_once dirname(__DIR__) . '/config/test.php';
@@ -454,5 +455,85 @@ class RouteTest extends TestCase
         }
         $expected = $routeUrl;
         $this->assertEquals($expected, $prefix . $result);
+    }
+
+    /**
+     * Summary of getRouteProvider
+     * @param class-string $handler
+     * @return array<mixed>
+     */
+    public static function getRouteProvider($handler)
+    {
+        $result = [];
+        $routes = $handler::getRoutes();
+        foreach ($routes as $name => $route) {
+            // Add params, methods and options if needed
+            array_push($route, [], [], []);
+            [$path, $params, $methods, $options] = $route;
+            // Add ["_handler" => $handler] to params
+            if ($handler::HANDLER !== HtmlHandler::class) {
+                $params[Route::HANDLER_PARAM] ??= $handler;
+            } else {
+                // default routes can be used by html, json, phpunit, restapi without _resource, ...
+            }
+            // Add ["_route" => $name] to params
+            if (empty($params[Route::ROUTE_PARAM]) && !str_starts_with($name, 'restapi-')) {
+                $params[Route::ROUTE_PARAM] ??= $name;
+            }
+            $found = [];
+            // check and replace path params + support custom patterns - see nikic/fast-route
+            $count = preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found);
+            if (empty($count)) {
+                $result[] = [$path, $name, $params];
+                continue;
+            }
+            foreach ($found[1] as $key => $param) {
+                $path = str_replace('{' . $param . '}', (string) $key, $path);
+                $pattern = '';
+                if (str_contains($param, ':')) {
+                    [$param, $pattern] = explode(':', $param);
+                }
+                // add dummy params here for tests
+                $params[$param] ??= $key;
+            }
+            $result[] = [$path, $name, $params];
+        }
+        return $result;
+    }
+
+    /**
+     * @param TestCase $test
+     * @param mixed $expected
+     * @param mixed $route
+     * @param mixed $params
+     * @return void
+     */
+    public static function getRouteForParams($test, $expected, $route, $params)
+    {
+        // pass handler class-string as param here
+        if (!empty($params[Route::HANDLER_PARAM])) {
+            $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
+        }
+        $test->assertEquals($expected, Route::getRouteForParams($params));
+    }
+
+    /**
+     * @param TestCase $test
+     * @param mixed $routeUrl
+     * @param mixed $route
+     * @param mixed $params
+     * @return void
+     */
+    public static function generateRoute($test, $routeUrl, $route, $params)
+    {
+        $prefix = "";
+        try {
+            $result = Route::generate($route, $params);
+        } catch (Throwable) {
+            $test->assertNull($routeUrl);
+            return;
+        }
+        $expected = $routeUrl;
+        $test->assertEquals($expected, $prefix . $result);
     }
 }

@@ -240,6 +240,22 @@ class Cover
     }
 
     /**
+     * Summary of getThumbnailHeight
+     * @param string $thumb
+     * @return int
+     */
+    public function getThumbnailHeight($thumb)
+    {
+        return match ($thumb) {
+            "opds2" => intval(Config::get('opds_thumbnail_height')) * 2,
+            "opds" => intval(Config::get('opds_thumbnail_height')),
+            "html2" => intval(Config::get('html_thumbnail_height')) * 2,
+            "html" => intval(Config::get('html_thumbnail_height')),
+            default => intval($thumb),
+        };
+    }
+
+    /**
      * Summary of sendThumbnail
      * @param Request $request
      * @param ?FileResponse $response
@@ -253,13 +269,7 @@ class Cover
         $height = $request->get('height');
         $thumb = $request->get('thumb');
         if (!empty($thumb) && empty($height)) {
-            $height = match ($thumb) {
-                "opds2" => intval(Config::get('opds_thumbnail_height')) * 2,
-                "opds" => intval(Config::get('opds_thumbnail_height')),
-                "html2" => intval(Config::get('html_thumbnail_height')) * 2,
-                "html" => intval(Config::get('html_thumbnail_height')),
-                default => intval($thumb),
-            };
+            $height = $this->getThumbnailHeight($thumb);
         }
         $mime = ($type == 'jpg') ? 'image/jpeg' : 'image/png';
         $file = $this->coverFileName;
@@ -428,7 +438,12 @@ class Cover
             $params['thumb'] = $thumb;
             $routeName = self::ROUTE_THUMB;
             // @todo get thumbnail cache path here?
-            $filePath = null;
+            if ($thumb == "opds") {
+                $height = $this->getThumbnailHeight($thumb);
+                $filePath = $this->getThumbnailCachePath(null, $height, $ext);
+            } else {
+                $filePath = null;
+            }
         } else {
             $routeName = self::ROUTE_COVER;
             $filePath = $this->coverFileName;

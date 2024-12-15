@@ -539,19 +539,18 @@ class Route
         $default = self::getHandler('html');
         if (!empty($params[self::HANDLER_PARAM])) {
             $handler = $params[self::HANDLER_PARAM];
-            // use page route with /restapi prefix instead
-            if ($handler::HANDLER == 'restapi' && empty($params['_resource'])) {
-                if (!empty($params[self::ROUTE_PARAM]) || !empty($params['page'])) {
+            if (in_array($handler::HANDLER, ['restapi', 'feed', 'opds'])) {
+                // if we have a page, or if we have a route and it starts with page-*, e.g. _route=page-author
+                if (!empty($params['page']) || str_starts_with($params[self::ROUTE_PARAM] ?? '', 'page-')) {
+                    // use page route with /handler prefix instead
                     $prefix = $prefix . $handler::PREFIX;
                     $handler = $default;
-                }
-            } elseif (in_array($handler::HANDLER, ['feed', 'opds'])) {
-                // if we have a page, or if we have a route and it does *not* start with the handler name, e.g. _route=page-author
-                if (!empty($params['page']) || (!empty($params[self::ROUTE_PARAM]) && !str_starts_with($params[self::ROUTE_PARAM], $handler::HANDLER))) {
+                // if we have a route and it does *not* start with the handler name, e.g. _route=check-more
+                } elseif (!empty($params[self::ROUTE_PARAM]) && !str_starts_with($params[self::ROUTE_PARAM], $handler::HANDLER)) {
                     $prefix = $prefix . $handler::PREFIX;
-                    $handler = $default;
+                    $handlerName = explode('-', $params[self::ROUTE_PARAM])[0];
+                    $handler = self::getHandler($handlerName);
                 }
-                // @todo same for feed with /feed/{path:.*} ?
             } elseif ($handler::HANDLER == 'phpunit') {
                 $handler = $default;
             }

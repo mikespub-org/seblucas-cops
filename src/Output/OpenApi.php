@@ -139,8 +139,8 @@ class OpenApi
     {
         [$path, $queryParams, $methods, $options] = $route;
         $pathItem = [];
-        if (str_starts_with($path, RestApi::PREFIX . '/')) {
-            $path = substr($path, strlen(RestApi::PREFIX));
+        if (str_starts_with($path, RestApiHandler::PREFIX . '/')) {
+            $path = substr($path, strlen(RestApiHandler::PREFIX));
             if (empty($path)) {
                 return [$path, $pathItem];
             }

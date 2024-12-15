@@ -13,7 +13,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
-  * Switch PageId values to strings + adapt templates
+  * Split off GraphQLExecutor class + rename RestApi to RestApiProvider
+  * Expand Link models for OPDS 2.0 + use closure for links
+  * BC: Switch PageId values to strings + adapt templates
   * Add PageQueryScope enum and PageFilter class (wip)
   * Group entries by filter group for twigged template - see 'filters.html'
   * Split off ProxyRequest class to handle trusted proxy headers for base url

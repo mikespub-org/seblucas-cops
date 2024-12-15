@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Handlers\GraphQLHandler;
+use SebLucas\Cops\Output\GraphQLExecutor;
 
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
@@ -84,8 +85,8 @@ class GraphQLHandlerTest extends TestCase
     public function testGetSchema(): void
     {
         $request = Request::build();
-        $handler = new GraphQLHandler();
-        $schema = $handler->getSchema($request);
+        $executor = new GraphQLExecutor();
+        $schema = $executor->getSchema($request);
 
         $expected = Schema::class;
         $this->assertEquals($expected, $schema::class);
@@ -105,8 +106,8 @@ class GraphQLHandlerTest extends TestCase
         $request = Request::build();
         $request->content = $this->getBasicQuery();
 
-        $handler = new GraphQLHandler();
-        $result = $handler->runQuery($request);
+        $executor = new GraphQLExecutor();
+        $result = $executor->runQuery($request);
 
         $expected = 7;
         $this->assertCount($expected, $result['data']['authors']);
@@ -166,8 +167,8 @@ class GraphQLHandlerTest extends TestCase
         $request = Request::build();
         $request->content = $this->getAuthorQuery();
 
-        $handler = new GraphQLHandler();
-        $result = $handler->runQuery($request);
+        $executor = new GraphQLExecutor();
+        $result = $executor->runQuery($request);
 
         $expected = "cops:authors:1";
         $this->assertEquals($expected, $result['data']['author']['id']);
@@ -200,8 +201,8 @@ class GraphQLHandlerTest extends TestCase
             ];
         }
         $request = Request::build();
-        $handler = new GraphQLHandler();
-        $schema = $handler->getSchema($request);
+        $executor = new GraphQLExecutor();
+        $schema = $executor->getSchema($request);
 
         $data = [];
         $queryType = $schema->getQueryType();
@@ -299,8 +300,8 @@ class GraphQLHandlerTest extends TestCase
         $request = Request::build();
         $request->content = file_get_contents($queryFile);
 
-        $handler = new GraphQLHandler();
-        $result = $handler->runQuery($request);
+        $executor = new GraphQLExecutor();
+        $result = $executor->runQuery($request);
         if (!file_exists($resultFile)) {
             file_put_contents($resultFile, json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }

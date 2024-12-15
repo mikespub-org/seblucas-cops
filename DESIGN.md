@@ -85,7 +85,7 @@ read | epubreader.php | ReadHandler | EPubReader | -
 epubfs | epubfs.php | EpubFsHandler | = | -
 zipfs | zipfs.php | ZipFsHandler | = | -
 ... | | | | 
-restapi | restapi.php | RestApiHandler | RestApi | partial
+restapi | restapi.php | RestApiHandler | RestApiProvider | partial
 
 All Handlers have a static `getRoutes()` method to define the Routes they support with the Framework.
 

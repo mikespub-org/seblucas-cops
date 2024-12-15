@@ -28,6 +28,10 @@ class LinkImage extends LinkResource
     /** @var ?string */
     public $height = null;
 
+    /**
+     * Summary of getImageSize
+     * @return void
+     */
     public function getImageSize()
     {
         $size = getimagesize($this->filepath);

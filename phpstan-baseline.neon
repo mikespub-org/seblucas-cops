@@ -6,6 +6,11 @@ parameters:
 			path: src/Calibre/Annotation.php
 
 		-
+			message: "#^PHPDoc type string\\|null of property SebLucas\\\\Cops\\\\Calibre\\\\Format\\:\\:\\$id is not covariant with PHPDoc type int\\|null of overridden property SebLucas\\\\Cops\\\\Calibre\\\\Base\\:\\:\\$id\\.$#"
+			count: 1
+			path: src/Calibre/Format.php
+
+		-
 			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
 			count: 1
 			path: src/Calibre/Metadata.php
@@ -16,14 +21,24 @@ parameters:
 			path: src/Calibre/Metadata.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$request\\.$#"
+			message: "#^Left side of && is always true\\.$#"
+			count: 3
+			path: src/Handlers/LoaderHandler.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
-			path: src/Handlers/GraphQLHandler.php
+			path: src/Handlers/LoaderHandler.php
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Output/DotPHPTemplate.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$request\\.$#"
+			count: 1
+			path: src/Output/GraphQLExecutor.php
 
 		-
 			message: "#^Call to an undefined method SebLucas\\\\Cops\\\\Pages\\\\Page\\:\\:getContent\\(\\)\\.$#"

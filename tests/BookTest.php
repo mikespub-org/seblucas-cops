@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Model\LinkImage;
 
 require_once dirname(__DIR__) . '/config/test.php';
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Handlers\FetchHandler;
@@ -338,23 +339,6 @@ class BookTest extends TestCase
         $this->assertEquals(self::$fetcher::link() . "/thumbs/0/2/html.jpg", $thumbnailurl);
     }
 
-    public function testGetLinkImageSize(): void
-    {
-        $book = Book::getBookById(17);
-        $book->setHandler(self::$handler);
-
-        $entry = $book->getEntry();
-        foreach ($entry->linkArray as $link) {
-            if ($link instanceof LinkImage && $link->hasFileInfo()) {
-                $width = $link->getWidth();
-                $height = $link->getHeight();
-                $size = getimagesize($link->filepath);
-                $this->assertEquals($size[0], intval($width));
-                $this->assertEquals($size[1], intval($height));
-            }
-        }
-    }
-
     /**
      * @param mixed $width
      * @param mixed $height
@@ -456,6 +440,7 @@ class BookTest extends TestCase
         $this->assertEquals($expected, $result::class);
     }
 
+    #[Depends('testSendThumbnailResize')]
     public function testSendThumbnailCacheMiss(): void
     {
         $book = Book::getBookById(17);
@@ -492,6 +477,30 @@ class BookTest extends TestCase
         Config::set('thumbnail_cache_directory', '');
     }
 
+    #[Depends('testSendThumbnailCacheMiss')]
+    public function testGetLinkImageSize(): void
+    {
+        $book = Book::getBookById(17);
+        $book->setHandler(self::$handler);
+
+        // use thumbnail cache
+        Config::set('thumbnail_cache_directory', __DIR__ . '/cache/');
+
+        $entry = $book->getEntry();
+        foreach ($entry->linkArray as $link) {
+            if ($link instanceof LinkImage && $link->hasFileInfo()) {
+                $width = $link->getWidth();
+                $height = $link->getHeight();
+                $size = getimagesize($link->filepath);
+                $this->assertEquals($size[0], intval($width));
+                $this->assertEquals($size[1], intval($height));
+            }
+        }
+
+        Config::set('thumbnail_cache_directory', '');
+    }
+
+    #[Depends('testGetLinkImageSize')]
     public function testSendThumbnailCacheHit(): void
     {
         $book = Book::getBookById(17);
