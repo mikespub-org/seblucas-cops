@@ -302,8 +302,8 @@ class GraphQLHandlerTest extends TestCase
                     $vars = ['bookId' => 17];
                     $query = 'query ' . $operation . "(\$bookId: ID) {\n";
                     $query .= '  ' . $name . "(bookId: \$bookId) {\n";
-                } elseif ($name == 'nodes') {
-                    $vars = ['idlist' => ['/books/17']];
+                } elseif ($name == 'nodelist') {
+                    $vars = ['idlist' => ['/authors/3', '/books/17', '/datas/20', '/oops/42']];
                     $query = 'query ' . $operation . "(\$idlist: [ID!]!) {\n";
                     $query .= '  ' . $name . "(idlist: \$idlist) {\n";
                 } else {

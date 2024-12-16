@@ -111,9 +111,18 @@ query getNode($id: ID!) {
     }
   }
 }
-query getNodes($idlist: [ID!]!) {
-  nodes(idlist: $idlist) {
+query getNodeList($idlist: [ID!]!) {
+  nodelist(idlist: $idlist) {
     __typename
     id
+  	... on Entry {
+      title
+    }
+    ... on EntryBook {
+      title
+    }
+    ... on Data {
+      name
+    }
   }
 }

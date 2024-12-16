@@ -1,0 +1,37 @@
+{
+    "errors": [
+        {
+            "message": "Internal server error",
+            "locations": [
+                {
+                    "line": 2,
+                    "column": 3
+                }
+            ],
+            "path": [
+                "nodelist",
+                3
+            ],
+            "extensions": {
+                "debugMessage": "Invalid global identifier type"
+            }
+        }
+    ],
+    "data": {
+        "nodelist": [
+            {
+                "__typename": "Entry",
+                "id": "cops:authors:3"
+            },
+            {
+                "__typename": "EntryBook",
+                "id": "urn:uuid:d74fec58-06bc-4ba8-b8b4-24a91a58e6f9"
+            },
+            {
+                "__typename": "Data",
+                "id": "20"
+            },
+            null
+        ]
+    }
+}

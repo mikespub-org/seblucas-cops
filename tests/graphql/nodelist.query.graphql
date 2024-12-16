@@ -1,0 +1,6 @@
+query getNodelist($idlist: [ID!]!) {
+  nodelist(idlist: $idlist) {
+    __typename
+    id
+  }
+}

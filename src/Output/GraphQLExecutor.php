@@ -373,6 +373,19 @@ class GraphQLExecutor
                 $instance = Tag::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
                 return $instance->getEntry();
+            case 'nodelist':
+                // @todo add other requested fields on demand
+                $result = [];
+                foreach ($args['idlist'] as $id) {
+                    try {
+                        $result[] = self::getNode((string) $id, $request, $handler);
+                    } catch (Exception $e) {
+                        // see https://github.com/webonyx/graphql-php/issues/374 or
+                        // see https://github.com/webonyx/graphql-php/issues/432
+                        $result[] = $e;
+                    }
+                }
+                return $result;
             case 'node':
                 // @todo add other requested fields on demand
                 return self::getNode((string) $args['id'] ?? '', $request, $handler);

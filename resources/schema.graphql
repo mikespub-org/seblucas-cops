@@ -246,7 +246,7 @@ type Query {
   Plural identifying root field
   See https://relay.dev/graphql/objectidentification.htm#sec-Plural-identifying-root-fields
   """
-  nodes(
+  nodelist(
     idlist: [ID!]!
   ): [Node]
 }
