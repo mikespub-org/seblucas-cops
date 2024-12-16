@@ -1,0 +1,83 @@
+{
+    "title": "Identifiers > ISBN",
+    "parentTitle": "Identifiers",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Identifiers > ISBN",
+    "multipleDatabase": 0,
+    "page": "identifier",
+    "entries": [
+        {
+            "title": "La curée",
+            "book": {
+                "id": 18,
+                "detailurl": "vendor/bin/index.php/restapi/books/18/Emile_Zola/La_curee",
+                "hasCover": false,
+                "preferedData": [
+                    {
+                        "name": "EPUB",
+                        "url": "vendor/bin/index.php/fetch/0/21/ignore.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/21/ignore.epub"
+                    }
+                ],
+                "preferedCount": 1,
+                "rating": "",
+                "publisherName": "Georges Charpentier & Eugène Fasquelle",
+                "publisherurl": "vendor/bin/index.php/restapi/publishers/9/Georges_Charpentier_and_Eugene_Fasquelle",
+                "pubDate": "1872",
+                "languagesName": "French",
+                "authorsName": "Émile Zola",
+                "authors": [
+                    {
+                        "name": "Émile Zola",
+                        "url": "vendor/bin/index.php/restapi/authors/7/Emile_Zola"
+                    }
+                ],
+                "tagsName": "Littérature",
+                "tags": [
+                    {
+                        "name": "Littérature",
+                        "url": "vendor/bin/index.php/restapi/tags/12/Litterature"
+                    }
+                ],
+                "seriesName": "Série des Rougon-Macquart",
+                "seriesIndex": 1,
+                "seriesCompleteName": "Book 1 in the Série des Rougon-Macquart series",
+                "seriesurl": "vendor/bin/index.php/restapi/series/5/Serie_des_Rougon_Macquart",
+                "customcolumns_list": []
+            },
+            "thumbnailurl": "vendor/bin/images/icons/icon144.png",
+            "coverurl": "vendor/bin/images/icons/icon144.png"
+        }
+    ],
+    "entriesCount": 1,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 1,
+    "filterurl": "vendor/bin/index.php/restapi/identifiers/isbn?filter=1",
+    "sorturl": "vendor/bin/index.php/restapi/identifiers/isbn?sort={0}",
+    "sortoptions": {
+        "title": "Titles",
+        "author": "Authors",
+        "pubdate": "Published",
+        "rating": "Ratings",
+        "timestamp": "Recent additions"
+    },
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php/restapi/identifiers",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

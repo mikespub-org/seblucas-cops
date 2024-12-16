@@ -1,0 +1,13 @@
+{
+    "title": "Notes",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "entries": [
+        {
+            "class": "Notes Type",
+            "title": "authors",
+            "navlink": "vendor/bin/index.php/restapi/notes/authors",
+            "number": 1
+        }
+    ]
+}

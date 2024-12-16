@@ -1,0 +1,83 @@
+{
+    "title": "Publishers",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Publishers",
+    "multipleDatabase": 0,
+    "page": "publishers",
+    "entries": [
+        {
+            "class": "Publishers",
+            "title": "D. Appleton and Company",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/publishers/3/D_Appleton_and_Company",
+            "number": 2
+        },
+        {
+            "class": "Publishers",
+            "title": "Georges Charpentier & Eugène Fasquelle",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/publishers/9/Georges_Charpentier_and_Eugene_Fasquelle",
+            "number": 1
+        },
+        {
+            "class": "Publishers",
+            "title": "Macmillan and Co. London",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/publishers/2/Macmillan_and_Co_London",
+            "number": 2
+        },
+        {
+            "class": "Publishers",
+            "title": "Macmillan Publishers USA",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/publishers/4/Macmillan_Publishers_USA",
+            "number": 1
+        },
+        {
+            "class": "Publishers",
+            "title": "Pierson's Magazine",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/publishers/5/Pierson_s_Magazine",
+            "number": 1
+        },
+        {
+            "class": "Publishers",
+            "title": "Strand Magazine",
+            "content": "8 books",
+            "navlink": "vendor/bin/index.php/restapi/publishers/6/Strand_Magazine",
+            "number": 8
+        },
+        {
+            "class": "Publishers",
+            "title": "青苹果数据中心",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/publishers/10/qing_ping_guo_shu_ju_zhong_xin",
+            "number": 1
+        }
+    ],
+    "entriesCount": 7,
+    "isPaginated": 0,
+    "sorted": "name",
+    "sortedBy": "name",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

@@ -1,0 +1,12 @@
+{
+    "title": "Databases",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "entries": [
+        {
+            "class": "Database",
+            "title": "",
+            "id": 0,
+            "navlink": "vendor/bin/index.php/restapi/databases/0"
+        }
+    ]
+}

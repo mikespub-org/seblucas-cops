@@ -1,0 +1,55 @@
+{
+    "title": "Formats",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Formats",
+    "multipleDatabase": 0,
+    "page": "formats",
+    "entries": [
+        {
+            "class": "Format",
+            "title": "EPUB",
+            "content": "16 books",
+            "navlink": "vendor/bin/index.php/restapi/formats/EPUB",
+            "number": 16
+        },
+        {
+            "class": "Format",
+            "title": "MOBI",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/formats/MOBI",
+            "number": 1
+        },
+        {
+            "class": "Format",
+            "title": "PDF",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/formats/PDF",
+            "number": 1
+        }
+    ],
+    "entriesCount": 3,
+    "isPaginated": 0,
+    "sorted": "format",
+    "sortedBy": "format",
+    "sortedDir": "desc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

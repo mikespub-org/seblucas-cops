@@ -1,0 +1,85 @@
+{
+    "title": "Preferences",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "entries": [
+        {
+            "class": "Preference",
+            "title": "books view split pane state",
+            "navlink": "vendor/bin/index.php/restapi/preferences/books%20view%20split%20pane%20state",
+            "number": 3
+        },
+        {
+            "class": "Preference",
+            "title": "bools_are_tristate",
+            "navlink": "vendor/bin/index.php/restapi/preferences/bools_are_tristate",
+            "number": 1
+        },
+        {
+            "class": "Preference",
+            "title": "field_metadata",
+            "navlink": "vendor/bin/index.php/restapi/preferences/field_metadata",
+            "number": 32
+        },
+        {
+            "class": "Preference",
+            "title": "grouped_search_terms",
+            "navlink": "vendor/bin/index.php/restapi/preferences/grouped_search_terms",
+            "number": 0
+        },
+        {
+            "class": "Preference",
+            "title": "gui_view_history",
+            "navlink": "vendor/bin/index.php/restapi/preferences/gui_view_history",
+            "number": 2
+        },
+        {
+            "class": "Preference",
+            "title": "library_view books view state",
+            "navlink": "vendor/bin/index.php/restapi/preferences/library_view%20books%20view%20state",
+            "number": 10
+        },
+        {
+            "class": "Preference",
+            "title": "namespaced:ViewManagerPlugin:settings",
+            "navlink": "vendor/bin/index.php/restapi/preferences/namespaced%3AViewManagerPlugin%3Asettings",
+            "number": 5
+        },
+        {
+            "class": "Preference",
+            "title": "saved_searches",
+            "navlink": "vendor/bin/index.php/restapi/preferences/saved_searches",
+            "number": 1
+        },
+        {
+            "class": "Preference",
+            "title": "tag_browser_category_order",
+            "navlink": "vendor/bin/index.php/restapi/preferences/tag_browser_category_order",
+            "number": 12
+        },
+        {
+            "class": "Preference",
+            "title": "tag_browser_hidden_categories",
+            "navlink": "vendor/bin/index.php/restapi/preferences/tag_browser_hidden_categories",
+            "number": 0
+        },
+        {
+            "class": "Preference",
+            "title": "update_all_last_mod_dates_on_start",
+            "navlink": "vendor/bin/index.php/restapi/preferences/update_all_last_mod_dates_on_start",
+            "number": 1
+        },
+        {
+            "class": "Preference",
+            "title": "user_categories",
+            "navlink": "vendor/bin/index.php/restapi/preferences/user_categories",
+            "number": 0
+        },
+        {
+            "class": "Preference",
+            "title": "virtual_libraries",
+            "navlink": "vendor/bin/index.php/restapi/preferences/virtual_libraries",
+            "number": 2
+        }
+    ]
+}

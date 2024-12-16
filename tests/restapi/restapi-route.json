@@ -1,0 +1,1436 @@
+{
+    "title": "Routes",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "entries": [
+        {
+            "name": "page-index",
+            "route": [
+                "/index",
+                {
+                    "page": "index",
+                    "_route": "page-index"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-authors-letter",
+            "route": [
+                "/authors/letter/{letter}",
+                {
+                    "page": "authors_letter",
+                    "_route": "page-authors-letter"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-authors-letters",
+            "route": [
+                "/authors/letter",
+                {
+                    "page": "authors",
+                    "letter": 1,
+                    "_route": "page-authors-letters"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-author",
+            "route": [
+                "/authors/{id:\\d+}/{title}",
+                {
+                    "page": "author",
+                    "_route": "page-author"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-author-id",
+            "route": [
+                "/authors/{id:\\d+}",
+                {
+                    "page": "author",
+                    "_route": "page-author-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-authors",
+            "route": [
+                "/authors",
+                {
+                    "page": "authors",
+                    "_route": "page-authors"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-books-letter",
+            "route": [
+                "/books/letter/{letter:\\w}",
+                {
+                    "page": "books_letter",
+                    "_route": "page-books-letter"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-books-letters",
+            "route": [
+                "/books/letter",
+                {
+                    "page": "books",
+                    "letter": 1,
+                    "_route": "page-books-letters"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-books-year",
+            "route": [
+                "/books/year/{year:\\d+}",
+                {
+                    "page": "books_year",
+                    "_route": "page-books-year"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-books-years",
+            "route": [
+                "/books/year",
+                {
+                    "page": "books",
+                    "year": 1,
+                    "_route": "page-books-years"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-book",
+            "route": [
+                "/books/{id:\\d+}/{author}/{title}",
+                {
+                    "page": "book",
+                    "_route": "page-book"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-book-id",
+            "route": [
+                "/books/{id:\\d+}",
+                {
+                    "page": "book",
+                    "_route": "page-book-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-books",
+            "route": [
+                "/books",
+                {
+                    "page": "books",
+                    "_route": "page-books"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-serie",
+            "route": [
+                "/series/{id:\\d+}/{title}",
+                {
+                    "page": "serie",
+                    "_route": "page-serie"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-serie-id",
+            "route": [
+                "/series/{id:\\d+}",
+                {
+                    "page": "serie",
+                    "_route": "page-serie-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-series",
+            "route": [
+                "/series",
+                {
+                    "page": "series",
+                    "_route": "page-series"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-typeahead",
+            "route": [
+                "/typeahead",
+                {
+                    "page": "query",
+                    "search": 1,
+                    "_route": "page-typeahead"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-query-scope",
+            "route": [
+                "/search/{query}/{scope}",
+                {
+                    "page": "query",
+                    "_route": "page-query-scope"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-query",
+            "route": [
+                "/search/{query}",
+                {
+                    "page": "query",
+                    "_route": "page-query"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-search",
+            "route": [
+                "/search",
+                {
+                    "page": "opensearch",
+                    "_route": "page-search"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-recent",
+            "route": [
+                "/recent",
+                {
+                    "page": "recent",
+                    "_route": "page-recent"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-tag",
+            "route": [
+                "/tags/{id:\\d+}/{title}",
+                {
+                    "page": "tag",
+                    "_route": "page-tag"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-tag-id",
+            "route": [
+                "/tags/{id:\\d+}",
+                {
+                    "page": "tag",
+                    "_route": "page-tag-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-tags",
+            "route": [
+                "/tags",
+                {
+                    "page": "tags",
+                    "_route": "page-tags"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-custom",
+            "route": [
+                "/custom/{custom:\\d+}/{id}",
+                {
+                    "page": "custom",
+                    "_route": "page-custom"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-customtype",
+            "route": [
+                "/custom/{custom:\\d+}",
+                {
+                    "page": "customtype",
+                    "_route": "page-customtype"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-about",
+            "route": [
+                "/about",
+                {
+                    "page": "about",
+                    "_route": "page-about"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-language",
+            "route": [
+                "/languages/{id:\\d+}/{title}",
+                {
+                    "page": "language",
+                    "_route": "page-language"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-language-id",
+            "route": [
+                "/languages/{id:\\d+}",
+                {
+                    "page": "language",
+                    "_route": "page-language-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-languages",
+            "route": [
+                "/languages",
+                {
+                    "page": "languages",
+                    "_route": "page-languages"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-customize",
+            "route": [
+                "/customize",
+                {
+                    "page": "customize",
+                    "_route": "page-customize"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-publisher",
+            "route": [
+                "/publishers/{id:\\d+}/{title}",
+                {
+                    "page": "publisher",
+                    "_route": "page-publisher"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-publisher-id",
+            "route": [
+                "/publishers/{id:\\d+}",
+                {
+                    "page": "publisher",
+                    "_route": "page-publisher-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-publishers",
+            "route": [
+                "/publishers",
+                {
+                    "page": "publishers",
+                    "_route": "page-publishers"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-rating",
+            "route": [
+                "/ratings/{id:\\d+}/{title}",
+                {
+                    "page": "rating",
+                    "_route": "page-rating"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-rating-id",
+            "route": [
+                "/ratings/{id:\\d+}",
+                {
+                    "page": "rating",
+                    "_route": "page-rating-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-ratings",
+            "route": [
+                "/ratings",
+                {
+                    "page": "ratings",
+                    "_route": "page-ratings"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-identifier",
+            "route": [
+                "/identifiers/{id:\\w+}/{title}",
+                {
+                    "page": "identifier",
+                    "_route": "page-identifier"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-identifier-id",
+            "route": [
+                "/identifiers/{id:\\w+}",
+                {
+                    "page": "identifier",
+                    "_route": "page-identifier-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-identifiers",
+            "route": [
+                "/identifiers",
+                {
+                    "page": "identifiers",
+                    "_route": "page-identifiers"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-format",
+            "route": [
+                "/formats/{id:\\w+}",
+                {
+                    "page": "format",
+                    "_route": "page-format"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-formats",
+            "route": [
+                "/formats",
+                {
+                    "page": "formats",
+                    "_route": "page-formats"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-libraries",
+            "route": [
+                "/libraries",
+                {
+                    "page": "libraries",
+                    "_route": "page-libraries"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-filter",
+            "route": [
+                "/filter",
+                {
+                    "page": "filter",
+                    "_route": "page-filter"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "feed-search",
+            "route": [
+                "/feed/search",
+                {
+                    "page": "search",
+                    "_handler": "SebLucas\\Cops\\Handlers\\FeedHandler",
+                    "_route": "feed-search"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "feed-page",
+            "route": [
+                "/feed/{page:\\w+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FeedHandler",
+                    "_route": "feed-page"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "feed-path",
+            "route": [
+                "/feed/{path:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FeedHandler",
+                    "_route": "feed-path"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "feed",
+            "route": [
+                "/feed",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FeedHandler",
+                    "_route": "feed"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-file",
+            "route": [
+                "/files/{db:\\d+}/{id:\\d+}/{file:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-file"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-thumb",
+            "route": [
+                "/thumbs/{db:\\d+}/{id:\\d+}/{thumb}.jpg",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-thumb"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-cover",
+            "route": [
+                "/covers/{db:\\d+}/{id:\\d+}.jpg",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-cover"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-inline",
+            "route": [
+                "/inline/{db:\\d+}/{data:\\d+}/{ignore}.{type}",
+                {
+                    "view": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-inline"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-data",
+            "route": [
+                "/fetch/{db:\\d+}/{data:\\d+}/{ignore}.{type}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-data"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-view",
+            "route": [
+                "/view/{data}/{db}/{ignore}.{type}",
+                {
+                    "view": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-view"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-download",
+            "route": [
+                "/download/{data}/{db}/{ignore}.{type}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-download"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "read-title",
+            "route": [
+                "/read/{db:\\d+}/{data:\\d+}/{title}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ReadHandler",
+                    "_route": "read-title"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "read",
+            "route": [
+                "/read/{db:\\d+}/{data:\\d+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ReadHandler",
+                    "_route": "read"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "epubfs",
+            "route": [
+                "/epubfs/{db:\\d+}/{data:\\d+}/{comp:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\EpubFsHandler",
+                    "_route": "epubfs"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-customtypes",
+            "route": [
+                "/restapi/custom",
+                {
+                    "_resource": "CustomColumnType",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-customtypes"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-database-table",
+            "route": [
+                "/restapi/databases/{db}/{name}",
+                {
+                    "_resource": "Database",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-database-table"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-database",
+            "route": [
+                "/restapi/databases/{db}",
+                {
+                    "_resource": "Database",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-database"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-databases",
+            "route": [
+                "/restapi/databases",
+                {
+                    "_resource": "Database",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-databases"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-openapi",
+            "route": [
+                "/restapi/openapi",
+                {
+                    "_resource": "openapi",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-openapi"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-route",
+            "route": [
+                "/restapi/routes",
+                {
+                    "_resource": "route",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-route"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-handler",
+            "route": [
+                "/restapi/handlers",
+                {
+                    "_resource": "handler",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-handler"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-note",
+            "route": [
+                "/restapi/notes/{type}/{id}/{title}",
+                {
+                    "_resource": "Note",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-note"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-notes-type-id",
+            "route": [
+                "/restapi/notes/{type}/{id}",
+                {
+                    "_resource": "Note",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-notes-type-id"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-notes-type",
+            "route": [
+                "/restapi/notes/{type}",
+                {
+                    "_resource": "Note",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-notes-type"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-notes",
+            "route": [
+                "/restapi/notes",
+                {
+                    "_resource": "Note",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-notes"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-preference",
+            "route": [
+                "/restapi/preferences/{key}",
+                {
+                    "_resource": "Preference",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-preference"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-preferences",
+            "route": [
+                "/restapi/preferences",
+                {
+                    "_resource": "Preference",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-preferences"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-annotation",
+            "route": [
+                "/restapi/annotations/{bookId}/{id}",
+                {
+                    "_resource": "Annotation",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-annotation"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-annotations-book",
+            "route": [
+                "/restapi/annotations/{bookId}",
+                {
+                    "_resource": "Annotation",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-annotations-book"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-annotations",
+            "route": [
+                "/restapi/annotations",
+                {
+                    "_resource": "Annotation",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-annotations"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-metadata-element-name",
+            "route": [
+                "/restapi/metadata/{bookId}/{element}/{name}",
+                {
+                    "_resource": "Metadata",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-metadata-element-name"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-metadata-element",
+            "route": [
+                "/restapi/metadata/{bookId}/{element}",
+                {
+                    "_resource": "Metadata",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-metadata-element"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-metadata",
+            "route": [
+                "/restapi/metadata/{bookId}",
+                {
+                    "_resource": "Metadata",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-metadata"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-user-details",
+            "route": [
+                "/restapi/user/details",
+                {
+                    "_resource": "User",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-user-details"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-user",
+            "route": [
+                "/restapi/user",
+                {
+                    "_resource": "User",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-user"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-path",
+            "route": [
+                "/restapi/{path:.*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-path"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "check-more",
+            "route": [
+                "/check/{more:.*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\CheckHandler",
+                    "_route": "check-more"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "check",
+            "route": [
+                "/check",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\CheckHandler",
+                    "_route": "check"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "opds-search",
+            "route": [
+                "/opds/search",
+                {
+                    "page": "search",
+                    "_handler": "SebLucas\\Cops\\Handlers\\OpdsHandler",
+                    "_route": "opds-search"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "opds-page",
+            "route": [
+                "/opds/{page:\\w+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\OpdsHandler",
+                    "_route": "opds-page"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "opds-path",
+            "route": [
+                "/opds/{path:.*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\OpdsHandler",
+                    "_route": "opds-path"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "opds",
+            "route": [
+                "/opds",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\OpdsHandler",
+                    "_route": "opds"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "loader-action-dbNum-authorId-urlPath",
+            "route": [
+                "/loader/{action}/{dbNum:\\d+}/{authorId:\\w+}/{urlPath:.*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\LoaderHandler",
+                    "_route": "loader-action-dbNum-authorId-urlPath"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "loader-action-dbNum-authorId",
+            "route": [
+                "/loader/{action}/{dbNum:\\d+}/{authorId:\\w*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\LoaderHandler",
+                    "_route": "loader-action-dbNum-authorId"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "loader-action-dbNum",
+            "route": [
+                "/loader/{action}/{dbNum:\\d+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\LoaderHandler",
+                    "_route": "loader-action-dbNum"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "loader-action-",
+            "route": [
+                "/loader/{action}/",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\LoaderHandler",
+                    "_route": "loader-action-"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "loader-action",
+            "route": [
+                "/loader/{action}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\LoaderHandler",
+                    "_route": "loader-action"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "loader",
+            "route": [
+                "/loader",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\LoaderHandler",
+                    "_route": "loader"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "zipper-page-id-type",
+            "route": [
+                "/zipper/{page}/{id}/{type}.zip",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ZipperHandler",
+                    "_route": "zipper-page-id-type"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "zipper-page-type",
+            "route": [
+                "/zipper/{page}/{type}.zip",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ZipperHandler",
+                    "_route": "zipper-page-type"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "calres",
+            "route": [
+                "/calres/{db:\\d+}/{alg}/{digest}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\CalResHandler",
+                    "_route": "calres"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "zipfs",
+            "route": [
+                "/zipfs/{db:\\d+}/{data:\\d+}/{comp:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ZipFsHandler",
+                    "_route": "zipfs"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "mail",
+            "route": [
+                "/mail",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\MailHandler",
+                    "_route": "mail"
+                },
+                [
+                    "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "graphql",
+            "route": [
+                "/graphql",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\GraphQLHandler",
+                    "_route": "graphql"
+                },
+                [
+                    "GET",
+                    "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "tables",
+            "route": [
+                "/tables",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "tables"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "test",
+            "route": [
+                "/test",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\TestHandler",
+                    "_route": "test"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        }
+    ]
+}

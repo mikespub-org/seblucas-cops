@@ -1,0 +1,147 @@
+[
+    {
+        "class": "tt-header",
+        "title": "Search result for ** in books",
+        "navlink": "vendor/bin/index.php?scope=book"
+    },
+    {
+        "class": "",
+        "title": "The Adventures of Sherlock Holmes",
+        "navlink": "vendor/bin/index.php/restapi/books/4/Arthur_Conan_Doyle/The_Adventures_of_Sherlock_Holmes"
+    },
+    {
+        "class": "",
+        "title": "Alice's Adventures in Wonderland",
+        "navlink": "vendor/bin/index.php/restapi/books/17/Lewis_Carroll/Alice_s_Adventures_in_Wonderland"
+    },
+    {
+        "class": "",
+        "title": "The Call of the Wild",
+        "navlink": "vendor/bin/index.php/restapi/books/5/Jack_London/The_Call_of_the_Wild"
+    },
+    {
+        "class": "",
+        "title": "The Casebook of Sherlock Holmes",
+        "navlink": "vendor/bin/index.php/restapi/books/3/Arthur_Conan_Doyle/The_Casebook_of_Sherlock_Holmes"
+    },
+    {
+        "class": "",
+        "title": "La curée",
+        "navlink": "vendor/bin/index.php/restapi/books/18/Emile_Zola/La_curee"
+    },
+    {
+        "class": "tt-header",
+        "title": "Search result for ** in authors",
+        "navlink": "vendor/bin/index.php?scope=author"
+    },
+    {
+        "class": "Author",
+        "title": "Lewis Carroll",
+        "navlink": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll"
+    },
+    {
+        "class": "Author",
+        "title": "Arthur Conan Doyle",
+        "navlink": "vendor/bin/index.php/restapi/authors/1/Arthur_Conan_Doyle"
+    },
+    {
+        "class": "Author",
+        "title": "Alexandre Dumas",
+        "navlink": "vendor/bin/index.php/restapi/authors/5/Alexandre_Dumas"
+    },
+    {
+        "class": "Author",
+        "title": "Jack London",
+        "navlink": "vendor/bin/index.php/restapi/authors/2/Jack_London"
+    },
+    {
+        "class": "Author",
+        "title": "H. G. Wells",
+        "navlink": "vendor/bin/index.php/restapi/authors/4/H_G_Wells"
+    },
+    {
+        "class": "tt-header",
+        "title": "Search result for ** in series",
+        "navlink": "vendor/bin/index.php?scope=series"
+    },
+    {
+        "class": "Serie",
+        "title": "D'Artagnan Romances",
+        "navlink": "vendor/bin/index.php/restapi/series/3/D_Artagnan_Romances"
+    },
+    {
+        "class": "Serie",
+        "title": "Professor Challenger",
+        "navlink": "vendor/bin/index.php/restapi/series/2/Professor_Challenger"
+    },
+    {
+        "class": "Serie",
+        "title": "Sherlock Holmes",
+        "navlink": "vendor/bin/index.php/restapi/series/1/Sherlock_Holmes"
+    },
+    {
+        "class": "Serie",
+        "title": "Série des Rougon-Macquart",
+        "navlink": "vendor/bin/index.php/restapi/series/5/Serie_des_Rougon_Macquart"
+    },
+    {
+        "class": "tt-header",
+        "title": "Search result for ** in tags",
+        "navlink": "vendor/bin/index.php?scope=tag"
+    },
+    {
+        "class": "Tag",
+        "title": "Action & Adventure",
+        "navlink": "vendor/bin/index.php/restapi/tags/4/Action_and_Adventure"
+    },
+    {
+        "class": "Tag",
+        "title": "Fantasy",
+        "navlink": "vendor/bin/index.php/restapi/tags/5/Fantasy"
+    },
+    {
+        "class": "Tag",
+        "title": "Fiction",
+        "navlink": "vendor/bin/index.php/restapi/tags/1/Fiction"
+    },
+    {
+        "class": "Tag",
+        "title": "Historical",
+        "navlink": "vendor/bin/index.php/restapi/tags/10/Historical"
+    },
+    {
+        "class": "Tag",
+        "title": "Juvenile",
+        "navlink": "vendor/bin/index.php/restapi/tags/6/Juvenile"
+    },
+    {
+        "class": "tt-header",
+        "title": "Search result for ** in publishers",
+        "navlink": "vendor/bin/index.php?scope=publisher"
+    },
+    {
+        "class": "Publisher",
+        "title": "D. Appleton and Company",
+        "navlink": "vendor/bin/index.php/restapi/publishers/3/D_Appleton_and_Company"
+    },
+    {
+        "class": "Publisher",
+        "title": "Georges Charpentier & Eugène Fasquelle",
+        "navlink": "vendor/bin/index.php/restapi/publishers/9/Georges_Charpentier_and_Eugene_Fasquelle"
+    },
+    {
+        "class": "Publisher",
+        "title": "Macmillan and Co. London",
+        "navlink": "vendor/bin/index.php/restapi/publishers/2/Macmillan_and_Co_London"
+    },
+    {
+        "class": "Publisher",
+        "title": "Macmillan Publishers USA",
+        "navlink": "vendor/bin/index.php/restapi/publishers/4/Macmillan_Publishers_USA"
+    },
+    {
+        "class": "Publisher",
+        "title": "Pierson's Magazine",
+        "navlink": "vendor/bin/index.php/restapi/publishers/5/Pierson_s_Magazine"
+    }
+]

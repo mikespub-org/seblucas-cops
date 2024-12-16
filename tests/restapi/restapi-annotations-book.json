@@ -1,0 +1,32 @@
+{
+    "title": "Annotations for 17",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "entries": [
+        {
+            "class": "Annotation",
+            "title": "(17) Bookmark About #1",
+            "navlink": "vendor/bin/index.php/restapi/annotations/17/1"
+        },
+        {
+            "class": "Annotation",
+            "title": "(17) Highlight 5HHGuoCOtpA-umaIbBuc0Q",
+            "navlink": "vendor/bin/index.php/restapi/annotations/17/2"
+        },
+        {
+            "class": "Annotation",
+            "title": "(17) Highlight KFGNXVB2Heb53ghsAjVqvQ",
+            "navlink": "vendor/bin/index.php/restapi/annotations/17/3"
+        },
+        {
+            "class": "Annotation",
+            "title": "(17) Highlight iuGTy-WIXWDinBuszppGwA",
+            "navlink": "vendor/bin/index.php/restapi/annotations/17/4"
+        },
+        {
+            "class": "Annotation",
+            "title": "(17) Highlight 1ZUnS8Bf4uZGH0hS9JOKGQ",
+            "navlink": "vendor/bin/index.php/restapi/annotations/17/5"
+        }
+    ]
+}

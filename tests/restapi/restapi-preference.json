@@ -1,0 +1,11 @@
+{
+    "title": "Preference for virtual_libraries",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "id": 56,
+    "key": "virtual_libraries",
+    "val": {
+        "Action Fiction from this Century (TODO)": "(tags:\"Fiction\" and pubdate:>=2000) and tags:\"=Action & Adventure\"",
+        "Short Stories in English": "tags:\"=Short Stories\" and languages:\"=eng\""
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "title": "Identifiers",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Identifiers",
+    "multipleDatabase": 0,
+    "page": "identifiers",
+    "entries": [
+        {
+            "class": "Identifiers",
+            "title": "Amazon",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/amazon/Amazon",
+            "number": 1
+        },
+        {
+            "class": "Identifiers",
+            "title": "Google Books",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/google/Google_Books",
+            "number": 1
+        },
+        {
+            "class": "Identifiers",
+            "title": "ISBN",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/isbn/ISBN",
+            "number": 1
+        },
+        {
+            "class": "Identifiers",
+            "title": "OpenLibrary",
+            "content": "3 books",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/olid/OpenLibrary",
+            "number": 3
+        },
+        {
+            "class": "Identifiers",
+            "title": "uri",
+            "content": "13 books",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/uri/uri",
+            "number": 13
+        },
+        {
+            "class": "Identifiers",
+            "title": "urn",
+            "content": "13 books",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/urn/urn",
+            "number": 13
+        },
+        {
+            "class": "Identifiers",
+            "title": "Wikidata",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/wd/Wikidata",
+            "number": 2
+        }
+    ],
+    "entriesCount": 7,
+    "isPaginated": 0,
+    "sorted": "type",
+    "sortedBy": "type",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

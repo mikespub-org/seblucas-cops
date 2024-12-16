@@ -1,0 +1,55 @@
+{
+    "title": "Type1",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Type1",
+    "multipleDatabase": 0,
+    "page": "customtype",
+    "entries": [
+        {
+            "class": "Type1",
+            "title": "other",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/custom/3/2",
+            "number": 1
+        },
+        {
+            "class": "Type1",
+            "title": "text",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/custom/3/1",
+            "number": 2
+        },
+        {
+            "class": "Type1",
+            "title": "Not Set",
+            "content": "13 books",
+            "navlink": "vendor/bin/index.php/restapi/custom/3/not_set",
+            "number": 13
+        }
+    ],
+    "entriesCount": 3,
+    "isPaginated": 0,
+    "sorted": "value",
+    "sortedBy": "value",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

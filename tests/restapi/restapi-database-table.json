@@ -1,0 +1,6 @@
+{
+    "title": "Database Table books",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "entries": [],
+    "error": "Invalid api key"
+}

@@ -1,0 +1,330 @@
+{
+    "title": "Metadata for 17",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "entries": {
+        "uniqueIdentifier": "uuid_id",
+        "version": "2.0",
+        "metadata": [
+            {
+                "dc:identifier": {
+                    "scheme": "calibre",
+                    "id": "calibre_id",
+                    "value": "17"
+                }
+            },
+            {
+                "dc:identifier": {
+                    "scheme": "uuid",
+                    "id": "uuid_id",
+                    "value": "d74fec58-06bc-4ba8-b8b4-24a91a58e6f9"
+                }
+            },
+            {
+                "dc:title": "Alice's Adventures in Wonderland"
+            },
+            {
+                "dc:creator": {
+                    "file-as": "Carroll, Lewis",
+                    "role": "aut",
+                    "value": "Lewis Carroll"
+                }
+            },
+            {
+                "dc:contributor": {
+                    "file-as": "calibre",
+                    "role": "bkp",
+                    "value": "calibre (7.6.0) [https://calibre-ebook.com]"
+                }
+            },
+            {
+                "dc:date": "1897-04-10T23:00:00+00:00"
+            },
+            {
+                "dc:description": "<p class=\"description\">Alice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.<br>The tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.</p>\n\nAlice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.\nThe tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre."
+            },
+            {
+                "dc:publisher": "Macmillan and Co. London"
+            },
+            {
+                "dc:language": "eng"
+            },
+            {
+                "dc:subject": "Fantasy"
+            },
+            {
+                "dc:subject": "Juvenile"
+            },
+            {
+                "dc:subject": "Fiction"
+            },
+            {
+                "meta": {
+                    "name": "calibre:link_maps",
+                    "content": {
+                        "authors": {
+                            "Lewis Carroll": "http://www.wikidata.org/entity/Q38082"
+                        }
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:rating",
+                    "content": 4
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:timestamp",
+                    "content": "2012-04-11T12:12:09+00:00"
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:title_sort",
+                    "content": "Alice's Adventures in Wonderland"
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:user_metadata:#type1",
+                    "content": {
+                        "table": "custom_column_3",
+                        "column": "value",
+                        "datatype": "text",
+                        "is_multiple": null,
+                        "kind": "field",
+                        "name": "Type1",
+                        "search_terms": [
+                            "#type1"
+                        ],
+                        "label": "type1",
+                        "colnum": 3,
+                        "display": {
+                            "use_decorations": 0
+                        },
+                        "is_custom": true,
+                        "is_category": true,
+                        "link_column": "value",
+                        "category_sort": "value",
+                        "is_csp": false,
+                        "is_editable": true,
+                        "rec_index": 22,
+                        "#value#": "text",
+                        "#extra#": null,
+                        "is_multiple2": []
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:user_metadata:#type2",
+                    "content": {
+                        "table": "custom_column_2",
+                        "column": "value",
+                        "datatype": "text",
+                        "is_multiple": "|",
+                        "kind": "field",
+                        "name": "Type2",
+                        "search_terms": [
+                            "#type2"
+                        ],
+                        "label": "type2",
+                        "colnum": 2,
+                        "display": {
+                            "is_names": false
+                        },
+                        "is_custom": true,
+                        "is_category": true,
+                        "link_column": "value",
+                        "category_sort": "value",
+                        "is_csp": false,
+                        "is_editable": true,
+                        "rec_index": 23,
+                        "#value#": [
+                            "tag1",
+                            "tag2"
+                        ],
+                        "#extra#": null,
+                        "is_multiple2": {
+                            "cache_to_list": "|",
+                            "ui_to_list": ",",
+                            "list_to_ui": ", "
+                        }
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:user_metadata:#type4",
+                    "content": {
+                        "table": "custom_column_1",
+                        "column": "value",
+                        "datatype": "series",
+                        "is_multiple": null,
+                        "kind": "field",
+                        "name": "Type4",
+                        "search_terms": [
+                            "#type4"
+                        ],
+                        "label": "type4",
+                        "colnum": 1,
+                        "display": [],
+                        "is_custom": true,
+                        "is_category": true,
+                        "link_column": "value",
+                        "category_sort": "value",
+                        "is_csp": false,
+                        "is_editable": true,
+                        "rec_index": 24,
+                        "#value#": "SeriesLike",
+                        "#extra#": 1,
+                        "is_multiple2": []
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:annotation",
+                    "content": {
+                        "format": "EPUB",
+                        "user_type": "local",
+                        "user": "viewer",
+                        "annotation": {
+                            "title": "About #1",
+                            "pos_type": "epubcfi",
+                            "pos": "epubcfi(/6/2/4/2/6/2:38)",
+                            "timestamp": "2024-03-11T11:54:35.128396+00:00",
+                            "type": "bookmark"
+                        }
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:annotation",
+                    "content": {
+                        "format": "EPUB",
+                        "user_type": "local",
+                        "user": "viewer",
+                        "annotation": {
+                            "end_cfi": "/2/4/2/2/6/1:24",
+                            "highlighted_text": "Charles Lutwidge Dodgson",
+                            "notes": "Full author name",
+                            "spine_index": 2,
+                            "spine_name": "OPS/about.xml",
+                            "start_cfi": "/2/4/2/2/6/1:0",
+                            "style": {
+                                "kind": "color",
+                                "type": "builtin",
+                                "which": "yellow"
+                            },
+                            "timestamp": "2024-03-11T11:53:55.583Z",
+                            "toc_family_titles": [
+                                "About"
+                            ],
+                            "type": "highlight",
+                            "uuid": "5HHGuoCOtpA-umaIbBuc0Q"
+                        }
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:annotation",
+                    "content": {
+                        "format": "EPUB",
+                        "user_type": "local",
+                        "user": "viewer",
+                        "annotation": {
+                            "end_cfi": "/2/4/2/2[chapter_458]/4/2/1:5",
+                            "highlighted_text": "Alice",
+                            "notes": "Protagonist",
+                            "spine_index": 3,
+                            "spine_name": "OPS/main0.xml",
+                            "start_cfi": "/2/4/2/2[chapter_458]/4/2/1:0",
+                            "style": {
+                                "kind": "color",
+                                "type": "builtin",
+                                "which": "yellow"
+                            },
+                            "timestamp": "2024-03-11T11:56:52.891Z",
+                            "toc_family_titles": [
+                                "Chapter 1 - Down the Rabbit Hole"
+                            ],
+                            "type": "highlight",
+                            "uuid": "KFGNXVB2Heb53ghsAjVqvQ"
+                        }
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:annotation",
+                    "content": {
+                        "format": "EPUB",
+                        "user_type": "local",
+                        "user": "viewer",
+                        "annotation": {
+                            "end_cfi": "/2/4/2/2/6/1:106",
+                            "highlighted_text": "Lewis Carroll",
+                            "spine_index": 2,
+                            "spine_name": "OPS/about.xml",
+                            "start_cfi": "/2/4/2/2/6/1:93",
+                            "style": {
+                                "kind": "color",
+                                "type": "builtin",
+                                "which": "yellow"
+                            },
+                            "timestamp": "2024-03-11T11:55:32.734Z",
+                            "toc_family_titles": [
+                                "About"
+                            ],
+                            "type": "highlight",
+                            "uuid": "iuGTy-WIXWDinBuszppGwA"
+                        }
+                    }
+                }
+            },
+            {
+                "meta": {
+                    "name": "calibre:annotation",
+                    "content": {
+                        "format": "EPUB",
+                        "user_type": "web",
+                        "user": "*",
+                        "annotation": {
+                            "type": "highlight",
+                            "timestamp": "2024-03-11T16:24:14.624Z",
+                            "uuid": "1ZUnS8Bf4uZGH0hS9JOKGQ",
+                            "highlighted_text": "About Carroll",
+                            "start_cfi": "/2/4/2/2/2/1:0",
+                            "end_cfi": "/2/4/2/2/2/1:13",
+                            "style": {
+                                "type": "builtin",
+                                "kind": "color",
+                                "which": "yellow"
+                            },
+                            "spine_name": "OPS/about.xml",
+                            "spine_index": 2,
+                            "notes": "About note",
+                            "toc_family_titles": [
+                                "About"
+                            ]
+                        }
+                    }
+                }
+            }
+        ],
+        "guide": [
+            {
+                "reference": {
+                    "type": "cover",
+                    "title": "Cover",
+                    "href": "cover.jpg"
+                }
+            }
+        ]
+    }
+}

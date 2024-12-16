@@ -1,0 +1,83 @@
+{
+    "title": "Customize COPS UI",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Customize COPS UI",
+    "multipleDatabase": 0,
+    "page": "customize",
+    "entries": [
+        {
+            "class": "",
+            "title": "Template",
+            "content": "<select id='template' onchange='updateCookie (this); window.location=window.location;'><option value='bootstrap' >bootstrap</option><option value='bootstrap2' selected='selected'>bootstrap2</option><option value='bootstrap5' >bootstrap5</option><option value='default' >default</option><option value='twigged' >twigged</option></select>",
+            "navlink": "#",
+            "number": ""
+        },
+        {
+            "class": "",
+            "title": "Theme",
+            "content": "<select id=\"style\" name=\"style\" onchange=\"updateCookie (this); window.location=window.location;\"><option value='base' >base</option><option value='default' selected='selected'>default</option><option value='kindle' >kindle</option></select>",
+            "navlink": "#",
+            "number": ""
+        },
+        {
+            "class": "",
+            "title": "Max number of books per page (-1 to disable)",
+            "content": "<input type=\"number\" onchange=\"updateCookie (this);\" id=\"max_item_per_page\" value=\"48\" min=\"-1\" max=\"1200\" pattern=\"^[-+]?[0-9]+$\" />",
+            "navlink": "#",
+            "number": ""
+        },
+        {
+            "class": "",
+            "title": "Set your email (to allow book emailing)",
+            "content": "<input type=\"text\" onchange=\"updateCookie (this);\" id=\"email\" value=\"\" />",
+            "navlink": "#",
+            "number": ""
+        },
+        {
+            "class": "",
+            "title": "Enable tag filtering",
+            "content": "<input type=\"checkbox\" onchange=\"updateCookieFromCheckbox (this);\" id=\"html_tag_filter\"  />",
+            "navlink": "#",
+            "number": ""
+        },
+        {
+            "class": "",
+            "title": "Ignored categories",
+            "content": "<input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_author\"  > Authors</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_series\"  > Series</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_publisher\"  > Publishers</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_tag\"  > Tags</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_rating\"  > Ratings</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_language\"  > Languages</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_book\"  > Books</input><br>",
+            "navlink": "#",
+            "number": ""
+        },
+        {
+            "class": "",
+            "title": "Virtual library",
+            "content": "<select id='virtual_library' onchange='updateCookie (this); window.location=window.location;'><option value='' >No virtual libraries</option><option value='1.Action_Fiction_from_this_Century_TODO' >1. Action Fiction from this Century (TODO)</option><option value='2.Short_Stories_in_English' >2. Short Stories in English</option></select>",
+            "navlink": "#",
+            "number": ""
+        }
+    ],
+    "entriesCount": 7,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

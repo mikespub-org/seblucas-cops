@@ -1,0 +1,48 @@
+{
+    "title": "Search result for *car*",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Search result for *car*",
+    "multipleDatabase": 0,
+    "page": "query",
+    "entries": [
+        {
+            "class": "tt-header",
+            "title": "Search result for *car* in books",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/search/car/book",
+            "number": 1
+        },
+        {
+            "class": "tt-header",
+            "title": "Search result for *car* in authors",
+            "content": "1 author",
+            "navlink": "vendor/bin/index.php/restapi/search/car/author",
+            "number": 1
+        }
+    ],
+    "entriesCount": 2,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

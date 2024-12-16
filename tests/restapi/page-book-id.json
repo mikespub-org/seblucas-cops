@@ -1,0 +1,132 @@
+{
+    "title": "Alice's Adventures in Wonderland",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "book": {
+        "id": 17,
+        "detailurl": "vendor/bin/index.php/restapi/books/17/Lewis_Carroll/Alice_s_Adventures_in_Wonderland",
+        "hasCover": 1,
+        "preferedData": [
+            {
+                "name": "EPUB",
+                "url": "vendor/bin/index.php/fetch/0/20/ignore.epub",
+                "viewUrl": "vendor/bin/index.php/inline/0/20/ignore.epub"
+            },
+            {
+                "name": "PDF",
+                "url": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
+                "viewUrl": "vendor/bin/index.php/inline/0/19/ignore.pdf"
+            }
+        ],
+        "preferedCount": 2,
+        "rating": "&#9733;&#9733;&#9734;&#9734;&#9734;",
+        "publisherName": "Macmillan and Co. London",
+        "publisherurl": "vendor/bin/index.php/restapi/publishers/2/Macmillan_and_Co_London",
+        "pubDate": "1897",
+        "languagesName": "English",
+        "authorsName": "Lewis Carroll",
+        "authors": [
+            {
+                "name": "Lewis Carroll",
+                "url": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll"
+            }
+        ],
+        "tagsName": "Fantasy, Fiction, Juvenile",
+        "tags": [
+            {
+                "name": "Fantasy",
+                "url": "vendor/bin/index.php/restapi/tags/5/Fantasy"
+            },
+            {
+                "name": "Fiction",
+                "url": "vendor/bin/index.php/restapi/tags/1/Fiction"
+            },
+            {
+                "name": "Juvenile",
+                "url": "vendor/bin/index.php/restapi/tags/6/Juvenile"
+            }
+        ],
+        "seriesName": "",
+        "seriesIndex": 1,
+        "seriesCompleteName": "",
+        "seriesurl": "",
+        "customcolumns_list": [],
+        "thumbnailurl": "vendor/bin/index.php/thumbs/0/17/html2.jpg",
+        "coverurl": "vendor/bin/index.php/covers/0/17.jpg",
+        "content": "<p class=\"description\">Alice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.<br />The tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.</p>\n\nAlice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.\nThe tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.",
+        "datas": [
+            {
+                "id": 17,
+                "format": "MOBI",
+                "url": "vendor/bin/index.php/fetch/0/17/ignore.mobi",
+                "viewUrl": "vendor/bin/index.php/inline/0/17/ignore.mobi",
+                "mail": 0,
+                "readerUrl": ""
+            },
+            {
+                "id": 19,
+                "format": "PDF",
+                "url": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
+                "viewUrl": "vendor/bin/index.php/inline/0/19/ignore.pdf",
+                "mail": 0,
+                "readerUrl": ""
+            },
+            {
+                "id": 20,
+                "format": "EPUB",
+                "url": "vendor/bin/index.php/fetch/0/20/ignore.epub",
+                "viewUrl": "vendor/bin/index.php/inline/0/20/ignore.epub",
+                "mail": 1,
+                "readerUrl": "vendor/bin/index.php/read/0/20/Alice_s_Adventures_in_Wonderland"
+            }
+        ],
+        "extraFiles": [
+            {
+                "name": " * ",
+                "url": "vendor/bin/index.php/files/0/17/zipped"
+            },
+            {
+                "name": "hello.txt",
+                "url": "vendor/bin/index.php/files/0/17/hello.txt",
+                "length": "12",
+                "mtime": "2024-10-27T09:43:00+00:00"
+            },
+            {
+                "name": "sub/copied.txt",
+                "url": "vendor/bin/index.php/files/0/17/sub/copied.txt",
+                "length": "12",
+                "mtime": "2024-10-27T09:43:00+00:00"
+            }
+        ],
+        "identifiers": [],
+        "customcolumns_preview": []
+    },
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Alice's Adventures in Wonderland",
+    "multipleDatabase": 0,
+    "page": "book",
+    "entries": [],
+    "entriesCount": 0,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

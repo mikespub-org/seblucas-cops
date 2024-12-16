@@ -1,0 +1,55 @@
+{
+    "title": "Languages",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Languages",
+    "multipleDatabase": 0,
+    "page": "languages",
+    "entries": [
+        {
+            "class": "Languages",
+            "title": "English",
+            "content": "14 books",
+            "navlink": "vendor/bin/index.php/restapi/languages/1/English",
+            "number": 14
+        },
+        {
+            "class": "Languages",
+            "title": "French",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/languages/2/French",
+            "number": 1
+        },
+        {
+            "class": "Languages",
+            "title": "Chinese",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/languages/3/Chinese",
+            "number": 1
+        }
+    ],
+    "entriesCount": 3,
+    "isPaginated": 0,
+    "sorted": "lang_code",
+    "sortedBy": "lang_code",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

@@ -1,0 +1,62 @@
+{
+    "title": "Ratings",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Ratings",
+    "multipleDatabase": 0,
+    "page": "ratings",
+    "entries": [
+        {
+            "class": "Ratings",
+            "title": "2 stars",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/ratings/3/2_stars",
+            "number": 1
+        },
+        {
+            "class": "Ratings",
+            "title": "4 stars",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/ratings/2/4_stars",
+            "number": 2
+        },
+        {
+            "class": "Ratings",
+            "title": "5 stars",
+            "content": "4 books",
+            "navlink": "vendor/bin/index.php/restapi/ratings/1/5_stars",
+            "number": 4
+        },
+        {
+            "class": "Ratings",
+            "title": "No star",
+            "content": "9 books",
+            "navlink": "vendor/bin/index.php/restapi/ratings/0/No_star",
+            "number": 9
+        }
+    ],
+    "entriesCount": 4,
+    "isPaginated": 0,
+    "sorted": "rating",
+    "sortedBy": "rating",
+    "sortedDir": "desc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

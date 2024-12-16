@@ -1,0 +1,69 @@
+{
+    "title": "Series",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Series",
+    "multipleDatabase": 0,
+    "page": "series",
+    "entries": [
+        {
+            "class": "Series",
+            "title": "D'Artagnan Romances",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/series/3/D_Artagnan_Romances",
+            "number": 2
+        },
+        {
+            "class": "Series",
+            "title": "Professor Challenger",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/series/2/Professor_Challenger",
+            "number": 1
+        },
+        {
+            "class": "Series",
+            "title": "Sherlock Holmes",
+            "content": "7 books",
+            "navlink": "vendor/bin/index.php/restapi/series/1/Sherlock_Holmes",
+            "number": 7
+        },
+        {
+            "class": "Series",
+            "title": "Série des Rougon-Macquart",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/series/5/Serie_des_Rougon_Macquart",
+            "number": 1
+        },
+        {
+            "class": "Series",
+            "title": "No series",
+            "content": "5 books",
+            "navlink": "vendor/bin/index.php/restapi/series/0/No_series",
+            "number": 5
+        }
+    ],
+    "entriesCount": 5,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

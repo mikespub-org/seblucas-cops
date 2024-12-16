@@ -1,0 +1,614 @@
+{
+    "title": "Handlers",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "entries": [
+        {
+            "handler": "html",
+            "routes": {
+                "page-index": [
+                    "/index",
+                    {
+                        "page": "index"
+                    }
+                ],
+                "page-authors-letter": [
+                    "/authors/letter/{letter}",
+                    {
+                        "page": "authors_letter"
+                    }
+                ],
+                "page-authors-letters": [
+                    "/authors/letter",
+                    {
+                        "page": "authors",
+                        "letter": 1
+                    }
+                ],
+                "page-author": [
+                    "/authors/{id:\\d+}/{title}",
+                    {
+                        "page": "author"
+                    }
+                ],
+                "page-author-id": [
+                    "/authors/{id:\\d+}",
+                    {
+                        "page": "author"
+                    }
+                ],
+                "page-authors": [
+                    "/authors",
+                    {
+                        "page": "authors"
+                    }
+                ],
+                "page-books-letter": [
+                    "/books/letter/{letter:\\w}",
+                    {
+                        "page": "books_letter"
+                    }
+                ],
+                "page-books-letters": [
+                    "/books/letter",
+                    {
+                        "page": "books",
+                        "letter": 1
+                    }
+                ],
+                "page-books-year": [
+                    "/books/year/{year:\\d+}",
+                    {
+                        "page": "books_year"
+                    }
+                ],
+                "page-books-years": [
+                    "/books/year",
+                    {
+                        "page": "books",
+                        "year": 1
+                    }
+                ],
+                "page-book": [
+                    "/books/{id:\\d+}/{author}/{title}",
+                    {
+                        "page": "book"
+                    }
+                ],
+                "page-book-id": [
+                    "/books/{id:\\d+}",
+                    {
+                        "page": "book"
+                    }
+                ],
+                "page-books": [
+                    "/books",
+                    {
+                        "page": "books"
+                    }
+                ],
+                "page-serie": [
+                    "/series/{id:\\d+}/{title}",
+                    {
+                        "page": "serie"
+                    }
+                ],
+                "page-serie-id": [
+                    "/series/{id:\\d+}",
+                    {
+                        "page": "serie"
+                    }
+                ],
+                "page-series": [
+                    "/series",
+                    {
+                        "page": "series"
+                    }
+                ],
+                "page-typeahead": [
+                    "/typeahead",
+                    {
+                        "page": "query",
+                        "search": 1
+                    }
+                ],
+                "page-query-scope": [
+                    "/search/{query}/{scope}",
+                    {
+                        "page": "query"
+                    }
+                ],
+                "page-query": [
+                    "/search/{query}",
+                    {
+                        "page": "query"
+                    }
+                ],
+                "page-search": [
+                    "/search",
+                    {
+                        "page": "opensearch"
+                    }
+                ],
+                "page-recent": [
+                    "/recent",
+                    {
+                        "page": "recent"
+                    }
+                ],
+                "page-tag": [
+                    "/tags/{id:\\d+}/{title}",
+                    {
+                        "page": "tag"
+                    }
+                ],
+                "page-tag-id": [
+                    "/tags/{id:\\d+}",
+                    {
+                        "page": "tag"
+                    }
+                ],
+                "page-tags": [
+                    "/tags",
+                    {
+                        "page": "tags"
+                    }
+                ],
+                "page-custom": [
+                    "/custom/{custom:\\d+}/{id}",
+                    {
+                        "page": "custom"
+                    }
+                ],
+                "page-customtype": [
+                    "/custom/{custom:\\d+}",
+                    {
+                        "page": "customtype"
+                    }
+                ],
+                "page-about": [
+                    "/about",
+                    {
+                        "page": "about"
+                    }
+                ],
+                "page-language": [
+                    "/languages/{id:\\d+}/{title}",
+                    {
+                        "page": "language"
+                    }
+                ],
+                "page-language-id": [
+                    "/languages/{id:\\d+}",
+                    {
+                        "page": "language"
+                    }
+                ],
+                "page-languages": [
+                    "/languages",
+                    {
+                        "page": "languages"
+                    }
+                ],
+                "page-customize": [
+                    "/customize",
+                    {
+                        "page": "customize"
+                    }
+                ],
+                "page-publisher": [
+                    "/publishers/{id:\\d+}/{title}",
+                    {
+                        "page": "publisher"
+                    }
+                ],
+                "page-publisher-id": [
+                    "/publishers/{id:\\d+}",
+                    {
+                        "page": "publisher"
+                    }
+                ],
+                "page-publishers": [
+                    "/publishers",
+                    {
+                        "page": "publishers"
+                    }
+                ],
+                "page-rating": [
+                    "/ratings/{id:\\d+}/{title}",
+                    {
+                        "page": "rating"
+                    }
+                ],
+                "page-rating-id": [
+                    "/ratings/{id:\\d+}",
+                    {
+                        "page": "rating"
+                    }
+                ],
+                "page-ratings": [
+                    "/ratings",
+                    {
+                        "page": "ratings"
+                    }
+                ],
+                "page-identifier": [
+                    "/identifiers/{id:\\w+}/{title}",
+                    {
+                        "page": "identifier"
+                    }
+                ],
+                "page-identifier-id": [
+                    "/identifiers/{id:\\w+}",
+                    {
+                        "page": "identifier"
+                    }
+                ],
+                "page-identifiers": [
+                    "/identifiers",
+                    {
+                        "page": "identifiers"
+                    }
+                ],
+                "page-format": [
+                    "/formats/{id:\\w+}",
+                    {
+                        "page": "format"
+                    }
+                ],
+                "page-formats": [
+                    "/formats",
+                    {
+                        "page": "formats"
+                    }
+                ],
+                "page-libraries": [
+                    "/libraries",
+                    {
+                        "page": "libraries"
+                    }
+                ],
+                "page-filter": [
+                    "/filter",
+                    {
+                        "page": "filter"
+                    }
+                ]
+            }
+        },
+        {
+            "handler": "feed",
+            "routes": {
+                "feed-search": [
+                    "/feed/search",
+                    {
+                        "page": "search"
+                    }
+                ],
+                "feed-page": [
+                    "/feed/{page:\\w+}"
+                ],
+                "feed-path": [
+                    "/feed/{path:.+}"
+                ],
+                "feed": [
+                    "/feed"
+                ]
+            }
+        },
+        {
+            "handler": "json",
+            "routes": []
+        },
+        {
+            "handler": "fetch",
+            "routes": {
+                "fetch-file": [
+                    "/files/{db:\\d+}/{id:\\d+}/{file:.+}"
+                ],
+                "fetch-thumb": [
+                    "/thumbs/{db:\\d+}/{id:\\d+}/{thumb}.jpg"
+                ],
+                "fetch-cover": [
+                    "/covers/{db:\\d+}/{id:\\d+}.jpg"
+                ],
+                "fetch-inline": [
+                    "/inline/{db:\\d+}/{data:\\d+}/{ignore}.{type}",
+                    {
+                        "view": 1
+                    }
+                ],
+                "fetch-data": [
+                    "/fetch/{db:\\d+}/{data:\\d+}/{ignore}.{type}"
+                ],
+                "fetch-view": [
+                    "/view/{data}/{db}/{ignore}.{type}",
+                    {
+                        "view": 1
+                    }
+                ],
+                "fetch-download": [
+                    "/download/{data}/{db}/{ignore}.{type}"
+                ]
+            }
+        },
+        {
+            "handler": "read",
+            "routes": {
+                "read-title": [
+                    "/read/{db:\\d+}/{data:\\d+}/{title}"
+                ],
+                "read": [
+                    "/read/{db:\\d+}/{data:\\d+}"
+                ]
+            }
+        },
+        {
+            "handler": "epubfs",
+            "routes": {
+                "epubfs": [
+                    "/epubfs/{db:\\d+}/{data:\\d+}/{comp:.+}"
+                ]
+            }
+        },
+        {
+            "handler": "restapi",
+            "routes": {
+                "restapi-customtypes": [
+                    "/restapi/custom",
+                    {
+                        "_resource": "CustomColumnType"
+                    }
+                ],
+                "restapi-database-table": [
+                    "/restapi/databases/{db}/{name}",
+                    {
+                        "_resource": "Database"
+                    }
+                ],
+                "restapi-database": [
+                    "/restapi/databases/{db}",
+                    {
+                        "_resource": "Database"
+                    }
+                ],
+                "restapi-databases": [
+                    "/restapi/databases",
+                    {
+                        "_resource": "Database"
+                    }
+                ],
+                "restapi-openapi": [
+                    "/restapi/openapi",
+                    {
+                        "_resource": "openapi"
+                    }
+                ],
+                "restapi-route": [
+                    "/restapi/routes",
+                    {
+                        "_resource": "route"
+                    }
+                ],
+                "restapi-handler": [
+                    "/restapi/handlers",
+                    {
+                        "_resource": "handler"
+                    }
+                ],
+                "restapi-note": [
+                    "/restapi/notes/{type}/{id}/{title}",
+                    {
+                        "_resource": "Note"
+                    }
+                ],
+                "restapi-notes-type-id": [
+                    "/restapi/notes/{type}/{id}",
+                    {
+                        "_resource": "Note"
+                    }
+                ],
+                "restapi-notes-type": [
+                    "/restapi/notes/{type}",
+                    {
+                        "_resource": "Note"
+                    }
+                ],
+                "restapi-notes": [
+                    "/restapi/notes",
+                    {
+                        "_resource": "Note"
+                    }
+                ],
+                "restapi-preference": [
+                    "/restapi/preferences/{key}",
+                    {
+                        "_resource": "Preference"
+                    }
+                ],
+                "restapi-preferences": [
+                    "/restapi/preferences",
+                    {
+                        "_resource": "Preference"
+                    }
+                ],
+                "restapi-annotation": [
+                    "/restapi/annotations/{bookId}/{id}",
+                    {
+                        "_resource": "Annotation"
+                    }
+                ],
+                "restapi-annotations-book": [
+                    "/restapi/annotations/{bookId}",
+                    {
+                        "_resource": "Annotation"
+                    }
+                ],
+                "restapi-annotations": [
+                    "/restapi/annotations",
+                    {
+                        "_resource": "Annotation"
+                    }
+                ],
+                "restapi-metadata-element-name": [
+                    "/restapi/metadata/{bookId}/{element}/{name}",
+                    {
+                        "_resource": "Metadata"
+                    }
+                ],
+                "restapi-metadata-element": [
+                    "/restapi/metadata/{bookId}/{element}",
+                    {
+                        "_resource": "Metadata"
+                    }
+                ],
+                "restapi-metadata": [
+                    "/restapi/metadata/{bookId}",
+                    {
+                        "_resource": "Metadata"
+                    }
+                ],
+                "restapi-user-details": [
+                    "/restapi/user/details",
+                    {
+                        "_resource": "User"
+                    }
+                ],
+                "restapi-user": [
+                    "/restapi/user",
+                    {
+                        "_resource": "User"
+                    }
+                ],
+                "restapi-path": [
+                    "/restapi/{path:.*}"
+                ]
+            }
+        },
+        {
+            "handler": "check",
+            "routes": {
+                "check-more": [
+                    "/check/{more:.*}"
+                ],
+                "check": [
+                    "/check"
+                ]
+            }
+        },
+        {
+            "handler": "opds",
+            "routes": {
+                "opds-search": [
+                    "/opds/search",
+                    {
+                        "page": "search"
+                    }
+                ],
+                "opds-page": [
+                    "/opds/{page:\\w+}"
+                ],
+                "opds-path": [
+                    "/opds/{path:.*}"
+                ],
+                "opds": [
+                    "/opds"
+                ]
+            }
+        },
+        {
+            "handler": "loader",
+            "routes": {
+                "loader-action-dbNum-authorId-urlPath": [
+                    "/loader/{action}/{dbNum:\\d+}/{authorId:\\w+}/{urlPath:.*}"
+                ],
+                "loader-action-dbNum-authorId": [
+                    "/loader/{action}/{dbNum:\\d+}/{authorId:\\w*}"
+                ],
+                "loader-action-dbNum": [
+                    "/loader/{action}/{dbNum:\\d+}"
+                ],
+                "loader-action-": [
+                    "/loader/{action}/"
+                ],
+                "loader-action": [
+                    "/loader/{action}"
+                ],
+                "loader": [
+                    "/loader"
+                ]
+            }
+        },
+        {
+            "handler": "zipper",
+            "routes": {
+                "zipper-page-id-type": [
+                    "/zipper/{page}/{id}/{type}.zip"
+                ],
+                "zipper-page-type": [
+                    "/zipper/{page}/{type}.zip"
+                ]
+            }
+        },
+        {
+            "handler": "calres",
+            "routes": {
+                "calres": [
+                    "/calres/{db:\\d+}/{alg}/{digest}"
+                ]
+            }
+        },
+        {
+            "handler": "zipfs",
+            "routes": {
+                "zipfs": [
+                    "/zipfs/{db:\\d+}/{data:\\d+}/{comp:.+}"
+                ]
+            }
+        },
+        {
+            "handler": "mail",
+            "routes": {
+                "mail": [
+                    "/mail",
+                    [],
+                    [
+                        "POST"
+                    ]
+                ]
+            }
+        },
+        {
+            "handler": "graphql",
+            "routes": {
+                "graphql": [
+                    "/graphql",
+                    [],
+                    [
+                        "GET",
+                        "POST"
+                    ]
+                ]
+            }
+        },
+        {
+            "handler": "tables",
+            "routes": {
+                "tables": [
+                    "/tables"
+                ]
+            }
+        },
+        {
+            "handler": "error",
+            "routes": []
+        },
+        {
+            "handler": "phpunit",
+            "routes": {
+                "test": [
+                    "/test"
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "title": "Custom Columns",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "entries": [
+        {
+            "id": 1,
+            "label": "type4",
+            "name": "Type4",
+            "datatype": "series",
+            "display": "{}",
+            "is_multiple": 0,
+            "normalized": 1,
+            "navlink": "vendor/bin/index.php/restapi/custom/1"
+        },
+        {
+            "id": 2,
+            "label": "type2",
+            "name": "Type2",
+            "datatype": "text",
+            "display": "{\"is_names\": false}",
+            "is_multiple": 1,
+            "normalized": 1,
+            "navlink": "vendor/bin/index.php/restapi/custom/2"
+        },
+        {
+            "id": 3,
+            "label": "type1",
+            "name": "Type1",
+            "datatype": "text",
+            "display": "{\"use_decorations\": 0}",
+            "is_multiple": 0,
+            "normalized": 1,
+            "navlink": "vendor/bin/index.php/restapi/custom/3"
+        }
+    ]
+}

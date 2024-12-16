@@ -1,0 +1,13 @@
+{
+    "title": "Annotations",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "entries": [
+        {
+            "class": "Annotations",
+            "title": "Annotations for 17",
+            "navlink": "vendor/bin/index.php/restapi/annotations/17",
+            "number": 5
+        }
+    ]
+}

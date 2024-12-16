@@ -1,0 +1,118 @@
+{
+    "title": "Tags",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Tags",
+    "multipleDatabase": 0,
+    "page": "tags",
+    "entries": [
+        {
+            "class": "Tags",
+            "title": "Action & Adventure",
+            "content": "4 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/4/Action_and_Adventure",
+            "number": 4
+        },
+        {
+            "class": "Tags",
+            "title": "Fantasy",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/5/Fantasy",
+            "number": 2
+        },
+        {
+            "class": "Tags",
+            "title": "Fiction",
+            "content": "14 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/1/Fiction",
+            "number": 14
+        },
+        {
+            "class": "Tags",
+            "title": "Historical",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/10/Historical",
+            "number": 2
+        },
+        {
+            "class": "Tags",
+            "title": "Juvenile",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/6/Juvenile",
+            "number": 2
+        },
+        {
+            "class": "Tags",
+            "title": "Littérature",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/12/Litterature",
+            "number": 1
+        },
+        {
+            "class": "Tags",
+            "title": "Mystery & Detective",
+            "content": "7 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/3/Mystery_and_Detective",
+            "number": 7
+        },
+        {
+            "class": "Tags",
+            "title": "Romance",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/9/Romance",
+            "number": 2
+        },
+        {
+            "class": "Tags",
+            "title": "Science Fiction",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/7/Science_Fiction",
+            "number": 1
+        },
+        {
+            "class": "Tags",
+            "title": "Short Stories",
+            "content": "4 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/2/Short_Stories",
+            "number": 4
+        },
+        {
+            "class": "Tags",
+            "title": "War & Military",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/8/War_and_Military",
+            "number": 1
+        },
+        {
+            "class": "Tags",
+            "title": "No tags",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/0/No_tags",
+            "number": 1
+        }
+    ],
+    "entriesCount": 12,
+    "isPaginated": 0,
+    "sorted": "name",
+    "sortedBy": "name",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

@@ -1,0 +1,17 @@
+{
+    "title": "Database Types",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "entries": [
+        {
+            "class": "Metadata",
+            "title": "Tables",
+            "navlink": "vendor/bin/index.php/restapi/databases/0?type=table"
+        },
+        {
+            "class": "Metadata",
+            "title": "Views",
+            "navlink": "vendor/bin/index.php/restapi/databases/0?type=view"
+        }
+    ],
+    "version": 26
+}

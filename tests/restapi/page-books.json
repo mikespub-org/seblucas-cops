@@ -1,0 +1,104 @@
+{
+    "title": "All books",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "All books",
+    "multipleDatabase": 0,
+    "page": "books",
+    "entries": [
+        {
+            "class": "Letter",
+            "title": "A",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/A",
+            "number": 2
+        },
+        {
+            "class": "Letter",
+            "title": "C",
+            "content": "3 books",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/C",
+            "number": 3
+        },
+        {
+            "class": "Letter",
+            "title": "H",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/H",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "L",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/L",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "M",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/M",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "R",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/R",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "S",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/S",
+            "number": 2
+        },
+        {
+            "class": "Letter",
+            "title": "T",
+            "content": "3 books",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/T",
+            "number": 3
+        },
+        {
+            "class": "Letter",
+            "title": "W",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/W",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "孙",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php?letter=%E5%AD%99",
+            "number": 1
+        }
+    ],
+    "entriesCount": 10,
+    "isPaginated": 0,
+    "sorted": "groupid",
+    "sortedBy": "groupid",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

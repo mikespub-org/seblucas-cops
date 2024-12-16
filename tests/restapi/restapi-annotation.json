@@ -1,0 +1,23 @@
+{
+    "title": "(17) Bookmark About #1",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "id": 1,
+    "name": "About #1",
+    "link": null,
+    "count": null,
+    "limitSelf": true,
+    "book": 17,
+    "format": "EPUB",
+    "userType": "local",
+    "user": "viewer",
+    "timestamp": 1710158075.128396,
+    "type": "bookmark",
+    "data": {
+        "title": "About #1",
+        "pos_type": "epubcfi",
+        "pos": "epubcfi(/6/2/4/2/6/2:38)",
+        "timestamp": "2024-03-11T11:54:35.128396+00:00",
+        "type": "bookmark"
+    }
+}

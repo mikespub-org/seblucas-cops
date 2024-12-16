@@ -1,0 +1,146 @@
+{
+    "title": "Publishers > Macmillan and Co. London",
+    "parentTitle": "Publishers",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Publishers > Macmillan and Co. London",
+    "multipleDatabase": 0,
+    "page": "publisher",
+    "entries": [
+        {
+            "title": "Alice's Adventures in Wonderland",
+            "book": {
+                "id": 17,
+                "detailurl": "vendor/bin/index.php/restapi/books/17/Lewis_Carroll/Alice_s_Adventures_in_Wonderland",
+                "hasCover": 1,
+                "preferedData": [
+                    {
+                        "name": "EPUB",
+                        "url": "vendor/bin/index.php/fetch/0/20/ignore.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/20/ignore.epub"
+                    },
+                    {
+                        "name": "PDF",
+                        "url": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
+                        "viewUrl": "vendor/bin/index.php/inline/0/19/ignore.pdf"
+                    }
+                ],
+                "preferedCount": 2,
+                "rating": "&#9733;&#9733;&#9734;&#9734;&#9734;",
+                "publisherName": "Macmillan and Co. London",
+                "publisherurl": "vendor/bin/index.php/restapi/publishers/2/Macmillan_and_Co_London",
+                "pubDate": "1897",
+                "languagesName": "English",
+                "authorsName": "Lewis Carroll",
+                "authors": [
+                    {
+                        "name": "Lewis Carroll",
+                        "url": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll"
+                    }
+                ],
+                "tagsName": "Fantasy, Fiction, Juvenile",
+                "tags": [
+                    {
+                        "name": "Fantasy",
+                        "url": "vendor/bin/index.php/restapi/tags/5/Fantasy"
+                    },
+                    {
+                        "name": "Fiction",
+                        "url": "vendor/bin/index.php/restapi/tags/1/Fiction"
+                    },
+                    {
+                        "name": "Juvenile",
+                        "url": "vendor/bin/index.php/restapi/tags/6/Juvenile"
+                    }
+                ],
+                "seriesName": "",
+                "seriesIndex": 1,
+                "seriesCompleteName": "",
+                "seriesurl": "",
+                "customcolumns_list": []
+            },
+            "thumbnailurl": "vendor/bin/index.php/thumbs/0/17/html.jpg",
+            "coverurl": "vendor/bin/index.php/covers/0/17.jpg"
+        },
+        {
+            "title": "Through the Looking Glass (And What Alice Found There)",
+            "book": {
+                "id": 6,
+                "detailurl": "vendor/bin/index.php/restapi/books/6/Lewis_Carroll/Through_the_Looking_Glass_And_What_Alice_Found_There",
+                "hasCover": false,
+                "preferedData": [
+                    {
+                        "name": "EPUB",
+                        "url": "vendor/bin/index.php/fetch/0/5/ignore.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/5/ignore.epub"
+                    }
+                ],
+                "preferedCount": 1,
+                "rating": "",
+                "publisherName": "Macmillan and Co. London",
+                "publisherurl": "vendor/bin/index.php/restapi/publishers/2/Macmillan_and_Co_London",
+                "pubDate": "2006",
+                "languagesName": "English",
+                "authorsName": "Lewis Carroll",
+                "authors": [
+                    {
+                        "name": "Lewis Carroll",
+                        "url": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll"
+                    }
+                ],
+                "tagsName": "Fantasy, Fiction, Juvenile",
+                "tags": [
+                    {
+                        "name": "Fantasy",
+                        "url": "vendor/bin/index.php/restapi/tags/5/Fantasy"
+                    },
+                    {
+                        "name": "Fiction",
+                        "url": "vendor/bin/index.php/restapi/tags/1/Fiction"
+                    },
+                    {
+                        "name": "Juvenile",
+                        "url": "vendor/bin/index.php/restapi/tags/6/Juvenile"
+                    }
+                ],
+                "seriesName": "",
+                "seriesIndex": 1,
+                "seriesCompleteName": "",
+                "seriesurl": "",
+                "customcolumns_list": []
+            },
+            "thumbnailurl": "vendor/bin/images/icons/icon144.png",
+            "coverurl": "vendor/bin/images/icons/icon144.png"
+        }
+    ],
+    "entriesCount": 2,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 1,
+    "filterurl": "vendor/bin/index.php/restapi/publishers/2/Title?filter=1",
+    "sorturl": "vendor/bin/index.php/restapi/publishers/2/Title?sort={0}",
+    "sortoptions": {
+        "title": "Titles",
+        "author": "Authors",
+        "pubdate": "Published",
+        "rating": "Ratings",
+        "timestamp": "Recent additions"
+    },
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php/restapi/publishers",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

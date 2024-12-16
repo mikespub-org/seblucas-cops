@@ -1,0 +1,9 @@
+{
+    "title": "Metadata for 17",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "element": "dc:title",
+    "entries": [
+        "Alice's Adventures in Wonderland"
+    ]
+}

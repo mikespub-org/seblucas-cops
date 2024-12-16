@@ -1,0 +1,116 @@
+{
+    "title": "Metadata for 17",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "element": "meta",
+    "name": "calibre:annotation",
+    "entries": [
+        {
+            "format": "EPUB",
+            "user_type": "local",
+            "user": "viewer",
+            "annotation": {
+                "title": "About #1",
+                "pos_type": "epubcfi",
+                "pos": "epubcfi(/6/2/4/2/6/2:38)",
+                "timestamp": "2024-03-11T11:54:35.128396+00:00",
+                "type": "bookmark"
+            }
+        },
+        {
+            "format": "EPUB",
+            "user_type": "local",
+            "user": "viewer",
+            "annotation": {
+                "end_cfi": "/2/4/2/2/6/1:24",
+                "highlighted_text": "Charles Lutwidge Dodgson",
+                "notes": "Full author name",
+                "spine_index": 2,
+                "spine_name": "OPS/about.xml",
+                "start_cfi": "/2/4/2/2/6/1:0",
+                "style": {
+                    "kind": "color",
+                    "type": "builtin",
+                    "which": "yellow"
+                },
+                "timestamp": "2024-03-11T11:53:55.583Z",
+                "toc_family_titles": [
+                    "About"
+                ],
+                "type": "highlight",
+                "uuid": "5HHGuoCOtpA-umaIbBuc0Q"
+            }
+        },
+        {
+            "format": "EPUB",
+            "user_type": "local",
+            "user": "viewer",
+            "annotation": {
+                "end_cfi": "/2/4/2/2[chapter_458]/4/2/1:5",
+                "highlighted_text": "Alice",
+                "notes": "Protagonist",
+                "spine_index": 3,
+                "spine_name": "OPS/main0.xml",
+                "start_cfi": "/2/4/2/2[chapter_458]/4/2/1:0",
+                "style": {
+                    "kind": "color",
+                    "type": "builtin",
+                    "which": "yellow"
+                },
+                "timestamp": "2024-03-11T11:56:52.891Z",
+                "toc_family_titles": [
+                    "Chapter 1 - Down the Rabbit Hole"
+                ],
+                "type": "highlight",
+                "uuid": "KFGNXVB2Heb53ghsAjVqvQ"
+            }
+        },
+        {
+            "format": "EPUB",
+            "user_type": "local",
+            "user": "viewer",
+            "annotation": {
+                "end_cfi": "/2/4/2/2/6/1:106",
+                "highlighted_text": "Lewis Carroll",
+                "spine_index": 2,
+                "spine_name": "OPS/about.xml",
+                "start_cfi": "/2/4/2/2/6/1:93",
+                "style": {
+                    "kind": "color",
+                    "type": "builtin",
+                    "which": "yellow"
+                },
+                "timestamp": "2024-03-11T11:55:32.734Z",
+                "toc_family_titles": [
+                    "About"
+                ],
+                "type": "highlight",
+                "uuid": "iuGTy-WIXWDinBuszppGwA"
+            }
+        },
+        {
+            "format": "EPUB",
+            "user_type": "web",
+            "user": "*",
+            "annotation": {
+                "type": "highlight",
+                "timestamp": "2024-03-11T16:24:14.624Z",
+                "uuid": "1ZUnS8Bf4uZGH0hS9JOKGQ",
+                "highlighted_text": "About Carroll",
+                "start_cfi": "/2/4/2/2/2/1:0",
+                "end_cfi": "/2/4/2/2/2/1:13",
+                "style": {
+                    "type": "builtin",
+                    "kind": "color",
+                    "which": "yellow"
+                },
+                "spine_name": "OPS/about.xml",
+                "spine_index": 2,
+                "notes": "About note",
+                "toc_family_titles": [
+                    "About"
+                ]
+            }
+        }
+    ]
+}

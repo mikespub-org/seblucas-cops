@@ -1,0 +1,15 @@
+{
+    "title": "Notes for authors",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "entries": [
+        {
+            "class": "Notes",
+            "title": "Lewis Carroll",
+            "id": 3,
+            "navlink": "vendor/bin/index.php/restapi/notes/authors/3/Lewis_Carroll",
+            "size": 227,
+            "timestamp": 1708880895.654
+        }
+    ]
+}

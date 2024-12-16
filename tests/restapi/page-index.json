@@ -1,0 +1,90 @@
+{
+    "title": "COPS",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "COPS",
+    "multipleDatabase": 0,
+    "page": "index",
+    "entries": [
+        {
+            "class": "",
+            "title": "Authors",
+            "content": "Alphabetical index of the 7 authors",
+            "navlink": "vendor/bin/index.php/restapi/authors",
+            "number": 7
+        },
+        {
+            "class": "",
+            "title": "Series",
+            "content": "Alphabetical index of the 4 series",
+            "navlink": "vendor/bin/index.php/restapi/series",
+            "number": 4
+        },
+        {
+            "class": "",
+            "title": "Publishers",
+            "content": "Alphabetical index of the 7 publishers",
+            "navlink": "vendor/bin/index.php/restapi/publishers",
+            "number": 7
+        },
+        {
+            "class": "",
+            "title": "Tags",
+            "content": "Alphabetical index of the 11 tags",
+            "navlink": "vendor/bin/index.php/restapi/tags",
+            "number": 11
+        },
+        {
+            "class": "",
+            "title": "Ratings",
+            "content": "3 ratings",
+            "navlink": "vendor/bin/index.php/restapi/ratings",
+            "number": 3
+        },
+        {
+            "class": "",
+            "title": "Languages",
+            "content": "Alphabetical index of the 3 languages",
+            "navlink": "vendor/bin/index.php/restapi/languages",
+            "number": 3
+        },
+        {
+            "class": "",
+            "title": "All books",
+            "content": "Alphabetical index of the 16 books",
+            "navlink": "vendor/bin/index.php/restapi/books",
+            "number": 16
+        },
+        {
+            "class": "",
+            "title": "Recent additions",
+            "content": "16 most recent books",
+            "navlink": "vendor/bin/index.php/restapi/recent",
+            "number": 16
+        }
+    ],
+    "entriesCount": 8,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

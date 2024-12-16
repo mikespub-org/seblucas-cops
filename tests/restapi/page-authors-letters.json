@@ -1,0 +1,76 @@
+{
+    "title": "Authors",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Authors",
+    "multipleDatabase": 0,
+    "page": "authors",
+    "entries": [
+        {
+            "class": "Letter",
+            "title": "C",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/authors/letter/C",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "D",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/authors/letter/D",
+            "number": 2
+        },
+        {
+            "class": "Letter",
+            "title": "L",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/authors/letter/L",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "W",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/authors/letter/W",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "Z",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/authors/letter/Z",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "孙",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/authors/letter/孙",
+            "number": 1
+        }
+    ],
+    "entriesCount": 6,
+    "isPaginated": 0,
+    "sorted": "groupid",
+    "sortedBy": "groupid",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}
