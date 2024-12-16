@@ -24,6 +24,8 @@ class PageAllBooksYear extends Page
      */
     public function initializeContent()
     {
+        // this would be the year - override here
+        $this->idGet = $this->request->getId('year');
         $this->getEntries();
         $this->idPage = Book::getEntryIdByYear($this->idGet);
         $count = $this->totalNumber;

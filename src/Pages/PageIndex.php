@@ -127,7 +127,7 @@ class PageIndex extends Page
         // for multi-database setup, not all databases may have all custom columns - see issue #89
         $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());
         foreach ($customColumnList as $lookup) {
-            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
+            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
                 array_push($this->entryArray, $customColumn->getCount());
@@ -192,7 +192,7 @@ class PageIndex extends Page
         // for multi-database setup, not all databases may have all custom columns - see issue #89
         $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());
         foreach ($customColumnList as $lookup) {
-            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId());
+            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
                 array_push($this->entryArray, $customColumn->getCount());

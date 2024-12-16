@@ -30,14 +30,14 @@ class PageHandler extends BaseHandler
         return [
             "page-index" => ["/index", ["page" => PageId::INDEX]],
             // @todo support unicode pattern \pL for first letter - but see https://github.com/nikic/FastRoute/issues/154
-            "page-authors-letter" => ["/authors/letter/{id}", ["page" => PageId::AUTHORS_FIRST_LETTER]],
+            "page-authors-letter" => ["/authors/letter/{letter}", ["page" => PageId::AUTHORS_FIRST_LETTER]],
             "page-authors-letters" => ["/authors/letter", ["page" => PageId::ALL_AUTHORS, "letter" => 1]],
             "page-author" => ["/authors/{id:\d+}/{title}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-author-id" => ["/authors/{id:\d+}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-authors" => ["/authors", ["page" => PageId::ALL_AUTHORS]],
-            "page-books-letter" => ["/books/letter/{id:\w}", ["page" => PageId::ALL_BOOKS_LETTER]],
+            "page-books-letter" => ["/books/letter/{letter:\w}", ["page" => PageId::ALL_BOOKS_LETTER]],
             "page-books-letters" => ["/books/letter", ["page" => PageId::ALL_BOOKS, "letter" => 1]],
-            "page-books-year" => ["/books/year/{id:\d+}", ["page" => PageId::ALL_BOOKS_YEAR]],
+            "page-books-year" => ["/books/year/{year:\d+}", ["page" => PageId::ALL_BOOKS_YEAR]],
             "page-books-years" => ["/books/year", ["page" => PageId::ALL_BOOKS, "year" => 1]],
             "page-book" => ["/books/{id:\d+}/{author}/{title}", ["page" => PageId::BOOK_DETAIL]],
             "page-book-id" => ["/books/{id:\d+}", ["page" => PageId::BOOK_DETAIL]],

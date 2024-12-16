@@ -35,8 +35,8 @@ class GraphQLHandlerTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
         self::$numberPerPage = Config::get('max_item_per_page');
-        // No pagination
-        Config::set('max_item_per_page', -1);
+        // @todo override pagination
+        Config::set('max_item_per_page', GraphQLHandler::$numberPerPage);
     }
 
     public static function tearDownAfterClass(): void

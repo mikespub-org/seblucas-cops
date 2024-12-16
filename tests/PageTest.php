@@ -365,7 +365,7 @@ class PageTest extends TestCase
     {
         $page = PageId::AUTHORS_FIRST_LETTER;
         $request = new Request();
-        $request->set('id', "C");
+        $request->set('letter', "C");
 
         // Author Lewis Carroll
         $currentPage = PageId::getPage($page, $request);
@@ -394,7 +394,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getPrevLink());
 
-        Config::set('max_item_per_page', -1);
+        Config::set('max_item_per_page', 48);
     }
 
     public function testPageAuthorsDetail_LastPage(): void
@@ -416,8 +416,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getNextLink());
 
-        // No pagination
-        Config::set('max_item_per_page', -1);
+        Config::set('max_item_per_page', 48);
     }
 
     public function testPageAuthorsDetail_NoPagination(): void
@@ -435,6 +434,8 @@ class PageTest extends TestCase
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertTrue($currentPage->containsBook());
         $this->assertFalse($currentPage->IsPaginated());
+
+        Config::set('max_item_per_page', 48);
     }
 
     public function testPageAuthorsDetail_Filter(): void
@@ -518,7 +519,7 @@ class PageTest extends TestCase
     {
         $page = PageId::ALL_BOOKS_LETTER;
         $request = new Request();
-        $request->set('id', "C");
+        $request->set('letter', "C");
 
         $currentPage = PageId::getPage($page, $request);
 
@@ -552,7 +553,7 @@ class PageTest extends TestCase
     {
         $page = PageId::ALL_BOOKS_YEAR;
         $request = new Request();
-        $request->set('id', "2006");
+        $request->set('year', "2006");
 
         $currentPage = PageId::getPage($page, $request);
 

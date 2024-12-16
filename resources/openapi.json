@@ -54,21 +54,21 @@
                 ]
             }
         },
-        "/authors/letter/{id}": {
+        "/authors/letter/{letter}": {
             "get": {
-                "summary": "Route to page handler with page=authors_letter&id={id}",
+                "summary": "Route to page handler with page=authors_letter&letter={letter}",
                 "operationId": "get_page-authors-letter",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=authors_letter&id={id}"
+                        "description": "Result of page handler with page=authors_letter&letter={letter}"
                     }
                 },
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "letter",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -183,21 +183,21 @@
                 ]
             }
         },
-        "/books/letter/{id}": {
+        "/books/letter/{letter}": {
             "get": {
-                "summary": "Route to page handler with page=books_letter&id={id}",
+                "summary": "Route to page handler with page=books_letter&letter={letter}",
                 "operationId": "get_page-books-letter",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=books_letter&id={id}"
+                        "description": "Result of page handler with page=books_letter&letter={letter}"
                     }
                 },
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "letter",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -230,21 +230,21 @@
                 ]
             }
         },
-        "/books/year/{id}": {
+        "/books/year/{year}": {
             "get": {
-                "summary": "Route to page handler with page=books_year&id={id}",
+                "summary": "Route to page handler with page=books_year&year={year}",
                 "operationId": "get_page-books-year",
                 "tags": [
                     "default"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of page handler with page=books_year&id={id}"
+                        "description": "Result of page handler with page=books_year&year={year}"
                     }
                 },
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "year",
                         "in": "path",
                         "required": true,
                         "schema": {

@@ -69,7 +69,7 @@ class PageMultiDatabaseTest extends TestCase
         $this->assertEquals("1 book", $currentPage->entryArray [1]->content);
         $this->assertFalse($currentPage->containsBook());
 
-        Config::set('max_item_per_page', -1);
+        Config::set('max_item_per_page', 48);
     }
 
     /**

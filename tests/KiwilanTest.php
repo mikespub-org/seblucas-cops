@@ -318,8 +318,7 @@ class KiwilanTest extends TestCase
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
-        // No pagination
-        Config::set('max_item_per_page', -1);
+        Config::set('max_item_per_page', 48);
     }
 
     public function testPageAuthorsDetail_WithFacets(): void

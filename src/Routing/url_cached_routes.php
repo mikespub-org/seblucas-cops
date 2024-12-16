@@ -79,7 +79,7 @@ $routes = [
     [],
   ],
   'page-authors-letter' => [
-    '/authors/letter/{id}',
+    '/authors/letter/{letter}',
     [
       'page' => 'authors_letter',
       '_route' => 'page-authors-letter',
@@ -135,7 +135,7 @@ $routes = [
     [],
   ],
   'page-books-letter' => [
-    '/books/letter/{id:\\w}',
+    '/books/letter/{letter:\\w}',
     [
       'page' => 'books_letter',
       '_route' => 'page-books-letter',
@@ -158,7 +158,7 @@ $routes = [
     [],
   ],
   'page-books-year' => [
-    '/books/year/{id:\\d+}',
+    '/books/year/{year:\\d+}',
     [
       'page' => 'books_year',
       '_route' => 'page-books-year',

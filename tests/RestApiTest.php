@@ -15,7 +15,6 @@ use SebLucas\Cops\Framework;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
-use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApiProvider;
 
 require_once dirname(__DIR__) . '/config/test.php';
@@ -26,6 +25,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JsonRenderer;
+use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
 
 class RestApiTest extends TestCase
@@ -51,17 +51,17 @@ class RestApiTest extends TestCase
     public function testGetPathInfo(): void
     {
         $request = new Request();
-        $apiHandler = new RestApiProvider($request);
+        $apiProvider = new RestApiProvider($request);
         $expected = "/index";
-        $test = $apiHandler->getPathInfo();
+        $test = $apiProvider->getPathInfo();
         $this->assertEquals($expected, $test);
 
         $_SERVER["PATH_INFO"] = "/books/2";
         $request = new Request();
-        $apiHandler = new RestApiProvider($request);
+        $apiProvider = new RestApiProvider($request);
 
         $expected = "/books/2";
-        $test = $apiHandler->getPathInfo();
+        $test = $apiProvider->getPathInfo();
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);
@@ -71,24 +71,24 @@ class RestApiTest extends TestCase
     {
         $_SERVER["PATH_INFO"] = "/books/2";
         $request = new Request();
-        $apiHandler = new RestApiProvider($request);
-        $path = $apiHandler->getPathInfo();
+        $apiProvider = new RestApiProvider($request);
+        $path = $apiProvider->getPathInfo();
 
         $expected = ["page" => PageId::BOOK_DETAIL, "id" => 2, "_route" => "page-book-id"];
-        $test = $apiHandler->matchPathInfo($path);
+        $test = $apiProvider->matchPathInfo($path);
         $this->assertEquals($expected, $test);
 
         $_SERVER["PATH_INFO"] = "/restapi/openapi";
         $request = new Request();
-        $apiHandler = new RestApiProvider($request);
-        $path = $apiHandler->getPathInfo();
+        $apiProvider = new RestApiProvider($request);
+        $path = $apiProvider->getPathInfo();
 
         $expected = RestApiProvider::getOpenApi($request);
-        $test = $apiHandler->matchPathInfo($path);
+        $test = $apiProvider->matchPathInfo($path);
         $this->assertEquals($expected, $test);
 
         $expected = true;
-        $test = $apiHandler->isExtra;
+        $test = $apiProvider->isExtra;
         $this->assertEquals($expected, $test);
 
         unset($_SERVER["PATH_INFO"]);
@@ -98,10 +98,10 @@ class RestApiTest extends TestCase
     {
         $_SERVER["PATH_INFO"] = "/books/2";
         $request = new Request();
-        $apiHandler = new RestApiProvider($request);
-        $path = $apiHandler->getPathInfo();
-        $params = $apiHandler->matchPathInfo($path);
-        $request = $apiHandler->getRequest()->setParams($params);
+        $apiProvider = new RestApiProvider($request);
+        $path = $apiProvider->getPathInfo();
+        $params = $apiProvider->matchPathInfo($path);
+        $request = $apiProvider->getRequest()->setParams($params);
 
         $expected = PageId::BOOK_DETAIL;
         $test = $request->get("page");
@@ -117,10 +117,10 @@ class RestApiTest extends TestCase
     public function testGetJson(): void
     {
         $request = new Request();
-        $apiHandler = new RestApiProvider($request);
+        $apiProvider = new RestApiProvider($request);
         $renderer = new JsonRenderer();
         $expected = $renderer->getJson($request);
-        $test = $apiHandler->getJson();
+        $test = $apiProvider->getJson();
         unset($expected['counters']);
         unset($test['counters']);
         $this->assertEquals($expected, $test);
@@ -129,9 +129,9 @@ class RestApiTest extends TestCase
     public function testGetOutput(): void
     {
         $request = Request::build([], basename(self::$script));
-        $apiHandler = new RestApiProvider($request);
+        $apiProvider = new RestApiProvider($request);
         $expected = true;
-        $test = $apiHandler->getOutput();
+        $test = $apiProvider->getOutput();
         $this->assertEquals($expected, str_starts_with($test, '{"title":"COPS",'));
     }
 
@@ -278,11 +278,11 @@ class RestApiTest extends TestCase
     public function testGetPreferenceByKey(): void
     {
         $request = Request::build([], basename(self::$script));
-        $request->set('key', 'saved_searches');
-        $expected = "Preference for saved_searches";
+        $request->set('key', 'virtual_libraries');
+        $expected = "Preference for virtual_libraries";
         $test = RestApiProvider::getPreferences($request);
         $this->assertEquals($expected, $test["title"]);
-        $expected = 1;
+        $expected = 2;
         $this->assertCount($expected, $test["val"]);
     }
 
@@ -452,7 +452,7 @@ class RestApiTest extends TestCase
         $request = new Request();
         RestApiProvider::$doRunHandler = false;
 
-        $apiHandler = new RestApiProvider($request);
+        $apiProvider = new RestApiProvider($request);
         $expected = [
             Route::HANDLER_PARAM => Route::getHandler("zipfs"),
             "path" => "/zipfs/0/20/META-INF/container.xml",
@@ -464,7 +464,7 @@ class RestApiTest extends TestCase
             ],
         ];
         $expected = json_encode($expected, JSON_UNESCAPED_SLASHES);
-        $test = $apiHandler->getOutput();
+        $test = $apiProvider->getOutput();
         $this->assertEquals($expected, $test);
 
         RestApiProvider::$doRunHandler = true;
@@ -484,8 +484,8 @@ class RestApiTest extends TestCase
         RestApiProvider::$doRunHandler = true;
 
         ob_start();
-        $apiHandler = new RestApiProvider($request);
-        $result = $apiHandler->getOutput();
+        $apiProvider = new RestApiProvider($request);
+        $result = $apiProvider->getOutput();
         $result->send();
         $headers = headers_list();
         $output = ob_get_clean();
@@ -510,7 +510,7 @@ class RestApiTest extends TestCase
         $request = new Request();
         RestApiProvider::$doRunHandler = false;
 
-        $apiHandler = new RestApiProvider($request);
+        $apiProvider = new RestApiProvider($request);
         $expected = [
             Route::HANDLER_PARAM => Route::getHandler("fetch"),
             // check if the path starts with the handler param here
@@ -523,7 +523,7 @@ class RestApiTest extends TestCase
             ],
         ];
         $expected = json_encode($expected, JSON_UNESCAPED_SLASHES);
-        $test = $apiHandler->getOutput();
+        $test = $apiProvider->getOutput();
         $this->assertEquals($expected, $test);
 
         RestApiProvider::$doRunHandler = true;
@@ -539,19 +539,40 @@ class RestApiTest extends TestCase
     public static function routeProvider()
     {
         // get restapi routes
-        $result = RouteTest::getRouteProvider(RestApiHandler::class);
+        $defaults = [
+            'any' => ['db' => 0, 'name' => 'books', 'type' => 'authors', 'id' => 3, 'title' => 'Lewis Carroll', 'key' => 'virtual_libraries', 'bookId' => 17, 'element' => 'dc:title'],
+            'restapi-annotation' => ['bookId' => 17, 'id' => 1],
+            'restapi-metadata-element-name' => ['element' => 'meta', 'name' => 'calibre:annotation'],
+            'restapi-path' => ['path' => 'path'],
+        ];
+        $result = RouteTest::getRouteProvider(RestApiHandler::class, $defaults);
         // add page routes
-        $extra = RouteTest::getRouteProvider(HtmlHandler::class);
+        $defaults = [
+            'any' => ['id' => 1, 'letter' => 'C', 'year' => 2006, 'author' => 'Author', 'title' => 'Title', 'query' => 'car', 'scope' => 'author', 'search' => 1, 'custom' => 3],
+            'page-book' => ['id' => 17],
+            'page-book-id' => ['id' => 17],
+            'page-publisher' => ['id' => 2],
+            'page-publisher-id' => ['id' => 2],
+            'page-identifier' => ['id' => 'isbn'],
+            'page-identifier-id' => ['id' => 'isbn'],
+            'page-format' => ['id' => 'EPUB'],
+        ];
+        $extra = RouteTest::getRouteProvider(HtmlHandler::class, $defaults);
         // add other routes
-        $extra = array_merge($extra, RouteTest::getRouteProvider(CheckHandler::class));
+        $defaults = [
+            'any' => ['more' => 'more'],
+        ];
+        $extra = array_merge($extra, RouteTest::getRouteProvider(CheckHandler::class, $defaults));
         foreach ($extra as $info) {
             [$path, $name, $params] = $info;
+            $fixed = $params;
+            // handle via REST API with /restapi prefix
             $path = RestApiHandler::PREFIX . $path;
             $params[Route::HANDLER_PARAM] = RestApiHandler::class;
             // with or without route param
             $params[Route::ROUTE_PARAM] = $name;
             $name = 'restapi-path';
-            $result[] = [$path, $name, $params];
+            $result[] = [$path, $name, $params, $fixed];
         }
         return $result;
     }
@@ -581,5 +602,40 @@ class RestApiTest extends TestCase
             $this->markTestSkipped('Skip restapi-path for generate');
         }
         RouteTest::generateRoute($this, $routeUrl, $route, $params);
+    }
+
+    /**
+     * @param mixed $routeUrl
+     * @param mixed $route
+     * @param mixed $params
+     * @return void
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
+    public function testGetResult($routeUrl, $route, $params, $fixed = [])
+    {
+        $_SERVER['PATH_INFO'] = $routeUrl;
+        //$request = Request::build($params, basename(self::$script));
+        $request = new Request();
+        $apiProvider = new RestApiProvider($request);
+        $result = $apiProvider->getOutput();
+        if ($route == 'restapi-path' && !empty($params[Route::ROUTE_PARAM])) {
+            $route = $params[Route::ROUTE_PARAM];
+        }
+        if ($result instanceof Response) {
+            $output = $result->getContent();
+            $resultFile = __DIR__ . '/restapi/' . $route . '.html';
+        } else {
+            $output = Format::json(json_decode($result, true));
+            $resultFile = __DIR__ . '/restapi/' . $route . '.json';
+        }
+        if (!file_exists($resultFile)) {
+            file_put_contents($resultFile, $output);
+            $this->assertTrue(true);
+        } else {
+            $expexted = file_get_contents($resultFile);
+            $this->assertEquals($expexted, $output);
+        }
+
+        unset($_SERVER["PATH_INFO"]);
     }
 }

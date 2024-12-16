@@ -145,14 +145,14 @@ class RouteTest extends TestCase
             ["index.php?page=index", "/index", "page-index", ["page" => "index"]],
             ["index.php?page=authors", "/authors", "page-authors", ["page" => "authors"]],
             ["index.php?page=authors&letter=1", "/authors/letter", "page-authors-letters", ["page" => "authors", "letter" => "1"]],
-            ["index.php?page=authors_letter&id=D", "/authors/letter/D", "page-authors-letter", ["page" => "authors_letter", "id" => "D"]],
+            ["index.php?page=authors_letter&letter=D", "/authors/letter/D", "page-authors-letter", ["page" => "authors_letter", "letter" => "D"]],
             ["index.php?page=author&id=1", "/authors/1", "page-author-id", ["page" => "author", "id" => "1"]],
             ["index.php?page=author&id=1&title=Title", "/authors/1/Title", "page-author", ["page" => "author", "id" => "1", "title" => "Title"]],
             ["index.php?page=books", "/books", "page-books", ["page" => "books"]],
             ["index.php?page=books&letter=1", "/books/letter", "page-books-letters", ["page" => "books", "letter" => "1"]],
-            ["index.php?page=books_letter&id=A", "/books/letter/A", "page-books-letter", ["page" => "books_letter", "id" => "A"]],
+            ["index.php?page=books_letter&letter=A", "/books/letter/A", "page-books-letter", ["page" => "books_letter", "letter" => "A"]],
             ["index.php?page=books&year=1", "/books/year", "page-books-years", ["page" => "books", "year" => "1"]],
-            ["index.php?page=books_year&id=2006", "/books/year/2006", "page-books-year", ["page" => "books_year", "id" => "2006"]],
+            ["index.php?page=books_year&year=2006", "/books/year/2006", "page-books-year", ["page" => "books_year", "year" => "2006"]],
             ["index.php?page=series", "/series", "page-series", ["page" => "series"]],
             ["index.php?page=serie&id=1", "/series/1", "page-serie-id", ["page" => "serie", "id" => "1"]],
             ["index.php?page=serie&id=1&title=Title", "/series/1/Title", "page-serie", ["page" => "serie", "id" => "1", "title" => "Title"]],
@@ -460,16 +460,19 @@ class RouteTest extends TestCase
     /**
      * Summary of getRouteProvider
      * @param class-string $handler
+     * @param array<mixed> $defaults
      * @return array<mixed>
      */
-    public static function getRouteProvider($handler)
+    public static function getRouteProvider($handler, $defaults = [])
     {
+        $missing = [];
         $result = [];
         $routes = $handler::getRoutes();
         foreach ($routes as $name => $route) {
             // Add params, methods and options if needed
             array_push($route, [], [], []);
             [$path, $params, $methods, $options] = $route;
+            $fixed = $params;
             // Add ["_handler" => $handler] to params
             if ($handler::HANDLER !== HtmlHandler::class) {
                 $params[Route::HANDLER_PARAM] ??= $handler;
@@ -484,19 +487,36 @@ class RouteTest extends TestCase
             // check and replace path params + support custom patterns - see nikic/fast-route
             $count = preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found);
             if (empty($count)) {
-                $result[] = [$path, $name, $params];
+                $result[] = [$path, $name, $params, $fixed];
                 continue;
             }
-            foreach ($found[1] as $key => $param) {
-                $path = str_replace('{' . $param . '}', (string) $key, $path);
+            foreach ($found[1] as $key => $match) {
                 $pattern = '';
-                if (str_contains($param, ':')) {
-                    [$param, $pattern] = explode(':', $param);
+                if (str_contains($match, ':')) {
+                    [$param, $pattern] = explode(':', $match);
+                } else {
+                    $param = $match;
                 }
+                if (!empty($defaults[$name]) && isset($defaults[$name][$param])) {
+                    $value = (string) $defaults[$name][$param];
+                } elseif (!empty($defaults['any']) && isset($defaults['any'][$param])) {
+                    $value = (string) $defaults['any'][$param];
+                } else {
+                    $value = (string) $key;
+                    $missing[$name] ??= [];
+                    $missing[$name][$param] ??= $key;
+                }
+                if (in_array($param, ['author', 'title'])) {
+                    $value = Route::getSlugger()->slug($value, '_');
+                }
+                $path = str_replace('{' . $match . '}', $value, $path);
                 // add dummy params here for tests
-                $params[$param] ??= $key;
+                $params[$param] ??= $value;
             }
-            $result[] = [$path, $name, $params];
+            $result[] = [$path, $name, $params, $fixed];
+        }
+        if (!empty($missing)) {
+            var_dump($missing);
         }
         return $result;
     }

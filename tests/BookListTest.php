@@ -94,7 +94,7 @@ class BookListTest extends TestCase
         $this->assertEquals(3, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
-        Config::set('max_item_per_page', -1);
+        Config::set('max_item_per_page', 48);
         $request = new Request();
         $booklist = new BookList($request);
 

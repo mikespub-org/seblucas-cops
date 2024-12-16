@@ -160,20 +160,20 @@ class CustomColumnTypeDate extends CustomColumnType
         $result = Database::query($query, [], $this->databaseId);
 
         $entryArray = [];
-        $label = 'year';
+        $param = 'year';
         while ($post = $result->fetchObject()) {
-            $params = ['custom' => $this->customId, 'year' => $post->groupid, 'db' => $this->databaseId];
+            $params = ['custom' => $this->customId, $param => $post->groupid, 'db' => $this->databaseId];
             // @todo if we want to use ROUTE_DETAIL we need to add id= here
             $params['id'] = '0';
             $href = fn() => $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
-                $this->getEntryId() . ':' . $label . ':' . $post->groupid,
+                $this->getEntryId() . ':' . $param . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, null, null) ],
                 $this->databaseId,
-                ucfirst($label),
+                ucfirst($param),
                 $post->count
             ));
         }

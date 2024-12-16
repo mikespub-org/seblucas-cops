@@ -339,10 +339,10 @@ class BookList
      * Summary of getCountByGroup
      * @param string $groupField
      * @param string $routeName
-     * @param string $label
+     * @param string $param
      * @return array<Entry>
      */
-    public function getCountByGroup($groupField, $routeName, $label)
+    public function getCountByGroup($groupField, $routeName, $param)
     {
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
@@ -361,16 +361,16 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $params = ['id' => $post->groupid, 'db' => $this->databaseId];
+            $params = [$param => $post->groupid, 'db' => $this->databaseId];
             $href = fn() => $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
-                Book::PAGE_ID . ':' . $label . ':' . $post->groupid,
+                Book::PAGE_ID . ':' . $param . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkFeed($href, "subsection") ],
                 $this->databaseId,
-                ucfirst($label),
+                ucfirst($param),
                 $post->count
             ));
         }

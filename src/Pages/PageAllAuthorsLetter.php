@@ -25,7 +25,7 @@ class PageAllAuthorsLetter extends Page
     public function initializeContent()
     {
         // this would be the first letter - override here
-        $this->idGet = $this->request->get('id', null, '/^[\p{L}\p{N}]$/u');
+        $this->idGet = $this->request->get('letter', null, '/^[\p{L}\p{N}]$/u');
         $this->getEntries();
         $this->idPage = Author::getEntryIdByLetter($this->idGet);
         $count = $this->totalNumber;

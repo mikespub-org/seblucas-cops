@@ -340,10 +340,10 @@ class BaseList
      * Summary of getCountByGroup
      * @param string $groupField
      * @param string $routeName
-     * @param string $label
+     * @param string $param
      * @return array<Entry>
      */
-    public function getCountByGroup($groupField, $routeName, $label)
+    public function getCountByGroup($groupField, $routeName, $param)
     {
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
         $filterString = $filter->getFilterString();
@@ -367,16 +367,16 @@ class BaseList
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
         while ($post = $result->fetchObject()) {
-            $params["id"] = $post->groupid;
+            $params[$param] = $post->groupid;
             $href = fn() => $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
-                $this->className::PAGE_ID . ':' . $label . ':' . $post->groupid,
+                $this->className::PAGE_ID . ':' . $param . ':' . $post->groupid,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, "subsection") ],
                 $this->databaseId,
-                ucfirst($label),
+                ucfirst($param),
                 $post->count
             ));
         }

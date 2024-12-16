@@ -425,11 +425,15 @@ abstract class CustomColumnType
      *
      * @param int $customId the id of the custom column
      * @param ?int $database
+     * @param bool $cached
      * @return ?CustomColumnType
      * @throws Exception If the $customId is not found or the datatype is unknown
      */
-    public static function createByCustomID($customId, $database = null)
+    public static function createByCustomID($customId, $database = null, $cached = true)
     {
+        if (!$cached) {
+            static::$customColumnCacheID = [];
+        }
         // Reuse already created CustomColumns for performance
         if (array_key_exists($customId, static::$customColumnCacheID)) {
             return static::$customColumnCacheID[$customId];
@@ -459,10 +463,14 @@ abstract class CustomColumnType
      *
      * @param string $lookup the lookup-name of the custom column
      * @param ?int $database
+     * @param bool $cached
      * @return ?CustomColumnType
      */
-    public static function createByLookup($lookup, $database = null)
+    public static function createByLookup($lookup, $database = null, $cached = true)
     {
+        if (!$cached) {
+            static::$customColumnCacheLookup = [];
+        }
         // Reuse already created CustomColumns for performance
         if (array_key_exists($lookup, static::$customColumnCacheLookup)) {
             return static::$customColumnCacheLookup[$lookup];

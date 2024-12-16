@@ -516,7 +516,7 @@ class RestApiProvider extends BaseRenderer
             "baseurl" => $baseurl,
             "databaseId" => $db,
         ];
-        $result = array_replace($result, (array) $note);
+        $result = array_replace($result, get_object_vars($note));
         $result["size"] = strlen($result["doc"]);
         $result["resources"] = [];
         foreach ($note->getResources() as $hash => $resource) {
@@ -597,7 +597,7 @@ class RestApiProvider extends BaseRenderer
             "baseurl" => $baseurl,
             "databaseId" => $db,
         ];
-        $result = array_replace($result, (array) $preference);
+        $result = array_replace($result, get_object_vars($preference));
         return $result;
     }
 

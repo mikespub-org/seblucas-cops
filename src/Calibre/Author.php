@@ -45,7 +45,7 @@ class Author extends Base
     public function __construct($post, $database = null)
     {
         $this->id = $post->id;
-        $this->name = str_replace("|", ",", $post->name);
+        $this->name = str_replace("|", ",", (string) $post->name);
         $this->sort = $post->sort;
         $this->link = property_exists($post, 'link') ? $post->link : null;
         $this->count = property_exists($post, 'count') ? $post->count : null;

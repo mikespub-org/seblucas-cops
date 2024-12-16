@@ -25,6 +25,8 @@ class GraphQLHandler extends BaseHandler
     public const HANDLER = "graphql";
     public const PREFIX = "/graphql";
 
+    public static int $numberPerPage = 100;
+
     public static function getRoutes()
     {
         return [
@@ -48,7 +50,7 @@ class GraphQLHandler extends BaseHandler
         Config::set('titles_split_first_letter', '0');
         //Config::set('titles_split_publication_year', '0');
         // @todo override pagination
-        Config::set('max_item_per_page', 100);
+        Config::set('max_item_per_page', self::$numberPerPage);
 
         $executor = new GraphQLExecutor();
         $result = $executor->runQuery($request);

@@ -575,11 +575,11 @@
             ),
             1 => 
             array (
-              'id' => 'id',
+              'letter' => 'letter',
             ),
             2 => 
             array (
-              '_route' => '/authors/letter/{id}',
+              '_route' => '/authors/letter/{letter}',
               '_name' => 'page-authors-letter',
             ),
           ),
@@ -627,11 +627,11 @@
             ),
             1 => 
             array (
-              'id' => 'id',
+              'letter' => 'letter',
             ),
             2 => 
             array (
-              '_route' => '/books/letter/{id:\\w}',
+              '_route' => '/books/letter/{letter:\\w}',
               '_name' => 'page-books-letter',
             ),
           ),
@@ -644,11 +644,11 @@
             ),
             1 => 
             array (
-              'id' => 'id',
+              'year' => 'year',
             ),
             2 => 
             array (
-              '_route' => '/books/year/{id:\\d+}',
+              '_route' => '/books/year/{year:\\d+}',
               '_name' => 'page-books-year',
             ),
           ),
@@ -1680,7 +1680,7 @@
         0 => '/authors/letter/',
         1 => 
         array (
-          0 => 'id',
+          0 => 'letter',
           1 => '[^/]+',
         ),
       ),
@@ -1736,7 +1736,7 @@
         0 => '/books/letter/',
         1 => 
         array (
-          0 => 'id',
+          0 => 'letter',
           1 => '\\w',
         ),
       ),
@@ -1755,7 +1755,7 @@
         0 => '/books/year/',
         1 => 
         array (
-          0 => 'id',
+          0 => 'year',
           1 => '\\d+',
         ),
       ),

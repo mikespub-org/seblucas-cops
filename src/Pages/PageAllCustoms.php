@@ -31,7 +31,7 @@ class PageAllCustoms extends Page
     public function initializeContent()
     {
         $customId = $this->request->get("custom", null);
-        $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId());
+        $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId(), false);
         $columnType->setHandler($this->handler);
 
         $this->idPage = $columnType->getEntryId();

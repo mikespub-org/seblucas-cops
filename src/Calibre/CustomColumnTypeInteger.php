@@ -152,21 +152,21 @@ class CustomColumnTypeInteger extends CustomColumnType
         $result = Database::query($query, [], $this->databaseId);
 
         $entryArray = [];
-        $label = 'range';
+        $param = 'range';
         while ($post = $result->fetchObject()) {
             $range = $post->min_value . "-" . $post->max_value;
-            $params = ['custom' => $this->customId, 'range' => $range, 'db' => $this->databaseId];
+            $params = ['custom' => $this->customId, $param => $range, 'db' => $this->databaseId];
             // @todo if we want to use ROUTE_DETAIL we need to add id= here
             $params['id'] = '0';
             $href = fn() => $this->handler::route($routeName, $params);
             array_push($entryArray, new Entry(
                 $range,
-                $this->getEntryId() . ':' . $label . ':' . $range,
+                $this->getEntryId() . ':' . $param . ':' . $range,
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, null, null) ],
                 $this->databaseId,
-                ucfirst($label),
+                ucfirst($param),
                 $post->count
             ));
         }
