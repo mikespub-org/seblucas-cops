@@ -121,6 +121,7 @@ class Database
     /**
      * Summary of getDbDirectory
      * @param ?int $database
+     * @throws Exception if error
      * @return string
      */
     public static function getDbDirectory($database)
@@ -130,6 +131,9 @@ class Database
                 $database = 0;
             }
             $array = array_values(Config::get('calibre_directory'));
+            if ($database > count($array) - 1) {
+                throw new Exception("Database <{$database}> not found.");
+            }
             return  $array[$database];
         }
         return Config::get('calibre_directory');

@@ -69,3 +69,51 @@ query getData($id: ID) {
     }
   }
 }
+query getAuthors($limit: Int, $offset: Int, $order: String, $where: SequelizeJSON = "where") {
+  authors(limit: $limit, offset: $offset, order: $order, where: $where) {
+    id
+    title
+    numberOfElement
+    books {
+      id
+      title
+      languages
+    }
+  }
+}
+query getNode($id: ID!) {
+  node(id: $id) {
+    __typename
+    id
+  	... on Entry {
+      title
+      content
+      books {
+        id
+        title
+      }
+    }
+    ... on EntryBook {
+      title
+      path
+      authors {
+        id
+        title
+      }
+    }
+    ... on Data {
+      name
+      format
+      book {
+        id
+        title
+      }
+    }
+  }
+}
+query getNodes($idlist: [ID!]!) {
+  nodes(idlist: $idlist) {
+    __typename
+    id
+  }
+}

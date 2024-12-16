@@ -1,0 +1,18 @@
+{
+    "data": {
+        "authors": [
+            {
+                "id": "cops:authors:7",
+                "title": "Émile Zola",
+                "numberOfElement": "1",
+                "books": [
+                    {
+                        "id": "urn:uuid:08d43a34-fb89-446f-94ef-16bac6d8aa28",
+                        "title": "La curée",
+                        "languages": "French"
+                    }
+                ]
+            }
+        ]
+    }
+}

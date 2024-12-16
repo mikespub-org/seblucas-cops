@@ -1,0 +1,16 @@
+{
+    "data": {
+        "node": {
+            "__typename": "EntryBook",
+            "id": "urn:uuid:d74fec58-06bc-4ba8-b8b4-24a91a58e6f9",
+            "title": "Alice's Adventures in Wonderland",
+            "path": "/home/mikespub/seblucas-cops/tests/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)",
+            "authors": [
+                {
+                    "id": "cops:authors:3",
+                    "title": "Lewis Carroll"
+                }
+            ]
+        }
+    }
+}

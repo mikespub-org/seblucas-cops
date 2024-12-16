@@ -1,0 +1,20 @@
+{
+    "data": {
+        "node": {
+            "__typename": "Entry",
+            "id": "cops:authors:3",
+            "title": "Lewis Carroll",
+            "content": "No books",
+            "books": [
+                {
+                    "id": "urn:uuid:d74fec58-06bc-4ba8-b8b4-24a91a58e6f9",
+                    "title": "Alice's Adventures in Wonderland"
+                },
+                {
+                    "id": "urn:uuid:95029a0f-c537-4d8d-b4d0-b478ad4de645",
+                    "title": "Through the Looking Glass (And What Alice Found There)"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "data": {
+        "node": {
+            "__typename": "Data",
+            "id": "20",
+            "name": "Alice's Adventures in Wonderland - Lewis Carroll",
+            "format": "EPUB",
+            "book": {
+                "id": "urn:uuid:d74fec58-06bc-4ba8-b8b4-24a91a58e6f9",
+                "title": "Alice's Adventures in Wonderland"
+            }
+        }
+    }
+}

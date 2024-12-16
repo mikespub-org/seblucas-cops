@@ -1,0 +1,22 @@
+{
+    "errors": [
+        {
+            "message": "Internal server error",
+            "locations": [
+                {
+                    "line": 85,
+                    "column": 3
+                }
+            ],
+            "path": [
+                "node"
+            ],
+            "extensions": {
+                "debugMessage": "Invalid global identifier type"
+            }
+        }
+    ],
+    "data": {
+        "node": null
+    }
+}

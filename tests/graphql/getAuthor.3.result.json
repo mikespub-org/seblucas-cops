@@ -1,0 +1,80 @@
+{
+    "data": {
+        "author": {
+            "id": "cops:authors:3",
+            "title": "Lewis Carroll",
+            "books": [
+                {
+                    "id": "urn:uuid:d74fec58-06bc-4ba8-b8b4-24a91a58e6f9",
+                    "title": "Alice's Adventures in Wonderland",
+                    "path": "/home/mikespub/seblucas-cops/tests/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)",
+                    "content": "<p class=\"description\">Alice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.<br />The tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.</p>\n\nAlice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.\nThe tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.",
+                    "linkArray": [
+                        {
+                            "href": "vendor/bin/index.php/covers/0/17.jpg",
+                            "type": "image/jpeg",
+                            "rel": "http://opds-spec.org/image",
+                            "title": null
+                        },
+                        {
+                            "href": "vendor/bin/index.php/thumbs/0/17/html.jpg",
+                            "type": "image/jpeg",
+                            "rel": "http://opds-spec.org/image/thumbnail",
+                            "title": null
+                        },
+                        {
+                            "href": "vendor/bin/index.php/fetch/0/17/ignore.mobi",
+                            "type": "application/x-mobipocket-ebook",
+                            "rel": "http://opds-spec.org/acquisition",
+                            "title": "MOBI"
+                        },
+                        {
+                            "href": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
+                            "type": "application/pdf",
+                            "rel": "http://opds-spec.org/acquisition",
+                            "title": "PDF"
+                        },
+                        {
+                            "href": "vendor/bin/index.php/fetch/0/20/ignore.epub",
+                            "type": "application/epub+zip",
+                            "rel": "http://opds-spec.org/acquisition",
+                            "title": "EPUB"
+                        },
+                        {
+                            "href": "vendor/bin/index.php/authors/3/Lewis_Carroll",
+                            "type": "application/atom+xml;profile=opds-catalog;kind=acquisition",
+                            "rel": "related",
+                            "title": "Other books by Lewis Carroll"
+                        }
+                    ]
+                },
+                {
+                    "id": "urn:uuid:95029a0f-c537-4d8d-b4d0-b478ad4de645",
+                    "title": "Through the Looking Glass (And What Alice Found There)",
+                    "path": "/home/mikespub/seblucas-cops/tests/BaseWithSomeBooks/Lewis Carroll/Through the Looking Glass (And What Alic (6)",
+                    "content": "<p class=\"description\">Through the Looking-Glass, and What Alice Found There (1871) is a work of children's literature by Lewis Carroll (Charles Lutwidge Dodgson), generally categorized as literary nonsense. It is the sequel to Alice's Adventures in Wonderland (1865). Although it makes no reference to the events in the earlier book, the themes and settings of Through the Looking-Glass make it a kind of mirror image of Wonderland: the first book begins outdoors, in the warm month of May, on Alice's birthday (May 4), uses frequent changes in size as a plot device, and draws on the imagery of playing cards; the second opens indoors on a snowy, wintry night exactly six months later, on November 4 (the day before Guy Fawkes Night), uses frequent changes in time and spatial directions as a plot device, and draws on the imagery of chess. In it, there are many mirror themes, including opposites, time running backwards, and so on.</p>",
+                    "linkArray": [
+                        {
+                            "href": "vendor/bin/images/icons/icon144.png",
+                            "type": "image/png",
+                            "rel": "http://opds-spec.org/image/thumbnail",
+                            "title": null
+                        },
+                        {
+                            "href": "vendor/bin/index.php/fetch/0/5/ignore.epub",
+                            "type": "application/epub+zip",
+                            "rel": "http://opds-spec.org/acquisition",
+                            "title": "EPUB"
+                        },
+                        {
+                            "href": "vendor/bin/index.php/authors/3/Lewis_Carroll",
+                            "type": "application/atom+xml;profile=opds-catalog;kind=acquisition",
+                            "rel": "related",
+                            "title": "Other books by Lewis Carroll"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

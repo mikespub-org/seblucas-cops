@@ -235,12 +235,34 @@ type Query {
     """
     where: SequelizeJSON
   ): Entry
+  """
+  Node root field with Global Object Identifier
+  See https://relay.dev/graphql/objectidentification.htm#sec-Node-root-field
+  """
+  node(
+    id: ID!
+  ): Node
+  """
+  Plural identifying root field
+  See https://relay.dev/graphql/objectidentification.htm#sec-Plural-identifying-root-fields
+  """
+  nodes(
+    idlist: [ID!]!
+  ): [Node]
 }
 
 """The `JSON` scalar type represents raw JSON as values."""
 scalar SequelizeJSON
 
-type Entry {
+"""
+Node Interface with Global Object Identifier
+See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface
+"""
+interface Node {
+  id: ID!
+}
+
+type Entry implements Node {
   id: ID!
   title: String!
   content: String
@@ -260,7 +282,7 @@ type Entry {
   ): [EntryBook]
 }
 
-type EntryBook {
+type EntryBook implements Node {
   id: ID!
   title: String!
   content: String
@@ -288,7 +310,7 @@ type Link {
   title: String
 }
 
-type Data {
+type Data implements Node {
   id: ID!
   book: EntryBook
   format: String

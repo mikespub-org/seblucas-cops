@@ -1,0 +1,6 @@
+query getNodes($idlist: [ID!]!) {
+  nodes(idlist: $idlist) {
+    __typename
+    id
+  }
+}

@@ -1,0 +1,7 @@
+{
+    "operationName": "getNode",
+    "variables": {
+        "id": "/books/17"
+    },
+    "query": "query getNode($id: ID!) {\n  node(id: $id) {\n    __typename\n    id\n  }\n}"
+}
