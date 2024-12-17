@@ -1,0 +1,38 @@
+{
+    "data": {
+        "search": [
+            {
+                "__typename": "Entry",
+                "id": "db:query::book",
+                "title": "Search result for *car* in books",
+                "content": "1 book",
+                "numberOfElement": "1"
+            },
+            {
+                "__typename": "EntryBook",
+                "id": "urn:uuid:f3a4534e-d7bc-415a-8887-ba2b2810c980",
+                "title": "A Study in Scarlet",
+                "authors": [
+                    {
+                        "id": "cops:authors:1",
+                        "title": "Arthur Conan Doyle"
+                    }
+                ]
+            },
+            {
+                "__typename": "Entry",
+                "id": "db:query::author",
+                "title": "Search result for *car* in authors",
+                "content": "1 author",
+                "numberOfElement": "1"
+            },
+            {
+                "__typename": "Entry",
+                "id": "cops:authors:3",
+                "title": "Lewis Carroll",
+                "content": "2 books",
+                "numberOfElement": "2"
+            }
+        ]
+    }
+}

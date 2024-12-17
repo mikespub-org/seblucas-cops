@@ -98,7 +98,7 @@ class GraphQLHandlerTest extends TestCase
         $this->assertEquals($expected, $errors);
 
         $queryType = $schema->getQueryType();
-        $expected = 28;
+        $expected = 29;
         $this->assertCount($expected, $queryType->getFieldNames());
     }
 
@@ -306,6 +306,10 @@ class GraphQLHandlerTest extends TestCase
                     $vars = ['idlist' => ['/authors/3', '/books/17', '/datas/20', '/oops/42']];
                     $query = 'query ' . $operation . "(\$idlist: [ID!]!) {\n";
                     $query .= '  ' . $name . "(idlist: \$idlist) {\n";
+                } elseif ($name == 'search') {
+                    $vars = ['query' => 'car'];
+                    $query = 'query ' . $operation . "(\$query: String!, \$scope: String) {\n";
+                    $query .= '  ' . $name . "(query: \$query, scope: \$scope) {\n";
                 } else {
                     $vars = [];
                     $query = 'query ' . $operation . " {\n";
@@ -328,6 +332,23 @@ class GraphQLHandlerTest extends TestCase
                     case 'Node':
                         $query .= "    __typename\n";
                         $query .= "    id\n";
+                        break;
+                    case 'SearchResult':
+                        $query .= "    __typename\n";
+                        $query .= "    ... on Entry {\n";
+                        $query .= "      id\n";
+                        $query .= "      title\n";
+                        $query .= "      content\n";
+                        $query .= "      numberOfElement\n";
+                        $query .= "    }\n";
+                        $query .= "    ... on EntryBook {\n";
+                        $query .= "      id\n";
+                        $query .= "      title\n";
+                        $query .= "      authors {\n";
+                        $query .= "        id\n";
+                        $query .= "        title\n";
+                        $query .= "      }\n";
+                        $query .= "    }\n";
                         break;
                 }
                 $query .= "  }\n";

@@ -8,7 +8,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -17,7 +17,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -26,7 +26,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -35,7 +35,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): EntryBook
@@ -44,7 +44,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -53,7 +53,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -61,7 +61,7 @@ type Query {
     bookId: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): [Data]
@@ -69,7 +69,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Data
@@ -78,7 +78,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -87,7 +87,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -96,7 +96,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -105,7 +105,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -114,7 +114,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -123,7 +123,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -132,7 +132,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -141,7 +141,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -150,7 +150,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -159,7 +159,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -168,7 +168,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -177,7 +177,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -186,7 +186,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -195,7 +195,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -204,7 +204,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -213,7 +213,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -222,7 +222,7 @@ type Query {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -231,7 +231,7 @@ type Query {
     id: ID
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
   ): Entry
@@ -249,6 +249,21 @@ type Query {
   nodelist(
     idlist: [ID!]!
   ): [Node]
+  """
+  Search by query and scope
+  """
+  search(
+    query: String!
+    scope: String
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [SearchResult]
 }
 
 """The `JSON` scalar type represents raw JSON as values."""
@@ -275,7 +290,7 @@ type Entry implements Node {
     order: String
 
     """
-    A JSON object conforming the the shape specified in http://docs.sequelizejs.com/en/latest/docs/querying/
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
     """
     where: SequelizeJSON
     offset: Int
@@ -317,3 +332,5 @@ type Data implements Node {
   uncompressedSize: Int
   name: String
 }
+
+union SearchResult = Entry | EntryBook

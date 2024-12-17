@@ -1,0 +1,7 @@
+{
+    "operationName": "getSearch",
+    "variables": {
+        "query": "car"
+    },
+    "query": "query getSearch($query: String!, $scope: String) {\n  search(query: $query, scope: $scope) {\n    __typename\n    ... on Entry {\n      id\n      title\n      content\n      numberOfElement\n    }\n    ... on EntryBook {\n      id\n      title\n      authors {\n        id\n        title\n      }\n    }\n  }\n}"
+}

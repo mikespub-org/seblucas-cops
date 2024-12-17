@@ -1,0 +1,19 @@
+query getSearch($query: String!, $scope: String) {
+  search(query: $query, scope: $scope) {
+    __typename
+    ... on Entry {
+      id
+      title
+      content
+      numberOfElement
+    }
+    ... on EntryBook {
+      id
+      title
+      authors {
+        id
+        title
+      }
+    }
+  }
+}

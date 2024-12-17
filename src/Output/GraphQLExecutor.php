@@ -30,6 +30,7 @@ use SebLucas\Cops\Input\Context;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
+use SebLucas\Cops\Pages\PageId;
 use GraphQL\GraphQL;
 use GraphQL\Language\Parser;
 use GraphQL\Utils\BuildSchema;
@@ -211,6 +212,7 @@ class GraphQLExecutor
     {
         return [
             'Node' => $this->getNodeTypeResolver(...),
+            'SearchResult' => $this->getNodeTypeResolver(...),
         ];
     }
 
@@ -398,6 +400,8 @@ class GraphQLExecutor
             case 'node':
                 // @todo add other requested fields on demand
                 return self::getNode((string) ($args['id'] ?? ''), $request, $handler);
+            case 'search':
+                return self::getSearch($args, $request, $handler);
             default:
                 return false;
         }
@@ -555,5 +559,32 @@ class GraphQLExecutor
             throw new Exception('Invalid global identifier id');
         }
         return [$db, $type, $id];
+    }
+
+    /**
+     * Summary of getSearch
+     * @param array<mixed> $args
+     * @param Request $request
+     * @param class-string $handler
+     * @return mixed
+     */
+    public static function getSearch($args, $request, $handler)
+    {
+        [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
+        $query = $args['query'] ?? '';
+        if (empty($query)) {
+            return null;
+        }
+        $current->set('query', $query);
+        $scope = $args['scope'] ?? '';
+        if (!empty($scope)) {
+            $current->set('scope', $scope);
+        }
+        // use typeahead format here
+        $current->set('search', 1);
+        $pageId = PageId::OPENSEARCH_QUERY;
+        $page = PageId::getPage($pageId, $current);
+        // ...
+        return $page->entryArray;
     }
 }
