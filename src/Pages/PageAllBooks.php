@@ -35,7 +35,17 @@ class PageAllBooks extends Page
     public function getEntries()
     {
         $booklist = new BookList($this->request);
-        if ($this->request->option("titles_split_first_letter") == 1 || $this->request->get('letter')) {
+        $idlist = $this->request->get('idlist');
+        if (!empty($idlist)) {
+            // [$this->entryArray, $this->totalNumber] = $booklist->getAllBooks($this->n);
+            if (!is_array($idlist)) {
+                $idlist = explode(',', string: $idlist);
+            }
+            $idlist = array_map('intval', $idlist);
+            // sort entryArray by order in idlist here
+            [$this->entryArray, $this->totalNumber] = $booklist->getBooksByIdList($idlist);
+            $this->sorted = $booklist->orderBy ?? "id";
+        } elseif ($this->request->option("titles_split_first_letter") == 1 || $this->request->get('letter')) {
             $this->entryArray = $booklist->getCountByFirstLetter();
             $this->sorted = $booklist->orderBy ?? "letter";
         } elseif (!empty($this->request->option("titles_split_publication_year")) || $this->request->get('year')) {

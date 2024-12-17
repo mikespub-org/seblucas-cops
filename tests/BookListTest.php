@@ -326,6 +326,25 @@ class BookListTest extends TestCase
         $this->assertCount(16, $entryArray);
     }
 
+    public function testGetBookIdList(): void
+    {
+        $request = new Request();
+        $request->set('idlist', [19, 17]);
+        $booklist = new BookList($request);
+
+        [$entryArray, $totalNumber] = $booklist->getAllBooks();
+        $this->assertCount(2, $entryArray);
+        $this->assertEquals(2, $totalNumber);
+
+        $request = new Request();
+        $request->set('idlist', '19,17');
+        $booklist = new BookList($request);
+
+        [$entryArray, $totalNumber] = $booklist->getAllBooks();
+        $this->assertCount(2, $entryArray);
+        $this->assertEquals(2, $totalNumber);
+    }
+
     public function tearDown(): void
     {
         Database::clearDb();

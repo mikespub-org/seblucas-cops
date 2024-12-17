@@ -33,6 +33,8 @@ class BookList
     where upper (books.sort) like ? {1} order by books.sort';
     public const SQL_BOOKS_BY_PUB_YEAR = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where substr(date(books.pubdate), 1, 4) = ? {1} order by books.sort';
+    public const SQL_BOOKS_BY_ID_LIST = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where books.id = ? {1} order by books.sort';
     public const SQL_BOOKS_QUERY = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where (
     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
@@ -44,6 +46,7 @@ class BookList
     where 1=1 {1} order by books.timestamp desc limit ';
     public const URL_PARAM_FIRST = "f";
     public const URL_PARAM_YEAR = "y";
+    public const URL_PARAM_LIST = "idlist";
 
     public const BAD_SEARCH = 'QQQQQ';
     public const BATCH_QUERY = false;
@@ -397,6 +400,32 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function getBooksByPubYear($year, $n)
     {
         return $this->getEntryArray(self::SQL_BOOKS_BY_PUB_YEAR, [$year], $n);
+    }
+
+    /**
+     * Summary of getBooksByIdList
+     * @param array<int> $idlist
+     * @return array{0: EntryBook[], 1: integer}
+     */
+    public function getBooksByIdList($idlist)
+    {
+        if (count($idlist) < 1) {
+            $this->orderBy ??= 'id';
+            return $this->getAllBooks();
+        }
+        // @todo this is already covered in Filter::addBookIdListFilter()
+        $query = self::SQL_BOOKS_BY_ID_LIST;
+        $query = str_replace('books.id = ? ', 'books.id IN (' . str_repeat('?,', count($idlist) - 1) . '?) ', $query);
+        [$entryArray, $totalNumber] = $this->getEntryArray($query, $idlist, -1);
+        $sorted = $this->orderBy ?? "id";
+        if ($sorted == "id") {
+            // sort entryArray by order in idlist
+            $order = array_flip($idlist);
+            uasort($entryArray, function ($a, $b) use ($order) {
+                return $order[$a->book->id] <=> $order[$b->book->id];
+            });
+        }
+        return [$entryArray, $totalNumber];
     }
 
     /**

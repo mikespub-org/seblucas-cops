@@ -19,6 +19,8 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class BaseList
 {
+    public const URL_PARAM_LIST = "idlist";
+
     public Request $request;
     /** @var class-string */
     public $className;

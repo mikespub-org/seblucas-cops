@@ -32,6 +32,7 @@ class Filter
         CustomColumn::URL_PARAM => CustomColumn::class,
         BookList::URL_PARAM_FIRST => BookList::class,
         BookList::URL_PARAM_YEAR => BookList::class,
+        BookList::URL_PARAM_LIST => BookList::class,
         VirtualLibrary::URL_PARAM => VirtualLibrary::class,
     ];
     public const SEARCH_FIELDS = [
@@ -181,6 +182,18 @@ class Filter
         if (!empty($year) && $this->parentTable == 'books') {
             $this->addPubYearFilter($year);
         }
+
+        // this only works if books is part of the query
+        $idlist = $this->request->get(BookList::URL_PARAM_LIST, null);
+        if (!empty($idlist) && $this->parentTable == 'books') {
+            // URL format: ...&idlist[]=3&idlist[]=7 or ...&idlist=3,7 (csv)
+            if (!is_array($idlist)) {
+                $idlist = explode(',', (string) $idlist);
+            }
+            $idlist = array_map('intval', $idlist);
+            $this->addBookIdListFilter($idlist);
+        }
+        // @todo use idlist filter for other entities as well?
 
         // URL format: ...&c[2]=3&c[3]=other to filter on column 2 = 3 and column 3 = other
         $customIdArray = $this->request->get(CustomColumn::URL_PARAM, null);
@@ -404,6 +417,22 @@ class Filter
     }
 
     /**
+     * Summary of addBookIdListFilter
+     * @param array<int> $idlist
+     * @return void
+     */
+    public function addBookIdListFilter($idlist)
+    {
+        if (count($idlist) < 1) {
+            return;
+        }
+        $filter = 'books.id IN (' . str_repeat('?,', count($idlist) - 1) . '?)';
+        //$this->addFilter($filter, $idlist);
+        $this->queryString .= ' and (' . $filter . ')';
+        $this->params = array_merge($this->params, $idlist);
+    }
+
+    /**
      * Summary of addCustomIdArrayFilters
      * @param array<mixed> $customIdArray
      * @return void
@@ -539,6 +568,11 @@ class Filter
             }
             $paramValue = $request->get($paramName, null);
             if (!isset($paramValue)) {
+                continue;
+            }
+            if ($paramName == BookList::URL_PARAM_LIST) {
+                // @todo (booklist) this is not used to generate filter entries
+                //$entryArray = array_merge($entryArray, $booklist->getBooksByIdList($paramValue)),
                 continue;
             }
             // @todo do we want to filter by virtual library etc. here?
