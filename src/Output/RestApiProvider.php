@@ -32,6 +32,8 @@ use Exception;
  */
 class RestApiProvider extends BaseRenderer
 {
+    public const DEFINITION_FILE = 'resources/openapi.json';
+    public const RESTAPI_CACHE_FILE = 'resources/cache.restapi.php';
     public const PREFIX = RestApiHandler::PREFIX;
     public static string $handler = RestApiHandler::class;
     public static int $numberPerPage = 100;

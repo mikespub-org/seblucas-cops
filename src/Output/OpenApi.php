@@ -307,4 +307,17 @@ class OpenApi
             }
         }
     }
+
+    /**
+     * Summary of dump
+     * @param ?string $schemaFile
+     * @return void
+     */
+    public function dump($schemaFile = null)
+    {
+        $schemaFile ??= dirname(__DIR__, 2) . '/' . RestApiProvider::DEFINITION_FILE;
+        $definition = $this->getDefinition();
+        $content = Format::json($definition);
+        file_put_contents($schemaFile, $content);
+    }
 }

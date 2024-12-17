@@ -24,7 +24,6 @@ use Exception;
 class RestApiHandler extends BaseHandler
 {
     public const HANDLER = "restapi";
-    public const DEFINITION_FILE = 'resources/openapi.json';
     public const PREFIX = "/restapi";
     public const RESOURCE = "_resource";
     public const PARAMLIST = [

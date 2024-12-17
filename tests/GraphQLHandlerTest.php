@@ -168,7 +168,7 @@ class GraphQLHandlerTest extends TestCase
     {
         $id = 3;
         $request = Request::build();
-        $request->content = $this->getAuthorQuery($id);
+        $request->content = $this->getAuthorQuery((string) $id);
 
         $executor = new GraphQLExecutor();
         $result = $executor->runQuery($request);

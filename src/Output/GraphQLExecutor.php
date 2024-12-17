@@ -30,10 +30,10 @@ use SebLucas\Cops\Input\Context;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
-use SebLucas\Cops\Output\Format as OutputFormat;
-use SebLucas\Cops\Output\Response;
 use GraphQL\GraphQL;
+use GraphQL\Language\Parser;
 use GraphQL\Utils\BuildSchema;
+use GraphQL\Utils\AST;
 use GraphQL\Language\AST\TypeDefinitionNode;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Executor\Executor;
@@ -47,6 +47,7 @@ use JsonException;
 class GraphQLExecutor
 {
     public const DEFINITION_FILE = 'resources/schema.graphql';
+    public const SCHEMA_CACHE_FILE = 'resources/cache.graphql.php';
     public const DEBUG = DebugFlag::INCLUDE_DEBUG_MESSAGE;
 
     /**
@@ -90,9 +91,10 @@ class GraphQLExecutor
      * Summary of getSchema
      * @phpstan-type TypeConfigDecorator callable(): array<string, mixed>
      * @param Request $request
+     * @param bool $refresh
      * @return \GraphQL\Type\Schema
      */
-    public function getSchema($request)
+    public function getSchema($request, $refresh = false)
     {
         $fieldResolvers = $this->mapTypeFieldResolvers();
         $typeResolvers = $this->mapTypeResolvers();
@@ -104,14 +106,22 @@ class GraphQLExecutor
                 $typeConfig['resolveField'] = $fieldResolvers[$name]($request);
             }
             if (empty($typeConfig['resolveType']) && !empty($typeResolvers[$name])) {
-                $typeConfig['resolveType'] = $typeResolvers[$name]($request);
+                $typeConfig['resolveType'] = $typeResolvers[$name]();
             }
             return $typeConfig;
         };
 
-        $contents = file_get_contents(dirname(__DIR__, 2) . '/' . self::DEFINITION_FILE);
+        $cacheFile = dirname(__DIR__, 2) . '/' . self::SCHEMA_CACHE_FILE;
+        if ($refresh || !file_exists($cacheFile)) {
+            $schemaFile = dirname(__DIR__, 2) . '/' . self::DEFINITION_FILE;
+            $contents = file_get_contents($schemaFile);
+            $document = Parser::parse($contents);
+            file_put_contents($cacheFile, "<?php\nreturn " . var_export(AST::toArray($document), true) . ";\n");
+        } else {
+            $document = AST::fromArray(require $cacheFile); // fromArray() is a lazy operation as well
+        }
         //$schema = BuildSchema::build($contents);
-        $schema = BuildSchema::build($contents, $typeConfigDecorator);
+        $schema = BuildSchema::build($document, $typeConfigDecorator);
 
         return $schema;
     }
@@ -206,12 +216,11 @@ class GraphQLExecutor
 
     /**
      * Summary of getNodeTypeResolver
-     * @param Request $request - @todo not used
      * @return callable
      */
-    public function getNodeTypeResolver($request)
+    public function getNodeTypeResolver()
     {
-        $resolver = static function ($objectValue, $context, ResolveInfo $info) use ($request) {
+        $resolver = static function ($objectValue, $context, ResolveInfo $info) {
             if ($objectValue instanceof EntryBook) {
                 return 'EntryBook';
             }
@@ -388,7 +397,7 @@ class GraphQLExecutor
                 return $result;
             case 'node':
                 // @todo add other requested fields on demand
-                return self::getNode((string) $args['id'] ?? '', $request, $handler);
+                return self::getNode((string) ($args['id'] ?? ''), $request, $handler);
             default:
                 return false;
         }
@@ -489,10 +498,15 @@ class GraphQLExecutor
         if (empty($type) || empty($id)) {
             return null;
         }
+        // handle $db if different from $request->database()
+        $current = clone $request;
+        if ($db !== $current->database()) {
+            $current->set('db', $db);
+        }
         // books => book, authors => author etc.
         $fieldName = substr($type, 0, -1);
         // @todo add other requested fields on demand
-        $entry = self::getQueryField($fieldName, ['id' => $id], $request, $handler);
+        $entry = self::getQueryField($fieldName, ['id' => $id], $current, $handler);
         if (!empty($entry)) {
             return $entry;
         }
@@ -523,6 +537,8 @@ class GraphQLExecutor
             $id = $type;
             $type = $db;
             $db = null;
+        } else {
+            $db = intval($db);
         }
         // basic validation of global identifier parts
         try {
