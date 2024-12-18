@@ -85,9 +85,8 @@ class GraphQLHandlerTest extends TestCase
 
     public function testGetSchema(): void
     {
-        $request = Request::build();
         $executor = new GraphQLExecutor();
-        $schema = $executor->getSchema($request);
+        $schema = $executor->getSchema();
 
         $expected = Schema::class;
         $this->assertEquals($expected, $schema::class);
@@ -281,9 +280,8 @@ class GraphQLHandlerTest extends TestCase
                 [],
             ];
         }
-        $request = Request::build();
         $executor = new GraphQLExecutor();
-        $schema = $executor->getSchema($request);
+        $schema = $executor->getSchema();
 
         $data = [];
         $queryType = $schema->getQueryType();

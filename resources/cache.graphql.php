@@ -3,7 +3,7 @@ return array (
   'loc' => 
   array (
     'start' => 0,
-    'end' => 6329,
+    'end' => 6644,
   ),
   'kind' => 'Document',
   'definitions' => 
@@ -5411,7 +5411,7 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
       'loc' => 
       array (
         'start' => 5370,
-        'end' => 5724,
+        'end' => 5775,
       ),
       'kind' => 'ObjectTypeDefinition',
       'name' => 
@@ -6014,22 +6014,154 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
           ),
         ),
+        8 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 5725,
+            'end' => 5740,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5725,
+              'end' => 5732,
+            ),
+            'kind' => 'Name',
+            'value' => 'navlink',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5734,
+              'end' => 5740,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 5734,
+                'end' => 5740,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        9 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 5743,
+            'end' => 5760,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5743,
+              'end' => 5752,
+            ),
+            'kind' => 'Name',
+            'value' => 'thumbnail',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5754,
+              'end' => 5760,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 5754,
+                'end' => 5760,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        10 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 5763,
+            'end' => 5773,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5763,
+              'end' => 5767,
+            ),
+            'kind' => 'Name',
+            'value' => 'note',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5769,
+              'end' => 5773,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 5769,
+                'end' => 5773,
+              ),
+              'kind' => 'Name',
+              'value' => 'Note',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
       ),
     ),
     4 => 
     array (
       'loc' => 
       array (
-        'start' => 5726,
-        'end' => 6097,
+        'start' => 5777,
+        'end' => 6187,
       ),
       'kind' => 'ObjectTypeDefinition',
       'name' => 
       array (
         'loc' => 
         array (
-          'start' => 5731,
-          'end' => 5740,
+          'start' => 5782,
+          'end' => 5791,
         ),
         'kind' => 'Name',
         'value' => 'EntryBook',
@@ -6040,16 +6172,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5752,
-            'end' => 5756,
+            'start' => 5803,
+            'end' => 5807,
           ),
           'kind' => 'NamedType',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5752,
-              'end' => 5756,
+              'start' => 5803,
+              'end' => 5807,
             ),
             'kind' => 'Name',
             'value' => 'Node',
@@ -6065,16 +6197,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5761,
-            'end' => 5768,
+            'start' => 5812,
+            'end' => 5819,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5761,
-              'end' => 5763,
+              'start' => 5812,
+              'end' => 5814,
             ),
             'kind' => 'Name',
             'value' => 'id',
@@ -6086,24 +6218,24 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5765,
-              'end' => 5768,
+              'start' => 5816,
+              'end' => 5819,
             ),
             'kind' => 'NonNullType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 5765,
-                'end' => 5767,
+                'start' => 5816,
+                'end' => 5818,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 5765,
-                  'end' => 5767,
+                  'start' => 5816,
+                  'end' => 5818,
                 ),
                 'kind' => 'Name',
                 'value' => 'ID',
@@ -6118,16 +6250,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5771,
-            'end' => 5785,
+            'start' => 5822,
+            'end' => 5836,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5771,
-              'end' => 5776,
+              'start' => 5822,
+              'end' => 5827,
             ),
             'kind' => 'Name',
             'value' => 'title',
@@ -6139,24 +6271,24 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5778,
-              'end' => 5785,
+              'start' => 5829,
+              'end' => 5836,
             ),
             'kind' => 'NonNullType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 5778,
-                'end' => 5784,
+                'start' => 5829,
+                'end' => 5835,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 5778,
-                  'end' => 5784,
+                  'start' => 5829,
+                  'end' => 5835,
                 ),
                 'kind' => 'Name',
                 'value' => 'String',
@@ -6171,16 +6303,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5788,
-            'end' => 5803,
+            'start' => 5839,
+            'end' => 5854,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5788,
-              'end' => 5795,
+              'start' => 5839,
+              'end' => 5846,
             ),
             'kind' => 'Name',
             'value' => 'content',
@@ -6192,16 +6324,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5797,
-              'end' => 5803,
+              'start' => 5848,
+              'end' => 5854,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 5797,
-                'end' => 5803,
+                'start' => 5848,
+                'end' => 5854,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -6215,16 +6347,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5806,
-            'end' => 5825,
+            'start' => 5857,
+            'end' => 5876,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5806,
-              'end' => 5817,
+              'start' => 5857,
+              'end' => 5868,
             ),
             'kind' => 'Name',
             'value' => 'contentType',
@@ -6236,16 +6368,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5819,
-              'end' => 5825,
+              'start' => 5870,
+              'end' => 5876,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 5819,
-                'end' => 5825,
+                'start' => 5870,
+                'end' => 5876,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -6259,16 +6391,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5828,
-            'end' => 5845,
+            'start' => 5879,
+            'end' => 5896,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5828,
-              'end' => 5837,
+              'start' => 5879,
+              'end' => 5888,
             ),
             'kind' => 'Name',
             'value' => 'linkArray',
@@ -6280,24 +6412,24 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5839,
-              'end' => 5845,
+              'start' => 5890,
+              'end' => 5896,
             ),
             'kind' => 'ListType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 5840,
-                'end' => 5844,
+                'start' => 5891,
+                'end' => 5895,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 5840,
-                  'end' => 5844,
+                  'start' => 5891,
+                  'end' => 5895,
                 ),
                 'kind' => 'Name',
                 'value' => 'Link',
@@ -6312,16 +6444,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5848,
-            'end' => 5865,
+            'start' => 5899,
+            'end' => 5916,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5848,
-              'end' => 5857,
+              'start' => 5899,
+              'end' => 5908,
             ),
             'kind' => 'Name',
             'value' => 'className',
@@ -6333,16 +6465,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5859,
-              'end' => 5865,
+              'start' => 5910,
+              'end' => 5916,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 5859,
-                'end' => 5865,
+                'start' => 5910,
+                'end' => 5916,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -6356,16 +6488,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5868,
-            'end' => 5891,
+            'start' => 5919,
+            'end' => 5942,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5868,
-              'end' => 5883,
+              'start' => 5919,
+              'end' => 5934,
             ),
             'kind' => 'Name',
             'value' => 'numberOfElement',
@@ -6377,16 +6509,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5885,
-              'end' => 5891,
+              'start' => 5936,
+              'end' => 5942,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 5885,
-                'end' => 5891,
+                'start' => 5936,
+                'end' => 5942,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -6400,60 +6532,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5894,
-            'end' => 5906,
+            'start' => 5945,
+            'end' => 5961,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5894,
-              'end' => 5898,
-            ),
-            'kind' => 'Name',
-            'value' => 'path',
-          ),
-          'arguments' => 
-          array (
-          ),
-          'type' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 5900,
-              'end' => 5906,
-            ),
-            'kind' => 'NamedType',
-            'name' => 
-            array (
-              'loc' => 
-              array (
-                'start' => 5900,
-                'end' => 5906,
-              ),
-              'kind' => 'Name',
-              'value' => 'String',
-            ),
-          ),
-          'directives' => 
-          array (
-          ),
-        ),
-        8 => 
-        array (
-          'loc' => 
-          array (
-            'start' => 5909,
-            'end' => 5925,
-          ),
-          'kind' => 'FieldDefinition',
-          'name' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 5909,
-              'end' => 5916,
+              'start' => 5945,
+              'end' => 5952,
             ),
             'kind' => 'Name',
             'value' => 'authors',
@@ -6465,24 +6553,77 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5918,
-              'end' => 5925,
+              'start' => 5954,
+              'end' => 5961,
             ),
             'kind' => 'ListType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 5919,
-                'end' => 5924,
+                'start' => 5955,
+                'end' => 5960,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 5919,
-                  'end' => 5924,
+                  'start' => 5955,
+                  'end' => 5960,
+                ),
+                'kind' => 'Name',
+                'value' => 'Entry',
+              ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        8 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 5964,
+            'end' => 5986,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5964,
+              'end' => 5977,
+            ),
+            'kind' => 'Name',
+            'value' => 'customColumns',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 5979,
+              'end' => 5986,
+            ),
+            'kind' => 'ListType',
+            'type' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 5980,
+                'end' => 5985,
+              ),
+              'kind' => 'NamedType',
+              'name' => 
+              array (
+                'loc' => 
+                array (
+                  'start' => 5980,
+                  'end' => 5985,
                 ),
                 'kind' => 'Name',
                 'value' => 'Entry',
@@ -6497,69 +6638,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5928,
-            'end' => 5950,
+            'start' => 5989,
+            'end' => 6002,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5928,
-              'end' => 5941,
-            ),
-            'kind' => 'Name',
-            'value' => 'customColumns',
-          ),
-          'arguments' => 
-          array (
-          ),
-          'type' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 5943,
-              'end' => 5950,
-            ),
-            'kind' => 'ListType',
-            'type' => 
-            array (
-              'loc' => 
-              array (
-                'start' => 5944,
-                'end' => 5949,
-              ),
-              'kind' => 'NamedType',
-              'name' => 
-              array (
-                'loc' => 
-                array (
-                  'start' => 5944,
-                  'end' => 5949,
-                ),
-                'kind' => 'Name',
-                'value' => 'Entry',
-              ),
-            ),
-          ),
-          'directives' => 
-          array (
-          ),
-        ),
-        10 => 
-        array (
-          'loc' => 
-          array (
-            'start' => 5953,
-            'end' => 5966,
-          ),
-          'kind' => 'FieldDefinition',
-          'name' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 5953,
-              'end' => 5958,
+              'start' => 5989,
+              'end' => 5994,
             ),
             'kind' => 'Name',
             'value' => 'datas',
@@ -6571,24 +6659,24 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5960,
-              'end' => 5966,
+              'start' => 5996,
+              'end' => 6002,
             ),
             'kind' => 'ListType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 5961,
-                'end' => 5965,
+                'start' => 5997,
+                'end' => 6001,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 5961,
-                  'end' => 5965,
+                  'start' => 5997,
+                  'end' => 6001,
                 ),
                 'kind' => 'Name',
                 'value' => 'Data',
@@ -6599,20 +6687,20 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
           ),
         ),
-        11 => 
+        10 => 
         array (
           'loc' => 
           array (
-            'start' => 5969,
-            'end' => 5985,
+            'start' => 6005,
+            'end' => 6021,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 5969,
-              'end' => 5976,
+              'start' => 6005,
+              'end' => 6012,
             ),
             'kind' => 'Name',
             'value' => 'formats',
@@ -6624,24 +6712,77 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 5978,
-              'end' => 5985,
+              'start' => 6014,
+              'end' => 6021,
             ),
             'kind' => 'ListType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 5979,
-                'end' => 5984,
+                'start' => 6015,
+                'end' => 6020,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 5979,
-                  'end' => 5984,
+                  'start' => 6015,
+                  'end' => 6020,
+                ),
+                'kind' => 'Name',
+                'value' => 'Entry',
+              ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        11 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6024,
+            'end' => 6044,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6024,
+              'end' => 6035,
+            ),
+            'kind' => 'Name',
+            'value' => 'identifiers',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6037,
+              'end' => 6044,
+            ),
+            'kind' => 'ListType',
+            'type' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6038,
+                'end' => 6043,
+              ),
+              'kind' => 'NamedType',
+              'name' => 
+              array (
+                'loc' => 
+                array (
+                  'start' => 6038,
+                  'end' => 6043,
                 ),
                 'kind' => 'Name',
                 'value' => 'Entry',
@@ -6656,148 +6797,7 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 5988,
-            'end' => 6008,
-          ),
-          'kind' => 'FieldDefinition',
-          'name' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 5988,
-              'end' => 5999,
-            ),
-            'kind' => 'Name',
-            'value' => 'identifiers',
-          ),
-          'arguments' => 
-          array (
-          ),
-          'type' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 6001,
-              'end' => 6008,
-            ),
-            'kind' => 'ListType',
-            'type' => 
-            array (
-              'loc' => 
-              array (
-                'start' => 6002,
-                'end' => 6007,
-              ),
-              'kind' => 'NamedType',
-              'name' => 
-              array (
-                'loc' => 
-                array (
-                  'start' => 6002,
-                  'end' => 6007,
-                ),
-                'kind' => 'Name',
-                'value' => 'Entry',
-              ),
-            ),
-          ),
-          'directives' => 
-          array (
-          ),
-        ),
-        13 => 
-        array (
-          'loc' => 
-          array (
-            'start' => 6011,
-            'end' => 6028,
-          ),
-          'kind' => 'FieldDefinition',
-          'name' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 6011,
-              'end' => 6020,
-            ),
-            'kind' => 'Name',
-            'value' => 'languages',
-          ),
-          'arguments' => 
-          array (
-          ),
-          'type' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 6022,
-              'end' => 6028,
-            ),
-            'kind' => 'NamedType',
-            'name' => 
-            array (
-              'loc' => 
-              array (
-                'start' => 6022,
-                'end' => 6028,
-              ),
-              'kind' => 'Name',
-              'value' => 'String',
-            ),
-          ),
-          'directives' => 
-          array (
-          ),
-        ),
-        14 => 
-        array (
-          'loc' => 
-          array (
-            'start' => 6031,
-            'end' => 6047,
-          ),
-          'kind' => 'FieldDefinition',
-          'name' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 6031,
-              'end' => 6040,
-            ),
-            'kind' => 'Name',
-            'value' => 'publisher',
-          ),
-          'arguments' => 
-          array (
-          ),
-          'type' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 6042,
-              'end' => 6047,
-            ),
-            'kind' => 'NamedType',
-            'name' => 
-            array (
-              'loc' => 
-              array (
-                'start' => 6042,
-                'end' => 6047,
-              ),
-              'kind' => 'Name',
-              'value' => 'Entry',
-            ),
-          ),
-          'directives' => 
-          array (
-          ),
-        ),
-        15 => 
-        array (
-          'loc' => 
-          array (
-            'start' => 6050,
+            'start' => 6047,
             'end' => 6064,
           ),
           'kind' => 'FieldDefinition',
@@ -6805,11 +6805,11 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6050,
+              'start' => 6047,
               'end' => 6056,
             ),
             'kind' => 'Name',
-            'value' => 'rating',
+            'value' => 'languages',
           ),
           'arguments' => 
           array (
@@ -6837,12 +6837,12 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
           ),
         ),
-        16 => 
+        13 => 
         array (
           'loc' => 
           array (
             'start' => 6067,
-            'end' => 6079,
+            'end' => 6083,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
@@ -6850,7 +6850,95 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
             'loc' => 
             array (
               'start' => 6067,
-              'end' => 6072,
+              'end' => 6076,
+            ),
+            'kind' => 'Name',
+            'value' => 'publisher',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6078,
+              'end' => 6083,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6078,
+                'end' => 6083,
+              ),
+              'kind' => 'Name',
+              'value' => 'Entry',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        14 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6086,
+            'end' => 6100,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6086,
+              'end' => 6092,
+            ),
+            'kind' => 'Name',
+            'value' => 'rating',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6094,
+              'end' => 6100,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6094,
+                'end' => 6100,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        15 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6103,
+            'end' => 6115,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6103,
+              'end' => 6108,
             ),
             'kind' => 'Name',
             'value' => 'serie',
@@ -6862,16 +6950,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6074,
-              'end' => 6079,
+              'start' => 6110,
+              'end' => 6115,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 6074,
-                'end' => 6079,
+                'start' => 6110,
+                'end' => 6115,
               ),
               'kind' => 'Name',
               'value' => 'Entry',
@@ -6881,20 +6969,20 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
           ),
         ),
-        17 => 
+        16 => 
         array (
           'loc' => 
           array (
-            'start' => 6082,
-            'end' => 6095,
+            'start' => 6118,
+            'end' => 6131,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6082,
-              'end' => 6086,
+              'start' => 6118,
+              'end' => 6122,
             ),
             'kind' => 'Name',
             'value' => 'tags',
@@ -6906,28 +6994,160 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6088,
-              'end' => 6095,
+              'start' => 6124,
+              'end' => 6131,
             ),
             'kind' => 'ListType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 6089,
-                'end' => 6094,
+                'start' => 6125,
+                'end' => 6130,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 6089,
-                  'end' => 6094,
+                  'start' => 6125,
+                  'end' => 6130,
                 ),
                 'kind' => 'Name',
                 'value' => 'Entry',
               ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        17 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6134,
+            'end' => 6149,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6134,
+              'end' => 6141,
+            ),
+            'kind' => 'Name',
+            'value' => 'navlink',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6143,
+              'end' => 6149,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6143,
+                'end' => 6149,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        18 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6152,
+            'end' => 6169,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6152,
+              'end' => 6161,
+            ),
+            'kind' => 'Name',
+            'value' => 'thumbnail',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6163,
+              'end' => 6169,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6163,
+                'end' => 6169,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        19 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6172,
+            'end' => 6185,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6172,
+              'end' => 6177,
+            ),
+            'kind' => 'Name',
+            'value' => 'cover',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6179,
+              'end' => 6185,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6179,
+                'end' => 6185,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
             ),
           ),
           'directives' => 
@@ -6940,16 +7160,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
     array (
       'loc' => 
       array (
-        'start' => 6099,
-        'end' => 6174,
+        'start' => 6189,
+        'end' => 6264,
       ),
       'kind' => 'ObjectTypeDefinition',
       'name' => 
       array (
         'loc' => 
         array (
-          'start' => 6104,
-          'end' => 6108,
+          'start' => 6194,
+          'end' => 6198,
         ),
         'kind' => 'Name',
         'value' => 'Link',
@@ -6966,16 +7186,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6113,
-            'end' => 6126,
+            'start' => 6203,
+            'end' => 6216,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6113,
-              'end' => 6117,
+              'start' => 6203,
+              'end' => 6207,
             ),
             'kind' => 'Name',
             'value' => 'href',
@@ -6987,24 +7207,24 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6119,
-              'end' => 6126,
+              'start' => 6209,
+              'end' => 6216,
             ),
             'kind' => 'NonNullType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 6119,
-                'end' => 6125,
+                'start' => 6209,
+                'end' => 6215,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 6119,
-                  'end' => 6125,
+                  'start' => 6209,
+                  'end' => 6215,
                 ),
                 'kind' => 'Name',
                 'value' => 'String',
@@ -7019,16 +7239,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6129,
-            'end' => 6142,
+            'start' => 6219,
+            'end' => 6232,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6129,
-              'end' => 6133,
+              'start' => 6219,
+              'end' => 6223,
             ),
             'kind' => 'Name',
             'value' => 'type',
@@ -7040,24 +7260,24 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6135,
-              'end' => 6142,
+              'start' => 6225,
+              'end' => 6232,
             ),
             'kind' => 'NonNullType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 6135,
-                'end' => 6141,
+                'start' => 6225,
+                'end' => 6231,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 6135,
-                  'end' => 6141,
+                  'start' => 6225,
+                  'end' => 6231,
                 ),
                 'kind' => 'Name',
                 'value' => 'String',
@@ -7072,16 +7292,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6145,
-            'end' => 6156,
+            'start' => 6235,
+            'end' => 6246,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6145,
-              'end' => 6148,
+              'start' => 6235,
+              'end' => 6238,
             ),
             'kind' => 'Name',
             'value' => 'rel',
@@ -7093,16 +7313,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6150,
-              'end' => 6156,
+              'start' => 6240,
+              'end' => 6246,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 6150,
-                'end' => 6156,
+                'start' => 6240,
+                'end' => 6246,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -7116,16 +7336,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6159,
-            'end' => 6172,
+            'start' => 6249,
+            'end' => 6262,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6159,
-              'end' => 6164,
+              'start' => 6249,
+              'end' => 6254,
             ),
             'kind' => 'Name',
             'value' => 'title',
@@ -7137,16 +7357,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6166,
-              'end' => 6172,
+              'start' => 6256,
+              'end' => 6262,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 6166,
-                'end' => 6172,
+                'start' => 6256,
+                'end' => 6262,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -7162,16 +7382,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
     array (
       'loc' => 
       array (
-        'start' => 6176,
-        'end' => 6289,
+        'start' => 6266,
+        'end' => 6401,
       ),
       'kind' => 'ObjectTypeDefinition',
       'name' => 
       array (
         'loc' => 
         array (
-          'start' => 6181,
-          'end' => 6185,
+          'start' => 6271,
+          'end' => 6275,
         ),
         'kind' => 'Name',
         'value' => 'Data',
@@ -7182,16 +7402,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6197,
-            'end' => 6201,
+            'start' => 6287,
+            'end' => 6291,
           ),
           'kind' => 'NamedType',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6197,
-              'end' => 6201,
+              'start' => 6287,
+              'end' => 6291,
             ),
             'kind' => 'Name',
             'value' => 'Node',
@@ -7207,16 +7427,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6206,
-            'end' => 6213,
+            'start' => 6296,
+            'end' => 6303,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6206,
-              'end' => 6208,
+              'start' => 6296,
+              'end' => 6298,
             ),
             'kind' => 'Name',
             'value' => 'id',
@@ -7228,24 +7448,24 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6210,
-              'end' => 6213,
+              'start' => 6300,
+              'end' => 6303,
             ),
             'kind' => 'NonNullType',
             'type' => 
             array (
               'loc' => 
               array (
-                'start' => 6210,
-                'end' => 6212,
+                'start' => 6300,
+                'end' => 6302,
               ),
               'kind' => 'NamedType',
               'name' => 
               array (
                 'loc' => 
                 array (
-                  'start' => 6210,
-                  'end' => 6212,
+                  'start' => 6300,
+                  'end' => 6302,
                 ),
                 'kind' => 'Name',
                 'value' => 'ID',
@@ -7260,16 +7480,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6216,
-            'end' => 6231,
+            'start' => 6306,
+            'end' => 6321,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6216,
-              'end' => 6220,
+              'start' => 6306,
+              'end' => 6310,
             ),
             'kind' => 'Name',
             'value' => 'book',
@@ -7281,16 +7501,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6222,
-              'end' => 6231,
+              'start' => 6312,
+              'end' => 6321,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 6222,
-                'end' => 6231,
+                'start' => 6312,
+                'end' => 6321,
               ),
               'kind' => 'Name',
               'value' => 'EntryBook',
@@ -7304,16 +7524,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6234,
-            'end' => 6248,
+            'start' => 6324,
+            'end' => 6338,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6234,
-              'end' => 6240,
+              'start' => 6324,
+              'end' => 6330,
             ),
             'kind' => 'Name',
             'value' => 'format',
@@ -7325,16 +7545,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6242,
-              'end' => 6248,
+              'start' => 6332,
+              'end' => 6338,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 6242,
-                'end' => 6248,
+                'start' => 6332,
+                'end' => 6338,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -7348,60 +7568,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6251,
-            'end' => 6272,
+            'start' => 6341,
+            'end' => 6353,
           ),
           'kind' => 'FieldDefinition',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6251,
-              'end' => 6267,
-            ),
-            'kind' => 'Name',
-            'value' => 'uncompressedSize',
-          ),
-          'arguments' => 
-          array (
-          ),
-          'type' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 6269,
-              'end' => 6272,
-            ),
-            'kind' => 'NamedType',
-            'name' => 
-            array (
-              'loc' => 
-              array (
-                'start' => 6269,
-                'end' => 6272,
-              ),
-              'kind' => 'Name',
-              'value' => 'Int',
-            ),
-          ),
-          'directives' => 
-          array (
-          ),
-        ),
-        4 => 
-        array (
-          'loc' => 
-          array (
-            'start' => 6275,
-            'end' => 6287,
-          ),
-          'kind' => 'FieldDefinition',
-          'name' => 
-          array (
-            'loc' => 
-            array (
-              'start' => 6275,
-              'end' => 6279,
+              'start' => 6341,
+              'end' => 6345,
             ),
             'kind' => 'Name',
             'value' => 'name',
@@ -7413,16 +7589,148 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
           array (
             'loc' => 
             array (
-              'start' => 6281,
-              'end' => 6287,
+              'start' => 6347,
+              'end' => 6353,
             ),
             'kind' => 'NamedType',
             'name' => 
             array (
               'loc' => 
               array (
-                'start' => 6281,
-                'end' => 6287,
+                'start' => 6347,
+                'end' => 6353,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        4 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6356,
+            'end' => 6365,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6356,
+              'end' => 6360,
+            ),
+            'kind' => 'Name',
+            'value' => 'size',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6362,
+              'end' => 6365,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6362,
+                'end' => 6365,
+              ),
+              'kind' => 'Name',
+              'value' => 'Int',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        5 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6368,
+            'end' => 6381,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6368,
+              'end' => 6373,
+            ),
+            'kind' => 'Name',
+            'value' => 'mtime',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6375,
+              'end' => 6381,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6375,
+                'end' => 6381,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        6 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6384,
+            'end' => 6399,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6384,
+              'end' => 6391,
+            ),
+            'kind' => 'Name',
+            'value' => 'navlink',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6393,
+              'end' => 6399,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6393,
+                'end' => 6399,
               ),
               'kind' => 'Name',
               'value' => 'String',
@@ -7438,16 +7746,576 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
     array (
       'loc' => 
       array (
-        'start' => 6291,
-        'end' => 6329,
+        'start' => 6403,
+        'end' => 6558,
+      ),
+      'kind' => 'ObjectTypeDefinition',
+      'name' => 
+      array (
+        'loc' => 
+        array (
+          'start' => 6408,
+          'end' => 6412,
+        ),
+        'kind' => 'Name',
+        'value' => 'Note',
+      ),
+      'interfaces' => 
+      array (
+        0 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6424,
+            'end' => 6428,
+          ),
+          'kind' => 'NamedType',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6424,
+              'end' => 6428,
+            ),
+            'kind' => 'Name',
+            'value' => 'Node',
+          ),
+        ),
+      ),
+      'directives' => 
+      array (
+      ),
+      'fields' => 
+      array (
+        0 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6433,
+            'end' => 6440,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6433,
+              'end' => 6435,
+            ),
+            'kind' => 'Name',
+            'value' => 'id',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6437,
+              'end' => 6440,
+            ),
+            'kind' => 'NonNullType',
+            'type' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6437,
+                'end' => 6439,
+              ),
+              'kind' => 'NamedType',
+              'name' => 
+              array (
+                'loc' => 
+                array (
+                  'start' => 6437,
+                  'end' => 6439,
+                ),
+                'kind' => 'Name',
+                'value' => 'ID',
+              ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        1 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6443,
+            'end' => 6452,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6443,
+              'end' => 6447,
+            ),
+            'kind' => 'Name',
+            'value' => 'item',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6449,
+              'end' => 6452,
+            ),
+            'kind' => 'NonNullType',
+            'type' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6449,
+                'end' => 6451,
+              ),
+              'kind' => 'NamedType',
+              'name' => 
+              array (
+                'loc' => 
+                array (
+                  'start' => 6449,
+                  'end' => 6451,
+                ),
+                'kind' => 'Name',
+                'value' => 'ID',
+              ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        2 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6455,
+            'end' => 6468,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6455,
+              'end' => 6459,
+            ),
+            'kind' => 'Name',
+            'value' => 'type',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6461,
+              'end' => 6468,
+            ),
+            'kind' => 'NonNullType',
+            'type' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6461,
+                'end' => 6467,
+              ),
+              'kind' => 'NamedType',
+              'name' => 
+              array (
+                'loc' => 
+                array (
+                  'start' => 6461,
+                  'end' => 6467,
+                ),
+                'kind' => 'Name',
+                'value' => 'String',
+              ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        3 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6471,
+            'end' => 6486,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6471,
+              'end' => 6478,
+            ),
+            'kind' => 'Name',
+            'value' => 'content',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6480,
+              'end' => 6486,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6480,
+                'end' => 6486,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        4 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6489,
+            'end' => 6498,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6489,
+              'end' => 6493,
+            ),
+            'kind' => 'Name',
+            'value' => 'size',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6495,
+              'end' => 6498,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6495,
+                'end' => 6498,
+              ),
+              'kind' => 'Name',
+              'value' => 'Int',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        5 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6501,
+            'end' => 6514,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6501,
+              'end' => 6506,
+            ),
+            'kind' => 'Name',
+            'value' => 'mtime',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6508,
+              'end' => 6514,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6508,
+                'end' => 6514,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        6 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6517,
+            'end' => 6532,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6517,
+              'end' => 6524,
+            ),
+            'kind' => 'Name',
+            'value' => 'navlink',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6526,
+              'end' => 6532,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6526,
+                'end' => 6532,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        7 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6535,
+            'end' => 6556,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6535,
+              'end' => 6544,
+            ),
+            'kind' => 'Name',
+            'value' => 'resources',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6546,
+              'end' => 6556,
+            ),
+            'kind' => 'ListType',
+            'type' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6547,
+                'end' => 6555,
+              ),
+              'kind' => 'NamedType',
+              'name' => 
+              array (
+                'loc' => 
+                array (
+                  'start' => 6547,
+                  'end' => 6555,
+                ),
+                'kind' => 'Name',
+                'value' => 'Resource',
+              ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+      ),
+    ),
+    8 => 
+    array (
+      'loc' => 
+      array (
+        'start' => 6560,
+        'end' => 6604,
+      ),
+      'kind' => 'ObjectTypeDefinition',
+      'name' => 
+      array (
+        'loc' => 
+        array (
+          'start' => 6565,
+          'end' => 6573,
+        ),
+        'kind' => 'Name',
+        'value' => 'Resource',
+      ),
+      'interfaces' => 
+      array (
+      ),
+      'directives' => 
+      array (
+      ),
+      'fields' => 
+      array (
+        0 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6578,
+            'end' => 6587,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6578,
+              'end' => 6582,
+            ),
+            'kind' => 'Name',
+            'value' => 'hash',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6584,
+              'end' => 6587,
+            ),
+            'kind' => 'NonNullType',
+            'type' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6584,
+                'end' => 6586,
+              ),
+              'kind' => 'NamedType',
+              'name' => 
+              array (
+                'loc' => 
+                array (
+                  'start' => 6584,
+                  'end' => 6586,
+                ),
+                'kind' => 'Name',
+                'value' => 'ID',
+              ),
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+        1 => 
+        array (
+          'loc' => 
+          array (
+            'start' => 6590,
+            'end' => 6602,
+          ),
+          'kind' => 'FieldDefinition',
+          'name' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6590,
+              'end' => 6594,
+            ),
+            'kind' => 'Name',
+            'value' => 'name',
+          ),
+          'arguments' => 
+          array (
+          ),
+          'type' => 
+          array (
+            'loc' => 
+            array (
+              'start' => 6596,
+              'end' => 6602,
+            ),
+            'kind' => 'NamedType',
+            'name' => 
+            array (
+              'loc' => 
+              array (
+                'start' => 6596,
+                'end' => 6602,
+              ),
+              'kind' => 'Name',
+              'value' => 'String',
+            ),
+          ),
+          'directives' => 
+          array (
+          ),
+        ),
+      ),
+    ),
+    9 => 
+    array (
+      'loc' => 
+      array (
+        'start' => 6606,
+        'end' => 6644,
       ),
       'kind' => 'UnionTypeDefinition',
       'name' => 
       array (
         'loc' => 
         array (
-          'start' => 6297,
-          'end' => 6309,
+          'start' => 6612,
+          'end' => 6624,
         ),
         'kind' => 'Name',
         'value' => 'SearchResult',
@@ -7461,16 +8329,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6312,
-            'end' => 6317,
+            'start' => 6627,
+            'end' => 6632,
           ),
           'kind' => 'NamedType',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6312,
-              'end' => 6317,
+              'start' => 6627,
+              'end' => 6632,
             ),
             'kind' => 'Name',
             'value' => 'Entry',
@@ -7480,16 +8348,16 @@ See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface',
         array (
           'loc' => 
           array (
-            'start' => 6320,
-            'end' => 6329,
+            'start' => 6635,
+            'end' => 6644,
           ),
           'kind' => 'NamedType',
           'name' => 
           array (
             'loc' => 
             array (
-              'start' => 6320,
-              'end' => 6329,
+              'start' => 6635,
+              'end' => 6644,
             ),
             'kind' => 'Name',
             'value' => 'EntryBook',

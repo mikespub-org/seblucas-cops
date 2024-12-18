@@ -15,19 +15,19 @@ namespace SebLucas\Cops\Input;
  */
 class Context
 {
-    /**
-     * Summary of request
-     * @var Request
-     */
     protected Request $request;
+    /** @var class-string */
+    protected $handler;
 
     /**
      * Summary of __construct
      * @param Request $request
+     * @param ?class-string $handler
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, $handler = null)
     {
         $this->request = $request;
+        $this->handler = $handler ?? $request->getHandler();
     }
 
     /**
@@ -37,5 +37,14 @@ class Context
     public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * Summary of getHandler
+     * @return class-string
+     */
+    public function getHandler()
+    {
+        return $this->handler;
     }
 }

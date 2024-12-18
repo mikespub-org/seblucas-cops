@@ -36,11 +36,6 @@ parameters:
 			path: src/Output/DotPHPTemplate.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$request\\.$#"
-			count: 1
-			path: src/Output/GraphQLExecutor.php
-
-		-
 			message: "#^Call to an undefined method SebLucas\\\\Cops\\\\Pages\\\\Page\\:\\:getContent\\(\\)\\.$#"
 			count: 1
 			path: src/Output/JsonRenderer.php

@@ -271,6 +271,13 @@ class Request
     {
         $this->urlParams[$name] = $value;
         $this->queryString = Route::getQueryString($this->urlParams);
+        // @todo in case we ever need these later
+        if ($name == Route::HANDLER_PARAM) {
+            $this->handlerClass = $value;
+        }
+        if ($name == Route::ROUTE_PARAM) {
+            $this->routeName = $value;
+        }
         return $this;
     }
 

@@ -295,6 +295,9 @@ type Entry implements Node {
     where: SequelizeJSON
     offset: Int
   ): [EntryBook]
+  navlink: String
+  thumbnail: String
+  note: Note
 }
 
 type EntryBook implements Node {
@@ -305,7 +308,6 @@ type EntryBook implements Node {
   linkArray: [Link]
   className: String
   numberOfElement: String
-  path: String
   authors: [Entry]
   customColumns: [Entry]
   datas: [Data]
@@ -316,6 +318,9 @@ type EntryBook implements Node {
   rating: String
   serie: Entry
   tags: [Entry]
+  navlink: String
+  thumbnail: String
+  cover: String
 }
 
 type Link {
@@ -329,7 +334,25 @@ type Data implements Node {
   id: ID!
   book: EntryBook
   format: String
-  uncompressedSize: Int
+  name: String
+  size: Int
+  mtime: String
+  navlink: String
+}
+
+type Note implements Node {
+  id: ID!
+  item: ID!
+  type: String!
+  content: String
+  size: Int
+  mtime: String
+  navlink: String
+  resources: [Resource]
+}
+
+type Resource {
+  hash: ID!
   name: String
 }
 

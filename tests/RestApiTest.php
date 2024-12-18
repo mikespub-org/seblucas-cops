@@ -255,9 +255,9 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
     }
 
-    public function testGetNoteByTypeId(): void
+    public function testGetNoteByTypeItem(): void
     {
-        $request = Request::build(['type' => 'authors', 'id' => 3], basename(self::$script));
+        $request = Request::build(['type' => 'authors', 'item' => 3], basename(self::$script));
         $expected = "Note for authors #3";
         $test = RestApiProvider::getNotes($request);
         $this->assertEquals($expected, $test["title"]);

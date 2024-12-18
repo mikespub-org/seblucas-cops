@@ -9,7 +9,7 @@ query getCombo {
     books {
       id
       title
-      path
+      navlink
       authors {
         id
         title
@@ -24,7 +24,7 @@ query getAuthor($id: ID) {
     books {
       id
       title
-      path
+      navlink
       content
       linkArray {
         href
@@ -39,7 +39,7 @@ query getBooks {
   books {
     id
     title
-    path
+    navlink
     authors {
       id
       title
@@ -57,11 +57,11 @@ query getData($id: ID) {
     id
     name
     format
-    uncompressedSize
+    size
     book {
       id
       title
-      path
+      navlink
       authors {
         id
         title
@@ -95,7 +95,7 @@ query getNode($id: ID!) {
     }
     ... on EntryBook {
       title
-      path
+      navlink
       authors {
         id
         title

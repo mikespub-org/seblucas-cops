@@ -20,14 +20,16 @@ use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
+use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
-use SebLucas\Cops\Handlers\HtmlHandler;
+use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Context;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
@@ -54,20 +56,24 @@ class GraphQLExecutor
     /**
      * Summary of runQuery
      * @param Request $request
+     * @param ?class-string $handler
      * @return array<string, mixed>
      */
-    public function runQuery($request)
+    public function runQuery($request, $handler = null)
     {
         $input = json_decode((string) $request->content(), true);
+        // set request handler for navlink
+        $handler ??= RestApiHandler::class;
+        $request->set(Route::HANDLER_PARAM, $handler);
 
-        $schema = $this->getSchema($request);
+        $schema = $this->getSchema();
 
         $queryString = $input['query'];
         $rootValue = 'query';
         // @see https://github.com/webonyx/graphql-php/blob/master/examples/02-schema-definition-language/graphql.php
         // use $rootValue to resolve query fields
         //$rootValue = $this->getFieldResolvers($request);
-        $context = new Context($request);
+        $context = new Context($request, $handler);
         $variableValues = $input['variables'] ?? null;
         $operationName = $input['operationName'] ?? null;
         //$fieldResolver = $this->getFieldResolver($request, $resolvers);
@@ -91,20 +97,19 @@ class GraphQLExecutor
     /**
      * Summary of getSchema
      * @phpstan-type TypeConfigDecorator callable(): array<string, mixed>
-     * @param Request $request
      * @param bool $refresh
      * @return \GraphQL\Type\Schema
      */
-    public function getSchema($request, $refresh = false)
+    public function getSchema($refresh = false)
     {
         $fieldResolvers = $this->mapTypeFieldResolvers();
         $typeResolvers = $this->mapTypeResolvers();
 
-        $typeConfigDecorator = function (array $typeConfig, TypeDefinitionNode $typeDefinitionNode) use ($fieldResolvers, $typeResolvers, $request) {
+        $typeConfigDecorator = function (array $typeConfig, TypeDefinitionNode $typeDefinitionNode) use ($fieldResolvers, $typeResolvers) {
             $name = $typeConfig['name'];
             // ... add missing options to $typeConfig based on type $name
             if (empty($typeConfig['resolveField']) && !empty($fieldResolvers[$name])) {
-                $typeConfig['resolveField'] = $fieldResolvers[$name]($request);
+                $typeConfig['resolveField'] = $fieldResolvers[$name]();
             }
             if (empty($typeConfig['resolveType']) && !empty($typeResolvers[$name])) {
                 $typeConfig['resolveType'] = $typeResolvers[$name]();
@@ -137,20 +142,22 @@ class GraphQLExecutor
             'Query' => $this->getQueryFieldResolver(...),
             'Entry' => $this->getEntryFieldResolver(...),
             'EntryBook' => $this->getEntryBookFieldResolver(...),
+            'Data' => $this->getDataFieldResolver(...),
+            'Note' => $this->getNoteFieldResolver(...),
+            //'Resource' => $this->getResourceFieldResolver(...),
         ];
     }
 
     /**
      * Summary of getQueryFieldResolver
-     * @param Request $request
      * @return callable
      */
-    public function getQueryFieldResolver($request)
+    public function getQueryFieldResolver()
     {
-        $handler = HtmlHandler::class;
-        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) use ($request, $handler) {
+        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
+            $request = $context->getRequest();
             $fieldName = $info->fieldName;
-            $result = self::getQueryField($fieldName, $args, $request, $handler);
+            $result = self::getQueryField($fieldName, $args, $request);
             if ($result !== false) {
                 return $result;
             }
@@ -161,12 +168,12 @@ class GraphQLExecutor
 
     /**
      * Summary of getEntryFieldResolver
-     * @param Request $request
      * @return callable
      */
-    public function getEntryFieldResolver($request)
+    public function getEntryFieldResolver()
     {
-        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) use ($request) {
+        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
+            $request = $context->getRequest();
             $fieldName = $info->fieldName;
             $result = self::getEntryField($fieldName, $objectValue, $args, $request);
             if ($result !== false) {
@@ -179,23 +186,54 @@ class GraphQLExecutor
 
     /**
      * Summary of getEntryBookFieldResolver
-     * @param Request $request
      * @return callable
      */
-    public function getEntryBookFieldResolver($request)
+    public function getEntryBookFieldResolver()
     {
-        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) use ($request) {
+        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
+            //$request = $context->getRequest();
             $fieldName = $info->fieldName;
-            //if (is_object($objectValue) && isset($objectValue->{$fieldName})) {
-            //    return $objectValue->{$fieldName};
-            //}
             // coming from Data
             if ($objectValue instanceof Book) {
                 $objectValue = $objectValue->getEntry();
             }
-            /** @var Book $book */
-            $book = $objectValue->book;
-            $result = self::getBookField($fieldName, $book);
+            $result = self::getEntryBookField($fieldName, $objectValue);
+            if ($result !== false) {
+                return $result;
+            }
+            return Executor::defaultFieldResolver($objectValue, $args, $context, $info);
+        };
+        return $resolver;
+    }
+
+    /**
+     * Summary of getDataFieldResolver
+     * @return callable
+     */
+    public function getDataFieldResolver(): callable
+    {
+        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
+            //$request = $context->getRequest();
+            $fieldName = $info->fieldName;
+            $result = self::getDataField($fieldName, $objectValue);
+            if ($result !== false) {
+                return $result;
+            }
+            return Executor::defaultFieldResolver($objectValue, $args, $context, $info);
+        };
+        return $resolver;
+    }
+
+    /**
+     * Summary of getNoteFieldResolver
+     * @return callable
+     */
+    public function getNoteFieldResolver()
+    {
+        $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
+            //$request = $context->getRequest();
+            $fieldName = $info->fieldName;
+            $result = self::getNoteField($fieldName, $objectValue);
             if ($result !== false) {
                 return $result;
             }
@@ -228,6 +266,9 @@ class GraphQLExecutor
             }
             if ($objectValue instanceof Data) {
                 return 'Data';
+            }
+            if ($objectValue instanceof Note) {
+                return 'Note';
             }
             return 'Entry';
         };
@@ -280,11 +321,11 @@ class GraphQLExecutor
      * @param string $fieldName
      * @param array<mixed> $args
      * @param Request $request
-     * @param class-string $handler
      * @return mixed
      */
-    public static function getQueryField($fieldName, $args, $request, $handler)
+    public static function getQueryField($fieldName, $args, $request)
     {
+        $handler = $request->getHandler();
         switch ($fieldName) {
             case 'books':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -389,7 +430,7 @@ class GraphQLExecutor
                 $result = [];
                 foreach ($args['idlist'] as $id) {
                     try {
-                        $result[] = self::getNode((string) $id, $request, $handler);
+                        $result[] = self::getNode((string) $id, $request);
                     } catch (Exception $e) {
                         // see https://github.com/webonyx/graphql-php/issues/374 or
                         // see https://github.com/webonyx/graphql-php/issues/432
@@ -399,9 +440,9 @@ class GraphQLExecutor
                 return $result;
             case 'node':
                 // @todo add other requested fields on demand
-                return self::getNode((string) ($args['id'] ?? ''), $request, $handler);
+                return self::getNode((string) ($args['id'] ?? ''), $request);
             case 'search':
-                return self::getSearch($args, $request, $handler);
+                return self::getSearch($args, $request);
             default:
                 return false;
         }
@@ -413,34 +454,49 @@ class GraphQLExecutor
      * @param Entry $entry
      * @param array<mixed> $args
      * @param Request $request
-     * @return bool|int|\SebLucas\Cops\Model\EntryBook[]
+     * @return mixed
      */
     public static function getEntryField($fieldName, $entry, $args, $request)
     {
         switch ($fieldName) {
             case 'books':
-                // @todo get books for parent instance(s)
+                // get books for parent instance(s)
                 $instance = $entry->instance;
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
                 $booklist = new BookList($current, null, $numberPerPage);
                 [$entryArray, $totalNumber] = $booklist->getBooksByInstance($instance, $n);
                 return $entryArray;
+            case 'navlink':
+                return $entry->getNavLink();
+            case 'thumbnail':
+                return $entry->getThumbnail();
+            case 'note':
+                // get note for parent instance(s)
+                $instance = $entry->instance;
+                $note = $instance?->getNote();
+                if (!empty($note)) {
+                    // @todo parse doc here?
+                    return $note;
+                }
+                return null;
             default:
                 return false;
         }
     }
 
     /**
-     * Summary of getBookField
+     * Summary of getEntryBookField
      * @param string $fieldName
-     * @param Book $book
+     * @param EntryBook $entry
      * @return mixed
      */
-    public static function getBookField($fieldName, $book)
+    public static function getEntryBookField($fieldName, $entry)
     {
+        /** @var Book $book */
+        $book = $entry->book;
         switch ($fieldName) {
-            case 'path':
-                return $book->path;
+            //case 'path':
+            //    return $book->path;
             case 'authors':
                 $authors = $book->getAuthors();
                 $entryArray = [];
@@ -484,6 +540,60 @@ class GraphQLExecutor
                     array_push($entryArray, $tag->getEntry());
                 }
                 return $entryArray;
+            case 'navlink':
+                return $book->getUri();
+            case 'thumbnail':
+                return $entry->getThumbnail();
+            case 'cover':
+                return $entry->getImage();
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Summary of getDataField
+     * @param string $fieldName
+     * @param Data $data
+     * @return mixed
+     */
+    public static function getDataField($fieldName, $data)
+    {
+        switch ($fieldName) {
+            case 'size':
+                $path = $data->getLocalPath();
+                return file_exists($path) ? filesize($path) : null;
+            case 'mtime':
+                $path = $data->getLocalPath();
+                return file_exists($path) ? date(DATE_ATOM, filemtime($path)) : null;
+            case 'navlink':
+                return $data->getHtmlLink();
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Summary of getNoteField
+     * @param string $fieldName
+     * @param Note $entry
+     * @return mixed
+     */
+    public static function getNoteField($fieldName, $note)
+    {
+        switch ($fieldName) {
+            case 'type':
+                return $note->colname;
+            case 'content':
+                return $note->doc;
+            case 'size':
+                return strlen($note->doc);
+            case 'mtime':
+                return date(DATE_ATOM, $note->mtime);
+            case 'navlink':
+                return $note->getUri();
+            case 'resources':
+                return $note->getResources();
             default:
                 return false;
         }
@@ -493,10 +603,9 @@ class GraphQLExecutor
      * Summary of getNode
      * @param string $globalId
      * @param Request $request
-     * @param class-string $handler
      * @return mixed
      */
-    public static function getNode($globalId, $request, $handler)
+    public static function getNode($globalId, $request)
     {
         [$db, $type, $id] = self::fromGlobalIdentier($globalId);
         if (empty($type) || empty($id)) {
@@ -510,7 +619,7 @@ class GraphQLExecutor
         // books => book, authors => author etc.
         $fieldName = substr($type, 0, -1);
         // @todo add other requested fields on demand
-        $entry = self::getQueryField($fieldName, ['id' => $id], $current, $handler);
+        $entry = self::getQueryField($fieldName, ['id' => $id], $current);
         if (!empty($entry)) {
             return $entry;
         }
@@ -565,10 +674,9 @@ class GraphQLExecutor
      * Summary of getSearch
      * @param array<mixed> $args
      * @param Request $request
-     * @param class-string $handler
      * @return mixed
      */
-    public static function getSearch($args, $request, $handler)
+    public static function getSearch($args, $request)
     {
         [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
         $query = $args['query'] ?? '';
