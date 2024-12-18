@@ -68,9 +68,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphiql/react@npm:^0.27.0":
-  version: 0.27.0
-  resolution: "@graphiql/react@npm:0.27.0"
+"@graphiql/react@npm:^0.28.2":
+  version: 0.28.2
+  resolution: "@graphiql/react@npm:0.28.2"
   dependencies:
     "@graphiql/toolkit": "npm:^0.11.0"
     "@headlessui/react": "npm:^1.7.15"
@@ -81,18 +81,19 @@ __metadata:
     "@types/codemirror": "npm:^5.60.8"
     clsx: "npm:^1.2.1"
     codemirror: "npm:^5.65.3"
-    codemirror-graphql: "npm:^2.1.1"
+    codemirror-graphql: "npm:^2.2.0"
     copy-to-clipboard: "npm:^3.2.0"
     framer-motion: "npm:^6.5.1"
     get-value: "npm:^3.0.1"
     graphql-language-service: "npm:^5.3.0"
     markdown-it: "npm:^14.1.0"
+    react-compiler-runtime: "npm:19.0.0-beta-37ed2a7-20241206"
     set-value: "npm:^4.1.0"
   peerDependencies:
     graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
     react: ^16.8.0 || ^17 || ^18
     react-dom: ^16.8.0 || ^17 || ^18
-  checksum: 10c0/420523cbde4332145f4709a0fe8cce79fff667eec3cb1af633cb83eef08e4427a5ac013040c0bb7cd49187d35ca15338811c622545a0000856b77c2c778c6b0a
+  checksum: 10c0/05287068df1410736b4dd0e16d451eae11ccdc279b6dbc899759b6c58dbbf705e59e375c81e387c78b6b0c9379c99f822488fc82ae24012f3cc219e86e93c12a
   languageName: node
   linkType: hard
 
@@ -860,17 +861,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"codemirror-graphql@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "codemirror-graphql@npm:2.1.1"
+"codemirror-graphql@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "codemirror-graphql@npm:2.2.0"
   dependencies:
     "@types/codemirror": "npm:^0.0.90"
     graphql-language-service: "npm:5.3.0"
   peerDependencies:
     "@codemirror/language": 6.0.0
     codemirror: ^5.65.3
-    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0-alpha.2
-  checksum: 10c0/7fc617cea5d4882764fa22cea2b4e30683870e04317ceece55761f76ca5f77d9f0e4260511fbcede880420f849cb54d961cb6f31c818c8b483423f77dc32fc85
+    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
+  checksum: 10c0/2e1db81fd2afe2ae4db5a925d9f1e2473ec472ef072e1fac516869796544971c648f73e78bef042d42b58d3f59005809ea5be1405eedbe49fcf817e4407b85fd
   languageName: node
   linkType: hard
 
@@ -1113,16 +1114,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphiql@npm:^3.7.2":
-  version: 3.7.2
-  resolution: "graphiql@npm:3.7.2"
+"graphiql@npm:^3.8.3":
+  version: 3.8.3
+  resolution: "graphiql@npm:3.8.3"
   dependencies:
-    "@graphiql/react": "npm:^0.27.0"
+    "@graphiql/react": "npm:^0.28.2"
   peerDependencies:
     graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
     react: ^16.8.0 || ^17 || ^18
     react-dom: ^16.8.0 || ^17 || ^18
-  checksum: 10c0/7cf045415d209a7400a8c5c09c2e8cbfdde1368e416c209a4b7a71a933c7400d49a62e2fbcf412460f0be3662785384af706393a96b52db67b3520ebf1c0da55
+  checksum: 10c0/1c59416342410bdb634464310c19a1c09ea301a2381cfe7e0c51f3a840209e10a76c03db45355b8b96adbc1ed4b4c7821fbaffc033af6e85148ffe05cc50cf02
   languageName: node
   linkType: hard
 
@@ -1141,10 +1142,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:^16.9.0":
-  version: 16.9.0
-  resolution: "graphql@npm:16.9.0"
-  checksum: 10c0/a8850f077ff767377237d1f8b1da2ec70aeb7623cdf1dfc9e1c7ae93accc0c8149c85abe68923be9871a2934b1bce5a2496f846d4d56e1cfb03eaaa7ddba9b6a
+"graphql@npm:^16.10.0":
+  version: 16.10.0
+  resolution: "graphql@npm:16.10.0"
+  checksum: 10c0/303730675538c8bd6c76b447dc6f03e61242e2d2596b408c34759666ec4877409e5593a7a0467d590ac5407b8c663b093b599556a77f24f281abea69ddc53de6
   languageName: node
   linkType: hard
 
@@ -1442,6 +1443,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-compiler-runtime@npm:19.0.0-beta-37ed2a7-20241206":
+  version: 19.0.0-beta-37ed2a7-20241206
+  resolution: "react-compiler-runtime@npm:19.0.0-beta-37ed2a7-20241206"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/92bd9e73ca238fc92e9a482c0e1678aaebcea06bf33605c0a38c490b061237a6c2829ad7b811ce8eb93684768418eebcd7087035d7cc9bd494d6e59c222f999a
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:^18.3.1":
   version: 18.3.1
   resolution: "react-dom@npm:18.3.1"
@@ -1563,8 +1573,8 @@ __metadata:
     datatables.net: "npm:^2.1.8"
     datatables.net-bs5: "npm:^2.1.8"
     dot: "npm:^1.1.3"
-    graphiql: "npm:^3.7.2"
-    graphql: "npm:^16.9.0"
+    graphiql: "npm:^3.8.3"
+    graphql: "npm:^16.10.0"
     jquery: "npm:^3.7.1"
     js-cookie: "npm:^3.0.5"
     lru-fast: "npm:^0.2.2"

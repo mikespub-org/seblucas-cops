@@ -13,6 +13,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Update portuguese translation - see PR #127 from @horus68
+  * Rename group params + support idlist for books and expand GraphQL schema
   * Split off GraphQLExecutor class + rename RestApi to RestApiProvider
   * Expand Link models for OPDS 2.0 + use closure for links
   * BC: Switch PageId values to strings + adapt templates
