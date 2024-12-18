@@ -396,13 +396,13 @@
                     }
                 ],
                 "restapi-note": [
-                    "/restapi/notes/{type}/{id}/{title}",
+                    "/restapi/notes/{type}/{item}/{title}",
                     {
                         "_resource": "Note"
                     }
                 ],
                 "restapi-notes-type-id": [
-                    "/restapi/notes/{type}/{id}",
+                    "/restapi/notes/{type}/{item}",
                     {
                         "_resource": "Note"
                     }

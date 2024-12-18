@@ -797,7 +797,7 @@ $routes = [
     [],
   ],
   'restapi-note' => [
-    '/restapi/notes/{type}/{id}/{title}',
+    '/restapi/notes/{type}/{item}/{title}',
     [
       '_resource' => 'Note',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
@@ -809,7 +809,7 @@ $routes = [
     [],
   ],
   'restapi-notes-type-id' => [
-    '/restapi/notes/{type}/{id}',
+    '/restapi/notes/{type}/{item}',
     [
       '_resource' => 'Note',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',

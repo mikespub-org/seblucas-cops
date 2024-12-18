@@ -452,9 +452,9 @@ class RestApiProvider extends BaseRenderer
      */
     public static function getNotesByType($type, $request)
     {
-        $id = $request->getId('id');
-        if (!empty($id)) {
-            return self::getNoteByTypeId($type, $id, $request);
+        $item = $request->getId('item');
+        if (!empty($item)) {
+            return self::getNoteByTypeItem($type, $item, $request);
         }
         $db = $request->database();
         $baseurl = self::$baseUrl;
@@ -469,7 +469,7 @@ class RestApiProvider extends BaseRenderer
         $params['type'] = $type;
         // @todo get item from notes + corresponding title from instance
         foreach (Note::getEntriesByType($type, $db) as $entry) {
-            $params['id'] = $entry['item'];
+            $params['item'] = $entry['item'];
             if (!empty($entry["title"])) {
                 $title = Route::slugify($entry["title"]);
                 $params['title'] = $title;
@@ -505,16 +505,16 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getNoteByTypeId($type, $id, $request)
+    public static function getNoteByTypeItem($type, $item, $request)
     {
         $db = $request->database();
-        $note = Note::getInstanceByTypeId($type, $id, $db);
+        $note = Note::getInstanceByTypeItem($type, $item, $db);
         if (empty($note)) {
-            return ["error" => "Invalid note type id"];
+            return ["error" => "Invalid note type item"];
         }
         $baseurl = self::$baseUrl;
         $result = [
-            "title" => "Note for {$type} #{$id}",
+            "title" => "Note for {$type} #{$item}",
             "baseurl" => $baseurl,
             "databaseId" => $db,
         ];

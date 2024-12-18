@@ -1268,12 +1268,12 @@
             1 => 
             array (
               'type' => 'type',
-              'id' => 'id',
+              'item' => 'item',
               'title' => 'title',
             ),
             2 => 
             array (
-              '_route' => '/restapi/notes/{type}/{id}/{title}',
+              '_route' => '/restapi/notes/{type}/{item}/{title}',
               '_name' => 'restapi-note',
             ),
           ),
@@ -1288,11 +1288,11 @@
             1 => 
             array (
               'type' => 'type',
-              'id' => 'id',
+              'item' => 'item',
             ),
             2 => 
             array (
-              '_route' => '/restapi/notes/{type}/{id}',
+              '_route' => '/restapi/notes/{type}/{item}',
               '_name' => 'restapi-notes-type-id',
             ),
           ),
@@ -2530,7 +2530,7 @@
         2 => '/',
         3 => 
         array (
-          0 => 'id',
+          0 => 'item',
           1 => '[^/]+',
         ),
         4 => '/',
@@ -2554,7 +2554,7 @@
         2 => '/',
         3 => 
         array (
-          0 => 'id',
+          0 => 'item',
           1 => '[^/]+',
         ),
       ),

@@ -482,7 +482,7 @@ abstract class Base
     {
         $className = static::class;
         $tableName = $className::SQL_TABLE;
-        return Note::getInstanceByTypeId($tableName, $this->id, $this->databaseId);
+        return Note::getInstanceByTypeItem($tableName, $this->id, $this->databaseId);
     }
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */

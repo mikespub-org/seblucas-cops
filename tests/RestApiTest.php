@@ -540,7 +540,7 @@ class RestApiTest extends TestCase
     {
         // get restapi routes
         $defaults = [
-            'any' => ['db' => 0, 'name' => 'books', 'type' => 'authors', 'id' => 3, 'title' => 'Lewis Carroll', 'key' => 'virtual_libraries', 'bookId' => 17, 'element' => 'dc:title'],
+            'any' => ['db' => 0, 'name' => 'books', 'type' => 'authors', 'item' => 3, 'title' => 'Lewis Carroll', 'key' => 'virtual_libraries', 'bookId' => 17, 'element' => 'dc:title'],
             'restapi-annotation' => ['bookId' => 17, 'id' => 1],
             'restapi-metadata-element-name' => ['element' => 'meta', 'name' => 'calibre:annotation'],
             'restapi-path' => ['path' => 'path'],

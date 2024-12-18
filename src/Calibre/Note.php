@@ -162,13 +162,13 @@ class Note
     }
 
     /**
-     * Summary of getInstanceByTypeId
+     * Summary of getInstanceByTypeItem
      * @param string $type
-     * @param int $id
+     * @param int $item
      * @param ?int $database
      * @return self|null
      */
-    public static function getInstanceByTypeId($type, $id, $database = null)
+    public static function getInstanceByTypeItem($type, $item, $database = null)
     {
         if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return null;
@@ -178,7 +178,7 @@ class Note
             return null;
         }
         $query = 'select id, item, colname, doc, mtime from notes_db.notes where item = ? and colname = ?';
-        $params = [$id, $type];
+        $params = [$item, $type];
         $result = $notesDb->prepare($query);
         $result->execute($params);
         if ($post = $result->fetchObject()) {

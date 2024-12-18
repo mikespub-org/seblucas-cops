@@ -929,7 +929,7 @@
         {
             "name": "restapi-note",
             "route": [
-                "/restapi/notes/{type}/{id}/{title}",
+                "/restapi/notes/{type}/{item}/{title}",
                 {
                     "_resource": "Note",
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
@@ -944,7 +944,7 @@
         {
             "name": "restapi-notes-type-id",
             "route": [
-                "/restapi/notes/{type}/{id}",
+                "/restapi/notes/{type}/{item}",
                 {
                     "_resource": "Note",
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",

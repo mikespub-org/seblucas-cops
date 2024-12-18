@@ -1897,16 +1897,16 @@
                 }
             }
         },
-        "/notes/{type}/{id}/{title}": {
+        "/notes/{type}/{item}/{title}": {
             "get": {
-                "summary": "Route to notes/{type}/{id}/{title} api",
+                "summary": "Route to notes/{type}/{item}/{title} api",
                 "operationId": "get_restapi-note",
                 "tags": [
                     "restapi"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of notes/{type}/{id}/{title} api"
+                        "description": "Result of notes/{type}/{item}/{title} api"
                     }
                 },
                 "parameters": [
@@ -1919,7 +1919,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "item",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -1940,16 +1940,16 @@
                 ]
             }
         },
-        "/notes/{type}/{id}": {
+        "/notes/{type}/{item}": {
             "get": {
-                "summary": "Route to notes/{type}/{id} api",
+                "summary": "Route to notes/{type}/{item} api",
                 "operationId": "get_restapi-notes-type-id",
                 "tags": [
                     "restapi"
                 ],
                 "responses": {
                     "200": {
-                        "description": "Result of notes/{type}/{id} api"
+                        "description": "Result of notes/{type}/{item} api"
                     }
                 },
                 "parameters": [
@@ -1962,7 +1962,7 @@
                         }
                     },
                     {
-                        "name": "id",
+                        "name": "item",
                         "in": "path",
                         "required": true,
                         "schema": {

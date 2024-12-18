@@ -29,7 +29,7 @@ class RestApiHandler extends BaseHandler
     public const PARAMLIST = [
         // @todo support paramlist by resource here?
         "Database" => ["db", "name"],
-        "Note" => ["type", "id", "title"],
+        "Note" => ["type", "item", "title"],
         "Preference" => ["key"],
         "Annotation" => ["bookId", "id"],
         "Metadata" => ["bookId", "element", "name"],
@@ -52,8 +52,8 @@ class RestApiHandler extends BaseHandler
             "restapi-openapi" => [self::PREFIX . "/openapi", [self::RESOURCE => "openapi"]],
             "restapi-route" => [self::PREFIX . "/routes", [self::RESOURCE => "route"]],
             "restapi-handler" => [self::PREFIX . "/handlers", [self::RESOURCE => "handler"]],
-            "restapi-note" => [self::PREFIX . "/notes/{type}/{id}/{title}", [self::RESOURCE => "Note"]],
-            "restapi-notes-type-id" => [self::PREFIX . "/notes/{type}/{id}", [self::RESOURCE => "Note"]],
+            "restapi-note" => [self::PREFIX . "/notes/{type}/{item}/{title}", [self::RESOURCE => "Note"]],
+            "restapi-notes-type-id" => [self::PREFIX . "/notes/{type}/{item}", [self::RESOURCE => "Note"]],
             "restapi-notes-type" => [self::PREFIX . "/notes/{type}", [self::RESOURCE => "Note"]],
             "restapi-notes" => [self::PREFIX . "/notes", [self::RESOURCE => "Note"]],
             "restapi-preference" => [self::PREFIX . "/preferences/{key}", [self::RESOURCE => "Preference"]],
