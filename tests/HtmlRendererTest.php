@@ -106,7 +106,8 @@ class HtmlRendererTest extends TestCase
     public function testRenderDot(): void
     {
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = Request::build(['page' => $page]);
+        $request = new Request();
+        $request->set('page', $page);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);
@@ -120,7 +121,8 @@ class HtmlRendererTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = "Kindle/1.0";
 
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = Request::build(['page' => $page]);
+        $request = new Request();
+        $request->set('page', $page);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);
@@ -175,7 +177,8 @@ class HtmlRendererTest extends TestCase
     {
         $_COOKIE["template"] = $templateName;
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = Request::build(['page' => $page]);
+        $request = new Request();
+        $request->set('page', $page);
 
         $template = new TwigTemplate($request);
 
@@ -217,7 +220,8 @@ class HtmlRendererTest extends TestCase
         $_COOKIE['template'] = "twigged";
 
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = Request::build(['page' => $page]);
+        $request = new Request();
+        $request->set('page', $page);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);
@@ -234,7 +238,8 @@ class HtmlRendererTest extends TestCase
         $_COOKIE['template'] = "twigged";
 
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = Request::build(['page' => $page]);
+        $request = new Request();
+        $request->set('page', $page);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);

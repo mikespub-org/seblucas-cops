@@ -9,7 +9,7 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 
 require_once __DIR__ . '/config/config.php';
 

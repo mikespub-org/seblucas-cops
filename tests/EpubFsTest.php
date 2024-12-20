@@ -13,7 +13,7 @@ namespace SebLucas\Cops\Tests;
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Request;

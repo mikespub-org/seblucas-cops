@@ -18,12 +18,12 @@ use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
-use SebLucas\Cops\Framework;
 use Exception;
 
 /**
@@ -501,7 +501,7 @@ class RestApiProvider extends BaseRenderer
     /**
      * Summary of getNoteByTypeId
      * @param string $type
-     * @param int $id
+     * @param int $item
      * @param Request $request
      * @return array<string, mixed>
      */

@@ -23,12 +23,18 @@ class Request
     public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
 
     /** @var array<mixed> */
-    public $urlParams = [];
-    protected string $queryString = '';
-    protected string $pathInfo = '';
+    public array $urlParams = [];
+    /** @var array<mixed> */
+    public array $serverParams = [];
+    /** @var array<mixed> */
+    public array $queryParams = [];
+    /** @var array<mixed> */
+    public array $postParams = [];
+    /** @var array<mixed> */
+    public array $cookieParams = [];
+    /** @var array<mixed> */
+    public array $fileParams = [];
     /** @var class-string|null */
-    protected $handlerClass = null;
-    protected string $routeName = '';
     protected bool $parsed = true;
     /** @var string|null */
     public $content = null;
@@ -42,6 +48,9 @@ class Request
      */
     public function __construct($parse = true)
     {
+        // Validate path early
+        $this->validatePath();
+        // @todo remove from constructor?
         $this->parseParams($parse);
     }
 
@@ -56,11 +65,12 @@ class Request
 
     /**
      * Summary of query
+     * @deprecated 3.5.2 not used anywhere
      * @return string
      */
     public function query()
     {
-        return $this->queryString;
+        return '';
     }
 
     /**
@@ -132,6 +142,20 @@ class Request
     }
 
     /**
+     * Validate request path
+     */
+    public function validatePath(): void
+    {
+        // check for relative paths somewhere in templates
+        if (str_contains($this->path(), '/index.php')) {
+            $error = "Invalid relative path '{$this->path()}' from '{$this->template()}' template";
+            error_log("COPS: " . $error);
+            // this will call exit()
+            Response::sendError($this, $error);
+        }
+    }
+
+    /**
      * Summary of parseParams
      * @param bool $parse used by build()
      * @return void
@@ -140,50 +164,24 @@ class Request
     {
         $this->parsed = $parse;
         $this->urlParams = [];
-        $this->queryString = '';
         if (!$this->parsed) {
             return;
         }
-        $path = $this->path();
-        // check for relative paths somewhere in templates
-        if (str_contains($path, '/index.php')) {
-            $error = "Invalid relative path '$path' from '" . $this->template() . "' template";
-            error_log("COPS: " . $error);
-            // this will call exit()
-            Response::sendError($this, $error);
-        }
-        // set route param in request once we find matching route
-        $params = Route::match($path);
-        if (is_null($params)) {
-            // this will call exit()
-            //Response::sendError($this, "Invalid request path '$path'");
-            error_log("COPS: Invalid request path '$path' from template " . $this->template());
-            // delay reporting error until we're back in Framework
-            $this->invalid = true;
-            $params = [];
-        }
-        $default = Route::getHandler('html');
-        if (empty($params[Route::HANDLER_PARAM])) {
-            $params[Route::HANDLER_PARAM] = $default;
-        }
-        // JsonHandler uses same routes as HtmlHandler - see util.js
-        if ($params[Route::HANDLER_PARAM] == $default && $this->isAjax()) {
-            $params[Route::HANDLER_PARAM] = Route::getHandler('json');
-        }
-        // @todo in case we ever need these later
-        $this->handlerClass = $params[Route::HANDLER_PARAM];
-        $this->routeName = $params[Route::ROUTE_PARAM] ?? '';
-        foreach ($params as $name => $value) {
-            $this->urlParams[$name] = $value;
-        }
-        if (!empty($_GET)) {
-            foreach ($_GET as $name => $value) {
+        $this->serverParams = $_SERVER;
+        $this->queryParams = $_GET ?? [];
+        $this->postParams = $_POST ?? [];
+        $this->cookieParams = $_COOKIE ?? [];
+        $this->fileParams = $_FILES ?? [];
+        // @todo move to RequestContext
+        // $this->matchRoute();
+        if (!empty($this->queryParams)) {
+            foreach ($this->queryParams as $name => $value) {
                 // remove ajax timestamp for jQuery cache = false
                 // remove internal _handler, _route, _resource etc. params
                 if (str_starts_with($name, '_')) {
                     continue;
                 }
-                $this->urlParams[$name] = $_GET[$name];
+                $this->urlParams[$name] = $value;
             }
         }
         // get virtual library from option (see customize)
@@ -194,8 +192,46 @@ class Request
             $user = $this->getUserName();
             // @todo use restriction etc. from Calibre user database
         }
-        $this->queryString = $_SERVER['QUERY_STRING'] ?? '';
-        $this->pathInfo = $_SERVER['PATH_INFO'] ?? '';
+    }
+
+    /**
+     * Summary of matchRoute
+     * @todo move to RequestContext
+     * @return void
+     */
+    public function matchRoute()
+    {
+        $path = $this->path();
+        // set route param in request once we find matching route
+        $params = Route::match($path);
+        if (is_null($params)) {
+            // this will call exit()
+            //Response::sendError($this, "Invalid request path '$path'");
+            error_log("COPS: Invalid request path '$path' from template " . $this->template());
+            // delay reporting error until we're back in Framework
+            $this->invalid = true;
+            $params = [];
+        }
+        $this->updateFromMatch($params);
+    }
+
+    /**
+     * Update request parameters after route matching
+     * @param array<mixed> $params from Route::match()
+     */
+    public function updateFromMatch($params): void
+    {
+        $default = Route::getHandler('html');
+        if (empty($params[Route::HANDLER_PARAM])) {
+            $params[Route::HANDLER_PARAM] = $default;
+        }
+        // JsonHandler uses same routes as HtmlHandler - see util.js
+        if ($params[Route::HANDLER_PARAM] == $default && $this->isAjax()) {
+            $params[Route::HANDLER_PARAM] = Route::getHandler('json');
+        }
+        foreach ($params as $name => $value) {
+            $this->urlParams[$name] = $value;
+        }
     }
 
     /**
@@ -209,12 +245,6 @@ class Request
         foreach ($params as $param => $value) {
             $this->set($param, $value);
         }
-        if (!empty($params[Route::HANDLER_PARAM])) {
-            $this->handlerClass = $params[Route::HANDLER_PARAM];
-        } else {
-            $this->handlerClass = null;
-        }
-        $this->routeName = $params[Route::ROUTE_PARAM] ?? '';
         // remove /handler/{path:.*} param from current request
         if ($clearPath && empty($params['path']) && $this->get('path')) {
             $this->set('path', null);
@@ -270,14 +300,6 @@ class Request
     public function set($name, $value)
     {
         $this->urlParams[$name] = $value;
-        $this->queryString = Route::getQueryString($this->urlParams);
-        // @todo in case we ever need these later
-        if ($name == Route::HANDLER_PARAM) {
-            $this->handlerClass = $value;
-        }
-        if ($name == Route::ROUTE_PARAM) {
-            $this->routeName = $value;
-        }
         return $this;
     }
 
@@ -288,17 +310,18 @@ class Request
      */
     public function post($name)
     {
-        return $_POST[$name] ?? null;
+        return $this->postParams[$name] ?? null;
     }
 
     /**
      * Summary of request
      * @param string $name
+     * @deprecated 3.5.2 not used anywhere
      * @return mixed
      */
     public function request($name)
     {
-        return $_REQUEST[$name] ?? null;
+        return null;
     }
 
     /**
@@ -308,7 +331,7 @@ class Request
      */
     public function server($name)
     {
-        return $_SERVER[$name] ?? null;
+        return $this->serverParams[$name] ?? null;
     }
 
     /**
@@ -328,7 +351,7 @@ class Request
      */
     public function cookie($name)
     {
-        return $_COOKIE[$name] ?? null;
+        return $this->cookieParams[$name] ?? null;
     }
 
     /**
@@ -338,7 +361,7 @@ class Request
      */
     public function files($name)
     {
-        return $_FILES[$name] ?? null;
+        return $this->fileParams[$name] ?? null;
     }
 
     /**
@@ -382,7 +405,7 @@ class Request
     {
         $style = $this->option('style');
         if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $style)) {
-            return 'templates/' . $this->template() . '/styles/style-' . $this->option('style') . '.css';
+            return 'templates/' . $this->template() . '/styles/style-' . $style . '.css';
         }
         return 'templates/' . Config::get('template') . '/styles/style-' . Config::get('style') . '.css';
     }
@@ -475,32 +498,14 @@ class Request
     }
 
     /**
-     * Summary of getCurrentUrl
-     * @param class-string|null $handler
-     * @deprecated 3.1.0 use route urls instead
-     * @return string
-     */
-    public function getCurrentUrl($handler = null)
-    {
-        $handler ??= $this->getHandler();
-        $pathInfo = $this->path();
-        $queryString = $this->query();
-        // @todo fix this for handlers without base link
-        if (empty($queryString)) {
-            return $handler::link() . $pathInfo;
-        }
-        return $handler::link() . $pathInfo . '?' . $queryString;
-    }
-
-    /**
      * Get handler class corresponding to _handler param
+     * @todo move to RequestContext
      * @return class-string
      */
     public function getHandler()
     {
         // we have a handler already
         if (!empty($this->urlParams[Route::HANDLER_PARAM])) {
-            //return $this->urlParams[Route::HANDLER_PARAM];
             return Route::getHandler($this->urlParams[Route::HANDLER_PARAM]);
         }
         if ($this->isAjax()) {
@@ -604,11 +609,12 @@ class Request
      * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
      * @param class-string|null $handler
      * @param ?array<mixed> $server
-     * @param ?array<mixed> $cookie
-     * @param ?array<mixed> $config
+     * @param ?array<mixed> $post
+     * @param ?array<mixed> $cookies
+     * @param ?array<mixed> $files
      * @return Request
      */
-    public static function build($params = [], $handler = null, $server = null, $cookie = null, $config = null)
+    public static function build($params = [], $handler = null, $server = null, $post = null, $cookies = null, $files = null)
     {
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
         if (!empty($handler)) {
@@ -618,6 +624,19 @@ class Request
         }
         $request = new self(false);
         $request->setParams($params, false);
+        $request->queryParams = $params;
+        if (isset($server)) {
+            $request->serverParams = $server;
+        }
+        if (isset($post)) {
+            $request->postParams = $post;
+        }
+        if (isset($cookies)) {
+            $request->cookieParams = $cookies;
+        }
+        if (isset($files)) {
+            $request->fileParams = $files;
+        }
         return $request;
     }
 }

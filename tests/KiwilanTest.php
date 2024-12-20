@@ -19,7 +19,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\OpdsHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -173,7 +173,7 @@ class KiwilanTest extends TestCase
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         Config::set('generate_invalid_opds_stream', "1");
-        $request = self::$handler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page], $_SERVER);
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
@@ -346,7 +346,7 @@ class KiwilanTest extends TestCase
     {
         $page = PageId::AUTHOR_DETAIL;
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
-        $request = self::$handler::request(['page' => $page]);
+        $request = self::$handler::request(['page' => $page], $_SERVER);
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);

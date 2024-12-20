@@ -1,6 +1,6 @@
 <?php
 
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';

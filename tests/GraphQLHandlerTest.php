@@ -17,7 +17,7 @@ require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
@@ -49,7 +49,7 @@ class GraphQLHandlerTest extends TestCase
     public function testRenderPlayground(): void
     {
         $_SERVER['REQUEST_METHOD'] = "GET";
-        $request = Request::build();
+        $request = Request::build([], null, $_SERVER);
 
         ob_start();
         $handler = Framework::createHandler(self::$handler);
@@ -66,7 +66,7 @@ class GraphQLHandlerTest extends TestCase
     public function testHandleRequest(): void
     {
         $_SERVER['REQUEST_METHOD'] = "POST";
-        $request = Request::build();
+        $request = Request::build([], null, $_SERVER);
         $request->content = $this->getBasicQuery();
 
         ob_start();

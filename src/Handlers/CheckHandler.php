@@ -339,6 +339,7 @@ Please check
     public function handleMore($request)
     {
         unset($request->urlParams[Route::HANDLER_PARAM]);
+        $request->serverParams = ['HTTP_REDACTED' => true];
         $message = var_export($request, true);
 
         $response = new Response('text/plain;charset=utf-8');

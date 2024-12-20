@@ -27,7 +27,7 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Context;
+use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
@@ -73,7 +73,7 @@ class GraphQLExecutor
         // @see https://github.com/webonyx/graphql-php/blob/master/examples/02-schema-definition-language/graphql.php
         // use $rootValue to resolve query fields
         //$rootValue = $this->getFieldResolvers($request);
-        $context = new Context($request, $handler);
+        $context = new RequestContext($request);
         $variableValues = $input['variables'] ?? null;
         $operationName = $input['operationName'] ?? null;
         //$fieldResolver = $this->getFieldResolver($request, $resolvers);
@@ -576,7 +576,7 @@ class GraphQLExecutor
     /**
      * Summary of getNoteField
      * @param string $fieldName
-     * @param Note $entry
+     * @param Note $note
      * @return mixed
      */
     public static function getNoteField($fieldName, $note)
@@ -589,7 +589,7 @@ class GraphQLExecutor
             case 'size':
                 return strlen($note->doc);
             case 'mtime':
-                return date(DATE_ATOM, $note->mtime);
+                return date(DATE_ATOM, (int) $note->mtime);
             case 'navlink':
                 return $note->getUri();
             case 'resources':

@@ -10,9 +10,10 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\UriGenerator;
 
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
@@ -30,34 +31,34 @@ class RouteTest extends TestCase
 
     public function testRoutePage(): void
     {
-        $this->assertEquals("", Route::route(['page' => null, 'db' => null]));
-        $this->assertEquals("?db=0", Route::route(['page' => null, 'db' => 0]));
-        $this->assertEquals("?key=value", Route::route(['page' => null, 'key' => 'value', 'db' => null]));
-        $this->assertEquals("?key=value&db=0", Route::route(['page' => null, 'key' => 'value', 'db' => 0]));
-        $this->assertEquals("?key=value&db=0", Route::route(['page' => null, 'key' => 'value', 'otherKey' => null, 'db' => 0]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", Route::route(['page' => null, 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        $this->assertEquals("/authors", Route::route(['page' => 'authors', 'db' => null]));
-        $this->assertEquals("/authors?db=0", Route::route(['page' => 'authors', 'db' => 0]));
-        $this->assertEquals("/authors?key=value", Route::route(['page' => 'authors', 'key' => 'value', 'db' => null]));
-        $this->assertEquals("/authors?key=value&db=0", Route::route(['page' => 'authors', 'key' => 'value', 'db' => 0]));
-        $this->assertEquals("/authors?key=value&db=0", Route::route(['page' => 'authors', 'key' => 'value', 'otherKey' => null, 'db' => 0]));
-        $this->assertEquals("/authors?key=value&otherKey=other&db=0", Route::route(['page' => 'authors', 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
+        $this->assertEquals("", UriGenerator::route(['page' => null, 'db' => null]));
+        $this->assertEquals("?db=0", UriGenerator::route(['page' => null, 'db' => 0]));
+        $this->assertEquals("?key=value", UriGenerator::route(['page' => null, 'key' => 'value', 'db' => null]));
+        $this->assertEquals("?key=value&db=0", UriGenerator::route(['page' => null, 'key' => 'value', 'db' => 0]));
+        $this->assertEquals("?key=value&db=0", UriGenerator::route(['page' => null, 'key' => 'value', 'otherKey' => null, 'db' => 0]));
+        $this->assertEquals("?key=value&otherKey=other&db=0", UriGenerator::route(['page' => null, 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
+        $this->assertEquals("/authors", UriGenerator::route(['page' => 'authors', 'db' => null]));
+        $this->assertEquals("/authors?db=0", UriGenerator::route(['page' => 'authors', 'db' => 0]));
+        $this->assertEquals("/authors?key=value", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'db' => null]));
+        $this->assertEquals("/authors?key=value&db=0", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'db' => 0]));
+        $this->assertEquals("/authors?key=value&db=0", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'otherKey' => null, 'db' => 0]));
+        $this->assertEquals("/authors?key=value&otherKey=other&db=0", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
     }
 
     public function testFrontController(): void
     {
         $expected = '/recent';
-        $uri = Route::route(['_route' => 'page-recent']);
+        $uri = UriGenerator::route(['_route' => 'page-recent']);
         $this->assertEquals($expected, $uri);
 
         Config::set('front_controller', 'index.php');
         $expected = Route::base() . 'recent';
-        $test = Route::absolute(Route::route(['_route' => 'page-recent']));
+        $test = Route::absolute(UriGenerator::route(['_route' => 'page-recent']));
         $this->assertEquals($expected, $test);
 
         Config::set('front_controller', '');
         $expected = Route::base() . 'index.php/recent';
-        $test = Route::absolute(Route::route(['_route' => 'page-recent']));
+        $test = Route::absolute(UriGenerator::route(['_route' => 'page-recent']));
         $this->assertEquals($expected, $test);
     }
 
@@ -341,7 +342,7 @@ class RouteTest extends TestCase
             $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
         }
         try {
-            $result = Route::generate($route, $params);
+            $result = UriGenerator::generate($route, $params);
         } catch (Throwable) {
             $this->assertNull($routeUrl);
             return;
@@ -418,7 +419,7 @@ class RouteTest extends TestCase
         if (!empty($params[Route::HANDLER_PARAM])) {
             $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
         }
-        $this->assertEquals($expected, Route::getRouteForParams($params));
+        $this->assertEquals($expected, UriGenerator::getRouteForParams($params));
     }
 
     /**
@@ -448,7 +449,7 @@ class RouteTest extends TestCase
             $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
         }
         try {
-            $result = Route::generate($route, $params);
+            $result = UriGenerator::generate($route, $params);
         } catch (Throwable) {
             $this->assertNull($routeUrl);
             return;
@@ -534,7 +535,7 @@ class RouteTest extends TestCase
         if (!empty($params[Route::HANDLER_PARAM])) {
             $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
         }
-        $test->assertEquals($expected, Route::getRouteForParams($params));
+        $test->assertEquals($expected, UriGenerator::getRouteForParams($params));
     }
 
     /**
@@ -548,7 +549,7 @@ class RouteTest extends TestCase
     {
         $prefix = "";
         try {
-            $result = Route::generate($route, $params);
+            $result = UriGenerator::generate($route, $params);
         } catch (Throwable) {
             $test->assertNull($routeUrl);
             return;

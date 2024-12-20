@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Tests;
 
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Middleware\TestMiddleware;
 
@@ -49,15 +49,8 @@ class FrameworkTest extends TestCase
      */
     public static function getHandlers(): array
     {
-        $className = Framework::class;
-        // test protected method using closure bind & call or use reflection
-        // @see https://www.php.net/manual/en/closure.bind.php
-        $getHandlers = \Closure::bind(static function () use ($className) {
-            return $className::$handlers;
-        }, null, $className);
-
         $result = [];
-        foreach ($getHandlers() as $handler => $className) {
+        foreach (Framework::getHandlers() as $handler => $className) {
             array_push($result, [$handler, $className]);
         }
         return $result;
@@ -157,7 +150,7 @@ class FrameworkTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = "'queryString' => ''";
+        $expected = "'_route' => 'check-more'";
         $this->assertStringContainsString($expected, $output);
 
         // add test middleware to framework
@@ -170,7 +163,7 @@ class FrameworkTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = "queryString' => 'more=more&hello=world'";
+        $expected = "'_route' => 'check-more'";
         $this->assertStringContainsString($expected, $output);
         $expected = "Goodbye!";
         $this->assertStringContainsString($expected, $output);

@@ -15,6 +15,7 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApiProvider;
+use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
 
 /**
@@ -121,7 +122,7 @@ class RestApiHandler extends BaseHandler
         if (!empty($page)) {
             $params['page'] = $page;
         }
-        $link = Route::process($handler, $params);
+        $link = UriGenerator::process($handler, $params);
         return $link;
     }
 

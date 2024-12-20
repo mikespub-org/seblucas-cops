@@ -11,7 +11,7 @@
 namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Calibre\Metadata;
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
@@ -50,14 +50,14 @@ class RestApiTest extends TestCase
 
     public function testGetPathInfo(): void
     {
-        $request = new Request();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $expected = "/index";
         $test = $apiProvider->getPathInfo();
         $this->assertEquals($expected, $test);
 
         $_SERVER["PATH_INFO"] = "/books/2";
-        $request = new Request();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
 
         $expected = "/books/2";
@@ -70,7 +70,7 @@ class RestApiTest extends TestCase
     public function testMatchPathInfo(): void
     {
         $_SERVER["PATH_INFO"] = "/books/2";
-        $request = new Request();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $path = $apiProvider->getPathInfo();
 
@@ -79,7 +79,7 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
 
         $_SERVER["PATH_INFO"] = "/restapi/openapi";
-        $request = new Request();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $path = $apiProvider->getPathInfo();
 
@@ -97,7 +97,7 @@ class RestApiTest extends TestCase
     public function testSetParams(): void
     {
         $_SERVER["PATH_INFO"] = "/books/2";
-        $request = new Request();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $path = $apiProvider->getPathInfo();
         $params = $apiProvider->matchPathInfo($path);
@@ -116,7 +116,7 @@ class RestApiTest extends TestCase
 
     public function testGetJson(): void
     {
-        $request = new Request();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $renderer = new JsonRenderer();
         $expected = $renderer->getJson($request);
@@ -187,6 +187,7 @@ class RestApiTest extends TestCase
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
+        $request = Request::build(['db' => 0, 'name' => 'books'], basename(self::$script), $_SERVER);
 
         // less than RestApiProvider::$numberPerPage;
         $expected = 16;
@@ -368,9 +369,7 @@ class RestApiTest extends TestCase
     public function testGetMetadataElement(): void
     {
         $element = "dc:title";
-        $request = new Request();
-        $request->set('bookId', 17);
-        $request->set('element', $element);
+        $request = Request::build(['bookId' => 17, 'element' => $element], basename(self::$script));
         $expected = "Metadata for 17";
         $test = RestApiProvider::getMetadata($request);
         $this->assertEquals($expected, $test["title"]);
@@ -384,10 +383,7 @@ class RestApiTest extends TestCase
     {
         $element = "meta";
         $name = "calibre:annotation";
-        $request = new Request();
-        $request->set('bookId', 17);
-        $request->set('element', $element);
-        $request->set('name', $name);
+        $request = Request::build(['bookId' => 17, 'element' => $element, 'name' => $name], basename(self::$script));
         $expected = "Metadata for 17";
         $test = RestApiProvider::getMetadata($request);
         $this->assertEquals($expected, $test["title"]);
@@ -405,7 +401,7 @@ class RestApiTest extends TestCase
 
     public function testGetUserNoAuth(): void
     {
-        $request = new Request();
+        $request = Framework::getRequest();
         $expected = "Invalid username";
         $test = RestApiProvider::getUser($request);
         $this->assertEquals($expected, $test["error"]);
@@ -415,7 +411,7 @@ class RestApiTest extends TestCase
     {
         $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
         $_SERVER[$http_auth_user] = "admin";
-        $request = new Request();
+        $request = Framework::getRequest();
         $expected = "admin";
         $test = RestApiProvider::getUser($request);
         $this->assertEquals($expected, $test["username"]);
@@ -428,7 +424,7 @@ class RestApiTest extends TestCase
         $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
         $_SERVER[$http_auth_user] = 'admin';
         $_SERVER['PATH_INFO'] = '/restapi/user/details';
-        $request = new Request();
+        $request = Framework::getRequest();
 
         $expected = "admin";
         $test = RestApiProvider::getUser($request);
@@ -449,7 +445,7 @@ class RestApiTest extends TestCase
         Config::set('api_key', $apiKey);
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
         $_SERVER['PATH_INFO'] = '/zipfs/0/20/META-INF/container.xml';
-        $request = new Request();
+        $request = Framework::getRequest();
         RestApiProvider::$doRunHandler = false;
 
         $apiProvider = new RestApiProvider($request);
@@ -480,7 +476,7 @@ class RestApiTest extends TestCase
         Config::set('api_key', $apiKey);
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
         $_SERVER['PATH_INFO'] = '/calres/0/xxh64/7c301792c52eebf7';
-        $request = new Request();
+        $request = Framework::getRequest();
         RestApiProvider::$doRunHandler = true;
 
         ob_start();
@@ -507,7 +503,7 @@ class RestApiTest extends TestCase
         Config::set('api_key', $apiKey);
         $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
         $_SERVER['PATH_INFO'] = '/thumbs/0/17/html.jpg';
-        $request = new Request();
+        $request = Framework::getRequest();
         RestApiProvider::$doRunHandler = false;
 
         $apiProvider = new RestApiProvider($request);
@@ -616,7 +612,7 @@ class RestApiTest extends TestCase
     {
         $_SERVER['PATH_INFO'] = $routeUrl;
         //$request = Request::build($params, basename(self::$script));
-        $request = new Request();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $result = $apiProvider->getOutput();
         if ($route == 'restapi-path' && !empty($params[Route::ROUTE_PARAM])) {

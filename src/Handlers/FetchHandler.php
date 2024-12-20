@@ -55,8 +55,11 @@ class FetchHandler extends BaseHandler
     public function handle($request)
     {
         if (Config::get('fetch_protect') == '1') {
-            session_start();
-            if (!isset($_SESSION['connected'])) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $connected = $request->session('connected');
+            if (!isset($connected)) {
                 // this will call exit()
                 Response::notFound($request);
             }

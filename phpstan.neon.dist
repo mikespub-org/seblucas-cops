@@ -13,3 +13,6 @@ parameters:
         - vendor/*
         - tests/WebDriverTestCase.php
         - tests/WebDriverTest.php
+        - src/Framework/Adapter/LaravelAdapter.php
+        - src/Framework/Adapter/SlimAdapter.php
+        - src/Framework/Adapter/SymfonyAdapter.php

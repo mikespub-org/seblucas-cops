@@ -10,13 +10,11 @@
 
 namespace SebLucas\Cops\Input;
 
-use SebLucas\Cops\Framework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Slugger;
 use SebLucas\Cops\Output\Format;
-use SebLucas\Cops\Routing\FastRouter;
-use SebLucas\Cops\Routing\RouterInterface;
-use SebLucas\Cops\Routing\Routing;
+use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
 
 /**
@@ -29,19 +27,12 @@ class Route
     public const ROUTES_CACHE_FILE = 'url_cached_routes.php';
     public const KEEP_STATS = false;
 
-    /** @var ?\Symfony\Component\HttpFoundation\Request */
-    protected static $proxyRequest = null;
     /** @var ?string */
     protected static $baseUrl = null;
     /** @var array<string, mixed> */
     protected static $routes = [];
     /** @var array<string, mixed> */
     protected static $static = [];
-    /** @var class-string */
-    protected static $routerClass = FastRouter::class;
-    //protected static $routerClass = Routing::class;
-    /** @var RouterInterface|null */
-    protected static $router = null;
     /** @var class-string */
     protected static $sluggerClass = Slugger::class;
     /** @var Slugger|bool|null */
@@ -69,18 +60,6 @@ class Route
     ];
 
     /**
-     * Summary of getRouter
-     * @return RouterInterface
-     */
-    public static function getRouter()
-    {
-        if (!isset(self::$router)) {
-            self::$router = new self::$routerClass();
-        }
-        return self::$router;
-    }
-
-    /**
      * Match pathinfo against routes and return query params
      * @param string $path
      * @param ?string $method
@@ -101,7 +80,7 @@ class Route
             return self::get($path);
         }
 
-        return self::getRouter()->match($path, $method);
+        return Framework::getRouter()->match($path, $method);
     }
 
     /**
@@ -137,17 +116,6 @@ class Route
     public static function set($name, $path, $params = [], $methods = [], $options = [])
     {
         self::$routes[$name] = [$path, $params, $methods, $options];
-    }
-
-    /**
-     * Generate uri with FastRoute - @todo some issues left to deal with ;-)
-     * @param string $name
-     * @param array<mixed> $params
-     * @return string|null
-     */
-    public static function generate($name, $params)
-    {
-        return self::getRouter()->generate($name, $params);
     }
 
     /**
@@ -203,7 +171,7 @@ class Route
      * Add routes with name, path, params, methods and options
      * @param array<string, array<mixed>> $routes
      * @param class-string $handler
-     * @return void
+     * @return array<string, array<mixed>>
      */
     public static function addRoutes($routes, $handler)
     {
@@ -234,6 +202,7 @@ class Route
             $routes[$name] = [$path, $params, $methods, $options];
         }
         self::$routes = array_merge(self::$routes, $routes);
+        return $routes;
     }
 
     /**
@@ -306,66 +275,7 @@ class Route
      */
     public static function path($path = '', $params = [])
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            self::$counters['path'] += 1;
-        }
-        $queryParams = self::getQueryParams($params);
-        if (!empty($path) && str_starts_with($path, '/')) {
-            $prefix = $path;
-        } else {
-            $prefix = self::base() . $path;
-        }
-        return self::getUriForParams($queryParams, $prefix);
-    }
-
-    /**
-     * Get full link for handler with page and params (incl _route)
-     *
-     * The handler takes precedence over page or _route here, as it
-     * will be variable (html/json or feed/opds or restapi or ...)
-     *
-     * @deprecated 3.4.2 use handler::route(), handler::page() or handler:link()
-     * @param class-string|null $handler
-     * @param string|int|null $page
-     * @param array<mixed> $params
-     * @return string
-     */
-    public static function link($handler = null, $page = null, $params = [])
-    {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            self::$counters['link'] += 1;
-            if (empty($handler)) {
-                self::$counters['empty'] += 1;
-            }
-        }
-        $handler ??= Route::getHandler('html');
-        // take into account handler when building page url, e.g. feed or zipper
-        if (!in_array($handler::HANDLER, ['html', 'json', 'phpunit'])) {
-            $params[self::HANDLER_PARAM] = $handler;
-        } else {
-            // @todo do we still want to get rid of this here?
-            unset($params[self::HANDLER_PARAM]);
-        }
-        if (!empty($page)) {
-            $params['page'] = $page;
-        }
-        return self::process($handler, $params);
-    }
-
-    /**
-     * Process link with defined handler and params (incl. page)
-     * @param class-string $handler defined in Route::link(), BaseHandler::link() or PageHandler::link() - @todo get rid of this = unused
-     * @param array<mixed> $params with HANDLER_PARAM set (base), unset (page) or variable (link)
-     * @param string $prefix (optional)
-     * @return string
-     */
-    public static function process($handler, $params, $prefix = '')
-    {
-        // ?page=... or /route/...
-        $uri = self::route($params, $prefix);
-        return self::absolute($uri, $handler);
+        return UriGenerator::path($path, $params);
     }
 
     /**
@@ -403,57 +313,6 @@ class Route
     }
 
     /**
-     * Get uri for page with params
-     * @deprecated 3.5.1 use handler::route(), handler::page() or handler:link()
-     * @param string|int|null $page
-     * @param array<mixed> $params
-     * @param string $prefix (optional)
-     * @return string
-     */
-    public static function page($page, $params = [], $prefix = '')
-    {
-        if (!empty($page)) {
-            $params['page'] = $page;
-        }
-        return self::route($params, $prefix);
-    }
-
-    /**
-     * Get uri for route with params
-     * @param array<mixed> $params
-     * @param string $prefix (optional)
-     * @return string
-     */
-    public static function route($params, $prefix = '')
-    {
-        $queryParams = self::getQueryParams($params);
-        if (count($queryParams) < 1) {
-            return $prefix;
-        }
-        $route = self::getRouteForParams($queryParams, $prefix);
-        if (!is_null($route)) {
-            return $route;
-        }
-        return self::getUriForParams($queryParams, $prefix);
-    }
-
-    /**
-     * Summary of getQueryParams
-     * @param array<mixed> $params
-     * @return array<mixed> filtered params with optional handler, route and page param
-     */
-    public static function getQueryParams($params)
-    {
-        $queryParams = array_filter($params, function ($val) {
-            if (empty($val) && strval($val) !== '0') {
-                return false;
-            }
-            return true;
-        });
-        return $queryParams;
-    }
-
-    /**
      * Summary of getQueryString
      * @param array<mixed> $params
      * @return string
@@ -463,21 +322,6 @@ class Route
         unset($params[self::HANDLER_PARAM]);
         unset($params[self::ROUTE_PARAM]);
         return http_build_query($params, '', null, PHP_QUERY_RFC3986);
-    }
-
-    /**
-     * Summary of getUriForParams
-     * @param array<mixed> $params
-     * @param string $prefix
-     * @return string
-     */
-    public static function getUriForParams($params, $prefix = '')
-    {
-        $queryString = self::getQueryString($params);
-        if (empty($queryString)) {
-            return $prefix;
-        }
-        return $prefix . '?' . $queryString;
     }
 
     /**
@@ -511,172 +355,7 @@ class Route
      */
     public static function getHandler($name)
     {
-        if (empty(self::$handlers)) {
-            self::$handlers = Framework::getHandlers();
-        }
-        // we already have a handler class-string
-        if (in_array($name, array_values(self::$handlers))) {
-            return $name;
-        }
-        if (!isset(self::$handlers[$name])) {
-            throw new Exception('Invalid handler name ' . htmlspecialchars($name));
-        }
-        return self::$handlers[$name];
-    }
-
-    /**
-     * Get route for params based on:
-     * 1. handler param + use default page handler with prefix for page routes
-     * 2. route param
-     * 3. page param
-     * 4. other params as uri
-     * @param array<mixed> $params
-     * @param string $prefix
-     * @return string|null
-     */
-    public static function getRouteForParams($params, $prefix = '')
-    {
-        $default = self::getHandler('html');
-        if (!empty($params[self::HANDLER_PARAM])) {
-            $handler = $params[self::HANDLER_PARAM];
-            if (in_array($handler::HANDLER, ['restapi', 'feed', 'opds'])) {
-                // if we have a page, or if we have a route and it starts with page-*, e.g. _route=page-author
-                if (!empty($params['page']) || str_starts_with($params[self::ROUTE_PARAM] ?? '', 'page-')) {
-                    // use page route with /handler prefix instead
-                    $prefix = $prefix . $handler::PREFIX;
-                    $handler = $default;
-                // if we have a route and it does *not* start with the handler name, e.g. _route=check-more
-                } elseif (!empty($params[self::ROUTE_PARAM]) && !str_starts_with($params[self::ROUTE_PARAM], $handler::HANDLER)) {
-                    $prefix = $prefix . $handler::PREFIX;
-                    $handlerName = explode('-', $params[self::ROUTE_PARAM])[0];
-                    $handler = self::getHandler($handlerName);
-                }
-            } elseif ($handler::HANDLER == 'phpunit') {
-                $handler = $default;
-            }
-            unset($params[self::HANDLER_PARAM]);
-        } elseif (isset($params[self::ROUTE_PARAM])) {
-            // use default handler for page route
-            $handler = $default;
-        } elseif (isset($params['page'])) {
-            // use default handler for page route
-            $handler = $default;
-            // @todo use _route later - see PageHandler::findRouteName()
-        } else {
-            // no page or handler, e.g. index.php?complete=1
-            return self::getUriForParams($params, $prefix);
-        }
-
-        $route = $handler::findRoute($params);
-        if (!isset($route)) {
-            return $route;
-        }
-        return $prefix . $route;
-    }
-
-    /**
-     * Summary of findMatchingRoute
-     * @param array<mixed> $routes
-     * @param array<mixed> $params
-     * @param string $prefix
-     * @return string|null
-     */
-    public static function findMatchingRoute($routes, $params, $prefix = '')
-    {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            self::$counters['find'] += 1;
-        }
-        // find matching route based on fixed and/or path params - e.g. authors letter
-        foreach ($routes as $name => $route) {
-            $result = self::replacePathParams($route, $params, $prefix);
-            if (isset($result)) {
-                return $result;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Replace path params for known route
-     * @param array<mixed> $route
-     * @param array<mixed> $params
-     * @param string $prefix
-     * @param bool $checkFixed true if we need to check fixed params, false for known route - see PageHandler::findRoute()
-     * @return string|null
-     */
-    public static function replacePathParams($route, $params, $prefix = '', $checkFixed = true)
-    {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['replace'] += 1;
-        }
-        // Add fixed if needed
-        $route[] = [];
-        [$path, $fixed] = $route;
-
-        $subst = $params;
-        // check and remove fixed params (incl. handler or page)
-        foreach ($fixed as $key => $val) {
-            if ($checkFixed) {
-                // this isn't the route you're looking for...
-                if (!isset($subst[$key]) || $subst[$key] != $val) {
-                    return null;
-                }
-            }
-            unset($subst[$key]);
-        }
-        $found = [];
-        // check and replace path params + support custom patterns - see nikic/fast-route
-        $count = preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found);
-        if ($count === false) {
-            return null;
-        }
-        // no path parameters found in route - return what is left
-        if ($count === 0) {
-            return self::getUriForParams($subst, $prefix . $path);
-        }
-        // start checking path parameters
-        if (in_array('ignore', $found[1])) {
-            $subst['ignore'] ??= 'ignore';
-        }
-        if (count($found[1]) > count($subst)) {
-            return null;
-        }
-        foreach ($found[1] as $param) {
-            $pattern = '';
-            if (str_contains($param, ':')) {
-                [$param, $pattern] = explode(':', $param);
-            }
-            if (!isset($subst[$param])) {
-                return null;
-            }
-            $value = $subst[$param];
-            // @todo support unicode pattern for first letter - but see https://github.com/nikic/FastRoute/issues/154
-            if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', (string) $value)) {
-                return null;
-            }
-            if (in_array($param, ['title', 'author', 'ignore'])) {
-                $value = self::slugify($value);
-                $value = rawurlencode($value);
-            }
-            // search query
-            if (in_array($param, ['query'])) {
-                $value = rawurlencode($value);
-            }
-            // extra file
-            if (in_array($param, ['file'])) {
-                $value = implode('/', array_map('rawurlencode', explode('/', $value)));
-            }
-            // @todo do we need to handle 'comp' or 'path' anywhere?
-            if (!empty($pattern)) {
-                $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
-            } else {
-                $path = str_replace('{' . $param . '}', "$value", $path);
-            }
-            unset($subst[$param]);
-        }
-        return self::getUriForParams($subst, $prefix . $path);
+        return Framework::getHandlerManager()->getHandlerClass($name);
     }
 
     /**

@@ -30,4 +30,11 @@ interface RouterInterface
      * @return string
      */
     public function generate($name, $params);
+
+    /**
+     * Get internal router for handler routes (cached)
+     * @param bool $refresh
+     * @return mixed
+     */
+    public function getRouter($refresh = false);
 }

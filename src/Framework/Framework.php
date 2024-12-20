@@ -8,36 +8,28 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops;
+namespace SebLucas\Cops\Framework;
 
+use SebLucas\Cops\Handlers\HandlerManager;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Routing\FastRouter;
+use SebLucas\Cops\Routing\RouterInterface;
+use SebLucas\Cops\Handlers\QueueBasedHandler;
 
 /**
  * Minimal Framework
  */
 class Framework
 {
-    /** @var array<string, class-string> */
-    protected static $handlers = [
-        "html" => Handlers\HtmlHandler::class,
-        "feed" => Handlers\FeedHandler::class,
-        "json" => Handlers\JsonHandler::class,
-        "fetch" => Handlers\FetchHandler::class,
-        "read" => Handlers\ReadHandler::class,
-        "epubfs" => Handlers\EpubFsHandler::class,
-        "restapi" => Handlers\RestApiHandler::class,
-        "check" => Handlers\CheckHandler::class,
-        "opds" => Handlers\OpdsHandler::class,
-        "loader" => Handlers\LoaderHandler::class,
-        "zipper" => Handlers\ZipperHandler::class,
-        "calres" => Handlers\CalResHandler::class,
-        "zipfs" => Handlers\ZipFsHandler::class,
-        "mail" => Handlers\MailHandler::class,
-        "graphql" => Handlers\GraphQLHandler::class,
-        "tables" => Handlers\TableHandler::class,
-        "error" => Handlers\ErrorHandler::class,
-        "phpunit" => Handlers\TestHandler::class,
-    ];
+    /** @var class-string */
+    protected static $routerClass = FastRouter::class;
+    //protected static $routerClass = Routing::class;
+    /** @var RouterInterface|null */
+    protected static $router = null;
+    /** @var HandlerManager|null */
+    protected static $handlerManager = null;
     /** @var array<mixed> */
     protected static $middlewares = [];
 
@@ -77,7 +69,7 @@ class Framework
             return;
         }
         // @see https://www.php-fig.org/psr/psr-15/meta/#queue-based-request-handler
-        $queue = new Handlers\QueueBasedHandler($handler);
+        $queue = new QueueBasedHandler($handler);
         foreach (self::$middlewares as $middleware) {
             $queue->add(new $middleware());
         }
@@ -90,7 +82,7 @@ class Framework
 
     /**
      * Get request instance
-     * @return Input\Request
+     * @return Request
      */
     public static function getRequest()
     {
@@ -100,9 +92,11 @@ class Framework
         if (empty($_SERVER['PATH_INFO']) && !empty($_SERVER['REDIRECT_PATH_INFO'])) {
             $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
         }
-        $request = new Input\Request();
+        $request = new Request();
+        // @todo move to RequestContext
+        $request->matchRoute();
         // @todo set locale for Route Slugger - must be done after init() and Request()
-        Input\Route::setLocale($request->locale());
+        Route::setLocale($request->locale());
         return $request;
     }
 
@@ -121,8 +115,8 @@ class Framework
      */
     public static function loadRoutes()
     {
-        //Input\Route::load();
-        Input\Route::init();
+        //Route::load();
+        Route::init();
         // @todo add cors options after the last handler or use middleware or...
         //'cors' => ['/{path:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
     }
@@ -133,24 +127,40 @@ class Framework
      */
     public static function getHandlers()
     {
-        return self::$handlers;
+        return self::getHandlerManager()->getHandlers();
     }
 
     /**
      * Create handler instance based on name or class-string
      * @param string|class-string $name
-     * @param mixed $args
      * @return mixed
      */
-    public static function createHandler($name, ...$args)
+    public static function createHandler($name)
     {
-        if (in_array($name, array_values(self::$handlers))) {
-            return new $name(...$args);
+        return self::getHandlerManager()->createHandler($name);
+    }
+
+    /**
+     * Summary of getHandlerManager
+     * @return HandlerManager
+     */
+    public static function getHandlerManager()
+    {
+        if (!isset(self::$handlerManager)) {
+            self::$handlerManager = new HandlerManager();
         }
-        if (!isset(self::$handlers[$name])) {
-            // this will call exit()
-            Response::sendError(null, "Invalid handler name '$name'");
+        return self::$handlerManager;
+    }
+
+    /**
+     * Summary of getRouter
+     * @return RouterInterface
+     */
+    public static function getRouter()
+    {
+        if (!isset(self::$router)) {
+            self::$router = new self::$routerClass();
         }
-        return new self::$handlers[$name](...$args);
+        return self::$router;
     }
 }
