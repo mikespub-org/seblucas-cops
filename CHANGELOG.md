@@ -13,6 +13,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Add HasRouteTrait to simplify handler route() calls and future migrations
+  * Split UriGenerator from Route + add HandlerManager for framework adapters
   * Update portuguese translation - see PR #127 from @horus68
   * Rename group params + support idlist for books and expand GraphQL schema
   * Split off GraphQLExecutor class + rename RestApi to RestApiProvider

@@ -158,7 +158,7 @@ class CustomColumnTypeInteger extends CustomColumnType
             $params = ['custom' => $this->customId, $param => $range, 'db' => $this->databaseId];
             // @todo if we want to use ROUTE_DETAIL we need to add id= here
             $params['id'] = '0';
-            $href = fn() => $this->handler::route($routeName, $params);
+            $href = fn() => $this->getRoute($routeName, $params);
             array_push($entryArray, new Entry(
                 $range,
                 $this->getEntryId() . ':' . $param . ':' . $range,

@@ -47,7 +47,7 @@ class Format extends Base
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
         //$params['title'] = $this->getTitle();
-        return $this->handler::route(static::ROUTE_DETAIL, $params);
+        return $this->getRoute(static::ROUTE_DETAIL, $params);
     }
 
     /**

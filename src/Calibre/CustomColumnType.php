@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
@@ -22,6 +23,8 @@ use Exception;
  */
 abstract class CustomColumnType
 {
+    use HasRouteTrait;
+
     public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
     public const PAGE_ALL = PageId::ALL_CUSTOMS;
     public const PAGE_DETAIL = PageId::CUSTOM_DETAIL;
@@ -73,8 +76,6 @@ abstract class CustomColumnType
     protected $numberPerPage = -1;
     /** @var array<string, mixed> */
     protected $displaySettings = [];
-    /** @var class-string */
-    protected $handler;
 
     /**
      * Summary of __construct
@@ -124,7 +125,7 @@ abstract class CustomColumnType
         $params['custom'] = $this->customId;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        return $this->handler::route(static::ROUTE_ALL, $params);
+        return $this->getRoute(static::ROUTE_ALL, $params);
     }
 
     /**
@@ -167,25 +168,6 @@ abstract class CustomColumnType
         $href = fn() => $this->getUri($params);
         // issue #26 for koreader: section is not supported
         return [ new LinkNavigation($href, "subsection") ];
-    }
-
-    /**
-     * Summary of setHandler
-     * @param class-string $handler
-     * @return void
-     */
-    public function setHandler($handler)
-    {
-        $this->handler = $handler;
-    }
-
-    /**
-     * Summary of getHandler
-     * @return class-string
-     */
-    public function getHandler()
-    {
-        return $this->handler;
     }
 
     /**

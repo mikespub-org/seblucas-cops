@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Handlers\ReadHandler;
@@ -29,6 +30,8 @@ use Exception;
 
 class JsonRenderer extends BaseRenderer
 {
+    use HasRouteTrait;
+
     /** @var class-string */
     public static $fetcher = FetchHandler::class;
     /** @var class-string */
@@ -40,8 +43,6 @@ class JsonRenderer extends BaseRenderer
     protected $request;
     /** @var ?int */
     protected $database = null;
-    /** @var class-string */
-    protected $handler;
     /** @var int|string */
     protected $page;
     /** @var int|string */
@@ -235,7 +236,7 @@ class JsonRenderer extends BaseRenderer
         foreach ($book->getIdentifiers() as $ident) {
             array_push($out ["identifiers"], [
                 "name" => $ident->formattedType,
-                "url" => $ident->getLink(),
+                "url" => $ident->getValueUri(),
             ]);
         }
 
@@ -370,7 +371,7 @@ class JsonRenderer extends BaseRenderer
             ],
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here + url does not include author or title
-                "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], $this->handler::route(Book::ROUTE_PAGEID, ['id' => '0', 'db' => '1'])),
+                "detailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], $this->getRoute(Book::ROUTE_PAGEID, ['id' => '0', 'db' => '1'])),
                 "coverUrl" => str_replace(['0', '1'], ['{0}', '{1}'], self::$fetcher::route(Cover::ROUTE_COVER, ['id' => '0', 'db' => '1'])),
                 "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], self::$fetcher::route(Cover::ROUTE_THUMB, ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
@@ -456,12 +457,12 @@ class JsonRenderer extends BaseRenderer
             // support {{=str_format(it.sorturl, "pubdate")}} etc. in templates (use double quotes for sort field)
             $params = $this->request->getCleanParams();
             $params['sort'] = 'SORTED';
-            $out ["sorturl"] = str_replace('SORTED', '{0}', $this->handler::link($params));
+            $out ["sorturl"] = str_replace('SORTED', '{0}', $this->getLink($params));
             $out ["sortoptions"] = $currentPage->getSortOptions();
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
                 $params['filter'] = 1;
-                $out ["filterurl"] = $this->handler::link($params);
+                $out ["filterurl"] = $this->getLink($params);
             }
         } elseif (!empty($currentPage->extra)) {
             // show extra info or series in Page*Detail (without books)
@@ -470,14 +471,14 @@ class JsonRenderer extends BaseRenderer
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
                 $params['filter'] = 1;
-                $out ["filterurl"] = $this->handler::link($params);
+                $out ["filterurl"] = $this->getLink($params);
             }
         } else {
             if ($currentPage->isPaginated()) {
                 // support {{=str_format(it.sorturl, "count")}} etc. in templates (use double quotes for sort field)
                 $params = $this->request->getCleanParams();
                 $params['sort'] = 'SORTED';
-                $out ["sorturl"] = str_replace('SORTED', '{0}', $this->handler::link($params));
+                $out ["sorturl"] = str_replace('SORTED', '{0}', $this->getLink($params));
                 $out ["sortoptions"] = [
                     'name' => localize("sort.names"),
                     'count' => localize("sort.count"),
@@ -488,7 +489,7 @@ class JsonRenderer extends BaseRenderer
             if ($currentPage->canFilter()) {
                 $params = $this->request->getCleanParams();
                 $params['filter'] = null;
-                $out ["filterurl"] = $this->handler::link($params);
+                $out ["filterurl"] = $this->getLink($params);
             }
         }
         return $out;
@@ -526,12 +527,12 @@ class JsonRenderer extends BaseRenderer
             $params = [];
             $params['db'] = $this->database;
             if ($this->homepage != PageId::INDEX) {
-                $homeurl = $this->handler::route(PageId::ROUTE_INDEX, $params);
+                $homeurl = $this->getRoute(PageId::ROUTE_INDEX, $params);
             } else {
-                $homeurl = $this->handler::link($params);
+                $homeurl = $this->getLink($params);
             }
         } elseif ($this->homepage != PageId::INDEX) {
-            $homeurl = $this->handler::route(PageId::ROUTE_INDEX);
+            $homeurl = $this->getRoute(PageId::ROUTE_INDEX);
         } else {
             $homeurl = $baseurl;
         }
@@ -558,7 +559,7 @@ class JsonRenderer extends BaseRenderer
             if ($this->request->hasFilter()) {
                 $filterParams = $this->request->getFilterParams();
                 $filterParams["db"] = $this->database;
-                $parenturl = $this->handler::route(PageId::ROUTE_INDEX, $filterParams);
+                $parenturl = $this->getRoute(PageId::ROUTE_INDEX, $filterParams);
             } else {
                 $parenturl = $homeurl;
             }
@@ -698,7 +699,7 @@ class JsonRenderer extends BaseRenderer
         if (!empty($out ["parentTitle"])) {
             $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
         }
-        $out ["baseurl"] = $this->handler::link();
+        $out ["baseurl"] = $this->getLink();
         $entries = [];
         $extraParams = [];
         $out ["isFilterPage"] = false;
@@ -749,8 +750,8 @@ class JsonRenderer extends BaseRenderer
 
         $params = [];
         $params['db'] = $this->database;
-        $out["abouturl"] = $this->handler::route(PageId::ROUTE_ABOUT, $params);
-        $out["customizeurl"] = $this->handler::route(PageId::ROUTE_CUSTOMIZE, $params);
+        $out["abouturl"] = $this->getRoute(PageId::ROUTE_ABOUT, $params);
+        $out["customizeurl"] = $this->getRoute(PageId::ROUTE_CUSTOMIZE, $params);
 
         if ($this->page == PageId::ABOUT) {
             $out ["fullhtml"] = $currentPage->getContent();
@@ -790,7 +791,7 @@ class JsonRenderer extends BaseRenderer
         $this->request = $request;
         $this->database = $request->database();
         // Adapt handler based on $request e.g. for rest api
-        $this->handler = $request->getHandler();
+        $this->setHandler($request->getHandler());
         // Use the configured home page if needed
         $this->homepage = PageId::getHomePage();
         $this->page = $request->get("page", $this->homepage);

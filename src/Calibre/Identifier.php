@@ -139,10 +139,10 @@ class Identifier extends Base
     }
 
     /**
-     * Summary of getLink
+     * Summary of getValueUri
      * @return string
      */
-    public function getLink()
+    public function getValueUri()
     {
         return $this->uri;
     }

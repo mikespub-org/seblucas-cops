@@ -155,6 +155,7 @@ class GraphQLExecutor
     public function getQueryFieldResolver()
     {
         $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
+            /** @var RequestContext $context */
             $request = $context->getRequest();
             $fieldName = $info->fieldName;
             $result = self::getQueryField($fieldName, $args, $request);
@@ -173,6 +174,7 @@ class GraphQLExecutor
     public function getEntryFieldResolver()
     {
         $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
+            /** @var RequestContext $context */
             $request = $context->getRequest();
             $fieldName = $info->fieldName;
             $result = self::getEntryField($fieldName, $objectValue, $args, $request);

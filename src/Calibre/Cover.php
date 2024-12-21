@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -19,6 +20,8 @@ use SebLucas\Cops\Output\FileResponse;
 
 class Cover
 {
+    use HasRouteTrait;
+
     public const ROUTE_COVER = "fetch-cover";
     public const ROUTE_THUMB = "fetch-thumb";
 
@@ -26,8 +29,6 @@ class Cover
     public $book;
     /** @var ?int */
     protected $databaseId;
-    /** @var class-string */
-    protected $handler;
     /** @var ?string */
     public $coverFileName = null;
     /** @var ?FileResponse */
@@ -45,7 +46,7 @@ class Cover
             $this->coverFileName = $book->getCoverFileName();
         }
         $this->databaseId = $database ?? $book->getDatabaseId();
-        $this->handler = FetchHandler::class;
+        $this->setHandler(FetchHandler::class);
     }
 
     /**
@@ -361,7 +362,7 @@ class Cover
         if ($ext != 'jpg') {
             $params['type'] = $ext;
         }
-        $href = fn() => $this->handler::route(self::ROUTE_COVER, $params);
+        $href = fn() => $this->getRoute(self::ROUTE_COVER, $params);
         return new LinkImage(
             $href,
             $mime,
@@ -448,7 +449,7 @@ class Cover
             $routeName = self::ROUTE_COVER;
             $filePath = $this->coverFileName;
         }
-        $href = fn() => $this->handler::route($routeName, $params);
+        $href = fn() => $this->getRoute($routeName, $params);
         return new LinkImage(
             $href,
             $mime,

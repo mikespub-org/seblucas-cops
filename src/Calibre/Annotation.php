@@ -72,6 +72,7 @@ class Annotation extends Base
     {
         $params['bookId'] = $this->book;
         $params['id'] = $this->id;
+        assert($this->handler === RestApiHandler::class);
         return $this->handler::resource($this::class, $params);
     }
 

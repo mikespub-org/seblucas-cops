@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
@@ -27,6 +28,8 @@ use Exception;
 //class Book extends Base
 class Book
 {
+    use HasRouteTrait;
+
     public const PAGE_ID = PageId::ALL_BOOKS_ID;
     public const PAGE_ALL = PageId::ALL_BOOKS;
     public const PAGE_DETAIL = PageId::BOOK_DETAIL;
@@ -98,8 +101,6 @@ class Book
     /** @var ?string */
     protected $coverFileName = null;
     public bool $updateForKepub = false;
-    /** @var class-string */
-    protected $handler;
 
     /**
      * Summary of __construct
@@ -206,7 +207,7 @@ class Book
         $params['db'] = $this->databaseId;
         $params['author'] = $this->getAuthorsName();
         $params['title'] = $this->getTitle();
-        return $this->handler::route(self::ROUTE_DETAIL, $params);
+        return $this->getRoute(self::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -724,25 +725,6 @@ class Book
         }
 
         return $linkArray;
-    }
-
-    /**
-     * Summary of setHandler
-     * @param class-string $handler
-     * @return void
-     */
-    public function setHandler($handler)
-    {
-        $this->handler = $handler;
-    }
-
-    /**
-     * Summary of getHandler
-     * @return class-string
-     */
-    public function getHandler()
-    {
-        return $this->handler;
     }
 
     /**

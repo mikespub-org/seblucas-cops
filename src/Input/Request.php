@@ -34,7 +34,6 @@ class Request
     public array $cookieParams = [];
     /** @var array<mixed> */
     public array $fileParams = [];
-    /** @var class-string|null */
     protected bool $parsed = true;
     /** @var string|null */
     public $content = null;

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
@@ -20,6 +21,8 @@ use Exception;
 
 class Data
 {
+    use HasRouteTrait;
+
     public const ROUTE_DATA = "fetch-data";
     public const ROUTE_INLINE = "fetch-inline";
     public const SQL_TABLE = "data";
@@ -37,8 +40,6 @@ class Data
     public $book;
     /** @var ?int */
     protected $databaseId;
-    /** @var class-string */
-    protected $handler;
     public bool $updateForKepub = false;
 
     /** @var array<string, string> */
@@ -106,7 +107,7 @@ class Data
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
         $this->setBook($book);
-        $this->handler = FetchHandler::class;
+        $this->setHandler(FetchHandler::class);
     }
 
     /**

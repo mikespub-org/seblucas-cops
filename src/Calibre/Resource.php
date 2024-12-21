@@ -17,11 +17,14 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\CalResHandler;
 use SebLucas\Cops\Output\FileResponse;
 
 class Resource
 {
+    use HasRouteTrait;
+
     public const ROUTE_DETAIL = "calres";
     // https://github.com/kovidgoyal/calibre/blob/master/src/calibre/gui2/dialogs/edit_category_notes.py
     public const IMAGE_EXTENSIONS = [
@@ -37,8 +40,6 @@ class Resource
     public string $hash;
     public string $name;
     public ?int $databaseId = null;
-    /** @var class-string */
-    protected $handler;
 
     /**
      * Summary of __construct
@@ -50,7 +51,7 @@ class Resource
         $this->hash = $post->hash;
         $this->name = $post->name;
         $this->databaseId = $database;
-        $this->handler = CalResHandler::class;
+        $this->setHandler(CalResHandler::class);
     }
 
     /**
@@ -65,7 +66,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = $alg;
         $params['digest'] = $digest;
-        return $this->handler::route(self::ROUTE_DETAIL, $params);
+        return $this->getRoute(self::ROUTE_DETAIL, $params);
     }
 
     /**

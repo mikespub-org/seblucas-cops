@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
@@ -23,6 +24,8 @@ use Exception;
 
 class BookList
 {
+    use HasRouteTrait;
+
     public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
     public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
     public const ROUTE_LETTER = "page-books-letter";
@@ -60,8 +63,6 @@ class BookList
     public $orderBy = null;
     /** @var array<int, mixed> */
     public $bookList = [];
-    /** @var class-string */
-    protected $handler;
 
     /**
      * @param ?Request $request
@@ -75,7 +76,7 @@ class BookList
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->setOrderBy();
         // get handler based on $this->request
-        $this->handler = $this->request->getHandler();
+        $this->setHandler($this->request->getHandler());
     }
 
     /**
@@ -145,7 +146,7 @@ class BookList
         $result = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
-        $href = fn() => $this->handler::route(Book::ROUTE_ALL, $params);
+        $href = fn() => $this->getRoute(Book::ROUTE_ALL, $params);
         // issue #26 for koreader: section is not supported
         if (!empty(Config::get('titles_split_first_letter'))) {
             $linkArray = [ new LinkNavigation($href, "subsection") ];
@@ -166,7 +167,7 @@ class BookList
         );
         array_push($result, $entry);
         if (Config::get('recentbooks_limit') > 0) {
-            $href = fn() => $this->handler::route(self::ROUTE_RECENT, $params);
+            $href = fn() => $this->getRoute(self::ROUTE_RECENT, $params);
             $count = ($nBooks > Config::get('recentbooks_limit')) ? Config::get('recentbooks_limit') : $nBooks;
             $entry = new Entry(
                 localize('recent.title'),
@@ -365,7 +366,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $params = [$param => $post->groupid, 'db' => $this->databaseId];
-            $href = fn() => $this->handler::route($routeName, $params);
+            $href = fn() => $this->getRoute($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 Book::PAGE_ID . ':' . $param . ':' . $post->groupid,

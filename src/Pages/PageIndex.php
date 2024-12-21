@@ -85,7 +85,7 @@ class PageIndex extends Page
      */
     public function getDatabaseEntry($name, $idx, $count)
     {
-        $href = fn() => $this->handler::link(["db" => $idx]);
+        $href = fn() => $this->getLink(["db" => $idx]);
         return new Entry(
             $name,
             "cops:{$idx}:catalog",

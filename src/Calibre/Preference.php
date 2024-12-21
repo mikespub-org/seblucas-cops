@@ -10,12 +10,15 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
 
 class Preference
 {
+    use HasRouteTrait;
+
     public const PAGE_ID = PageId::ALL_PREFERENCES_ID;
     public const PAGE_ALL = PageId::ALL_PREFERENCES;
     public const PAGE_DETAIL = PageId::PREFERENCE_DETAIL;
@@ -28,8 +31,6 @@ class Preference
     public string $key;
     public mixed $val;
     public ?int $databaseId = null;
-    /** @var class-string */
-    protected $handler;
 
     /**
      * Summary of __construct
@@ -57,6 +58,7 @@ class Preference
     public function getUri($params = [])
     {
         $params['key'] = $this->key;
+        assert($this->handler === RestApiHandler::class);
         return $this->handler::resource($this::class, $params);
     }
 

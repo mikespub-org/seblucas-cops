@@ -131,7 +131,7 @@ class PageQueryResult extends Page
         }
         foreach ($dbArray as $key) {
             if (Database::noDatabaseSelected($database)) {
-                $href = fn() => $this->handler::link(["db" => $d]);
+                $href = fn() => $this->getLink(["db" => $d]);
                 array_push($this->entryArray, new Entry(
                     $key,
                     "db:query:{$d}",
@@ -174,7 +174,7 @@ class PageQueryResult extends Page
                     if (!empty($libraryId)) {
                         $params['vl'] = $libraryId;
                     }
-                    $href = fn() => $this->handler::route(self::ROUTE_SCOPE, $params);
+                    $href = fn() => $this->getRoute(self::ROUTE_SCOPE, $params);
                     array_push($this->entryArray, new Entry(
                         str_format(localize("search.result.{$value}"), $this->query),
                         "db:query:{$d}:{$value}",
@@ -296,7 +296,7 @@ class PageQueryResult extends Page
      */
     public function getDatabaseEntry($name, $idx, $count, $query)
     {
-        $href = fn() => $this->handler::route(self::ROUTE_QUERY, ['query' => $query, 'db' => $idx]);
+        $href = fn() => $this->getRoute(self::ROUTE_QUERY, ['query' => $query, 'db' => $idx]);
         return new Entry(
             $name,
             "db:query:{$idx}",
@@ -318,7 +318,7 @@ class PageQueryResult extends Page
     public function getNoResultEntry($database = null, $scope = null)
     {
         $params = ['db' => $database, 'scope' => $scope];
-        $href = fn() => $this->handler::route(self::ROUTE_SEARCH, $params);
+        $href = fn() => $this->getRoute(self::ROUTE_SEARCH, $params);
         return new Entry(
             str_format(localize("search.result.none"), $this->query),
             "db:query:{$database}:{$scope}",

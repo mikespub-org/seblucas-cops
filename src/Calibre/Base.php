@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -20,6 +21,8 @@ use SebLucas\Cops\Pages\Page;
 
 abstract class Base
 {
+    use HasRouteTrait;
+
     public const PAGE_ID = PageId::ALL_BASES_ID;
     public const PAGE_ALL = 0;
     public const PAGE_DETAIL = 0;
@@ -56,8 +59,6 @@ abstract class Base
     protected $filterLimit = null;
     /** @var array<string, mixed> */
     protected $filterParams = [];
-    /** @var class-string */
-    protected $handler;
 
     /**
      * Summary of __construct
@@ -93,7 +94,7 @@ abstract class Base
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
         $params['title'] = $this->getTitle();
-        return $this->handler::route(static::ROUTE_DETAIL, $params);
+        return $this->getRoute(static::ROUTE_DETAIL, $params);
     }
 
     /**
@@ -105,7 +106,7 @@ abstract class Base
     {
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        return $this->handler::route(static::ROUTE_ALL, $params);
+        return $this->getRoute(static::ROUTE_ALL, $params);
     }
 
     /**
@@ -166,25 +167,6 @@ abstract class Base
         unset($params[static::URL_PARAM]);
         $href = fn() => $this->getUri($params);
         return [ new LinkFeed($href, "subsection") ];
-    }
-
-    /**
-     * Summary of setHandler
-     * @param class-string $handler
-     * @return void
-     */
-    public function setHandler($handler)
-    {
-        $this->handler = $handler;
-    }
-
-    /**
-     * Summary of getHandler
-     * @return class-string
-     */
-    public function getHandler()
-    {
-        return $this->handler;
     }
 
     /**

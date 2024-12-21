@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
@@ -19,6 +20,8 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class BaseList
 {
+    use HasRouteTrait;
+
     public const URL_PARAM_LIST = "idlist";
 
     public Request $request;
@@ -31,8 +34,6 @@ class BaseList
     /** @var ?string */
     public $orderBy = null;
     public bool $pagination = false;
-    /** @var class-string */
-    protected $handler;
 
     /**
      * @param class-string $className
@@ -48,7 +49,7 @@ class BaseList
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->setOrderBy();
         // get handler based on $this->request
-        $this->handler = $this->request->getHandler();
+        $this->setHandler($this->request->getHandler());
     }
 
     /**
@@ -370,7 +371,7 @@ class BaseList
         $params["db"] ??= $this->databaseId;
         while ($post = $result->fetchObject()) {
             $params[$param] = $post->groupid;
-            $href = fn() => $this->handler::route($routeName, $params);
+            $href = fn() => $this->getRoute($routeName, $params);
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $param . ':' . $post->groupid,

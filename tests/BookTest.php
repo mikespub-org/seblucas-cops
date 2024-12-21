@@ -189,7 +189,7 @@ class BookTest extends TestCase
         $this->assertCount(2, $identifiers);
         $this->assertEquals("uri", $identifiers[0]->type);
         $this->assertEquals("http|//www.feedbooks.com/book/63", $identifiers[0]->val);
-        $this->assertEquals("", $identifiers[0]->getLink());
+        $this->assertEquals("", $identifiers[0]->getValueUri());
     }
 
     public function testGetIdentifiers_Google(): void
@@ -200,7 +200,7 @@ class BookTest extends TestCase
         $this->assertCount(4, $identifiers);
         $this->assertEquals("google", $identifiers[0]->type);
         $this->assertEquals("yr9EAAAAYAAJ", $identifiers[0]->val);
-        $this->assertEquals("https://books.google.com/books?id=yr9EAAAAYAAJ", $identifiers[0]->getLink());
+        $this->assertEquals("https://books.google.com/books?id=yr9EAAAAYAAJ", $identifiers[0]->getValueUri());
     }
 
     public function testGetIdentifiers_Isbn(): void
@@ -211,7 +211,7 @@ class BookTest extends TestCase
         $this->assertCount(4, $identifiers);
         $this->assertEquals("isbn", $identifiers[1]->type);
         $this->assertEquals("9782253003663", $identifiers[1]->val);
-        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[1]->getLink());
+        $this->assertEquals("https://www.worldcat.org/isbn/9782253003663", $identifiers[1]->getValueUri());
     }
 
     public function testGetIdentifiers_OpenLibrary(): void
@@ -222,7 +222,7 @@ class BookTest extends TestCase
         $this->assertCount(4, $identifiers);
         $this->assertEquals("olid", $identifiers[2]->type);
         $this->assertEquals("OL118974W", $identifiers[2]->val);
-        $this->assertEquals("https://openlibrary.org/works/OL118974W", $identifiers[2]->getLink());
+        $this->assertEquals("https://openlibrary.org/works/OL118974W", $identifiers[2]->getValueUri());
     }
 
     public function testGetIdentifiers_WikiData(): void
@@ -233,7 +233,7 @@ class BookTest extends TestCase
         $this->assertCount(4, $identifiers);
         $this->assertEquals("wd", $identifiers[3]->type);
         $this->assertEquals("Q962265", $identifiers[3]->val);
-        $this->assertEquals("https://www.wikidata.org/entity/Q962265", $identifiers[3]->getLink());
+        $this->assertEquals("https://www.wikidata.org/entity/Q962265", $identifiers[3]->getValueUri());
     }
 
     public function testBookGetLinkArrayWithUrlRewriting(): void

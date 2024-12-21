@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
@@ -21,6 +22,8 @@ use SebLucas\Cops\Model\LinkNavigation;
 
 class Page
 {
+    use HasRouteTrait;
+
     /** @var string */
     public $title;
     public string $subtitle = "";
@@ -63,8 +66,6 @@ class Page
     protected $ignoredCategories = [];
     /** @var ?int */
     protected $databaseId = null;
-    /** @var class-string */
-    protected $handler;
 
     /**
      * Summary of getPage
@@ -104,7 +105,7 @@ class Page
         $this->numberPerPage = $this->request->option("max_item_per_page");
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->database();
-        $this->handler = $this->request->getHandler();
+        $this->setHandler($this->request->getHandler());
     }
 
     /**
@@ -195,7 +196,7 @@ class Page
     {
         if ($this->n > 1) {
             $params = $this->request->getCleanParams();
-            $href = fn() => $this->handler::link($params);
+            $href = fn() => $this->getLink($params);
             return new LinkNavigation(
                 $href,
                 "first",
@@ -214,7 +215,7 @@ class Page
         if ($this->n < $this->getMaxPage()) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->getMaxPage());
-            $href = fn() => $this->handler::link($params);
+            $href = fn() => $this->getLink($params);
             return new LinkNavigation(
                 $href,
                 "last",
@@ -233,7 +234,7 @@ class Page
         if ($this->n < $this->getMaxPage()) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n + 1);
-            $href = fn() => $this->handler::link($params);
+            $href = fn() => $this->getLink($params);
             return new LinkNavigation(
                 $href,
                 "next",
@@ -252,7 +253,7 @@ class Page
         if ($this->n > 1) {
             $params = $this->request->getCleanParams();
             $params['n'] = strval($this->n - 1);
-            $href = fn() => $this->handler::link($params);
+            $href = fn() => $this->getLink($params);
             return new LinkNavigation(
                 $href,
                 "previous",

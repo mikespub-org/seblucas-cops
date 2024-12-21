@@ -176,6 +176,7 @@ class HandlerManager
             return $handler;
         }
 
+        // @see https://www.php-fig.org/psr/psr-15/meta/#queue-based-request-handler
         $queue = new QueueBasedHandler($handler);
         foreach ($middleware as $middlewareClass) {
             $queue->add(new $middlewareClass());

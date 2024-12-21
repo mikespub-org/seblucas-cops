@@ -73,7 +73,7 @@ class CustomColumn extends Category
         $params['id'] = $this->id ?? self::NOT_SET;
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        return $this->handler::route(self::ROUTE_DETAIL, $params);
+        return $this->getRoute(self::ROUTE_DETAIL, $params);
     }
 
     /**

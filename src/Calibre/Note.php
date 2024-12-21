@@ -10,11 +10,14 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Pages\PageId;
 
 class Note
 {
+    use HasRouteTrait;
+
     public const PAGE_ID = PageId::ALL_NOTES_ID;
     public const PAGE_ALL = PageId::ALL_NOTES;
     public const PAGE_TYPE = PageId::ALL_NOTES_TYPE;
@@ -37,8 +40,6 @@ class Note
     public string $doc;
     public float $mtime;
     public ?int $databaseId = null;
-    /** @var class-string */
-    protected $handler;
 
     /**
      * Summary of __construct
@@ -65,6 +66,7 @@ class Note
     {
         $params['type'] = $this->colname;
         $params['item'] = $this->item;
+        assert($this->handler === RestApiHandler::class);
         return $this->handler::resource($this::class, $params);
     }
 

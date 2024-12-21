@@ -56,7 +56,7 @@ class VirtualLibrary extends Base
             // URL format: ...&vl=2.Short_Stories_in_English
             $params[self::URL_PARAM] = self::formatParameter($this->id, $this->getTitle());
         }
-        return $this->handler::link($params);
+        return $this->getLink($params);
     }
 
     /**
