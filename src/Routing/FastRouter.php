@@ -43,6 +43,9 @@ class FastRouter implements RouterInterface
      */
     public function match($path, $method = null)
     {
+        if (empty($path) || $path == '/') {
+            return [];
+        }
         // match pattern
         $fixed = [];
         $params = [];

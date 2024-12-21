@@ -13,6 +13,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Use RequestContext and instance methods in Framework for future adapters
   * Add HasRouteTrait to simplify handler route() calls and future migrations
   * Split UriGenerator from Route + add HandlerManager for framework adapters
   * Update portuguese translation - see PR #127 from @horus68

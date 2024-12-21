@@ -200,6 +200,11 @@ class RoutingTest extends TestCase
             $this->assertNull($routeUrl);
             return;
         }
+        if (!isset($routeUrl)) {
+            $expected = [];
+            $this->assertEquals($expected, $result);
+            return;
+        }
         $extra = [];
         if (!empty($query)) {
             parse_str($query, $extra);

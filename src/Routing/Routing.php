@@ -49,6 +49,9 @@ class Routing implements RouterInterface
      */
     public function match($path, $method = null, $context = null)
     {
+        if (empty($path) || $path == '/') {
+            return [];
+        }
         // reset router context to start fresh
         $this->setContext($context);
         if (!empty($method) && $method != 'GET') {

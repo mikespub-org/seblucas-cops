@@ -18,7 +18,8 @@ use SebLucas\Cops\Routing\FastRouter;
 /**
  * Summary of RequestContext
  */
-class RequestContext {
+class RequestContext
+{
     private Request $request;
     private HandlerManager $manager;
     private RouterInterface $router;
@@ -27,8 +28,9 @@ class RequestContext {
     private ?BaseHandler $handler = null;
     private Config $config;
     private string $locale;
-    
-    public function __construct(Request $request, ?HandlerManager $manager = null, ?RouterInterface $router = null) {
+
+    public function __construct(Request $request, ?HandlerManager $manager = null, ?RouterInterface $router = null)
+    {
         $this->request = $request;
         $this->manager = $manager ?? new HandlerManager();
         $this->router = $router ?? new FastRouter();
@@ -36,18 +38,18 @@ class RequestContext {
         $this->initializeContext();
     }
 
-    protected function initializeContext(): void 
+    protected function initializeContext(): void
     {
         // Load routes if not already cached
     }
-    
+
     /**
      * Summary of matchRequest
      * @return array<mixed>
      */
     public function matchRequest(): array
     {
-        if ($this->matchParams) {
+        if (isset($this->matchParams)) {
             return $this->matchParams;
         }
 
@@ -65,30 +67,31 @@ class RequestContext {
                 $this->request->invalid = true;
                 $this->matchParams = [];
             }
-            
+
             // Enhance route with request context
             //$this->matchParams->setContext($this);
             // Update request with matched parameters
             $this->request->updateFromMatch($this->matchParams);
-            
+
             return $this->matchParams;
-        } catch (\RuntimeException $e) {
+        } catch (\Throwable $e) {
             // Return default route match for error handling
             return [
                 Route::HANDLER_PARAM => 'error',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
 
-    protected function resolveHandler(): BaseHandler {
+    public function resolveHandler(): BaseHandler
+    {
         if ($this->handler) {
             return $this->handler;
         }
-        
+
         // Get handler name based on request state
         $handlerName = $this->resolveHandlerName();
-        
+
         try {
             $handlerClass = $this->manager->getHandlerClass($handlerName);
             $this->handler = $this->createHandler($handlerClass);
@@ -101,13 +104,14 @@ class RequestContext {
             return $this->handler;
         }
     }
-    
-    protected function resolveHandlerName(): string {
+
+    protected function resolveHandlerName(): string
+    {
         // 1. Check if request is invalid
         if ($this->request->invalid) {
             return 'error';
         }
-        
+
         // 2. Check matched route handler
         if ($this->matchParams && !empty($this->matchParams[Route::HANDLER_PARAM])) {
             return $this->matchParams[Route::HANDLER_PARAM];
@@ -116,20 +120,22 @@ class RequestContext {
         // 3. Check request parameters
         if (!empty($this->request->urlParams[Route::HANDLER_PARAM])) {
             $name = $this->request->urlParams[Route::HANDLER_PARAM];
-            return $this->normalizeHandlerName($name);
+            // return $this->normalizeHandlerName($name);
+            return $name;
         }
-        
+
         // 4. Content negotiation
         if ($this->request->isJson() || $this->request->isAjax()) {
             return 'json';
         }
-        
+
         // 5. Default handler
-        return 'html'; 
+        return 'html';
     }
-    
-    protected function normalizeHandlerName(string $name): string {
-        // Convert handler class name to short name if needed
+
+    protected function normalizeHandlerName(string $name): string
+    {
+        // Convert handler class name to short name if needed - @todo not used here
         if (str_contains($name, '\\')) {
             $parts = explode('\\', $name);
             $className = end($parts);
@@ -137,15 +143,16 @@ class RequestContext {
         }
         return $name;
     }
-    
-    protected function createHandler(string $handlerClass): BaseHandler {
+
+    protected function createHandler(string $handlerClass): BaseHandler
+    {
         $handler = new $handlerClass();
-        
+
         // Allow handler to configure itself based on context
         //if ($handler instanceof ContextAwareInterface) {
         //    $handler->setContext($this);
         //}
-        
+
         return $handler;
     }
 
@@ -164,7 +171,7 @@ class RequestContext {
 
         try {
             return $this->router->generate($name, $params);
-        } catch (\RuntimeException $e) {
+        } catch (\Throwable $e) {
             // Fallback to query string URL
             return $this->generateQueryStringUrl($params);
         }
@@ -184,12 +191,12 @@ class RequestContext {
     }
 
     // Accessor methods
-    public function getRequest(): Request 
+    public function getRequest(): Request
     {
         return $this->request;
     }
-    
-    public function getHandler(): BaseHandler 
+
+    public function getHandler(): BaseHandler
     {
         return $this->handler;
     }
