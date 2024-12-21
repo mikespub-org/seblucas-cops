@@ -561,7 +561,8 @@ abstract class Base
             $numberOfString = static::SQL_TABLE . ".alphabetical";
         }
         $params["db"] ??= $database;
-        $href = fn() => $handler::route(static::ROUTE_ALL, $params);
+        // @todo replace static calls with handler instance and method calls someday
+        $href = fn() => self::getHandlerRoute($handler, static::ROUTE_ALL, $params);
         $entry = new Entry(
             localize(static::SQL_TABLE . ".title"),
             static::PAGE_ID,

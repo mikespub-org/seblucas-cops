@@ -54,7 +54,7 @@ class Note
         $this->doc = $post->doc;
         $this->mtime = $post->mtime;
         $this->databaseId = $database;
-        $this->handler = RestApiHandler::class;
+        $this->setHandler(RestApiHandler::class);
     }
 
     /**
@@ -66,8 +66,7 @@ class Note
     {
         $params['type'] = $this->colname;
         $params['item'] = $this->item;
-        assert($this->handler === RestApiHandler::class);
-        return $this->handler::resource($this::class, $params);
+        return $this->getResource($this::class, $params);
     }
 
     /**

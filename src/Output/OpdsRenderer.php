@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FeedHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -28,11 +29,10 @@ use XMLWriter;
 
 class OpdsRenderer extends BaseRenderer
 {
+    use HasRouteTrait;
+
     public const ROUTE_FEED = FeedHandler::HANDLER;
     public const ROUTE_SEARCH = FeedHandler::SEARCH;
-
-    /** @var class-string */
-    public static $handler = FeedHandler::class;
 
     /** @var ?XMLWriter */
     protected $xmlStream = null;
@@ -40,6 +40,12 @@ class OpdsRenderer extends BaseRenderer
     protected $updated = null;
     /** @var Request */
     protected $request;
+
+    public function __construct($request = null, $response = null)
+    {
+        parent::__construct($request, $response);
+        $this->setHandler(FeedHandler::class);
+    }
 
     /**
      * Summary of getUpdatedTime
@@ -102,7 +108,7 @@ class OpdsRenderer extends BaseRenderer
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
         $params = ["query" => "QUERY", "db" => $database];
-        $url = self::$handler::link($params);
+        $url = $this->getLink($params);
         $url = str_replace("QUERY", "{searchTerms}", $url);
         $xml->writeAttribute("template", $url);
         $xml->endElement();
@@ -168,11 +174,11 @@ class OpdsRenderer extends BaseRenderer
         $this->getXmlStream()->text($page->authorEmail);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->endElement();
-        $href = fn() => self::$handler::route(self::ROUTE_FEED);
+        $href = fn() => $this->getRoute(self::ROUTE_FEED);
         $link = new LinkNavigation($href, "start", "Home");
         $this->renderLink($link);
         // with same _route param here
-        $href = fn() => self::$handler::link($request->urlParams);
+        $href = fn() => $this->getLink($request->urlParams);
         if ($page->containsBook()) {
             $link = new LinkFeed($href, "self");
         } else {
@@ -183,7 +189,7 @@ class OpdsRenderer extends BaseRenderer
         if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             //$params["page"] = PageId::SEARCH;
-            $href = fn() => self::$handler::route(self::ROUTE_SEARCH, $params);
+            $href = fn() => $this->getRoute(self::ROUTE_SEARCH, $params);
             $link = new LinkResource(
                 $href,
                 "application/opensearchdescription+xml",
@@ -193,7 +199,7 @@ class OpdsRenderer extends BaseRenderer
         } else {
             // Bad way, will be removed when OPDS client are fixed
             $params["query"] = "QUERY";
-            $href = fn() => str_replace("QUERY", "{searchTerms}", (string) self::$handler::route(self::ROUTE_FEED, $params));
+            $href = fn() => str_replace("QUERY", "{searchTerms}", (string) $this->getRoute(self::ROUTE_FEED, $params));
             $link = new LinkResource(
                 $href,
                 "application/atom+xml",
@@ -206,7 +212,7 @@ class OpdsRenderer extends BaseRenderer
             $Urlfilter = $request->get("tag", "");
             foreach (Config::get('books_filter') as $lib => $filter) {
                 $params = array_replace($request->urlParams, ["tag" => $filter]);
-                $href = fn() => self::$handler::link($params);
+                $href = fn() => $this->getLink($params);
                 $link = new LinkFacet(
                     $href,
                     $lib,
@@ -393,7 +399,7 @@ class OpdsRenderer extends BaseRenderer
         }
         $params = $request->getCleanParams();
         $params['sort'] = null;
-        $sortUrl = self::$handler::link($params);
+        $sortUrl = $this->getLink($params);
         if (str_contains($sortUrl, '?')) {
             $sortUrl .= "&sort={0}";
         } else {
@@ -434,13 +440,13 @@ class OpdsRenderer extends BaseRenderer
         }
         //$params = $request->getCleanParams();
         //$params['filter'] = 1;
-        //$href = fn() => self::$handler::link($params);
+        //$href = fn() => $this->getLink($params);
         //$filterLabel = localize("cog.alternate");
         //$title = localize("links.title");
         //$link = new LinkFacet($href, $title, $filterLabel, false, null);
         //$this->renderLink($link);
         // Note: facets are only shown if there are books available, so we need to get a filter page here
-        $req = self::$handler::request($request->urlParams);
+        $req = Request::build($request->urlParams, $this->handler);
         $req->set('filter', 1);
         $filterPage = PageId::getPage($request->get('page'), $req);
         //$request->set('filter', null);

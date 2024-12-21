@@ -50,4 +50,28 @@ trait HasRouteTrait
     {
         return $this->handler::link($params);
     }
+
+    /**
+     * Summary of getResource
+     * @param string $className
+     * @param array<mixed> $params
+     * @return string
+     */
+    public function getResource(string $className, array $params = []): string
+    {
+        return RestApiHandler::resource($className, $params);
+    }
+
+    /**
+     * Summary of getHandlerRoute
+     * @todo replace with handler instance and method call
+     * @param class-string $handler
+     * @param string $routeName
+     * @param array<mixed> $params
+     * @return mixed
+     */
+    public static function getHandlerRoute($handler, $routeName, $params = [])
+    {
+        return $handler::route($routeName, $params);
+    }
 }

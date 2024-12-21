@@ -18,6 +18,7 @@ use Kiwilan\Opds\Entries\OpdsEntryBook;
 use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
 use Kiwilan\Opds\Entries\OpdsEntryNavigation;
 use Kiwilan\Opds\Enums\OpdsVersionEnum;
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\OpdsHandler;
 use SebLucas\Cops\Input\Config as CopsConfig;
 use SebLucas\Cops\Input\Request as CopsRequest;
@@ -28,15 +29,19 @@ use DateTime;
 
 class KiwilanOPDS
 {
+    use HasRouteTrait;
+
     public const ROUTE_FEED = OpdsHandler::HANDLER;
     public const ROUTE_SEARCH = OpdsHandler::SEARCH;
 
-    /** @var class-string */
-    public static $handler = OpdsHandler::class;
-
-    public static OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
+    public OpdsVersionEnum $version = OpdsVersionEnum::v2Dot0;
     /** @var ?DateTime */
     private $updated = null;
+
+    public function __construct()
+    {
+        $this->setHandler(OpdsHandler::class);
+    }
 
     /**
      * Summary of getUpdatedTime
@@ -61,9 +66,9 @@ class KiwilanOPDS
             author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
             authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
             iconUrl: CopsConfig::get(name: 'icon'),
-            startUrl: self::$handler::route(self::ROUTE_FEED),
+            startUrl: $this->getRoute(self::ROUTE_FEED),
             // @todo php-opds uses this to identify search (not page=query) and adds '?q=' without checking for existing ? params
-            searchUrl: self::$handler::route(self::ROUTE_SEARCH),
+            searchUrl: $this->getRoute(self::ROUTE_SEARCH),
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
             maxItemsPerPage: CopsConfig::get('max_item_per_page'),
@@ -166,7 +171,7 @@ class KiwilanOPDS
     {
         $opds = Opds::make($this->getOpdsConfig())
             ->title('Search')
-            ->url(self::$handler::route(self::ROUTE_SEARCH))
+            ->url($this->getRoute(self::ROUTE_SEARCH))
             ->isSearch()
             ->feeds([])
             ->get();
@@ -191,7 +196,7 @@ class KiwilanOPDS
             }
         }
         // with same _route param here
-        $url = self::$handler::link($request->urlParams);
+        $url = $this->getLink($request->urlParams);
         if ($page->isPaginated()) {
             $prevLink = $page->getPrevLink();
             if (!is_null($prevLink)) {

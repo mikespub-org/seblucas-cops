@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
@@ -21,14 +22,15 @@ use ZipArchive;
 use Exception;
 
 /**
- * EPub Reader based on Monocle
+ * EPub Reader based on Monocle or EPub.js
  */
 class EPubReader extends BaseRenderer
 {
+    use HasRouteTrait;
+
     public const ROUTE_EPUBFS = EpubFsHandler::HANDLER;
     public const ROUTE_ZIPFS = ZipFsHandler::HANDLER;
 
-    public static string $template = "templates/epubreader.html";
     public static string $epubClass = EPub::class;
 
     /**
@@ -38,12 +40,12 @@ class EPubReader extends BaseRenderer
      * @param array<mixed> $params
      * @return ?string
      */
-    public static function getComponentContent($epub, $component, $params = [])
+    public function getComponentContent($epub, $component, $params = [])
     {
-        $handler = EpubFsHandler::class;
         $data = $epub->component($component);
+        $this->setHandler(EpubFsHandler::class);
 
-        $callback = function ($m) use ($epub, $component, $params, $handler) {
+        $callback = function ($m) use ($epub, $component, $params) {
             $method = $m[1];
             $path = $m[2];
             $end = '';
@@ -63,7 +65,7 @@ class EPubReader extends BaseRenderer
                 return $method . "'#'" . $end;
             }
             $params['comp'] = $comp;
-            $out = $method . "'" . $handler::route(self::ROUTE_EPUBFS, $params) . $hash . "'" . $end;
+            $out = $method . "'" . $this->getRoute(self::ROUTE_EPUBFS, $params) . $hash . "'" . $end;
             if ($end) {
                 return $out;
             }
@@ -91,6 +93,7 @@ class EPubReader extends BaseRenderer
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
+        $this->setHandler(EpubFsHandler::class);
         $db = $book->getDatabaseId() ?? 0;
         $params = ['data' => $idData, 'db' => $db];
 
@@ -98,7 +101,7 @@ class EPubReader extends BaseRenderer
         $epub = new self::$epubClass($book->getFilePath('EPUB', $idData));
         $epub->initSpineComponent();
 
-        $data = self::getComponentContent($epub, $component, $params);
+        $data = $this->getComponentContent($epub, $component, $params);
 
         // get mimetype for $component from EPub manifest here
         $mimetype = $epub->componentContentType($component);
@@ -121,10 +124,24 @@ class EPubReader extends BaseRenderer
         if ($version == 'epubjs') {
             return $this->getEpubjsReader($idData, $database);
         }
+        return $this->getMonocleReader($idData, $database);
+    }
+
+    /**
+     * Summary of getMonocleReader
+     * @param int $idData
+     * @param ?int $database
+     * @param ?string $template
+     * @return string
+     */
+    public function getMonocleReader($idData, $database = null, $template = null)
+    {
+        $template ??= "templates/epubreader.html";
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
+        $this->setHandler(EpubFsHandler::class);
         if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
         }
@@ -145,11 +162,10 @@ class EPubReader extends BaseRenderer
             return self::addContentItem($content);
         }, $epub->contents()));
 
-        $handler = EpubFsHandler::class;
         // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
         $db = $book->getDatabaseId() ?? 0;
         $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
-        $link = str_replace('COMPONENT', '~COMP~', $handler::route(self::ROUTE_EPUBFS, $params));
+        $link = str_replace('COMPONENT', '~COMP~', $this->getRoute(self::ROUTE_EPUBFS, $params));
 
         $data = [
             'title'      => $book->title,
@@ -162,7 +178,7 @@ class EPubReader extends BaseRenderer
             'link'       => $link,
         ];
 
-        return Format::template($data, self::$template);
+        return Format::template($data, $template);
     }
 
     /**
@@ -215,15 +231,17 @@ class EPubReader extends BaseRenderer
      * Summary of getEpubjsReader
      * @param int $idData
      * @param ?int $database
+     * @param ?string $template
      * @return string
      */
-    public function getEpubjsReader($idData, $database = null)
+    public function getEpubjsReader($idData, $database = null, $template = null)
     {
-        $template = "templates/epubjs-reader.html";
+        $template ??= "templates/epubjs-reader.html";
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
+        $this->setHandler(ZipFsHandler::class);
         if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
             // URL format: full url to external epub file here - let epubjs reader handle parsing etc. in browser
             $link = $book->getFilePath('EPUB', $idData, true);
@@ -235,11 +253,10 @@ class EPubReader extends BaseRenderer
             if (!$epub || !file_exists($epub)) {
                 throw new Exception('Unknown file ' . $epub);
             }
-            $handler = ZipFsHandler::class;
             // URL format: index.php/zipfs/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
             $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
-            $link = $handler::route(self::ROUTE_ZIPFS, $params);
+            $link = $this->getRoute(self::ROUTE_ZIPFS, $params);
             $link = str_replace('COMPONENT', '', $link);
         }
         // Configurable settings (javascript object as text)

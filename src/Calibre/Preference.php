@@ -47,7 +47,7 @@ class Preference
             $this->val = $post->val;
         }
         $this->databaseId = $database;
-        $this->handler = RestApiHandler::class;
+        $this->setHandler(RestApiHandler::class);
     }
 
     /**
@@ -58,8 +58,7 @@ class Preference
     public function getUri($params = [])
     {
         $params['key'] = $this->key;
-        assert($this->handler === RestApiHandler::class);
-        return $this->handler::resource($this::class, $params);
+        return $this->getResource($this::class, $params);
     }
 
     /**

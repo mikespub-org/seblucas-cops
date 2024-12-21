@@ -116,7 +116,7 @@ abstract class BaseHandler
     }
 
     /**
-     * Summary of request
+     * Summary of request - not used except in tests - use Request::build instead?
      * @param array<mixed> $params
      * @param array<mixed> $server
      * @return Request

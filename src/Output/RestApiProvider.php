@@ -19,6 +19,7 @@ use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -32,32 +33,39 @@ use Exception;
  */
 class RestApiProvider extends BaseRenderer
 {
+    use HasRouteTrait;
+
     public const DEFINITION_FILE = 'resources/openapi.json';
     public const RESTAPI_CACHE_FILE = 'resources/cache.restapi.php';
     public const PREFIX = RestApiHandler::PREFIX;
-    public static string $handler = RestApiHandler::class;
-    public static int $numberPerPage = 100;
-    public static bool $doRunHandler = true;
-    protected static ?string $baseUrl = null;
+    public int $numberPerPage = 100;
+    public bool $doRunHandler = true;
+    protected ?string $baseUrl = null;
 
     /**
-     * Summary of extra
-     * @var array<string, array<string>>
+     * Summary of extra - use instance methods instead of static
+     * @var array<string, string>
      */
-    public static $extra = [
-        "/custom" => [self::class, 'getCustomColumns'],
-        "/databases" => [self::class, 'getDatabases'],
-        "/openapi" => [self::class, 'getOpenApi'],
-        "/routes" => [self::class, 'getRoutes'],
-        "/handlers" => [self::class, 'getHandlers'],
-        "/notes" => [self::class, 'getNotes'],
-        "/preferences" => [self::class, 'getPreferences'],
-        "/annotations" => [self::class, 'getAnnotations'],
-        "/metadata" => [self::class, 'getMetadata'],
-        "/user" => [self::class, 'getUser'],
+    public array $extra = [
+        "/custom" => 'getCustomColumns',
+        "/databases" => 'getDatabases',
+        "/openapi" => 'getOpenApi',
+        "/routes" => 'getRoutes',
+        "/handlers" => 'getHandlers',
+        "/notes" => 'getNotes',
+        "/preferences" => 'getPreferences',
+        "/annotations" => 'getAnnotations',
+        "/metadata" => 'getMetadata',
+        "/user" => 'getUser',
     ];
 
     public bool $isExtra = false;
+
+    public function __construct($request = null, $response = null)
+    {
+        parent::__construct($request, $response);
+        $this->setHandler(RestApiHandler::class);
+    }
 
     /**
      * Summary of matchPathInfo
@@ -73,7 +81,7 @@ class RestApiProvider extends BaseRenderer
 
         // handle extra functions
         $root = '/' . explode('/', $path . '/')[1];
-        if (array_key_exists($root, self::$extra)) {
+        if (array_key_exists($root, $this->extra)) {
             $params = Route::match($path);
             // @todo handle non-matching path here too!?
             $params ??= [];
@@ -85,7 +93,10 @@ class RestApiProvider extends BaseRenderer
             if (!empty($params)) {
                 $this->request->setParams($params);
             }
-            return call_user_func(self::$extra[$root], $this->request);
+            // Call instance method instead of static
+            //return call_user_func($this->extra[$root], $this->request);
+            $method = $this->extra[$root];
+            return $this->$method($this->request);
         }
 
         // match path with routes
@@ -123,7 +134,7 @@ class RestApiProvider extends BaseRenderer
         // run via handler now
         $handler = Framework::createHandler($name);
         unset($params[Route::HANDLER_PARAM]);
-        $run ??= self::$doRunHandler;
+        $run ??= $this->doRunHandler;
         if ($run) {
             $oldpath = $_SERVER['PATH_INFO'] ?? '';
             $oldparams = $_GET;
@@ -141,6 +152,15 @@ class RestApiProvider extends BaseRenderer
     }
 
     /**
+     * Get base URL from handler
+     */
+    protected function getBaseUrl(): string 
+    {
+        $this->baseUrl ??= RestApiHandler::getBaseUrl();
+        return $this->baseUrl;
+    }
+
+    /**
      * Summary of getOutput
      * @param mixed $result
      * @return string|Response
@@ -150,11 +170,10 @@ class RestApiProvider extends BaseRenderer
         if (isset($result)) {
             return json_encode($result, JSON_UNESCAPED_SLASHES);
         }
-        self::$baseUrl ??= self::$handler::getBaseUrl();
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
         if (!isset($params)) {
-            Response::redirect(self::$handler::route(PageId::ROUTE_INDEX));
+            Response::redirect($this->getRoute(PageId::ROUTE_INDEX));
             return '';
         }
         if ($this->isExtra) {
@@ -182,11 +201,11 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getCustomColumns($request)
+    public function getCustomColumns($request)
     {
         $db = $request->database();
         $columns = CustomColumnType::getAllCustomColumns();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Custom Columns",
             "baseurl" => $baseurl,
@@ -196,7 +215,7 @@ class RestApiProvider extends BaseRenderer
             $params = [];
             $params["custom"] = $column['id'];
             $params["db"] = $db;
-            $column["navlink"] = self::$handler::route(CustomColumnType::ROUTE_ALL, $params);
+            $column["navlink"] = $this->getRoute(CustomColumnType::ROUTE_ALL, $params);
             array_push($result["entries"], $column);
         }
         return $result;
@@ -207,13 +226,13 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getDatabases($request)
+    public function getDatabases($request)
     {
         $db = $request->database();
         if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
-            return self::getDatabase($db, $request);
+            return $this->getDatabase($db, $request);
         }
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Databases",
             "baseurl" => $baseurl,
@@ -223,7 +242,7 @@ class RestApiProvider extends BaseRenderer
         $id = 0;
         foreach (Database::getDbNameList() as $key) {
             $params['db'] = $id;
-            $link = self::$handler::resource(Database::class, $params);
+            $link = $this->getResource(Database::class, $params);
             array_push($result["entries"], [
                 "class" => "Database",
                 "title" => $key,
@@ -241,7 +260,7 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getDatabase($database, $request)
+    public function getDatabase($database, $request)
     {
         if (!Database::isMultipleDatabaseEnabled() && $database != 0) {
             return [
@@ -251,14 +270,14 @@ class RestApiProvider extends BaseRenderer
         }
         $name = $request->get('name', null, '/^\w+$/');
         if (!empty($name)) {
-            return self::getTable($database, $name, $request);
+            return $this->getTable($database, $name, $request);
         }
         $title = "Database";
         $dbName = Database::getDbName($database);
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $params = [];
         $type = $request->get('type', null, '/^\w+$/');
         if (in_array($type, ['table', 'view'])) {
@@ -272,7 +291,7 @@ class RestApiProvider extends BaseRenderer
             $entries = Database::getDbSchema($database, $type);
             foreach ($entries as $entry) {
                 $params['name'] = $entry['tbl_name'];
-                $entry["navlink"] = self::$handler::resource(Database::class, $params);
+                $entry["navlink"] = $this->getResource(Database::class, $params);
                 unset($entry["sql"]);
                 array_push($result["entries"], $entry);
             }
@@ -295,7 +314,7 @@ class RestApiProvider extends BaseRenderer
             array_push($result["entries"], [
                 "class" => "Metadata",
                 "title" => $title,
-                "navlink" => self::$handler::resource(Database::class, $params),
+                "navlink" => $this->getResource(Database::class, $params),
             ]);
         }
         $result["version"] = Database::getUserVersion($database);
@@ -309,7 +328,7 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getTable($database, $name, $request)
+    public function getTable($database, $name, $request)
     {
         $title = "Database";
         $dbName = Database::getDbName($database);
@@ -317,7 +336,7 @@ class RestApiProvider extends BaseRenderer
             $title .= " $dbName";
         }
         $title .= " Table $name";
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => $title,
             "baseurl" => $baseurl,
@@ -335,19 +354,19 @@ class RestApiProvider extends BaseRenderer
         $query = "SELECT COUNT(*) FROM {$name}";
         $count = Database::querySingle($query, $database);
         $result["total"] = $count;
-        $result["limit"] = self::$numberPerPage;
+        $result["limit"] = $this->numberPerPage;
         $start = 0;
         $n = (int) $request->get('n', 1, '/^\d+$/');
-        if ($n > 0 && $n < ceil($count / self::$numberPerPage)) {
-            $start = ($n - 1) * self::$numberPerPage;
+        if ($n > 0 && $n < ceil($count / $this->numberPerPage)) {
+            $start = ($n - 1) * $this->numberPerPage;
         }
         $result["offset"] = $start;
         $query = "SELECT * FROM {$name} LIMIT ?, ?";
-        $res = Database::query($query, [$start, self::$numberPerPage], $database);
+        $res = Database::query($query, [$start, $this->numberPerPage], $database);
         while ($post = $res->fetchObject()) {
             $entry = (array) $post;
             $params['id'] = $entry['id'];
-            $entry["navlink"] = self::$handler::resource(Database::class, $params);
+            $entry["navlink"] = $this->getResource(Database::class, $params);
             array_push($result["entries"], $entry);
         }
         $result["columns"] = Database::getTableInfo($database, $name);
@@ -359,7 +378,7 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getOpenApi($request)
+    public function getOpenApi($request)
     {
         $openapi = new OpenApi();
         return $openapi->getDefinition();
@@ -370,9 +389,9 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getRoutes($request)
+    public function getRoutes($request)
     {
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Routes",
             "baseurl" => $baseurl,
@@ -392,9 +411,9 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getHandlers($request)
+    public function getHandlers($request)
     {
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Handlers",
             "baseurl" => $baseurl,
@@ -415,14 +434,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getNotes($request)
+    public function getNotes($request)
     {
         $type = $request->get('type', null, '/^\w+$/');
         if (!empty($type)) {
-            return self::getNotesByType($type, $request);
+            return $this->getNotesByType($type, $request);
         }
         $db = $request->database();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Notes",
             "baseurl" => $baseurl,
@@ -433,7 +452,7 @@ class RestApiProvider extends BaseRenderer
         $params['db'] = $db;
         foreach (Note::getCountByType($db) as $type => $count) {
             $params['type'] = $type;
-            $link = self::$handler::resource(Note::class, $params);
+            $link = $this->getResource(Note::class, $params);
             array_push($result["entries"], [
                 "class" => "Notes Type",
                 "title" => $type,
@@ -450,14 +469,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getNotesByType($type, $request)
+    public function getNotesByType($type, $request)
     {
         $item = $request->getId('item');
         if (!empty($item)) {
-            return self::getNoteByTypeItem($type, $item, $request);
+            return $this->getNoteByTypeItem($type, $item, $request);
         }
         $db = $request->database();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Notes for {$type}",
             "baseurl" => $baseurl,
@@ -473,7 +492,7 @@ class RestApiProvider extends BaseRenderer
             if (!empty($entry["title"])) {
                 $title = Route::slugify($entry["title"]);
                 $params['title'] = $title;
-                $link = self::$handler::resource(Note::class, $params);
+                $link = $this->getResource(Note::class, $params);
                 array_push($result["entries"], [
                     "class" => "Notes",
                     "title" => $entry["title"],
@@ -484,7 +503,7 @@ class RestApiProvider extends BaseRenderer
                 ]);
             } else {
                 unset($params['title']);
-                $link = self::$handler::resource(Note::class, $params);
+                $link = $this->getResource(Note::class, $params);
                 array_push($result["entries"], [
                     "class" => "Notes",
                     "title" => $type,
@@ -505,14 +524,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getNoteByTypeItem($type, $item, $request)
+    public function getNoteByTypeItem($type, $item, $request)
     {
         $db = $request->database();
         $note = Note::getInstanceByTypeItem($type, $item, $db);
         if (empty($note)) {
             return ["error" => "Invalid note type item"];
         }
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Note for {$type} #{$item}",
             "baseurl" => $baseurl,
@@ -542,14 +561,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getPreferences($request)
+    public function getPreferences($request)
     {
         $key = $request->get('key', null, '/^[\w\s:]+$/');
         if (!empty($key)) {
-            return self::getPreferenceByKey($key, $request);
+            return $this->getPreferenceByKey($key, $request);
         }
         $db = $request->database();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Preferences",
             "baseurl" => $baseurl,
@@ -569,7 +588,7 @@ class RestApiProvider extends BaseRenderer
                 $count = 0;
             }
             $params['key'] = rawurlencode($key);
-            $link = self::$handler::resource(Preference::class, $params);
+            $link = $this->getResource(Preference::class, $params);
             array_push($result["entries"], [
                 "class" => "Preference",
                 "title" => $key,
@@ -586,14 +605,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getPreferenceByKey($key, $request)
+    public function getPreferenceByKey($key, $request)
     {
         $db = $request->database();
         $preference = Preference::getInstanceByKey($key, $db);
         if (empty($preference)) {
             return ["error" => "Invalid preference key"];
         }
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Preference for {$key}",
             "baseurl" => $baseurl,
@@ -608,14 +627,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getAnnotations($request)
+    public function getAnnotations($request)
     {
         $bookId = $request->getId('bookId');
         if (!empty($bookId)) {
-            return self::getAnnotationsByBookId($bookId, $request);
+            return $this->getAnnotationsByBookId($bookId, $request);
         }
         $db = $request->database();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Annotations",
             "baseurl" => $baseurl,
@@ -626,7 +645,7 @@ class RestApiProvider extends BaseRenderer
             $params = [];
             $params['bookId'] = $bookId;
             $params['db'] = $db;
-            $link = self::$handler::resource(Annotation::class, $params);
+            $link = $this->getResource(Annotation::class, $params);
             array_push($result["entries"], [
                 "class" => "Annotations",
                 "title" => "Annotations for {$bookId}",
@@ -643,14 +662,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getAnnotationsByBookId($bookId, $request)
+    public function getAnnotationsByBookId($bookId, $request)
     {
         $id = $request->getId('id');
         if (!empty($id)) {
-            return self::getAnnotationById($bookId, $id, $request);
+            return $this->getAnnotationById($bookId, $id, $request);
         }
         $db = $request->database();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Annotations for {$bookId}",
             "baseurl" => $baseurl,
@@ -659,7 +678,7 @@ class RestApiProvider extends BaseRenderer
         ];
         // @todo get item from annotations + corresponding title from instance
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
-            $instance->setHandler(self::$handler);
+            $instance->setHandler($this->handler);
             $entry = $instance->getEntry();
             array_push($result["entries"], [
                 "class" => $entry->className,
@@ -677,7 +696,7 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getAnnotationById($bookId, $id, $request)
+    public function getAnnotationById($bookId, $id, $request)
     {
         $db = $request->database();
         /** @var Annotation $annotation */
@@ -685,7 +704,7 @@ class RestApiProvider extends BaseRenderer
         if (empty($annotation->id)) {
             return ["error" => "Invalid annotation id"];
         }
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => $annotation->getTitle(),
             "baseurl" => $baseurl,
@@ -700,14 +719,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getMetadata($request)
+    public function getMetadata($request)
     {
         $bookId = $request->getId('bookId');
         if (empty($bookId)) {
             return ["error" => "Invalid book id"];
         }
         $db = $request->database();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $metadata = Metadata::getInstanceByBookId($bookId, $db);
         if (empty($metadata)) {
             $result["error"] = "Invalid metadata for book id";
@@ -739,14 +758,14 @@ class RestApiProvider extends BaseRenderer
      * @param Request $request
      * @return array<string, mixed>
      */
-    public static function getUser($request)
+    public function getUser($request)
     {
         $username = $request->getUserName();
         if (empty($username)) {
             return ["error" => "Invalid username"];
         }
         $db = $request->database();
-        $baseurl = self::$baseUrl;
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "User",
             "baseurl" => $baseurl,

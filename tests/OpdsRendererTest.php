@@ -31,7 +31,7 @@ class OpdsRendererTest extends TestCase
     public const OPDSVALIDATOR_JAR = __DIR__ . "/OPDSValidator.jar";
     public const TEST_FEED = __DIR__ . "/text.atom";
 
-    /** @var class-string */
+    /** @var class-string<FeedHandler> */
     private static $handler = FeedHandler::class;
 
     public static function setUpBeforeClass(): void
