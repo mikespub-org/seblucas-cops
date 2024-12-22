@@ -159,7 +159,7 @@ class HandlerManager
         else {
             // Maintain existing error behavior
             Response::sendError($request, "Invalid handler name '$name'");
-            throw new \RuntimeException("Invalid handler name '$name'");
+            //throw new \RuntimeException("Invalid handler name '$name'");
         }
 
         // Apply middleware if any exists

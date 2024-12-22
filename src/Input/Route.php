@@ -357,7 +357,7 @@ class Route
      */
     public static function setLocale($locale)
     {
-        return UriGenerator::setLocale($locale);
+        UriGenerator::setLocale($locale);
     }
 
     /**
@@ -368,6 +368,6 @@ class Route
      */
     public static function setBaseUrl($base)
     {
-        return UriGenerator::setBaseUrl($base);
+        UriGenerator::setBaseUrl($base);
     }
 }

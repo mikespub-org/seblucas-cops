@@ -36,12 +36,14 @@ class RequestContext
         $this->manager = $manager ?? new HandlerManager();
         $this->router = $router ?? new FastRouter();
         $this->config = new Config();
+        $this->locale = $this->request->locale();
         $this->initializeContext();
     }
 
     protected function initializeContext(): void
     {
         // Load routes if not already cached
+        UriGenerator::setLocale($this->locale);
     }
 
     /**

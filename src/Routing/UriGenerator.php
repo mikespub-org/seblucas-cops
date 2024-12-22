@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Routing;
 
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Route;
@@ -276,7 +277,7 @@ class UriGenerator
 
     /**
      * Summary of findRoute
-     * @param class-string $handler
+     * @param class-string<BaseHandler> $handler
      * @param array<mixed> $params
      * @param string $prefix
      * @return string|null
