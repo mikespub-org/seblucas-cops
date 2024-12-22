@@ -18,6 +18,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
 
 #[RequiresMethod('\Symfony\Component\Routing\Router', '__construct')]
@@ -109,7 +110,7 @@ class RoutingTest extends TestCase
             //unset($result[Route::ROUTE_PARAM]);
         }
         if (!empty($expected['title']) && empty($extra['title'])) {
-            $expected['title'] = Route::slugify($expected['title']);
+            $expected['title'] = UriGenerator::slugify($expected['title']);
         }
         $this->assertEquals($expected, $result);
 
@@ -152,7 +153,7 @@ class RoutingTest extends TestCase
             $prefix = "/opds";
         }
         if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
-            $params['title'] = Route::slugify($params['title']);
+            $params['title'] = UriGenerator::slugify($params['title']);
         }
         //if (!empty($params['file'])) {
         //    $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
@@ -223,7 +224,7 @@ class RoutingTest extends TestCase
             unset($result[Route::ROUTE_PARAM]);
         }
         if (!empty($expected['title']) && empty($extra['title'])) {
-            $expected['title'] = Route::slugify($expected['title']);
+            $expected['title'] = UriGenerator::slugify($expected['title']);
         }
         $this->assertEquals($expected, $result);
     }
@@ -250,7 +251,7 @@ class RoutingTest extends TestCase
             $prefix = "/feed";
         }
         if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
-            $params['title'] = Route::slugify($params['title']);
+            $params['title'] = UriGenerator::slugify($params['title']);
         }
         //if (!empty($params['file'])) {
         //    $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));

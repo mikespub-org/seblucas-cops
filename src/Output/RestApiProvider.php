@@ -24,6 +24,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
 
 /**
@@ -487,7 +488,7 @@ class RestApiProvider extends BaseRenderer
         foreach (Note::getEntriesByType($type, $db) as $entry) {
             $params['item'] = $entry['item'];
             if (!empty($entry["title"])) {
-                $title = Route::slugify($entry["title"]);
+                $title = UriGenerator::slugify($entry["title"]);
                 $params['title'] = $title;
                 $link = $this->getResource(Note::class, $params);
                 array_push($result["entries"], [

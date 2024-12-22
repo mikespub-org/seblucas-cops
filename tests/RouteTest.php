@@ -336,7 +336,7 @@ class RouteTest extends TestCase
             $prefix = "/opds";
         }
         if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
-            $params['title'] = Route::slugify($params['title']);
+            $params['title'] = UriGenerator::slugify($params['title']);
         }
         if (!empty($params['file'])) {
             $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
@@ -443,7 +443,7 @@ class RouteTest extends TestCase
             $prefix = "/feed";
         }
         if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
-            $params['title'] = Route::slugify($params['title']);
+            $params['title'] = UriGenerator::slugify($params['title']);
         }
         if (!empty($params['file'])) {
             $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
@@ -508,7 +508,7 @@ class RouteTest extends TestCase
                     $missing[$name][$param] ??= $key;
                 }
                 if (in_array($param, ['author', 'title'])) {
-                    $value = Route::getSlugger()->slug($value, '_');
+                    $value = UriGenerator::getSlugger()->slug($value, '_');
                 }
                 $path = str_replace('{' . $match . '}', $value, $path);
                 // add dummy params here for tests

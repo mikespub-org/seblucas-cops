@@ -10,9 +10,9 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class VirtualLibrary extends Base
 {
@@ -77,7 +77,7 @@ class VirtualLibrary extends Base
     public static function formatParameter($id, $title)
     {
         // URL format: ...&vl=2.Short_Stories_in_English
-        return strval($id) . '.' . Route::slugify($title);
+        return strval($id) . '.' . UriGenerator::slugify($title);
     }
 
     /**

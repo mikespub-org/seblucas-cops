@@ -14,6 +14,7 @@ use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Language\Slugger;
 
 /**
  * Summary of UriGenerator
@@ -22,6 +23,10 @@ class UriGenerator
 {
     /** @var ?string */
     protected static $baseUrl = null;
+    /** @var class-string */
+    protected static $sluggerClass = Slugger::class;
+    /** @var Slugger|bool|null */
+    protected static $slugger = null;
 
     /**
      * Generate uri with FastRoute - @todo some issues left to deal with ;-)
@@ -444,7 +449,7 @@ class UriGenerator
                 return null;
             }
             if (in_array($param, ['title', 'author', 'ignore'])) {
-                $value = Route::slugify($value);
+                $value = self::slugify($value);
                 $value = rawurlencode($value);
             }
             // search query
@@ -464,5 +469,44 @@ class UriGenerator
             unset($subst[$param]);
         }
         return self::getUriForParams($subst, $prefix . $path);
+    }
+
+    /**
+     * Summary of getSlugger
+     * @param ?string $locale
+     * @return Slugger|bool|null
+     */
+    public static function getSlugger($locale = null)
+    {
+        if (!isset(self::$slugger)) {
+            self::$slugger = new self::$sluggerClass($locale);
+        }
+        return self::$slugger;
+    }
+
+    /**
+     * Summary of slugify
+     * @param string $string
+     * @return string
+     */
+    public static function slugify($string)
+    {
+        return (string) self::getSlugger()->slug($string, '_');
+        // @deprecated 3.5.1 use Slugger()->slug()
+        //return self::$sluggerClass::slugify($string);
+    }
+
+    /**
+     * Summary of setLocale
+     * @param ?string $locale
+     * @return void
+     */
+    public static function setLocale($locale)
+    {
+        if (is_null($locale)) {
+            self::$slugger = null;
+            return;
+        }
+        self::$slugger = new self::$sluggerClass($locale);
     }
 }

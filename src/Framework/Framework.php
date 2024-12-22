@@ -17,6 +17,7 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\FastRouter;
 use SebLucas\Cops\Routing\RouterInterface;
+use SebLucas\Cops\Routing\UriGenerator;
 use SebLucas\Cops\Handlers\QueueBasedHandler;
 
 /**
@@ -147,7 +148,7 @@ class Framework
         }
         $request = new Request();
         // @todo set locale for Route Slugger - must be done after init() and Request()
-        Route::setLocale($request->locale());
+        UriGenerator::setLocale($request->locale());
         return $request;
     }
 

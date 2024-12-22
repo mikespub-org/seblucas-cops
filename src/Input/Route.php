@@ -30,10 +30,6 @@ class Route
     protected static $routes = [];
     /** @var array<string, mixed> */
     protected static $static = [];
-    /** @var class-string */
-    protected static $sluggerClass = Slugger::class;
-    /** @var Slugger|bool|null */
-    protected static $slugger = null;
     /** @var array<string, class-string> */
     protected static $handlers = [];
     /** @var array<string, mixed> */
@@ -334,40 +330,34 @@ class Route
     /**
      * Summary of getSlugger
      * @param ?string $locale
+     * @deprecated 3.5.2 use UriGenerator::getSlugger()
      * @return Slugger|bool|null
      */
     public static function getSlugger($locale = null)
     {
-        if (!isset(self::$slugger)) {
-            self::$slugger = new self::$sluggerClass($locale);
-        }
-        return self::$slugger;
+        return UriGenerator::getSlugger($locale);
     }
 
     /**
      * Summary of slugify
      * @param string $string
+     * @deprecated 3.5.2 use UriGenerator::slugify()
      * @return string
      */
     public static function slugify($string)
     {
-        return (string) self::getSlugger()->slug($string, '_');
-        // @deprecated 3.5.1 use Slugger()->slug()
-        //return self::$sluggerClass::slugify($string);
+        return UriGenerator::slugify($string);
     }
 
     /**
      * Summary of setLocale
      * @param ?string $locale
+     * @deprecated 3.5.2 use UriGenerator::setLocale()
      * @return void
      */
     public static function setLocale($locale)
     {
-        if (is_null($locale)) {
-            self::$slugger = null;
-            return;
-        }
-        self::$slugger = new self::$sluggerClass($locale);
+        return UriGenerator::setLocale($locale);
     }
 
     /**
