@@ -21,8 +21,8 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class NoteResourceTest extends TestCase
 {
@@ -84,7 +84,7 @@ class NoteResourceTest extends TestCase
     public function testFixResourceLinks(): void
     {
         Config::set('full_url', '/cops/');
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
 
         $note = self::$author->getNote();
         $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
@@ -92,7 +92,7 @@ class NoteResourceTest extends TestCase
         $this->assertStringContainsString($expected, $html);
 
         Config::set('full_url', '');
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
     }
 
     public function testGetResources(): void

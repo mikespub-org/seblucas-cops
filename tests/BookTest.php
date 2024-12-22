@@ -25,6 +25,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Routing\UriGenerator;
 
 /*
 Publishers:
@@ -245,7 +246,7 @@ class BookTest extends TestCase
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link instanceof LinkAcquisition && $link->title == "EPUB") {
-                $this->assertEquals(Route::path("download/1/0/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub"), $link->getUri());
+                $this->assertEquals(UriGenerator::path("download/1/0/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub"), $link->getUri());
                 return;
             }
         }
@@ -643,15 +644,15 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $book->updateForKepub = true;
         $epub = $book->getDataById(20);
-        $this->assertEquals(Route::path("download/20/0/Carroll%2C%20Lewis%20-%20Alice%27s%20Adventures%20in%20Wonderland.kepub.epub"), $epub->getHtmlLink());
-        $this->assertEquals(Route::path("download/17/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi"), $mobi->getHtmlLink());
+        $this->assertEquals(UriGenerator::path("download/20/0/Carroll%2C%20Lewis%20-%20Alice%27s%20Adventures%20in%20Wonderland.kepub.epub"), $epub->getHtmlLink());
+        $this->assertEquals(UriGenerator::path("download/17/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi"), $mobi->getHtmlLink());
 
         Config::set('provide_kepub', "0");
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $book = Book::getBookById(17);
         $book->updateForKepub = false;
         $epub = $book->getDataById(20);
-        $this->assertEquals(Route::path("download/20/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $epub->getHtmlLink());
+        $this->assertEquals(UriGenerator::path("download/20/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $epub->getHtmlLink());
 
         Config::set('use_url_rewriting', "0");
         $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $epub->getHtmlLink());

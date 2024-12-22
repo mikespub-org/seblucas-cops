@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Request;
 
 /**
@@ -17,6 +18,8 @@ use SebLucas\Cops\Input\Request;
  */
 abstract class BaseRenderer
 {
+    use HasRouteTrait;
+
     public const PREFIX = "";
 
     /** @var Request */

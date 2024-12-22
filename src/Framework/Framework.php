@@ -77,6 +77,7 @@ class Framework
      */
     public function handleRequest(): void
     {
+        $context = null;
         try {
             $context = $this->getContext();
 
@@ -175,7 +176,9 @@ class Framework
      */
     public static function init()
     {
-        self::loadRoutes();
+        $framework = self::getInstance();
+        // initialize routes if needed
+        $framework->initializeRoutes();
     }
 
     /**

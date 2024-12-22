@@ -19,9 +19,9 @@ use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\FeedHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class OpdsRendererTest extends TestCase
 {
@@ -37,7 +37,7 @@ class OpdsRendererTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         Config::set('full_url', '/cops/');
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
     }
@@ -45,7 +45,7 @@ class OpdsRendererTest extends TestCase
     public static function tearDownAfterClass(): void
     {
         Config::set('full_url', '');
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
         if (!file_exists(self::TEST_FEED)) {
             return;
         }

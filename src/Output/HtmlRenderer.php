@@ -13,7 +13,6 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Handlers\FeedHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 
 class HtmlRenderer extends BaseRenderer
 {
@@ -33,13 +32,13 @@ class HtmlRenderer extends BaseRenderer
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),
-            'current_css'           => Route::path($request->style()),
-            'favico'                => Route::path(Config::get('icon')),
-            'assets'                => Route::path(Config::get('assets')),
-            'images'                => Route::path('images'),
-            'resources'             => Route::path('resources'),
-            'templates'             => Route::path('templates'),
-            'basedir'               => Route::path('.'),
+            'current_css'           => $this->getPath($request->style()),
+            'favico'                => $this->getPath(Config::get('icon')),
+            'assets'                => $this->getPath(Config::get('assets')),
+            'images'                => $this->getPath('images'),
+            'resources'             => $this->getPath('resources'),
+            'templates'             => $this->getPath('templates'),
+            'basedir'               => $this->getPath('.'),
             'getjson_url'           => JsonRenderer::getCurrentUrl($request),
         ];
         if (preg_match('/Kindle/', $request->agent())) {

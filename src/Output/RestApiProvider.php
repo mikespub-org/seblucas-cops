@@ -19,7 +19,6 @@ use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
 use SebLucas\Cops\Framework\Framework;
-use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -33,8 +32,6 @@ use Exception;
  */
 class RestApiProvider extends BaseRenderer
 {
-    use HasRouteTrait;
-
     public const DEFINITION_FILE = 'resources/openapi.json';
     public const RESTAPI_CACHE_FILE = 'resources/cache.restapi.php';
     public const PREFIX = RestApiHandler::PREFIX;

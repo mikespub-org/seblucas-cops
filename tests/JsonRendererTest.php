@@ -22,8 +22,8 @@ use SebLucas\Cops\Handlers\ReadHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class JsonRendererTest extends TestCase
 {
@@ -146,10 +146,10 @@ class JsonRendererTest extends TestCase
         $renderer = new JsonRenderer();
         $test = $renderer->getFullBookContentArray($book);
 
-        $this->assertEquals(Route::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
+        $this->assertEquals(UriGenerator::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);
         $this->assertEquals(self::$fetcher::link() . "/thumbs/0/17/html2.jpg", $test ["thumbnailurl"]);
         // see bookTest for more tests on data links
-        $this->assertEquals(Route::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $test ["datas"][2]["url"]);
+        $this->assertEquals(UriGenerator::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $test ["datas"][2]["url"]);
 
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();

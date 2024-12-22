@@ -11,6 +11,8 @@
 namespace SebLucas\Cops\Routing;
 
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Route;
 
 /**
@@ -18,6 +20,9 @@ use SebLucas\Cops\Input\Route;
  */
 class UriGenerator
 {
+    /** @var ?string */
+    protected static $baseUrl = null;
+
     /**
      * Generate uri with FastRoute - @todo some issues left to deal with ;-)
      * @param string $name
@@ -41,7 +46,7 @@ class UriGenerator
         if (!empty($path) && str_starts_with($path, '/')) {
             $prefix = $path;
         } else {
-            $prefix = Route::base() . $path;
+            $prefix = self::base() . $path;
         }
         return self::getUriForParams($queryParams, $prefix);
     }
@@ -57,7 +62,7 @@ class UriGenerator
     {
         // ?page=... or /route/...
         $uri = self::route($params, $prefix);
-        return Route::absolute($uri, $handler);
+        return self::absolute($uri, $handler);
     }
 
     /**
@@ -77,6 +82,77 @@ class UriGenerator
             return $route;
         }
         return self::getUriForParams($queryParams, $prefix);
+    }
+
+    /**
+     * Return absolute path for uri
+     * @param string $uri
+     * @param mixed $handler - @todo get rid of this = unused
+     * @return string
+     */
+    public static function absolute($uri, $handler = 'html')
+    {
+        // endpoint.php or handler or empty
+        $endpoint = self::endpoint($handler);
+        if (empty($endpoint) && str_starts_with($uri, '/')) {
+            // URL format: /base/route/...
+            return self::base() . substr($uri, 1);
+        }
+        // URL format: /base/endpoint.php?page=... or /base/handler/route/...
+        return self::base() . $endpoint . $uri;
+    }
+
+    /**
+     * Get endpoint for handler
+     * @todo get rid of param here - prefix is already included
+     * @param string $handler
+     * @return string
+     */
+    public static function endpoint($handler = 'html')
+    {
+        if (Config::get('front_controller')) {
+            // no endpoint prefix for supported handlers
+            return '';
+        }
+        // use default endpoint for supported handlers
+        return Config::ENDPOINT['html'];
+    }
+
+    /**
+     * Get base URL without endpoint (with trailing /)
+     * @return string
+     */
+    public static function base()
+    {
+        if (isset(self::$baseUrl)) {
+            return self::$baseUrl;
+        }
+        if (!empty(Config::get('full_url'))) {
+            $base = Config::get('full_url');
+        } elseif (ProxyRequest::hasTrustedProxies()) {
+            // use scheme and host + base path here to apply potential forwarded values
+            $base = ProxyRequest::getProxyBaseUrl();
+        } else {
+            $base = dirname((string) $_SERVER['SCRIPT_NAME']);
+        }
+        if (!str_ends_with((string) $base, '/')) {
+            $base .= '/';
+        }
+        self::setBaseUrl($base);
+        return $base;
+    }
+
+    /**
+     * Summary of setBaseUrl
+     * @param ?string $base
+     * @return void
+     */
+    public static function setBaseUrl($base)
+    {
+        self::$baseUrl = $base;
+        if (is_null($base)) {
+            ProxyRequest::$proxyRequest = null;
+        }
     }
 
     /**
@@ -103,11 +179,44 @@ class UriGenerator
      */
     public static function getUriForParams($params, $prefix = '')
     {
-        $queryString = Route::getQueryString($params);
+        $queryString = self::getQueryString($params);
         if (empty($queryString)) {
             return $prefix;
         }
         return $prefix . '?' . $queryString;
+    }
+
+    /**
+     * Summary of getQueryString
+     * @param array<mixed> $params
+     * @return string
+     */
+    public static function getQueryString($params)
+    {
+        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Route::ROUTE_PARAM]);
+        return http_build_query($params, '', null, PHP_QUERY_RFC3986);
+    }
+
+    /**
+     * Summary of mergeUriWithParams
+     * @param string $uri current uri with optional queryString
+     * @param mixed $extraParams extra params to merge with uri
+     * @return string
+     */
+    public static function mergeUriWithParams($uri, $extraParams = [])
+    {
+        if (empty($extraParams)) {
+            return $uri;
+        }
+        $query = parse_url($uri, PHP_URL_QUERY);
+        if (is_null($query)) {
+            return $uri . '?' . self::getQueryString($extraParams);
+        }
+        // replace current params with extraParams where needed
+        parse_str($query, $params);
+        $params = array_replace($params, $extraParams);
+        return str_replace('?' . $query, '?' . self::getQueryString($params), $uri);
     }
 
     /**
@@ -131,7 +240,7 @@ class UriGenerator
                     // use page route with /handler prefix instead
                     $prefix = $prefix . $handler::PREFIX;
                     $handler = $default;
-                // if we have a route and it does *not* start with the handler name, e.g. _route=check-more
+                    // if we have a route and it does *not* start with the handler name, e.g. _route=check-more
                 } elseif (!empty($params[Route::ROUTE_PARAM]) && !str_starts_with($params[Route::ROUTE_PARAM], $handler::HANDLER)) {
                     $prefix = $prefix . $handler::PREFIX;
                     $handlerName = explode('-', $params[Route::ROUTE_PARAM])[0];

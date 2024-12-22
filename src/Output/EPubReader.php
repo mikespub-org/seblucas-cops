@@ -11,11 +11,9 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
 use ZipArchive;
@@ -26,8 +24,6 @@ use Exception;
  */
 class EPubReader extends BaseRenderer
 {
-    use HasRouteTrait;
-
     public const ROUTE_EPUBFS = EpubFsHandler::HANDLER;
     public const ROUTE_ZIPFS = ZipFsHandler::HANDLER;
 
@@ -141,10 +137,10 @@ class EPubReader extends BaseRenderer
         if (!$book) {
             throw new Exception('Unknown data ' . $idData);
         }
-        $this->setHandler(EpubFsHandler::class);
-        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
+        if ($book->isExternal()) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
         }
+        $this->setHandler(EpubFsHandler::class);
 
         try {
             /** @var EPub $epub */
@@ -170,9 +166,9 @@ class EPubReader extends BaseRenderer
         $data = [
             'title'      => $book->title,
             'version'    => Config::VERSION,
-            'resources'  => Route::path('resources'),
-            'styles'     => Route::path('styles'),
-            'favicon'    => Route::path(Config::get('icon')),
+            'resources'  => $this->getPath('resources'),
+            'styles'     => $this->getPath('styles'),
+            'favicon'    => $this->getPath(Config::get('icon')),
             'components' => $components,
             'contents'   => $contents,
             'link'       => $link,
@@ -242,9 +238,9 @@ class EPubReader extends BaseRenderer
             throw new Exception('Unknown data ' . $idData);
         }
         $this->setHandler(ZipFsHandler::class);
-        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($book->path, (string) Config::get('calibre_external_storage'))) {
+        if ($book->isExternal()) {
             // URL format: full url to external epub file here - let epubjs reader handle parsing etc. in browser
-            $link = $book->getFilePath('EPUB', $idData, true);
+            $link = $book->getFilePath('EPUB', $idData);
             if (!$link) {
                 throw new Exception('Unknown link ' . $idData);
             }
@@ -262,7 +258,7 @@ class EPubReader extends BaseRenderer
         // Configurable settings (javascript object as text)
         $settings = Config::get('epubjs_reader_settings');
 
-        $dist = Route::path(dirname((string) Config::get('assets')) . '/mikespub/epubjs-reader/dist');
+        $dist = $this->getPath(dirname((string) Config::get('assets')) . '/mikespub/epubjs-reader/dist');
         $data = [
             'title'      => htmlspecialchars($book->title),
             'version'    => Config::VERSION,

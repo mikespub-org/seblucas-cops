@@ -13,7 +13,6 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkResource;
 use SebLucas\Cops\Model\LinkFeed;
@@ -117,18 +116,9 @@ class Book
         //$this->relativePath = $line->path;
         // -DC- Init relative or full path
         if (!empty(Config::get('calibre_external_storage'))) {
-            if (str_starts_with($line->path, Config::get('calibre_external_storage'))) {
-                $this->path = $line->path;
-            } else {
-                // external storage is assumed to be already url-encoded if needed
-                $urlPath = implode('/', array_map('rawurlencode', explode('/', $line->path)));
-                $this->path = Config::get('calibre_external_storage') . $urlPath;
-            }
+            $this->setExternalPath($line->path);
         } else {
-            $this->path = $line->path;
-            if (!is_dir($this->path)) {
-                $this->path = Database::getDbDirectory($database) . $line->path;
-            }
+            $this->setLocalPath($line->path, $database);
         }
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment ?? '';
@@ -403,7 +393,7 @@ class Book
         if (is_null($this->extraFiles)) {
             $this->extraFiles = [];
             $dataPath = $this->path . '/' . self::DATA_DIR_NAME . '/';
-            if (empty(Config::get('calibre_external_storage')) && is_dir($dataPath)) {
+            if (!$this->isExternal() && is_dir($dataPath)) {
                 $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dataPath));
                 foreach ($iterator as $file) {
                     if ($file->isDir()) {
@@ -435,7 +425,7 @@ class Book
             $href = fn() => FetchHandler::route(self::ROUTE_FILE, $params);
         } else {
             $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
-            $href = fn() => Route::path($urlPath);
+            $href = fn() => $this->getPath($urlPath);
         }
         $linkResource = new LinkResource(
             $href,
@@ -550,10 +540,9 @@ class Book
      * @checkme always returns absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
      * @param string $extension
      * @param int $idData
-     * @param bool $encoded url encode filename
      * @return string|false|null string for file path, false for missing cover, null for missing data
      */
-    public function getFilePath($extension, $idData = null, $encoded = false)
+    public function getFilePath($extension, $idData = null)
     {
         if ($extension == "jpg" || $extension == "png") {
             return $this->getCoverFilePath($extension);
@@ -562,7 +551,7 @@ class Book
         if (!$data) {
             return null;
         }
-        if ($encoded) {
+        if ($this->isExternal()) {
             // external storage is assumed to be already url-encoded if needed
             return $data->getExternalPath();
         }
@@ -583,6 +572,51 @@ class Book
             if ($ext == $extension) {
                 return $this->coverFileName;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Summary of setLocalPath
+     * @param string $path
+     * @param ?int $database
+     * @return string
+     */
+    public function setLocalPath($path, $database)
+    {
+        if (!is_dir($path)) {
+            $this->path = Database::getDbDirectory($database) . $path;
+        } else {
+            $this->path = $path;
+        }
+        return $this->path;
+    }
+
+    /**
+     * Summary of setExternalPath
+     * @param string $path
+     * @return string
+     */
+    public function setExternalPath($path)
+    {
+        if (str_starts_with($path, Config::get('calibre_external_storage'))) {
+            $this->path = $path;
+        } else {
+            // external storage is assumed to be already url-encoded if needed
+            $urlPath = implode('/', array_map('rawurlencode', explode('/', $path)));
+            $this->path = Config::get('calibre_external_storage') . $urlPath;
+        }
+        return $this->path;
+    }
+
+    /**
+     * Summary of isExternal
+     * @return bool
+     */
+    public function isExternal()
+    {
+        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->path, (string) Config::get('calibre_external_storage'))) {
+            return true;
         }
         return false;
     }

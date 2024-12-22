@@ -56,7 +56,7 @@ class TwigTemplate extends BaseRenderer
             return Format::str_format($format, ...$args);
         });
         $twig->addFunction($function);
-        $assets = Route::path(Config::get('assets'));
+        $assets = $this->getPath(Config::get('assets'));
         $function = new \Twig\TwigFunction('asset', function ($file) use ($assets) {
             return $assets . '/' . $file . '?v=' . Config::VERSION;
         });

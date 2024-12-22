@@ -27,6 +27,7 @@ use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\UriGenerator;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -62,13 +63,13 @@ class BrowserKitTest extends TestCase
         $this->userAgent ??= 'Chrome';
         $this->createBrowser($this->template, $this->userAgent);
         Config::set('full_url', self::$baseDir);
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
     }
 
     public function tearDown(): void
     {
         Config::set('full_url', '');
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
     }
 
     /**
@@ -181,7 +182,7 @@ class BrowserKitTest extends TestCase
 
         $uri = JsonHandler::link() . '/index?complete=1';
 
-        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . Route::path("templates") . '");';
+        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . UriGenerator::path("templates") . '");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
 
@@ -254,7 +255,7 @@ class BrowserKitTest extends TestCase
             if ($template == 'default') {
                 $this->assertEquals('2 books', $articles->filterXPath('//h4')->text());
             }
-            $this->assertEquals(Route::absolute('/search/ali/book'), $articles->filterXPath('//a')->attr('href'));
+            $this->assertEquals(UriGenerator::absolute('/search/ali/book'), $articles->filterXPath('//a')->attr('href'));
         }
     }
 

@@ -9,7 +9,6 @@
 
 namespace SebLucas\Cops\Routing;
 
-use SebLucas\Cops\Input\Route;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
@@ -107,9 +106,7 @@ class Routing implements RouterInterface
      */
     public function context($request)
     {
-        $handler = $request->getHandler();
-        $endpoint = Route::endpoint($handler);
-        $baseUrl = Route::base() . $endpoint;
+        $baseUrl = UriGenerator::absolute('');
         // @todo get scheme and host - see Symfony\Request::getSchemeAndHttpHost()
         //$context = new RequestContext('/index.php', 'GET', 'localhost', 'http', 80, 443, '/', '');
         $context = new RequestContext($baseUrl, $request->method(), 'localhost', 'http', 80, 443, $request->path, $request->query());
@@ -168,5 +165,28 @@ class Routing implements RouterInterface
         if (file_exists($cacheFile)) {
             unlink($cacheFile);
         }
+    }
+
+    /**
+     * Add multiple routes at once
+     * @param array<string, array<mixed>> $routes Array of routes with [path, params, methods, options]
+     * @return void
+     */
+    public function addRoutes(array $routes): void
+    {
+        // ...
+    }
+
+    /**
+     * Add single route - mainly for testing
+     * @param string|array<string> $methods HTTP methods (GET, POST etc.)
+     * @param string $path Route pattern with optional {param} placeholders
+     * @param array<mixed> $params Fixed parameters including handler
+     * @param array<string, string|int|bool|float> $options Extra options including route name
+     * @return void
+     */
+    public function addRoute(string|array $methods, string $path, array $params, array $options = []): void
+    {
+        // ...
     }
 }

@@ -12,8 +12,8 @@ namespace SebLucas\Cops\Model;
 
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class Entry
 {
@@ -62,7 +62,7 @@ class Entry
         if (isset(self::$images[$reg])) {
             return self::$images[$reg];
         }
-        $href = fn() => Route::path($image, ["v" => Config::VERSION]);
+        $href = fn() => UriGenerator::path($image, ["v" => Config::VERSION]);
         self::$images[$reg] = new LinkImage(
             $href,
             "image/png",
@@ -141,14 +141,7 @@ class Entry
             if (empty($extraParams)) {
                 return $uri;
             }
-            $query = parse_url($uri, PHP_URL_QUERY);
-            if (is_null($query)) {
-                return $uri . '?' . Route::getQueryString($extraParams);
-            }
-            // replace current params with extraParams where needed
-            parse_str($query, $params);
-            $params = array_replace($params, $extraParams);
-            return str_replace('?' . $query, '?' . Route::getQueryString($params), $uri);
+            return UriGenerator::mergeUriWithParams($uri, $extraParams);
         }
         return "#";
     }

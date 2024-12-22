@@ -14,7 +14,6 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
-use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Handlers\ReadHandler;
@@ -30,8 +29,6 @@ use Exception;
 
 class JsonRenderer extends BaseRenderer
 {
-    use HasRouteTrait;
-
     /** @var class-string */
     public static $fetcher = FetchHandler::class;
     /** @var class-string */
@@ -764,7 +761,7 @@ class JsonRenderer extends BaseRenderer
         if (!empty($currentPage->extra['series'])) {
             $out ["extra"]["series"] = $this->getSeries($currentPage, $extraParams);
         }
-        $out ["assets"] = Route::path(Config::get('assets'));
+        $out ["assets"] = $this->getPath(Config::get('assets'));
         $out ["download"] = $this->getDownloadLinks($currentPage, $qid);
 
         /** @phpstan-ignore-next-line */

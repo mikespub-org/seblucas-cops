@@ -11,11 +11,9 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FeedHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkAcquisition;
@@ -29,8 +27,6 @@ use XMLWriter;
 
 class OpdsRenderer extends BaseRenderer
 {
-    use HasRouteTrait;
-
     public const ROUTE_FEED = FeedHandler::HANDLER;
     public const ROUTE_SEARCH = FeedHandler::SEARCH;
 

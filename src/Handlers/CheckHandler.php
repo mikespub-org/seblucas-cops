@@ -17,6 +17,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
 use PDO;
 
@@ -61,7 +62,7 @@ class CheckHandler extends BaseHandler
     public function checkConfig($request)
     {
         $data = [];
-        $data['style'] = Route::path($request->style());
+        $data['style'] = UriGenerator::path($request->style());
         $data['err']   = $request->get('err', -1);
         $data['error'] = $this->getError($data['err']);
         $data['phpversion'] = $this->getPhpVersion();
@@ -207,7 +208,7 @@ class CheckHandler extends BaseHandler
                 $header = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
                 $result .= $header . ': ' . ($request->server($header) ?? '') . '<br>';
             }
-            $result .= 'Base URL via trusted proxies: ' . Route::base() . '<br>';
+            $result .= 'Base URL via trusted proxies: ' . UriGenerator::base() . '<br>';
         }
         $result .= 'REMOTE_ADDR: ' . ($request->server('REMOTE_ADDR') ?? '') . '<br>';
         $result .= '<br>';

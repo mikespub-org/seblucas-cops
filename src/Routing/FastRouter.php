@@ -28,6 +28,8 @@ class FastRouter implements RouterInterface
     public ?FastRoute $router = null;
     protected ?Dispatcher $dispatcher = null;
     protected ?GenerateUri $uriGenerator = null;
+    /** @var array<string, array<mixed>> */
+    protected array $routes = [];
 
     public function __construct(?string $cacheDir = null)
     {
@@ -110,6 +112,36 @@ class FastRouter implements RouterInterface
     }
 
     /**
+     * Add multiple routes at once
+     * @param array<string, array<mixed>> $routes Array of routes with [path, params, methods, options]
+     * @return void
+     */
+    public function addRoutes(array $routes): void
+    {
+        // Store all routes - no need to reset cache
+        $this->routes = array_merge($this->routes, $routes);
+    }
+
+    /**
+     * Add single route - mainly for testing
+     * @param string|array<string> $methods
+     * @param string $path
+     * @param array<mixed> $params
+     * @param array<string, string|int|bool|float> $options
+     * @return void
+     */
+    public function addRoute(string|array $methods, string $path, array $params, array $options = []): void
+    {
+        $name = $options[ConfigureRoutes::ROUTE_NAME] ?? ($params[Route::ROUTE_PARAM] ?? '');
+        if (empty($name)) {
+            $name = 'route_' . md5($path . (is_array($methods) ? implode('', $methods) : $methods));
+            $params[Route::ROUTE_PARAM] = $name;
+            $options[ConfigureRoutes::ROUTE_NAME] = $name;
+        }
+        $this->routes[$name] = [$path, $params, is_array($methods) ? $methods : [$methods], $options];
+    }
+
+    /**
      * Get FastRoute router for handler routes (cached)
      * @param bool $refresh
      * @return FastRoute
@@ -124,11 +156,11 @@ class FastRouter implements RouterInterface
         }
         if (empty($this->cacheDir)) {
             $cacheKey = self::FASTROUTE_CACHE_FILE;
-            $this->router = FastRoute::recommendedSettings(self::addRouteCollection(...), $cacheKey);
+            $this->router = FastRoute::recommendedSettings($this->addRouteCollection(...), $cacheKey);
             $this->router = $this->router->disableCache();
         } else {
             $cacheKey = $this->cacheDir . '/' . self::FASTROUTE_CACHE_FILE;
-            $this->router = FastRoute::recommendedSettings(self::addRouteCollection(...), $cacheKey);
+            $this->router = FastRoute::recommendedSettings($this->addRouteCollection(...), $cacheKey);
         }
         return $this->router;
     }
@@ -177,7 +209,7 @@ class FastRouter implements RouterInterface
      * @param ConfigureRoutes $r
      * @return void
      */
-    public static function addRouteCollection($r)
+    public function addRouteCollection($r)
     {
         foreach (Route::getRoutes() as $name => $route) {
             /** @var array<string, string|int|bool|float> $options */
@@ -190,6 +222,19 @@ class FastRouter implements RouterInterface
             //$r->addRoute($methods, $path, $handler, $params);
             // use the 'handler' to store any fixed params here, and pass along extra options for FastRoute
             $r->addRoute($methods, $path, $params, $options);
+        }
+
+        // Then add any routes from adapter
+        if (!empty($this->routes)) {
+            foreach ($this->routes as $name => $route) {
+                [$path, $params, $methods, $options] = $route;
+                // set route param in request once we find matching route
+                $params[Route::ROUTE_PARAM] ??= $name;
+                // set route name in extra options for uri generator - FastRoute uses _name internally
+                $options[ConfigureRoutes::ROUTE_NAME] ??= $name;
+                // use the 'handler' to store any fixed params here, and pass along extra options for FastRoute
+                $r->addRoute($methods, $path, $params, $options);
+            }
         }
     }
 }

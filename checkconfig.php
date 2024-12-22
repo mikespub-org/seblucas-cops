@@ -16,6 +16,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\UriGenerator;
 
 require_once __DIR__ . '/config/config.php';
 /** @var array<mixed> $config */
@@ -35,7 +36,7 @@ switch ($err) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>COPS Configuration Check</title>
-    <link rel="stylesheet" type="text/css" href="<?php echo Route::path($request->style()) ?>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<?php echo UriGenerator::path($request->style()) ?>" media="screen" />
 </head>
 <body>
 <div class="container">
@@ -209,7 +210,7 @@ if (ProxyRequest::hasTrustedProxies()) {
         $header = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
         echo $header . ': ' . ($_SERVER[$header] ?? '') . '<br>';
     }
-    echo 'Base URL via trusted proxies: ' . Route::base() . '<br>';
+    echo 'Base URL via trusted proxies: ' . UriGenerator::base() . '<br>';
 }
 echo 'REMOTE_ADDR: ' . ($_SERVER['REMOTE_ADDR'] ?? '') . '<br>';
 echo '<br>';

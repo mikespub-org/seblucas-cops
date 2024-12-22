@@ -14,7 +14,6 @@ use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkImage;
 use SebLucas\Cops\Output\FileResponse;
 
@@ -335,7 +334,7 @@ class Cover
                 LinkImage::OPDS_IMAGE_TYPE
                 // no filepath here
             );
-        } elseif (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+        } elseif ($this->isExternal()) {
             $href = $this->coverFileName;
             return new LinkImage(
                 $href,
@@ -348,7 +347,7 @@ class Cover
         $filePath = $this->book->path . "/" . $file;
         if (!Database::useAbsolutePath($this->databaseId)) {
             $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
-            $href = fn() => Route::path($urlPath);
+            $href = fn() => $this->getPath($urlPath);
             return new LinkImage(
                 $href,
                 $mime,
@@ -419,7 +418,7 @@ class Cover
                 LinkImage::OPDS_THUMBNAIL_TYPE
                 // no filepath here
             );
-        } elseif (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+        } elseif ($this->isExternal()) {
             $href = $this->coverFileName;
             return new LinkImage(
                 $href,
@@ -472,7 +471,7 @@ class Cover
         }
         $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
         $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-        $href = fn() => Route::path($filePath);
+        $href = fn() => $this->getPath($filePath);
         return new LinkImage(
             $href,
             $mime,
@@ -480,6 +479,21 @@ class Cover
             null,
             $filePath
         );
+    }
+
+    /**
+     * Summary of isExternal
+     * @return bool
+     */
+    public function isExternal()
+    {
+        if (empty($this->coverFileName)) {
+            return false;
+        }
+        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+            return true;
+        }
+        return false;
     }
 
     /**

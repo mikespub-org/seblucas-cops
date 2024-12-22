@@ -20,9 +20,9 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Language\Normalizer;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class PageTest extends TestCase
 {
@@ -49,7 +49,7 @@ class PageTest extends TestCase
         $this->assertEquals("Authors", $currentPage->entryArray [0]->title);
         $this->assertEquals("Alphabetical index of the 7 authors", $currentPage->entryArray [0]->content);
         if (Config::get('show_icons') == 1) {
-            $this->assertEquals(Route::path("images/author.png", ["v" => Config::VERSION]), $currentPage->entryArray [0]->getThumbnail());
+            $this->assertEquals(UriGenerator::path("images/author.png", ["v" => Config::VERSION]), $currentPage->entryArray [0]->getThumbnail());
         } else {
             $this->assertNull($currentPage->entryArray [0]->getThumbnail());
         }

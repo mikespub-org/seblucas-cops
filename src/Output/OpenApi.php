@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\UriGenerator;
 
 /**
  * Basic OpenApi definition for REST API
@@ -188,7 +189,7 @@ class OpenApi
     public function getPathParams($path, $queryParams)
     {
         $params = [];
-        $queryString = Route::getQueryString($queryParams);
+        $queryString = UriGenerator::getQueryString($queryParams);
         $found = [];
         // support custom pattern for route placeholders - see nikic/fast-route
         if (preg_match_all("~\{(\w+(|:[^}]+))\}~", $path, $found)) {

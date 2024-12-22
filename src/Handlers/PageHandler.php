@@ -122,7 +122,7 @@ class PageHandler extends BaseHandler
         $name = PageId::ROUTE_INDEX;
         $route = self::getRoutes()[$name] ?? ["/index"];
         $path = $route[0];
-        return Route::absolute($path);
+        return UriGenerator::absolute($path);
     }
 
     /**

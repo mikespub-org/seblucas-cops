@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Framework\Framework;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Slugger;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -27,8 +26,6 @@ class Route
     public const ROUTES_CACHE_FILE = 'url_cached_routes.php';
     public const KEEP_STATS = false;
 
-    /** @var ?string */
-    protected static $baseUrl = null;
     /** @var array<string, mixed> */
     protected static $routes = [];
     /** @var array<string, mixed> */
@@ -271,6 +268,7 @@ class Route
      * Get full URL path for relative path with optional params
      * @param string $path relative to base dir
      * @param array<mixed> $params (optional)
+     * @deprecated 3.5.2 use UriGenerator::path() or $this->getPath() with HasRouteTrait
      * @return string
      */
     public static function path($path = '', $params = [])
@@ -282,70 +280,45 @@ class Route
      * Return absolute path for uri
      * @param string $uri
      * @param mixed $handler - @todo get rid of this = unused
+     * @deprecated 3.5.2 use UriGenerator::absolute()
      * @return string
      */
     public static function absolute($uri, $handler = 'html')
     {
-        // endpoint.php or handler or empty
-        $endpoint = self::endpoint($handler);
-        if (empty($endpoint) && str_starts_with($uri, '/')) {
-            // URL format: /base/route/...
-            return self::base() . substr($uri, 1);
-        }
-        // URL format: /base/endpoint.php?page=... or /base/handler/route/...
-        return self::base() . $endpoint . $uri;
+        return UriGenerator::absolute($uri, $handler);
     }
 
     /**
      * Get endpoint for handler
      * @todo get rid of param here - prefix is already included
      * @param string $handler
+     * @deprecated 3.5.2 use UriGenerator::endpoint()
      * @return string
      */
     public static function endpoint($handler = 'html')
     {
-        if (Config::get('front_controller')) {
-            // no endpoint prefix for supported handlers
-            return '';
-        }
-        // use default endpoint for supported handlers
-        return Config::ENDPOINT['html'];
+        return UriGenerator::endpoint($handler);
     }
 
     /**
      * Summary of getQueryString
      * @param array<mixed> $params
+     * @deprecated 3.5.2 use UriGenerator::getQueryString()
      * @return string
      */
     public static function getQueryString($params)
     {
-        unset($params[self::HANDLER_PARAM]);
-        unset($params[self::ROUTE_PARAM]);
-        return http_build_query($params, '', null, PHP_QUERY_RFC3986);
+        return UriGenerator::getQueryString($params);
     }
 
     /**
      * Summary of base
+     * @deprecated 3.5.2 use UriGenerator::base()
      * @return string
      */
     public static function base()
     {
-        if (isset(self::$baseUrl)) {
-            return self::$baseUrl;
-        }
-        if (!empty(Config::get('full_url'))) {
-            $base = Config::get('full_url');
-        } elseif (ProxyRequest::hasTrustedProxies()) {
-            // use scheme and host + base path here to apply potential forwarded values
-            $base = ProxyRequest::getProxyBaseUrl();
-        } else {
-            $base = dirname((string) $_SERVER['SCRIPT_NAME']);
-        }
-        if (!str_ends_with((string) $base, '/')) {
-            $base .= '/';
-        }
-        self::setBaseUrl($base);
-        return $base;
+        return UriGenerator::base();
     }
 
     /**
@@ -400,13 +373,11 @@ class Route
     /**
      * Summary of setBaseUrl
      * @param ?string $base
+     * @deprecated 3.5.2 use UriGenerator::setBaseUrl()
      * @return void
      */
     public static function setBaseUrl($base)
     {
-        self::$baseUrl = $base;
-        if (is_null($base)) {
-            ProxyRequest::$proxyRequest = null;
-        }
+        return UriGenerator::setBaseUrl($base);
     }
 }

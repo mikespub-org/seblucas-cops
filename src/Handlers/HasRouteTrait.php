@@ -2,6 +2,8 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Routing\UriGenerator;
+
 /**
  * Trait for classes that have a handler
  * @todo replace class-string and static calls with handler instance and method calls someday
@@ -60,6 +62,17 @@ trait HasRouteTrait
     public function getResource(string $className, array $params = []): string
     {
         return RestApiHandler::resource($className, $params);
+    }
+
+    /**
+     * Summary of getPath
+     * @param string $path relative to base dir
+     * @param array<mixed> $params (optional)
+     * @return string
+     */
+    public function getPath($path = '', $params = [])
+    {
+        return UriGenerator::path($path, $params);
     }
 
     /**

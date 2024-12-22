@@ -52,13 +52,13 @@ class RouteTest extends TestCase
         $this->assertEquals($expected, $uri);
 
         Config::set('front_controller', 'index.php');
-        $expected = Route::base() . 'recent';
-        $test = Route::absolute(UriGenerator::route(['_route' => 'page-recent']));
+        $expected = UriGenerator::base() . 'recent';
+        $test = UriGenerator::absolute(UriGenerator::route(['_route' => 'page-recent']));
         $this->assertEquals($expected, $test);
 
         Config::set('front_controller', '');
-        $expected = Route::base() . 'index.php/recent';
-        $test = Route::absolute(UriGenerator::route(['_route' => 'page-recent']));
+        $expected = UriGenerator::base() . 'index.php/recent';
+        $test = UriGenerator::absolute(UriGenerator::route(['_route' => 'page-recent']));
         $this->assertEquals($expected, $test);
     }
 
@@ -94,13 +94,13 @@ class RouteTest extends TestCase
 
     public function testProxyBaseUrl(): void
     {
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
         Config::set('full_url', '');
 
         $expected = 'vendor/bin/';
-        $base = Route::base();
+        $base = UriGenerator::base();
         $this->assertStringEndsWith($expected, $base);
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
 
         // @see https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations
         Config::set('trusted_proxies', 'private_ranges');
@@ -113,9 +113,9 @@ class RouteTest extends TestCase
         //$_SERVER['REQUEST_URI'] = '/index.php/check';
 
         $expected = 'https://www.example.com:8443/books/';
-        $base = Route::base();
+        $base = UriGenerator::base();
         $this->assertEquals($expected, $base);
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
         unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
         unset($_SERVER['HTTP_X_FORWARDED_HOST']);
         unset($_SERVER['HTTP_X_FORWARDED_PORT']);
@@ -126,9 +126,9 @@ class RouteTest extends TestCase
         Config::set('full_url', '/cops/');
 
         $expected = '/cops/';
-        $base = Route::base();
+        $base = UriGenerator::base();
         $this->assertEquals($expected, $base);
-        Route::setBaseUrl(null);
+        UriGenerator::setBaseUrl(null);
 
         Config::set('trusted_proxies', '');
         Config::set('trusted_headers', []);
@@ -304,7 +304,7 @@ class RouteTest extends TestCase
             if (!empty($params['title'])) {
                 $params['title'] = str_replace('_', ' ', $params['title']);
             }
-            $test .= '?' . Route::getQueryString($params);
+            $test .= '?' . UriGenerator::getQueryString($params);
         }
         if (!empty($query)) {
             $test .= '&' . $query;

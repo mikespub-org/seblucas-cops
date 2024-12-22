@@ -14,6 +14,7 @@ use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\FastRouter;
+use SebLucas\Cops\Routing\UriGenerator;
 
 /**
  * Summary of RequestContext
@@ -185,7 +186,7 @@ class RequestContext
     protected function generateQueryStringUrl(array $params): string
     {
         //$baseUrl = $this->request->baseUrl();
-        $baseUrl = Route::absolute('');
+        $baseUrl = UriGenerator::absolute('');
         $queryString = http_build_query($params);
         return $baseUrl . ($queryString ? '?' . $queryString : '');
     }

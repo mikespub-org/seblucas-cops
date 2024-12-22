@@ -37,4 +37,21 @@ interface RouterInterface
      * @return mixed
      */
     public function getRouter($refresh = false);
+
+    /**
+     * Add multiple routes at once
+     * @param array<string, array<mixed>> $routes Array of routes with [path, params, methods, options]
+     * @return void
+     */
+    public function addRoutes(array $routes): void;
+
+    /**
+     * Add single route - mainly for testing
+     * @param string|array<string> $methods HTTP methods (GET, POST etc.)
+     * @param string $path Route pattern with optional {param} placeholders
+     * @param array<mixed> $params Fixed parameters including handler
+     * @param array<string, string|int|bool|float> $options Extra options including route name
+     * @return void
+     */
+    public function addRoute(string|array $methods, string $path, array $params, array $options = []): void;
 }
