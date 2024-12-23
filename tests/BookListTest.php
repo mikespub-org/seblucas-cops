@@ -285,6 +285,23 @@ class BookListTest extends TestCase
         $this->assertCount(9, $entryArray);
     }
 
+    public function testGetBooksByIdList(): void
+    {
+        $booklist = new BookList(self::$request);
+
+        // All books in idlist
+        [$entryArray, $totalNumber] = $booklist->getBooksByIdList([17, 19, 42]);
+        $this->assertEquals(-1, $totalNumber);
+        $this->assertCount(2, $entryArray);
+
+        // All books sorted by id
+        [$entryArray, $totalNumber] = $booklist->getBooksByIdList([]);
+        $this->assertEquals(16, $totalNumber);
+        $this->assertCount(16, $entryArray);
+        $this->assertEquals('id', $booklist->orderBy);
+        $this->assertEquals(2, $entryArray[0]->book->id);
+    }
+
     public function testGetBatchQuery(): void
     {
         // All recent books

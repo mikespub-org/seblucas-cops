@@ -2,7 +2,7 @@
     "title": "Filters",
     "parentTitle": "",
     "baseurl": "vendor/bin/index.php",
-    "isFilterPage": false,
+    "isFilterPage": true,
     "databaseId": "",
     "databaseName": "",
     "libraryId": "",

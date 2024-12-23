@@ -704,6 +704,8 @@ class JsonRenderer extends BaseRenderer
             // @todo get rid of extraParams as filters should be included in navlink now
             $extraParams = $currentPage->filterParams;
             $out ["isFilterPage"] = true;
+        } elseif ($currentPage->idPage == PageId::FILTER_ID) {
+            $out ["isFilterPage"] = true;
         }
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, $this->getContentArray($entry, $extraParams));

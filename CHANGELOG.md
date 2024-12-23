@@ -13,6 +13,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+
+3.5.4 - 20241223 Update translations, adapt templates for PageId + refactor
   * Move base url and slugify from Route to UriGenerator
   * Use RequestContext and instance methods in Framework for future adapters
   * Add HasRouteTrait to simplify handler route() calls and future migrations
@@ -25,6 +27,8 @@ x.x.x - TODO
   * Add PageQueryScope enum and PageFilter class (wip)
   * Group entries by filter group for twigged template - see 'filters.html'
   * Split off ProxyRequest class to handle trusted proxy headers for base url
+
+3.5.1 - 20241211 Fix issues, add formats + replace transliterator
   * Use symfony/string package as alternative for normAndUp and slugify with Transliterator
   * Get request locale based on Translation and HTTP_ACCEPT_LANGUAGE
   * Clean up Route url methods and test generating route urls

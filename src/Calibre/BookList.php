@@ -417,6 +417,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         // @todo this is already covered in Filter::addBookIdListFilter()
         $query = self::SQL_BOOKS_BY_ID_LIST;
         $query = str_replace('books.id = ? ', 'books.id IN (' . str_repeat('?,', count($idlist) - 1) . '?) ', $query);
+        // no page limit here
         [$entryArray, $totalNumber] = $this->getEntryArray($query, $idlist, -1);
         $sorted = $this->orderBy ?? "id";
         if ($sorted == "id") {

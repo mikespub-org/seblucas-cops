@@ -26,6 +26,7 @@ use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\VirtualLibrary;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 
 class PageFilter extends Page
 {
@@ -173,5 +174,19 @@ class PageFilter extends Page
             }
         }
          */
+    }
+
+    /**
+     * Summary of addEntries
+     * @param array<Entry> $entries
+     * @return void
+     */
+    public function addEntries($entries)
+    {
+        foreach ($entries as $idx => $entry) {
+            // @todo replace instance link with filter link
+            // ...
+        }
+        $this->entryArray = array_merge($this->entryArray, $entries);
     }
 }
