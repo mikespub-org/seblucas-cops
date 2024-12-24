@@ -291,7 +291,7 @@ class Data
         }
         // provide kepub in name only (without update of opf properties for cover-image in Epub)
         $response ??= new FileResponse($this->getMimeType(), 0, basename($this->getUpdatedFilenameKepub()));
-        return $response->setFile(filepath: $file);
+        return $response->setFile($file);
     }
 
     /**

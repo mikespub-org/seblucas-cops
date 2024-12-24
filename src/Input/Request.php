@@ -63,16 +63,6 @@ class Request
     }
 
     /**
-     * Summary of query
-     * @deprecated 3.5.2 not used anywhere
-     * @return string
-     */
-    public function query()
-    {
-        return '';
-    }
-
-    /**
      * Summary of method
      * @return ?string
      */
@@ -310,17 +300,6 @@ class Request
     public function post($name)
     {
         return $this->postParams[$name] ?? null;
-    }
-
-    /**
-     * Summary of request
-     * @param string $name
-     * @deprecated 3.5.2 not used anywhere
-     * @return mixed
-     */
-    public function request($name)
-    {
-        return null;
     }
 
     /**

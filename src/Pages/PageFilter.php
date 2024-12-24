@@ -78,7 +78,7 @@ class PageFilter extends Page
         $req = Request::build($params, $this->handler);
         $filtersTitle = localize("filters.title");
         if (in_array('author', $filterLinks)) {
-            $title = localize(phrase: "authors.title");
+            $title = localize("authors.title");
             $href = fn() => $this->getRoute(Author::ROUTE_ALL, $params);
             $relation = "authors";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);

@@ -261,63 +261,6 @@ class Route
     }
 
     /**
-     * Get full URL path for relative path with optional params
-     * @param string $path relative to base dir
-     * @param array<mixed> $params (optional)
-     * @deprecated 3.5.2 use UriGenerator::path() or $this->getPath() with HasRouteTrait
-     * @return string
-     */
-    public static function path($path = '', $params = [])
-    {
-        return UriGenerator::path($path, $params);
-    }
-
-    /**
-     * Return absolute path for uri
-     * @param string $uri
-     * @param mixed $handler - @todo get rid of this = unused
-     * @deprecated 3.5.2 use UriGenerator::absolute()
-     * @return string
-     */
-    public static function absolute($uri, $handler = 'html')
-    {
-        return UriGenerator::absolute($uri, $handler);
-    }
-
-    /**
-     * Get endpoint for handler
-     * @todo get rid of param here - prefix is already included
-     * @param string $handler
-     * @deprecated 3.5.2 use UriGenerator::endpoint()
-     * @return string
-     */
-    public static function endpoint($handler = 'html')
-    {
-        return UriGenerator::endpoint($handler);
-    }
-
-    /**
-     * Summary of getQueryString
-     * @param array<mixed> $params
-     * @deprecated 3.5.2 use UriGenerator::getQueryString()
-     * @return string
-     */
-    public static function getQueryString($params)
-    {
-        return UriGenerator::getQueryString($params);
-    }
-
-    /**
-     * Summary of base
-     * @deprecated 3.5.2 use UriGenerator::base()
-     * @return string
-     */
-    public static function base()
-    {
-        return UriGenerator::base();
-    }
-
-    /**
      * Get handler class based on name
      * @param string|class-string $name
      * @return class-string
@@ -325,49 +268,5 @@ class Route
     public static function getHandler($name)
     {
         return Framework::getHandlerManager()->getHandlerClass($name);
-    }
-
-    /**
-     * Summary of getSlugger
-     * @param ?string $locale
-     * @deprecated 3.5.2 use UriGenerator::getSlugger()
-     * @return Slugger|bool|null
-     */
-    public static function getSlugger($locale = null)
-    {
-        return UriGenerator::getSlugger($locale);
-    }
-
-    /**
-     * Summary of slugify
-     * @param string $string
-     * @deprecated 3.5.2 use UriGenerator::slugify()
-     * @return string
-     */
-    public static function slugify($string)
-    {
-        return UriGenerator::slugify($string);
-    }
-
-    /**
-     * Summary of setLocale
-     * @param ?string $locale
-     * @deprecated 3.5.2 use UriGenerator::setLocale()
-     * @return void
-     */
-    public static function setLocale($locale)
-    {
-        UriGenerator::setLocale($locale);
-    }
-
-    /**
-     * Summary of setBaseUrl
-     * @param ?string $base
-     * @deprecated 3.5.2 use UriGenerator::setBaseUrl()
-     * @return void
-     */
-    public static function setBaseUrl($base)
-    {
-        UriGenerator::setBaseUrl($base);
     }
 }

@@ -201,25 +201,6 @@ class Book
     }
 
     /**
-     * Summary of getDetailUrl
-     * @param class-string|null $handler
-     * @param array<mixed> $params
-     * @deprecated 3.5.2 use getUri instead
-     * @return string
-     */
-    public function getDetailUrl($handler = null, $params = [])
-    {
-        $handler ??= $this->handler;
-        $params['id'] = $this->id;
-        // we need databaseId here because we use Route::link with $handler
-        $params['db'] = $this->databaseId;
-        $params['author'] = $this->getAuthorsName();
-        $params['title'] = $this->getTitle();
-        // @todo replace static calls with handler instance and method calls someday
-        return self::getHandlerRoute($handler, self::ROUTE_DETAIL, $params);
-    }
-
-    /**
      * Summary of getTitle
      * @return string
      */

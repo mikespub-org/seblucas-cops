@@ -181,10 +181,10 @@ class PageIndex extends Page
             $this->addCountEntry(Publisher::class);
         }
         if (!in_array(PageQueryScope::TAG->value, $this->ignoredCategories)) {
-            $this->addCountEntry(className: Tag::class);
+            $this->addCountEntry(Tag::class);
         }
         if (!in_array(PageQueryScope::RATING->value, $this->ignoredCategories)) {
-            $this->addCountEntry(className: Rating::class);
+            $this->addCountEntry(Rating::class);
         }
         if (!in_array(PageQueryScope::LANGUAGE->value, $this->ignoredCategories)) {
             $this->addCountEntry(Language::class);

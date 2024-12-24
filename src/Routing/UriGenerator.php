@@ -493,8 +493,6 @@ class UriGenerator
     public static function slugify($string)
     {
         return (string) self::getSlugger()->slug($string, '_');
-        // @deprecated 3.5.1 use Slugger()->slug()
-        //return self::$sluggerClass::slugify($string);
     }
 
     /**

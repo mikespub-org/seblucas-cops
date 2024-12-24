@@ -103,30 +103,6 @@ class RestApiHandler extends BaseHandler
     }
 
     /**
-     * Get REST API link for handler, page, params handled elsewhere
-     * @param class-string|null $handler
-     * @param string|int|null $page
-     * @param array<mixed> $params
-     * @deprecated 3.5.0 use handler::route(), handler::page() or handler:link()
-     * @return string
-     */
-    public static function getHandlerLink($handler = null, $page = null, $params = [])
-    {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['handler'] += 1;
-        }
-        // use page route with /restapi prefix instead
-        $handler ??= Route::getHandler('html');
-        $params[Route::HANDLER_PARAM] = self::class;
-        if (!empty($page)) {
-            $params['page'] = $page;
-        }
-        $link = UriGenerator::process($handler, $params);
-        return $link;
-    }
-
-    /**
      * Get base URL for REST API links
      * @return string
      */
