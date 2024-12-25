@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
@@ -286,7 +287,7 @@ abstract class Base
 
     /**
      * Summary of getEntriesByInstance
-     * @param class-string $className
+     * @param class-string<Base> $className
      * @param int $n
      * @param ?string $sort
      * @param ?int $database
@@ -534,7 +535,7 @@ abstract class Base
     /**
      * Summary of getCount
      * @param ?int $database
-     * @param class-string $handler
+     * @param class-string<BaseHandler> $handler
      * @return ?Entry
      */
     public static function getCount($database, $handler)
@@ -548,7 +549,7 @@ abstract class Base
      * @param int $count
      * @param ?int $database
      * @param ?string $numberOfString
-     * @param class-string $handler
+     * @param class-string<BaseHandler> $handler
      * @param array<mixed> $params
      * @return ?Entry
      */

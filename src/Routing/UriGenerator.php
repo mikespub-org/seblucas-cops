@@ -59,7 +59,7 @@ class UriGenerator
 
     /**
      * Process link with defined handler and params (incl. page)
-     * @param class-string $handler defined in Route::link(), BaseHandler::link() or PageHandler::link() - @todo get rid of this = unused
+     * @param class-string<BaseHandler> $handler defined in Route::link(), BaseHandler::link() or PageHandler::link() - @todo get rid of this = unused
      * @param array<mixed> $params with HANDLER_PARAM set (base), unset (page) or variable (link)
      * @param string $prefix (optional)
      * @return string

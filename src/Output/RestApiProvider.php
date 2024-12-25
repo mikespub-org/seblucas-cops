@@ -152,7 +152,7 @@ class RestApiProvider extends BaseRenderer
     /**
      * Get base URL from handler
      */
-    protected function getBaseUrl(): string 
+    protected function getBaseUrl(): string
     {
         $this->baseUrl ??= RestApiHandler::getBaseUrl();
         return $this->baseUrl;

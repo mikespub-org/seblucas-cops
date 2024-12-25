@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Language\Slugger;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -163,7 +164,7 @@ class Route
     /**
      * Add routes with name, path, params, methods and options
      * @param array<string, array<mixed>> $routes
-     * @param class-string $handler
+     * @param class-string<BaseHandler> $handler
      * @return array<string, array<mixed>>
      */
     public static function addRoutes($routes, $handler)

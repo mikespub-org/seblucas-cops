@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Framework;
 
+use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
@@ -220,7 +221,7 @@ class Framework
 
     /**
      * Create handler instance based on name or class-string
-     * @param string|class-string $name
+     * @param string|class-string<BaseHandler> $name
      * @return mixed
      */
     public static function createHandler($name)

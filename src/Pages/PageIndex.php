@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
+use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
@@ -152,7 +153,7 @@ class PageIndex extends Page
 
     /**
      * Summary of addFilterCountEntry
-     * @param class-string $className
+     * @param class-string<Base> $className
      * @param ?string $numberOfString
      * @return void
      */
@@ -214,7 +215,7 @@ class PageIndex extends Page
 
     /**
      * Summary of addCountEntry
-     * @param string $className
+     * @param class-string<Base> $className
      * @return void
      */
     public function addCountEntry($className)

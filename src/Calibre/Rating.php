@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
@@ -55,7 +56,7 @@ class Rating extends Base
     /**
      * Summary of getCount
      * @param ?int $database
-     * @param class-string $handler
+     * @param class-string<BaseHandler> $handler
      * @return ?Entry
      */
     public static function getCount($database, $handler)

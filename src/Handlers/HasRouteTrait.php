@@ -55,11 +55,11 @@ trait HasRouteTrait
 
     /**
      * Summary of getResource
-     * @param string $className
+     * @param class-string $className
      * @param array<mixed> $params
      * @return string
      */
-    public function getResource(string $className, array $params = []): string
+    public function getResource($className, $params = []): string
     {
         return RestApiHandler::resource($className, $params);
     }
@@ -78,7 +78,7 @@ trait HasRouteTrait
     /**
      * Summary of getHandlerRoute
      * @todo replace with handler instance and method call
-     * @param class-string $handler
+     * @param class-string<BaseHandler> $handler
      * @param string $routeName
      * @param array<mixed> $params
      * @return mixed

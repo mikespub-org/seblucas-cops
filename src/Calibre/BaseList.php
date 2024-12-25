@@ -36,7 +36,7 @@ class BaseList
     public bool $pagination = false;
 
     /**
-     * @param class-string $className
+     * @param class-string<Base|Data> $className
      * @param ?Request $request
      * @param ?int $database
      * @param ?int $numberPerPage

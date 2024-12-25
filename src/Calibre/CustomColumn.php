@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
@@ -215,7 +216,7 @@ class CustomColumn extends Category
 
     /**
      * Summary of setHandler
-     * @param class-string $handler
+     * @param class-string<BaseHandler> $handler
      * @return void
      */
     public function setHandler($handler)

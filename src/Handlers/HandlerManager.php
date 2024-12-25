@@ -119,7 +119,7 @@ class HandlerManager
 
     /**
      * Get handler class by name
-     * @param string|class-string $name Handler name or class
+     * @param string|class-string<BaseHandler> $name Handler name or class
      * @return class-string<BaseHandler>
      * @throws \RuntimeException
      */
@@ -141,7 +141,7 @@ class HandlerManager
 
     /**
      * Create handler instance by name
-     * @param string|class-string $name Handler name or class
+     * @param string|class-string<BaseHandler> $name Handler name or class
      * @param Request|null $request Optional request for error handling
      * @throws \RuntimeException
      */
@@ -203,7 +203,7 @@ class HandlerManager
 
     /**
      * Summary of addHandlerRoutes
-     * @param class-string $handlerClass
+     * @param class-string<BaseHandler> $handlerClass
      * @return array<string, array<mixed>>
      */
     public function addHandlerRoutes($handlerClass): array
