@@ -165,6 +165,8 @@ class FrameworkTest extends TestCase
 
         $expected = "'_route' => 'check-more'";
         $this->assertStringContainsString($expected, $output);
+        $expected = "'hello' => 'world'";
+        $this->assertStringContainsString($expected, $output);
         $expected = "Goodbye!";
         $this->assertStringContainsString($expected, $output);
 

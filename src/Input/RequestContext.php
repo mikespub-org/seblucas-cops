@@ -43,6 +43,7 @@ class RequestContext
 
     protected function initializeContext(): void
     {
+        $this->manager->setContext($this);
         // Load routes if not already cached
         UriGenerator::setLocale($this->locale);
     }
@@ -148,14 +149,15 @@ class RequestContext
         return $name;
     }
 
+    /**
+     * Summary of createHandler
+     * @param class-string<BaseHandler> $handlerClass
+     * @return BaseHandler
+     */
     protected function createHandler(string $handlerClass): BaseHandler
     {
-        $handler = new $handlerClass();
-
-        // Allow handler to configure itself based on context
-        //if ($handler instanceof ContextAwareInterface) {
-        //    $handler->setContext($this);
-        //}
+        // Create handler instance with context
+        $handler = new $handlerClass($this);
 
         return $handler;
     }
@@ -203,6 +205,11 @@ class RequestContext
     public function getHandler(): BaseHandler
     {
         return $this->handler;
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
     }
 
     public function getHandlerManager(): HandlerManager

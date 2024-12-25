@@ -10,6 +10,9 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Input\HasContextInterface;
+use SebLucas\Cops\Input\HasContextTrait;
+use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
@@ -18,8 +21,10 @@ use SebLucas\Cops\Routing\UriGenerator;
 /**
  * Summary of BaseHandler
  */
-abstract class BaseHandler
+abstract class BaseHandler implements HasContextInterface
 {
+    use HasContextTrait;
+
     public const HANDLER = "";
     public const PREFIX = "";
     public const PARAMLIST = [];
@@ -128,11 +133,11 @@ abstract class BaseHandler
 
     /**
      * Summary of __construct
-     * @param mixed $dummy
+     * @param RequestContext $context
      */
-    public function __construct($dummy = null)
+    public function __construct($context)
     {
-        // ...
+        $this->setContext($context);
     }
 
     /**

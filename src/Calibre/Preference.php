@@ -58,7 +58,7 @@ class Preference
     public function getUri($params = [])
     {
         $params['key'] = $this->key;
-        return $this->getResource($this::class, $params);
+        return $this->getResource(static::class, $params);
     }
 
     /**

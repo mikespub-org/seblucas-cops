@@ -72,7 +72,7 @@ class Annotation extends Base
     {
         $params['bookId'] = $this->book;
         $params['id'] = $this->id;
-        return $this->getResource($this::class, $params);
+        return $this->getResource(static::class, $params);
     }
 
     /**

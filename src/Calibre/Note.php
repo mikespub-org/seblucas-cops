@@ -66,7 +66,7 @@ class Note
     {
         $params['type'] = $this->colname;
         $params['item'] = $this->item;
-        return $this->getResource($this::class, $params);
+        return $this->getResource(static::class, $params);
     }
 
     /**

@@ -90,7 +90,7 @@ class Framework
 
             // Apply middleware if configured
             if (!empty(self::$middlewares)) {
-                $queue = new QueueBasedHandler($handler);
+                $queue = new QueueBasedHandler($context, $handler);
                 foreach (self::$middlewares as $middleware) {
                     $queue->add(new $middleware());
                 }
@@ -182,6 +182,8 @@ class Framework
         $framework = self::getInstance();
         // initialize routes if needed
         $framework->initializeRoutes();
+        // create context for static calls in tests - see createHandler()
+        $framework->getContext();
     }
 
     /**

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Response;
 
@@ -28,10 +29,12 @@ class QueueBasedHandler extends BaseHandler
 
     /**
      * Set final request handler
+     * @param RequestContext $context
      * @param BaseHandler $handler
      */
-    public function __construct($handler)
+    public function __construct($context, $handler)
     {
+        $this->setContext($context);
         $this->handler = $handler;
     }
 

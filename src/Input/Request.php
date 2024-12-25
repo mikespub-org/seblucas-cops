@@ -157,10 +157,10 @@ class Request
             return;
         }
         $this->serverParams = $_SERVER;
-        $this->queryParams = $_GET ?? [];
-        $this->postParams = $_POST ?? [];
-        $this->cookieParams = $_COOKIE ?? [];
-        $this->fileParams = $_FILES ?? [];
+        $this->queryParams = $_GET;
+        $this->postParams = $_POST;
+        $this->cookieParams = $_COOKIE;
+        $this->fileParams = $_FILES;
         // @todo move to RequestContext
         // $this->matchRoute();
         if (!empty($this->queryParams)) {

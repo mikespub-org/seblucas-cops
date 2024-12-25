@@ -2,6 +2,8 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Input\HasContextInterface;
+use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
@@ -9,8 +11,10 @@ use SebLucas\Cops\Output\Response;
 /**
  * Manages handler registration and creation in COPS - @todo
  */
-class HandlerManager
+class HandlerManager implements HasContextInterface
 {
+    use HasContextTrait;
+
     /** @var array<string, class-string<BaseHandler>> */
     private array $handlers = [];
 
@@ -102,22 +106,6 @@ class HandlerManager
     }
 
     /**
-     * Create a handler instance from a request
-     */
-    public function createFromRequest(Request $request): BaseHandler
-    {
-        $handlerClass = $request->getHandler();
-        $name = $handlerClass::HANDLER;
-
-        // Handle JSON requests special case
-        if ($name === 'html' && $request->isJson()) {
-            $name = 'json';
-        }
-
-        return $this->createHandler($name, $request);
-    }
-
-    /**
      * Get handler class by name
      * @param string|class-string<BaseHandler> $name Handler name or class
      * @return class-string<BaseHandler>
@@ -141,26 +129,18 @@ class HandlerManager
 
     /**
      * Create handler instance by name
+     * @todo use RequestContext to create handler
      * @param string|class-string<BaseHandler> $name Handler name or class
      * @param Request|null $request Optional request for error handling
      * @throws \RuntimeException
      */
     public function createHandler(string $name, ?Request $request = null): BaseHandler
     {
-        // Direct class name usage
-        if (in_array($name, array_values($this->handlers))) {
-            $handler = new $name();
-        }
-        // Handler by name
-        elseif (isset($this->handlers[$name])) {
-            $handler = new $this->handlers[$name]();
-        }
-        // Invalid handler
-        else {
-            // Maintain existing error behavior
-            Response::sendError($request, "Invalid handler name '$name'");
-            //throw new \RuntimeException("Invalid handler name '$name'");
-        }
+        // Get handler class by name
+        $handlerClass = $this->getHandlerClass($name);
+
+        // Create handler instance with context
+        $handler = new $handlerClass($this->getContext());
 
         // Apply middleware if any exists
         return $this->applyMiddleware($handler, $name);
@@ -177,7 +157,7 @@ class HandlerManager
         }
 
         // @see https://www.php-fig.org/psr/psr-15/meta/#queue-based-request-handler
-        $queue = new QueueBasedHandler($handler);
+        $queue = new QueueBasedHandler($handler->getContext(), $handler);
         foreach ($middleware as $middlewareClass) {
             $queue->add(new $middlewareClass());
         }

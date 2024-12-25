@@ -13,6 +13,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2024xxxx
+  * Add HasContextTrait to BaseHandler and BaseMiddleware
+  * Use symfony/routing instead of nikic/fast-route by default
 
 3.5.4 - 20241223 Update translations, adapt templates for PageId + refactor
   * Move base url and slugify from Route to UriGenerator

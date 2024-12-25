@@ -110,10 +110,12 @@ class Page
 
     /**
      * Summary of setConfig
+     * @param ?Config $config not used for now - see RequestContext
      * @return void
      */
-    public function setConfig()
+    public function setConfig($config = null)
     {
+        $config ??= new Config();
         $this->favicon = Config::get('icon');
         $this->authorName = Config::get('author_name') ?: 'Sébastien Lucas';
         $this->authorUri = Config::get('author_uri') ?: 'http://blog.slucas.fr';
