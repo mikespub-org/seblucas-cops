@@ -37,6 +37,8 @@ class UriGenerator
      */
     public static function generate($name, $params)
     {
+        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Route::ROUTE_PARAM]);
         return Framework::getRouter()->generate($name, $params);
     }
 

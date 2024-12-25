@@ -594,10 +594,15 @@ class RestApiTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
     public function testGenerateRoute($routeUrl, $route, $params)
     {
+        $prefix = "";
         if ($route == 'restapi-path') {
-            $this->markTestSkipped('Skip restapi-path for generate');
+            if (empty($params[Route::ROUTE_PARAM])) {
+                $this->markTestSkipped('Skip restapi-path without route param for generate');
+            }
+            $prefix = "/restapi";
+            $route = $params[Route::ROUTE_PARAM];
         }
-        RouteTest::generateRoute($this, $routeUrl, $route, $params);
+        RouteTest::generateRoute($this, $routeUrl, $route, $params, $prefix);
     }
 
     /**

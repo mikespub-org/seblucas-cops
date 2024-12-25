@@ -26,6 +26,7 @@ class FastRouter implements RouterInterface
 
     public ?string $cacheDir = null;
     public ?FastRoute $router = null;
+    public int $routeCount = 0;
     protected ?Dispatcher $dispatcher = null;
     protected ?GenerateUri $uriGenerator = null;
     /** @var array<string, array<mixed>> */
@@ -192,6 +193,7 @@ class FastRouter implements RouterInterface
     public function resetCache()
     {
         $this->router = null;
+        $this->routeCount = 0;
         if (empty($this->cacheDir)) {
             return;
         }
@@ -222,6 +224,7 @@ class FastRouter implements RouterInterface
             //$r->addRoute($methods, $path, $handler, $params);
             // use the 'handler' to store any fixed params here, and pass along extra options for FastRoute
             $r->addRoute($methods, $path, $params, $options);
+            $this->routeCount++;
         }
 
         // Then add any routes from adapter
@@ -234,6 +237,7 @@ class FastRouter implements RouterInterface
                 $options[ConfigureRoutes::ROUTE_NAME] ??= $name;
                 // use the 'handler' to store any fixed params here, and pass along extra options for FastRoute
                 $r->addRoute($methods, $path, $params, $options);
+                $this->routeCount++;
             }
         }
     }

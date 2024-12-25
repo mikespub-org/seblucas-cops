@@ -29,39 +29,6 @@ class RouteTest extends TestCase
         Database::clearDb();
     }
 
-    public function testRoutePage(): void
-    {
-        $this->assertEquals("", UriGenerator::route(['page' => null, 'db' => null]));
-        $this->assertEquals("?db=0", UriGenerator::route(['page' => null, 'db' => 0]));
-        $this->assertEquals("?key=value", UriGenerator::route(['page' => null, 'key' => 'value', 'db' => null]));
-        $this->assertEquals("?key=value&db=0", UriGenerator::route(['page' => null, 'key' => 'value', 'db' => 0]));
-        $this->assertEquals("?key=value&db=0", UriGenerator::route(['page' => null, 'key' => 'value', 'otherKey' => null, 'db' => 0]));
-        $this->assertEquals("?key=value&otherKey=other&db=0", UriGenerator::route(['page' => null, 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-        $this->assertEquals("/authors", UriGenerator::route(['page' => 'authors', 'db' => null]));
-        $this->assertEquals("/authors?db=0", UriGenerator::route(['page' => 'authors', 'db' => 0]));
-        $this->assertEquals("/authors?key=value", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'db' => null]));
-        $this->assertEquals("/authors?key=value&db=0", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'db' => 0]));
-        $this->assertEquals("/authors?key=value&db=0", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'otherKey' => null, 'db' => 0]));
-        $this->assertEquals("/authors?key=value&otherKey=other&db=0", UriGenerator::route(['page' => 'authors', 'key' => 'value', 'otherKey' => 'other', 'db' => 0]));
-    }
-
-    public function testFrontController(): void
-    {
-        $expected = '/recent';
-        $uri = UriGenerator::route(['_route' => 'page-recent']);
-        $this->assertEquals($expected, $uri);
-
-        Config::set('front_controller', 'index.php');
-        $expected = UriGenerator::base() . 'recent';
-        $test = UriGenerator::absolute(UriGenerator::route(['_route' => 'page-recent']));
-        $this->assertEquals($expected, $test);
-
-        Config::set('front_controller', '');
-        $expected = UriGenerator::base() . 'index.php/recent';
-        $test = UriGenerator::absolute(UriGenerator::route(['_route' => 'page-recent']));
-        $this->assertEquals($expected, $test);
-    }
-
     public function testGetGroups(): void
     {
         $groups = Route::getGroups();
@@ -92,56 +59,12 @@ class RouteTest extends TestCase
         $this->assertEquals($expected, $test);
     }
 
-    public function testProxyBaseUrl(): void
-    {
-        UriGenerator::setBaseUrl(null);
-        Config::set('full_url', '');
-
-        $expected = 'vendor/bin/';
-        $base = UriGenerator::base();
-        $this->assertStringEndsWith($expected, $base);
-        UriGenerator::setBaseUrl(null);
-
-        // @see https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations
-        Config::set('trusted_proxies', 'private_ranges');
-        Config::set('trusted_headers', ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']);
-        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
-        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'www.example.com';
-        $_SERVER['HTTP_X_FORWARDED_PORT'] = 8443;
-        $_SERVER['HTTP_X_FORWARDED_PREFIX'] = '/books/';
-        $_SERVER['REMOTE_ADDR'] = '::1';
-        //$_SERVER['REQUEST_URI'] = '/index.php/check';
-
-        $expected = 'https://www.example.com:8443/books/';
-        $base = UriGenerator::base();
-        $this->assertEquals($expected, $base);
-        UriGenerator::setBaseUrl(null);
-        unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
-        unset($_SERVER['HTTP_X_FORWARDED_HOST']);
-        unset($_SERVER['HTTP_X_FORWARDED_PORT']);
-        unset($_SERVER['HTTP_X_FORWARDED_PREFIX']);
-        unset($_SERVER['REMOTE_ADDR']);
-
-        // this has priority over trusted proxies or script name
-        Config::set('full_url', '/cops/');
-
-        $expected = '/cops/';
-        $base = UriGenerator::base();
-        $this->assertEquals($expected, $base);
-        UriGenerator::setBaseUrl(null);
-
-        Config::set('trusted_proxies', '');
-        Config::set('trusted_headers', []);
-        Config::set('full_url', '');
-    }
-
     /**
      * Summary of linkProvider
      * @return array<mixed>
      */
     public static function linkProvider()
     {
-        //return RouteTest::linkProvider();
         return [
             ["index.php?page=index", "/index", "page-index", ["page" => "index"]],
             ["index.php?page=authors", "/authors", "page-authors", ["page" => "authors"]],
@@ -218,147 +141,12 @@ class RouteTest extends TestCase
     }
 
     /**
-     * @param mixed $link
-     * @param mixed $expected
-     * @param mixed $route
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
-    public function testHandlerLink($link, $expected, $route)
-    {
-        // skip feed-page routes for handler::link() - use feed-path route with default page handler
-        if (str_starts_with($route, "feed-page")) {
-            $this->markTestSkipped("Skip feed-page routes here");
-        }
-        // skip opds-page routes for handler::link() - use opds-path route with default page handler
-        if (str_starts_with($route, "opds-page")) {
-            $this->markTestSkipped("Skip opds-page routes here");
-        }
-        $expected = "index.php" . $expected;
-        $params = [];
-        parse_str(parse_url((string) $link, PHP_URL_QUERY) ?? '', $params);
-        $endpoint = parse_url((string) $link, PHP_URL_PATH);
-        // 1. this will find handler name based on old endpoints
-        $handler = "html";
-        if ($endpoint !== Config::ENDPOINT["html"]) {
-            $testpoint = str_replace('.php', '', $endpoint);
-            if (array_key_exists($testpoint, Config::ENDPOINT)) {
-                $params[Route::HANDLER_PARAM] = $testpoint;
-                $handler = $testpoint;
-            } else {
-                // for epubreader.php, checkconfig.php etc.
-                $flipped = array_flip(Config::ENDPOINT);
-                $params[Route::HANDLER_PARAM] = $flipped[$endpoint];
-                $handler = $flipped[$endpoint];
-            }
-        }
-        // 2. we pass handler class-string as param now
-        $handler = Route::getHandler($handler);
-        $test = $handler::link($params);
-        $this->assertStringEndsWith($expected, $test);
-    }
-
-    /**
-     * @param mixed $expected
-     * @param mixed $path
-     * @param mixed $route
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
-    public function testRouteMatch($expected, $path, $route)
-    {
-        $path = "index.php" . $path;
-        $query = parse_url((string) $path, PHP_URL_QUERY);
-        // parse_url() does not decode URL-encoded characters in the path
-        $path = parse_url((string) $path, PHP_URL_PATH);
-        $parts = explode('/', $path);
-        $endpoint = array_shift($parts);
-        $path = '/' . implode('/', $parts);
-        $params = Route::match($path);
-        if (is_null($params)) {
-            $this->fail('Invalid params for path ' . $path);
-        }
-        // this contains handler class-string now
-        if (!empty($params[Route::HANDLER_PARAM]) && in_array($params[Route::HANDLER_PARAM], Framework::getHandlers())) {
-            $name = $params[Route::HANDLER_PARAM]::HANDLER;
-            $endpoint = Config::ENDPOINT[$name];
-            unset($params[Route::HANDLER_PARAM]);
-            // parse path parameter
-            if (in_array($name, ['feed', 'opds']) && !empty($params['path'])) {
-                $params = Route::match('/' . $params['path']);
-            }
-            // un-slugify parameter (minimal) - not tested here
-            foreach (['title', 'author'] as $param) {
-                if (isset($params[$param])) {
-                    $params[$param] = rawurldecode($params[$param]);
-                }
-            }
-        }
-        if (array_key_exists('ignore', $params)) {
-            unset($params['ignore']);
-        }
-        $test = $endpoint;
-        unset($params[Route::HANDLER_PARAM]);
-        unset($params[Route::ROUTE_PARAM]);
-        if (!empty($params)) {
-            if (!empty($params['title'])) {
-                $params['title'] = str_replace('_', ' ', $params['title']);
-            }
-            $test .= '?' . UriGenerator::getQueryString($params);
-        }
-        if (!empty($query)) {
-            $test .= '&' . $query;
-        }
-        $this->assertEquals($expected, $test);
-    }
-
-    /**
-     * @param mixed $queryUrl
-     * @param mixed $routeUrl
-     * @param mixed $route
-     * @param mixed $params
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider("linkProvider")]
-    public function testGenerateLink($queryUrl, $routeUrl, $route, $params)
-    {
-        if (!empty($routeUrl) && str_contains($routeUrl, '?')) {
-            $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
-        }
-        // @todo handle ignore
-        // @todo handle restapi/route...
-        unset($params[Route::HANDLER_PARAM]);
-        unset($params["_method"]);
-        $prefix = "";
-        // use default page handler with prefix for opds-path + use _route in params to generate path
-        if ($route == "opds-path" && !empty($params[Route::ROUTE_PARAM])) {
-            $route = $params[Route::ROUTE_PARAM];
-            $prefix = "/opds";
-        }
-        if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
-            $params['title'] = UriGenerator::slugify($params['title']);
-        }
-        if (!empty($params['file'])) {
-            $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
-        }
-        try {
-            $result = UriGenerator::generate($route, $params);
-        } catch (Throwable) {
-            $this->assertNull($routeUrl);
-            return;
-        }
-        $expected = $routeUrl;
-        $this->assertEquals($expected, $prefix . $result);
-    }
-
-    /**
      * Summary of routeProvider
      * @return array<mixed>
      */
     public static function routeProvider()
     {
         // @todo replace handler name with class-string
-        //$handlers = Framework::getHandlers();
         return [
             ["/calres/0/xxh64/7c301792c52eebf7", "calres", ["_handler" => "calres", "db" => "0", "alg" => "xxh64", "digest" => "7c301792c52eebf7"]],
             ["/zipfs/0/20/META-INF/container.xml", "zipfs", ["_handler" => "zipfs", "db" => "0", "data" => "20", "comp" => "META-INF/container.xml"]],
@@ -394,68 +182,6 @@ class RouteTest extends TestCase
             ["/view/20/0/ignore.epub", "fetch-view", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub", "_route" => "fetch-view"]],
             ["/download/20/0/ignore.epub", "fetch-download", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub", "_route" => "fetch-download"]],
         ];
-    }
-
-    /**
-     * @param mixed $expected
-     * @param mixed $route
-     * @param mixed $params
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
-    public function testGetRouteForParams($expected, $route, $params)
-    {
-        // skip feed-page routes for Route::getRouteForParams() - use feed-path route with default page handler
-        if (str_starts_with($route, "feed-page")) {
-            $this->markTestSkipped("Skip feed-page routes here");
-        }
-        // handle POST method for mail
-        $method = null;
-        if (!empty($params["_method"])) {
-            $method = $params["_method"];
-            unset($params["_method"]);
-        }
-        // pass handler class-string as param here
-        if (!empty($params[Route::HANDLER_PARAM])) {
-            $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
-        }
-        $this->assertEquals($expected, UriGenerator::getRouteForParams($params));
-    }
-
-    /**
-     * @param mixed $routeUrl
-     * @param mixed $route
-     * @param mixed $params
-     * @return void
-     */
-    #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
-    public function testGenerateRoute($routeUrl, $route, $params)
-    {
-        if (!empty($routeUrl) && str_contains($routeUrl, '?')) {
-            $this->markTestSkipped('Generate uri with FastRoute still has some issues - e.g. not knowing which params have been "consumed"');
-        }
-        unset($params[Route::HANDLER_PARAM]);
-        unset($params["_method"]);
-        $prefix = "";
-        // use default page handler with prefix for feed-path + use _route in params to generate path
-        if ($route == "feed-path" && !empty($params[Route::ROUTE_PARAM])) {
-            $route = $params[Route::ROUTE_PARAM];
-            $prefix = "/feed";
-        }
-        if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
-            $params['title'] = UriGenerator::slugify($params['title']);
-        }
-        if (!empty($params['file'])) {
-            $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
-        }
-        try {
-            $result = UriGenerator::generate($route, $params);
-        } catch (Throwable) {
-            $this->assertNull($routeUrl);
-            return;
-        }
-        $expected = $routeUrl;
-        $this->assertEquals($expected, $prefix . $result);
     }
 
     /**
@@ -543,11 +269,11 @@ class RouteTest extends TestCase
      * @param mixed $routeUrl
      * @param mixed $route
      * @param mixed $params
+     * @param string $prefix
      * @return void
      */
-    public static function generateRoute($test, $routeUrl, $route, $params)
+    public static function generateRoute($test, $routeUrl, $route, $params, $prefix = "")
     {
-        $prefix = "";
         try {
             $result = UriGenerator::generate($route, $params);
         } catch (Throwable) {

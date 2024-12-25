@@ -13,7 +13,8 @@ namespace SebLucas\Cops\Input;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Routing\RouterInterface;
-use SebLucas\Cops\Routing\FastRouter;
+//use SebLucas\Cops\Routing\FastRouter;
+use SebLucas\Cops\Routing\Routing;
 use SebLucas\Cops\Routing\UriGenerator;
 
 /**
@@ -34,7 +35,7 @@ class RequestContext
     {
         $this->request = $request;
         $this->manager = $manager ?? new HandlerManager();
-        $this->router = $router ?? new FastRouter();
+        $this->router = $router ?? new Routing();  // new FastRouter();
         $this->config = new Config();
         $this->locale = $this->request->locale();
         $this->initializeContext();
