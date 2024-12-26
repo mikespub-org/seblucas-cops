@@ -73,24 +73,6 @@ type Query {
     """
     where: SequelizeJSON
   ): Data
-  feeds(
-    limit: Int
-    order: String
-
-    """
-    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
-    """
-    where: SequelizeJSON
-    offset: Int
-  ): [Entry]
-  feed(
-    id: ID
-
-    """
-    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
-    """
-    where: SequelizeJSON
-  ): Entry
   formats(
     limit: Int
     order: String

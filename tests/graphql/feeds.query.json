@@ -1,5 +1,0 @@
-{
-    "operationName": "getFeeds",
-    "variables": [],
-    "query": "query getFeeds {\n  feeds {\n    id\n    title\n  }\n}"
-}

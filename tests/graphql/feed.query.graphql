@@ -1,6 +1,0 @@
-query getFeed($id: ID) {
-  feed(id: $id) {
-    id
-    title
-  }
-}

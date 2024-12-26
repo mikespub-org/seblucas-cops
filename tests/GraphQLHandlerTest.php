@@ -97,7 +97,7 @@ class GraphQLHandlerTest extends TestCase
         $this->assertEquals($expected, $errors);
 
         $queryType = $schema->getQueryType();
-        $expected = 29;
+        $expected = 27;
         $this->assertCount($expected, $queryType->getFieldNames());
     }
 
