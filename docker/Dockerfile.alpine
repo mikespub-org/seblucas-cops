@@ -1,20 +1,14 @@
-FROM php:8.2-cli-alpine AS build
-# This takes too long and is messy to maintain
-#RUN apk add --no-cache freetype-dev libjpeg-turbo-dev libpng-dev zlib-dev libwebp-dev \
-#    icu-dev \
-#    libzip-dev \
-#	&& docker-php-ext-configure gd --with-freetype --with-jpeg \
-#	&& docker-php-ext-install -j$(nproc) gd \
-#	&& docker-php-ext-configure intl \
-#	&& docker-php-ext-install intl \
-#	&& docker-php-ext-install zip
-# Use https://github.com/mlocati/docker-php-extension-installer instead
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
-RUN chmod +x /usr/local/bin/install-php-extensions && \
-    install-php-extensions gd intl zip
-
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+FROM alpine:3.21 AS build
+RUN apk add --no-cache --upgrade \
+    php83 \
+    php83-dom \
+    php83-gd \
+    php83-intl \
+    php83-pdo_sqlite \
+    php83-xml \
+    composer \
+    php83-tokenizer \
+    php83-xmlwriter
 
 WORKDIR /app
 COPY . /app
@@ -25,7 +19,7 @@ EXPOSE $PORT
 
 CMD ["sh", "-c", "php -S 0.0.0.0:$PORT -t /app"]
 
-FROM build as dev-envs
+FROM build AS dev-envs
 RUN composer update -o -d /app
 #RUN apk --no-cache add nodejs yarn
 #RUN yarn

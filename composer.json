@@ -26,7 +26,7 @@
         "ext-xml": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "mikespub/epubjs-reader": "^2024.11",
+        "mikespub/epubjs-reader": "^2025.01",
         "mikespub/php-epub-meta": "^3.3",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
@@ -42,7 +42,7 @@
         "symfony/routing": "^6.4||^7.2",
         "symfony/string": "^6.4||^7.2",
         "symfony/translation-contracts": "^3.5",
-        "twig/twig": "^3.17"
+        "twig/twig": "^3.18"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.1",
