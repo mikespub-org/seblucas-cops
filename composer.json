@@ -42,7 +42,7 @@
         "symfony/routing": "^6.4||^7.2",
         "symfony/string": "^6.4||^7.2",
         "symfony/translation-contracts": "^3.5",
-        "twig/twig": "^3.18"
+        "twig/twig": "^3.19"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.1",
@@ -52,7 +52,7 @@
         "symfony/http-client": "^6.4||^7.2",
         "symfony/http-foundation": "^6.4||^7.2",
         "nikic/fast-route": "2.0.0-beta1",
-        "mikespub/epub-loader": "^3.5",
+        "mikespub/epub-loader": "^3.6",
         "opis/json-schema": "^2.3",
         "webonyx/graphql-php": "^15.19"
     },
