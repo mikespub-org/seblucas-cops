@@ -126,13 +126,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikespub/epubjs-reader@npm:^2024.10.27":
-  version: 2024.10.27
-  resolution: "@mikespub/epubjs-reader@npm:2024.10.27"
+"@mikespub/epubjs-reader@npm:^2025.1.2":
+  version: 2025.1.2
+  resolution: "@mikespub/epubjs-reader@npm:2025.1.2"
   dependencies:
     epubjs: "npm:^0.3.93"
     js-md5: "npm:^0.8.3"
-  checksum: 10c0/e7e6578942c0420b3d862a4345acfca3201be4d18c1e6cf761a77b5a06365057f28fdc1766083e306ae6b5eebbd2d8a4cbd80e5defec2b052d0999d8b013f5ab
+  checksum: 10c0/6b79be0b793c3228e5cd9c7455491737874d9e2a495909f337e07b68b7e1f282e6114ebf76324a0bc69511040440a01dc6f7d8615cb6d8451fa679c2588f9946
   languageName: node
   linkType: hard
 
@@ -931,22 +931,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"datatables.net-bs5@npm:^2.1.8":
-  version: 2.1.8
-  resolution: "datatables.net-bs5@npm:2.1.8"
+"datatables.net-bs5@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "datatables.net-bs5@npm:2.2.2"
   dependencies:
-    datatables.net: "npm:2.1.8"
+    datatables.net: "npm:2.2.2"
     jquery: "npm:>=1.7"
-  checksum: 10c0/8627fc9c599fae958478f67f49f9c14555afbb00b03621294edab57ff81b4edb7405afb6cd9be2872d622859e1a8bff4363b41cbdf45905035f4ff888b33f7d8
+  checksum: 10c0/5568e86e71a1969139157f75cdb363eafd94d866130fb2fd627f62d2d86cea4a938e7ff753bc477934245f3ae97105b83bb30def88a6598cae5ad4e74ef319f6
   languageName: node
   linkType: hard
 
-"datatables.net@npm:2.1.8, datatables.net@npm:^2.1.8":
-  version: 2.1.8
-  resolution: "datatables.net@npm:2.1.8"
+"datatables.net@npm:2.2.2, datatables.net@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "datatables.net@npm:2.2.2"
   dependencies:
     jquery: "npm:>=1.7"
-  checksum: 10c0/0c669c84c03bc63610bb885f5d0e84829221e26ae1e15d9568544b6acd9df3e89aac3b74f367af4267850498cd56feb591fbcf70c8cda0b114ca325ea94da473
+  checksum: 10c0/ca42e87e09cad2a3ca0f8728931fba48a222a87953d85ee0951432f9b0c7f15a630b787839ec2493b53f18744758ecfec9e18049ceccefec4323fd0895901845
   languageName: node
   linkType: hard
 
@@ -1567,11 +1567,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "seblucas-cops@workspace:."
   dependencies:
-    "@mikespub/epubjs-reader": "npm:^2024.10.27"
+    "@mikespub/epubjs-reader": "npm:^2025.1.2"
     bootstrap: "npm:^3.4.1"
     corejs-typeahead: "npm:^1.3.4"
-    datatables.net: "npm:^2.1.8"
-    datatables.net-bs5: "npm:^2.1.8"
+    datatables.net: "npm:^2.2.2"
+    datatables.net-bs5: "npm:^2.2.2"
     dot: "npm:^1.1.3"
     graphiql: "npm:^3.8.3"
     graphql: "npm:^16.10.0"
@@ -1582,7 +1582,7 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    swagger-ui-dist: "npm:^5.18.2"
+    swagger-ui-dist: "npm:^5.19.0"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1623,12 +1623,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.18.2":
-  version: 5.18.2
-  resolution: "swagger-ui-dist@npm:5.18.2"
+"swagger-ui-dist@npm:^5.19.0":
+  version: 5.19.0
+  resolution: "swagger-ui-dist@npm:5.19.0"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/254f0d0b14766d505e69c36ea656afe838c32eefe1317aa4a8a2ffae06f1e53c55333130c6cea2f57bb47825b0cc465436f3f7af41254bd24b0601e56f914dba
+  checksum: 10c0/71fdfd8af6d2073425311d4736e2580318a190521423dcaf20244aa8b1bc7b591847087c545af791e07ea1251c4cc1e6c57f4cf204ce8ec101047c5dcaab159a
   languageName: node
   linkType: hard
 
