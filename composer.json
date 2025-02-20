@@ -42,18 +42,18 @@
         "symfony/routing": "^6.4||^7.2",
         "symfony/string": "^6.4||^7.2",
         "symfony/translation-contracts": "^3.5",
-        "twig/twig": "^3.19"
+        "twig/twig": "^3.20"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.1",
-        "phpunit/phpunit": "^10.5||^11.5",
+        "phpunit/phpunit": "^11.5",
         "php-webdriver/webdriver": "dev-main",
-        "symfony/browser-kit": "^6.4||^7.2",
-        "symfony/http-client": "^6.4||^7.2",
-        "symfony/http-foundation": "^6.4||^7.2",
+        "symfony/browser-kit": "^7.2",
+        "symfony/http-client": "^7.2",
+        "symfony/http-foundation": "^7.2",
         "nikic/fast-route": "2.0.0-beta1",
         "mikespub/epub-loader": "^3.6",
-        "opis/json-schema": "^2.3",
+        "opis/json-schema": "^2.4",
         "webonyx/graphql-php": "^15.19"
     },
     "suggest": {

@@ -489,7 +489,7 @@ class RestApiTest extends TestCase
 
         $expected = self::$expectedSize['calres'];
         $this->assertTrue($result instanceof Response);
-        $this->assertEquals(0, actual: count($headers));
+        $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
 
         Config::set('api_key', null);
@@ -635,6 +635,10 @@ class RestApiTest extends TestCase
             $this->assertTrue(true);
         } else {
             $expexted = file_get_contents($resultFile);
+            if (str_contains($output, ' "mtime": ')) {
+                $output = preg_replace('/ "mtime": \S+/', ' "mtime": "now"', $output);
+                $expexted = preg_replace('/ "mtime": \S+/', ' "mtime": "now"', $expexted);
+            }
             $this->assertEquals($expexted, $output);
         }
 

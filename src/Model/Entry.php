@@ -131,7 +131,7 @@ class Entry
     public function getNavLink($extraParams = [])
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkFeed|LinkResource */
+            /** @var LinkFeed|LinkResource $link */
 
             if (!($link instanceof LinkFeed)) {
                 continue;
@@ -153,7 +153,7 @@ class Entry
     public function getRelation()
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkFeed|LinkResource */
+            /** @var LinkFeed|LinkResource $link */
 
             if (!($link instanceof LinkFeed)) {
                 continue;
@@ -171,7 +171,7 @@ class Entry
     public function getThumbnail()
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkFeed|LinkResource */
+            /** @var LinkFeed|LinkResource $link */
 
             if ($link instanceof LinkImage && $link->rel == LinkImage::OPDS_THUMBNAIL_TYPE) {
                 return $link->getUri();
@@ -187,7 +187,7 @@ class Entry
     public function getImage()
     {
         foreach ($this->linkArray as $link) {
-            /** @var $link LinkFeed|LinkResource */
+            /** @var LinkFeed|LinkResource $link */
 
             if ($link instanceof LinkImage && $link->rel == LinkImage::OPDS_IMAGE_TYPE) {
                 return $link->getUri();
