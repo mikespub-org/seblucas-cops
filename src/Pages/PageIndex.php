@@ -124,6 +124,12 @@ class PageIndex extends Page
         if (!in_array(PageQueryScope::LANGUAGE->value, $this->ignoredCategories)) {
             $this->addFilterCountEntry(Language::class);
         }
+        if (!in_array(PageQueryScope::FORMAT->value, $this->ignoredCategories)) {
+            $this->addFilterCountEntry(Format::class);
+        }
+        if (!in_array(PageQueryScope::IDENTIFIER->value, $this->ignoredCategories)) {
+            $this->addFilterCountEntry(Identifier::class);
+        }
         // @todo apply filter?
         // for multi-database setup, not all databases may have all custom columns - see issue #89
         $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());
@@ -189,6 +195,12 @@ class PageIndex extends Page
         }
         if (!in_array(PageQueryScope::LANGUAGE->value, $this->ignoredCategories)) {
             $this->addCountEntry(Language::class);
+        }
+        if (!in_array(PageQueryScope::FORMAT->value, $this->ignoredCategories)) {
+            $this->addCountEntry(Format::class);
+        }
+        if (!in_array(PageQueryScope::IDENTIFIER->value, $this->ignoredCategories)) {
+            $this->addCountEntry(Identifier::class);
         }
         // for multi-database setup, not all databases may have all custom columns - see issue #89
         $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());

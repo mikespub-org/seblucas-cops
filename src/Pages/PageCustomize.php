@@ -105,6 +105,8 @@ class PageCustomize extends Page
             PageQueryScope::TAG,
             PageQueryScope::RATING,
             PageQueryScope::LANGUAGE,
+            PageQueryScope::FORMAT,
+            PageQueryScope::IDENTIFIER,
             PageQueryScope::BOOK,
         ];
 

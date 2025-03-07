@@ -418,9 +418,11 @@ $config['cops_server_side_render'] = 'Kindle\/1\.\d|Kindle\/2\.\d|Kindle\/3\.\d|
  * - publisher
  * - rating
  * - language
+ * - format
+ * - identifier
  * - libraries
  */
-$config ['cops_ignored_categories'] = [];
+$config ['cops_ignored_categories'] = ['format', 'identifier'];
 
 /*
  * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
