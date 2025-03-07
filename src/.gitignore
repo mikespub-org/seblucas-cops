@@ -1,0 +1,4 @@
+# ignore adapters for other frameworks
+Framework/Adapter/LaravelAdapter.php
+Framework/Adapter/SlimAdapter.php
+Framework/Adapter/SymfonyAdapter.php

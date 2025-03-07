@@ -12,7 +12,15 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-3.x.x - 2024xxxx
+3.x.x - 2025xxxx 
+  * ...
+
+3.5.7 - 20250307 Fix format issues + switch routing library
+  * Remove support for legacy config_local.php file + add warning message
+  * Show formats or identifiers on homepage - see issue #134 by @HelenaGwyn
+  * Support formats search in virtual library - see issue #132 by @HelenaGwyn
+  * Start framework adapter for other frameworks (WIP)
+  * Clean up GraphQL schema + update expected test results
   * Add HasContextTrait to BaseHandler and BaseMiddleware
   * Use symfony/routing instead of nikic/fast-route by default
 

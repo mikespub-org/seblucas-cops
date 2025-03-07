@@ -1,10 +1,13 @@
 DirectoryIndex index.php
 
-<IfModule mod_xsendfile.c>
-<Files fetch.php>
-    XSendFile on
-</Files>
-</IfModule>
+###########################################
+# Apache module mod_xsendfile is deprecated
+###########################################
+#<IfModule mod_xsendfile.c>
+#<Files fetch.php>
+#    XSendFile on
+#</Files>
+#</IfModule>
 
 ###########################################
 # If the notation above don't work, you can try that one

@@ -254,7 +254,7 @@ class RestApiTest extends TestCase
         $expected = "Notes for authors";
         $test = self::$apiProvider->getNotes($request);
         $this->assertEquals($expected, $test["title"]);
-        $expected = 1;
+        $expected = 3;
         $this->assertCount($expected, $test["entries"]);
     }
 

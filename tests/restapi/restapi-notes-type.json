@@ -10,6 +10,22 @@
             "navlink": "vendor/bin/index.php/restapi/notes/authors/3/Lewis_Carroll",
             "size": 227,
             "timestamp": 1708880895.654
+        },
+        {
+            "class": "Notes",
+            "title": "H. G. Wells",
+            "id": 4,
+            "navlink": "vendor/bin/index.php/restapi/notes/authors/4/H_G_Wells",
+            "size": 21741,
+            "timestamp": 1741359641.1851127
+        },
+        {
+            "class": "Notes",
+            "title": "Alexandre Dumas",
+            "id": 5,
+            "navlink": "vendor/bin/index.php/restapi/notes/authors/5/Alexandre_Dumas",
+            "size": 28518,
+            "timestamp": 1741359668.481976
         }
     ]
 }

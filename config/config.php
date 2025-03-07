@@ -21,7 +21,9 @@ if (php_sapi_name() !== 'cli') {
         }
     } elseif (file_exists(dirname(__DIR__) . '/config_local.php')) {
         // @deprecated 3.0.0 move config_local.php file to config/local.php
-        require dirname(__DIR__) . '/config_local.php';
+        echo "Please replace 'config_local.php' file with 'config/local.php' (= local.php file in config/ directory)\n";
+        echo "See https://github.com/mikespub-org/seblucas-cops#breaking-changes-for-3x-release-php--82\n";
+        exit;
     }
 }
 /** @var array<mixed> $config */

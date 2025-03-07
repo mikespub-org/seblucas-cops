@@ -1582,7 +1582,7 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    swagger-ui-dist: "npm:^5.19.0"
+    swagger-ui-dist: "npm:^5.20.0"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1623,12 +1623,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.19.0":
-  version: 5.19.0
-  resolution: "swagger-ui-dist@npm:5.19.0"
+"swagger-ui-dist@npm:^5.20.0":
+  version: 5.20.0
+  resolution: "swagger-ui-dist@npm:5.20.0"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/71fdfd8af6d2073425311d4736e2580318a190521423dcaf20244aa8b1bc7b591847087c545af791e07ea1251c4cc1e6c57f4cf204ce8ec101047c5dcaab159a
+  checksum: 10c0/52d171388cd42efef90c76848db0c8cdb805e0685a881b4c80bbf64700f039e0a2c628f20c8be24f256626e539d2a2584ed39e1cf823175e12763ee5f4de92c6
   languageName: node
   linkType: hard
 

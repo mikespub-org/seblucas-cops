@@ -25,15 +25,6 @@ $config['calibre_directory'] = './';
 $config['cops_title_default'] = "COPS";
 
 /*
- * use URL rewriting for downloading of ebook in HTML catalog
- * See README for more information
- *  1 : enable
- *  0 : disable
- * @deprecated 3.1.0 use route urls instead (= always enabled in 3.4+)
- */
-$config['cops_use_url_rewriting'] = "0";
-
-/*
  * Set front controller to remove index.php/ from route URLs generated in COPS
  *
  * Note: this assumes your web server config will rewrite /... to /index.php/...
@@ -51,30 +42,3 @@ $config['cops_front_controller'] = '';
  * This will also stop downloading them, unless the files are under the web directory
  */
 $config['cops_ignored_formats'] = ['ORIGINAL_EPUB', 'ORIGINAL_AZW3'];
-
-/*
- * Show links to sort by title, author, pubdate, rating or timestamp in OPDS catalog (using facets)
- * Note: this will only work if your e-reader supports facets in OPDS feeds, like Thorium Reader for example
- * See https://specs.opds.io/opds-1.2.html#4-facets for specification details
- * To disable this feature, use an empty array in config/local.php:
- * $config['cops_opds_sort_links'] = [];
- *
- * Available values: ['title', 'author', 'pubdate', 'rating', 'timestamp']
- */
-$config['cops_opds_sort_links'] = ['title', 'author', 'pubdate', 'rating', 'timestamp'];
-
-/*
- * Show links to filter by Author, Language, Publisher, Rating, Serie or Tag in OPDS catalog (using facets)
- * Note: this will only work if your e-reader supports facets in OPDS feeds, like Thorium Reader for example
- * See https://specs.opds.io/opds-1.2.html#4-facets for specification details
- * To disable this feature, use an empty array in config/local.php:
- * $config['cops_opds_filter_links'] = [];
- *
- * Available values: ['author', 'language', 'publisher', 'rating', 'series', 'tag', 'identifier', 'format']
- */
-$config['cops_opds_filter_links'] = ['author', 'language', 'rating', 'tag'];
-
-/*
- * Number of filter links to show per category in OPDS catalog
- */
-$config['cops_opds_filter_limit'] = '8';

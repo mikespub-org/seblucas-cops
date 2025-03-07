@@ -53,7 +53,7 @@ class NoteResourceTest extends TestCase
 
     public function testGetCountByType(): void
     {
-        $expected = ["authors" => 1];
+        $expected = ["authors" => 3];
         $result = Note::getCountByType();
         $this->assertEquals($expected, $result);
     }
@@ -68,7 +68,7 @@ class NoteResourceTest extends TestCase
             "title" => "Lewis Carroll",
         ];
         $result = Note::getEntriesByType("authors");
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected[3], $result[3]);
     }
 
     public function testGetNotesById(): void

@@ -29,7 +29,7 @@
             "class": "VirtualLibrary",
             "title": "No virtual libraries",
             "content": "16 books",
-            "navlink": "vendor/bin/index.php/restapi/index",
+            "navlink": "vendor/bin/index.php/restapi/index?vl=0.No_virtual_libraries",
             "number": 16
         }
     ],

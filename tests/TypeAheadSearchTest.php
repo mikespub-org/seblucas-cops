@@ -92,7 +92,7 @@ class TypeAheadSearchTest extends TestCase
 
     public function testWithIgnored_SingleCategory(): void
     {
-        Config::set('ignored_categories', ["author"]);
+        Config::set('ignored_categories', ["author", "format", "identifier"]);
         $request = new Request();
         $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "car");
@@ -104,12 +104,12 @@ class TypeAheadSearchTest extends TestCase
         $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
         $this->assertEquals("A Study in Scarlet", $currentPage->entryArray[1]->title);
 
-        Config::set('ignored_categories', []);
+        Config::set('ignored_categories', ["format", "identifier"]);
     }
 
     public function testWithIgnored_MultipleCategory(): void
     {
-        Config::set('ignored_categories', ["series"]);
+        Config::set('ignored_categories', ["series", "format", "identifier"]);
         $request = new Request();
         $page = PageId::OPENSEARCH_QUERY;
         $request->set('query', "art");
@@ -121,7 +121,7 @@ class TypeAheadSearchTest extends TestCase
         $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
         $this->assertEquals("Arthur Conan Doyle", $currentPage->entryArray[1]->title);
 
-        Config::set('ignored_categories', []);
+        Config::set('ignored_categories', ["format", "identifier"]);
     }
 
     public function testMultiDatabase(): void

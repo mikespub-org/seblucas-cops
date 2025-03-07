@@ -83,7 +83,7 @@ class PageTest extends TestCase
         $page = PageId::INDEX;
         $request = new Request();
 
-        Config::set('ignored_categories', ["author", "series", "tag", "publisher", "language"]);
+        Config::set('ignored_categories', ["author", "series", "tag", "publisher", "language", "format", "identifier"]);
 
         $currentPage = PageId::getPage($page, $request);
 
@@ -96,7 +96,7 @@ class PageTest extends TestCase
         $this->assertEquals("16 most recent books", $currentPage->entryArray [2]->content);
         $this->assertFalse($currentPage->containsBook());
 
-        Config::set('ignored_categories', []);
+        Config::set('ignored_categories', ["format", "identifier"]);
     }
 
     public function testPageIndexWithCustomColumn_Type1(): void
@@ -983,7 +983,7 @@ class PageTest extends TestCase
         $request = new Request();
         $request->set('query', "car");
 
-        Config::set('ignored_categories', ["author"]);
+        Config::set('ignored_categories', ["author", "format", "identifier"]);
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertEquals("Search result for *car*", $currentPage->title);
@@ -992,7 +992,7 @@ class PageTest extends TestCase
         $this->assertEquals("1 book", $currentPage->entryArray [0]->content);
         $this->assertFalse($currentPage->containsBook());
 
-        Config::set('ignored_categories', []);
+        Config::set('ignored_categories', ["format", "identifier"]);
     }
 
     public function testPageSearch_WithTwoCategories(): void

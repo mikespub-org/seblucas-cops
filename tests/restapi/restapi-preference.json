@@ -6,6 +6,6 @@
     "key": "virtual_libraries",
     "val": {
         "Action Fiction from this Century (TODO)": "(tags:\"Fiction\" and pubdate:>=2000) and tags:\"=Action & Adventure\"",
-        "Short Stories in English": "tags:\"=Short Stories\" and languages:\"=eng\""
+        "Short Stories in English": "tags:\"=Short Stories\" and languages:\"=eng\" and formats:\"=EPUB\""
     }
 }
