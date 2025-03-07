@@ -5,13 +5,14 @@
         <dc:identifier opf:scheme="uuid" id="uuid_id">bb33f1fd-3d54-4491-b9c5-182348a19ddd</dc:identifier>
         <dc:title>孙子兵法</dc:title>
         <dc:creator opf:file-as="孙武" opf:role="aut">孙武</dc:creator>
-        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (7.10.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (7.26.0) [https://calibre-ebook.com]</dc:contributor>
         <dc:date>2012-11-22T22:00:00+00:00</dc:date>
         <dc:description>&lt;div&gt;
 &lt;p&gt;“前孙子者，孙子不遗；后孙子者，不遗孙子”。《孙子兵法》又称《孙武兵法》、《孙子兵书》等，是中国古典军事文化遗产中的璀璨瑰宝，是世界三大兵书之一。全书共十三篇，虽然只有五千余言，但内容包罗万象、博大精深，涉及到战争规律、哲理、谋略、政治、经济、外交、天文、地理等各方面内容，堪称古代兵学理论的宝库和集大成者，在世界广为传播，美国西点军校和哈佛商学院高级管理将其作为人才培训的必读教材。&lt;/p&gt;&lt;/div&gt;</dc:description>
         <dc:publisher>青苹果数据中心</dc:publisher>
         <dc:identifier opf:scheme="AMAZON">B00AA7KMKG</dc:identifier>
         <dc:language>zho</dc:language>
+        <meta name="calibre:link_maps" content="{&quot;authors&quot;: {&quot;孙武&quot;: &quot;https://www.goodreads.com/author/show/7338007._&quot;}}"/>
         <meta name="calibre:rating" content="8"/>
         <meta name="calibre:timestamp" content="2024-05-18T09:15:14+00:00"/>
         <meta name="calibre:title_sort" content="孙子兵法"/>
