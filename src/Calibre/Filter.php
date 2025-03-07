@@ -37,7 +37,7 @@ class Filter
     ];
     public const SEARCH_FIELDS = [
         'authors' => Author::class,
-        //'formats' => Format::class,
+        'formats' => Format::class,
         'languages' => Language::class,
         'publishers' => Publisher::class,
         'ratings' => Rating::class,
@@ -279,13 +279,13 @@ class Filter
                 $className = self::SEARCH_FIELDS[$match['attr']];
                 $instance = $className::getInstanceByName($value, $this->databaseId);
                 if (empty($instance)) {
-                    throw new UnexpectedValueException('Invalid search criteria: ' . $match['attr'] . '=' . $match['value']);
+                    throw new UnexpectedValueException('Invalid search criteria: ' . $match['attr'] . ':' . $match['value']);
                 }
                 $filterString = $this->getLinkedIdFilter($instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
                 $replace = str_replace($match[0], $filterString, $replace);
                 array_push($params, $instance->id);
             } else {
-                throw new UnexpectedValueException('Unsupported search criteria: ' . $match['attr'] . '=' . $match['value']);
+                throw new UnexpectedValueException('Unsupported search criteria: ' . $match['attr'] . ':' . $match['value']);
             }
         }
 

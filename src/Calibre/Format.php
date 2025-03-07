@@ -76,6 +76,17 @@ class Format extends Base
     }
 
     /**
+     * Summary of getInstanceByName
+     * @param string|int|null $name used for the format here
+     * @param ?int $database
+     * @return self
+     */
+    public static function getInstanceByName($name, $database = null)
+    {
+        return self::getInstanceById($name, $database);
+    }
+
+    /**
      * Summary of getDefaultName
      * @return string
      */

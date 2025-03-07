@@ -53,7 +53,7 @@ class VirtualLibrary extends Base
         $params['page'] = PageId::getHomePage();
         // we need databaseId here because we use Route::link with $handler
         $params['db'] = $this->getDatabaseId();
-        if (!empty($this->id)) {
+        if (isset($this->id)) {
             // URL format: ...&vl=2.Short_Stories_in_English
             $params[self::URL_PARAM] = self::formatParameter($this->id, $this->getTitle());
         }
@@ -176,14 +176,17 @@ class VirtualLibrary extends Base
     public static function getInstanceById($id, $database = null)
     {
         $libraries = self::getLibraries($database);
-        if (isset($id)) {
+        if (!empty($id)) {
             // id = key position in array + 1
             $id = intval($id) - 1;
-            $name = array_keys($libraries)[$id];
-            return self::getInstanceByName($name);
+            $name = array_keys($libraries)[$id] ?? null;
+            if (!empty($name)) {
+                return self::getInstanceByName($name);
+            }
         }
         $default = self::getDefaultName();
-        $post = (object) ['id' => null, 'name' => $default, 'value' => ''];
+        // use id = 0 to support route urls
+        $post = (object) ['id' => 0, 'name' => $default, 'value' => ''];
         return new self($post, $database);
     }
 
