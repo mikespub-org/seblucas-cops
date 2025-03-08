@@ -126,6 +126,12 @@ abstract class Category extends Base
         if (count($parents) == 1) {
             $this->parent = $parents[0];
         }
+        // @todo create dummy parent for missing hierarchy in series? doesn't help filter by it afterwards :-(
+        //$className = static::class;
+        // use id = 0 to support route urls
+        //$instance = new $className((object) ['id' => 0, 'name' => $find, 'sort' => $find, 'count' => 0], $this->databaseId);
+        //$instance->setHandler($this->handler);
+        //return $instance;
         return $this->parent;
     }
 
@@ -173,6 +179,7 @@ abstract class Category extends Base
             /** @var Category $instance */
             $instance = new $className($post, $this->databaseId);
             $instance->count = $post->count;
+            $instance->setHandler($this->handler);
             array_push($instances, $instance);
         }
         return $instances;

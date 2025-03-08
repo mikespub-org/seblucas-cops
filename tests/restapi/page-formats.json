@@ -31,9 +31,16 @@
             "content": "1 book",
             "navlink": "vendor/bin/index.php/restapi/formats/PDF",
             "number": 1
+        },
+        {
+            "class": "Format",
+            "title": "No format",
+            "content": "No books",
+            "navlink": "vendor/bin/index.php/restapi/formats/0",
+            "number": 0
         }
     ],
-    "entriesCount": 3,
+    "entriesCount": 4,
     "isPaginated": 0,
     "sorted": "format",
     "sortedBy": "format",

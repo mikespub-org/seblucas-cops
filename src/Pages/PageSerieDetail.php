@@ -29,9 +29,8 @@ class PageSerieDetail extends PageWithDetail
         if ($this->request->get('filter')) {
             $this->filterParams = [Serie::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
-            // @todo needs title_sort function in sqlite for series
-            //} elseif ($this->request->get('tree')) {
-            //    $this->getHierarchy($instance);
+        } elseif ($this->request->get('tree')) {
+            $this->getHierarchy($instance);
         } elseif ($this->request->get('extra')) {
             // show extra information without books
             $this->getExtra($instance);
@@ -39,13 +38,13 @@ class PageSerieDetail extends PageWithDetail
             $this->getEntries($instance);
         }
         $this->setInstance($instance);
-        //if ($instance->hasChildCategories()) {
-        //    $this->hierarchy = [
-        //        "parent" => $instance->getParentEntry(),
-        //        "current" => $instance->getEntry(),
-        //        "children" => $instance->getChildEntries($this->request->get('tree')),
-        //    ];
-        //}
+        if ($instance->hasChildCategories()) {
+            $this->hierarchy = [
+                "parent" => $instance->getParentEntry(),
+                "current" => $instance->getEntry(),
+                "children" => $instance->getChildEntries($this->request->get('tree')),
+            ];
+        }
     }
 
     /**
@@ -58,6 +57,7 @@ class PageSerieDetail extends PageWithDetail
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstanceOrChildren($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
+        $this->getExtra($instance);
     }
 
     /**

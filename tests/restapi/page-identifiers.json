@@ -59,9 +59,16 @@
             "content": "2 books",
             "navlink": "vendor/bin/index.php/restapi/identifiers/wd/Wikidata",
             "number": 2
+        },
+        {
+            "class": "Identifiers",
+            "title": "no identifier",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/identifiers/0/no_identifier",
+            "number": 1
         }
     ],
-    "entriesCount": 7,
+    "entriesCount": 8,
     "isPaginated": 0,
     "sorted": "type",
     "sortedBy": "type",

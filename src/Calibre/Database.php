@@ -224,6 +224,12 @@ class Database
                 return Normalizer::normAndUp($s);
             }, 1);
         }
+        if (in_array('series', Config::get('calibre_categories_using_hierarchy', []))) {
+            self::$db->sqliteCreateFunction('title_sort', function ($s) {
+                //return Normalizer::getTitleSort($s);
+                return $s;
+            }, 1);
+        }
         // Check if we need to add unixepoch() for notes_db.notes
         $sql = 'SELECT sqlite_version() as version;';
         $stmt = self::$db->prepare($sql);
@@ -276,9 +282,11 @@ class Database
         self::getDb($database);
         self::$functions = true;
         // add dummy functions for selecting in meta and tag_browser_* views
-        self::$db->sqliteCreateFunction('title_sort', function ($s) {
-            return Normalizer::getTitleSort($s);
-        }, 1);
+        if (!in_array('series', Config::get('calibre_categories_using_hierarchy', []))) {
+            self::$db->sqliteCreateFunction('title_sort', function ($s) {
+                return Normalizer::getTitleSort($s);
+            }, 1);
+        }
         self::$db->sqliteCreateFunction('books_list_filter', function ($s) {
             return 1;
         }, 1);

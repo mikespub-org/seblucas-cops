@@ -798,7 +798,7 @@ class PageTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertEquals("Identifiers", $currentPage->title);
-        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("Amazon", $currentPage->entryArray [0]->title);
         $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("uri", $currentPage->entryArray [4]->title);
@@ -847,7 +847,7 @@ class PageTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertEquals("Formats", $currentPage->title);
-        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("EPUB", $currentPage->entryArray [0]->title);
         $this->assertEquals(16, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("PDF", $currentPage->entryArray [2]->title);

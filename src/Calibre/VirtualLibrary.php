@@ -107,7 +107,7 @@ class VirtualLibrary extends Base
     public static function countEntries($database = null)
     {
         $libraryList = Config::get('calibre_virtual_libraries', []);
-        if (!empty($libraryList) && $libraryList != static::ALL_WILDCARD) {
+        if (!empty($libraryList) && $libraryList !== static::ALL_WILDCARD) {
             return count($libraryList);
         }
         $libraries = self::getLibraries($database);
@@ -123,7 +123,7 @@ class VirtualLibrary extends Base
     public static function getEntries($database, $handler)
     {
         $libraryList = Config::get('calibre_virtual_libraries', []);
-        if (!empty($libraryList) && $libraryList == static::ALL_WILDCARD) {
+        if (!empty($libraryList) && $libraryList === static::ALL_WILDCARD) {
             $libraryList = [];
         }
         $libraries = self::getLibraries($database);
