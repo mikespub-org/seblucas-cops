@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\VirtualLibrary;
+use SebLucas\Cops\Input\Config;
 
 class PageAllVirtualLibraries extends Page
 {
@@ -36,6 +37,8 @@ class PageAllVirtualLibraries extends Page
         $this->entryArray = VirtualLibrary::getEntries($this->getDatabaseId(), $this->handler);
         $this->totalNumber = VirtualLibrary::countEntries($this->getDatabaseId());
         $this->sorted = null;
-        array_push($this->entryArray, VirtualLibrary::getWithoutEntry($this->getDatabaseId(), $this->handler));
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("libraries", Config::get('show_not_set_filter'))) {
+            array_push($this->entryArray, VirtualLibrary::getWithoutEntry($this->getDatabaseId(), $this->handler));
+        }
     }
 }

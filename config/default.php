@@ -238,6 +238,7 @@ $config['cops_books_filter'] = [];
 /*
  * Virtual libraries
  * to add as an array containing the library names configured in Calibre
+ * This is not supported in combination with multiple databases
  *
  * For example : ["Short Stories in English", "Fiction from this Century"];
  *
@@ -252,6 +253,7 @@ $config['cops_calibre_virtual_libraries'] = [];
 /*
  * Default virtual library to use (and filter on) in COPS
  * based on the Calibre list of virtual libraries (starting with 1)
+ * This is not supported in combination with multiple databases
  */
 $config['cops_virtual_library'] = '0';
 
@@ -316,6 +318,8 @@ $config['cops_custom_integer_split_range'] = 0;
  * For example for 'tags' and 'Type2' custom column in csv format:
  * $config['calibre_categories_using_hierarchy'] = ['tags', 'Type2'];
  * Note: here you need to specify the title/name of the custom column, not the lookup name = different from above
+ *
+ * Hierarchy will only be visible in templates that supports them: 'bootstrap2' and 'twigged' for now
  */
 $config['calibre_categories_using_hierarchy'] = [];
 
@@ -519,8 +523,10 @@ $config['cops_home_page'] = 'INDEX';
  * Show book count for "Not Set" columns in All<Column> pages and filter "Not Set" books in <Column>Detail pages
  * Use cases: unrated books, or books not tagged, or books without custom lastread date, ...
  * Note: author, language and publisher are always assumed present and cannot be filtered here
+ *
+ * Available values: ['custom', 'rating', 'series', 'tag', 'identifier', 'format', 'libraries']
  */
-$config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag'];
+$config['cops_show_not_set_filter'] = ['custom', 'rating', 'series', 'tag', 'identifier', 'format', 'libraries'];
 
 /*
  * Show links to sort by title, author, pubdate, rating or timestamp in HTML page detail

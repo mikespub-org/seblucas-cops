@@ -10,8 +10,8 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\VirtualLibrary;
-use SebLucas\Cops\Model\Entry;
 
 class PageCustomize extends Page
 {
@@ -171,7 +171,10 @@ class PageCustomize extends Page
         }
         $this->addHeaderEntry($title, $content);
 
-        $this->addVirtualLibraries($database);
+        // do not customize virtual libraries for multiple databases
+        if (!Database::isMultipleDatabaseEnabled()) {
+            $this->addVirtualLibraries($database);
+        }
     }
 
     /**

@@ -29,7 +29,7 @@ class PageTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
-        Config::set('show_not_set_filter', ['custom', 'rating', 'series', 'tag']);
+        Config::set('show_not_set_filter', ['custom', 'rating', 'series', 'tag', 'identifier', 'format', 'libraries']);
         Database::clearDb();
         $_GET = [];
     }

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Input;
 
+use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Response;
@@ -175,7 +176,9 @@ class Request
         }
         // get virtual library from option (see customize)
         if (!isset($this->urlParams['vl']) && !empty($this->option('virtual_library'))) {
-            $this->urlParams['vl'] = $this->option('virtual_library');
+            if (!Database::isMultipleDatabaseEnabled()) {
+                $this->urlParams['vl'] = $this->option('virtual_library');
+            }
         }
         if (!empty(Config::get('calibre_user_database'))) {
             $user = $this->getUserName();

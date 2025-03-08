@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -24,6 +25,7 @@ class VirtualLibrary extends Base
     public const ROUTE_DETAIL = "page-library";
     public const SQL_TABLE = "libraries";
     public const URL_PARAM = "vl";
+    public const ALL_WILDCARD = ["*"];
 
     /** @var array<mixed> */
     protected static array $libraries = [];
@@ -104,6 +106,10 @@ class VirtualLibrary extends Base
      */
     public static function countEntries($database = null)
     {
+        $libraryList = Config::get('calibre_virtual_libraries', []);
+        if (!empty($libraryList) && $libraryList != static::ALL_WILDCARD) {
+            return count($libraryList);
+        }
         $libraries = self::getLibraries($database);
         return count($libraries);
     }
@@ -116,10 +122,18 @@ class VirtualLibrary extends Base
      */
     public static function getEntries($database, $handler)
     {
+        $libraryList = Config::get('calibre_virtual_libraries', []);
+        if (!empty($libraryList) && $libraryList == static::ALL_WILDCARD) {
+            $libraryList = [];
+        }
         $libraries = self::getLibraries($database);
         $entryArray = [];
         $id = 1;
         foreach ($libraries as $name => $value) {
+            if (!empty($libraryList) && !in_array($name, $libraryList)) {
+                $id += 1;
+                continue;
+            }
             // @todo get book count filtered by value
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $value, 'count' => 0];
             $instance = new self($post, $database);
