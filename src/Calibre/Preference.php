@@ -111,6 +111,27 @@ class Preference
     }
 
     /**
+     * Summary of getCategoriesUsingHierarchy
+     * @param ?int $database
+     * @return self|null
+     */
+    public static function getCategoriesUsingHierarchy($database = null)
+    {
+        return self::getInstanceByKey('categories_using_hierarchy', $database);
+    }
+
+    /**
+     * Summary of getFieldMetadata
+     * @param ?int $database
+     * @return self|null
+     */
+    public static function getFieldMetadata($database = null)
+    {
+        // @todo investigate format
+        return self::getInstanceByKey('field_metadata', $database);
+    }
+
+    /**
      * Summary of getUserCategories
      * @param ?int $database
      * @return self|null
