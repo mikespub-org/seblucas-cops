@@ -96,8 +96,14 @@ class JsonRenderer extends BaseRenderer
         $tags = [];
         foreach ($book->getTags() as $tag) {
             $tag->setHandler($handler);
+            // @todo add link to parent(s) for hierarchical tags?
+            if ($tag->hasChildCategories()) {
+                $tagName = str_replace(".", " > ", $tag->name);
+            } else {
+                $tagName = $tag->name;
+            }
             array_push($tags, [
-                "name" => $tag->name,
+                "name" => $tagName,
                 "url" => $tag->getUri(),
             ]);
         }
@@ -119,7 +125,12 @@ class JsonRenderer extends BaseRenderer
             $su = "";
         } else {
             $serie->setHandler($handler);
-            $sn = $serie->name;
+            // @todo add link to parent(s) for hierarchical series?
+            if ($serie->hasChildCategories()) {
+                $sn = str_replace(".", " > ", $serie->name);
+            } else {
+                $sn = $serie->name;
+            }
             $scn = str_format(localize("content.series.data"), $book->seriesIndex, $serie->name);
             $su = $serie->getUri();
         }
@@ -223,8 +234,14 @@ class JsonRenderer extends BaseRenderer
         $out ["tags"] = [];
         foreach ($book->getTags() as $tag) {
             $tag->setHandler($handler);
+            // @todo add link to parent(s) for hierarchical tags?
+            if ($tag->hasChildCategories()) {
+                $tagName = str_replace(".", " > ", $tag->name);
+            } else {
+                $tagName = $tag->name;
+            }
             array_push($out ["tags"], [
-                "name" => $tag->name,
+                "name" => $tagName,
                 "url" => $tag->getUri(),
             ]);
         }
@@ -576,12 +593,23 @@ class JsonRenderer extends BaseRenderer
         if (!$currentPage->hierarchy) {
             return $hierarchy;
         }
+        $hastree = $this->request->get('tree', false);
+        if ($hastree) {
+            $current = $this->getContentArray($currentPage->hierarchy['current'], $extraParams);
+        } else {
+            $params = $extraParams;
+            $params['tree'] = 1;
+            $current = $this->getContentArray($currentPage->hierarchy['current'], $params);
+        }
         $hierarchy = [
-            "parent" => $this->getContentArray($currentPage->hierarchy['parent'], $extraParams),
-            "current" => $this->getContentArray($currentPage->hierarchy['current'], $extraParams),
+            "parents" => [],
+            "current" => $current,
             "children" => [],
-            "hastree" => $this->request->get('tree', false),
+            "hastree" => $hastree,
         ];
+        foreach ($currentPage->hierarchy['parents'] as $entry) {
+            array_push($hierarchy["parents"], $this->getContentArray($entry, $extraParams));
+        }
         foreach ($currentPage->hierarchy['children'] as $entry) {
             array_push($hierarchy["children"], $this->getContentArray($entry, $extraParams));
         }
@@ -602,6 +630,10 @@ class JsonRenderer extends BaseRenderer
         }
         $series = [];
         foreach ($currentPage->extra['series'] as $entry) {
+            // @todo add link to parent(s) for hierarchical series?
+            if (!empty($entry->instance) && $entry->instance->hasChildCategories()) {
+                $entry->title = str_replace(".", " > ", $entry->title);
+            }
             array_push($series, $this->getContentArray($entry, $extraParams));
         }
         return $series;
@@ -694,7 +726,12 @@ class JsonRenderer extends BaseRenderer
         $out = [ "title" => $currentPage->title];
         $out ["parentTitle"] = $currentPage->parentTitle;
         if (!empty($out ["parentTitle"])) {
-            $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
+            if ($currentPage->hierarchy) {
+                // @todo add link to parent(s) for hierarchical series, tags etc.
+                $out ["title"] = $out ["parentTitle"] . " > " . str_replace(".", " > ", $out ["title"]);
+            } else {
+                $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
+            }
         }
         $out ["baseurl"] = $this->getLink();
         $entries = [];
@@ -757,6 +794,7 @@ class JsonRenderer extends BaseRenderer
         }
 
         $out ["homeurl"] = $this->getHomeUrl($out["baseurl"]);
+        // @todo add link to parent(s) for hierarchical series, tags etc.
         $out ["parenturl"] = $this->getParentUrl($currentPage, $out["filters"], $out["homeurl"]);
         $out ["hierarchy"] = $this->getHierarchy($currentPage, $extraParams);
         $out ["extra"] = $currentPage->extra;

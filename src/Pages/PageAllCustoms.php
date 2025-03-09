@@ -57,7 +57,7 @@ class PageAllCustoms extends Page
         } elseif ($columnType->hasChildCategories()) {
             $this->sorted = $this->request->getSorted("sort");
             // use tag_browser_custom_column_X view here, to get the full hierarchy?
-            $this->entryArray = $columnType->browseAllCustomValues($this->n, $this->sorted);
+            $this->entryArray = $columnType->browseAllCustomValues($this->n, $this->sorted, $this->request->get('tree'));
             $this->totalNumber = $columnType->getDistinctValueCount();
         } else {
             $this->sorted = $this->request->getSorted("value");

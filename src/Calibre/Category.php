@@ -14,10 +14,13 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
+use Exception;
 
 abstract class Category extends Base
 {
+    public const SQL_CREATE = 'insert into categories (name) values (?)';
     public const CATEGORY = "categories";
+
     /** @var ?array<Category> */
     protected $children = null;
     /** @var Category|false|null */
@@ -90,19 +93,44 @@ abstract class Category extends Base
     }
 
     /**
+     * Find current name of hierarchical name
+     * @param string $name
+     * @return string
+     */
+    public static function findCurrentName($name)
+    {
+        $parts = explode('.', $name);
+        $current = array_pop($parts);
+        return $current;
+    }
+
+    /**
      * Find parent name of hierarchical name
      * @param string $name
      * @return string
      */
-    protected static function findParentName($name)
+    public static function findParentName($name)
     {
         $parts = explode('.', $name);
-        $child = array_pop($parts);
+        $current = array_pop($parts);
         if (empty($parts)) {
             return '';
         }
         $parent = implode('.', $parts);
         return $parent;
+    }
+
+    /**
+     * Summary of hasParentCategory
+     * @return bool
+     */
+    public function hasParentCategory()
+    {
+        $parentName = static::findParentName($this->getTitle());
+        if (empty($parentName)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -126,12 +154,19 @@ abstract class Category extends Base
         if (count($parents) == 1) {
             $this->parent = $parents[0];
         }
-        // @todo create dummy parent for missing hierarchy in series? doesn't help filter by it afterwards :-(
-        //$className = static::class;
-        // use id = 0 to support route urls
-        //$instance = new $className((object) ['id' => 0, 'name' => $find, 'sort' => $find, 'count' => 0], $this->databaseId);
-        //$instance->setHandler($this->handler);
-        //return $instance;
+        // no count in tag_browser_* for this parent - try to find it by name
+        $this->parent = static::getInstanceByName($parentName, $this->databaseId);
+        if (!empty($this->parent)) {
+            $this->parent->count = 0;
+            $this->parent->setHandler($this->handler);
+            return $this->parent;
+        }
+        // parent is missing - try to create it
+        try {
+            $this->parent = $this->createMissingParent($parentName);
+        } catch (Exception $e) {
+            throw new Exception('Unable to create missing parent ' . static::CATEGORY . ' "' . $parentName . '": ' . $e->getMessage());
+        }
         return $this->parent;
     }
 
@@ -146,6 +181,32 @@ abstract class Category extends Base
             return $parent->getEntry($parent->count);
         }
         return null;
+    }
+
+    /**
+     * Get trail of parent entries
+     * @return array<Entry>
+     */
+    public function getParentTrail()
+    {
+        $trail = [];
+        $parentName = static::findParentName($this->getTitle());
+        while (!empty($parentName)) {
+            $parent = static::getInstanceByName($parentName, $this->databaseId);
+            if (empty($parent) || empty($parent->id)) {
+                try {
+                    $this->parent = $this->createMissingParent($parentName);
+                } catch (Exception $e) {
+                    throw new Exception('Unable to create missing parent ' . static::CATEGORY . ' "' . $parentName . '": ' . $e->getMessage());
+                }
+            }
+            $parent->setHandler($this->handler);
+            $entry = $parent->getEntry();
+            $entry->title = static::findCurrentName($entry->title);
+            $trail[] = $entry;
+            $parentName = static::findParentName($parentName);
+        }
+        return array_reverse($trail);
     }
 
     /**
@@ -183,5 +244,54 @@ abstract class Category extends Base
             array_push($instances, $instance);
         }
         return $instances;
+    }
+
+    /**
+     * Get parent, current and child entries for hierarchical tags or custom columns
+     * @param int|bool|null $expand include all child categories at all levels or only direct children
+     * @return array<string, mixed>
+     */
+    public function getHierarchy($expand = false)
+    {
+        $parents = $this->getParentTrail();
+        $current = $this->getEntry();
+        $children = $this->getChildEntries($expand);
+        // remove current title from children
+        foreach ($children as $id => $entry) {
+            $childTitle = substr($entry->title, strlen($current->title) + 1);
+            $children[$id]->title = $childTitle;
+        }
+        // remove parent title from current
+        $current->title = static::findCurrentName($current->title);
+        return [
+            "parents" => $parents,
+            "current" => $current,
+            "children" => $children,
+        ];
+    }
+
+    /**
+     * Create missing parent for hierarchy
+     * @param string $name
+     * @return Category|null
+     */
+    public function createMissingParent($name)
+    {
+        $query = static::SQL_CREATE;
+        $params = [ $name ];
+        $result = Database::getDb($this->databaseId)->prepare($query);
+        $result->execute($params);
+        $instance = static::getInstanceByName($name, $this->databaseId);
+        if ($instance) {
+            $instance->count = 0;
+            $instance->setHandler($this->handler);
+        } else {
+            // create dummy parent for missing hierarchy? doesn't help filter by it afterwards :-(
+            //$className = static::class;
+            // use id = 0 to support route urls
+            //$instance = new $className((object) ['id' => 0, 'name' => $name, 'sort' => $name, 'count' => 0], $this->databaseId);
+            //$instance->setHandler($this->handler);
+        }
+        return $instance;
     }
 }

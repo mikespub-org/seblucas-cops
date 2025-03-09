@@ -30,6 +30,7 @@ class Serie extends Category
     where books_series_link.book = books.id and series = ? {1} order by series_index';
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books.id not in (select book from books_series_link) {1} order by books.sort';
+    public const SQL_CREATE = 'insert into series (name) values (?)';  // sort will be set by insert trigger here
     public const URL_PARAM = "s";
     public const CATEGORY = "series";
 

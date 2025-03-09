@@ -42,6 +42,7 @@ abstract class CustomColumnType
     where {2}.book = books.id and {2}.value >= ? and {2}.value <= ? {1} order by {2}.value';
     public const SQL_BOOKLIST_NULL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books.id not in (select book from {2}) {1} order by books.sort';
+    public const SQL_CREATE = 'insert into {0} (value) values (?)';
     public const ALL_WILDCARD         = ["*"];
 
     public const TYPE_TEXT      = "text";        // type 1 + 2 (calibre)
@@ -278,9 +279,10 @@ abstract class CustomColumnType
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
      * @param int $n
      * @param ?string $sort
+     * @param int|bool|null $expand include all child categories at all levels or only direct children - @todo
      * @return array<Entry>
      */
-    public function browseAllCustomValues($n = -1, $sort = null)
+    public function browseAllCustomValues($n = -1, $sort = null, $expand = false)
     {
         if (!$this->hasChildCategories()) {
             return [];
@@ -299,6 +301,9 @@ abstract class CustomColumnType
         $entryArray = [];
         while ($post = $result->fetchObject()) {
             $customcolumn = new CustomColumn($post->id, $post->value, $this);
+            if (!$expand && $customcolumn->hasParentCategory()) {
+                // @todo add missing parents here too if needed? - see Baselist::browseAllEntries()
+            }
             array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
@@ -349,6 +354,26 @@ abstract class CustomColumnType
             array_push($instances, $customcolumn);
         }
         return $instances;
+    }
+
+    /**
+     * Create missing parent for hierarchy
+     * @param string $name
+     * @return CustomColumn
+     */
+    public function createMissingParent($name)
+    {
+        $query = str_format(static::SQL_CREATE, $this->getTableName());
+        $params = [ $name ];
+        $result = Database::getDb($this->databaseId)->prepare($query);
+        $result->execute($params);
+        $instance = $this->getCustomByValue($name);
+        if ($instance) {
+            // ... handler already set in constructor here
+        } else {
+            // create dummy parent for missing hierarchy? doesn't help filter by it afterwards :-(
+        }
+        return $instance;
     }
 
     /**
@@ -564,6 +589,21 @@ abstract class CustomColumnType
      * @return ?CustomColumn
      */
     abstract public function getCustom($id);
+
+    /**
+     * Summary of getCustomByValue - only if there is no book value in customcolumn table itself
+     * @param mixed $value
+     * @return CustomColumn
+     */
+    public function getCustomByValue($value)
+    {
+        $query = str_format("SELECT id, value AS name FROM {0} WHERE value = ?", $this->getTableName());
+        $result = Database::query($query, [$value], $this->databaseId);
+        if ($post = $result->fetchObject()) {
+            return new CustomColumn($post->id, $post->name, $this);
+        }
+        return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
+    }
 
     /**
      * Return an entry array for all possible (in the DB used) values of this column by querying the database

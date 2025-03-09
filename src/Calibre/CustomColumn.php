@@ -11,9 +11,9 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
+use Exception;
 
 /**
  * A CustomColumn with an value
@@ -26,6 +26,7 @@ class CustomColumn extends Category
     public const ROUTE_ALL = "page-customtype";
     public const ROUTE_DETAIL = "page-custom";
     public const URL_PARAM = "c";
+    public const CATEGORY = "custom_column";
     public const NOT_SET = "not_set";
 
     /** @var string the (string) representation of the value */
@@ -189,6 +190,32 @@ class CustomColumn extends Category
     }
 
     /**
+     * Get trail of parent entries
+     * @return array<Entry>
+     */
+    public function getParentTrail()
+    {
+        $trail = [];
+        $parentName = static::findParentName($this->getTitle());
+        while (!empty($parentName)) {
+            $parent = $this->customColumnType->getCustomByValue($parentName);
+            if (empty($parent) || empty($parent->id)) {
+                try {
+                    $this->parent = $this->createMissingParent($parentName);
+                } catch (Exception $e) {
+                    throw new Exception('Unable to create missing parent ' . static::CATEGORY . ' "' . $parentName . '": ' . $e->getMessage());
+                }
+            }
+            $parent->setHandler($this->handler);
+            $entry = $parent->getEntry();
+            $entry->title = static::findCurrentName($entry->title);
+            $trail[] = $entry;
+            $parentName = static::findParentName($parentName);
+        }
+        return array_reverse($trail);
+    }
+
+    /**
      * Find related categories for hierarchical custom columns
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
      * @param string|array<mixed> $find
@@ -197,6 +224,16 @@ class CustomColumn extends Category
     public function getRelatedCategories($find)
     {
         return $this->customColumnType->getRelatedCategories($find);
+    }
+
+    /**
+     * Create missing parent for hierarchy
+     * @param string $name
+     * @return CustomColumn
+     */
+    public function createMissingParent($name)
+    {
+        return $this->customColumnType->createMissingParent($name);
     }
 
     /**

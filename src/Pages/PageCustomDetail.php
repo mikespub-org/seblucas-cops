@@ -43,25 +43,21 @@ class PageCustomDetail extends PageWithDetail
             $this->filterParams = [CustomColumn::URL_PARAM => [strval($customId) => $this->idGet  ?? CustomColumn::NOT_SET]];
             $this->getFilters($instance);
         } elseif ($this->request->get('tree')) {
-            $this->getHierarchy($instance);
+            $this->getEntriesWithChildren($instance);
         } else {
             $this->getCustomEntries($instance);
         }
         if ($instance->hasChildCategories()) {
-            $this->hierarchy = [
-                "parent" => $instance->getParentEntry(),
-                "current" => $instance->getEntry(),
-                "children" => $instance->getChildEntries($this->request->get('tree')),
-            ];
+            $this->hierarchy = $instance->getHierarchy($this->request->get('tree'));
         }
     }
 
     /**
-     * Summary of getHierarchy
+     * Summary of getEntriesWithChildren
      * @param CustomColumn $instance
      * @return void
      */
-    public function getHierarchy($instance)
+    public function getEntriesWithChildren($instance)
     {
         $booklist = new BookList($this->request);
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstanceOrChildren($instance, $this->n);

@@ -226,8 +226,7 @@ class Database
         }
         if (in_array('series', Config::get('calibre_categories_using_hierarchy', []))) {
             self::$db->sqliteCreateFunction('title_sort', function ($s) {
-                //return Normalizer::getTitleSort($s);
-                return $s;
+                return Normalizer::getTitleSort($s);
             }, 1);
         }
         // Check if we need to add unixepoch() for notes_db.notes

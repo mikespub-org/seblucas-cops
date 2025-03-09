@@ -320,6 +320,7 @@ $config['cops_custom_integer_split_range'] = 0;
  * Note: here you need to specify the title/name of the custom column, not the lookup name = different from above
  *
  * Hierarchy will only be visible in templates that supports them: 'bootstrap2' and 'twigged' for now
+ * Caution: this requires *write* access to the database if any parents are missing in the hierarchy
  */
 $config['calibre_categories_using_hierarchy'] = [];
 

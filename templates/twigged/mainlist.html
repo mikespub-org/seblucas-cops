@@ -7,18 +7,26 @@
 <div id="filter">
     {% if it.hierarchy  %}
     <ul>
-        {% if it.hierarchy.parent  %}
-            <li><a href="{{it.hierarchy.parent.navlink}}"><strong>{{it.hierarchy.parent.title}}</strong></a></li>
-        {% endif %}
+        {% for entry in it.hierarchy.parents %}
+            <li><a href="{{entry.navlink}}"><span class="glyphicon glyphicon-arrow-up"></span><strong>{{entry.title}}</strong></a></li>
+        {% endfor %}
         {% if it.hierarchy.current  %}
-            {% if it.hierarchy.hastree  %}
-                <li><a href="{{it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+            {% if it.hierarchy.children|length > 0 %}
+                {% if it.hierarchy.hastree  %}
+                    <li><a href="{{it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+                {% else %}
+                    <li><a href="{{it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+                {% endif %}
             {% else %}
-                <li><a href="{{it.hierarchy.current.navlink}}&tree=1"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></a></li>
+                <li><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></li>
             {% endif %}
         {% endif %}
         {% for entry in it.hierarchy.children %}
-            <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
+            {% if entry.number %}
+                <li><a href="{{entry.navlink}}">{{entry.title}} ({{entry.number}})</a></li>
+            {% else %}
+                <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
+            {% endif %}
         {% endfor %}
     </ul>
     {% endif %}

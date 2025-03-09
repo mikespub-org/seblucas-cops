@@ -144,6 +144,16 @@ class BaseList
     }
 
     /**
+     * Summary of getInstanceByName
+     * @param string $name
+     * @return mixed
+     */
+    public function getInstanceByName($name)
+    {
+        return $this->className::getInstanceByName($name, $this->databaseId);
+    }
+
+    /**
      * Summary of getWithoutEntry
      * @return ?Entry
      */
@@ -637,9 +647,10 @@ class BaseList
      * Use the Calibre tag browser view to retrieve all tags or series with count
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
      * @param int $n
+     * @param int|bool|null $expand include all child categories at all levels or only direct children
      * @return array<Entry>
      */
-    public function browseAllEntries($n = 1)
+    public function browseAllEntries($n = 1, $expand = false)
     {
         if (!$this->hasChildCategories()) {
             return [];
@@ -653,13 +664,38 @@ class BaseList
 
         $result = Database::queryFilter($query, "", "", [], $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
+        $parents = [];
         while ($post = $result->fetchObject()) {
-            /** @var Base|Book $instance */
+            /** @var Category $instance */
             $instance = new $this->className($post, $this->databaseId);
             $instance->setHandler($this->handler);
-            array_push($entryArray, $instance->getEntry($post->count));
+            if (!$expand && $instance->hasParentCategory()) {
+                // add count to parent entry
+                $parent = $instance->getParentCategory();
+                while ($parent) {
+                    $parentName = $parent->getTitle();
+                    if (empty($parents[$parentName])) {
+                        $parents[$parentName] = $parent;
+                        // set parent entry if needed
+                        if (!$parent->hasParentCategory()) {
+                            $entryArray[$parent->getTitle()] ??= $parent->getEntry($post->count);
+                        }
+                    }
+                    $parents[$parentName]->count += $post->count;
+                    $parent = $parent->getParentCategory();
+                }
+                continue;
+            }
+            $entryArray[$instance->getTitle()] = $instance->getEntry($post->count);
         }
-        return $entryArray;
+        // update count of parent entries
+        foreach ($entryArray as $entryName => $entry) {
+            if (array_key_exists($entryName, $parents)) {
+                $count = $parents[$entryName]->count;
+                $entryArray[$entryName] = $parents[$entryName]->getEntry($count);
+            }
+        }
+        return array_values($entryArray);
     }
 
     /**

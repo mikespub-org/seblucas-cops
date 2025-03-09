@@ -39,7 +39,7 @@ class PageAllTags extends Page
         $this->sorted = $this->request->getSorted("sort");
         if ($baselist->hasChildCategories()) {
             // use tag_browser_tags view here, to get the full hierarchy?
-            $this->entryArray = $baselist->browseAllEntries($this->n);
+            $this->entryArray = $baselist->browseAllEntries($this->n, $this->request->get('tree'));
         } else {
             $this->entryArray = $baselist->getRequestEntries($this->n);
         }

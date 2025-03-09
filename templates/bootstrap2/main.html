@@ -9,18 +9,26 @@
 <div id="filter">
     <ul>
     {{? it.hierarchy }}
-        {{? it.hierarchy.parent }}
-            <li><a href="{{=it.hierarchy.parent.navlink}}"><strong>{{=it.hierarchy.parent.title}}</strong></a></li>
-        {{?}}
+        {{~it.hierarchy.parents:entry:idx}}
+            <li><a href="{{=entry.navlink}}"><span class="glyphicon glyphicon-arrow-up"></span><strong>{{=entry.title}}</strong></a></li>
+        {{~}}
         {{? it.hierarchy.current }}
-            {{? it.hierarchy.hastree }}
-                <li><a href="{{=it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
+            {{? it.hierarchy.children.length > 0 }}
+                {{? it.hierarchy.hastree }}
+                    <li><a href="{{=it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-minus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
+                {{??}}
+                    <li><a href="{{=it.hierarchy.current.navlink}}"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
+                {{?}}
             {{??}}
-                <li><a href="{{=it.hierarchy.current.navlink}}&tree=1"><span class="glyphicon glyphicon-plus"></span><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></a></li>
+                <li><span class="hidden-sm hidden-md"> {{=it.hierarchy.current.title}}</span></li>
             {{?}}
         {{?}}
         {{~it.hierarchy.children:entry:idx}}
-            <li><a href="{{=entry.navlink}}">{{=entry.title}}</a></li>
+            {{? entry.number }}
+                <li><a href="{{=entry.navlink}}">{{=entry.title}} ({{=entry.number}})</a></li>
+            {{??}}
+                <li><a href="{{=entry.navlink}}">{{=entry.title}}</a></li>
+            {{?}}
         {{~}}
     {{?}}
     </ul>
