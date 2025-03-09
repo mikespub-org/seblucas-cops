@@ -55,6 +55,8 @@
     "data.alphabetical.none": "Alphabetical index of absolutely no formats",
     "data.alphabetical.one": "Alphabetical index of the single format",
     "data.title": "Formats",
+    "databases.default": "Default database",
+    "databases.none": "No default database",
     "default.template": "Default COPS template",
     "downloadall.title": "Download all",
     "downloadall.tooltip": "Download a zip file containing all books on this page in this format",
