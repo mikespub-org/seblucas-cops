@@ -19,7 +19,10 @@ if (!isset($config)) {
  * containing all the formats.
  * BEWARE : it has to end with a /
  * You can enable multiple database with this notation instead of a simple string :
- * $config['calibre_directory'] = array ("My database name" => "/home/directory/calibre1/", "My other database name" => "/home/directory/calibre2/");
+ * $config['calibre_directory'] = [
+ *     "My database name" => "/home/directory/calibre1/",
+ *     "My other database name" => "/home/directory/calibre2/",
+ * ];
  */
 $config['calibre_directory'] = './';
 
@@ -227,11 +230,12 @@ $config['cops_update_epub-metadata'] = '0';
 /*
  * Filter on tags to book list
  * Only works with the OPDS catalog
- * Usage : array ("I only want to see books using the tag : Tag1"     => "Tag1",
- *                "I only want to see books not using the tag : Tag1" => "!Tag1",
- *                "I want to see every books"                         => "",
- *
- * Example : array ("All" => "", "Unread" => "!Read", "Read" => "Read")
+ * Usage : [
+ *     "I only want to see books using the tag : Tag1"     => "Tag1",
+ *     "I only want to see books not using the tag : Tag1" => "!Tag1",
+ *     "I want to see every books"                         => "",
+ * ];
+ * Example : ["All" => "", "Unread" => "!Read", "Read" => "Read"];
  */
 $config['cops_books_filter'] = [];
 
@@ -346,31 +350,34 @@ $config['cops_kepubify_path'] = '';
  * Don't forget to authorize the sender email you configured in your Kindle's  Approved Personal Document E-mail List.
  *
  * If you want to use a simple smtp server (provided by your ISP for example), you can configure it like that :
- * $config['cops_mail_configuration'] = array( "smtp.host"     => "smtp.free.fr",
- *                                           "smtp.username" => "",
- *                                           "smtp.password" => "",
- *                                           "smtp.secure"   => "",
- *                                           "smtp.port"     => "", // Not mandatory, if smtp.secure is set then defaults to 465
- *                                           "address.from"  => "cops@slucas.fr",
- *                                           "subject"       => "Sent by COPS : " // Not mandatory
- *                                           );
+ * $config['cops_mail_configuration'] = [
+ *     "smtp.host"     => "smtp.free.fr",
+ *     "smtp.username" => "",
+ *     "smtp.password" => "",
+ *     "smtp.secure"   => "",
+ *     "smtp.port"     => "", // Not mandatory, if smtp.secure is set then defaults to 465
+ *     "address.from"  => "cops@slucas.fr",
+ *     "subject"       => "Sent by COPS : " // Not mandatory
+ * ];
  *
  * For Gmail (ssl is mandatory) :
- * $config['cops_mail_configuration'] = array( "smtp.host"     => "smtp.gmail.com",
- *                                           "smtp.username" => "YOUR GMAIL ADRESS",
- *                                           "smtp.password" => "YOUR GMAIL PASSWORD",
- *                                           "smtp.secure"   => "ssl",
- *                                           "address.from"  => "cops@slucas.fr"
- *                                           );
+ * $config['cops_mail_configuration'] = [
+ *     "smtp.host"     => "smtp.gmail.com",
+ *     "smtp.username" => "YOUR GMAIL ADRESS",
+ *     "smtp.password" => "YOUR GMAIL PASSWORD",
+ *     "smtp.secure"   => "ssl",
+ *     "address.from"  => "cops@slucas.fr"
+ * ];
  *
  * For GMX (tls and 587 is mandatory) :
- * $config['cops_mail_configuration'] = array( "smtp.host"   => "mail.gmx.com",
- *                                           "smtp.username" => "YOUR GMX ADRESS",
- *                                           "smtp.password" => "YOUR GMX PASSWORD",
- *                                           "smtp.secure"   => "tls",
- *                                           "smtp.port"     => "587",
- *                                           "address.from"  => "cops@slucas.fr"
- *                                           );
+ * $config['cops_mail_configuration'] = [
+ *     "smtp.host"   => "mail.gmx.com",
+ *     "smtp.username" => "YOUR GMX ADRESS",
+ *     "smtp.password" => "YOUR GMX PASSWORD",
+ *     "smtp.secure"   => "tls",
+ *     "smtp.port"     => "587",
+ *     "address.from"  => "cops@slucas.fr"
+ * ];
  */
 $config['cops_mail_configuration'] = null;
 
@@ -466,9 +473,10 @@ $config['calibre_user_database'] = null;
 /*
  * Enable PHP password protection (You can use if htpasswd is not possible for you)
  * If possible prefer htpasswd or authentication done by reverse proxy!
- * array( "username" => "xxx", "password" => "secret") : Enable PHP password protection
- * NULL : Disable PHP password protection (You can still use htpasswd or reverse proxy)
- * $config['calibre_user_database'] : Calibre user accounts database - WARNING: passwords are in clear!
+ * Supported values:
+ *     array with ["username" => "xxx", "password" => "secret"] : Enable PHP password protection
+ *     null : Disable PHP password protection (You can still use htpasswd or reverse proxy)
+ *     string with $config['calibre_user_database'] : Calibre user accounts database - WARNING: passwords are in clear!
  */
 $config['cops_basic_authentication'] = null;
 

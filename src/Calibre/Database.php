@@ -54,6 +54,24 @@ class Database
     }
 
     /**
+     * Summary of findDatabaseId
+     * @param string $dbName
+     * @return int|null
+     */
+    public static function findDatabaseId($dbName)
+    {
+        if (!self::isMultipleDatabaseEnabled()) {
+            return null;
+        }
+        $array = array_keys(Config::get('calibre_directory'));
+        $database = array_search($dbName, $array);
+        if ($database === false || !is_numeric($database)) {
+            return null;
+        }
+        return (int) $database;
+    }
+
+    /**
      * Summary of useAbsolutePath
      * @param ?int $database
      * @return bool
