@@ -13,7 +13,11 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
-  * ...
+  * Clean up handler and endpoint code for uri generation
+  * Use short array syntax for arrays in config/default.php
+  * Show parent trail for series when using hierarchy - see issue #134 by @HelenaGwyn
+  * Use series and tags hierarchy in custom columns test database
+  * Disable customize virtual library for multiple databases - see issue #133 by @HelenaGwyn
 
 3.5.7 - 20250307 Fix format issues + switch routing library
   * Remove support for legacy config_local.php file + add warning message

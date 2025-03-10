@@ -61,16 +61,15 @@ class UriGenerator
 
     /**
      * Process link with defined handler and params (incl. page)
-     * @param class-string<BaseHandler> $handler defined in Route::link(), BaseHandler::link() or PageHandler::link() - @todo get rid of this = unused
      * @param array<mixed> $params with HANDLER_PARAM set (base), unset (page) or variable (link)
      * @param string $prefix (optional)
      * @return string
      */
-    public static function process($handler, $params, $prefix = '')
+    public static function process($params, $prefix = '')
     {
         // ?page=... or /route/...
         $uri = self::route($params, $prefix);
-        return self::absolute($uri, $handler);
+        return self::absolute($uri);
     }
 
     /**
@@ -95,13 +94,12 @@ class UriGenerator
     /**
      * Return absolute path for uri
      * @param string $uri
-     * @param mixed $handler - @todo get rid of this = unused
      * @return string
      */
-    public static function absolute($uri, $handler = 'html')
+    public static function absolute($uri)
     {
-        // endpoint.php or handler or empty
-        $endpoint = self::endpoint($handler);
+        // index.php or empty with front_controller
+        $endpoint = self::endpoint();
         if (empty($endpoint) && str_starts_with($uri, '/')) {
             // URL format: /base/route/...
             return self::base() . substr($uri, 1);
@@ -111,19 +109,17 @@ class UriGenerator
     }
 
     /**
-     * Get endpoint for handler
-     * @todo get rid of param here - prefix is already included
-     * @param string $handler
+     * Get endpoint or empty with front_controller
      * @return string
      */
-    public static function endpoint($handler = 'html')
+    public static function endpoint()
     {
         if (Config::get('front_controller')) {
-            // no endpoint prefix for supported handlers
+            // no endpoint prefix
             return '';
         }
-        // use default endpoint for supported handlers
-        return Config::ENDPOINT['html'];
+        // use default endpoint
+        return Config::ENDPOINT;
     }
 
     /**

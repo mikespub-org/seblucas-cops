@@ -92,7 +92,7 @@ class PageHandler extends BaseHandler
         }
         // use default page handler to find the route for html and json
         unset($params[Route::HANDLER_PARAM]);
-        return UriGenerator::process(static::class, $params);
+        return UriGenerator::process($params);
     }
 
     /**

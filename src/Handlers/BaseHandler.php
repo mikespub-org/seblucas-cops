@@ -53,7 +53,7 @@ abstract class BaseHandler implements HasContextInterface
         }
         // use this specific handler to find the route
         $params[Route::HANDLER_PARAM] = static::class;
-        return UriGenerator::process(static::class, $params);
+        return UriGenerator::process($params);
     }
 
     /**

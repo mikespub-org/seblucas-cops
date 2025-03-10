@@ -98,19 +98,19 @@ $currentPage = PageId::getPage($page, $request);
 
 ## Routes, Pages & Calibre
 
-Route | PAGE_ID | Page # | Pages | Calibre
-------|---------|--------|-------|--------
-/index | INDEX | index | PageIndex | *
-/authors | ALL_AUTHORS | 1 | PageAllAuthors | BaseList[Author]
-/authors/{id} | AUTHOR_DETAIL | 3 | PageAuthorDetail | Author
-/books | ALL_BOOKS | 4 | PageAllBooks | BookList
-/books/{id} | BOOK_DETAIL | 13 | PageBookDetail | Book
+Route | PAGE_ID | Page | Page # | Pages | Calibre
+------|---------|------|--------|-------|--------
+/index | INDEX | index | - | PageIndex | *
+/authors | ALL_AUTHORS | authors | 1 | PageAllAuthors | BaseList[Author]
+/authors/{id} | AUTHOR_DETAIL | author | 3 | PageAuthorDetail | Author
+/books | ALL_BOOKS | books | 4 | PageAllBooks | BookList
+/books/{id} | BOOK_DETAIL | book | 13 | PageBookDetail | Book
 ... | 
 
 Routes for Pages are defined in `PageHandler::getRoutes()` and used by both `HtmlHandler` and `JsonHandler`.
 Other routes are defined in the corresponding handlers. Since COPS 3.4.x route names are used to generate URLs.
 
-The PAGE_ID and page=... values are defined in `PageId` and correspond to one of the Pages. Pages cover a particular Calibre entity like Author, Book etc. or a list of entities. Generic features like About or Customize are handled by their own Pages. 
+The PAGE_ID and page=... values are defined in `PageId` and correspond to one of the Pages. Pages cover a particular Calibre entity like Author, Book etc. or a list of entities. Generic features like About or Customize are handled by their own Pages. Page # are replaced with strings since COPS 3.5.x.
 
 The Pages will use the `getEntries()` method to collect all the entries that will then be Output by the `HtmlRenderer`, `JsonRenderer` or `OpdsRenderer`.
 

@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Response;
 
@@ -481,7 +482,7 @@ class Request
     /**
      * Get handler class corresponding to _handler param
      * @todo move to RequestContext
-     * @return class-string
+     * @return class-string<BaseHandler>
      */
     public function getHandler()
     {
@@ -578,8 +579,7 @@ class Request
     {
         // set in parseParams() based on Route::match()
         $handler = $this->getHandler();
-        $feedHandlers = [Route::getHandler('feed'), Route::getHandler('opds')];
-        if (in_array($handler, $feedHandlers)) {
+        if (in_array($handler::HANDLER, ['feed', 'opds'])) {
             return true;
         }
         return false;

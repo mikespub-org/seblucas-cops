@@ -109,7 +109,7 @@ class FastRouterTest extends TestCase
 
         // @todo check/add default route for each handler?
         $endpoint = parse_url((string) $queryUrl, PHP_URL_PATH);
-        $flipped = array_flip(Config::ENDPOINT);
+        $flipped = array_flip(Config::OLD_ENDPOINT);
         $handler = "html";
         if (!empty($flipped[$endpoint])) {
             $handler = $flipped[$endpoint];

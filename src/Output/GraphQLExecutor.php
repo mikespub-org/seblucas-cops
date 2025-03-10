@@ -353,6 +353,7 @@ class GraphQLExecutor
                 if (is_null($book)) {
                     return $book;
                 }
+                $book->setHandler($handler);
                 $data = $book->datas[0];
                 return $data;
             case 'authors':

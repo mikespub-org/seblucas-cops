@@ -134,14 +134,14 @@ class UriGeneratorTest extends TestCase
         $endpoint = parse_url((string) $link, PHP_URL_PATH);
         // 1. this will find handler name based on old endpoints
         $handler = "html";
-        if ($endpoint !== Config::ENDPOINT["html"]) {
+        if ($endpoint !== Config::OLD_ENDPOINT["html"]) {
             $testpoint = str_replace('.php', '', $endpoint);
-            if (array_key_exists($testpoint, Config::ENDPOINT)) {
+            if (array_key_exists($testpoint, Config::OLD_ENDPOINT)) {
                 $params[Route::HANDLER_PARAM] = $testpoint;
                 $handler = $testpoint;
             } else {
                 // for epubreader.php, checkconfig.php etc.
-                $flipped = array_flip(Config::ENDPOINT);
+                $flipped = array_flip(Config::OLD_ENDPOINT);
                 $params[Route::HANDLER_PARAM] = $flipped[$endpoint];
                 $handler = $flipped[$endpoint];
             }

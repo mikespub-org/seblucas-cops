@@ -264,7 +264,7 @@ class Route
     /**
      * Get handler class based on name
      * @param string|class-string $name
-     * @return class-string
+     * @return class-string<BaseHandler>
      */
     public static function getHandler($name)
     {

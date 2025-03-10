@@ -694,7 +694,7 @@ class Book
             array_push($linkArray, $coverLink);
         }
         // set height for thumbnail here depending on opds vs. html
-        if (in_array($this->handler, ['feed', 'opds'])) {
+        if (!empty($this->handler) && in_array($this->handler::HANDLER, ['feed', 'opds'])) {
             $thumb = 'opds';
         } else {
             $thumb = 'html';

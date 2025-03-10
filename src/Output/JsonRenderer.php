@@ -171,7 +171,7 @@ class JsonRenderer extends BaseRenderer
 
         $cover = new Cover($book);
         // set height for thumbnail here depending on opds vs. html (height x 2)
-        if (in_array($handler, ['feed', 'opds'])) {
+        if (!empty($handler) && in_array($handler::HANDLER, ['feed', 'opds'])) {
             $thumb = "opds2";
         } else {
             $thumb = "html2";
