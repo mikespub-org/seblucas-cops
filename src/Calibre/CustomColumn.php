@@ -190,29 +190,13 @@ class CustomColumn extends Category
     }
 
     /**
-     * Get trail of parent entries
-     * @return array<Entry>
+     * Summary of getParentByName
+     * @param string $parentName
+     * @return CustomColumn
      */
-    public function getParentTrail()
+    public function getParentByName($parentName)
     {
-        $trail = [];
-        $parentName = static::findParentName($this->getTitle());
-        while (!empty($parentName)) {
-            $parent = $this->customColumnType->getCustomByValue($parentName);
-            if (empty($parent) || empty($parent->id)) {
-                try {
-                    $this->parent = $this->createMissingParent($parentName);
-                } catch (Exception $e) {
-                    throw new Exception('Unable to create missing parent ' . static::CATEGORY . ' "' . $parentName . '": ' . $e->getMessage());
-                }
-            }
-            $parent->setHandler($this->handler);
-            $entry = $parent->getEntry();
-            $entry->title = static::findCurrentName($entry->title);
-            $trail[] = $entry;
-            $parentName = static::findParentName($parentName);
-        }
-        return array_reverse($trail);
+        return $this->customColumnType->getCustomByValue($parentName);
     }
 
     /**

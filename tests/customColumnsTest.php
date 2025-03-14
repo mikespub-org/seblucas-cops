@@ -111,7 +111,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("csv", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
-        $this->assertCount(3, $coltype->getAllCustomValues());
+        $this->assertCount(8, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/6", $coltype->getUri());
         $this->assertEquals("cops:custom:6", $coltype->getEntryId());
         $this->assertEquals("custom_02", $coltype->getTitle());
@@ -450,7 +450,7 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("custom_02", $currentPage->entryArray[5]->title);
         $this->assertEquals("cops:custom:6", $currentPage->entryArray[5]->id);
         $this->assertEquals("Custom column example 02 (csv)", $currentPage->entryArray[5]->content);
-        $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals(9, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("csv", $currentPage->entryArray[5]->contentType);
         $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(6)->getCount());
     }
@@ -620,7 +620,7 @@ class CustomColumnsTest extends TestCase
         $currentPage = PageId::getPage(PageId::ALL_CUSTOMS, $request);
 
         $this->assertEquals("custom_02", $currentPage->title);
-        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("cops:custom:6:1", $currentPage->entryArray[0]->id);
         $this->assertEquals("a", $currentPage->entryArray[0]->title);
         $this->assertEquals("6 books", $currentPage->entryArray[0]->content);

@@ -665,6 +665,7 @@ class BaseList
         $result = Database::queryFilter($query, "", "", [], $n, $this->databaseId, $this->numberPerPage);
         $entryArray = [];
         $parents = [];
+        $counter = [];
         while ($post = $result->fetchObject()) {
             /** @var Category $instance */
             $instance = new $this->className($post, $this->databaseId);
@@ -681,17 +682,21 @@ class BaseList
                             $entryArray[$parent->getTitle()] ??= $parent->getEntry($post->count);
                         }
                     }
-                    $parents[$parentName]->count += $post->count;
+                    $counter[$parentName] ??= 0;
+                    $counter[$parentName] += $post->count;
                     $parent = $parent->getParentCategory();
                 }
                 continue;
             }
-            $entryArray[$instance->getTitle()] = $instance->getEntry($post->count);
+            $name = $instance->getTitle();
+            $counter[$name] ??= 0;
+            $counter[$name] += $post->count;
+            $entryArray[$name] = $instance->getEntry($post->count);
         }
         // update count of parent entries
         foreach ($entryArray as $entryName => $entry) {
             if (array_key_exists($entryName, $parents)) {
-                $count = $parents[$entryName]->count;
+                $count = $counter[$parentName];
                 $entryArray[$entryName] = $parents[$entryName]->getEntry($count);
             }
         }

@@ -299,14 +299,41 @@ abstract class CustomColumnType
 
         $result = $this->getPaginatedResult($query, [], $n);
         $entryArray = [];
+        $parents = [];
+        $counter = [];
         while ($post = $result->fetchObject()) {
             $customcolumn = new CustomColumn($post->id, $post->value, $this);
             if (!$expand && $customcolumn->hasParentCategory()) {
-                // @todo add missing parents here too if needed? - see Baselist::browseAllEntries()
+                // add count to parent entry
+                $parent = $customcolumn->getParentCategory();
+                while ($parent) {
+                    $parentName = $parent->getTitle();
+                    if (empty($parents[$parentName])) {
+                        $parents[$parentName] = $parent;
+                        // set parent entry if needed
+                        if (!$parent->hasParentCategory()) {
+                            $entryArray[$parent->getTitle()] ??= $parent->getEntry($post->count);
+                        }
+                    }
+                    $counter[$parentName] ??= 0;
+                    $counter[$parentName] += $post->count;
+                    $parent = $parent->getParentCategory();
+                }
+                continue;
             }
-            array_push($entryArray, $customcolumn->getEntry($post->count));
+            $name = $customcolumn->getTitle();
+            $counter[$name] ??= 0;
+            $counter[$name] += $post->count;
+            $entryArray[$name] = $customcolumn->getEntry($post->count);
         }
-        return $entryArray;
+        // update count of parent entries
+        foreach ($entryArray as $entryName => $entry) {
+            if (array_key_exists($entryName, $parents)) {
+                $count = $counter[$entryName];
+                $entryArray[$entryName] = $parents[$entryName]->getEntry($count);
+            }
+        }
+        return array_values($entryArray);
     }
 
     /**

@@ -64,6 +64,7 @@ abstract class Category extends Base
         foreach ($this->getChildCategories() as $child) {
             // check if this is an immediate child or not, like Fiction matches Fiction.Historical but not Fiction.Historical.Romance
             if (empty($expand) && !preg_match('/^' . $this->getTitle() . '\.[^.]+$/', $child->getTitle())) {
+                // @todo add child count to parent
                 continue;
             }
             array_push($entryArray, $child->getEntry($child->count));
@@ -87,6 +88,15 @@ abstract class Category extends Base
         $siblings = $this->getRelatedCategories($find);
         $entryArray = [];
         foreach ($siblings as $sibling) {
+            // skip current entry
+            if ($sibling->id == $this->id) {
+                continue;
+            }
+            // skip entries deeper in hierarchy like Fiction.Historical.Mystery
+            $siblingName = substr($sibling->getTitle(), strlen($parentName) + 1);
+            if (str_contains($siblingName, '.')) {
+                continue;
+            }
             array_push($entryArray, $sibling->getEntry($sibling->count));
         }
         return $entryArray;
@@ -155,7 +165,7 @@ abstract class Category extends Base
             $this->parent = $parents[0];
         }
         // no count in tag_browser_* for this parent - try to find it by name
-        $this->parent = static::getInstanceByName($parentName, $this->databaseId);
+        $this->parent = $this->getParentByName($parentName);
         if (!empty($this->parent)) {
             $this->parent->count = 0;
             $this->parent->setHandler($this->handler);
@@ -184,6 +194,16 @@ abstract class Category extends Base
     }
 
     /**
+     * Summary of getParentByName
+     * @param string $parentName
+     * @return Category|null
+     */
+    public function getParentByName($parentName)
+    {
+        return static::getInstanceByName($parentName, $this->databaseId);
+    }
+
+    /**
      * Get trail of parent entries
      * @return array<Entry>
      */
@@ -192,7 +212,7 @@ abstract class Category extends Base
         $trail = [];
         $parentName = static::findParentName($this->getTitle());
         while (!empty($parentName)) {
-            $parent = static::getInstanceByName($parentName, $this->databaseId);
+            $parent = $this->getParentByName($parentName);
             if (empty($parent) || empty($parent->id)) {
                 try {
                     $this->parent = $this->createMissingParent($parentName);
@@ -281,7 +301,7 @@ abstract class Category extends Base
         $params = [ $name ];
         $result = Database::getDb($this->databaseId)->prepare($query);
         $result->execute($params);
-        $instance = static::getInstanceByName($name, $this->databaseId);
+        $instance = $this->getParentByName($name);
         if ($instance) {
             $instance->count = 0;
             $instance->setHandler($this->handler);
