@@ -13,6 +13,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Fix parent count for hierarchical series, tags and custom
   * Clean up handler and endpoint code for uri generation
   * Use short array syntax for arrays in config/default.php
   * Show parent trail for series when using hierarchy - see issue #134 by @HelenaGwyn

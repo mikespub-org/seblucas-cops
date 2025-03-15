@@ -6,11 +6,11 @@ __metadata:
   cacheKey: 10c0
 
 "@babel/runtime@npm:^7.8.4":
-  version: 7.22.15
-  resolution: "@babel/runtime@npm:7.22.15"
+  version: 7.26.10
+  resolution: "@babel/runtime@npm:7.26.10"
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
-  checksum: 10c0/96b74adfd1db812d06ed56d9db12acecfc844d252b93994ce4901433957bd28affba725622a4dc9e7f76384c4cb6cadc3d620d07817c8be9156eaedba5eea059
+  checksum: 10c0/6dc6d88c7908f505c4f7770fb4677dfa61f68f659b943c2be1f2a99cb6680343462867abf2d49822adc435932919b36c77ac60125793e719ea8745f2073d3745
   languageName: node
   linkType: hard
 
@@ -1209,14 +1209,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:>=1.11":
-  version: 3.7.0
-  resolution: "jquery@npm:3.7.0"
-  checksum: 10c0/2eea1d9ce48fabd0d8736b8bed2e2087c33f038a077ea9f8dcbad55b07c3a1abc226898f498fc992b7fb02c1296cbe79d6283902a9d2027ed41efab04d86da6f
-  languageName: node
-  linkType: hard
-
-"jquery@npm:>=1.7, jquery@npm:^3.7.1":
+"jquery@npm:>=1.11, jquery@npm:>=1.7, jquery@npm:^3.7.1":
   version: 3.7.1
   resolution: "jquery@npm:3.7.1"
   checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
@@ -1293,9 +1286,9 @@ __metadata:
   linkType: hard
 
 "locutus@npm:^2.0.11":
-  version: 2.0.16
-  resolution: "locutus@npm:2.0.16"
-  checksum: 10c0/46559f449e3624610272cb6061fe5b55bfb21323741238526a115026f31e5352e7cffe9c162e1eb727fbf22529953280a2a326ec0d55ae4aa482d294c9c1ad97
+  version: 2.0.32
+  resolution: "locutus@npm:2.0.32"
+  checksum: 10c0/e056da51996d248dccabaac5ff8414709e9a5b1474e122dca94151bb59ec9cd89adedf58f14b2ee1a0eccb54fa1c3ba588f89828b96c1d94f4ef3f1d56bb6015
   languageName: node
   linkType: hard
 
@@ -1541,9 +1534,9 @@ __metadata:
   linkType: hard
 
 "regenerator-runtime@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "regenerator-runtime@npm:0.14.0"
-  checksum: 10c0/e25f062c1a183f81c99681691a342760e65c55e8d3a4d4fe347ebe72433b123754b942b70b622959894e11f8a9131dc549bd3c9a5234677db06a4af42add8d12
+  version: 0.14.1
+  resolution: "regenerator-runtime@npm:0.14.1"
+  checksum: 10c0/1b16eb2c4bceb1665c89de70dcb64126a22bc8eb958feef3cd68fe11ac6d2a4899b5cd1b80b0774c7c03591dc57d16631a7f69d2daa2ec98100e2f29f7ec4cc4
   languageName: node
   linkType: hard
 
@@ -1582,7 +1575,7 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    swagger-ui-dist: "npm:^5.20.0"
+    swagger-ui-dist: "npm:^5.20.1"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1623,12 +1616,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.20.0":
-  version: 5.20.0
-  resolution: "swagger-ui-dist@npm:5.20.0"
+"swagger-ui-dist@npm:^5.20.1":
+  version: 5.20.1
+  resolution: "swagger-ui-dist@npm:5.20.1"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/52d171388cd42efef90c76848db0c8cdb805e0685a881b4c80bbf64700f039e0a2c628f20c8be24f256626e539d2a2584ed39e1cf823175e12763ee5f4de92c6
+  checksum: 10c0/e24b416c3c6987ab4b13e5515a3f0d23b017ce1420ec8d383cce63e509a17a625d81142cce3765100c98dc6caff8df7178dede52089c6c8f17b31d415573ac32
   languageName: node
   linkType: hard
 

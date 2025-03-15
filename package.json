@@ -1,6 +1,6 @@
 {
   "name": "seblucas-cops",
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "yarn@4.7.0",
   "dependencies": {
     "@mikespub/epubjs-reader": "^2025.1.2",
     "bootstrap": "^3.4.1",
@@ -17,7 +17,7 @@
     "normalize.css": "^8.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "swagger-ui-dist": "^5.20.0",
+    "swagger-ui-dist": "^5.20.1",
     "twig": "^1.17.1"
   },
   "license": "GPL-2.0-or-later"
