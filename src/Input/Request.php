@@ -61,16 +61,16 @@ class Request
      */
     public function render()
     {
-        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent());
+        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent()) || $this->method() == 'POST';
     }
 
     /**
      * Summary of method
-     * @return ?string
+     * @return string
      */
     public function method()
     {
-        return $this->server('REQUEST_METHOD');
+        return $this->server('REQUEST_METHOD') ?? 'GET';
     }
 
     /**

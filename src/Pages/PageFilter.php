@@ -27,6 +27,7 @@ use SebLucas\Cops\Calibre\VirtualLibrary;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\LinkFeed;
 
 class PageFilter extends Page
 {
@@ -183,9 +184,31 @@ class PageFilter extends Page
      */
     public function addEntries($entries)
     {
-        foreach ($entries as $idx => $entry) {
-            // @todo replace instance link with filter link
-            // ...
+        foreach ($entries as $edx => $entry) {
+            // set filter params in content here
+            if ($entry->className != "Paging") {
+                if (!empty($entry->instance)) {
+                    $entry->content = $entry->instance::URL_PARAM . '=' . $entry->instance->id;
+                    $entries[$edx] = $entry;
+                }
+                continue;
+            }
+            // replace instance link with filter link here
+            foreach ($entry->linkArray as $ldx => $link) {
+                if (!($link instanceof LinkFeed)) {
+                    continue;
+                }
+                // index.php/tags/0/No_tags?filter=1&g[t]=2
+                $uri = $link->getUri();
+                $query = parse_url($uri, PHP_URL_QUERY);
+                $params = [];
+                parse_str($query, $params);
+                unset($params['filter']);
+                // index.php/filter?g[t]=2
+                $link->href = $this->getRoute(Filter::ROUTE_ALL, $params);
+                $entry->linkArray[$ldx] = $link;
+            }
+            $entries[$edx] = $entry;
         }
         $this->entryArray = array_merge($this->entryArray, $entries);
     }

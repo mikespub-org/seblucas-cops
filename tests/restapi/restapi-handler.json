@@ -193,7 +193,11 @@
                     "/customize",
                     {
                         "page": "customize"
-                    }
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
                 ],
                 "page-publisher": [
                     "/publishers/{id:\\d+}/{title}",
@@ -271,7 +275,11 @@
                     "/filter",
                     {
                         "page": "filter"
-                    }
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
                 ]
             }
         },

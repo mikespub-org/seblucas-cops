@@ -21,49 +21,49 @@
         {
             "class": "Authors",
             "title": "Lewis Carroll",
-            "content": "2 books",
+            "content": "a=3",
             "navlink": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll",
             "number": 2
         },
         {
             "class": "Authors",
             "title": "Arthur Conan Doyle",
-            "content": "8 books",
+            "content": "a=1",
             "navlink": "vendor/bin/index.php/restapi/authors/1/Arthur_Conan_Doyle",
             "number": 8
         },
         {
             "class": "Authors",
             "title": "Alexandre Dumas",
-            "content": "2 books",
+            "content": "a=5",
             "navlink": "vendor/bin/index.php/restapi/authors/5/Alexandre_Dumas",
             "number": 2
         },
         {
             "class": "Authors",
             "title": "Jack London",
-            "content": "1 book",
+            "content": "a=2",
             "navlink": "vendor/bin/index.php/restapi/authors/2/Jack_London",
             "number": 1
         },
         {
             "class": "Authors",
             "title": "H. G. Wells",
-            "content": "1 book",
+            "content": "a=4",
             "navlink": "vendor/bin/index.php/restapi/authors/4/H_G_Wells",
             "number": 1
         },
         {
             "class": "Authors",
             "title": "Émile Zola",
-            "content": "1 book",
+            "content": "a=7",
             "navlink": "vendor/bin/index.php/restapi/authors/7/Emile_Zola",
             "number": 1
         },
         {
             "class": "Authors",
             "title": "孙武",
-            "content": "1 book",
+            "content": "a=9",
             "navlink": "vendor/bin/index.php/restapi/authors/9/sun_wu",
             "number": 1
         },
@@ -77,21 +77,21 @@
         {
             "class": "Languages",
             "title": "English",
-            "content": "14 books",
+            "content": "l=1",
             "navlink": "vendor/bin/index.php/restapi/languages/1/English",
             "number": 14
         },
         {
             "class": "Languages",
             "title": "French",
-            "content": "1 book",
+            "content": "l=2",
             "navlink": "vendor/bin/index.php/restapi/languages/2/French",
             "number": 1
         },
         {
             "class": "Languages",
             "title": "Chinese",
-            "content": "1 book",
+            "content": "l=3",
             "navlink": "vendor/bin/index.php/restapi/languages/3/Chinese",
             "number": 1
         },
@@ -105,49 +105,49 @@
         {
             "class": "Publishers",
             "title": "D. Appleton and Company",
-            "content": "2 books",
+            "content": "p=3",
             "navlink": "vendor/bin/index.php/restapi/publishers/3/D_Appleton_and_Company",
             "number": 2
         },
         {
             "class": "Publishers",
             "title": "Georges Charpentier & Eugène Fasquelle",
-            "content": "1 book",
+            "content": "p=9",
             "navlink": "vendor/bin/index.php/restapi/publishers/9/Georges_Charpentier_and_Eugene_Fasquelle",
             "number": 1
         },
         {
             "class": "Publishers",
             "title": "Macmillan and Co. London",
-            "content": "2 books",
+            "content": "p=2",
             "navlink": "vendor/bin/index.php/restapi/publishers/2/Macmillan_and_Co_London",
             "number": 2
         },
         {
             "class": "Publishers",
             "title": "Macmillan Publishers USA",
-            "content": "1 book",
+            "content": "p=4",
             "navlink": "vendor/bin/index.php/restapi/publishers/4/Macmillan_Publishers_USA",
             "number": 1
         },
         {
             "class": "Publishers",
             "title": "Pierson's Magazine",
-            "content": "1 book",
+            "content": "p=5",
             "navlink": "vendor/bin/index.php/restapi/publishers/5/Pierson_s_Magazine",
             "number": 1
         },
         {
             "class": "Publishers",
             "title": "Strand Magazine",
-            "content": "8 books",
+            "content": "p=6",
             "navlink": "vendor/bin/index.php/restapi/publishers/6/Strand_Magazine",
             "number": 8
         },
         {
             "class": "Publishers",
             "title": "青苹果数据中心",
-            "content": "1 book",
+            "content": "p=10",
             "navlink": "vendor/bin/index.php/restapi/publishers/10/qing_ping_guo_shu_ju_zhong_xin",
             "number": 1
         },
@@ -161,21 +161,21 @@
         {
             "class": "Ratings",
             "title": "2 stars",
-            "content": "1 book",
+            "content": "r=3",
             "navlink": "vendor/bin/index.php/restapi/ratings/3/2_stars",
             "number": 1
         },
         {
             "class": "Ratings",
             "title": "4 stars",
-            "content": "2 books",
+            "content": "r=2",
             "navlink": "vendor/bin/index.php/restapi/ratings/2/4_stars",
             "number": 2
         },
         {
             "class": "Ratings",
             "title": "5 stars",
-            "content": "4 books",
+            "content": "r=1",
             "navlink": "vendor/bin/index.php/restapi/ratings/1/5_stars",
             "number": 4
         },
@@ -189,28 +189,28 @@
         {
             "class": "Series",
             "title": "D'Artagnan Romances",
-            "content": "2 books",
+            "content": "s=3",
             "navlink": "vendor/bin/index.php/restapi/series/3/D_Artagnan_Romances",
             "number": 2
         },
         {
             "class": "Series",
             "title": "Professor Challenger",
-            "content": "1 book",
+            "content": "s=2",
             "navlink": "vendor/bin/index.php/restapi/series/2/Professor_Challenger",
             "number": 1
         },
         {
             "class": "Series",
             "title": "Sherlock Holmes",
-            "content": "7 books",
+            "content": "s=1",
             "navlink": "vendor/bin/index.php/restapi/series/1/Sherlock_Holmes",
             "number": 7
         },
         {
             "class": "Series",
             "title": "Série des Rougon-Macquart",
-            "content": "1 book",
+            "content": "s=5",
             "navlink": "vendor/bin/index.php/restapi/series/5/Serie_des_Rougon_Macquart",
             "number": 1
         },
@@ -224,64 +224,64 @@
         {
             "class": "Tags",
             "title": "Action & Adventure",
-            "content": "4 books",
+            "content": "t=4",
             "navlink": "vendor/bin/index.php/restapi/tags/4/Action_and_Adventure",
             "number": 4
         },
         {
             "class": "Tags",
             "title": "Fantasy",
-            "content": "2 books",
+            "content": "t=5",
             "navlink": "vendor/bin/index.php/restapi/tags/5/Fantasy",
             "number": 2
         },
         {
             "class": "Tags",
             "title": "Fiction",
-            "content": "14 books",
+            "content": "t=1",
             "navlink": "vendor/bin/index.php/restapi/tags/1/Fiction",
             "number": 14
         },
         {
             "class": "Tags",
             "title": "Historical",
-            "content": "2 books",
+            "content": "t=10",
             "navlink": "vendor/bin/index.php/restapi/tags/10/Historical",
             "number": 2
         },
         {
             "class": "Tags",
             "title": "Juvenile",
-            "content": "2 books",
+            "content": "t=6",
             "navlink": "vendor/bin/index.php/restapi/tags/6/Juvenile",
             "number": 2
         },
         {
             "class": "Tags",
             "title": "Littérature",
-            "content": "1 book",
+            "content": "t=12",
             "navlink": "vendor/bin/index.php/restapi/tags/12/Litterature",
             "number": 1
         },
         {
             "class": "Tags",
             "title": "Mystery & Detective",
-            "content": "7 books",
+            "content": "t=3",
             "navlink": "vendor/bin/index.php/restapi/tags/3/Mystery_and_Detective",
             "number": 7
         },
         {
             "class": "Tags",
             "title": "Romance",
-            "content": "2 books",
+            "content": "t=9",
             "navlink": "vendor/bin/index.php/restapi/tags/9/Romance",
             "number": 2
         },
         {
-            "class": "Tags",
+            "class": "Paging",
             "title": "Next Tags",
             "content": "3 books",
-            "navlink": "vendor/bin/index.php/restapi/tags/0/No_tags?filter=1&g[t]=2",
+            "navlink": "vendor/bin/index.php/restapi/filter?g%5Bt%5D=2",
             "number": "2 / 2"
         }
     ],

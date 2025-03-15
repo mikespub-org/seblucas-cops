@@ -744,6 +744,10 @@ class JsonRenderer extends BaseRenderer
         } elseif ($currentPage->idPage == PageId::FILTER_ID) {
             $out ["isFilterPage"] = true;
         }
+        $out ["posted"] = [];
+        if ($this->request->method() == 'POST') {
+            $out ["posted"] = $this->request->postParams;
+        }
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, $this->getContentArray($entry, $extraParams));
         }

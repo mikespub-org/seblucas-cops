@@ -62,7 +62,7 @@ class PageHandler extends BaseHandler
             "page-language" => ["/languages/{id:\d+}/{title}", ["page" => PageId::LANGUAGE_DETAIL]],
             "page-language-id" => ["/languages/{id:\d+}", ["page" => PageId::LANGUAGE_DETAIL]],
             "page-languages" => ["/languages", ["page" => PageId::ALL_LANGUAGES]],
-            "page-customize" => ["/customize", ["page" => PageId::CUSTOMIZE]],
+            "page-customize" => ["/customize", ["page" => PageId::CUSTOMIZE], ["GET", "POST"]],
             "page-publisher" => ["/publishers/{id:\d+}/{title}", ["page" => PageId::PUBLISHER_DETAIL]],
             "page-publisher-id" => ["/publishers/{id:\d+}", ["page" => PageId::PUBLISHER_DETAIL]],
             "page-publishers" => ["/publishers", ["page" => PageId::ALL_PUBLISHERS]],
@@ -75,7 +75,7 @@ class PageHandler extends BaseHandler
             "page-format" => ["/formats/{id:\w+}", ["page" => PageId::FORMAT_DETAIL]],
             "page-formats" => ["/formats", ["page" => PageId::ALL_FORMATS]],
             "page-libraries" => ["/libraries", ["page" => PageId::ALL_LIBRARIES]],
-            "page-filter" => ["/filter", ["page" => PageId::FILTER]],
+            "page-filter" => ["/filter", ["page" => PageId::FILTER], ["GET", "POST"]],
         ];
     }
 

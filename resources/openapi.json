@@ -831,6 +831,23 @@
                         "$ref": "#/components/parameters/dbParam"
                     }
                 ]
+            },
+            "post": {
+                "summary": "Route to page handler with page=customize",
+                "operationId": "post_page-customize",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=customize"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
             }
         },
         "/publishers/{id}/{title}": {
@@ -1152,6 +1169,23 @@
             "get": {
                 "summary": "Route to page handler with page=filter",
                 "operationId": "get_page-filter",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=filter"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to page handler with page=filter",
+                "operationId": "post_page-filter",
                 "tags": [
                     "default"
                 ],

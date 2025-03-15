@@ -19,6 +19,7 @@ class Filter
 {
     public const PAGE_ID = PageId::FILTER_ID;
     public const PAGE_DETAIL = PageId::FILTER;
+    public const ROUTE_ALL = "page-filter";
     public const ROUTE_DETAIL = "page-filter";
     public const URL_PARAMS = [
         Author::URL_PARAM => Author::class,

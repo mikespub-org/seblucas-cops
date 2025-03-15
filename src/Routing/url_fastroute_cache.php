@@ -529,6 +529,32 @@
     ),
     'POST' => 
     array (
+      '/customize' => 
+      array (
+        0 => 
+        array (
+          'page' => 'customize',
+          '_route' => 'page-customize',
+        ),
+        1 => 
+        array (
+          '_route' => '/customize',
+          '_name' => 'page-customize',
+        ),
+      ),
+      '/filter' => 
+      array (
+        0 => 
+        array (
+          'page' => 'filter',
+          '_route' => 'page-filter',
+        ),
+        1 => 
+        array (
+          '_route' => '/filter',
+          '_name' => 'page-filter',
+        ),
+      ),
       '/mail' => 
       array (
         0 => 

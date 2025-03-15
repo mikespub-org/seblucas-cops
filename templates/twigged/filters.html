@@ -4,6 +4,7 @@
 {% block content %}
 <div id="content" class="container-fluid">
     <div class="row">
+        <form id="filterForm" method="POST">
         <!-- group entries by filter group -->
         {% for group in it.filterGroups %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
@@ -15,17 +16,39 @@
                     </a>
                 </div>
                 {% for entry in group.entries %}
-                    <a href="{{entry.navlink}}">
-                        <div class="panel-body">
+                    <div class="panel-body">
+                        {% if entry.class != "Paging" %}
+                            {% set params = entry.content|split('=') %}
+                            {% if it.posted[params.0] and it.posted[params.0][params.1] %}
+                                <input type="checkbox" id="check_{{params.0}}_{{params.1}}" name="{{params.0}}[{{params.1}}]" value="1" checked="checked" />
+                            {% else %}
+                                <input type="checkbox" id="check_{{params.0}}_{{params.1}}" name="{{params.0}}[{{params.1}}]" value="1" />
+                            {% endif %}
+                        {% endif %}
+                        <a href="{{entry.navlink}}">
                             {{entry.title|escape}}
                             <span class="badge pull-right">{{entry.number}}</span>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 {% endfor %}
             </div>
             {% endblock filtergroup %}
         </div>
         {% endfor %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{it.c.i18n.filtersTitle}}
+                </div>
+                <div class="panel-body">
+                    <div class="input-group-btn">
+                        <button id="filterButton" type="submit" class="btn btn-success"><span class="glyphicon glyphicon-filter"></span></button>
+                        <input type="hidden" name="page" value="filter" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
     </div>
 </div>
 {% endblock content %}

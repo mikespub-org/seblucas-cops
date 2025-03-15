@@ -435,7 +435,8 @@
                     "_route": "page-customize"
                 },
                 [
-                    "GET"
+                    "GET",
+                    "POST"
                 ],
                 []
             ]
@@ -617,7 +618,8 @@
                     "_route": "page-filter"
                 },
                 [
-                    "GET"
+                    "GET",
+                    "POST"
                 ],
                 []
             ]

@@ -504,7 +504,7 @@ class BaseList
                 "text",
                 [ new LinkNavigation($href . $paging) ],
                 $this->databaseId,
-                $className,
+                "Paging",
                 strval($n - 1) . " / $maxPage"
             );
             array_unshift($entries, $entry);
@@ -524,7 +524,7 @@ class BaseList
                 "text",
                 [ new LinkNavigation($href . $paging) ],
                 $this->databaseId,
-                $className,
+                "Paging",
                 strval($n + 1) . " / $maxPage"
             );
             array_push($entries, $entry);
