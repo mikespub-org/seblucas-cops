@@ -18,7 +18,21 @@ class Session
 {
     public function __construct()
     {
-        // ...
+        $this->configure();
+    }
+
+    protected function configure(): void
+    {
+        // avoid overlap with other PHP session names
+        $name = Config::get('session_name') ?? 'COPS_SESSID';
+        ini_set('session.name', $name);
+        // use only session cookies for now - revisit if first-party cookie policy changes
+        ini_set('session.use_only_cookies', 1);
+        ini_set('session.use_strict_mode', 1);
+        // session is used to validate fetching/zipping books or configure COPS, so we use long timeout here
+        $timeout = Config::get('session_timeout') ?? (365 * 24 * 60 * 60);
+        ini_set('session.cookie_lifetime', $timeout);
+        ini_set('session.gc_maxlifetime', $timeout);
     }
 
     public function start(): bool

@@ -448,6 +448,17 @@ $config ['cops_ignored_categories'] = ['format', 'identifier'];
 $config ['cops_fetch_protect'] = '0';
 
 /*
+ * Session timeout for cookie lifetime (client) and garbage collection (server)
+ * Session is used to validate fetching/zipping books or customize COPS, so we use long timeout here
+ */
+$config ['cops_session_timeout'] = 365 * 24 * 60 * 60;
+
+/*
+ * Session cookie name - avoid overlap with other PHP session names
+ */
+$config ['cops_session_name'] = 'COPS_SESSID';
+
+/*
  * WARNING NOT READY FOR PRODUCTION USE
  * Make the search better (don't care about diacritics, uppercase should work on Cyrillic) but slower.
  * 1 : Yes (enable)

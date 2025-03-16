@@ -69,7 +69,7 @@ class PageFilter extends Page
             if (empty($values) || !is_array($values)) {
                 continue;
             }
-            if (in_array($name, ['i', 'format'])) {
+            if (in_array($name, [Identifier::URL_PARAM, Format::URL_PARAM])) {
                 $filter[$name] = array_filter($values, function ($id) {
                     return preg_match('/^\w+$/', $id);
                 }, ARRAY_FILTER_USE_KEY);

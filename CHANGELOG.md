@@ -13,6 +13,10 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Changes in config/default.php file:
+    - new $config['cops_session_name'] for session cookie name
+    - new $config['cops_session_timeout'] for session timeout
+  * Support POST for customize and filter pages + add Session class
   * Fix parent count for hierarchical series, tags and custom
   * Clean up handler and endpoint code for uri generation
   * Use short array syntax for arrays in config/default.php
