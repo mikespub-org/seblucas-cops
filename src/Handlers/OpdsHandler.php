@@ -65,12 +65,11 @@ class OpdsHandler extends BaseHandler
         }
 
         if (Config::get('fetch_protect') == '1') {
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-            $connected = $request->session('connected');
+            $session = $this->getContext()->getSession();
+            $session->start();
+            $connected = $session->get('connected');
             if (!isset($connected)) {
-                $_SESSION['connected'] = 0;
+                $session->set('connected', 0);
             }
         }
 

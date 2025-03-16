@@ -53,13 +53,17 @@ class HtmlHandler extends PageHandler
         Database::checkDatabaseAvailability($database);
 
         if (Config::get('fetch_protect') == '1') {
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-            $connected = $request->session('connected');
+            $session = $this->getContext()->getSession();
+            $session->start();
+            $connected = $session->get('connected');
             if (!isset($connected)) {
-                $_SESSION['connected'] = 0;
+                $session->set('connected', 0);
             }
+            $request->setSession($session);
+        } elseif (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER])) {
+            $session = $this->getContext()->getSession();
+            $session->start();
+            $request->setSession($session);
         }
 
         $response = new Response('text/html;charset=utf-8');

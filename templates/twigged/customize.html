@@ -1,13 +1,55 @@
 {# customize.html is used for it.page == "customize" #}
 {% extends 'navlist.html' %}
 
-{% block entry %}
-<div class="panel panel-default">
-    <div class="panel-heading">
-    {{entry.title|escape}}
-    </div>
-    <div class="panel-body">
-        {{entry.content|raw}}
+{% block content %}
+<div id="content" class="container-fluid">
+    <div class="row">
+        <form id="customForm" method="POST">
+        {% for entry in it.entries %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+            {% block customgroup %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{entry.title|escape}}
+                </div>
+                <div class="panel-body">
+                    {{entry.content|raw}}
+                </div>
+            </div>
+            {% endblock customgroup %}
+        </div>
+        {% endfor %}
+        {# @todo remove style="display:none" when code is ready #}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding" style="display:none">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{it.c.i18n.customizeTitle}}
+                </div>
+                <div class="panel-body">
+                    <div class="input-group-btn">
+                        <button id="customSubmitButton" type="submit" class="btn btn-success" title="{{it.c.i18n.customizeTitle}}"><span class="glyphicon glyphicon-ok"></span></button>
+                        <button id="customClearButton" type="button" class="btn btn-danger pull-right" title="{{it.c.i18n.filterClearAll}}"><span class="glyphicon glyphicon-remove"></span></button>
+                        <input type="hidden" name="page" value="customize" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <script type="text/javascript">
+            const form = document.getElementById('customForm');
+            const btn = document.getElementById('customClearButton');
+            btn.addEventListener("click", function () {
+                let boxes = form.getElementsByTagName('input');
+                for (let box of boxes) {
+                    if (box.type == 'checkbox') {
+                        box.checked = false;
+                    } else {
+                        // ... @todo
+                    }
+                }
+                form.submit();
+            });
+        </script>
     </div>
 </div>
-{% endblock entry %}
+{% endblock content %}

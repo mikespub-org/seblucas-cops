@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Pages\PageId;
 use Throwable;
 
 /**
@@ -32,6 +33,12 @@ class JsonHandler extends PageHandler
 
     public function handle($request)
     {
+        $page = $request->get('page');
+        if (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER])) {
+            $session = $this->getContext()->getSession();
+            $session->start();
+            $request->setSession($session);
+        }
         $response = new Response('application/json;charset=utf-8');
 
         $json = new JsonRenderer($request, $response);

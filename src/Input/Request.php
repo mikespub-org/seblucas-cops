@@ -41,6 +41,8 @@ class Request
     public $content = null;
     /** @var string|null */
     public $locale = null;
+    /** @var Session|null */
+    public $session = null;
     public bool $invalid = false;
 
     /**
@@ -319,6 +321,7 @@ class Request
     /**
      * Summary of session
      * @param string $name
+     * @deprecated 3.5.7 use Session() instead
      * @return mixed
      */
     public function session($name)
@@ -537,6 +540,25 @@ class Request
             return false;
         }
         return true;
+    }
+
+    /**
+     * Summary of getSession
+     * @return Session|null
+     */
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    /**
+     * Summary of setSession
+     * @param Session|null $session
+     * @return void
+     */
+    public function setSession($session)
+    {
+        $this->session = $session;
     }
 
     /**

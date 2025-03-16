@@ -30,6 +30,7 @@ class RequestContext
     private ?BaseHandler $handler = null;
     private Config $config;
     private string $locale;
+    private ?Session $session = null;
 
     public function __construct(Request $request, ?HandlerManager $manager = null, ?RouterInterface $router = null)
     {
@@ -210,6 +211,12 @@ class RequestContext
     public function getConfig(): Config
     {
         return $this->config;
+    }
+
+    public function getSession(): Session
+    {
+        $this->session ??= new Session();
+        return $this->session;
     }
 
     public function getHandlerManager(): HandlerManager

@@ -32,6 +32,8 @@ use SebLucas\Cops\Model\LinkFeed;
 class PageFilter extends Page
 {
     protected $className = Filter::class;
+    /** @var array<string, mixed> */
+    public array $filter = [];
 
     /**
      * Summary of initializeContent
@@ -39,11 +41,45 @@ class PageFilter extends Page
      */
     public function initializeContent()
     {
+        // @todo use $this->filter
+        $session = $this->request->getSession();
+        if ($session) {
+            if ($this->request->method() == 'POST') {
+                $session->set('filter', $this->validateValues());
+            }
+            $this->filter = $session->get('filter') ?? [];
+        }
         $this->request->set('filter', '1');
         $this->filterParams = $this->request->getFilterParams();
         $this->getEntries();
         $this->idPage = Filter::PAGE_ID;
         $this->title = localize("filters.title");
+    }
+
+    /**
+     * Summary of validateValues
+     * @return array<string, mixed>
+     */
+    protected function validateValues()
+    {
+        $filter = [];
+        // see list of acceptable filter params in Filter.php
+        $params = array_intersect_key($this->request->postParams, Filter::URL_PARAMS);
+        foreach ($params as $name => $values) {
+            if (empty($values) || !is_array($values)) {
+                continue;
+            }
+            if (in_array($name, ['i', 'format'])) {
+                $filter[$name] = array_filter($values, function ($id) {
+                    return preg_match('/^\w+$/', $id);
+                }, ARRAY_FILTER_USE_KEY);
+                continue;
+            }
+            $filter[$name] = array_filter($values, function ($id) {
+                return preg_match('/^\d+$/', $id);
+            }, ARRAY_FILTER_USE_KEY);
+        }
+        return $filter;
     }
 
     /**

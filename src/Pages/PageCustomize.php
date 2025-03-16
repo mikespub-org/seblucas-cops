@@ -15,6 +15,9 @@ use SebLucas\Cops\Calibre\VirtualLibrary;
 
 class PageCustomize extends Page
 {
+    /** @var array<string, mixed> */
+    public array $custom = [];
+
     /**
      * Summary of isChecked
      * @param string $key
@@ -23,6 +26,7 @@ class PageCustomize extends Page
      */
     protected function isChecked($key, $testedValue = 1)
     {
+        // @todo use $this->custom
         $value = $this->request->option($key);
         if (is_array($value)) {
             if (in_array($testedValue, $value)) {
@@ -44,6 +48,7 @@ class PageCustomize extends Page
      */
     protected function isSelected($key, $value)
     {
+        // @todo use $this->custom
         if ($this->request->option($key) == $value) {
             return "selected='selected'";
         }
@@ -86,19 +91,85 @@ class PageCustomize extends Page
      */
     public function initializeContent()
     {
+        // @todo use $this->custom
+        $session = $this->request->getSession();
+        if ($session) {
+            if ($this->request->method() == 'POST') {
+                $session->set('custom', $this->validateValues());
+            }
+            $this->custom = $session->get('custom') ?? [];
+        }
         $this->getEntries();
         $this->title = localize("customize.title");
     }
 
     /**
-     * Summary of getEntries
-     * @return void
+     * Summary of validateValues
+     * @return array<string, mixed>
      */
-    public function getEntries()
+    protected function validateValues()
     {
-        $this->entryArray = [];
+        $custom = [];
+        $template = $this->request->post('template');
+        if (isset($template) && in_array($template, $this->getTemplateList())) {
+            $custom['template'] = $template;
+        }
+        $style = $this->request->post('style');
+        if (isset($style) && in_array($style, $this->getStyleList())) {
+            $custom['style'] = $style;
+        }
+        $fancybox = $this->request->post('use_fancyapps');
+        if (isset($fancybox)) {
+            $custom['use_fancyapps'] = $fancybox ? true : false;
+        }
+        $paging = $this->request->post('max_item_per_page');
+        if (isset($paging) && filter_var($paging, FILTER_VALIDATE_INT, ['min_range' => -1, 'max_range' => 1200])) {
+            $custom['max_item_per_page'] = (int) $paging;
+        }
+        $email = $this->request->post('email');
+        if (isset($email) && (empty($email) || filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE))) {
+            $custom['email'] = $email;
+        }
+        $filter = $this->request->post('html_tag_filter');
+        if (isset($filter)) {
+            $custom['html_tag_filter'] = $filter ? true : false;
+        }
+        $ignored = $this->request->post('ignored_categories');
+        if (isset($ignored) && is_array($ignored)) {
+            $allowed = array_map(function ($enum) {
+                return $enum->value;
+            }, $this->getIgnoredCategoryList());
+            $custom['ignored_categories'] = array_intersect($ignored, $allowed);
+        }
+        // do not customize virtual libraries for multiple databases
+        if (Database::isMultipleDatabaseEnabled()) {
+            return $custom;
+        }
+        $library = $this->request->post('virtual_library');
+        if (isset($library) && !empty($library)) {
+            $database = $this->getDatabaseId();
+            $libraries = VirtualLibrary::getLibraries($database);
+            $allowed = [];
+            $id = 1;
+            foreach ($libraries as $name => $value) {
+                $value = VirtualLibrary::formatParameter($id, $name);
+                $allowed[] = $value;
+                $id += 1;
+            }
+            if (in_array($library, $allowed)) {
+                $custom['virtual_library'] = $library;
+            }
+        }
+        return $custom;
+    }
 
-        $ignoredBaseArray = [
+    /**
+     * Summary of getIgnoredCategoryList
+     * @return array<PageQueryScope>
+     */
+    protected function getIgnoredCategoryList()
+    {
+        return [
             PageQueryScope::AUTHOR,
             PageQueryScope::SERIES,
             PageQueryScope::PUBLISHER,
@@ -109,13 +180,22 @@ class PageCustomize extends Page
             PageQueryScope::IDENTIFIER,
             PageQueryScope::BOOK,
         ];
+    }
+
+    /**
+     * Summary of getEntries
+     * @return void
+     */
+    public function getEntries()
+    {
+        $this->entryArray = [];
 
         $database = $this->getDatabaseId();
 
         $title = localize("customize.template");
         $content = "";
         if ($this->useSelectTag()) {
-            $content .= "<select id='template' onchange='updateCookie (this); window.location=window.location;'>";
+            $content .= "<select id='template' name='template' onchange='updateCookie (this); window.location=window.location;'>";
 
             foreach ($this-> getTemplateList() as $filename) {
                 $content .= "<option value='{$filename}' " . $this->isSelected("template", $filename) . ">{$filename}</option>";
@@ -146,28 +226,28 @@ class PageCustomize extends Page
         // Enable the Lightboxes (for popups) in 'default' template with client side rendering
         if (!$this->request->render() && $this->request->template() === 'default') {
             $title = localize("customize.fancybox");
-            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $this->isChecked("use_fancyapps") . ' />';
+            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" name="use_fancyapps" ' . $this->isChecked("use_fancyapps") . ' />';
             $this->addHeaderEntry($title, $content);
         }
 
         $title = localize("customize.paging");
-        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . strval($this->getNumberPerPage()) . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
+        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" name="max_item_per_page" value="' . strval($this->getNumberPerPage()) . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
         $this->addHeaderEntry($title, $content);
 
         $title = localize("customize.email");
-        $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . $this->request->option("email") . '" />';
+        $content = '<input type="text" onchange="updateCookie (this);" id="email" name="email" value="' . $this->request->option("email") . '" />';
         $this->addHeaderEntry($title, $content);
 
         $title = localize("customize.filter");
-        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $this->isChecked("html_tag_filter") . ' />';
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" name="html_tag_filter" ' . $this->isChecked("html_tag_filter") . ' />';
         $this->addHeaderEntry($title, $content);
 
         $title = localize("customize.ignored");
         $content = "";
-        foreach ($ignoredBaseArray as $scope) {
+        foreach ($this->getIgnoredCategoryList() as $scope) {
             $value = $scope->value;
             $label = $scope->title();
-            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $value . '" ' . $this->isChecked("ignored_categories", $value) . ' > ' . $label . '</input><br>';
+            $content .=  '<input type="checkbox" name="ignored_categories[]" value="' . $value . '" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $value . '" ' . $this->isChecked("ignored_categories", $value) . ' > ' . $label . '</input><br>';
         }
         $this->addHeaderEntry($title, $content);
 
@@ -201,7 +281,7 @@ class PageCustomize extends Page
         $content = "";
         $id = 1;
         if ($this->useSelectTag()) {
-            $content .= "<select id='virtual_library' onchange='updateCookie (this); window.location=window.location;'>";
+            $content .= "<select id='virtual_library' name='virtual_library' onchange='updateCookie (this); window.location=window.location;'>";
             $content .= "<option value='' " . $this->isSelected("virtual_library", "") . ">" . localize("libraries.none") . "</option>";
             foreach ($libraries as $name => $value) {
                 $value = VirtualLibrary::formatParameter($id, $name);
