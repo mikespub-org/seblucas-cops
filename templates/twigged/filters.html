@@ -17,7 +17,7 @@
                 </div>
                 {% for entry in group.entries %}
                     <div class="panel-body">
-                        {% if page == 'filter' and entry.class != 'Paging' %}
+                        {% if it.page == 'filter' and entry.class != 'Paging' %}
                             {% set params = entry.content|split('=') %}
                             {% if it.checked[params.0] and it.checked[params.0][params.1] %}
                                 <input type="checkbox" id="check_{{params.0}}_{{params.1}}" name="{{params.0}}[{{params.1}}]" value="1" checked="checked" />
@@ -35,7 +35,7 @@
             {% endblock filtergroup %}
         </div>
         {% endfor %}
-        {% if page == 'filter' %}
+        {% if it.page == 'filter' %}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -52,7 +52,7 @@
         </div>
         {% endif %}
         </form>
-        {% if page == 'filter' %}
+        {% if it.page == 'filter' %}
         <script type="text/javascript">
             const form = document.getElementById('filterForm');
             const btn = document.getElementById('filterClearButton');
