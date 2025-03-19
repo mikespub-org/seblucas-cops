@@ -144,7 +144,9 @@ class Request
             $error = "Invalid relative path '{$this->path()}' from '{$this->template()}' template";
             error_log("COPS: " . $error);
             // this will call exit()
-            Response::sendError($this, $error);
+            $response = Response::sendError($this, $error);
+            $response->send();
+            exit;
         }
     }
 
@@ -200,8 +202,6 @@ class Request
         // set route param in request once we find matching route
         $params = Route::match($path);
         if (is_null($params)) {
-            // this will call exit()
-            //Response::sendError($this, "Invalid request path '$path'");
             error_log("COPS: Invalid request path '$path' from template " . $this->template());
             // delay reporting error until we're back in Framework
             $this->invalid = true;

@@ -14,7 +14,7 @@
         {
             "class": "",
             "title": "Template",
-            "content": "<select id='template' onchange='updateCookie (this); window.location=window.location;'><option value='bootstrap' >bootstrap</option><option value='bootstrap2' selected='selected'>bootstrap2</option><option value='bootstrap5' >bootstrap5</option><option value='default' >default</option><option value='twigged' >twigged</option></select>",
+            "content": "<select id='template' name='template' onchange='updateCookie (this); window.location=window.location;'><option value='bootstrap' >bootstrap</option><option value='bootstrap2' selected='selected'>bootstrap2</option><option value='bootstrap5' >bootstrap5</option><option value='default' >default</option><option value='twigged' >twigged</option></select>",
             "navlink": "#",
             "number": ""
         },
@@ -28,35 +28,35 @@
         {
             "class": "",
             "title": "Max number of books per page (-1 to disable)",
-            "content": "<input type=\"number\" onchange=\"updateCookie (this);\" id=\"max_item_per_page\" value=\"48\" min=\"-1\" max=\"1200\" pattern=\"^[-+]?[0-9]+$\" />",
+            "content": "<input type=\"number\" onchange=\"updateCookie (this);\" id=\"max_item_per_page\" name=\"max_item_per_page\" value=\"48\" min=\"-1\" max=\"1200\" pattern=\"^[-+]?[0-9]+$\" />",
             "navlink": "#",
             "number": ""
         },
         {
             "class": "",
             "title": "Set your email (to allow book emailing)",
-            "content": "<input type=\"text\" onchange=\"updateCookie (this);\" id=\"email\" value=\"\" />",
+            "content": "<input type=\"text\" onchange=\"updateCookie (this);\" id=\"email\" name=\"email\" value=\"\" />",
             "navlink": "#",
             "number": ""
         },
         {
             "class": "",
             "title": "Enable tag filtering",
-            "content": "<input type=\"checkbox\" onchange=\"updateCookieFromCheckbox (this);\" id=\"html_tag_filter\"  />",
+            "content": "<input type=\"checkbox\" onchange=\"updateCookieFromCheckbox (this);\" id=\"html_tag_filter\" name=\"html_tag_filter\"  />",
             "navlink": "#",
             "number": ""
         },
         {
             "class": "",
             "title": "Ignored categories",
-            "content": "<input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_author\"  > Authors</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_series\"  > Series</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_publisher\"  > Publishers</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_tag\"  > Tags</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_rating\"  > Ratings</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_language\"  > Languages</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_format\" checked='checked' > Formats</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_identifier\" checked='checked' > Identifiers</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_book\"  > Books</input><br>",
+            "content": "<input type=\"checkbox\" name=\"ignored_categories[]\" value=\"author\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_author\"  > Authors</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"series\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_series\"  > Series</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"publisher\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_publisher\"  > Publishers</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"tag\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_tag\"  > Tags</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"rating\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_rating\"  > Ratings</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"language\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_language\"  > Languages</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"format\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_format\" checked='checked' > Formats</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"identifier\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_identifier\" checked='checked' > Identifiers</input><br><input type=\"checkbox\" name=\"ignored_categories[]\" value=\"book\" onchange=\"updateCookieFromCheckboxGroup (this);\" id=\"ignored_categories_book\"  > Books</input><br>",
             "navlink": "#",
             "number": ""
         },
         {
             "class": "",
             "title": "Virtual library",
-            "content": "<select id='virtual_library' onchange='updateCookie (this); window.location=window.location;'><option value='' >No virtual libraries</option><option value='1.Action_Fiction_from_this_Century_TODO' >1. Action Fiction from this Century (TODO)</option><option value='2.Short_Stories_in_English' >2. Short Stories in English</option></select>",
+            "content": "<select id='virtual_library' name='virtual_library' onchange='updateCookie (this); window.location=window.location;'><option value='' >No virtual libraries</option><option value='1.Action_Fiction_from_this_Century_TODO' >1. Action Fiction from this Century (TODO)</option><option value='2.Short_Stories_in_English' >2. Short Stories in English</option></select>",
             "navlink": "#",
             "number": ""
         }

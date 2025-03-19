@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Handlers;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
+use InvalidArgumentException;
 use Throwable;
 
 /**
@@ -45,10 +46,11 @@ class JsonHandler extends PageHandler
 
         try {
             return $response->setContent(json_encode($json->getJson($request)));
+        } catch (InvalidArgumentException $e) {
+            return Response::notFound($request, $e->getMessage());
         } catch (Throwable $e) {
             error_log($e);
-            // this will call exit()
-            Response::sendError($request, $e->getMessage());
+            return Response::sendError($request, $e->getMessage());
         }
     }
 }

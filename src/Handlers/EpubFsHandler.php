@@ -42,13 +42,11 @@ class EpubFsHandler extends BaseHandler
         //$database = $request->getId('db');
         $idData = $request->getId('data');
         if (empty($idData)) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
         $component = $request->get('comp', null);
         if (empty($component)) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
         $database = $request->database();
 
@@ -62,8 +60,7 @@ class EpubFsHandler extends BaseHandler
 
         } catch (Exception $e) {
             error_log($e);
-            // this will call exit()
-            Response::sendError($request, $e->getMessage());
+            return Response::sendError($request, $e->getMessage());
         }
     }
 }

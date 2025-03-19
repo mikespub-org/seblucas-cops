@@ -38,15 +38,13 @@ class MailHandler extends BaseHandler
         $mailer = new Mail();
 
         if ($error = $mailer->checkConfiguration()) {
-            // this will call exit()
-            Response::sendError($request, $error);
+            return Response::sendError($request, $error);
         }
 
         $idData = (int) $request->post("data");
         $emailDest = $request->post("email");
         if ($error = $mailer->checkRequest($idData, $emailDest)) {
-            // this will call exit()
-            Response::sendError($request, $error);
+            return Response::sendError($request, $error);
         }
 
         if ($error = $mailer->sendMail($idData, $emailDest, $request, $dryRun)) {

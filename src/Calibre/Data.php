@@ -216,7 +216,7 @@ class Data
      * Summary of sendUpdatedEpub
      * @param ?bool $updateForKepub
      * @param ?FileResponse $response
-     * @return FileResponse
+     * @return FileResponse|Response
      */
     public function sendUpdatedEpub($updateForKepub = null, $response = null)
     {
@@ -227,8 +227,7 @@ class Data
             // make a temp copy for the updated Epub file
             $tmpfile = FileResponse::getTempFile('epub');
             if (!copy($this->getLocalPath(), $tmpfile)) {
-                // this will call exit()
-                Response::sendError(null, 'Error: unable to copy epub file');
+                return Response::sendError(null, 'Error: unable to copy epub file');
             }
             $filePath = $tmpfile;
         } else {
@@ -250,8 +249,7 @@ class Data
                     // run kepubify on updated Epub file and send converted tmpfile
                     $tmpfile = self::runKepubify($filePath);
                     if (empty($tmpfile)) {
-                        // this will call exit()
-                        Response::sendError(null, 'Error: failed to convert epub file');
+                        return Response::sendError(null, 'Error: failed to convert epub file');
                     }
                     return $response->setFile($tmpfile, true);
                 }
@@ -265,15 +263,14 @@ class Data
             $response->isSent(true);
             return $response;
         } catch (Exception $e) {
-            // this will call exit()
-            Response::sendError(null, 'Exception: ' . $e->getMessage());
+            return Response::sendError(null, 'Exception: ' . $e->getMessage());
         }
     }
 
     /**
      * Summary of sendConvertedKepub
      * @param ?FileResponse $response
-     * @return FileResponse
+     * @return FileResponse|Response
      */
     public function sendConvertedKepub($response = null)
     {
@@ -284,8 +281,7 @@ class Data
             $response ??= new FileResponse($this->getMimeType(), null, basename($this->getUpdatedFilenameKepub()));
             $tmpfile = self::runKepubify($file);
             if (empty($tmpfile)) {
-                // this will call exit()
-                Response::sendError(null, 'Error: failed to convert epub file');
+                return Response::sendError(null, 'Error: failed to convert epub file');
             }
             return $response->setFile($tmpfile, true);
         }

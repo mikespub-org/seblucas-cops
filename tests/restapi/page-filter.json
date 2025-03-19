@@ -3,6 +3,7 @@
     "parentTitle": "",
     "baseurl": "vendor/bin/index.php",
     "isFilterPage": true,
+    "checked": [],
     "databaseId": "",
     "databaseName": "",
     "libraryId": "",

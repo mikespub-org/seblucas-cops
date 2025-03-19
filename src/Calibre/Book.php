@@ -636,14 +636,13 @@ class Book
      * Summary of sendUpdatedEpub
      * @param int $idData
      * @param ?FileResponse $response
-     * @return FileResponse
+     * @return FileResponse|Response
      */
     public function sendUpdatedEpub($idData, $response = null)
     {
         $data = $this->getDataById($idData);
         if (!$data) {
-            // this will call exit()
-            Response::sendError(null, 'Error: unable to find epub file');
+            return Response::sendError(null, 'Error: unable to find epub file');
         }
         return $data->sendUpdatedEpub($this->updateForKepub, $response);
     }

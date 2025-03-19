@@ -66,8 +66,6 @@ class RequestContext
             // Try to match the route
             $this->matchParams = $this->router->match($path, $method);
             if (!isset($this->matchParams)) {
-                // this will call exit()
-                //Response::sendError($this, "Invalid request path '$path'");
                 error_log("COPS: Invalid request path '$path' from template " . $this->request->template());
                 // delay reporting error until we're back in Framework
                 $this->request->invalid = true;

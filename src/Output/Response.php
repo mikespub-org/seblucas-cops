@@ -27,12 +27,14 @@ class Response
     public static $handler = HtmlHandler::class;
 
     protected int $statusCode = 200;
-    protected ?string $mimetype;
-    protected ?int $expires;
-    protected ?string $filename;
-    protected string $content;
-    protected ?\Closure $callback;
+    protected ?string $mimetype = null;
+    protected ?int $expires = null;
+    protected ?string $filename = null;
+    protected ?string $content = null;
+    protected ?\Closure $callback = null;
     protected bool $sent = false;
+    /** @var array<string, mixed> */
+    protected array $headers = [];
 
     /**
      * Summary of getMimeType
@@ -85,6 +87,29 @@ class Response
     }
 
     /**
+     * Summary of addHeader
+     * @param string $name
+     * @param mixed $value
+     * @return Response
+     */
+    public function addHeader($name, $value): static
+    {
+        $this->headers[$name] = $value;
+        return $this;
+    }
+
+    /**
+     * Summary of setStatusCode
+     * @param int $statusCode
+     * @return Response
+     */
+    public function setStatusCode($statusCode): static
+    {
+        $this->statusCode = $statusCode;
+        return $this;
+    }
+
+    /**
      * Summary of setCallback
      * @todo possibly use to send file or zipstream later in response handler?
      * @param \Closure|callable $callback
@@ -117,21 +142,36 @@ class Response
             $this->expires = 60 * 60 * 24 * 14;
         }
         if (!empty($this->expires)) {
-            header('Pragma: public');
-            header('Cache-Control: max-age=' . $this->expires);
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $this->expires) . ' GMT');
+            $this->addHeader('Pragma', 'public');
+            $this->addHeader('Cache-Control', 'max-age=' . (string) $this->expires);
+            $this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + $this->expires) . ' GMT');
         }
 
         if (!empty($this->mimetype)) {
-            header('Content-Type: ' . $this->mimetype);
+            $this->addHeader('Content-Type', $this->mimetype);
         }
 
         if (is_null($this->filename)) {
             // no content disposition
         } elseif (empty($this->filename)) {
-            header('Content-Disposition: inline');
+            $this->addHeader('Content-Disposition', 'inline');
         } else {
-            header('Content-Disposition: attachment; filename="' . basename($this->filename) . '"');
+            $this->addHeader('Content-Disposition', 'attachment; filename="' . basename($this->filename) . '"');
+        }
+
+        foreach ($this->headers as $name => $value) {
+            if (isset($value)) {
+                header($name . ': ' . (string) $value);
+            } else {
+                header($name);
+            }
+        }
+
+        // let PHP handle RFC 2616 (HTTP/1.1) vs RFC 3875 (CGI/1.1)
+        // @see https://www.php.net/manual/en/ini.core.php#ini.cgi.rfc2616-headers
+        $statusCode ??= $this->statusCode;
+        if ($statusCode !== 200) {
+            http_response_code($statusCode);
         }
 
         return $this;
@@ -144,18 +184,18 @@ class Response
      */
     public function setContent($content): static
     {
-        $this->content = $content ?? '';
+        $this->content = $content;
 
         return $this;
     }
 
     /**
      * Summary of getContent
-     * @return string|false
+     * @return string|null
      */
-    public function getContent(): string|false
+    public function getContent(): string|null
     {
-        return $this->content ?? false;
+        return $this->content;
     }
 
     /**
@@ -165,7 +205,9 @@ class Response
     public function sendContent(): static
     {
         // @todo check callback
-        echo $this->content;
+        if (isset($this->content)) {
+            echo $this->content;
+        }
 
         return $this;
     }
@@ -218,18 +260,19 @@ class Response
     /**
      * Summary of notFound
      * @param ?Request $request
-     * @return never
+     * @param string|null $error
+     * @return self
      */
-    public static function notFound($request = null): never
+    public static function notFound($request = null, $error = null): self
     {
-        header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1') . ' 404 Not Found');
-        header('Status: 404 Not Found');
+        $response = new self();
+        $response->setStatusCode(404);
 
-        $_SERVER['REDIRECT_STATUS'] = 404;
         $data = ['link' => self::$handler::link()];
+        $data['error'] = htmlspecialchars($error ?? "I'm sorry Dave, I'm afraid I can't do that");
         $template = 'templates/notfound.html';
-        echo Format::template($data, $template);
-        exit;
+        $response->setContent(Format::template($data, $template));
+        return $response;
     }
 
     /**
@@ -237,29 +280,29 @@ class Response
      * @param ?Request $request
      * @param string|null $error
      * @param array<string, mixed> $params
-     * @return never
+     * @return self
      */
-    public static function sendError($request = null, $error = null, $params = ['page' => 'index', 'db' => 0, 'vl' => 0]): never
+    public static function sendError($request = null, $error = null, $params = ['page' => 'index', 'db' => 0, 'vl' => 0]): self
     {
-        header(($_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1') . ' 404 Not Found');
-        header('Status: 404 Not Found');
+        $response = new self();
+        $response->setStatusCode(404);
 
-        $_SERVER['REDIRECT_STATUS'] = 404;
         $data = ['link' => self::$handler::route(PageId::ROUTE_INDEX, $params)];
         $data['error'] = htmlspecialchars($error ?? 'Unknown Error');
         $template = 'templates/error.html';
-        echo Format::template($data, $template);
-        exit;
+        $response->setContent(Format::template($data, $template));
+        return $response;
     }
 
     /**
      * Summary of redirect
      * @param string $location
-     * @return void
+     * @return self
      */
-    public static function redirect($location): void
+    public static function redirect($location): self
     {
-        header('Location: ' . $location);
-        //exit;
+        $response = new self();
+        $response->addHeader('Location', $location);
+        return $response;
     }
 }

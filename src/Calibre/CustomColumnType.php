@@ -487,7 +487,7 @@ abstract class CustomColumnType
             static::TYPE_RATING => new CustomColumnTypeRating($customId, $database, $displaySettings),
             static::TYPE_BOOL => new CustomColumnTypeBool($customId, $database, $displaySettings),
             static::TYPE_COMPOSITE => null,
-            default => throw new Exception("Unkown column type: " . $datatype),
+            default => throw new Exception("Unknown column type: " . $datatype),
         };
         return static::$customColumnCacheID[$customId];
     }

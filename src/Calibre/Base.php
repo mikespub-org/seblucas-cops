@@ -19,6 +19,7 @@ use SebLucas\Cops\Model\LinkFeed;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
+use InvalidArgumentException;
 
 abstract class Base
 {
@@ -484,6 +485,10 @@ abstract class Base
             $result = Database::query($query, [$id], $database);
             if ($post = $result->fetchObject()) {
                 return new $className($post, $database);
+            }
+            if (!empty($id)) {
+                $classParts = explode('\\', $className);
+                throw new InvalidArgumentException('Invalid ' . end($classParts));
             }
         }
         $default = static::getDefaultName();

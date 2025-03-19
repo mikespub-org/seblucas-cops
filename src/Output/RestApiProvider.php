@@ -171,8 +171,7 @@ class RestApiProvider extends BaseRenderer
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
         if (!isset($params)) {
-            Response::redirect($this->getRoute(PageId::ROUTE_INDEX));
-            return '';
+            return Response::redirect($this->getRoute(PageId::ROUTE_INDEX));
         }
         if ($this->isExtra) {
             $result = $params;

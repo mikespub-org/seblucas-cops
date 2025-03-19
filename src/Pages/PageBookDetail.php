@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
+use InvalidArgumentException;
 
 class PageBookDetail extends Page
 {
@@ -24,9 +25,7 @@ class PageBookDetail extends Page
     {
         $this->book = Book::getBookById($this->idGet, $this->getDatabaseId());
         if (is_null($this->book)) {
-            $this->idPage = PageId::ERROR_ID;
-            $this->title = 'Not Found';
-            return;
+            throw new InvalidArgumentException('Invalid Book');
         }
         $this->book->setHandler($this->handler);
         $this->idPage = $this->book->getEntryId();

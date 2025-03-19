@@ -712,12 +712,7 @@ class JsonRenderer extends BaseRenderer
         $qid = $request->getId();
         $libraryId = $request->getVirtualLibrary();
 
-        try {
-            $currentPage = PageId::getPage($this->page, $request);
-        } catch (Exception $e) {
-            // this will call exit()
-            Response::sendError($request, $e->getMessage());
-        }
+        $currentPage = PageId::getPage($this->page, $request);
 
         if ($search) {
             return $this->getContentArrayTypeahead($currentPage);

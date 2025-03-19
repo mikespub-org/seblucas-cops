@@ -46,8 +46,7 @@ class FeedHandler extends BaseHandler
             // match path against default page handler
             $params = Route::match('/' . $path);
             if (!isset($params)) {
-                // this will call exit()
-                Response::sendError($request, 'Unknown path for feed: ' . $path);
+                return Response::sendError($request, 'Unknown path for feed: ' . $path);
             }
             // set actual path params in request
             $request->setParams($params);

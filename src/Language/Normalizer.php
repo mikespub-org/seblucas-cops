@@ -25,7 +25,9 @@ class Normalizer
         if (Config::get('normalized_search') == '1') {
             if (!extension_loaded('intl')) {
                 // this will call exit()
-                Response::sendError(null, 'Please enable the "intl" extension to use normalized search');
+                $response = Response::sendError(null, 'Please enable the "intl" extension to use normalized search');
+                $response->send();
+                exit;
             }
             return true;
         }

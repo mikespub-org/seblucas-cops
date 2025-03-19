@@ -36,16 +36,14 @@ class ZipperHandler extends BaseHandler
     public function handle($request)
     {
         if (empty(Config::get('download_page'))) {
-            // this will call exit()
-            Response::sendError($request, 'Downloads by page are disabled in config');
+            return Response::sendError($request, 'Downloads by page are disabled in config');
         }
         if (Config::get('fetch_protect') == '1') {
             $session = $this->getContext()->getSession();
             $session->start();
             $connected = $session->get('connected');
             if (!isset($connected)) {
-                // this will call exit()
-                Response::notFound($request);
+                return Response::notFound($request);
             }
         }
 
@@ -62,7 +60,6 @@ class ZipperHandler extends BaseHandler
             }
             return $zipper->download(null, $sendHeaders);
         }
-        // this will call exit()
-        Response::sendError($request, "Invalid download: " . $zipper->getMessage());
+        return Response::sendError($request, "Invalid download: " . $zipper->getMessage());
     }
 }

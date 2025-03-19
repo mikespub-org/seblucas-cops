@@ -52,8 +52,7 @@ class OpdsHandler extends BaseHandler
             // match path against default page handler
             $params = Route::match('/' . $path);
             if (!isset($params)) {
-                // this will call exit()
-                CopsResponse::sendError($request, 'Unknown path for feed: ' . $path);
+                return CopsResponse::sendError($request, 'Unknown path for feed: ' . $path);
             }
             // set actual path params in request
             $request->setParams($params);

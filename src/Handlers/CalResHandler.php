@@ -44,8 +44,7 @@ class CalResHandler extends BaseHandler
 
         $result = Resource::sendImageResource($hash, $response, null, intval($database));
         if (is_null($result)) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
         return $result;
     }

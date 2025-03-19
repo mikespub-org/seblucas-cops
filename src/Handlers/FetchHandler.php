@@ -59,8 +59,7 @@ class FetchHandler extends BaseHandler
             $session->start();
             $connected = $session->get('connected');
             if (!isset($connected)) {
-                // this will call exit()
-                Response::notFound($request);
+                return Response::notFound($request);
             }
         }
         // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
@@ -82,8 +81,7 @@ class FetchHandler extends BaseHandler
         }
 
         if (!$book) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
 
         if (!empty($file)) {
@@ -97,8 +95,7 @@ class FetchHandler extends BaseHandler
 
         $data = $book->getDataById($idData);
         if (!$data) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
 
         if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
@@ -132,14 +129,12 @@ class FetchHandler extends BaseHandler
         }
         $extraFiles = $book->getExtraFiles();
         if (!in_array($file, $extraFiles)) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
         // send back extra file
         $filepath = $book->path . '/' . Book::DATA_DIR_NAME . '/' . $file;
         if (!file_exists($filepath)) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
         $mimetype = Response::getMimeType($filepath);
         $response = new FileResponse($mimetype, 0, basename($filepath));
@@ -166,8 +161,7 @@ class FetchHandler extends BaseHandler
             }
             return $zipper->download(null, $sendHeaders);
         } else {
-            // this will call exit()
-            Response::sendError($request, "Invalid zipped: " . $zipper->getMessage());
+            return Response::sendError($request, "Invalid zipped: " . $zipper->getMessage());
         }
     }
 
@@ -176,14 +170,13 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param string $type
-     * @return FileResponse
+     * @return FileResponse|Response
      */
     public function sendThumbnail($request, $book, $type)
     {
         $file = $book->getCoverFilePath($type);
         if (empty($file) || !file_exists($file)) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
         $cover = new Cover($book);
         // create empty file response to start with!?

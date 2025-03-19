@@ -37,8 +37,7 @@ class ReadHandler extends BaseHandler
     {
         $idData = $request->getId('data');
         if (empty($idData)) {
-            // this will call exit()
-            Response::notFound($request);
+            return Response::notFound($request);
         }
         $version = $request->get('version', Config::get('epub_reader', 'monocle'));
         $database = $request->database();
@@ -51,8 +50,7 @@ class ReadHandler extends BaseHandler
             return $response->setContent($reader->getReader($idData, $version, $database));
         } catch (Exception $e) {
             error_log($e);
-            // this will call exit()
-            Response::sendError($request, $e->getMessage());
+            return Response::sendError($request, $e->getMessage());
         }
     }
 }
