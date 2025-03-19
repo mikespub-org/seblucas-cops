@@ -61,6 +61,11 @@ class ZipFsHandler extends BaseHandler
             return $reader->sendZipContent($idData, $component, $database);
 
         } catch (Exception $e) {
+            // @see https://github.com/mikespub-org/seblucas-cops/issues/136
+            if ($component == 'META-INF/com.apple.ibooks.display-options.xml') {
+                // this will call exit()
+                Response::notFound($request);
+            }
             error_log($e);
             // this will call exit()
             Response::sendError($request, $e->getMessage());

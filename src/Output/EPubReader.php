@@ -285,6 +285,7 @@ class EPubReader extends BaseRenderer
         }
         $res = $zip->locateName($component);
         if ($res === false) {
+            $zip->close();
             throw new Exception('Unknown component ' . $component);
         }
         $data = $zip->getFromName($component);
