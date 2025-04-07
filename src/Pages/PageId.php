@@ -23,12 +23,14 @@ class PageId
     public const ALL_BOOKS = "books";
     public const ALL_BOOKS_LETTER = "books_letter";
     public const ALL_SERIES = "series";
+    public const SERIES_FIRST_LETTER = "series_letter";
     public const SERIE_DETAIL = "serie";
     public const OPENSEARCH = "opensearch";
     public const SEARCH = "search";
     public const OPENSEARCH_QUERY = "query";
     public const ALL_RECENT_BOOKS = "recent";
     public const ALL_TAGS = "tags";
+    public const TAGS_FIRST_LETTER = "tags_letter";
     public const TAG_DETAIL = "tag";
     public const BOOK_DETAIL = "book";
     public const ALL_CUSTOMS = "customtype";
@@ -38,6 +40,7 @@ class PageId
     public const LANGUAGE_DETAIL = "language";
     public const CUSTOMIZE = "customize";
     public const ALL_PUBLISHERS = "publishers";
+    public const PUBLISHERS_FIRST_LETTER = "publishers_letter";
     public const PUBLISHER_DETAIL = "publisher";
     public const ALL_RATINGS = "ratings";
     public const RATING_DETAIL = "rating";
@@ -106,6 +109,7 @@ class PageId
             PageId::AUTHORS_FIRST_LETTER => new PageAllAuthorsLetter($request),
             PageId::AUTHOR_DETAIL => new PageAuthorDetail($request, $instance),
             PageId::ALL_TAGS => new PageAllTags($request),
+            PageId::TAGS_FIRST_LETTER => new PageAllTagsLetter($request),
             PageId::TAG_DETAIL => new PageTagDetail($request, $instance),
             PageId::ALL_LANGUAGES => new PageAllLanguages($request),
             PageId::LANGUAGE_DETAIL => new PageLanguageDetail($request, $instance),
@@ -114,6 +118,7 @@ class PageId
             PageId::ALL_RATINGS => new PageAllRating($request),
             PageId::RATING_DETAIL => new PageRatingDetail($request, $instance),
             PageId::ALL_SERIES => new PageAllSeries($request),
+            PageId::SERIES_FIRST_LETTER => new PageAllSeriesLetter($request),
             PageId::ALL_BOOKS => new PageAllBooks($request),
             PageId::ALL_BOOKS_LETTER => new PageAllBooksLetter($request),
             PageId::ALL_BOOKS_YEAR => new PageAllBooksYear($request),
@@ -124,6 +129,7 @@ class PageId
             PageId::OPENSEARCH => !empty($request->get('query')) ? new PageQueryResult($request) : new PageIndex($request),
             PageId::BOOK_DETAIL => new PageBookDetail($request),
             PageId::ALL_PUBLISHERS => new PageAllPublishers($request),
+            PageId::PUBLISHERS_FIRST_LETTER => new PageAllPublishersLetter($request),
             PageId::PUBLISHER_DETAIL => new PagePublisherDetail($request, $instance),
             PageId::ALL_IDENTIFIERS => new PageAllIdentifiers($request),
             PageId::IDENTIFIER_DETAIL => new PageIdentifierDetail($request, $instance),

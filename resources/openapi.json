@@ -368,6 +368,52 @@
                 ]
             }
         },
+        "/series/letter/{letter}": {
+            "get": {
+                "summary": "Route to page handler with page=series_letter&letter={letter}",
+                "operationId": "get_page-series-letter",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=series_letter&letter={letter}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "letter",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/series/letter": {
+            "get": {
+                "summary": "Route to page handler with page=series&letter=1",
+                "operationId": "get_page-series-letters",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=series&letter=1"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
         "/series/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=serie&id={id}&title={title}",
@@ -561,6 +607,52 @@
                 "responses": {
                     "200": {
                         "description": "Result of page handler with page=recent"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/tags/letter/{letter}": {
+            "get": {
+                "summary": "Route to page handler with page=tags_letter&letter={letter}",
+                "operationId": "get_page-tags-letter",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=tags_letter&letter={letter}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "letter",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/tags/letter": {
+            "get": {
+                "summary": "Route to page handler with page=tags&letter=1",
+                "operationId": "get_page-tags-letters",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=tags&letter=1"
                     }
                 },
                 "parameters": [
@@ -841,6 +933,52 @@
                 "responses": {
                     "200": {
                         "description": "Result of page handler with page=customize"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/publishers/letter/{letter}": {
+            "get": {
+                "summary": "Route to page handler with page=publishers_letter&letter={letter}",
+                "operationId": "get_page-publishers-letter",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=publishers_letter&letter={letter}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "letter",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/publishers/letter": {
+            "get": {
+                "summary": "Route to page handler with page=publishers&letter=1",
+                "operationId": "get_page-publishers-letters",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=publishers&letter=1"
                     }
                 },
                 "parameters": [

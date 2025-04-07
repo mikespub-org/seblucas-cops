@@ -347,7 +347,7 @@ class PageTest extends TestCase
         Config::set('author_split_first_letter', "1");
     }
 
-    public function testPageAllAuthors_SplittedByFirstLetter(): void
+    public function testPageAllAuthors_SplitByFirstLetter(): void
     {
         $page = PageId::ALL_AUTHORS;
         $request = new Request();
@@ -579,6 +579,38 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
+    public function testPageAllSeries_SplitByFirstLetter(): void
+    {
+        $page = PageId::ALL_SERIES;
+        $request = new Request();
+
+        Config::set('series_split_first_letter', "1");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        Config::set('series_split_first_letter', "0");
+
+        $this->assertEquals("Series", $currentPage->title);
+        $this->assertCount(4, $currentPage->entryArray);
+        $this->assertEquals("D", $currentPage->entryArray [0]->title);
+        $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageSeriesFirstLetter(): void
+    {
+        $page = PageId::SERIES_FIRST_LETTER;
+        $request = new Request();
+        $request->set('letter', "S");
+
+        // Series Sherlock Holmes & Série des Rougon-Macquart
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("2 series starting with S", $currentPage->title);
+        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
     public function testPageSeriesDetail(): void
     {
         $page = PageId::SERIE_DETAIL;
@@ -620,6 +652,38 @@ class PageTest extends TestCase
         $this->assertEquals("Publishers", $currentPage->title);
         $this->assertCount(7, $currentPage->entryArray);
         $this->assertEquals("D. Appleton and Company", $currentPage->entryArray [0]->title);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageAllPublishers_SplitByFirstLetter(): void
+    {
+        $page = PageId::ALL_PUBLISHERS;
+        $request = new Request();
+
+        Config::set('publisher_split_first_letter', "1");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        Config::set('publisher_split_first_letter', "0");
+
+        $this->assertEquals("Publishers", $currentPage->title);
+        $this->assertCount(6, $currentPage->entryArray);
+        $this->assertEquals("D", $currentPage->entryArray [0]->title);
+        $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPagePublishersFirstLetter(): void
+    {
+        $page = PageId::PUBLISHERS_FIRST_LETTER;
+        $request = new Request();
+        $request->set('letter', "M");
+
+        // Publisher Macmillan and Co. London & Macmillan Publishers USA
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("2 publishers starting with M", $currentPage->title);
+        $this->assertCount(2, $currentPage->entryArray);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -667,6 +731,38 @@ class PageTest extends TestCase
         $this->assertEquals(4, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals("No tags", $currentPage->entryArray [11]->title);
         $this->assertEquals(1, $currentPage->entryArray [11]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageAllTags_SplitByFirstLetter(): void
+    {
+        $page = PageId::ALL_TAGS;
+        $request = new Request();
+
+        Config::set('tag_split_first_letter', "1");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        Config::set('tag_split_first_letter', "0");
+
+        $this->assertEquals("Tags", $currentPage->title);
+        $this->assertCount(10, $currentPage->entryArray);
+        $this->assertEquals("A", $currentPage->entryArray [0]->title);
+        $this->assertEquals(1, $currentPage->entryArray [0]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageTagsFirstLetter(): void
+    {
+        $page = PageId::TAGS_FIRST_LETTER;
+        $request = new Request();
+        $request->set('letter', "F");
+
+        // Tag Fantasy & Fiction
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("2 tags starting with F", $currentPage->title);
+        $this->assertCount(2, $currentPage->entryArray);
         $this->assertFalse($currentPage->containsBook());
     }
 

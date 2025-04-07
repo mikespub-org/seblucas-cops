@@ -25,7 +25,7 @@ class BaseList
     public const URL_PARAM_LIST = "idlist";
 
     public Request $request;
-    /** @var class-string */
+    /** @var class-string<Base|Data> */
     public $className;
     /** @var ?int */
     protected $databaseId = null;
@@ -171,7 +171,7 @@ class BaseList
      */
     public function getEntryCount()
     {
-        return $this->className::getCount($this->databaseId);
+        return $this->className::getCount($this->databaseId, $this->handler);
     }
 
     /**
@@ -405,8 +405,8 @@ class BaseList
     public function getEntriesByFirstLetter($letter, $n = 1)
     {
         $query = $this->className::SQL_ROWS_BY_FIRST_LETTER;
-        // authors by first letter in sort
-        if ($this->orderBy == 'name') {
+        // authors and series by first letter in sort
+        if (in_array($this->className, [Author::class, Serie::class]) && $this->orderBy == 'name') {
             $this->orderBy = 'sort';
         }
         $query = $this->addOrderByClause($query);

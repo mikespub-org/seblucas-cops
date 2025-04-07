@@ -84,6 +84,20 @@
           '_name' => 'page-books',
         ),
       ),
+      '/series/letter' => 
+      array (
+        0 => 
+        array (
+          'page' => 'series',
+          'letter' => 1,
+          '_route' => 'page-series-letters',
+        ),
+        1 => 
+        array (
+          '_route' => '/series/letter',
+          '_name' => 'page-series-letters',
+        ),
+      ),
       '/series' => 
       array (
         0 => 
@@ -137,6 +151,20 @@
           '_name' => 'page-recent',
         ),
       ),
+      '/tags/letter' => 
+      array (
+        0 => 
+        array (
+          'page' => 'tags',
+          'letter' => 1,
+          '_route' => 'page-tags-letters',
+        ),
+        1 => 
+        array (
+          '_route' => '/tags/letter',
+          '_name' => 'page-tags-letters',
+        ),
+      ),
       '/tags' => 
       array (
         0 => 
@@ -187,6 +215,20 @@
         array (
           '_route' => '/customize',
           '_name' => 'page-customize',
+        ),
+      ),
+      '/publishers/letter' => 
+      array (
+        0 => 
+        array (
+          'page' => 'publishers',
+          'letter' => 1,
+          '_route' => 'page-publishers-letters',
+        ),
+        1 => 
+        array (
+          '_route' => '/publishers/letter',
+          '_name' => 'page-publishers-letters',
         ),
       ),
       '/publishers' => 
@@ -589,7 +631,7 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/(\\w)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/(\\d+)/([^/]+)(*MARK:h)|/series/(\\d+)(*MARK:i)|/search/([^/]+)/([^/]+)(*MARK:j)|/search/([^/]+)(*MARK:k)|/tags/(\\d+)/([^/]+)(*MARK:l)|/tags/(\\d+)(*MARK:m)|/custom/(\\d+)/([^/]+)(*MARK:n)|/custom/(\\d+)(*MARK:o)|/languages/(\\d+)/([^/]+)(*MARK:p)|/languages/(\\d+)(*MARK:q)|/publishers/(\\d+)/([^/]+)(*MARK:r)|/publishers/(\\d+)(*MARK:s)|/ratings/(\\d+)/([^/]+)(*MARK:t)|/ratings/(\\d+)(*MARK:u)|/identifiers/(\\w+)/([^/]+)(*MARK:v)|/identifiers/(\\w+)(*MARK:w)|/formats/(\\w+)(*MARK:x)|/feed/(\\w+)(*MARK:y)|/feed/(.+)(*MARK:z)|/files/(\\d+)/(\\d+)/(.+)(*MARK:aa)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ab)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:ac)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:ad))$~',
+        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/(\\w)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/tags/letter/([^/]+)(*MARK:m)|/tags/(\\d+)/([^/]+)(*MARK:n)|/tags/(\\d+)(*MARK:o)|/custom/(\\d+)/([^/]+)(*MARK:p)|/custom/(\\d+)(*MARK:q)|/languages/(\\d+)/([^/]+)(*MARK:r)|/languages/(\\d+)(*MARK:s)|/publishers/letter/([^/]+)(*MARK:t)|/publishers/(\\d+)/([^/]+)(*MARK:u)|/publishers/(\\d+)(*MARK:v)|/ratings/(\\d+)/([^/]+)(*MARK:w)|/ratings/(\\d+)(*MARK:x)|/identifiers/(\\w+)/([^/]+)(*MARK:y)|/identifiers/(\\w+)(*MARK:z)|/formats/(\\w+)(*MARK:aa)|/feed/(\\w+)(*MARK:ab)|/feed/(.+)(*MARK:ac)|/files/(\\d+)/(\\d+)/(.+)(*MARK:ad)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ae)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:af))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -718,6 +760,23 @@
           array (
             0 => 
             array (
+              'page' => 'series_letter',
+              '_route' => 'page-series-letter',
+            ),
+            1 => 
+            array (
+              'letter' => 'letter',
+            ),
+            2 => 
+            array (
+              '_route' => '/series/letter/{letter}',
+              '_name' => 'page-series-letter',
+            ),
+          ),
+          'i' => 
+          array (
+            0 => 
+            array (
               'page' => 'serie',
               '_route' => 'page-serie',
             ),
@@ -732,7 +791,7 @@
               '_name' => 'page-serie',
             ),
           ),
-          'i' => 
+          'j' => 
           array (
             0 => 
             array (
@@ -749,7 +808,7 @@
               '_name' => 'page-serie-id',
             ),
           ),
-          'j' => 
+          'k' => 
           array (
             0 => 
             array (
@@ -767,7 +826,7 @@
               '_name' => 'page-query-scope',
             ),
           ),
-          'k' => 
+          'l' => 
           array (
             0 => 
             array (
@@ -784,7 +843,24 @@
               '_name' => 'page-query',
             ),
           ),
-          'l' => 
+          'm' => 
+          array (
+            0 => 
+            array (
+              'page' => 'tags_letter',
+              '_route' => 'page-tags-letter',
+            ),
+            1 => 
+            array (
+              'letter' => 'letter',
+            ),
+            2 => 
+            array (
+              '_route' => '/tags/letter/{letter}',
+              '_name' => 'page-tags-letter',
+            ),
+          ),
+          'n' => 
           array (
             0 => 
             array (
@@ -802,7 +878,7 @@
               '_name' => 'page-tag',
             ),
           ),
-          'm' => 
+          'o' => 
           array (
             0 => 
             array (
@@ -819,7 +895,7 @@
               '_name' => 'page-tag-id',
             ),
           ),
-          'n' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -837,7 +913,7 @@
               '_name' => 'page-custom',
             ),
           ),
-          'o' => 
+          'q' => 
           array (
             0 => 
             array (
@@ -854,7 +930,7 @@
               '_name' => 'page-customtype',
             ),
           ),
-          'p' => 
+          'r' => 
           array (
             0 => 
             array (
@@ -872,7 +948,7 @@
               '_name' => 'page-language',
             ),
           ),
-          'q' => 
+          's' => 
           array (
             0 => 
             array (
@@ -889,7 +965,24 @@
               '_name' => 'page-language-id',
             ),
           ),
-          'r' => 
+          't' => 
+          array (
+            0 => 
+            array (
+              'page' => 'publishers_letter',
+              '_route' => 'page-publishers-letter',
+            ),
+            1 => 
+            array (
+              'letter' => 'letter',
+            ),
+            2 => 
+            array (
+              '_route' => '/publishers/letter/{letter}',
+              '_name' => 'page-publishers-letter',
+            ),
+          ),
+          'u' => 
           array (
             0 => 
             array (
@@ -907,7 +1000,7 @@
               '_name' => 'page-publisher',
             ),
           ),
-          's' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -924,7 +1017,7 @@
               '_name' => 'page-publisher-id',
             ),
           ),
-          't' => 
+          'w' => 
           array (
             0 => 
             array (
@@ -942,7 +1035,7 @@
               '_name' => 'page-rating',
             ),
           ),
-          'u' => 
+          'x' => 
           array (
             0 => 
             array (
@@ -959,7 +1052,7 @@
               '_name' => 'page-rating-id',
             ),
           ),
-          'v' => 
+          'y' => 
           array (
             0 => 
             array (
@@ -977,7 +1070,7 @@
               '_name' => 'page-identifier',
             ),
           ),
-          'w' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -994,7 +1087,7 @@
               '_name' => 'page-identifier-id',
             ),
           ),
-          'x' => 
+          'aa' => 
           array (
             0 => 
             array (
@@ -1011,7 +1104,7 @@
               '_name' => 'page-format',
             ),
           ),
-          'y' => 
+          'ab' => 
           array (
             0 => 
             array (
@@ -1028,7 +1121,7 @@
               '_name' => 'feed-page',
             ),
           ),
-          'z' => 
+          'ac' => 
           array (
             0 => 
             array (
@@ -1045,7 +1138,7 @@
               '_name' => 'feed-path',
             ),
           ),
-          'aa' => 
+          'ad' => 
           array (
             0 => 
             array (
@@ -1064,7 +1157,7 @@
               '_name' => 'fetch-file',
             ),
           ),
-          'ab' => 
+          'ae' => 
           array (
             0 => 
             array (
@@ -1083,7 +1176,7 @@
               '_name' => 'fetch-thumb',
             ),
           ),
-          'ac' => 
+          'af' => 
           array (
             0 => 
             array (
@@ -1101,7 +1194,14 @@
               '_name' => 'fetch-cover',
             ),
           ),
-          'ad' => 
+        ),
+      ),
+      1 => 
+      array (
+        'regex' => '~^(?|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:b)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:e)|/read/(\\d+)/(\\d+)(*MARK:f)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:g)|/restapi/databases/([^/]+)/([^/]+)(*MARK:h)|/restapi/databases/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)/([^/]+)(*MARK:k)|/restapi/notes/([^/]+)(*MARK:l)|/restapi/preferences/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:n)|/restapi/annotations/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:q)|/restapi/metadata/([^/]+)(*MARK:r)|/restapi/(.*)(*MARK:s)|/check/(.*)(*MARK:t)|/opds/(\\w+)(*MARK:u)|/opds/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:w)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:x)|/loader/([^/]+)/(\\d+)(*MARK:y)|/loader/([^/]+)/(*MARK:z)|/loader/([^/]+)(*MARK:aa)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ac)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ad)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ae))$~',
+        'routeMap' => 
+        array (
+          'a' => 
           array (
             0 => 
             array (
@@ -1122,14 +1222,7 @@
               '_name' => 'fetch-inline',
             ),
           ),
-        ),
-      ),
-      1 => 
-      array (
-        'regex' => '~^(?|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:b)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)(*MARK:e)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:f)|/restapi/databases/([^/]+)/([^/]+)(*MARK:g)|/restapi/databases/([^/]+)(*MARK:h)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)(*MARK:k)|/restapi/preferences/([^/]+)(*MARK:l)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)(*MARK:n)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)(*MARK:q)|/restapi/(.*)(*MARK:r)|/check/(.*)(*MARK:s)|/opds/(\\w+)(*MARK:t)|/opds/(.*)(*MARK:u)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:w)|/loader/([^/]+)/(\\d+)(*MARK:x)|/loader/([^/]+)/(*MARK:y)|/loader/([^/]+)(*MARK:z)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:aa)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ac)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ad))$~',
-        'routeMap' => 
-        array (
-          'a' => 
+          'b' => 
           array (
             0 => 
             array (
@@ -1149,7 +1242,7 @@
               '_name' => 'fetch-data',
             ),
           ),
-          'b' => 
+          'c' => 
           array (
             0 => 
             array (
@@ -1170,7 +1263,7 @@
               '_name' => 'fetch-view',
             ),
           ),
-          'c' => 
+          'd' => 
           array (
             0 => 
             array (
@@ -1190,7 +1283,7 @@
               '_name' => 'fetch-download',
             ),
           ),
-          'd' => 
+          'e' => 
           array (
             0 => 
             array (
@@ -1209,7 +1302,7 @@
               '_name' => 'read-title',
             ),
           ),
-          'e' => 
+          'f' => 
           array (
             0 => 
             array (
@@ -1227,7 +1320,7 @@
               '_name' => 'read',
             ),
           ),
-          'f' => 
+          'g' => 
           array (
             0 => 
             array (
@@ -1246,7 +1339,7 @@
               '_name' => 'epubfs',
             ),
           ),
-          'g' => 
+          'h' => 
           array (
             0 => 
             array (
@@ -1265,7 +1358,7 @@
               '_name' => 'restapi-database-table',
             ),
           ),
-          'h' => 
+          'i' => 
           array (
             0 => 
             array (
@@ -1283,7 +1376,7 @@
               '_name' => 'restapi-database',
             ),
           ),
-          'i' => 
+          'j' => 
           array (
             0 => 
             array (
@@ -1303,7 +1396,7 @@
               '_name' => 'restapi-note',
             ),
           ),
-          'j' => 
+          'k' => 
           array (
             0 => 
             array (
@@ -1322,7 +1415,7 @@
               '_name' => 'restapi-notes-type-id',
             ),
           ),
-          'k' => 
+          'l' => 
           array (
             0 => 
             array (
@@ -1340,7 +1433,7 @@
               '_name' => 'restapi-notes-type',
             ),
           ),
-          'l' => 
+          'm' => 
           array (
             0 => 
             array (
@@ -1358,7 +1451,7 @@
               '_name' => 'restapi-preference',
             ),
           ),
-          'm' => 
+          'n' => 
           array (
             0 => 
             array (
@@ -1377,7 +1470,7 @@
               '_name' => 'restapi-annotation',
             ),
           ),
-          'n' => 
+          'o' => 
           array (
             0 => 
             array (
@@ -1395,7 +1488,7 @@
               '_name' => 'restapi-annotations-book',
             ),
           ),
-          'o' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -1415,7 +1508,7 @@
               '_name' => 'restapi-metadata-element-name',
             ),
           ),
-          'p' => 
+          'q' => 
           array (
             0 => 
             array (
@@ -1434,7 +1527,7 @@
               '_name' => 'restapi-metadata-element',
             ),
           ),
-          'q' => 
+          'r' => 
           array (
             0 => 
             array (
@@ -1452,7 +1545,7 @@
               '_name' => 'restapi-metadata',
             ),
           ),
-          'r' => 
+          's' => 
           array (
             0 => 
             array (
@@ -1469,7 +1562,7 @@
               '_name' => 'restapi-path',
             ),
           ),
-          's' => 
+          't' => 
           array (
             0 => 
             array (
@@ -1486,7 +1579,7 @@
               '_name' => 'check-more',
             ),
           ),
-          't' => 
+          'u' => 
           array (
             0 => 
             array (
@@ -1503,7 +1596,7 @@
               '_name' => 'opds-page',
             ),
           ),
-          'u' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -1520,7 +1613,7 @@
               '_name' => 'opds-path',
             ),
           ),
-          'v' => 
+          'w' => 
           array (
             0 => 
             array (
@@ -1540,7 +1633,7 @@
               '_name' => 'loader-action-dbNum-authorId-urlPath',
             ),
           ),
-          'w' => 
+          'x' => 
           array (
             0 => 
             array (
@@ -1559,7 +1652,7 @@
               '_name' => 'loader-action-dbNum-authorId',
             ),
           ),
-          'x' => 
+          'y' => 
           array (
             0 => 
             array (
@@ -1577,7 +1670,7 @@
               '_name' => 'loader-action-dbNum',
             ),
           ),
-          'y' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1594,7 +1687,7 @@
               '_name' => 'loader-action-',
             ),
           ),
-          'z' => 
+          'aa' => 
           array (
             0 => 
             array (
@@ -1611,7 +1704,7 @@
               '_name' => 'loader-action',
             ),
           ),
-          'aa' => 
+          'ab' => 
           array (
             0 => 
             array (
@@ -1630,7 +1723,7 @@
               '_name' => 'zipper-page-id-type',
             ),
           ),
-          'ab' => 
+          'ac' => 
           array (
             0 => 
             array (
@@ -1648,7 +1741,7 @@
               '_name' => 'zipper-page-type',
             ),
           ),
-          'ac' => 
+          'ad' => 
           array (
             0 => 
             array (
@@ -1667,7 +1760,7 @@
               '_name' => 'calres',
             ),
           ),
-          'ad' => 
+          'ae' => 
           array (
             0 => 
             array (
@@ -1836,6 +1929,25 @@
         0 => '/books',
       ),
     ),
+    'page-series-letter' => 
+    array (
+      0 => 
+      array (
+        0 => '/series/letter/',
+        1 => 
+        array (
+          0 => 'letter',
+          1 => '[^/]+',
+        ),
+      ),
+    ),
+    'page-series-letters' => 
+    array (
+      0 => 
+      array (
+        0 => '/series/letter',
+      ),
+    ),
     'page-serie' => 
     array (
       0 => 
@@ -1922,6 +2034,25 @@
       0 => 
       array (
         0 => '/recent',
+      ),
+    ),
+    'page-tags-letter' => 
+    array (
+      0 => 
+      array (
+        0 => '/tags/letter/',
+        1 => 
+        array (
+          0 => 'letter',
+          1 => '[^/]+',
+        ),
+      ),
+    ),
+    'page-tags-letters' => 
+    array (
+      0 => 
+      array (
+        0 => '/tags/letter',
       ),
     ),
     'page-tag' => 
@@ -2040,6 +2171,25 @@
       0 => 
       array (
         0 => '/customize',
+      ),
+    ),
+    'page-publishers-letter' => 
+    array (
+      0 => 
+      array (
+        0 => '/publishers/letter/',
+        1 => 
+        array (
+          0 => 'letter',
+          1 => '[^/]+',
+        ),
+      ),
+    ),
+    'page-publishers-letters' => 
+    array (
+      0 => 
+      array (
+        0 => '/publishers/letter',
       ),
     ),
     'page-publisher' => 

@@ -64,6 +64,21 @@ class ConfigTest extends TestCase
         $this->assertTrue(is_int((int) Config::get('titles_split_first_letter')));
     }
 
+    public function testCheckConfigurationPublisherSplitFirstLetter(): void
+    {
+        $this->assertTrue(is_int((int) Config::get('publisher_split_first_letter')));
+    }
+
+    public function testCheckConfigurationSeriesSplitFirstLetter(): void
+    {
+        $this->assertTrue(is_int((int) Config::get('series_split_first_letter')));
+    }
+
+    public function testCheckConfigurationTagSplitFirstLetter(): void
+    {
+        $this->assertTrue(is_int((int) Config::get('tag_split_first_letter')));
+    }
+
     public function testCheckConfigurationCopsUseFancyapps(): void
     {
         $this->assertTrue(is_int((int) Config::get('use_fancyapps')));

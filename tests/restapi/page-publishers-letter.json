@@ -1,0 +1,48 @@
+{
+    "title": "2 publishers starting with M",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "2 publishers starting with M",
+    "multipleDatabase": 0,
+    "page": "publishers_letter",
+    "entries": [
+        {
+            "class": "Publishers",
+            "title": "Macmillan and Co. London",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/publishers/2/Macmillan_and_Co_London",
+            "number": 2
+        },
+        {
+            "class": "Publishers",
+            "title": "Macmillan Publishers USA",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/publishers/4/Macmillan_Publishers_USA",
+            "number": 1
+        }
+    ],
+    "entriesCount": 2,
+    "isPaginated": 0,
+    "sorted": "name",
+    "sortedBy": "name",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php/restapi/publishers",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

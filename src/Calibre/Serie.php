@@ -17,14 +17,17 @@ class Serie extends Category
     public const PAGE_ID = PageId::ALL_SERIES_ID;
     public const PAGE_ALL = PageId::ALL_SERIES;
     public const PAGE_DETAIL = PageId::SERIE_DETAIL;
+    public const PAGE_LETTER = PageId::SERIES_FIRST_LETTER;
     public const ROUTE_ALL = "page-series";
     public const ROUTE_DETAIL = "page-serie";
+    public const ROUTE_LETTER = "page-series-letter";
     public const SQL_TABLE = "series";
     public const SQL_LINK_TABLE = "books_series_link";
     public const SQL_LINK_COLUMN = "series";
     public const SQL_SORT = "sort";
     public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort";
     public const SQL_ALL_ROWS = "select {0} from series, books_series_link where series.id = series {1} group by series.id, series.name, series.sort order by series.sort";
+    public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
     public const SQL_BOOKLIST = 'select {0} from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_series_link.book = books.id and series = ? {1} order by series_index';

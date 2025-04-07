@@ -1,0 +1,48 @@
+{
+    "title": "2 series starting with S",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "2 series starting with S",
+    "multipleDatabase": 0,
+    "page": "series_letter",
+    "entries": [
+        {
+            "class": "Series",
+            "title": "Sherlock Holmes",
+            "content": "7 books",
+            "navlink": "vendor/bin/index.php/restapi/series/1/Sherlock_Holmes",
+            "number": 7
+        },
+        {
+            "class": "Series",
+            "title": "Série des Rougon-Macquart",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/series/5/Serie_des_Rougon_Macquart",
+            "number": 1
+        }
+    ],
+    "entriesCount": 2,
+    "isPaginated": 0,
+    "sorted": "sort",
+    "sortedBy": "sort",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php/restapi/series",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

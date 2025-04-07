@@ -214,6 +214,27 @@ $config['cops_titles_split_first_letter'] = '1';
 $config['cops_titles_split_publication_year'] = '1';
 
 /*
+ * split publishers by first letter
+ * 1 : Yes
+ * 0 : No
+ */
+$config['cops_publisher_split_first_letter'] = '0';
+
+/*
+ * split series by first letter
+ * 1 : Yes
+ * 0 : No
+ */
+$config['cops_series_split_first_letter'] = '0';
+
+/*
+ * split tags by first letter
+ * 1 : Yes
+ * 0 : No
+ */
+$config['cops_tag_split_first_letter'] = '0';
+
+/*
  * Enable the Lightboxes (for popups) in 'default' template with client side rendering
  * 1 : Yes (enable)
  * 0 : No

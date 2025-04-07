@@ -17,14 +17,17 @@ class Tag extends Category
     public const PAGE_ID = PageId::ALL_TAGS_ID;
     public const PAGE_ALL = PageId::ALL_TAGS;
     public const PAGE_DETAIL = PageId::TAG_DETAIL;
+    public const PAGE_LETTER = PageId::TAGS_FIRST_LETTER;
     public const ROUTE_ALL = "page-tags";
     public const ROUTE_DETAIL = "page-tag";
+    public const ROUTE_LETTER = "page-tags-letter";
     public const SQL_TABLE = "tags";
     public const SQL_LINK_TABLE = "books_tags_link";
     public const SQL_LINK_COLUMN = "tag";
     public const SQL_SORT = "name";
     public const SQL_COLUMNS = "tags.id as id, tags.name as name";
     public const SQL_ALL_ROWS = "select {0} from tags, books_tags_link where tags.id = tag {1} group by tags.id, tags.name order by tags.name";
+    public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from tags, books_tags_link where tags.id = tag and upper (tags.name) like ? {1} group by tags.id, tags.name order by tags.name";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from tags, books_tags_link where tags.id = tag and upper (tags.name) like ? {1} group by tags.id, tags.name order by tags.name";
     public const SQL_BOOKLIST = 'select {0} from books_tags_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_tags_link.book = books.id and tag = ? {1} order by books.sort';

@@ -188,6 +188,35 @@
             ]
         },
         {
+            "name": "page-series-letter",
+            "route": [
+                "/series/letter/{letter}",
+                {
+                    "page": "series_letter",
+                    "_route": "page-series-letter"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-series-letters",
+            "route": [
+                "/series/letter",
+                {
+                    "page": "series",
+                    "letter": 1,
+                    "_route": "page-series-letters"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "page-serie",
             "route": [
                 "/series/{id:\\d+}/{title}",
@@ -293,6 +322,35 @@
                 {
                     "page": "recent",
                     "_route": "page-recent"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-tags-letter",
+            "route": [
+                "/tags/letter/{letter}",
+                {
+                    "page": "tags_letter",
+                    "_route": "page-tags-letter"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-tags-letters",
+            "route": [
+                "/tags/letter",
+                {
+                    "page": "tags",
+                    "letter": 1,
+                    "_route": "page-tags-letters"
                 },
                 [
                     "GET"
@@ -437,6 +495,35 @@
                 [
                     "GET",
                     "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-publishers-letter",
+            "route": [
+                "/publishers/letter/{letter}",
+                {
+                    "page": "publishers_letter",
+                    "_route": "page-publishers-letter"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-publishers-letters",
+            "route": [
+                "/publishers/letter",
+                {
+                    "page": "publishers",
+                    "letter": 1,
+                    "_route": "page-publishers-letters"
+                },
+                [
+                    "GET"
                 ],
                 []
             ]

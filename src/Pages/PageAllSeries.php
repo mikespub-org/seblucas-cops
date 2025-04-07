@@ -36,6 +36,14 @@ class PageAllSeries extends Page
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);
+        if ($this->request->option("series_split_first_letter") == 1 || $this->request->get('letter')) {
+            $this->entryArray = $baselist->getCountByFirstLetter();
+            $this->sorted = $baselist->orderBy;
+            if (in_array("series", Config::get('show_not_set_filter'))) {
+                array_push($this->entryArray, $baselist->getWithoutEntry());
+            }
+            return;
+        }
         if ($baselist->hasChildCategories()) {
             // use tag_browser_series view here, to get the full hierarchy?
             $this->entryArray = $baselist->browseAllEntries($this->n, $this->request->get('tree'));

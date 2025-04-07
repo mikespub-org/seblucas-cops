@@ -36,6 +36,14 @@ class PageAllTags extends Page
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);
+        if ($this->request->option("tag_split_first_letter") == 1 || $this->request->get('letter')) {
+            $this->entryArray = $baselist->getCountByFirstLetter();
+            $this->sorted = $baselist->orderBy;
+            if (in_array("tag", Config::get('show_not_set_filter'))) {
+                array_push($this->entryArray, $baselist->getWithoutEntry());
+            }
+            return;
+        }
         $this->sorted = $this->request->getSorted("sort");
         if ($baselist->hasChildCategories()) {
             // use tag_browser_tags view here, to get the full hierarchy?

@@ -86,6 +86,19 @@
                         "page": "books"
                     }
                 ],
+                "page-series-letter": [
+                    "/series/letter/{letter}",
+                    {
+                        "page": "series_letter"
+                    }
+                ],
+                "page-series-letters": [
+                    "/series/letter",
+                    {
+                        "page": "series",
+                        "letter": 1
+                    }
+                ],
                 "page-serie": [
                     "/series/{id:\\d+}/{title}",
                     {
@@ -133,6 +146,19 @@
                     "/recent",
                     {
                         "page": "recent"
+                    }
+                ],
+                "page-tags-letter": [
+                    "/tags/letter/{letter}",
+                    {
+                        "page": "tags_letter"
+                    }
+                ],
+                "page-tags-letters": [
+                    "/tags/letter",
+                    {
+                        "page": "tags",
+                        "letter": 1
                     }
                 ],
                 "page-tag": [
@@ -198,6 +224,19 @@
                         "GET",
                         "POST"
                     ]
+                ],
+                "page-publishers-letter": [
+                    "/publishers/letter/{letter}",
+                    {
+                        "page": "publishers_letter"
+                    }
+                ],
+                "page-publishers-letters": [
+                    "/publishers/letter",
+                    {
+                        "page": "publishers",
+                        "letter": 1
+                    }
                 ],
                 "page-publisher": [
                     "/publishers/{id:\\d+}/{title}",

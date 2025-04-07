@@ -1,0 +1,104 @@
+{
+    "title": "Tags",
+    "parentTitle": "",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Tags",
+    "multipleDatabase": 0,
+    "page": "tags",
+    "entries": [
+        {
+            "class": "Letter",
+            "title": "A",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/A",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "F",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/F",
+            "number": 2
+        },
+        {
+            "class": "Letter",
+            "title": "H",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/H",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "J",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/J",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "L",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/L",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "M",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/M",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "R",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/R",
+            "number": 1
+        },
+        {
+            "class": "Letter",
+            "title": "S",
+            "content": "2 books",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/S",
+            "number": 2
+        },
+        {
+            "class": "Letter",
+            "title": "W",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/letter/W",
+            "number": 1
+        },
+        {
+            "class": "Tags",
+            "title": "No tags",
+            "content": "1 book",
+            "navlink": "vendor/bin/index.php/restapi/tags/0/No_tags",
+            "number": 1
+        }
+    ],
+    "entriesCount": 10,
+    "isPaginated": 0,
+    "sorted": "groupid",
+    "sortedBy": "groupid",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": false,
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

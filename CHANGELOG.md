@@ -14,8 +14,12 @@ x.x.x - TODO
 
 3.x.x - 2025xxxx 
   * Changes in config/default.php file:
+    - new $config['cops_publisher_split_first_letter'] to split publisher by first letter
+    - new $config['cops_series_split_first_letter'] to split series by first letter
+    - new $config['cops_tag_split_first_letter'] to split tag by first letter
     - new $config['cops_session_name'] for session cookie name
     - new $config['cops_session_timeout'] for session timeout
+  * Split publisher, series or tag by first letter - see issue #139 by @prky
   * Support POST for customize and filter pages + add Session class
   * Fix parent count for hierarchical series, tags and custom
   * Clean up handler and endpoint code for uri generation

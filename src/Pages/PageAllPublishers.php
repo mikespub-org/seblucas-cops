@@ -35,6 +35,11 @@ class PageAllPublishers extends Page
     public function getEntries()
     {
         $baselist = new BaseList($this->className, $this->request);
+        if ($this->request->option("publisher_split_first_letter") == 1 || $this->request->get('letter')) {
+            $this->entryArray = $baselist->getCountByFirstLetter();
+            $this->sorted = $baselist->orderBy;
+            return;
+        }
         $this->entryArray = $baselist->getRequestEntries($this->n);
         $this->totalNumber = $baselist->countRequestEntries();
         $this->sorted = $baselist->orderBy;

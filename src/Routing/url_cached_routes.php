@@ -30,14 +30,17 @@ $static = [
   '/books/letter' => 'page-books-letters',
   '/books/year' => 'page-books-years',
   '/books' => 'page-books',
+  '/series/letter' => 'page-series-letters',
   '/series' => 'page-series',
   '/typeahead' => 'page-typeahead',
   '/search' => 'page-search',
   '/recent' => 'page-recent',
+  '/tags/letter' => 'page-tags-letters',
   '/tags' => 'page-tags',
   '/about' => 'page-about',
   '/languages' => 'page-languages',
   '/customize' => 'page-customize',
+  '/publishers/letter' => 'page-publishers-letters',
   '/publishers' => 'page-publishers',
   '/ratings' => 'page-ratings',
   '/identifiers' => 'page-identifiers',
@@ -213,6 +216,29 @@ $routes = [
     ],
     [],
   ],
+  'page-series-letter' => [
+    '/series/letter/{letter}',
+    [
+      'page' => 'series_letter',
+      '_route' => 'page-series-letter',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-series-letters' => [
+    '/series/letter',
+    [
+      'page' => 'series',
+      'letter' => 1,
+      '_route' => 'page-series-letters',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'page-serie' => [
     '/series/{id:\\d+}/{title}',
     [
@@ -296,6 +322,29 @@ $routes = [
     [
       'page' => 'recent',
       '_route' => 'page-recent',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-tags-letter' => [
+    '/tags/letter/{letter}',
+    [
+      'page' => 'tags_letter',
+      '_route' => 'page-tags-letter',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-tags-letters' => [
+    '/tags/letter',
+    [
+      'page' => 'tags',
+      'letter' => 1,
+      '_route' => 'page-tags-letters',
     ],
     [
       'GET',
@@ -410,6 +459,29 @@ $routes = [
     [
       'GET',
       'POST',
+    ],
+    [],
+  ],
+  'page-publishers-letter' => [
+    '/publishers/letter/{letter}',
+    [
+      'page' => 'publishers_letter',
+      '_route' => 'page-publishers-letter',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-publishers-letters' => [
+    '/publishers/letter',
+    [
+      'page' => 'publishers',
+      'letter' => 1,
+      '_route' => 'page-publishers-letters',
+    ],
+    [
+      'GET',
     ],
     [],
   ],

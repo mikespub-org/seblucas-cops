@@ -552,6 +552,10 @@ class RestApiTest extends TestCase
             'page-identifier' => ['id' => 'isbn'],
             'page-identifier-id' => ['id' => 'isbn'],
             'page-format' => ['id' => 'EPUB'],
+            'page-authors-letter' => ['letter' => 'C'],
+            'page-publishers-letter' => ['letter' => 'M'],
+            'page-series-letter' => ['letter' => 'S'],
+            'page-tags-letter' => ['letter' => 'F'],
         ];
         $extra = RouteTest::getRouteProvider(HtmlHandler::class, $defaults);
         // add other routes
