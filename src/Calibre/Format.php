@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
 class Format extends Base
@@ -57,6 +59,18 @@ class Format extends Base
     public function getParentTitle()
     {
         return localize("formats.title");
+    }
+
+    /**
+     * Summary of getCount
+     * @param ?int $database
+     * @param class-string<BaseHandler> $handler
+     * @return ?Entry
+     */
+    public static function getCount($database, $handler)
+    {
+        $count = Database::querySingle('select count(distinct format) from ' . static::SQL_TABLE, $database);
+        return static::getCountEntry($count, $database, null, $handler);
     }
 
     /**

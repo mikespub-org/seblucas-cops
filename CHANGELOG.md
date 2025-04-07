@@ -19,6 +19,7 @@ x.x.x - TODO
     - new $config['cops_tag_split_first_letter'] to split tag by first letter
     - new $config['cops_session_name'] for session cookie name
     - new $config['cops_session_timeout'] for session timeout
+  * Fix number of formats and identifiers on index page - see issue #138 by @woidi
   * Split publisher, series or tag by first letter - see issue #139 by @prky
   * Support POST for customize and filter pages + add Session class
   * Fix parent count for hierarchical series, tags and custom
