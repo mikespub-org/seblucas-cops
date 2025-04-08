@@ -19,9 +19,10 @@ x.x.x - TODO
     - new $config['cops_tag_split_first_letter'] to split tag by first letter
     - new $config['cops_session_name'] for session cookie name
     - new $config['cops_session_timeout'] for session timeout
+  * Update epubjs-reader to version 2025.04.08 + use assets in template links
   * Fix number of formats and identifiers on index page - see issue #138 by @woidi
   * Split publisher, series or tag by first letter - see issue #139 by @prky
-  * Support POST for customize and filter pages + add Session class
+  * Support POST for customize and filter pages + add Session class (WIP)
   * Fix parent count for hierarchical series, tags and custom
   * Clean up handler and endpoint code for uri generation
   * Use short array syntax for arrays in config/default.php

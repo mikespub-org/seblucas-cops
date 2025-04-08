@@ -86,16 +86,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2025.01.02",
+            "version": "2025.04.08",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "37125a6067180eb9877742d217a7bb40cd245040"
+                "reference": "9bec68dc3275690193677339e4c33ad239cc7cfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/37125a6067180eb9877742d217a7bb40cd245040",
-                "reference": "37125a6067180eb9877742d217a7bb40cd245040",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/9bec68dc3275690193677339e4c33ad239cc7cfd",
+                "reference": "9bec68dc3275690193677339e4c33ad239cc7cfd",
                 "shasum": ""
             },
             "suggest": {
@@ -126,9 +126,9 @@
             "description": "Epub.js Reader with zipfs.php",
             "support": {
                 "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2025.01.02"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2025.04.08"
             },
-            "time": "2025-01-02T16:07:41+00:00"
+            "time": "2025-04-08T09:18:22+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
@@ -2728,16 +2728,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "11.5.15",
+            "version": "11.5.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4b6a4ee654e5e0c5e1f17e2f83c0f4c91dee1f9c"
+                "reference": "fd2e863a2995cdfd864fb514b5e0b28b09895b5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4b6a4ee654e5e0c5e1f17e2f83c0f4c91dee1f9c",
-                "reference": "4b6a4ee654e5e0c5e1f17e2f83c0f4c91dee1f9c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fd2e863a2995cdfd864fb514b5e0b28b09895b5c",
+                "reference": "fd2e863a2995cdfd864fb514b5e0b28b09895b5c",
                 "shasum": ""
             },
             "require": {
@@ -2809,7 +2809,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.15"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.17"
             },
             "funding": [
                 {
@@ -2825,7 +2825,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-03-23T16:02:11+00:00"
+            "time": "2025-04-08T07:59:11+00:00"
         },
         {
             "name": "psr/container",
