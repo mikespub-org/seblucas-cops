@@ -189,7 +189,7 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param Data $data
-     * @return FileResponse
+     * @return FileResponse|Response
      */
     public function sendUpdatedEpub($request, $book, $data)
     {

@@ -696,7 +696,7 @@ class BaseList
         // update count of parent entries
         foreach ($entryArray as $entryName => $entry) {
             if (array_key_exists($entryName, $parents)) {
-                $count = $counter[$parentName];
+                $count = $counter[$entryName];
                 $entryArray[$entryName] = $parents[$entryName]->getEntry($count);
             }
         }
