@@ -45,6 +45,26 @@ class Normalizer
     }
 
     /**
+     * Summary of normalize
+     * @param string $s
+     * @return string
+     */
+    public static function normalize($s)
+    {
+        return (string) (new UnicodeString($s))->ascii();
+    }
+
+    /**
+     * Summary of isAscii
+     * @param string $s
+     * @return bool
+     */
+    public static function isAscii($s)
+    {
+        return preg_match('/^[\x20-\x7e]*$/', $s) ? true : false;
+    }
+
+    /**
      * Summary of getTitleSort
      * @param string $str
      * @return string

@@ -359,7 +359,7 @@ $config['calibre_categories_using_hierarchy'] = [];
 $config['cops_provide_kepub'] = '0';
 
 /*
- * Use external 'kepubify' tool to convert .epub files to .kepub.epub format for Kobo - @todo
+ * Use external 'kepubify' tool to convert .epub files to .kepub.epub format for Kobo
  * Example:
  * $config['cops_kepubify_path'] = '/usr/bin/kepubify';
  */
@@ -629,6 +629,23 @@ $config['cops_download_page'] = [];
  * Save to disk template for book filenames inside the .zip download file - @todo
  */
 $config['cops_download_template'] = '{author} - {series} #{series_index} - {title}';
+
+/*
+ * Save to disk template for book filenames when fetching a book format - partial
+ * @see https://manual.calibre-ebook.com/template_lang.html please submit PR or issue if you need anything else
+ *
+ * Supported values:
+ * "" : Use default filename based on:
+ *      ASCII {title} - {author} with .format extension for non-epub or non-updated epub files, or
+ *      {author_sort} - {title} with .epub or .kepub.epub extension for updated epub/kepub files
+ * "{author_sort}{series:| - | #}{series_index} - {title}" : Use field names and optional prefix/suffix text
+ *
+ * Supported fields:
+ * {title}, {title_sort}, {authors}, {author_sort}, {author}, {series}, {series_index}
+ *
+ * Note: any extra formats or functions after the field are simply ignored here
+ */
+$config['cops_download_filename'] = '';
 
 /*
  * Set front controller to remove index.php/ from route URLs generated in COPS

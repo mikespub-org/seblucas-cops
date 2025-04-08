@@ -159,10 +159,6 @@ class BaseTest extends TestCase
         Database::clearDb();
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage Database <1> not found.
-     */
     public function testCheckDatabaseAvailability_Exception1(): void
     {
         Config::set('calibre_directory', [
@@ -179,10 +175,6 @@ class BaseTest extends TestCase
         Database::clearDb();
     }
 
-    /**
-     * @expectedException        Exception
-     * @expectedExceptionMessage Database <0> not found.
-     */
     public function testCheckDatabaseAvailability_Exception2(): void
     {
         Config::set('calibre_directory', [

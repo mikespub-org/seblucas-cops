@@ -13,7 +13,9 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Pages\PageId;
+use Closure;
 
 /**
  * Summary of Response
@@ -31,7 +33,7 @@ class Response
     protected ?int $expires = null;
     protected ?string $filename = null;
     protected ?string $content = null;
-    protected ?\Closure $callback = null;
+    protected ?Closure $callback = null;
     protected bool $sent = false;
     /** @var array<string, mixed> */
     protected array $headers = [];
@@ -90,7 +92,7 @@ class Response
      * Summary of addHeader
      * @param string $name
      * @param mixed $value
-     * @return Response
+     * @return static
      */
     public function addHeader($name, $value): static
     {
@@ -101,7 +103,7 @@ class Response
     /**
      * Summary of setStatusCode
      * @param int $statusCode
-     * @return Response
+     * @return static
      */
     public function setStatusCode($statusCode): static
     {
@@ -110,17 +112,88 @@ class Response
     }
 
     /**
+     * Summary of setContent
+     * @param ?string $content actual data
+     * @return static
+     */
+    public function setContent($content): static
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    /**
      * Summary of setCallback
      * @todo possibly use to send file or zipstream later in response handler?
-     * @param \Closure|callable $callback
+     * @param Closure|callable $callback
      * @return static
      */
     public function setCallback($callback): static
     {
-        if ($callback instanceof \Closure) {
+        if ($callback instanceof Closure) {
             $this->callback = $callback;
         } else {
-            $this->callback = \Closure::fromCallable($callback);
+            $this->callback = Closure::fromCallable($callback);
+        }
+        return $this;
+    }
+
+    /**
+     * Summary of setContentType
+     * @param ?string $mimetype with null = no mimetype, '...' = actual mimetype for Content-Type
+     * @return static
+     */
+    public function setContentType($mimetype): static
+    {
+        if (!empty($mimetype)) {
+            $this->addHeader('Content-Type', $mimetype);
+        }
+        return $this;
+    }
+
+    /**
+     * Summary of setExpires
+     * @param ?int $expires with null = no cache control, 0 = default expiration, > 0 actual expiration
+     * @return static
+     */
+    public function setExpires($expires): static
+    {
+        if (is_null($expires)) {
+            // no cache control
+        } elseif (empty($expires)) {
+            // use default expiration (14 days)
+            $expires = 60 * 60 * 24 * 14;
+        }
+        if (!empty($expires)) {
+            $this->addHeader('Pragma', 'public');
+            $this->addHeader('Cache-Control', 'max-age=' . (string) $expires);
+            $this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + $expires) . ' GMT');
+        }
+        return $this;
+    }
+
+    /**
+     * Summary of setContentDisposition
+     * @see https://github.com/symfony/symfony/blob/7.2/src/Symfony/Component/HttpFoundation/BinaryFileResponse.php#L155
+     * @param ?string $filename with null = no disposition, '' = inline, '...' = attachment filename
+     * @return static
+     */
+    public function setContentDisposition($filename): static
+    {
+        if (is_null($filename)) {
+            // no content disposition
+        } elseif (empty($filename)) {
+            $this->addHeader('Content-Disposition', 'inline');
+        } else {
+            $filename = basename($filename);
+            // Note: we don't support ISO-8859-1 filenames here - http://test.greenbytes.de/tech/tc2231/#attwithisofnplain
+            if (Normalizer::isAscii($filename)) {
+                $this->addHeader('Content-Disposition', 'attachment; filename="' . addcslashes($filename, '"\\') . '"');
+            } else {
+                $fallback = Normalizer::normalize($filename);
+                $this->addHeader('Content-Disposition', 'attachment; filename="' . addcslashes($fallback, '"\\') . '"; filename*=' . "utf-8''" . rawurlencode($filename));
+            }
         }
         return $this;
     }
@@ -135,29 +208,11 @@ class Response
             return $this;
         }
 
-        if (is_null($this->expires)) {
-            // no cache control
-        } elseif (empty($this->expires)) {
-            // use default expiration (14 days)
-            $this->expires = 60 * 60 * 24 * 14;
-        }
-        if (!empty($this->expires)) {
-            $this->addHeader('Pragma', 'public');
-            $this->addHeader('Cache-Control', 'max-age=' . (string) $this->expires);
-            $this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + $this->expires) . ' GMT');
-        }
+        $this->setContentType($this->mimetype);
 
-        if (!empty($this->mimetype)) {
-            $this->addHeader('Content-Type', $this->mimetype);
-        }
+        $this->setExpires($this->expires);
 
-        if (is_null($this->filename)) {
-            // no content disposition
-        } elseif (empty($this->filename)) {
-            $this->addHeader('Content-Disposition', 'inline');
-        } else {
-            $this->addHeader('Content-Disposition', 'attachment; filename="' . basename($this->filename) . '"');
-        }
+        $this->setContentDisposition($this->filename);
 
         foreach ($this->headers as $name => $value) {
             if (isset($value)) {
@@ -175,27 +230,6 @@ class Response
         }
 
         return $this;
-    }
-
-    /**
-     * Summary of setContent
-     * @param ?string $content actual data
-     * @return static
-     */
-    public function setContent($content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    /**
-     * Summary of getContent
-     * @return string|null
-     */
-    public function getContent(): string|null
-    {
-        return $this->content;
     }
 
     /**
@@ -255,6 +289,60 @@ class Response
             $this->sent = $sent;
         }
         return $this->sent;
+    }
+
+    /**
+     * Summary of getHeaders
+     * @return array<string, mixed>
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Summary of getStatusCode
+     * @return int
+     */
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    /**
+     * Summary of getExpires
+     * @return int|null
+     */
+    public function getExpires(): int|null
+    {
+        return $this->expires;
+    }
+
+    /**
+     * Summary of getFilename
+     * @return string|null
+     */
+    public function getFilename(): string|null
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Summary of getContent
+     * @return string|null
+     */
+    public function getContent(): string|null
+    {
+        return $this->content;
+    }
+
+    /**
+     * Summary of getCallback
+     * @return Closure|null
+     */
+    public function getCallback(): Closure|null
+    {
+        return $this->callback;
     }
 
     /**

@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkResource;
 use SebLucas\Cops\Model\LinkFeed;
@@ -22,7 +23,7 @@ use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Tools\ZipEdit;
-use Exception;
+use UnexpectedValueException;
 
 //class Book extends Base
 class Book
@@ -850,5 +851,88 @@ where data.book = books.id and data.id = ?';
             array_push($out, new Data($post, $book));
         }
         return $out;
+    }
+
+    /**
+     * Summary of replaceTemplateFields
+     * @param string $template
+     * @param Book $book
+     * @throws \UnexpectedValueException
+     * @return string
+     */
+    public static function replaceTemplateFields($template, $book)
+    {
+        $found = [];
+        // check and replace template fields - see https://manual.calibre-ebook.com/template_lang.html
+        $count = preg_match_all("~\{(\w+(|:[^}]+))\}~", $template, $found);
+        if ($count === false) {
+            throw new UnexpectedValueException('Unsupported template match ' . $template);
+        }
+        // no template fields found - return what is left
+        if ($count === 0) {
+            return $template;
+        }
+        // any extra formats or functions after the field are simply ignored here
+        foreach ($found[1] as $field) {
+            $format = '';
+            if (str_contains($field, ':')) {
+                [$field, $format] = explode(':', $field);
+            }
+            $value = self::getTemplateField($field, $book);
+            if (!empty($format)) {
+                // limited support for prefix and suffix
+                if (str_starts_with($format, '|') && $value !== '') {
+                    [$dummy, $prefix, $suffix] = explode('|', $format);
+                    $template = str_replace('{' . $field . ':' . $format . '}', "{$prefix}{$value}{$suffix}", $template);
+                } else {
+                    $template = str_replace('{' . $field . ':' . $format . '}', "$value", $template);
+                }
+            } else {
+                $template = str_replace('{' . $field . '}', "$value", $template);
+            }
+        }
+        if (str_contains($template, '{')) {
+            throw new UnexpectedValueException('Unsupported template fields ' . $template);
+        }
+        $template = preg_replace('/\s+/', ' ', $template);
+        return $template;
+    }
+
+    /**
+     * Summary of getTemplateField
+     * @param string $field
+     * @param Book $book
+     * @return string
+     */
+    public static function getTemplateField($field, $book)
+    {
+        switch ($field) {
+            case 'title':
+                return $book->title;
+            case 'title_sort':
+                // @todo use sort field from books table
+                return Normalizer::getTitleSort($book->title);
+            case 'author_sort':
+                return $book->getAuthorsSort();
+            case 'authors':
+                return $book->getAuthorsName();
+            case 'author':
+                $authors = $book->getAuthors();
+                return $authors[0]->name;
+            case 'series':
+                $serie = $book->getSerie();
+                if (!empty($serie)) {
+                    return $serie->name;
+                }
+                return '';
+            case 'series_index':
+                $serie = $book->getSerie();
+                if (!empty($serie)) {
+                    return (string) $book->seriesIndex;
+                }
+                return '';
+            default:
+                return '{' . $field . ':?}';
+        }
     }
 }

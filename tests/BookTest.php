@@ -783,6 +783,80 @@ class BookTest extends TestCase
         }
     }
 
+    public function testReplaceTemplateFields(): void
+    {
+        $template = "{author_sort}{series:| - | #}{series_index} - {title}";
+        Config::set('download_filename', $template);
+
+        $book = Book::getBookById(17);
+        $result = Book::replaceTemplateFields($template, $book);
+        $expected = "Carroll, Lewis - Alice's Adventures in Wonderland";
+        $this->assertEquals($expected, $result);
+
+        $book = Book::getBookById(18);
+        $result = Book::replaceTemplateFields($template, $book);
+        $expected = "Zola, Émile - Série des Rougon-Macquart #1 - La curée";
+        $this->assertEquals($expected, $result);
+
+        Config::set('download_filename', '');
+    }
+
+    public function testDataWithDownloadFilename(): void
+    {
+        $template = "{author_sort}{series:| - | #}{series_index} - {title}";
+        Config::set('download_filename', $template);
+
+        $book = Book::getBookById(17);
+        $data = $book->getDataFormat("EPUB");
+
+        $result = $data->getDownloadFilename();
+        $expected = "Carroll, Lewis - Alice's Adventures in Wonderland";
+        $this->assertEquals($expected, $result);
+
+        $result = $data->getUpdatedFilenameEpub();
+        $expected = "Carroll, Lewis - Alice's Adventures in Wonderland.epub";
+        $this->assertEquals($expected, $result);
+
+        $result = $data->getUpdatedFilenameKepub();
+        $expected = "Carroll, Lewis - Alice's Adventures in Wonderland.kepub.epub";
+        $this->assertEquals($expected, $result);
+
+        $book = Book::getBookById(18);
+        $data = $book->getDataFormat("EPUB");
+
+        $result = $data->getDownloadFilename();
+        $expected = "Zola, Émile - Série des Rougon-Macquart #1 - La curée";
+        $this->assertEquals($expected, $result);
+
+        $result = $data->getUpdatedFilenameEpub();
+        $expected = "Zola, Émile - Série des Rougon-Macquart #1 - La curée.epub";
+        $this->assertEquals($expected, $result);
+
+        Config::set('download_filename', '');
+
+        $book = Book::getBookById(17);
+        $data = $book->getDataFormat("EPUB");
+
+        $result = $data->getDownloadFilename();
+        $expected = "Alice's Adventures in Wonderland - Lewis Carroll";
+        $this->assertEquals($expected, $result);
+
+        $result = $data->getUpdatedFilenameEpub();
+        $expected = "Carroll, Lewis - Alice's Adventures in Wonderland.epub";
+        $this->assertEquals($expected, $result);
+
+        $book = Book::getBookById(18);
+        $data = $book->getDataFormat("EPUB");
+
+        $result = $data->getDownloadFilename();
+        $expected = "La curee - Emile Zola";
+        $this->assertEquals($expected, $result);
+
+        $result = $data->getUpdatedFilenameEpub();
+        $expected = "Zola, Émile - La curée.epub";
+        $this->assertEquals($expected, $result);
+    }
+
     public function tearDown(): void
     {
         Database::clearDb();

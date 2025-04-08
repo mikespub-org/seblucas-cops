@@ -19,6 +19,8 @@ x.x.x - TODO
     - new $config['cops_tag_split_first_letter'] to split tag by first letter
     - new $config['cops_session_name'] for session cookie name
     - new $config['cops_session_timeout'] for session timeout
+    - new $config['cops_download_filename'] to customize download filename
+  * Customize download filename (partial) - see issue #137 by @pigochu
   * Update epubjs-reader to version 2025.04.08 + use assets in template links
   * Fix number of formats and identifiers on index page - see issue #138 by @woidi
   * Split publisher, series or tag by first letter - see issue #139 by @prky

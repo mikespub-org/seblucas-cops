@@ -165,6 +165,19 @@ class Data
     }
 
     /**
+     * Summary of getDownloadFilename
+     * @return string
+     */
+    public function getDownloadFilename()
+    {
+        $filename = Config::get('download_filename', '');
+        if (empty($filename)) {
+            return $this->name;
+        }
+        return Book::replaceTemplateFields($filename, $this->book);
+    }
+
+    /**
      * Summary of sendFile
      * @param bool $inline disposition inline (default false)
      * @param ?FileResponse $response
@@ -175,7 +188,11 @@ class Data
         $response ??= new FileResponse();
         $file = $this->getLocalPath();
 
-        $filename = $inline ? '' : basename($file);
+        if ($inline) {
+            $filename = '';
+        } else {
+            $filename = $this->getDownloadFilename() . "." . strtolower($this->format);
+        }
         $response->setHeaders($this->getMimeType(), 0, $filename);
         return $response->setFile($file);
     }
@@ -186,7 +203,11 @@ class Data
      */
     public function getUpdatedFilename()
     {
-        return $this->book->getAuthorsSort() . " - " . $this->book->title;
+        $filename = Config::get('download_filename', '');
+        if (empty($filename)) {
+            return $this->book->getAuthorsSort() . " - " . $this->book->title;
+        }
+        return $this->getDownloadFilename();
     }
 
     /**
@@ -435,7 +456,8 @@ class Data
         }
 
         $filePath = $this->getLocalPath();
-        if (Database::useAbsolutePath($this->databaseId) ||
+        if (!empty(Config::get('download_filename')) ||
+            Database::useAbsolutePath($this->databaseId) ||
             ($this->extension == "epub" && Config::get('update_epub-metadata'))) {
             $params = [];
             $params['db'] = $this->databaseId ?? 0;
