@@ -628,7 +628,7 @@ $config['cops_download_page'] = [];
 /*
  * Save to disk template for book filenames inside the .zip download file - @todo
  */
-$config['cops_download_template'] = '{author} - {series} #{series_index} - {title}';
+$config['cops_download_template'] = '{author}{series:| - | #}{series_index} - {title}';
 
 /*
  * Save to disk template for book filenames when fetching a book format - partial

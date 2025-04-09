@@ -10,9 +10,7 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
@@ -119,8 +117,7 @@ class Zipper extends BaseRenderer
         } else {
             $checkFormats = [ $this->format ];
         }
-        // @todo use download_template to format name
-        //$template = Config::get('download_template');
+        $template = Config::get('download_template');
         foreach ($entries as $entry) {
             if ($entry::class != EntryBook::class) {
                 continue;
@@ -139,16 +136,7 @@ class Zipper extends BaseRenderer
             if (!file_exists($path)) {
                 continue;
             }
-            //$name = basename($path);
-            // @todo use normalizeUtf8String() on author, series and title or not?
-            // Using {author} - {series} #{series_index} - {title} with .{format}
-            $author = $entry->book->getAuthorsName();
-            $name = explode(', ', $author)[0];
-            $serie = $entry->book->getSerie();
-            if (!empty($serie)) {
-                $name .= ' - ' . $serie->name . ' #' . $entry->book->seriesIndex;
-            }
-            $name .= ' - ' . $entry->book->title;
+            $name = Book::replaceTemplateFields($template, $entry->book);
             $info = pathinfo($path);
             $name .= '.' . $info['extension'];
             // allow unicode characters here

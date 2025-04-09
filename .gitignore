@@ -17,3 +17,5 @@
 .gitattributes
 *.cache
 .devcontainer
+/cache/*.php
+rector.php

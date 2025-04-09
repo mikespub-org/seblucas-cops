@@ -17,7 +17,7 @@ use Exception;
  */
 class Config
 {
-    public const VERSION = '3.5.7';
+    public const VERSION = '3.6.1';
     public const ENDPOINT = 'index.php';
     // @deprecated 3.5.7 remove old endpoints in uri generator
     public const OLD_ENDPOINT = [

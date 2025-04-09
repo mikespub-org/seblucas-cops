@@ -126,13 +126,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikespub/epubjs-reader@npm:^2025.1.2":
-  version: 2025.1.2
-  resolution: "@mikespub/epubjs-reader@npm:2025.1.2"
+"@mikespub/epubjs-reader@npm:^2025.4.8":
+  version: 2025.4.8
+  resolution: "@mikespub/epubjs-reader@npm:2025.4.8"
   dependencies:
     epubjs: "npm:^0.3.93"
     js-md5: "npm:^0.8.3"
-  checksum: 10c0/6b79be0b793c3228e5cd9c7455491737874d9e2a495909f337e07b68b7e1f282e6114ebf76324a0bc69511040440a01dc6f7d8615cb6d8451fa679c2588f9946
+  checksum: 10c0/e1a56dfb5446f00344f9bad01da429cb2e24e766c9aa8c5760feef413d32acec990a420759729357d56d0600f178e4d174059140578ea6de6da2d908ca2660af
   languageName: node
   linkType: hard
 
@@ -1560,7 +1560,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "seblucas-cops@workspace:."
   dependencies:
-    "@mikespub/epubjs-reader": "npm:^2025.1.2"
+    "@mikespub/epubjs-reader": "npm:^2025.4.8"
     bootstrap: "npm:^3.4.1"
     corejs-typeahead: "npm:^1.3.4"
     datatables.net: "npm:^2.2.2"
@@ -1575,7 +1575,7 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    swagger-ui-dist: "npm:^5.20.1"
+    swagger-ui-dist: "npm:^5.20.7"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1616,12 +1616,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.20.1":
-  version: 5.20.1
-  resolution: "swagger-ui-dist@npm:5.20.1"
+"swagger-ui-dist@npm:^5.20.7":
+  version: 5.20.7
+  resolution: "swagger-ui-dist@npm:5.20.7"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/e24b416c3c6987ab4b13e5515a3f0d23b017ce1420ec8d383cce63e509a17a625d81142cce3765100c98dc6caff8df7178dede52089c6c8f17b31d415573ac32
+  checksum: 10c0/4048c304144772e01bd06078652942b022aba884aca9adc7c7ecfe18ce3c30671ebf12a727e6089117fe7df230cdfc2ee5a2898141e1e66febf4fb187df0aebf
   languageName: node
   linkType: hard
 

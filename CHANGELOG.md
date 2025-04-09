@@ -13,6 +13,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * ...
+
+3.6.1 - 20250409 Improve hierarchy, split by letter, download filename + fixes
   * Changes in config/default.php file:
     - new $config['cops_publisher_split_first_letter'] to split publisher by first letter
     - new $config['cops_series_split_first_letter'] to split series by first letter
@@ -20,6 +23,7 @@ x.x.x - TODO
     - new $config['cops_session_name'] for session cookie name
     - new $config['cops_session_timeout'] for session timeout
     - new $config['cops_download_filename'] to customize download filename
+  * Save to disk template for book filenames inside the .zip download file
   * Customize download filename (partial) - see issue #137 by @pigochu
   * Update epubjs-reader to version 2025.04.08 + use assets in template links
   * Fix number of formats and identifiers on index page - see issue #138 by @woidi

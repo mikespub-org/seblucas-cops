@@ -51,11 +51,14 @@
                 <exclude name="phpstan*" />
                 <exclude name="phpunit*" />
                 <exclude name="rector*" />
+                <exclude name="cache/**.php" />
                 <exclude name="vendor/bin/**" />
+                <exclude name="vendor/maennchen/zipstream-php/.github/**" />
                 <exclude name="vendor/maennchen/zipstream-php/.phive/**" />
                 <exclude name="vendor/maennchen/zipstream-php/.phpdoc/**" />
                 <exclude name="vendor/maennchen/zipstream-php/guides/**" />
                 <exclude name="vendor/maennchen/zipstream-php/test/**" />
+                <exclude name="vendor/mikespub/epubjs-reader/assets/**" />
                 <exclude name="vendor/mikespub/epubjs-reader/src/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/app/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/assets/**" />
