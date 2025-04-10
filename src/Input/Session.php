@@ -45,6 +45,12 @@ class Session
         };
     }
 
+    public function restore(string $id): bool
+    {
+        session_id($id);
+        return $this->start();
+    }
+
     public function regenerate(bool $destroy = false): bool
     {
         $this->start();

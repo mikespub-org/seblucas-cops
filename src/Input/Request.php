@@ -167,8 +167,6 @@ class Request
         $this->postParams = $_POST;
         $this->cookieParams = $_COOKIE;
         $this->fileParams = $_FILES;
-        // @todo move to RequestContext
-        // $this->matchRoute();
         if (!empty($this->queryParams)) {
             foreach ($this->queryParams as $name => $value) {
                 // remove ajax timestamp for jQuery cache = false
@@ -193,7 +191,7 @@ class Request
 
     /**
      * Summary of matchRoute
-     * @todo move to RequestContext
+     * @deprecated 3.6.2 use RequestContext::matchRequest() instead
      * @return void
      */
     public function matchRoute()
