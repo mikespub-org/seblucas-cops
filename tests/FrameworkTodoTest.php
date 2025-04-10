@@ -44,9 +44,6 @@ class FrameworkTodoTest extends TestCase
 
     public function testRequestHandling(): void
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/';
-
         $framework = new FrameworkTodo(new CustomAdapter());
         $context = $framework->getContext();
 

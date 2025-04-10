@@ -70,13 +70,11 @@ class FrameworkTest extends TestCase
 
     public function testgetRequest(): void
     {
-        $_SERVER['PATH_INFO'] = '/check';
-        $request = Framework::getRequest();
+        $path = '/check';
+        $request = Framework::getRequest($path);
 
         $expected = CheckHandler::class;
         $this->assertEquals($expected, $request->getHandler());
-
-        unset($_SERVER['PATH_INFO']);
     }
 
     public function testgetHandler(): void

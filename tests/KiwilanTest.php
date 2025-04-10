@@ -171,16 +171,15 @@ class KiwilanTest extends TestCase
         $this->AssertTrue($this->opdsValidator(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
-        $_SERVER ["HTTP_USER_AGENT"] = "XXX";
+        $server = ["HTTP_USER_AGENT" => "XXX"];
         Config::set('generate_invalid_opds_stream', "1");
-        $request = self::$handler::request(['page' => $page], $_SERVER);
+        $request = self::$handler::request(['page' => $page], $server);
 
         $response = $OPDSRender->render($currentPage, $request);
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsValidator(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
-        unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('generate_invalid_opds_stream', "0");
     }
 
@@ -194,7 +193,6 @@ class KiwilanTest extends TestCase
     {
         $request = self::$handler::request(['page' => $page]);
         $request->set('query', $query);
-        //$_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
         $currentPage = PageId::getPage($page, $request);
 
@@ -204,8 +202,6 @@ class KiwilanTest extends TestCase
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
-
-        //unset($_SERVER['REQUEST_URI']);
     }
 
     /**
@@ -345,8 +341,8 @@ class KiwilanTest extends TestCase
     public function testPageAuthorsDetail_WithoutAnyId(): void
     {
         $page = PageId::AUTHOR_DETAIL;
-        $_SERVER['REQUEST_URI'] = "index.php?XXXX";
-        $request = self::$handler::request(['page' => $page], $_SERVER);
+        $server = ['REQUEST_URI' => "index.php?XXXX"];
+        $request = self::$handler::request(['page' => $page], $server);
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
@@ -358,8 +354,6 @@ class KiwilanTest extends TestCase
         file_put_contents(self::TEST_FEED, $response->getContents());
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
-
-        unset($_SERVER['REQUEST_URI']);
     }
 
     public function testOpdsHandler(): void

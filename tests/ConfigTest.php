@@ -126,7 +126,6 @@ class ConfigTest extends TestCase
 
     public function testCheckConfigurationTemplate(): void
     {
-        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $templateName = 'bootstrap';
 
         Config::set('template', $templateName);

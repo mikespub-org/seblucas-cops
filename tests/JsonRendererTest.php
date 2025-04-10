@@ -45,7 +45,6 @@ class JsonRendererTest extends TestCase
 
     public function testCompleteArray(): void
     {
-        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $request = self::$handler::request([]);
         $renderer = new JsonRenderer();
         $renderer->setRequest($request);

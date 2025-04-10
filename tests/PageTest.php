@@ -31,7 +31,6 @@ class PageTest extends TestCase
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Config::set('show_not_set_filter', ['custom', 'rating', 'series', 'tag', 'identifier', 'format', 'libraries']);
         Database::clearDb();
-        $_GET = [];
     }
 
     public function testPageIndex(): void

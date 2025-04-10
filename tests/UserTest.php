@@ -37,9 +37,11 @@ class UserTest extends TestCase
     public function testLoginEnabledAndLoggingIn(): void
     {
         Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
-        $_SERVER['PHP_AUTH_USER'] = 'xxx';
-        $_SERVER['PHP_AUTH_PW'] = 'secret';
-        $this->assertTrue(User::verifyLogin($_SERVER));
+        $server = [
+            'PHP_AUTH_USER' => 'xxx',
+            'PHP_AUTH_PW' => 'secret',
+        ];
+        $this->assertTrue(User::verifyLogin($server));
 
         Config::set('basic_authentication', null);
     }
@@ -47,9 +49,11 @@ class UserTest extends TestCase
     public function testLoginEnabledAndWrong(): void
     {
         Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
-        $_SERVER['PHP_AUTH_USER'] = 'xyz';
-        $_SERVER['PHP_AUTH_PW'] = 'wrong';
-        $this->assertFalse(User::verifyLogin($_SERVER));
+        $server = [
+            'PHP_AUTH_USER' => 'xyz',
+            'PHP_AUTH_PW' => 'wrong',
+        ];
+        $this->assertFalse(User::verifyLogin($server));
 
         Config::set('basic_authentication', null);
     }
@@ -57,9 +61,11 @@ class UserTest extends TestCase
     public function testLoginWithUserDb(): void
     {
         Config::set('basic_authentication', __DIR__ . "/BaseWithSomeBooks/users.db");
-        $_SERVER['PHP_AUTH_USER'] = 'admin';
-        $_SERVER['PHP_AUTH_PW'] = 'admin';
-        $this->assertTrue(User::verifyLogin($_SERVER));
+        $server = [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'admin',
+        ];
+        $this->assertTrue(User::verifyLogin($server));
 
         Config::set('basic_authentication', null);
     }
@@ -67,9 +73,11 @@ class UserTest extends TestCase
     public function testLoginWithUserDbWrong(): void
     {
         Config::set('basic_authentication', __DIR__ . "/BaseWithSomeBooks/users.db");
-        $_SERVER['PHP_AUTH_USER'] = 'user';
-        $_SERVER['PHP_AUTH_PW'] = 'pass';
-        $this->assertFalse(User::verifyLogin($_SERVER));
+        $server = [
+            'PHP_AUTH_USER' => 'user',
+            'PHP_AUTH_PW' => 'pass',
+        ];
+        $this->assertFalse(User::verifyLogin($server));
 
         Config::set('basic_authentication', null);
     }
@@ -77,9 +85,11 @@ class UserTest extends TestCase
     public function testLoginWithInvalidUserDb(): void
     {
         Config::set('basic_authentication', __DIR__ . "/BaseWithSomeBooks/no-users.db");
-        $_SERVER['PHP_AUTH_USER'] = 'admin';
-        $_SERVER['PHP_AUTH_PW'] = 'admin';
-        $this->assertFalse(User::verifyLogin($_SERVER));
+        $server = [
+            'PHP_AUTH_USER' => 'admin',
+            'PHP_AUTH_PW' => 'admin',
+        ];
+        $this->assertFalse(User::verifyLogin($server));
 
         Config::set('basic_authentication', null);
     }
@@ -88,8 +98,8 @@ class UserTest extends TestCase
     {
         Config::set('http_auth_user', "REMOTE_USER");
         Config::set('calibre_user_database', __DIR__ . "/BaseWithSomeBooks/users.db");
-        $_SERVER['REMOTE_USER'] = 'admin';
-        $request = new Request();
+        $server = ['REMOTE_USER' => 'admin'];
+        $request = Request::build([], null, $server);
         $this->assertEquals('admin', $request->getUserName());
 
         $user = User::getInstanceByName('admin');

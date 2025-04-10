@@ -924,7 +924,6 @@ class CustomColumnsTest extends TestCase
 
     public function testRenderCustomColumns(): void
     {
-        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         Config::set('calibre_directory', __DIR__ . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
         Config::set('calibre_custom_column_list', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
@@ -969,7 +968,6 @@ class CustomColumnsTest extends TestCase
         $this->assertEquals("custom_10", $custom[9]['customColumnType']['columnTitle']);
         $this->assertEquals("No", $custom[9]['htmlvalue']);
 
-        $_SERVER["HTTP_USER_AGENT"] = "";
         Config::set('calibre_custom_column_list', []);
         Config::set('calibre_custom_column_preview', []);
     }

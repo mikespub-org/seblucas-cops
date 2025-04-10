@@ -27,10 +27,11 @@ use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class RestApiTest extends TestCase
 {
-    protected static string $script;
+    protected static string $handler;
     protected static RestApiProvider $apiProvider;
     /** @var array<string, int> */
     protected static $expectedSize = [
@@ -41,13 +42,15 @@ class RestApiTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
-        self::$script = $_SERVER["SCRIPT_NAME"];
+        self::$handler = Route::getHandler("phpunit");
+        UriGenerator::setScriptName($_SERVER["SCRIPT_NAME"]);
+        UriGenerator::setBaseUrl(null);
         self::$apiProvider = new RestApiProvider(Framework::getRequest());
     }
 
     public static function tearDownAfterClass(): void
     {
-        $_SERVER["SCRIPT_NAME"] = self::$script;
+        // ...
     }
 
     public function testGetPathInfo(): void
@@ -58,21 +61,19 @@ class RestApiTest extends TestCase
         $test = $apiProvider->getPathInfo();
         $this->assertEquals($expected, $test);
 
-        $_SERVER["PATH_INFO"] = "/books/2";
-        $request = Framework::getRequest();
+        $path = "/books/2";
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
 
         $expected = "/books/2";
         $test = $apiProvider->getPathInfo();
         $this->assertEquals($expected, $test);
-
-        unset($_SERVER["PATH_INFO"]);
     }
 
     public function testMatchPathInfo(): void
     {
-        $_SERVER["PATH_INFO"] = "/books/2";
-        $request = Framework::getRequest();
+        $path = "/books/2";
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $path = $apiProvider->getPathInfo();
 
@@ -80,8 +81,8 @@ class RestApiTest extends TestCase
         $test = $apiProvider->matchPathInfo($path);
         $this->assertEquals($expected, $test);
 
-        $_SERVER["PATH_INFO"] = "/restapi/openapi";
-        $request = Framework::getRequest();
+        $path = "/restapi/openapi";
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $path = $apiProvider->getPathInfo();
 
@@ -92,14 +93,12 @@ class RestApiTest extends TestCase
         $expected = true;
         $test = $apiProvider->isExtra;
         $this->assertEquals($expected, $test);
-
-        unset($_SERVER["PATH_INFO"]);
     }
 
     public function testSetParams(): void
     {
-        $_SERVER["PATH_INFO"] = "/books/2";
-        $request = Framework::getRequest();
+        $path = "/books/2";
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $path = $apiProvider->getPathInfo();
         $params = $apiProvider->matchPathInfo($path);
@@ -112,8 +111,6 @@ class RestApiTest extends TestCase
         $expected = 2;
         $test = $request->getId();
         $this->assertEquals($expected, $test);
-
-        unset($_SERVER["PATH_INFO"]);
     }
 
     public function testGetJson(): void
@@ -130,7 +127,7 @@ class RestApiTest extends TestCase
 
     public function testGetOutput(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $apiProvider = new RestApiProvider($request);
         $expected = true;
         $test = $apiProvider->getOutput();
@@ -139,7 +136,7 @@ class RestApiTest extends TestCase
 
     public function testGetCustomColumns(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $expected = "Custom Columns";
         $test = self::$apiProvider->getCustomColumns($request);
         $this->assertEquals($expected, $test["title"]);
@@ -147,7 +144,7 @@ class RestApiTest extends TestCase
 
     public function testGetDatabases(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $expected = "Databases";
         $test = self::$apiProvider->getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -157,7 +154,7 @@ class RestApiTest extends TestCase
 
     public function testGetDatabase(): void
     {
-        $request = Request::build(['db' => 0], basename(self::$script));
+        $request = Request::build(['db' => 0], self::$handler);
         $expected = "Database Types";
         $test = self::$apiProvider->getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -167,7 +164,7 @@ class RestApiTest extends TestCase
 
     public function testGetDatabaseTable(): void
     {
-        $request = Request::build(['db' => 0, 'type' => 'table'], basename(self::$script));
+        $request = Request::build(['db' => 0, 'type' => 'table'], self::$handler);
         $expected = "Database Type table";
         $test = self::$apiProvider->getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -177,7 +174,7 @@ class RestApiTest extends TestCase
 
     public function testGetTable(): void
     {
-        $request = Request::build(['db' => 0, 'name' => 'books'], basename(self::$script));
+        $request = Request::build(['db' => 0, 'name' => 'books'], self::$handler);
         $expected = "Database Table books";
         $test = self::$apiProvider->getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
@@ -188,8 +185,8 @@ class RestApiTest extends TestCase
         // generate api key and pass along in request
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
-        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
-        $request = Request::build(['db' => 0, 'name' => 'books'], basename(self::$script), $_SERVER);
+        $server = ['HTTP_X_API_KEY' => Config::get('api_key')];
+        $request = Request::build(['db' => 0, 'name' => 'books'], self::$handler, $server);
 
         // less than self::$apiProvider->$numberPerPage;
         $expected = 16;
@@ -197,12 +194,11 @@ class RestApiTest extends TestCase
         $this->assertCount($expected, $test["entries"]);
 
         Config::set('api_key', null);
-        unset($_SERVER['HTTP_X_API_KEY']);
     }
 
     public function testGetOpenApi(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $expected = "3.0.3";
         $test = self::$apiProvider->getOpenApi($request);
         $this->assertEquals($expected, $test["openapi"]);
@@ -220,7 +216,7 @@ class RestApiTest extends TestCase
 
     public function testGetRoutes(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $test = self::$apiProvider->getRoutes($request);
         $expected = "Routes";
         $this->assertEquals($expected, $test["title"]);
@@ -230,7 +226,7 @@ class RestApiTest extends TestCase
 
     public function testGetHandlers(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $test = self::$apiProvider->getHandlers($request);
         $expected = "Handlers";
         $this->assertEquals($expected, $test["title"]);
@@ -240,7 +236,7 @@ class RestApiTest extends TestCase
 
     public function testGetNotes(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $expected = "Notes";
         $test = self::$apiProvider->getNotes($request);
         $this->assertEquals($expected, $test["title"]);
@@ -250,7 +246,7 @@ class RestApiTest extends TestCase
 
     public function testGetNotesByType(): void
     {
-        $request = Request::build(['type' => 'authors'], basename(self::$script));
+        $request = Request::build(['type' => 'authors'], self::$handler);
         $expected = "Notes for authors";
         $test = self::$apiProvider->getNotes($request);
         $this->assertEquals($expected, $test["title"]);
@@ -260,7 +256,7 @@ class RestApiTest extends TestCase
 
     public function testGetNoteByTypeItem(): void
     {
-        $request = Request::build(['type' => 'authors', 'item' => 3], basename(self::$script));
+        $request = Request::build(['type' => 'authors', 'item' => 3], self::$handler);
         $expected = "Note for authors #3";
         $test = self::$apiProvider->getNotes($request);
         $this->assertEquals($expected, $test["title"]);
@@ -270,7 +266,7 @@ class RestApiTest extends TestCase
 
     public function testGetPreferences(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $expected = "Preferences";
         $test = self::$apiProvider->getPreferences($request);
         $this->assertEquals($expected, $test["title"]);
@@ -280,7 +276,7 @@ class RestApiTest extends TestCase
 
     public function testGetPreferenceByKey(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $request->set('key', 'virtual_libraries');
         $expected = "Preference for virtual_libraries";
         $test = self::$apiProvider->getPreferences($request);
@@ -291,7 +287,7 @@ class RestApiTest extends TestCase
 
     public function testGetAnnotations(): void
     {
-        $request = Request::build([], basename(self::$script));
+        $request = Request::build([], self::$handler);
         $expected = "Annotations";
         $test = self::$apiProvider->getAnnotations($request);
         $this->assertEquals($expected, $test["title"]);
@@ -307,7 +303,7 @@ class RestApiTest extends TestCase
 
     public function testGetAnnotationsByBookId(): void
     {
-        $request = Request::build(['bookId' => 17], basename(self::$script));
+        $request = Request::build(['bookId' => 17], self::$handler);
         $expected = "Annotations for 17";
         $test = self::$apiProvider->getAnnotations($request);
         $this->assertEquals($expected, $test["title"]);
@@ -321,7 +317,7 @@ class RestApiTest extends TestCase
 
     public function testGetAnnotationById(): void
     {
-        $request = Request::build(['bookId' => 17, 'id' => 1], basename(self::$script));
+        $request = Request::build(['bookId' => 17, 'id' => 1], self::$handler);
         $expected = "(17) Bookmark About #1";
         $test = self::$apiProvider->getAnnotations($request);
         $expected = "EPUB";
@@ -340,7 +336,7 @@ class RestApiTest extends TestCase
 
     public function testGetMetadata(): void
     {
-        $request = Request::build(['bookId' => 17], basename(self::$script));
+        $request = Request::build(['bookId' => 17], self::$handler);
         $expected = "Metadata for 17";
         $test = self::$apiProvider->getMetadata($request);
         $this->assertEquals($expected, $test["title"]);
@@ -371,7 +367,7 @@ class RestApiTest extends TestCase
     public function testGetMetadataElement(): void
     {
         $element = "dc:title";
-        $request = Request::build(['bookId' => 17, 'element' => $element], basename(self::$script));
+        $request = Request::build(['bookId' => 17, 'element' => $element], self::$handler);
         $expected = "Metadata for 17";
         $test = self::$apiProvider->getMetadata($request);
         $this->assertEquals($expected, $test["title"]);
@@ -385,7 +381,7 @@ class RestApiTest extends TestCase
     {
         $element = "meta";
         $name = "calibre:annotation";
-        $request = Request::build(['bookId' => 17, 'element' => $element, 'name' => $name], basename(self::$script));
+        $request = Request::build(['bookId' => 17, 'element' => $element, 'name' => $name], self::$handler);
         $expected = "Metadata for 17";
         $test = self::$apiProvider->getMetadata($request);
         $this->assertEquals($expected, $test["title"]);
@@ -412,21 +408,20 @@ class RestApiTest extends TestCase
     public function testGetUser(): void
     {
         $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
-        $_SERVER[$http_auth_user] = "admin";
         $request = Framework::getRequest();
+        $request->serverParams[$http_auth_user] = "admin";
         $expected = "admin";
         $test = self::$apiProvider->getUser($request);
         $this->assertEquals($expected, $test["username"]);
-        unset($_SERVER[$http_auth_user]);
     }
 
     public function testGetUserDetails(): void
     {
         Config::set('calibre_user_database', __DIR__ . "/BaseWithSomeBooks/users.db");
         $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
-        $_SERVER[$http_auth_user] = 'admin';
-        $_SERVER['PATH_INFO'] = '/restapi/user/details';
-        $request = Framework::getRequest();
+        $path = '/restapi/user/details';
+        $request = Framework::getRequest($path);
+        $request->serverParams[$http_auth_user] = "admin";
 
         $expected = "admin";
         $test = self::$apiProvider->getUser($request);
@@ -435,8 +430,6 @@ class RestApiTest extends TestCase
         $expected = ['library_restrictions' => []];
         $this->assertEquals($expected, $test["restriction"]);
 
-        unset($_SERVER[$http_auth_user]);
-        unset($_SERVER['PATH_INFO']);
         Config::set('calibre_user_database', null);
     }
 
@@ -445,9 +438,9 @@ class RestApiTest extends TestCase
         // generate api key and pass along in request
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
-        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
-        $_SERVER['PATH_INFO'] = '/zipfs/0/20/META-INF/container.xml';
-        $request = Framework::getRequest();
+        $path = '/zipfs/0/20/META-INF/container.xml';
+        $request = Framework::getRequest($path);
+        $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         $apiProvider = new RestApiProvider($request);
         $apiProvider->doRunHandler = false;
@@ -466,8 +459,6 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
 
         Config::set('api_key', null);
-        unset($_SERVER['HTTP_X_API_KEY']);
-        unset($_SERVER['PATH_INFO']);
     }
 
     public function testRunHandlerTrue(): void
@@ -475,9 +466,9 @@ class RestApiTest extends TestCase
         // generate api key and pass along in request
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
-        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
-        $_SERVER['PATH_INFO'] = '/calres/0/xxh64/7c301792c52eebf7';
-        $request = Framework::getRequest();
+        $path = '/calres/0/xxh64/7c301792c52eebf7';
+        $request = Framework::getRequest($path);
+        $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         ob_start();
         $apiProvider = new RestApiProvider($request);
@@ -493,8 +484,6 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, strlen($output));
 
         Config::set('api_key', null);
-        unset($_SERVER['HTTP_X_API_KEY']);
-        unset($_SERVER['PATH_INFO']);
     }
 
     public function testRunHandlerDifferentRoot(): void
@@ -502,9 +491,9 @@ class RestApiTest extends TestCase
         // generate api key and pass along in request
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
-        $_SERVER['HTTP_X_API_KEY'] = Config::get('api_key');
-        $_SERVER['PATH_INFO'] = '/thumbs/0/17/html.jpg';
-        $request = Framework::getRequest();
+        $path = '/thumbs/0/17/html.jpg';
+        $request = Framework::getRequest($path);
+        $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         $apiProvider = new RestApiProvider($request);
         $apiProvider->doRunHandler = false;
@@ -524,8 +513,6 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
 
         Config::set('api_key', null);
-        unset($_SERVER['HTTP_X_API_KEY']);
-        unset($_SERVER['PATH_INFO']);
     }
 
     /**
@@ -619,9 +606,9 @@ class RestApiTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
     public function testGetResult($routeUrl, $route, $params, $fixed = [])
     {
-        $_SERVER['PATH_INFO'] = $routeUrl;
-        //$request = Request::build($params, basename(self::$script));
-        $request = Framework::getRequest();
+        $path = $routeUrl;
+        //$request = Request::build($params, self::$handler);
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $result = $apiProvider->getOutput();
         if ($route == 'restapi-path' && !empty($params[Route::ROUTE_PARAM])) {
@@ -645,7 +632,5 @@ class RestApiTest extends TestCase
             }
             $this->assertEquals($expexted, $output);
         }
-
-        unset($_SERVER["PATH_INFO"]);
     }
 }

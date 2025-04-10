@@ -146,10 +146,9 @@ class MailTest extends TestCase
 
     public function testMailHandler(): void
     {
-        $_POST = ['data' => '20', 'email' => 'a@a.com'];
+        $post = ['data' => '20', 'email' => 'a@a.com'];
         // set request handler to 'TestHandler' class to run preSend() but not actually Send()
-        $request = Request::build([], TestHandler::class);
-        $request->postParams = $_POST;
+        $request = Request::build([], TestHandler::class, null, $post);
         $handler = Framework::createHandler('mail');
 
         ob_start();
@@ -160,8 +159,5 @@ class MailTest extends TestCase
 
         $expected = localize("mail.messagesent");
         $this->assertEquals($expected, $output);
-
-        $_GET = [];
-        $_POST = [];
     }
 }

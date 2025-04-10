@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Handlers\GraphQLHandler;
+use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Output\GraphQLExecutor;
 
 require_once dirname(__DIR__) . '/config/test.php';
@@ -42,14 +43,13 @@ class GraphQLHandlerTest extends TestCase
 
     public static function tearDownAfterClass(): void
     {
-        unset($_SERVER['REQUEST_METHOD']);
         Config::set('max_item_per_page', self::$numberPerPage);
     }
 
     public function testRenderPlayground(): void
     {
-        $_SERVER['REQUEST_METHOD'] = "GET";
-        $request = Request::build([], null, $_SERVER);
+        $server = ['REQUEST_METHOD' => "GET"];
+        $request = Request::build([], null, $server);
 
         ob_start();
         $handler = Framework::createHandler(self::$handler);
@@ -65,8 +65,8 @@ class GraphQLHandlerTest extends TestCase
 
     public function testHandleRequest(): void
     {
-        $_SERVER['REQUEST_METHOD'] = "POST";
-        $request = Request::build([], null, $_SERVER);
+        $server = ['REQUEST_METHOD' => "POST"];
+        $request = Request::build([], null, $server);
         $request->content = $this->getBasicQuery();
 
         ob_start();
@@ -105,9 +105,10 @@ class GraphQLHandlerTest extends TestCase
     {
         $request = Request::build();
         $request->content = $this->getBasicQuery();
+        $context = new RequestContext($request);
 
         $executor = new GraphQLExecutor();
-        $result = $executor->runQuery($request);
+        $result = $executor->runQuery($context);
 
         $expected = 7;
         $this->assertCount($expected, $result['data']['authors']);
@@ -168,9 +169,10 @@ class GraphQLHandlerTest extends TestCase
         $id = 3;
         $request = Request::build();
         $request->content = $this->getAuthorQuery((string) $id);
+        $context = new RequestContext($request);
 
         $executor = new GraphQLExecutor();
-        $result = $executor->runQuery($request);
+        $result = $executor->runQuery($context);
 
         $resultFile = __DIR__ . '/graphql/getAuthor.' . $id . '.result.json';
         if (!file_exists($resultFile)) {
@@ -202,9 +204,10 @@ class GraphQLHandlerTest extends TestCase
         $where = ['l' => 2];
         $request = Request::build();
         $request->content = $this->getAuthorsQuery($where);
+        $context = new RequestContext($request);
 
         $executor = new GraphQLExecutor();
-        $result = $executor->runQuery($request);
+        $result = $executor->runQuery($context);
 
         $resultFile = __DIR__ . '/graphql/getAuthors.l.' . $where['l'] . '.result.json';
         if (!file_exists($resultFile)) {
@@ -256,9 +259,10 @@ class GraphQLHandlerTest extends TestCase
     {
         $request = Request::build();
         $request->content = $this->getNodeQuery($id);
+        $context = new RequestContext($request);
 
         $executor = new GraphQLExecutor();
-        $result = $executor->runQuery($request);
+        $result = $executor->runQuery($context);
 
         $resultFile = __DIR__ . '/graphql/getNode' . str_replace('/', '.', $id) . '.result.json';
         if (!file_exists($resultFile)) {
@@ -417,9 +421,10 @@ class GraphQLHandlerTest extends TestCase
 
         $request = Request::build();
         $request->content = file_get_contents($queryFile);
+        $context = new RequestContext($request);
 
         $executor = new GraphQLExecutor();
-        $result = $executor->runQuery($request);
+        $result = $executor->runQuery($context);
         if (!file_exists($resultFile)) {
             file_put_contents($resultFile, Format::json($result));
         }

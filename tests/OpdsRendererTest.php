@@ -164,16 +164,15 @@ class OpdsRendererTest extends TestCase
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
-        $_SERVER ["HTTP_USER_AGENT"] = "XXX";
+        $server = ["HTTP_USER_AGENT" => "XXX"];
         Config::set('generate_invalid_opds_stream', "1");
-        $request = self::$handler::request(['page' => $page], $_SERVER);
+        $request = self::$handler::request(['page' => $page], $server);
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertFalse($this->jingValidateSchema(self::TEST_FEED, self::OPDS_RELAX_NG, false));
         $this->AssertFalse($this->opdsValidator(self::TEST_FEED, false));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
 
-        unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('generate_invalid_opds_stream', "0");
     }
 
@@ -187,7 +186,6 @@ class OpdsRendererTest extends TestCase
     {
         $request = self::$handler::request(['page' => $page]);
         $request->set('query', $query);
-        //$_SERVER['REQUEST_URI'] = OpdsRenderer::$endpoint . "?" . $request->query();
 
         $currentPage = PageId::getPage($page, $request);
 
@@ -196,8 +194,6 @@ class OpdsRendererTest extends TestCase
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
-
-        //unset($_SERVER['REQUEST_URI']);
     }
 
     /**
@@ -329,8 +325,8 @@ class OpdsRendererTest extends TestCase
     public function testPageAuthorsDetail_WithoutAnyId(): void
     {
         $page = PageId::AUTHOR_DETAIL;
-        $_SERVER['REQUEST_URI'] = "index.php?XXXX";
-        $request = self::$handler::request(['page' => $page], $_SERVER);
+        $server = ['REQUEST_URI' => "index.php?XXXX"];
+        $request = self::$handler::request(['page' => $page], $server);
         $request->set('id', "1");
 
         $currentPage = PageId::getPage($page, $request);
@@ -341,8 +337,6 @@ class OpdsRendererTest extends TestCase
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
         $this->AssertTrue($this->checkEntries($currentPage, self::TEST_FEED));
-
-        unset($_SERVER['REQUEST_URI']);
     }
 
     public function testFeedHandler(): void

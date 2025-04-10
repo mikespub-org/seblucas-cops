@@ -640,7 +640,6 @@ class BookTest extends TestCase
 
         Config::set('use_url_rewriting', "1");
         Config::set('provide_kepub', "1");
-        $_SERVER["HTTP_USER_AGENT"] = "Kobo";
         $book = Book::getBookById(17);
         $book->updateForKepub = true;
         $epub = $book->getDataById(20);
@@ -648,7 +647,6 @@ class BookTest extends TestCase
         $this->assertEquals(UriGenerator::path("download/17/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi"), $mobi->getHtmlLink());
 
         Config::set('provide_kepub', "0");
-        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $book = Book::getBookById(17);
         $book->updateForKepub = false;
         $epub = $book->getDataById(20);

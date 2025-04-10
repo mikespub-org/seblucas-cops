@@ -61,13 +61,12 @@ class UriGeneratorTest extends TestCase
 
     public function testProxyBaseUrl(): void
     {
-        UriGenerator::setBaseUrl(null);
         Config::set('full_url', '');
+        UriGenerator::setBaseUrl(null);
 
         $expected = 'vendor/bin/';
         $base = UriGenerator::base();
         $this->assertStringEndsWith($expected, $base);
-        UriGenerator::setBaseUrl(null);
 
         // @see https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations
         Config::set('trusted_proxies', 'private_ranges');
@@ -77,29 +76,29 @@ class UriGeneratorTest extends TestCase
         $_SERVER['HTTP_X_FORWARDED_PORT'] = 8443;
         $_SERVER['HTTP_X_FORWARDED_PREFIX'] = '/books/';
         $_SERVER['REMOTE_ADDR'] = '::1';
-        //$_SERVER['REQUEST_URI'] = '/index.php/check';
+        UriGenerator::setBaseUrl(null);
 
         $expected = 'https://www.example.com:8443/books/';
         $base = UriGenerator::base();
         $this->assertEquals($expected, $base);
-        UriGenerator::setBaseUrl(null);
+
         unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
         unset($_SERVER['HTTP_X_FORWARDED_HOST']);
         unset($_SERVER['HTTP_X_FORWARDED_PORT']);
         unset($_SERVER['HTTP_X_FORWARDED_PREFIX']);
         unset($_SERVER['REMOTE_ADDR']);
-
         // this has priority over trusted proxies or script name
         Config::set('full_url', '/cops/');
+        UriGenerator::setBaseUrl(null);
 
         $expected = '/cops/';
         $base = UriGenerator::base();
         $this->assertEquals($expected, $base);
-        UriGenerator::setBaseUrl(null);
 
         Config::set('trusted_proxies', '');
         Config::set('trusted_headers', []);
         Config::set('full_url', '');
+        UriGenerator::setBaseUrl(null);
     }
 
     /**

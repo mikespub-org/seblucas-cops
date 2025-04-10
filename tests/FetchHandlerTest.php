@@ -137,10 +137,10 @@ class FetchHandlerTest extends TestCase
     {
         Config::set('provide_kepub', '1');
         Config::set('kepubify_path', self::$kepubifyPath);
-        $_SERVER['HTTP_USER_AGENT'] = "Kobo";
+        $server = ['HTTP_USER_AGENT' => "Kobo"];
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler, $_SERVER);
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler, $server);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -154,7 +154,6 @@ class FetchHandlerTest extends TestCase
         $this->assertEquals($expected, strlen($output));
         //file_put_contents(__DIR__ . '/file.kepubify.epub', $output);
 
-        unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('kepubify_path', '');
         Config::set('provide_kepub', '0');
     }
@@ -164,10 +163,10 @@ class FetchHandlerTest extends TestCase
         Config::set('update_epub-metadata', '1');
         Config::set('provide_kepub', '1');
         Config::set('kepubify_path', self::$kepubifyPath);
-        $_SERVER['HTTP_USER_AGENT'] = "Kobo";
+        $server = ['HTTP_USER_AGENT' => "Kobo"];
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
-        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler, $_SERVER);
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler, $server);
         $handler = Framework::createHandler('fetch');
 
         ob_start();
@@ -181,7 +180,6 @@ class FetchHandlerTest extends TestCase
         $this->assertEquals($expected, strlen($output));
         //file_put_contents(__DIR__ . '/file.allinone.epub', $output);
 
-        unset($_SERVER['HTTP_USER_AGENT']);
         Config::set('kepubify_path', '');
         Config::set('provide_kepub', '0');
         Config::set('update_epub-metadata', '0');

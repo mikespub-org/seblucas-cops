@@ -36,21 +36,19 @@ class BaseTest extends TestCase
 
     public function testLocalizeFr(): void
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
-        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $acceptLanguage = "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
+        $translator = new Translation($acceptLanguage);
         $this->assertEquals("Auteurs", $translator->localize("authors.title", -1, true));
 
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
     }
 
     public function testLocalizeUnknown(): void
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "aa";
-        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $acceptLanguage = "aa";
+        $translator = new Translation($acceptLanguage);
         $this->assertEquals("Authors", $translator->localize("authors.title", -1, true));
 
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
     }
 
@@ -62,12 +60,10 @@ class BaseTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('providerGetLangAndTranslationFile')]
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $translator = new Translation($acceptLanguage);
         [$lang, $lang_file] = $translator->getLangAndTranslationFile();
         $this->assertEquals($result, $lang);
 
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
     }
 
@@ -96,12 +92,10 @@ class BaseTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('providerGetAcceptLanguages')]
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $translator = new Translation($acceptLanguage);
         $langs = array_keys($translator->getAcceptLanguages($acceptLanguage));
         $this->assertEquals($result, $langs[0]);
 
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize("authors.title", -1, true);
     }
 

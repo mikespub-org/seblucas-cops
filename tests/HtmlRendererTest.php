@@ -30,7 +30,6 @@ class HtmlRendererTest extends TestCase
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");
         Database::clearDb();
-        $_GET = [];
     }
 
     /**
@@ -41,9 +40,9 @@ class HtmlRendererTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('providerDotTemplate')]
     public function testDotHeader($templateName)
     {
-        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
-        $_COOKIE["template"] = $templateName;
-        $request = new Request();
+        $server = ["HTTP_USER_AGENT" => "Firefox"];
+        $cookie = ["template" => $templateName];
+        $request = Request::build([], null, $server, null, $cookie);
         $html = new HtmlRenderer();
         $data = $html->getTemplateData($request);
         $template = new DotPHPTemplate($request);
@@ -52,8 +51,6 @@ class HtmlRendererTest extends TestCase
         $head = $tpl($data);
         $this->assertStringContainsString("<head>", $head);
         $this->assertStringContainsString("</head>", $head);
-
-        unset($_COOKIE["template"]);
     }
 
     /**
@@ -64,8 +61,9 @@ class HtmlRendererTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('providerDotTemplate')]
     public function testDotServerSide($templateName)
     {
-        $_COOKIE["template"] = $templateName;
-        $request = new Request();
+        $server = ["HTTP_USER_AGENT" => "Firefox"];
+        $cookie = ["template" => $templateName];
+        $request = Request::build([], null, $server, null, $cookie);
         $template = new DotPHPTemplate($request);
         $this->assertNull($template->serverSide(null));
 
@@ -86,8 +84,6 @@ class HtmlRendererTest extends TestCase
         }
         libxml_clear_errors();
         libxml_use_internal_errors($old);
-
-        unset($_COOKIE['template']);
     }
 
     /**
@@ -105,9 +101,9 @@ class HtmlRendererTest extends TestCase
 
     public function testRenderDot(): void
     {
+        $server = ["HTTP_USER_AGENT" => "Firefox"];
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = new Request();
-        $request->set('page', $page);
+        $request = Request::build(["page" => $page], null, $server);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);
@@ -118,19 +114,15 @@ class HtmlRendererTest extends TestCase
 
     public function testRenderDotServerSide(): void
     {
-        $_SERVER['HTTP_USER_AGENT'] = "Kindle/1.0";
-
+        $server = ["HTTP_USER_AGENT" => "Kindle/1.0"];
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = new Request();
-        $request->set('page', $page);
+        $request = Request::build(["page" => $page], null, $server);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);
 
         $expected = "Alice&#039;s Adventures in Wonderland";
         $this->assertStringContainsString($expected, $output);
-
-        unset($_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
@@ -140,8 +132,9 @@ class HtmlRendererTest extends TestCase
      */
     public function testTwigServerSide($templateName = 'twigged')
     {
-        $_COOKIE["template"] = $templateName;
-        $request = new Request();
+        $server = [];
+        $cookie = ["template" => $templateName];
+        $request = Request::build([], null, $server, null, $cookie);
         $template = new TwigTemplate($request);
         $this->assertNull($template->serverSide(null));
 
@@ -162,8 +155,6 @@ class HtmlRendererTest extends TestCase
         }
         libxml_clear_errors();
         libxml_use_internal_errors($old);
-
-        unset($_COOKIE['template']);
     }
 
     /**
@@ -175,10 +166,10 @@ class HtmlRendererTest extends TestCase
      */
     public function testTwigRenderBlock($templateName = 'twigged', $name = 'mainlist.html', $block = 'main'): void
     {
-        $_COOKIE["template"] = $templateName;
+        $server = ["HTTP_USER_AGENT" => "Firefox"];
+        $cookie = ["template" => $templateName];
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = new Request();
-        $request->set('page', $page);
+        $request = Request::build(["page" => $page], null, $server, null, $cookie);
 
         $template = new TwigTemplate($request);
 
@@ -211,43 +202,33 @@ class HtmlRendererTest extends TestCase
 
         $expected = 16;
         $this->assertCount($expected, $nodes);
-
-        unset($_COOKIE['template']);
     }
 
     public function testRenderTwig(): void
     {
-        $_COOKIE['template'] = "twigged";
-
+        $server = ["HTTP_USER_AGENT" => "Firefox"];
+        $cookie = ["template" => "twigged"];
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = new Request();
-        $request->set('page', $page);
+        $request = Request::build(["page" => $page], null, $server, null, $cookie);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);
 
         $expected = "index.php/recent?complete=1";
         $this->assertStringContainsString($expected, $output);
-
-        unset($_COOKIE['template']);
     }
 
     public function testRenderTwigServerSide(): void
     {
-        $_SERVER['HTTP_USER_AGENT'] = "Kindle/1.0";
-        $_COOKIE['template'] = "twigged";
-
+        $server = ["HTTP_USER_AGENT" => "Kindle/1.0"];
+        $cookie = ["template" => "twigged"];
         $page = PageId::ALL_RECENT_BOOKS;
-        $request = new Request();
-        $request->set('page', $page);
+        $request = Request::build(["page" => $page], null, $server, null, $cookie);
 
         $html = new HtmlRenderer();
         $output = $html->render($request);
 
         $expected = "Alice&#039;s Adventures in Wonderland";
         $this->assertStringContainsString($expected, $output);
-
-        unset($_COOKIE['template']);
-        unset($_SERVER['HTTP_USER_AGENT']);
     }
 }
