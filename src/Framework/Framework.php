@@ -123,9 +123,9 @@ class Framework
      * Summary of getContext
      * @return RequestContext
      */
-    public function getContext()
+    public function getContext(bool $reset = false)
     {
-        if (!isset($this->context)) {
+        if (!isset($this->context) || $reset) {
             // initialize routes if needed
             $this->initializeRoutes();
             $request = $this->createRequest();
@@ -149,8 +149,6 @@ class Framework
             $_SERVER['PATH_INFO'] = $_SERVER['REDIRECT_PATH_INFO'];
         }
         $request = new Request();
-        // @todo set locale for Route Slugger - must be done after init() and Request()
-        UriGenerator::setLocale($request->locale());
         return $request;
     }
 
@@ -199,18 +197,26 @@ class Framework
     }
 
     /**
-     * Get request instance
+     * Get request instance with optional path and params
+     * @param array<string, mixed> $params
      * @return Request
      */
-    public static function getRequest()
+    public static function getRequest(string $path = '', array $params = [])
     {
         $framework = self::getInstance();
-        // initialize routes if needed
-        $framework->initializeRoutes();
-        $request = $framework->createRequest();
-        // @todo move to RequestContext
-        $request->matchRoute();
-        return $request;
+        // reset context for static calls in tests
+        $context = $framework->getContext(true);
+        // set path and params in request
+        if (!empty($path)) {
+            $context->getRequest()->setPath($path);
+        }
+        if (!empty($params)) {
+            $context->getRequest()->setParams($params, false);
+        }
+        // match route and update request with matched parameters
+        $params = $context->matchRequest();
+        // return request
+        return $context->getRequest();
     }
 
     /**

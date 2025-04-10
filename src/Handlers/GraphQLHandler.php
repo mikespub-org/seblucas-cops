@@ -45,6 +45,8 @@ class GraphQLHandler extends BaseHandler
             return $this->renderPlayground();
         }
 
+        // update request context if needed here - see tests
+        $this->getContext()->setRequest($request);
         // override splitting authors and books by first letter here?
         Config::set('author_split_first_letter', '0');
         Config::set('titles_split_first_letter', '0');
@@ -53,7 +55,7 @@ class GraphQLHandler extends BaseHandler
         Config::set('max_item_per_page', self::$numberPerPage);
 
         $executor = new GraphQLExecutor();
-        $result = $executor->runQuery($request);
+        $result = $executor->runQuery($this->getContext());
 
         $response = new Response('application/json;charset=utf-8');
         return $response->setContent(json_encode($result));

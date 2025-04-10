@@ -45,8 +45,9 @@ class RequestContext
     protected function initializeContext(): void
     {
         $this->manager->setContext($this);
-        // Load routes if not already cached
+        // set locale for Route Slugger
         UriGenerator::setLocale($this->locale);
+        UriGenerator::setScriptName((string) $this->request->script());
     }
 
     /**
@@ -196,6 +197,11 @@ class RequestContext
     }
 
     // Accessor methods
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+    }
+
     public function getRequest(): Request
     {
         return $this->request;

@@ -24,13 +24,15 @@ class UriGenerator
 {
     /** @var ?string */
     protected static $baseUrl = null;
+    /** @var ?string */
+    protected static $scriptName = null;
     /** @var class-string */
     protected static $sluggerClass = Slugger::class;
     /** @var Slugger|bool|null */
     protected static $slugger = null;
 
     /**
-     * Generate uri with FastRoute - @todo some issues left to deal with ;-)
+     * Generate uri with Symfony Routing
      * @param string $name
      * @param array<mixed> $params
      * @return string|null
@@ -128,22 +130,10 @@ class UriGenerator
      */
     public static function base()
     {
-        if (isset(self::$baseUrl)) {
-            return self::$baseUrl;
+        if (!isset(self::$baseUrl)) {
+            self::setBaseUrl(null);
         }
-        if (!empty(Config::get('full_url'))) {
-            $base = Config::get('full_url');
-        } elseif (ProxyRequest::hasTrustedProxies()) {
-            // use scheme and host + base path here to apply potential forwarded values
-            $base = ProxyRequest::getProxyBaseUrl();
-        } else {
-            $base = dirname((string) $_SERVER['SCRIPT_NAME']);
-        }
-        if (!str_ends_with((string) $base, '/')) {
-            $base .= '/';
-        }
-        self::setBaseUrl($base);
-        return $base;
+        return self::$baseUrl;
     }
 
     /**
@@ -151,12 +141,25 @@ class UriGenerator
      * @param ?string $base
      * @return void
      */
-    public static function setBaseUrl($base)
+    public static function setBaseUrl($base = null)
     {
-        self::$baseUrl = $base;
-        if (is_null($base)) {
-            ProxyRequest::$proxyRequest = null;
+        if (isset($base)) {
+            self::$baseUrl = $base;
+            return;
         }
+        ProxyRequest::$proxyRequest = null;
+        if (!empty(Config::get('full_url'))) {
+            $base = Config::get('full_url');
+        } elseif (ProxyRequest::hasTrustedProxies()) {
+            // use scheme and host + base path here to apply potential forwarded values
+            $base = ProxyRequest::getProxyBaseUrl();
+        } else {
+            $base = dirname(self::$scriptName);
+        }
+        if (!str_ends_with((string) $base, '/')) {
+            $base .= '/';
+        }
+        self::$baseUrl = $base;
     }
 
     /**
@@ -505,5 +508,15 @@ class UriGenerator
             return;
         }
         self::$slugger = new self::$sluggerClass($locale);
+    }
+
+    /**
+     * Summary of setScriptName
+     * @param string $scriptName
+     * @return void
+     */
+    public static function setScriptName($scriptName)
+    {
+        self::$scriptName = $scriptName;
     }
 }

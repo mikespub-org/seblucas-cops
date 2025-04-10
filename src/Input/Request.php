@@ -230,6 +230,17 @@ class Request
     }
 
     /**
+     * Set path for route matching
+     * @param string $path
+     * @return Request
+     */
+    public function setPath($path)
+    {
+        $this->serverParams['PATH_INFO'] = $path;
+        return $this;
+    }
+
+    /**
      * Set params for match of /handler/{path:.*} with default page handler - see RestApiHandler, FeedHandler etc.
      * @param array<mixed> $params from Route::match('/' . $params['path'])
      * @param bool $clearPath remove 'path' from urlParams if not set here
@@ -610,7 +621,7 @@ class Request
     /**
      * Summary of build
      * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-     * @param class-string|null $handler
+     * @param class-string|string|null $handler
      * @param ?array<mixed> $server
      * @param ?array<mixed> $post
      * @param ?array<mixed> $cookies

@@ -45,6 +45,18 @@ class Session
         };
     }
 
+    public function regenerate(bool $destroy = false): bool
+    {
+        $this->start();
+        if (PHP_SESSION_ACTIVE !== session_status()) {
+            return false;
+        }
+        if ($destroy) {
+            $_SESSION = [];
+        }
+        return session_regenerate_id();
+    }
+
     public function has(string $name): bool
     {
         return array_key_exists($name, $_SESSION);

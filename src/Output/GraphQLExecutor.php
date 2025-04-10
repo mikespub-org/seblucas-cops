@@ -55,12 +55,13 @@ class GraphQLExecutor
 
     /**
      * Summary of runQuery
-     * @param Request $request
+     * @param RequestContext $context
      * @param ?class-string $handler
      * @return array<string, mixed>
      */
-    public function runQuery($request, $handler = null)
+    public function runQuery($context, $handler = null)
     {
+        $request = $context->getRequest();
         $input = json_decode((string) $request->content(), true);
         // set request handler for navlink
         $handler ??= RestApiHandler::class;
@@ -73,7 +74,6 @@ class GraphQLExecutor
         // @see https://github.com/webonyx/graphql-php/blob/master/examples/02-schema-definition-language/graphql.php
         // use $rootValue to resolve query fields
         //$rootValue = $this->getFieldResolvers($request);
-        $context = new RequestContext($request);
         $variableValues = $input['variables'] ?? null;
         $operationName = $input['operationName'] ?? null;
         //$fieldResolver = $this->getFieldResolver($request, $resolvers);

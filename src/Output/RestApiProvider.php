@@ -134,15 +134,9 @@ class RestApiProvider extends BaseRenderer
         unset($params[Route::HANDLER_PARAM]);
         $run ??= $this->doRunHandler;
         if ($run) {
-            $oldpath = $_SERVER['PATH_INFO'] ?? '';
-            $oldparams = $_GET;
-            $_SERVER['PATH_INFO'] = $path;
-            $_GET = $params;
-            // @todo create request without using globals
-            $request = Framework::getRequest();
+            // create request without using globals
+            $request = Framework::getRequest($path, $params);
             $response = $handler->handle($request);
-            $_SERVER['PATH_INFO'] = $oldpath;
-            $_GET = $oldparams;
             return $response;
         }
         $result = [Route::HANDLER_PARAM => $name, "path" => $path, "params" => $params];
