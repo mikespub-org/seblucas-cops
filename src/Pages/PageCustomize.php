@@ -72,12 +72,14 @@ class PageCustomize extends Page
 
     /**
      * Summary of getStyleList
+     * @param string|null $template
      * @return array<string>
      */
-    protected function getStyleList()
+    protected function getStyleList($template = null)
     {
+        $template ??= $this->request->template();
         $result = [];
-        foreach (glob("templates/" . $this->request->template() . "/styles/style-*.css") as $filename) {
+        foreach (glob("templates/" . $template . "/styles/style-*.css") as $filename) {
             if (preg_match('/styles\/style-(.*?)\.css/', $filename, $m)) {
                 array_push($result, $m [1]);
             }
@@ -113,9 +115,11 @@ class PageCustomize extends Page
         $template = $this->request->post('template');
         if (isset($template) && in_array($template, $this->getTemplateList())) {
             $custom['template'] = $template;
+        } else {
+            $template = null;
         }
         $style = $this->request->post('style');
-        if (isset($style) && in_array($style, $this->getStyleList())) {
+        if (isset($style) && in_array($style, $this->getStyleList($template))) {
             $custom['style'] = $style;
         }
         $fancybox = $this->request->post('use_fancyapps');

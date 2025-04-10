@@ -20,6 +20,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\Session;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -1326,5 +1327,65 @@ class PageTest extends TestCase
         $this->assertEquals("Template", $currentPage->entryArray [0]->title);
         $this->assertEquals("Virtual library", $currentPage->entryArray [6]->title);
         $this->assertFalse($currentPage->containsBook());
+    }
+
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function testPageCustomizeSessionGet(): void
+    {
+        $session = new Session();
+        $session->start();
+        $custom = [
+            'template' => "default",
+        ];
+        $session->set('custom', $custom);
+        $page = PageId::CUSTOMIZE;
+        $server = ['REQUEST_METHOD' => "GET"];
+        $request = Request::build(['page' => $page], null, $server);
+        $request->setSession($session);
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("Customize COPS UI", $currentPage->title);
+        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertEquals("Template", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Virtual library", $currentPage->entryArray [6]->title);
+        $this->assertFalse($currentPage->containsBook());
+
+        $expected = $custom;
+        $this->assertEquals($expected, $currentPage->custom);
+    }
+
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function testPageCustomizeSessionPost(): void
+    {
+        $session = new Session();
+        $session->start();
+        $custom = [
+            'template' => "default",
+        ];
+        $session->set('custom', $custom);
+        $page = PageId::CUSTOMIZE;
+        $server = ['REQUEST_METHOD' => "POST"];
+        $post = [
+            'template' => "twigged",
+            'style' => "default",
+            'max_item_per_page' => "48",
+            'email' => "test@example.com",
+            'ignored_categories' => ["format", "identifier"],
+            'virtual_library' => "2.Short_Stories_in_English",
+        ];
+        $request = Request::build(['page' => $page], null, $server, $post);
+        $request->setSession($session);
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("Customize COPS UI", $currentPage->title);
+        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertEquals("Template", $currentPage->entryArray [0]->title);
+        $this->assertEquals("Virtual library", $currentPage->entryArray [6]->title);
+        $this->assertFalse($currentPage->containsBook());
+
+        $expected = $post;
+        $this->assertEquals($expected, $currentPage->custom);
     }
 }
