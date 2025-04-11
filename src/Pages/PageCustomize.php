@@ -12,11 +12,14 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\VirtualLibrary;
+use SebLucas\Cops\Input\Config;
 
 class PageCustomize extends Page
 {
     /** @var array<string, mixed> */
     public array $custom = [];
+    /** @var array<string, mixed> */
+    public array $default = [];
 
     /**
      * Summary of isChecked
@@ -93,6 +96,8 @@ class PageCustomize extends Page
      */
     public function initializeContent()
     {
+        // @todo use $this->default here too?
+        $this->default = Config::get('customize', []);
         // @todo use $this->custom
         $session = $this->request->getSession();
         if ($session) {

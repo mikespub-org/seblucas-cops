@@ -99,10 +99,44 @@ class SessionTest extends TestCase
         $expected = session_id();
         $this->assertNotEquals($expected, $sessionId);
 
+        // session regenerated -> session data kept
+        $expected = 0;
+        $connected = $session->get('connected');
+        $this->assertEquals($expected, $connected);
+
+        // force expires on next start()
+        $session->set('expires', time() - 24 * 60 * 60);
+
         file_put_contents(__DIR__ . '/text.sessionid', $expected);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testSessionRegenerate')]
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function testSessionExpires(): void
+    {
+        $session = new Session();
+
+        $sessionId = file_get_contents(__DIR__ . '/text.sessionid');
+        $session->restore($sessionId);
+
+        // session expired -> new session id
+        $expected = session_id();
+        $this->assertNotEquals($expected, $sessionId);
+
+        // session expired -> reset expires
+        $expected = time();
+        $this->assertGreaterThan($expected, $session->get('expires'));
+        $sessionId = $expected;
+
+        // session expired -> session data kept
+        $expected = 0;
+        $connected = $session->get('connected');
+        $this->assertEquals($expected, $connected);
+
+        file_put_contents(__DIR__ . '/text.sessionid', $sessionId);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Depends('testSessionExpires')]
     #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function testSessionDestroy(): void
     {

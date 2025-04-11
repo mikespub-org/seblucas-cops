@@ -328,17 +328,6 @@ class Request
     }
 
     /**
-     * Summary of session
-     * @param string $name
-     * @deprecated 3.5.7 use Session() instead
-     * @return mixed
-     */
-    public function session($name)
-    {
-        return $_SESSION[$name] ?? null;
-    }
-
-    /**
      * Summary of cookie
      * @param string $name
      * @return mixed
@@ -384,6 +373,9 @@ class Request
                 return $this->cookie($option);
             }
         }
+        // @todo use session or default here? see PageCustomize()
+        //$session = $this->getSession();
+        //$default = Config::get('customize', []);
         if (!is_null(Config::get($option))) {
             return Config::get($option);
         }

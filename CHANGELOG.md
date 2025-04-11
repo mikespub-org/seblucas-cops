@@ -13,7 +13,11 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
-  * ...
+  * Changes in config/default.php file:
+    - new $config['cops_customize'] for default customize values per user (TODO)
+  * Experiment with default customize values per user (TODO)
+  * Add session expires and regenerate session id if needed
+  * Pass request context to graphql executor instead of request
 
 3.6.1 - 20250409 Improve hierarchy, split by letter, download filename + fixes
   * Changes in config/default.php file:

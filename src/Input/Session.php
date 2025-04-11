@@ -29,20 +29,52 @@ class Session
         // use only session cookies for now - revisit if first-party cookie policy changes
         ini_set('session.use_only_cookies', 1);
         ini_set('session.use_strict_mode', 1);
-        // session is used to validate fetching/zipping books or configure COPS, so we use long timeout here
-        $timeout = Config::get('session_timeout') ?? (365 * 24 * 60 * 60);
+        $timeout = $this->timeout();
         ini_set('session.cookie_lifetime', $timeout);
         ini_set('session.gc_maxlifetime', $timeout);
+    }
+
+    /**
+     * Session is used to validate fetching/zipping books or customize COPS, so we use long timeout here
+     */
+    protected function timeout(): int
+    {
+        $timeout = Config::get('session_timeout', 365 * 24 * 60 * 60);
+        return (int) $timeout;
+    }
+
+    /**
+     * Set expires or regenerate half-way in the lifetime
+     */
+    protected function expires(): bool
+    {
+        if (!$this->has('expires')) {
+            $this->set('expires', time() + intdiv($this->timeout(), 2));
+            return true;
+        }
+        $expires = $this->get('expires');
+        if ($expires > time()) {
+            return false;
+        }
+        $result = session_regenerate_id();
+        if ($result) {
+            $this->set('expires', time() + intdiv($this->timeout(), 2));
+        }
+        return $result;
     }
 
     public function start(): bool
     {
         $status = session_status();
-        return match ($status) {
+        $started = match ($status) {
             PHP_SESSION_ACTIVE => true,
             PHP_SESSION_DISABLED => false,
             PHP_SESSION_NONE => session_start(),
         };
+        if ($started) {
+            $this->expires();
+        }
+        return $started;
     }
 
     public function restore(string $id): bool
@@ -60,7 +92,11 @@ class Session
         if ($destroy) {
             $_SESSION = [];
         }
-        return session_regenerate_id();
+        $result = session_regenerate_id();
+        if ($result) {
+            $this->set('expires', time() + intdiv($this->timeout(), 2));
+        }
+        return $result;
     }
 
     public function has(string $name): bool

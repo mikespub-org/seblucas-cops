@@ -676,6 +676,11 @@ $config['cops_api_key'] = '';
 $config['cops_epub_reader'] = 'monocle';
 
 /*
+ * Default customize values per user - @todo
+ */
+$config['cops_customize'] = [];
+
+/*
  * Configure epubjs-reader as used in templates/epubjs-reader.html
  * This is a javascript object stored as text string for the template
  *
