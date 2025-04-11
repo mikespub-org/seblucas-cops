@@ -100,23 +100,4 @@ class RouteLoader extends Loader
         }
         return [$path, $requirements];
     }
-
-    /**
-     * Summary of getPathName
-     * @deprecated 3.4.2 use route names from Route::getRoutes()
-     * @param string $path
-     * @return string
-     */
-    public static function getPathName($path)
-    {
-        $name = ltrim($path, '/');
-        $replace = [
-            '/' => '-',
-            '{' => '',
-            '}' => '',
-            '.jpg' => '',
-            //'-ignore' => '',
-        ];
-        return str_replace(array_keys($replace), array_values($replace), $name);
-    }
 }

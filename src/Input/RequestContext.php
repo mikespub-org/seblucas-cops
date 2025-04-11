@@ -125,7 +125,6 @@ class RequestContext
         // 3. Check request parameters
         if (!empty($this->request->urlParams[Route::HANDLER_PARAM])) {
             $name = $this->request->urlParams[Route::HANDLER_PARAM];
-            // return $this->normalizeHandlerName($name);
             return $name;
         }
 
@@ -136,20 +135,6 @@ class RequestContext
 
         // 5. Default handler
         return 'html';
-    }
-
-    /**
-     * @deprecated 3.5.2 not used here
-     */
-    protected function normalizeHandlerName(string $name): string
-    {
-        // Convert handler class name to short name if needed - @todo not used here
-        if (str_contains($name, '\\')) {
-            $parts = explode('\\', $name);
-            $className = end($parts);
-            return str_replace('Handler', '', strtolower($className));
-        }
-        return $name;
     }
 
     /**

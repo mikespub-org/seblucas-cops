@@ -118,7 +118,7 @@ class RoutingTest extends TestCase
 
         // @todo check/add default route for each handler?
         $endpoint = parse_url((string) $queryUrl, PHP_URL_PATH);
-        $flipped = array_flip(Config::OLD_ENDPOINT);
+        $flipped = array_flip(RouteTest::OLD_ENDPOINT);
         $handler = "html";
         if (!empty($flipped[$endpoint])) {
             $handler = $flipped[$endpoint];

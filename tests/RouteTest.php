@@ -23,6 +23,26 @@ use Throwable;
 
 class RouteTest extends TestCase
 {
+    // @deprecated 3.5.7 remove old endpoints in uri generator
+    public const OLD_ENDPOINT = [
+        "html" => "index.php",
+        "feed" => "feed.php",
+        "json" => "getJSON.php",
+        "fetch" => "fetch.php",
+        "read" => "epubreader.php",
+        "epubfs" => "epubfs.php",
+        "restapi" => "restapi.php",
+        "check" => "checkconfig.php",
+        "opds" => "opds.php",
+        "loader" => "loader.php",
+        "zipper" => "zipper.php",
+        "calres" => "calres.php",
+        "zipfs" => "zipfs.php",
+        "mail" => "sendtomail.php",
+        "graphql" => "graphql.php",
+        "tables" => "tables.php",
+    ];
+
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', __DIR__ . "/BaseWithSomeBooks/");

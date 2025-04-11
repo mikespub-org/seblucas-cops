@@ -171,20 +171,6 @@ class Framework
     }
 
     /**
-     * Initialize framework
-     * @deprecated 3.5.2 replace with instance method
-     * @return void
-     */
-    public static function init()
-    {
-        $framework = self::getInstance();
-        // initialize routes if needed
-        $framework->initializeRoutes();
-        // create context for static calls in tests - see createHandler()
-        $framework->getContext();
-    }
-
-    /**
      * Load routes for all handlers
      * @return void
      */

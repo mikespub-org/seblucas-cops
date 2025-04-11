@@ -21,4 +21,4 @@ $config['cops_mail_configuration'] = [
 Config::load($config);
 
 // initialize framework with routes etc. for tests
-Framework::init();
+Framework::getInstance()->getContext();
