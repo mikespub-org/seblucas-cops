@@ -17,8 +17,10 @@ use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\UriGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Exception;
 
 #[RequiresMethod('\Symfony\Component\Routing\Router', '__construct')]
@@ -264,5 +266,39 @@ class RoutingTest extends TestCase
         }
         $expected = $routeUrl;
         $this->assertEquals($expected, $prefix . $result);
+    }
+
+    public function testRoutingContext(): void
+    {
+        $routing = new Routing();
+        $router = $routing->getRouter();
+
+        $route = "page-author";
+        $params = ["id" => "1", "title" => "Title"];
+
+        $expected = "/authors/1/Title";
+        $result = $router->generate($route, $params);
+        $this->assertEquals($expected, $result);
+
+        $expected = "http://localhost/authors/1/Title";
+        $result = $router->getGenerator()->generate($route, $params, UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->assertEquals($expected, $result);
+
+        // set request context for symfony routing
+        $request = new Request();
+        $context = $routing->context($request);
+        $router->setContext($context);
+
+        $expected = "/vendor/bin/index.php";
+        $result = $context->getBaseUrl();
+        $this->assertEquals($expected, $result);
+
+        $expected = "/vendor/bin/index.php/authors/1/Title";
+        $result = $router->generate($route, $params);
+        $this->assertEquals($expected, $result);
+
+        $expected = "http://localhost/vendor/bin/index.php/authors/1/Title";
+        $result = $router->getGenerator()->generate($route, $params, UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->assertEquals($expected, $result);
     }
 }

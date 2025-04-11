@@ -100,16 +100,21 @@ class Routing implements RouterInterface
     }
 
     /**
-     * Summary of context - @todo
+     * Summary of context - @todo not used here
      * @param mixed $request
      * @return RequestContext
      */
     public function context($request)
     {
         $baseUrl = UriGenerator::absolute('');
+        // @see RoutingTest::testRoutingContext() = vendor/bin/index.php
+        if (!str_starts_with($baseUrl, '/')) {
+            $baseUrl = '/' . $baseUrl;
+        }
         // @todo get scheme and host - see Symfony\Request::getSchemeAndHttpHost()
         //$context = new RequestContext('/index.php', 'GET', 'localhost', 'http', 80, 443, '/', '');
-        $context = new RequestContext($baseUrl, $request->method(), 'localhost', 'http', 80, 443, $request->path, $request->query());
+        $queryString = http_build_query($request->urlParams);
+        $context = new RequestContext($baseUrl, $request->method(), 'localhost', 'http', 80, 443, $request->path(), $queryString);
         //$context->fromRequest($request);
         return $context;
     }
