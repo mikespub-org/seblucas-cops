@@ -626,7 +626,7 @@ $config['cops_opds_filter_limit'] = '8';
 $config['cops_download_page'] = [];
 
 /*
- * Save to disk template for book filenames inside the .zip download file - @todo
+ * Save to disk template for book filenames inside the .zip download file
  */
 $config['cops_download_template'] = '{author}{series:| - | #}{series_index} - {title}';
 

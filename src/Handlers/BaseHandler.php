@@ -102,6 +102,7 @@ abstract class BaseHandler implements HasContextInterface
 
     /**
      * Summary of findRouteName - @todo adapt to actual routes for each handler
+     * @deprecated 3.5.7 use HasRouteTrait::getRoute() or BaseHandler::route() instead
      * @param array<mixed> $params
      * @return string
      */

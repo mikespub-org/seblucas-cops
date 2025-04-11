@@ -63,13 +63,10 @@ class RouteLoader extends Loader
             if (!empty($options)) {
                 $route->setOptions($options);
             }
-            //$name = self::getPathName($path);
             if (!empty($seen[$name])) {
                 throw new Exception('Duplicate route name ' . $name . ' for ' . $path);
             }
             $seen[$name] = $path;
-            // @todo simplify if only one path for handler, e.g. calres-db-alg-digest
-            //echo "'$name' => ['" . $route->getPath() . "', " . json_encode($route->getDefaults()) . ", " . json_encode($route->getRequirements()) . "],\n";
             $routes->add($name, $route);
         }
         return $routes;
@@ -106,6 +103,7 @@ class RouteLoader extends Loader
 
     /**
      * Summary of getPathName
+     * @deprecated 3.4.2 use route names from Route::getRoutes()
      * @param string $path
      * @return string
      */

@@ -4,12 +4,10 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
-use SebLucas\Cops\Output\Response;
 
 /**
- * Manages handler registration and creation in COPS - @todo
+ * Manages handler registration and creation in COPS
  */
 class HandlerManager implements HasContextInterface
 {
@@ -129,12 +127,10 @@ class HandlerManager implements HasContextInterface
 
     /**
      * Create handler instance by name
-     * @todo use RequestContext to create handler
      * @param string|class-string<BaseHandler> $name Handler name or class
-     * @param Request|null $request Optional request for error handling
      * @throws \RuntimeException
      */
-    public function createHandler(string $name, ?Request $request = null): BaseHandler
+    public function createHandler(string $name): BaseHandler
     {
         // Get handler class by name
         $handlerClass = $this->getHandlerClass($name);

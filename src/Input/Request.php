@@ -485,7 +485,8 @@ class Request
 
     /**
      * Get handler class corresponding to _handler param
-     * @todo move to RequestContext
+     * @todo move to RequestContext?
+     * @see RequestContext::resolveHandlerName()
      * @return class-string<BaseHandler>
      */
     public function getHandler()
@@ -622,7 +623,7 @@ class Request
     {
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
         if (!empty($handler)) {
-            // @todo double-check we use an actual class-string here
+            // make sure we have an actual class-string here
             $handler = Route::getHandler($handler);
             $params[Route::HANDLER_PARAM] ??= $handler;
         }

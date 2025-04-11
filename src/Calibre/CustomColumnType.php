@@ -279,7 +279,7 @@ abstract class CustomColumnType
      * Format: tag_browser_custom_column_2(id,value,count,avg_rating,sort)
      * @param int $n
      * @param ?string $sort
-     * @param int|bool|null $expand include all child categories at all levels or only direct children - @todo
+     * @param int|bool|null $expand include all child categories at all levels or only direct children
      * @return array<Entry>
      */
     public function browseAllCustomValues($n = -1, $sort = null, $expand = false)

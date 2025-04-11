@@ -138,6 +138,9 @@ class RequestContext
         return 'html';
     }
 
+    /**
+     * @deprecated 3.5.2 not used here
+     */
     protected function normalizeHandlerName(string $name): string
     {
         // Convert handler class name to short name if needed - @todo not used here

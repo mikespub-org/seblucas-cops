@@ -56,7 +56,7 @@ class QueueBasedHandler extends BaseHandler
     public function handle($request)
     {
         if (empty($this->queue)) {
-            // @todo most handlers already finish sending response
+            // return Response if it's not already sent
             return $this->handler->handle($request);
         }
         // @todo support other __invoke, callable etc. middleware
