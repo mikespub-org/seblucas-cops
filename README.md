@@ -64,7 +64,7 @@ Notice: for a first-time installation, you need to copy *[config/local.php.examp
 
 COPS stands for Calibre OPDS (and HTML) Php Server.
 
-See : [COPS's home](http://blog.slucas.fr/en/oss/calibre-opds-php-server) for more details.
+See : [COPS's home](https://blog.slucas.fr/en/oss/calibre-opds-php-server) for more details.
 
 Don't forget to check the [Wiki](https://github.com/seblucas/cops/wiki).
 
@@ -167,19 +167,19 @@ I only have one limit (I may have more but that one is the worse) : COPS' goal i
 # Credits
 
  * Locale message handling is inspired of https://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php
- * str_format function come from http://tmont.com/blargh/2010/1/string-format-in-php
+ * str_format function come from https://tmont.com/blargh/2010/1/string-format-in-php
  * All icons come from Font Awesome : https://github.com/FortAwesome/Font-Awesome
- * The unofficial OPDS validator : http://opds-validator.appspot.com/
+ * The unofficial OPDS validator : https://opds-validator.appspot.com/
  * Thanks to all testers, translators and contributors.
- * Feed icons made by Freepik from Flaticon website licensed under Creative Commons BY 3.0 http://www.flaticon.com and http://www.freepik.com
+ * Feed icons made by Freepik from Flaticon website licensed under Creative Commons BY 3.0 https://www.flaticon.com and https://www.freepik.com
  * A huge thanks to Jetbrains for supporting COPS by providing a set of free licenses to their products for several years now!
 
 External libraries used :
- * JQuery : http://jquery.com/
- * Magnific Popup : http://dimsemenov.com/plugins/magnific-popup/
+ * JQuery : https://jquery.com/
+ * Magnific Popup : https://dimsemenov.com/plugins/magnific-popup/
  * Php-epub-meta : https://github.com/splitbrain/php-epub-meta with some modification by me (https://github.com/seblucas/php-epub-meta)
- * TbsZip : http://www.tinybutstrong.com/apps/tbszip/tbszip_help.html
- * DoT.js : http://olado.github.io/doT/index.html
+ * TbsZip : https://www.tinybutstrong.com/apps/tbszip/tbszip_help.html
+ * DoT.js : https://olado.github.io/doT/index.html
  * PHPMailer : https://github.com/PHPMailer/PHPMailer
  * js-lru : https://github.com/rsms/js-lru
 

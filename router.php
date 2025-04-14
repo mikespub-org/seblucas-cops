@@ -6,7 +6,7 @@
  *
  * $ php -S 0.0.0.0:8080 router.php
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */
