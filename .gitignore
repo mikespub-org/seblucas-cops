@@ -19,3 +19,4 @@
 .devcontainer
 /cache/*.php
 rector.php
+.vscode/
