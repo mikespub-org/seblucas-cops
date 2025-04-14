@@ -791,7 +791,7 @@ class Book
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?';
         $result = Database::query($query, [$bookId], $database);
-        while ($post = $result->fetchObject()) {
+        if ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             return $book;
         }
@@ -816,7 +816,7 @@ where data.book = books.id and data.id = ?';
             . "')";
         }
         $result = Database::query($query, [$dataId], $database);
-        while ($post = $result->fetchObject()) {
+        if ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             $data = new Data($post, $book);
             $data->id = $dataId;

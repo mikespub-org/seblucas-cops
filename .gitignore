@@ -20,3 +20,4 @@
 /cache/*.php
 rector.php
 .vscode/
+.sonarcloud.properties

@@ -412,8 +412,8 @@ class Database
         $totalResult = -1;
 
         if (Normalizer::useNormAndUp()) {
-            $query = preg_replace("/upper/", "normAndUp", $query);
-            $columns = preg_replace("/upper/", "normAndUp", $columns);
+            $query = str_replace("upper", "normAndUp", $query);
+            $columns = str_replace("upper", "normAndUp", $columns);
         }
 
         if (is_null($numberPerPage)) {
@@ -451,8 +451,8 @@ class Database
             array_push(self::$queries, [$query, $columns, $filter]);
         }
         if (Normalizer::useNormAndUp()) {
-            $query = preg_replace("/upper/", "normAndUp", $query);
-            $columns = preg_replace("/upper/", "normAndUp", $columns);
+            $query = str_replace("upper", "normAndUp", $query);
+            $columns = str_replace("upper", "normAndUp", $columns);
         }
 
         if (is_null($numberPerPage)) {

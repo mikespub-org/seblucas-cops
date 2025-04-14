@@ -215,7 +215,7 @@ class BaseList
     {
         $filterString = 'upper(' . $this->getTable() . '.' . $this->getSort() . ') like ?';
         if (Normalizer::useNormAndUp()) {
-            $filterString = preg_replace("/upper/", "normAndUp", $filterString);
+            $filterString = str_replace("upper", "normAndUp", $filterString);
         }
         $param =  $letter . "%";
         $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);

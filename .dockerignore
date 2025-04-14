@@ -1,5 +1,6 @@
 .git/
 *.zip
+config/local.php
 tests/
 # keep the test database in the image here
 !tests/BaseWithSomeBooks/
@@ -13,6 +14,7 @@ docker/
 docker-compose*.yaml
 # remove development files
 .vscode/
+.sonarcloud.properties
 .yarn/
 #!.yarn/releases
 #!.yarn/plugins
