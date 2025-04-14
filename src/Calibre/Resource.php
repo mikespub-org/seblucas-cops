@@ -10,7 +10,7 @@
  *     meta = ./.calnotes/resources/di/alg-digest.metadata
  *     link = calres://alg/digest?placement=uuid4
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */

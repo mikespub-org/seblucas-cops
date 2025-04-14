@@ -3,7 +3,7 @@
 /**
  * EPub Loader config
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     Didier Corbière <contact@atoll-digital-library.org>
  * @author     mikespub
  */

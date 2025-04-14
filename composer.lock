@@ -204,10 +204,10 @@
         },
         {
             "name": "npm-asset/babel--runtime",
-            "version": "7.26.9",
+            "version": "7.27.0",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.26.9.tgz"
+                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.27.0.tgz"
             },
             "require": {
                 "npm-asset/regenerator-runtime": ">=0.14.0,<0.15.0"

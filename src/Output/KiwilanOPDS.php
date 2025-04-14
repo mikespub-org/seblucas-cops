@@ -3,7 +3,7 @@
 /**
  * COPS (Calibre OPDS PHP Server) class file
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org//licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */
@@ -64,7 +64,7 @@ class KiwilanOPDS
         return new OpdsConfig(
             name: 'Calibre',  // CopsConfig::get('title_default')
             author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
-            authorUrl: CopsConfig::get('author_uri') ?: 'http://blog.slucas.fr',
+            authorUrl: CopsConfig::get('author_uri') ?: 'https://blog.slucas.fr',
             iconUrl: CopsConfig::get('icon'),
             startUrl: $this->getRoute(self::ROUTE_FEED),
             // @todo php-opds uses this to identify search (not page=query) and adds '?q=' without checking for existing ? params

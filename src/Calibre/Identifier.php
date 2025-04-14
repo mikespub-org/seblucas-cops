@@ -3,7 +3,7 @@
 /**
  * COPS (Calibre OPDS PHP Server) class file
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     SenorSmartyPants <senorsmartypants@gmail.com>
  * @author     mikespub
  */
@@ -100,7 +100,7 @@ class Identifier extends Base
             $this->uri = sprintf("https://portal.issn.org/resource/ISSN/%s", $this->val);
         } elseif ($this->type == "isfdb") {
             $this->formattedType = "ISFDB";
-            $this->uri = sprintf("http://www.isfdb.org/cgi-bin/pl.cgi?%s", $this->val);
+            $this->uri = sprintf("https://www.isfdb.org/cgi-bin/pl.cgi?%s", $this->val);
         } elseif ($this->type == "lubimyczytac") {
             $this->formattedType = "Lubimyczytac";
             $this->uri = sprintf("https://lubimyczytac.pl/ksiazka/%s/ksiazka", $this->val);

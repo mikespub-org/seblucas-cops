@@ -10,7 +10,7 @@ Client-side rendering is possible with Twig.js as well, but this hasn't been ful
 
 References:
 - doT:
-  * Client-side: See http://olado.github.io/doT/index.html for details of doT.js
+  * Client-side: See https://olado.github.io/doT/index.html for details of doT.js
   * Server-side: See https://github.com/seblucas/doT-php for doT-php restrictions
 - Twig:
   * Server-side: see https://twig.symfony.com/doc/3.x/ for Twig documentation

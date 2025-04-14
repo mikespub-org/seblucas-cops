@@ -7,7 +7,7 @@
  *
  * Keep as fallback endpoint for any CheckHandler issues for now
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */
@@ -265,7 +265,7 @@ foreach (Database::getDbList() as $name => $database) {
 Please check
 <ul>
 <li>Value of $config[\'calibre_directory\'] in config/local.php <strong>(Does it end with a \'/\'?)</strong></li>
-<li>Value of <a href="http://php.net/manual/en/ini.core.php#ini.open-basedir">open_basedir</a> in your php.ini</li>
+<li>Value of <a href="https://php.net/manual/en/ini.core.php#ini.open-basedir">open_basedir</a> in your php.ini</li>
 <li>The access rights of the Calibre Database</li>
 <li>Synology users please read <a href="https://github.com/seblucas/cops/wiki/Howto---Synology">this</a></li>
 <li>Note that hosting your Calibre Library in /home is almost impossible due to access rights restriction</li>

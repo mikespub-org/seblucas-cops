@@ -3,7 +3,7 @@
 /**
  * COPS (Calibre OPDS PHP Server) class file
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org//licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */
@@ -118,7 +118,7 @@ class Page
         $config ??= new Config();
         $this->favicon = Config::get('icon');
         $this->authorName = Config::get('author_name') ?: 'Sébastien Lucas';
-        $this->authorUri = Config::get('author_uri') ?: 'http://blog.slucas.fr';
+        $this->authorUri = Config::get('author_uri') ?: 'https://blog.slucas.fr';
         $this->authorEmail = Config::get('author_email') ?: 'sebastien@slucas.fr';
     }
 

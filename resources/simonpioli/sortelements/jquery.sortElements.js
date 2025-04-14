@@ -1,7 +1,7 @@
 /**
 * jQuery.fn.sortElements
 * --------------
-* @author James Padolsey (http://james.padolsey.com)
+* @author James Padolsey (https://j11y.io/)
 * @version 0.11
 * @updated 18-MAR-2010
 * --------------

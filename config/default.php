@@ -5,7 +5,7 @@
  * Settings can be overridden in config/local.php and
  * optional config/local.{remote_user}.php
  *
- * @license    GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
+ * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  * @author     mikespub
  */
@@ -97,7 +97,7 @@ $config['cops_author_name'] = 'Sébastien Lucas';
 /*
  * Catalog's author uri
  */
-$config['cops_author_uri'] = 'http://blog.slucas.fr';
+$config['cops_author_uri'] = 'https://blog.slucas.fr';
 
 /*
  * Catalog's author email
@@ -151,7 +151,7 @@ $config['cops_show_icons'] = '1';
 /*
  * Default timezone
  * Check following link for other timezones :
- * http://www.php.net/manual/en/timezones.php
+ * https://www.php.net/manual/en/timezones.php
  */
 $config['default_timezone'] = 'UTC';
 
