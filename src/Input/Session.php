@@ -56,7 +56,10 @@ class Session
         if ($expires > time()) {
             return false;
         }
-        $result = session_regenerate_id();
+        if (!function_exists('\session_regenerate_id')) {
+            return false;
+        }
+        $result = \session_regenerate_id();
         if ($result) {
             $this->set('expires', time() + intdiv($this->timeout(), 2));
         }
@@ -65,11 +68,14 @@ class Session
 
     public function start(): bool
     {
-        $status = session_status();
+        if (!function_exists('\session_status')) {
+            return false;
+        }
+        $status = \session_status();
         $started = match ($status) {
             PHP_SESSION_ACTIVE => true,
             PHP_SESSION_DISABLED => false,
-            PHP_SESSION_NONE => session_start(),
+            PHP_SESSION_NONE => \session_start(),
         };
         if ($started) {
             $this->expires();
@@ -79,20 +85,26 @@ class Session
 
     public function restore(string $id): bool
     {
-        session_id($id);
+        if (!function_exists('\session_id')) {
+            return false;
+        }
+        \session_id($id);
         return $this->start();
     }
 
     public function regenerate(bool $destroy = false): bool
     {
+        if (!function_exists('\session_regenerate_id')) {
+            return false;
+        }
         $this->start();
-        if (PHP_SESSION_ACTIVE !== session_status()) {
+        if (PHP_SESSION_ACTIVE !== \session_status()) {
             return false;
         }
         if ($destroy) {
             $_SESSION = [];
         }
-        $result = session_regenerate_id();
+        $result = \session_regenerate_id();
         if ($result) {
             $this->set('expires', time() + intdiv($this->timeout(), 2));
         }
