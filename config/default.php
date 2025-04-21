@@ -680,6 +680,16 @@ $config['cops_epub_reader'] = 'monocle';
 $config['cops_customize'] = [];
 
 /*
+ * Enable admin features in COPS - @todo
+ * Supported values:
+ *     false = disable admin features (default)
+ *     true = enable admin features for everyone
+ *     "xxx" = enable admin features for authenticated user "xxx"
+ *     ["xxx", "yyy"] = enable admin features for authenticated users "xxx" and "yyy"
+ */
+$config['cops_enable_admin'] = false;
+
+/*
  * Configure epubjs-reader as used in templates/epubjs-reader.html
  * This is a javascript object stored as text string for the template
  *

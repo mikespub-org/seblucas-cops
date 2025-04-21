@@ -14,7 +14,9 @@ x.x.x - TODO
 
 3.x.x - 2025xxxx 
   * Changes in config/default.php file:
+    - new $config['cops_enable_admin'] to enable admin features in COPS (TODO)
     - new $config['cops_customize'] for default customize values per user (TODO)
+  * Start admin handler to enable special server features (TODO)
   * Experiment with default customize values per user (TODO)
   * Add session expires and regenerate session id if needed
   * Pass request context to graphql executor instead of request
