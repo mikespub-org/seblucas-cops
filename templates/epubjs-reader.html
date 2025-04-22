@@ -21,6 +21,7 @@
 
 	<!-- Reader -->
 	<script type="module">
+		// Not supported for Javascript ES5 - use monocle instead
 		import { Reader } from "{{=it.dist}}/js/epubreader.min.js?v={{=it.version}}";
 		// string containing the initial book path - link / to get content from file /{component}
 		const path = "{{=it.link}}";

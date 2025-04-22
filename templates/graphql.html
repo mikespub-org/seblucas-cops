@@ -64,6 +64,7 @@
     <div id="graphiql">Loading...</div>
     <!-- in pseudo doT syntax, but only this link is supported -->
     <script>
+      // Not supported for Javascript ES5
       const root = ReactDOM.createRoot(document.getElementById('graphiql'));
       const fetcher = GraphiQL.createFetcher({
         url: '{{=it.link}}',

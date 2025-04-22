@@ -36,14 +36,20 @@
         </div>
         </form>
         <script type="text/javascript">
-            const form = document.getElementById('customForm');
-            const btn = document.getElementById('customClearButton');
+            var form = document.getElementById('customForm'); // Replaced const with var
+            var btn = document.getElementById('customClearButton');
             btn.addEventListener("click", function () {
                 var boxes = form.getElementsByTagName('input'); // Replaced let with var
                 for (var i = 0; i < boxes.length; i++) { // Replaced for...of with traditional for loop
                     var box = boxes[i];
                     if (box.type == 'checkbox') {
                         box.checked = false;
+                        // update cookies here too
+                        if (box.name.indexOf('[]') !== -1) {
+                            updateCookieFromCheckboxGroup(box);
+                        } else {
+                            updateCookieFromCheckbox(box);
+                        }
                     } else {
                         // ... @todo
                     }
