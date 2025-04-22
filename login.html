@@ -71,12 +71,11 @@
 
               $.ajax(
                 {
-                  'password' : password,
-                  'username' : username,
-                  'url'      : 'index.php',
-                  'type'     : 'GET',
-                  'success'  : function(){ window.location = 'index.php'; },
-                  'error'    : function(){ alert('Bad Login Details');},
+                  url      : 'index.php', // Moved 'url' to the correct position
+                  type     : 'GET',
+                  data     : { username: username, password: password }, // Replaced shorthand with explicit 'data' object
+                  success  : function(){ window.location = 'index.php'; },
+                  error    : function(){ alert('Bad Login Details');},
                 }
               );
 

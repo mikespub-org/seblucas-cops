@@ -6,11 +6,13 @@ function postRefresh()
     if (elmnt) elmnt.scrollIntoView();
 }
 
-function initiateTwig(url, theme, templates = 'templates') {
+// Refactored to replace ES6+ features with ES5-compatible syntax
+function initiateTwig(url, theme, templates) {
+    templates = typeof templates !== 'undefined' ? templates : 'templates';
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
 
-    let template = Twig.twig({
+    var template = Twig.twig({
         id: 'page',
         href: templates + '/' + theme + '/page.html',
         async: false

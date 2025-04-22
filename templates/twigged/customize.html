@@ -39,8 +39,9 @@
             const form = document.getElementById('customForm');
             const btn = document.getElementById('customClearButton');
             btn.addEventListener("click", function () {
-                let boxes = form.getElementsByTagName('input');
-                for (let box of boxes) {
+                var boxes = form.getElementsByTagName('input'); // Replaced let with var
+                for (var i = 0; i < boxes.length; i++) { // Replaced for...of with traditional for loop
+                    var box = boxes[i];
                     if (box.type == 'checkbox') {
                         box.checked = false;
                     } else {
