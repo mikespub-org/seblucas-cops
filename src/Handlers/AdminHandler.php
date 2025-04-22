@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use JsonException;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
@@ -173,25 +174,37 @@ class AdminHandler extends BaseHandler
                 continue;
             }
             if (!is_string($default[$key])) {
-                $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                if ($value === "") {
+                    $value = $default[$key];
+                } else {
+                    try {
+                        $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+                    } catch (JsonException) {
+                        $changes[$key] = "Invalid JSON value!";
+                        $value = $local[$key] ?? $default[$key];
+                        // send error here
+                    }
+                }
             }
             // skip unchanged others
             if ($value === $default[$key] && !array_key_exists($key, $local)) {
                 continue;
             }
-            if ($value !== $local[$key]) {
+            if (!array_key_exists($key, $local) || $value !== $local[$key]) {
                 $changes[$key] = $value;
             }
             // update local values based on posted
             $local[$key] = $value;
         }
+        $original = [];
         $updated = [];
         foreach ($local as $key => $value) {
-            if (!array_key_exists($key, $default) || $default[$key] !== $value) {
+            if (array_key_exists($key, $default) && $default[$key] === $value) {
+                $original[$key] = $value;
+            } else {
                 $updated[$key] = $value;
             }
         }
-        $original = array_diff_assoc($local, $updated);
         $others = array_filter($default, function ($key) use ($updated, $original) {
             return !array_key_exists($key, $updated) && !array_key_exists($key, $original);
         }, ARRAY_FILTER_USE_KEY);
