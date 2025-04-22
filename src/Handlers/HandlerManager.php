@@ -60,6 +60,7 @@ class HandlerManager implements HasContextInterface
             "tables" => TableHandler::class,
             "error" => ErrorHandler::class,
             "phpunit" => TestHandler::class,
+            "admin" => AdminHandler::class,
             // ... other default handlers
         ];
     }

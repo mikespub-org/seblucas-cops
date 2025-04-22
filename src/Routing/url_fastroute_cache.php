@@ -568,6 +568,47 @@
           '_name' => 'test',
         ),
       ),
+      '/admin/clearcache' => 
+      array (
+        0 => 
+        array (
+          'action' => 'clearcache',
+          '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+          '_route' => 'admin-clearcache',
+        ),
+        1 => 
+        array (
+          '_route' => '/admin/clearcache',
+          '_name' => 'admin-clearcache',
+        ),
+      ),
+      '/admin/config' => 
+      array (
+        0 => 
+        array (
+          'action' => 'config',
+          '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+          '_route' => 'admin-config',
+        ),
+        1 => 
+        array (
+          '_route' => '/admin/config',
+          '_name' => 'admin-config',
+        ),
+      ),
+      '/admin' => 
+      array (
+        0 => 
+        array (
+          '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+          '_route' => 'admin',
+        ),
+        1 => 
+        array (
+          '_route' => '/admin',
+          '_name' => 'admin',
+        ),
+      ),
     ),
     'POST' => 
     array (
@@ -621,6 +662,20 @@
         array (
           '_route' => '/graphql',
           '_name' => 'graphql',
+        ),
+      ),
+      '/admin/config' => 
+      array (
+        0 => 
+        array (
+          'action' => 'config',
+          '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+          '_route' => 'admin-config',
+        ),
+        1 => 
+        array (
+          '_route' => '/admin/config',
+          '_name' => 'admin-config',
         ),
       ),
     ),
@@ -1198,7 +1253,7 @@
       ),
       1 => 
       array (
-        'regex' => '~^(?|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:b)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:e)|/read/(\\d+)/(\\d+)(*MARK:f)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:g)|/restapi/databases/([^/]+)/([^/]+)(*MARK:h)|/restapi/databases/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)/([^/]+)(*MARK:k)|/restapi/notes/([^/]+)(*MARK:l)|/restapi/preferences/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:n)|/restapi/annotations/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:q)|/restapi/metadata/([^/]+)(*MARK:r)|/restapi/(.*)(*MARK:s)|/check/(.*)(*MARK:t)|/opds/(\\w+)(*MARK:u)|/opds/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:w)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:x)|/loader/([^/]+)/(\\d+)(*MARK:y)|/loader/([^/]+)/(*MARK:z)|/loader/([^/]+)(*MARK:aa)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ac)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ad)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ae))$~',
+        'regex' => '~^(?|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:b)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:e)|/read/(\\d+)/(\\d+)(*MARK:f)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:g)|/restapi/databases/([^/]+)/([^/]+)(*MARK:h)|/restapi/databases/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)/([^/]+)(*MARK:k)|/restapi/notes/([^/]+)(*MARK:l)|/restapi/preferences/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:n)|/restapi/annotations/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:q)|/restapi/metadata/([^/]+)(*MARK:r)|/restapi/(.*)(*MARK:s)|/check/(.*)(*MARK:t)|/opds/(\\w+)(*MARK:u)|/opds/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:w)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:x)|/loader/([^/]+)/(\\d+)(*MARK:y)|/loader/([^/]+)/(*MARK:z)|/loader/([^/]+)(*MARK:aa)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ac)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ad)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ae)|/admin/(.*)(*MARK:af))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -1777,6 +1832,50 @@
             array (
               '_route' => '/zipfs/{db:\\d+}/{data:\\d+}/{comp:.+}',
               '_name' => 'zipfs',
+            ),
+          ),
+          'af' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+              '_route' => 'admin-action',
+            ),
+            1 => 
+            array (
+              'action' => 'action',
+            ),
+            2 => 
+            array (
+              '_route' => '/admin/{action:.*}',
+              '_name' => 'admin-action',
+            ),
+          ),
+        ),
+      ),
+    ),
+    'POST' => 
+    array (
+      0 => 
+      array (
+        'regex' => '~^(?|/admin/(.*)(*MARK:a))$~',
+        'routeMap' => 
+        array (
+          'a' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+              '_route' => 'admin-action',
+            ),
+            1 => 
+            array (
+              'action' => 'action',
+            ),
+            2 => 
+            array (
+              '_route' => '/admin/{action:.*}',
+              '_name' => 'admin-action',
             ),
           ),
         ),
@@ -3169,6 +3268,39 @@
       0 => 
       array (
         0 => '/test',
+      ),
+    ),
+    'admin-clearcache' => 
+    array (
+      0 => 
+      array (
+        0 => '/admin/clearcache',
+      ),
+    ),
+    'admin-config' => 
+    array (
+      0 => 
+      array (
+        0 => '/admin/config',
+      ),
+    ),
+    'admin-action' => 
+    array (
+      0 => 
+      array (
+        0 => '/admin/',
+        1 => 
+        array (
+          0 => 'action',
+          1 => '.*',
+        ),
+      ),
+    ),
+    'admin' => 
+    array (
+      0 => 
+      array (
+        0 => '/admin',
       ),
     ),
   ),

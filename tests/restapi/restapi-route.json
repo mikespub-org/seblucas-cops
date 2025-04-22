@@ -1520,6 +1520,66 @@
                 ],
                 []
             ]
+        },
+        {
+            "name": "admin-clearcache",
+            "route": [
+                "/admin/clearcache",
+                {
+                    "action": "clearcache",
+                    "_handler": "SebLucas\\Cops\\Handlers\\AdminHandler",
+                    "_route": "admin-clearcache"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "admin-config",
+            "route": [
+                "/admin/config",
+                {
+                    "action": "config",
+                    "_handler": "SebLucas\\Cops\\Handlers\\AdminHandler",
+                    "_route": "admin-config"
+                },
+                [
+                    "GET",
+                    "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "admin-action",
+            "route": [
+                "/admin/{action:.*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\AdminHandler",
+                    "_route": "admin-action"
+                },
+                [
+                    "GET",
+                    "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "admin",
+            "route": [
+                "/admin",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\AdminHandler",
+                    "_route": "admin"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
         }
     ]
 }

@@ -23,6 +23,10 @@ use Closure;
  */
 class Response
 {
+    public const MIME_TYPE_HTML = 'text/html;charset=utf-8';
+    public const MIME_TYPE_JSON = 'application/json;charset=utf-8';
+    public const MIME_TYPE_TEXT = 'text/plain;charset=utf-8';
+    public const MIME_TYPE_XML = 'application/xml;charset=utf-8';
     public const SYMFONY_RESPONSE = '\Symfony\Component\HttpFoundation\Response';
 
     /** @var class-string */

@@ -66,7 +66,7 @@ class HtmlHandler extends PageHandler
             $request->setSession($session);
         }
 
-        $response = new Response('text/html;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_HTML);
 
         $html = new HtmlRenderer($request, $response);
 

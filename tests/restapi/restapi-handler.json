@@ -656,6 +656,38 @@
                     "/test"
                 ]
             }
+        },
+        {
+            "handler": "admin",
+            "routes": {
+                "admin-clearcache": [
+                    "/admin/clearcache",
+                    {
+                        "action": "clearcache"
+                    }
+                ],
+                "admin-config": [
+                    "/admin/config",
+                    {
+                        "action": "config"
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
+                ],
+                "admin-action": [
+                    "/admin/{action:.*}",
+                    [],
+                    [
+                        "GET",
+                        "POST"
+                    ]
+                ],
+                "admin": [
+                    "/admin"
+                ]
+            }
         }
     ]
 }

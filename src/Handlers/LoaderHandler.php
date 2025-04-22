@@ -121,7 +121,7 @@ class LoaderHandler extends BaseHandler
         $templateDir = $gConfig['template_dir'] ?? null;
         $template = null;
 
-        $response = new Response('text/html;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent($handler->output($result, $templateDir, $template));
     }
 

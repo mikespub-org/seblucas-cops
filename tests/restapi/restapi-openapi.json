@@ -3125,6 +3125,138 @@
                     }
                 }
             }
+        },
+        "/admin/clearcache": {
+            "get": {
+                "summary": "Route to admin handler with action=clearcache - with api key",
+                "operationId": "get_admin-clearcache",
+                "tags": [
+                    "admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of admin handler with action=clearcache"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/config": {
+            "get": {
+                "summary": "Route to admin handler with action=config - with api key",
+                "operationId": "get_admin-config",
+                "tags": [
+                    "admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of admin handler with action=config"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to admin handler with action=config - with api key",
+                "operationId": "post_admin-config",
+                "tags": [
+                    "admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of admin handler with action=config"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin/{action}": {
+            "get": {
+                "summary": "Route to admin handler with action={action} - with api key",
+                "operationId": "get_admin-action",
+                "tags": [
+                    "admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of admin handler with action={action}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to admin handler with action={action} - with api key",
+                "operationId": "post_admin-action",
+                "tags": [
+                    "admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of admin handler with action={action}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/admin": {
+            "get": {
+                "summary": "Route to admin handler - with api key",
+                "operationId": "get_admin",
+                "tags": [
+                    "admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of admin handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
         }
     }
 }

@@ -68,7 +68,7 @@ class FeedHandler extends BaseHandler
             }
         }
 
-        $response = new Response('application/xml;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_XML);
 
         $OPDSRender = new OpdsRenderer($request, $response);
 

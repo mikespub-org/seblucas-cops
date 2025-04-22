@@ -127,7 +127,7 @@ class RestApiHandler extends BaseHandler
             return $this->getSwaggerUI();
         }
 
-        $response = new Response('application/json;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_JSON);
 
         $apiProvider = new RestApiProvider($request, $response);
 
@@ -151,7 +151,7 @@ class RestApiHandler extends BaseHandler
         $data = ['link' => self::link([self::RESOURCE => 'openapi'])];
         $template = dirname(__DIR__, 2) . '/templates/restapi.html';
 
-        $response = new Response('text/html;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(Format::template($data, $template));
     }
 }

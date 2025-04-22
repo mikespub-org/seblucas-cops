@@ -77,7 +77,7 @@ class CheckHandler extends BaseHandler
 
         $template = dirname(__DIR__, 2) . '/templates/checkconfig.html';
 
-        $response = new Response('text/html;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(Format::template($data, $template));
     }
 
@@ -343,7 +343,7 @@ Please check
         $request->serverParams = ['HTTP_REDACTED' => true];
         $message = var_export($request, true);
 
-        $response = new Response('text/plain;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_TEXT);
         return $response->setContent($message);
     }
 }

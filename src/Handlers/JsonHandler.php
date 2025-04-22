@@ -40,7 +40,7 @@ class JsonHandler extends PageHandler
             $session->start();
             $request->setSession($session);
         }
-        $response = new Response('application/json;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_JSON);
 
         $json = new JsonRenderer($request, $response);
 

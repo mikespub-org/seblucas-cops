@@ -21,6 +21,7 @@ $handlers = [
   'tables' => 'SebLucas\\Cops\\Handlers\\TableHandler',
   'error' => 'SebLucas\\Cops\\Handlers\\ErrorHandler',
   'phpunit' => 'SebLucas\\Cops\\Handlers\\TestHandler',
+  'admin' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
 ];
 
 $static = [
@@ -67,6 +68,9 @@ $static = [
   '/graphql' => 'graphql',
   '/tables' => 'tables',
   '/test' => 'test',
+  '/admin/clearcache' => 'admin-clearcache',
+  '/admin/config' => 'admin-config',
+  '/admin' => 'admin',
 ];
 
 $routes = [
@@ -1265,6 +1269,54 @@ $routes = [
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\TestHandler',
       '_route' => 'test',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'admin-clearcache' => [
+    '/admin/clearcache',
+    [
+      'action' => 'clearcache',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+      '_route' => 'admin-clearcache',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'admin-config' => [
+    '/admin/config',
+    [
+      'action' => 'config',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+      '_route' => 'admin-config',
+    ],
+    [
+      'GET',
+      'POST',
+    ],
+    [],
+  ],
+  'admin-action' => [
+    '/admin/{action:.*}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+      '_route' => 'admin-action',
+    ],
+    [
+      'GET',
+      'POST',
+    ],
+    [],
+  ],
+  'admin' => [
+    '/admin',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+      '_route' => 'admin',
     ],
     [
       'GET',

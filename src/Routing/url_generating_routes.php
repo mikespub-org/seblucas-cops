@@ -109,4 +109,8 @@ return [
     'graphql' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\GraphQLHandler', '_route' => 'graphql'], [], [['text', '/graphql']], [], [], []],
     'tables' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler', '_route' => 'tables'], [], [['text', '/tables']], [], [], []],
     'test' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\TestHandler', '_route' => 'test'], [], [['text', '/test']], [], [], []],
+    'admin-clearcache' => [[], ['action' => 'clearcache', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-clearcache'], [], [['text', '/admin/clearcache']], [], [], []],
+    'admin-config' => [[], ['action' => 'config', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-config'], [], [['text', '/admin/config']], [], [], []],
+    'admin-action' => [['action'], ['_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-action'], ['action' => '.*'], [['variable', '/', '.*', 'action'], ['text', '/admin']], [], [], []],
+    'admin' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin'], [], [['text', '/admin']], [], [], []],
 ];

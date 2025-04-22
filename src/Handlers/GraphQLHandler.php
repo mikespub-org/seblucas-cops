@@ -57,7 +57,7 @@ class GraphQLHandler extends BaseHandler
         $executor = new GraphQLExecutor();
         $result = $executor->runQuery($this->getContext());
 
-        $response = new Response('application/json;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_JSON);
         return $response->setContent(json_encode($result));
     }
 
@@ -70,7 +70,7 @@ class GraphQLHandler extends BaseHandler
         $data = ['link' => self::link()];
         $template = dirname(__DIR__, 2) . '/templates/graphql.html';
 
-        $response = new Response('text/html;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(OutputFormat::template($data, $template));
     }
 }

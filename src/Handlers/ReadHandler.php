@@ -42,7 +42,7 @@ class ReadHandler extends BaseHandler
         $version = $request->get('version', Config::get('epub_reader', 'monocle'));
         $database = $request->database();
 
-        $response = new Response('text/html;charset=utf-8');
+        $response = new Response(Response::MIME_TYPE_HTML);
 
         $reader = new EPubReader($request, $response);
 
