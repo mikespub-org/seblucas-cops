@@ -76,12 +76,19 @@ class AdminHandler extends BaseHandler
         [$count, $size] = $this->getCacheSize($cachePath);
         $size = $size > 0 ? sprintf('%.3f', $size / 1024 / 1024) : $size;
         $updated = $this->getUpdatedConfig();
+        $writable = $this->isLocalConfigWritable();
+
         $content = 'Admin - TODO';
         $content .= '<ol>';
         $content .= '<li><a href="./admin/clearcache">Clear Thumbnail Cache</a> with ' . $count . ' files (' . $size . ' MB)</li>';
-        $content .= '<li><a href="./admin/config">Edit Local Config</a> with ' . count($updated) . ' modified config settings</li>';
+        if (!$writable) {
+            $content .= '<li><a href="./admin/config">Edit Local Config</a> with ' . count($updated) . ' modified config settings (read-only)</li>';
+        } else {
+            $content .= '<li><a href="./admin/config">Edit Local Config</a> with ' . count($updated) . ' modified config settings</li>';
+        }
         $content .= '<li><a href="./admin/action">Admin Action</a></li>';
         $content .= '</ol>';
+
         $data = [
             'title' => 'Admin Features',
             'content' => $content,
@@ -154,8 +161,30 @@ class AdminHandler extends BaseHandler
      */
     public function handleUpdateConfig($request, $response)
     {
+        $posted = [];
+        if ($request->method() == "POST" && !empty($request->postParams)) {
+            $posted = $request->postParams;
+        }
         $default = $this->getDefaultConfig();
         $local = $this->getLocalConfig();
+        $changes = [];
+        foreach ($posted as $key => $value) {
+            if (!array_key_exists($key, $default)) {
+                continue;
+            }
+            if (!is_string($default[$key])) {
+                $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+            }
+            // skip unchanged others
+            if ($value === $default[$key] && !array_key_exists($key, $local)) {
+                continue;
+            }
+            if ($value !== $local[$key]) {
+                $changes[$key] = $value;
+            }
+            // update local values based on posted
+            $local[$key] = $value;
+        }
         $updated = [];
         foreach ($local as $key => $value) {
             if (!array_key_exists($key, $default) || $default[$key] !== $value) {
@@ -163,11 +192,34 @@ class AdminHandler extends BaseHandler
             }
         }
         $original = array_diff_assoc($local, $updated);
+        $others = array_filter($default, function ($key) use ($updated, $original) {
+            return !array_key_exists($key, $updated) && !array_key_exists($key, $original);
+        }, ARRAY_FILTER_USE_KEY);
+
         $content = 'Edit Local Config - TODO with ' . count($updated) . ' modified config settings';
-        $content .= '<p>Modified:</p><pre>' . json_encode($updated, JSON_PRETTY_PRINT) . '</pre>';
-        $content .= '<p>Unchanged:</p><pre>' . json_encode($original, JSON_PRETTY_PRINT) . '</pre>';
-        $content .= '<p>Local:</p><pre>' . json_encode($local, JSON_PRETTY_PRINT) . '</pre>';
-        $content .= '<p>Default:</p><pre>' . json_encode($default, JSON_PRETTY_PRINT) . '</pre>';
+        $writable = $this->isLocalConfigWritable();
+        if (!$writable) {
+            $content .= ' (read-only)<p>Warning: config/local.php cannot be written by the web server - this is actually a good thing security-wise, but it also means this action will not work...</p>';
+        }
+        if (!empty($changes)) {
+            $content .= '<p>Changes to apply - TODO</p>';
+            $content .= '<pre>' . json_encode($changes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . '</pre>' . "\n";
+        }
+        $content .= '<form id="configForm" method="POST"><table id="configTable">';
+        $content .= '<thead><tr><th>Config Setting</th><th>Value</th><th>Type</th></tr></thead>';
+        $content .= '<tr><th colspan="3">Local Modified</th></tr>' . "\n";
+        $content .= $this->addConfigSettings($updated);
+        $content .= '<tr><th colspan="3">Local Unchanged</th></tr>';
+        $content .= $this->addConfigSettings($original);
+        $content .= '<tr><th colspan="3">Default Others</th></tr>';
+        $content .= $this->addConfigSettings($others);
+        if (!$writable && false) {
+            $content .= '<tr><td></td><td><input id="submit" type="submit" disabled="disabled" /></td><td></td></tr>';
+        } else {
+            $content .= '<tr><td></td><td><input id="submit" type="submit" /></td><td></td></tr>';
+        }
+        $content .= '</table></form>';
+
         $data = [
             'title' => 'Edit Local Config',
             'content' => $content,
@@ -175,6 +227,19 @@ class AdminHandler extends BaseHandler
             'home' => 'Admin',
         ];
         return $response->setContent(Format::template($data, $this->template));
+    }
+
+    /**
+     * Summary of isLocalConfigWritable
+     * @return bool
+     */
+    protected function isLocalConfigWritable()
+    {
+        $filepath = dirname(__DIR__, 2) . '/config/local.php';
+        if (!file_exists($filepath) || !is_writable($filepath)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -220,6 +285,26 @@ class AdminHandler extends BaseHandler
             }
         }
         return $updated;
+    }
+
+    /**
+     * Summary of addConfigSettings
+     * @param array<string, mixed> $array
+     * @return string
+     */
+    protected function addConfigSettings($array)
+    {
+        $content = '';
+        foreach ($array as $key => $value) {
+            $json = '';
+            if (!is_string($value)) {
+                $json = ' (' . gettype($value) . ')';
+                $value = json_encode($value, JSON_UNESCAPED_SLASHES);
+            }
+            $value = htmlspecialchars($value);
+            $content .= '<tr><td><label for="' . $key . '">' . $key . '</label></td><td><input type="text" id="' . $key . '" name="' . $key . '" value="' . $value . '" size="50" /></td><td>' . $json . '</td></tr>' . "\n";
+        }
+        return $content;
     }
 
     /**
