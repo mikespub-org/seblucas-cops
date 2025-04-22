@@ -71,7 +71,7 @@ function updateCookie (id) {
 /*exported updateCookieFromCheckbox */
 function updateCookieFromCheckbox (id) {
     var name = $(id).attr('id');
-    if (name.includes('-')) {
+    if (name.indexOf('-') !== -1) { // Replaced includes with indexOf
         var nameArray = name.split('-');
         name = nameArray[0];
     }
@@ -439,11 +439,11 @@ function link_Clicked (event) {
     }
     // let read, fetch, zippper etc. do their thing
     var url = currentLink.attr('href');
-    if (url.includes('/read/') ||
-        url.includes('/fetch/') ||
-        url.includes('/zipper/') ||
-        url.includes('/covers/') ||
-        url.includes('/files/')) {
+    if (url.indexOf('/read/') !== -1 || // Replaced includes with indexOf
+        url.indexOf('/fetch/') !== -1 ||
+        url.indexOf('/zipper/') !== -1 ||
+        url.indexOf('/covers/') !== -1 ||
+        url.indexOf('/files/') !== -1) {
         return;
     }
     event.preventDefault();
@@ -600,12 +600,12 @@ function initiateAjax (url, theme, templates) {
 }
 
 /** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
-function initiateTwig(url, theme, templates = 'templates') {
+function initiateTwig(url, theme, templates) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
 
-    let template = Twig.twig({
+    var template = Twig.twig({
         id: 'page',
         href: templates + '/' + theme + '/page.html',
         async: false 
