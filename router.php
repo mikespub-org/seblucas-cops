@@ -35,4 +35,4 @@ $_SERVER['SCRIPT_NAME'] = '/index.php';
 $_SERVER['PATH_INFO'] ??= parse_url((string) $_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // use index.php as front controller
-include __DIR__ . '/index.php';
+include __DIR__ . '/index.php';  // NOSONAR

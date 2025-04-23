@@ -56,7 +56,7 @@ class LoaderHandler extends BaseHandler
             return;
         }
         // get the global config for epub-loader from config/loader.php
-        $gConfig = require dirname(__DIR__, 2) . '/config/loader.php';
+        $gConfig = require dirname(__DIR__, 2) . '/config/loader.php';  // NOSONAR
         // adapt for use with COPS
         $gConfig['endpoint'] = self::link();
         $gConfig['app_name'] = 'COPS Loader';

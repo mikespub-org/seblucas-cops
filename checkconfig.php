@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) Configuration check
@@ -25,10 +25,8 @@ $request = new Request();
 $err   = $request->get('err', -1);
 $full  = $request->get('full');
 $error = null;
-switch ($err) {
-    case 1:
-        $error = 'Database error';
-        break;
+if (!empty($err) && $err == 1) {
+    $error = 'Database error';
 }
 
 ?>
@@ -311,21 +309,7 @@ Please check
             <h2>Check if all Calibre books are found</h2>
             <h4>
             <?php
-            echo "This option has been disabled by default - uncomment if you are sure you want to do this...";
-            /**
-            try {
-                $db = new PDO('sqlite:' . Database::getDbFileName($i));
-                $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
-                $result->execute();
-                while ($post = $result->fetchObject()) {
-                    if (!is_file(Database::getDbDirectory($i) . $post->fullpath)) {
-                        echo '<p>' . Database::getDbDirectory($i) . $post->fullpath . '</p>';
-                    }
-                }
-            } catch (Exception $e) {
-                echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
-            }
-             */
+            echo "This option has been disabled by default - see Admin if you are sure you want to do this...";
             ?>
             </h4>
         </article>

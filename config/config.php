@@ -9,11 +9,11 @@
  */
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-require __DIR__ . '/default.php';
+require __DIR__ . '/default.php';  // NOSONAR
 if (php_sapi_name() !== 'cli') {
     if (file_exists(__DIR__ . '/local.php')) {
         try {
-            require __DIR__ . '/local.php';
+            require __DIR__ . '/local.php';  // NOSONAR
         } catch (Throwable $e) {
             echo "Error loading local.php<br>\n";
             echo $e->getMessage() . ' in ' . $e->getFile() . ' line ' . $e->getLine();
@@ -39,7 +39,7 @@ $remote_user = preg_replace('/[^a-zA-Z0-9_-]/', '', $remote_user);
 if (!empty($remote_user)) {
     $user_config_file = 'local.' . $remote_user . '.php';
     if (file_exists(__DIR__ . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
-        require __DIR__ . '/' . $user_config_file;
+        require __DIR__ . '/' . $user_config_file;  // NOSONAR
     }
 }
 

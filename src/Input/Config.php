@@ -75,4 +75,30 @@ class Config
     {
         return self::$values;
     }
+
+    /**
+     * Summary of getDefaultConfig
+     * @return array<string, mixed>
+     */
+    public static function getDefaultConfig()
+    {
+        $config = [];
+        $filepath = dirname(__DIR__, 2) . '/config/default.php';
+        require $filepath;  // NOSONAR
+        return $config;
+    }
+
+    /**
+     * Summary of getLocalConfig
+     * @return array<string, mixed>
+     */
+    public static function getLocalConfig()
+    {
+        $config = [];
+        $filepath = dirname(__DIR__, 2) . '/config/local.php';
+        if (file_exists($filepath)) {
+            require $filepath;  // NOSONAR
+        }
+        return $config;
+    }
 }

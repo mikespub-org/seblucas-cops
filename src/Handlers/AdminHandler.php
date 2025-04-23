@@ -166,8 +166,8 @@ class AdminHandler extends BaseHandler
         if ($request->method() == "POST" && !empty($request->postParams)) {
             $posted = $request->postParams;
         }
-        $default = $this->getDefaultConfig();
-        $local = $this->getLocalConfig();
+        $default = Config::getDefaultConfig();
+        $local = Config::getLocalConfig();
         $changes = [];
         foreach ($posted as $key => $value) {
             if (!array_key_exists($key, $default)) {
@@ -256,32 +256,6 @@ class AdminHandler extends BaseHandler
     }
 
     /**
-     * Summary of getDefaultConfig
-     * @return array<string, mixed>
-     */
-    protected function getDefaultConfig()
-    {
-        $config = [];
-        $filepath = dirname(__DIR__, 2) . '/config/default.php';
-        require $filepath;
-        return $config;
-    }
-
-    /**
-     * Summary of getLocalConfig
-     * @return array<string, mixed>
-     */
-    protected function getLocalConfig()
-    {
-        $config = [];
-        $filepath = dirname(__DIR__, 2) . '/config/local.php';
-        if (file_exists($filepath)) {
-            require $filepath;
-        }
-        return $config;
-    }
-
-    /**
      * Summary of getUpdatedConfig
      * @param ?array<string, mixed> $local
      * @param ?array<string, mixed> $default
@@ -289,8 +263,8 @@ class AdminHandler extends BaseHandler
      */
     protected function getUpdatedConfig($local = null, $default = null)
     {
-        $local ??= $this->getLocalConfig();
-        $default ??= $this->getDefaultConfig();
+        $local ??= Config::getLocalConfig();
+        $default ??= Config::getDefaultConfig();
         $updated = [];
         foreach ($local as $key => $value) {
             if (!array_key_exists($key, $default) || $default[$key] !== $value) {

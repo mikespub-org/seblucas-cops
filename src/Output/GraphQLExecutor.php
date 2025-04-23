@@ -124,7 +124,7 @@ class GraphQLExecutor
             $document = Parser::parse($contents);
             file_put_contents($cacheFile, "<?php\nreturn " . var_export(AST::toArray($document), true) . ";\n");
         } else {
-            $document = AST::fromArray(require $cacheFile); // fromArray() is a lazy operation as well
+            $document = AST::fromArray(require $cacheFile);  // NOSONAR fromArray() is a lazy operation as well
         }
         //$schema = BuildSchema::build($contents);
         $schema = BuildSchema::build($document, $typeConfigDecorator);

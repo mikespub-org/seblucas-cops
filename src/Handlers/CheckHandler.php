@@ -103,11 +103,10 @@ class CheckHandler extends BaseHandler
      */
     public function getError($err)
     {
-        switch ($err) {
-            case 1:
-                $title = 'You\'ve been redirected because COPS is not configured properly';
-                $message = 'Database error';
-                return $this->getMessage($title, $message);
+        if (!empty($err) && $err == 1) {
+            $title = 'You\'ve been redirected because COPS is not configured properly';
+            $message = 'Database error';
+            return $this->getMessage($title, $message);
         }
         return '';
     }
@@ -311,21 +310,7 @@ Please check
                 continue;
             }
             $title = 'Check if all Calibre books are found';
-            $message = "This option has been disabled by default - uncomment if you are sure you want to do this...";
-            /**
-            try {
-                $db = new PDO('sqlite:' . Database::getDbFileName($i));
-                $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
-                $result->execute();
-                while ($post = $result->fetchObject()) {
-                    if (!is_file(Database::getDbDirectory($i) . $post->fullpath)) {
-                        echo '<p>' . Database::getDbDirectory($i) . $post->fullpath . '</p>';
-                    }
-                }
-            } catch (Exception $e) {
-                echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
-            }
-            */
+            $message = "This option has been disabled by default - see Admin if you are sure you want to do this...";
             $result .= $this->getMessage($title, $message);
             $i++;
         }

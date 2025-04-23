@@ -252,7 +252,7 @@ class Route
             return;
         }
         try {
-            $cache = require $cacheFile;
+            $cache = require $cacheFile;  // NOSONAR
             self::$handlers = $cache["handlers"];
             self::$static = $cache["static"];
             self::$routes = $cache["routes"];
