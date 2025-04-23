@@ -1553,6 +1553,21 @@
             ]
         },
         {
+            "name": "admin-checkbooks",
+            "route": [
+                "/admin/checkbooks",
+                {
+                    "action": "checkbooks",
+                    "_handler": "SebLucas\\Cops\\Handlers\\AdminHandler",
+                    "_route": "admin-checkbooks"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "admin-action",
             "route": [
                 "/admin/{action:.*}",

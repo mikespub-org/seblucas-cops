@@ -676,6 +676,12 @@
                         "POST"
                     ]
                 ],
+                "admin-checkbooks": [
+                    "/admin/checkbooks",
+                    {
+                        "action": "checkbooks"
+                    }
+                ],
                 "admin-action": [
                     "/admin/{action:.*}",
                     [],

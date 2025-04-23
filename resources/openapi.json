@@ -3181,6 +3181,25 @@
                 ]
             }
         },
+        "/admin/checkbooks": {
+            "get": {
+                "summary": "Route to admin handler with action=checkbooks - with api key",
+                "operationId": "get_admin-checkbooks",
+                "tags": [
+                    "admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of admin handler with action=checkbooks"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/admin/{action}": {
             "get": {
                 "summary": "Route to admin handler with action={action} - with api key",

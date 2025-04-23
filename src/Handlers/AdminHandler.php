@@ -10,11 +10,14 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use JsonException;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Calibre\Database;
+use Exception;
+use JsonException;
+use PDO;
 
 /**
  * Summary of AdminHandler - @todo
@@ -32,6 +35,7 @@ class AdminHandler extends BaseHandler
         return [
             "admin-clearcache" => ["/admin/clearcache", ["action" => "clearcache"]],
             "admin-config" => ["/admin/config", ["action" => "config"], ["GET", "POST"]],
+            "admin-checkbooks" => ["/admin/checkbooks", ["action" => "checkbooks"]],
             "admin-action" => ["/admin/{action:.*}", [], ["GET", "POST"]],
             "admin" => ["/admin"],
         ];
@@ -60,6 +64,8 @@ class AdminHandler extends BaseHandler
                 return $this->handleClearCache($request, $response);
             case 'config':
                 return $this->handleUpdateConfig($request, $response);
+            case 'checkbooks':
+                return $this->handleCheckBooks($request, $response);
             default:
                 return $this->handleAction($request, $response);
         }
@@ -87,6 +93,7 @@ class AdminHandler extends BaseHandler
         } else {
             $content .= '<li><a href="./admin/config">Edit Local Config</a> with ' . count($updated) . ' modified config settings</li>';
         }
+        $content .= '<li><a href="./admin/checkbooks">Check Books</a></li>';
         $content .= '<li><a href="./admin/action">Admin Action</a></li>';
         $content .= '</ol>';
 
@@ -292,6 +299,37 @@ class AdminHandler extends BaseHandler
             $content .= '<tr><td><label for="' . $key . '">' . $key . '</label></td><td><input type="text" id="' . $key . '" name="' . $key . '" value="' . $value . '" size="50" /></td><td>' . $json . '</td></tr>' . "\n";
         }
         return $content;
+    }
+
+    public function handleCheckBooks($request, $response)
+    {
+        $i = 0;
+        $content = '<strong>Missing Books:</strong><ul>';
+        foreach (Database::getDbList() as $name => $database) {
+            $content .= "<li>Database $i: $name $database\n<ul>\n";
+            try {
+                $db = new PDO('sqlite:' . Database::getDbFileName($i));
+                $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
+                $result->execute();
+                while ($post = $result->fetchObject()) {
+                    if (!is_file(Database::getDbDirectory($i) . $post->fullpath)) {
+                        $content .= '<li>' . Database::getDbDirectory($i) . $post->fullpath . '</li>';
+                    }
+                }
+            } catch (Exception $e) {
+                $content .= '<li>' . $name . ' Exception detail : ' . $e . '</li>';
+            }
+            $content .= '</ul></li>';
+            $i++;
+        }
+        $content .= '</ul>';
+        $data = [
+            'title' => 'Check Books',
+            'content' => $content,
+            'link' => self::route('admin'),
+            'home' => 'Admin',
+        ];
+        return $response->setContent(Format::template($data, $this->template));
     }
 
     /**

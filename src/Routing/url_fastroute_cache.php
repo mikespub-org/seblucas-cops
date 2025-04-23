@@ -596,6 +596,20 @@
           '_name' => 'admin-config',
         ),
       ),
+      '/admin/checkbooks' => 
+      array (
+        0 => 
+        array (
+          'action' => 'checkbooks',
+          '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+          '_route' => 'admin-checkbooks',
+        ),
+        1 => 
+        array (
+          '_route' => '/admin/checkbooks',
+          '_name' => 'admin-checkbooks',
+        ),
+      ),
       '/admin' => 
       array (
         0 => 
@@ -3282,6 +3296,13 @@
       0 => 
       array (
         0 => '/admin/config',
+      ),
+    ),
+    'admin-checkbooks' => 
+    array (
+      0 => 
+      array (
+        0 => '/admin/checkbooks',
       ),
     ),
     'admin-action' => 

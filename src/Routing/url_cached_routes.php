@@ -70,6 +70,7 @@ $static = [
   '/test' => 'test',
   '/admin/clearcache' => 'admin-clearcache',
   '/admin/config' => 'admin-config',
+  '/admin/checkbooks' => 'admin-checkbooks',
   '/admin' => 'admin',
 ];
 
@@ -1297,6 +1298,18 @@ $routes = [
     [
       'GET',
       'POST',
+    ],
+    [],
+  ],
+  'admin-checkbooks' => [
+    '/admin/checkbooks',
+    [
+      'action' => 'checkbooks',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+      '_route' => 'admin-checkbooks',
+    ],
+    [
+      'GET',
     ],
     [],
   ],

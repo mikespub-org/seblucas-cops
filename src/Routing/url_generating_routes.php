@@ -111,6 +111,7 @@ return [
     'test' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\TestHandler', '_route' => 'test'], [], [['text', '/test']], [], [], []],
     'admin-clearcache' => [[], ['action' => 'clearcache', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-clearcache'], [], [['text', '/admin/clearcache']], [], [], []],
     'admin-config' => [[], ['action' => 'config', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-config'], [], [['text', '/admin/config']], [], [], []],
+    'admin-checkbooks' => [[], ['action' => 'checkbooks', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-checkbooks'], [], [['text', '/admin/checkbooks']], [], [], []],
     'admin-action' => [['action'], ['_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-action'], ['action' => '.*'], [['variable', '/', '.*', 'action'], ['text', '/admin']], [], [], []],
     'admin' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin'], [], [['text', '/admin']], [], [], []],
 ];
