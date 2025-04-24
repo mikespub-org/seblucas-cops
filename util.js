@@ -59,46 +59,73 @@ function debug_log(text) {
 }
 
 /*exported updateCookie */
-function updateCookie (id) {
-    if ($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
+function updateCookie(id) {
+    var pattern = $(id).prop('pattern');
+    var value = $(id).val();
+
+    // Validate input against pattern, if one is present
+    if (pattern && !value.match(new RegExp(pattern))) {
         return;
     }
+
     var name = $(id).attr('id');
-    var value = $(id).val ();
-    Cookies.set(name, value, { expires: 365 });
+
+    // Calculate the expiration date (365 days from now)
+    var d = new Date();
+    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+
+    // Set the cookie manually
+    document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
 }
 
 /*exported updateCookieFromCheckbox */
-function updateCookieFromCheckbox (id) {
+function updateCookieFromCheckbox(id) {
+   // rewritten by ChatGPT to avoid js-cookie
     var name = $(id).attr('id');
-    if (name.indexOf('-') !== -1) { // Replaced includes with indexOf
+
+    // Fallback from String.includes() to indexOf for compatibility
+    if (name.indexOf('-') !== -1) {
         var nameArray = name.split('-');
         name = nameArray[0];
     }
-    if ($(id).is(":checked"))
-    {
+
+    if ($(id).is(":checked")) {
+        var value;
         if ($(id).is(':radio')) {
-            Cookies.set(name, $(id).val (), { expires: 365 });
+            value = $(id).val();
         } else {
-            Cookies.set(name, '1', { expires: 365 });
+            value = '1';
         }
-    }
-    else
-    {
-        Cookies.set(name, '0', { expires: 365 });
+        // Set cookie to expire in 365 days
+        var d = new Date();
+        d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        // Set the cookie manually using document.cookie
+        document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
     }
 }
 
 /*exported updateCookieFromCheckboxGroup */
-function updateCookieFromCheckboxGroup (id) {
+function updateCookieFromCheckboxGroup(id) {
     var name = $(id).attr('name');
-    var idBase = name.replace (/\[\]/, "");
+    var idBase = name.replace(/\[\]/, "");
     var group = [];
-    $(':checkbox[name="' + name + '"]:checked').each (function () {
-        var id = $(this).attr("id");
-        group.push (id.replace (idBase + "_", ""));
+
+    $(':checkbox[name="' + name + '"]:checked').each(function () {
+        var checkboxId = $(this).attr("id");
+        group.push(checkboxId.replace(idBase + "_", ""));
     });
-    Cookies.set(idBase, group.join (), { expires: 365 });
+
+    var value = group.join();
+
+    // Set cookie to expire in 365 days
+    var d = new Date();
+    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+
+    // Set the cookie manually
+    document.cookie = idBase + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
 }
 
 
