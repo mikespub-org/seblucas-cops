@@ -321,18 +321,6 @@
             ]
         },
         {
-            "name": "npm-asset/js-cookie",
-            "version": "1.5.1",
-            "dist": {
-                "type": "tar",
-                "url": "https://registry.npmjs.org/js-cookie/-/js-cookie-1.5.1.tgz"
-            },
-            "type": "npm-asset",
-            "license": [
-                "MIT"
-            ]
-        },
-        {
             "name": "npm-asset/locutus",
             "version": "2.0.32",
             "dist": {
