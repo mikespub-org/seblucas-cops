@@ -58,7 +58,40 @@ function debug_log(text) {
     }
 }
 
+// Simple cookie utility functions
+// Set a cookie (name, value, days to expire, path)
+function setCookie(name, value, days, path) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    if (!path) {
+        path = "/";
+    }
+    document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=" + path;
+}
+
+// Get a cookie by name
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+// Delete a cookie by name
+function eraseCookie(name) {
+    setCookie(name, "", -1);
+}
+
 /*exported updateCookie */
+// Rewritten to replace use of js-cookie
 function updateCookie(id) {
     var pattern = $(id).prop('pattern');
     var value = $(id).val();
@@ -80,11 +113,11 @@ function updateCookie(id) {
 }
 
 /*exported updateCookieFromCheckbox */
+// Rewritten to replace use of js-cookie
 function updateCookieFromCheckbox(id) {
-   // rewritten by ChatGPT to avoid js-cookie
     var name = $(id).attr('id');
 
-    // Fallback from String.includes() to indexOf for compatibility
+    // Fallback for compatibility: check for hyphen and split
     if (name.indexOf('-') !== -1) {
         var nameArray = name.split('-');
         name = nameArray[0];
@@ -97,16 +130,14 @@ function updateCookieFromCheckbox(id) {
         } else {
             value = '1';
         }
-        // Set cookie to expire in 365 days
-        var d = new Date();
-        d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        // Set the cookie manually using document.cookie
-        document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+
+        // Use the setCookie utility: name, value, days, path
+        setCookie(name, value, 365, "/");
     }
 }
 
 /*exported updateCookieFromCheckboxGroup */
+// Rewritten to replace use of js-cookie
 function updateCookieFromCheckboxGroup(id) {
     var name = $(id).attr('name');
     var idBase = name.replace(/\[\]/, "");
@@ -119,15 +150,9 @@ function updateCookieFromCheckboxGroup(id) {
 
     var value = group.join();
 
-    // Set cookie to expire in 365 days
-    var d = new Date();
-    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-
-    // Set the cookie manually
-    document.cookie = idBase + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+    // Use the setCookie utility: name, value, days, path
+    setCookie(idBase, value, 365, "/");
 }
-
 
 function elapsed () {
     var elapsedTime = new Date () - before;
@@ -154,14 +179,14 @@ function errorMail(data) {
 
 /*exported sendToMailAddress */
 function sendToMailAddress (component, dataid) {
-    var email = Cookies.get('email');
-    if (!Cookies.get('email')) {
+    var email = getCookie('email');
+    if (!email) {
         email = window.prompt (currentData.c.i18n.customizeEmail, "");
         if (email === null)
         {
             return;
         }
-        Cookies.set('email', email, { expires: 365 });
+        setCookie('email', email, 365);
     }
     var url = currentData.baseurl + '/mail';
     if (currentData.databaseId) {
@@ -196,13 +221,14 @@ function isDefined(x) {
     return (typeof x !== 'undefined');
 }
 
-function getCurrentOption (option) {
-    if (!Cookies.get(option)) {
-        if (currentData && currentData.c && currentData.c.config && currentData.c.config [option]) {
-            return currentData.c.config [option];
+function getCurrentOption(option) {
+    var cookieValue = getCookie(option);
+    if (!cookieValue) {
+        if (currentData && currentData.c && currentData.c.config && currentData.c.config[option]) {
+            return currentData.c.config[option];
         }
     }
-    return Cookies.get(option);
+    return cookieValue;
 }
 
 /*exported htmlspecialchars */
@@ -393,7 +419,7 @@ updatePage = function (data) {
 
     debug_log (elapsed ());
 
-    if (Cookies.get('toolbar') === '1') { $("#tool").show (); }
+    if (getCookie('toolbar') === '1') { $("#tool").show (); }
     if (currentData.containsBook === 1) {
         $("#sortForm").show ();
         // disable html tag filter when dealing with hierarchical tags or custom columns
@@ -541,10 +567,10 @@ function handleLinks () {
     $("body").on ("click", ".headright", function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");
-            Cookies.get('toolbar', '1', { expires: 365 });
+            getCookie('toolbar', '1', { expires: 365 });
         } else {
             $("#tool").slideUp();
-            Cookies.remove('toolbar');
+            eraseCookie('toolbar');
         }
     });
     $("body").magnificPopup({
