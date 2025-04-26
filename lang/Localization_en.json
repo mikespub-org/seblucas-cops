@@ -48,7 +48,7 @@
     "customize.filter": "Enable tag filtering",
     "customize.ignored": "Ignored categories",
     "customize.paging": "Max number of books per page (-1 to disable)",
-    "customize.style": "Theme",
+    "customize.style": "Style",
     "customize.template": "Template",
     "customize.title": "Customize COPS UI",
     "data.alphabetical.many": "Alphabetical index of the {0} formats",
