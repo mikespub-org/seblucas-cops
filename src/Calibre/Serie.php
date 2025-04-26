@@ -27,7 +27,7 @@ class Serie extends Category
     public const SQL_SORT = "sort";
     public const SQL_COLUMNS = "series.id as id, series.name as name, series.sort as sort";
     public const SQL_ALL_ROWS = "select {0} from series, books_series_link where series.id = series {1} group by series.id, series.name, series.sort order by series.sort";
-    public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
+    public const SQL_ROWS_BY_FIRST_LETTER = "select {0} from series, books_series_link where series.id = series and upper (series.sort) like ? {1} group by series.id, series.name, series.sort order by series.sort";
     public const SQL_ROWS_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? {1} group by series.id, series.name, series.sort order by series.sort";
     public const SQL_BOOKLIST = 'select {0} from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where books_series_link.book = books.id and series = ? {1} order by series_index';
