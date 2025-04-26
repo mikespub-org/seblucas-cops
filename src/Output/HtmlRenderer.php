@@ -46,7 +46,7 @@ class HtmlRenderer extends BaseRenderer
             // Kindle experimental browser - see #140
             $data['legacy_browser_cookies'] = true;
         } else {
-            $data['legacy_browser_cookies'] = true;
+            $data['legacy_browser_cookies'] = false;
         }
         return $data;
     }
