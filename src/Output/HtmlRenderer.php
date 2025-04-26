@@ -43,6 +43,10 @@ class HtmlRenderer extends BaseRenderer
         ];
         if (preg_match('/Kindle/', $request->agent())) {
             $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
+            // Kindle experimental browser - see #140
+            $data['legacy_browser_cookies'] = true;
+        } else {
+            $data['legacy_browser_cookies'] = true;
         }
         return $data;
     }
