@@ -59,7 +59,6 @@ class BaseList
     protected function setOrderBy()
     {
         $this->orderBy = $this->request->getSorted($this->getSort());
-        //$this->orderBy ??= $this->request->option('sort');
     }
 
     /**
@@ -376,6 +375,8 @@ class BaseList
         $columns = $groupField . ' as groupid, count(distinct ' . $this->getTable() . '.id) as count';
         $result = Database::queryFilter($query, $columns, $filterString, $params, -1, $this->databaseId);
 
+        // authorword, publisherword, seriesword, tagword
+        $countword = $this->getLinkColumn() . 'word';
         $entryArray = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
@@ -385,7 +386,7 @@ class BaseList
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $param . ':' . $post->groupid,
-                str_format(localize('bookword', $post->count), $post->count),
+                str_format(localize($countword, $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, "subsection") ],
                 $this->databaseId,
