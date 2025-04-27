@@ -70,6 +70,9 @@ function setCookie(name, value, days, path) {
     if (!path) {
         path = "/";
     }
+    if (!days){
+        days = 400; //400 days is the maximum cookie
+    }
     document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=" + path;
 }
 
