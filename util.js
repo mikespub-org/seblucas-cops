@@ -61,18 +61,21 @@ function debug_log(text) {
 // Simple cookie utility functions
 // Set a cookie (name, value, days to expire, path)
 function setCookie(name, value, days, path) {
+    // set default days and path
+    if (!days){
+        days = 365;
+    }
+    if (!path) {
+        path = "/";
+    }
+   
     var expires = "";
     if (days) {
         var date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    if (!path) {
-        path = "/";
-    }
-    if (!days){
-        days = 400; //400 days is the maximum cookie
-    }
+    
     document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=" + path;
 }
 
@@ -94,7 +97,9 @@ function eraseCookie(name) {
 }
 
 /*exported updateCookie */
-// Rewritten to replace use of js-cookie
+/*  Rewritten to replace use of js-cookie
+    Note this function is quite specific to setting a cookie based on changes on a form
+    It shouldn't be used for other cookie related purposes */
 function updateCookie(id) {
     var pattern = $(id).prop('pattern');
     var value = $(id).val();
@@ -103,16 +108,9 @@ function updateCookie(id) {
     if (pattern && !value.match(new RegExp(pattern))) {
         return;
     }
-
     var name = $(id).attr('id');
 
-    // Calculate the expiration date (365 days from now)
-    var d = new Date();
-    d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-
-    // Set the cookie manually
-    document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+    setCookie(name,value,365)
 }
 
 /*exported updateCookieFromCheckbox */
