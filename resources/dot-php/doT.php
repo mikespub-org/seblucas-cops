@@ -77,7 +77,7 @@ class doT
         }
 
         // single quotes can mess up serverside rendering for client-side javascript, e.g. in header template:
-        // <a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' ...
+        // <a href="#" onclick='setCookie("template", "default", 365); window.location.reload(true); ' ...
         $replace = [
             "unsafe" => ["'", '\/'],
             "encode" => ['~QUOTE~', '~SLASH~'],
