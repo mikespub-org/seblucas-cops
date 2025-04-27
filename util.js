@@ -99,7 +99,8 @@ function eraseCookie(name) {
 /*exported updateCookie */
 /*  Rewritten to replace use of js-cookie
     Note this function is quite specific to setting a cookie based on changes on a form
-    It shouldn't be used for other cookie related purposes */
+    It shouldn't be used for other cookie related purposes
+    setCookie() is more generic */
 function updateCookie(id) {
     var pattern = $(id).prop('pattern');
     var value = $(id).val();
