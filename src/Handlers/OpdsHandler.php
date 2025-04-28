@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
-//use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 use SebLucas\Cops\Output\Response as CopsResponse;
 use SebLucas\Cops\Pages\PageId;
@@ -42,8 +41,9 @@ class OpdsHandler extends BaseHandler
     public function handle($request)
     {
         if (!class_exists('\Kiwilan\Opds\OpdsResponse')) {
-            echo 'This handler is available in developer mode only (without --no-dev option):' . "<br/>\n";
-            echo '$ composer install -o';
+            echo 'For standard OPDS 1.2 feeds in XML format please use /feed instead of /opds in URL links' . "<br/>\n";
+            echo 'This handler for OPDS 2.0 in JSON format is available in developer mode only (without --no-dev option):' . "<br/>\n";
+            echo '$ composer install -o' . "<br/>\n";
             return;
         }
         // deal with /handler/{path:.*}
@@ -72,16 +72,16 @@ class OpdsHandler extends BaseHandler
             }
         }
 
-        $OPDSRender = new OpdsRenderer();
+        $opdsRenderer = new OpdsRenderer();
 
         switch ($page) {
             case PageId::OPENSEARCH :
             case PageId::SEARCH :
-                $response = $OPDSRender->getOpenSearch($request);
+                $response = $opdsRenderer->getOpenSearch($request);
                 break;
             default:
                 $currentPage = PageId::getPage($page, $request);
-                $response = $OPDSRender->render($currentPage, $request);
+                $response = $opdsRenderer->render($currentPage, $request);
         }
 
         // @todo convert OPDS Response to COPS Response?

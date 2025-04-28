@@ -70,15 +70,15 @@ class FeedHandler extends BaseHandler
 
         $response = new Response(Response::MIME_TYPE_XML);
 
-        $OPDSRender = new OpdsRenderer($request, $response);
+        $opdsRenderer = new OpdsRenderer($request, $response);
 
         switch ($page) {
             case PageId::OPENSEARCH :
             case PageId::SEARCH :
-                return $response->setContent($OPDSRender->getOpenSearch($request));
+                return $response->setContent($opdsRenderer->getOpenSearch($request));
             default:
                 $currentPage = PageId::getPage($page, $request);
-                return $response->setContent($OPDSRender->render($currentPage, $request));
+                return $response->setContent($opdsRenderer->render($currentPage, $request));
         }
     }
 }
