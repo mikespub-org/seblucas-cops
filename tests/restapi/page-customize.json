@@ -20,7 +20,7 @@
         },
         {
             "class": "",
-            "title": "Theme",
+            "title": "Style",
             "content": "<select id=\"style\" name=\"style\" onchange=\"updateCookie (this); window.location=window.location;\"><option value='base' >base</option><option value='default' selected='selected'>default</option><option value='kindle' >kindle</option></select>",
             "navlink": "#",
             "number": ""

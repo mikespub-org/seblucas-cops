@@ -90,13 +90,13 @@
                 "name": "hello.txt",
                 "url": "vendor/bin/index.php/files/0/17/hello.txt",
                 "length": "12",
-                "mtime": "2024-10-27T09:43:00+00:00"
+                "mtime": "2025-01-24T21:33:18+00:00"
             },
             {
-                "name": "sub/copied.txt",
-                "url": "vendor/bin/index.php/files/0/17/sub/copied.txt",
+                "name": "sub folder/copied file.txt",
+                "url": "vendor/bin/index.php/files/0/17/sub%20folder/copied%20file.txt",
                 "length": "12",
-                "mtime": "2024-10-27T09:43:00+00:00"
+                "mtime": "2025-01-24T21:33:18+00:00"
             }
         ],
         "identifiers": [],

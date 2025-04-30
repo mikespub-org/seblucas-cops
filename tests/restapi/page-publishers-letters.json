@@ -14,42 +14,42 @@
         {
             "class": "Letter",
             "title": "D",
-            "content": "1 book",
+            "content": "1 publisher",
             "navlink": "vendor/bin/index.php/restapi/publishers/letter/D",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "G",
-            "content": "1 book",
+            "content": "1 publisher",
             "navlink": "vendor/bin/index.php/restapi/publishers/letter/G",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "M",
-            "content": "2 books",
+            "content": "2 publishers",
             "navlink": "vendor/bin/index.php/restapi/publishers/letter/M",
             "number": 2
         },
         {
             "class": "Letter",
             "title": "P",
-            "content": "1 book",
+            "content": "1 publisher",
             "navlink": "vendor/bin/index.php/restapi/publishers/letter/P",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "S",
-            "content": "1 book",
+            "content": "1 publisher",
             "navlink": "vendor/bin/index.php/restapi/publishers/letter/S",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "青",
-            "content": "1 book",
+            "content": "1 publisher",
             "navlink": "vendor/bin/index.php/restapi/publishers/letter/青",
             "number": 1
         }

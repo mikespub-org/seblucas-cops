@@ -31,7 +31,7 @@ class FetchHandlerTest extends TestCase
         'kepubify' => 1608245,
         'allinone' => 1055260,
         'file' => 12,
-        'zipped' => 344,
+        'zipped' => 368,
     ];
     /** @var class-string */
     private static $handler = TestHandler::class;

@@ -626,7 +626,7 @@ class RestApiTest extends TestCase
             $this->assertTrue(true);
         } else {
             $expexted = file_get_contents($resultFile);
-            if (str_contains($output, ' "mtime": ')) {
+            if (str_contains($output ?? '', ' "mtime": ')) {
                 $output = preg_replace('/ "mtime": \S+/', ' "mtime": "now"', $output);
                 $expexted = preg_replace('/ "mtime": \S+/', ' "mtime": "now"', $expexted);
             }

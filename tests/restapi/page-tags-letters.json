@@ -14,63 +14,63 @@
         {
             "class": "Letter",
             "title": "A",
-            "content": "1 book",
+            "content": "1 tag",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/A",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "F",
-            "content": "2 books",
+            "content": "2 tags",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/F",
             "number": 2
         },
         {
             "class": "Letter",
             "title": "H",
-            "content": "1 book",
+            "content": "1 tag",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/H",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "J",
-            "content": "1 book",
+            "content": "1 tag",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/J",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "L",
-            "content": "1 book",
+            "content": "1 tag",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/L",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "M",
-            "content": "1 book",
+            "content": "1 tag",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/M",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "R",
-            "content": "1 book",
+            "content": "1 tag",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/R",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "S",
-            "content": "2 books",
+            "content": "2 tags",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/S",
             "number": 2
         },
         {
             "class": "Letter",
             "title": "W",
-            "content": "1 book",
+            "content": "1 tag",
             "navlink": "vendor/bin/index.php/restapi/tags/letter/W",
             "number": 1
         },

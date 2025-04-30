@@ -28,7 +28,7 @@ class ZipperTest extends TestCase
     protected static $expectedSize = [
         'recent' => 1596561,
         'author' => 1594886,
-        'zipped' => 344,
+        'zipped' => 368,
     ];
 
     public static function setUpBeforeClass(): void
@@ -154,7 +154,7 @@ class ZipperTest extends TestCase
 
         $expected = [
             'hello.txt',
-            'sub/copied.txt',
+            'sub folder/copied file.txt',
         ];
         // make a temp file to analyze the zip file
         $tmpfile = FileResponse::getTempFile('zip');

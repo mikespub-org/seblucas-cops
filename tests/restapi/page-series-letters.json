@@ -14,21 +14,21 @@
         {
             "class": "Letter",
             "title": "D",
-            "content": "1 book",
+            "content": "1 series",
             "navlink": "vendor/bin/index.php/restapi/series/letter/D",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "P",
-            "content": "1 book",
+            "content": "1 series",
             "navlink": "vendor/bin/index.php/restapi/series/letter/P",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "S",
-            "content": "2 books",
+            "content": "2 series",
             "navlink": "vendor/bin/index.php/restapi/series/letter/S",
             "number": 2
         },

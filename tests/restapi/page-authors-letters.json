@@ -14,42 +14,42 @@
         {
             "class": "Letter",
             "title": "C",
-            "content": "1 book",
+            "content": "1 author",
             "navlink": "vendor/bin/index.php/restapi/authors/letter/C",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "D",
-            "content": "2 books",
+            "content": "2 authors",
             "navlink": "vendor/bin/index.php/restapi/authors/letter/D",
             "number": 2
         },
         {
             "class": "Letter",
             "title": "L",
-            "content": "1 book",
+            "content": "1 author",
             "navlink": "vendor/bin/index.php/restapi/authors/letter/L",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "W",
-            "content": "1 book",
+            "content": "1 author",
             "navlink": "vendor/bin/index.php/restapi/authors/letter/W",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "Z",
-            "content": "1 book",
+            "content": "1 author",
             "navlink": "vendor/bin/index.php/restapi/authors/letter/Z",
             "number": 1
         },
         {
             "class": "Letter",
             "title": "孙",
-            "content": "1 book",
+            "content": "1 author",
             "navlink": "vendor/bin/index.php/restapi/authors/letter/孙",
             "number": 1
         }
