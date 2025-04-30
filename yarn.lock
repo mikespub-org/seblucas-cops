@@ -931,22 +931,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"datatables.net-bs5@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "datatables.net-bs5@npm:2.2.2"
+"datatables.net-bs5@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "datatables.net-bs5@npm:2.3.0"
   dependencies:
-    datatables.net: "npm:2.2.2"
+    datatables.net: "npm:2.3.0"
     jquery: "npm:>=1.7"
-  checksum: 10c0/5568e86e71a1969139157f75cdb363eafd94d866130fb2fd627f62d2d86cea4a938e7ff753bc477934245f3ae97105b83bb30def88a6598cae5ad4e74ef319f6
+  checksum: 10c0/20f2322d078ba30e07d3138ca6dd3a5e3c7075cb7f1834815884533fd1257df825e14561863d2165243e40be600365a8452247067606fb6e761e56ad8025761a
   languageName: node
   linkType: hard
 
-"datatables.net@npm:2.2.2, datatables.net@npm:^2.2.2":
-  version: 2.2.2
-  resolution: "datatables.net@npm:2.2.2"
+"datatables.net@npm:2.3.0, datatables.net@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "datatables.net@npm:2.3.0"
   dependencies:
     jquery: "npm:>=1.7"
-  checksum: 10c0/ca42e87e09cad2a3ca0f8728931fba48a222a87953d85ee0951432f9b0c7f15a630b787839ec2493b53f18744758ecfec9e18049ceccefec4323fd0895901845
+  checksum: 10c0/8b6ca567a601567dee95776307653a47b7418e4706de41a5f2e6e243650f450014128969178113d049918ac8f63ac3832b4de230d6685add80ef3dd5d87f9e68
   languageName: node
   linkType: hard
 
@@ -1142,10 +1142,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:^16.10.0":
-  version: 16.10.0
-  resolution: "graphql@npm:16.10.0"
-  checksum: 10c0/303730675538c8bd6c76b447dc6f03e61242e2d2596b408c34759666ec4877409e5593a7a0467d590ac5407b8c663b093b599556a77f24f281abea69ddc53de6
+"graphql@npm:^16.11.0":
+  version: 16.11.0
+  resolution: "graphql@npm:16.11.0"
+  checksum: 10c0/124da7860a2292e9acf2fed0c71fc0f6a9b9ca865d390d112bdd563c1f474357141501c12891f4164fe984315764736ad67f705219c62f7580681d431a85db88
   languageName: node
   linkType: hard
 
@@ -1563,11 +1563,11 @@ __metadata:
     "@mikespub/epubjs-reader": "npm:^2025.4.8"
     bootstrap: "npm:^3.4.1"
     corejs-typeahead: "npm:^1.3.4"
-    datatables.net: "npm:^2.2.2"
-    datatables.net-bs5: "npm:^2.2.2"
+    datatables.net: "npm:^2.3.0"
+    datatables.net-bs5: "npm:^2.3.0"
     dot: "npm:^1.1.3"
     graphiql: "npm:^3.8.3"
-    graphql: "npm:^16.10.0"
+    graphql: "npm:^16.11.0"
     jquery: "npm:^3.7.1"
     js-cookie: "npm:^3.0.5"
     lru-fast: "npm:^0.2.2"
@@ -1575,7 +1575,7 @@ __metadata:
     normalize.css: "npm:^8.0.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    swagger-ui-dist: "npm:^5.20.7"
+    swagger-ui-dist: "npm:^5.21.0"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1616,12 +1616,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.20.7":
-  version: 5.20.7
-  resolution: "swagger-ui-dist@npm:5.20.7"
+"swagger-ui-dist@npm:^5.21.0":
+  version: 5.21.0
+  resolution: "swagger-ui-dist@npm:5.21.0"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/4048c304144772e01bd06078652942b022aba884aca9adc7c7ecfe18ce3c30671ebf12a727e6089117fe7df230cdfc2ee5a2898141e1e66febf4fb187df0aebf
+  checksum: 10c0/fed58b709cc956f5965cc3e2c522898365ecd43f5bb942252d7352e52039ef7b2106b915165295114009ce7e1b64c2b2cb97edf93e3f2a44adfed70bb8a4fac8
   languageName: node
   linkType: hard
 

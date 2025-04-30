@@ -4,7 +4,7 @@ For the original releases 0.0.1 to 1.1.3 see [CHANGELOG.seblucas](CHANGELOG.sebl
 or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 
 x.x.x - TODO
-  * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.3
+  * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.5
 
 2.8.x - 2024xxxx Maintenance release for 2.x (PHP >= 8.1)
   * ...
