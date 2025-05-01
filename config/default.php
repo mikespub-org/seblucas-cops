@@ -267,13 +267,13 @@ $config['cops_books_filter'] = [];
  *
  * For example : ["Short Stories in English", "Fiction from this Century"];
  *
- * To select all Calibre virtual libraries you can use wildcard : ["*"];
+ * To select all Calibre virtual libraries you can use wildcard :
+ * $config['cops_calibre_virtual_libraries'] = ["*"];
  *
  * @todo https://manual.calibre-ebook.com/virtual_libraries.html
  * Note that search criteria for virtual libraries are very limited in COPS (TODO)
  */
 $config['cops_calibre_virtual_libraries'] = [];
-//$config['cops_calibre_virtual_libraries'] = ["*"];
 
 /*
  * Default virtual library to use (and filter on) in COPS
@@ -455,7 +455,7 @@ $config['cops_server_side_render'] = 'Kindle\/1\.\d|Kindle\/2\.\d|Kindle\/3\.\d|
  * - identifier
  * - libraries
  */
-$config ['cops_ignored_categories'] = ['format', 'identifier'];
+$config['cops_ignored_categories'] = ['format', 'identifier'];
 
 /*
  * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
@@ -465,18 +465,18 @@ $config ['cops_ignored_categories'] = ['format', 'identifier'];
  * index.php or index.php/feed first.
  * BEWARE : Do not touch this if you're not using password, not using PRS-TX or not using Aldiko.
  */
-$config ['cops_fetch_protect'] = '0';
+$config['cops_fetch_protect'] = '0';
 
 /*
  * Session timeout for cookie lifetime (client) and garbage collection (server)
  * Session is used to validate fetching/zipping books or customize COPS, so we use long timeout here
  */
-$config ['cops_session_timeout'] = 365 * 24 * 60 * 60;
+$config['cops_session_timeout'] = 365 * 24 * 60 * 60;
 
 /*
  * Session cookie name - avoid overlap with other PHP session names
  */
-$config ['cops_session_name'] = 'COPS_SESSID';
+$config['cops_session_name'] = 'COPS_SESSID';
 
 /*
  * WARNING NOT READY FOR PRODUCTION USE
@@ -484,7 +484,7 @@ $config ['cops_session_name'] = 'COPS_SESSID';
  * 1 : Yes (enable)
  * 0 : No
  */
-$config ['cops_normalized_search'] = '0';
+$config['cops_normalized_search'] = '0';
 
 /*
  * Get remote user authentication from server for:
@@ -683,9 +683,10 @@ $config['cops_customize'] = [];
  * Enable admin features in COPS - @todo
  * Supported values:
  *     false = disable admin features (default)
- *     true = enable admin features for everyone
+ *     true = enable admin features for everyone (*)
  *     "xxx" = enable admin features for authenticated user "xxx"
  *     ["xxx", "yyy"] = enable admin features for authenticated users "xxx" and "yyy"
+ * (*) Warning: do *not* enable for everyone if COPS can be accessed via Internet
  */
 $config['cops_enable_admin'] = false;
 

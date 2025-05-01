@@ -29,6 +29,8 @@ class AdminHandler extends BaseHandler
     public const PARAMLIST = ["action"];
 
     protected string $template = 'templates/admin.html';
+    /** @var array<string, string> */
+    protected array $tooltips = [];
 
     public static function getRoutes()
     {
@@ -176,6 +178,7 @@ class AdminHandler extends BaseHandler
         $default = Config::getDefaultConfig();
         $local = Config::getLocalConfig();
         $changes = [];
+        $errors = 0;
         foreach ($posted as $key => $value) {
             if (!array_key_exists($key, $default)) {
                 continue;
@@ -187,6 +190,7 @@ class AdminHandler extends BaseHandler
                     try {
                         $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
                     } catch (JsonException) {
+                        $errors += 1;
                         $changes[$key] = "Invalid JSON value!";
                         $value = $local[$key] ?? $default[$key];
                         // send error here
@@ -220,6 +224,15 @@ class AdminHandler extends BaseHandler
         $writable = $this->isLocalConfigWritable();
         if (!$writable) {
             $content .= ' (read-only)<p>Warning: config/local.php cannot be written by the web server - this is actually a good thing security-wise, but it also means this action will not work...</p>';
+        } elseif ($errors) {
+            $content .= ' (errors)<p>Warning: please correct the errors for the changes below</p>';
+        } elseif (!empty($changes)) {
+            // save changes
+            $content .= '<pre>';
+            foreach ($local as $key => $value) {
+                $content .= "\$config['$key'] = " . json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ";\n";
+            }
+            $content .= '</pre>';
         }
         if (!empty($changes)) {
             $content .= '<p>Changes to apply - TODO</p>';
@@ -296,9 +309,24 @@ class AdminHandler extends BaseHandler
                 $value = json_encode($value, JSON_UNESCAPED_SLASHES);
             }
             $value = htmlspecialchars($value);
-            $content .= '<tr><td><label for="' . $key . '">' . $key . '</label></td><td><input type="text" id="' . $key . '" name="' . $key . '" value="' . $value . '" size="50" /></td><td>' . $json . '</td></tr>' . "\n";
+            $title = htmlspecialchars($this->getTooltip($key));
+            $content .= '<tr><td><label for="' . $key . '" title="' . $title . '">' . $key . '</label></td><td><input type="text" id="' . $key . '" name="' . $key . '" value="' . $value . '" size="50" /></td><td>' . $json . '</td></tr>' . "\n";
         }
         return $content;
+    }
+
+    /**
+     * Summary of getTooltip
+     * @param string $key
+     * @return string
+     */
+    protected function getTooltip($key)
+    {
+        if (empty($this->tooltips)) {
+            require dirname(__DIR__, 2) . '/config/tooltips.php';  // NOSONAR
+            $this->tooltips = $tooltips;
+        }
+        return $this->tooltips[$key] ?? '';
     }
 
     public function handleCheckBooks($request, $response)
