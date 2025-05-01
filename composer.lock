@@ -1376,16 +1376,16 @@
     "packages-dev": [
         {
             "name": "illuminate/collections",
-            "version": "v12.11.0",
+            "version": "v12.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "7f8a89e1e484fea952cdd8400bab2e277fa4f903"
+                "reference": "abccbba3aef0fb9460105496e18c36b28dfe10b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/7f8a89e1e484fea952cdd8400bab2e277fa4f903",
-                "reference": "7f8a89e1e484fea952cdd8400bab2e277fa4f903",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/abccbba3aef0fb9460105496e18c36b28dfe10b2",
+                "reference": "abccbba3aef0fb9460105496e18c36b28dfe10b2",
                 "shasum": ""
             },
             "require": {
@@ -1429,11 +1429,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-04-21T14:14:46+00:00"
+            "time": "2025-04-29T20:14:54+00:00"
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v12.11.0",
+            "version": "v12.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1479,7 +1479,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v12.11.0",
+            "version": "v12.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1527,7 +1527,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v12.11.0",
+            "version": "v12.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1573,16 +1573,16 @@
         },
         {
             "name": "kiwilan/php-opds",
-            "version": "2.1.0",
+            "version": "2.1.01",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kiwilan/php-opds.git",
-                "reference": "b9594ad7a3b80a32bda849c0ccf2cb54f5bd0435"
+                "reference": "85f2432a04163b3b82a54a6b15920dc5821e465b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/b9594ad7a3b80a32bda849c0ccf2cb54f5bd0435",
-                "reference": "b9594ad7a3b80a32bda849c0ccf2cb54f5bd0435",
+                "url": "https://api.github.com/repos/kiwilan/php-opds/zipball/85f2432a04163b3b82a54a6b15920dc5821e465b",
+                "reference": "85f2432a04163b3b82a54a6b15920dc5821e465b",
                 "shasum": ""
             },
             "require": {
@@ -1627,7 +1627,7 @@
             ],
             "support": {
                 "issues": "https://github.com/kiwilan/php-opds/issues",
-                "source": "https://github.com/kiwilan/php-opds/tree/v2.1.0"
+                "source": "https://github.com/kiwilan/php-opds/tree/v2.1.01"
             },
             "funding": [
                 {
@@ -1635,7 +1635,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-26T06:41:02+00:00"
+            "time": "2025-05-01T13:33:43+00:00"
         },
         {
             "name": "masterminds/html5",

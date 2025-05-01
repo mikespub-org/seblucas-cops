@@ -12,12 +12,22 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
+4.x.x - 2025xxxx 
+  * Changes in config/default.php file:
+    - new $config['cops_customize'] for default customize values per user (TODO)
+  * Upgrade graphiql CDN template for react 19.x - see PR graphql/graphiql#3902
+  * Experiment with default customize values per user (TODO)
+
 3.x.x - 2025xxxx 
   * Changes in config/default.php file:
-    - new $config['cops_enable_admin'] to enable admin features in COPS (TODO)
-    - new $config['cops_customize'] for default customize values per user (TODO)
-  * Start admin handler to enable special server features (TODO)
-  * Experiment with default customize values per user (TODO)
+    - new $config['cops_enable_admin'] to enable admin features in COPS (WIP)
+  * Upgrade kiwilan/php-opds package to fix OPDS 2.0 search template with route urls (dev only)
+  * Update translations in language files - see PR #150 from @horus68 et al.
+  * Fix count by letter phrases in code - see issue #147 by @dunxd
+  * Replace Theme by Style in customize page - see issue #146 by @dunxd
+  * Support Javascript ES5 + legacy browser cookies - see issue #140 and PRs by @dunxd
+  * Support PHP with session disabled - see issue #140 by @dunxd
+  * Start admin handler to enable special server features (WIP)
   * Add session expires and regenerate session id if needed
   * Pass request context to graphql executor instead of request
 
