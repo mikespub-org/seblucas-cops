@@ -15,6 +15,7 @@
         "$ref": "https://readium.org/webpub-manifest/schema/link.schema.json"
       },
       "uniqueItems": true,
+      "minItems": 1,
       "contains": {
         "properties": {
           "rel": {
@@ -43,7 +44,8 @@
       "items": {
         "$ref": "publication.schema.json"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "minItems": 1
     },
     "navigation": {
       "description": "Navigation for the catalog using links",
@@ -52,6 +54,7 @@
         "$ref": "https://readium.org/webpub-manifest/schema/link.schema.json"
       },
       "uniqueItems": true,
+      "minItems": 1,
       "allOf": [
         {
           "description": "Each Link Object in a navigation collection must contain a title",
@@ -77,11 +80,13 @@
             "items": {
               "$ref": "https://readium.org/webpub-manifest/schema/link.schema.json"
             },
-            "uniqueItems": true
+            "uniqueItems": true,
+            "minItems": 1
           }
         }
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "minItems": 1
     },
     "groups": {
       "description": "Groups provide a curated experience, grouping publications or navigation links together",
@@ -97,21 +102,24 @@
             "items": {
               "$ref": "https://readium.org/webpub-manifest/schema/link.schema.json"
             },
-            "uniqueItems": true
+            "uniqueItems": true,
+            "minItems": 1
           },
           "publications": {
             "type": "array",
             "items": {
               "$ref": "publication.schema.json"
             },
-            "uniqueItems": true
+            "uniqueItems": true,
+            "minItems": 1
           },
           "navigation": {
             "type": "array",
             "items": {
               "$ref": "https://readium.org/webpub-manifest/schema/link.schema.json"
             },
-            "uniqueItems": true
+            "uniqueItems": true,
+            "minItems": 1
           }
         },
         "required": [

@@ -58,12 +58,13 @@
       "minItems": 1,
       "allOf": [
         {
-          "description": "At least one image resource must use one of the following formats: image/jpeg, image/png or image/gif.",
+          "description": "At least one image resource must use one of the following formats: image/jpeg, image/avif, image/png or image/gif.",
           "contains": {
             "properties": {
               "type": {
                 "enum": [
                   "image/jpeg",
+                  "image/avif",
                   "image/png",
                   "image/gif"
                 ]
@@ -76,7 +77,6 @@
   },
   "required": [
     "metadata",
-    "links",
-    "images"
+    "links"
   ]
 }
