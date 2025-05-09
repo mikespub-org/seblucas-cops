@@ -170,11 +170,20 @@ class Entry
      */
     public function getThumbnail()
     {
+        return $this->getThumbnailLink()?->getUri();
+    }
+
+    /**
+     * Summary of getThumbnailLink
+     * @return ?LinkImage
+     */
+    public function getThumbnailLink()
+    {
         foreach ($this->linkArray as $link) {
             /** @var LinkFeed|LinkResource $link */
 
             if ($link instanceof LinkImage && $link->rel == LinkImage::OPDS_THUMBNAIL_TYPE) {
-                return $link->getUri();
+                return $link;
             }
         }
         return null;
@@ -186,11 +195,20 @@ class Entry
      */
     public function getImage()
     {
+        return $this->getImageLink()?->getUri();
+    }
+
+    /**
+     * Summary of getImageLink
+     * @return ?LinkImage
+     */
+    public function getImageLink()
+    {
         foreach ($this->linkArray as $link) {
             /** @var LinkFeed|LinkResource $link */
 
             if ($link instanceof LinkImage && $link->rel == LinkImage::OPDS_IMAGE_TYPE) {
-                return $link->getUri();
+                return $link;
             }
         }
         return null;

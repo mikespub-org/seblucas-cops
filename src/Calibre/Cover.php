@@ -437,25 +437,27 @@ class Cover
         if (Config::get('thumbnail_handling') != "1") {
             $params['thumb'] = $thumb;
             $routeName = self::ROUTE_THUMB;
+            $height = $this->getThumbnailHeight($thumb);
             // @todo get thumbnail cache path here?
             if ($thumb == "opds") {
-                $height = $this->getThumbnailHeight($thumb);
                 $filePath = $this->getThumbnailCachePath(null, $height, $ext);
             } else {
                 $filePath = null;
             }
         } else {
             $routeName = self::ROUTE_COVER;
+            $height = null;
             $filePath = $this->coverFileName;
         }
         $href = fn() => $this->getRoute($routeName, $params);
-        return new LinkImage(
+        $link = new LinkImage(
             $href,
             $mime,
             LinkImage::OPDS_THUMBNAIL_TYPE,
             null,
             $filePath
         );
+        return $link->setHeight($height);
     }
 
     /**

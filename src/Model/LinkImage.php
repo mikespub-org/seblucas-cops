@@ -50,12 +50,23 @@ class LinkImage extends LinkResource
     public function getWidth()
     {
         if (!isset($this->filepath)) {
-            return $this->length;
+            return $this->width;
         }
         if (!isset($this->width)) {
             $this->getImageSize();
         }
         return $this->width;
+    }
+
+    /**
+     * Summary of setWidth
+     * @param ?string $width
+     * @return self
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+        return $this;
     }
 
     /**
@@ -65,11 +76,22 @@ class LinkImage extends LinkResource
     public function getHeight()
     {
         if (!isset($this->filepath)) {
-            return $this->length;
+            return $this->height;
         }
         if (!isset($this->height)) {
             $this->getImageSize();
         }
         return $this->height;
+    }
+
+    /**
+     * Summary of setHeight
+     * @param ?string $height
+     * @return self
+     */
+    public function setHeight($height)
+    {
+        $this->height = $height;
+        return $this;
     }
 }
