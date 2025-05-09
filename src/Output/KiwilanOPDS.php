@@ -16,6 +16,7 @@ use Kiwilan\Opds\OpdsResponse;
 use Kiwilan\Opds\Engine\Paginate\OpdsPaginate;
 use Kiwilan\Opds\Entries\OpdsEntryBook;
 use Kiwilan\Opds\Entries\OpdsEntryBookAuthor;
+use Kiwilan\Opds\Entries\OpdsEntryImage;
 use Kiwilan\Opds\Entries\OpdsEntryNavigation;
 use Kiwilan\Opds\Enums\OpdsVersionEnum;
 use SebLucas\Cops\Handlers\HasRouteTrait;
@@ -24,6 +25,7 @@ use SebLucas\Cops\Input\Config as CopsConfig;
 use SebLucas\Cops\Input\Request as CopsRequest;
 use SebLucas\Cops\Model\Entry as CopsEntry;
 use SebLucas\Cops\Model\EntryBook as CopsEntryBook;
+use SebLucas\Cops\Model\LinkImage as CopsLinkImage;
 use SebLucas\Cops\Pages\Page as CopsPage;
 use DateTime;
 
@@ -113,16 +115,21 @@ class KiwilanOPDS
         if ($publisher) {
             $publisher = $publisher->name;
         }
+        $image = $entry->getImageLink();
+        $media = isset($image) ? $this->getOpdsEntryImage($image) : null;
+        $thumbnail = $entry->getThumbnailLink();
+        $mediaThumbnail = isset($thumbnail) ? $this->getOpdsEntryImage($thumbnail) : null;
+
         $opdsEntry = new OpdsEntryBook(
             id: $entry->id,
             title: $entry->title,
             route: $entry->getNavLink(),
             summary: OpdsEntryNavigation::handleContent($entry->content),
             content: $entry->content,
-            media: $entry->getImage(),
+            media: $media,
             updated: new DateTime($entry->getUpdatedTime()),
             download: $download,
-            mediaThumbnail: $entry->getThumbnail(),
+            mediaThumbnail: $mediaThumbnail,
             categories: $categories,
             authors: $authors,
             published: $published,
@@ -139,18 +146,39 @@ class KiwilanOPDS
     }
 
     /**
+     * Summary of getOpdsEntryImage
+     * @param CopsLinkImage $link
+     * @return OpdsEntryImage
+     */
+    private function getOpdsEntryImage($link)
+    {
+        $opdsEntry = new OpdsEntryImage(
+            uri: $link->getUri(),
+            path: $link->filepath,
+            type: $link->type,
+            height: $link->getHeight(),
+            width: $link->getWidth(),
+        );
+
+        return $opdsEntry;
+    }
+
+    /**
      * Summary of getOpdsEntry
      * @param CopsEntry $entry
      * @return OpdsEntryNavigation
      */
     private function getOpdsEntry($entry)
     {
+        $thumbnail = $entry->getThumbnailLink();
+        $media = isset($thumbnail) ? $this->getOpdsEntryImage($thumbnail) : null;
+
         $opdsEntry = new OpdsEntryNavigation(
             id: $entry->id,
             title: $entry->title,
             route: $entry->getNavLink(),
             summary: $entry->content,
-            media: $entry->getThumbnail(),
+            media: $media,
             relation: $entry->getRelation(),
             //updated: $entry->getUpdatedTime(),
             updated: $this->getUpdatedTime(),
