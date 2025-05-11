@@ -1,51 +1,109 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Static method SebLucas\\\\Cops\\\\Calibre\\\\Annotation\\:\\:forgetAboutConvertAnnotations\\(\\) is unused\\.$#"
+			message: '#^Comparison operation "\>\=" between int\<80200, 80499\> and 70400 is always true\.$#'
+			identifier: greaterOrEqual.alwaysTrue
+			count: 1
+			path: checkconfig.php
+
+		-
+			message: '#^Static method SebLucas\\Cops\\Calibre\\Annotation\:\:forgetAboutConvertAnnotations\(\) is unused\.$#'
+			identifier: method.unused
 			count: 1
 			path: src/Calibre/Annotation.php
 
 		-
-			message: "#^PHPDoc type string\\|null of property SebLucas\\\\Cops\\\\Calibre\\\\Format\\:\\:\\$id is not covariant with PHPDoc type int\\|null of overridden property SebLucas\\\\Cops\\\\Calibre\\\\Base\\:\\:\\$id\\.$#"
+			message: '#^Call to an undefined static method SebLucas\\Cops\\Calibre\\Base\|SebLucas\\Cops\\Calibre\\Data\:\:getCount\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Calibre/BaseList.php
+
+		-
+			message: '#^Call to an undefined static method SebLucas\\Cops\\Calibre\\Base\|SebLucas\\Cops\\Calibre\\Data\:\:getInstanceById\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Calibre/BaseList.php
+
+		-
+			message: '#^Call to an undefined static method SebLucas\\Cops\\Calibre\\Base\|SebLucas\\Cops\\Calibre\\Data\:\:getInstanceByName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Calibre/BaseList.php
+
+		-
+			message: '#^PHPDoc tag @var with type SebLucas\\Cops\\Calibre\\Category is not subtype of native type static\(SebLucas\\Cops\\Calibre\\Category\)\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: src/Calibre/Category.php
+
+		-
+			message: '#^PHPDoc type string\|null of property SebLucas\\Cops\\Calibre\\Format\:\:\$id is not covariant with PHPDoc type int\|null of overridden property SebLucas\\Cops\\Calibre\\Base\:\:\$id\.$#'
+			identifier: property.phpDocType
 			count: 1
 			path: src/Calibre/Format.php
 
 		-
-			message: "#^Call to an undefined method DOMNode\\:\\:getAttribute\\(\\)\\.$#"
+			message: '#^Call to an undefined method DOMNode\:\:getAttribute\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/Calibre/Metadata.php
 
 		-
-			message: "#^Call to an undefined method DOMNode\\:\\:getElementsByTagName\\(\\)\\.$#"
+			message: '#^Call to an undefined method DOMNode\:\:getElementsByTagName\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/Calibre/Metadata.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
+			message: '#^Right side of && is always false\.$#'
+			identifier: booleanAnd.rightAlwaysFalse
+			count: 1
+			path: src/Handlers/AdminHandler.php
+
+		-
+			message: '#^Comparison operation "\>\=" between int\<80200, 80499\> and 80200 is always true\.$#'
+			identifier: greaterOrEqual.alwaysTrue
+			count: 1
+			path: src/Handlers/CheckHandler.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/Handlers/CheckHandler.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Marsender\\EPubLoader\\RequestHandler and ''isDone'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Handlers/LoaderHandler.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
 			count: 3
 			path: src/Handlers/LoaderHandler.php
 
 		-
-			message: "#^Ternary operator condition is always true\\.$#"
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
 			count: 1
 			path: src/Handlers/LoaderHandler.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Output/DotPHPTemplate.php
-
-		-
-			message: "#^Call to an undefined method SebLucas\\\\Cops\\\\Pages\\\\Page\\:\\:getContent\\(\\)\\.$#"
+			message: '#^Call to an undefined method SebLucas\\Cops\\Pages\\Page\:\:getContent\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/Output/JsonRenderer.php
 
 		-
-			message: "#^Comparison operation \"\\>\" between 0 and 0 is always false\\.$#"
-			count: 1
-			path: src/Output/JsonRenderer.php
-
-		-
-			message: "#^Property SebLucas\\\\Cops\\\\Output\\\\BaseRenderer\\:\\:\\$response \\(SebLucas\\\\Cops\\\\Output\\\\Response\\) in empty\\(\\) is not falsy\\.$#"
+			message: '#^Property SebLucas\\Cops\\Output\\BaseRenderer\:\:\$response \(SebLucas\\Cops\\Output\\Response\) in empty\(\) is not falsy\.$#'
+			identifier: empty.property
 			count: 1
 			path: src/Output/Zipper.php
+
+		-
+			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 12
+			path: tests/ConfigTest.php

@@ -11,6 +11,7 @@ use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Routing\RouterInterface;
 
 class FrameworkTodoTest extends TestCase
 {
@@ -38,8 +39,9 @@ class FrameworkTodoTest extends TestCase
         $router1 = Framework::getRouter();
         $router2 = FrameworkTodo::getRouter();
 
-        $this->assertNotNull($router1);
-        $this->assertNotNull($router2);
+        $this->assertInstanceOf(RouterInterface::class, $router1);
+        $this->assertInstanceOf(RouterInterface::class, $router2);
+        $this->assertNotSame($router1, $router2);
     }
 
     public function testRequestHandling(): void
@@ -47,7 +49,6 @@ class FrameworkTodoTest extends TestCase
         $framework = new FrameworkTodo(new CustomAdapter());
         $context = $framework->getContext();
 
-        $this->assertNotNull($context);
         $this->assertInstanceOf(Request::class, $context->getRequest());
     }
 
@@ -64,9 +65,10 @@ class FrameworkTodoTest extends TestCase
             }
         };
 
-        $adapter->addMiddleware(get_class($testMiddleware));
+        $result = $adapter->addMiddleware(get_class($testMiddleware));
 
-        $this->assertTrue(true); // Middleware added successfully
+        $expected = $adapter;
+        $this->assertSame($expected, $result); // Middleware added successfully
     }
 
     public function testErrorHandling(): void

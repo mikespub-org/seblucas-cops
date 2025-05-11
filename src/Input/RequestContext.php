@@ -178,14 +178,13 @@ class RequestContext
      */
     protected function generateQueryStringUrl(array $params): string
     {
-        //$baseUrl = $this->request->baseUrl();
         $baseUrl = UriGenerator::absolute('');
         $queryString = http_build_query($params);
         return $baseUrl . ($queryString ? '?' . $queryString : '');
     }
 
     // Accessor methods
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): void
     {
         $this->request = $request;
     }

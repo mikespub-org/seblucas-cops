@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Tests;
 
 use SebLucas\Cops\Pages\PageAuthorDetail;
+use SebLucas\Cops\Pages\PageCustomize;
 use SebLucas\Cops\Pages\PageId;
 
 require_once dirname(__DIR__) . '/config/test.php';
@@ -1343,6 +1344,7 @@ class PageTest extends TestCase
         $request = Request::build(['page' => $page], null, $server);
         $request->setSession($session);
 
+        /** @var PageCustomize $currentPage */
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertEquals("Customize COPS UI", $currentPage->title);
@@ -1377,6 +1379,7 @@ class PageTest extends TestCase
         $request = Request::build(['page' => $page], null, $server, $post);
         $request->setSession($session);
 
+        /** @var PageCustomize $currentPage */
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertEquals("Customize COPS UI", $currentPage->title);

@@ -369,11 +369,18 @@ if (!isset($config)) {
     {
         if (empty($this->tooltips)) {
             require dirname(__DIR__, 2) . '/config/tooltips.php';  // NOSONAR
+            /** @var array<string, string> $tooltips */
             $this->tooltips = $tooltips;
         }
         return $this->tooltips[$key] ?? '';
     }
 
+    /**
+     * Summary of handleCheckBooks
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function handleCheckBooks($request, $response)
     {
         $i = 0;

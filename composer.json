@@ -42,7 +42,7 @@
         "symfony/routing": "^6.4||^7.2",
         "symfony/string": "^6.4||^7.2",
         "symfony/translation-contracts": "^3.5",
-        "twig/twig": "^3.20"
+        "twig/twig": "^3.21"
     },
     "require-dev": {
         "kiwilan/php-opds": "dev-images",

@@ -262,7 +262,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("d.e", $parent->title);
 
         $columnType = CustomColumnType::createByCustomID(6);
-        $columnType->setHandler(static::$handler);
+        $columnType->setHandler(self::$handler);
         $entries = $columnType->browseAllCustomValues();
         $this->assertCount(5, $entries);
         $this->assertEquals("a", $entries[0]->title);
