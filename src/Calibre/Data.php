@@ -340,10 +340,6 @@ class Data
      */
     public function getDataLink($title = null, $view = false)
     {
-        if (Config::get('use_url_rewriting') == "1") {
-            return $this->getHtmlLinkWithRewriting($title, $view);
-        }
-
         return $this->getLinkResource($title, $view);
     }
 
@@ -382,46 +378,6 @@ class Data
     {
         // external storage is assumed to be already url-encoded if needed
         return $this->book->path . '/' . rawurlencode($this->getFilename());
-    }
-
-    /**
-     * Summary of getHtmlLinkWithRewriting
-     * @param ?string $title
-     * @param bool $view
-     * @deprecated 3.1.0 use route urls instead
-     * @return LinkAcquisition
-     */
-    public function getHtmlLinkWithRewriting($title = null, $view = false)
-    {
-        $database = "";
-        if (!is_null($this->databaseId)) {
-            $database = $this->databaseId . "/";
-        } else {
-            $database = "0/";
-        }
-
-        $prefix = "download";
-        //$routeName = 'fetch-download';
-        if ($view) {
-            $prefix = "view";
-            //$routeName = 'fetch-view';
-        }
-        $urlPath = $prefix . "/" . $this->id . "/" . $database;
-
-        // this is set on book in JsonRenderer now
-        if ($this->updateForKepub) {
-            $urlPath .= rawurlencode($this->getUpdatedFilenameKepub());
-        } else {
-            $urlPath .= rawurlencode($this->getFilename());
-        }
-        $href = fn() => $this->getPath($urlPath);
-        return new LinkAcquisition(
-            $href,
-            $this->getMimeType(),
-            LinkAcquisition::OPDS_ACQUISITION_TYPE,
-            $title,
-            null
-        );
     }
 
     /**

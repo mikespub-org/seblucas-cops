@@ -169,15 +169,6 @@ $config['cops_prefered_format'] = ['EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 
 $config['cops_ignored_formats'] = [];
 
 /*
- * use URL rewriting for downloading of ebook in HTML catalog
- * See Github wiki for more information
- *  1 : enable
- *  0 : disable
- * @deprecated 3.1.0 use route urls instead (= always enabled in 3.4+)
- */
-$config['cops_use_url_rewriting'] = '0';
-
-/*
  * generate a invalid OPDS stream to allow bad OPDS client to use search
  * Example of non compliant OPDS client : Moon+ Reader
  * Example of good OPDS client : Mantano, FBReader

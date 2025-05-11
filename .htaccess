@@ -31,9 +31,6 @@ DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
 RewriteEngine on
-# @deprecated 3.1.0 use route urls instead
-RewriteRule ^download/(\d+)/(\d+)/.*\.(.*)$ index.php/fetch/$2/$1/ignore.$3 [L]
-RewriteRule ^view/(\d+)/(\d+)/.*\.(.*)$ index.php/inline/$2/$1/ignore.$3 [L]
 # with $config['cops_front_controller'] = 'index.php'
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f

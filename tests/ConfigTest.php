@@ -39,11 +39,6 @@ class ConfigTest extends TestCase
         $this->assertTrue(is_array(Config::get('prefered_format')));
     }
 
-    public function testCheckConfigurationUseUrlRewiting(): void
-    {
-        $this->assertTrue(is_int((int) Config::get('use_url_rewriting')));
-    }
-
     public function testCheckConfigurationGenerateInvalidOPDSStream(): void
     {
         $this->assertTrue(is_int((int) Config::get('generate_invalid_opds_stream')));

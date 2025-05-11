@@ -237,25 +237,8 @@ class BookTest extends TestCase
         $this->assertEquals("https://www.wikidata.org/entity/Q962265", $identifiers[3]->getValueUri());
     }
 
-    public function testBookGetLinkArrayWithUrlRewriting(): void
+    public function testBookGetLinkArray(): void
     {
-        Config::set('use_url_rewriting', "1");
-        $book = Book::getBookById(2);
-        $book->setHandler(self::$handler);
-
-        $linkArray = $book->getLinkArray();
-        foreach ($linkArray as $link) {
-            if ($link instanceof LinkAcquisition && $link->title == "EPUB") {
-                $this->assertEquals(UriGenerator::path("download/1/0/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub"), $link->getUri());
-                return;
-            }
-        }
-        $this->fail();
-    }
-
-    public function testBookGetLinkArrayWithoutUrlRewriting(): void
-    {
-        Config::set('use_url_rewriting', "0");
         $book = Book::getBookById(2);
         $book->setHandler(self::$handler);
 
@@ -638,21 +621,17 @@ class BookTest extends TestCase
         $this->assertEquals("Carroll, Lewis - Alice's Adventures in Wonderland.kepub.epub", $epub->getUpdatedFilenameKepub());
         $this->assertEquals(__DIR__ . "/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $epub->getLocalPath());
 
-        Config::set('use_url_rewriting', "1");
         Config::set('provide_kepub', "1");
         $book = Book::getBookById(17);
         $book->updateForKepub = true;
         $epub = $book->getDataById(20);
-        $this->assertEquals(UriGenerator::path("download/20/0/Carroll%2C%20Lewis%20-%20Alice%27s%20Adventures%20in%20Wonderland.kepub.epub"), $epub->getHtmlLink());
-        $this->assertEquals(UriGenerator::path("download/17/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi"), $mobi->getHtmlLink());
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Carroll_Lewis_Alice_s_Adventures_in_Wonderland_kepub.epub", $epub->getHtmlLink());
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/17/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.mobi", $mobi->getHtmlLink());
 
         Config::set('provide_kepub', "0");
         $book = Book::getBookById(17);
         $book->updateForKepub = false;
         $epub = $book->getDataById(20);
-        $this->assertEquals(UriGenerator::path("download/20/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $epub->getHtmlLink());
-
-        Config::set('use_url_rewriting', "0");
         $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub", $epub->getHtmlLink());
     }
 

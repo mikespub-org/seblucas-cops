@@ -137,14 +137,6 @@ $tooltips['cops_ignored_formats'] = <<<'EOT'
     This will also stop downloading them, unless the files are under the web directory
     EOT;
 
-$tooltips['cops_use_url_rewriting'] = <<<'EOT'
-    use URL rewriting for downloading of ebook in HTML catalog
-    See Github wiki for more information
-     1 : enable
-     0 : disable
-    @deprecated 3.1.0 use route urls instead (= always enabled in 3.4+)
-    EOT;
-
 $tooltips['cops_generate_invalid_opds_stream'] = <<<'EOT'
     generate a invalid OPDS stream to allow bad OPDS client to use search
     Example of non compliant OPDS client : Moon+ Reader
