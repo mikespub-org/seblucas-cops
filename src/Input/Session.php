@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Input;
 
+use SebLucas\Cops\Routing\UriGenerator;
+
 /**
  * Summary of Session
  * @see https://github.com/symfony/symfony/blob/7.2/src/Symfony/Component/HttpFoundation/Session/Session.php
@@ -32,6 +34,23 @@ class Session
         $timeout = $this->timeout();
         ini_set('session.cookie_lifetime', $timeout);
         ini_set('session.gc_maxlifetime', $timeout);
+        // set cookie path for session cookies here
+        $baseUrl = UriGenerator::base();
+        if (str_contains($baseUrl, '://')) {
+            if (str_starts_with($baseUrl, 'https://')) {
+                ini_set('session.cookie_secure', 1);
+            } else {
+                // allow local insecure cookies for now
+                // ini_set('session.cookie_secure', 1);
+            }
+            $baseUrl = parse_url($baseUrl, PHP_URL_PATH);
+        } else {
+            // allow local insecure cookies for now
+            // ini_set('session.cookie_secure', 1);
+        }
+        ini_set('session.cookie_path', $baseUrl);
+        ini_set('session.cookie_httponly', 1);
+        ini_set('session.cookie_samesite', 'Strict');
     }
 
     /**
