@@ -183,6 +183,8 @@ class AdminHandler extends BaseHandler
             if (!array_key_exists($key, $default)) {
                 continue;
             }
+            // @todo handle case where default is string and local is array, e.g. calibre_directory
+            // @todo handle case where default is null and local is string or array, e.g. cops_basic_authentication
             if (!is_string($default[$key])) {
                 if ($value === "") {
                     $value = $default[$key];
@@ -228,10 +230,21 @@ class AdminHandler extends BaseHandler
             $content .= ' (errors)<p>Warning: please correct the errors for the changes below</p>';
         } elseif (!empty($changes)) {
             // save changes
-            $content .= '<pre>';
+            $output = '';
             foreach ($local as $key => $value) {
-                $content .= "\$config['$key'] = " . json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ";\n";
+                $title = $this->getTooltip($key);
+                if (!empty($title)) {
+                    $output .= "/*\n * ";
+                    $output .= str_replace("\n", "\n * ", trim($title));
+                    $output .= "\n */\n";
+                }
+                $output .= "\$config['$key'] = " . json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ";\n\n";
             }
+            $filepath = $this->getLocalConfigPath();
+            $header = $this->getConfigHeader();
+            file_put_contents($filepath, $header . $output);
+            $content .= '<pre>';
+            $content .= $output;
             $content .= '</pre>';
         }
         if (!empty($changes)) {
@@ -263,12 +276,21 @@ class AdminHandler extends BaseHandler
     }
 
     /**
+     * Summary of getLocalConfigPath
+     * @return string
+     */
+    protected function getLocalConfigPath()
+    {
+        return dirname(__DIR__, 2) . '/config/local.php';
+    }
+
+    /**
      * Summary of isLocalConfigWritable
      * @return bool
      */
     protected function isLocalConfigWritable()
     {
-        $filepath = dirname(__DIR__, 2) . '/config/local.php';
+        $filepath = $this->getLocalConfigPath();
         if (!file_exists($filepath) || !is_writable($filepath)) {
             return false;
         }
@@ -313,6 +335,29 @@ class AdminHandler extends BaseHandler
             $content .= '<tr><td><label for="' . $key . '" title="' . $title . '">' . $key . '</label></td><td><input type="text" id="' . $key . '" name="' . $key . '" value="' . $value . '" size="50" /></td><td>' . $json . '</td></tr>' . "\n";
         }
         return $content;
+    }
+
+    /**
+     * Summary of getConfigHeader
+     * @return string
+     */
+    protected function getConfigHeader()
+    {
+        return '<?php
+
+if (!isset($config)) {
+    $config = [];
+}
+
+/*
+ ***************************************************
+ * Please read config/default.php for all possible
+ * configuration items
+ * For changes in config/default.php see CHANGELOG.md
+ ***************************************************
+ */
+
+';
     }
 
     /**
