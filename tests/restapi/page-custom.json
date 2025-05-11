@@ -20,13 +20,13 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/20/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/20/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub"
                     },
                     {
                         "name": "PDF",
-                        "url": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
-                        "viewUrl": "vendor/bin/index.php/inline/0/19/ignore.pdf"
+                        "url": "vendor/bin/index.php/fetch/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf",
+                        "viewUrl": "vendor/bin/index.php/inline/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf"
                     }
                 ],
                 "preferedCount": 2,
@@ -75,8 +75,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/14/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/14/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/14/Twenty_Years_After_Alexandre_Dumas.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/14/Twenty_Years_After_Alexandre_Dumas.epub"
                     }
                 ],
                 "preferedCount": 1,

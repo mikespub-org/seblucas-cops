@@ -10,13 +10,13 @@
         "preferedData": [
             {
                 "name": "EPUB",
-                "url": "vendor/bin/index.php/fetch/0/20/ignore.epub",
-                "viewUrl": "vendor/bin/index.php/inline/0/20/ignore.epub"
+                "url": "vendor/bin/index.php/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub",
+                "viewUrl": "vendor/bin/index.php/inline/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub"
             },
             {
                 "name": "PDF",
-                "url": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
-                "viewUrl": "vendor/bin/index.php/inline/0/19/ignore.pdf"
+                "url": "vendor/bin/index.php/fetch/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf",
+                "viewUrl": "vendor/bin/index.php/inline/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf"
             }
         ],
         "preferedCount": 2,
@@ -59,24 +59,24 @@
             {
                 "id": 17,
                 "format": "MOBI",
-                "url": "vendor/bin/index.php/fetch/0/17/ignore.mobi",
-                "viewUrl": "vendor/bin/index.php/inline/0/17/ignore.mobi",
+                "url": "vendor/bin/index.php/fetch/0/17/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.mobi",
+                "viewUrl": "vendor/bin/index.php/inline/0/17/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.mobi",
                 "mail": 0,
                 "readerUrl": ""
             },
             {
                 "id": 19,
                 "format": "PDF",
-                "url": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
-                "viewUrl": "vendor/bin/index.php/inline/0/19/ignore.pdf",
+                "url": "vendor/bin/index.php/fetch/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf",
+                "viewUrl": "vendor/bin/index.php/inline/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf",
                 "mail": 0,
                 "readerUrl": ""
             },
             {
                 "id": 20,
                 "format": "EPUB",
-                "url": "vendor/bin/index.php/fetch/0/20/ignore.epub",
-                "viewUrl": "vendor/bin/index.php/inline/0/20/ignore.epub",
+                "url": "vendor/bin/index.php/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub",
+                "viewUrl": "vendor/bin/index.php/inline/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub",
                 "mail": 1,
                 "readerUrl": "vendor/bin/index.php/read/0/20/Alice_s_Adventures_in_Wonderland"
             }
@@ -90,13 +90,13 @@
                 "name": "hello.txt",
                 "url": "vendor/bin/index.php/files/0/17/hello.txt",
                 "length": "12",
-                "mtime": "2025-01-24T21:33:18+00:00"
+                "mtime": "now"
             },
             {
                 "name": "sub folder/copied file.txt",
                 "url": "vendor/bin/index.php/files/0/17/sub%20folder/copied%20file.txt",
                 "length": "12",
-                "mtime": "2025-01-24T21:33:18+00:00"
+                "mtime": "now"
             }
         ],
         "identifiers": [],

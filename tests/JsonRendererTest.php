@@ -89,7 +89,7 @@ class JsonRendererTest extends TestCase
         $test = $renderer->getBookContentArray($book);
 
         $this->assertCount(2, $test ["preferedData"]);
-        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $test ["preferedData"][0]["url"]);
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub", $test ["preferedData"][0]["url"]);
         $this->assertEquals(self::$handler::link() . "/publishers/2/Macmillan_and_Co_London", $test ["publisherurl"]);
 
         $this->assertEquals("", $test ["seriesName"]);
@@ -107,7 +107,7 @@ class JsonRendererTest extends TestCase
         $test = $renderer->getBookContentArray($book);
 
         $this->assertCount(1, $test ["preferedData"]);
-        $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/ignore.epub", $test ["preferedData"][0]["url"]);
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub", $test ["preferedData"][0]["url"]);
         $this->assertEquals(self::$handler::link() . "/publishers/6/Strand_Magazine", $test ["publisherurl"]);
 
         $this->assertEquals("Sherlock Holmes", $test ["seriesName"]);
@@ -132,8 +132,8 @@ class JsonRendererTest extends TestCase
         $this->assertEquals(self::$handler::link() . "/tags/5/Fantasy", $test ["tags"][0]["url"]);
         $this->assertCount(0, $test ["identifiers"]);
         $this->assertCount(3, $test ["datas"]);
-        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $test ["datas"][2]["url"]);
-        $this->assertEquals(self::$fetcher::link() . "/inline/0/20/ignore.epub", $test ["datas"][2]["viewUrl"]);
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub", $test ["datas"][2]["url"]);
+        $this->assertEquals(self::$fetcher::link() . "/inline/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub", $test ["datas"][2]["viewUrl"]);
         $this->assertEquals(ReadHandler::link() . "/read/0/20/Alice_s_Adventures_in_Wonderland", $test ["datas"][2]["readerUrl"]);
 
         // use relative path for calibre directory

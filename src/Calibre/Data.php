@@ -463,8 +463,12 @@ class Data
             $params['db'] = $this->databaseId ?? 0;
             $params['type'] = $this->extension;
             $params['data'] = $this->id;
-            //$params['ignore'] = rawurlencode(basename($filename));
-            $params['ignore'] = 'ignore';
+            // this is set on book in JsonRenderer now
+            if ($this->updateForKepub) {
+                $params['ignore'] = $this->getUpdatedFilename() . '.kepub';
+            } else {
+                $params['ignore'] = $this->getDownloadFilename();
+            }
             $routeName = self::ROUTE_DATA;
             if ($view) {
                 $params['view'] = 1;

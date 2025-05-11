@@ -20,8 +20,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/3/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/3/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/3/The_Adventures_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/3/The_Adventures_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -70,13 +70,13 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/20/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/20/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub"
                     },
                     {
                         "name": "PDF",
-                        "url": "vendor/bin/index.php/fetch/0/19/ignore.pdf",
-                        "viewUrl": "vendor/bin/index.php/inline/0/19/ignore.pdf"
+                        "url": "vendor/bin/index.php/fetch/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf",
+                        "viewUrl": "vendor/bin/index.php/inline/0/19/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.pdf"
                     }
                 ],
                 "preferedCount": 2,
@@ -125,8 +125,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/4/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/4/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/4/The_Call_of_the_Wild_Jack_London.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/4/The_Call_of_the_Wild_Jack_London.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -171,8 +171,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/2/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/2/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -221,8 +221,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/12/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/12/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/12/The_Hound_of_the_Baskervilles_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/12/The_Hound_of_the_Baskervilles_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -267,8 +267,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/8/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/8/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/8/The_Lost_World_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/8/The_Lost_World_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -313,8 +313,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/11/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/11/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/11/The_Memoirs_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/11/The_Memoirs_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -363,8 +363,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/1/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/1/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -413,8 +413,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/9/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/9/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/9/The_Sign_of_the_Four_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/9/The_Sign_of_the_Four_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -459,8 +459,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/10/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/10/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/10/A_Study_in_Scarlet_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/10/A_Study_in_Scarlet_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -505,8 +505,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/13/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/13/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/13/The_Three_Musketeers_Alexandre_Dumas.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/13/The_Three_Musketeers_Alexandre_Dumas.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -559,8 +559,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/5/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/5/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/5/Through_the_Looking_Glass_And_What_Alic_Lewis_Carroll.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/5/Through_the_Looking_Glass_And_What_Alic_Lewis_Carroll.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -609,8 +609,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/14/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/14/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/14/Twenty_Years_After_Alexandre_Dumas.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/14/Twenty_Years_After_Alexandre_Dumas.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -663,8 +663,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/7/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/7/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/7/The_War_of_the_Worlds_H_G_Wells.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/7/The_War_of_the_Worlds_H_G_Wells.epub"
                     }
                 ],
                 "preferedCount": 1,

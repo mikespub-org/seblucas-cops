@@ -20,8 +20,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/3/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/3/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/3/The_Adventures_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/3/The_Adventures_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -70,8 +70,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/2/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/2/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -120,8 +120,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/11/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/11/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/11/The_Memoirs_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/11/The_Memoirs_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -170,8 +170,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/1/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/1/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,

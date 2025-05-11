@@ -20,8 +20,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/21/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/21/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/21/La_curee_Emile_Zola.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/21/La_curee_Emile_Zola.epub"
                     }
                 ],
                 "preferedCount": 1,

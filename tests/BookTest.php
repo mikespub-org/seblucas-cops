@@ -262,7 +262,7 @@ class BookTest extends TestCase
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
             if ($link instanceof LinkAcquisition && $link->title == "EPUB") {
-                $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/ignore.epub", $link->getUri());
+                $this->assertEquals(self::$fetcher::link() . "/fetch/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub", $link->getUri());
                 return;
             }
         }
@@ -653,7 +653,7 @@ class BookTest extends TestCase
         $this->assertEquals(UriGenerator::path("download/20/0/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"), $epub->getHtmlLink());
 
         Config::set('use_url_rewriting', "0");
-        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/ignore.epub", $epub->getHtmlLink());
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub", $epub->getHtmlLink());
     }
 
     public function testGetUpdatedEpub(): void

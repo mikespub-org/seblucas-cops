@@ -20,8 +20,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/4/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/4/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/4/The_Call_of_the_Wild_Jack_London.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/4/The_Call_of_the_Wild_Jack_London.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -66,8 +66,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/2/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/2/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
                     }
                 ],
                 "preferedCount": 1,
@@ -116,8 +116,8 @@
                 "preferedData": [
                     {
                         "name": "EPUB",
-                        "url": "vendor/bin/index.php/fetch/0/21/ignore.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/21/ignore.epub"
+                        "url": "vendor/bin/index.php/fetch/0/21/La_curee_Emile_Zola.epub",
+                        "viewUrl": "vendor/bin/index.php/inline/0/21/La_curee_Emile_Zola.epub"
                     }
                 ],
                 "preferedCount": 1,
