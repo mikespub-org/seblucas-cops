@@ -91,6 +91,12 @@ class NoteResourceTest extends TestCase
         $expected = '<img src="/cops/index.php/calres/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
 
+        Config::set('resources_cdn', 'https://fastly.site.com/cops/');
+        $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
+        $expected = '<img src="https://fastly.site.com/cops/index.php/calres/0/xxh64/7c301792c52eebf7?placement=';
+        $this->assertStringContainsString($expected, $html);
+
+        Config::set('resources_cdn', '');
         Config::set('full_url', '');
         UriGenerator::setBaseUrl(null);
     }

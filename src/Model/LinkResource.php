@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Model;
 
+use SebLucas\Cops\Routing\UriGenerator;
+
 /**
  * From https://specs.opds.io/opds-1.2#52-catalog-entry-relations
  * OPDS Catalog Entry Documents SHOULD include links to related Resources. This specification
@@ -85,5 +87,14 @@ class LinkResource extends Link
         }
         $this->mtime ??= date(DATE_ATOM, filemtime($this->filepath));
         return $this->mtime;
+    }
+
+    /**
+     * Summary of getUri
+     * @return string
+     */
+    public function getUri()
+    {
+        return UriGenerator::cached(parent::getUri());
     }
 }

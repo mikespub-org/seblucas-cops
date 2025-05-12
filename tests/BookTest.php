@@ -252,6 +252,45 @@ class BookTest extends TestCase
         $this->fail();
     }
 
+    public function testBookGetLinkArrayWithCDN(): void
+    {
+        Config::set('full_url', '/cops/');
+        UriGenerator::setBaseUrl(null);
+        Config::set('resources_cdn', 'https://fastly.site.com/cops/');
+
+        $book = Book::getBookById(17);
+        $book->setHandler(self::$handler);
+
+        $linkArray = $book->getLinkArray();
+        $found = 0;
+        foreach ($linkArray as $link) {
+            if ($link instanceof LinkAcquisition && $link->title == "EPUB") {
+                $this->assertEquals("https://fastly.site.com/cops/index.php/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub", $link->getUri());
+                $found += 1;
+                continue;
+            }
+            if ($link instanceof LinkImage && $link->rel == "http://opds-spec.org/image/thumbnail") {
+                $this->assertEquals("https://fastly.site.com/cops/index.php/thumbs/0/17/html.jpg", $link->getUri());
+                $found += 1;
+                continue;
+            }
+        }
+
+        foreach ($book->getExtraFiles() as $fileName) {
+            $link = $book->getExtraFileLink($fileName);
+            $this->assertEquals("https://fastly.site.com/cops/index.php/files/0/17/hello.txt", $link->getUri());
+            $found += 1;
+            break;
+        }
+
+        Config::set('resources_cdn', '');
+        Config::set('full_url', '');
+        UriGenerator::setBaseUrl(null);
+        if ($found < 3) {
+            $this->fail();
+        }
+    }
+
     public function testGetThumbnailNotNeeded(): void
     {
         $book = Book::getBookById(2);

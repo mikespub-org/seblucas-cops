@@ -111,6 +111,22 @@ class UriGenerator
     }
 
     /**
+     * Summary of cached
+     * @param string $uri
+     * @return string
+     */
+    public static function cached($uri)
+    {
+        if (Config::get('resources_cdn')) {
+            $baseUri = self::base();
+            if (str_starts_with($uri, $baseUri)) {
+                return Config::get('resources_cdn') . substr($uri, strlen($baseUri));
+            }
+        }
+        return $uri;
+    }
+
+    /**
      * Get endpoint or empty with front_controller
      * @return string
      */

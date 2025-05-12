@@ -67,6 +67,12 @@ $tooltips['cops_trusted_proxies'] = <<<'EOT'
 $tooltips['cops_trusted_headers'] = <<<'EOT'
     EOT;
 
+$tooltips['cops_resources_cdn'] = <<<'EOT'
+    Use CDN for resources like images, files etc.
+    This will replace the base url or full url above
+    @see https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations#using-cdn-for-cops-resources
+    EOT;
+
 $tooltips['cops_recentbooks_limit'] = <<<'EOT'
     Number of recent books to show
     EOT;

@@ -20,6 +20,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\CalResHandler;
 use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Routing\UriGenerator;
 
 class Resource
 {
@@ -83,7 +84,7 @@ class Resource
         $params['db'] = $database;
         $params['alg'] = 'ALG';
         $params['digest'] = 'DIGEST';
-        $baseurl = CalResHandler::route(self::ROUTE_DETAIL, $params);
+        $baseurl = UriGenerator::cached(CalResHandler::route(self::ROUTE_DETAIL, $params));
         // remove dummy alg & digest
         $baseurl = str_replace(['/ALG', '/DIGEST'], [], $baseurl);
         return str_replace(self::RESOURCE_URL_SCHEME . '://', $baseurl . '/', $doc);

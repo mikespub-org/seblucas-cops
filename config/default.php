@@ -85,6 +85,13 @@ $config['cops_trusted_proxies'] = '';
 $config['cops_trusted_headers'] = [];
 
 /*
+ * Use CDN for resources like images, files etc.
+ * This will replace the base url or full url above
+ * @see https://github.com/mikespub-org/seblucas-cops/wiki/Reverse-proxy-configurations#using-cdn-for-cops-resources
+ */
+$config['cops_resources_cdn'] = '';
+
+/*
  * Number of recent books to show
  */
 $config['cops_recentbooks_limit'] = '50';

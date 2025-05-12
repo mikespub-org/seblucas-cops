@@ -72,7 +72,8 @@ trait HasRouteTrait
      */
     public function getPath($path = '', $params = [])
     {
-        return UriGenerator::path($path, $params);
+        // this requires setting Access-Control-Allow-Origin in cache for jquery/fetch with Origin
+        return UriGenerator::cached(UriGenerator::path($path, $params));
     }
 
     /**
