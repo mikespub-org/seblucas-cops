@@ -4,6 +4,10 @@ For the original releases 0.0.1 to 1.1.3 see [CHANGELOG.seblucas](CHANGELOG.sebl
 or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 
 x.x.x - TODO
+  * Changes in config/default.php file:
+    - new $config['cops_customize'] for default customize values per user (TODO)
+  * Upgrade graphiql CDN template for react 19.x - see PR graphql/graphiql#3902
+  * Experiment with default customize values per user (TODO)
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.5
 
 2.8.x - 2024xxxx Maintenance release for 2.x (PHP >= 8.1)
@@ -12,17 +16,18 @@ x.x.x - TODO
 1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
   * ...
 
-4.x.x - 2025xxxx 
-  * Changes in config/default.php file:
-    - new $config['cops_customize'] for default customize values per user (TODO)
-  * Upgrade graphiql CDN template for react 19.x - see PR graphql/graphiql#3902
-  * Experiment with default customize values per user (TODO)
-
 3.x.x - 2025xxxx 
   * Changes in config/default.php file:
+    - new $config['cops_resources_cdn'] to use CDN for COPS resources
+    - drop $config['cops_use_url_rewriting'] as deprecated since 3.1.0
+    - mark $config['calibre_internal_directory'] as deprecated since 1.3.1
     - new $config['cops_enable_admin'] to enable admin features in COPS (WIP)
+  * Experiment using CDN for COPS resources + allow caching for template files
+  * Set ignore filename for book data links
+  * Set session cookie path, httponly, samesite and secure id if needed
+  * Set image height and width for OPDS 2.0 feeds (dev only)
   * Upgrade kiwilan/php-opds package to fix OPDS 2.0 search template with route urls (dev only)
-  * Update translations in language files - see PR #150 from @horus68 et al.
+  * Update translations in language files - see PR #150 from @horus68, PR #154 from @HaoSs07 etc.
   * Fix count by letter phrases in code - see issue #147 by @dunxd
   * Replace Theme by Style in customize page - see issue #146 by @dunxd
   * Support Javascript ES5 + legacy browser cookies - see issue #140 and PRs by @dunxd
