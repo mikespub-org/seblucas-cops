@@ -139,6 +139,7 @@ class BaseList
      */
     public function getInstanceById($id)
     {
+        assert(is_subclass_of($this->className, Base::class));
         return $this->className::getInstanceById($id, $this->databaseId);
     }
 
@@ -149,6 +150,7 @@ class BaseList
      */
     public function getInstanceByName($name)
     {
+        assert(is_subclass_of($this->className, Base::class));
         return $this->className::getInstanceByName($name, $this->databaseId);
     }
 
@@ -619,12 +621,8 @@ class BaseList
             $params = $this->request->getFilterParams();
             //$params["db"] ??= $this->databaseId;
         }
+        assert(is_subclass_of($this->className, Base::class));
         while ($post = $result->fetchObject()) {
-            if ($this->className == Book::class) {
-                $post->count = 1;
-            }
-
-            /** @var Base|Book $instance */
             $instance = new $this->className($post, $this->databaseId);
             $instance->setHandler($this->handler);
             array_push($entryArray, $instance->getEntry($post->count, $params));
@@ -667,6 +665,7 @@ class BaseList
         $entryArray = [];
         $parents = [];
         $counter = [];
+        assert(is_subclass_of($this->className, Base::class));
         while ($post = $result->fetchObject()) {
             /** @var Category $instance */
             $instance = new $this->className($post, $this->databaseId);
@@ -745,6 +744,7 @@ class BaseList
                 // we don't have the book available here, set later
                 $instances[$post->id] = new $this->className($post);
             } else {
+                assert(is_subclass_of($this->className, Base::class));
                 $instances[$post->id] = new $this->className($post, $this->databaseId);
                 $instances[$post->id]->setHandler($this->handler);
             }

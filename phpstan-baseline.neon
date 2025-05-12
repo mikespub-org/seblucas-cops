@@ -19,18 +19,6 @@ parameters:
 			path: src/Calibre/BaseList.php
 
 		-
-			message: '#^Call to an undefined static method SebLucas\\Cops\\Calibre\\Base\|SebLucas\\Cops\\Calibre\\Data\:\:getInstanceById\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: src/Calibre/BaseList.php
-
-		-
-			message: '#^Call to an undefined static method SebLucas\\Cops\\Calibre\\Base\|SebLucas\\Cops\\Calibre\\Data\:\:getInstanceByName\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: src/Calibre/BaseList.php
-
-		-
 			message: '#^PHPDoc tag @var with type SebLucas\\Cops\\Calibre\\Category is not subtype of native type static\(SebLucas\\Cops\\Calibre\\Category\)\.$#'
 			identifier: varTag.nativeType
 			count: 1
@@ -89,12 +77,6 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 1
 			path: src/Handlers/LoaderHandler.php
-
-		-
-			message: '#^Call to an undefined method SebLucas\\Cops\\Pages\\Page\:\:getContent\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Output/JsonRenderer.php
 
 		-
 			message: '#^Property SebLucas\\Cops\\Output\\BaseRenderer\:\:\$response \(SebLucas\\Cops\\Output\\Response\) in empty\(\) is not falsy\.$#'

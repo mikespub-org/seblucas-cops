@@ -25,6 +25,7 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
+use \SebLucas\Cops\Pages\PageAbout;
 use Exception;
 
 class JsonRenderer extends BaseRenderer
@@ -787,6 +788,7 @@ class JsonRenderer extends BaseRenderer
         $out["customizeurl"] = $this->getRoute(PageId::ROUTE_CUSTOMIZE, $params);
 
         if ($this->page == PageId::ABOUT) {
+            /** @var PageAbout $currentPage */
             $out ["fullhtml"] = $currentPage->getContent();
         }
 

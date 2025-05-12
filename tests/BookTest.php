@@ -476,8 +476,8 @@ class BookTest extends TestCase
                 $width = $link->getWidth();
                 $height = $link->getHeight();
                 $size = getimagesize($link->filepath);
-                $this->assertEquals($size[0], intval($width));
-                $this->assertEquals($size[1], intval($height));
+                $this->assertSame($size[0], $width);
+                $this->assertSame($size[1], $height);
             }
         }
 

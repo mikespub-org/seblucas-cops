@@ -23,9 +23,9 @@ class LinkImage extends LinkResource
     public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
     public const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
 
-    /** @var ?string */
+    /** @var ?int */
     public $width = null;
-    /** @var ?string */
+    /** @var ?int */
     public $height = null;
 
     /**
@@ -38,14 +38,13 @@ class LinkImage extends LinkResource
         if (empty($size)) {
             return;
         }
-        //[$this->width, $this->height, $type, $attr] = $size;
-        $this->width = (string) $size[0];
-        $this->height = (string) $size[1];
+        $this->width = (int) $size[0];
+        $this->height = (int) $size[1];
     }
 
     /**
      * Summary of getWidth
-     * @return string|null
+     * @return int|null
      */
     public function getWidth()
     {
@@ -60,7 +59,7 @@ class LinkImage extends LinkResource
 
     /**
      * Summary of setWidth
-     * @param ?string $width
+     * @param ?int $width
      * @return self
      */
     public function setWidth($width)
@@ -71,7 +70,7 @@ class LinkImage extends LinkResource
 
     /**
      * Summary of getHeight
-     * @return string|null
+     * @return int|null
      */
     public function getHeight()
     {
@@ -86,7 +85,7 @@ class LinkImage extends LinkResource
 
     /**
      * Summary of setHeight
-     * @param ?string $height
+     * @param ?int $height
      * @return self
      */
     public function setHeight($height)
