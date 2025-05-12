@@ -17,6 +17,7 @@ $tooltips['calibre_internal_directory'] = <<<'EOT'
     SPECIFIC TO NGINX
     The internal directory set in nginx config file
     Leave empty if you don't know what you're doing
+    @deprecated 1.3.1 use absolute paths in calibre_directory
     EOT;
 
 $tooltips['calibre_external_storage'] = <<<'EOT'

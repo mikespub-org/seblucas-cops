@@ -56,7 +56,6 @@ class FileResponse extends Response
      */
     public function sendFile()
     {
-        // @todo clean up nginx x_accel_redirect
         // don't use x_accel_redirect if we deal with a tmpfile here
         if (!empty($this->istmpfile) || empty(Config::get('x_accel_redirect'))) {
             header('Content-Length: ' . filesize($this->filepath));
