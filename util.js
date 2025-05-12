@@ -553,15 +553,16 @@ $(document).on("keydown", function(e){
 });
 
 /*exported initiateAjax */
-function initiateAjax (url, theme, templates) {
+function initiateAjax (url, theme, templates, version) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
+    version = typeof version !== 'undefined' ? version : '3.6.5';
     // allow caching to get() template files here, but not for getJSON()
-    $.when($.get({url: templates + '/' + theme + '/header.html', cache: true}),
-           $.get({url: templates + '/' + theme + '/footer.html', cache: true}),
-           $.get({url: templates + '/' + theme + '/bookdetail.html', cache: true}),
-           $.get({url: templates + '/' + theme + '/main.html', cache: true}),
-           $.get({url: templates + '/' + theme + '/page.html', cache: true}),
-           $.get({url: templates + '/' + theme + '/suggestion.html', cache: true}),
+    $.when($.get({url: templates + '/' + theme + '/header.html?v=' + version, cache: true}),
+           $.get({url: templates + '/' + theme + '/footer.html?v=' + version, cache: true}),
+           $.get({url: templates + '/' + theme + '/bookdetail.html?v=' + version, cache: true}),
+           $.get({url: templates + '/' + theme + '/main.html?v=' + version, cache: true}),
+           $.get({url: templates + '/' + theme + '/page.html?v=' + version, cache: true}),
+           $.get({url: templates + '/' + theme + '/suggestion.html?v=' + version, cache: true}),
            $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
         templateBookDetail = doT.template (bookdetail [0]);
 
@@ -601,7 +602,7 @@ function initiateAjax (url, theme, templates) {
 }
 
 /** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
-function initiateTwig(url, theme, templates) {
+function initiateTwig(url, theme, templates, version) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);

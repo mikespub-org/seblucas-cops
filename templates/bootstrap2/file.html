@@ -28,18 +28,18 @@
     <script type="text/javascript" src="{{=it.assets}}/corejs-typeahead/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
 {{?}}
     <script type="text/javascript" src="{{=it.assets}}/lru-fast/lru.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="{{=it.templates}}/bootstrap2/scripts/cops.js"></script>
-    <script type="text/javascript" src="{{=it.basedir}}/util.js"></script>
+    <script type="text/javascript" src="{{=it.templates}}/bootstrap2/scripts/cops.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="{{=it.basedir}}/util.js?v={{=it.version}}"></script>
     <link rel="related" href="{{=it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{=it.title}}" />
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{{=it.assets}}/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{=it.assets}}/bootstrap/dist/css/bootstrap.min.css?v={{=it.version}}">
 
 
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="{{=it.assets}}/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="{{=it.assets}}/bootstrap/dist/js/bootstrap.min.js?v={{=it.version}}"></script>
 
     <style media="screen" type="text/css">
     .demo{
@@ -202,13 +202,13 @@
     }
 
     </style>
-    <link rel="stylesheet" href="{{=it.templates}}/bootstrap2/styles/typeahead.css">
+    <link rel="stylesheet" href="{{=it.templates}}/bootstrap2/styles/typeahead.css?v={{=it.version}}">
     <link rel="stylesheet" type="text/css" href="{{=it.current_css}}?v={{=it.version}}" media="screen" />
 
 {{? it.server_side_rendering == 0}}
     <script type="text/javascript">
         $(document).ready(function() {
-            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}", "{{=it.templates}}");
+            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}", "{{=it.templates}}", "{{=it.version}}");
         });
     </script>
 {{?}}

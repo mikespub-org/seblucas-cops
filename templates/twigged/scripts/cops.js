@@ -7,14 +7,14 @@ function postRefresh()
 }
 
 // Refactored to replace ES6+ features with ES5-compatible syntax
-function initiateTwig(url, theme, templates) {
+function initiateTwig(url, theme, templates, version) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
     Twig.extendFunction("str_format", str_format);
     Twig.extendFunction("asset", asset);
 
     var template = Twig.twig({
         id: 'page',
-        href: templates + '/' + theme + '/page.html',
+        href: templates + '/' + theme + '/page.html?v=' + version,
         async: false
      });
 

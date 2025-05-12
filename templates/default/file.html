@@ -28,21 +28,21 @@
     <script type="text/javascript" src="{{=it.assets}}/corejs-typeahead/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
 {{?}}
     <script type="text/javascript" src="{{=it.assets}}/lru-fast/lru.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="{{=it.basedir}}/util.js"></script>
+    <script type="text/javascript" src="{{=it.basedir}}/util.js?v={{=it.version}}"></script>
     <link rel="related" href="{{=it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{=it.title}}" />
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
     <link rel="stylesheet" type="text/css" href="{{=it.assets}}/normalize.css/normalize.css?v={{=it.version}}" />
     <link rel="stylesheet" type="text/css" href="{{=it.templates}}/default/styles/fa-solid.min.css?v={{=it.version}}" media="screen" />
     <link rel="stylesheet" type="text/css" href="{{=it.templates}}/default/styles/fontawesome.min.css?v={{=it.version}}" media="screen" />
     <link rel="stylesheet" type="text/css" href="{{=it.current_css}}?v={{=it.version}}" media="screen" />
-    <link rel="stylesheet" href="{{=it.templates}}/default/styles/typeahead.css">
+    <link rel="stylesheet" href="{{=it.templates}}/default/styles/typeahead.css?v={{=it.version}}">
 
     {{=it.customHeader}}
 
 {{? it.server_side_rendering == 0}}
     <script type="text/javascript">
         $(document).ready(function() {
-            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}", "{{=it.templates}}");
+            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}", "{{=it.templates}}", "{{=it.version}}");
         });
     </script>
 {{?}}

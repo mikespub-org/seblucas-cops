@@ -182,7 +182,7 @@ class BrowserKitTest extends TestCase
 
         $uri = JsonHandler::link() . '/index?complete=1';
 
-        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . UriGenerator::path("templates") . '");';
+        $expected = 'initiateAjax ("' . $uri . '", "' . $template . '", "' . UriGenerator::path("templates") . '", "' . Config::VERSION . '");';
         $script = $crawler->filterXPath('//head/script[not(@src)]')->text();
         $this->assertStringContainsString($expected, $script);
 
