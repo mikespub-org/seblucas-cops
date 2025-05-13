@@ -47,6 +47,11 @@ class FileResponse extends Response
         if (empty($this->mimetype)) {
             $this->mimetype = self::getMimeType($filepath);
         }
+        $mtime = filemtime($filepath);
+        $etag = '"' . md5((string) $mtime . '-' . $filepath) . '"';
+        $this->addHeader('ETag', $etag);
+        $modified = gmdate('D, d M Y H:i:s \G\M\T', $mtime);
+        $this->addHeader('Last-Modified', $modified);
         return $this;
     }
 

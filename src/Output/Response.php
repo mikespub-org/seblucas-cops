@@ -282,6 +282,37 @@ class Response
     }
 
     /**
+     * Summary of isNotModified
+     * @see https://github.com/symfony/symfony/blob/7.2/src/Symfony/Component/HttpFoundation/Response.php#L1111
+     * @see https://github.com/mikespub-org/micheh-psr7-cache/blob/main/src/CacheUtil.php#L261
+     * @param Request $request
+     * @return bool
+     */
+    public function isNotModified($request): bool
+    {
+        if (!in_array($request->method(), ['GET', 'HEAD'])) {
+            return false;
+        }
+        // check If-None-Match against ETag
+        $match = $request->server('HTTP_IF_NONE_MATCH');
+        if (!empty($match)) {
+            $etag = $this->getHeader('ETag');
+            if (!empty($etag)) {
+                // ... check exact & weak match
+            }
+        }
+        // check If-Modified-Since against Last-Modified
+        $since = $request->server('HTTP_IF_MODIFIED_SINCE');
+        if (!empty($since)) {
+            $modified = $this->getHeader('Last-Modified');
+            if (!empty($modified)) {
+                // ... check times
+            }
+        }
+        return false;
+    }
+
+    /**
      * Summary of isSent
      * @param ?bool $sent
      * @return bool
@@ -302,6 +333,16 @@ class Response
     public function getHeaders(): array
     {
         return $this->headers;
+    }
+
+    /**
+     * Summary of getHeader
+     * @param string $name
+     * @return mixed
+     */
+    public function getHeader($name): mixed
+    {
+        return $this->headers[$name] ?? null;
     }
 
     /**
