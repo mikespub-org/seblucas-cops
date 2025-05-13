@@ -6,7 +6,6 @@ use SebLucas\Cops\Input\Config;
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 require __DIR__ . '/default.php';  // NOSONAR
 
-//$config['calibre_directory'] = dirname(__DIR__) . "/tests/BaseWithSomeBooks/";
 $config['calibre_directory'] = "./tests/BaseWithSomeBooks/";
 
 $config['cops_mail_configuration'] = [

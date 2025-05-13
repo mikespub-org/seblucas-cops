@@ -94,10 +94,6 @@ class RestApiHandler extends BaseHandler
      */
     public static function resource($className, $params = [])
     {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['resource'] += 1;
-        }
         $params = self::addResourceParam($className, $params);
         return self::link($params);
     }

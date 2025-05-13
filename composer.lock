@@ -1563,12 +1563,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/kiwilan-php-opds.git",
-                "reference": "c197e003aa78b4ed72c1f6c02ef4da3b5425aab9"
+                "reference": "0f7392c615c57b3f1a23f65bbb4225ebc3173b8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/kiwilan-php-opds/zipball/c197e003aa78b4ed72c1f6c02ef4da3b5425aab9",
-                "reference": "c197e003aa78b4ed72c1f6c02ef4da3b5425aab9",
+                "url": "https://api.github.com/repos/mikespub-org/kiwilan-php-opds/zipball/0f7392c615c57b3f1a23f65bbb4225ebc3173b8f",
+                "reference": "0f7392c615c57b3f1a23f65bbb4225ebc3173b8f",
                 "shasum": ""
             },
             "require": {
@@ -1647,7 +1647,7 @@
                     "url": "https://github.com/kiwilan"
                 }
             ],
-            "time": "2025-05-09T13:48:59+00:00"
+            "time": "2025-05-13T07:55:01+00:00"
         },
         {
             "name": "masterminds/html5",

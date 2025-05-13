@@ -186,6 +186,17 @@ class Database
     }
 
     /**
+     * Summary of getLastModified
+     * @param ?int $database
+     * @return string
+     */
+    public static function getLastModified($database)
+    {
+        $fileName = self::getDbFileName($database);
+        return date(DATE_ATOM, filemtime($fileName));
+    }
+
+    /**
      * Summary of error
      * @param ?int $database
      * @throws \Exception

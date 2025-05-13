@@ -64,7 +64,7 @@ class Format
      */
     public static function json($data, $flags = null)
     {
-        $flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR;
+        $flags ??= JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR;
         try {
             return json_encode($data, $flags);
         } catch (JsonException $e) {

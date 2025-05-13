@@ -7,7 +7,6 @@ use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
-//use SebLucas\Cops\Routing\FastRouter;
 use SebLucas\Cops\Routing\Routing;
 use SebLucas\Cops\Handlers\QueueBasedHandler;
 
@@ -20,7 +19,7 @@ class CustomAdapter implements AdapterInterface
     protected array $middlewares = [];
 
     public function __construct(
-        protected readonly RouterInterface $router = new Routing(),  // new FastRouter(),
+        protected readonly RouterInterface $router = new Routing(),
         protected readonly HandlerManager $manager = new HandlerManager()
     ) {}
 

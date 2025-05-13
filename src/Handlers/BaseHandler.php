@@ -47,10 +47,6 @@ abstract class BaseHandler implements HasContextInterface
      */
     public static function link($params = [])
     {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['baseLink'] += 1;
-        }
         // use this specific handler to find the route
         $params[Route::HANDLER_PARAM] = static::class;
         return UriGenerator::process($params);
@@ -64,10 +60,6 @@ abstract class BaseHandler implements HasContextInterface
      */
     public static function page($page = null, $params = [])
     {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['basePage'] += 1;
-        }
         if (!empty($page)) {
             $params['page'] = $page;
         }
@@ -82,10 +74,6 @@ abstract class BaseHandler implements HasContextInterface
      */
     public static function route($routeName, $params = [])
     {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['baseRoute'] += 1;
-        }
         $params[Route::ROUTE_PARAM] = $routeName;
         return static::link($params);
     }

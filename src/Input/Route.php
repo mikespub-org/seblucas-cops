@@ -25,7 +25,6 @@ class Route
     public const HANDLER_PARAM = "_handler";
     public const ROUTE_PARAM = "_route";
     public const ROUTES_CACHE_FILE = 'url_cached_routes.php';
-    public const KEEP_STATS = false;
 
     /** @var array<string, mixed> */
     protected static $routes = [];
@@ -61,10 +60,6 @@ class Route
      */
     public static function match($path, $method = null)
     {
-        /** @phpstan-ignore-next-line */
-        if (self::KEEP_STATS) {
-            self::$counters['match'] += 1;
-        }
         if (empty($path) || $path == '/') {
             return [];
         }

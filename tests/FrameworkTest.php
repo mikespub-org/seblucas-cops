@@ -17,6 +17,7 @@ use SebLucas\Cops\Middleware\TestMiddleware;
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
 
 class FrameworkTest extends TestCase
@@ -124,6 +125,41 @@ class FrameworkTest extends TestCase
         $expected = "<title>COPS Loader</title>";
         $this->assertStringContainsString($expected, $output);
 
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testRunAdminDisabled(): void
+    {
+        $_SERVER['PATH_INFO'] = '/admin';
+
+        ob_start();
+        Framework::run();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        // redirect with empty content
+        $expected = "";
+        $this->assertEquals($expected, $output);
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testRunAdminEnabled(): void
+    {
+        // enable admin in test config
+        Config::set('enable_admin', true);
+        $_SERVER['PATH_INFO'] = '/admin';
+
+        ob_start();
+        Framework::run();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $expected = "<title>COPS - Admin Features</title>";
+        $this->assertStringContainsString($expected, $output);
+
+        // disable admin in test config
+        Config::set('enable_admin', false);
         unset($_SERVER['PATH_INFO']);
     }
 

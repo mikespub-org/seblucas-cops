@@ -92,10 +92,6 @@ class PageHandler extends BaseHandler
      */
     public static function link($params = [])
     {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['pageLink'] += 1;
-        }
         // use default page handler to find the route for html and json
         unset($params[Route::HANDLER_PARAM]);
         return UriGenerator::process($params);
@@ -109,10 +105,6 @@ class PageHandler extends BaseHandler
      */
     public static function page($page = null, $params = [])
     {
-        /** @phpstan-ignore-next-line */
-        if (Route::KEEP_STATS) {
-            Route::$counters['pagePage'] += 1;
-        }
         if (!empty($page)) {
             $params['page'] = $page;
         }

@@ -17,11 +17,15 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * ...
+
+3.6.5 - 20250513 Fix legacy browser, count by letter, update translations
   * Changes in config/default.php file:
     - new $config['cops_resources_cdn'] to use CDN for COPS resources
     - drop $config['cops_use_url_rewriting'] as deprecated since 3.1.0
     - mark $config['calibre_internal_directory'] as deprecated since 1.3.1
     - new $config['cops_enable_admin'] to enable admin features in COPS (WIP)
+  * Add version to script, style and template links if missing
   * Experiment using CDN for COPS resources + allow caching for template files
   * Set ignore filename for book data links
   * Set session cookie path, httponly, samesite and secure id if needed
