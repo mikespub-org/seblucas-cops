@@ -138,7 +138,11 @@ class FetchHandler extends BaseHandler
         }
         $mimetype = Response::getMimeType($filepath);
         $response = new FileResponse($mimetype, 0, basename($filepath));
-        return $response->setFile($filepath);
+        $response->setFile($filepath);
+        if ($response->isNotModified($request)) {
+            return $response->setNotModified();
+        }
+        return $response;
     }
 
     /**
@@ -181,7 +185,11 @@ class FetchHandler extends BaseHandler
         $cover = new Cover($book);
         // create empty file response to start with!?
         $response = new FileResponse();
-        return $cover->sendThumbnail($request, $response);
+        $response = $cover->sendThumbnail($request, $response);
+        if ($response->isNotModified($request)) {
+            return $response->setNotModified();
+        }
+        return $response;
     }
 
     /**

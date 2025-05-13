@@ -46,6 +46,9 @@ class CalResHandler extends BaseHandler
         if (is_null($result)) {
             return Response::notFound($request);
         }
+        if ($result->isNotModified($request)) {
+            return $result->setNotModified();
+        }
         return $result;
     }
 }

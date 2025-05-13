@@ -299,6 +299,11 @@ class Response
             $etag = $this->getHeader('ETag');
             if (!empty($etag)) {
                 // ... check exact & weak match
+                $matches = preg_split('/\s*,\s*/', $match);
+                if (in_array($etag, $matches)) {
+                    // call this if true - $this->setNotModified();
+                    return true;
+                }
             }
         }
         // check If-Modified-Since against Last-Modified
@@ -307,9 +312,28 @@ class Response
             $modified = $this->getHeader('Last-Modified');
             if (!empty($modified)) {
                 // ... check times
+                if (strtotime($since) >= strtotime($modified)) {
+                    // call this if true - $this->setNotModified();
+                    return true;
+                }
             }
         }
         return false;
+    }
+
+    /**
+     * Summary of setNotModified
+     * @return static
+     */
+    public function setNotModified(): static
+    {
+        $this->setStatusCode(304);
+        // remove other headers besides ETag, Cache-Control, Expires etc.
+        // @see https://httpwg.org/specs/rfc9110.html#status.304
+        $this->mimetype = null;
+        $this->filename = null;
+        $this->content = null;
+        return $this;
     }
 
     /**

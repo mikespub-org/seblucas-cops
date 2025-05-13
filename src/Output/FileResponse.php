@@ -39,7 +39,7 @@ class FileResponse extends Response
      * @param bool $istmpfile with true if this is a temp file, false otherwise
      * @return static
      */
-    public function setFile($filepath, $istmpfile = false)
+    public function setFile($filepath, $istmpfile = false): static
     {
         $this->filepath = $filepath;
         $this->istmpfile = $istmpfile;
@@ -56,10 +56,21 @@ class FileResponse extends Response
     }
 
     /**
+     * Summary of setNotModified
+     * @return static
+     */
+    public function setNotModified(): static
+    {
+        parent::setNotModified();
+        $this->filepath = null;
+        return $this;
+    }
+
+    /**
      * Summary of sendFile
      * @return static
      */
-    public function sendFile()
+    public function sendFile(): static
     {
         // don't use x_accel_redirect if we deal with a tmpfile here
         if (!empty($this->istmpfile) || empty(Config::get('x_accel_redirect'))) {

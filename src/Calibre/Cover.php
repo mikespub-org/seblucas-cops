@@ -222,9 +222,6 @@ class Cover
             $mimetype = ($inType == 'png') ? 'image/png' : 'image/jpeg';
             // use cache control here
             $this->response->setHeaders($mimetype, 0);
-            $mtime = time();
-            $modified = gmdate('D, d M Y H:i:s \G\M\T', $mtime);
-            $this->response->addHeader('Last-Modified', $modified);
             $this->response->sendHeaders();
         }
         if ($inType == 'png') {
@@ -285,9 +282,17 @@ class Cover
             return $response->setFile($cachePath, true);
         }
 
-        // use dummy etag without timestamp for cachePath null here
-        $etag = '"' . md5($file . '-' . strval($width) . 'x' . strval($height) . '.' . $type) . '"';
-        $response->addHeader('ETag', $etag);
+        // use dummy etag with original timestamp for cachePath null here
+        if (is_null($cachePath) && (!is_null($width) || !is_null($height))) {
+            $mtime = filemtime($file);
+            $etag = '"' . md5((string) $mtime . '-' . $file . '-' . strval($width) . 'x' . strval($height) . '.' . $type) . '"';
+            $response->addHeader('ETag', $etag);
+            $modified = gmdate('D, d M Y H:i:s \G\M\T', $mtime);
+            $response->addHeader('Last-Modified', $modified);
+            if ($response->isNotModified($request)) {
+                return $response->setNotModified();
+            }
+        }
 
         $this->response = $response;
         if ($this->getThumbnail($width, $height, $cachePath, $type)) {

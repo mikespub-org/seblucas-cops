@@ -561,6 +561,61 @@ class BookTest extends TestCase
         Config::set('thumbnail_cache_directory', '');
     }
 
+    #[Depends('testSendThumbnailCacheHit')]
+    public function testSendThumbnailNotModified(): void
+    {
+        $book = Book::getBookById(17);
+        $cover = new Cover($book);
+        $thumb = 'html';
+
+        // resize without cache
+        $request = Request::build(['thumb' => $thumb]);
+        $response = new FileResponse();
+
+        ob_start();
+        $result = $cover->sendThumbnail($request, $response);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertNotEmpty($output);
+        $expected = 200;
+        $this->assertSame($expected, $result->getStatusCode());
+
+        // get current ETag and Last-Modified
+        $etag = $result->getHeader('ETag');
+        $modified = $result->getHeader('Last-Modified');
+
+        $this->assertNotEmpty($etag);
+        $expected = time();
+        $this->assertLessThan($expected, strtotime($modified));
+
+        // check with ETag
+        $request = Request::build(['thumb' => $thumb]);
+        $request->serverParams['HTTP_IF_NONE_MATCH'] = $etag;
+
+        ob_start();
+        $result = $cover->sendThumbnail($request, $response);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertEmpty($output);
+        $expected = 304;
+        $this->assertSame($expected, $result->getStatusCode());
+
+        // check with Last-Modified
+        $request = Request::build(['thumb' => $thumb]);
+        $request->serverParams['HTTP_IF_MODIFIED_SINCE'] = $modified;
+
+        ob_start();
+        $result = $cover->sendThumbnail($request, $response);
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertEmpty($output);
+        $expected = 304;
+        $this->assertSame($expected, $result->getStatusCode());
+    }
+
     public function testCheckDatabaseFieldCover(): void
     {
         $book = Book::getBookById(17);
