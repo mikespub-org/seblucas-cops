@@ -37,6 +37,7 @@
                 <exclude name="docker-*.yaml" />
                 <exclude name=".vscode/**" />
                 <exclude name=".sonarcloud.properties" />
+                <exclude name=".sonarlint/**" />
                 <exclude name=".yarn/**" />
                 <exclude name=".yarnrc.yml" />
                 <exclude name=".pnp.*" />

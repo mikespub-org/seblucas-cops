@@ -15,6 +15,7 @@ docker-compose*.yaml
 # remove development files
 .vscode/
 .sonarcloud.properties
+.sonarlint/
 .yarn/
 #!.yarn/releases
 #!.yarn/plugins

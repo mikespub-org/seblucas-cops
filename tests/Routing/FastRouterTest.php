@@ -20,6 +20,9 @@ use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
 
+/**
+ * @deprecated 3.5.7 use symfony/routing instead
+ */
 #[RequiresMethod('\FastRoute\FastRoute', '__construct')]
 class FastRouterTest extends TestCase
 {

@@ -21,3 +21,4 @@
 rector.php
 .vscode/
 .sonarcloud.properties
+.sonarlint/

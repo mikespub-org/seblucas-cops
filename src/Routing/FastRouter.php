@@ -19,6 +19,7 @@ use Throwable;
 
 /**
  * Routing based on nikic FastRoute
+ * @deprecated 3.5.7 use symfony/routing instead
  */
 class FastRouter implements RouterInterface
 {
