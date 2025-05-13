@@ -86,7 +86,6 @@ class FileResponse extends Response
         }
         $this->sent = true;
 
-        // @todo do we send cache control for tmpfile too?
         $this->sendHeaders();
         $this->sendFile();
 

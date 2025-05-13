@@ -222,6 +222,9 @@ class Cover
             $mimetype = ($inType == 'png') ? 'image/png' : 'image/jpeg';
             // use cache control here
             $this->response->setHeaders($mimetype, 0);
+            $mtime = time();
+            $modified = gmdate('D, d M Y H:i:s \G\M\T', $mtime);
+            $this->response->addHeader('Last-Modified', $modified);
             $this->response->sendHeaders();
         }
         if ($inType == 'png') {
@@ -281,6 +284,10 @@ class Cover
             $response->setHeaders($mime, 0);
             return $response->setFile($cachePath, true);
         }
+
+        // use dummy etag without timestamp for cachePath null here
+        $etag = '"' . md5($file . '-' . strval($width) . 'x' . strval($height) . '.' . $type) . '"';
+        $response->addHeader('ETag', $etag);
 
         $this->response = $response;
         if ($this->getThumbnail($width, $height, $cachePath, $type)) {
