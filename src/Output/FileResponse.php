@@ -52,6 +52,7 @@ class FileResponse extends Response
         $this->addHeader('ETag', $etag);
         $modified = gmdate('D, d M Y H:i:s \G\M\T', $mtime);
         $this->addHeader('Last-Modified', $modified);
+        // no encoding here: $this->addHeader('Vary', 'Accept-Encoding');
         return $this;
     }
 

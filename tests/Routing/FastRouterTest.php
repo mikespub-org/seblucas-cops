@@ -225,6 +225,9 @@ class FastRouterTest extends TestCase
         if (!empty($expected['title']) && empty($extra['title'])) {
             $expected['title'] = UriGenerator::slugify($expected['title']);
         }
+        if (!empty($expected['ignore']) && empty($extra['ignore'])) {
+            $expected['ignore'] = UriGenerator::slugify($expected['ignore']);
+        }
         if (!empty($result['file'])) {
             $result['file'] = implode('/', array_map('rawurldecode', explode('/', $result['file'])));
         }
@@ -255,6 +258,9 @@ class FastRouterTest extends TestCase
         }
         if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
             $params['title'] = UriGenerator::slugify($params['title']);
+        }
+        if (!empty($params['ignore'])) {
+            $params['ignore'] = UriGenerator::slugify($params['ignore']);
         }
         if (!empty($params['file'])) {
             $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));

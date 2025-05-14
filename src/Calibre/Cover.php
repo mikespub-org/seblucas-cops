@@ -289,6 +289,7 @@ class Cover
             $response->addHeader('ETag', $etag);
             $modified = gmdate('D, d M Y H:i:s \G\M\T', $mtime);
             $response->addHeader('Last-Modified', $modified);
+            // no encoding here: $response->addHeader('Vary', 'Accept-Encoding');
             if ($response->isNotModified($request)) {
                 return $response->setNotModified();
             }
