@@ -10,82 +10,17 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use DOMDocument;
-use DOMNode;
-use DOMText;
-use JsonException;
+use SebLucas\EPubMeta\Metadata as EPubMetadata;
 
 /**
  * Calibre metadata.opf files are based on EPUB 2.0 <https://idpf.org/epub/20/spec/OPF_2.0_latest.htm#Section2.0>,
  * not EPUB 3.x <https://www.w3.org/TR/epub-33/#sec-package-doc>
  */
-class Metadata
+class Metadata extends EPubMetadata
 {
     public const ROUTE_DETAIL = "restapi-metadata";
     public const ROUTE_ELEMENT = "restapi-metadata-element";
     public const ROUTE_ELEMENT_NAME = "restapi-metadata-element-name";
-    public string $uniqueIdentifier;
-    public string $version;
-    /** @var array<mixed> */
-    public array $metadata;
-    /** @var array<mixed> */
-    public array $guide;
-
-    /**
-     * Summary of getElement
-     * @param string $element like dc:identifier
-     * @return array<mixed>
-     */
-    public function getElement($element)
-    {
-        $elements = [];
-        foreach ($this->metadata as $item) {
-            if (empty($item[$element])) {
-                continue;
-            }
-            $elements[] = $item[$element];
-        }
-        return $elements;
-    }
-
-    /**
-     * Summary of getIdentifiers
-     * @return array<mixed>
-     */
-    public function getIdentifiers()
-    {
-        return $this->getElement('dc:identifier');
-    }
-
-    /**
-     * Summary of getElementName
-     * @param string $element like meta
-     * @param string $name like calibre:annotation
-     * @return array<mixed>
-     */
-    public function getElementName($element, $name)
-    {
-        $elements = [];
-        foreach ($this->metadata as $item) {
-            if (empty($item[$element])) {
-                continue;
-            }
-            if (empty($item[$element]['name']) || $item[$element]['name'] != $name) {
-                continue;
-            }
-            $elements[] = $item[$element]['content'];
-        }
-        return $elements;
-    }
-
-    /**
-     * Summary of getAnnotations
-     * @return array<mixed>
-     */
-    public function getAnnotations()
-    {
-        return $this->getElementName('meta', 'calibre:annotation');
-    }
 
     /**
      * Summary of getInstanceByBookId
@@ -100,102 +35,6 @@ class Metadata
             return false;
         }
         $file = realpath($book->path . '/metadata.opf');
-        if (empty($file) || !file_exists($file)) {
-            return false;
-        }
-        $content = file_get_contents($file);
-        return self::parseData($content);
-    }
-
-    /**
-     * @param string $data
-     * @return self
-     */
-    public static function parseData($data)
-    {
-        $doc = new DOMDocument();
-        $doc->loadXML($data);
-        $root = self::getNode($doc, 'package');
-
-        $package = new self();
-        $package->uniqueIdentifier = self::getAttr($root, 'unique-identifier');
-        $package->version = self::getAttr($root, 'version');
-        $package->metadata = self::addNode(self::getNode($root, 'metadata'));
-        $package->guide = self::addNode(self::getNode($root, 'guide'));
-        return $package;
-    }
-
-    /**
-     * @param DOMNode $node
-     * @param string $name
-     * @return mixed
-     */
-    public static function getAttr($node, $name)
-    {
-        return $node->getAttribute($name);
-    }
-
-    /**
-     * @param DOMNode $node
-     * @param string $name
-     * @return DOMNode
-     */
-    public static function getNode($node, $name)
-    {
-        return $node->getElementsByTagName($name)->item(0);
-    }
-
-    /**
-     * @param DOMNode $node
-     * @return string|array<mixed>
-     */
-    public static function addNode($node)
-    {
-        if (!$node->hasAttributes() && !$node->hasChildNodes()) {
-            return trim($node->nodeValue);
-        }
-        $children = null;
-        if ($node->hasChildNodes()) {
-            if ($node->childNodes->length == 1 && $node->firstChild instanceof DOMText) {
-                $children = trim((string) $node->firstChild->nodeValue);
-            } else {
-                $children = [];
-                foreach ($node->childNodes as $child) {
-                    if ($child instanceof DOMText) {
-                        continue;
-                    }
-                    $children[] = [$child->nodeName => self::addNode($child)];
-                }
-            }
-        }
-        if (!$node->hasAttributes()) {
-            return $children;
-        }
-        $info = [];
-        foreach ($node->attributes as $attr) {
-            if ($node->nodeName == 'meta' && $attr->name == 'content' && !empty($attr->value)) {
-                try {
-                    $info[$attr->name] = json_decode($attr->value, true, 512, JSON_THROW_ON_ERROR);
-                } catch (JsonException) {
-                    $info[$attr->name] = $attr->value;
-                }
-            } elseif ($attr->name == 'value') {
-                $info['@value'] = $attr->value;
-            } else {
-                $info[$attr->name] = $attr->value;
-            }
-        }
-        //$value = trim($node->nodeValue);
-        //if ($value !== '') {
-        //    $info['value'] = $value;
-        //}
-        if (!empty($children)) {
-            if (is_array($children)) {
-                $info['children'] = $children;
-            } else {
-                $info['value'] = $children;
-            }
-        }
-        return $info;
+        return self::fromFile($file);
     }
 }
