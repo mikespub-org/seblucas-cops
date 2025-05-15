@@ -9,6 +9,8 @@ var templatePage, templateBookDetail, templateMain, templateSuggestion, currentD
 
 var CLEAR_FILTER_ID = "_CLEAR_";
 
+var COOKIE_LIFETIME = 400; // Set the maximum time cookies should be stored in days - most browsers now limit this to 400 days
+
 if (typeof LRUCache === 'undefined') {
     console.log('ERROR: LRUCache module not loaded!');
 }
@@ -65,7 +67,7 @@ function updateCookie (id) {
     }
     var name = $(id).attr('id');
     var value = $(id).val ();
-    Cookies.set(name, value, { expires: 365 });
+    Cookies.set(name, value, { expires: COOKIE_LIFETIME });
 }
 
 /*exported updateCookieFromCheckbox */
@@ -78,14 +80,14 @@ function updateCookieFromCheckbox (id) {
     if ($(id).is(":checked"))
     {
         if ($(id).is(':radio')) {
-            Cookies.set(name, $(id).val (), { expires: 365 });
+            Cookies.set(name, $(id).val (), { expires: COOKIE_LIFETIME });
         } else {
-            Cookies.set(name, '1', { expires: 365 });
+            Cookies.set(name, '1', { expires: COOKIE_LIFETIME });
         }
     }
     else
     {
-        Cookies.set(name, '0', { expires: 365 });
+        Cookies.set(name, '0', { expires: COOKIE_LIFETIME });
     }
 }
 
@@ -98,7 +100,7 @@ function updateCookieFromCheckboxGroup (id) {
         var id = $(this).attr("id");
         group.push (id.replace (idBase + "_", ""));
     });
-    Cookies.set(idBase, group.join (), { expires: 365 });
+    Cookies.set(idBase, group.join (), { expires: COOKIE_LIFETIME });
 }
 
 
@@ -134,7 +136,7 @@ function sendToMailAddress (component, dataid) {
         {
             return;
         }
-        Cookies.set('email', email, { expires: 365 });
+        Cookies.set('email', email, { expires: COOKIE_LIFETIME });
     }
     var url = currentData.baseurl + '/mail';
     if (currentData.databaseId) {
