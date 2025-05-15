@@ -516,7 +516,7 @@ function handleLinks () {
     $("body").on ("click", ".headright", function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");
-            Cookies.get('toolbar', '1', { expires: 365 });
+            Cookies.get('toolbar', '1');
         } else {
             $("#tool").slideUp();
             Cookies.remove('toolbar');
