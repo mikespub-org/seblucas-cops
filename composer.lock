@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f92d395440a5ef40f3436c2818b89fc1",
+    "content-hash": "ca09c683e77029e1571b7ef990926564",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -132,16 +132,16 @@
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "3.4.0",
+            "version": "3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "dadad2384b68f8a4da95a760b819c38a5e84f204"
+                "reference": "de2eab8a704fb0041331540df6509de2eef4b128"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/dadad2384b68f8a4da95a760b819c38a5e84f204",
-                "reference": "dadad2384b68f8a4da95a760b819c38a5e84f204",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/de2eab8a704fb0041331540df6509de2eef4b128",
+                "reference": "de2eab8a704fb0041331540df6509de2eef4b128",
                 "shasum": ""
             },
             "require": {
@@ -198,9 +198,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.4.0"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.5.1"
             },
-            "time": "2025-05-15T15:45:21+00:00"
+            "time": "2025-05-16T14:13:29+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",
@@ -1718,16 +1718,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "3.6.2",
+            "version": "3.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "18491ea12e27c14c2297b98847c13ee42e2d8019"
+                "reference": "0fff01d635aedbe265b83ef64e3a1bdc0fc2dc87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/18491ea12e27c14c2297b98847c13ee42e2d8019",
-                "reference": "18491ea12e27c14c2297b98847c13ee42e2d8019",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/0fff01d635aedbe265b83ef64e3a1bdc0fc2dc87",
+                "reference": "0fff01d635aedbe265b83ef64e3a1bdc0fc2dc87",
                 "shasum": ""
             },
             "require": {
@@ -1737,10 +1737,10 @@
                 "ext-xml": "*",
                 "ext-zip": "*",
                 "ext-zlib": "*",
-                "mikespub/php-epub-meta": "^3.3",
+                "mikespub/php-epub-meta": "^3.5",
                 "mikespub/survos-wikidata": "^5.2",
                 "php": ">=8.2",
-                "twig/twig": "^3.20"
+                "twig/twig": "^3.21"
             },
             "require-dev": {
                 "phpunit/phpunit": "^11.5"
@@ -1783,9 +1783,9 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/3.6.2"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/3.6.3"
             },
-            "time": "2025-04-24T14:34:47+00:00"
+            "time": "2025-05-16T16:19:20+00:00"
         },
         {
             "name": "mikespub/survos-wikidata",

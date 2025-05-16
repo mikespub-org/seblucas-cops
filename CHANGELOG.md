@@ -17,6 +17,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Update package.json dependencies (info only)
+  * Upgrade mikespub/epub-loader to 3.6.3 and php-epub-meta to 3.5
   * Upgrade mikespub/php-epub-meta to 3.4 and adapt Calibre\Metadata class
 
 3.6.5 - 20250513 Fix legacy browser, count by letter, update translations
