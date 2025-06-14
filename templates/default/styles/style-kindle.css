@@ -1,5 +1,6 @@
 /* 
- * COPS 4 Kindle from https://github.com/Joduai/cops-kindle
+ * COPS 4 Kindle origianlly by https://github.com/Joduai/cops-kindle
+ * but numerous fixes and tweaks.
  * A dedicated COPS (Calibre OPDS) css theme for kindle e-book readers.
  * Should also work elegantly on other manufacturers e-book readers.
  */
@@ -7,83 +8,70 @@
 *:after,
 *:before {
     box-sizing: border-box;
-    -webkit-font-smoothing: antialiased
+    -webkit-font-smoothing: antialiased;
 } 
 
 html,
 body {
     margin: 0;
     padding: 0;
-    background: #FFF
+    background: #FFF;
 }
 
 body {
     font-family: "Amazon Ember", Helvetica, Futura, Caecilia, Georgia, Palatino, sans-serif;
     font-size: 1.6em;
     line-height: 1.6em;
-    color: #000
+    color: #000;
 }
 
 img {
     border: 0;
     max-width: 100%;
-    height: auto
+    height: auto;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1,h2,h3,h4,h5,h6 {
     margin: 0;
     padding: 0;
-    line-height: 100%
+    line-height: 100%;
 }
 
 h1 {
-    font-family: "Amazon Ember Bold", Helvetica, Futura, Caecilia, sans-serif
-}
-
-h1 {
-    font-size: 1.8em
+    font-family: "Amazon Ember Bold", Helvetica, Futura, Caecilia, sans-serif;
+    font-size: 1.8em;
 }
 
 h2 {
-    font-size: 1.6em
+    font-size: 1.6em;
 }
 
-h3,
-h4,
-h5,
-h6 {
+h3,h4,h5,h6 {
     font-size: 1.2em;
-    font-weight: normal
+    font-weight: normal;
 }
 
-a:hover,
-a:focus,
-a:active {
-    outline: none
+a:hover,a:focus,a:active {
+    outline: none;
 }
 
 a {
     color: #000;
-    text-decoration: none
+    text-decoration: none;
 }
 
 a:hover {
-    text-decoration: none
+    text-decoration: none;
 }
 
 .books:hover {
-    background-color: #ececec
+    background-color: #ececec;
 }
 
 .link a:hover {
     display: inline-block;
     width: 100%;
-    background-color: #c2c2c2
+    background-color: #c2c2c2;
 }
 
 .mfp-content .bookpopup {
@@ -93,7 +81,7 @@ a:hover {
     width: auto;
     max-width: 90%;
     margin: 20px auto;
-    min-height: 198px
+    min-height: 198px;
 }
 
 button.mfp-close,
@@ -103,19 +91,19 @@ button.mfp-close,
     background: #FFF;
     border-radius: 20%;
     font-size: 2.4em;
-    opacity: 1
+    opacity: 1;
 }
 
 #email {
-    width: 300px
+    width: 300px;
 }
 
 .filtered {
-    display: none
+    display: none;
 }
 
 #filter {
-    clear: both
+    clear: both;
 }
 
 #filter ul {
@@ -123,11 +111,11 @@ button.mfp-close,
     padding: 0;
     list-style-type: none;
     text-align: left;
-    text-transform: none
+    text-transform: none;
 }
 
 #filter ul li {
-    cursor: pointer
+    cursor: pointer;
 }
 
 li {
@@ -136,12 +124,12 @@ li {
     margin: 2px;
     color: black;
     background-color: white;
-    opacity: 0.5
+    opacity: 0.5;
 }
 
 .filter-include {
     border-left: thick solid blue;
-    opacity: 1
+    opacity: 1;
 }
 
 .filter-include:after {
@@ -162,14 +150,14 @@ li {
 img {
     margin: 0;
     padding: 0;
-    border: 0
+    border: 0;
 }
 
 .container {
     border: none;
     width: 100%;
     margin: 0 auto;
-    position: relative
+    position: relative;
 }
 
 header {
@@ -180,7 +168,7 @@ header {
     display: block;
     min-height: 120px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #000
+    border-bottom: 1px solid #000;
 }
 
 .hicon {
@@ -194,7 +182,7 @@ header {
     background-color: transparent;
     background-image: none;
     border-color: transparent;
-    display: table-cell
+    display: table-cell;
 }
 
 .hicon64 {
@@ -203,13 +191,13 @@ header {
 
 .hicon32 .fa-search {
     font-size: 1.6em;
-    vertical-align: middle
+    vertical-align: middle;
 }
 
 .headleft {
     float: left;
     padding: 10px;
-    display: block
+    display: block;
 }
 
 .headcenter {
@@ -217,7 +205,7 @@ header {
     margin: auto;
     text-align: center;
     height: 70px;
-    display: table
+    display: table;
 }
 
 header h1 {
@@ -225,39 +213,40 @@ header h1 {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-    line-height: 100%
+    line-height: 100%;
 }
 
 .headright {
-    float: right
+    float: right;
+    padding: 10px 10px 0 0;
 }
 
 section {
-    clear: both
+    clear: both;
 }
 
 article {
-    border-bottom: 1px solid #000
+    border-bottom: 1px solid #000;
 }
 
 .frontpage h2 {
-    padding: 5px 0 3px 5px
+    padding: 5px 0 3px 5px;
 }
 
 .frontpage h4 {
     padding: 8px 0 4px 40px;
-    font-style: italic
+    font-style: italic;
 }
 
 .frontpage a {
     padding: 10px;
-    display: block
+    display: block;
 }
 
 .frontpage a:hover,
 .frontpage a:active .frontpage a:focus {
     width: 100%;
-    background-color: #c2c2c2
+    background-color: #c2c2c2;
 }
 
 .books {
@@ -266,13 +255,13 @@ article {
     min-height: 100px;
     position: relative;
     overflow: auto;
-    padding: 10px 20px 10px 10px;
+    padding: 10px;
     display: table;
-    direction: rtl
+    direction: rtl;
 }
 
 section>article.books:first-of-type {
-    padding-top: 20px
+    padding-top: 20px;
 }
 
 .books .cover {
@@ -281,25 +270,25 @@ section>article.books:first-of-type {
     height: 100%;
     display: table-cell;
     float: left;
-    vertical-align: top
+    vertical-align: top;
 }
 
 .books .cover a {
-    display: block
+    display: block;
 }
 
 .cover img {
     margin: 0;
-    border: 1px solid #000
+    border: 1px solid #000;
 }
 
 .bookpopup .cover {
-    max-width: 100%
+    max-width: 100%;
 }
 
 .bookpopup .cover img {
     width: auto;
-    max-height: 350px
+    max-height: 350px;
 }
 
 .books .download,
@@ -310,22 +299,22 @@ section>article.books:first-of-type {
     position: relative;
     display: table-cell;
     float: right;
-    vertical-align: top
+    vertical-align: top;
 }
 
 .download a {
     text-decoration: none;
     font-weight: bold;
     padding: 5px 10px;
-    text-align: center
+    text-align: center;
 }
 
 .download br {
-    display: none
+    display: none;
 }
 
 .download img {
-    vertical-align: middle
+    vertical-align: middle;
 }
 
 .download a {
@@ -335,20 +324,20 @@ section>article.books:first-of-type {
     border: 1px solid #000;
     background: #FFF;
     margin: 0 0 15px 0;
-    padding: 10px
+    padding: 10px;
 }
 
 .download a[title*="Reader"] {
-    display: block
+    display: block;
 }
 
 article.books .download a:nth-of-type(even),
 article.bookpopup .download a[title*="Open"] {
-    display: none
+    display: none;
 }
 
 .download a .fa-download {
-    float: left
+    float: left;
 }
 
 .books a.fancydetail {
@@ -358,77 +347,77 @@ article.bookpopup .download a[title*="Open"] {
     direction: ltr;
     width: 65%;
     min-width: 65%;
-    max-width: 65%
+    max-width: 65%;
 }
 
 .books .fullclickpopup {
-    line-height: 100%
+    line-height: 100%;
 }
 
 .books .fullclickpopup h4 {
     display: inline;
     font-style: italic;
-    line-height: 1.2em
+    line-height: 1.2em;
 }
 
 .books .fullclickpopup h4+span {
-    font-size: 1.1em
+    font-size: 1.1em;
 }
 
 section .bookpopup {
     padding: 10px 20px;
-    margin-top: 40px
+    margin-top: 40px;
 }
 
 .bookpopup .download {
-    max-width: 260px
+    max-width: 260px;
 }
 
 .bookpopup h1 {
     clear: both;
-    margin: 20px 0
+    margin: 20px 0;
 }
 
 .bookpopup h1 a {
-    display: none
+    display: none;
 }
 
 .bookpopup h2 {
-    margin: 0 10px
+    margin: 0 10px;
 }
 
 .bookpopup h3 {
     display: inline-block;
-    margin-top: 5px
+    margin-top: 5px;
 }
 
 .bookpopup h4 {
     padding: 30px 0;
-    border-top: 1px solid black
+    border-top: 1px solid black;
 }
 
 .bookpopup h3+a,
 .bookpopup h3+p {
-    font-size: 1.2em
+    font-size: 1.2em;
 }
 
 .fullclickpopup {
     display: block;
-    min-height: 100px
+    min-height: 100px;
 }
 
 .fullclickpopup h2 {
     font-size: 1.4em;
-    margin-bottom: 10px
+    margin-bottom: 10px;
 }
 
 .bookpopup p.popupless {
-    clear: both
+    clear: both;
 }
 
 .bookpopup>p {
     padding: 0;
-    margin: 0
+    margin: 0;
 }
 
 .bookpopup>p.popupless:first-of-type {
@@ -437,13 +426,13 @@ section .bookpopup {
 }
 
 .bookpopup>div:last-child {
-    font-size: 1.3em
+    font-size: 1.3em;
 }
 
 .bookpopup>div:last-child * {
     font-family: inherit !important;
     font-size: 1em !important;
-    line-height: 1.3em !important
+    line-height: 1.3em !important;
 }
 
 footer {
@@ -452,7 +441,7 @@ footer {
     padding: 5px 20px 15px;
     margin-bottom: 15px;
     line-height: 1em;
-    position: relative
+    position: relative;
 }
 
 .footleft {
@@ -460,7 +449,7 @@ footer {
 }
 
 .footright {
-    float: right
+    float: right;
 }
 
 .footcenter {
@@ -469,7 +458,7 @@ footer {
     height: 32px;
     display: table;
     font-weight: bold;
-    margin-top: -5px
+    margin-top: -5px;
 }
 
 .footcenter p,
@@ -477,12 +466,12 @@ footer {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
-    line-height: 100%
+    line-height: 100%;
 }
 
 footer a {
     display: block;
-    padding: 15px
+    padding: 15px;
 }
 
 footer:before,
@@ -491,70 +480,50 @@ footer:after {
     bottom: 0;
     font-size: 1em;
     font-style: italic;
-    line-height: 1.2em
-}
-
-footer:before {
-    content: "\63 \6f \70 \73 \20 \6b \69 \6e \64 \6c \65 \20 \74 \68 \65 \6d \65 \20 \62 \79 \20 \67 \69 \74 \68 \75 \62 .\63 \6f \6d /";
-    font-size: 0.75em;
-    width: 63%;
-    color: #555;
-    left: 0;
-    text-align: right
-}
-
-footer:after {
-    clear: both;
-    content: "\6A \6F \64 \75 \61 \69";
-    font-size: 0.75em;
-    width: 37%;
-    display: block;
-    right: 0;
-    text-align: left;
-    color: #333
+    line-height: 1.2em;
 }
 
 /* Aside stuff */
 #tool {
-    width: 100%
+    width: 100%;
 }
 
 #tool>div {
     float: none !important;
     width: 45% !important;
-    margin: 10px auto
+    margin: 10px auto;
 }
 
 #tool input[type=text],
 .twitter-typeahead {
     vertical-align: middle;
-    width: 100%
+    width: 100%;
 }
 
 .tt-hint,
 .tt-query {
-    width: 100%
+    width: 100%;
 }
 
 .stop select {
     vertical-align: middle;
     margin: 4px;
-    color: black
+    color: black;
 }
 
 #sort {
-    cursor: pointer
+    cursor: pointer;
 }
 
 #searchForm {
     display: table;
-    padding: 0 2px
+    padding: 0 2px;
 }
 
 .stop {
     display: table-cell;
     vertical-align: middle;
-    width: 100%
+    width: 100%;
 }
 
 .tt-dropdown-menu {
@@ -565,22 +534,22 @@ footer:after {
     padding: 4px 0;
     background-color: #fff;
     border: 1px solid #ccc;
-    font-size: 50%
+    font-size: 50%;
 }
 
 .tt-header {
     border-bottom: 1px solid #CCCCCC;
-    font-weight: bold
+    font-weight: bold;
 }
 
 .tt-suggestion {
     padding: 3px 20px;
-    line-height: 14px
+    line-height: 14px;
 }
 
 .tt-suggestion.tt-cursor {
     color: #1c1c1c;
-    background-color: #c2c2c2
+    background-color: #c2c2c2;
 }
 
 .tt-suggestion p {
@@ -588,12 +557,12 @@ footer:after {
 }
 
 #tool div form * {
-    border: none
+    border: none;
 }
 
 #tool form input {
     padding: 5px;
-    border: 1px solid #000
+    border: 1px solid #000;
 }
 
 input[type="radio"], input[type="checkbox"]{ /* Make radio buttons easier to hit with touchscreen */
@@ -608,45 +577,45 @@ input[type="radio"], input[type="checkbox"]{ /* Make radio buttons easier to hit
     body .mfp-content {
         width: 70%;
         max-width: 1000px;
-        font-size: 60%
+        font-size: 60%;
     }
 
     .download {
-        min-width: 120px
+        min-width: 120px;
     }
 
     .bookpopup .download {
         min-width: 260px;
         display: flex;
-        flex-wrap: wrap
+        flex-wrap: wrap;
     }
 
     .bookpopup .download a {
-        flex: 0 50%
+        flex: 0 50%;
     }
 
     .bookpopup .download a {
         display: inline-block !important;
         padding: 10px 0;
-        overflow: auto
+        overflow: auto;
     }
 
     .bookpopup .download a .fa-download {
-        float: none
+        float: none;
     }
 
     .bookpopup .download #mailButton,
     .bookpopup .download a[title*="Reader"] {
-        flex: 100%
+        flex: 100%;
     }
 
     .bookpopup .download a:hover {
         color: #FFF;
-        background: #000
+        background: #000;
     }
 
     .books .download {
-        min-width: 140px
+        min-width: 140px;
     }
 }
 
@@ -654,12 +623,12 @@ input[type="radio"], input[type="checkbox"]{ /* Make radio buttons easier to hit
     .books a.fancydetail {
         width: 55%;
         min-width: 55%;
-        max-width: 55%
+        max-width: 55%;
     }
 }
 
 @media only screen and (max-width:900px) {
     .books .cover {
-        float: none
+        float: none;
     }
 }
