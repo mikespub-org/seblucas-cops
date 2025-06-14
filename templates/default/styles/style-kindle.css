@@ -482,26 +482,6 @@ footer:after {
     line-height: 1.2em;
 }
 
-footer:before {
-    content: "\63 \6f \70 \73 \20 \6b \69 \6e \64 \6c \65 \20 \74 \68 \65 \6d \65 \20 \62 \79 \20 \67 \69 \74 \68 \75 \62 .\63 \6f \6d /";
-    font-size: 0.75em;
-    width: 63%;
-    color: #555;
-    left: 0;
-    text-align: right;
-}
-
-footer:after {
-    clear: both;
-    content: "\6A \6F \64 \75 \61 \69";
-    font-size: 0.75em;
-    width: 37%;
-    display: block;
-    right: 0;
-    text-align: left;
-    color: #333;
-}
-
 /* Aside stuff */
 #tool {
     width: 100%;
