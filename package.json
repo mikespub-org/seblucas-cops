@@ -1,14 +1,14 @@
 {
   "name": "seblucas-cops",
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.9.2",
   "dependencies": {
     "@mikespub/epubjs-reader": "^2025.4.8",
     "bootstrap": "^3.4.1",
     "corejs-typeahead": "^1.3.4",
-    "datatables.net": "^2.3.1",
-    "datatables.net-bs5": "^2.3.1",
+    "datatables.net": "^2.3.2",
+    "datatables.net-bs5": "^2.3.2",
     "dot": "^1.1.3",
-    "graphiql": "^4.0.0",
+    "graphiql": "^4.1.2",
     "graphql": "^16.11.0",
     "jquery": "^3.7.1",
     "js-cookie": "^3.0.5",
@@ -17,7 +17,7 @@
     "normalize.css": "^8.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "swagger-ui-dist": "^5.21.0",
+    "swagger-ui-dist": "^5.25.2",
     "twig": "^1.17.1"
   },
   "license": "GPL-2.0-or-later"

@@ -6,7 +6,6 @@ or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 x.x.x - TODO
   * Changes in config/default.php file:
     - new $config['cops_customize'] for default customize values per user (TODO)
-  * Upgrade graphiql CDN template for react 19.x - see PR graphql/graphiql#3902
   * Experiment with default customize values per user (TODO)
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.5
 
@@ -17,6 +16,10 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Fix Kindle style in default templates - see PR #156 from @dunxd
+  * Increase cookie lifetime - see PR #155 from @dunxd
+  * Set ETag and Last-Modified for files and images
+  * Upgrade graphiql CDN template for react 19.x - see PR graphql/graphiql#3902
   * Update package.json dependencies (info only)
   * Upgrade mikespub/epub-loader to 3.6.3 and php-epub-meta to 3.5
   * Upgrade mikespub/php-epub-meta to 3.4 and adapt Calibre\Metadata class
