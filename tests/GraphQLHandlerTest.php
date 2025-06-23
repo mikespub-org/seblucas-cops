@@ -58,7 +58,7 @@ class GraphQLHandlerTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = '<title>GraphiQL</title>';
+        $expected = '<title>GraphiQL 4 with React 19 and GraphiQL Explorer</title>';
         $this->assertEquals(0, count($headers));
         $this->assertStringContainsString($expected, $output);
     }
