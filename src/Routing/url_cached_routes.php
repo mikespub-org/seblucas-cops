@@ -1023,6 +1023,7 @@ $routes = [
     '/restapi/user/details',
     [
       '_resource' => 'User',
+      'details' => true,
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
       '_route' => 'restapi-user-details',
     ],

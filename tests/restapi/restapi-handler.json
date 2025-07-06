@@ -517,7 +517,8 @@
                 "restapi-user-details": [
                     "/restapi/user/details",
                     {
-                        "_resource": "User"
+                        "_resource": "User",
+                        "details": true
                     }
                 ],
                 "restapi-user": [

@@ -65,7 +65,7 @@ class RestApiHandler extends BaseHandler
             "restapi-metadata-element-name" => [self::PREFIX . "/metadata/{bookId}/{element}/{name}", [self::RESOURCE => "Metadata"]],
             "restapi-metadata-element" => [self::PREFIX . "/metadata/{bookId}/{element}", [self::RESOURCE => "Metadata"]],
             "restapi-metadata" => [self::PREFIX . "/metadata/{bookId}", [self::RESOURCE => "Metadata"]],
-            "restapi-user-details" => [self::PREFIX . "/user/details", [self::RESOURCE => "User"]],
+            "restapi-user-details" => [self::PREFIX . "/user/details", [self::RESOURCE => "User", "details" => true]],
             "restapi-user" => [self::PREFIX . "/user", [self::RESOURCE => "User"]],
             // add default routes for handler to generate links
             "restapi-path" => [self::PREFIX . "/{path:.*}"],  // [self::RESOURCE => "path"]
