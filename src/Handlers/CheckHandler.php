@@ -217,7 +217,7 @@ class CheckHandler extends BaseHandler
         $result .= 'SERVER_ADDR: ' . ($request->server('SERVER_ADDR') ?? '') . '<br>';
         $result .= 'SERVER_PORT: ' . ($request->server('SERVER_PORT') ?? '') . '<br>';
         $result .= 'REQUEST_SCHEME: ' . ($request->server('REQUEST_SCHEME') ?? '') . '<br>';
-        $result .= 'REQUEST_URI: ' . ($request->server('REQUEST_URI') ?? '') . '<br>';
+        $result .= 'REQUEST_URI: ' . htmlspecialchars($request->server('REQUEST_URI') ?? '') . '<br>';
         return $result;
     }
 

@@ -218,7 +218,7 @@ echo 'SERVER_NAME: ' . ($_SERVER['SERVER_NAME'] ?? '') . '<br>';
 echo 'SERVER_ADDR: ' . ($_SERVER['SERVER_ADDR'] ?? '') . '<br>';
 echo 'SERVER_PORT: ' . ($_SERVER['SERVER_PORT'] ?? '') . '<br>';
 echo 'REQUEST_SCHEME: ' . ($_SERVER['REQUEST_SCHEME'] ?? '') . '<br>';
-echo 'REQUEST_URI: ' . ($_SERVER['REQUEST_URI'] ?? '') . '<br>';
+echo 'REQUEST_URI: ' . htmlspecialchars($_SERVER['REQUEST_URI'] ?? '') . '<br>';
 ?>
             </h4>
         </article>
