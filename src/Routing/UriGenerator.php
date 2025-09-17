@@ -468,6 +468,10 @@ class UriGenerator
             }
             if (in_array($param, ['title', 'author', 'ignore'])) {
                 $value = self::slugify($value);
+                // if intl extension is not installed, slugify() can return empty string for non-latin tags - see issue 158
+                if (strlen($value) < 1) {
+                    $value = $subst[$param];
+                }
                 $value = rawurlencode($value);
             }
             // search query
