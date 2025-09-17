@@ -85,40 +85,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphiql/plugin-doc-explorer@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@graphiql/plugin-doc-explorer@npm:0.3.0"
+"@graphiql/plugin-doc-explorer@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "@graphiql/plugin-doc-explorer@npm:0.4.1"
   dependencies:
-    "@graphiql/react": "npm:^0.35.0"
     "@headlessui/react": "npm:^2.2"
-    react-compiler-runtime: "npm:19.1.0-rc.1"
     zustand: "npm:^5"
   peerDependencies:
+    "@graphiql/react": ^0.37.0
     graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
     react: ^18 || ^19
+    react-compiler-runtime: 19.1.0-rc.1
     react-dom: ^18 || ^19
-  checksum: 10c0/02c3762247d38d759535eba82ae4178d108f85aedb1aa61b1cb382e7266f4a7f7c3654e219441c16994407c144527035ad747fc76c52380309c9d1f0022c1501
+  checksum: 10c0/7dc4b027025c78d06603d4d6de72c60acedec48813bddc77eaf1dd749e201f5b4ad2fbbadf5f899bb2e656a372027848743d31b57a8148ab49a46a8b23642ada
   languageName: node
   linkType: hard
 
-"@graphiql/plugin-history@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@graphiql/plugin-history@npm:0.3.0"
+"@graphiql/plugin-history@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "@graphiql/plugin-history@npm:0.4.1"
   dependencies:
-    "@graphiql/react": "npm:^0.35.0"
     "@graphiql/toolkit": "npm:^0.11.3"
-    react-compiler-runtime: "npm:19.1.0-rc.1"
     zustand: "npm:^5"
   peerDependencies:
+    "@graphiql/react": ^0.37.0
     react: ^18 || ^19
+    react-compiler-runtime: 19.1.0-rc.1
     react-dom: ^18 || ^19
-  checksum: 10c0/4794dec72c8740250a7a6a0c5a3689b1e3c9f814238b519fa9587450ffc18df1cc0eebfc90b8f244f6d5752120734cdf95e369c283a28000ba63f1aabd54dd45
+  checksum: 10c0/8c72936be6bd8ea7db69cf338634b741061bfb4eb0f20ae09261864049e50bac0889e92ad53b31ae4a4c88402614ecb6c9ec6f401d43a1989519f8e959c7571e
   languageName: node
   linkType: hard
 
-"@graphiql/react@npm:^0.35.0, @graphiql/react@npm:^0.35.4":
-  version: 0.35.4
-  resolution: "@graphiql/react@npm:0.35.4"
+"@graphiql/react@npm:^0.37.1":
+  version: 0.37.1
+  resolution: "@graphiql/react@npm:0.37.1"
   dependencies:
     "@graphiql/toolkit": "npm:^0.11.3"
     "@radix-ui/react-dialog": "npm:^1.1"
@@ -128,20 +128,20 @@ __metadata:
     clsx: "npm:^1.2.1"
     framer-motion: "npm:^12.12"
     get-value: "npm:^3.0.1"
-    graphql-language-service: "npm:^5.3.1"
+    graphql-language-service: "npm:^5.5.0"
     jsonc-parser: "npm:^3.3.1"
     markdown-it: "npm:^14.1.0"
     monaco-editor: "npm:^0.52.2"
-    monaco-graphql: "npm:^1.7.1"
+    monaco-graphql: "npm:^1.7.2"
     prettier: "npm:^3.5.3"
-    react-compiler-runtime: "npm:19.1.0-rc.1"
     set-value: "npm:^4.1.0"
     zustand: "npm:^5"
   peerDependencies:
     graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
     react: ^18 || ^19
+    react-compiler-runtime: 19.1.0-rc.1
     react-dom: ^18 || ^19
-  checksum: 10c0/339f917711520094d4467f4660df89d0e681304bafe5ae90a6f6df1210aa61347891236e43adb7d5b734a89d09e5664e7b2c11f7018f63ae6c95a8a6a2690c9d
+  checksum: 10c0/68e37cfb72e33d8516b59fe5f2eb3c69a6304622681761aefae42765c14f444e54904e14babdb52c9904d99eabd6b7ab90b18d3bec6c2ebb5265fcfe3b469749
   languageName: node
   linkType: hard
 
@@ -967,22 +967,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"datatables.net-bs5@npm:^2.3.2":
-  version: 2.3.2
-  resolution: "datatables.net-bs5@npm:2.3.2"
+"datatables.net-bs5@npm:^2.3.4":
+  version: 2.3.4
+  resolution: "datatables.net-bs5@npm:2.3.4"
   dependencies:
-    datatables.net: "npm:2.3.2"
+    datatables.net: "npm:2.3.4"
     jquery: "npm:>=1.7"
-  checksum: 10c0/d3429180af81948101b04f13af95f8ae6eceef3c82aa99ce1233dc5ed2368100f07210748764ddac838ac7747e3978c3dcd815002981d1824ef82beb43e2f4a1
+  checksum: 10c0/27dab5a78fd98aed45fadd40f2b5da551663a8292cdc90384135dfdf99cb1397758b54b0d1934389fb04768fa00ca66be4cc1aca079c3bb13f6265b3c91716fa
   languageName: node
   linkType: hard
 
-"datatables.net@npm:2.3.2, datatables.net@npm:^2.3.2":
-  version: 2.3.2
-  resolution: "datatables.net@npm:2.3.2"
+"datatables.net@npm:2.3.4, datatables.net@npm:^2.3.4":
+  version: 2.3.4
+  resolution: "datatables.net@npm:2.3.4"
   dependencies:
     jquery: "npm:>=1.7"
-  checksum: 10c0/da40a7c47580a673b185d94592088bab264e64328b4b818440c026739236fe1133bb6800cd6029c181b1b971f1ac236a48439934ff6b560efef93da3083d06df
+  checksum: 10c0/8683653cf1aacb50cc637c799f73bc91e477ccbf49ec99859e991034ba43c8e01b9c5a245fadcb0d10cbba9dca69989a5a36e886212fb4c62d53cd6e38081287
   languageName: node
   linkType: hard
 
@@ -1142,25 +1142,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphiql@npm:^5.0.3":
-  version: 5.0.3
-  resolution: "graphiql@npm:5.0.3"
+"graphiql@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "graphiql@npm:5.2.0"
   dependencies:
-    "@graphiql/plugin-doc-explorer": "npm:^0.3.0"
-    "@graphiql/plugin-history": "npm:^0.3.0"
-    "@graphiql/react": "npm:^0.35.4"
+    "@graphiql/plugin-doc-explorer": "npm:^0.4.1"
+    "@graphiql/plugin-history": "npm:^0.4.1"
+    "@graphiql/react": "npm:^0.37.1"
     react-compiler-runtime: "npm:19.1.0-rc.1"
   peerDependencies:
     graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
     react: ^18 || ^19
     react-dom: ^18 || ^19
-  checksum: 10c0/e528cf96656f55ac3e442bcc055cf805ff3f6153215759c7f09c4f35ce38522cc2ad02b26b0a2368ff4e7692f7201367c4781cb369af28ccdcf7166a7cb11340
+  checksum: 10c0/b084deab0b3b588a06e090ceef18dd05a47ff8601badbcfc926813a9938a494c9b1ed4240d11a5311650d5fc6201677540aeba1d4b4186ea70ffd2a6f302f8c7
   languageName: node
   linkType: hard
 
-"graphql-language-service@npm:^5.3.1":
-  version: 5.3.1
-  resolution: "graphql-language-service@npm:5.3.1"
+"graphql-language-service@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "graphql-language-service@npm:5.5.0"
   dependencies:
     debounce-promise: "npm:^3.1.2"
     nullthrows: "npm:^1.0.0"
@@ -1169,22 +1169,7 @@ __metadata:
     graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
   bin:
     graphql: dist/temp-bin.js
-  checksum: 10c0/f7915550fa97a037f74e90c5616886fc00a3cb84543a92f7210e02fc97fa2eaa1e5cf2d47c13256d84ba42c151a8f877a8eb47c0489d4525a4c523e6c982ebff
-  languageName: node
-  linkType: hard
-
-"graphql-language-service@npm:^5.4.0":
-  version: 5.4.0
-  resolution: "graphql-language-service@npm:5.4.0"
-  dependencies:
-    debounce-promise: "npm:^3.1.2"
-    nullthrows: "npm:^1.0.0"
-    vscode-languageserver-types: "npm:^3.17.1"
-  peerDependencies:
-    graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
-  bin:
-    graphql: dist/temp-bin.js
-  checksum: 10c0/26b1ea7b00c07709d865869f67c9afd0745ba72d48b9a8aea26ff7ffc6e11bd51cc2391c4510726b1d1ae4fd9e925b3cd34c77fc8f8bb7fc76cd008c9ae13744
+  checksum: 10c0/edac04ef2ebc33cb6dcb07bbc6ae8c92ad952e3f830782e5dd89cb57f3ee93ed50f750c8c2c4636e1e9841eb6c4429892abbf22a85c34f900d0e6f0c74554047
   languageName: node
   linkType: hard
 
@@ -1401,17 +1386,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-graphql@npm:^1.7.1":
-  version: 1.7.1
-  resolution: "monaco-graphql@npm:1.7.1"
+"monaco-graphql@npm:^1.7.2":
+  version: 1.7.2
+  resolution: "monaco-graphql@npm:1.7.2"
   dependencies:
-    graphql-language-service: "npm:^5.4.0"
+    graphql-language-service: "npm:^5.5.0"
     picomatch-browser: "npm:^2.2.6"
   peerDependencies:
     graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
     monaco-editor: ">= 0.20.0 < 1"
     prettier: ^2.8.0 || ^3.0.0
-  checksum: 10c0/55a03dd9570c9c02697434a5a0414edc2a88046e1ba5ec0a365f5b972eb4caaeb5eb4198c4e3cacb88da9806030b852dcbcf0d196a4db42f4b7138a64ac743be
+  checksum: 10c0/6a0de634c2d97df91d292ca8f19a7cf84dbc06f7b8b1fc46b07fd1a4fd6c37fde480b605f684d92749804ffeb717277f639ad508421091c70cb8f8c65f39fffd
   languageName: node
   linkType: hard
 
@@ -1505,14 +1490,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^19.1.0":
-  version: 19.1.0
-  resolution: "react-dom@npm:19.1.0"
+"react-dom@npm:^19.1.1":
+  version: 19.1.1
+  resolution: "react-dom@npm:19.1.1"
   dependencies:
     scheduler: "npm:^0.26.0"
   peerDependencies:
-    react: ^19.1.0
-  checksum: 10c0/3e26e89bb6c67c9a6aa86cb888c7a7f8258f2e347a6d2a15299c17eb16e04c19194e3452bc3255bd34000a61e45e2cb51e46292392340432f133e5a5d2dfb5fc
+    react: ^19.1.1
+  checksum: 10c0/8c91198510521299c56e4e8d5e3a4508b2734fb5e52f29eeac33811de64e76fe586ad32c32182e2e84e070d98df67125da346c3360013357228172dbcd20bcdd
   languageName: node
   linkType: hard
 
@@ -1567,10 +1552,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^19.1.0":
-  version: 19.1.0
-  resolution: "react@npm:19.1.0"
-  checksum: 10c0/530fb9a62237d54137a13d2cfb67a7db6a2156faed43eecc423f4713d9b20c6f2728b026b45e28fcd72e8eadb9e9ed4b089e99f5e295d2f0ad3134251bdd3698
+"react@npm:^19.1.1":
+  version: 19.1.1
+  resolution: "react@npm:19.1.1"
+  checksum: 10c0/8c9769a2dfd02e603af6445058325e6c8a24b47b185d0e461f66a6454765ddcaecb3f0a90184836c68bb509f3c38248359edbc42f0d07c23eb500a5c30c87b4e
   languageName: node
   linkType: hard
 
@@ -1617,19 +1602,19 @@ __metadata:
     "@mikespub/epubjs-reader": "npm:^2025.7.6"
     bootstrap: "npm:^3.4.1"
     corejs-typeahead: "npm:^1.3.4"
-    datatables.net: "npm:^2.3.2"
-    datatables.net-bs5: "npm:^2.3.2"
+    datatables.net: "npm:^2.3.4"
+    datatables.net-bs5: "npm:^2.3.4"
     dot: "npm:^1.1.3"
-    graphiql: "npm:^5.0.3"
+    graphiql: "npm:^5.2.0"
     graphql: "npm:^16.11.0"
     jquery: "npm:^3.7.1"
     js-cookie: "npm:^3.0.5"
     lru-fast: "npm:^0.2.2"
     magnific-popup: "npm:^1.2.0"
     normalize.css: "npm:^8.0.1"
-    react: "npm:^19.1.0"
-    react-dom: "npm:^19.1.0"
-    swagger-ui-dist: "npm:^5.26.0"
+    react: "npm:^19.1.1"
+    react-dom: "npm:^19.1.1"
+    swagger-ui-dist: "npm:^5.29.0"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1660,12 +1645,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.26.0":
-  version: 5.26.0
-  resolution: "swagger-ui-dist@npm:5.26.0"
+"swagger-ui-dist@npm:^5.29.0":
+  version: 5.29.0
+  resolution: "swagger-ui-dist@npm:5.29.0"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/c0ce3e3196cf97ee87d11077bdcedfbd5d23e9a5f88ed5ba3b23a2eb8470ca292ac02a57d19f1b6b5a76fc9fb13cf9cf527df9724c0dd1591360f2c6b85a3de6
+  checksum: 10c0/9d004acf487e70b4b9d665807e76997bb7f48d4103d26ff168e91def49b4027822a11c10d28535977adc0e21566e66522cd44f44612df7d2abaff56888a86b26
   languageName: node
   linkType: hard
 
