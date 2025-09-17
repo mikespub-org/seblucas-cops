@@ -557,7 +557,7 @@ $(document).on("keydown", function(e){
 /*exported initiateAjax */
 function initiateAjax (url, theme, templates, version) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
-    version = typeof version !== 'undefined' ? version : '3.6.5';
+    version = typeof version !== 'undefined' ? version : '3.7.2';
     // allow caching to get() template files here, but not for getJSON()
     $.when($.get({url: templates + '/' + theme + '/header.html?v=' + version, cache: true}),
            $.get({url: templates + '/' + theme + '/footer.html?v=' + version, cache: true}),

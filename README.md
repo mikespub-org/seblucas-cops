@@ -56,7 +56,7 @@ Same options as original:
 
 The rest of the installation process is very similar to the original below. But if you install from source, just use your regular composer 2.x - you don't need to download an old composer 1.x version or install global asset plugins anymore :-)
 
-Notice: for a first-time installation, you need to copy *[config/local.php.example](config/local.php.example)* to *config/local.php* and customize the calibre directory etc. as needed. Afterwards, if you get an error or blank page the first time you browse to COPS, you can check for common issues by browsing to http://.../checkconfig.php
+Notice: for a first-time installation, you need to copy *[config/local.php.example](config/local.php.example)* to *config/local.php* and customize the calibre directory etc. as needed. Afterwards, if you get an error or blank page the first time you browse to COPS, you can check for common issues by browsing to http://.../index.php/check or http://.../checkconfig.php
 
 ---
 

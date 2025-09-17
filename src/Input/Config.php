@@ -17,7 +17,7 @@ use Exception;
  */
 class Config
 {
-    public const VERSION = '3.6.5';
+    public const VERSION = '3.7.2';
     public const ENDPOINT = 'index.php';
     protected const PREFIX = 'cops_';
 

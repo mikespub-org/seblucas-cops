@@ -16,6 +16,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+
+3.7.2 - 20250917 Update packages + include PRs and reported issues 
+  * Check uri generator without intl extension - see issue #158 from @shaoyangx
   * Fix Kindle style in default templates - see PR #156 from @dunxd
   * Increase cookie lifetime - see PR #155 from @dunxd
   * Set ETag and Last-Modified for files and images
