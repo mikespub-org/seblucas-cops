@@ -26,7 +26,7 @@
         "ext-xml": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "mikespub/epubjs-reader": "^2025.07",
+        "mikespub/epubjs-reader": "^2025.09",
         "mikespub/php-epub-meta": "^3.5",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",

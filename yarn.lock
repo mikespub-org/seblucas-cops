@@ -177,13 +177,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikespub/epubjs-reader@npm:^2025.7.6":
-  version: 2025.7.6
-  resolution: "@mikespub/epubjs-reader@npm:2025.7.6"
+"@mikespub/epubjs-reader@npm:^2025.9.17":
+  version: 2025.9.17
+  resolution: "@mikespub/epubjs-reader@npm:2025.9.17"
   dependencies:
     epubjs: "npm:^0.3.93"
     js-md5: "npm:^0.8.3"
-  checksum: 10c0/68abc0ca289f1e2fb1fc4d5d7c358c56f492c005e0d50263f9d087e701d67440eeb69f7c014a8c9a4715689a1a91d700c7aff634337a0fd4a39718d1194df025
+  checksum: 10c0/7d0f297161cde5e210b80c6cff0b0778132ebf7fe280a610c9b45bc4b6a2889d4bf4edc6db42a7173760ea3632e83aeb44c2f2a25f11c42c8aac415a5d5b7da1
   languageName: node
   linkType: hard
 
@@ -1599,7 +1599,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "seblucas-cops@workspace:."
   dependencies:
-    "@mikespub/epubjs-reader": "npm:^2025.7.6"
+    "@mikespub/epubjs-reader": "npm:^2025.9.17"
     bootstrap: "npm:^3.4.1"
     corejs-typeahead: "npm:^1.3.4"
     datatables.net: "npm:^2.3.4"

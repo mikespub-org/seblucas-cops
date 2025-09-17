@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6adadc442663face208e9c16ad2f3a02",
+    "content-hash": "51ba2cc159c802c7a07f97ed6fd278d1",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -86,16 +86,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2025.07.07",
+            "version": "2025.09.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "269271451c73f7b5f317def1dd1454ef8b124837"
+                "reference": "4ee61f22febb7d8318a5bef7b32c77aa18a88f0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/269271451c73f7b5f317def1dd1454ef8b124837",
-                "reference": "269271451c73f7b5f317def1dd1454ef8b124837",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/4ee61f22febb7d8318a5bef7b32c77aa18a88f0d",
+                "reference": "4ee61f22febb7d8318a5bef7b32c77aa18a88f0d",
                 "shasum": ""
             },
             "require-dev": {
@@ -129,22 +129,22 @@
             "description": "Epub.js Reader with zipfs.php",
             "support": {
                 "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2025.07.07"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2025.09.17"
             },
-            "time": "2025-07-07T13:21:22+00:00"
+            "time": "2025-09-17T15:48:30+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "3.5.1",
+            "version": "3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "de2eab8a704fb0041331540df6509de2eef4b128"
+                "reference": "f2da01d0e854bc341a2889b6e2cb5085c36134cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/de2eab8a704fb0041331540df6509de2eef4b128",
-                "reference": "de2eab8a704fb0041331540df6509de2eef4b128",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/f2da01d0e854bc341a2889b6e2cb5085c36134cf",
+                "reference": "f2da01d0e854bc341a2889b6e2cb5085c36134cf",
                 "shasum": ""
             },
             "require": {
@@ -201,9 +201,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.5.1"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.5.2"
             },
-            "time": "2025-05-16T14:13:29+00:00"
+            "time": "2025-09-17T16:04:03+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",
@@ -1729,16 +1729,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "3.6.4",
+            "version": "3.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "d0597e7609ef833095c5458778aa1f6219912a43"
+                "reference": "a68176df25f2e505014a2c763ebdc7f925d81363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/d0597e7609ef833095c5458778aa1f6219912a43",
-                "reference": "d0597e7609ef833095c5458778aa1f6219912a43",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/a68176df25f2e505014a2c763ebdc7f925d81363",
+                "reference": "a68176df25f2e505014a2c763ebdc7f925d81363",
                 "shasum": ""
             },
             "require": {
@@ -1749,7 +1749,7 @@
                 "ext-zip": "*",
                 "ext-zlib": "*",
                 "mikespub/php-epub-meta": "^3.5",
-                "mikespub/survos-wikidata": "^5.2",
+                "mikespub/survos-wikidata": "^5.3",
                 "php": ">=8.2",
                 "twig/twig": "^3.21"
             },
@@ -1794,22 +1794,22 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/3.6.4"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/3.6.5"
             },
-            "time": "2025-05-17T15:27:20+00:00"
+            "time": "2025-09-17T16:32:15+00:00"
         },
         {
             "name": "mikespub/survos-wikidata",
-            "version": "5.2.5",
+            "version": "5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/survos-wikidata.git",
-                "reference": "74e5833a17dc61bc2c2eb6cc8de1cc05266deb5e"
+                "reference": "2b14fa728a469a79ff99ee6e569bd695501e7b60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/74e5833a17dc61bc2c2eb6cc8de1cc05266deb5e",
-                "reference": "74e5833a17dc61bc2c2eb6cc8de1cc05266deb5e",
+                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/2b14fa728a469a79ff99ee6e569bd695501e7b60",
+                "reference": "2b14fa728a469a79ff99ee6e569bd695501e7b60",
                 "shasum": ""
             },
             "require": {
@@ -1857,7 +1857,7 @@
                 "wikidata"
             ],
             "support": {
-                "source": "https://github.com/mikespub-org/survos-wikidata/tree/5.2.5"
+                "source": "https://github.com/mikespub-org/survos-wikidata/tree/5.3.0"
             },
             "funding": [
                 {
@@ -1869,7 +1869,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-07-03T10:54:50+00:00"
+            "time": "2025-09-17T16:07:22+00:00"
         },
         {
             "name": "myclabs/deep-copy",
