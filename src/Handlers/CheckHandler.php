@@ -72,6 +72,7 @@ class CheckHandler extends BaseHandler
         $data['baseurl'] = $this->getBaseURL($request);
         $data['render'] = $this->getRender($request);
         $data['agent'] = $this->getAgent($request);
+        $data['language'] = $this->getLanguage($request);
         $data['full']  = $request->get('full');
         $data['databases'] = $this->getDatabases($data['full']);
 
@@ -242,6 +243,16 @@ class CheckHandler extends BaseHandler
     public function getAgent($request)
     {
         return $request->agent();
+    }
+
+    /**
+     * Summary of getLanguage
+     * @param Request $request
+     * @return string
+     */
+    public function getLanguage($request)
+    {
+        return $request->language() . ' (locale: ' . $request->locale() . ')';
     }
 
     /**
