@@ -16,6 +16,7 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Routing\UriGenerator;
 use Marsender\EPubLoader\RequestHandler;
 use Marsender\EPubLoader\App\ExtraActions;
 use Marsender\EPubLoader\Models\AuthorInfo;
@@ -117,6 +118,10 @@ class LoaderHandler extends BaseHandler
 
         // handle the result yourself or let epub-loader generate the output
         $result = array_merge($gConfig, $result);
+
+        // add static url for style
+        $result['static'] ??= UriGenerator::path('vendor/mikespub/epub-loader/static');
+
         //$templateDir = 'templates/twigged/loader';  // if you want to use custom templates
         $templateDir = $gConfig['template_dir'] ?? null;
         $template = null;
