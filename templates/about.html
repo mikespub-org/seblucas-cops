@@ -1,5 +1,29 @@
 <div class="bookpopup" style="max-width:700px;">
-<h1>About COPS</h1>
+<!-- in pseudo doT syntax, but only these variables are replaced -->
+<h1>About COPS {{=it.version}}</h1>
+
+<h2>This Site</h2>
+<p>
+    <div id="qrcode"></div>
+    <script>
+        <!-- use dynamic script loading here -->
+        var link = '{{=it.site_url}}';
+        if (link.includes('://')) {
+            var el = document.createElement('script');
+            el.type = 'text/javascript';
+            el.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+            el.onload = function() {
+                new QRCode(document.getElementById("qrcode"), link);
+            }
+            document.getElementById("qrcode").appendChild(el);
+        }
+    </script>
+</p>
+
+<p><strong>Web Site</strong>: <a href="{{=it.site_url}}">{{=it.site_url}}</a></p>
+
+<p><strong>OPDS Feed</strong>: <a href="{{=it.opds_url}}">{{=it.opds_url}}</a></p>
+
 <h2>This Fork</h2>
 <p>See <a href="https://github.com/mikespub-org/seblucas-cops/blob/main/CHANGELOG.md">CHANGELOG</a> on Github for details: <a href="https://github.com/mikespub-org/seblucas-cops">https://github.com/mikespub-org/seblucas-cops</a></p>
 

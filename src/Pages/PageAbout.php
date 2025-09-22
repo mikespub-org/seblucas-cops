@@ -10,10 +10,15 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Handlers\FeedHandler;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Output\Format;
 
 class PageAbout extends Page
 {
+    protected string $template = 'templates/about.html';
+
     /**
      * Summary of initializeContent
      * @return void
@@ -30,6 +35,11 @@ class PageAbout extends Page
      */
     public function getContent()
     {
-        return preg_replace("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . Config::VERSION . "</h1>", file_get_contents('templates/about.html'));
+        $data = [
+            'version'    => Config::VERSION,
+            'site_url'   => HtmlHandler::index(),
+            'opds_url'   => FeedHandler::route(FeedHandler::HANDLER),
+        ];
+        return Format::template($data, $this->template);
     }
 }

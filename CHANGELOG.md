@@ -16,6 +16,8 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Add qr code to web site for sharing with others in About page
+  * Upgrade mikespub/epub-loader to 3.6.5 and update loader templates
 
 3.7.2 - 20250917 Update packages + include PRs and reported issues 
   * Check uri generator without intl extension - see issue #158 from @shaoyangx
