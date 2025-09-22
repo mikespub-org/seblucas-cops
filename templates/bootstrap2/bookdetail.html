@@ -14,6 +14,10 @@
     {{~it.book.datas:data:i}}
     <div class="btn-group">
         <a title="Download // {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.format}}</a>
+        {{? data.qrcode == 1}}
+        <a id="qrButton" class="btn btn-primary" role="button" title="QR Code" href="#" onclick="showQRCode('qrcode', '{{=data.url}}'); return false;">
+        <span class="glyphicon glyphicon-qrcode"></span></a>
+        {{?}}
         {{? data.mail == 1}}
         <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
         <span class="glyphicon glyphicon-envelope"></span></a>
@@ -85,6 +89,9 @@
         <h4><span class="book-meta-label">{{=it.c.i18n.filesTitle}}</span>: {{~it.book.extraFiles:extraFile:i}}<a href="{{=extraFile.url}}">{{=htmlspecialchars (extraFile.name)}}</a> {{~}}</h4>
     </p>
     {{?}}
+    <p>
+        <div id="qrcode"></div>
+    </p>
 
 </div>
 

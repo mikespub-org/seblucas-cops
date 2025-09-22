@@ -189,10 +189,14 @@ class JsonRenderer extends BaseRenderer
                 "url" => $data->getHtmlLink(),
                 "viewUrl" => $data->getViewHtmlLink(),
                 "mail" => 0,
+                "qrcode" => 0,
                 "readerUrl" => "",
             ];
-            if (!empty(Config::get('mail_configuration')) && !is_null($dataKindle) && $data->id == $dataKindle->id) {
-                $tab ["mail"] = 1;
+            if (!is_null($dataKindle) && $data->id == $dataKindle->id) {
+                $tab ["qrcode"] = 1;
+                if (!empty(Config::get('mail_configuration'))) {
+                    $tab ["mail"] = 1;
+                }
             }
             if ($data->format == "EPUB") {
                 $params = [];

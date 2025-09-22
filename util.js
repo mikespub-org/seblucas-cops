@@ -146,6 +146,29 @@ function sendToMailAddress (component, dataid) {
     $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail, 'error': errorMail});
 }
 
+/*exported showQRCode */
+function showQRCode (id, link) {
+    var qr = document.getElementById(id);
+    if (qr === null) {
+        return;
+    }
+    // clear qr code if already set
+    if (qr.innerHTML !== "") {
+        qr.innerHTML = "";
+        return;
+    }
+    // use dynamic script loading here
+    if (link.includes('://')) {
+        var el = document.createElement('script');
+        el.type = 'text/javascript';
+        el.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        el.onload = function() {
+            new QRCode(qr, link);
+        }
+        qr.appendChild(el);
+    }
+}
+
 /*exported asset */
 function asset (file) {
     var url = currentData.assets + '/' + file;

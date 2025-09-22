@@ -16,6 +16,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Add qr code to download book in bootstrap2/twigged templates
   * Add qr code to web site for sharing with others in About page
   * Upgrade mikespub/epub-loader to 3.6.5 and update loader templates
 
