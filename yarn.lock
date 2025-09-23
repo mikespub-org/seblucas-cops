@@ -1481,6 +1481,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qrcodejs@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "qrcodejs@npm:1.0.0"
+  checksum: 10c0/eb7ef9215379f8b5a4c4afc3700ce734ac971fff11e772067b25cfda29861b725dff1ffd2f7963f9d093d06accb9947836522d842f3d95ddbf6567c536bd6421
+  languageName: node
+  linkType: hard
+
 "react-compiler-runtime@npm:19.1.0-rc.1":
   version: 19.1.0-rc.1
   resolution: "react-compiler-runtime@npm:19.1.0-rc.1"
@@ -1612,6 +1619,7 @@ __metadata:
     lru-fast: "npm:^0.2.2"
     magnific-popup: "npm:^1.2.0"
     normalize.css: "npm:^8.0.1"
+    qrcodejs: "npm:^1.0.0"
     react: "npm:^19.1.1"
     react-dom: "npm:^19.1.1"
     swagger-ui-dist: "npm:^5.29.0"

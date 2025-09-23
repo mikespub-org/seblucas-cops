@@ -6,17 +6,7 @@
 <p>
     <div id="qrcode"></div>
     <script>
-        <!-- use dynamic script loading here -->
-        var link = '{{=it.site_url}}';
-        if (link.includes('://')) {
-            var el = document.createElement('script');
-            el.type = 'text/javascript';
-            el.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-            el.onload = function() {
-                new QRCode(document.getElementById("qrcode"), link);
-            }
-            document.getElementById("qrcode").appendChild(el);
-        }
+        showQRCode('qrcode', '{{=it.site_url}}');
     </script>
 </p>
 

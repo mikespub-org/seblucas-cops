@@ -15,6 +15,7 @@
     "lru-fast": "^0.2.2",
     "magnific-popup": "^1.2.0",
     "normalize.css": "^8.0.1",
+    "qrcodejs": "^1.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "swagger-ui-dist": "^5.29.0",
