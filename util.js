@@ -163,7 +163,10 @@ function showQRCode (id, link) {
         el.type = 'text/javascript';
         el.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
         el.onload = function() {
-            new QRCode(qr, link);
+            new QRCode(qr, {
+                text: link,
+                correctLevel: QRCode.CorrectLevel.M
+            });
         }
         qr.appendChild(el);
     }
