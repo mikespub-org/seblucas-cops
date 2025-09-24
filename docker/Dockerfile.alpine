@@ -1,14 +1,24 @@
-FROM alpine:3.21 AS build
+FROM alpine:3.22 AS build
 RUN apk add --no-cache --upgrade \
-    php83 \
-    php83-dom \
-    php83-gd \
-    php83-intl \
-    php83-pdo_sqlite \
-    php83-xml \
+    php84 \
+    php84-dom \
+    php84-gd \
+    php84-intl \
+    php84-pdo_sqlite \
+    php84-xml \
+    php84-zip \
+    php84-phar \
     composer \
-    php83-tokenizer \
-    php83-xmlwriter
+    php84-curl \
+    php84-fileinfo \
+    php84-iconv \
+    php84-mbstring \
+    php84-openssl \
+    php84-session \
+    php84-tokenizer \
+    php84-xmlwriter
+# https://www.dannyvankooten.com/blog/2025/composer-php-version-alpine-linux/
+RUN sed -i 's/php83/php84/g' /usr/bin/composer
 
 WORKDIR /app
 COPY . /app
@@ -17,7 +27,7 @@ RUN composer install --no-dev -o -d /app
 ENV PORT=80
 EXPOSE $PORT
 
-CMD ["sh", "-c", "php -S 0.0.0.0:$PORT -t /app"]
+CMD ["sh", "-c", "php84 -S 0.0.0.0:$PORT -t /app"]
 
 FROM build AS dev-envs
 RUN composer update -o -d /app

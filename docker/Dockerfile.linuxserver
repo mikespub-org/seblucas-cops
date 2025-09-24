@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.21
+FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.22
 
 # set version label
 ARG BUILD_DATE
@@ -13,15 +13,15 @@ RUN \
   echo "**** install runtime packages ****" && \
   apk add --no-cache --upgrade \
     # libxml2 \
-    php83-dom \
-    php83-gd \
-    php83-intl \
-    php83-pdo_sqlite \
-    php83-sqlite3 && \
+    php84-dom \
+    php84-gd \
+    php84-intl \
+    php84-pdo_sqlite \
+    php84-sqlite3 && \
   echo "**** configure php-fpm to pass env vars ****" && \
-  sed -E -i 's/^;?clear_env ?=.*$/clear_env = no/g' /etc/php83/php-fpm.d/www.conf && \
-  grep -qxF 'clear_env = no' /etc/php83/php-fpm.d/www.conf || echo 'clear_env = no' >> /etc/php83/php-fpm.d/www.conf && \
-  echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php83/php-fpm.conf && \
+  sed -E -i 's/^;?clear_env ?=.*$/clear_env = no/g' /etc/php84/php-fpm.d/www.conf && \
+  if ! grep -qxF 'clear_env = no' /etc/php84/php-fpm.d/www.conf; then echo 'clear_env = no' >> /etc/php84/php-fpm.d/www.conf; fi && \
+  echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php84/php-fpm.conf && \
   echo "**** install cops ****" && \
   if [ -z ${COPS_RELEASE+x} ]; then \
     COPS_RELEASE=$(curl -sX GET "https://api.github.com/repos/mikespub-org/seblucas-cops/releases/latest" \
