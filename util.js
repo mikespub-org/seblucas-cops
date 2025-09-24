@@ -158,7 +158,7 @@ function showQRCode (id, link) {
         return;
     }
     // use dynamic script loading here
-    if (link.includes('://')) {
+    if (link.indexOf('://') !== -1) { // Replaced includes with indexOf
         var el = document.createElement('script');
         el.type = 'text/javascript';
         el.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
@@ -629,38 +629,4 @@ function initiateAjax (url, theme, templates, version) {
     });
 }
 
-/** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
-function initiateTwig(url, theme, templates, version) {
-    templates = typeof templates !== 'undefined' ? templates : 'templates';
-    Twig.extendFunction("str_format", str_format);
-    Twig.extendFunction("asset", asset);
-
-    var template = Twig.twig({
-        id: 'page',
-        href: templates + '/' + theme + '/page.html',
-        async: false 
-     });
-
-     templatePage = function (data) {
-        return Twig.twig({ref: 'page'}).render({it: data});
-     };
-
-     $.when($.getJSON(url)).done(function(data){
-        currentData = data;
-
-        updatePage (currentData);
-        cache.put (url, currentData);
-        if (isPushStateEnabled) {
-            window.history.replaceState(url, "", window.location);
-        }
-        handleLinks ();
-    }).fail(function (error) {
-        if (error.responseText) {
-            document.write (error.responseText);
-        } else {
-            document.write ('Error loading templates from directory "' + encodeURI(templates + '/' + theme) + '/" for url: ' + encodeURI(url));
-        }
-        console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
-    });
-}
- */
+/** Moved initiateTwig from util.js to twigged cops.js due to unknown issue with Kindle - see #36 */
