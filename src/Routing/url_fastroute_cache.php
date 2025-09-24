@@ -701,7 +701,7 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/(\\w)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/tags/letter/([^/]+)(*MARK:m)|/tags/(\\d+)/([^/]+)(*MARK:n)|/tags/(\\d+)(*MARK:o)|/custom/(\\d+)/([^/]+)(*MARK:p)|/custom/(\\d+)(*MARK:q)|/languages/(\\d+)/([^/]+)(*MARK:r)|/languages/(\\d+)(*MARK:s)|/publishers/letter/([^/]+)(*MARK:t)|/publishers/(\\d+)/([^/]+)(*MARK:u)|/publishers/(\\d+)(*MARK:v)|/ratings/(\\d+)/([^/]+)(*MARK:w)|/ratings/(\\d+)(*MARK:x)|/identifiers/(\\w+)/([^/]+)(*MARK:y)|/identifiers/(\\w+)(*MARK:z)|/formats/(\\w+)(*MARK:aa)|/feed/(\\w+)(*MARK:ab)|/feed/(.+)(*MARK:ac)|/files/(\\d+)/(\\d+)/(.+)(*MARK:ad)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ae)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:af))$~',
+        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/tags/letter/([^/]+)(*MARK:m)|/tags/(\\d+)/([^/]+)(*MARK:n)|/tags/(\\d+)(*MARK:o)|/custom/(\\d+)/([^/]+)(*MARK:p)|/custom/(\\d+)(*MARK:q)|/languages/(\\d+)/([^/]+)(*MARK:r)|/languages/(\\d+)(*MARK:s)|/publishers/letter/([^/]+)(*MARK:t)|/publishers/(\\d+)/([^/]+)(*MARK:u)|/publishers/(\\d+)(*MARK:v)|/ratings/(\\d+)/([^/]+)(*MARK:w)|/ratings/(\\d+)(*MARK:x)|/identifiers/(\\w+)/([^/]+)(*MARK:y)|/identifiers/(\\w+)(*MARK:z)|/formats/(\\w+)(*MARK:aa)|/feed/(\\w+)(*MARK:ab)|/feed/(.+)(*MARK:ac)|/files/(\\d+)/(\\d+)/(.+)(*MARK:ad)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ae)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:af))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -769,7 +769,7 @@
             ),
             2 => 
             array (
-              '_route' => '/books/letter/{letter:\\w}',
+              '_route' => '/books/letter/{letter}',
               '_name' => 'page-books-letter',
             ),
           ),
@@ -1970,7 +1970,7 @@
         1 => 
         array (
           0 => 'letter',
-          1 => '\\w',
+          1 => '[^/]+',
         ),
       ),
     ),

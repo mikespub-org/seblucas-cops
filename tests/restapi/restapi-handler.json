@@ -43,7 +43,7 @@
                     }
                 ],
                 "page-books-letter": [
-                    "/books/letter/{letter:\\w}",
+                    "/books/letter/{letter}",
                     {
                         "page": "books_letter"
                     }

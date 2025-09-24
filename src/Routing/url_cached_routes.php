@@ -143,7 +143,7 @@ $routes = [
     [],
   ],
   'page-books-letter' => [
-    '/books/letter/{letter:\\w}',
+    '/books/letter/{letter}',
     [
       'page' => 'books_letter',
       '_route' => 'page-books-letter',

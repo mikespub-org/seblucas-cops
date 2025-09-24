@@ -474,8 +474,8 @@ class UriGenerator
                 }
                 $value = rawurlencode($value);
             }
-            // search query
-            if (in_array($param, ['query'])) {
+            // search query or first letter
+            if (in_array($param, ['query', 'letter'])) {
                 $value = rawurlencode($value);
             }
             // extra file

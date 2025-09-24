@@ -36,7 +36,7 @@ class PageHandler extends BaseHandler
             "page-author" => ["/authors/{id:\d+}/{title}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-author-id" => ["/authors/{id:\d+}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-authors" => ["/authors", ["page" => PageId::ALL_AUTHORS]],
-            "page-books-letter" => ["/books/letter/{letter:\w}", ["page" => PageId::ALL_BOOKS_LETTER]],
+            "page-books-letter" => ["/books/letter/{letter}", ["page" => PageId::ALL_BOOKS_LETTER]],
             "page-books-letters" => ["/books/letter", ["page" => PageId::ALL_BOOKS, "letter" => 1]],
             "page-books-year" => ["/books/year/{year:\d+}", ["page" => PageId::ALL_BOOKS_YEAR]],
             "page-books-years" => ["/books/year", ["page" => PageId::ALL_BOOKS, "year" => 1]],

@@ -90,7 +90,7 @@
         {
             "name": "page-books-letter",
             "route": [
-                "/books/letter/{letter:\\w}",
+                "/books/letter/{letter}",
                 {
                     "page": "books_letter",
                     "_route": "page-books-letter"

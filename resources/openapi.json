@@ -201,8 +201,7 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "pattern": "^\\w$"
+                            "type": "string"
                         }
                     },
                     {

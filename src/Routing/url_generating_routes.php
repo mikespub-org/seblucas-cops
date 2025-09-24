@@ -9,7 +9,7 @@ return [
     'page-author' => [['id', 'title'], ['page' => 'author', '_route' => 'page-author'], ['id' => '\\d+'], [['variable', '/', '[^/]++', 'title'], ['variable', '/', '\\d+', 'id'], ['text', '/authors']], [], [], []],
     'page-author-id' => [['id'], ['page' => 'author', '_route' => 'page-author-id'], ['id' => '\\d+'], [['variable', '/', '\\d+', 'id'], ['text', '/authors']], [], [], []],
     'page-authors' => [[], ['page' => 'authors', '_route' => 'page-authors'], [], [['text', '/authors']], [], [], []],
-    'page-books-letter' => [['letter'], ['page' => 'books_letter', '_route' => 'page-books-letter'], ['letter' => '\\w'], [['variable', '/', '\\w', 'letter'], ['text', '/books/letter']], [], [], []],
+    'page-books-letter' => [['letter'], ['page' => 'books_letter', '_route' => 'page-books-letter'], [], [['variable', '/', '[^/]++', 'letter'], ['text', '/books/letter']], [], [], []],
     'page-books-letters' => [[], ['page' => 'books', 'letter' => 1, '_route' => 'page-books-letters'], [], [['text', '/books/letter']], [], [], []],
     'page-books-year' => [['year'], ['page' => 'books_year', '_route' => 'page-books-year'], ['year' => '\\d+'], [['variable', '/', '\\d+', 'year'], ['text', '/books/year']], [], [], []],
     'page-books-years' => [[], ['page' => 'books', 'year' => 1, '_route' => 'page-books-years'], [], [['text', '/books/year']], [], [], []],
