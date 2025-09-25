@@ -8,7 +8,8 @@
 namespace SebLucas\Cops\Tests\Adapter;
 
 require_once dirname(__DIR__) . '/config/test.php';
-
+use PHPUnit\Framework\Attributes\RequiresMethod;
+use PHPUnit\Framework\TestCase;
 use Illuminate\Container\Container;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Routing\CallableDispatcher;
@@ -16,13 +17,13 @@ use Illuminate\Routing\Contracts\CallableDispatcher as CallableDispatcherContrac
 use Illuminate\Http\Request as LaravelRequest;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router as LaravelRouter;
-use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Framework\Adapter\LaravelAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 
+#[RequiresMethod('\Illuminate\Routing\Router', '__construct')]
 class LaravelAdapterTest extends TestCase
 {
     private LaravelAdapter $adapter;
