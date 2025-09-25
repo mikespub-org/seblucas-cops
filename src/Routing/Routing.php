@@ -32,6 +32,7 @@ class Routing implements RouterInterface
 
     public ?string $cacheDir = null;
     public ?Router $router = null;
+    public ?RouteLoader $loader = null;
 
     public function __construct(?string $cacheDir = null)
     {
@@ -132,13 +133,36 @@ class Routing implements RouterInterface
         if (isset($this->router)) {
             return $this->router;
         }
-        $loader = new RouteLoader();
+        $loader = $this->getLoader();
         $resource = null;
         $options = ['cache_dir' => $this->cacheDir];
         $context = null;
 
         $this->router = new Router($loader, $resource, $options, $context);
         return $this->router;
+    }
+
+    /**
+     * Summary of getLoader
+     * @return RouteLoader|null
+     */
+    public function getLoader()
+    {
+        if (isset($this->loader)) {
+            return $this->loader;
+        }
+        $this->loader = new RouteLoader();
+        return $this->loader;
+    }
+
+    /**
+     * Summary of setLoader
+     * @param ?RouteLoader $loader
+     * @return void
+     */
+    public function setLoader($loader = null)
+    {
+        $this->loader = $loader;
     }
 
     /**

@@ -81,7 +81,7 @@ class SymfonyAdapter implements AdapterInterface
                 $copsRequest->urlParams = array_merge(
                     $defaults,
                     $request->attributes->get('_route_params', []),
-                    $request->query->all()
+                    $request->query->all(),
                 );
 
                 // We need to set a context on the handler manager for it to create a handler
@@ -97,7 +97,7 @@ class SymfonyAdapter implements AdapterInterface
                 return new SymfonyResponse(
                     $copsResponse->getContent(),
                     $copsResponse->getStatusCode(),
-                    $copsResponse->getHeaders()
+                    $copsResponse->getHeaders(),
                 );
             };
 

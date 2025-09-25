@@ -129,7 +129,7 @@ class Framework
             $this->context = new RequestContext(
                 $request,
                 $this->manager,
-                $this->routerInstance
+                $this->routerInstance,
             );
         }
         return $this->context;

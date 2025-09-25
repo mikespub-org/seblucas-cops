@@ -74,7 +74,7 @@ class LaravelAdapter implements AdapterInterface
                 $copsRequest->urlParams = array_merge(
                     $defaults,
                     $request->route()->parameters(),
-                    $request->query()
+                    $request->query(),
                 );
 
                 // We need to set a context on the handler manager for it to create a handler
@@ -90,7 +90,7 @@ class LaravelAdapter implements AdapterInterface
                 return new LaravelResponse(
                     $copsResponse->getContent(),
                     $copsResponse->getStatusCode(),
-                    $copsResponse->getHeaders()
+                    $copsResponse->getHeaders(),
                 );
             })->name($name);
         }

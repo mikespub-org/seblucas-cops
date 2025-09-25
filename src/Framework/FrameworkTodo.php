@@ -19,7 +19,7 @@ class FrameworkTodo
     protected RequestContext $context;
 
     public function __construct(
-        protected readonly AdapterInterface $adapter = new CustomAdapter()
+        protected readonly AdapterInterface $adapter = new CustomAdapter(),
     ) {
         $request = $this->createRequest();
         // Register routes via adapter before creating context
@@ -27,7 +27,7 @@ class FrameworkTodo
         $this->context = new RequestContext(
             $request,
             $this->adapter->getHandlerManager(),
-            $this->adapter->getRouter()
+            $this->adapter->getRouter(),
         );
     }
 

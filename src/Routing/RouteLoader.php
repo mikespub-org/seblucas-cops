@@ -9,6 +9,7 @@
 
 namespace SebLucas\Cops\Routing;
 
+//use SebLucas\Cops\Controller\CopsController;
 use SebLucas\Cops\Input\Route;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
@@ -50,6 +51,8 @@ class RouteLoader extends Loader
             [$path, $params, $methods, $options] = $route;
             // set route param in request once we find matching route
             $params[Route::ROUTE_PARAM] ??= $name;
+            // Set the default controller for all COPS routes
+            //$params['_controller'] = CopsController::class;
             [$path, $requirements] = self::getPathRequirements($path);
             // use the 'defaults' to store any fixed params here
             $route = new SymfonyRoute($path, $params);

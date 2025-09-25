@@ -20,7 +20,7 @@ class CustomAdapter implements AdapterInterface
 
     public function __construct(
         protected readonly RouterInterface $router = new Routing(),
-        protected readonly HandlerManager $manager = new HandlerManager()
+        protected readonly HandlerManager $manager = new HandlerManager(),
     ) {}
 
     public function getName(): string
