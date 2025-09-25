@@ -17,7 +17,6 @@ use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
