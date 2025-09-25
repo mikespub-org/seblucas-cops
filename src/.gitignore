@@ -1,3 +1,2 @@
 # ignore adapters for other frameworks
 Framework/Adapter/LaravelAdapter.php
-Framework/Adapter/SymfonyAdapter.php
