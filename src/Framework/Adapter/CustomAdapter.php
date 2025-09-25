@@ -37,7 +37,7 @@ class CustomAdapter implements AdapterInterface
         foreach ($this->manager->getHandlers() as $handlerClass) {
             $routes = array_merge($routes, $this->manager->addHandlerRoutes($handlerClass));
         }
-        // Add them all at once to router
+        // Add them all at once to router - @todo this doesn't do anything
         if (!empty($routes)) {
             $this->router->addRoutes($routes);
         }

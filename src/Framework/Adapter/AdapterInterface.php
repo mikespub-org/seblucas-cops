@@ -18,4 +18,5 @@ interface AdapterInterface
     public function registerRoutes(): void;
     public function getRouter(): RouterInterface;
     public function getHandlerManager(): HandlerManager;
+    public function addMiddleware(string $middlewareClass): self;
 }

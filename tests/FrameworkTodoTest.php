@@ -2,12 +2,14 @@
 
 namespace SebLucas\Cops\Tests;
 
+require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Framework\Adapter\CustomAdapter;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
@@ -46,10 +48,25 @@ class FrameworkTodoTest extends TestCase
 
     public function testRequestHandling(): void
     {
+        $_SERVER['PATH_INFO'] = '/check';
+
         $framework = new FrameworkTodo(new CustomAdapter());
         $context = $framework->getContext();
+        // match route and update request with matched parameters
+        $params = $context->matchRequest();
+        $handler = $context->resolveHandler();
 
-        $this->assertInstanceOf(Request::class, $context->getRequest());
+        $request = $context->getRequest();
+        $this->assertInstanceOf(Request::class, $request);
+
+        $expected = '/check';
+        $this->assertEquals($expected, $request->path());
+
+        $expected = CheckHandler::class;
+        $this->assertEquals($expected, $handler::class);
+        $this->assertEquals($expected, $request->getHandler());
+
+        unset($_SERVER['PATH_INFO']);
     }
 
     public function testMiddlewareSupport(): void
@@ -92,5 +109,56 @@ class FrameworkTodoTest extends TestCase
         //$this->assertNotEmpty($router->getRoutes());
         $expected = Route::count();
         $this->assertCount($expected, $router->getRouter()->getRouteCollection());
+    }
+
+    public function testRunCheck(): void
+    {
+        $_SERVER['PATH_INFO'] = '/check';
+
+        ob_start();
+        FrameworkTodo::run(true);
+        $output = ob_get_clean();
+
+        $expected = "<title>COPS Configuration Check</title>";
+        $this->assertStringContainsString($expected, $output);
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testRunNotFound(): void
+    {
+        $_SERVER['PATH_INFO'] = '/this-route-does-not-exist';
+
+        // Capture error_log output to verify the error is logged
+        $logFile = tempnam(sys_get_temp_dir(), 'cops_test_');
+        ini_set('error_log', $logFile);
+
+        ob_start();
+        FrameworkTodo::run(true);
+        $output = ob_get_clean();
+
+        // The ErrorHandler should output a "Invalid request path" message
+        $this->assertStringContainsString('<h1>Error</h1>', $output);
+        $this->assertStringContainsString('<p>COPS: Invalid request path &#039;/this-route-does-not-exist&#039;</p>', $output);
+
+        // Check that the error was logged
+        $this->assertStringContainsString("COPS: Invalid request path '/this-route-does-not-exist' from template", file_get_contents($logFile));
+        unlink($logFile);
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testCreateRequestWithRedirectPathInfo(): void
+    {
+        unset($_SERVER['PATH_INFO']);
+        $_SERVER['REDIRECT_PATH_INFO'] = '/test/path';
+
+        $framework = new FrameworkTodo();
+        $request = $framework->getContext()->getRequest();
+
+        $this->assertEquals('/test/path', $request->path());
+
+        unset($_SERVER['REDIRECT_PATH_INFO']);
+        unset($_SERVER['PATH_INFO']);
     }
 }

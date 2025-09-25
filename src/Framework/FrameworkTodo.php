@@ -69,9 +69,9 @@ class FrameworkTodo
         }
     }
 
-    public static function getInstance(): self
+    public static function getInstance(bool $reset = false): self
     {
-        if (!self::$instance) {
+        if (!self::$instance || $reset) {
             self::$instance = new self();
         }
         return self::$instance;
@@ -87,8 +87,8 @@ class FrameworkTodo
         return self::getInstance()->adapter->getRouter();
     }
 
-    public static function run(): void
+    public static function run(bool $reset = false): void
     {
-        self::getInstance()->handleRequest();
+        self::getInstance($reset)->handleRequest();
     }
 }

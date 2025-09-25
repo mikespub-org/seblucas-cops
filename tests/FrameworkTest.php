@@ -211,4 +211,46 @@ class FrameworkTest extends TestCase
 
         unset($_SERVER['PATH_INFO']);
     }
+
+    /**
+     * Test the 404 Not Found error handling path.
+     */
+    public function testRunNotFound(): void
+    {
+        $_SERVER['PATH_INFO'] = '/this-route-does-not-exist';
+
+        // Capture error_log output to verify the error is logged
+        $logFile = tempnam(sys_get_temp_dir(), 'cops_test_');
+        ini_set('error_log', $logFile);
+
+        ob_start();
+        Framework::run();
+        $output = ob_get_clean();
+
+        // The ErrorHandler should output a "Invalid request path" message
+        $this->assertStringContainsString('<h1>Error</h1>', $output);
+        $this->assertStringContainsString('<p>COPS: Invalid request path &#039;/this-route-does-not-exist&#039;</p>', $output);
+
+        // Check that the error was logged
+        $this->assertStringContainsString("COPS: Invalid request path '/this-route-does-not-exist' from template", file_get_contents($logFile));
+        unlink($logFile);
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    /**
+     * Test the createRequest method's fallback to REDIRECT_PATH_INFO.
+     */
+    public function testCreateRequestWithRedirectPathInfo(): void
+    {
+        unset($_SERVER['PATH_INFO']);
+        $_SERVER['REDIRECT_PATH_INFO'] = '/test/path';
+
+        $request = Framework::getInstance()->getContext(true)->getRequest();
+
+        $this->assertEquals('/test/path', $request->path());
+
+        unset($_SERVER['REDIRECT_PATH_INFO']);
+        unset($_SERVER['PATH_INFO']);
+    }
 }

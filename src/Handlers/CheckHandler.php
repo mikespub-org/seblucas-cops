@@ -50,7 +50,7 @@ class CheckHandler extends BaseHandler
         } catch (Exception $e) {
             echo "<h2>Error in normal handling:</h2>";
             echo "<h4>" . $e->getMessage() . "<h4><br/>";
-            include 'checkconfig.php';
+            include 'checkconfig.php';  // NOSONAR
         }
     }
 
