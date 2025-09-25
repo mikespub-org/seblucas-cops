@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * composer require --dev slim/slim
+ * composer require --dev slim/psr7
+ */
+
 namespace SebLucas\Cops\Tests\Adapter;
 
 require_once dirname(__DIR__) . '/config/test.php';

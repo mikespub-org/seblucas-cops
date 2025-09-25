@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * composer require --dev symfony/http-kernel
+ * composer require --dev symfony/dependency-injection
+ */
+
 namespace SebLucas\Cops\Tests\Adapter;
 
 require_once dirname(__DIR__) . '/config/test.php';
