@@ -7,7 +7,7 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Tests;
+namespace SebLucas\Cops\Tests\Routing;
 
 use SebLucas\Cops\Routing\RouteLoader;
 use SebLucas\Cops\Routing\Routing;

@@ -14,6 +14,13 @@ parameters:
         - vendor/*
         - tests/WebDriverTestCase.php
         - tests/WebDriverTest.php
+        - tests/Framework/CopsControllerTest.php
+        - tests/Framework/CopsServiceProviderTest.php
+        - tests/Framework/LaravelAdapterTest.php
+        - tests/Framework/SlimAdapterTest.php
+        - tests/Framework/SymfonyAdapterTest.php
         - src/Framework/Adapter/LaravelAdapter.php
         - src/Framework/Adapter/SlimAdapter.php
         - src/Framework/Adapter/SymfonyAdapter.php
+        - src/Framework/Controller/CopsController.php
+        - src/Framework/Providers/CopsServiceProvider.php

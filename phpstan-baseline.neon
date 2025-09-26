@@ -76,4 +76,4 @@ parameters:
 			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 12
-			path: tests/ConfigTest.php
+			path: tests/Input/ConfigTest.php
