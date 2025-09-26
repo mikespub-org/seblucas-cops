@@ -14,7 +14,6 @@ use SebLucas\Cops\Routing\RouterInterface;
 interface AdapterInterface
 {
     public function getName(): string;
-    public function handleRequest(RequestContext $context): Response;
     public function registerRoutes(): void;
     public function getRouter(): RouterInterface;
     public function getHandlerManager(): HandlerManager;

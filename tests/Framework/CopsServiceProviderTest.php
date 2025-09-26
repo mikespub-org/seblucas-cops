@@ -7,10 +7,11 @@
 
 namespace SebLucas\Cops\Tests\Framework;
 
+use SebLucas\Cops\Framework\Providers\CopsServiceProvider;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Framework\Providers\CopsServiceProvider;
 use Illuminate\Container\Container;
 use Illuminate\Routing\CallableDispatcher;
 use Illuminate\Routing\Contracts\CallableDispatcher as CallableDispatcherContract;

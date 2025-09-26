@@ -69,7 +69,7 @@ class FrameworkTest extends TestCase
         $this->assertCount($expected, $handlers);
     }
 
-    public function testgetRequest(): void
+    public function testGetRequest(): void
     {
         $path = '/check';
         $request = Framework::getRequest($path);
@@ -78,7 +78,7 @@ class FrameworkTest extends TestCase
         $this->assertEquals($expected, $request->getHandler());
     }
 
-    public function testgetHandler(): void
+    public function testGetHandler(): void
     {
         $handler = Framework::createHandler('check');
 

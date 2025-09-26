@@ -7,10 +7,11 @@
 
 namespace SebLucas\Cops\Tests\Framework;
 
+use SebLucas\Cops\Framework\Adapter\SymfonyAdapter;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Framework\Adapter\SymfonyAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouterInterface;
@@ -94,12 +95,5 @@ class SymfonyAdapterTest extends TestCase
         // Assert the response is correct
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringContainsString('<title>COPS Configuration Check</title>', $response->getContent());
-    }
-
-    public function testDirectHandleRequestThrowsException(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('SymfonyAdapter does not handle requests directly. The Symfony Kernel should be run.');
-        $this->adapter->handleRequest(new \SebLucas\Cops\Input\RequestContext(new \SebLucas\Cops\Input\Request(), new HandlerManager(), new Routing()));
     }
 }

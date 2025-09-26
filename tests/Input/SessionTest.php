@@ -53,7 +53,7 @@ class SessionTest extends TestCase
         ];
         $session->set('custom', $custom);
 
-        file_put_contents(__DIR__ . '/text.sessionid', $sessionId);
+        $this->putSessionId($sessionId);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testSessionConnected')]
@@ -62,7 +62,7 @@ class SessionTest extends TestCase
     {
         $session = new Session();
 
-        $sessionId = file_get_contents(__DIR__ . '/text.sessionid');
+        $sessionId = $this->getSessionId();
         $session->restore($sessionId);
 
         $expected = 0;
@@ -86,7 +86,7 @@ class SessionTest extends TestCase
     {
         $session = new Session();
 
-        $sessionId = file_get_contents(__DIR__ . '/text.sessionid');
+        $sessionId = $this->getSessionId();
         $session->restore($sessionId);
 
         $expected = 0;
@@ -107,7 +107,7 @@ class SessionTest extends TestCase
         // force expires on next start()
         $session->set('expires', time() - 24 * 60 * 60);
 
-        file_put_contents(__DIR__ . '/text.sessionid', $expected);
+        $this->putSessionId($expected);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testSessionRegenerate')]
@@ -116,7 +116,7 @@ class SessionTest extends TestCase
     {
         $session = new Session();
 
-        $sessionId = file_get_contents(__DIR__ . '/text.sessionid');
+        $sessionId = $this->getSessionId();
         $session->restore($sessionId);
 
         // session expired -> new session id
@@ -133,7 +133,7 @@ class SessionTest extends TestCase
         $connected = $session->get('connected');
         $this->assertEquals($expected, $connected);
 
-        file_put_contents(__DIR__ . '/text.sessionid', $sessionId);
+        $this->putSessionId($sessionId);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testSessionExpires')]
@@ -142,7 +142,7 @@ class SessionTest extends TestCase
     {
         $session = new Session();
 
-        $sessionId = file_get_contents(__DIR__ . '/text.sessionid');
+        $sessionId = $this->getSessionId();
         $session->restore($sessionId);
 
         $expected = 0;
@@ -159,5 +159,16 @@ class SessionTest extends TestCase
         $expected = null;
         $connected = $session->get('connected');
         $this->assertEquals($expected, $connected);
+    }
+
+    protected function getSessionId(): string
+    {
+        $sessionId = file_get_contents(dirname(__DIR__) . '/text.sessionid');
+        return $sessionId;
+    }
+
+    protected function putSessionId(string $sessionId): void
+    {
+        file_put_contents(dirname(__DIR__) . '/text.sessionid', $sessionId);
     }
 }

@@ -30,13 +30,6 @@ class LaravelAdapter implements AdapterInterface
         return 'laravel';
     }
 
-    public function handleRequest(RequestContext $context): CopsResponse
-    {
-        // This method is not applicable for LaravelAdapter. The Laravel Kernel's
-        // handle() method should be the entry point.
-        throw new \LogicException('LaravelAdapter does not handle requests directly. The Laravel Kernel should be run.');
-    }
-
     public function getRouter(): RouterInterface
     {
         return $this->container->get(RouterInterface::class);
@@ -67,32 +60,45 @@ class LaravelAdapter implements AdapterInterface
             // The path needs to be adjusted for Laravel's router
             $laravelPath = ltrim($path, '/');
 
-            $this->laravelRouter->addRoute($methods, $laravelPath, function (LaravelRequest $request) use ($copsManager, $copsRouter, $defaults): LaravelResponse {
-                // 1. Convert Laravel Request to COPS Request
-                $copsRequest = new CopsRequest();
-                $copsRequest->setPath($request->getPathInfo());
-                $copsRequest->urlParams = array_merge(
-                    $defaults,
-                    $request->route()->parameters(),
-                    $request->query(),
-                );
-
-                // We need to set a context on the handler manager for it to create a handler
-                $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
-                $copsManager->setContext($context);
-
-                // 2. Resolve and handle the request using COPS components
-                $handlerName = $defaults['_handler'] ?? 'html';
-                $handler = $copsManager->createHandler($handlerName);
-                $copsResponse = $handler->handle($copsRequest);
-
-                // 3. Convert COPS Response to Laravel Response
-                return new LaravelResponse(
-                    $copsResponse->getContent(),
-                    $copsResponse->getStatusCode(),
-                    $copsResponse->getHeaders(),
-                );
-            })->name($name);
+            $this->laravelRouter->addRoute(
+                $methods,
+                $laravelPath,
+                $this->getRouteCallable($copsManager, $copsRouter, $defaults)
+            )->name($name);
         }
+    }
+
+    /**
+     * Summary of getRouteCallable
+     * @param array<mixed> $defaults
+     */
+    protected function getRouteCallable(HandlerManager $copsManager, RouterInterface $copsRouter, array $defaults): callable
+    {
+        return function (LaravelRequest $request) use ($copsManager, $copsRouter, $defaults): LaravelResponse {
+            // 1. Convert Laravel Request to COPS Request
+            $copsRequest = new CopsRequest();
+            $copsRequest->setPath($request->getPathInfo());
+            $copsRequest->urlParams = array_merge(
+                $defaults,
+                $request->route()->parameters(),
+                $request->query(),
+            );
+
+            // We need to set a context on the handler manager for it to create a handler
+            $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
+            $copsManager->setContext($context);
+
+            // 2. Resolve and handle the request using COPS components
+            $handlerName = $defaults['_handler'] ?? 'html';
+            $handler = $copsManager->createHandler($handlerName);
+            $copsResponse = $handler->handle($copsRequest);
+
+            // 3. Convert COPS Response to Laravel Response
+            return new LaravelResponse(
+                $copsResponse->getContent(),
+                $copsResponse->getStatusCode(),
+                $copsResponse->getHeaders(),
+            );
+        };
     }
 }

@@ -7,6 +7,8 @@
 
 namespace SebLucas\Cops\Tests\Framework;
 
+use SebLucas\Cops\Framework\Adapter\LaravelAdapter;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
@@ -17,7 +19,6 @@ use Illuminate\Routing\Contracts\CallableDispatcher as CallableDispatcherContrac
 use Illuminate\Http\Request as LaravelRequest;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router as LaravelRouter;
-use SebLucas\Cops\Framework\Adapter\LaravelAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouterInterface;
@@ -92,12 +93,5 @@ class LaravelAdapterTest extends TestCase
         // Assert the response is correct
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringContainsString('<title>COPS Configuration Check</title>', $response->getContent());
-    }
-
-    public function testDirectHandleRequestThrowsException(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('LaravelAdapter does not handle requests directly. The Laravel Kernel should be run.');
-        $this->adapter->handleRequest(new \SebLucas\Cops\Input\RequestContext(new \SebLucas\Cops\Input\Request(), new HandlerManager(), new Routing()));
     }
 }

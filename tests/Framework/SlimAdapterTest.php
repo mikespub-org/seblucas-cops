@@ -7,6 +7,8 @@
 
 namespace SebLucas\Cops\Tests\Framework;
 
+use SebLucas\Cops\Framework\Adapter\SlimAdapter;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -14,7 +16,6 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use DI\Container;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use SebLucas\Cops\Framework\Adapter\SlimAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Middleware\TestMiddleware;

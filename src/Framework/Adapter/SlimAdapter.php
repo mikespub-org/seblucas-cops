@@ -33,13 +33,6 @@ class SlimAdapter implements AdapterInterface
         return 'slim';
     }
 
-    public function handleRequest(RequestContext $context): CopsResponse
-    {
-        // This method is not applicable for SlimAdapter. In a Slim integration,
-        // the Slim App's run() or handle() method should be the entry point.
-        throw new \LogicException('SlimAdapter does not handle requests directly. The Slim App should be run.');
-    }
-
     public function getRouter(): RouterInterface
     {
         return $this->container->get(RouterInterface::class);
@@ -89,33 +82,46 @@ class SlimAdapter implements AdapterInterface
 
     public function registerRoutes(): void
     {
-        $router = $this->getRouter();
-        $manager = $this->getHandlerManager();
-        $routes = $manager->getRoutes();
+        $copsManager = $this->getHandlerManager();
+        $copsRoutes = $copsManager->getRoutes();
+        $copsRouter = $this->getRouter();
 
-        foreach ($routes as $name => $routeConfig) {
-            $this->addRoute($router, $manager, $name, $routeConfig);
+        foreach ($copsRoutes as $name => $routeConfig) {
+            $this->addRoute($copsManager, $copsRouter, $name, $routeConfig);
         }
     }
 
-    protected function addRoute(RouterInterface $router, HandlerManager $manager, string $name, array $routeConfig): Route
+    protected function addRoute(HandlerManager $copsManager, RouterInterface $copsRouter, string $name, array $routeConfig): Route
     {
         [$path, $defaults] = $routeConfig;
         $methods = $routeConfig[2] ?? ['GET'];
 
-        return $this->app->map($methods, $path, function (Request $request, Response $response, array $args) use ($manager, $router, $defaults): Response {
+        return $this->app->map(
+            $methods,
+            $path,
+            $this->getRouteCallable($copsManager, $copsRouter, $defaults)
+        )->setName($name);
+    }
+
+    /**
+     * Summary of getRouteCallable
+     * @param array<mixed> $defaults
+     */
+    protected function getRouteCallable(HandlerManager $copsManager, RouterInterface $copsRouter, array $defaults): callable
+    {
+        return function (Request $request, Response $response, array $args) use ($copsManager, $copsRouter, $defaults): Response {
             // Create a COPS Request from the PSR-7 Request
             $copsRequest = new CopsRequest();
             $copsRequest->setPath($request->getUri()->getPath());
             $copsRequest->urlParams = array_merge($defaults, $args, $request->getQueryParams(), $request->getAttributes());
 
             // We need to set a context on the handler manager for it to create a handler
-            $context = new RequestContext($copsRequest, $manager, $router);
-            $manager->setContext($context);
+            $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
+            $copsManager->setContext($context);
 
             // Resolve and handle the request using COPS components
             $handlerName = $defaults['_handler'] ?? 'html';
-            $handler = $manager->createHandler($handlerName);
+            $handler = $copsManager->createHandler($handlerName);
             $copsResponse = $handler->handle($copsRequest);
 
             // Convert COPS Response to PSR-7 Response
@@ -126,6 +132,6 @@ class SlimAdapter implements AdapterInterface
             }
 
             return $response;
-        })->setName($name);
+        };
     }
 }

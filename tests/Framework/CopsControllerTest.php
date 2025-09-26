@@ -2,10 +2,11 @@
 
 namespace SebLucas\Cops\Tests\Framework;
 
+use SebLucas\Cops\Framework\Controller\CopsController;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Framework\Controller\CopsController;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouteLoader;

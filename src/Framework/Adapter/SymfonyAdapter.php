@@ -32,13 +32,6 @@ class SymfonyAdapter implements AdapterInterface
         return 'symfony';
     }
 
-    public function handleRequest(RequestContext $context): CopsResponse
-    {
-        // This method is not applicable for SymfonyAdapter. The Symfony Kernel's
-        // handle() method should be the entry point.
-        throw new \LogicException('SymfonyAdapter does not handle requests directly. The Symfony Kernel should be run.');
-    }
-
     public function getRouter(): RouterInterface
     {
         return $this->container->get(RouterInterface::class);
@@ -74,40 +67,57 @@ class SymfonyAdapter implements AdapterInterface
             $methods = $routeConfig[2] ?? ['GET'];
 
             // Define the controller as a callable that bridges to COPS
-            $controller = function (SymfonyRequest $request) use ($copsManager, $copsRouter, $defaults): SymfonyResponse {
-                // 1. Convert Symfony Request to COPS Request
-                $copsRequest = new CopsRequest();
-                $copsRequest->setPath($request->getPathInfo());
-                $copsRequest->urlParams = array_merge(
-                    $defaults,
-                    $request->attributes->get('_route_params', []),
-                    $request->query->all(),
-                );
-
-                // We need to set a context on the handler manager for it to create a handler
-                $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
-                $copsManager->setContext($context);
-
-                // 2. Resolve and handle the request using COPS components
-                $handlerName = $defaults['_handler'] ?? 'html';
-                $handler = $copsManager->createHandler($handlerName);
-                $copsResponse = $handler->handle($copsRequest);
-
-                // 3. Convert COPS Response to Symfony Response
-                return new SymfonyResponse(
-                    $copsResponse->getContent(),
-                    $copsResponse->getStatusCode(),
-                    $copsResponse->getHeaders(),
-                );
-            };
+            $controller = $this->getRouteCallable($copsManager, $copsRouter, $defaults);
 
             $defaults['_controller'] = $controller;
 
-            $route = new Route($path, $defaults, [], [], '', [], $methods);
+            $route = new Route(
+                $path,
+                $defaults,
+                [],
+                [],
+                '',
+                [],
+                $methods
+            );
             $routeCollection->add($name, $route);
         }
 
         // Add the new collection to the main router
         $symfonyRouter->getRouteCollection()->addCollection($routeCollection);
+    }
+
+    /**
+     * Summary of getRouteCallable
+     * @param array<mixed> $defaults
+     */
+    protected function getRouteCallable(HandlerManager $copsManager, RouterInterface $copsRouter, array $defaults): callable
+    {
+        return function (SymfonyRequest $request) use ($copsManager, $copsRouter, $defaults): SymfonyResponse {
+            // 1. Convert Symfony Request to COPS Request
+            $copsRequest = new CopsRequest();
+            $copsRequest->setPath($request->getPathInfo());
+            $copsRequest->urlParams = array_merge(
+                $defaults,
+                $request->attributes->get('_route_params', []),
+                $request->query->all(),
+            );
+
+            // We need to set a context on the handler manager for it to create a handler
+            $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
+            $copsManager->setContext($context);
+
+            // 2. Resolve and handle the request using COPS components
+            $handlerName = $defaults['_handler'] ?? 'html';
+            $handler = $copsManager->createHandler($handlerName);
+            $copsResponse = $handler->handle($copsRequest);
+
+            // 3. Convert COPS Response to Symfony Response
+            return new SymfonyResponse(
+                $copsResponse->getContent(),
+                $copsResponse->getStatusCode(),
+                $copsResponse->getHeaders(),
+            );
+        };
     }
 }
