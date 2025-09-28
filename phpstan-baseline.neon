@@ -31,6 +31,12 @@ parameters:
 			path: src/Calibre/Format.php
 
 		-
+			message: '#^Instanceof between SebLucas\\Cops\\Output\\Response and SebLucas\\Cops\\Output\\Response will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Framework/FrameworkTodo.php
+
+		-
 			message: '#^Right side of && is always false\.$#'
 			identifier: booleanAnd.rightAlwaysFalse
 			count: 1
@@ -49,6 +55,15 @@ parameters:
 			path: src/Handlers/CheckHandler.php
 
 		-
+			message: '''
+				#^Call to deprecated method addRoutes\(\) of class SebLucas\\Cops\\Input\\Route\:
+				3\.7\.3 use routeCollection instead$#
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: src/Handlers/HandlerManager.php
+
+		-
 			message: '#^Call to function method_exists\(\) with Marsender\\EPubLoader\\RequestHandler and ''isDone'' will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -65,6 +80,15 @@ parameters:
 			identifier: ternary.alwaysTrue
 			count: 1
 			path: src/Handlers/LoaderHandler.php
+
+		-
+			message: '''
+				#^Call to deprecated method addRoutes\(\) of class SebLucas\\Cops\\Input\\Route\:
+				3\.7\.3 use routeCollection instead$#
+			'''
+			identifier: staticMethod.deprecated
+			count: 1
+			path: src/Input/Route.php
 
 		-
 			message: '#^Property SebLucas\\Cops\\Output\\BaseRenderer\:\:\$response \(SebLucas\\Cops\\Output\\Response\) in empty\(\) is not falsy\.$#'

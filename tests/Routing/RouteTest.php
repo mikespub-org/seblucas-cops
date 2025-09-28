@@ -49,27 +49,6 @@ class RouteTest extends TestCase
         Database::clearDb();
     }
 
-    public function testGetGroups(): void
-    {
-        $groups = Route::getGroups();
-        $names = [];
-        foreach ($groups as $group => $items) {
-            if (in_array($group::HANDLER, ['html', 'restapi'])) {
-                foreach ($items as $subgroup => $routes) {
-                    foreach ($routes as $name) {
-                        $names[] = $name;
-                    }
-                }
-                continue;
-            }
-            foreach ($items as $name) {
-                $names[] = $name;
-            }
-        }
-        $expected = Route::count();
-        $this->assertCount($expected, $names);
-    }
-
     public function testDump(): void
     {
         $expected = Route::count();

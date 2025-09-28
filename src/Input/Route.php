@@ -80,6 +80,7 @@ class Route
      * Check if static path exists
      * @param string $path
      * @return bool
+     * @deprecated 3.7.3 use context router match instead
      */
     public static function has($path)
     {
@@ -90,6 +91,7 @@ class Route
      * Get route params for static path
      * @param string $path
      * @return array<mixed>
+     * @deprecated 3.7.3 use context router match instead
      */
     public static function get($path)
     {
@@ -105,6 +107,7 @@ class Route
      * @param array<mixed> $methods
      * @param array<mixed> $options
      * @return void
+     * @deprecated 3.7.3 use routeCollection instead
      */
     public static function set($name, $path, $params = [], $methods = [], $options = [])
     {
@@ -114,6 +117,7 @@ class Route
     /**
      * Get routes and query params
      * @return array<string, array<mixed>>
+     * @deprecated 3.7.3 use routeCollection instead
      */
     public static function getRoutes()
     {
@@ -123,6 +127,7 @@ class Route
     /**
      * Get routes by group
      * @return array<string, array<mixed>>
+     * @deprecated 3.5.7 no longer used in rest api
      */
     public static function getGroups()
     {
@@ -165,6 +170,7 @@ class Route
      * @param array<string, array<mixed>> $routes
      * @param class-string<BaseHandler> $handler
      * @return array<string, array<mixed>>
+     * @deprecated 3.7.3 use routeCollection instead
      */
     public static function addRoutes($routes, $handler)
     {

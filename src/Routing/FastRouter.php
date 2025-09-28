@@ -242,4 +242,13 @@ class FastRouter implements RouterInterface
             }
         }
     }
+
+    /**
+     * Summary of getRouteCollection
+     * @return RouteCollection|null
+     */
+    public function getRouteCollection()
+    {
+        return null;
+    }
 }

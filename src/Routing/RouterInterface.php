@@ -54,4 +54,10 @@ interface RouterInterface
      * @return void
      */
     public function addRoute(string|array $methods, string $path, array $params, array $options = []): void;
+
+    /**
+     * Summary of getRouteCollection
+     * @return RouteCollection|null
+     */
+    public function getRouteCollection();
 }

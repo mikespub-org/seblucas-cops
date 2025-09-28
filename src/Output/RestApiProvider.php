@@ -376,7 +376,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getOpenApi($request)
     {
         $openapi = new OpenApi();
-        return $openapi->getDefinition();
+        $routes = $this->getContext()->getRoutes();
+        return $openapi->getDefinition($routes);
     }
 
     /**
@@ -392,7 +393,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach (Route::getRoutes() as $name => $route) {
+        $routes = $this->getContext()->getRoutes();
+        foreach ($routes as $name => $route) {
             array_push($result["entries"], [
                 "name" => $name,
                 "route" => $route,
@@ -414,7 +416,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach (Framework::getHandlers() as $name => $class) {
+        foreach ($this->getContext()->getHandlerManager()->getHandlers() as $name => $class) {
             $routes = $class::getRoutes();
             array_push($result["entries"], [
                 "handler" => $name,

@@ -19,16 +19,21 @@ use SebLucas\Cops\Routing\UriGenerator;
  */
 class OpenApi
 {
+    /** @var array<string, mixed> */
+    protected array $definition = [];
+
     /**
      * Summary of getDefinition
+     * @param array<string, mixed> $routes
      * @return array<string, mixed>
      */
-    public function getDefinition()
+    public function getDefinition($routes)
     {
         $openapi = $this->initOpenApi();
         $openapi["servers"] = $this->getServers();
         $openapi["components"] = $this->getComponents();
-        $openapi["paths"] = $this->getPaths();
+        $openapi["paths"] = $this->getPaths($routes);
+        $this->definition = $openapi;
         return $openapi;
     }
 
@@ -115,12 +120,13 @@ class OpenApi
 
     /**
      * Summary of getPaths
+     * @param array<string, mixed> $routes
      * @return array<mixed>
      */
-    public function getPaths()
+    public function getPaths($routes)
     {
         $paths = [];
-        foreach (Route::getRoutes() as $name => $route) {
+        foreach ($routes as $name => $route) {
             [$path, $pathItem] = $this->getPathItem($name, $route);
             if (empty($path)) {
                 continue;
@@ -317,8 +323,7 @@ class OpenApi
     public function dump($schemaFile = null)
     {
         $schemaFile ??= dirname(__DIR__, 2) . '/' . RestApiProvider::DEFINITION_FILE;
-        $definition = $this->getDefinition();
-        $content = Format::json($definition);
+        $content = Format::json($this->definition);
         file_put_contents($schemaFile, $content);
     }
 }

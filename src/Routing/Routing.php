@@ -221,4 +221,13 @@ class Routing implements RouterInterface
     {
         // ...
     }
+
+    /**
+     * Summary of getRouteCollection
+     * @return RouteCollection|null
+     */
+    public function getRouteCollection()
+    {
+        return $this->routeCollection;
+    }
 }

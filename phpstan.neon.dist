@@ -22,5 +22,6 @@ parameters:
         - src/Framework/Adapter/LaravelAdapter.php
         - src/Framework/Adapter/SlimAdapter.php
         - src/Framework/Adapter/SymfonyAdapter.php
+        - src/Framework/Action/CopsAction.php
         - src/Framework/Controller/CopsController.php
         - src/Framework/Providers/CopsServiceProvider.php

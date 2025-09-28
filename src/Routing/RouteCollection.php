@@ -68,6 +68,8 @@ class RouteCollection
             // Add ["_handler" => $handler] to params if provided
             if (isset($handler) && $handler::HANDLER !== 'html') {
                 $params[Route::HANDLER_PARAM] ??= $handler;
+            } else {
+                // default routes can be used by html, json, phpunit, restapi without _resource, ...
             }
 
             // Add ["_route" => $name] to params

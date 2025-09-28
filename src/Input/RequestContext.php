@@ -218,4 +218,13 @@ class RequestContext
     {
         return $this->router;
     }
+
+    /**
+     * Summary of getRoutes
+     * @return array<string, mixed>
+     */
+    public function getRoutes(): array
+    {
+        return $this->router->getRouteCollection()?->all() ?? [];
+    }
 }

@@ -40,7 +40,8 @@ class TableHandler extends BaseHandler
         $data = ['link' => RestApiHandler::getBaseUrl()];
         $data['thead'] = '<tr><th>Route</th><th>Description</th></tr>';
         $data['tbody'] = '';
-        foreach (Route::getRoutes() as $name => $route) {
+        $routes = $this->getContext()->getRoutes();
+        foreach ($routes as $name => $route) {
             $path = reset($route);
             if (str_contains($path, '{')) {
                 continue;
