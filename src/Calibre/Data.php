@@ -412,9 +412,9 @@ class Data
         }
 
         $filePath = $this->getLocalPath();
-        if (!empty(Config::get('download_filename')) ||
-            Database::useAbsolutePath($this->databaseId) ||
-            ($this->extension == "epub" && Config::get('update_epub-metadata'))) {
+        if (!empty(Config::get('download_filename'))
+            || Database::useAbsolutePath($this->databaseId)
+            || ($this->extension == "epub" && Config::get('update_epub-metadata'))) {
             $params = [];
             $params['db'] = $this->databaseId ?? 0;
             $params['type'] = $this->extension;

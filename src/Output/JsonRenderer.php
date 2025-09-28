@@ -25,7 +25,7 @@ use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
-use \SebLucas\Cops\Pages\PageAbout;
+use SebLucas\Cops\Pages\PageAbout;
 use Exception;
 
 class JsonRenderer extends BaseRenderer

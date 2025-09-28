@@ -121,8 +121,8 @@ class User
      */
     public static function checkBasicAuthArray($authArray, $serverVars)
     {
-        if (($serverVars['PHP_AUTH_USER'] != $authArray['username'] ||
-            $serverVars['PHP_AUTH_PW'] != $authArray['password'])) {
+        if (($serverVars['PHP_AUTH_USER'] != $authArray['username']
+            || $serverVars['PHP_AUTH_PW'] != $authArray['password'])) {
             return false;
         }
         return true;

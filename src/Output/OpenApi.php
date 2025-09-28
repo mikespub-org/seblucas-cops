@@ -242,10 +242,10 @@ class OpenApi
             ]);
         }
         if (
-            !str_starts_with($path, "/databases") &&
-            !in_array($path, ["/openapi", "/routes", "/handlers", "/about"]) &&
-            (empty($queryParams[Route::HANDLER_PARAM]) ||
-            in_array($queryParams[Route::HANDLER_PARAM]::HANDLER, ['restapi', 'zipper']))
+            !str_starts_with($path, "/databases")
+            && !in_array($path, ["/openapi", "/routes", "/handlers", "/about"])
+            && (empty($queryParams[Route::HANDLER_PARAM])
+            || in_array($queryParams[Route::HANDLER_PARAM]::HANDLER, ['restapi', 'zipper']))
         ) {
             array_push($params, [
                 '$ref' => "#/components/parameters/dbParam",

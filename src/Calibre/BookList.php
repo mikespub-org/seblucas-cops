@@ -295,8 +295,8 @@ class BookList
             PageQueryScope::PUBLISHER,
             PageQueryScope::BOOK] as $scope) {
             $key = $scope->value;
-            if (in_array($key, $ignoredCategories) ||
-                (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
+            if (in_array($key, $ignoredCategories)
+                || (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
                 $critArray[$i] = self::BAD_SEARCH;
             } else {
                 if (array_key_exists($key, $queryScope)) {

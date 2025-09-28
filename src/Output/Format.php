@@ -132,9 +132,9 @@ class Format
                 break;
         }
 
-        $return .= trim($error->message) .
-                "\n  Line: " . $error->line .
-                "\n  Column: " . $error->column;
+        $return .= trim($error->message)
+                . "\n  Line: " . $error->line
+                . "\n  Column: " . $error->column;
 
         if ($error->file) {
             $return .= "\n  File: " . $error->file;
@@ -169,8 +169,8 @@ class Format
         $doc = new DOMDocument();
         libxml_use_internal_errors(true);
 
-        $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' .
-                            $html . '</body></html>'); // Load the HTML
+        $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>'
+                            . $html . '</body></html>'); // Load the HTML
         $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
         $output = self::xml2xhtml($output);
         if (preg_match('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', (string) $output, $matches)) {

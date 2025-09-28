@@ -79,8 +79,8 @@ class Database
     public static function useAbsolutePath($database)
     {
         $path = self::getDbDirectory($database);
-        return preg_match('/^\//', $path) || // Linux /
-               preg_match('/^\w\:/', $path); // Windows X:
+        return preg_match('/^\//', $path) // Linux /
+               || preg_match('/^\w\:/', $path); // Windows X:
     }
 
     /**

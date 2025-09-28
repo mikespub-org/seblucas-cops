@@ -185,9 +185,9 @@ class Page
      */
     public function isPaginated()
     {
-        return ($this->getNumberPerPage() != -1 &&
-                $this->totalNumber != -1 &&
-                $this->totalNumber > $this->getNumberPerPage());
+        return ($this->getNumberPerPage() != -1
+                && $this->totalNumber != -1
+                && $this->totalNumber > $this->getNumberPerPage());
     }
 
     /**
