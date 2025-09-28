@@ -5,12 +5,10 @@ namespace SebLucas\Cops\Framework\Adapter;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use SebLucas\Cops\Framework\Action\CopsAction;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use SebLucas\Cops\Input\Request as CopsRequest;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\RequestContext;
-use SebLucas\Cops\Output\Response as CopsResponse;
 use SebLucas\Cops\Routing\RouterInterface;
 use Slim\App;
 use Slim\Routing\Route;
@@ -99,39 +97,18 @@ class SlimAdapter implements AdapterInterface
         return $this->app->map(
             $methods,
             $path,
-            $this->getRouteCallable($copsManager, $copsRouter, $defaults)
-        )->setName($name);
+            CopsAction::class
+        )->setName($name)->setArgument('_defaults', $defaults);
     }
 
     /**
      * Summary of getRouteCallable
      * @param array<mixed> $defaults
+     * @deprecated
      */
     protected function getRouteCallable(HandlerManager $copsManager, RouterInterface $copsRouter, array $defaults): callable
     {
-        return function (Request $request, Response $response, array $args) use ($copsManager, $copsRouter, $defaults): Response {
-            // Create a COPS Request from the PSR-7 Request
-            $copsRequest = new CopsRequest();
-            $copsRequest->setPath($request->getUri()->getPath());
-            $copsRequest->urlParams = array_merge($defaults, $args, $request->getQueryParams(), $request->getAttributes());
-
-            // We need to set a context on the handler manager for it to create a handler
-            $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
-            $copsManager->setContext($context);
-
-            // Resolve and handle the request using COPS components
-            $handlerName = $defaults['_handler'] ?? 'html';
-            $handler = $copsManager->createHandler($handlerName);
-            $copsResponse = $handler->handle($copsRequest);
-
-            // Convert COPS Response to PSR-7 Response
-            $response->getBody()->write($copsResponse->getContent());
-            $response = $response->withStatus($copsResponse->getStatusCode());
-            foreach ($copsResponse->getHeaders() as $headerName => $headerValues) {
-                $response = $response->withHeader($headerName, implode(', ', $headerValues));
-            }
-
-            return $response;
-        };
+        // This is now handled by CopsAction
+        return $this->container->get(CopsAction::class);
     }
 }

@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Language\Slugger;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -32,6 +33,8 @@ class Route
     protected static $static = [];
     /** @var array<string, class-string> */
     protected static $handlers = [];
+    /** @var HandlerManager|null */
+    protected static $manager = null;
     /** @var array<string, mixed> */
     public static $counters = [
         'link' => 0,
@@ -257,12 +260,23 @@ class Route
     }
 
     /**
+     * Set handler manager from framework
+     * @param HandlerManager $handlerManager
+     * @return void
+     */
+    public static function setManager($handlerManager)
+    {
+        self::$manager = $handlerManager;
+    }
+
+    /**
      * Get handler class based on name
      * @param string|class-string $name
      * @return class-string<BaseHandler>
      */
     public static function getHandler($name)
     {
-        return Framework::getHandlerManager()->getHandlerClass($name);
+        self::$manager ??= Framework::getHandlerManager();
+        return self::$manager->getHandlerClass($name);
     }
 }
