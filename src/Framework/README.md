@@ -58,7 +58,7 @@ The integration relies on several key classes:
     use SebLucas\Cops\Framework\Action\CopsAction;
     use SebLucas\Cops\Framework\Adapter\SlimAdapter;
     use SebLucas\Cops\Handlers\HandlerManager;
-    use SebLucas\Cops\Input\Route;
+    use SebLucas\Cops\Routing\RouteCollection;
     use SebLucas\Cops\Routing\RouterInterface;
     use SebLucas\Cops\Routing\Routing;
     use Slim\Factory\AppFactory;
@@ -71,10 +71,13 @@ The integration relies on several key classes:
 
     // Register COPS services
     $container->set(HandlerManager::class, fn() => new HandlerManager());
-    $container->set(RouterInterface::class, function () {
-        Route::init();
-        return new Routing();
-    });
+
+    // The processed route collection for internal COPS use
+    $container->set(RouteCollection::class, fn(Container $c) => new RouteCollection($c->get(HandlerManager::class)));
+
+    // The internal COPS router service, which depends on the processed collection
+    $container->set(RouterInterface::class, fn(Container $c) => new Routing($c->get(RouteCollection::class)));
+
     $container->set(CopsAction::class, fn(Container $c) => new CopsAction($c->get(HandlerManager::class), $c->get(RouterInterface::class)));
 
     // Register COPS routes
@@ -107,7 +110,15 @@ The integration relies on several key classes:
         SebLucas\Cops\Handlers\HandlerManager: ~
         SebLucas\Cops\Routing\RouterInterface:
             class: SebLucas\Cops\Routing\Routing
-        SebLucas\Cops\Framework\Adapter\SymfonyAdapter: ~
+            arguments: ['@SebLucas\Cops\Routing\RouteCollection']
+
+        # The processed route collection for internal COPS use
+        SebLucas\Cops\Routing\RouteCollection:
+            arguments: ['@SebLucas\Cops\Handlers\HandlerManager']
+
+        # The adapter and controller for bridging Symfony and COPS
+        SebLucas\Cops\Framework\Adapter\SymfonyAdapter:
+            arguments: ['@kernel']
         SebLucas\Cops\Framework\Controller\CopsController: ~
     ```
 

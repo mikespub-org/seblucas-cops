@@ -3,6 +3,7 @@
 namespace SebLucas\Cops\Routing;
 
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Route;
 
 /**
@@ -17,13 +18,32 @@ class RouteCollection
     private array $staticPaths = [];
 
     /**
+     * @param HandlerManager|null $handlerManager
+     */
+    public function __construct(?HandlerManager $handlerManager = null)
+    {
+        if (isset($handlerManager)) {
+            foreach ($handlerManager->getHandlers() as $handlerClass) {
+                if (method_exists($handlerClass, 'getRoutes')) {
+                    $this->addRoutes($handlerClass::getRoutes(), $handlerClass);
+                }
+            }
+        }
+    }
+
+    /**
+     * Create a RouteCollection from a pre-defined array of routes.
+     * Useful for testing or caching.
+     *
      * @param array<string, array<mixed>> $routes
      */
-    public function __construct(array $routes = [])
+    public static function fromArray(array $routes): self
     {
+        $collection = new self();
         if (!empty($routes)) {
-            $this->addRoutes($routes);
+            $collection->addRoutes($routes);
         }
+        return $collection;
     }
 
     /**

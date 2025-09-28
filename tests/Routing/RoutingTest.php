@@ -9,6 +9,8 @@
 
 namespace SebLucas\Cops\Tests\Routing;
 
+use SebLucas\Cops\Handlers\HandlerManager;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\RouteLoader;
 use SebLucas\Cops\Routing\Routing;
 
@@ -33,12 +35,13 @@ class RoutingTest extends TestCase
     {
         Config::set("calibre_directory", dirname(__DIR__) . "/BaseWithSomeBooks/");
         Database::clearDb();
-        self::$routing = new Routing();
+        self::$routing = new Routing(new RouteCollection(new HandlerManager()));
     }
 
     public function testRouteLoader(): void
     {
-        $loader = new RouteLoader();
+        $routes = new RouteCollection(new HandlerManager());
+        $loader = new RouteLoader($routes);
         $resource = null;
         $routes = $loader->load($resource);
 
@@ -48,7 +51,7 @@ class RoutingTest extends TestCase
 
     public function testGetRouter(): void
     {
-        $routing = new Routing();
+        $routing = new Routing(new RouteCollection(new HandlerManager()));
         $router = $routing->getRouter();
         // force cache generation
         $matcher = $router->getMatcher();

@@ -26,18 +26,9 @@ class CustomAdapter implements AdapterInterface
 
     public function registerRoutes(): void
     {
-        // Reset routes for tests
-        Route::setRoutes();
-        // Collect all routes first
-        $routes = [];
-        $manager = $this->getHandlerManager();
-        foreach ($manager->getHandlers() as $handlerClass) {
-            $routes = array_merge($routes, $manager->addHandlerRoutes($handlerClass));
-        }
-        // Add them all at once to router - @todo this doesn't do anything
-        if (!empty($routes)) {
-            $this->getRouter()->addRoutes($routes);
-        }
+        // In the standalone FrameworkTodo, routes are already processed and injected
+        // into the router during construction. This method is only required for
+        // external framework adapters that need to register routes at boot time.
     }
 
     public function getRouter(): RouterInterface

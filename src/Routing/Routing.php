@@ -33,11 +33,14 @@ class Routing implements RouterInterface
     public ?string $cacheDir = null;
     public ?Router $router = null;
     public ?RouteLoader $loader = null;
+    protected ?RouteCollection $routeCollection = null;
 
-    public function __construct(?string $cacheDir = null)
+    public function __construct(RouteCollection $routeCollection = null, ?string $cacheDir = null)
     {
         // force cache generation
         $this->cacheDir = $cacheDir ?? __DIR__;
+        // Use provided collection, or create an empty one
+        $this->routeCollection = $routeCollection ?? new RouteCollection();
     }
 
     /**
@@ -151,7 +154,7 @@ class Routing implements RouterInterface
         if (isset($this->loader)) {
             return $this->loader;
         }
-        $this->loader = new RouteLoader();
+        $this->loader = new RouteLoader($this->routeCollection);
         return $this->loader;
     }
 

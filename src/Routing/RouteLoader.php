@@ -23,6 +23,11 @@ use Exception;
 class RouteLoader extends Loader
 {
     /**
+     * @param \SebLucas\Cops\Routing\RouteCollection|null $routeCollection
+     */
+    public function __construct(private ?\SebLucas\Cops\Routing\RouteCollection $routeCollection = null) {}
+
+    /**
      * Summary of load
      * @param mixed $resource not used here
      * @param string|null $type not used here
@@ -31,7 +36,7 @@ class RouteLoader extends Loader
     public function load(mixed $resource, ?string $type = null): mixed
     {
         $routes = new RouteCollection();
-        return self::addRouteCollection($routes);
+        return $this->addRouteCollection($routes);
     }
 
     public function supports(mixed $resource, ?string $type = null): bool
@@ -44,10 +49,10 @@ class RouteLoader extends Loader
      * @param RouteCollection $routes
      * @return RouteCollection
      */
-    public static function addRouteCollection($routes)
+    public function addRouteCollection($routes)
     {
         $seen = [];
-        foreach (Route::getRoutes() as $name => $route) {
+        foreach ($this->routeCollection->all() as $name => $route) {
             [$path, $params, $methods, $options] = $route;
             // set route param in request once we find matching route
             $params[Route::ROUTE_PARAM] ??= $name;

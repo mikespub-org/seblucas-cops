@@ -10,7 +10,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use SebLucas\Cops\Framework\Adapter\LaravelAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 
@@ -28,11 +28,14 @@ class CopsServiceProvider extends ServiceProvider
             return new HandlerManager();
         });
 
+        // Define how to build the processed RouteCollection as a singleton service.
+        $this->app->singleton(RouteCollection::class, function (Container $app) {
+            return new RouteCollection($app->make(HandlerManager::class));
+        });
+
         $this->app->singleton(RouterInterface::class, function (Container $app) {
-            // Initialize the static COPS routes so the router can find them.
-            Route::setRoutes();
-            Route::init();
-            return new Routing();
+            // The router now depends on the injectable RouteCollection service.
+            return new Routing($app->make(RouteCollection::class));
         });
 
         // Bind the LaravelAdapter itself, giving it access to the container.

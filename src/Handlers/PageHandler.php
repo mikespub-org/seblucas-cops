@@ -137,29 +137,6 @@ class PageHandler extends BaseHandler
         return $routes;
     }
 
-    /**
-     * Summary of findRouteName - @todo adapt to actual routes for each handler
-     * @deprecated 3.5.7 use HasRouteTrait::getRoute() or BaseHandler::route() instead
-     * @param array<mixed> $params
-     * @return string
-     */
-    public static function findRouteName($params)
-    {
-        if (!empty($params[Route::ROUTE_PARAM])) {
-            return $params[Route::ROUTE_PARAM];
-        }
-        $name = self::HANDLER;
-        $name .= '-' . ($params["page"] ?? '');
-        unset($params["page"]);
-        if (count(static::getRoutes()) > 1) {
-            $accept = array_intersect(array_keys($params), static::PARAMLIST);
-            if (!empty($accept)) {
-                $name = $name . '-' . implode('-', $accept);
-            }
-        }
-        return $name;
-    }
-
     public function handle($request)
     {
         // ...

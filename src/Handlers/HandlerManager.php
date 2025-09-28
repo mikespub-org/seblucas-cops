@@ -173,6 +173,8 @@ class HandlerManager implements HasContextInterface
             if (method_exists($handlerClass, 'getRoutes')) {
                 $handlerRoutes = $this->addHandlerRoutes($handlerClass);
                 $routes = array_merge($routes, $handlerRoutes);
+                // @todo replace addHandlerRoutes() call with simple getRoutes()
+                // $routes = array_merge($routes, $handlerClass::getRoutes());
             }
         }
         return $routes;

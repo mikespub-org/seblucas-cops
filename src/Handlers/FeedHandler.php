@@ -44,7 +44,7 @@ class FeedHandler extends BaseHandler
         $path = $request->get('path');
         if (!empty($path)) {
             // match path against default page handler
-            $params = Route::match('/' . $path);
+            $params = $this->getContext()->getRouter()->match('/' . $path);
             if (!isset($params)) {
                 return Response::sendError($request, 'Unknown path for feed: ' . $path);
             }

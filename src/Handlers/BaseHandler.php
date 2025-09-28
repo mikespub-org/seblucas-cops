@@ -89,27 +89,6 @@ abstract class BaseHandler implements HasContextInterface
     }
 
     /**
-     * Summary of findRouteName - @todo adapt to actual routes for each handler
-     * @deprecated 3.5.7 use HasRouteTrait::getRoute() or BaseHandler::route() instead
-     * @param array<mixed> $params
-     * @return string
-     */
-    public static function findRouteName($params)
-    {
-        if (!empty($params[Route::ROUTE_PARAM])) {
-            return $params[Route::ROUTE_PARAM];
-        }
-        $name = static::HANDLER;
-        if (count(static::getRoutes()) > 1) {
-            $accept = array_intersect(array_keys($params), static::PARAMLIST);
-            if (!empty($accept)) {
-                $name = $name . '-' . implode('-', $accept);
-            }
-        }
-        return $name;
-    }
-
-    /**
      * Summary of request - not used except in tests - use Request::build instead?
      * @param array<mixed> $params
      * @param array<mixed> $server

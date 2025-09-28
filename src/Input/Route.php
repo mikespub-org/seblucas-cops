@@ -60,6 +60,7 @@ class Route
      * @param string $path
      * @param ?string $method
      * @return ?array<mixed> array of query params or null if not found
+     * @deprecated 3.7.3 use context router match instead
      */
     public static function match($path, $method = null)
     {
@@ -276,7 +277,7 @@ class Route
      */
     public static function getHandler($name)
     {
-        self::$manager ??= Framework::getHandlerManager();
+        self::$manager ??= new HandlerManager();
         return self::$manager->getHandlerClass($name);
     }
 }

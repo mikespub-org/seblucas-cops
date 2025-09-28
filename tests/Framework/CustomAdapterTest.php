@@ -10,7 +10,6 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Routing\RouterInterface;
-use SebLucas\Cops\Routing\Routing;
 
 class CustomAdapterTest extends TestCase
 {
@@ -21,9 +20,9 @@ class CustomAdapterTest extends TestCase
     protected function setUp(): void
     {
         // Use real dependencies for integration testing
-        $this->router = new Routing();
         $this->handlerManager = new HandlerManager();
-        $framework = new FrameworkTodo($this->router, $this->handlerManager);
+        $framework = new FrameworkTodo($this->handlerManager);
+        $this->router = $framework->getRouter();
         $this->adapter = new CustomAdapter($framework);
 
         Database::clearDb();

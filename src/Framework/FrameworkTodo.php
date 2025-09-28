@@ -8,6 +8,7 @@ use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\QueueBasedHandler;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\RequestContext;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
@@ -20,16 +21,25 @@ class FrameworkTodo
     protected static ?self $instance = null;
     /** @var array<string, class-string> */
     protected array $middlewares = [];
+    protected HandlerManager $manager;
+    protected RouterInterface $router;
     protected CustomAdapter $adapter;
     protected RequestContext $context;
 
-    public function __construct(
-        protected readonly RouterInterface $router = new Routing(),
-        protected readonly HandlerManager $manager = new HandlerManager(),
-    ) {
+    public function __construct(?HandlerManager $manager = null, ?RouteCollection $routeCollection = null)
+    {
+        // 1. Build the service graph ("Poor Man's DI")
+        $this->manager = $manager ?? new HandlerManager();
+
+        // Create the processed RouteCollection from the HandlerManager
+        $routeCollection ??= new RouteCollection($this->manager);
+
+        // Create the router and pass it the collection
+        $this->router = new Routing($routeCollection);
+
         $this->adapter = new CustomAdapter($this);
         // Register routes via adapter before creating context
-        $this->adapter->registerRoutes();
+        //$this->adapter->registerRoutes();
         $request = $this->createRequest();
         $this->context = new RequestContext(
             $request,

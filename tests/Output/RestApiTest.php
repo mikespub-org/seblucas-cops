@@ -12,9 +12,11 @@ namespace SebLucas\Cops\Tests\Output;
 
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Output\RestApiProvider;
 use SebLucas\Cops\Tests\Routing\RouteTest;
 
@@ -33,6 +35,7 @@ use SebLucas\Cops\Routing\UriGenerator;
 class RestApiTest extends TestCase
 {
     protected static string $handler;
+    protected static RequestContext $context;
     protected static RestApiProvider $apiProvider;
     /** @var array<string, int> */
     protected static $expectedSize = [
@@ -46,7 +49,10 @@ class RestApiTest extends TestCase
         self::$handler = Route::getHandler("phpunit");
         UriGenerator::setScriptName($_SERVER["SCRIPT_NAME"]);
         UriGenerator::setBaseUrl(null);
+        $framework = new FrameworkTodo();
+        self::$context = $framework->getContext();
         self::$apiProvider = new RestApiProvider(Framework::getRequest());
+        self::$apiProvider->setContext(self::$context);
     }
 
     public static function tearDownAfterClass(): void
@@ -58,6 +64,7 @@ class RestApiTest extends TestCase
     {
         $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $expected = "/index";
         $test = $apiProvider->getPathInfo();
         $this->assertEquals($expected, $test);
@@ -76,6 +83,7 @@ class RestApiTest extends TestCase
         $path = "/books/2";
         $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $path = $apiProvider->getPathInfo();
 
         $expected = ["page" => PageId::BOOK_DETAIL, "id" => 2, "_route" => "page-book-id"];
@@ -85,6 +93,7 @@ class RestApiTest extends TestCase
         $path = "/restapi/openapi";
         $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $path = $apiProvider->getPathInfo();
 
         $expected = self::$apiProvider->getOpenApi($request);
@@ -101,6 +110,7 @@ class RestApiTest extends TestCase
         $path = "/books/2";
         $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $path = $apiProvider->getPathInfo();
         $params = $apiProvider->matchPathInfo($path);
         $request = $apiProvider->getRequest()->setParams($params);
@@ -118,6 +128,7 @@ class RestApiTest extends TestCase
     {
         $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $renderer = new JsonRenderer();
         $expected = $renderer->getJson($request);
         $test = $apiProvider->getJson();
@@ -130,6 +141,7 @@ class RestApiTest extends TestCase
     {
         $request = Request::build([], self::$handler);
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $expected = true;
         $test = $apiProvider->getOutput();
         $this->assertEquals($expected, str_starts_with($test, '{"title":"COPS",'));
@@ -444,6 +456,7 @@ class RestApiTest extends TestCase
         $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $apiProvider->doRunHandler = false;
         $expected = [
             Route::HANDLER_PARAM => Route::getHandler("zipfs"),
@@ -473,6 +486,7 @@ class RestApiTest extends TestCase
 
         ob_start();
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $apiProvider->doRunHandler = true;
         $result = $apiProvider->getOutput();
         $result->send();
@@ -497,6 +511,7 @@ class RestApiTest extends TestCase
         $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $apiProvider->doRunHandler = false;
         $expected = [
             Route::HANDLER_PARAM => Route::getHandler("fetch"),
@@ -611,6 +626,7 @@ class RestApiTest extends TestCase
         //$request = Request::build($params, self::$handler);
         $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
+        $apiProvider->setContext(self::$context);
         $result = $apiProvider->getOutput();
         if ($route == 'restapi-path' && !empty($params[Route::ROUTE_PARAM])) {
             $route = $params[Route::ROUTE_PARAM];

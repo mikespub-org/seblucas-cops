@@ -190,25 +190,6 @@ class Request
     }
 
     /**
-     * Summary of matchRoute
-     * @deprecated 3.6.2 use RequestContext::matchRequest() instead
-     * @return void
-     */
-    public function matchRoute()
-    {
-        $path = $this->path();
-        // set route param in request once we find matching route
-        $params = Route::match($path);
-        if (is_null($params)) {
-            error_log("COPS: Invalid request path '$path' from template " . $this->template());
-            // delay reporting error until we're back in Framework
-            $this->invalid = true;
-            $params = [];
-        }
-        $this->updateFromMatch($params);
-    }
-
-    /**
      * Update request parameters after route matching
      * @param array<mixed> $params from Route::match()
      */

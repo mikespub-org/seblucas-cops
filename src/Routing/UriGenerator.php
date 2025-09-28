@@ -279,7 +279,6 @@ class UriGenerator
         } elseif (isset($params['page'])) {
             // use default handler for page route
             $handler = $default;
-            // @todo use _route later - see PageHandler::findRouteName()
         } else {
             // no page or handler, e.g. index.php?complete=1
             return self::getUriForParams($params, $prefix);

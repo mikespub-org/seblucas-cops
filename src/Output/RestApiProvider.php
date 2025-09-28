@@ -21,6 +21,8 @@ use SebLucas\Cops\Calibre\User;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasContextInterface;
+use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
@@ -31,8 +33,10 @@ use Exception;
  * Basic REST API routing to JSON Renderer
  * Note: this supports all other paths with /restapi prefix
  */
-class RestApiProvider extends BaseRenderer
+class RestApiProvider extends BaseRenderer implements HasContextInterface
 {
+    use HasContextTrait;
+
     public const DEFINITION_FILE = 'resources/openapi.json';
     public const RESTAPI_CACHE_FILE = 'resources/cache.restapi.php';
     public const PREFIX = RestApiHandler::PREFIX;
@@ -80,7 +84,7 @@ class RestApiProvider extends BaseRenderer
         // handle extra functions
         $root = '/' . explode('/', $path . '/')[1];
         if (array_key_exists($root, $this->extra)) {
-            $params = Route::match($path);
+            $params = $this->getContext()->getRouter()->match($path);
             // @todo handle non-matching path here too!?
             $params ??= [];
             if (!empty($params['page']) && $params['page'] != PageId::REST_API) {
@@ -98,7 +102,7 @@ class RestApiProvider extends BaseRenderer
         }
 
         // match path with routes
-        return Route::match($path);
+        return $this->getContext()->getRouter()->match($path);
     }
 
     /**

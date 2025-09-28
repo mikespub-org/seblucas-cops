@@ -126,6 +126,7 @@ class RestApiHandler extends BaseHandler
         $response = new Response(Response::MIME_TYPE_JSON);
 
         $apiProvider = new RestApiProvider($request, $response);
+        $apiProvider->setContext($this->getContext());
 
         try {
             $output = $apiProvider->getOutput();
