@@ -93,7 +93,7 @@ abstract class Base
     public function getUri($params = [])
     {
         $params['id'] = $this->id;
-        // we need databaseId here because we use Route::link with $handler
+        // we need databaseId here because we use $handler::link()
         $params['db'] = $this->getDatabaseId();
         $params['title'] = $this->getTitle();
         return $this->getRoute(static::ROUTE_DETAIL, $params);
@@ -106,7 +106,7 @@ abstract class Base
      */
     public function getParentUri($params = [])
     {
-        // we need databaseId here because we use Route::link with $handler
+        // we need databaseId here because we use $handler::link()
         $params['db'] = $this->getDatabaseId();
         return $this->getRoute(static::ROUTE_ALL, $params);
     }
@@ -224,7 +224,7 @@ abstract class Base
     public function getPage($count = 0, $params = [])
     {
         $params['id'] = $this->id;
-        // we need databaseId here because we use Route::link with $handler
+        // we need databaseId here because we use $handler::link()
         $params['db'] = $this->getDatabaseId();
         $params['title'] = $this->getTitle();
         $request = Request::build($params, $this->handler);

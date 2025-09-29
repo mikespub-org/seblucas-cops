@@ -192,6 +192,7 @@ class Request
     /**
      * Update request parameters after route matching
      * @param array<mixed> $params from Route::match()
+     * @deprecated 3.7.3 use RequestContext UpdateRequest instead
      */
     public function updateFromMatch($params): void
     {

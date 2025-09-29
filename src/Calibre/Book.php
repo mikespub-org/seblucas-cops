@@ -194,7 +194,7 @@ class Book
     public function getUri($params = [])
     {
         $params['id'] = $this->id;
-        // we need databaseId here because we use Route::link with $handler
+        // we need databaseId here because we use $handler::link()
         $params['db'] = $this->databaseId;
         $params['author'] = $this->getAuthorsName();
         $params['title'] = $this->getTitle();

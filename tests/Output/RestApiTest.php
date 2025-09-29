@@ -51,7 +51,7 @@ class RestApiTest extends TestCase
         UriGenerator::setBaseUrl(null);
         $framework = new FrameworkTodo();
         self::$context = $framework->getContext();
-        self::$apiProvider = new RestApiProvider(Framework::getRequest());
+        self::$apiProvider = new RestApiProvider(self::$context->getRequest());
         self::$apiProvider->setContext(self::$context);
     }
 
@@ -243,7 +243,7 @@ class RestApiTest extends TestCase
         $test = self::$apiProvider->getHandlers($request);
         $expected = "Handlers";
         $this->assertEquals($expected, $test["title"]);
-        $expected = count(Framework::getHandlers());
+        $expected = count(self::$context->getHandlerManager()->getHandlers());
         $this->assertCount($expected, $test["entries"]);
     }
 

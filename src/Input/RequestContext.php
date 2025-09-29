@@ -72,10 +72,8 @@ class RequestContext
                 $this->matchParams = [];
             }
 
-            // Enhance route with request context
-            //$this->matchParams->setContext($this);
             // Update request with matched parameters
-            $this->request->updateFromMatch($this->matchParams);
+            $this->updateRequest($this->matchParams);
 
             return $this->matchParams;
         } catch (\Throwable $e) {
@@ -84,6 +82,25 @@ class RequestContext
                 Route::HANDLER_PARAM => 'error',
                 'error' => $e->getMessage(),
             ];
+        }
+    }
+
+    /**
+     * Update request parameters after route matching
+     * @param array<mixed> $params from router match()
+     */
+    public function updateRequest($params): void
+    {
+        $default = $this->manager->getHandlerClass('html');
+        if (empty($params[Route::HANDLER_PARAM])) {
+            $params[Route::HANDLER_PARAM] = $default;
+        }
+        // JsonHandler uses same routes as HtmlHandler - see util.js
+        if ($params[Route::HANDLER_PARAM] == $default && $this->request->isAjax()) {
+            $params[Route::HANDLER_PARAM] = $this->manager->getHandlerClass('json');
+        }
+        foreach ($params as $name => $value) {
+            $this->request->set($name, $value);
         }
     }
 

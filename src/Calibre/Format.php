@@ -46,7 +46,7 @@ class Format extends Base
     public function getUri($params = [])
     {
         $params['id'] = $this->id;
-        // we need databaseId here because we use Route::link with $handler
+        // we need databaseId here because we use $handler::link()
         $params['db'] = $this->getDatabaseId();
         //$params['title'] = $this->getTitle();
         return $this->getRoute(static::ROUTE_DETAIL, $params);

@@ -125,7 +125,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function runHandler($path, $params, $run = null)
     {
         // we are using class-string now
-        if (empty($params[Route::HANDLER_PARAM]) || !in_array($params[Route::HANDLER_PARAM], Framework::getHandlers())) {
+        $handlers = $this->getContext()->getHandlerManager()->getHandlers();
+        if (empty($params[Route::HANDLER_PARAM]) || !in_array($params[Route::HANDLER_PARAM], $handlers)) {
             return ["error" => "Invalid handler"];
         }
         $handler = $params[Route::HANDLER_PARAM]::HANDLER;
@@ -416,7 +417,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach ($this->getContext()->getHandlerManager()->getHandlers() as $name => $class) {
+        $handlers = $this->getContext()->getHandlerManager()->getHandlers();
+        foreach ($handlers as $name => $class) {
             $routes = $class::getRoutes();
             array_push($result["entries"], [
                 "handler" => $name,

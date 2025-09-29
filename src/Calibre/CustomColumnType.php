@@ -124,7 +124,7 @@ abstract class CustomColumnType
     public function getUri($params = [])
     {
         $params['custom'] = $this->customId;
-        // we need databaseId here because we use Route::link with $handler
+        // we need databaseId here because we use $handler::link()
         $params['db'] = $this->getDatabaseId();
         return $this->getRoute(static::ROUTE_ALL, $params);
     }
