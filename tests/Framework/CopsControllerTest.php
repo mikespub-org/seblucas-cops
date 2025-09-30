@@ -39,7 +39,7 @@ class CopsControllerTest extends TestCase
 
         // 2. Create a custom RouteLoader for this test that sets the CopsController
         $routeLoader = new class extends RouteLoader {
-            public function load(mixed $resource, string $type = null): mixed
+            public function load(mixed $resource, ?string $type = null): mixed
             {
                 $routes = parent::load($resource, $type);
                 foreach ($routes->all() as $route) {

@@ -190,26 +190,6 @@ class Request
     }
 
     /**
-     * Update request parameters after route matching
-     * @param array<mixed> $params from Route::match()
-     * @deprecated 3.7.3 use RequestContext UpdateRequest instead
-     */
-    public function updateFromMatch($params): void
-    {
-        $default = Route::getHandler('html');
-        if (empty($params[Route::HANDLER_PARAM])) {
-            $params[Route::HANDLER_PARAM] = $default;
-        }
-        // JsonHandler uses same routes as HtmlHandler - see util.js
-        if ($params[Route::HANDLER_PARAM] == $default && $this->isAjax()) {
-            $params[Route::HANDLER_PARAM] = Route::getHandler('json');
-        }
-        foreach ($params as $name => $value) {
-            $this->urlParams[$name] = $value;
-        }
-    }
-
-    /**
      * Set path for route matching
      * @param string $path
      * @return Request

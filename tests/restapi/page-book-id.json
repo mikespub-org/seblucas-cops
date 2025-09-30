@@ -80,7 +80,7 @@
                 "url": "vendor/bin/index.php/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub",
                 "viewUrl": "vendor/bin/index.php/inline/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub",
                 "mail": 1,
-                "qrcode": 1,
+                "qrcode": 0,
                 "readerUrl": "vendor/bin/index.php/read/0/20/Alice_s_Adventures_in_Wonderland"
             }
         ],
