@@ -193,7 +193,10 @@ class JsonRenderer extends BaseRenderer
                 "readerUrl" => "",
             ];
             if (!is_null($dataKindle) && $data->id == $dataKindle->id) {
-                $tab ["qrcode"] = 1;
+                // only show QR code if we have a full url here
+                if (str_contains($tab["url"], '://')) {
+                    $tab ["qrcode"] = 1;
+                }
                 if (!empty(Config::get('mail_configuration'))) {
                     $tab ["mail"] = 1;
                 }
