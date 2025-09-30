@@ -100,15 +100,4 @@ class SlimAdapter implements AdapterInterface
             CopsAction::class
         )->setName($name)->setArgument('_defaults', $defaults);
     }
-
-    /**
-     * Summary of getRouteCallable
-     * @param array<mixed> $defaults
-     * @deprecated 3.7.3 use CopsAction instead
-     */
-    protected function getRouteCallable(HandlerManager $copsManager, RouterInterface $copsRouter, array $defaults): callable
-    {
-        // This is now handled by CopsAction
-        return $this->container->get(CopsAction::class);
-    }
 }

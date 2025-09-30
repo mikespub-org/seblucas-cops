@@ -177,22 +177,4 @@ class HandlerManager implements HasContextInterface
         }
         return $routes;
     }
-
-    /**
-     * Summary of addHandlerRoutes
-     * @param class-string<BaseHandler> $handlerClass
-     * @return array<string, array<mixed>>
-     * @deprecated 3.7.4 use routeCollection instead
-     */
-    public function addHandlerRoutes($handlerClass): array
-    {
-        // Skip invalid handler classes
-        if (!method_exists($handlerClass, 'getRoutes')) {
-            return [];
-        }
-        // Get routes from handler class
-        $routes = $handlerClass::getRoutes();
-        // Add handler class to route data
-        return Route::addRoutes($routes, $handlerClass);
-    }
 }

@@ -168,20 +168,6 @@ class Framework
         $routes = new RouteCollection($this->manager);
         $this->routerInstance = new self::$routerClass($routes);
         self::$router = $this->routerInstance;
-        // self::loadRoutes();
-    }
-
-    /**
-     * Load routes for all handlers
-     * @return void
-     * @deprecated 3.7.4 use routeCollection instead
-     */
-    public static function loadRoutes()
-    {
-        //Route::load();
-        Route::init();
-        // @todo add cors options after the last handler or use middleware or...
-        //'cors' => ['/{path:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
     }
 
     /**

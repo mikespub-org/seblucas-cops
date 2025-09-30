@@ -28,24 +28,6 @@ class FrameworkTest extends TestCase
     }
 
     /**
-     * Summary of testAddRoutes
-     * @return void
-     * @deprecated 3.7.4 use routeCollection instead
-     */
-    public function testAddRoutes(): void
-    {
-        Route::setRoutes();
-
-        $expected = 0;
-        $this->assertEquals($expected, Route::count());
-
-        Framework::loadRoutes();
-
-        $expected = 111;
-        $this->assertEquals($expected, Route::count());
-    }
-
-    /**
      * Summary of getHandlers
      * @return array<array<mixed>>
      */
