@@ -30,6 +30,7 @@ class FrameworkTest extends TestCase
     /**
      * Summary of testAddRoutes
      * @return void
+     * @deprecated 3.7.4 use routeCollection instead
      */
     public function testAddRoutes(): void
     {

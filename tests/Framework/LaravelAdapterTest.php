@@ -33,9 +33,6 @@ class LaravelAdapterTest extends TestCase
 
     protected function setUp(): void
     {
-        // Reset COPS routes for tests
-        Route::setRoutes();
-
         // 1. Create a Laravel DI Container
         $this->container = new Container();
 

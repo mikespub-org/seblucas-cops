@@ -110,7 +110,7 @@ class FrameworkTodoTest extends TestCase
         // Verify routes are registered
         $router = $framework->getRouter();
         //$this->assertNotEmpty($router->getRoutes());
-        $expected = Route::count();
+        $expected = count($framework->getHandlerManager()->getRoutes());
         $this->assertCount($expected, $router->getRouter()->getRouteCollection());
     }
 

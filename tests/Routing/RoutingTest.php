@@ -40,24 +40,26 @@ class RoutingTest extends TestCase
 
     public function testRouteLoader(): void
     {
-        $routes = new RouteCollection(new HandlerManager());
+        $manager = new HandlerManager();
+        $routes = new RouteCollection($manager);
         $loader = new RouteLoader($routes);
         $resource = null;
         $routes = $loader->load($resource);
 
-        $expected = Route::count();
+        $expected = count($manager->getRoutes());
         $this->assertCount($expected, $routes);
     }
 
     public function testGetRouter(): void
     {
-        $routing = new Routing(new RouteCollection(new HandlerManager()));
+        $manager = new HandlerManager();
+        $routing = new Routing(new RouteCollection($manager));
         $router = $routing->getRouter();
         // force cache generation
         $matcher = $router->getMatcher();
         $generator = $router->getGenerator();
 
-        $expected = Route::count();
+        $expected = count($manager->getRoutes());
         $this->assertCount($expected, $router->getRouteCollection());
     }
 

@@ -233,7 +233,7 @@ class RestApiTest extends TestCase
         $test = self::$apiProvider->getRoutes($request);
         $expected = "Routes";
         $this->assertEquals($expected, $test["title"]);
-        $expected = Route::count();
+        $expected = count(self::$context->getHandlerManager()->getRoutes());
         $this->assertCount($expected, $test["entries"]);
     }
 

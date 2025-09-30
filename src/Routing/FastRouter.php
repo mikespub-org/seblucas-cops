@@ -32,11 +32,14 @@ class FastRouter implements RouterInterface
     protected ?GenerateUri $uriGenerator = null;
     /** @var array<string, array<mixed>> */
     protected array $routes = [];
+    protected ?RouteCollection $routeCollection = null;
 
-    public function __construct(?string $cacheDir = null)
+    public function __construct(?RouteCollection $routeCollection = null, ?string $cacheDir = null)
     {
         // force cache generation
         $this->cacheDir = $cacheDir ?? __DIR__;
+        // Use provided collection, or create an empty one
+        $this->routeCollection = $routeCollection ?? new RouteCollection();
     }
 
     /**
@@ -214,7 +217,7 @@ class FastRouter implements RouterInterface
      */
     public function addRouteCollection($r)
     {
-        foreach (Route::getRoutes() as $name => $route) {
+        foreach ($this->routeCollection->all() as $name => $route) {
             /** @var array<string, string|int|bool|float> $options */
             [$path, $params, $methods, $options] = $route;
             // set route param in request once we find matching route

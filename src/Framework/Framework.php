@@ -17,6 +17,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\Routing;
 use SebLucas\Cops\Handlers\QueueBasedHandler;
 
@@ -164,12 +165,16 @@ class Framework
      */
     protected function initializeRoutes(): void
     {
-        self::loadRoutes();
+        $routes = new RouteCollection($this->manager);
+        $this->routerInstance = new self::$routerClass($routes);
+        self::$router = $this->routerInstance;
+        // self::loadRoutes();
     }
 
     /**
      * Load routes for all handlers
      * @return void
+     * @deprecated 3.7.4 use routeCollection instead
      */
     public static function loadRoutes()
     {

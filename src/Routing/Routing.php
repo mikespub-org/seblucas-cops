@@ -35,7 +35,7 @@ class Routing implements RouterInterface
     public ?RouteLoader $loader = null;
     protected ?RouteCollection $routeCollection = null;
 
-    public function __construct(RouteCollection $routeCollection = null, ?string $cacheDir = null)
+    public function __construct(?RouteCollection $routeCollection = null, ?string $cacheDir = null)
     {
         // force cache generation
         $this->cacheDir = $cacheDir ?? __DIR__;

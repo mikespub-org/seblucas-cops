@@ -154,6 +154,7 @@ class Route
     /**
      * Add routes for all handlers
      * @return void
+     * @deprecated 3.7.4 use routeCollection instead
      */
     public static function init()
     {
@@ -208,6 +209,7 @@ class Route
      * Set routes
      * @param array<string, array<mixed>> $routes
      * @return void
+     * @deprecated 3.7.4 use routeCollection instead
      */
     public static function setRoutes($routes = [])
     {
@@ -217,6 +219,7 @@ class Route
     /**
      * Count routes
      * @return int
+     * @deprecated 3.7.4 use routeCollection instead
      */
     public static function count()
     {
@@ -226,6 +229,7 @@ class Route
     /**
      * Summary of dump
      * @return void
+     * @deprecated 3.7.4 use routeCollection instead
      */
     public static function dump()
     {
@@ -247,6 +251,7 @@ class Route
      * Summary of load
      * @param bool $refresh
      * @return void
+     * @deprecated 3.7.4 use routeCollection instead
      */
     public static function load($refresh = false): void
     {

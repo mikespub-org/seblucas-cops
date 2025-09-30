@@ -11,8 +11,10 @@
 namespace SebLucas\Cops\Tests\Routing;
 
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\UriGenerator;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
@@ -51,10 +53,11 @@ class RouteTest extends TestCase
 
     public function testDump(): void
     {
-        $expected = Route::count();
-        Route::dump();
-        Route::load();
-        $test = Route::count();
+        $routes = new RouteCollection(new HandlerManager());
+        $expected = $routes->count();
+        $routes->dump();
+        $routes->load();
+        $test = $routes->count();
         $this->assertEquals($expected, $test);
     }
 

@@ -15,8 +15,10 @@ require_once dirname(__DIR__, 2) . "/config/test.php";
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
 
@@ -33,18 +35,21 @@ class FastRouterTest extends TestCase
     {
         Config::set("calibre_directory", dirname(__DIR__) . "/BaseWithSomeBooks/");
         Database::clearDb();
-        self::$routing = new FastRouter();
+        $routes = new RouteCollection(new HandlerManager());
+        self::$routing = new FastRouter($routes);
     }
 
     public function testGetRouter(): void
     {
-        $routing = new FastRouter(__DIR__);
+        $routes = new RouteCollection(new HandlerManager());
+        $routing = new FastRouter($routes, __DIR__);
         $router = $routing->getRouter(true);
         // force cache generation
         $dispatcher = $router->dispatcher();
         $uriGenerator = $router->uriGenerator();
 
-        $expected = Route::count();
+        $manager = new HandlerManager();
+        $expected = count($manager->getRoutes());
         $this->assertEquals($expected, $routing->routeCount);
         if (file_exists(__DIR__ . '/' . FastRouter::FASTROUTE_CACHE_FILE)) {
             unlink(__DIR__ . '/' . FastRouter::FASTROUTE_CACHE_FILE);

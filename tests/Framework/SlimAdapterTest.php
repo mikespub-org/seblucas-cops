@@ -35,9 +35,6 @@ class SlimAdapterTest extends TestCase
 
     protected function setUp(): void
     {
-        // Reset routes for tests
-        Route::setRoutes();
-
         // 1. Create a DI Container
         $container = new Container();
 

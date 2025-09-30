@@ -104,7 +104,7 @@ class SlimAdapter implements AdapterInterface
     /**
      * Summary of getRouteCallable
      * @param array<mixed> $defaults
-     * @deprecated
+     * @deprecated 3.7.3 use CopsAction instead
      */
     protected function getRouteCallable(HandlerManager $copsManager, RouterInterface $copsRouter, array $defaults): callable
     {
