@@ -15,6 +15,7 @@ use SebLucas\Cops\Handlers\HandlerManager;
 
 /**
  * Summary of Route
+ * @deprecated 3.7.5 use handler class in urlParams instead
  */
 class Route
 {
@@ -38,6 +39,7 @@ class Route
      * Get handler class based on name
      * @param string|class-string $name
      * @return class-string<BaseHandler>
+     * @deprecated 3.7.5 use handler class in urlParams instead
      */
     public static function getHandler($name)
     {

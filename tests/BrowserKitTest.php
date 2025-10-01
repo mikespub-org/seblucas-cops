@@ -26,7 +26,6 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\UriGenerator;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;

@@ -14,7 +14,7 @@ use FastRoute\Dispatcher;
 use FastRoute\FastRoute;
 use FastRoute\GenerateUri;
 use FastRoute\GenerateUri\UriCouldNotBeGenerated;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 use Throwable;
 
 /**
@@ -83,8 +83,8 @@ class FastRouter implements RouterInterface
         // for normal routes, put fixed params at the start
         $params = array_merge($fixed, $params);
         // set _route param in request once we find matching route - FastRoute uses _name internally
-        if (isset($extra[ConfigureRoutes::ROUTE_NAME]) && !isset($params[Route::ROUTE_PARAM])) {
-            $params[Route::ROUTE_PARAM] = $extra[ConfigureRoutes::ROUTE_NAME];
+        if (isset($extra[ConfigureRoutes::ROUTE_NAME]) && !isset($params[Request::ROUTE_PARAM])) {
+            $params[Request::ROUTE_PARAM] = $extra[ConfigureRoutes::ROUTE_NAME];
         }
         unset($params['ignore']);
         return $params;
@@ -137,10 +137,10 @@ class FastRouter implements RouterInterface
      */
     public function addRoute(string|array $methods, string $path, array $params, array $options = []): void
     {
-        $name = $options[ConfigureRoutes::ROUTE_NAME] ?? ($params[Route::ROUTE_PARAM] ?? '');
+        $name = $options[ConfigureRoutes::ROUTE_NAME] ?? ($params[Request::ROUTE_PARAM] ?? '');
         if (empty($name)) {
             $name = 'route_' . md5($path . (is_array($methods) ? implode('', $methods) : $methods));
-            $params[Route::ROUTE_PARAM] = $name;
+            $params[Request::ROUTE_PARAM] = $name;
             $options[ConfigureRoutes::ROUTE_NAME] = $name;
         }
         $this->routes[$name] = [$path, $params, is_array($methods) ? $methods : [$methods], $options];
@@ -221,7 +221,7 @@ class FastRouter implements RouterInterface
             /** @var array<string, string|int|bool|float> $options */
             [$path, $params, $methods, $options] = $route;
             // set route param in request once we find matching route
-            $params[Route::ROUTE_PARAM] ??= $name;
+            $params[Request::ROUTE_PARAM] ??= $name;
             // set route name in extra options for uri generator - FastRoute uses _name internally
             $options[ConfigureRoutes::ROUTE_NAME] ??= $name;
             //$handler = $params[self::HANDLER_PARAM] ?? '';
@@ -236,7 +236,7 @@ class FastRouter implements RouterInterface
             foreach ($this->routes as $name => $route) {
                 [$path, $params, $methods, $options] = $route;
                 // set route param in request once we find matching route
-                $params[Route::ROUTE_PARAM] ??= $name;
+                $params[Request::ROUTE_PARAM] ??= $name;
                 // set route name in extra options for uri generator - FastRoute uses _name internally
                 $options[ConfigureRoutes::ROUTE_NAME] ??= $name;
                 // use the 'handler' to store any fixed params here, and pass along extra options for FastRoute

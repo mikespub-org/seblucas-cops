@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\RestApiProvider;

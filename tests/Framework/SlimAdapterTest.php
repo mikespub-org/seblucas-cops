@@ -17,7 +17,6 @@ use DI\Container;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Middleware\TestMiddleware;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;

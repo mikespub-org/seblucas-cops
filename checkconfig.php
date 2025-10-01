@@ -15,7 +15,6 @@
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\UriGenerator;
 
 require_once __DIR__ . '/config/config.php';

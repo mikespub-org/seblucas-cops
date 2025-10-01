@@ -18,7 +18,6 @@ require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 
 class FrameworkTest extends TestCase
 {

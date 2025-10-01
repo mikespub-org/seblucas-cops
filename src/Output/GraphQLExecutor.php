@@ -29,7 +29,6 @@ use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
@@ -65,7 +64,7 @@ class GraphQLExecutor
         $input = json_decode((string) $request->content(), true);
         // set request handler for navlink
         $handler ??= RestApiHandler::class;
-        $request->set(Route::HANDLER_PARAM, $handler);
+        $request->set(Request::HANDLER_PARAM, $handler);
 
         $schema = $this->getSchema();
 

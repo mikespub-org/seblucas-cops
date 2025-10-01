@@ -14,7 +14,6 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -335,7 +334,7 @@ Please check
      */
     public function handleMore($request)
     {
-        unset($request->urlParams[Route::HANDLER_PARAM]);
+        unset($request->urlParams[Request::HANDLER_PARAM]);
         $request->serverParams = ['HTTP_REDACTED' => true];
         $message = var_export($request, true);
 

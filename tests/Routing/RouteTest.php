@@ -10,10 +10,9 @@
 
 namespace SebLucas\Cops\Tests\Routing;
 
-use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\HtmlHandler;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -44,11 +43,13 @@ class RouteTest extends TestCase
         "graphql" => "graphql.php",
         "tables" => "tables.php",
     ];
+    protected static HandlerManager $manager;
 
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
         Database::clearDb();
+        self::$manager = new HandlerManager();
     }
 
     public function testDump(): void
@@ -171,7 +172,7 @@ class RouteTest extends TestCase
             ["/read/0/20/Alice_s_Adventures_in_Wonderland", "read-title", ["_handler" => "read", "db" => "0", "data" => "20", "title" => "Alice's Adventures in Wonderland"]],
             ["/read/0/20", "read", ["_handler" => "read", "db" => "0", "data" => "20"]],
             ["/mail", "mail", ["_handler" => "mail", "_method" => "POST"]],  // fake _method to simulate POST
-            // skip feed-page routes for Route::getRouteForParams() - use feed-path route with default page handler
+            // skip feed-page routes for UriGenerator::getRouteForParams() - use feed-path route with default page handler
             //["/feed/author/1?title=Arthur%20Conan%20Doyle", "feed-page-id", ["_handler" => "feed", "page" => "author", "id" => "1", "title" => "Arthur Conan Doyle"]],
             //["/feed/author/1", "feed-page-id", ["_handler" => "feed", "page" => "author", "id" => "1"]],
             ["/feed/recent", "feed-page", ["_handler" => "feed", "page" => "recent"]],
@@ -206,13 +207,13 @@ class RouteTest extends TestCase
             $fixed = $params;
             // Add ["_handler" => $handler] to params
             if ($handler::HANDLER !== HtmlHandler::class) {
-                $params[Route::HANDLER_PARAM] ??= $handler;
+                $params[Request::HANDLER_PARAM] ??= $handler;
             } else {
                 // default routes can be used by html, json, phpunit, restapi without _resource, ...
             }
             // Add ["_route" => $name] to params
-            if (empty($params[Route::ROUTE_PARAM]) && !str_starts_with($name, 'restapi-')) {
-                $params[Route::ROUTE_PARAM] ??= $name;
+            if (empty($params[Request::ROUTE_PARAM]) && !str_starts_with($name, 'restapi-')) {
+                $params[Request::ROUTE_PARAM] ??= $name;
             }
             $found = [];
             // check and replace path params + support custom patterns - see nikic/fast-route
@@ -262,8 +263,9 @@ class RouteTest extends TestCase
     public static function getRouteForParams($test, $expected, $route, $params)
     {
         // pass handler class-string as param here
-        if (!empty($params[Route::HANDLER_PARAM])) {
-            $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
+        if (!empty($params[Request::HANDLER_PARAM])) {
+            self::$manager ??= new HandlerManager();
+            $params[Request::HANDLER_PARAM] = self::$manager->getHandlerClass($params[Request::HANDLER_PARAM]);
         }
         $test->assertEquals($expected, UriGenerator::getRouteForParams($params));
     }

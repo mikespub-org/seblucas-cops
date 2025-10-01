@@ -14,8 +14,10 @@ use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Handlers\CheckHandler;
+use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Output\RestApiProvider;
 use SebLucas\Cops\Tests\Routing\RouteTest;
@@ -23,9 +25,10 @@ use SebLucas\Cops\Tests\Routing\RouteTest;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Output\Response;
@@ -34,6 +37,7 @@ use SebLucas\Cops\Routing\UriGenerator;
 
 class RestApiTest extends TestCase
 {
+    /** @var class-string<BaseHandler> */
     protected static string $handler;
     protected static RequestContext $context;
     protected static RestApiProvider $apiProvider;
@@ -46,7 +50,7 @@ class RestApiTest extends TestCase
     {
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
         Database::clearDb();
-        self::$handler = Route::getHandler("phpunit");
+        self::$handler = TestHandler::class;
         UriGenerator::setScriptName($_SERVER["SCRIPT_NAME"]);
         UriGenerator::setBaseUrl(null);
         $framework = new FrameworkTodo();
@@ -459,7 +463,7 @@ class RestApiTest extends TestCase
         $apiProvider->setContext(self::$context);
         $apiProvider->doRunHandler = false;
         $expected = [
-            Route::HANDLER_PARAM => Route::getHandler("zipfs"),
+            Request::HANDLER_PARAM => ZipFsHandler::class,
             "path" => "/zipfs/0/20/META-INF/container.xml",
             "params" => [
                 "_route" => "zipfs",
@@ -514,7 +518,7 @@ class RestApiTest extends TestCase
         $apiProvider->setContext(self::$context);
         $apiProvider->doRunHandler = false;
         $expected = [
-            Route::HANDLER_PARAM => Route::getHandler("fetch"),
+            Request::HANDLER_PARAM => FetchHandler::class,
             // check if the path starts with the handler param here
             "path" => "/thumbs/0/17/html.jpg",
             "params" => [
@@ -571,9 +575,9 @@ class RestApiTest extends TestCase
             $fixed = $params;
             // handle via REST API with /restapi prefix
             $path = RestApiHandler::PREFIX . $path;
-            $params[Route::HANDLER_PARAM] = RestApiHandler::class;
+            $params[Request::HANDLER_PARAM] = RestApiHandler::class;
             // with or without route param
-            $params[Route::ROUTE_PARAM] = $name;
+            $params[Request::ROUTE_PARAM] = $name;
             $name = 'restapi-path';
             $result[] = [$path, $name, $params, $fixed];
         }
@@ -603,11 +607,11 @@ class RestApiTest extends TestCase
     {
         $prefix = "";
         if ($route == 'restapi-path') {
-            if (empty($params[Route::ROUTE_PARAM])) {
+            if (empty($params[Request::ROUTE_PARAM])) {
                 $this->markTestSkipped('Skip restapi-path without route param for generate');
             }
             $prefix = "/restapi";
-            $route = $params[Route::ROUTE_PARAM];
+            $route = $params[Request::ROUTE_PARAM];
         }
         RouteTest::generateRoute($this, $routeUrl, $route, $params, $prefix);
     }
@@ -628,8 +632,8 @@ class RestApiTest extends TestCase
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $result = $apiProvider->getOutput();
-        if ($route == 'restapi-path' && !empty($params[Route::ROUTE_PARAM])) {
-            $route = $params[Route::ROUTE_PARAM];
+        if ($route == 'restapi-path' && !empty($params[Request::ROUTE_PARAM])) {
+            $route = $params[Request::ROUTE_PARAM];
         }
         if ($result instanceof Response) {
             $output = $result->getContent();

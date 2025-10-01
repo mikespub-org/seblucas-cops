@@ -8,7 +8,6 @@ require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouteLoader;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
@@ -31,9 +30,6 @@ class CopsControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        // Reset COPS routes for tests
-        //Route::setRoutes();
-
         // 1. Create a DI Container
         $this->container = new ContainerBuilder();
 

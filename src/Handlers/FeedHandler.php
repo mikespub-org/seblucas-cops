@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;

@@ -12,9 +12,11 @@ namespace SebLucas\Cops\Routing;
 
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Handlers\HandlerManager;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\ProxyRequest;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\Slugger;
 
 /**
@@ -39,8 +41,8 @@ class UriGenerator
      */
     public static function generate($name, $params)
     {
-        unset($params[Route::HANDLER_PARAM]);
-        unset($params[Route::ROUTE_PARAM]);
+        unset($params[Request::HANDLER_PARAM]);
+        unset($params[Request::ROUTE_PARAM]);
         return Framework::getRouter()->generate($name, $params);
     }
 
@@ -216,8 +218,8 @@ class UriGenerator
      */
     public static function getQueryString($params)
     {
-        unset($params[Route::HANDLER_PARAM]);
-        unset($params[Route::ROUTE_PARAM]);
+        unset($params[Request::HANDLER_PARAM]);
+        unset($params[Request::ROUTE_PARAM]);
         return http_build_query($params, '', null, PHP_QUERY_RFC3986);
     }
 
@@ -254,26 +256,27 @@ class UriGenerator
      */
     public static function getRouteForParams($params, $prefix = '')
     {
-        $default = Route::getHandler('html');
-        if (!empty($params[Route::HANDLER_PARAM])) {
-            $handler = $params[Route::HANDLER_PARAM];
+        $default = HtmlHandler::class;
+        if (!empty($params[Request::HANDLER_PARAM])) {
+            $handler = $params[Request::HANDLER_PARAM];
             if (in_array($handler::HANDLER, ['restapi', 'feed', 'opds'])) {
                 // if we have a page, or if we have a route and it starts with page-*, e.g. _route=page-author
-                if (!empty($params['page']) || str_starts_with($params[Route::ROUTE_PARAM] ?? '', 'page-')) {
+                if (!empty($params['page']) || str_starts_with($params[Request::ROUTE_PARAM] ?? '', 'page-')) {
                     // use page route with /handler prefix instead
                     $prefix = $prefix . $handler::PREFIX;
                     $handler = $default;
-                    // if we have a route and it does *not* start with the handler name, e.g. _route=check-more
-                } elseif (!empty($params[Route::ROUTE_PARAM]) && !str_starts_with($params[Route::ROUTE_PARAM], $handler::HANDLER)) {
+                    // if we have a route and it does *not* start with the handler name, e.g. _route=check-more with restapi handler
+                } elseif (!empty($params[Request::ROUTE_PARAM]) && !str_starts_with($params[Request::ROUTE_PARAM], $handler::HANDLER)) {
                     $prefix = $prefix . $handler::PREFIX;
-                    $handlerName = explode('-', $params[Route::ROUTE_PARAM])[0];
-                    $handler = Route::getHandler($handlerName);
+                    $handlerName = explode('-', $params[Request::ROUTE_PARAM])[0];
+                    // @todo handle this more gracefully
+                    $handler = HandlerManager::$registry[$handlerName];
                 }
             } elseif ($handler::HANDLER == 'phpunit') {
                 $handler = $default;
             }
-            unset($params[Route::HANDLER_PARAM]);
-        } elseif (isset($params[Route::ROUTE_PARAM])) {
+            unset($params[Request::HANDLER_PARAM]);
+        } elseif (isset($params[Request::ROUTE_PARAM])) {
             // use default handler for page route
             $handler = $default;
         } elseif (isset($params['page'])) {
@@ -306,7 +309,7 @@ class UriGenerator
         if ($path) {
             return $path;
         }
-        unset($params[Route::ROUTE_PARAM]);
+        unset($params[Request::ROUTE_PARAM]);
         $path = self::hasSingleRoute($routes, $params, $prefix, $handler::PARAMLIST);
         if ($path) {
             return $path;
@@ -324,11 +327,11 @@ class UriGenerator
     public static function hasRouteName($routes, $params = [], $prefix = '')
     {
         // use _route if available
-        if (!isset($params[Route::ROUTE_PARAM])) {
+        if (!isset($params[Request::ROUTE_PARAM])) {
             return null;
         }
-        $name = $params[Route::ROUTE_PARAM];
-        unset($params[Route::ROUTE_PARAM]);
+        $name = $params[Request::ROUTE_PARAM];
+        unset($params[Request::ROUTE_PARAM]);
         if (empty($name) || empty($routes[$name])) {
             return null;
         }

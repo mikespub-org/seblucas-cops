@@ -4,7 +4,6 @@ namespace SebLucas\Cops\Framework\Adapter;
 
 use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouterInterface;
 
 /**

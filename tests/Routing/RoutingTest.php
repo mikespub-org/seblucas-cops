@@ -20,7 +20,6 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\UriGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Exception;
@@ -106,15 +105,15 @@ class RoutingTest extends TestCase
         //unset($result["ignore"]);
 
         $expected = $route;
-        $this->assertEquals($expected, $result[Route::ROUTE_PARAM]);
-        unset($result[Route::ROUTE_PARAM]);
-        unset($result[Route::HANDLER_PARAM]);
+        $this->assertEquals($expected, $result[Request::ROUTE_PARAM]);
+        unset($result[Request::ROUTE_PARAM]);
+        unset($result[Request::HANDLER_PARAM]);
         $expected = $params;
-        unset($expected[Route::HANDLER_PARAM]);
+        unset($expected[Request::HANDLER_PARAM]);
         if (!empty($result['path'])) {
             // match path for actual result
             $result = self::$routing->match('/' . $result['path'], $method);
-            //unset($result[Route::ROUTE_PARAM]);
+            //unset($result[Request::ROUTE_PARAM]);
         }
         if (!empty($expected['title']) && empty($extra['title'])) {
             $expected['title'] = UriGenerator::slugify($expected['title']);
@@ -151,12 +150,12 @@ class RoutingTest extends TestCase
     {
         // @todo handle ignore
         // @todo handle restapi/route...
-        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Request::HANDLER_PARAM]);
         unset($params["_method"]);
         $prefix = "";
         // use default page handler with prefix for opds-path + use _route in params to generate path
-        if ($route == "opds-path" && !empty($params[Route::ROUTE_PARAM])) {
-            $route = $params[Route::ROUTE_PARAM];
+        if ($route == "opds-path" && !empty($params[Request::ROUTE_PARAM])) {
+            $route = $params[Request::ROUTE_PARAM];
             $prefix = "/opds";
         }
         if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {
@@ -219,16 +218,16 @@ class RoutingTest extends TestCase
             $result = array_merge($result, $extra);
         }
         $expected = $route;
-        $this->assertEquals($expected, $result[Route::ROUTE_PARAM]);
-        unset($result[Route::ROUTE_PARAM]);
-        unset($result[Route::HANDLER_PARAM]);
+        $this->assertEquals($expected, $result[Request::ROUTE_PARAM]);
+        unset($result[Request::ROUTE_PARAM]);
+        unset($result[Request::HANDLER_PARAM]);
         $expected = $params;
-        unset($expected[Route::ROUTE_PARAM]);
-        unset($expected[Route::HANDLER_PARAM]);
+        unset($expected[Request::ROUTE_PARAM]);
+        unset($expected[Request::HANDLER_PARAM]);
         if (!empty($result['path'])) {
             // match path for actual result
             $result = self::$routing->match('/' . $result['path'], $method);
-            unset($result[Route::ROUTE_PARAM]);
+            unset($result[Request::ROUTE_PARAM]);
         }
         if (!empty($expected['title']) && empty($extra['title'])) {
             $expected['title'] = UriGenerator::slugify($expected['title']);
@@ -252,12 +251,12 @@ class RoutingTest extends TestCase
         //if (str_starts_with($route, "feed-page")) {
         //    $this->markTestSkipped("Skip feed-page routes here");
         //}
-        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Request::HANDLER_PARAM]);
         unset($params["_method"]);
         $prefix = "";
         // use default page handler with prefix for feed-path + use _route in params to generate path
-        if ($route == "feed-path" && !empty($params[Route::ROUTE_PARAM])) {
-            $route = $params[Route::ROUTE_PARAM];
+        if ($route == "feed-path" && !empty($params[Request::ROUTE_PARAM])) {
+            $route = $params[Request::ROUTE_PARAM];
             $prefix = "/feed";
         }
         if (!empty($params['title']) && !in_array($route, ['feed-page-id', 'opds-page-id'])) {

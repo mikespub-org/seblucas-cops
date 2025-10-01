@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -93,7 +93,7 @@ class PageHandler extends BaseHandler
     public static function link($params = [])
     {
         // use default page handler to find the route for html and json
-        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Request::HANDLER_PARAM]);
         return UriGenerator::process($params);
     }
 

@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\BaseList;
-use SebLucas\Cops\Input\Route;
 
 class PageAllTagsLetter extends Page
 {

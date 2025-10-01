@@ -14,7 +14,6 @@ use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\RouteCollection;

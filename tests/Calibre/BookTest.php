@@ -22,7 +22,6 @@ use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Routing\UriGenerator;

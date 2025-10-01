@@ -20,7 +20,6 @@ use Illuminate\Http\Request as LaravelRequest;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router as LaravelRouter;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 

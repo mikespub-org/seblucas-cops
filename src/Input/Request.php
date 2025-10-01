@@ -13,6 +13,8 @@ namespace SebLucas\Cops\Input;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Handlers\HtmlHandler;
+use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Response;
 
@@ -22,6 +24,8 @@ use SebLucas\Cops\Output\Response;
  */
 class Request
 {
+    public const HANDLER_PARAM = "_handler";
+    public const ROUTE_PARAM = "_route";
     public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
 
     /** @var array<mixed> */
@@ -202,7 +206,7 @@ class Request
 
     /**
      * Set params for match of /handler/{path:.*} with default page handler - see RestApiHandler, FeedHandler etc.
-     * @param array<mixed> $params from Route::match('/' . $params['path'])
+     * @param array<mixed> $params from Routing::match('/' . $params['path'])
      * @param bool $clearPath remove 'path' from urlParams if not set here
      * @return Request
      */
@@ -447,21 +451,21 @@ class Request
 
     /**
      * Get handler class corresponding to _handler param
-     * @todo move to RequestContext?
      * @see RequestContext::resolveHandlerName()
      * @return class-string<BaseHandler>
      */
     public function getHandler()
     {
         // we have a handler already
-        if (!empty($this->urlParams[Route::HANDLER_PARAM])) {
-            return Route::getHandler($this->urlParams[Route::HANDLER_PARAM]);
+        if (!empty($this->urlParams[self::HANDLER_PARAM])) {
+            // return Route::getHandler($this->urlParams[self::HANDLER_PARAM]);
+            return $this->urlParams[self::HANDLER_PARAM];
         }
         if ($this->isAjax()) {
-            return Route::getHandler('json');
+            return JsonHandler::class;
         }
         // use default handler
-        return Route::getHandler('html');
+        return HtmlHandler::class;
     }
 
     /**
@@ -477,8 +481,8 @@ class Request
         unset($params['n']);
         unset($params['complete']);
         // override in $handler::route() etc. if needed
-        //unset($params[Route::HANDLER_PARAM]);
-        //unset($params[Route::ROUTE_PARAM]);
+        //unset($params[self::HANDLER_PARAM]);
+        //unset($params[self::ROUTE_PARAM]);
         return $params;
     }
 
@@ -563,7 +567,7 @@ class Request
      */
     public function isFeed()
     {
-        // set in parseParams() based on Route::match()
+        // set in parseParams() based on Routing::match()
         $handler = $this->getHandler();
         if (in_array($handler::HANDLER, ['feed', 'opds'])) {
             return true;
@@ -574,7 +578,7 @@ class Request
     /**
      * Summary of build
      * @param array<mixed> $params ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
-     * @param class-string|string|null $handler
+     * @param class-string<BaseHandler>|null $handler
      * @param ?array<mixed> $server
      * @param ?array<mixed> $post
      * @param ?array<mixed> $cookies
@@ -586,8 +590,7 @@ class Request
         // ['db' => $db, 'page' => $pageId, 'id' => $id, 'query' => $query, 'n' => $n]
         if (!empty($handler)) {
             // make sure we have an actual class-string here
-            $handler = Route::getHandler($handler);
-            $params[Route::HANDLER_PARAM] ??= $handler;
+            $params[self::HANDLER_PARAM] ??= $handler;
         }
         $request = new self(false);
         $request->setParams($params, false);

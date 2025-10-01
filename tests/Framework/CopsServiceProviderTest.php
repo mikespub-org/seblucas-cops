@@ -19,7 +19,6 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Routing\Router as LaravelRouter;
 use SebLucas\Cops\Framework\Adapter\LaravelAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\RouterInterface;
 
 #[RequiresMethod('\Illuminate\Routing\Router', '__construct')]

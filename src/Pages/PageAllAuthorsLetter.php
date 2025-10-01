@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
-use SebLucas\Cops\Input\Route;
 
 class PageAllAuthorsLetter extends Page
 {

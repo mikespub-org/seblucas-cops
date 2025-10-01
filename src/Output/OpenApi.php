@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Routing\UriGenerator;
 
 /**
@@ -156,12 +156,12 @@ class OpenApi
 
         // @todo clean up queryString with handler_param here
         $handler = 'default';
-        if (!empty($queryParams[Route::HANDLER_PARAM])) {
-            $handler = $queryParams[Route::HANDLER_PARAM]::HANDLER;
+        if (!empty($queryParams[Request::HANDLER_PARAM])) {
+            $handler = $queryParams[Request::HANDLER_PARAM]::HANDLER;
         }
         if ($handler == "restapi") {
             $queryString = substr($path, 1) . ' api';
-        } elseif (!empty($queryParams[Route::HANDLER_PARAM])) {
+        } elseif (!empty($queryParams[Request::HANDLER_PARAM])) {
             if (!empty($queryString)) {
                 $queryString = $handler . ' handler with ' . trim($queryString, '&');
             } else {
@@ -250,8 +250,8 @@ class OpenApi
         if (
             !str_starts_with($path, "/databases")
             && !in_array($path, ["/openapi", "/routes", "/handlers", "/about"])
-            && (empty($queryParams[Route::HANDLER_PARAM])
-            || in_array($queryParams[Route::HANDLER_PARAM]::HANDLER, ['restapi', 'zipper']))
+            && (empty($queryParams[Request::HANDLER_PARAM])
+            || in_array($queryParams[Request::HANDLER_PARAM]::HANDLER, ['restapi', 'zipper']))
         ) {
             array_push($params, [
                 '$ref' => "#/components/parameters/dbParam",
@@ -304,8 +304,8 @@ class OpenApi
                 ["BasicAuth" => []],
             ];
         }
-        if (!empty($queryParams[Route::HANDLER_PARAM])) {
-            $handler = $queryParams[Route::HANDLER_PARAM]::HANDLER;
+        if (!empty($queryParams[Request::HANDLER_PARAM])) {
+            $handler = $queryParams[Request::HANDLER_PARAM]::HANDLER;
             if (!in_array($handler, ["restapi", "check", "phpunit"])) {
                 $operation["summary"] .= " - with api key";
                 $operation["security"] = [

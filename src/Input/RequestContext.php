@@ -79,7 +79,7 @@ class RequestContext
         } catch (\Throwable $e) {
             // Return default route match for error handling
             return [
-                Route::HANDLER_PARAM => 'error',
+                Request::HANDLER_PARAM => 'error',
                 'error' => $e->getMessage(),
             ];
         }
@@ -92,12 +92,12 @@ class RequestContext
     public function updateRequest($params): void
     {
         $default = $this->manager->getHandlerClass('html');
-        if (empty($params[Route::HANDLER_PARAM])) {
-            $params[Route::HANDLER_PARAM] = $default;
+        if (empty($params[Request::HANDLER_PARAM])) {
+            $params[Request::HANDLER_PARAM] = $default;
         }
         // JsonHandler uses same routes as HtmlHandler - see util.js
-        if ($params[Route::HANDLER_PARAM] == $default && $this->request->isAjax()) {
-            $params[Route::HANDLER_PARAM] = $this->manager->getHandlerClass('json');
+        if ($params[Request::HANDLER_PARAM] == $default && $this->request->isAjax()) {
+            $params[Request::HANDLER_PARAM] = $this->manager->getHandlerClass('json');
         }
         foreach ($params as $name => $value) {
             $this->request->set($name, $value);
@@ -134,13 +134,13 @@ class RequestContext
         }
 
         // 2. Check matched route handler
-        if ($this->matchParams && !empty($this->matchParams[Route::HANDLER_PARAM])) {
-            return $this->matchParams[Route::HANDLER_PARAM];
+        if ($this->matchParams && !empty($this->matchParams[Request::HANDLER_PARAM])) {
+            return $this->matchParams[Request::HANDLER_PARAM];
         }
 
         // 3. Check request parameters
-        if (!empty($this->request->urlParams[Route::HANDLER_PARAM])) {
-            $name = $this->request->urlParams[Route::HANDLER_PARAM];
+        if (!empty($this->request->urlParams[Request::HANDLER_PARAM])) {
+            $name = $this->request->urlParams[Request::HANDLER_PARAM];
             return $name;
         }
 

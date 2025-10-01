@@ -24,7 +24,6 @@ use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\VirtualLibrary;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 
 class PageWithDetail extends Page
 {

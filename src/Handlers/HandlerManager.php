@@ -4,7 +4,6 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
-use SebLucas\Cops\Input\Route;
 
 /**
  * Manages handler registration and creation in COPS
@@ -13,6 +12,29 @@ class HandlerManager implements HasContextInterface
 {
     use HasContextTrait;
 
+    /** @var array<string, class-string<BaseHandler>> */
+    public static array $registry = [
+        "html" => HtmlHandler::class,
+        "feed" => FeedHandler::class,
+        "json" => JsonHandler::class,
+        "fetch" => FetchHandler::class,
+        "read" => ReadHandler::class,
+        "epubfs" => EpubFsHandler::class,
+        "restapi" => RestApiHandler::class,
+        "check" => CheckHandler::class,
+        "opds" => OpdsHandler::class,
+        "loader" => LoaderHandler::class,
+        "zipper" => ZipperHandler::class,
+        "calres" => CalResHandler::class,
+        "zipfs" => ZipFsHandler::class,
+        "mail" => MailHandler::class,
+        "graphql" => GraphQLHandler::class,
+        "tables" => TableHandler::class,
+        "error" => ErrorHandler::class,
+        "phpunit" => TestHandler::class,
+        "admin" => AdminHandler::class,
+        // ... other default handlers
+    ];
     /** @var array<string, class-string<BaseHandler>> */
     private array $handlers = [];
 
@@ -41,28 +63,7 @@ class HandlerManager implements HasContextInterface
      */
     protected function getDefaultHandlers(): array
     {
-        return [
-            "html" => HtmlHandler::class,
-            "feed" => FeedHandler::class,
-            "json" => JsonHandler::class,
-            "fetch" => FetchHandler::class,
-            "read" => ReadHandler::class,
-            "epubfs" => EpubFsHandler::class,
-            "restapi" => RestApiHandler::class,
-            "check" => CheckHandler::class,
-            "opds" => OpdsHandler::class,
-            "loader" => LoaderHandler::class,
-            "zipper" => ZipperHandler::class,
-            "calres" => CalResHandler::class,
-            "zipfs" => ZipFsHandler::class,
-            "mail" => MailHandler::class,
-            "graphql" => GraphQLHandler::class,
-            "tables" => TableHandler::class,
-            "error" => ErrorHandler::class,
-            "phpunit" => TestHandler::class,
-            "admin" => AdminHandler::class,
-            // ... other default handlers
-        ];
+        return self::$registry;
     }
 
     /**

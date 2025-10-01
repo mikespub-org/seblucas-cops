@@ -14,7 +14,6 @@ use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -32,7 +31,7 @@ abstract class BaseHandler implements HasContextInterface
 
     /**
      * Array of path => params for this handler
-     * Note: Route will add Route::HANDLER_PARAM => static::class to params
+     * Note: Route will add Request::HANDLER_PARAM => static::class to params
      * @return array<string, mixed>
      */
     public static function getRoutes()
@@ -48,7 +47,7 @@ abstract class BaseHandler implements HasContextInterface
     public static function link($params = [])
     {
         // use this specific handler to find the route
-        $params[Route::HANDLER_PARAM] = static::class;
+        $params[Request::HANDLER_PARAM] = static::class;
         return UriGenerator::process($params);
     }
 
@@ -74,7 +73,7 @@ abstract class BaseHandler implements HasContextInterface
      */
     public static function route($routeName, $params = [])
     {
-        $params[Route::ROUTE_PARAM] = $routeName;
+        $params[Request::ROUTE_PARAM] = $routeName;
         return static::link($params);
     }
 

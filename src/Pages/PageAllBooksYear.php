@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
-use SebLucas\Cops\Input\Route;
 
 class PageAllBooksYear extends Page
 {

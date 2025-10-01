@@ -15,15 +15,19 @@ use SebLucas\Cops\Routing\UriGenerator;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 
 class UriGeneratorTest extends TestCase
 {
+    protected static HandlerManager $manager;
+
     public static function setUpBeforeClass(): void
     {
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
         Database::clearDb();
+        self::$manager = new HandlerManager();
     }
 
     public function testRoute(): void
@@ -136,17 +140,17 @@ class UriGeneratorTest extends TestCase
         if ($endpoint !== RouteTest::OLD_ENDPOINT["html"]) {
             $testpoint = str_replace('.php', '', $endpoint);
             if (array_key_exists($testpoint, RouteTest::OLD_ENDPOINT)) {
-                $params[Route::HANDLER_PARAM] = $testpoint;
+                $params[Request::HANDLER_PARAM] = $testpoint;
                 $handler = $testpoint;
             } else {
                 // for epubreader.php, checkconfig.php etc.
                 $flipped = array_flip(RouteTest::OLD_ENDPOINT);
-                $params[Route::HANDLER_PARAM] = $flipped[$endpoint];
+                $params[Request::HANDLER_PARAM] = $flipped[$endpoint];
                 $handler = $flipped[$endpoint];
             }
         }
         // 2. we pass handler class-string as param now
-        $handler = Route::getHandler($handler);
+        $handler = self::$manager->getHandlerClass($handler);
         $test = $handler::link($params);
         $this->assertStringEndsWith($expected, $test);
     }
@@ -169,7 +173,7 @@ class UriGeneratorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
     public function testGetRouteForParams($expected, $route, $params)
     {
-        // skip feed-page routes for Route::getRouteForParams() - use feed-path route with default page handler
+        // skip feed-page routes for UriGenerator::getRouteForParams() - use feed-path route with default page handler
         if (str_starts_with($route, "feed-page")) {
             $this->markTestSkipped("Skip feed-page routes here");
         }
@@ -180,8 +184,8 @@ class UriGeneratorTest extends TestCase
             unset($params["_method"]);
         }
         // pass handler class-string as param here
-        if (!empty($params[Route::HANDLER_PARAM])) {
-            $params[Route::HANDLER_PARAM] = Route::getHandler($params[Route::HANDLER_PARAM]);
+        if (!empty($params[Request::HANDLER_PARAM])) {
+            $params[Request::HANDLER_PARAM] = self::$manager->getHandlerClass($params[Request::HANDLER_PARAM]);
         }
         $this->assertEquals($expected, UriGenerator::getRouteForParams($params));
     }

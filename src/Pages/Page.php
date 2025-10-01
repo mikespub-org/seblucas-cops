@@ -15,7 +15,6 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
