@@ -1,0 +1,123 @@
+{# bookdetail.html is used for it.page == "book" #}
+{% extends 'base.html' %}
+
+{% block main %}
+<div id="main" class="container-fluid">
+<div class="row">
+<div class="offset-md-2 col-md-4 col-sm-6 col-12" id="cover" name="cover">
+    <div class="cover-image">
+        {% if it.book.hasCover == 1 %}
+        <div class="d-block d-sm-none topspace"></div>
+        <a href="{{it.book.coverurl}}">
+          <img class="img-fluid mx-auto d-block" src="{{it.book.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="col-lg-4 col-md-5 col-sm-6 col-12 text-center text-sm-start ">
+    {% for data in it.book.datas %}
+    <div class="btn-group">
+        <a title="Download // {{data.format}}" href="{{data.url}}" class="btn btn-primary" role="button"><i class="bi bi-download"></i> {{data.format}}</a>
+        {% if data.qrcode == 1 %}
+        <a id="qrButton" class="btn btn-primary" role="button" title="QR Code" href="#" onclick="showQRCode('qrcode', '{{data.url}}'); return false;">
+        <i class="bi bi-qr-code"></i></a>
+        {% endif %}
+        {% if data.mail == 1 %}
+        <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{data.format}}" href="empty.php" onclick="sendToMailAddress (this, '{{data.id}}'); return false;">
+        <i class="bi bi-envelope"></i></a>
+        {% endif %}
+        {% if data.readerUrl != "" %}
+        <a title="Reader" class="btn btn-primary" role="button" href="{{data.readerUrl}}" target="blank">
+        <i class="bi bi-eye"></i></a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+
+<div class="col-md-4 col-sm-6 col-12">
+    <h1>{{it.title|escape}}</h1>
+    <h4>{% for author in it.book.authors %}{% if not loop.first %}, {% endif %}<a href="{{author.url}}">{{author.name|escape}}</a>{% endfor %}</h4>
+    {% if it.book.seriesName != "" %}
+        <h4><a href="{{it.book.seriesurl}}">{{it.book.seriesName|escape}}</a> ({{it.book.seriesIndex}})</h4>
+    {% endif %}
+</div>
+
+
+<div class="col-md-4 col-sm-6 col-12">
+
+    {% if it.book.languagesName != "" %}
+    <p>
+        <span class="badge">{{it.c.i18n.languagesTitle}}: {{it.book.languagesName}}</span>
+    </p>
+    {% endif %}
+
+    {% if it.book.identifiers != "" %}
+    <div class="tags">
+        <p>
+        <i class="bi bi-link-45deg" title="{{it.c.i18n.linksTitle}}"></i>
+        {% for id in it.book.identifiers %}<a class="btn btn-sm btn-success" role="button" href="{{id.url}}">{{id.name|escape}}</a> {% endfor %}
+        </p>
+    </div>
+    {% endif %}
+
+    {% if it.book.tagsName != "" %}
+    <div class="tags">
+        <i class="bi bi-tags" title="{{it.c.i18n.tagsTitle}}"></i>
+        {% for tag in it.book.tags %}<a class="btn btn-sm btn-info" role="button" href="{{tag.url}}">{{tag.name|escape}}</a> {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if it.book.rating != "" %}
+    <p>
+        <h4>{{it.c.i18n.ratingTitle}}: {{it.book.rating}}</h4>
+    </p>
+    {% endif %}
+    {% if it.book.publisherName != "" %}
+    <p>
+        <h4>{{it.c.i18n.publisherName}}: <a href="{{it.book.publisherurl}}">{{it.book.publisherName|escape}}</a></h4>
+    </p>
+    {% endif %}
+    {% if it.book.pubDate != "" %}
+    <p>
+        <h4>{{it.c.i18n.pubdateTitle}}: {{it.book.pubDate}}</h4>
+    </p>
+    {% endif %}
+    {% for column in it.book.customcolumns_preview  %}
+    <p>
+        <h4>
+            {{column.customColumnType.columnTitle}}: 
+            {% if column.htmlvalue != "" and column.url %}
+                {# @todo handle series, csv text etc. links #}
+                {{column.htmlvalue}}
+            {% else %}
+                {{column.htmlvalue}}
+            {% endif %}
+        </h4>
+    </p>
+    {% endfor %}
+    {% if it.book.extraFiles != "" %}
+    <p>
+        <h4>{{it.c.i18n.filesTitle}}: {% for extraFile in it.book.extraFiles %}<a href="{{extraFile.url}}">{{extraFile.name|escape}}</a> {% endfor %}</h4>
+    </p>
+    {% endif %}
+    <p>
+        <div id="qrcode"></div>
+    </p>
+
+</div>
+
+</div>
+
+<div class="row">
+<div class="offset-md-2 col-md-8 col-sm-12">    
+    {% if it.book.content != "" %}
+    <br />
+    <h4>{{it.c.i18n.contentTitle}}</h4>
+    <div>{{it.book.content|raw}}</div>
+    {% endif %}
+</div>
+</div>
+</div>
+{% endblock main %}

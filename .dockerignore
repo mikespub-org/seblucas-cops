@@ -31,3 +31,4 @@ coverage/
 *.cache
 cache/*.php
 rector.php
+templates/twigged5/

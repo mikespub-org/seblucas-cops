@@ -1,0 +1,41 @@
+{# navlist.html is used for it.containsBook == 0 #}
+{% extends 'mainlist.html' %}
+
+{% block sortlinks %}
+{% if it.sortoptions ?? false %}
+<!-- show sort options -->
+<ul id="sortlinks" class="navbar-nav">
+  {% if it.sortoptions.name is defined %}
+  <li><a href="{{str_format(it.sorturl, "name")}}" data-bs-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.name}}">
+    <i class="bi bi-type"></i><i class="bi bi-sort-alpha-down"></i>
+  </a></li>
+  {% endif %}
+  {% if it.sortoptions.count is defined %}
+  <li><a href="{{str_format(it.sorturl, "count")}}" data-bs-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.count}}">
+    <i class="bi bi-book"></i><i class="bi bi-sort-numeric-down-alt"></i>
+  </a></li>
+  {% endif %}
+</ul>
+{% endif %}
+{% endblock sortlinks %}
+
+{% block content %}
+<div id="content" class="container-fluid">
+    <div class="row">
+        {% for entry in it.entries %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-12 col-half-padding">
+            {% block entry %}
+            <div class="card h-100">
+                <a href="{{entry.navlink}}">
+                    <div class="card-body">
+                        {{entry.title|escape}}
+                        <span class="badge float-end">{{entry.number}}</span>
+                    </div>
+                </a>
+            </div>
+            {% endblock entry %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

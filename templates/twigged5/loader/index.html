@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{app_name}}</title>
+	<meta name="author" content="atoll-digital-library.org" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{static}}/css/styles.css">
+</head>
+<body>
+	<!-- Header begin -->
+	<div class="header">
+		<a href="{{endpoint}}">{{app_name}}</a> <span class="small"> - version {{version}}</span>
+	</div>
+	<!-- Header end -->
+
+	<!-- Content begin -->
+	<div class="content">
+		{% block content %}
+			{% if actionTitle %}
+			<div><p><a href="{{endpoint}}/{{action}}">{{actionTitle}}</a></p></div>
+			{% endif %}
+			{{result|raw}}
+		{% endblock content %}
+	</div>
+	<!-- Content end -->
+
+	{% if errors|length %}
+	<!-- Error begin -->
+	<div class="error">
+		<table>
+			<tr>
+				<th colspan="2">Errors ({{ errors|length }})</th>
+			</tr>
+			{% for fileName, error in errors %}
+			<!-- Display error -->
+			<tr>
+				<td class="col_1">{{fileName}}</td>
+				<td class="col_2">{{error}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+	<!-- Error end -->
+	{% endif %}
+
+	<!-- Footer begin -->
+	<div class="footer">
+		{% if admin_email %}
+		<script type="text/javascript">
+			/*<![CDATA[*/
+				document.write("<n uers=\"znvygb:{{admin_email}}\">".replace(/[a-zA-Z]/g, function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);}));
+				document.write("Contact<\/a>");
+			/*]]>*/
+		</script>
+		{% endif %}
+	</div>
+	<!-- Footer end -->
+
+</body>
+</html>

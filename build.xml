@@ -31,6 +31,7 @@
                 <include name="**" />
                 <exclude name="DESIGN.md" />
                 <exclude name="templates/tables.html" />
+                <exclude name="templates/twigged5/**" />
                 <exclude name="tests/**" />
                 <exclude name=".git/**" />
                 <exclude name="docker/**" />

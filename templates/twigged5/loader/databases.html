@@ -1,0 +1,36 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="title">
+	<b>Select database</b>
+</div>
+<table width="100%">
+	<tr>
+		<th>Db num</th>
+		<th>Db name</th>
+		<th>Authors</th>
+		<th>Books</th>
+		<th>Series</th>
+		<th>Notes</th>
+		<th>Action</th>
+		<th>Db Path</th>
+		<th>Epub path</th>
+		<th>Nb Files</th>
+	</tr>
+	{% for dbNum, dbConfig in databases %}
+	<tr>
+		<td>{{dbNum}}</td>
+		<td>{{dbConfig.name}}</td>
+		<td><a href="{{endpoint}}/authors/{{dbNum}}">{{dbConfig.authors}}</a></td>
+		<td><a href="{{endpoint}}/books/{{dbNum}}">{{dbConfig.books}}</a></td>
+		<td><a href="{{endpoint}}/series/{{dbNum}}">{{dbConfig.series}}</a></td>
+		<td><a href="{{endpoint}}/notes/{{dbNum}}">{{dbConfig['notes_db.notes']}}</a></td>
+		<td><a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionTitle}}</a></td>
+		<td>{{dbConfig.db_path}}</td>
+		<td>{{dbConfig.epub_path}}</td>
+		<td>{{dbConfig.count}}</td>
+	</tr>
+	{% endfor %}
+</table>
+<p><a href="{{endpoint}}/{{action}}/?refresh=1" title="Refresh">Stats Updated</a>: {{statsUpdated}}</p>
+{% endblock content %}

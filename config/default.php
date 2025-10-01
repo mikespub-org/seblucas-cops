@@ -535,7 +535,7 @@ $config['cops_style'] = 'default';
  * Which of these templates use the Twig template engine
  * Only the 'twigged' template for now...
  */
-$config['cops_twig_templates'] = ['twigged'];
+$config['cops_twig_templates'] = ['twigged', 'twigged5'];
 
 /*
  * Which URL prefix to use in templates for js & css assets (without trailing /)

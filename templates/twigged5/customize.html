@@ -1,0 +1,62 @@
+{# customize.html is used for it.page == "customize" #}
+{% extends 'navlist.html' %}
+
+{% block content %}
+<div id="content" class="container-fluid">
+    <div class="row">
+        <form id="customForm" method="POST">
+        {% for entry in it.entries %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-12 col-half-padding">
+            {% block customgroup %}
+            <div class="card h-100">
+                <div class="card-header h-100">
+                    {{entry.title|escape}}
+                </div>
+                <div class="card-body">
+                    {{entry.content|raw}}
+                </div>
+            </div>
+            {% endblock customgroup %}
+        </div>
+        {% endfor %}
+        {# @todo remove style="display:none" when code is ready #}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-12 col-half-padding" style="display:none">
+            <div class="card h-100">
+                <div class="card-header h-100">
+                    {{it.c.i18n.customizeTitle}}
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <button id="customSubmitButton" type="submit" class="btn btn-success" title="{{it.c.i18n.customizeTitle}}"><i class="bi bi-check-lg"></i></button>
+                        <button id="customClearButton" type="button" class="btn btn-danger" title="{{it.c.i18n.filterClearAll}}"><i class="bi bi-x-lg"></i></button>
+                        <input type="hidden" name="page" value="customize" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        <script type="text/javascript">
+            var form = document.getElementById('customForm'); // Replaced const with var
+            var btn = document.getElementById('customClearButton');
+            btn.addEventListener("click", function () {
+                var boxes = form.getElementsByTagName('input'); // Replaced let with var
+                for (var i = 0; i < boxes.length; i++) { // Replaced for...of with traditional for loop
+                    var box = boxes[i];
+                    if (box.type == 'checkbox') {
+                        box.checked = false;
+                        // update cookies here too
+                        if (box.name.indexOf('[]') !== -1) {
+                            updateCookieFromCheckboxGroup(box);
+                        } else {
+                            updateCookieFromCheckbox(box);
+                        }
+                    } else {
+                        // ... @todo
+                    }
+                }
+                form.submit();
+            });
+        </script>
+    </div>
+</div>
+{% endblock content %}

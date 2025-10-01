@@ -34,12 +34,11 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{it.favico}}" />
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="{{asset('bootstrap/dist/css/bootstrap.min.css')}}">
-
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="{{asset('bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <style media="screen" type="text/css">
     .demo{
@@ -48,7 +47,7 @@
         border:1px solid #efefef;
     }
 
-    .panel-body { padding: 5px 10px; }
+    .card-body { padding: 5px 10px; }
 
     .bottom {position:absolute; bottom:15px; }
 
@@ -88,47 +87,10 @@
         font-size: 15px;
     }
 
-    span.glyphicon {
-        padding-right: 5px;
-        vertical-align: text-top;
-    }
-
-    span.glyphicon.glyphicon-tags {
-        color: #999;
-    }
-
     div.tags {margin-bottom: -5px}
     div.tags a {margin-bottom: 5px}
 
-/*
- * Responsive text aligning
- * http://ohryan.ca/2014/08/14/set-responsive-text-alignment-bootstrap-3/
- */
-    .text-xs-left { text-align: left; }
-    .text-xs-right { text-align: right; }
-    .text-xs-center { text-align: center; }
-    .text-xs-justify { text-align: justify; }
-
-    @media (min-width: 768px) {
-    .text-sm-left { text-align: left; }
-    .text-sm-right { text-align: right; }
-    .text-sm-center { text-align: center; }
-    .text-sm-justify { text-align: justify; }
-    }
-
-    .d-flex {
-        display: flex;
-    }
-
-    .row.d-flex {
-        flex-wrap: wrap;
-    }
-
-    .row.d-flex > [class*='col-'] {
-        flex-direction: column;
-    }
-
-    .panel { margin-bottom: 5px; }
+    .card { margin-bottom: 5px; }
 
     div[class*="books"] {
         padding: 7px 7px;

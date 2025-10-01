@@ -1,0 +1,74 @@
+{# mainlist.html is extended by booklist.html and navlist.html #}
+{% extends 'base.html' %}
+
+{% block main %}
+<div id="main" class="container-fluid">
+{% block hierarchy %}
+<div id="filter">
+    {% if it.hierarchy  %}
+    <ul>
+        {% for entry in it.hierarchy.parents %}
+            <li><a href="{{entry.navlink}}"><i class="bi bi-arrow-up"></i> <strong>{{entry.title}}</strong></a></li>
+        {% endfor %}
+        {% if it.hierarchy.current  %}
+            {% if it.hierarchy.children|length > 0 %}
+                {% if it.hierarchy.hastree  %}
+                    <li><a href="{{it.hierarchy.current.navlink}}"><i class="bi bi-dash-circle"></i><span class="d-none d-sm-inline"> {{it.hierarchy.current.title}}</span></a></li>
+                {% else %}
+                    <li><a href="{{it.hierarchy.current.navlink}}"><i class="bi bi-plus-circle"></i><span class="d-none d-sm-inline"> {{it.hierarchy.current.title}}</span></a></li>
+                {% endif %}
+            {% else %}
+                <li><span class="d-none d-sm-inline"> {{it.hierarchy.current.title}}</span></li>
+            {% endif %}
+        {% endif %}
+        {% for entry in it.hierarchy.children %}
+            {% if entry.number %}
+                <li><a href="{{entry.navlink}}">{{entry.title}} ({{entry.number}})</a></li>
+            {% else %}
+                <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if it.filters %}
+    <ul>
+        <!-- show links to filter -->
+        <li>{{it.c.i18n.filtersTitle}}:</li>
+        {% for filter in it.filters %}
+        <li>
+            <a href="{{filter.navlink}}">
+                {{filter.class}} = {{filter.title}}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock hierarchy %}
+
+{% block content %}
+<div id="content">
+    This is the content block
+</div>
+{% endblock content %}
+
+{% block pager %}
+{% if it.isPaginated == 1 %}
+    <nav aria-label="Page navigation">
+        <ul id="pager" class="pagination justify-content-center">
+            {% if it.maxPage > 3 %}
+            <li class="page-item {% if it.firstLink == "" %}disabled{% endif %}"><a class="page-link" id="firstLink" href="{{it.firstLink}}"><i class="bi bi-skip-start-fill"></i> {{it.c.i18n.firstAlt}}</a></li>
+            {% endif %}
+            <li class="page-item {% if it.prevLink == "" %}disabled{% endif %}"><a class="page-link" id="prevLink" href="{{it.prevLink}}"><i class="bi bi-chevron-left"></i> {{it.c.i18n.previousAlt}}</a></li>
+            <li class="page-item disabled"><a class="page-link" href="#">{{it.currentPage}} / {{it.maxPage}}</a></li>
+            <li class="page-item {% if it.nextLink == "" %}disabled{% endif %}"><a class="page-link" id="nextLink" href="{{it.nextLink}}">{{it.c.i18n.nextAlt}} <i class="bi bi-chevron-right"></i></a></li>
+            {% if it.maxPage > 3 %}
+            <li class="page-item {% if it.lastLink == "" %}disabled{% endif %}"><a class="page-link" id="lastLink" href="{{it.lastLink}}">{{it.c.i18n.lastAlt}} <i class="bi bi-skip-end-fill"></i></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+{% endblock pager %}
+</div>
+<div id="error"></div>
+{% endblock main %}

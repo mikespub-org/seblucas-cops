@@ -1,0 +1,99 @@
+{# booklist.html is used for it.containsBook != 0 #}
+{% extends 'mainlist.html' %}
+
+{% block download %}
+  {% if it.download %}
+    {% for link in it.download %}
+    <a class="navbar-brand" href="{{link.url}}" data-bs-toggle="tooltip" data-placement="bottom" title="{{link.format}}">
+      <i class="bi bi-download"></i>
+    </a>
+    {% endfor %}
+  {% endif %}
+{% endblock download %}
+
+{% block sortlinks %}
+<!-- show sort options -->
+<ul id="sortlinks" class="navbar-nav">
+  {% if it.sortoptions.title is defined %}
+  <li><a href="{{str_format(it.sorturl, "title")}}" data-bs-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.title}}">
+    <i class="bi bi-type"></i><i class="bi bi-sort-alpha-down"></i>
+  </a></li>
+  {% endif %}
+  {% if it.sortoptions.author is defined %}
+  <li><a href="{{str_format(it.sorturl, "author")}}" data-bs-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.author}}">
+    <i class="bi bi-person"></i><i class="bi bi-sort-alpha-down"></i>
+  </a></li>
+  {% endif %}
+  {% if it.sortoptions.pubdate is defined %}
+  <li><a href="{{str_format(it.sorturl, "pubdate")}}" data-bs-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.pubdate}}">
+    <i class="bi bi-calendar-event"></i><i class="bi bi-sort-numeric-down-alt"></i>
+  </a></li>
+  {% endif %}
+  {% if it.sortoptions.rating is defined %}
+  <li><a href="{{str_format(it.sorturl, "rating")}}" data-bs-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.rating}}">
+    <i class="bi bi-star"></i><i class="bi bi-sort-numeric-down-alt"></i>
+  </a></li>
+  {% endif %}
+  {% if it.sortoptions.timestamp is defined %}
+  <li><a href="{{str_format(it.sorturl, "timestamp")}}" data-bs-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.sortoptions.timestamp}}">
+    <i class="bi bi-clock"></i><i class="bi bi-sort-numeric-down-alt"></i>
+  </a></li>
+  {% endif %}
+</ul>
+{% endblock sortlinks %}
+
+{% block content %}
+<div id="content" class="row">
+    {% for entry in it.entries %}
+        <div class="col-lg-2 col-sm-3 col-6 books">
+            <div class="cover-image">
+                {% if entry.thumbnailurl  %}
+                    <a href="{{entry.book.detailurl}}#cover">
+                        <img class ="img-fluid" src="{{entry.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
+                    </a>
+                {% endif %}
+            </div>
+            <div class="meta">
+                <p class="title"><a href="{{entry.book.detailurl}}#cover">{{entry.title|escape}}</a></p>
+                <div class="author ellipsis">{{entry.book.authorsName|escape}}</div>
+                {% if entry.book.seriesName != "" %}<div class="series ellipsis"><a href="{{entry.book.seriesurl}}">{{entry.book.seriesName|escape}}</a> ({{entry.book.seriesIndex}})</div>{% endif %}
+                <!-- custom columns not tested -->
+                {% for column in entry.book.customcolumns_list  %}
+                <div class="ellipsis"><i class="bi bi-dash"></i> <span class="ss">{{column.customColumnType.columnTitle}} : {{column.htmlvalue}}</span></div>
+                {% endfor %}
+            </div>
+            <div style="height: 40px;"><!-- reserve space for absolutely positioned bottom download button --></div>
+            <div class="download bottom">
+                <!-- download Split button -->
+                <div class="btn-group">
+                    {% for data in entry.book.preferedData %}
+                        {% if loop.first %}
+                            <a href="{{data.url}}" class="btn btn-primary btn-sm" role="button"><i class="bi bi-download"></i> {{data.name}}</a>
+                            {% if entry.book.preferedCount > 1 %}
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                            {% endif %}
+                        {% else %}
+                            <li><a class="dropdown-item" href="{{data.url}}">{{data.name}}</a></li>
+                            {% if loop.last %}</ul>{% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock content %}
+
+{% block extra %}
+  {% if it.extra %}
+    {% if it.extra.series %}
+      {% include 'extra_series.html' %}
+    {% endif %}
+    {% if it.extra.title %}
+      {% include 'extra_info.html' %}
+    {% endif %}
+  {% endif %}
+{% endblock extra %}

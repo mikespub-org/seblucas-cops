@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<div class="title">
+	<b>Select action</b>
+</div>
+{% if groups %}
+<ul>
+	{% for group, actionList in groups %}
+	{% if group != "Internal" %}
+	<li>
+		{{group}}
+		<ul>
+			{% for action, actionInfo in actionList %}
+			<li>
+				{% if action in actions|keys %}
+					<a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionInfo}}</a>
+				{% else %}
+					{{actionInfo}}
+				{% endif %}
+			</li>
+			{% endfor %}
+		</ul>
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+{% else %}
+<ul>
+	{% for action, actionInfo in actions %}
+	<li>
+		<a href="{{endpoint}}/{{action}}/{{dbNum}}">{{actionInfo}}</a>
+	</li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endblock content %}
