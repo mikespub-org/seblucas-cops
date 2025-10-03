@@ -9,6 +9,7 @@ RUN apk add --no-cache --upgrade \
     php84-zip \
     php84-phar \
     composer \
+    icu-data-full \
     php84-curl \
     php84-fileinfo \
     php84-iconv \
