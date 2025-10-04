@@ -54,7 +54,8 @@
         "nikic/fast-route": "2.0.0-beta1",
         "mikespub/epub-loader": "^3.6",
         "opis/json-schema": "^2.4",
-        "webonyx/graphql-php": "^15.24"
+        "webonyx/graphql-php": "^15.24",
+        "npm-asset/mikespub--web-comic-reader": "^2025.10"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks"
