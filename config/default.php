@@ -674,6 +674,20 @@ $config['cops_api_key'] = '';
 $config['cops_epub_reader'] = 'monocle';
 
 /*
+ * Choose comic-reader template URL when viewing comic files online:
+ * '' (default)
+ * 'comic-reader.html?url='
+ */
+$config['cops_comic_reader'] = '';
+
+/*
+ * Choose pdfjs-viewer template URL when viewing pdf files online:
+ * '' (default)
+ * 'pdfjs-viewer.html?file='
+ */
+$config['cops_pdfjs_viewer'] = '';
+
+/*
  * Default customize values per user - @todo
  */
 $config['cops_customize'] = [];

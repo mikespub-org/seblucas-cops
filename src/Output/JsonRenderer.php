@@ -207,6 +207,14 @@ class JsonRenderer extends BaseRenderer
                 $params['title'] = $book->getTitle();
                 $tab ["readerUrl"] = self::$reader::route('read-title', $params);
             }
+            // use templates/comic-reader?url=... format here for now
+            if (in_array($data->format, ["CBZ", "CBR", "CBT"]) && Config::get('comic_reader')) {
+                $tab ["readerUrl"] = $this->getPath('templates/' . Config::get('comic_reader')) . $data->getHtmlLink();
+            }
+            // use templates/pdfjs-viewer?file=... format here for now
+            if ($data->format == "PDF" && Config::get('pdfjs_viewer')) {
+                $tab ["readerUrl"] = $this->getPath('templates/' . Config::get('pdfjs_viewer')) . $data->getHtmlLink();
+            }
             array_push($out ["datas"], $tab);
         }
         $out ["extraFiles"] = [];
@@ -807,6 +815,7 @@ class JsonRenderer extends BaseRenderer
             $out ["extra"]["series"] = $this->getSeries($currentPage, $extraParams);
         }
         $out ["assets"] = $this->getPath(Config::get('assets'));
+        $out ["templates"] = $this->getPath('templates');
         $out ["download"] = $this->getDownloadLinks($currentPage, $qid);
 
         /** @phpstan-ignore-next-line */
