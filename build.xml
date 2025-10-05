@@ -66,6 +66,13 @@
                 <exclude name="vendor/mikespub/php-epub-meta/app/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/assets/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/test/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/**.map" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/cmaps/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/iccs/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/locale/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/standard_fonts/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/wasm/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/**.pdf" />
                 <exclude name="vendor/npm-asset/dot/benchmarks/**" />
                 <exclude name="vendor/npm-asset/dot/bin/**" />
                 <exclude name="vendor/npm-asset/dot/examples/**" />

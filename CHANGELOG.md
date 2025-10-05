@@ -16,6 +16,18 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * ...
+
+3.7.8 - 20251004 Add QR code, Comic Reader and PDF Viewer (dev only) + fixes
+  * Changes in config/default.php file:
+    - new $config['cops_comic_reader'] to read comic books
+    - new $config['cops_pdfjs_viewer'] to view pdf files (dev only)
+  * Add PDF.js Viewer for PDF books - see issue #159 from @tgiraud (dev only)
+  * Add Comic Reader for CBZ/CBR/CBT books - see issue #159 from @tgiraud
+  * Add icu-data-full package for alpine in Dockerfile
+  * Start twigged5 template to convert twigged to Bootstrap 5 (WIP)
+  * Use generic RouteCollection and deprecate Route class
+  * Add framework integration for Laravel, Slim and Symfony (dev only)
   * Fix non-ASCII book letter in uri generator and page route
   * Add qr code to download book in bootstrap2/twigged templates
   * Add qr code to web site for sharing with others in About page

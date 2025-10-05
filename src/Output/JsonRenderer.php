@@ -815,7 +815,7 @@ class JsonRenderer extends BaseRenderer
             $out ["extra"]["series"] = $this->getSeries($currentPage, $extraParams);
         }
         $out ["assets"] = $this->getPath(Config::get('assets'));
-        $out ["templates"] = $this->getPath('templates');
+        // $out ["templates"] = $this->getPath('templates');
         $out ["download"] = $this->getDownloadLinks($currentPage, $qid);
 
         /** @phpstan-ignore-next-line */

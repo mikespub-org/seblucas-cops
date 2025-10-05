@@ -681,7 +681,7 @@ $config['cops_epub_reader'] = 'monocle';
 $config['cops_comic_reader'] = '';
 
 /*
- * Choose pdfjs-viewer template URL when viewing pdf files online:
+ * Choose pdfjs-viewer template URL when viewing pdf files online: (dev only)
  * '' (default)
  * 'pdfjs-viewer.html?file='
  */

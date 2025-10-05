@@ -23,5 +23,8 @@
     "swagger-ui-dist": "^5.29.3",
     "twig": "^1.17.1"
   },
-  "license": "GPL-2.0-or-later"
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "pdfjs-dist": "^5.4.149"
+  }
 }

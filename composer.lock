@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "545ed63298cb0d036fedad417e7b3797",
+    "content-hash": "c3c5a736787b086f7a0e7e6140420656",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -204,6 +204,43 @@
                 "source": "https://github.com/mikespub-org/php-epub-meta/tree/3.5.2"
             },
             "time": "2025-09-17T16:04:03+00:00"
+        },
+        {
+            "name": "mikespub/web-comic-reader",
+            "version": "2025.10.07",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader.git",
+                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/afzafri-Web-Comic-Reader/zipball/8789c54519098d6bf68d205c11e1cd702deb1bf2",
+                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "afzafri",
+                    "homepage": "https://github.com/afzafri/Web-Comic-Reader",
+                    "role": "Developer"
+                },
+                {
+                    "name": "mikespub",
+                    "homepage": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Web Based cbr/cbz/cbt comic book reader. Written in HTML5 and Javascript",
+            "support": {
+                "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2025.10.07"
+            },
+            "time": "2025-10-05T11:52:30+00:00"
         },
         {
             "name": "npm-asset/babel--runtime",
@@ -1870,43 +1907,6 @@
                 }
             ],
             "time": "2025-09-17T16:07:22+00:00"
-        },
-        {
-            "name": "mikespub/web-comic-reader",
-            "version": "2025.10.07",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader.git",
-                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/afzafri-Web-Comic-Reader/zipball/8789c54519098d6bf68d205c11e1cd702deb1bf2",
-                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "afzafri",
-                    "homepage": "https://github.com/afzafri/Web-Comic-Reader",
-                    "role": "Developer"
-                },
-                {
-                    "name": "mikespub",
-                    "homepage": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Web Based cbr/cbz/cbt comic book reader. Written in HTML5 and Javascript",
-            "support": {
-                "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2025.10.07"
-            },
-            "time": "2025-10-05T11:52:30+00:00"
         },
         {
             "name": "mozilla/pdfjs-dist",

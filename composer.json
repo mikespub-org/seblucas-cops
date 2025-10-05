@@ -28,6 +28,7 @@
         "ext-zlib": "*",
         "mikespub/epubjs-reader": "^2025.09",
         "mikespub/php-epub-meta": "^3.5",
+        "mikespub/web-comic-reader": "^2025.10",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
         "npm-asset/jquery": "^3.7",
@@ -55,7 +56,6 @@
         "mikespub/epub-loader": "^3.6",
         "opis/json-schema": "^2.4",
         "webonyx/graphql-php": "^15.24",
-        "mikespub/web-comic-reader": "^2025.10",
         "mozilla/pdfjs-dist": "^5.4"
     },
     "suggest": {

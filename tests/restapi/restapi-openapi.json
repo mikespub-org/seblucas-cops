@@ -2,7 +2,7 @@
     "openapi": "3.0.3",
     "info": {
         "title": "COPS REST API",
-        "version": "3.7.2"
+        "version": "3.7.8"
     },
     "servers": [
         {
