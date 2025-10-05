@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b96aab222aaf4b8736f7c87fd55ae44d",
+    "content-hash": "bc6ae28108938a42f10a91aeb6f10de9",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1872,6 +1872,43 @@
             "time": "2025-09-17T16:07:22+00:00"
         },
         {
+            "name": "mikespub/web-comic-reader",
+            "version": "2025.10.07",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader.git",
+                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/afzafri-Web-Comic-Reader/zipball/8789c54519098d6bf68d205c11e1cd702deb1bf2",
+                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "afzafri",
+                    "homepage": "https://github.com/afzafri/Web-Comic-Reader",
+                    "role": "Developer"
+                },
+                {
+                    "name": "mikespub",
+                    "homepage": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Web Based cbr/cbz/cbt comic book reader. Written in HTML5 and Javascript",
+            "support": {
+                "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2025.10.07"
+            },
+            "time": "2025-10-05T11:52:30+00:00"
+        },
+        {
             "name": "myclabs/deep-copy",
             "version": "1.13.4",
             "source": {
@@ -2051,18 +2088,6 @@
                 "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.1"
             },
             "time": "2025-08-13T20:13:15+00:00"
-        },
-        {
-            "name": "npm-asset/mikespub--web-comic-reader",
-            "version": "2025.10.5",
-            "dist": {
-                "type": "tar",
-                "url": "https://registry.npmjs.org/@mikespub/web-comic-reader/-/web-comic-reader-2025.10.5.tgz"
-            },
-            "type": "npm-asset",
-            "license": [
-                "MIT"
-            ]
         },
         {
             "name": "npm-asset/ng2-pdfjs-viewer",

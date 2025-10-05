@@ -55,7 +55,7 @@
         "mikespub/epub-loader": "^3.6",
         "opis/json-schema": "^2.4",
         "webonyx/graphql-php": "^15.24",
-        "npm-asset/mikespub--web-comic-reader": "^2025.10",
+        "mikespub/web-comic-reader": "^2025.10",
         "npm-asset/ng2-pdfjs-viewer": "^25.0"
     },
     "suggest": {

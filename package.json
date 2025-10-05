@@ -3,9 +3,9 @@
   "packageManager": "yarn@4.10.3",
   "dependencies": {
     "@mikespub/epubjs-reader": "^2025.9.17",
-    "@mikespub/web-comic-reader": "^2025.10.5",
+    "@mikespub/web-comic-reader": "^2025.10.7",
     "bootstrap": "^5.3.8",
-    "bootstrap3": "npm:bootstrap@^3.4.1",
+    "bootstrap3": "npm:bootstrap@^5.3.8",
     "corejs-typeahead": "^1.3.4",
     "datatables.net": "^2.3.4",
     "datatables.net-bs5": "^2.3.4",
@@ -20,7 +20,7 @@
     "qrcodejs": "^1.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "swagger-ui-dist": "^5.29.1",
+    "swagger-ui-dist": "^5.29.3",
     "twig": "^1.17.1"
   },
   "license": "GPL-2.0-or-later"

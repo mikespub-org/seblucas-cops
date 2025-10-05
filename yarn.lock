@@ -187,10 +187,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikespub/web-comic-reader@npm:^2025.10.5":
-  version: 2025.10.5
-  resolution: "@mikespub/web-comic-reader@npm:2025.10.5"
-  checksum: 10c0/0c90981dd3db76789fcef6d90d8d8c04b8e267d977ba1ac3bcb416dd1ce54bf98b0ee9c81e1074508c7a9d6e71d84642565347a94e3def766aa7e135e5f76f4a
+"@mikespub/web-comic-reader@npm:^2025.10.7":
+  version: 2025.10.7
+  resolution: "@mikespub/web-comic-reader@npm:2025.10.7"
+  checksum: 10c0/116d8d7256b32921505820dc40980157372c2782b96914448d5e4ab6c23ca1e57c92fe969ef726fe3c59176bd79ab6b3bd57ff7c8280e5ca69b423e230539fa1
   languageName: node
   linkType: hard
 
@@ -903,14 +903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap3@npm:bootstrap@^3.4.1":
-  version: 3.4.1
-  resolution: "bootstrap@npm:3.4.1"
-  checksum: 10c0/3ac443985a432fd77f1d6df2972d8f0a06e93bb0e10893fa890e6503e6d2b36e601f4a9894429223afa867c2232ead1af5c55ded4c23a64dc706ca25e49dc2da
-  languageName: node
-  linkType: hard
-
-"bootstrap@npm:^5.3.8":
+"bootstrap3@npm:bootstrap@^5.3.8, bootstrap@npm:^5.3.8":
   version: 5.3.8
   resolution: "bootstrap@npm:5.3.8"
   peerDependencies:
@@ -1623,9 +1616,9 @@ __metadata:
   resolution: "seblucas-cops@workspace:."
   dependencies:
     "@mikespub/epubjs-reader": "npm:^2025.9.17"
-    "@mikespub/web-comic-reader": "npm:^2025.10.5"
+    "@mikespub/web-comic-reader": "npm:^2025.10.7"
     bootstrap: "npm:^5.3.8"
-    bootstrap3: "npm:bootstrap@^3.4.1"
+    bootstrap3: "npm:bootstrap@^5.3.8"
     corejs-typeahead: "npm:^1.3.4"
     datatables.net: "npm:^2.3.4"
     datatables.net-bs5: "npm:^2.3.4"
@@ -1640,7 +1633,7 @@ __metadata:
     qrcodejs: "npm:^1.0.0"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
-    swagger-ui-dist: "npm:^5.29.1"
+    swagger-ui-dist: "npm:^5.29.3"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1671,12 +1664,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.29.1":
-  version: 5.29.1
-  resolution: "swagger-ui-dist@npm:5.29.1"
+"swagger-ui-dist@npm:^5.29.3":
+  version: 5.29.3
+  resolution: "swagger-ui-dist@npm:5.29.3"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/b99b0171f3af5b37552c0b6da6e2e1fcf02e373876b0f8e6c0fdc522f00837c8b50c7800a71832f495e282579bd844e4a5160730035f9443903aeed2bf88a4d4
+  checksum: 10c0/18649da5ffdd79471dba64d19d0c9064fcd45ff5e1b1b7c9cc9afc000f10d35692c6e8155256789b6d40834804891a9db7b1ac388f0a0de8840a7aa46632806c
   languageName: node
   linkType: hard
 
