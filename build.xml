@@ -72,6 +72,7 @@
                 <exclude name="vendor/mozilla/pdfjs-dist/web/locale/**" />
                 <exclude name="vendor/mozilla/pdfjs-dist/web/standard_fonts/**" />
                 <exclude name="vendor/mozilla/pdfjs-dist/web/wasm/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/debugger.*" />
                 <exclude name="vendor/mozilla/pdfjs-dist/web/**.pdf" />
                 <exclude name="vendor/npm-asset/dot/benchmarks/**" />
                 <exclude name="vendor/npm-asset/dot/bin/**" />

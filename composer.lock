@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3c5a736787b086f7a0e7e6140420656",
+    "content-hash": "abb30a0c33156bbdf45b583a27820262",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -241,6 +241,20 @@
                 "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2025.10.07"
             },
             "time": "2025-10-05T11:52:30+00:00"
+        },
+        {
+            "name": "mozilla/pdfjs-dist",
+            "version": "5.4.296",
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.296/pdfjs-5.4.296-legacy-dist.zip"
+            },
+            "type": "library",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Legacy build for PDF.js from official release",
+            "homepage": "https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website"
         },
         {
             "name": "npm-asset/babel--runtime",
@@ -1907,20 +1921,6 @@
                 }
             ],
             "time": "2025-09-17T16:07:22+00:00"
-        },
-        {
-            "name": "mozilla/pdfjs-dist",
-            "version": "5.4.149",
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.149/pdfjs-5.4.149-legacy-dist.zip"
-            },
-            "type": "library",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "Legacy build for PDF.js from official release",
-            "homepage": "https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website"
         },
         {
             "name": "myclabs/deep-copy",

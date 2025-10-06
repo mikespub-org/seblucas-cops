@@ -681,9 +681,16 @@ $config['cops_epub_reader'] = 'monocle';
 $config['cops_comic_reader'] = '';
 
 /*
- * Choose pdfjs-viewer template URL when viewing pdf files online: (dev only)
+ * Choose pdfjs-viewer template URL when viewing pdf files online:
  * '' (default)
  * 'pdfjs-viewer.html?file='
+ *
+ * Note: the release package cops-3.x.x-php82.zip only contains
+ * minimal parts of the mozilla/pdfjs-dist package. If your PDF
+ * shows errors, please install the full package with composer:
+ *
+ * $ rm -r vendor/mozilla/pdfjs-dist/
+ * $ composer install -o
  */
 $config['cops_pdfjs_viewer'] = '';
 

@@ -16,7 +16,9 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
-  * ...
+  * Add minimal mozilla/pdfjs-dist to release package cops-3.x.x-php82.zip
+  * Upgrade mozilla/pdfjs-dist to v5.4.296 and refresh pdfjs-viewer template
+  * Hide dropzone in comic-reader if url is specified
 
 3.7.8 - 20251004 Add QR code, Comic Reader and PDF Viewer (dev only) + fixes
   * Changes in config/default.php file:

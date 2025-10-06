@@ -29,6 +29,7 @@
         "mikespub/epubjs-reader": "^2025.09",
         "mikespub/php-epub-meta": "^3.5",
         "mikespub/web-comic-reader": "^2025.10",
+        "mozilla/pdfjs-dist": "^5.4",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
         "npm-asset/jquery": "^3.7",
@@ -55,8 +56,7 @@
         "nikic/fast-route": "2.0.0-beta1",
         "mikespub/epub-loader": "^3.6",
         "opis/json-schema": "^2.4",
-        "webonyx/graphql-php": "^15.24",
-        "mozilla/pdfjs-dist": "^5.4"
+        "webonyx/graphql-php": "^15.24"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks"
@@ -81,11 +81,11 @@
             "package": {
                 "name": "mozilla/pdfjs-dist",
                 "description": "Legacy build for PDF.js from official release",
-                "version": "5.4.149",
+                "version": "5.4.296",
                 "homepage": "https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website",
                 "license": "Apache-2.0",
                 "dist": {
-                    "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.149/pdfjs-5.4.149-legacy-dist.zip",
+                    "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.296/pdfjs-5.4.296-legacy-dist.zip",
                     "type": "zip"
                 }
             }
