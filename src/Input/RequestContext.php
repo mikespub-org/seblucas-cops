@@ -89,7 +89,7 @@ class RequestContext
      * Update request parameters after route matching
      * @param array<mixed> $params from router match()
      */
-    public function updateRequest($params): void
+    public function updateRequest($params): Request
     {
         $default = $this->manager->getHandlerClass('html');
         if (empty($params[Request::HANDLER_PARAM])) {
@@ -102,6 +102,22 @@ class RequestContext
         foreach ($params as $name => $value) {
             $this->request->set($name, $value);
         }
+        return $this->request;
+    }
+
+    /**
+     * Load database config after request match & update
+     */
+    public function updateConfig(): Config
+    {
+        $database = $this->request->database();
+        $username = $this->request->getUserName();
+        $config = Config::getDatabaseConfig($database, $username);
+        if (!empty($config)) {
+            Config::load($config);
+            $this->config = new Config();
+        }
+        return $this->config;
     }
 
     public function resolveHandler(): BaseHandler

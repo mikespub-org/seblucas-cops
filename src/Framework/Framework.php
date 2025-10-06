@@ -85,6 +85,9 @@ class Framework
             $params = $context->matchRequest();
             $handler = $context->resolveHandler();
 
+            // load database-dependent config here?
+            $context->updateConfig();
+
             // Apply middleware if configured
             if (!empty(self::$middlewares)) {
                 $queue = new QueueBasedHandler($context, $handler);

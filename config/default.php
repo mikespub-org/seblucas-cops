@@ -3,7 +3,10 @@
 /**
  * COPS (Calibre OPDS PHP Server) default configuration
  * Settings can be overridden in config/local.php and
- * optional config/local.{remote_user}.php
+ * optional config/local.{remote_user}.php and
+ * for request handling options only:
+ * optional config/local.db-{database}.php (using db number 0, 1, ...) or
+ * optional config/local.{remote_user}.db-{database}.php (using db number 0, 1, ... of remote_user)
  *
  * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>

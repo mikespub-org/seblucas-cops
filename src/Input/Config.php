@@ -77,7 +77,7 @@ class Config
     }
 
     /**
-     * Summary of getDefaultConfig
+     * Get config/default.php
      * @return array<string, mixed>
      */
     public static function getDefaultConfig()
@@ -89,13 +89,60 @@ class Config
     }
 
     /**
-     * Summary of getLocalConfig
+     * Get config/local.php
      * @return array<string, mixed>
      */
     public static function getLocalConfig()
     {
         $config = [];
         $filepath = dirname(__DIR__, 2) . '/config/local.php';
+        if (file_exists($filepath)) {
+            require $filepath;  // NOSONAR
+        }
+        return $config;
+    }
+
+    /**
+     * Get config/local.{$username}.php
+     * @param string $username
+     * @return array<string, mixed>
+     */
+    public static function getUserConfig($username)
+    {
+        $config = [];
+        // Clean username, only allow a-z, A-Z, 0-9, -_ chars
+        $username = preg_replace('/[^a-zA-Z0-9_-]/', '', $username);
+        if (empty($username)) {
+            return $config;
+        }
+        $filepath = dirname(__DIR__, 2) . '/config/local.' . $username . '.php';
+        if (file_exists($filepath)) {
+            require $filepath;  // NOSONAR
+        }
+        return $config;
+    }
+
+    /**
+     * Get config/local.{$username}.db-{$database}.php or config/local.db-{$database}.php
+     * @param ?int $database
+     * @param ?string $username
+     * @return array<string, mixed>
+     */
+    public static function getDatabaseConfig($database, $username = null)
+    {
+        $config = [];
+        $database ??= 0;
+        $username ??= '';
+        // Clean username, only allow a-z, A-Z, 0-9, -_ chars
+        $username = preg_replace('/[^a-zA-Z0-9_-]/', '', $username);
+        if (!empty($username)) {
+            $filepath = dirname(__DIR__, 2) . '/config/local.' . $username . '.db-' . $database . '.php';
+            if (file_exists($filepath)) {
+                require $filepath;  // NOSONAR
+            }
+            return $config;
+        }
+        $filepath = dirname(__DIR__, 2) . '/config/local.db-' . $database . '.php';
         if (file_exists($filepath)) {
             require $filepath;  // NOSONAR
         }
