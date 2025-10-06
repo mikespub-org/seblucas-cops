@@ -17,7 +17,7 @@
     </div> <!-- loading spinner -->
 
     <center>
-        <fieldset>
+        <fieldset id="fieldset" style="display:none">
             <legend>
                 <button class="tab-button active" id="tab" tab="upload">Choose file from your computer</button>
             </legend>
@@ -30,8 +30,6 @@
 
             <br>
         </fieldset>
-
-        <br><br>
 
         <!-- output comics images here -->
         <div id="output"></div>
@@ -53,6 +51,15 @@
     <script src="https://unpkg.com/lightgallery@1/dist/js/lightgallery-all.min.js"></script>
     <script src="https://unpkg.com/dropzone/dist/dropzone-min.js"></script>
     <script src="../vendor/mikespub/web-comic-reader/assets/js/script.js"></script>
+    <script>
+        // display fieldset with dropzone if no ?url=... parameter is given
+        let params = new URLSearchParams(document.location.search);
+        let link = params.get("url");
+        if (link === null || link === "") {
+            let fieldsetElement = document.getElementById('fieldset');
+            fieldsetElement.style = "display:inline-block";
+        }
+    </script>
 </body>
 
 </html>
