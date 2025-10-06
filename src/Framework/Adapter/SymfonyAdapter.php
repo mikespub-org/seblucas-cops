@@ -95,7 +95,8 @@ class SymfonyAdapter implements AdapterInterface
     {
         return function (SymfonyRequest $request) use ($copsManager, $copsRouter, $defaults): SymfonyResponse {
             // 1. Convert Symfony Request to COPS Request
-            $copsRequest = new CopsRequest();
+            $copsRequest = new CopsRequest(false);
+            $copsRequest->serverParams = $request->headers->all();
             $copsRequest->setPath($request->getPathInfo());
             $copsRequest->urlParams = array_merge(
                 $defaults,

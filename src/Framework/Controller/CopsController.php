@@ -19,7 +19,8 @@ class CopsController
     public function __invoke(SymfonyRequest $request): SymfonyResponse
     {
         // 1. Convert Symfony Request to COPS Request
-        $copsRequest = new CopsRequest();
+        $copsRequest = new CopsRequest(false);
+        $copsRequest->serverParams = $request->headers->all();
         $copsRequest->setPath($request->getPathInfo());
 
         // Get defaults and route params from Symfony request attributes

@@ -29,7 +29,8 @@ class CopsAction
         $handlerName = $defaults['_handler'] ?? 'html';
 
         // 1. Convert PSR-7 Request to COPS Request
-        $copsRequest = new CopsRequest();
+        $copsRequest = new CopsRequest(false);
+        $copsRequest->serverParams = $request->getServerParams();
         $copsRequest->setPath($request->getUri()->getPath());
         $copsRequest->urlParams = array_merge($defaults, $args, $request->getQueryParams());
 

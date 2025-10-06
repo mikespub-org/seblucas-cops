@@ -76,7 +76,8 @@ class LaravelAdapter implements AdapterInterface
     {
         return function (LaravelRequest $request) use ($copsManager, $copsRouter, $defaults): LaravelResponse {
             // 1. Convert Laravel Request to COPS Request
-            $copsRequest = new CopsRequest();
+            $copsRequest = new CopsRequest(false);
+            $copsRequest->serverParams = $request->headers->all();
             $copsRequest->setPath($request->getPathInfo());
             $copsRequest->urlParams = array_merge(
                 $defaults,
