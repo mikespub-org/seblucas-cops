@@ -3,13 +3,9 @@
 namespace SebLucas\Cops\Framework\Adapter;
 
 use Psr\Container\ContainerInterface;
+use SebLucas\Cops\Framework\Controller\CopsController;
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\Request as CopsRequest;
-use SebLucas\Cops\Input\RequestContext;
-use SebLucas\Cops\Output\Response as CopsResponse;
 use SebLucas\Cops\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -56,69 +52,45 @@ class SymfonyAdapter implements AdapterInterface
     {
         /** @var \Symfony\Component\Routing\RouterInterface $symfonyRouter */
         $symfonyRouter = $this->container->get('router');
-        $routeCollection = new RouteCollection();
-
-        $copsManager = $this->getHandlerManager();
-        $copsRoutes = $copsManager->getRoutes();
-        $copsRouter = $this->getRouter();
-
-        foreach ($copsRoutes as $name => $routeConfig) {
-            [$path, $defaults] = $routeConfig;
-            $methods = $routeConfig[2] ?? ['GET'];
-
-            // Define the controller as a callable that bridges to COPS
-            $controller = $this->getRouteCallable($copsManager, $copsRouter, $defaults);
-
-            $defaults['_controller'] = $controller;
-
-            $route = new Route(
-                $path,
-                $defaults,
-                [],
-                [],
-                '',
-                [],
-                $methods
-            );
-            $routeCollection->add($name, $route);
-        }
+        $routeCollection = $this->getRouteCollection();
 
         // Add the new collection to the main router
         $symfonyRouter->getRouteCollection()->addCollection($routeCollection);
     }
 
     /**
-     * Summary of getRouteCallable
-     * @param array<mixed> $defaults
+     * Get all COPS routes as a Symfony RouteCollection.
+     *
+     * This method is intended to be used by a dynamic route loader in a Symfony application,
+     * as described in the framework integration documentation.
+     *
+     * @return RouteCollection
      */
-    protected function getRouteCallable(HandlerManager $copsManager, RouterInterface $copsRouter, array $defaults): callable
+    public function getRouteCollection(): RouteCollection
     {
-        return function (SymfonyRequest $request) use ($copsManager, $copsRouter, $defaults): SymfonyResponse {
-            // 1. Convert Symfony Request to COPS Request
-            $copsRequest = new CopsRequest(false);
-            $copsRequest->serverParams = $request->headers->all();
-            $copsRequest->setPath($request->getPathInfo());
-            $copsRequest->urlParams = array_merge(
+        $collection = new RouteCollection();
+        $copsManager = $this->getHandlerManager();
+        $copsRoutes = $copsManager->getRoutes();
+
+        foreach ($copsRoutes as $name => $routeConfig) {
+            [$path, $defaults] = $routeConfig;
+            $methods = $routeConfig[2] ?? ['GET'];
+
+            // Set the generic CopsController for all routes
+            $defaults['_controller'] = CopsController::class;
+
+            $route = new Route(
+                $path,
                 $defaults,
-                $request->attributes->get('_route_params', []),
-                $request->query->all(),
+                [], // requirements are parsed from path
+                [], // options
+                '', // host
+                [], // schemes
+                $methods
             );
+            $collection->add($name, $route);
+        }
 
-            // We need to set a context on the handler manager for it to create a handler
-            $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
-            $copsManager->setContext($context);
-
-            // 2. Resolve and handle the request using COPS components
-            $handlerName = $defaults['_handler'] ?? 'html';
-            $handler = $copsManager->createHandler($handlerName);
-            $copsResponse = $handler->handle($copsRequest);
-
-            // 3. Convert COPS Response to Symfony Response
-            return new SymfonyResponse(
-                $copsResponse->getContent(),
-                $copsResponse->getStatusCode(),
-                $copsResponse->getHeaders(),
-            );
-        };
+        return $collection;
     }
 }

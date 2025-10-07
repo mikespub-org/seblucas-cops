@@ -35,6 +35,8 @@ class CopsController
 
         // We need to set a context on the handler manager for it to create a handler
         $context = new RequestContext($copsRequest, $this->copsManager, $this->copsRouter);
+        // load database-dependent config here?
+        $context->updateConfig();
         $this->copsManager->setContext($context);
 
         // 2. Resolve and handle the request using COPS components

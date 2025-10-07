@@ -11,6 +11,10 @@ $tooltips['calibre_directory'] = <<<'EOT'
         "My database name" => "/home/directory/calibre1/",
         "My other database name" => "/home/directory/calibre2/",
     ];
+    Each user can have its own set of databases in config/local.{remote_user}.php
+    Each database can have its own config options in config/local.db-{database}.php
+    for common database setup, or config/local.{remote_user}.db-{database}.php for
+    user-specific set of databases (see issue #160)
     EOT;
 
 $tooltips['calibre_internal_directory'] = <<<'EOT'
@@ -585,6 +589,25 @@ $tooltips['cops_epub_reader'] = <<<'EOT'
     Choose preferred epub reader when viewing epub files online:
     'monocle' (default)
     'epubjs'
+    EOT;
+
+$tooltips['cops_comic_reader'] = <<<'EOT'
+    Choose comic-reader template URL when viewing comic files online:
+    '' (default)
+    'comic-reader.html?url='
+    EOT;
+
+$tooltips['cops_pdfjs_viewer'] = <<<'EOT'
+    Choose pdfjs-viewer template URL when viewing pdf files online:
+    '' (default)
+    'pdfjs-viewer.html?file='
+
+    Note: the release package cops-3.x.x-php82.zip only contains
+    minimal parts of the mozilla/pdfjs-dist package. If your PDF
+    shows errors, please install the full package with composer:
+
+    $ rm -r vendor/mozilla/pdfjs-dist/
+    $ composer install -o
     EOT;
 
 $tooltips['cops_customize'] = <<<'EOT'
