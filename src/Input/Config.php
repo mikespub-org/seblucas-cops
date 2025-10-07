@@ -139,8 +139,10 @@ class Config
             $filepath = dirname(__DIR__, 2) . '/config/local.' . $username . '.db-' . $database . '.php';
             if (file_exists($filepath)) {
                 require $filepath;  // NOSONAR
+                // username-specific database setup
+                return $config;
             }
-            return $config;
+            // common database setup across users
         }
         $filepath = dirname(__DIR__, 2) . '/config/local.db-' . $database . '.php';
         if (file_exists($filepath)) {
