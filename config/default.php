@@ -5,7 +5,7 @@
  * Settings can be overridden in config/local.php and
  * optional config/local.{remote_user}.php and
  * for request handling options only:
- * optional config/local.db-{database}.php (using db number 0, 1, ...) or
+ * optional config/local.db-{database}.php (using db number 0, 1, ... across users) or
  * optional config/local.{remote_user}.db-{database}.php (using db number 0, 1, ... of remote_user)
  *
  * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
@@ -26,6 +26,10 @@ if (!isset($config)) {
  *     "My database name" => "/home/directory/calibre1/",
  *     "My other database name" => "/home/directory/calibre2/",
  * ];
+ * Each user can have its own set of databases in config/local.{remote_user}.php
+ * Each database can have its own config options in config/local.db-{database}.php
+ * for common database setup, or config/local.{remote_user}.db-{database}.php for
+ * user-specific set of databases (see issue #160)
  */
 $config['calibre_directory'] = './';
 

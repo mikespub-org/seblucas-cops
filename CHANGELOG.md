@@ -16,6 +16,7 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Support user-specific or common database config files - see #160 from @tgiraud
   * Add minimal mozilla/pdfjs-dist to release package cops-3.x.x-php82.zip
   * Upgrade mozilla/pdfjs-dist to v5.4.296 and refresh pdfjs-viewer template
   * Hide dropzone in comic-reader if url is specified
