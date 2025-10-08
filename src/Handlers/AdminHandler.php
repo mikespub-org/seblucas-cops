@@ -433,7 +433,7 @@ if (!isset($config)) {
      * Summary of getContent
      * @param Request $request
      * @param array<string, mixed> $data
-     * @param string $name = admin.html
+     * @param string $name = index.html
      * @return string
      */
     public function getContent($request, $data, $name = 'index.html')
