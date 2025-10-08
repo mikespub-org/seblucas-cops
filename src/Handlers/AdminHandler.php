@@ -29,7 +29,7 @@ class AdminHandler extends BaseHandler
     public const PREFIX = "/admin";
     public const PARAMLIST = ["action"];
 
-    protected string $template = 'templates/admin.html';
+    protected string $templateDir = 'templates/admin';
     /** @var array<string, string> */
     protected array $tooltips = [];
 
@@ -259,7 +259,7 @@ class AdminHandler extends BaseHandler
             'link' => self::route('admin'),
             'home' => 'Admin',
         ];
-        return $response->setContent($this->getContent($request, $data, 'admin-config.html'));
+        return $response->setContent($this->getContent($request, $data, 'config.html'));
     }
 
     /**
@@ -436,11 +436,11 @@ if (!isset($config)) {
      * @param string $name = admin.html
      * @return string
      */
-    public function getContent($request, $data, $name = 'admin.html')
+    public function getContent($request, $data, $name = 'index.html')
     {
-        $request->cookieParams['template'] = 'twigged';
+        $request->cookieParams['template'] = basename($this->templateDir);
         $template = new TwigTemplate($request);
-        $twig = $template->getTwigEnvironment('templates');
+        $twig = $template->getTwigEnvironment($this->templateDir);
         $getTypeFunction = new \Twig\TwigFunction('get_type', function ($value) {
             if (is_iterable($value)) {
                 return 'array';

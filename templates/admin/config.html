@@ -109,7 +109,7 @@
                             {% elseif type == 'string' %}
                                 {% if key == 'cops_template' %}
                                     <select id="{{ key }}" name="{{ key }}">
-                                        {% for option in ['default', 'bootstrap', 'bootstrap2', 'bootstrap5', 'twigged', 'admin'] %}
+                                        {% for option in ['default', 'bootstrap', 'bootstrap2', 'bootstrap5', 'twigged'] %}
                                             <option value="{{ option }}"{{ option == value ? ' selected' : '' }}>{{ option }}</option>
                                         {% endfor %}
                                     </select>
