@@ -14,6 +14,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Output\TwigTemplate;
 use SebLucas\Cops\Calibre\Database;
 use Exception;
 use JsonException;
@@ -87,25 +88,39 @@ class AdminHandler extends BaseHandler
         $updated = $this->getUpdatedConfig();
         $writable = $this->isLocalConfigWritable();
 
-        $content = 'Admin - TODO';
-        $content .= '<ol>';
-        $content .= '<li><a href="./admin/clearcache">Clear Thumbnail Cache</a> with ' . $count . ' files (' . $size . ' MB)</li>';
+        $actions = [];
+        $actions[] = [
+            'url' => self::route('admin-clearcache'),
+            'title' => 'Clear Thumbnail Cache',
+            'description' => 'with ' . $count . ' files (' . $size . ' MB)',
+        ];
+        $config_desc = 'with ' . count($updated) . ' modified config settings';
         if (!$writable) {
-            $content .= '<li><a href="./admin/config">Edit Local Config</a> with ' . count($updated) . ' modified config settings (read-only)</li>';
-        } else {
-            $content .= '<li><a href="./admin/config">Edit Local Config</a> with ' . count($updated) . ' modified config settings</li>';
+            $config_desc .= ' (read-only)';
         }
-        $content .= '<li><a href="./admin/checkbooks">Check Books</a></li>';
-        $content .= '<li><a href="./admin/action">Admin Action</a></li>';
-        $content .= '</ol>';
+        $actions[] = [
+            'url' => self::route('admin-config'),
+            'title' => 'Edit Local Config',
+            'description' => $config_desc,
+        ];
+        $actions[] = [
+            'url' => self::route('admin-checkbooks'),
+            'title' => 'Check Books',
+            'description' => 'Verify that all book files exist on disk.',
+        ];
+        $actions[] = [
+            'url' => self::route('admin-action'),
+            'title' => 'Admin Action',
+            'description' => 'A placeholder for future actions.',
+        ];
 
         $data = [
             'title' => 'Admin Features',
-            'content' => $content,
+            'actions' => $actions,
             'link' => PageHandler::link(),
             'home' => 'Home',
         ];
-        return $response->setContent(Format::template($data, $this->template));
+        return $response->setContent($this->getContent($request, $data));
     }
 
     /**
@@ -132,7 +147,7 @@ class AdminHandler extends BaseHandler
             'link' => self::route('admin'),
             'home' => 'Admin',
         ];
-        return $response->setContent(Format::template($data, $this->template));
+        return $response->setContent($this->getContent($request, $data));
     }
 
     /**
@@ -175,17 +190,17 @@ class AdminHandler extends BaseHandler
         if ($request->method() == "POST" && !empty($request->postParams)) {
             $posted = $request->postParams;
         }
-        $default = Config::getDefaultConfig();
-        $local = Config::getLocalConfig();
         $changes = [];
         $errors = 0;
+        $default = Config::getDefaultConfig();
+        $local = $this->getUpdatedConfig(Config::getLocalConfig(), $default);
         foreach ($posted as $key => $value) {
             if (!array_key_exists($key, $default)) {
                 continue;
             }
-            // @todo handle case where default is string and local is array, e.g. calibre_directory
-            // @todo handle case where default is null and local is string or array, e.g. cops_basic_authentication
-            if (!is_string($default[$key])) {
+            if (is_bool($default[$key])) {
+                $value = in_array($value, ["on", "1", "true"]);
+            } elseif (!is_string($default[$key])) {
                 if ($value === "") {
                     $value = $default[$key];
                 } else {
@@ -193,7 +208,7 @@ class AdminHandler extends BaseHandler
                         $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
                     } catch (JsonException) {
                         $errors += 1;
-                        $changes[$key] = "Invalid JSON value!";
+                        $changes[$key] = '<span style="color: red;">Invalid JSON value!</span>';
                         $value = $local[$key] ?? $default[$key];
                         // send error here
                     }
@@ -204,7 +219,7 @@ class AdminHandler extends BaseHandler
                 continue;
             }
             if (!array_key_exists($key, $local) || $value !== $local[$key]) {
-                $changes[$key] = $value;
+                $changes[$key] = 'Value updated.';
             }
             // update local values based on posted
             $local[$key] = $value;
@@ -221,58 +236,30 @@ class AdminHandler extends BaseHandler
         $others = array_filter($default, function ($key) use ($updated, $original) {
             return !array_key_exists($key, $updated) && !array_key_exists($key, $original);
         }, ARRAY_FILTER_USE_KEY);
+        ksort($updated);
+        ksort($original);
+        ksort($others);
 
-        $content = 'Edit Local Config - TODO with ' . count($updated) . ' modified config settings';
         $writable = $this->isLocalConfigWritable();
-        if (!$writable) {
-            $content .= ' (read-only)<p>Warning: config/local.php cannot be written by the web server - this is actually a good thing security-wise, but it also means this action will not work...</p>';
-        } elseif ($errors) {
-            $content .= ' (errors)<p>Warning: please correct the errors for the changes below</p>';
-        } elseif (!empty($changes)) {
-            // save changes
-            $output = '';
-            foreach ($local as $key => $value) {
-                $title = $this->getTooltip($key);
-                if (!empty($title)) {
-                    $output .= "/*\n * ";
-                    $output .= str_replace("\n", "\n * ", trim($title));
-                    $output .= "\n */\n";
-                }
-                $output .= "\$config['$key'] = " . json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . ";\n\n";
-            }
-            $filepath = $this->getLocalConfigPath();
-            $header = $this->getConfigHeader();
-            file_put_contents($filepath, $header . $output);
-            $content .= '<pre>';
-            $content .= $output;
-            $content .= '</pre>';
+        if ($writable && !$errors && !empty($changes)) {
+            $this->saveLocalConfig($updated);
         }
-        if (!empty($changes)) {
-            $content .= '<p>Changes to apply - TODO</p>';
-            $content .= '<pre>' . json_encode($changes, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . '</pre>' . "\n";
-        }
-        $content .= '<form id="configForm" method="POST"><table id="configTable">';
-        $content .= '<thead><tr><th>Config Setting</th><th>Value</th><th>Type</th></tr></thead>';
-        $content .= '<tr><th colspan="3">Local Modified</th></tr>' . "\n";
-        $content .= $this->addConfigSettings($updated);
-        $content .= '<tr><th colspan="3">Local Unchanged</th></tr>';
-        $content .= $this->addConfigSettings($original);
-        $content .= '<tr><th colspan="3">Default Others</th></tr>';
-        $content .= $this->addConfigSettings($others);
-        if (!$writable && false) {
-            $content .= '<tr><td></td><td><input id="submit" type="submit" disabled="disabled" /></td><td></td></tr>';
-        } else {
-            $content .= '<tr><td></td><td><input id="submit" type="submit" /></td><td></td></tr>';
-        }
-        $content .= '</table></form>';
 
         $data = [
             'title' => 'Edit Local Config',
-            'content' => $content,
+            'writable' => $writable,
+            'errors' => $errors,
+            'changes' => $changes,
+            'updated' => $updated,
+            'original' => $original,
+            'others' => $others,
+            'default' => $default,
+            'tooltips' => $this->getTooltips(),
+            'files' => Config::listLocalConfigFiles(),
             'link' => self::route('admin'),
             'home' => 'Admin',
         ];
-        return $response->setContent(Format::template($data, $this->template));
+        return $response->setContent($this->getContent($request, $data, 'admin-config.html'));
     }
 
     /**
@@ -317,24 +304,25 @@ class AdminHandler extends BaseHandler
     }
 
     /**
-     * Summary of addConfigSettings
-     * @param array<string, mixed> $array
-     * @return string
+     * Summary of saveLocalConfig
+     * @param array<string, mixed> $updated
+     * @return void
      */
-    protected function addConfigSettings($array)
+    protected function saveLocalConfig($updated)
     {
-        $content = '';
-        foreach ($array as $key => $value) {
-            $json = '';
-            if (!is_string($value)) {
-                $json = ' (' . gettype($value) . ')';
-                $value = json_encode($value, JSON_UNESCAPED_SLASHES);
+        $output = '';
+        foreach ($updated as $key => $value) {
+            $title = $this->getTooltip($key);
+            if (!empty($title)) {
+                $output .= "/*\n * ";
+                $output .= str_replace("\n", "\n * ", trim($title));
+                $output .= "\n */\n";
             }
-            $value = htmlspecialchars($value);
-            $title = htmlspecialchars($this->getTooltip($key));
-            $content .= '<tr><td><label for="' . $key . '" title="' . $title . '">' . $key . '</label></td><td><input type="text" id="' . $key . '" name="' . $key . '" value="' . $value . '" size="50" /></td><td>' . $json . '</td></tr>' . "\n";
+            $output .= "\$config['$key'] = " . Format::export($value) . ";\n\n";
         }
-        return $content;
+        $filepath = $this->getLocalConfigPath();
+        $header = $this->getConfigHeader();
+        file_put_contents($filepath, $header . $output);
     }
 
     /**
@@ -368,11 +356,23 @@ if (!isset($config)) {
     protected function getTooltip($key)
     {
         if (empty($this->tooltips)) {
+            $this->getTooltips();
+        }
+        return $this->tooltips[$key] ?? '';
+    }
+
+    /**
+     * Summary of getTooltips
+     * @return array<string, string>
+     */
+    protected function getTooltips()
+    {
+        if (empty($this->tooltips)) {
             require dirname(__DIR__, 2) . '/config/tooltips.php';  // NOSONAR
             /** @var array<string, string> $tooltips */
             $this->tooltips = $tooltips;
         }
-        return $this->tooltips[$key] ?? '';
+        return $this->tooltips;
     }
 
     /**
@@ -409,7 +409,7 @@ if (!isset($config)) {
             'link' => self::route('admin'),
             'home' => 'Admin',
         ];
-        return $response->setContent(Format::template($data, $this->template));
+        return $response->setContent($this->getContent($request, $data));
     }
 
     /**
@@ -426,6 +426,28 @@ if (!isset($config)) {
             'link' => self::route('admin'),
             'home' => 'Admin',
         ];
-        return $response->setContent(Format::template($data, $this->template));
+        return $response->setContent($this->getContent($request, $data));
+    }
+
+    /**
+     * Summary of getContent
+     * @param Request $request
+     * @param array<string, mixed> $data
+     * @param string $name = admin.html
+     * @return string
+     */
+    public function getContent($request, $data, $name = 'admin.html')
+    {
+        $request->cookieParams['template'] = 'twigged';
+        $template = new TwigTemplate($request);
+        $twig = $template->getTwigEnvironment('templates');
+        $getTypeFunction = new \Twig\TwigFunction('get_type', function ($value) {
+            if (is_iterable($value)) {
+                return 'array';
+            }
+            return gettype($value);
+        });
+        $twig->addFunction($getTypeFunction);
+        return $twig->render($name, ['it' => $data]);
     }
 }

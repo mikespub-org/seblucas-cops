@@ -150,4 +150,18 @@ class Config
         }
         return $config;
     }
+
+    /**
+     * List config/local.*.php files
+     * @return array<string>
+     */
+    public static function listLocalConfigFiles()
+    {
+        $files = [];
+        $dirpath = dirname(__DIR__, 2) . '/config';
+        foreach (glob($dirpath . '/local.*.php') as $filename) {
+            $files[] = basename($filename);
+        }
+        return $files;
+    }
 }
