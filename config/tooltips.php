@@ -589,12 +589,14 @@ $tooltips['cops_epub_reader'] = <<<'EOT'
     Choose preferred epub reader when viewing epub files online:
     'monocle' (default)
     'epubjs'
+    'custom-reader.html?url=' (custom reader template - adapt as needed)
     EOT;
 
 $tooltips['cops_comic_reader'] = <<<'EOT'
     Choose comic-reader template URL when viewing comic files online:
     '' (default)
     'comic-reader.html?url='
+    'codedread-kthoom.html?bookUri=' (with mikespub/codedread-kthoom package)
     EOT;
 
 $tooltips['cops_pdfjs_viewer'] = <<<'EOT'

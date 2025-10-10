@@ -677,6 +677,7 @@ $config['cops_api_key'] = '';
  * Choose preferred epub reader when viewing epub files online:
  * 'monocle' (default)
  * 'epubjs'
+ * 'custom-reader.html?url=' (custom reader template - adapt as needed)
  */
 $config['cops_epub_reader'] = 'monocle';
 
