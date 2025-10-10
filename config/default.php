@@ -684,6 +684,7 @@ $config['cops_epub_reader'] = 'monocle';
  * Choose comic-reader template URL when viewing comic files online:
  * '' (default)
  * 'comic-reader.html?url='
+ * 'codedread-kthoom.html?bookUri=' (with mikespub/codedread-kthoom package)
  */
 $config['cops_comic_reader'] = '';
 

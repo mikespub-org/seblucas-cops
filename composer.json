@@ -59,7 +59,8 @@
         "webonyx/graphql-php": "^15.24"
     },
     "suggest": {
-        "mikespub/epub-loader": "epub-loader is a utility package for ebooks"
+        "mikespub/epub-loader": "epub-loader is a utility package for ebooks",
+        "mikespub/codedread-kthoom": "Comic Book Reader alternative for web-comic-reader"
     },
     "autoload": {
         "classmap": [

@@ -1448,7 +1448,7 @@
     "packages-dev": [
         {
             "name": "illuminate/collections",
-            "version": "v12.32.5",
+            "version": "v12.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -1507,7 +1507,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v12.32.5",
+            "version": "v12.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1553,7 +1553,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v12.32.5",
+            "version": "v12.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1601,7 +1601,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v12.32.5",
+            "version": "v12.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -2105,16 +2105,16 @@
         },
         {
             "name": "opis/json-schema",
-            "version": "2.4.1",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/opis/json-schema.git",
-                "reference": "712827751c62b465daae6e725bf0cf5ffbf965e1"
+                "reference": "1c59bfd514856a98c01ad0c121f6b915576f9198"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/opis/json-schema/zipball/712827751c62b465daae6e725bf0cf5ffbf965e1",
-                "reference": "712827751c62b465daae6e725bf0cf5ffbf965e1",
+                "url": "https://api.github.com/repos/opis/json-schema/zipball/1c59bfd514856a98c01ad0c121f6b915576f9198",
+                "reference": "1c59bfd514856a98c01ad0c121f6b915576f9198",
                 "shasum": ""
             },
             "require": {
@@ -2164,9 +2164,9 @@
             ],
             "support": {
                 "issues": "https://github.com/opis/json-schema/issues",
-                "source": "https://github.com/opis/json-schema/tree/2.4.1"
+                "source": "https://github.com/opis/json-schema/tree/2.5.0"
             },
-            "time": "2024-12-30T20:20:21+00:00"
+            "time": "2025-10-08T15:35:41+00:00"
         },
         {
             "name": "opis/string",
@@ -5026,16 +5026,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.24.0",
+            "version": "v15.25.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "030a04d22d52d7fc07049d0e3b683d2b40f90457"
+                "reference": "60ef919138a171bdca5fc22c1e9aea8bbc59e5b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/030a04d22d52d7fc07049d0e3b683d2b40f90457",
-                "reference": "030a04d22d52d7fc07049d0e3b683d2b40f90457",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/60ef919138a171bdca5fc22c1e9aea8bbc59e5b7",
+                "reference": "60ef919138a171bdca5fc22c1e9aea8bbc59e5b7",
                 "shasum": ""
             },
             "require": {
@@ -5048,14 +5048,14 @@
                 "amphp/http-server": "^2.1",
                 "dms/phpunit-arraysubset-asserts": "dev-master",
                 "ergebnis/composer-normalize": "^2.28",
-                "friendsofphp/php-cs-fixer": "3.86.0",
+                "friendsofphp/php-cs-fixer": "3.88.2",
                 "mll-lab/php-cs-fixer-config": "5.11.0",
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "2.1.22",
+                "phpstan/phpstan": "2.1.30",
                 "phpstan/phpstan-phpunit": "2.0.7",
-                "phpstan/phpstan-strict-rules": "2.0.6",
+                "phpstan/phpstan-strict-rules": "2.0.7",
                 "phpunit/phpunit": "^9.5 || ^10.5.21 || ^11",
                 "psr/http-message": "^1 || ^2",
                 "react/http": "^1.6",
@@ -5063,7 +5063,8 @@
                 "rector/rector": "^2.0",
                 "symfony/polyfill-php81": "^1.23",
                 "symfony/var-exporter": "^5 || ^6 || ^7",
-                "thecodingmachine/safe": "^1.3 || ^2 || ^3"
+                "thecodingmachine/safe": "^1.3 || ^2 || ^3",
+                "ticketswap/phpstan-error-formatter": "1.2.3"
             },
             "suggest": {
                 "amphp/http-server": "To leverage async resolving with webserver on AMPHP platform",
@@ -5088,7 +5089,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.24.0"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.25.1"
             },
             "funding": [
                 {
@@ -5096,7 +5097,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2025-08-20T10:09:37+00:00"
+            "time": "2025-10-08T10:29:48+00:00"
         }
     ],
     "aliases": [],
