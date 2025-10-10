@@ -200,27 +200,7 @@ class JsonRenderer extends BaseRenderer
                     $tab ["mail"] = 1;
                 }
             }
-            if ($data->format == "EPUB" && Config::get('epub_reader')) {
-                if (in_array(Config::get('epub_reader'), ['monocle', 'epubjs'])) {
-                    // use standard epub reader here
-                    $params = [];
-                    $params['data'] = $data->id;
-                    $params['db'] = $database;
-                    $params['title'] = $book->getTitle();
-                    $tab ["readerUrl"] = self::$reader::route('read-title', $params);
-                } else {
-                    // use templates/custom-reader?url=... format here for now
-                    $tab ["readerUrl"] = $this->getPath('templates/' . Config::get('epub_reader')) . $data->getHtmlLink();
-                }
-            }
-            // use templates/comic-reader?url=... format here for now
-            if (in_array($data->format, ["CBZ", "CBR", "CBT"]) && Config::get('comic_reader')) {
-                $tab ["readerUrl"] = $this->getPath('templates/' . Config::get('comic_reader')) . $data->getHtmlLink();
-            }
-            // use templates/pdfjs-viewer?file=... format here for now
-            if ($data->format == "PDF" && Config::get('pdfjs_viewer')) {
-                $tab ["readerUrl"] = $this->getPath('templates/' . Config::get('pdfjs_viewer')) . $data->getHtmlLink();
-            }
+            $tab ["readerUrl"] = self::$reader::getReaderUrl($data);
             array_push($out ["datas"], $tab);
         }
         $out ["extraFiles"] = [];
