@@ -1755,7 +1755,7 @@ __metadata:
     qrcodejs: "npm:^1.0.0"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
-    swagger-ui-dist: "npm:^5.29.3"
+    swagger-ui-dist: "npm:^5.29.4"
     twig: "npm:^1.17.1"
   languageName: unknown
   linkType: soft
@@ -1786,12 +1786,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swagger-ui-dist@npm:^5.29.3":
-  version: 5.29.3
-  resolution: "swagger-ui-dist@npm:5.29.3"
+"swagger-ui-dist@npm:^5.29.4":
+  version: 5.29.4
+  resolution: "swagger-ui-dist@npm:5.29.4"
   dependencies:
     "@scarf/scarf": "npm:=1.4.0"
-  checksum: 10c0/18649da5ffdd79471dba64d19d0c9064fcd45ff5e1b1b7c9cc9afc000f10d35692c6e8155256789b6d40834804891a9db7b1ac388f0a0de8840a7aa46632806c
+  checksum: 10c0/6be6f3824311160f51ead82b490c692ba0ef0cf2caf7dde222fbde349ebb45be1aa65ad98228667a08f1c7a6382feaebb78a0f99e5ed4d6f6908e6cb71dbf999
   languageName: node
   linkType: hard
 
