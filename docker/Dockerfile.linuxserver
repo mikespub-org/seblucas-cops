@@ -13,6 +13,7 @@ RUN \
   echo "**** install runtime packages ****" && \
   apk add --no-cache --upgrade \
     # libxml2 \
+    icu-data-full \
     php84-dom \
     php84-gd \
     php84-intl \
