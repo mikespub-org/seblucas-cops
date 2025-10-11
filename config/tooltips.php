@@ -597,6 +597,10 @@ $tooltips['cops_comic_reader'] = <<<'EOT'
     '' (default)
     'comic-reader.html?url='
     'codedread-kthoom.html?bookUri=' (with mikespub/codedread-kthoom package)
+
+    Note: for kthoom please install the package with composer:
+
+    $ composer require mikespub/codedread-kthoom
     EOT;
 
 $tooltips['cops_pdfjs_viewer'] = <<<'EOT'

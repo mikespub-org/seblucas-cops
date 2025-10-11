@@ -16,6 +16,13 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * Changes in config/default.php file:
+    - add $config['cops_epub_reader'] option to use custom reader template
+    - add $config['cops_comic_reader'] option to use codedread-kthoom template
+  * Prepare upgrade of symfony/* packages to new 7.4 LTS version
+  * Support custom reader template for epub files too
+  * Add option to use different comic reader based on kthoom from @codedread
+  * Move admin templates to subdirectory and use Twig template engine
   * Support user-specific or common database config files - see #160 from @tgiraud
   * Add minimal mozilla/pdfjs-dist to release package cops-3.x.x-php82.zip
   * Upgrade mozilla/pdfjs-dist to v5.4.296 and refresh pdfjs-viewer template
