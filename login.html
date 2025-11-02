@@ -3,61 +3,50 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>COPS</title>
+    <title>COPS Sign in</title>
     <script type="text/javascript" src="vendor/npm-asset/jquery/dist/jquery.min.js"></script>
-    <style media="screen" type="text/css">
-        body{
-            background:white;
-            font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif;
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
         
-        #block{
-            width:230px;
-            height:113px;
-            margin:auto;
-            background:#2c3e50;
-            margin-top:100px;
-            border-radius:2px;
+        #login-container {
+            border: 2px solid #000000;
+            padding: 20px;
+            width: 80%;
+            max-width: 400px;
         }
         
-        #block:before{
-            content:'';
-            display:block;
-            width:230px;
-            height:3px;
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 20px;
         }
         
-        #block:after{
-            content:'';
-            display:block;
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border: 1px solid #000000;
+            box-sizing: border-box;
         }
         
-        #block input[type=text],#block  input[type=password] {
-            font-family:'Open Sans', sans-serif;
-            width:156px;
-            height:32px;
-            margin:15px 15px;
-            border:0;
-            border-radius:2px;
-            display:block;
-            font-size:18px;
-        }
-        
-        #block input[type=password]{
-            width:156px;
-            height:32px;
-            margin:-5px 15px;
-        }
-        #submit{
-            position:absolute;
-            width:33px;
-            height:34px;
-            background:#9b59b6;
-            color:#ffffff;
-            border:0;
-            margin:-29px 180px;
-            font-size:22px;
-            padding:0;
+        input[type="submit"] {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.5em;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
         }
     </style>
     <script>
@@ -70,26 +59,26 @@
 
               $.ajax(
                 {
-                  url      : 'index.php', // Moved 'url' to the correct position
-                  type     : 'GET',
-                  data     : { username: username, password: password }, // Replaced shorthand with explicit 'data' object
+                  url      : 'index.php',
+                  type     : 'POST',
+                  data     : { username: username, password: password },
                   success  : function(){ window.location = 'index.php'; },
                   error    : function(){ alert('Bad Login Details');},
                 }
               );
-
               return false;
             });
         });
     </script>
 </head>
 <body>
-    <form id="loginForm">
-    <div id="block">
-        <input id="user" type="text" placeholder="Username" required="required" />
-        <input id="password" type="password" placeholder="Password" required="required" />
-        <input id="submit" type="submit" value="&#x2192;" />
+    <div id="login-container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <input id="user" type="text" placeholder="Username" required="required" />
+            <input id="password" type="password" placeholder="Password" required="required" />
+            <input id="submit" type="submit" value="Login" />
+        </form>
     </div>
-    </form>
 </body>
 </html>
