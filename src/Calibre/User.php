@@ -92,44 +92,51 @@ class User
      * @param array<mixed> $serverVars
      * @return bool
      */
-    public static function verifyLogin($requestVars = null)
+    public static function verifyLogin($serverVars = null, $requestVars = null)
     {
-        session_start();
         $basicAuth = Config::get('basic_authentication');
-        if (empty($basicAuth)) {
+        $formAuth = Config::get('form_authentication');
+        if (empty($basicAuth) && empty($formAuth)) {
             return true;
         }
-
-        // Session check
-        if (!empty($_SESSION['user'])) {
-            return true;
-        }
-
-        $requestVars ??= $_REQUEST;
-
-        // Form-based login
-        if (!empty($requestVars['username']) && !empty($requestVars['password'])) {
-            $isAuthenticated = false;
-            if (is_array($basicAuth)) {
-                $isAuthenticated = self::checkBasicAuthArray($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
-            } elseif (is_string($basicAuth)) {
-                $isAuthenticated = self::checkBasicAuthDatabase($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+        if (!empty($basicAuth)) {
+            // @todo remove fallback on superglobals
+            $serverVars ??= $_SERVER;
+            if (empty($serverVars['PHP_AUTH_USER']) || empty($serverVars['PHP_AUTH_PW'])) {
+                return false;
             }
-
-            if ($isAuthenticated) {
-                $_SESSION['user'] = $requestVars['username'];
-                return true;
-            }
-        }
-
-        // HTTP Basic Auth
-        $serverVars = $_SERVER;
-        if (!empty($serverVars['PHP_AUTH_USER']) && !empty($serverVars['PHP_AUTH_PW'])) {
+            // array( "username" => "xxx", "password" => "secret")
             if (is_array($basicAuth)) {
                 return self::checkBasicAuthArray($basicAuth, $serverVars);
             }
+            // /config/.config/calibre/server-users.sqlite
             if (is_string($basicAuth)) {
                 return self::checkBasicAuthDatabase($basicAuth, $serverVars);
+            }
+        }
+        if (!empty($formAuth)) {
+            // @todo move use of sessions later in request handling
+            session_start();
+            // Session check
+            if (!empty($_SESSION['user'])) {
+                return true;
+            }
+            // @todo remove fallback on superglobals
+            $requestVars ??= $_REQUEST;
+
+            // Form-based login
+            if (!empty($requestVars['username']) && !empty($requestVars['password'])) {
+                $isAuthenticated = false;
+                if (is_array($basicAuth)) {
+                    $isAuthenticated = self::checkBasicAuthArray($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+                } elseif (is_string($basicAuth)) {
+                    $isAuthenticated = self::checkBasicAuthDatabase($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+                }
+
+                if ($isAuthenticated) {
+                    $_SESSION['user'] = $requestVars['username'];
+                    return true;
+                }
             }
         }
 
