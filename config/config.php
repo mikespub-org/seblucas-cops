@@ -47,9 +47,10 @@ if (!empty($remote_user)) {
 Config::load($config);
 date_default_timezone_set(Config::get('default_timezone'));
 
-if (!User::verifyLogin($_SERVER)) {
-    header('WWW-Authenticate: Basic realm="COPS Authentication"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'This site is password protected';
-    exit;
+if (!User::verifyLogin($_REQUEST)) {
+    // if we are in the login page, don't redirect
+    if (strpos($_SERVER['REQUEST_URI'], 'login.html') === false) {
+        header('Location: login.html');
+        exit;
+    }
 }
