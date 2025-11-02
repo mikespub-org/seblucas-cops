@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Tests\Framework;
 
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\CheckHandler;
+use SebLucas\Cops\Middleware\AuthMiddleware;
 use SebLucas\Cops\Middleware\TestMiddleware;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
@@ -154,7 +155,9 @@ class FrameworkTest extends TestCase
             if (!empty($add)) {
                 array_push($className::$middlewares, $add);
             } else {
-                $className::$middlewares = [];
+                $className::$middlewares = [
+                    AuthMiddleware::class,
+                ];
             }
             return $className::$middlewares;
         }, null, $className);
@@ -169,9 +172,9 @@ class FrameworkTest extends TestCase
         $expected = "'_route' => 'check-more'";
         $this->assertStringContainsString($expected, $output);
 
-        // add test middleware to framework
+        // add test middleware to framework - we already have auth middleware now
         $middlewares = $addMiddleware(new TestMiddleware());
-        $expected = 1;
+        $expected = 2;
         $this->assertCount($expected, $middlewares);
 
         ob_start();
@@ -186,9 +189,9 @@ class FrameworkTest extends TestCase
         $expected = "Goodbye!";
         $this->assertStringContainsString($expected, $output);
 
-        // reset middleware again
+        // reset middleware again - we already have auth middleware now
         $middlewares = $addMiddleware(null);
-        $expected = 0;
+        $expected = 1;
         $this->assertCount($expected, $middlewares);
 
         unset($_SERVER['PATH_INFO']);

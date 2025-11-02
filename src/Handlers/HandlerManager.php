@@ -4,6 +4,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
+use SebLucas\Cops\Middleware\BaseMiddleware;
 
 /**
  * Manages handler registration and creation in COPS
@@ -38,7 +39,7 @@ class HandlerManager implements HasContextInterface
     /** @var array<string, class-string<BaseHandler>> */
     private array $handlers = [];
 
-    /** @var array<string, array<string>> */
+    /** @var array<class-string<BaseHandler>, array<class-string<BaseMiddleware>>> */
     private array $middleware = [];
 
     /**
@@ -81,6 +82,11 @@ class HandlerManager implements HasContextInterface
         }
 
         $this->handlers[$name] = $handlerClass;
+
+        $this->middleware[$handlerClass] = [];
+        foreach ($handlerClass::getMiddleware() as $middlewareClass) {
+            $this->registerMiddleware($handlerClass, $middlewareClass);
+        }
     }
 
     /**
@@ -94,15 +100,17 @@ class HandlerManager implements HasContextInterface
 
     /**
      * Register middleware for a handler
+     * @param class-string<BaseHandler> $handlerClass
+     * @param class-string<BaseMiddleware> $middlewareClass
      * @throws \InvalidArgumentException
      */
-    public function registerMiddleware(string $handlerName, string $middlewareClass): void
+    public function registerMiddleware(string $handlerClass, string $middlewareClass): void
     {
-        if (!isset($this->handlers[$handlerName])) {
-            throw new \InvalidArgumentException("Unknown handler: $handlerName");
+        if (!in_array($handlerClass, $this->handlers)) {
+            throw new \InvalidArgumentException("Unknown handler: $handlerClass");
         }
 
-        $this->middleware[$handlerName][] = $middlewareClass;
+        $this->middleware[$handlerClass][] = $middlewareClass;
     }
 
     /**
@@ -141,15 +149,15 @@ class HandlerManager implements HasContextInterface
         $handler = new $handlerClass($this->getContext());
 
         // Apply middleware if any exists
-        return $this->applyMiddleware($handler, $name);
+        return $this->applyMiddleware($handler);
     }
 
     /**
      * Apply middleware to handler if configured
      */
-    protected function applyMiddleware(BaseHandler $handler, string $name): BaseHandler
+    protected function applyMiddleware(BaseHandler $handler): BaseHandler
     {
-        $middleware = $this->middleware[$name] ?? [];
+        $middleware = $this->middleware[$handler::class] ?? [];
         if (empty($middleware)) {
             return $handler;
         }

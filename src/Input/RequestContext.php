@@ -130,14 +130,12 @@ class RequestContext
         $handlerName = $this->resolveHandlerName();
 
         try {
-            $handlerClass = $this->manager->getHandlerClass($handlerName);
-            $this->handler = $this->createHandler($handlerClass);
+            $this->handler = $this->manager->createHandler($handlerName);
             return $this->handler;
         } catch (\RuntimeException $e) {
             // Fallback to error handler
             //return $this->createErrorHandler($e);
-            $errorHandlerClass = $this->manager->getHandlerClass('error');
-            $this->handler = $this->createHandler($errorHandlerClass);
+            $this->handler = $this->manager->createHandler('error');
             return $this->handler;
         }
     }

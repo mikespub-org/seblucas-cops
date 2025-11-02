@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
@@ -37,6 +37,13 @@ class FeedHandler extends BaseHandler
         ];
     }
 
+    public static function getMiddleware()
+    {
+        return [
+            ConnectMiddleware::class,
+        ];
+    }
+
     public function handle($request)
     {
         // deal with /handler/{path:.*}
@@ -58,14 +65,7 @@ class FeedHandler extends BaseHandler
         // @todo handle special case of OPDS not expecting filter while HTML does better
         $request->set('filter', null);
 
-        if (Config::get('fetch_protect') == '1') {
-            $session = $this->getContext()->getSession();
-            $session->start();
-            $connected = $session->get('connected');
-            if (!isset($connected)) {
-                $session->set('connected', 0);
-            }
-        }
+        // set session connected in ConnectMiddleware
 
         $response = new Response(Response::MIME_TYPE_XML);
 

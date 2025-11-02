@@ -47,15 +47,4 @@ if (!empty($remote_user)) {
 Config::load($config);
 date_default_timezone_set(Config::get('default_timezone'));
 
-if (!User::verifyLogin($_SERVER, $_REQUEST)) {
-    $formAuth = Config::get('form_authentication');
-    // if we are in the login page, don't redirect
-    if (!empty($formAuth) && !str_contains($_SERVER['REQUEST_URI'], 'login.html')) {
-        header('Location: login.html');
-        exit;
-    }
-    header('WWW-Authenticate: Basic realm="COPS Authentication"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'This site is password protected';
-    exit;
-}
+// replace User::verifyLogin with AuthMiddleware - see PR #161

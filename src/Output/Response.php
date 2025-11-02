@@ -462,4 +462,19 @@ class Response
         $response->addHeader('Location', $location);
         return $response;
     }
+
+    /**
+     * Summary of unauthorized
+     * @param string $realm
+     * @return self
+     */
+    public static function unauthorized($realm = 'COPS Authentication'): self
+    {
+        $response = new self();
+        $response->setStatusCode(401);
+        $authenticate = 'Basic realm="' . $realm . '"';
+        $response->addHeader('WWW-Authenticate', $authenticate);
+        $response->setContent('This site is password protected');
+        return $response;
+    }
 }

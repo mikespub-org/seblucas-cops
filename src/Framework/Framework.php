@@ -14,6 +14,7 @@ use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Middleware\AuthMiddleware;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\RouteCollection;
@@ -34,7 +35,10 @@ class Framework
     /** @var HandlerManager|null */
     protected static $handlerManager = null;
     /** @var array<mixed> */
-    protected static $middlewares = [];
+    protected static $middlewares = [
+        // Use authentication middleware
+        AuthMiddleware::class,
+    ];
 
     protected ?RequestContext $context = null;
     protected HandlerManager $manager;
@@ -85,8 +89,8 @@ class Framework
             $params = $context->matchRequest();
             $handler = $context->resolveHandler();
 
-            // load database-dependent config here?
-            $context->updateConfig();
+            // load database-dependent config here? moved to AuthMiddleware now
+            //$context->updateConfig();
 
             // Apply middleware if configured
             if (!empty(self::$middlewares)) {

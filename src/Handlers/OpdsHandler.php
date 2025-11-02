@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 use SebLucas\Cops\Output\Response as CopsResponse;
 use SebLucas\Cops\Pages\PageId;
@@ -34,6 +34,13 @@ class OpdsHandler extends BaseHandler
             "opds-page" => ["/opds/{page:\w+}"],
             "opds-path" => ["/opds/{path:.*}"],
             "opds" => ["/opds"],
+        ];
+    }
+
+    public static function getMiddleware()
+    {
+        return [
+            ConnectMiddleware::class,
         ];
     }
 
@@ -62,14 +69,7 @@ class OpdsHandler extends BaseHandler
             $page = PageId::OPENSEARCH_QUERY;
         }
 
-        if (Config::get('fetch_protect') == '1') {
-            $session = $this->getContext()->getSession();
-            $session->start();
-            $connected = $session->get('connected');
-            if (!isset($connected)) {
-                $session->set('connected', 0);
-            }
-        }
+        // set session connected in ConnectMiddleware
 
         $opdsRenderer = new OpdsRenderer();
 

@@ -14,6 +14,7 @@ use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Middleware\BaseMiddleware;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -35,6 +36,15 @@ abstract class BaseHandler implements HasContextInterface
      * @return array<string, mixed>
      */
     public static function getRoutes()
+    {
+        return [];
+    }
+
+    /**
+     * Array of middleware classes that should apply for this handler
+     * @return array<class-string<BaseMiddleware>>
+     */
+    public static function getMiddleware()
     {
         return [];
     }

@@ -91,6 +91,7 @@ class User
      * Summary of verifyLogin
      * @param array<mixed> $serverVars
      * @return bool
+     * @deprecated 3.8.1 use AuthMiddleware instead - see PR #161
      */
     public static function verifyLogin($serverVars = null, $requestVars = null)
     {
@@ -127,10 +128,10 @@ class User
             // Form-based login
             if (!empty($requestVars['username']) && !empty($requestVars['password'])) {
                 $isAuthenticated = false;
-                if (is_array($basicAuth)) {
-                    $isAuthenticated = self::checkBasicAuthArray($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
-                } elseif (is_string($basicAuth)) {
-                    $isAuthenticated = self::checkBasicAuthDatabase($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+                if (is_array($formAuth)) {
+                    $isAuthenticated = self::checkBasicAuthArray($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+                } elseif (is_string($formAuth)) {
+                    $isAuthenticated = self::checkBasicAuthDatabase($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
                 }
 
                 if ($isAuthenticated) {

@@ -8,6 +8,7 @@ use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\QueueBasedHandler;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\RequestContext;
+use SebLucas\Cops\Middleware\AuthMiddleware;
 use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
@@ -46,6 +47,9 @@ class FrameworkTodo
             $this->manager,
             $this->router,
         );
+
+        // Add authentication middleware
+        $this->addMiddleware(AuthMiddleware::class);
     }
 
     public function getContext(?Request $request = null): RequestContext
@@ -65,8 +69,8 @@ class FrameworkTodo
             $params = $context->matchRequest();
             $handler = $context->resolveHandler();
 
-            // load database-dependent config here?
-            $context->updateConfig();
+            // load database-dependent config here? moved to AuthMiddleware now
+            //$context->updateConfig();
 
             // Apply middleware if configured
             if (!empty($this->middlewares)) {
