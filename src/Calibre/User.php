@@ -92,24 +92,47 @@ class User
      * @param array<mixed> $serverVars
      * @return bool
      */
-    public static function verifyLogin($serverVars = null)
+    public static function verifyLogin($requestVars = null)
     {
+        session_start();
         $basicAuth = Config::get('basic_authentication');
         if (empty($basicAuth)) {
             return true;
         }
-        $serverVars ??= $_SERVER;
-        if (empty($serverVars['PHP_AUTH_USER']) || empty($serverVars['PHP_AUTH_PW'])) {
-            return false;
+
+        // Session check
+        if (!empty($_SESSION['user'])) {
+            return true;
         }
-        // array( "username" => "xxx", "password" => "secret")
-        if (is_array($basicAuth)) {
-            return self::checkBasicAuthArray($basicAuth, $serverVars);
+
+        $requestVars ??= $_REQUEST;
+
+        // Form-based login
+        if (!empty($requestVars['username']) && !empty($requestVars['password'])) {
+            $isAuthenticated = false;
+            if (is_array($basicAuth)) {
+                $isAuthenticated = self::checkBasicAuthArray($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+            } elseif (is_string($basicAuth)) {
+                $isAuthenticated = self::checkBasicAuthDatabase($basicAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+            }
+
+            if ($isAuthenticated) {
+                $_SESSION['user'] = $requestVars['username'];
+                return true;
+            }
         }
-        // /config/.config/calibre/server-users.sqlite
-        if (is_string($basicAuth)) {
-            return self::checkBasicAuthDatabase($basicAuth, $serverVars);
+
+        // HTTP Basic Auth
+        $serverVars = $_SERVER;
+        if (!empty($serverVars['PHP_AUTH_USER']) && !empty($serverVars['PHP_AUTH_PW'])) {
+            if (is_array($basicAuth)) {
+                return self::checkBasicAuthArray($basicAuth, $serverVars);
+            }
+            if (is_string($basicAuth)) {
+                return self::checkBasicAuthDatabase($basicAuth, $serverVars);
+            }
         }
+
         return false;
     }
 
