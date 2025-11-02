@@ -139,6 +139,7 @@ class User
                 }
             }
         }
+
         return false;
     }
 
