@@ -83,10 +83,10 @@ class AuthMiddleware extends BaseMiddleware
         $isAuthenticated = false;
         if (is_array($basicAuth)) {
             // format: ["username" => "xxx", "password" => "secret"]
-            $isAuthenticated = User::checkBasicAuthArray($basicAuth, $serverVars);
+            $isAuthenticated = User::checkAuthArray($basicAuth, $serverVars['PHP_AUTH_USER'], $serverVars['PHP_AUTH_PW']);
         } elseif (is_string($basicAuth)) {
             // format: "/config/.config/calibre/server-users.sqlite"
-            $isAuthenticated = User::checkBasicAuthDatabase($basicAuth, $serverVars);
+            $isAuthenticated = User::checkAuthDatabase($basicAuth, $serverVars['PHP_AUTH_USER'], $serverVars['PHP_AUTH_PW']);
         }
         if (!$isAuthenticated) {
             $request->setUserName(null);
@@ -127,10 +127,10 @@ class AuthMiddleware extends BaseMiddleware
         $isAuthenticated = false;
         if (is_array($formAuth)) {
             // format: ["username" => "xxx", "password" => "secret"]
-            $isAuthenticated = User::checkBasicAuthArray($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+            $isAuthenticated = User::checkAuthArray($formAuth, $requestVars['username'], $requestVars['password']);
         } elseif (is_string($formAuth)) {
             // format: "/config/.config/calibre/server-users.sqlite"
-            $isAuthenticated = User::checkBasicAuthDatabase($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
+            $isAuthenticated = User::checkAuthDatabase($formAuth, $requestVars['username'], $requestVars['password']);
         }
         if ($isAuthenticated) {
             $session->set('user', $requestVars['username']);

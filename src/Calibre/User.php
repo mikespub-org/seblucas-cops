@@ -95,77 +95,34 @@ class User
      */
     public static function verifyLogin($serverVars = null, $requestVars = null)
     {
-        $basicAuth = Config::get('basic_authentication');
-        $formAuth = Config::get('form_authentication');
-        if (empty($basicAuth) && empty($formAuth)) {
-            return true;
-        }
-        if (!empty($basicAuth)) {
-            // @todo remove fallback on superglobals
-            $serverVars ??= $_SERVER;
-            if (empty($serverVars['PHP_AUTH_USER']) || empty($serverVars['PHP_AUTH_PW'])) {
-                return false;
-            }
-            // array( "username" => "xxx", "password" => "secret")
-            if (is_array($basicAuth)) {
-                return self::checkBasicAuthArray($basicAuth, $serverVars);
-            }
-            // /config/.config/calibre/server-users.sqlite
-            if (is_string($basicAuth)) {
-                return self::checkBasicAuthDatabase($basicAuth, $serverVars);
-            }
-        }
-        if (!empty($formAuth)) {
-            // @todo move use of sessions later in request handling
-            session_start();
-            // Session check
-            if (!empty($_SESSION['user'])) {
-                return true;
-            }
-            // @todo remove fallback on superglobals
-            $requestVars ??= $_REQUEST;
-
-            // Form-based login
-            if (!empty($requestVars['username']) && !empty($requestVars['password'])) {
-                $isAuthenticated = false;
-                if (is_array($formAuth)) {
-                    $isAuthenticated = self::checkBasicAuthArray($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
-                } elseif (is_string($formAuth)) {
-                    $isAuthenticated = self::checkBasicAuthDatabase($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
-                }
-
-                if ($isAuthenticated) {
-                    $_SESSION['user'] = $requestVars['username'];
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        // throw new Exception('Please update your config/config.php file and remove the User::verifyLogin() part');
+        return true;
     }
 
     /**
-     * Summary of checkBasicAuthArray
+     * Summary of checkAuthArray
      * @param array<string, mixed> $authArray
-     * @param array<mixed> $serverVars
+     * @param string $username
+     * @param string $password
      * @return bool
      */
-    public static function checkBasicAuthArray($authArray, $serverVars)
+    public static function checkAuthArray($authArray, $username, $password)
     {
-        if (($serverVars['PHP_AUTH_USER'] != $authArray['username']
-            || $serverVars['PHP_AUTH_PW'] != $authArray['password'])) {
+        if ($username !== $authArray['username']
+            || $password !== $authArray['password']) {
             return false;
         }
         return true;
     }
 
     /**
-     * Summary of checkBasicAuthDatabase
+     * Summary of checkAuthDatabase
      * @param string $userDbFile
-     * @param array<mixed> $serverVars
+     * @param string $username
+     * @param string $password
      * @return bool
      */
-    public static function checkBasicAuthDatabase($userDbFile, $serverVars)
+    public static function checkAuthDatabase($userDbFile, $username, $password)
     {
         try {
             $db = self::getUserDb($userDbFile);
@@ -175,10 +132,10 @@ class User
         }
         $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' where name = ? and pw = ?';
         $stmt = $db->prepare($query);
-        $params = [ $serverVars['PHP_AUTH_USER'], $serverVars['PHP_AUTH_PW'] ];
+        $params = [ $username, $password ];
         $stmt->execute($params);
         $result = $stmt->fetchObject();
-        if (empty($result) || $result->name != $serverVars['PHP_AUTH_USER']) {
+        if (empty($result) || $result->name !== $username) {
             return false;
         }
         return true;

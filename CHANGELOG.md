@@ -17,13 +17,20 @@ x.x.x - TODO
 
 3.x.x - 2025xxxx 
   * Changes in config/default.php file:
+    - add $config['cops_form_authentication'] option to use form authentication
+  * Drop loading user-specific config before auth in config/config.php
+  * Use new AuthMiddleware to handle authentication + update Config
+  * Support form authentication with login.html again - see PR #161 from @dcoffin88
+
+3.8.0 - 20251011 Add custom readers, database config files + prepare symfony upgrade 
+  * Changes in config/default.php file:
     - add $config['cops_epub_reader'] option to use custom reader template
     - add $config['cops_comic_reader'] option to use codedread-kthoom template
   * Prepare upgrade of symfony/* packages to new 7.4 LTS version
   * Support custom reader template for epub files too
   * Add option to use different comic reader based on kthoom from @codedread
   * Move admin templates to subdirectory and use Twig template engine
-  * Support user-specific or common database config files - see #160 from @tgiraud
+  * Support user-specific or common database config files - see issue #160 from @tgiraud
   * Add minimal mozilla/pdfjs-dist to release package cops-3.x.x-php82.zip
   * Upgrade mozilla/pdfjs-dist to v5.4.296 and refresh pdfjs-viewer template
   * Hide dropzone in comic-reader if url is specified
