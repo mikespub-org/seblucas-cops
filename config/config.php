@@ -9,7 +9,9 @@
  */
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
+// 1. load config/default.php with default $config variables
 require __DIR__ . '/default.php';  // NOSONAR
+// 2. load config/local.php  to override with local $config values
 if (php_sapi_name() !== 'cli') {
     if (file_exists(__DIR__ . '/local.php')) {
         try {
@@ -29,22 +31,14 @@ if (php_sapi_name() !== 'cli') {
 /** @var array<mixed> $config */
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Calibre\User;
-
-// Get user authentication from server
-$http_auth_user = $config['cops_http_auth_user'] ?? 'PHP_AUTH_USER';
-$remote_user = array_key_exists($http_auth_user, $_SERVER) ? $_SERVER[$http_auth_user] : '';
-// Clean username, only allow a-z, A-Z, 0-9, -_ chars
-$remote_user = preg_replace('/[^a-zA-Z0-9_-]/', '', $remote_user);
-if (!empty($remote_user)) {
-    $user_config_file = 'local.' . $remote_user . '.php';
-    if (file_exists(__DIR__ . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
-        require __DIR__ . '/' . $user_config_file;  // NOSONAR
-    }
-}
 
 // from here on, we assume that all global $config variables have been loaded
 Config::load($config);
 date_default_timezone_set(Config::get('default_timezone'));
+
+// override $config after authentication with AuthMiddleware:
+// 3. load config/local.{remote_user}.php if available
+// 4. then load config/local.{remote_user}.db-{database}.php if available
+// 5. or load config/local.db-{database}.php if available
 
 // replace User::verifyLogin with AuthMiddleware - see PR #161

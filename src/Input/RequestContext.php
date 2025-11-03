@@ -106,12 +106,22 @@ class RequestContext
     }
 
     /**
-     * Load database config after request match & update
+     * Load user- and/or database-specific config after request match & update + authentication
+     * @see SebLucas\Cops\Middleware\AuthMiddleware::checkUserAuthentication()
      */
     public function updateConfig(): Config
     {
-        $database = $this->request->database();
+        // first load user-specific config in case they have their own database(s)
         $username = $this->request->getUserName();
+        if (!empty($username)) {
+            $config = Config::getUserConfig($username);
+            if (!empty($config)) {
+                Config::load($config);
+                $this->config = new Config();
+            }
+        }
+        // then load database- (and user-) specific config
+        $database = $this->request->database();
         $config = Config::getDatabaseConfig($database, $username);
         if (!empty($config)) {
             Config::load($config);

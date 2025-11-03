@@ -48,7 +48,7 @@ class FrameworkTodo
             $this->router,
         );
 
-        // Add authentication middleware
+        // Add authentication middleware with updateConfig()
         $this->addMiddleware(AuthMiddleware::class);
     }
 
@@ -69,10 +69,7 @@ class FrameworkTodo
             $params = $context->matchRequest();
             $handler = $context->resolveHandler();
 
-            // load database-dependent config here? moved to AuthMiddleware now
-            //$context->updateConfig();
-
-            // Apply middleware if configured
+            // Apply middleware - incl. AuthMiddleware with updateConfig()
             if (!empty($this->middlewares)) {
                 $queue = new QueueBasedHandler($context, $handler);
                 foreach ($this->middlewares as $middlewareClass) {

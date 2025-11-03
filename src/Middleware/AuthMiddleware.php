@@ -24,6 +24,7 @@ use SebLucas\Cops\Calibre\User;
 class AuthMiddleware extends BaseMiddleware
 {
     /**
+     * Check user authentation before handling request
      * @param Request $request
      * @param BaseHandler $handler
      * @return Response|void
@@ -39,7 +40,7 @@ class AuthMiddleware extends BaseMiddleware
     }
 
     /**
-     * Summary of checkUserAuthentication
+     * Check user authentication + call updateConfig() or prepare fail Response (302 or 401)
      * @param Request $request
      * @param RequestContext $context
      * @return Response|null
@@ -50,7 +51,7 @@ class AuthMiddleware extends BaseMiddleware
         if (static::checkBasicAuthentication($request, $context)) {
             // check form authentication
             if (static::checkFormAuthentication($request, $context)) {
-                // load database- and user-dependent config here?
+                // load user- and/or database-dependent config here!
                 $context->updateConfig();
                 return null;
             }
@@ -60,7 +61,7 @@ class AuthMiddleware extends BaseMiddleware
     }
 
     /**
-     * Summary of checkBasicAuthentication
+     * Check basic authentication
      * @param Request $request
      * @param RequestContext $context not used here
      * @return bool
@@ -81,10 +82,10 @@ class AuthMiddleware extends BaseMiddleware
         }
         $isAuthenticated = false;
         if (is_array($basicAuth)) {
-            // array( "username" => "xxx", "password" => "secret")
+            // format: ["username" => "xxx", "password" => "secret"]
             $isAuthenticated = User::checkBasicAuthArray($basicAuth, $serverVars);
         } elseif (is_string($basicAuth)) {
-            // /config/.config/calibre/server-users.sqlite
+            // format: "/config/.config/calibre/server-users.sqlite"
             $isAuthenticated = User::checkBasicAuthDatabase($basicAuth, $serverVars);
         }
         if (!$isAuthenticated) {
@@ -94,7 +95,7 @@ class AuthMiddleware extends BaseMiddleware
     }
 
     /**
-     * Summary of checkFormAuthentication
+     * Check form authentication - using session here
      * @param Request $request
      * @param RequestContext $context
      * @return bool
@@ -125,10 +126,10 @@ class AuthMiddleware extends BaseMiddleware
         }
         $isAuthenticated = false;
         if (is_array($formAuth)) {
-            // array( "username" => "xxx", "password" => "secret")
+            // format: ["username" => "xxx", "password" => "secret"]
             $isAuthenticated = User::checkBasicAuthArray($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
         } elseif (is_string($formAuth)) {
-            // /config/.config/calibre/server-users.sqlite
+            // format: "/config/.config/calibre/server-users.sqlite"
             $isAuthenticated = User::checkBasicAuthDatabase($formAuth, ['PHP_AUTH_USER' => $requestVars['username'], 'PHP_AUTH_PW' => $requestVars['password']]);
         }
         if ($isAuthenticated) {
@@ -143,7 +144,7 @@ class AuthMiddleware extends BaseMiddleware
     }
 
     /**
-     * Summary of checkProxyAuthentication - not used here
+     * Check proxy authentication - not used here
      * @param Request $request
      * @param RequestContext $context not used here
      * @return bool
@@ -152,6 +153,7 @@ class AuthMiddleware extends BaseMiddleware
     {
         $username = $request->getUserName();
         $basicAuth = Config::get('basic_authentication');
+        // we have username and don't use basic authentication - assume valid
         if (!empty($username) && empty($basicAuth)) {
             return true;
         }

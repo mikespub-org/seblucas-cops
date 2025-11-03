@@ -34,6 +34,7 @@ class Config
      */
     public static function load($values)
     {
+        // add user- and/or database-specific config after AuthMiddleware
         // some phpunit tests re-load the config so we merge here
         self::$values = array_merge(self::$values, $values);
     }

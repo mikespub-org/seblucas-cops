@@ -36,7 +36,7 @@ class Framework
     protected static $handlerManager = null;
     /** @var array<mixed> */
     protected static $middlewares = [
-        // Use authentication middleware
+        // Use authentication middleware with updateConfig()
         AuthMiddleware::class,
     ];
 
@@ -89,10 +89,7 @@ class Framework
             $params = $context->matchRequest();
             $handler = $context->resolveHandler();
 
-            // load database-dependent config here? moved to AuthMiddleware now
-            //$context->updateConfig();
-
-            // Apply middleware if configured
+            // Apply middleware - incl. AuthMiddleware with updateConfig()
             if (!empty(self::$middlewares)) {
                 $queue = new QueueBasedHandler($context, $handler);
                 foreach (self::$middlewares as $middleware) {

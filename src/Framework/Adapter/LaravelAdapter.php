@@ -84,11 +84,12 @@ class LaravelAdapter implements AdapterInterface
                 $request->route()->parameters(),
                 $request->query(),
             );
+            // @todo $copsRequest->setUserName() if authenticated by framework
 
             // We need to set a context on the handler manager for it to create a handler
             $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
-            // load database-dependent config here?
-            $context->updateConfig();
+            // @todo load user- and/or database-dependent config here?
+            //$context->updateConfig();
             $copsManager->setContext($context);
 
             // 2. Resolve and handle the request using COPS components
