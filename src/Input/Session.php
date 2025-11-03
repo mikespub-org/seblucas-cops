@@ -25,6 +25,15 @@ class Session
 
     protected function configure(): void
     {
+        if (function_exists('\session_status')) {
+            if (\session_status() !== PHP_SESSION_NONE) {
+                return;
+            }
+        }
+        // ini_set may be disabled in php.ini
+        if (!function_exists('\ini_set')) {
+            return;
+        }
         // avoid overlap with other PHP session names
         $name = Config::get('session_name') ?? 'COPS_SESSID';
         ini_set('session.name', $name);

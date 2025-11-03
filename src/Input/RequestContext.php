@@ -240,6 +240,11 @@ class RequestContext
         return $this->session;
     }
 
+    public function setSession(Session $session)
+    {
+        $this->session = $session;
+    }
+
     public function getHandlerManager(): HandlerManager
     {
         return $this->manager;

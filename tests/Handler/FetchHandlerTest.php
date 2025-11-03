@@ -218,4 +218,66 @@ class FetchHandlerTest extends TestCase
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
     }
+
+    public function testFetchProtect(): void
+    {
+        Config::set('fetch_protect', 1);
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
+        $handler = Framework::createHandler('fetch');
+
+        ob_start();
+        $response = $handler->handle($request);
+        $response->send();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        Config::set('fetch_protect', 0);
+
+        // check that we don't have access without connected session
+        $this->assertStringContainsString('<h1>Not Found</h1>', $output);
+        $this->assertStringContainsString('<p>COPS: Please connect via web or feed first</p>', $output);
+    }
+
+    public function testFetchProtectWithSession(): void
+    {
+        Config::set('fetch_protect', 1);
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['page' => 'book', 'id' => '2'], self::$handler);
+        $handler = Framework::createHandler('html');
+
+        ob_start();
+        $response = $handler->handle($request);
+        $response->send();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        $this->assertStringContainsString('<title>COPS</title>', $output);
+
+        // check that we have a session connected
+        $expected = 0;
+        $session = $request->getSession();
+        $this->assertEquals($expected, $session->get('connected'));
+
+        // set the session in the framework context
+        $context = Framework::getInstance()->getContext();
+        $context->setSession($session);
+
+        // set request handler to 'TestHandler' class to override output buffer check in handler
+        $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
+        $handler = Framework::createHandler('fetch');
+
+        ob_start();
+        $response = $handler->handle($request);
+        $response->send();
+        $headers = headers_list();
+        $output = ob_get_clean();
+
+        Config::set('fetch_protect', 0);
+
+        // check that we have access with a connected session
+        $expected = self::$expectedSize['original'];
+        $this->assertEquals(0, count($headers));
+        $this->assertEquals($expected, strlen($output));
+    }
 }

@@ -439,6 +439,17 @@ class Request
     }
 
     /**
+     * Summary of setUserName
+     * @param ?string $name
+     * @return void
+     */
+    public function setUserName($name = null)
+    {
+        $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
+        $this->serverParams[$http_auth_user] = $name;
+    }
+
+    /**
      * Summary of getSorted
      * @param ?string $default
      * @return ?string

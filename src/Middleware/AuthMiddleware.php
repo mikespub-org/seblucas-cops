@@ -76,6 +76,7 @@ class AuthMiddleware extends BaseMiddleware
         $serverVars = $request->serverParams;
         // check basic authentication with standard PHP variables
         if (empty($serverVars['PHP_AUTH_USER']) || empty($serverVars['PHP_AUTH_PW'])) {
+            $request->setUserName(null);
             return false;
         }
         $isAuthenticated = false;
@@ -85,6 +86,9 @@ class AuthMiddleware extends BaseMiddleware
         } elseif (is_string($basicAuth)) {
             // /config/.config/calibre/server-users.sqlite
             $isAuthenticated = User::checkBasicAuthDatabase($basicAuth, $serverVars);
+        }
+        if (!$isAuthenticated) {
+            $request->setUserName(null);
         }
         return $isAuthenticated;
     }
@@ -109,7 +113,7 @@ class AuthMiddleware extends BaseMiddleware
         // we have a session user
         if (!empty($username)) {
             // set the session user as remote user in request for handlers
-            $request->serverParams['PHP_AUTH_USER'] = $username;
+            $request->setUserName($username);
             $request->setSession($session);
             return true;
         }
@@ -130,7 +134,7 @@ class AuthMiddleware extends BaseMiddleware
         if ($isAuthenticated) {
             $session->set('user', $requestVars['username']);
             // set the session user as remote user in request for handlers
-            $request->serverParams['PHP_AUTH_USER'] = $requestVars['username'];
+            $request->setUserName($requestVars['username']);
             $request->setSession($session);
             return true;
         }

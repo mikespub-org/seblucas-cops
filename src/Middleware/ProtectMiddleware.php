@@ -33,7 +33,7 @@ class ProtectMiddleware extends BaseMiddleware
             $session->start();
             $connected = $session->get('connected');
             if (!isset($connected)) {
-                return Response::notFound($request);
+                return Response::notFound($request, 'Please connect via web or feed first');
             }
         }
         // do something with $response after $handler

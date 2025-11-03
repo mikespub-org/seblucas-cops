@@ -10,6 +10,7 @@ use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\CheckHandler;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Middleware\TestMiddleware;
 use SebLucas\Cops\Output\Response;
@@ -181,6 +182,42 @@ class FrameworkTodoTest extends TestCase
         // Check that the error was logged
         $this->assertStringContainsString("COPS: Invalid request path '/this-route-does-not-exist' from template", file_get_contents($logFile));
         unlink($logFile);
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testRunCheckWithBasicAuth(): void
+    {
+        Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
+        $_SERVER['PATH_INFO'] = '/check';
+        $_SERVER['PHP_AUTH_USER'] = 'xxx';
+        $_SERVER['PHP_AUTH_PW'] = 'secret';
+
+        ob_start();
+        FrameworkTodo::run(true);
+        $output = ob_get_clean();
+        Config::set('basic_authentication', null);
+
+        $expected = "<title>COPS Configuration Check</title>";
+        $this->assertStringContainsString($expected, $output);
+
+        unset($_SERVER['PATH_INFO']);
+        unset($_SERVER['PHP_AUTH_USER']);
+        unset($_SERVER['PHP_AUTH_PW']);
+    }
+
+    public function testRunCheckUnauthorized(): void
+    {
+        Config::set('basic_authentication', [ "username" => "xxx", "password" => "secret"]);
+        $_SERVER['PATH_INFO'] = '/check';
+
+        ob_start();
+        FrameworkTodo::run(true);
+        $output = ob_get_clean();
+        Config::set('basic_authentication', null);
+
+        $expected = "This site is password protected";
+        $this->assertStringContainsString($expected, $output);
 
         unset($_SERVER['PATH_INFO']);
     }
