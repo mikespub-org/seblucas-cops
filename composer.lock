@@ -86,16 +86,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2025.09.17",
+            "version": "2025.11.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "4ee61f22febb7d8318a5bef7b32c77aa18a88f0d"
+                "reference": "78d8c441d185c7e4627f59d0b69bf38aed3032a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/4ee61f22febb7d8318a5bef7b32c77aa18a88f0d",
-                "reference": "4ee61f22febb7d8318a5bef7b32c77aa18a88f0d",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/78d8c441d185c7e4627f59d0b69bf38aed3032a9",
+                "reference": "78d8c441d185c7e4627f59d0b69bf38aed3032a9",
                 "shasum": ""
             },
             "require-dev": {
@@ -129,9 +129,9 @@
             "description": "Epub.js Reader with zipfs.php",
             "support": {
                 "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2025.09.17"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2025.11.22"
             },
-            "time": "2025-09-17T15:48:30+00:00"
+            "time": "2025-11-22T11:12:09+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
@@ -207,16 +207,16 @@
         },
         {
             "name": "mikespub/web-comic-reader",
-            "version": "2025.10.07",
+            "version": "2025.11.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader.git",
-                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2"
+                "reference": "f6215e2feccec014abcb4ccfbdb3a83ebaa63a89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/afzafri-Web-Comic-Reader/zipball/8789c54519098d6bf68d205c11e1cd702deb1bf2",
-                "reference": "8789c54519098d6bf68d205c11e1cd702deb1bf2",
+                "url": "https://api.github.com/repos/mikespub-org/afzafri-Web-Comic-Reader/zipball/f6215e2feccec014abcb4ccfbdb3a83ebaa63a89",
+                "reference": "f6215e2feccec014abcb4ccfbdb3a83ebaa63a89",
                 "shasum": ""
             },
             "type": "library",
@@ -238,9 +238,9 @@
             ],
             "description": "Web Based cbr/cbz/cbt comic book reader. Written in HTML5 and Javascript",
             "support": {
-                "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2025.10.07"
+                "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2025.11.23"
             },
-            "time": "2025-10-05T11:52:30+00:00"
+            "time": "2025-11-23T14:35:50+00:00"
         },
         {
             "name": "mozilla/pdfjs-dist",

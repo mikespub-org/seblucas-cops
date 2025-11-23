@@ -177,20 +177,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mikespub/epubjs-reader@npm:^2025.9.17":
-  version: 2025.9.17
-  resolution: "@mikespub/epubjs-reader@npm:2025.9.17"
+"@mikespub/epubjs-reader@npm:^2025.11.22":
+  version: 2025.11.22
+  resolution: "@mikespub/epubjs-reader@npm:2025.11.22"
   dependencies:
     epubjs: "npm:^0.3.93"
     js-md5: "npm:^0.8.3"
-  checksum: 10c0/7d0f297161cde5e210b80c6cff0b0778132ebf7fe280a610c9b45bc4b6a2889d4bf4edc6db42a7173760ea3632e83aeb44c2f2a25f11c42c8aac415a5d5b7da1
+  checksum: 10c0/97b7d75ebd8692b02f61879a422937107a02fa071973930bc4d39ec7c17b1c7dd9e25340249d4ad20c910e6b0a0926ec12d2734797d61f92f1a92c38dad405d8
   languageName: node
   linkType: hard
 
-"@mikespub/web-comic-reader@npm:^2025.10.7":
-  version: 2025.10.7
-  resolution: "@mikespub/web-comic-reader@npm:2025.10.7"
-  checksum: 10c0/116d8d7256b32921505820dc40980157372c2782b96914448d5e4ab6c23ca1e57c92fe969ef726fe3c59176bd79ab6b3bd57ff7c8280e5ca69b423e230539fa1
+"@mikespub/web-comic-reader@npm:^2025.11.23":
+  version: 2025.11.23
+  resolution: "@mikespub/web-comic-reader@npm:2025.11.23"
+  checksum: 10c0/6cdec9b5dd007164ac5450054b5f189402d6465c5c9e4716c43997807bd5691c51c7e2e66f6f669c981c82cd9794de9cc023cbe686bcb507f922d42b357a5a9d
   languageName: node
   linkType: hard
 
@@ -1736,8 +1736,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "seblucas-cops@workspace:."
   dependencies:
-    "@mikespub/epubjs-reader": "npm:^2025.9.17"
-    "@mikespub/web-comic-reader": "npm:^2025.10.7"
+    "@mikespub/epubjs-reader": "npm:^2025.11.22"
+    "@mikespub/web-comic-reader": "npm:^2025.11.23"
     bootstrap: "npm:^5.3.8"
     bootstrap3: "npm:bootstrap@^5.3.8"
     corejs-typeahead: "npm:^1.3.4"

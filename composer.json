@@ -26,9 +26,9 @@
         "ext-xml": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "mikespub/epubjs-reader": "^2025.09",
+        "mikespub/epubjs-reader": "^2025.11",
         "mikespub/php-epub-meta": "^3.5",
-        "mikespub/web-comic-reader": "^2025.10",
+        "mikespub/web-comic-reader": "^2025.11",
         "mozilla/pdfjs-dist": "^5.4",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
@@ -44,7 +44,7 @@
         "symfony/routing": "^7.4",
         "symfony/string": "^7.4",
         "symfony/translation-contracts": "^3.6",
-        "twig/twig": "^3.21"
+        "twig/twig": "^3.22"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.2",
@@ -55,8 +55,8 @@
         "symfony/http-foundation": "^7.4",
         "nikic/fast-route": "2.0.0-beta1",
         "mikespub/epub-loader": "^3.7",
-        "opis/json-schema": "^2.5",
-        "webonyx/graphql-php": "^15.25"
+        "opis/json-schema": "^2.6",
+        "webonyx/graphql-php": "^15.26"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
