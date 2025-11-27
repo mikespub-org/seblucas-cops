@@ -44,7 +44,7 @@ class DotPHPTemplate extends BaseRenderer
     public function getDotTemplate($templateFile)
     {
         // production mode was required here for issue seblucas/cops#392
-        error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+        //error_reporting(E_ALL & ~E_DEPRECATED);
         $headcontent = file_get_contents($templateFile);
         $template = new doT();
         $dot = $template->template($headcontent, null);

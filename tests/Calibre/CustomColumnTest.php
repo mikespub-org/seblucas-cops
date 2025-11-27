@@ -434,7 +434,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Custom column example 01 (text)", $currentPage->entryArray[5]->content);
         $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("text", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(8)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(8)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType02(): void
@@ -452,7 +455,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Custom column example 02 (csv)", $currentPage->entryArray[5]->content);
         $this->assertEquals(9, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("csv", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(6)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(6)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType03(): void
@@ -482,7 +488,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Alphabetical index of the 3 series", $currentPage->entryArray[5]->content);
         $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("series", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(4)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(4)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType05(): void
@@ -500,7 +509,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Alphabetical index of the 4 values", $currentPage->entryArray[5]->content);
         $this->assertEquals(4, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("enumeration", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(5)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(5)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType06(): void
@@ -518,7 +530,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Custom column example 06 (date)", $currentPage->entryArray[5]->content);
         $this->assertEquals(5, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("datetime", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(12)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(12)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType07(): void
@@ -536,7 +551,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Custom column example 07 (float)", $currentPage->entryArray[5]->content);
         $this->assertEquals(6, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("float", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(14)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(14)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType08(): void
@@ -554,7 +572,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Custom column example 08 (int)", $currentPage->entryArray[5]->content);
         $this->assertEquals(4, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("int", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(10)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(10)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType09(): void
@@ -572,7 +593,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Index of ratings", $currentPage->entryArray[5]->content);
         $this->assertEquals(6, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("rating", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(9)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(9)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testIndexType10(): void
@@ -590,7 +614,10 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Index of a boolean value", $currentPage->entryArray[5]->content);
         $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("bool", $currentPage->entryArray[5]->contentType);
-        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(11)->getCount());
+        $currentPage->entryArray[5]->getNavLink();
+        $countEntry = CustomColumnType::createByCustomID(11)->getCount();
+        $countEntry->getNavLink();
+        $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
 
     public function testAllCustomsType01(): void
