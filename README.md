@@ -1,5 +1,9 @@
 # COPS for PHP 8.x
 
+## Breaking changes for 4.x release (PHP >= 8.4)
+
+None if you upgrade from 3.x, besides the PHP version
+
 ## Breaking changes for 3.x release (PHP >= 8.2)
 
 ### For everyone
@@ -12,13 +16,14 @@
 
 ## Prerequisites for this fork
 
--	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML, Zip and ZLib support (PHP 8.2 or later recommended)
+-	PHP 8.x with DOM, GD, Intl, Json, PDO SQLite, SQLite3, XML, Zip and ZLib support (PHP 8.4 or later recommended)
+- Release 4.x.x will only work with PHP >= 8.4 - typical for most source code & docker image installs in 2025 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 3.x.x will only work with PHP >= 8.2 - typical for most source code & docker image installs in 2024 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 2.x.x will only work with PHP >= 8.1 - typical for most source code & docker image installs in 2023 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 1.x.x still works with PHP 7.4 if necessary - earlier PHP 7.x (or 5.x) versions are *not* supported with this fork
 
 User support issues remain available at https://github.com/seblucas/cops/issues - please use it if you need help with COPS in general.
-For the 2.x and 3.x versions please report any new issues at https://github.com/mikespub-org/seblucas-cops/issues
+For the 2.x, 3.x and 4.x versions please report any new issues at https://github.com/mikespub-org/seblucas-cops/issues
 
 Pull requests should be against the latest source code at https://github.com/mikespub-org/seblucas-cops/pulls - thanks for any contributions :-)
 
