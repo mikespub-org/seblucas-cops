@@ -16,8 +16,12 @@ x.x.x - TODO
   * ...
 
 3.x.x - 2025xxxx 
+  * ...
+
+3.8.2 - 20251127 Use form authentication + update packages & readers
   * Changes in config/default.php file:
     - add $config['cops_form_authentication'] option to use form authentication
+  * Update php/npm packages and ebook readers
   * Drop loading user-specific config before auth in config/config.php
   * Use new AuthMiddleware to handle authentication + update Config
   * Support form authentication with login.html again - see PR #161 from @dcoffin88

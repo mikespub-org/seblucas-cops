@@ -645,11 +645,11 @@ class RestApiTest extends TestCase
         if (!file_exists($resultFile)) {
             file_put_contents($resultFile, $output);
         }
-        $expexted = file_get_contents($resultFile);
+        $expected = file_get_contents($resultFile);
         if (str_contains($output ?? '', ' "mtime": ')) {
             $output = preg_replace('/ "mtime": \S+/', ' "mtime": "now"', $output);
-            $expexted = preg_replace('/ "mtime": \S+/', ' "mtime": "now"', $expexted);
+            $expected = preg_replace('/ "mtime": \S+/', ' "mtime": "now"', $expected);
         }
-        $this->assertEquals($expexted, $output);
+        $this->assertEquals($expected, $output);
     }
 }
