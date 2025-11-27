@@ -172,7 +172,7 @@ class BrowserKitTest extends TestCase
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplates')]
-    public function testClientSideRendering($template = 'default'): void
+    public function testClientSideRendering($template = 'default', $ignored = ''): void
     {
         $this->createBrowser($template, 'Chrome');
 

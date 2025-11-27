@@ -121,7 +121,7 @@ class UriGeneratorTest extends TestCase
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]
-    public function testHandlerLink($link, $expected, $route)
+    public function testHandlerLink($link, $expected, $route, $ignored)
     {
         // skip feed-page routes for handler::link() - use feed-path route with default page handler
         if (str_starts_with($route, "feed-page")) {

@@ -591,7 +591,7 @@ class RestApiTest extends TestCase
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
-    public function testGetRouteForParams($expected, $route, $params)
+    public function testGetRouteForParams($expected, $route, $params, $ignored)
     {
         RouteTest::getRouteForParams($this, $expected, $route, $params);
     }
@@ -603,7 +603,7 @@ class RestApiTest extends TestCase
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]
-    public function testGenerateRoute($routeUrl, $route, $params)
+    public function testGenerateRoute($routeUrl, $route, $params, $ignored)
     {
         $prefix = "";
         if ($route == 'restapi-path') {
