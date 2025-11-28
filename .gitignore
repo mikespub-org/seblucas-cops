@@ -13,6 +13,7 @@
 #!.yarn/plugins
 .yarnrc.yml
 .pnp.*
+yarn.lock
 .editorconfig
 .gitattributes
 *.cache

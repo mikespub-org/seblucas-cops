@@ -21,6 +21,7 @@ docker-compose*.yaml
 #!.yarn/plugins
 .yarnrc.yml
 .pnp.*
+yarn.lock
 .editorconfig
 .gitattributes
 .gitremotes
