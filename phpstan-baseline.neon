@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Comparison operation "\>\=" between int\<80200, 80599\> and 70400 is always true\.$#'
+			message: '#^Comparison operation "\>\=" between int\<80400, 80599\> and 80400 is always true\.$#'
 			identifier: greaterOrEqual.alwaysTrue
 			count: 1
 			path: checkconfig.php
@@ -11,12 +11,6 @@ parameters:
 			identifier: method.unused
 			count: 1
 			path: src/Calibre/Annotation.php
-
-		-
-			message: '#^Call to an undefined static method SebLucas\\Cops\\Calibre\\Base\|SebLucas\\Cops\\Calibre\\Data\:\:getCount\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: src/Calibre/BaseList.php
 
 		-
 			message: '#^PHPDoc tag @var with type SebLucas\\Cops\\Calibre\\Category is not subtype of native type static\(SebLucas\\Cops\\Calibre\\Category\)\.$#'
@@ -37,13 +31,7 @@ parameters:
 			path: src/Framework/FrameworkTodo.php
 
 		-
-			message: '#^Right side of && is always false\.$#'
-			identifier: booleanAnd.rightAlwaysFalse
-			count: 1
-			path: src/Handlers/AdminHandler.php
-
-		-
-			message: '#^Comparison operation "\>\=" between int\<80200, 80599\> and 80200 is always true\.$#'
+			message: '#^Comparison operation "\>\=" between int\<80400, 80599\> and 80400 is always true\.$#'
 			identifier: greaterOrEqual.alwaysTrue
 			count: 1
 			path: src/Handlers/CheckHandler.php

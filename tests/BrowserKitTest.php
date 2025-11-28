@@ -169,6 +169,7 @@ class BrowserKitTest extends TestCase
     /**
      * Summary of testClientSideRendering
      * @param string $template
+     * @param string $ignored
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplates')]

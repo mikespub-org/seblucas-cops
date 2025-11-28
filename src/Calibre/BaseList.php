@@ -171,6 +171,7 @@ class BaseList
      */
     public function getEntryCount()
     {
+        assert(is_subclass_of($this->className, Base::class));
         return $this->className::getCount($this->databaseId, $this->handler);
     }
 

@@ -107,7 +107,7 @@ class SessionTest extends TestCase
         // force expires on next start()
         $session->set('expires', time() - 24 * 60 * 60);
 
-        $this->putSessionId($expected);
+        $this->putSessionId((string) $expected);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testSessionRegenerate')]
@@ -133,7 +133,7 @@ class SessionTest extends TestCase
         $connected = $session->get('connected');
         $this->assertEquals($expected, $connected);
 
-        $this->putSessionId($sessionId);
+        $this->putSessionId((string) $sessionId);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testSessionExpires')]

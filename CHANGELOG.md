@@ -9,14 +9,14 @@ x.x.x - TODO
   * Experiment with default customize values per user (TODO)
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.5
 
-2.8.x - 2024xxxx Maintenance release for 2.x (PHP >= 8.1)
+3.8.x - 2025xxxx Maintenance release for 3.x (PHP >= 8.2)
   * ...
 
-1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
+4.x.x - 2025xxxx 
   * ...
 
-3.x.x - 2025xxxx 
-  * ...
+4.0.0 - 20251127 Pre-release for PHP 8.4+
+  * Update platform reqs in composer.json
 
 3.8.2 - 20251127 Use form authentication + update packages & readers
   * Changes in config/default.php file:

@@ -59,13 +59,13 @@ if (!empty($err) && $err == 1) {
             <h4>
             <?php
     if (defined('PHP_VERSION_ID')) {
-        if (PHP_VERSION_ID >= 70400) {
+        if (PHP_VERSION_ID >= 80400) {
             echo 'OK (' . PHP_VERSION . ')';
         } else {
-            echo 'Please install PHP >= 7.4 (' . PHP_VERSION . ')';
+            echo 'Please install PHP >= 8.4 (' . PHP_VERSION . ')';
         }
     } else {
-        echo 'Please install PHP >= 7.4';
+        echo 'Please install PHP >= 8.4';
     }
 ?>
             </h4>

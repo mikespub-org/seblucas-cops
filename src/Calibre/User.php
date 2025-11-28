@@ -89,7 +89,8 @@ class User
 
     /**
      * Summary of verifyLogin
-     * @param array<mixed> $serverVars
+     * @param ?array<mixed> $serverVars
+     * @param ?array<mixed> $requestVars
      * @return bool
      * @deprecated 3.8.1 use AuthMiddleware instead - see PR #161
      */

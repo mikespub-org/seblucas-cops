@@ -588,6 +588,7 @@ class RestApiTest extends TestCase
      * @param mixed $expected
      * @param mixed $route
      * @param mixed $params
+     * @param mixed $ignored
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('routeProvider')]
@@ -600,6 +601,7 @@ class RestApiTest extends TestCase
      * @param mixed $routeUrl
      * @param mixed $route
      * @param mixed $params
+     * @param mixed $ignored
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider("routeProvider")]

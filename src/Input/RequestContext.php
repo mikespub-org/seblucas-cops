@@ -250,7 +250,7 @@ class RequestContext
         return $this->session;
     }
 
-    public function setSession(Session $session)
+    public function setSession(Session $session): void
     {
         $this->session = $session;
     }

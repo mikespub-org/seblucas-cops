@@ -118,6 +118,7 @@ class UriGeneratorTest extends TestCase
      * @param mixed $link
      * @param mixed $expected
      * @param mixed $route
+     * @param mixed $ignored
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('linkProvider')]

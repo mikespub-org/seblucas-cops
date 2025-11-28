@@ -118,12 +118,12 @@ class CheckHandler extends BaseHandler
     public function getPhpVersion()
     {
         if (defined('PHP_VERSION_ID')) {
-            if (PHP_VERSION_ID >= 80200) {
+            if (PHP_VERSION_ID >= 80400) {
                 return 'OK (' . PHP_VERSION . ')';
             }
-            return 'Please install PHP >= 8.2 (' . PHP_VERSION . ')';
+            return 'Please install PHP >= 8.4 (' . PHP_VERSION . ')';
         }
-        return 'Please install PHP >= 8.2';
+        return 'Please install PHP >= 8.4';
     }
 
     /**
