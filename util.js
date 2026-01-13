@@ -138,7 +138,13 @@ function sendToMailAddress (component, dataid) {
         }
         Cookies.set('email', email, { expires: COOKIE_LIFETIME });
     }
-    var url = currentData.baseurl + '/mail';
+    // fix https://github.com/dunxd/HomeAssistantAddons/issues/90
+    var url = currentData.baseurl;
+    if (url.indexOf('index.php') !== -1) {
+        url = url + '/mail';
+    } else {
+        url = url + 'index.php/mail';
+    }
     if (currentData.databaseId) {
         url = url + '?db=' + currentData.databaseId;
     }
