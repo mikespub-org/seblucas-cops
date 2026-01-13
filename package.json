@@ -7,8 +7,8 @@
     "bootstrap": "^5.3.8",
     "bootstrap3": "npm:bootstrap@^3.4.1",
     "corejs-typeahead": "^1.3.4",
-    "datatables.net": "^2.3.5",
-    "datatables.net-bs5": "^2.3.5",
+    "datatables.net": "^2.3.6",
+    "datatables.net-bs5": "^2.3.6",
     "dot": "^1.1.3",
     "graphiql": "^5.2.2",
     "graphql": "^16.12.0",
@@ -19,9 +19,9 @@
     "normalize.css": "^8.0.1",
     "pdfjs-dist": "^5.4.394",
     "qrcodejs": "^1.0.0",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
-    "swagger-ui-dist": "^5.30.3",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "swagger-ui-dist": "^5.31.0",
     "twig": "^1.17.1"
   },
   "license": "GPL-2.0-or-later"
