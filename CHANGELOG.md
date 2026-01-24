@@ -9,11 +9,15 @@ x.x.x - TODO
   * Experiment with default customize values per user (TODO)
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.5
 
-3.8.x - 2025xxxx Maintenance release for 3.x (PHP >= 8.2)
+3.8.x - 2026xxxx Maintenance release for 3.x (PHP >= 8.2)
   * ...
 
-4.x.x - 2025xxxx 
+4.x.x - 2026xxxx 
   * ...
+
+4.0.2 - 20260124 Fix mail without index.php + update packages 
+  * Update php/npm packages and templates
+  * Fix sending mail when front_controller is set - see dunxd/HomeAssistantAddons#90 by @saya6k
 
 4.0.0 - 20251127 Pre-release for PHP 8.4+
   * Update platform reqs in composer.json

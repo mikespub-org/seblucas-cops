@@ -120,12 +120,12 @@ class LanguageTest extends TestCase
         if (class_exists('\Symfony\Component\String\UnicodeString')) {
             // @ignore class.notFound
             $input = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ";
-            $output = (new \Symfony\Component\String\UnicodeString($input))->ascii();
+            $output = new \Symfony\Component\String\UnicodeString($input)->ascii();
             $expected = "AAAAAACEEEEIIIIOEOOOOOUUUUYaaaaaaceeeeiiiioedooooouuuuyyn";
             $this->assertEquals($expected, (string) $output);
 
             $input = "孙子兵法";
-            $output = (new \Symfony\Component\String\UnicodeString($input))->ascii();
+            $output = new \Symfony\Component\String\UnicodeString($input)->ascii();
             $expected = "sun zi bing fa";
             $this->assertEquals($expected, (string) $output);
         } else {

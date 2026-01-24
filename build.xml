@@ -116,6 +116,7 @@
                 <exclude name="composer.lock" />
                 <exclude name="*.cache" />
                 <exclude name="*.cache/**" />
+                <exclude name=".php-cs-fixer.dist.php" />
             </fileset>
         </zip>
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP renderer for doT templating engine
  *

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b90e2bf8ceddf14f5cd796ce7bc90574",
+    "content-hash": "364e06e37cfc6a385fec16b72c8f8c5c",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -86,16 +86,16 @@
         },
         {
             "name": "mikespub/epubjs-reader",
-            "version": "2025.11.22",
+            "version": "2026.1.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/intity-epubjs-reader.git",
-                "reference": "78d8c441d185c7e4627f59d0b69bf38aed3032a9"
+                "reference": "4ba747619206e7f93334d72484f85821591df942"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/78d8c441d185c7e4627f59d0b69bf38aed3032a9",
-                "reference": "78d8c441d185c7e4627f59d0b69bf38aed3032a9",
+                "url": "https://api.github.com/repos/mikespub-org/intity-epubjs-reader/zipball/4ba747619206e7f93334d72484f85821591df942",
+                "reference": "4ba747619206e7f93334d72484f85821591df942",
                 "shasum": ""
             },
             "require-dev": {
@@ -129,22 +129,22 @@
             "description": "Epub.js Reader with zipfs.php",
             "support": {
                 "issues": "https://github.com/mikespub-org/intity-epubjs-reader/issues",
-                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2025.11.22"
+                "source": "https://github.com/mikespub-org/intity-epubjs-reader/tree/2026.1.24"
             },
-            "time": "2025-11-22T11:12:09+00:00"
+            "time": "2026-01-24T12:37:32+00:00"
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "4.0.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "d9bcc4990cec47a390feaad894a1809af479ec37"
+                "reference": "2bf360232ddbf151034c3de2935392a3652540e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/d9bcc4990cec47a390feaad894a1809af479ec37",
-                "reference": "d9bcc4990cec47a390feaad894a1809af479ec37",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/2bf360232ddbf151034c3de2935392a3652540e7",
+                "reference": "2bf360232ddbf151034c3de2935392a3652540e7",
                 "shasum": ""
             },
             "require": {
@@ -201,22 +201,22 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/4.0.0"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/4.0.1"
             },
-            "time": "2025-11-27T16:53:18+00:00"
+            "time": "2026-01-24T14:03:48+00:00"
         },
         {
             "name": "mikespub/web-comic-reader",
-            "version": "2025.11.23",
+            "version": "2026.1.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader.git",
-                "reference": "f6215e2feccec014abcb4ccfbdb3a83ebaa63a89"
+                "reference": "8c66d784f40f1abf299fcb174a9beb2cf0857a0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/afzafri-Web-Comic-Reader/zipball/f6215e2feccec014abcb4ccfbdb3a83ebaa63a89",
-                "reference": "f6215e2feccec014abcb4ccfbdb3a83ebaa63a89",
+                "url": "https://api.github.com/repos/mikespub-org/afzafri-Web-Comic-Reader/zipball/8c66d784f40f1abf299fcb174a9beb2cf0857a0d",
+                "reference": "8c66d784f40f1abf299fcb174a9beb2cf0857a0d",
                 "shasum": ""
             },
             "type": "library",
@@ -238,16 +238,16 @@
             ],
             "description": "Web Based cbr/cbz/cbt comic book reader. Written in HTML5 and Javascript",
             "support": {
-                "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2025.11.23"
+                "source": "https://github.com/mikespub-org/afzafri-Web-Comic-Reader/tree/2026.1.24"
             },
-            "time": "2025-11-23T14:35:50+00:00"
+            "time": "2026-01-24T12:19:14+00:00"
         },
         {
             "name": "mozilla/pdfjs-dist",
-            "version": "5.4.394",
+            "version": "5.4.530",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.394/pdfjs-5.4.394-legacy-dist.zip"
+                "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.530/pdfjs-5.4.530-legacy-dist.zip"
             },
             "type": "library",
             "license": [
@@ -258,18 +258,15 @@
         },
         {
             "name": "npm-asset/babel--runtime",
-            "version": "v7.28.5",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:babel/babel.git",
-                "reference": "61647ae2397c82c3c71f077b5ab109106a5cac0f"
-            },
+            "version": "7.28.6",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/babel/babel/zipball/61647ae2397c82c3c71f077b5ab109106a5cac0f",
-                "reference": "61647ae2397c82c3c71f077b5ab109106a5cac0f"
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@babel/runtime/-/runtime-7.28.6.tgz"
             },
-            "type": "npm-asset"
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "npm-asset/balanced-match",
@@ -1368,16 +1365,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v3.22.2",
+            "version": "v3.23.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "946ddeafa3c9f4ce279d1f34051af041db0e16f2"
+                "reference": "a64dc5d2cc7d6cafb9347f6cd802d0d06d0351c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/946ddeafa3c9f4ce279d1f34051af041db0e16f2",
-                "reference": "946ddeafa3c9f4ce279d1f34051af041db0e16f2",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a64dc5d2cc7d6cafb9347f6cd802d0d06d0351c9",
+                "reference": "a64dc5d2cc7d6cafb9347f6cd802d0d06d0351c9",
                 "shasum": ""
             },
             "require": {
@@ -1431,7 +1428,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v3.22.2"
+                "source": "https://github.com/twigphp/Twig/tree/v3.23.0"
             },
             "funding": [
                 {
@@ -1443,22 +1440,22 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-14T11:28:47+00:00"
+            "time": "2026-01-23T21:00:41+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "illuminate/collections",
-            "version": "v12.46.0",
+            "version": "v12.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "d3f104a32fdfbf416cd1a839dad0e2c670a03f4e"
+                "reference": "95eb9f848a02a05db35d71b63073ed5f09dc11ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/d3f104a32fdfbf416cd1a839dad0e2c670a03f4e",
-                "reference": "d3f104a32fdfbf416cd1a839dad0e2c670a03f4e",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/95eb9f848a02a05db35d71b63073ed5f09dc11ce",
+                "reference": "95eb9f848a02a05db35d71b63073ed5f09dc11ce",
                 "shasum": ""
             },
             "require": {
@@ -1505,11 +1502,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-01-07T21:26:29+00:00"
+            "time": "2026-01-19T15:23:52+00:00"
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v12.46.0",
+            "version": "v12.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1555,7 +1552,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v12.46.0",
+            "version": "v12.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1603,7 +1600,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v12.46.0",
+            "version": "v12.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -1714,17 +1711,54 @@
             "time": "2025-06-11T08:12:14+00:00"
         },
         {
-            "name": "mikespub/epub-loader",
-            "version": "4.0.0",
+            "name": "mikespub/codedread-kthoom",
+            "version": "2026.1.24",
             "source": {
                 "type": "git",
-                "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "91250a3e052382beb618c26182da433bc1d7155d"
+                "url": "https://github.com/mikespub-org/codedread-kthoom.git",
+                "reference": "b9460ce8bbe36cb63a72abf4d14a7c272594d1d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/91250a3e052382beb618c26182da433bc1d7155d",
-                "reference": "91250a3e052382beb618c26182da433bc1d7155d",
+                "url": "https://api.github.com/repos/mikespub-org/codedread-kthoom/zipball/b9460ce8bbe36cb63a72abf4d14a7c272594d1d0",
+                "reference": "b9460ce8bbe36cb63a72abf4d14a7c272594d1d0",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "codedread",
+                    "homepage": "https://github.com/codedread/kthoom",
+                    "role": "Developer"
+                },
+                {
+                    "name": "mikespub",
+                    "homepage": "https://github.com/mikespub-org/codedread-kthoom",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Comic Book Reader in the Browser",
+            "support": {
+                "source": "https://github.com/mikespub-org/codedread-kthoom/tree/2026.1.24"
+            },
+            "time": "2026-01-24T12:49:10+00:00"
+        },
+        {
+            "name": "mikespub/epub-loader",
+            "version": "4.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikespub-org/epub-loader.git",
+                "reference": "76f466be17912ef79fc558081e3a056d9c027339"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/76f466be17912ef79fc558081e3a056d9c027339",
+                "reference": "76f466be17912ef79fc558081e3a056d9c027339",
                 "shasum": ""
             },
             "require": {
@@ -1737,10 +1771,10 @@
                 "mikespub/php-epub-meta": "^4.0",
                 "mikespub/survos-wikidata": "^6.0",
                 "php": ">=8.4",
-                "twig/twig": "^3.22"
+                "twig/twig": "^3.23"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.5 || ^12.0"
+                "phpunit/phpunit": "^12.5"
             },
             "suggest": {
                 "google/apiclient": "Client library for Google APIs",
@@ -1780,22 +1814,22 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/4.0.0"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/4.0.1"
             },
-            "time": "2025-11-27T17:08:47+00:00"
+            "time": "2026-01-24T14:15:15+00:00"
         },
         {
             "name": "mikespub/survos-wikidata",
-            "version": "6.0.0",
+            "version": "6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/survos-wikidata.git",
-                "reference": "76c174b926a6ae999b3a32b41739c031223ccc4e"
+                "reference": "6a3840fa47e437e25cebb6962c94bba6ee9d1c4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/76c174b926a6ae999b3a32b41739c031223ccc4e",
-                "reference": "76c174b926a6ae999b3a32b41739c031223ccc4e",
+                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/6a3840fa47e437e25cebb6962c94bba6ee9d1c4a",
+                "reference": "6a3840fa47e437e25cebb6962c94bba6ee9d1c4a",
                 "shasum": ""
             },
             "require": {
@@ -1805,8 +1839,8 @@
             },
             "require-dev": {
                 "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^11.5 || ^12.0",
-                "rector/rector": "^2.2"
+                "phpunit/phpunit": "^12.5",
+                "rector/rector": "^2.3"
             },
             "type": "library",
             "autoload": {
@@ -1843,7 +1877,7 @@
                 "wikidata"
             ],
             "support": {
-                "source": "https://github.com/mikespub-org/survos-wikidata/tree/6.0.0"
+                "source": "https://github.com/mikespub-org/survos-wikidata/tree/6.0.1"
             },
             "funding": [
                 {
@@ -1855,7 +1889,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-11-27T16:35:53+00:00"
+            "time": "2026-01-24T14:22:16+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2749,16 +2783,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.4",
+            "version": "12.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4ba0e923f9d3fc655de22f9547c01d15a41fc93a"
+                "reference": "ab8e4374264bc65523d1458d14bf80261577e01f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4ba0e923f9d3fc655de22f9547c01d15a41fc93a",
-                "reference": "4ba0e923f9d3fc655de22f9547c01d15a41fc93a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ab8e4374264bc65523d1458d14bf80261577e01f",
+                "reference": "ab8e4374264bc65523d1458d14bf80261577e01f",
                 "shasum": ""
             },
             "require": {
@@ -2772,7 +2806,7 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
-                "phpunit/php-code-coverage": "^12.5.1",
+                "phpunit/php-code-coverage": "^12.5.2",
                 "phpunit/php-file-iterator": "^6.0.0",
                 "phpunit/php-invoker": "^6.0.0",
                 "phpunit/php-text-template": "^5.0.0",
@@ -2826,7 +2860,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.4"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.6"
             },
             "funding": [
                 {
@@ -2850,7 +2884,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-15T06:05:34+00:00"
+            "time": "2026-01-16T16:28:10+00:00"
         },
         {
             "name": "psr/container",
@@ -3077,16 +3111,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "7.1.3",
+            "version": "7.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "dc904b4bb3ab070865fa4068cd84f3da8b945148"
+                "reference": "6a7de5df2e094f9a80b40a522391a7e6022df5f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/dc904b4bb3ab070865fa4068cd84f3da8b945148",
-                "reference": "dc904b4bb3ab070865fa4068cd84f3da8b945148",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/6a7de5df2e094f9a80b40a522391a7e6022df5f6",
+                "reference": "6a7de5df2e094f9a80b40a522391a7e6022df5f6",
                 "shasum": ""
             },
             "require": {
@@ -3145,7 +3179,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/comparator/issues",
                 "security": "https://github.com/sebastianbergmann/comparator/security/policy",
-                "source": "https://github.com/sebastianbergmann/comparator/tree/7.1.3"
+                "source": "https://github.com/sebastianbergmann/comparator/tree/7.1.4"
             },
             "funding": [
                 {
@@ -3165,7 +3199,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-20T11:27:00+00:00"
+            "time": "2026-01-24T09:28:48+00:00"
         },
         {
             "name": "sebastian/complexity",
@@ -4863,16 +4897,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v15.29.4",
+            "version": "v15.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "7ae6371184a1909822916ff101eab7e6e070c656"
+                "reference": "eb3b86e3c1034055972ec2685f13b34c660d8844"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/7ae6371184a1909822916ff101eab7e6e070c656",
-                "reference": "7ae6371184a1909822916ff101eab7e6e070c656",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/eb3b86e3c1034055972ec2685f13b34c660d8844",
+                "reference": "eb3b86e3c1034055972ec2685f13b34c660d8844",
                 "shasum": ""
             },
             "require": {
@@ -4885,12 +4919,12 @@
                 "amphp/http-server": "^2.1",
                 "dms/phpunit-arraysubset-asserts": "dev-master",
                 "ergebnis/composer-normalize": "^2.28",
-                "friendsofphp/php-cs-fixer": "3.92.4",
-                "mll-lab/php-cs-fixer-config": "5.11.0",
+                "friendsofphp/php-cs-fixer": "3.92.5",
+                "mll-lab/php-cs-fixer-config": "5.13.0",
                 "nyholm/psr7": "^1.5",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "2.1.33",
+                "phpstan/phpstan": "2.1.34",
                 "phpstan/phpstan-phpunit": "2.0.11",
                 "phpstan/phpstan-strict-rules": "2.0.7",
                 "phpunit/phpunit": "^9.5 || ^10.5.21 || ^11",
@@ -4926,7 +4960,7 @@
             ],
             "support": {
                 "issues": "https://github.com/webonyx/graphql-php/issues",
-                "source": "https://github.com/webonyx/graphql-php/tree/v15.29.4"
+                "source": "https://github.com/webonyx/graphql-php/tree/v15.30.0"
             },
             "funding": [
                 {
@@ -4934,7 +4968,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2026-01-05T16:06:25+00:00"
+            "time": "2026-01-20T07:10:44+00:00"
         }
     ],
     "aliases": [],

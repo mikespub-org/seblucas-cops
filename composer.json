@@ -26,9 +26,9 @@
         "ext-xml": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
-        "mikespub/epubjs-reader": "^2025.11",
+        "mikespub/epubjs-reader": "^2026.1",
         "mikespub/php-epub-meta": "^4.0",
-        "mikespub/web-comic-reader": "^2025.11",
+        "mikespub/web-comic-reader": "^2026.1",
         "mozilla/pdfjs-dist": "^5.4",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
@@ -44,19 +44,20 @@
         "symfony/routing": "^7.4 || ^8.0",
         "symfony/string": "^7.4 || ^8.0",
         "symfony/translation-contracts": "^3.6",
-        "twig/twig": "^3.22"
+        "twig/twig": "^3.23"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.2",
-        "phpunit/phpunit": "^11.5 || ^12.0",
+        "phpunit/phpunit": "^12.5",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^7.4 || ^8.0",
         "symfony/http-client": "^7.4 || ^8.0",
         "symfony/http-foundation": "^7.4 || ^8.0",
         "nikic/fast-route": "2.0.0-beta1",
         "mikespub/epub-loader": "^4.0",
+        "mikespub/codedread-kthoom": "^2026.1",
         "opis/json-schema": "^2.6",
-        "webonyx/graphql-php": "^15.29"
+        "webonyx/graphql-php": "^15.30"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks",
@@ -82,11 +83,11 @@
             "package": {
                 "name": "mozilla/pdfjs-dist",
                 "description": "Legacy build for PDF.js from official release",
-                "version": "5.4.394",
+                "version": "5.4.530",
                 "homepage": "https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website",
                 "license": "Apache-2.0",
                 "dist": {
-                    "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.394/pdfjs-5.4.394-legacy-dist.zip",
+                    "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.530/pdfjs-5.4.530-legacy-dist.zip",
                     "type": "zip"
                 }
             }
