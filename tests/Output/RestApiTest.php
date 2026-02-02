@@ -185,7 +185,7 @@ class RestApiTest extends TestCase
         $expected = "Database Type table";
         $test = self::$apiProvider->getDatabases($request);
         $this->assertEquals($expected, $test["title"]);
-        $expected = 43;
+        $expected = 44;
         $this->assertCount($expected, $test["entries"]);
     }
 
@@ -287,7 +287,7 @@ class RestApiTest extends TestCase
         $expected = "Preferences";
         $test = self::$apiProvider->getPreferences($request);
         $this->assertEquals($expected, $test["title"]);
-        $expected = 13;
+        $expected = 14;
         $this->assertCount($expected, $test["entries"]);
     }
 

@@ -23,6 +23,12 @@
         },
         {
             "class": "Preference",
+            "title": "full_page_scan_requested",
+            "navlink": "vendor/bin/index.php/restapi/preferences/full_page_scan_requested",
+            "number": 1
+        },
+        {
+            "class": "Preference",
             "title": "grouped_search_terms",
             "navlink": "vendor/bin/index.php/restapi/preferences/grouped_search_terms",
             "number": 0
@@ -37,7 +43,7 @@
             "class": "Preference",
             "title": "library_view books view state",
             "navlink": "vendor/bin/index.php/restapi/preferences/library_view%20books%20view%20state",
-            "number": 10
+            "number": 11
         },
         {
             "class": "Preference",
