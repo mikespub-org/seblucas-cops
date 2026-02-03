@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Output\Response;
 use Exception;
-use PDO;
+use Pdo\Sqlite;
 
 class Database
 {
@@ -26,7 +26,7 @@ class Database
     public const NOTES_DB_NAME = 'notes_db';
     public const ROUTE_CHECK = "check";
 
-    /** @var ?PDO */
+    /** @var ?Sqlite */
     protected static $db = null;
     protected static ?string $dbFileName = null;
     protected static int $count = 0;
@@ -215,7 +215,7 @@ class Database
     /**
      * Summary of getDb
      * @param ?int $database
-     * @return \PDO
+     * @return \Pdo\Sqlite
      */
     public static function getDb($database = null)
     {
@@ -226,7 +226,7 @@ class Database
         if (is_null(self::$db)) {
             try {
                 if (is_readable(self::getDbFileName($database))) {
-                    self::$db = new PDO('sqlite:' . self::getDbFileName($database));
+                    self::$db = new Sqlite('sqlite:' . self::getDbFileName($database));
                     self::createSqliteFunctions();
                     self::$dbFileName = self::getDbFileName($database);
                     self::$functions = false;
@@ -250,12 +250,12 @@ class Database
     {
         // Use normalized search function
         if (Normalizer::useNormAndUp()) {
-            self::$db->sqliteCreateFunction('normAndUp', function ($s) {
+            self::$db->createFunction('normAndUp', function ($s) {
                 return Normalizer::normAndUp($s);
             }, 1);
         }
         if (in_array('series', Config::get('calibre_categories_using_hierarchy', []))) {
-            self::$db->sqliteCreateFunction('title_sort', function ($s) {
+            self::$db->createFunction('title_sort', function ($s) {
                 return Normalizer::getTitleSort($s);
             }, 1);
         }
@@ -270,7 +270,7 @@ class Database
         }
         // @todo no support for actual datetime conversion here
         // mtime REAL DEFAULT (unixepoch('subsec')),
-        self::$db->sqliteCreateFunction('unixepoch', function ($s) {
+        self::$db->createFunction('unixepoch', function ($s) {
             if (!empty($s) && $s == 'subsec') {
                 return microtime(true);
             }
@@ -312,14 +312,14 @@ class Database
         self::$functions = true;
         // add dummy functions for selecting in meta and tag_browser_* views
         if (!in_array('series', Config::get('calibre_categories_using_hierarchy', []))) {
-            self::$db->sqliteCreateFunction('title_sort', function ($s) {
+            self::$db->createFunction('title_sort', function ($s) {
                 return Normalizer::getTitleSort($s);
             }, 1);
         }
-        self::$db->sqliteCreateFunction('books_list_filter', function ($s) {
+        self::$db->createFunction('books_list_filter', function ($s) {
             return 1;
         }, 1);
-        self::$db->sqliteCreateAggregate('concat', function ($context, $row, $string) {
+        self::$db->createAggregate('concat', function ($context, $row, $string) {
             $context ??= [];
             $context[] = $string;
             return $context;
@@ -327,7 +327,7 @@ class Database
             $context ??= [];
             return implode(',', $context);
         }, 1);
-        self::$db->sqliteCreateAggregate('sortconcat', function ($context, $row, $id, $string) {
+        self::$db->createAggregate('sortconcat', function ($context, $row, $id, $string) {
             $context ??= [];
             $context[$id] = $string;
             return $context;
@@ -593,7 +593,7 @@ class Database
     /**
      * Summary of getNotesDb
      * @param ?int $database
-     * @return PDO|null
+     * @return \Pdo\Sqlite|null
      */
     public static function getNotesDb($database = null)
     {

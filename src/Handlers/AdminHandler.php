@@ -18,7 +18,7 @@ use SebLucas\Cops\Output\TwigTemplate;
 use SebLucas\Cops\Calibre\Database;
 use Exception;
 use JsonException;
-use PDO;
+use Pdo\Sqlite;
 
 /**
  * Summary of AdminHandler - @todo
@@ -388,7 +388,7 @@ if (!isset($config)) {
         foreach (Database::getDbList() as $name => $database) {
             $content .= "<li>Database $i: $name $database\n<ul>\n";
             try {
-                $db = new PDO('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
                 $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
                 $result->execute();
                 while ($post = $result->fetchObject()) {

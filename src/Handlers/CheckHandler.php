@@ -18,7 +18,7 @@ use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
-use PDO;
+use Pdo\Sqlite;
 
 /**
  * Summary of CheckHandler
@@ -294,7 +294,7 @@ Please check
             }
             $title = 'Check if Calibre database file can be opened with PHP';
             try {
-                $db = new PDO('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
                 $message = $name . ' OK';
             } catch (Exception $e) {
                 $message = $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
@@ -303,7 +303,7 @@ Please check
 
             $title = 'Check if Calibre database file contains at least some of the needed tables';
             try {
-                $db = new PDO('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
                 $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
                 if ($count == 4) {
                     $message = $name . ' OK';

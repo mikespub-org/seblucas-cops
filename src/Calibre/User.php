@@ -11,7 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
-use PDO;
+use Pdo\Sqlite;
 use Exception;
 use JsonException;
 
@@ -52,7 +52,7 @@ class User
     /**
      * Summary of getUserDb
      * @param string|null $userDbFile
-     * @return \PDO
+     * @return \Pdo\Sqlite
      */
     public static function getUserDb($userDbFile = null)
     {
@@ -60,7 +60,7 @@ class User
         if (!is_string($userDbFile) || !is_readable($userDbFile)) {
             throw new Exception('Invalid users database ' . $userDbFile);
         }
-        return new PDO('sqlite:' . $userDbFile);
+        return new Sqlite('sqlite:' . $userDbFile);
     }
 
     /**
