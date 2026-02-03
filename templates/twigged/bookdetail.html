@@ -74,6 +74,11 @@
         <h4>{{it.c.i18n.ratingTitle}}: {{it.book.rating}}</h4>
     </p>
     {% endif %}
+    {% if it.book.pages > 0 %}
+    <p>
+        <h4>{{it.c.i18n.pagesTitle}}: {{it.book.pages}}</h4>
+    </p>
+    {% endif %}
     {% if it.book.publisherName != "" %}
     <p>
         <h4>{{it.c.i18n.publisherName}}: <a href="{{it.book.publisherurl}}">{{it.book.publisherName|escape}}</a></h4>

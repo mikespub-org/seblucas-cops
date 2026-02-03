@@ -69,6 +69,11 @@
         <h4><span class="book-meta-label">{{=it.c.i18n.ratingTitle}}</span>: {{=it.book.rating}}</h4>
     </p>
     {{?}}
+    {{? it.book.pages > 0}}
+    <p>
+        <h4><span class="book-meta-label">{{=it.c.i18n.pagesTitle}}</span>: {{=it.book.pages}}</h4>
+    </p>
+    {{?}}
     {{? it.book.publisherName != ""}}
     <p>
         <h4><span class="book-meta-label">{{=it.c.i18n.publisherName}}</span>: <a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a></h4>

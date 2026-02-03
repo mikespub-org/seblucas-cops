@@ -96,8 +96,8 @@ class Book
     public $languages = null;
     /** @var ?array<Annotation> */
     public $annotations = null;
-    /** @var array<mixed> */
-    public $format = [];
+    /** @var ?int */
+    public $pages = null;
     /** @var ?string */
     protected $coverFileName = null;
     public bool $updateForKepub = false;
@@ -338,6 +338,26 @@ class Book
             $this->annotations = Annotation::getInstancesByBookId($this->id, $this->databaseId);
         }
         return $this->annotations;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPages()
+    {
+        if (is_null($this->pages)) {
+            $this->pages = 0;
+            // add pages for database user_version 27 = Calibre version 9.0.0 and later (Jan 30, 2026)
+            if (Database::getUserVersion($this->databaseId) > 26) {
+                // @see https://manual.calibre-ebook.com/_modules/calibre/db/cache.html#Cache.get_pages
+                $query = 'select pages from books_pages_link where book = ? and pages > 0 limit 1';
+                $result = Database::query($query, [$this->id], $this->databaseId);
+                if ($post = $result->fetchObject()) {
+                    $this->pages = (int) $post->pages;
+                }
+            }
+        }
+        return $this->pages;
     }
 
     /**

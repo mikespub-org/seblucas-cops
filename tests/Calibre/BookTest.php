@@ -149,6 +149,22 @@ class BookTest extends TestCase
         $this->assertNull($book);
     }
 
+    public function testGetPages_Count(): void
+    {
+        $book = Book::getBookById(17);
+
+        $this->assertSame(75, $book->getPages());
+    }
+
+    public function testGetPages_None(): void
+    {
+        $book = Book::getBookById(2);
+
+        $this->assertNull($book->pages);
+        $this->assertSame(0, $book->getPages());
+        $this->assertNotNull($book->pages);
+    }
+
     public function testGetRating_FiveStars(): void
     {
         $book = Book::getBookById(2);

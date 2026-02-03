@@ -179,6 +179,7 @@ class JsonRenderer extends BaseRenderer
         $out ["thumbnailurl"] = $cover->getThumbnailUri($thumb, false);
         $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
+        $out ["pages"] = $book->getPages();
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
         foreach ($book->getDatas() as $data) {
@@ -366,6 +367,7 @@ class JsonRenderer extends BaseRenderer
                 "permalinkAlt" => localize("permalink.alternate"),
                 "publisherName" => localize("publisher.name"),
                 "pubdateTitle" => localize("pubdate.title"),
+                "pagesTitle" => localize("pages.title"),
                 "languagesTitle" => localize("languages.title"),
                 "languageTitle" => localize("language.title"),
                 "contentTitle" => localize("content.summary"),

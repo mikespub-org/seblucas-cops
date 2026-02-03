@@ -13,7 +13,7 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
-  * ...
+  * Get book pages for Calibre version 9.0 and later
 
 4.0.2 - 20260124 Fix mail without index.php + update packages 
   * Update php/npm packages and templates
