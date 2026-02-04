@@ -48,7 +48,7 @@ class FrameworkTest extends TestCase
     {
         $handlers = $this->getHandlers();
 
-        $expected = 19;
+        $expected = 20;
         $this->assertCount($expected, $handlers);
     }
 

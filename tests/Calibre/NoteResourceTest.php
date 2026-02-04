@@ -29,7 +29,7 @@ class NoteResourceTest extends TestCase
     private static Author $author;
     /** @var array<string, int> */
     protected static $expectedSize = [
-        'note' => 227,
+        'note' => 434,
         'calres' => 37341,
     ];
 
@@ -63,8 +63,8 @@ class NoteResourceTest extends TestCase
         $expected = [];
         $expected[3] = [
             "item" => 3,
-            "size" => 227,
-            "mtime" => 1708880895.654,
+            "size" => 434,
+            "mtime" => 1770217333.384,
             "title" => "Lewis Carroll",
         ];
         $result = Note::getEntriesByType("authors");
@@ -78,7 +78,7 @@ class NoteResourceTest extends TestCase
         $this->assertEquals(3, $note->item);
         $this->assertEquals("authors", $note->colname);
         $this->assertEquals(self::$expectedSize['note'], strlen($note->doc));
-        $this->assertEquals(1708880895.654, $note->mtime);
+        $this->assertEquals(1770217333.384, $note->mtime);
     }
 
     public function testFixResourceLinks(): void

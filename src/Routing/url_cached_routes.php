@@ -14,6 +14,7 @@ $handlers = [
   'opds' => 'SebLucas\\Cops\\Handlers\\OpdsHandler',
   'loader' => 'SebLucas\\Cops\\Handlers\\LoaderHandler',
   'zipper' => 'SebLucas\\Cops\\Handlers\\ZipperHandler',
+  'calibre' => 'SebLucas\\Cops\\Handlers\\CalibreHandler',
   'calres' => 'SebLucas\\Cops\\Handlers\\CalResHandler',
   'zipfs' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler',
   'mail' => 'SebLucas\\Cops\\Handlers\\MailHandler',
@@ -1204,6 +1205,28 @@ $routes = [
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\ZipperHandler',
       '_route' => 'zipper-page-type',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'calibre-details' => [
+    '/calibre/{action}/{library}/{details:.*}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler',
+      '_route' => 'calibre-details',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'calibre-library' => [
+    '/calibre/{action}/{library}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler',
+      '_route' => 'calibre-library',
     ],
     [
       'GET',

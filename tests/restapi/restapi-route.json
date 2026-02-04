@@ -1438,6 +1438,34 @@
             ]
         },
         {
+            "name": "calibre-details",
+            "route": [
+                "/calibre/{action}/{library}/{details:.*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\CalibreHandler",
+                    "_route": "calibre-details"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "calibre-library",
+            "route": [
+                "/calibre/{action}/{library}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\CalibreHandler",
+                    "_route": "calibre-library"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "calres",
             "route": [
                 "/calres/{db:\\d+}/{alg}/{digest}",

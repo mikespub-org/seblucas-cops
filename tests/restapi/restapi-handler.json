@@ -598,6 +598,17 @@
             }
         },
         {
+            "handler": "calibre",
+            "routes": {
+                "calibre-details": [
+                    "/calibre/{action}/{library}/{details:.*}"
+                ],
+                "calibre-library": [
+                    "/calibre/{action}/{library}"
+                ]
+            }
+        },
+        {
             "handler": "calres",
             "routes": {
                 "calres": [

@@ -701,7 +701,7 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/tags/letter/([^/]+)(*MARK:m)|/tags/(\\d+)/([^/]+)(*MARK:n)|/tags/(\\d+)(*MARK:o)|/custom/(\\d+)/([^/]+)(*MARK:p)|/custom/(\\d+)(*MARK:q)|/languages/(\\d+)/([^/]+)(*MARK:r)|/languages/(\\d+)(*MARK:s)|/publishers/letter/([^/]+)(*MARK:t)|/publishers/(\\d+)/([^/]+)(*MARK:u)|/publishers/(\\d+)(*MARK:v)|/ratings/(\\d+)/([^/]+)(*MARK:w)|/ratings/(\\d+)(*MARK:x)|/identifiers/(\\w+)/([^/]+)(*MARK:y)|/identifiers/(\\w+)(*MARK:z)|/formats/(\\w+)(*MARK:aa)|/feed/(\\w+)(*MARK:ab)|/feed/(.+)(*MARK:ac)|/files/(\\d+)/(\\d+)/(.+)(*MARK:ad)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ae)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:af))$~',
+        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/tags/letter/([^/]+)(*MARK:m)|/tags/(\\d+)/([^/]+)(*MARK:n)|/tags/(\\d+)(*MARK:o)|/custom/(\\d+)/([^/]+)(*MARK:p)|/custom/(\\d+)(*MARK:q)|/languages/(\\d+)/([^/]+)(*MARK:r)|/languages/(\\d+)(*MARK:s)|/publishers/letter/([^/]+)(*MARK:t)|/publishers/(\\d+)/([^/]+)(*MARK:u)|/publishers/(\\d+)(*MARK:v)|/ratings/(\\d+)/([^/]+)(*MARK:w)|/ratings/(\\d+)(*MARK:x)|/identifiers/(\\w+)/([^/]+)(*MARK:y)|/identifiers/(\\w+)(*MARK:z)|/formats/(\\w+)(*MARK:aa)|/feed/(\\w+)(*MARK:ab)|/feed/(.+)(*MARK:ac)|/files/(\\d+)/(\\d+)/(.+)(*MARK:ad)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ae)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:af)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:ag))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -1264,14 +1264,7 @@
               '_name' => 'fetch-cover',
             ),
           ),
-        ),
-      ),
-      1 => 
-      array (
-        'regex' => '~^(?|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:b)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:e)|/read/(\\d+)/(\\d+)(*MARK:f)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:g)|/restapi/databases/([^/]+)/([^/]+)(*MARK:h)|/restapi/databases/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)/([^/]+)(*MARK:k)|/restapi/notes/([^/]+)(*MARK:l)|/restapi/preferences/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:n)|/restapi/annotations/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:q)|/restapi/metadata/([^/]+)(*MARK:r)|/restapi/(.*)(*MARK:s)|/check/(.*)(*MARK:t)|/opds/(\\w+)(*MARK:u)|/opds/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:w)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:x)|/loader/([^/]+)/(\\d+)(*MARK:y)|/loader/([^/]+)/(*MARK:z)|/loader/([^/]+)(*MARK:aa)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ac)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ad)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ae)|/admin/(.*)(*MARK:af))$~',
-        'routeMap' => 
-        array (
-          'a' => 
+          'ag' => 
           array (
             0 => 
             array (
@@ -1292,7 +1285,14 @@
               '_name' => 'fetch-inline',
             ),
           ),
-          'b' => 
+        ),
+      ),
+      1 => 
+      array (
+        'regex' => '~^(?|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:b)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)(*MARK:e)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:f)|/restapi/databases/([^/]+)/([^/]+)(*MARK:g)|/restapi/databases/([^/]+)(*MARK:h)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)(*MARK:k)|/restapi/preferences/([^/]+)(*MARK:l)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)(*MARK:n)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)(*MARK:q)|/restapi/(.*)(*MARK:r)|/check/(.*)(*MARK:s)|/opds/(\\w+)(*MARK:t)|/opds/(.*)(*MARK:u)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:w)|/loader/([^/]+)/(\\d+)(*MARK:x)|/loader/([^/]+)/(*MARK:y)|/loader/([^/]+)(*MARK:z)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:aa)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/calibre/([^/]+)/([^/]+)/(.*)(*MARK:ac)|/calibre/([^/]+)/([^/]+)(*MARK:ad)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ae)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:af)|/admin/(.*)(*MARK:ag))$~',
+        'routeMap' => 
+        array (
+          'a' => 
           array (
             0 => 
             array (
@@ -1312,7 +1312,7 @@
               '_name' => 'fetch-data',
             ),
           ),
-          'c' => 
+          'b' => 
           array (
             0 => 
             array (
@@ -1333,7 +1333,7 @@
               '_name' => 'fetch-view',
             ),
           ),
-          'd' => 
+          'c' => 
           array (
             0 => 
             array (
@@ -1353,7 +1353,7 @@
               '_name' => 'fetch-download',
             ),
           ),
-          'e' => 
+          'd' => 
           array (
             0 => 
             array (
@@ -1372,7 +1372,7 @@
               '_name' => 'read-title',
             ),
           ),
-          'f' => 
+          'e' => 
           array (
             0 => 
             array (
@@ -1390,7 +1390,7 @@
               '_name' => 'read',
             ),
           ),
-          'g' => 
+          'f' => 
           array (
             0 => 
             array (
@@ -1409,7 +1409,7 @@
               '_name' => 'epubfs',
             ),
           ),
-          'h' => 
+          'g' => 
           array (
             0 => 
             array (
@@ -1428,7 +1428,7 @@
               '_name' => 'restapi-database-table',
             ),
           ),
-          'i' => 
+          'h' => 
           array (
             0 => 
             array (
@@ -1446,7 +1446,7 @@
               '_name' => 'restapi-database',
             ),
           ),
-          'j' => 
+          'i' => 
           array (
             0 => 
             array (
@@ -1466,7 +1466,7 @@
               '_name' => 'restapi-note',
             ),
           ),
-          'k' => 
+          'j' => 
           array (
             0 => 
             array (
@@ -1485,7 +1485,7 @@
               '_name' => 'restapi-notes-type-id',
             ),
           ),
-          'l' => 
+          'k' => 
           array (
             0 => 
             array (
@@ -1503,7 +1503,7 @@
               '_name' => 'restapi-notes-type',
             ),
           ),
-          'm' => 
+          'l' => 
           array (
             0 => 
             array (
@@ -1521,7 +1521,7 @@
               '_name' => 'restapi-preference',
             ),
           ),
-          'n' => 
+          'm' => 
           array (
             0 => 
             array (
@@ -1540,7 +1540,7 @@
               '_name' => 'restapi-annotation',
             ),
           ),
-          'o' => 
+          'n' => 
           array (
             0 => 
             array (
@@ -1558,7 +1558,7 @@
               '_name' => 'restapi-annotations-book',
             ),
           ),
-          'p' => 
+          'o' => 
           array (
             0 => 
             array (
@@ -1578,7 +1578,7 @@
               '_name' => 'restapi-metadata-element-name',
             ),
           ),
-          'q' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -1597,7 +1597,7 @@
               '_name' => 'restapi-metadata-element',
             ),
           ),
-          'r' => 
+          'q' => 
           array (
             0 => 
             array (
@@ -1615,7 +1615,7 @@
               '_name' => 'restapi-metadata',
             ),
           ),
-          's' => 
+          'r' => 
           array (
             0 => 
             array (
@@ -1632,7 +1632,7 @@
               '_name' => 'restapi-path',
             ),
           ),
-          't' => 
+          's' => 
           array (
             0 => 
             array (
@@ -1649,7 +1649,7 @@
               '_name' => 'check-more',
             ),
           ),
-          'u' => 
+          't' => 
           array (
             0 => 
             array (
@@ -1666,7 +1666,7 @@
               '_name' => 'opds-page',
             ),
           ),
-          'v' => 
+          'u' => 
           array (
             0 => 
             array (
@@ -1683,7 +1683,7 @@
               '_name' => 'opds-path',
             ),
           ),
-          'w' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -1703,7 +1703,7 @@
               '_name' => 'loader-action-dbNum-authorId-urlPath',
             ),
           ),
-          'x' => 
+          'w' => 
           array (
             0 => 
             array (
@@ -1722,7 +1722,7 @@
               '_name' => 'loader-action-dbNum-authorId',
             ),
           ),
-          'y' => 
+          'x' => 
           array (
             0 => 
             array (
@@ -1740,7 +1740,7 @@
               '_name' => 'loader-action-dbNum',
             ),
           ),
-          'z' => 
+          'y' => 
           array (
             0 => 
             array (
@@ -1757,7 +1757,7 @@
               '_name' => 'loader-action-',
             ),
           ),
-          'aa' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1774,7 +1774,7 @@
               '_name' => 'loader-action',
             ),
           ),
-          'ab' => 
+          'aa' => 
           array (
             0 => 
             array (
@@ -1793,7 +1793,7 @@
               '_name' => 'zipper-page-id-type',
             ),
           ),
-          'ac' => 
+          'ab' => 
           array (
             0 => 
             array (
@@ -1811,7 +1811,44 @@
               '_name' => 'zipper-page-type',
             ),
           ),
+          'ac' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler',
+              '_route' => 'calibre-details',
+            ),
+            1 => 
+            array (
+              'action' => 'action',
+              'library' => 'library',
+              'details' => 'details',
+            ),
+            2 => 
+            array (
+              '_route' => '/calibre/{action}/{library}/{details:.*}',
+              '_name' => 'calibre-details',
+            ),
+          ),
           'ad' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler',
+              '_route' => 'calibre-library',
+            ),
+            1 => 
+            array (
+              'action' => 'action',
+              'library' => 'library',
+            ),
+            2 => 
+            array (
+              '_route' => '/calibre/{action}/{library}',
+              '_name' => 'calibre-library',
+            ),
+          ),
+          'ae' => 
           array (
             0 => 
             array (
@@ -1830,7 +1867,7 @@
               '_name' => 'calres',
             ),
           ),
-          'ae' => 
+          'af' => 
           array (
             0 => 
             array (
@@ -1849,7 +1886,7 @@
               '_name' => 'zipfs',
             ),
           ),
-          'af' => 
+          'ag' => 
           array (
             0 => 
             array (
@@ -3207,6 +3244,48 @@
           1 => '[^/]+',
         ),
         4 => '.zip',
+      ),
+    ),
+    'calibre-details' => 
+    array (
+      0 => 
+      array (
+        0 => '/calibre/',
+        1 => 
+        array (
+          0 => 'action',
+          1 => '[^/]+',
+        ),
+        2 => '/',
+        3 => 
+        array (
+          0 => 'library',
+          1 => '[^/]+',
+        ),
+        4 => '/',
+        5 => 
+        array (
+          0 => 'details',
+          1 => '.*',
+        ),
+      ),
+    ),
+    'calibre-library' => 
+    array (
+      0 => 
+      array (
+        0 => '/calibre/',
+        1 => 
+        array (
+          0 => 'action',
+          1 => '[^/]+',
+        ),
+        2 => '/',
+        3 => 
+        array (
+          0 => 'library',
+          1 => '[^/]+',
+        ),
       ),
     ),
     'calres' => 

@@ -37,6 +37,7 @@ class RouteTest extends TestCase
         "opds" => "opds.php",
         "loader" => "loader.php",
         "zipper" => "zipper.php",
+        "calibre" => "calibre.php",
         "calres" => "calres.php",
         "zipfs" => "zipfs.php",
         "mail" => "sendtomail.php",
@@ -110,6 +111,7 @@ class RouteTest extends TestCase
             ["index.php?page=rating&id=1&title=Title", "/ratings/1/Title", "page-rating", ["page" => "rating", "id" => "1", "title" => "Title"]],
             ["index.php?page=ratings&a=1", "/ratings?a=1", "page-ratings", ["page" => "ratings", "a" => "1"]],
             ["index.php?page=rating&id=1&a=1", "/ratings/1?a=1", "page-rating-id", ["page" => "rating", "id" => "1", "a" => "1"]],
+            ["calibre.php?action=book-details&library=_hex_-4261736557697468536f6d65426f6f6b73&details=17", "/calibre/book-details/_hex_-4261736557697468536f6d65426f6f6b73/17", "calibre-details", ["_handler" => "calibre", "action" => "book-details", "library" => "_hex_-4261736557697468536f6d65426f6f6b73", "details" => "17"]],
             ["calres.php?db=0&alg=xxh64&digest=7c301792c52eebf7", "/calres/0/xxh64/7c301792c52eebf7", "calres", ["_handler" => "calres", "db" => "0", "alg" => "xxh64", "digest" => "7c301792c52eebf7"]],
             ["zipfs.php?db=0&data=20&comp=META-INF%2Fcontainer.xml", "/zipfs/0/20/META-INF/container.xml", "zipfs", ["_handler" => "zipfs", "db" => "0", "data" => "20", "comp" => "META-INF/container.xml"]],
             ["loader.php?action=wd_author&dbNum=0&authorId=1&matchId=Q35610", "/loader/wd_author/0/1?matchId=Q35610", "loader-action-dbNum-authorId", ["_handler" => "loader", "action" => "wd_author", "dbNum" => "0", "authorId" => "1", "matchId" => "Q35610"]],
@@ -151,6 +153,7 @@ class RouteTest extends TestCase
     {
         // @todo replace handler name with class-string
         return [
+            ["/calibre/book-details/_hex_-4261736557697468536f6d65426f6f6b73/17", "calibre-details", ["_handler" => "calibre", "action" => "book-details", "library" => "_hex_-4261736557697468536f6d65426f6f6b73", "details" => "17"]],
             ["/calres/0/xxh64/7c301792c52eebf7", "calres", ["_handler" => "calres", "db" => "0", "alg" => "xxh64", "digest" => "7c301792c52eebf7"]],
             ["/zipfs/0/20/META-INF/container.xml", "zipfs", ["_handler" => "zipfs", "db" => "0", "data" => "20", "comp" => "META-INF/container.xml"]],
             [null, "zipfs", ["_handler" => "zipfs", "db" => "x", "data" => "20", "comp" => "META-INF/container.xml"]],

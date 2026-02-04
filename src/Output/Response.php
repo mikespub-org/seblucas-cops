@@ -459,6 +459,7 @@ class Response
     public static function redirect($location): self
     {
         $response = new self();
+        $response->setStatusCode(302);
         $response->addHeader('Location', $location);
         return $response;
     }

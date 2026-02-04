@@ -26,6 +26,7 @@ class HandlerManager implements HasContextInterface
         "opds" => OpdsHandler::class,
         "loader" => LoaderHandler::class,
         "zipper" => ZipperHandler::class,
+        "calibre" => CalibreHandler::class,
         "calres" => CalResHandler::class,
         "zipfs" => ZipFsHandler::class,
         "mail" => MailHandler::class,

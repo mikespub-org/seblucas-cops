@@ -187,4 +187,28 @@ class Note
         }
         return null;
     }
+
+    /**
+     * Summary of getInstanceByTypeItem
+     * @param string $type
+     * @param string $name
+     * @param ?int $database
+     * @return self|null
+     */
+    public static function getInstanceByTypeName($type, $name, $database = null)
+    {
+        if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
+            return null;
+        }
+        $notesDb = Database::getNotesDb($database);
+        if (is_null($notesDb)) {
+            return null;
+        }
+        $query = "select id, name from {$type} where name = ?";
+        $result = Database::query($query, [$name], $database);
+        if ($post = $result->fetchObject()) {
+            $item = (int) $post->id;
+        }
+        return self::getInstanceByTypeItem($type, $item, $database);
+    }
 }

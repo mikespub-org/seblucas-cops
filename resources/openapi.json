@@ -2943,6 +2943,89 @@
                 ]
             }
         },
+        "/calibre/{action}/{library}/{details}": {
+            "get": {
+                "summary": "Route to calibre handler with action={action}&library={library}&details={details} - with api key",
+                "operationId": "get_calibre-details",
+                "tags": [
+                    "calibre"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of calibre handler with action={action}&library={library}&details={details}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "library",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "details",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/calibre/{action}/{library}": {
+            "get": {
+                "summary": "Route to calibre handler with action={action}&library={library} - with api key",
+                "operationId": "get_calibre-library",
+                "tags": [
+                    "calibre"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of calibre handler with action={action}&library={library}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "library",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/calres/{db}/{alg}/{digest}": {
             "get": {
                 "summary": "Route to calres handler with db={db}&alg={alg}&digest={digest} - with api key",
