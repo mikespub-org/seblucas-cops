@@ -36,7 +36,7 @@ class Resource
         'svg' => 'image/svg+xml',
         'webp' => 'image/webp',
     ];
-    public const RESOURCE_URL_SCHEME = 'calres';
+    public const RESOURCE_URL_SCHEME = CalResHandler::URL_SCHEME;
 
     public string $hash;
     public string $name;

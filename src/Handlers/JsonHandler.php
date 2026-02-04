@@ -42,6 +42,13 @@ class JsonHandler extends PageHandler
         }
         $response = new Response(Response::MIME_TYPE_JSON);
 
+        // handle redirected json requests - see CalibreHandler
+        if ($request->get('redirected')) {
+            $params = $request->urlParams;
+            unset($params['redirected']);
+            $response->addHeader('X-Response-Url', self::link($params));
+        }
+
         $json = new JsonRenderer($request, $response);
 
         try {

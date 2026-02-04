@@ -449,7 +449,14 @@ navigateTo = function (url) {
         window.history.pushState(jsonurl, "", url);
         updatePage (cachedData);
     } else {
-        $.getJSON(jsonurl, function(data) {
+        $.getJSON(jsonurl, function(data, status, xhr) {
+            // handle redirected json requests - see CalibreHandler
+            if (typeof xhr !== undefined) {
+                var redirected = xhr.getResponseHeader('X-Response-Url');
+                if (redirected) {
+                    url = redirected;
+                }
+            }
             window.history.pushState(jsonurl, "", url);
             cache.put (jsonurl, data);
             updatePage (data);

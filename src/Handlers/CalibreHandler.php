@@ -25,6 +25,7 @@ class CalibreHandler extends BaseHandler
     public const HANDLER = "calibre";
     public const PREFIX = "/calibre";
     public const PARAMLIST = ["action", "library", "details"];
+    public const URL_SCHEME = "calibre";
 
     public static function getRoutes()
     {
@@ -40,7 +41,7 @@ class CalibreHandler extends BaseHandler
         $library = $request->get('library');
         $details = $request->get('details');
 
-        $database = self::findDatabaseId($library);
+        $database = self::findDatabaseId($library, $request->database());
 
         switch ($action) {
             case 'switch-library':
@@ -53,7 +54,7 @@ class CalibreHandler extends BaseHandler
                     if (!empty($book)) {
                         // use html handler by default here
                         $book->setHandler(HtmlHandler::class);
-                        return Response::redirect($book->getUri());
+                        return Response::redirect($book->getUri(['redirected' => 1]));
                     }
                 }
                 return Response::notFound($request, 'Invalid Book');
@@ -100,11 +101,12 @@ class CalibreHandler extends BaseHandler
     /**
      * Summary of findDatabaseId
      * @param string $library
+     * @param ?int $database
      * @return int|null
      */
-    public static function findDatabaseId($library)
+    public static function findDatabaseId($library, $database = null)
     {
-        $database = null;
+        // use current database
         if (empty($library) || $library == '_') {
             return $database;
         }

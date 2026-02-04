@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
+use SebLucas\Cops\Calibre\Comment;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
@@ -218,6 +219,9 @@ class PageWithDetail extends Page
             $note = $instance->getNote();
             if (!empty($note) && !empty($note->doc)) {
                 $content = Resource::fixResourceLinks($note->doc, $instance->getDatabaseId());
+                if (Comment::hasCalibreLinks($content)) {
+                    $content = Comment::fixCalibreLinks($content, $instance->getDatabaseId());
+                }
             }
             if (!empty($instance->link) || !empty($content)) {
                 $this->extra = [
