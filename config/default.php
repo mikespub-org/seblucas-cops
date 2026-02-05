@@ -85,7 +85,7 @@ $config['cops_full_url'] = '';
 /*
  * As an alternative for cops_full_url above, if you're using a reverse proxy and you want to
  * change how COPS is accessed depending on the entrypoint (e.g. direct, local network, internet)
- * you can define trusted proxies and trusted headers here (dev only)
+ * you can define trusted proxies and trusted headers here
  * Note: using symfony/http-foundation to support X-Forwarded-* and Forwarded headers from proxies
  * @see https://symfony.com/doc/current/deployment/proxies.html
  */
