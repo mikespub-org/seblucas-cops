@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
+use InvalidArgumentException;
 
 class PageAllBooksLetter extends Page
 {
@@ -23,8 +24,11 @@ class PageAllBooksLetter extends Page
      */
     public function initializeContent()
     {
-        // this would be the first letter - override here
-        $this->idGet = $this->request->get('letter', null, '/^[\p{L}\p{N}]$/u');
+        // this would be the first letter - override here + allow punctuation & symbol too for book titles
+        $this->idGet = $this->request->get('letter', null, '/^[\p{L}\p{N}\p{P}\p{S}]$/u');
+        if (is_null($this->idGet)) {
+            throw new InvalidArgumentException('Invalid Letter');
+        }
         $this->getEntries();
         $this->idPage = Book::getEntryIdByLetter($this->idGet);
         $count = $this->totalNumber;

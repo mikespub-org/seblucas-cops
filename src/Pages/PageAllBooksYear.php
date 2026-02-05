@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
+use InvalidArgumentException;
 
 class PageAllBooksYear extends Page
 {
@@ -25,6 +26,9 @@ class PageAllBooksYear extends Page
     {
         // this would be the year - override here
         $this->idGet = $this->request->getId('year');
+        if (is_null($this->idGet)) {
+            throw new InvalidArgumentException('Invalid Year');
+        }
         $this->getEntries();
         $this->idPage = Book::getEntryIdByYear($this->idGet);
         $count = $this->totalNumber;

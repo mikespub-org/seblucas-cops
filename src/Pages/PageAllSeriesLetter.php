@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\BaseList;
+use InvalidArgumentException;
 
 class PageAllSeriesLetter extends Page
 {
@@ -25,6 +26,9 @@ class PageAllSeriesLetter extends Page
     {
         // this would be the first letter - override here
         $this->idGet = $this->request->get('letter', null, '/^[\p{L}\p{N}]$/u');
+        if (is_null($this->idGet)) {
+            throw new InvalidArgumentException('Invalid Letter');
+        }
         $this->getEntries();
         $this->idPage = Serie::getEntryIdByLetter($this->idGet);
         $count = $this->totalNumber;

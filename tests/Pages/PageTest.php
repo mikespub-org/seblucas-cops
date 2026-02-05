@@ -530,6 +530,48 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->containsBook());
     }
 
+    public function testPageAllBooksByLetter_Punctuation(): void
+    {
+        $page = PageId::ALL_BOOKS_LETTER;
+        $request = new Request();
+        $request->set('letter', "(");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("No books starting with (", $currentPage->title);
+        $this->assertCount(0, $currentPage->entryArray);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageAllBooksByLetter_Symbol(): void
+    {
+        $page = PageId::ALL_BOOKS_LETTER;
+        $request = new Request();
+        $request->set('letter', "<");
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("No books starting with <", $currentPage->title);
+        $this->assertCount(0, $currentPage->entryArray);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
+    public function testPageAllBooksByLetter_Invalid(): void
+    {
+        $page = PageId::ALL_BOOKS_LETTER;
+        $request = new Request();
+        $request->set('letter', "\n");
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid Letter');
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("No books starting with <", $currentPage->title);
+        $this->assertCount(0, $currentPage->entryArray);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
     public function testPageAllBooks_SplitByPubYear(): void
     {
         $page = PageId::ALL_BOOKS;
