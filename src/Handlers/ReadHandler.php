@@ -15,7 +15,8 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
-use Exception;
+use InvalidArgumentException;
+use Throwable;
 
 /**
  * Handle epub reader with monocle
@@ -80,7 +81,9 @@ class ReadHandler extends BaseHandler
 
         try {
             return $response->setContent($reader->getReader($idData, $version, $database));
-        } catch (Exception $e) {
+        } catch (InvalidArgumentException $e) {
+            return Response::notFound($request, $e->getMessage());
+        } catch (Throwable $e) {
             error_log($e);
             return Response::sendError($request, $e->getMessage());
         }

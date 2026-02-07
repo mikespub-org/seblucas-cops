@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
+use InvalidArgumentException;
 use UnexpectedValueException;
 
 class CustomColumnTypeInteger extends CustomColumnType
@@ -54,14 +55,14 @@ class CustomColumnTypeInteger extends CustomColumnType
     /**
      * Summary of getQueryByRange
      * @param string $range
-     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
      * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQueryByRange($range)
     {
         $matches = [];
         if (!preg_match(self::GET_PATTERN, $range, $matches)) {
-            throw new UnexpectedValueException();
+            throw new InvalidArgumentException('Invalid Range');
         }
         $lower = $matches[1];
         $upper = $matches[2];
@@ -177,13 +178,14 @@ class CustomColumnTypeInteger extends CustomColumnType
      * Summary of getCustomValuesByRange
      * @param string $range
      * @param ?string $sort
+     * @throws \InvalidArgumentException
      * @return array<Entry>
      */
     public function getCustomValuesByRange($range, $sort = null)
     {
         $matches = [];
         if (!preg_match(self::GET_PATTERN, $range, $matches)) {
-            throw new UnexpectedValueException();
+            throw new InvalidArgumentException('Invalid Range');
         }
         $lower = $matches[1];
         $upper = $matches[2];

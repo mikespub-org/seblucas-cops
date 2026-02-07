@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\Request;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route as SymfonyRoute;
-use Exception;
+use RuntimeException;
 
 /**
  * Load routes from handlers with getRoutes()
@@ -47,6 +47,7 @@ class RouteLoader extends Loader
     /**
      * Summary of addRouteCollection
      * @param RouteCollection $routes
+     * @throws \RuntimeException
      * @return RouteCollection
      */
     public function addRouteCollection($routes)
@@ -72,7 +73,7 @@ class RouteLoader extends Loader
                 $route->setOptions($options);
             }
             if (!empty($seen[$name])) {
-                throw new Exception('Duplicate route name ' . $name . ' for ' . $path);
+                throw new RuntimeException('Duplicate route name ' . $name . ' for ' . $path);
             }
             $seen[$name] = $path;
             $routes->add($name, $route);

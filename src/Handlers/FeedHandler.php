@@ -14,6 +14,8 @@ use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
+use InvalidArgumentException;
+use Throwable;
 
 /**
  * Handle OPDS 1.2 feed
@@ -76,8 +78,16 @@ class FeedHandler extends BaseHandler
             case PageId::SEARCH :
                 return $response->setContent($opdsRenderer->getOpenSearch($request));
             default:
-                $currentPage = PageId::getPage($page, $request);
-                return $response->setContent($opdsRenderer->render($currentPage, $request));
+                break;
+        }
+        try {
+            $currentPage = PageId::getPage($page, $request);
+            return $response->setContent($opdsRenderer->render($currentPage, $request));
+        } catch (InvalidArgumentException $e) {
+            return Response::notFound($request, $e->getMessage());
+        } catch (Throwable $e) {
+            error_log($e);
+            return Response::sendError($request, $e->getMessage());
         }
     }
 }

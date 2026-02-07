@@ -208,7 +208,8 @@ class Note
         $result = Database::query($query, [$name], $database);
         if ($post = $result->fetchObject()) {
             $item = (int) $post->id;
+            return self::getInstanceByTypeItem($type, $item, $database);
         }
-        return self::getInstanceByTypeItem($type, $item, $database);
+        return null;
     }
 }

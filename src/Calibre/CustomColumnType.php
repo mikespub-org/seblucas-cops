@@ -15,7 +15,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
-use Exception;
+use UnexpectedValueException;
 
 /**
  * A single calibre custom column
@@ -460,7 +460,7 @@ abstract class CustomColumnType
      * @param ?int $database
      * @param bool $cached
      * @return ?CustomColumnType
-     * @throws Exception If the $customId is not found or the datatype is unknown
+     * @throws \UnexpectedValueException If the $customId is not found or the datatype is unknown
      */
     public static function createByCustomID($customId, $database = null, $cached = true)
     {
@@ -486,7 +486,7 @@ abstract class CustomColumnType
             static::TYPE_RATING => new CustomColumnTypeRating($customId, $database, $displaySettings),
             static::TYPE_BOOL => new CustomColumnTypeBool($customId, $database, $displaySettings),
             static::TYPE_COMPOSITE => null,
-            default => throw new Exception("Unknown column type: " . $datatype),
+            default => throw new UnexpectedValueException("Unknown column type: " . $datatype),
         };
         return static::$customColumnCacheID[$customId];
     }

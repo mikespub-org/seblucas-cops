@@ -475,6 +475,7 @@ abstract class Base
      * Summary of getInstanceById
      * @param string|int|null $id
      * @param ?int $database
+     * @throws \InvalidArgumentException
      * @return static
      */
     public static function getInstanceById($id, $database = null)

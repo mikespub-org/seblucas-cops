@@ -41,6 +41,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Executor\Executor;
 use GraphQL\Error\DebugFlag;
 use Exception;
+use InvalidArgumentException;
 use JsonException;
 
 /**
@@ -638,6 +639,7 @@ class GraphQLExecutor
     /**
      * Summary of fromGlobalIdentier
      * @param string $globalId
+     * @throws \InvalidArgumentException
      * @return array<mixed>
      */
     public static function fromGlobalIdentier($globalId)
@@ -661,13 +663,13 @@ class GraphQLExecutor
                 return [null, null, null];
             }
         } catch (Exception) {
-            throw new Exception('Invalid global identifier db');
+            throw new InvalidArgumentException('Invalid global identifier db');
         }
         if (!in_array($type, ['authors', 'books', 'datas', 'formats', 'identifiers', 'languagues', 'publishers', 'ratings', 'series', 'tags'])) {
-            throw new Exception('Invalid global identifier type');
+            throw new InvalidArgumentException('Invalid global identifier type');
         }
         if ($id === '') {
-            throw new Exception('Invalid global identifier id');
+            throw new InvalidArgumentException('Invalid global identifier id');
         }
         return [$db, $type, $id];
     }

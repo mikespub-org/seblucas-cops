@@ -68,7 +68,7 @@ class CalibreHandler extends BaseHandler
                     // calibre field
                 }
                 if (str_starts_with($item, 'id_')) {
-                    $item = substr($item, 3);
+                    $item = (int) substr($item, 3);
                     $note = Note::getInstanceByTypeItem($type, $item, $database);
                 } elseif (str_starts_with($item, 'hex_')) {
                     $name = hex2bin(substr($item, 4));

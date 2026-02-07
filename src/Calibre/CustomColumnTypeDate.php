@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use DateTime;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class CustomColumnTypeDate extends CustomColumnType
 {
@@ -54,13 +54,13 @@ class CustomColumnTypeDate extends CustomColumnType
     /**
      * Summary of getQueryByYear
      * @param mixed $year
-     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
      * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQueryByYear($year)
     {
         if (!preg_match(self::GET_PATTERN, (string) $year)) {
-            throw new UnexpectedValueException();
+            throw new InvalidArgumentException('Invalid Year');
         }
         $query = str_format(self::SQL_BOOKLIST_YEAR, "{0}", "{1}", $this->getTableName());
         return [$query, [$year]];
@@ -184,12 +184,13 @@ class CustomColumnTypeDate extends CustomColumnType
      * Summary of getCustomValuesByYear
      * @param mixed $year
      * @param ?string $sort
+     * @throws \InvalidArgumentException
      * @return array<Entry>
      */
     public function getCustomValuesByYear($year, $sort = null)
     {
         if (!preg_match(self::GET_PATTERN, (string) $year)) {
-            throw new UnexpectedValueException();
+            throw new InvalidArgumentException('Invalid Year');
         }
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} WHERE substr(date(value), 1, 4) = ? GROUP BY datevalue";
         if (!empty($sort) && $sort == 'count') {

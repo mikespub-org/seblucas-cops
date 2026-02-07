@@ -6,6 +6,7 @@ use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
+use RuntimeException;
 
 /**
  * A collection of route definitions.
@@ -58,6 +59,7 @@ class RouteCollection
      *
      * @param array<string, array<mixed>> $routes
      * @param class-string<BaseHandler>|null $handler
+     * @throws \RuntimeException
      * @return void
      */
     public function addRoutes(array $routes, ?string $handler = null): void
@@ -88,7 +90,7 @@ class RouteCollection
             }
 
             if (isset($this->routes[$name])) {
-                throw new \RuntimeException('Duplicate route name ' . $name . ' for ' . $handler);
+                throw new RuntimeException('Duplicate route name ' . $name . ' for ' . $handler);
             }
 
             $this->routes[$name] = [$path, $params, $methods, $options];
