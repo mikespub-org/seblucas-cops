@@ -240,6 +240,21 @@ $tooltips['cops_virtual_library'] = <<<'EOT'
     This is not supported in combination with multiple databases
     EOT;
 
+$tooltips['cops_database_filter'] = <<<'EOT'
+    Filter Calibre database by tags, languages etc.
+    Example:
+    $config['cops_database_filter'] = [
+        "tags": "Short Stories",
+        "language": "eng",
+    ];
+
+    For negative filters start with !, example: "!Short Stories"
+
+    Can be used as alternative to virtual libraries
+    also in multi-database/multi-user configurations
+    by putting this in the right local.*.php file(s)
+    EOT;
+
 $tooltips['cops_calibre_custom_column'] = <<<'EOT'
     Custom Columns for the index page
     to add as an array containing the lookup names configured in Calibre

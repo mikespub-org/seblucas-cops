@@ -39,7 +39,7 @@ class PageIndex extends Page
     {
         if (Database::noDatabaseSelected($this->databaseId)) {
             $this->getDatabaseEntries();
-        } elseif ($this->request->hasFilter()) {
+        } elseif ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
             $this->getFilteredEntries();
         } else {
             $this->getEntries();

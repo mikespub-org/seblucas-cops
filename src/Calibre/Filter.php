@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
@@ -105,6 +106,11 @@ class Filter
         $tagName = $this->request->get('tag', null);
         if (!empty($tagName)) {
             $this->addTagNameFilter($tagName);
+        }
+
+        if (!empty(Config::get('database_filter'))) {
+            $filter = array_filter(Config::get('database_filter'));
+            $this->addDatabaseFilter($filter);
         }
 
         if (!$this->request->hasFilter()) {
@@ -292,6 +298,49 @@ class Filter
 
         if (!empty($replace)) {
             $this->queryString .= ' and (' . $replace . ')';
+            foreach ($params as $param) {
+                array_push($this->params, $param);
+            }
+        }
+    }
+
+    public function addDatabaseFilter($filter)
+    {
+        $query = [];
+        $params = [];
+        foreach ($filter as $field => $value) {
+            if (empty($value)) {
+                continue;
+            }
+            if (!array_key_exists($field, self::SEARCH_FIELDS)) {
+                $field .= 's';
+                if (!array_key_exists($field, self::SEARCH_FIELDS)) {
+                    throw new UnexpectedValueException('Unsupported filter field: ' . $field);
+                }
+            }
+            $className = self::SEARCH_FIELDS[$field];
+            if (is_array($value)) {
+                // @todo support list of values for OR
+                continue;
+            }
+            $exists = true;
+            if (str_starts_with($value, '!')) {
+                $exists = false;
+                $value = substr($value, 1);
+            }
+            $instance = $className::getInstanceByName($value, $this->databaseId);
+            if (empty($instance)) {
+                throw new UnexpectedValueException('Invalid filter criteria: ' . $field . ':' . $value);
+            }
+            $filterString = $this->getLinkedIdFilter($instance->getLinkTable(), $instance->getLinkColumn(), $instance->limitSelf);
+            if (!$exists) {
+                $filterString = 'not ' . $filterString;
+            }
+            $query[] = $filterString;
+            array_push($params, $instance->id);
+        }
+        if (!empty($query)) {
+            $this->queryString .= ' and (' . implode(' and ', $query) . ')';
             foreach ($params as $param) {
                 array_push($this->params, $param);
             }

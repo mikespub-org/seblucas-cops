@@ -117,7 +117,7 @@ class BookList
      */
     public function getBookCount()
     {
-        if ($this->request->hasFilter()) {
+        if ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
             return $this->getFilterBookCount();
         }
         return Database::querySingle('select count(*) from books', $this->databaseId);

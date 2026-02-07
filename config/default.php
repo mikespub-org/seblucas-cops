@@ -289,6 +289,22 @@ $config['cops_calibre_virtual_libraries'] = [];
 $config['cops_virtual_library'] = '0';
 
 /*
+ * Filter Calibre database by tags, languages etc.
+ * Example:
+ * $config['cops_database_filter'] = [
+ *     "tags": "Short Stories",
+ *     "language": "eng",
+ * ];
+ *
+ * For negative filters start with !, example: "!Short Stories"
+ *
+ * Can be used as alternative to virtual libraries
+ * also in multi-database/multi-user configurations
+ * by putting this in the right local.*.php file(s)
+ */
+$config['cops_database_filter'] = [];
+
+/*
  * Custom Columns for the index page
  * to add as an array containing the lookup names configured in Calibre
  *

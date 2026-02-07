@@ -13,6 +13,8 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * Changes in config/default.php file:
+    - add $config['cops_database_filter'] option to filter Calibre databases - see #133
   * Get book pages for Calibre version 9.0 and later
 
 4.0.2 - 20260124 Fix mail without index.php + update packages 
