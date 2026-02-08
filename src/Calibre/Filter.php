@@ -102,12 +102,13 @@ class Filter
      */
     public function checkForFilters($parentClass = null)
     {
-        // See $config['cops_books_filter']
+        // See $config['cops_books_filter'] - OPDS catalog facets
         $tagName = $this->request->get('tag', null);
         if (!empty($tagName)) {
             $this->addTagNameFilter($tagName);
         }
 
+        // See $config['cops_database_filter'] - filter data everywhere
         if (!empty(Config::get('database_filter'))) {
             $filter = array_filter(Config::get('database_filter'));
             $this->addDatabaseFilter($filter);
@@ -304,6 +305,12 @@ class Filter
         }
     }
 
+    /**
+     * Summary of addDatabaseFilter
+     * @param array<string, mixed> $filter
+     * @throws \UnexpectedValueException
+     * @return void
+     */
     public function addDatabaseFilter($filter)
     {
         $query = [];

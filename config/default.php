@@ -33,14 +33,6 @@ if (!isset($config)) {
  */
 $config['calibre_directory'] = './';
 
-/*
- * SPECIFIC TO NGINX
- * The internal directory set in nginx config file
- * Leave empty if you don't know what you're doing
- * @deprecated 1.3.1 use absolute paths in calibre_directory
- */
-$config['calibre_internal_directory'] = '';
-
 /**
  * Custom configuration if your Calibre library is stored elsewhere and
  * you cannot sync it or mount a remote volume to it on your COPS server.
@@ -137,6 +129,21 @@ $config['cops_subtitle_default'] = '';
  *   No value (default) : Let PHP handle the download
  */
 $config['cops_x_accel_redirect'] = '';
+
+/*
+ * Absolute path mapping for books is assumed to be the same between web server and PHP COPS
+ * Example: if COPS finds books in /mapped/library, then nginx config must have something like:
+ * # X-Accel-Redirect uri from COPS
+ * location /mapped/library {
+ *     # internal redirect for nginx
+ *     internal;
+ *     # actual path on nginx server
+ *     alias /volume1/Calibre
+ *     # or if COPS and nginx are on the same server
+ *     #root /
+ * }
+ */
+$config['cops_x_accel_mapping'] = '';
 
 /*
  * Height of thumbnail image for OPDS (thumb=opds)

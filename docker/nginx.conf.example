@@ -10,10 +10,20 @@ server {
     root /cops;
     index index.php;
 
+    # X-Accel-Redirect uri from COPS - see config/local.php
+    #location /mapped/library {
+    #    # internal redirect for nginx
+    #    internal;
+    #    # actual path on nginx server
+    #    alias /volume1/Calibre
+    #    # or if COPS and nginx are on the same server
+    #    #root /
+    #}
+
     location / {
         # This tells NGINX: If the file doesn't exist,
         # send the request to index.php and keep the path info.
-        try_files $uri $uri/ /index.php$uri$is_args$args;
+        try_files $uri $uri/ /index.php$request_uri;
     }
 
     location ~ [^/]\.php(/|$) {

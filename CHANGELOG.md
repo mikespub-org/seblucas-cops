@@ -13,9 +13,16 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * ...
+
+4.1.0 - 20260208 Book pages, calibre links, database filters, web app manifest 
   * Changes in config/default.php file:
-    - add $config['cops_database_filter'] option to filter Calibre databases - see #133
-  * Get book pages for Calibre version 9.0 and later
+    - new $config['cops_database_filter'] option to filter Calibre databases - see #133
+  * Support Calibre database filters in config/local[.*].php file(s) - see #133
+  * Add web app manifest file in resources + adapt templates - see PR #167 from @dunxd
+  * Move symfony/http-foundation package to --no-dev to support trusted proxy headers
+  * Replace calibre:// links in comments and notes with corresponding COPS links
+  * Get book pages for Calibre version 9.0 and later + update test databases
 
 4.0.2 - 20260124 Fix mail without index.php + update packages 
   * Update php/npm packages and templates

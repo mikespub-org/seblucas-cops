@@ -12,13 +12,13 @@ LABEL maintainer="chbmb"
 RUN \
   echo "**** install runtime packages ****" && \
   apk add --no-cache --upgrade \
-    # libxml2 \
     icu-data-full \
     php84-dom \
     php84-gd \
     php84-intl \
     php84-pdo_sqlite \
-    php84-sqlite3 && \
+    php84-sqlite3 \
+    php84-tokenizer && \
   echo "**** configure php-fpm to pass env vars ****" && \
   sed -E -i 's/^;?clear_env ?=.*$/clear_env = no/g' /etc/php84/php-fpm.d/www.conf && \
   if ! grep -qxF 'clear_env = no' /etc/php84/php-fpm.d/www.conf; then echo 'clear_env = no' >> /etc/php84/php-fpm.d/www.conf; fi && \

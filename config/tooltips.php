@@ -17,13 +17,6 @@ $tooltips['calibre_directory'] = <<<'EOT'
     user-specific set of databases (see issue #160)
     EOT;
 
-$tooltips['calibre_internal_directory'] = <<<'EOT'
-    SPECIFIC TO NGINX
-    The internal directory set in nginx config file
-    Leave empty if you don't know what you're doing
-    @deprecated 1.3.1 use absolute paths in calibre_directory
-    EOT;
-
 $tooltips['calibre_external_storage'] = <<<'EOT'
     Custom configuration if your Calibre library is stored elsewhere and
     you cannot sync it or mount a remote volume to it on your COPS server.
@@ -108,6 +101,20 @@ $tooltips['cops_x_accel_redirect'] = <<<'EOT'
       X-Accel-Redirect   : For Nginx
       X-Sendfile         : For Lightttpd or Apache (with mod_xsendfile)
       No value (default) : Let PHP handle the download
+    EOT;
+
+$tooltips['cops_x_accel_mapping'] = <<<'EOT'
+    Absolute path mapping for books is assumed to be the same between web server and PHP COPS
+    Example: if COPS finds books in /mapped/library, then nginx config must have something like:
+    # X-Accel-Redirect uri from COPS - see config/local.php
+    location /mapped/library {
+        # internal redirect for nginx
+        internal;
+        # actual path on nginx server
+        alias /volume1/Calibre
+        # or if COPS and nginx are on the same server
+        #root /
+    }
     EOT;
 
 $tooltips['cops_opds_thumbnail_height'] = <<<'EOT'
