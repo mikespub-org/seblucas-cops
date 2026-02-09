@@ -15,6 +15,11 @@ x.x.x - TODO
 4.x.x - 2026xxxx 
   * ...
 
+4.2.0 - 20260209 Support mapping of filepath for x-accel-redirect
+  * Changes in config/default.php file:
+    - new $config['cops_x_accel_mapping'] option to map file paths for x-accel-redirect
+  * Support mapping of real filepath to uri filepath for x-accel-redirect
+
 4.1.0 - 20260208 Book pages, calibre links, database filters, web app manifest 
   * Changes in config/default.php file:
     - new $config['cops_database_filter'] option to filter Calibre databases - see #133
