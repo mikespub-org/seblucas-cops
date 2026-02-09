@@ -77,9 +77,24 @@ class FileResponse extends Response
         if (!empty($this->istmpfile) || empty(Config::get('x_accel_redirect'))) {
             header('Content-Length: ' . filesize($this->filepath));
             readfile($this->filepath);
-        } else {
-            header(Config::get('x_accel_redirect') . ': ' . $this->filepath);
+            return $this;
         }
+        $path = $this->filepath;
+        // map real filepath to uri filepath if needed - check nginx config
+        if (!empty(Config::get('x_accel_mapping'))) {
+            $mapping = Config::get('x_accel_mapping');
+            foreach ($mapping as $real => $uri) {
+                if (str_starts_with($path, $real)) {
+                    $path = $uri . substr($path, strlen($real));
+                    break;
+                }
+            }
+        }
+        // @see https://github.com/caddyserver/caddy/issues/4180
+        if (Config::get('x_accel_redirect') !== 'X-Sendfile') {
+            $path = implode('/', array_map('rawurlencode', explode('/', $path)));
+        }
+        header(Config::get('x_accel_redirect') . ': ' . $path);
 
         return $this;
     }

@@ -99,7 +99,7 @@ $tooltips['cops_x_accel_redirect'] = <<<'EOT'
     Wich header to use when downloading books outside the web directory
     Possible values are :
       X-Accel-Redirect   : For Nginx
-      X-Sendfile         : For Lightttpd or Apache (with mod_xsendfile)
+      X-Sendfile         : For Caddy or Lightttpd or Apache (with mod_xsendfile)
       No value (default) : Let PHP handle the download
     EOT;
 
@@ -107,14 +107,19 @@ $tooltips['cops_x_accel_mapping'] = <<<'EOT'
     Absolute path mapping for books is assumed to be the same between web server and PHP COPS
     Example: if COPS finds books in /mapped/library, then nginx config must have something like:
     # X-Accel-Redirect uri from COPS - see config/local.php
-    location /mapped/library {
+    location /mapped/library/ {
         # internal redirect for nginx
         internal;
         # actual path on nginx server
-        alias /volume1/Calibre
+        alias /volume1/Calibre/
         # or if COPS and nginx are on the same server
         #root /
     }
+    But if COPS finds books in /volume1/Calibre and nginx only knows /mapped/library urls
+    then you can configure COPS mapping from real filepath to uri filepath here:
+    $config['cops_x_accel_mapping'] = [
+        '/volume1/Calibre/' => '/mapped/library/',
+    ];
     EOT;
 
 $tooltips['cops_opds_thumbnail_height'] = <<<'EOT'

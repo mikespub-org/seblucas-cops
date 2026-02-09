@@ -10,6 +10,10 @@
         </delete>
     </target>
 
+    <!--
+    Caution: this file is also parsed to clean up Arch Linux packages for COPS
+    https://github.com/mikespub-org/seblucas-cops/issues/168#issuecomment-3870051746
+    -->
 
     <!-- ============================================  -->
     <!-- (DEFAULT)  Target: dist                       -->
