@@ -546,6 +546,7 @@ class RestApiTest extends TestCase
             'any' => ['db' => 0, 'name' => 'books', 'type' => 'authors', 'item' => 3, 'title' => 'Lewis Carroll', 'key' => 'virtual_libraries', 'bookId' => 17, 'element' => 'dc:title'],
             'restapi-annotation' => ['bookId' => 17, 'id' => 1],
             'restapi-metadata-element-name' => ['element' => 'meta', 'name' => 'calibre:annotation'],
+            'restapi-folders' => ['path' => 'BaseWithSomeBooks/Lewis Carroll'],
             'restapi-path' => ['path' => 'path'],
         ];
         $result = RouteTest::getRouteProvider(RestApiHandler::class, $defaults);
@@ -563,6 +564,8 @@ class RestApiTest extends TestCase
             'page-publishers-letter' => ['letter' => 'M'],
             'page-series-letter' => ['letter' => 'S'],
             'page-tags-letter' => ['letter' => 'F'],
+            'page-folder' => ['path' => ''],
+            'page-ebook' => ['path' => "BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll"],
         ];
         $extra = RouteTest::getRouteProvider(HtmlHandler::class, $defaults);
         // add other routes

@@ -1529,16 +1529,16 @@
     "packages-dev": [
         {
             "name": "illuminate/collections",
-            "version": "v12.50.0",
+            "version": "v12.51.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
-                "reference": "b4bbe2a929aaacf0ade3bec535f1f8fac6e6ed38"
+                "reference": "1fd7db2203ce5a935fffd2ad40955248fb9f581c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/collections/zipball/b4bbe2a929aaacf0ade3bec535f1f8fac6e6ed38",
-                "reference": "b4bbe2a929aaacf0ade3bec535f1f8fac6e6ed38",
+                "url": "https://api.github.com/repos/illuminate/collections/zipball/1fd7db2203ce5a935fffd2ad40955248fb9f581c",
+                "reference": "1fd7db2203ce5a935fffd2ad40955248fb9f581c",
                 "shasum": ""
             },
             "require": {
@@ -1585,11 +1585,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-02-01T16:38:26+00:00"
+            "time": "2026-02-09T13:43:38+00:00"
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v12.50.0",
+            "version": "v12.51.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1635,7 +1635,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v12.50.0",
+            "version": "v12.51.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1683,7 +1683,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v12.50.0",
+            "version": "v12.51.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
@@ -2915,16 +2915,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "13.0.1",
+            "version": "13.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "35b8abcac712ba24814d7fe8908dfb5702efb39f"
+                "reference": "87f0ca577a7056016741af70e7a7de9246c52e67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/35b8abcac712ba24814d7fe8908dfb5702efb39f",
-                "reference": "35b8abcac712ba24814d7fe8908dfb5702efb39f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/87f0ca577a7056016741af70e7a7de9246c52e67",
+                "reference": "87f0ca577a7056016741af70e7a7de9246c52e67",
                 "shasum": ""
             },
             "require": {
@@ -2993,7 +2993,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.0.1"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/13.0.2"
             },
             "funding": [
                 {
@@ -3017,7 +3017,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-08T07:08:25+00:00"
+            "time": "2026-02-10T12:33:24+00:00"
         },
         {
             "name": "psr/container",

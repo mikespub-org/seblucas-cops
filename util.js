@@ -484,6 +484,9 @@ function link_Clicked (event) {
         url.indexOf('/fetch/') !== -1 ||
         url.indexOf('/zipper/') !== -1 ||
         url.indexOf('/covers/') !== -1 ||
+        url.indexOf('/calibre/') !== -1 ||
+        url.indexOf('/format/') !== -1 ||
+        url.indexOf('/images/') !== -1 ||
         url.indexOf('/files/') !== -1) {
         return;
     }

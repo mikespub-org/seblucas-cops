@@ -24,6 +24,7 @@ class Data
 
     public const ROUTE_DATA = "fetch-data";
     public const ROUTE_INLINE = "fetch-inline";
+    public const ROUTE_FORMAT = "fetch-format";
     public const SQL_TABLE = "data";
     public const SQL_COLUMNS = "id, name, format";
     public const SQL_LINK_TABLE = "data";
@@ -371,6 +372,18 @@ class Data
     }
 
     /**
+     * Summary of getFolderPath
+     * @return string
+     */
+    public function getFolderPath()
+    {
+        if (!empty($this->book->folderId)) {
+            return $this->book->folderId . '/' . $this->getFilename();
+        }
+        return $this->getFilename();
+    }
+
+    /**
      * Summary of getExternalPath
      * @return string
      */
@@ -398,6 +411,21 @@ class Data
      */
     public function getLinkResource($title = null, $view = false)
     {
+        if (isset($this->book->folderId)) {
+            $params = [];
+            $params['path'] = $this->getFolderPath();
+            $routeName = self::ROUTE_FORMAT;
+            $href = fn() => $this->getRoute($routeName, $params);
+            return new LinkAcquisition(
+                $href,
+                $this->getMimeType(),
+                LinkAcquisition::OPDS_ACQUISITION_TYPE,
+                $title,
+                // no filepath here
+                null
+            );
+        }
+
         if ($this->book->isExternal()) {
             // external storage is assumed to be already url-encoded if needed
             $href = $this->getExternalPath();

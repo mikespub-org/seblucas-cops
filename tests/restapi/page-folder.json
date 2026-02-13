@@ -1,0 +1,52 @@
+{
+    "title": "Folders > Root",
+    "parentTitle": "Folders",
+    "baseurl": "vendor/bin/index.php",
+    "isFilterPage": false,
+    "databaseId": "",
+    "databaseName": "",
+    "libraryId": "",
+    "libraryName": "COPS",
+    "fullTitle": "Folders > Root",
+    "multipleDatabase": 0,
+    "page": "folder",
+    "entries": [],
+    "entriesCount": 0,
+    "isPaginated": 0,
+    "sorted": "title",
+    "sortedBy": "title",
+    "sortedDir": "asc",
+    "containsBook": 0,
+    "filterurl": false,
+    "sortoptions": [],
+    "filters": false,
+    "abouturl": "vendor/bin/index.php/restapi/about",
+    "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "homeurl": "vendor/bin/index.php",
+    "parenturl": "vendor/bin/index.php",
+    "hierarchy": {
+        "parents": [],
+        "current": {
+            "class": "Folders",
+            "title": "Root",
+            "content": "No books",
+            "navlink": "vendor/bin/index.php/restapi/folder/0?tree=1",
+            "number": 0
+        },
+        "children": [
+            {
+                "class": "Folders",
+                "title": "BaseWithSomeBooks",
+                "content": "2 books",
+                "navlink": "vendor/bin/index.php/restapi/folder/BaseWithSomeBooks",
+                "number": 2
+            }
+        ],
+        "hastree": false
+    },
+    "extra": false,
+    "assets": "vendor/bin/vendor/npm-asset",
+    "download": false,
+    "locale": "en",
+    "template": "bootstrap2"
+}

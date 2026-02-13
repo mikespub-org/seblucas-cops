@@ -323,6 +323,29 @@ $routes = [
     ],
     [],
   ],
+  'page-folder' => [
+    '/folder/{path:.*}',
+    [
+      'page' => 'folder',
+      '_route' => 'page-folder',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-ebook' => [
+    '/ebook/{path:.*}',
+    [
+      'page' => 'folder',
+      'ebook' => 1,
+      '_route' => 'page-ebook',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'page-recent' => [
     '/recent',
     [
@@ -736,6 +759,29 @@ $routes = [
     ],
     [],
   ],
+  'fetch-format' => [
+    '/format/{path:.+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
+      '_route' => 'fetch-format',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'fetch-image' => [
+    '/images/{size}/{path:.+}',
+    [
+      'image' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
+      '_route' => 'fetch-image',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'fetch-view' => [
     '/view/{data}/{db}/{ignore}.{type}',
     [
@@ -1039,6 +1085,18 @@ $routes = [
       '_resource' => 'User',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
       '_route' => 'restapi-user',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'restapi-folders' => [
+    '/restapi/folders/{path:.*}',
+    [
+      '_resource' => 'Folder',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
+      '_route' => 'restapi-folders',
     ],
     [
       'GET',

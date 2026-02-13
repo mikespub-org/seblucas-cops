@@ -596,6 +596,62 @@
                 ]
             }
         },
+        "/folder/{path}": {
+            "get": {
+                "summary": "Route to page handler with page=folder&path={path}",
+                "operationId": "get_page-folder",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=folder&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/ebook/{path}": {
+            "get": {
+                "summary": "Route to page handler with page=folder&ebook=1&path={path}",
+                "operationId": "get_page-ebook",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=folder&ebook=1&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
         "/recent": {
             "get": {
                 "summary": "Route to page handler with page=recent",
@@ -1680,6 +1736,74 @@
                 ]
             }
         },
+        "/format/{path}": {
+            "get": {
+                "summary": "Route to fetch handler with path={path} - with api key",
+                "operationId": "get_fetch-format",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/images/{size}/{path}": {
+            "get": {
+                "summary": "Route to fetch handler with image=1&size={size}&path={path} - with api key",
+                "operationId": "get_fetch-image",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with image=1&size={size}&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/view/{data}/{db}/{ignore}.{type}": {
             "get": {
                 "summary": "Route to fetch handler with view=1&data={data}&db={db}&type={type} - with api key",
@@ -2468,6 +2592,34 @@
                 "security": [
                     {
                         "BasicAuth": []
+                    }
+                ]
+            }
+        },
+        "/folders/{path}": {
+            "get": {
+                "summary": "Route to folders/{path} api",
+                "operationId": "get_restapi-folders",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of folders/{path} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
                     }
                 ]
             }

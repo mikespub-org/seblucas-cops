@@ -44,6 +44,9 @@
 
 {% block content %}
 <div id="content" class="row d-flex">
+    {% if it.page == "folder" %}
+      <div class="col-xs-12"><h4>{{it.c.i18n.bookwordTitle}}</h4></div>
+    {% endif %}
     {% for entry in it.entries %}
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
             <div class="cover-image">

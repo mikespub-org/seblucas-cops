@@ -267,6 +267,10 @@ $tooltips['cops_database_filter'] = <<<'EOT'
     by putting this in the right local.*.php file(s)
     EOT;
 
+$tooltips['cops_browse_books_directory'] = <<<'EOT'
+    Browse book files in other folders besides Calibre (WIP)
+    EOT;
+
 $tooltips['cops_calibre_custom_column'] = <<<'EOT'
     Custom Columns for the index page
     to add as an array containing the lookup names configured in Calibre

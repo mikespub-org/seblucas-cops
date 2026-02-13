@@ -89,6 +89,18 @@ class AdminHandler extends BaseHandler
         $writable = $this->isLocalConfigWritable();
 
         $actions = [];
+        $description = 'Browse book files in other folders besides Calibre';
+        $root = Config::get('browse_books_directory');
+        if (empty($root)) {
+            $description .= ' - set $config[\'cops_browse_books_directory\'] in config/local.php';
+        } else {
+            $description .= ': ' . htmlspecialchars($root);
+        }
+        $actions[] = [
+            'url' => HtmlHandler::route('page-folder', ['path' => '0']),
+            'title' => 'Browse Folders',
+            'description' => $description,
+        ];
         $actions[] = [
             'url' => self::route('admin-clearcache'),
             'title' => 'Clear Thumbnail Cache',

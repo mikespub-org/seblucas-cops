@@ -35,6 +35,7 @@ class Book
     public const PAGE_DETAIL = PageId::BOOK_DETAIL;
     public const ROUTE_ALL = "page-books";
     public const ROUTE_DETAIL = "page-book";
+    public const ROUTE_FOLDER = "page-ebook";
     // used to generate detailUrl in JsonRenderer
     public const ROUTE_PAGEID = "page-book-id";
     public const ROUTE_FILE = "fetch-file";
@@ -99,6 +100,8 @@ class Book
     /** @var ?int */
     public $pages = null;
     /** @var ?string */
+    public $folderId = null;
+    /** @var ?string */
     protected $coverFileName = null;
     public bool $updateForKepub = false;
 
@@ -111,8 +114,8 @@ class Book
     {
         $this->id = $line->id;
         $this->title = $line->title;
-        $this->timestamp = strtotime($line->timestamp);
-        $this->pubdate = $line->pubdate;
+        $this->timestamp = strtotime($line->timestamp ?? '');
+        $this->pubdate = $line->pubdate ?? '';
         //$this->path = Database::getDbDirectory() . $line->path;
         //$this->relativePath = $line->path;
         // -DC- Init relative or full path
@@ -121,11 +124,11 @@ class Book
         } else {
             $this->setLocalPath($line->path, $database);
         }
-        $this->seriesIndex = $line->series_index;
+        $this->seriesIndex = $line->series_index ?? null;
         $this->comment = $line->comment ?? '';
-        $this->uuid = $line->uuid;
-        $this->hasCover = $line->has_cover;
-        $this->rating = $line->rating;
+        $this->uuid = $line->uuid ?? '';
+        $this->hasCover = $line->has_cover ?? false;
+        $this->rating = $line->rating ?? null;
         $this->databaseId = $database;
         // do this at the end when all properties are set
         if ($this->hasCover) {
@@ -193,6 +196,10 @@ class Book
      */
     public function getUri($params = [])
     {
+        if (isset($this->folderId)) {
+            $params['path'] = $this->folderId ? $this->folderId . '/' . $this->getTitle() : $this->getTitle();
+            return $this->getRoute(self::ROUTE_FOLDER, $params);
+        }
         $params['id'] = $this->id;
         // we need databaseId here because we use $handler::link()
         $params['db'] = $this->databaseId;

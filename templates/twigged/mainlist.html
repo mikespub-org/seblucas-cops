@@ -21,6 +21,7 @@
                 <li><span class="hidden-sm hidden-md"> {{it.hierarchy.current.title}}</span></li>
             {% endif %}
         {% endif %}
+        {% if it.page != "folder" %}
         {% for entry in it.hierarchy.children %}
             {% if entry.number %}
                 <li><a href="{{entry.navlink}}">{{entry.title}} ({{entry.number}})</a></li>
@@ -28,6 +29,7 @@
                 <li><a href="{{entry.navlink}}">{{entry.title}}</a></li>
             {% endif %}
         {% endfor %}
+        {% endif %}
     </ul>
     {% endif %}
     {% if it.filters %}
@@ -44,6 +46,26 @@
     </ul>
     {% endif %}
 </div>
+{% if it.page == "folder" and it.hierarchy and it.hierarchy.children %}
+<div class="row">
+    <div class="col-xs-12"><h4>{{it.c.i18n.foldersTitle}}</h4></div>
+    {% for folder in it.hierarchy.children %}
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+        <div class="panel panel-default">
+            <a href="{{folder.navlink}}">
+                <div class="panel-body">
+                    <span class="glyphicon glyphicon-folder-close"></span>
+                    {{folder.title|escape}}
+                    {% if folder.number %}
+                        <span class="badge pull-right">{{folder.number}}</span>
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock hierarchy %}
 
 {% block content %}

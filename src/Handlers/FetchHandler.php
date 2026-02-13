@@ -16,6 +16,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Middleware\ProtectMiddleware;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
@@ -42,6 +43,8 @@ class FetchHandler extends BaseHandler
             "fetch-cover" => ["/covers/{db:\d+}/{id:\d+}.jpg"],
             "fetch-inline" => ["/inline/{db:\d+}/{data:\d+}/{ignore}.{type}", ["view" => 1]],
             "fetch-data" => ["/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}"],
+            "fetch-format" => ["/format/{path:.+}"],
+            "fetch-image" => ["/images/{size}/{path:.+}", ["image" => 1]],
             // @todo handle url rewriting if enabled separately - path parameters are different
             "fetch-view" => ["/view/{data}/{db}/{ignore}.{type}", ["view" => 1]],
             "fetch-download" => ["/download/{data}/{db}/{ignore}.{type}"],
@@ -67,6 +70,14 @@ class FetchHandler extends BaseHandler
         // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
         if (ob_get_length() !== false && $request->getHandler() !== TestHandler::class) {
             ob_end_clean();
+        }
+
+        // check if we have a folder file path
+        if (Config::get('browse_books_directory')) {
+            $path = $request->get('path');
+            if (!empty($path)) {
+                return $this->sendFolderFile($request, $path);
+            }
         }
 
         $bookId   = $request->getId();
@@ -209,5 +220,51 @@ class FetchHandler extends BaseHandler
         }
         // set updateForKepub if necessary
         return $data->sendUpdatedEpub($book->updateForKepub);
+    }
+
+    public function sendFolderFile($request, $path)
+    {
+        $fileName = basename($path);
+        $folderId = dirname($path);
+        $root = Config::get('browse_books_directory', '');
+        if (empty($root) || !is_dir($root)) {
+            return Response::sendError($request, "Invalid Root");
+        }
+        $folder = Folder::getRootFolder($root);
+        $folder->setHandler(HtmlHandler::class);
+        // force looking for book files here
+        $folder->findBookFiles();
+        $instance = $folder->getChildFolderById($folderId);
+        if (is_null($instance)) {
+            return Response::sendError($request, "Invalid Folder");
+        }
+        $bookName = pathinfo($fileName, PATHINFO_FILENAME);
+        $book = $instance->getBookByName($bookName);
+        if (is_null($book)) {
+            return Response::sendError($request, "Invalid Book");
+        }
+        $image = $request->get('image', false);
+        if ($image) {
+            if (!$book->hasCover) {
+                return Response::sendError($request, "Invalid Cover");
+            }
+            $coverFile = $book->getCoverFileName();
+            if (empty($coverFile) || !file_exists($coverFile)) {
+                return Response::sendError($request, "Invalid Cover");
+            }
+            $cover = new Cover($book);
+            $thumb = $request->get('size', 'full');
+            if ($thumb == 'full') {
+                return $cover->sendImage();
+            }
+            $request->set('thumb', $thumb);
+            return $cover->sendThumbnail($request);
+        }
+        $format = strtoupper(pathinfo($fileName, PATHINFO_EXTENSION));
+        $data = $book->getDataFormat($format);
+        if (empty($data)) {
+            return Response::sendError($request, "Invalid Format");
+        }
+        return $data->sendFile();
     }
 }

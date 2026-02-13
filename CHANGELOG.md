@@ -13,7 +13,9 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
-  * ...
+  * Changes in config/default.php file:
+    - new $config['cops_browse_books_directory'] to browse books in other folders
+  * Browse book files in other folders besides Calibre (WIP)
 
 4.2.0 - 20260209 Support mapping of filepath for x-accel-redirect
   * Changes in config/default.php file:

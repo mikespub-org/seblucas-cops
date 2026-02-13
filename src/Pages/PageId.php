@@ -27,6 +27,7 @@ class PageId
     public const SERIE_DETAIL = "serie";
     public const OPENSEARCH = "opensearch";
     public const SEARCH = "search";
+    public const FOLDER = "folder";
     public const OPENSEARCH_QUERY = "query";
     public const ALL_RECENT_BOOKS = "recent";
     public const ALL_TAGS = "tags";
@@ -67,6 +68,7 @@ class PageId
     public const FILTER_ID = "cops:filter";
     public const ERROR_ID = "cops:error";
     public const SEARCH_ID = "cops:search";
+    public const FOLDER_ID = "cops:folder";
     public const ALL_AUTHORS_ID = "cops:authors";
     public const ALL_BASES_ID = "cops:bases";
     public const ALL_BOOKS_UUID = 'urn:uuid';
@@ -94,7 +96,7 @@ class PageId
      * @param string|int|null $pageId
      * @param ?Request $request
      * @param ?Base $instance @todo investigate potential use as alternative to getEntry()
-     * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail
+     * @return Page|PageAbout|PageAllAuthors|PageAllAuthorsLetter|PageAllBooks|PageAllBooksLetter|PageAllBooksYear|PageAllCustoms|PageAllLanguages|PageAllPublishers|PageAllRating|PageAllSeries|PageAllTags|PageAuthorDetail|PageBookDetail|PageCustomDetail|PageCustomize|PageLanguageDetail|PagePublisherDetail|PageQueryResult|PageRatingDetail|PageRecentBooks|PageSerieDetail|PageTagDetail|PageFolderDetail
      */
     public static function getPage($pageId, $request, $instance = null)
     {
@@ -127,6 +129,7 @@ class PageId
             PageId::OPENSEARCH_QUERY => new PageQueryResult($request),
             // support ?query=... URL param by default for opensearch
             PageId::OPENSEARCH => !empty($request->get('query')) ? new PageQueryResult($request) : new PageIndex($request),
+            PageId::FOLDER => new PageFolderDetail($request, $instance),
             PageId::BOOK_DETAIL => new PageBookDetail($request),
             PageId::ALL_PUBLISHERS => new PageAllPublishers($request),
             PageId::PUBLISHERS_FIRST_LETTER => new PageAllPublishersLetter($request),

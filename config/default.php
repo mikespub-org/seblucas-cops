@@ -317,6 +317,11 @@ $config['cops_virtual_library'] = '0';
 $config['cops_database_filter'] = [];
 
 /*
+ * Browse book files in other folders besides Calibre (WIP)
+ */
+$config['cops_browse_books_directory'] = '';
+
+/*
  * Custom Columns for the index page
  * to add as an array containing the lookup names configured in Calibre
  *

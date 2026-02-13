@@ -480,8 +480,8 @@ class UriGenerator
             if (in_array($param, ['query', 'letter'])) {
                 $value = rawurlencode($value);
             }
-            // extra file
-            if (in_array($param, ['file'])) {
+            // extra file or path
+            if (in_array($param, ['file', 'path']) && !str_contains($value, '%')) {
                 $value = implode('/', array_map('rawurlencode', explode('/', $value)));
             }
             // @todo do we need to handle 'comp' or 'path' anywhere?

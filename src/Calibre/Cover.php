@@ -23,6 +23,7 @@ class Cover
 
     public const ROUTE_COVER = "fetch-cover";
     public const ROUTE_THUMB = "fetch-thumb";
+    public const ROUTE_IMAGE = "fetch-image";
 
     /** @var Book */
     public $book;
@@ -336,6 +337,10 @@ class Cover
             return null;
         }
 
+        if (isset($this->book->folderId)) {
+            return $this->getFolderLink();
+        }
+
         // -DC- Use cover file name
         $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
         $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
@@ -417,6 +422,10 @@ class Cover
                 return $this->getDefaultLink();
             }
             return null;
+        }
+
+        if (isset($this->book->folderId)) {
+            return $this->getFolderLink($thumb);
         }
 
         // -DC- Use cover file name
@@ -509,6 +518,39 @@ class Cover
             return true;
         }
         return false;
+    }
+
+    /**
+     * Summary of getFolderLink
+     * @param string $thumb
+     * @return LinkImage
+     */
+    public function getFolderLink($thumb = 'full')
+    {
+        $params = [];
+        $params['path'] = $this->getFolderPath();
+        $params['size'] = $thumb;
+        $routeName = self::ROUTE_IMAGE;
+        $href = fn() => $this->getRoute($routeName, $params);
+        $mime = 'image/jpeg';
+        return new LinkImage(
+            $href,
+            $mime,
+            LinkImage::OPDS_THUMBNAIL_TYPE
+            // no filepath here
+        );
+    }
+
+    /**
+     * Summary of getFolderPath
+     * @return string
+     */
+    public function getFolderPath()
+    {
+        if (!empty($this->book->folderId)) {
+        return $this->book->folderId . '/' . $this->book->getTitle() . '.jpg';
+        }
+        return $this->book->getTitle() . '.jpg';
     }
 
     /**

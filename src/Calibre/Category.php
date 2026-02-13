@@ -20,6 +20,7 @@ abstract class Category extends Base
 {
     public const SQL_CREATE = 'insert into categories (name) values (?)';
     public const CATEGORY = "categories";
+    public const SEPARATOR = ".";
 
     /** @var ?array<Category> */
     protected $children = null;
@@ -94,7 +95,7 @@ abstract class Category extends Base
             }
             // skip entries deeper in hierarchy like Fiction.Historical.Mystery
             $siblingName = substr($sibling->getTitle(), strlen($parentName) + 1);
-            if (str_contains($siblingName, '.')) {
+            if (str_contains($siblingName, self::SEPARATOR)) {
                 continue;
             }
             array_push($entryArray, $sibling->getEntry($sibling->count));
@@ -109,7 +110,7 @@ abstract class Category extends Base
      */
     public static function findCurrentName($name)
     {
-        $parts = explode('.', $name);
+        $parts = explode(self::SEPARATOR, $name);
         $current = array_pop($parts);
         return $current;
     }
@@ -121,12 +122,12 @@ abstract class Category extends Base
      */
     public static function findParentName($name)
     {
-        $parts = explode('.', $name);
+        $parts = explode(self::SEPARATOR, $name);
         $current = array_pop($parts);
         if (empty($parts)) {
             return '';
         }
-        $parent = implode('.', $parts);
+        $parent = implode(self::SEPARATOR, $parts);
         return $parent;
     }
 
@@ -278,7 +279,10 @@ abstract class Category extends Base
         $children = $this->getChildEntries($expand);
         // remove current title from children
         foreach ($children as $id => $entry) {
-            $childTitle = substr($entry->title, strlen($current->title) + 1);
+            $childTitle = $entry->title;
+            if (str_starts_with($childTitle, $current->title)) {
+                $childTitle = substr($childTitle, strlen($current->title) + 1);
+            }
             $children[$id]->title = $childTitle;
         }
         // remove parent title from current

@@ -142,6 +142,19 @@
                         "page": "opensearch"
                     }
                 ],
+                "page-folder": [
+                    "/folder/{path:.*}",
+                    {
+                        "page": "folder"
+                    }
+                ],
+                "page-ebook": [
+                    "/ebook/{path:.*}",
+                    {
+                        "page": "folder",
+                        "ebook": 1
+                    }
+                ],
                 "page-recent": [
                     "/recent",
                     {
@@ -367,6 +380,15 @@
                 "fetch-data": [
                     "/fetch/{db:\\d+}/{data:\\d+}/{ignore}.{type}"
                 ],
+                "fetch-format": [
+                    "/format/{path:.+}"
+                ],
+                "fetch-image": [
+                    "/images/{size}/{path:.+}",
+                    {
+                        "image": 1
+                    }
+                ],
                 "fetch-view": [
                     "/view/{data}/{db}/{ignore}.{type}",
                     {
@@ -525,6 +547,12 @@
                     "/restapi/user",
                     {
                         "_resource": "User"
+                    }
+                ],
+                "restapi-folders": [
+                    "/restapi/folders/{path:.*}",
+                    {
+                        "_resource": "Folder"
                     }
                 ],
                 "restapi-path": [

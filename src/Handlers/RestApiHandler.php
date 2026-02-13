@@ -33,6 +33,7 @@ class RestApiHandler extends BaseHandler
         "Preference" => ["key"],
         "Annotation" => ["bookId", "id"],
         "Metadata" => ["bookId", "element", "name"],
+        "Folder" => ["path"],
         "" => ["path"],
     ];
     public const GROUP_PARAM = "_resource";
@@ -66,6 +67,7 @@ class RestApiHandler extends BaseHandler
             "restapi-metadata" => [self::PREFIX . "/metadata/{bookId}", [self::RESOURCE => "Metadata"]],
             "restapi-user-details" => [self::PREFIX . "/user/details", [self::RESOURCE => "User", "details" => true]],
             "restapi-user" => [self::PREFIX . "/user", [self::RESOURCE => "User"]],
+            "restapi-folders" => [self::PREFIX . "/folders/{path:.*}", [self::RESOURCE => "Folder"]],
             // add default routes for handler to generate links
             "restapi-path" => [self::PREFIX . "/{path:.*}"],  // [self::RESOURCE => "path"]
             //"restapi-none" => [self::PREFIX . ""],

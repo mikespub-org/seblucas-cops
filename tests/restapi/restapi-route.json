@@ -316,6 +316,35 @@
             ]
         },
         {
+            "name": "page-folder",
+            "route": [
+                "/folder/{path:.*}",
+                {
+                    "page": "folder",
+                    "_route": "page-folder"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-ebook",
+            "route": [
+                "/ebook/{path:.*}",
+                {
+                    "page": "folder",
+                    "ebook": 1,
+                    "_route": "page-ebook"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "page-recent",
             "route": [
                 "/recent",
@@ -840,6 +869,35 @@
             ]
         },
         {
+            "name": "fetch-format",
+            "route": [
+                "/format/{path:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-format"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-image",
+            "route": [
+                "/images/{size}/{path:.+}",
+                {
+                    "image": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-image"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "fetch-view",
             "route": [
                 "/view/{data}/{db}/{ignore}.{type}",
@@ -1219,6 +1277,21 @@
                     "_resource": "User",
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
                     "_route": "restapi-user"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "restapi-folders",
+            "route": [
+                "/restapi/folders/{path:.*}",
+                {
+                    "_resource": "Folder",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-folders"
                 },
                 [
                     "GET"

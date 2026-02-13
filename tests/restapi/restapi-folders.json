@@ -1,0 +1,132 @@
+{
+    "title": "Folder",
+    "baseurl": "vendor/bin/index.php/restapi",
+    "databaseId": null,
+    "root": "/home/mikespub/seblucas-cops/tests",
+    "folderId": "BaseWithSomeBooks/Lewis Carroll",
+    "folder": {
+        "id": "BaseWithSomeBooks/Lewis Carroll",
+        "name": "Lewis Carroll",
+        "link": null,
+        "count": 1,
+        "limitSelf": true,
+        "root": "/home/mikespub/seblucas-cops/tests",
+        "bookList": [],
+        "orderBy": null
+    },
+    "children": [
+        {
+            "id": "BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)",
+            "name": "Alice's Adventures in Wonderland (17)",
+            "link": null,
+            "count": 1,
+            "limitSelf": true,
+            "root": "/home/mikespub/seblucas-cops/tests",
+            "bookList": [
+                {
+                    "id": 2,
+                    "title": "Alice's Adventures in Wonderland - Lewis Carroll",
+                    "timestamp": 1737754398,
+                    "pubdate": "",
+                    "path": "/home/mikespub/seblucas-cops/tests/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)",
+                    "uuid": "",
+                    "hasCover": true,
+                    "relativePath": null,
+                    "seriesIndex": null,
+                    "comment": "<p class=\"description\">Alice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.<br>The tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.</p>\n\nAlice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.\nThe tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.",
+                    "rating": 0,
+                    "datas": [
+                        {
+                            "id": 2,
+                            "name": "Alice's Adventures in Wonderland - Lewis Carroll",
+                            "format": "EPUB",
+                            "realFormat": "EPUB",
+                            "extension": "epub",
+                            "book": null,
+                            "updateForKepub": false
+                        }
+                    ],
+                    "extraFiles": [],
+                    "authors": [
+                        {
+                            "id": null,
+                            "name": "Lewis Carroll",
+                            "link": null,
+                            "count": null,
+                            "limitSelf": true,
+                            "sort": "Carroll, Lewis"
+                        }
+                    ],
+                    "publisher": false,
+                    "serie": false,
+                    "tags": [],
+                    "identifiers": [],
+                    "formats": [],
+                    "languages": "",
+                    "annotations": [],
+                    "pages": 0,
+                    "folderId": "BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)",
+                    "updateForKepub": false
+                }
+            ],
+            "orderBy": null
+        }
+    ],
+    "parent": [
+        {
+            "title": "Root",
+            "id": "cops:folder:0",
+            "content": "2 books",
+            "numberOfElement": 2,
+            "contentType": "text",
+            "linkArray": [
+                {
+                    "href": [],
+                    "type": "application/atom+xml;profile=opds-catalog;kind=acquisition",
+                    "rel": "subsection",
+                    "title": null
+                }
+            ],
+            "localUpdated": null,
+            "className": "Folder",
+            "instance": {
+                "id": 0,
+                "name": "Root",
+                "link": null,
+                "count": 2,
+                "limitSelf": true,
+                "root": "/home/mikespub/seblucas-cops/tests",
+                "bookList": [],
+                "orderBy": null
+            }
+        },
+        {
+            "title": "BaseWithSomeBooks",
+            "id": "cops:folder:BaseWithSomeBooks",
+            "content": "2 books",
+            "numberOfElement": 2,
+            "contentType": "text",
+            "linkArray": [
+                {
+                    "href": [],
+                    "type": "application/atom+xml;profile=opds-catalog;kind=acquisition",
+                    "rel": "subsection",
+                    "title": null
+                }
+            ],
+            "localUpdated": null,
+            "className": "Folder",
+            "instance": {
+                "id": "BaseWithSomeBooks",
+                "name": "BaseWithSomeBooks",
+                "link": null,
+                "count": 2,
+                "limitSelf": true,
+                "root": "/home/mikespub/seblucas-cops/tests",
+                "bookList": [],
+                "orderBy": null
+            }
+        }
+    ],
+    "Exception": "Recursion detected"
+}

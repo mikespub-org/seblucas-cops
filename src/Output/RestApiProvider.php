@@ -10,16 +10,20 @@
 
 namespace SebLucas\Cops\Output;
 
+use JsonException;
 use SebLucas\Cops\Calibre\Annotation;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\Request;
@@ -57,6 +61,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         "/annotations" => 'getAnnotations',
         "/metadata" => 'getMetadata',
         "/user" => 'getUser',
+        "/folders" => 'getFolders',
     ];
 
     public bool $isExtra = false;
@@ -163,7 +168,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getOutput($result = null)
     {
         if (isset($result)) {
-            return json_encode($result, JSON_UNESCAPED_SLASHES);
+            return json_encode($result, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         }
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
@@ -185,7 +190,12 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
                 return $result;
             }
         }
-        $output = json_encode($result, JSON_UNESCAPED_SLASHES);
+        try {
+            $output = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $result['Exception'] ??= $e->getMessage();
+            $output = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_PARTIAL_OUTPUT_ON_ERROR);
+        }
 
         return $output;
     }
@@ -772,6 +782,56 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         if ($request->path() == RestApiHandler::PREFIX . "/user/details") {
             $user = User::getInstanceByName($username);
             $result = array_replace($result, (array) $user);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getFolders
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public function getFolders($request)
+    {
+        $root = Config::get('browse_books_directory');
+        if (empty($root) || !is_dir($root)) {
+            return ["error" => "Invalid root folder"];
+        }
+        $folderId = $request->get('path', '');
+        if (str_contains($folderId, '..') || str_contains($folderId, './')) {
+            return ["error" => "Invalid folderId"];
+        }
+        $db = $request->database();
+        $baseurl = $this->getBaseUrl();
+        $result = [
+            "title" => "Folder",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+            "root" => $root,
+            "folderId" => $folderId,
+            "folder" => null,
+        ];
+        $folder = Folder::getRootFolder($root);
+        $folder->setHandler(HtmlHandler::class);
+        $folder->findBookFiles();
+        if (!empty($folderId)) {
+            $folderPath = $folder->getFolderPath($folderId);
+            if (is_dir($folderPath)) {
+                $result["folder"] = $folder->getChildFolderById($folderId);
+                $result["children"] = $result["folder"]->getChildFolders();
+                $result["parent"] = $result["folder"]->getParentTrail();
+            } elseif (is_file($folderPath)) {
+                $fileId = basename($folderId);
+                $folderId = dirname($folderId);
+                $result["folder"] = $folder->getChildFolderById($folderId);
+                $result["children"] = $result["folder"]->getChildFolders();
+                $result["parent"] = $result["folder"]->getParentTrail();
+                $result["file"] = pathinfo($result["folder"]->getFolderPath() . $fileId);
+            }
+        } else {
+            $result["folder"] = $folder;
+            $result["children"] = $folder->getChildFolders();
+            $result["parent"] = $folder->getParentTrail();
         }
         return $result;
     }

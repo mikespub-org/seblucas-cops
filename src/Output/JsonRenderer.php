@@ -290,6 +290,7 @@ class JsonRenderer extends BaseRenderer
             'Rating' => localize("ratings.title"),
             'Serie' => localize("series.title"),
             'Tag' => localize("tags.title"),
+            'Folder' => localize("folders.title"),
             default => $entry->className,
         };
         return [
@@ -347,6 +348,7 @@ class JsonRenderer extends BaseRenderer
                 "authorTitle" => localize("author.title"),
                 "allbooksTitle" => localize("allbooks.title"),
                 "bookwordTitle" => localize("bookword.title"),
+                "foldersTitle" => localize("folders.title"),
                 "recentTitle" => localize("recent.title"),
                 "tagsTitle" => localize("tags.title"),
                 "tagwordTitle" => localize("tagword.title"),
@@ -716,6 +718,11 @@ class JsonRenderer extends BaseRenderer
         $libraryId = $request->getVirtualLibrary();
 
         $currentPage = PageId::getPage($this->page, $request);
+
+        // handle folder book as book page
+        if ($this->page == "folder" && !empty($currentPage->book)) {
+            $this->page = "book";
+        }
 
         if ($search) {
             return $this->getContentArrayTypeahead($currentPage);
