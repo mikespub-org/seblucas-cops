@@ -24,7 +24,7 @@
             "root": "/home/mikespub/seblucas-cops/tests",
             "bookList": [
                 {
-                    "id": 2,
+                    "id": 1,
                     "title": "Alice's Adventures in Wonderland - Lewis Carroll",
                     "timestamp": 1737754398,
                     "pubdate": "",
@@ -37,7 +37,7 @@
                     "rating": 0,
                     "datas": [
                         {
-                            "id": 2,
+                            "id": 1,
                             "name": "Alice's Adventures in Wonderland - Lewis Carroll",
                             "format": "EPUB",
                             "realFormat": "EPUB",

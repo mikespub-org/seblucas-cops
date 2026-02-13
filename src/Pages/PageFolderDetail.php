@@ -39,8 +39,6 @@ class PageFolderDetail extends PageWithDetail
         }
         $folder = Folder::getRootFolder($root, $this->getDatabaseId());
         $folder->setHandler($this->handler);
-        // force looking for book files here
-        $folder->findBookFiles();
         $bookName = null;
         if (!empty($this->idGet)) {
             $ebook = $this->request->get('ebook');
@@ -52,6 +50,11 @@ class PageFolderDetail extends PageWithDetail
             if (!is_dir($folderPath)) {
                 throw new InvalidArgumentException('Invalid Folder');
             }
+            // force looking for book files here
+            $folder->findBookFiles($this->idGet);
+        } else {
+            // force looking for book files here
+            $folder->findBookFiles();
         }
         /** @var Folder $instance */
         $instance = $folder->getChildFolderById($this->idGet);

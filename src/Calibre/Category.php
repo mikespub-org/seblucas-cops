@@ -275,7 +275,7 @@ abstract class Category extends Base
     public function getHierarchy($expand = false)
     {
         $parents = $this->getParentTrail();
-        $current = $this->getEntry();
+        $current = $this->getEntry($this->count ?? 0);
         $children = $this->getChildEntries($expand);
         // remove current title from children
         foreach ($children as $id => $entry) {

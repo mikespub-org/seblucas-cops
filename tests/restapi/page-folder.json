@@ -29,9 +29,9 @@
         "current": {
             "class": "Folders",
             "title": "Root",
-            "content": "No books",
+            "content": "2 books",
             "navlink": "vendor/bin/index.php/restapi/folder/0?tree=1",
-            "number": 0
+            "number": 2
         },
         "children": [
             {

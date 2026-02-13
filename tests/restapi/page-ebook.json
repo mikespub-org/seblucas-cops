@@ -4,7 +4,7 @@
     "baseurl": "vendor/bin/index.php",
     "isFilterPage": false,
     "book": {
-        "id": 2,
+        "id": 1,
         "detailurl": "vendor/bin/index.php/restapi/ebook/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll",
         "hasCover": true,
         "preferedData": [
@@ -40,13 +40,13 @@
         "pages": 0,
         "datas": [
             {
-                "id": 2,
+                "id": 1,
                 "format": "EPUB",
                 "url": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
                 "viewUrl": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
                 "mail": 1,
                 "qrcode": 0,
-                "readerUrl": "vendor/bin/index.php/read/0/2/Alice_s_Adventures_in_Wonderland_Lewis_Carroll"
+                "readerUrl": "vendor/bin/index.php/read/0/1/Alice_s_Adventures_in_Wonderland_Lewis_Carroll"
             }
         ],
         "extraFiles": [],

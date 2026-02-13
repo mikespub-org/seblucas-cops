@@ -8,6 +8,7 @@
 /cops.sublime-*
 /config_local.php
 /config_local.*.php
+cops_folders.php
 .yarn/*
 #!.yarn/releases
 #!.yarn/plugins

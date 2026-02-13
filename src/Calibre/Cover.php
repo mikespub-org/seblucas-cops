@@ -548,7 +548,7 @@ class Cover
     public function getFolderPath()
     {
         if (!empty($this->book->folderId)) {
-        return $this->book->folderId . '/' . $this->book->getTitle() . '.jpg';
+            return $this->book->folderId . '/' . $this->book->getTitle() . '.jpg';
         }
         return $this->book->getTitle() . '.jpg';
     }

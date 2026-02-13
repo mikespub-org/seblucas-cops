@@ -222,6 +222,12 @@ class FetchHandler extends BaseHandler
         return $data->sendUpdatedEpub($book->updateForKepub);
     }
 
+    /**
+     * Summary of sendFolderFile
+     * @param Request $request
+     * @param string $path
+     * @return FileResponse|Response
+     */
     public function sendFolderFile($request, $path)
     {
         $fileName = basename($path);
@@ -230,11 +236,12 @@ class FetchHandler extends BaseHandler
         if (empty($root) || !is_dir($root)) {
             return Response::sendError($request, "Invalid Root");
         }
-        $folder = Folder::getRootFolder($root);
+        $database = $request->database();
+        $folder = Folder::getInstanceById($folderId, $database, $root);
         $folder->setHandler(HtmlHandler::class);
         // force looking for book files here
-        $folder->findBookFiles();
-        $instance = $folder->getChildFolderById($folderId);
+        $folder->findBookFiles(null, false);
+        $instance = $folder->getChildFolderById($folderId, false);
         if (is_null($instance)) {
             return Response::sendError($request, "Invalid Folder");
         }
