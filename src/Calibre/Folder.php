@@ -242,11 +242,20 @@ class Folder extends Category
         $parent ??= $this;
         $bookList = [];
         foreach ($fileList as $dirPath => $books) {
-            $metadata = null;
-            $hasCover = false;
             if ($dirPath == '.') {
                 $bookPath = rtrim($folderPath, '/');
                 $bookFolder = $parent;
+            } elseif (empty($parent->id)) {
+                // don't add books in lower levels for Root
+                $childName = explode('/', $dirPath)[0];
+                $bookFolder = $parent->addChildFolder($childName);
+                $count = count($books);
+                $bookFolder->count += $count;
+                while ($bookFolder->parent) {
+                    $bookFolder = $bookFolder->parent;
+                    $bookFolder->count += $count;
+                }
+                continue;
             } else {
                 $bookPath = $folderPath . $dirPath;
                 $folderId = $parent->id ? $parent->id . '/' . $dirPath : $dirPath;
@@ -254,17 +263,9 @@ class Folder extends Category
                 if (empty($bookFolder)) {
                     $bookFolder = $parent->buildHierarchy($dirPath);
                 }
-                // don't add books in lower levels for Root
-                if (empty($parent->id) && str_contains($dirPath, '/')) {
-                    $count = count($books);
-                    $bookFolder->count += $count;
-                    while ($bookFolder->parent) {
-                        $bookFolder = $bookFolder->parent;
-                        $bookFolder->count += $count;
-                    }
-                    continue;
-                }
             }
+            $metadata = null;
+            $hasCover = false;
             if (count($books) == 1) {
                 if (!empty($coverList[$dirPath])) {
                     $hasCover = true;
