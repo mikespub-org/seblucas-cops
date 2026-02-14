@@ -65,12 +65,13 @@ class PageCustomize extends Page
     protected function getTemplateList()
     {
         $result = [];
+        $hidden = ['admin', 'markdown'];
         foreach (glob("templates/*", GLOB_ONLYDIR) as $filename) {
             if (preg_match('/templates\/(.*)/', $filename, $m)) {
-                if ($m[1] === 'admin') {
+                if (in_array($m[1], $hidden)) {
                     continue;
                 }
-                array_push($result, $m [1]);
+                array_push($result, $m[1]);
             }
         }
         return $result;

@@ -450,6 +450,7 @@ if (!isset($config)) {
      */
     public function getContent($request, $data, $name = 'index.html')
     {
+        // set cookie param template to 'admin' here
         $request->cookieParams['template'] = basename($this->templateDir);
         $template = new TwigTemplate($request);
         $twig = $template->getTwigEnvironment($this->templateDir);

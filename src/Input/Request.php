@@ -67,7 +67,9 @@ class Request
      */
     public function render()
     {
-        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent()) || $this->method() == 'POST';
+        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent())
+            || $this->method() == 'POST'
+            || $this->isMarkdown();
     }
 
     /**
@@ -556,6 +558,15 @@ class Request
         }
         // @todo https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Mode
         return false;
+    }
+
+    /**
+     * Summary of isMarkdown
+     * @return bool
+     */
+    public function isMarkdown()
+    {
+        return str_contains($this->server('HTTP_ACCEPT') ?? '', 'text/markdown');
     }
 
     /**

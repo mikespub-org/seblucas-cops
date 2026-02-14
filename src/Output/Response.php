@@ -26,6 +26,7 @@ class Response
     public const MIME_TYPE_HTML = 'text/html;charset=utf-8';
     public const MIME_TYPE_JSON = 'application/json;charset=utf-8';
     public const MIME_TYPE_TEXT = 'text/plain;charset=utf-8';
+    public const MIME_TYPE_MARKDOWN = 'text/markdown;charset=utf-8';
     public const MIME_TYPE_XML = 'application/xml;charset=utf-8';
     public const SYMFONY_RESPONSE = '\Symfony\Component\HttpFoundation\Response';
 
@@ -427,7 +428,12 @@ class Response
 
         $data = ['link' => self::$handler::link()];
         $data['error'] = htmlspecialchars($error ?? "I'm sorry Dave, I'm afraid I can't do that");
-        $template = 'templates/notfound.html';
+        if ($request?->isMarkdown()) {
+            $response->setHeaders(self::MIME_TYPE_MARKDOWN);
+            $template = 'templates/markdown/notfound.md';
+        } else {
+            $template = 'templates/notfound.html';
+        }
         $response->setContent(Format::template($data, $template));
         return $response;
     }
@@ -446,7 +452,12 @@ class Response
 
         $data = ['link' => self::$handler::route(PageId::ROUTE_INDEX, $params)];
         $data['error'] = htmlspecialchars($error ?? 'Unknown Error');
-        $template = 'templates/error.html';
+        if ($request?->isMarkdown()) {
+            $response->setHeaders(self::MIME_TYPE_MARKDOWN);
+            $template = 'templates/markdown/error.md';
+        } else {
+            $template = 'templates/error.html';
+        }
         $response->setContent(Format::template($data, $template));
         return $response;
     }

@@ -29,6 +29,9 @@ class CheckHandler extends BaseHandler
     public const PREFIX = "/check";
     public const PARAMLIST = ["more"];
 
+    /** @var bool */
+    protected $markdown = false;
+
     public static function getRoutes()
     {
         return [
@@ -42,6 +45,9 @@ class CheckHandler extends BaseHandler
         $more = $request->get('more');
         if ($more) {
             return $this->handleMore($request);
+        }
+        if ($request->isMarkdown()) {
+            $this->markdown = true;
         }
 
         try {
@@ -75,9 +81,14 @@ class CheckHandler extends BaseHandler
         $data['full']  = $request->get('full');
         $data['databases'] = $this->getDatabases($data['full']);
 
-        $template = dirname(__DIR__, 2) . '/templates/checkconfig.html';
+        if ($this->markdown) {
+            $template = dirname(__DIR__, 2) . '/templates/markdown/checkconfig.md';
+            $response = new Response(Response::MIME_TYPE_MARKDOWN);
+        } else {
+            $template = dirname(__DIR__, 2) . '/templates/checkconfig.html';
+            $response = new Response(Response::MIME_TYPE_HTML);
+        }
 
-        $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(Format::template($data, $template));
     }
 
@@ -89,6 +100,12 @@ class CheckHandler extends BaseHandler
      */
     public function getMessage($title, $message)
     {
+        if ($this->markdown) {
+            return '
+## ' . $title . '
+' . $message . '
+';
+        }
         return '
         <article class="frontpage">
             <h2>' . $title . '</h2>
@@ -197,27 +214,28 @@ class CheckHandler extends BaseHandler
         if (!str_ends_with($base, '/')) {
             $base .= '/';
         }
+        $br = $this->markdown ? "\n" : '<br>';
         $result = '';
-        $result .= 'Base URL detected by the script: ' . $base . '<br>';
-        $result .= 'Full URL specified in $config[\'cops_full_url\']: ' . Config::get('full_url') . '<br>';
+        $result .= 'Base URL detected by the script: ' . $base . $br;
+        $result .= 'Full URL specified in $config[\'cops_full_url\']: ' . Config::get('full_url') . $br;
         if (ProxyRequest::hasTrustedProxies()) {
-            $result .= 'Trusted proxies configured: ' . Config::get('trusted_proxies') . '<br>';
-            $result .= 'Trusted headers configured: ' . json_encode(Config::get('trusted_headers')) . '<br>';
+            $result .= 'Trusted proxies configured: ' . Config::get('trusted_proxies') . $br;
+            $result .= 'Trusted headers configured: ' . json_encode(Config::get('trusted_headers')) . $br;
             foreach (Config::get('trusted_headers') as $name) {
                 $header = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
-                $result .= $header . ': ' . ($request->server($header) ?? '') . '<br>';
+                $result .= $header . ': ' . ($request->server($header) ?? '') . $br;
             }
-            $result .= 'Base URL via trusted proxies: ' . UriGenerator::base() . '<br>';
+            $result .= 'Base URL via trusted proxies: ' . UriGenerator::base() . $br;
         }
-        $result .= 'REMOTE_ADDR: ' . ($request->server('REMOTE_ADDR') ?? '') . '<br>';
-        $result .= '<br>';
-        $result .= 'SCRIPT_NAME: ' . ($request->server('SCRIPT_NAME') ?? '') . '<br>';
-        $result .= 'HTTP_HOST: ' . ($request->server('HTTP_HOST') ?? '') . '<br>';
-        $result .= 'SERVER_NAME: ' . ($request->server('SERVER_NAME') ?? '') . '<br>';
-        $result .= 'SERVER_ADDR: ' . ($request->server('SERVER_ADDR') ?? '') . '<br>';
-        $result .= 'SERVER_PORT: ' . ($request->server('SERVER_PORT') ?? '') . '<br>';
-        $result .= 'REQUEST_SCHEME: ' . ($request->server('REQUEST_SCHEME') ?? '') . '<br>';
-        $result .= 'REQUEST_URI: ' . htmlspecialchars($request->server('REQUEST_URI') ?? '') . '<br>';
+        $result .= 'REMOTE_ADDR: ' . ($request->server('REMOTE_ADDR') ?? '') . $br;
+        $result .= $br;
+        $result .= 'SCRIPT_NAME: ' . ($request->server('SCRIPT_NAME') ?? '') . $br;
+        $result .= 'HTTP_HOST: ' . ($request->server('HTTP_HOST') ?? '') . $br;
+        $result .= 'SERVER_NAME: ' . ($request->server('SERVER_NAME') ?? '') . $br;
+        $result .= 'SERVER_ADDR: ' . ($request->server('SERVER_ADDR') ?? '') . $br;
+        $result .= 'SERVER_PORT: ' . ($request->server('SERVER_PORT') ?? '') . $br;
+        $result .= 'REQUEST_SCHEME: ' . ($request->server('REQUEST_SCHEME') ?? '') . $br;
+        $result .= 'REQUEST_URI: ' . htmlspecialchars($request->server('REQUEST_URI') ?? '') . $br;
         return $result;
     }
 
