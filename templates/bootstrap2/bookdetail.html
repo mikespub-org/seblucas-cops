@@ -89,6 +89,11 @@
         <h4><span class="book-meta-label">{{=column.customColumnType.columnTitle}}</span>: {{=column.htmlvalue}}</h4>
     </p>
     {{~}}
+    {{? it.book.folderUrl != ""}}
+    <p>
+        <h4><span class="book-meta-label">{{=it.c.i18n.folderTitle}}</span>: <a href="{{=it.book.folderUrl}}">{{=htmlspecialchars (it.book.folderId)}}</a></h4>
+    </p>
+    {{?}}
     {{? it.book.extraFiles != ""}}
     <p>
         <h4><span class="book-meta-label">{{=it.c.i18n.filesTitle}}</span>: {{~it.book.extraFiles:extraFile:i}}<a href="{{=extraFile.url}}">{{=htmlspecialchars (extraFile.name)}}</a> {{~}}</h4>

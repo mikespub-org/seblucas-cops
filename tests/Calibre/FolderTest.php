@@ -33,7 +33,7 @@ class FolderTest extends TestCase
         $folder->setHandler(HtmlHandler::class);
         $books = $folder->findBookFiles();
         $expected = 3;
-        $this->assertCount($expected, $books);
+        $this->assertEquals($expected, $folder->count);
     }
 
     public function testFolderHierarchy(): void
@@ -55,7 +55,6 @@ class FolderTest extends TestCase
         $books = $folder->findBookFiles();
 
         // Total books in tests is 2
-        $this->assertCount(2, $books);
         $this->assertEquals(2, $folder->count);
 
         // Direct children in tests
@@ -88,6 +87,10 @@ class FolderTest extends TestCase
         $this->assertNotNull($carroll, 'BaseWithSomeBooks/Lewis Carroll folder not found');
         $this->assertEquals($lewis, $carroll);
 
+        // Force re-scan of $carroll folder (no books loaded in root scan above)
+        $carroll->scanned = false;
+        $carroll->findBookFiles();
+
         // Find book entries in Lewis Carroll folder
         [$entries, $total] = Folder::getBooksByFolderOrChildren($carroll);
         $this->assertEquals(1, count($entries));
@@ -113,6 +116,25 @@ class FolderTest extends TestCase
 
         // Find parent trail for $lewis
         $trail = $lewis->getParentTrail();
+    }
+
+    public function testParseGetFiles(): void
+    {
+        $root = '/volume1/calibre/';
+        $files = dirname(__DIR__, 2) . '/tests/getfiles.json';
+        $folder = Folder::getRootFolder($root);
+        $result = $folder->parseGetFiles($files);
+        $this->assertEmpty($result);
+        $this->assertNotNull($result);
+        $expected = 2;
+        $this->assertEquals($expected, $folder->count);
+
+        $folderName = 'BaseWithSomeBooks/Lewis Carroll';
+        $result = $folder->parseGetFiles($files, $folderName);
+        $expected = 1;
+        $this->assertCount($expected, $result);
+        $instance = $folder->getChildFolderById('BaseWithSomeBooks/Lewis Carroll');
+        $this->assertNotNull($instance);
     }
 
     public function tearDown(): void

@@ -56,6 +56,8 @@
         "coverurl": "vendor/bin/index.php/covers/0/17.jpg",
         "content": "<p class=\"description\">Alice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.<br />The tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.</p>\n\nAlice's Adventures in Wonderland (1865) is a novel written by English author Charles Lutwidge Dodgson, better known under the pseudonym Lewis Carroll. It tells the story of a girl named Alice who falls down a rabbit-hole into a fantasy world populated by peculiar and anthropomorphic creatures.\nThe tale is filled with allusions to Dodgson's friends (and enemies), and to the lessons that British schoolchildren were expected to memorize. The tale plays with logic in ways that have made the story of lasting popularity with adults as well as children. It is considered to be one of the most characteristic examples of the genre of literary nonsense, and its narrative course and structure has been enormously influential, mainly in the fantasy genre.",
         "pages": 75,
+        "folderId": "",
+        "folderUrl": "",
         "datas": [
             {
                 "id": 17,
@@ -94,13 +96,13 @@
                 "name": "hello.txt",
                 "url": "vendor/bin/index.php/files/0/17/hello.txt",
                 "length": "12",
-                "mtime": "now"
+                "mtime": "2025-01-24T21:33:18+00:00"
             },
             {
                 "name": "sub folder/copied file.txt",
                 "url": "vendor/bin/index.php/files/0/17/sub%20folder/copied%20file.txt",
                 "length": "12",
-                "mtime": "now"
+                "mtime": "2025-01-24T21:33:18+00:00"
             }
         ],
         "identifiers": [],

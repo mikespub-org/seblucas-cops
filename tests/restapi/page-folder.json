@@ -30,7 +30,7 @@
             "class": "Folders",
             "title": "Root",
             "content": "2 books",
-            "navlink": "vendor/bin/index.php/restapi/folder/0?tree=1",
+            "navlink": "vendor/bin/index.php/restapi/folder/0",
             "number": 2
         },
         "children": [
@@ -42,7 +42,7 @@
                 "number": 2
             }
         ],
-        "hastree": false
+        "hastree": true
     },
     "extra": false,
     "assets": "vendor/bin/vendor/npm-asset",

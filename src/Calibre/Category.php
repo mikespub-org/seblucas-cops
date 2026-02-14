@@ -95,7 +95,7 @@ abstract class Category extends Base
             }
             // skip entries deeper in hierarchy like Fiction.Historical.Mystery
             $siblingName = substr($sibling->getTitle(), strlen($parentName) + 1);
-            if (str_contains($siblingName, self::SEPARATOR)) {
+            if (str_contains($siblingName, static::SEPARATOR)) {
                 continue;
             }
             array_push($entryArray, $sibling->getEntry($sibling->count));
@@ -110,7 +110,7 @@ abstract class Category extends Base
      */
     public static function findCurrentName($name)
     {
-        $parts = explode(self::SEPARATOR, $name);
+        $parts = explode(static::SEPARATOR, $name);
         $current = array_pop($parts);
         return $current;
     }
@@ -122,12 +122,12 @@ abstract class Category extends Base
      */
     public static function findParentName($name)
     {
-        $parts = explode(self::SEPARATOR, $name);
+        $parts = explode(static::SEPARATOR, $name);
         $current = array_pop($parts);
         if (empty($parts)) {
             return '';
         }
-        $parent = implode(self::SEPARATOR, $parts);
+        $parent = implode(static::SEPARATOR, $parts);
         return $parent;
     }
 
@@ -291,6 +291,8 @@ abstract class Category extends Base
             "parents" => $parents,
             "current" => $current,
             "children" => $children,
+            "hastree" => $expand,
+            "separator" => static::SEPARATOR,
         ];
     }
 

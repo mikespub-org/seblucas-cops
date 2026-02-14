@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Handlers\ReadHandler;
@@ -180,6 +181,13 @@ class JsonRenderer extends BaseRenderer
         $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
         $out ["pages"] = $book->getPages();
+        if (!empty($book->folderId)) {
+            $out ["folderId"] = $book->folderId;
+            $out ["folderUrl"] = JsonHandler::route(Folder::ROUTE_DETAIL, ["path" => $book->folderId]);
+        } else {
+            $out ["folderId"] = '';
+            $out ["folderUrl"] = '';
+        }
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
         foreach ($book->getDatas() as $data) {
@@ -383,6 +391,7 @@ class JsonRenderer extends BaseRenderer
                 "libraryTitle" => localize("library.title"),
                 "linkTitle" => localize("extra.link"),
                 "filesTitle" => localize("extra.files"),
+                "folderTitle" => localize("folder.title"),
                 "titleTitle" => localize("title.title"),
                 "filtersTitle" => localize("filters.title"),
                 "downloadAllTitle" => localize("downloadall.title"),
@@ -598,7 +607,7 @@ class JsonRenderer extends BaseRenderer
         if (!$currentPage->hierarchy) {
             return $hierarchy;
         }
-        $hastree = $this->request->get('tree', false);
+        $hastree = $currentPage->hierarchy['hastree'];
         if ($hastree) {
             $current = $this->getContentArray($currentPage->hierarchy['current'], $extraParams);
         } else {
@@ -732,8 +741,9 @@ class JsonRenderer extends BaseRenderer
         $out ["parentTitle"] = $currentPage->parentTitle;
         if (!empty($out ["parentTitle"])) {
             if ($currentPage->hierarchy) {
+                $separator = $currentPage->hierarchy["separator"];
                 // @todo add link to parent(s) for hierarchical series, tags etc.
-                $out ["title"] = $out ["parentTitle"] . " > " . str_replace(".", " > ", $out ["title"]);
+                $out ["title"] = $out ["parentTitle"] . " > " . str_replace($separator, " > ", $out ["title"]);
             } else {
                 $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
             }

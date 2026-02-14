@@ -102,6 +102,11 @@
         </h4>
     </p>
     {% endfor %}
+    {% if it.book.folderUrl != "" %}
+    <p>
+        <h4>{{it.c.i18n.folderTitle}}: <a href="{{it.book.folderUrl}}">{{it.book.folderId|escape}}</a></h4>
+    </p>
+    {% endif %}
     {% if it.book.extraFiles != "" %}
     <p>
         <h4>{{it.c.i18n.filesTitle}}: {% for extraFile in it.book.extraFiles %}<a href="{{extraFile.url}}">{{extraFile.name|escape}}</a> {% endfor %}</h4>

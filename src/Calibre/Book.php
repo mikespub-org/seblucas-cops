@@ -593,7 +593,7 @@ class Book
      */
     public function setLocalPath($path, $database)
     {
-        if (!is_dir($path)) {
+        if (!str_starts_with($path, '/')) {
             $this->path = Database::getDbDirectory($database) . $path;
         } else {
             $this->path = $path;

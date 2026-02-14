@@ -35,7 +35,11 @@ class PageFolderDetail extends PageWithDetail
         }
         $root = Config::get('browse_books_directory', '');
         if (empty($root) || !is_dir($root)) {
-            throw new InvalidArgumentException('Invalid Root');
+            throw new InvalidArgumentException('Invalid Root (browse_books_directory)');
+        }
+        $getFiles = Config::get('browse_books_getfiles', '');
+        if (!empty($getFiles) && !is_file($getFiles)) {
+            throw new InvalidArgumentException('Invalid Files (browse_books_getfiles)');
         }
         $folder = Folder::getRootFolder($root, $this->getDatabaseId());
         $folder->setHandler($this->handler);
@@ -46,16 +50,13 @@ class PageFolderDetail extends PageWithDetail
                 $bookName = basename($this->idGet);
                 $this->idGet = dirname($this->idGet);
             }
-            $folderPath = $folder->getFolderPath($this->idGet);
-            if (!is_dir($folderPath)) {
-                throw new InvalidArgumentException('Invalid Folder');
-            }
-            // force looking for book files here
-            $folder->findBookFiles($this->idGet);
-        } else {
-            // force looking for book files here
-            $folder->findBookFiles();
+            //$folderPath = $folder->getFolderPath($this->idGet);
         }
+        if (!empty($getFiles)) {
+            $folder->parseGetFiles($getFiles, $this->idGet);
+        }
+        // force looking for book files here
+        $folder->findBookFiles($this->idGet);
         /** @var Folder $instance */
         $instance = $folder->getChildFolderById($this->idGet);
         if (is_null($instance)) {
@@ -76,6 +77,10 @@ class PageFolderDetail extends PageWithDetail
         $this->setInstance($instance);
         if ($instance->hasChildCategories()) {
             $this->hierarchy = $instance->getHierarchy($this->request->get('tree'));
+            // disable tree navigation for root
+            if (empty($this->idGet)) {
+                $this->hierarchy['hastree'] = true;
+            }
         }
     }
 

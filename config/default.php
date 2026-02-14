@@ -322,6 +322,16 @@ $config['cops_database_filter'] = [];
 $config['cops_browse_books_directory'] = '';
 
 /*
+ * Get list of files in other folders besides Calibre
+ * for rclone mount or large filesystem on slow device (WIP)
+ * Example:
+ * ```sh
+ * $ rclone lsjson -R --fast-list --no-mimetype --files-only /volume1/calibre/ >getfiles.json
+ * ```
+ */
+$config['cops_browse_books_getfiles'] = '';
+
+/*
  * Custom Columns for the index page
  * to add as an array containing the lookup names configured in Calibre
  *

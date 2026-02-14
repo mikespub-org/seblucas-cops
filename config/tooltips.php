@@ -271,6 +271,15 @@ $tooltips['cops_browse_books_directory'] = <<<'EOT'
     Browse book files in other folders besides Calibre (WIP)
     EOT;
 
+$tooltips['cops_browse_books_getfiles'] = <<<'EOT'
+    Get list of files in other folders besides Calibre
+    for rclone mount or large filesystem on slow device (WIP)
+    Example:
+    ```sh
+    $ rclone lsjson -R --fast-list --no-mimetype --files-only /volume1/calibre/ >getfiles.json
+    ```
+    EOT;
+
 $tooltips['cops_calibre_custom_column'] = <<<'EOT'
     Custom Columns for the index page
     to add as an array containing the lookup names configured in Calibre

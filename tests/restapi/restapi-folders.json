@@ -12,7 +12,8 @@
         "limitSelf": true,
         "root": "/home/mikespub/seblucas-cops/tests",
         "bookList": [],
-        "orderBy": null
+        "orderBy": null,
+        "scanned": true
     },
     "children": [
         {
@@ -22,8 +23,8 @@
             "count": 1,
             "limitSelf": true,
             "root": "/home/mikespub/seblucas-cops/tests",
-            "bookList": [
-                {
+            "bookList": {
+                "Alice's Adventures in Wonderland - Lewis Carroll": {
                     "id": 1,
                     "title": "Alice's Adventures in Wonderland - Lewis Carroll",
                     "timestamp": 1737754398,
@@ -68,16 +69,17 @@
                     "folderId": "BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)",
                     "updateForKepub": false
                 }
-            ],
-            "orderBy": null
+            },
+            "orderBy": null,
+            "scanned": true
         }
     ],
     "parent": [
         {
             "title": "Root",
             "id": "cops:folder:0",
-            "content": "2 books",
-            "numberOfElement": 2,
+            "content": "1 book",
+            "numberOfElement": 1,
             "contentType": "text",
             "linkArray": [
                 {
@@ -93,18 +95,19 @@
                 "id": 0,
                 "name": "Root",
                 "link": null,
-                "count": 2,
+                "count": 1,
                 "limitSelf": true,
                 "root": "/home/mikespub/seblucas-cops/tests",
                 "bookList": [],
-                "orderBy": null
+                "orderBy": null,
+                "scanned": true
             }
         },
         {
             "title": "BaseWithSomeBooks",
             "id": "cops:folder:BaseWithSomeBooks",
-            "content": "2 books",
-            "numberOfElement": 2,
+            "content": "1 book",
+            "numberOfElement": 1,
             "contentType": "text",
             "linkArray": [
                 {
@@ -120,11 +123,12 @@
                 "id": "BaseWithSomeBooks",
                 "name": "BaseWithSomeBooks",
                 "link": null,
-                "count": 2,
+                "count": 1,
                 "limitSelf": true,
                 "root": "/home/mikespub/seblucas-cops/tests",
                 "bookList": [],
-                "orderBy": null
+                "orderBy": null,
+                "scanned": true
             }
         }
     ],

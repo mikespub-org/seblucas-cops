@@ -57,9 +57,9 @@ class Folder extends Category
     public $id;
     /** @var string */
     public $root = '';
-    /** @var Book[] */
+    /** @var array<string, Book> */
     public $bookList = [];
-    /** @var Folder[] */
+    /** @var array<string, Folder> */
     protected $children = [];
     /** @var Folder|false */
     protected $parent = false;
@@ -67,6 +67,8 @@ class Folder extends Category
     protected $numberPerPage = null;
     /** @var ?string */
     public $orderBy = null;
+    /** @var bool */
+    public $scanned = false;
 
     public function __construct($post, $database = null)
     {
@@ -110,9 +112,6 @@ class Folder extends Category
         if (!empty($folderName)) {
             $folderPath .= '/' . $folderName;
         }
-        if (is_dir($folderPath) && !str_ends_with($folderPath, '/')) {
-            $folderPath .= '/';
-        }
         return $folderPath;
     }
 
@@ -125,8 +124,8 @@ class Folder extends Category
      */
     public function findBookFiles($folderName = null, $recursive = true)
     {
-        if (empty($folderName) && (!empty($this->bookList) || !empty($this->children))) {
-            $bookList = $this->bookList;
+        if ($this->scanned) {
+            $bookList = array_values($this->bookList);
             if ($recursive) {
                 foreach ($this->children as $child) {
                     $bookList = array_merge($bookList, $child->findBookFiles());
@@ -137,17 +136,20 @@ class Folder extends Category
         $this->bookList = [];
         $this->children = [];
         $this->parent = false;
-        $folderPath = $this->getFolderPath($folderName);
+        $folderPath = $this->getFolderPath($folderName) . '/';
         if (!is_dir($folderPath)) {
+            $this->scanned = true;
             return $this->bookList;
         }
         $parent = $this;
+        /**
         if (empty($this->id) && empty($folderName) && $recursive) {
-            [$fileList, $metaList] = self::loadFileList($this->root);
+            [$fileList, $metaList, $coverList] = self::loadFileList($this->root);
             if (!empty($fileList)) {
-                return $this->makeBookList($folderPath, $fileList, $metaList, $parent);
+                return $this->makeBookList($folderPath, $fileList, $metaList, $coverList, $parent);
             }
         }
+         */
         if ($recursive) {
             // for PageFolderDetail
             $flags = \FilesystemIterator::KEY_AS_PATHNAME | \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS;
@@ -162,6 +164,8 @@ class Folder extends Category
         $allowed = array_map('strtolower', Config::get('prefered_format'));
         $fileList = [];
         $metaList = [];
+        $coverList = [];
+        $bookCount = 0;
         foreach ($iterator as $file) {
             if ($file->isDir()) {
                 continue;
@@ -177,9 +181,12 @@ class Folder extends Category
                 if ($format == 'opf') {
                     // only one .opf file per directory supported - assume one book per directory here
                     $metaList[$dirPath] = $file->getBasename();
+                } elseif ($file->getBasename() == 'cover.jpg') {
+                    $coverList[$dirPath] = $file->getBasename();
                 }
                 continue;
             }
+            $bookCount++;
             // several books per directory allowed (but not required)
             $fileList[$dirPath] ??= [];
             // several formats per book allowed - assume same bookName with different formats here
@@ -188,10 +195,12 @@ class Folder extends Category
             array_push($fileList[$dirPath][$bookName], $format);
         }
         ksort($fileList);
-        if (empty($this->id) && empty($folderName) && $recursive) {
-            self::saveFileList($this->root, $fileList, $metaList);
+        /**
+        if (empty($this->id) && empty($folderName) && $recursive && $bookCount > 100) {
+            self::saveFileList($this->root, $fileList, $metaList, $coverList);
         }
-        return $this->makeBookList($folderPath, $fileList, $metaList, $parent);
+         */
+        return $this->makeBookList($folderPath, $fileList, $metaList, $coverList, $parent);
     }
 
     /**
@@ -203,6 +212,7 @@ class Folder extends Category
     public function buildHierarchy($folderName, $parent = null)
     {
         $parent ??= $this;
+        $parent->scanned = true;
         $parentFolder = $parent;
         $currentPath = $parent->id;
         $parts = explode('/', str_replace('\\', '/', $folderName));
@@ -211,16 +221,7 @@ class Folder extends Category
                 continue;
             }
             $currentPath = $currentPath ? $currentPath . '/' . $part : $part;
-            $childFolder = $parentFolder->getChildFolderByName($part);
-            if (!isset($childFolder)) {
-                $childId = $currentPath;
-                $post = (object) ['id' => $childId, 'name' => $part, 'root' => $this->root];
-                $childFolder = new Folder($post, $this->getDatabaseId());
-                $childFolder->setHandler($this->handler);
-                $childFolder->children = [];
-                $childFolder->parent = $parentFolder;
-                $parentFolder->children[] = $childFolder;
-            }
+            $childFolder = $parentFolder->addChildFolder($part);
             $parentFolder = $childFolder;
         }
         return $parentFolder;
@@ -231,16 +232,15 @@ class Folder extends Category
      * @param string $folderPath
      * @param array<string, mixed> $fileList
      * @param array<string, mixed> $metaList
+     * @param array<string, mixed> $coverList
      * @param ?Folder $parent
      * @throws \Exception
      * @return Book[]
      */
-    public function makeBookList($folderPath, $fileList, $metaList = [], $parent = null)
+    public function makeBookList($folderPath, $fileList, $metaList = [], $coverList = [], $parent = null)
     {
         $parent ??= $this;
         $bookList = [];
-        $bookId = 0;
-        $dataId = 0;
         foreach ($fileList as $dirPath => $books) {
             $metadata = null;
             $hasCover = false;
@@ -254,45 +254,33 @@ class Folder extends Category
                 if (empty($bookFolder)) {
                     $bookFolder = $parent->buildHierarchy($dirPath);
                 }
+                // don't add books in lower levels for Root
+                if (empty($parent->id) && str_contains($dirPath, '/')) {
+                    $count = count($books);
+                    $bookFolder->count += $count;
+                    while ($bookFolder->parent) {
+                        $bookFolder = $bookFolder->parent;
+                        $bookFolder->count += $count;
+                    }
+                    continue;
+                }
             }
             if (count($books) == 1) {
-                if (file_exists($bookPath . '/cover.jpg')) {
+                if (!empty($coverList[$dirPath])) {
                     $hasCover = true;
                 }
                 if (!empty($metaList[$dirPath])) {
                     $filePath = $bookPath . '/' . $metaList[$dirPath];
-                    if (!file_exists($filePath)) {
-                        throw new Exception('Invalid metadata path ' . $filePath);
+                    if (file_exists($filePath)) {
+                        $metadata = Metadata::fromFile($filePath);
                     }
-                    $metadata = Metadata::fromFile($filePath);
                 }
             }
             foreach ($books as $bookName => $formats) {
-                $bookId++;
-                $line = (object) ['id' => $bookId, 'title' => $bookName, 'path' => $bookPath, 'timestamp' => '', 'has_cover' => $hasCover];
-                $book = new Book($line);
-                $book->setHandler($this->handler);
-                if (!empty($metadata)) {
-                    $metadata->updateBook($book);
-                }
-                $book->folderId = $bookFolder->id;
-                $book->datas = [];
-                $book->formats = [];
+                $book = $bookFolder->addBookName($bookName, $bookPath, '', $metadata, $hasCover);
                 foreach ($formats as $format) {
-                    $filePath = $bookPath . '/' . $bookName . '.' . $format;
-                    if (!file_exists($filePath)) {
-                        throw new Exception('Invalid file path ' . $filePath);
-                    }
-                    if (empty($book->timestamp)) {
-                        $book->timestamp = filemtime($filePath);
-                    }
-                    $dataId++;
-                    $post = (object) ['id' => $dataId, 'name' => $bookName, 'format' => strtoupper($format)];
-                    $data = new Data($post, $book);
-                    $book->datas[] = $data;
-                    // $book->formats[] = ...;
+                    $bookFolder->addBookFormat($bookName, $format);
                 }
-                $bookFolder->bookList[] = $book;
                 array_push($bookList, $book);
             }
         }
@@ -302,14 +290,18 @@ class Folder extends Category
 
     /**
      * Summary of getBookCount
+     * @param bool $refresh
      * @return int
      */
-    public function getBookCount()
+    public function getBookCount($refresh = false)
     {
+        if (isset($this->count) && !$refresh) {
+            return $this->count;
+        }
         $this->count = count($this->bookList);
         if (!empty($this->children)) {
             foreach ($this->children as $child) {
-                $this->count += $child->getBookCount();
+                $this->count += $child->getBookCount($refresh);
             }
         }
         return $this->count;
@@ -347,7 +339,7 @@ class Folder extends Category
     public function getChildFolders($recursive = false)
     {
         if (!$recursive) {
-            return $this->children;
+            return array_values($this->children);
         }
         $children = [];
         foreach ($this->children as $child) {
@@ -410,6 +402,77 @@ class Folder extends Category
     }
 
     /**
+     * Summary of addBookName
+     * @param string $bookName
+     * @param string $bookPath
+     * @param string $timestamp
+     * @param ?Metadata $metadata
+     * @param bool $hasCover
+     * @return Book
+     */
+    public function addBookName($bookName, $bookPath, $timestamp = '', $metadata = null, $hasCover = false)
+    {
+        if (isset($this->bookList[$bookName])) {
+            return $this->bookList[$bookName];
+        }
+        $bookId = count($this->bookList) + 1;
+        $line = (object) ['id' => $bookId, 'title' => $bookName, 'path' => $bookPath, 'timestamp' => $timestamp, 'has_cover' => $hasCover];
+        $book = new Book($line);
+        $book->setHandler($this->handler);
+        if (!empty($metadata)) {
+            $metadata->updateBook($book);
+        }
+        $book->folderId = $this->id;
+        $book->datas = [];
+        $book->formats = [];
+        $this->bookList[$bookName] = $book;
+        $this->count += 1;
+        return $book;
+    }
+
+    /**
+     * Summary of addBookFormat
+     * @param string $bookName
+     * @param string $format
+     * @return Data
+     */
+    public function addBookFormat($bookName, $format)
+    {
+        // not checking for existing format here
+        $book = $this->bookList[$bookName];
+        $filePath = $book->path . '/' . $bookName . '.' . $format;
+        if (empty($book->timestamp) && file_exists($filePath)) {
+            $book->timestamp = filemtime($filePath);
+        }
+        $dataId = $book->id;
+        $post = (object) ['id' => $dataId, 'name' => $bookName, 'format' => strtoupper($format)];
+        $data = new Data($post, $book);
+        $book->datas[] = $data;
+        // $book->formats[] = ...;
+        return $data;
+    }
+
+    /**
+     * Summary of addChildFolder
+     * @param string $name
+     * @return Folder
+     */
+    public function addChildFolder($name)
+    {
+        if (isset($this->children[$name])) {
+            return $this->children[$name];
+        }
+        $childId = $this->id ? $this->id . '/' . $name : $name;
+        $post = (object) ['id' => $childId, 'name' => $name, 'root' => $this->root];
+        $childFolder = new Folder($post, $this->getDatabaseId());
+        $childFolder->setHandler($this->handler);
+        $childFolder->parent = $this;
+        $childFolder->scanned = true;
+        $this->children[$name] = $childFolder;
+        return $childFolder;
+    }
+
+    /**
      * Summary of getParentTrail
      * @return Entry[]
      */
@@ -428,7 +491,7 @@ class Folder extends Category
 
     /**
      * Summary of getCount
-     * @param ?int $database
+     * @param ?int $database not used here
      * @param class-string<BaseHandler> $handler
      * @return ?Entry
      */
@@ -446,7 +509,7 @@ class Folder extends Category
      */
     public static function getBooksByFolder($folder, $n = 1)
     {
-        $bookList = $folder->bookList;
+        $bookList = array_values($folder->bookList);
         return self::getEntryArray($folder, $bookList, $n);
     }
 
@@ -458,7 +521,7 @@ class Folder extends Category
      */
     public static function getBooksByFolderOrChildren($folder, $n = 1)
     {
-        $bookList = $folder->bookList;
+        $bookList = array_values($folder->bookList);
         foreach ($folder->children as $child) {
             $bookList = array_merge($bookList, $child->findBookFiles());
         }
@@ -468,7 +531,7 @@ class Folder extends Category
     /**
      * Summary of getEntryArray
      * @param Folder $folder
-     * @param array<int, mixed> $bookList
+     * @param Book[] $bookList
      * @param int $n
      * @return array{0: EntryBook[], 1: integer}
      */
@@ -493,27 +556,17 @@ class Folder extends Category
     /**
      * Summary of getInstanceById
      * @param string|int|null $id used for the folder here
-     * @param ?int $database
+     * @param ?int $database not used here
      * @param ?string $root
      * @return self
      */
     public static function getInstanceById($id, $database = null, $root = null)
     {
         if (!empty($id)) {
-            return new Folder((object) ['id' => $id, 'name' => $id, 'root' => $root], $database);
+            $name = static::findCurrentName($id);
+            return new Folder((object) ['id' => $id, 'name' => $name, 'root' => $root], $database);
         }
         return self::getRootFolder($root, $database);
-    }
-
-    /**
-     * Summary of getInstanceByPath
-     * @param string|int|null $path used for the folder here
-     * @param ?int $database
-     * @return self
-     */
-    public static function getInstanceByPath($path, $database = null)
-    {
-        return self::getInstanceById($path, $database);
     }
 
     /**
@@ -528,7 +581,7 @@ class Folder extends Category
     /**
      * Summary of getRootFolder
      * @param ?string $root
-     * @param ?int $database
+     * @param ?int $database not used here
      * @return Folder
      */
     public static function getRootFolder($root = null, $database = null)
@@ -544,9 +597,10 @@ class Folder extends Category
      * @param string $root
      * @param array<string, mixed> $fileList
      * @param array<string, mixed> $metaList
+     * @param array<string, mixed> $coverList
      * @return void
      */
-    public static function saveFileList($root, $fileList, $metaList)
+    public static function saveFileList($root, $fileList, $metaList, $coverList)
     {
         /**
         if (function_exists('apcu_store')) {
@@ -565,9 +619,11 @@ class Folder extends Category
         $content .= "// This file has been auto-generated by the COPS Calibre\Folder class.\n\n";
         $content .= '$fileList = ' . Format::export($fileList) . ";\n\n";
         $content .= '$metaList = ' . Format::export($metaList) . ";\n\n";
+        $content .= '$coverList = ' . Format::export($coverList) . ";\n\n";
         $content .= "return [\n";
         $content .= "    'fileList' => \$fileList,\n";
         $content .= "    'metaList' => \$metaList,\n";
+        $content .= "    'coverList' => \$coverList,\n";
         $content .= "];\n";
         file_put_contents($fileName, $content);
     }
@@ -575,7 +631,7 @@ class Folder extends Category
     /**
      * Summary of loadFileList
      * @param string $root
-     * @return array{0: array<string, mixed>, 1: array<string, mixed>}
+     * @return array{0: array<string, mixed>, 1: array<string, mixed>, 2: array<string, mixed>}
      */
     public static function loadFileList($root)
     {
@@ -594,10 +650,10 @@ class Folder extends Category
             $fileName = sys_get_temp_dir() . '/cops_folders.' . md5($root) . '.php';
         }
         if (!file_exists($fileName)) {
-            return [[], []];
+            return [[], [], []];
         }
         if (filemtime($fileName) < time() - 24 * 60 * 60) {
-            return [[], []];
+            return [[], [], []];
         }
         try {
             $data = require $fileName;  // NOSONAR
@@ -605,8 +661,101 @@ class Folder extends Category
             $data = false;
         }
         if (empty($data)) {
-            return [[], []];
+            return [[], [], []];
         }
-        return [$data['fileList'], $data['metaList']];
+        return [$data['fileList'], $data['metaList'], $data['coverList']];
+    }
+
+    /**
+     * Summary of parseGetFiles
+     * ```sh
+     * $ rclone lsjson -R --fast-list --no-mimetype --files-only /volume1/calibre/ >getfiles.json
+     * ```
+     * @param string $fileName
+     * @param ?string $folderName
+     * @return Book[]
+     */
+    public function parseGetFiles($fileName, $folderName = null)
+    {
+        if (!file_exists($fileName)) {
+            throw new Exception('Invalid $fileName ' . $fileName);
+        }
+        $content = file_get_contents($fileName);
+        $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+        unset($content);
+        $allowed = array_map('strtolower', Config::get('prefered_format'));
+        $fileList = [];
+        $metaList = [];
+        $coverList = [];
+        $large = false;
+        if (count($data) > 1000) {
+            $large = true;
+            $this->count = 0;
+        }
+        $this->scanned = true;
+        $folderPath = $this->getFolderPath($folderName);
+        // Author Name/Short Title (id)/Short Title - Author Name.format
+        foreach ($data as $item) {
+            // ignore directories if present
+            if (!empty($item['IsDir'])) {
+                continue;
+            }
+            // ignore books if they're not inside current folder
+            if (!empty($folderName) && !str_starts_with($item['Path'], $folderName . '/')) {
+                continue;
+            }
+            $info = pathinfo($item['Path']);
+            $info['extension'] ??= '';
+            // add direct child to root folder and continue
+            if (empty($folderName) && $large) {
+                if (!in_array($info['extension'], $allowed)) {
+                    continue;
+                }
+                if (!empty($info['dirname']) && $info['dirname'] != '.') {
+                    $base = explode('/', $info['dirname'])[0];
+                    $child = $this->addChildFolder($base);
+                    $child->count += 1;
+                } else {
+                    $timestamp = $item['ModTime'] ?? '';
+                    // add books in root folder
+                    $book = $this->addBookName($info['filename'], $folderPath, $timestamp);
+                    $data = $this->addBookFormat($info['filename'], $info['extension']);
+                }
+                $this->count += 1;
+                continue;
+            }
+            if (!empty($folderName)) {
+                if ($info['dirname'] == $folderName) {
+                    $info['dirname'] = '.';
+                } elseif (str_starts_with($info['dirname'], $folderName . '/')) {
+                    $info['dirname'] = substr($info['dirname'], strlen($folderName) + 1);
+                }
+            }
+            if (in_array($info['extension'], $allowed)) {
+                // several books per directory allowed (but not required)
+                $fileList[$info['dirname']] ??= [];
+                // several formats per book allowed - assume same bookName with different formats here
+                $fileList[$info['dirname']][$info['filename']] ??= [];
+                array_push($fileList[$info['dirname']][$info['filename']], $info['extension']);
+            } elseif ($info['extension'] == 'opf') {
+                // only one .opf file per directory supported - assume one book per directory here
+                $metaList[$info['dirname']] = $info['basename'];
+            } elseif ($info['filename'] == 'cover' && in_array($info['extension'], ['jpg', 'png'])) {
+                // only one cover file per directory supported - assume one book per directory here
+                $coverList[$info['dirname']] = $info['basename'];
+            }
+        }
+        if (empty($folderName) && $large) {
+            ksort($this->children);
+            return [];
+        }
+        unset($data);
+        ksort($fileList);
+        $parent = $this;
+        if (!empty($folderName)) {
+            $parent = $this->buildHierarchy($folderName, $this);
+        }
+        $folderPath = $this->getFolderPath($folderName) . '/';
+        return $this->makeBookList($folderPath, $fileList, $metaList, $coverList, $parent);
     }
 }

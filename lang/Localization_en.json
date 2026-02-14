@@ -66,6 +66,7 @@
     "extra.title": "Extra Information",
     "filter.clearall": "Clear all",
     "filters.title": "Filters",
+    "folder.title": "Folder",
     "folders.many": "{0} folders",
     "folders.none": "No folder",
     "folders.one": "1 folder",

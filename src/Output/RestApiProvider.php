@@ -813,22 +813,27 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         ];
         $folder = Folder::getRootFolder($root);
         $folder->setHandler(HtmlHandler::class);
-        $folder->findBookFiles();
         if (!empty($folderId)) {
             $folderPath = $folder->getFolderPath($folderId);
             if (is_dir($folderPath)) {
+                $folder->findBookFiles($folderId);
                 $result["folder"] = $folder->getChildFolderById($folderId);
                 $result["children"] = $result["folder"]->getChildFolders();
                 $result["parent"] = $result["folder"]->getParentTrail();
             } elseif (is_file($folderPath)) {
                 $fileId = basename($folderId);
                 $folderId = dirname($folderId);
+                $folder->findBookFiles($folderId);
                 $result["folder"] = $folder->getChildFolderById($folderId);
                 $result["children"] = $result["folder"]->getChildFolders();
                 $result["parent"] = $result["folder"]->getParentTrail();
-                $result["file"] = pathinfo($result["folder"]->getFolderPath() . $fileId);
+                $result["file"] = pathinfo($result["folder"]->getFolderPath() . '/' . $fileId);
+            } else {
+                $folder->findBookFiles();
+                $result["folder"] = $folder;
             }
         } else {
+            $folder->findBookFiles();
             $result["folder"] = $folder;
             $result["children"] = $folder->getChildFolders();
             $result["parent"] = $folder->getParentTrail();
