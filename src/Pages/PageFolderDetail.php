@@ -50,6 +50,9 @@ class PageFolderDetail extends PageWithDetail
             if ($ebook) {
                 $bookName = basename($this->idGet);
                 $this->idGet = dirname($this->idGet);
+                if ($this->idGet == '.') {
+                    $this->idGet = '0';
+                }
             }
             //$folderPath = $folder->getFolderPath($this->idGet);
         }
@@ -98,10 +101,16 @@ class PageFolderDetail extends PageWithDetail
             throw new InvalidArgumentException('Invalid Book');
         }
         if (!$this->book->isExternal()) {
-            // add metadata from EPUB file if available
-            $data = $this->book->getDataFormat('EPUB');
-            if (!empty($data) && file_exists($data->getLocalPath())) {
-                $this->book = Metadata::updateBookFromEPub($this->book, $data->getLocalPath());
+            foreach (Config::get('prefered_format') as $format) {
+                if (!in_array($format, ['EPUB', 'CBZ'])) {
+                    continue;
+                }
+                // add metadata from prefered format file if available
+                $data = $this->book->getDataFormat($format);
+                if (!empty($data) && file_exists($data->getLocalPath())) {
+                    $this->book = Metadata::updateBookFromFile($this->book, $data->getLocalPath(), $format);
+                    break;
+                }
             }
         }
         if (Comment::hasCalibreLinks($this->book->comment)) {

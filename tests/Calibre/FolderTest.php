@@ -10,10 +10,11 @@
 
 namespace SebLucas\Cops\Tests\Calibre;
 
+use SebLucas\Cops\Calibre\Folder;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\LinkAcquisition;
@@ -32,7 +33,7 @@ class FolderTest extends TestCase
         $folder = Folder::getRootFolder($root);
         $folder->setHandler(HtmlHandler::class);
         $books = $folder->findBookFiles();
-        $expected = 3;
+        $expected = 4;
         $this->assertEquals($expected, $folder->count);
     }
 
@@ -40,13 +41,14 @@ class FolderTest extends TestCase
     {
         /**
         tests/
-        └── BaseWithSomeBooks
-            ├── Lewis Carroll
-            │   └── Alice's Adventures in Wonderland (17)
-            │       └── Alice's Adventures in Wonderland - Lewis Carroll.epub
-            └── Sun Wu
-                └── Sun Zi Bing Fa (19)
-                    └── Sun Zi Bing Fa - Sun Wu.epub
+        ├── BaseWithSomeBooks
+        │   ├── Lewis Carroll
+        │   │   └── Alice's Adventures in Wonderland (17)
+        │   │       └── Alice's Adventures in Wonderland - Lewis Carroll.epub
+        │   └── Sun Wu
+        │       └── Sun Zi Bing Fa (19)
+        │           └── Sun Zi Bing Fa - Sun Wu.epub
+        └── cba-cbam.cbz
         */
         $root = dirname(__DIR__, 2) . '/tests';
         $folder = Folder::getRootFolder($root);
@@ -54,8 +56,8 @@ class FolderTest extends TestCase
 
         $books = $folder->findBookFiles();
 
-        // Total books in tests is 2
-        $this->assertEquals(2, $folder->count);
+        // Total books in tests is 3
+        $this->assertEquals(3, $folder->count);
 
         // Direct children in tests
         $children = $folder->getChildFolders();

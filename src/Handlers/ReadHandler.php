@@ -19,7 +19,7 @@ use InvalidArgumentException;
 use Throwable;
 
 /**
- * Handle epub reader with monocle
+ * Handle epub reader with monocle or epubjs + link to comic reader or pdf viewer
  * URL format: index.php/read?data={idData}&version={version}
  */
 class ReadHandler extends BaseHandler

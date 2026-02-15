@@ -10,14 +10,48 @@
     "fullTitle": "Folders > Root",
     "multipleDatabase": 0,
     "page": "folder",
-    "entries": [],
-    "entriesCount": 0,
+    "entries": [
+        {
+            "title": "cba-cbam",
+            "book": {
+                "id": 1,
+                "detailurl": "vendor/bin/index.php/restapi/ebook/cba-cbam",
+                "hasCover": false,
+                "preferedData": [
+                    {
+                        "name": "CBZ",
+                        "url": "vendor/bin/index.php/format/cba-cbam.cbz",
+                        "viewUrl": "vendor/bin/index.php/format/cba-cbam.cbz"
+                    }
+                ],
+                "preferedCount": 1,
+                "rating": "",
+                "publisherName": "",
+                "publisherurl": "",
+                "pubDate": "",
+                "languagesName": "",
+                "authorsName": "",
+                "authors": [],
+                "tagsName": "",
+                "tags": [],
+                "seriesName": "",
+                "seriesIndex": null,
+                "seriesCompleteName": "",
+                "seriesurl": "",
+                "customcolumns_list": []
+            },
+            "thumbnailurl": "vendor/bin/images/icons/icon144.png",
+            "coverurl": "vendor/bin/images/icons/icon144.png"
+        }
+    ],
+    "entriesCount": 1,
     "isPaginated": 0,
     "sorted": "title",
     "sortedBy": "title",
     "sortedDir": "asc",
-    "containsBook": 0,
+    "containsBook": 1,
     "filterurl": false,
+    "sorturl": "vendor/bin/index.php?page=folder&sort={0}",
     "sortoptions": [],
     "filters": false,
     "abouturl": "vendor/bin/index.php/restapi/about",
@@ -29,9 +63,9 @@
         "current": {
             "class": "Folders",
             "title": "Root",
-            "content": "2 books",
+            "content": "3 books",
             "navlink": "vendor/bin/index.php/restapi/folder/0",
-            "number": 2
+            "number": 3
         },
         "children": [
             {

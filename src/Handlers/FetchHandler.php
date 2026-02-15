@@ -232,6 +232,9 @@ class FetchHandler extends BaseHandler
     {
         $fileName = basename($path);
         $folderId = dirname($path);
+        if ($folderId == '.') {
+            $folderId = '0';
+        }
         $root = Config::get('browse_books_directory', '');
         if (empty($root) || !is_dir($root)) {
             return Response::sendError($request, "Invalid Root");

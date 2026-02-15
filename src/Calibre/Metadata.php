@@ -10,8 +10,11 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Output\ComicReader;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Metadata as EPubMetadata;
+use DOMDocument;
+use InvalidArgumentException;
 
 /**
  * Calibre metadata.opf files are based on EPUB 2.0 <https://idpf.org/epub/20/spec/OPF_2.0_latest.htm#Section2.0>,
@@ -63,6 +66,29 @@ class Metadata extends EPubMetadata
         $book->datas ??= [];
         $book->extraFiles ??= [];
         return $book;
+    }
+
+    /**
+     * Summary of updateBookFromFile
+     * @param Book $book
+     * @param string $filePath
+     * @param ?string $format
+     * @return Book
+     */
+    public static function updateBookFromFile($book, $filePath, $format = null)
+    {
+        $format ??= pathinfo($filePath, PATHINFO_EXTENSION);
+        $format = strtoupper($format);
+        switch ($format) {
+            case 'CBZ':
+                return static::updateBookFromComic($book, $filePath);
+            case 'EPUB':
+                return static::updateBookFromEPub($book, $filePath);
+            case 'OPF':
+                return static::updateBookFromMetadata($book, $filePath);
+            default:
+                throw new InvalidArgumentException('Invalid Format');
+        }
     }
 
     /**
@@ -133,6 +159,107 @@ class Metadata extends EPubMetadata
         }
         $book->uuid = $epub->getUuid();
         return $book;
+    }
+
+    /**
+     * Summary of updateBookFromComic
+     * @param Book $book
+     * @param string $filePath
+     * @return Book
+     */
+    public static function updateBookFromComic($book, $filePath)
+    {
+        $reader = new ComicReader();
+        $metadata = $reader->getMetadata($filePath);
+        if (empty($metadata)) {
+            return $book;
+        }
+        $title = $metadata->getElement('Title');
+        if (!empty($title)) {
+            $book->title = $title[0];
+        }
+        $year = $metadata->getElement('Year');
+        if (!empty($year)) {
+            $book->pubdate = $year[0];
+            $month = $metadata->getElement('Month');
+            if (!empty($month)) {
+                $book->pubdate .= '-' . $month[0];
+                $day = $metadata->getElement('Day');
+                if (!empty($day)) {
+                    $book->pubdate .= '-' . $day[0];
+                }
+            }
+        }
+        $writer = $metadata->getElement('Writer');
+        $book->authors = [];
+        if (!empty($writer)) {
+            $post = (object) ['id' => null, 'name' => $writer[0], 'sort' => $writer[0]];
+            $author = new Author($post);
+            $book->authors[] = $author;
+        }
+        $summary = $metadata->getElement('Summary');
+        if (!empty($summary)) {
+            $book->comment = $summary[0];
+        }
+        $publisher = $metadata->getElement('Publisher');
+        if (!empty($publisher)) {
+            $post = (object) ['id' => null, 'name' => $publisher[0]];
+            $book->publisher = new Publisher($post);
+        }
+        $series = $metadata->getElement('Series');
+        if (!empty($series)) {
+            $post = (object) ['id' => null, 'name' => $series[0]];
+            $book->serie = new Serie($post);
+            $index = $metadata->getElement('Number');
+            if (!empty($index)) {
+                $book->seriesIndex = (float) $index[0];
+            }
+        }
+        $genre = $metadata->getElement('Genre');
+        $book->tags = [];
+        if (!empty($genre)) {
+            $post = (object) ['id' => null, 'name' => $genre[0]];
+            $tag = new Tag($post);
+            $book->tags[] = $tag;
+        }
+        $language = $metadata->getElement('LanguageISO');
+        if (!empty($language)) {
+            $book->languages = $language[0];
+        }
+        $web = $metadata->getElement('Web');
+        $book->identifiers = [];
+        if (!empty($web)) {
+            $type = 'url';
+            $post = (object) ['id' => null, 'type' => $type, 'val' => $web[0]];
+            $identifier = new Identifier($post);
+            $book->identifiers[] = $identifier;
+        }
+        $count = $metadata->getElement('PageCount');
+        if (!empty($count)) {
+            $book->pages = $count[0];
+        } else {
+            $pages = $metadata->getElement('Pages');
+            if (!empty($pages)) {
+                $book->pages = count($pages);
+            }
+        }
+        return $book;
+    }
+
+    /**
+     * Summary of parseComicInfo
+     * @param string $data
+     * @return Metadata
+     */
+    public static function parseComicInfo($data)
+    {
+        $doc = new DOMDocument();
+        $doc->loadXML($data);
+        $root = static::getNode($doc, 'ComicInfo');
+
+        $info = new static();
+        $info->metadata = static::addNode($root);
+        return $info;
     }
 
     /**

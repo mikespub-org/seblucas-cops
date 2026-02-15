@@ -182,8 +182,8 @@ class JsonRenderer extends BaseRenderer
         $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
         $out ["pages"] = $book->getPages();
-        if (!empty($book->folderId)) {
-            $out ["folderId"] = $book->folderId;
+        if (isset($book->folderId)) {
+            $out ["folderId"] = $book->folderId ?: localize("folders.root");
             $out ["folderUrl"] = JsonHandler::route(Folder::ROUTE_DETAIL, ["path" => $book->folderId]);
         } else {
             $out ["folderId"] = '';
