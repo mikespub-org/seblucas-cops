@@ -177,6 +177,7 @@ class JsonRenderer extends BaseRenderer
         } else {
             $thumb = "html2";
         }
+        // Note: this will fail for books in folders /ebook/ if book title is updated based on EPUB file
         $out ["thumbnailurl"] = $cover->getThumbnailUri($thumb, false);
         $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);

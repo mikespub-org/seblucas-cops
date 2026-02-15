@@ -62,6 +62,11 @@ class FolderTest extends TestCase
         $this->assertNotEmpty($children);
         $this->assertEquals(1, count($children));
 
+        // Force re-scan of $child folder (no books loaded in root scan above)
+        $child = reset($children);
+        $child->scanned = false;
+        $child->findBookFiles();
+
         // Recursive children in tests
         $children = $folder->getChildFolders(true);
         $this->assertNotEmpty($children);
@@ -80,16 +85,12 @@ class FolderTest extends TestCase
         // Find Lewis Carroll folder by name in $base
         $lewis = $base->getChildFolderByName('Lewis Carroll');
         $this->assertNotNull($lewis, 'Lewis Carroll folder not found');
-        $this->assertEquals(1, $lewis->count);
+        $this->assertEquals(1, $lewis->getBookCount());
 
         // Find BaseWithSomeBooks/Lewis Carroll folder by id from $folder
         $carroll = $folder->getChildFolderById('BaseWithSomeBooks/Lewis Carroll');
         $this->assertNotNull($carroll, 'BaseWithSomeBooks/Lewis Carroll folder not found');
         $this->assertEquals($lewis, $carroll);
-
-        // Force re-scan of $carroll folder (no books loaded in root scan above)
-        $carroll->scanned = false;
-        $carroll->findBookFiles();
 
         // Find book entries in Lewis Carroll folder
         [$entries, $total] = Folder::getBooksByFolderOrChildren($carroll);

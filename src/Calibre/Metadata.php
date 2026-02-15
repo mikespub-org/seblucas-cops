@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Metadata as EPubMetadata;
 
 /**
@@ -61,6 +62,76 @@ class Metadata extends EPubMetadata
         $book->pages ??= 0;
         $book->datas ??= [];
         $book->extraFiles ??= [];
+        return $book;
+    }
+
+    /**
+     * Summary of updateBookFromMetadata
+     * @param Book $book
+     * @param string $filePath
+     * @return Book
+     */
+    public static function updateBookFromMetadata($book, $filePath)
+    {
+        $metadata = static::fromFile($filePath);
+        return $metadata->updateBook($book);
+    }
+
+    /**
+     * Summary of updateBookFromEPub
+     * @param Book $book
+     * @param string $filePath
+     * @return Book
+     */
+    public static function updateBookFromEPub($book, $filePath)
+    {
+        $epub = new EPub($filePath);
+        // Note: cover URLs will fail in JsonRenderer::getFullBookContentArray()
+        // for books in folders /ebook/ if book title is updated based on EPUB file
+        //$book->title = $epub->getTitle();
+        $book->pubdate = $epub->getCreationDate();
+        $book->authors = [];
+        foreach ($epub->getAuthors() as $sort => $name) {
+            $post = (object) ['id' => null, 'name' => $name, 'sort' => $sort];
+            $author = new Author($post);
+            $book->authors[] = $author;
+        }
+        $description = $epub->getDescription();
+        if (!empty($description)) {
+            $book->comment = $description;
+        }
+        $publisher = $epub->getPublisher();
+        if ($publisher) {
+            $post = (object) ['id' => null, 'name' => $publisher];
+            $book->publisher = new Publisher($post);
+        }
+        [$series, $index] = $epub->getSeriesOrCollection();
+        if ($series) {
+            $post = (object) ['id' => null, 'name' => $series];
+            $book->serie = new Serie($post);
+            $book->seriesIndex = (float) $index;
+        }
+        $book->tags = [];
+        foreach ($epub->getSubjects() as $name) {
+            $post = (object) ['id' => null, 'name' => $name];
+            $tag = new Tag($post);
+            $book->tags[] = $tag;
+        }
+        //$book->rating = $epub->getRating();
+        $book->languages = $epub->getLanguage();
+        $book->identifiers = [];
+        foreach (['ISBN', 'URI'] as $type) {
+            $val = $epub->getIdentifier($type);
+            if ($val) {
+                if ($type == 'URI') {
+                    $type = 'url';
+                }
+                $post = (object) ['id' => null, 'type' => $type, 'val' => $val];
+                $identifier = new Identifier($post);
+                $book->identifiers[] = $identifier;
+            }
+        }
+        $book->uuid = $epub->getUuid();
         return $book;
     }
 

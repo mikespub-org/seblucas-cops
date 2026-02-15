@@ -533,10 +533,11 @@ class Cover
         $routeName = self::ROUTE_IMAGE;
         $href = fn() => $this->getRoute($routeName, $params);
         $mime = 'image/jpeg';
+        $rel = ($thumb == 'full') ? LinkImage::OPDS_IMAGE_TYPE : LinkImage::OPDS_THUMBNAIL_TYPE;
         return new LinkImage(
             $href,
             $mime,
-            LinkImage::OPDS_THUMBNAIL_TYPE
+            $rel
             // no filepath here
         );
     }

@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Comment;
 use SebLucas\Cops\Calibre\Folder;
+use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Input\Config;
 use InvalidArgumentException;
 
@@ -95,6 +96,13 @@ class PageFolderDetail extends PageWithDetail
         $this->book = $instance->getBookByName($bookName);
         if (is_null($this->book)) {
             throw new InvalidArgumentException('Invalid Book');
+        }
+        if (!$this->book->isExternal()) {
+            // add metadata from EPUB file if available
+            $data = $this->book->getDataFormat('EPUB');
+            if (!empty($data) && file_exists($data->getLocalPath())) {
+                $this->book = Metadata::updateBookFromEPub($this->book, $data->getLocalPath());
+            }
         }
         if (Comment::hasCalibreLinks($this->book->comment)) {
             $this->book->comment = Comment::fixCalibreLinks($this->book->comment, $this->getDatabaseId());
