@@ -45,6 +45,11 @@ class ReadHandler extends BaseHandler
     {
         if ($data->format == "EPUB" && Config::get('epub_reader')) {
             if (in_array(Config::get('epub_reader'), ['monocle', 'epubjs'])) {
+                // @todo support reader for epub books in folders
+                if (empty($data->id)) {
+                    // use templates/custom-reader.html?url=... format here for now
+                    return UriGenerator::path('templates/custom-reader.html?url=') . $data->getHtmlLink();
+                }
                 // use standard epub reader here
                 $params = [];
                 $params['data'] = $data->id;
@@ -52,7 +57,7 @@ class ReadHandler extends BaseHandler
                 $params['title'] = $data->book->getTitle();
                 return self::route('read-title', $params) ?? '';
             }
-            // use templates/custom-reader?url=... format here for now
+            // use templates/custom-reader.html?url=... format here for now
             return UriGenerator::path('templates/' . Config::get('epub_reader')) . $data->getHtmlLink();
         }
         // use templates/comic-reader?url=... format here for now

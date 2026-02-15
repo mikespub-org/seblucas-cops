@@ -4,7 +4,7 @@
     "baseurl": "vendor/bin/index.php",
     "isFilterPage": false,
     "book": {
-        "id": 1,
+        "id": 0,
         "detailurl": "vendor/bin/index.php/restapi/ebook/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll",
         "hasCover": true,
         "preferedData": [
@@ -17,29 +17,29 @@
         "preferedCount": 1,
         "rating": "",
         "publisherName": "Feedbooks",
-        "publisherurl": "vendor/bin/index.php?title=Feedbooks",
+        "publisherurl": "vendor/bin/index.php/restapi/publishers?query=Feedbooks",
         "pubDate": "1897",
         "languagesName": "en",
         "authorsName": "Lewis Carroll",
         "authors": [
             {
                 "name": "Lewis Carroll",
-                "url": "vendor/bin/index.php?title=Lewis%20Carroll"
+                "url": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll"
             }
         ],
         "tagsName": "Fiction, Fantasy, Juvenile",
         "tags": [
             {
                 "name": "Fiction",
-                "url": "vendor/bin/index.php?title=Fiction"
+                "url": "vendor/bin/index.php/restapi/tags/1/Fiction"
             },
             {
                 "name": "Fantasy",
-                "url": "vendor/bin/index.php?title=Fantasy"
+                "url": "vendor/bin/index.php/restapi/tags/5/Fantasy"
             },
             {
                 "name": "Juvenile",
-                "url": "vendor/bin/index.php?title=Juvenile"
+                "url": "vendor/bin/index.php/restapi/tags/6/Juvenile"
             }
         ],
         "seriesName": "",
@@ -55,13 +55,13 @@
         "folderUrl": "vendor/bin/index.php/folder/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29",
         "datas": [
             {
-                "id": 1,
+                "id": 0,
                 "format": "EPUB",
                 "url": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
                 "viewUrl": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
                 "mail": 1,
                 "qrcode": 0,
-                "readerUrl": "vendor/bin/index.php/read/0/1/Alice_s_Adventures_in_Wonderland_Lewis_Carroll"
+                "readerUrl": "vendor/bin/templates/custom-reader.html?url=vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"
             }
         ],
         "extraFiles": [],

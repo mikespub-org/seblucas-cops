@@ -230,26 +230,8 @@ class FetchHandler extends BaseHandler
      */
     public function sendFolderFile($request, $path)
     {
-        $fileName = basename($path);
-        $folderId = dirname($path);
-        if ($folderId == '.') {
-            $folderId = '0';
-        }
-        $root = Config::get('browse_books_directory', '');
-        if (empty($root) || !is_dir($root)) {
-            return Response::sendError($request, "Invalid Root");
-        }
         $database = $request->database();
-        $folder = Folder::getInstanceById($folderId, $database, $root);
-        $folder->setHandler(HtmlHandler::class);
-        // force looking for book files here
-        $folder->findBookFiles(null, false);
-        $instance = $folder->getChildFolderById($folderId, false);
-        if (is_null($instance)) {
-            return Response::sendError($request, "Invalid Folder");
-        }
-        $bookName = pathinfo($fileName, PATHINFO_FILENAME);
-        $book = $instance->getBookByName($bookName);
+        $book = Folder::getBookByFolderPath($path, $database);
         if (is_null($book)) {
             return Response::sendError($request, "Invalid Book");
         }
@@ -270,6 +252,7 @@ class FetchHandler extends BaseHandler
             $request->set('thumb', $thumb);
             return $cover->sendThumbnail($request);
         }
+        $fileName = basename($path);
         $format = strtoupper(pathinfo($fileName, PATHINFO_EXTENSION));
         $data = $book->getDataFormat($format);
         if (empty($data)) {

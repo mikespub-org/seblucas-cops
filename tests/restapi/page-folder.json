@@ -14,7 +14,7 @@
         {
             "title": "cba-cbam",
             "book": {
-                "id": 1,
+                "id": 0,
                 "detailurl": "vendor/bin/index.php/restapi/ebook/cba-cbam",
                 "hasCover": false,
                 "preferedData": [

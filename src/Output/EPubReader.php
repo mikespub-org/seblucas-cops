@@ -229,8 +229,8 @@ class EPubReader extends BaseRenderer
 
     /**
      * Summary of getDataLink
-     * @param mixed $book
-     * @param mixed $idData
+     * @param Book $book
+     * @param int $idData
      * @throws InvalidArgumentException
      * @return string
      */

@@ -11,12 +11,14 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Pages\PageId;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * Browse book files in other folders besides Calibre (WIP)
@@ -416,7 +418,7 @@ class Folder extends Category
         if (isset($this->bookList[$bookName])) {
             return $this->bookList[$bookName];
         }
-        $bookId = count($this->bookList) + 1;
+        $bookId = 0;
         $line = (object) ['id' => $bookId, 'title' => $bookName, 'path' => $bookPath, 'timestamp' => $timestamp, 'has_cover' => $hasCover];
         $book = new Book($line);
         $book->setHandler($this->handler);
@@ -445,7 +447,7 @@ class Folder extends Category
         if (empty($book->timestamp) && file_exists($filePath)) {
             $book->timestamp = filemtime($filePath);
         }
-        $dataId = $book->id;
+        $dataId = 0;
         $post = (object) ['id' => $dataId, 'name' => $bookName, 'format' => strtoupper($format)];
         $data = new Data($post, $book);
         $book->datas[] = $data;
@@ -591,6 +593,40 @@ class Folder extends Category
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'root' => $root];
         return new Folder($post, $database);
+    }
+
+    /**
+     * Summary of getBookByFolderPath
+     * @param string $path
+     * @param ?int $database
+     * @throws \InvalidArgumentException
+     * @return Book
+     */
+    public static function getBookByFolderPath($path, $database = null)
+    {
+        $fileName = basename($path);
+        $folderId = dirname($path);
+        if ($folderId == '.') {
+            $folderId = '0';
+        }
+        $root = Config::get('browse_books_directory', '');
+        if (empty($root) || !is_dir($root)) {
+            throw new InvalidArgumentException("Invalid Root");
+        }
+        $folder = Folder::getInstanceById($folderId, $database, $root);
+        $folder->setHandler(HtmlHandler::class);
+        // force looking for book files here
+        $folder->findBookFiles(null, false);
+        $instance = $folder->getChildFolderById($folderId, false);
+        if (is_null($instance)) {
+            throw new InvalidArgumentException("Invalid Folder");
+        }
+        $bookName = pathinfo($fileName, PATHINFO_FILENAME);
+        $book = $instance->getBookByName($bookName);
+        if (is_null($book)) {
+            throw new InvalidArgumentException("Invalid Book");
+        }
+        return $book;
     }
 
     /**
