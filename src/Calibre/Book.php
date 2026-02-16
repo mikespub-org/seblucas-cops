@@ -719,6 +719,8 @@ class Book
         $coverLink = $cover->getCoverLink();
         if ($coverLink) {
             array_push($linkArray, $coverLink);
+        } elseif (isset($this->folderId)) {
+            // @see JsonRenderer::getFullBookContentArray()
         }
         // set height for thumbnail here depending on opds vs. html
         if (!empty($this->handler) && in_array($this->handler::HANDLER, ['feed', 'opds'])) {
@@ -878,6 +880,17 @@ where data.book = books.id and data.id = ?';
             array_push($out, new Data($post, $book));
         }
         return $out;
+    }
+
+    /**
+     * Summary of getBookByFolderPath
+     * @param string $path
+     * @param ?int $database
+     * @return Book
+     */
+    public static function getBookByFolderPath($path, $database = null)
+    {
+        return Folder::getBookByFolderPath($path, $database);
     }
 
     /**

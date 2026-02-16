@@ -643,7 +643,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "pattern": "^.*$"
+                            "pattern": "^.+$"
                         }
                     },
                     {
@@ -1996,6 +1996,36 @@
                 ]
             }
         },
+        "/read/{path}": {
+            "get": {
+                "summary": "Route to read handler with path={path} - with api key",
+                "operationId": "get_read-format",
+                "tags": [
+                    "read"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of read handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/epubfs/{db}/{data}/{comp}": {
             "get": {
                 "summary": "Route to epubfs handler with db={db}&data={data}&comp={comp} - with api key",
@@ -3257,6 +3287,36 @@
                     },
                     {
                         "name": "comp",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/zipfs/{path}": {
+            "get": {
+                "summary": "Route to zipfs handler with path={path} - with api key",
+                "operationId": "get_zipfs-format",
+                "tags": [
+                    "zipfs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of zipfs handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
                         "in": "path",
                         "required": true,
                         "schema": {

@@ -149,7 +149,7 @@
                     }
                 ],
                 "page-ebook": [
-                    "/ebook/{path:.*}",
+                    "/ebook/{path:.+}",
                     {
                         "page": "folder",
                         "ebook": 1
@@ -408,6 +408,9 @@
                 ],
                 "read": [
                     "/read/{db:\\d+}/{data:\\d+}"
+                ],
+                "read-format": [
+                    "/read/{path:.+}"
                 ]
             }
         },
@@ -649,6 +652,9 @@
             "routes": {
                 "zipfs": [
                     "/zipfs/{db:\\d+}/{data:\\d+}/{comp:.+}"
+                ],
+                "zipfs-format": [
+                    "/zipfs/{path:.+}"
                 ]
             }
         },

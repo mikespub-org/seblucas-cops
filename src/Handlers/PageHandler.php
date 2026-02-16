@@ -55,7 +55,7 @@ class PageHandler extends BaseHandler
             "page-query" => ["/search/{query}", ["page" => PageId::OPENSEARCH_QUERY]],
             "page-search" => ["/search", ["page" => PageId::OPENSEARCH]],
             "page-folder" => ["/folder/{path:.*}", ["page" => PageId::FOLDER]],
-            "page-ebook" => ["/ebook/{path:.*}", ["page" => PageId::FOLDER, "ebook" => 1]],
+            "page-ebook" => ["/ebook/{path:.+}", ["page" => PageId::FOLDER, "ebook" => 1]],
             "page-recent" => ["/recent", ["page" => PageId::ALL_RECENT_BOOKS]],
             "page-tags-letter" => ["/tags/letter/{letter}", ["page" => PageId::TAGS_FIRST_LETTER]],
             "page-tags-letters" => ["/tags/letter", ["page" => PageId::ALL_TAGS, "letter" => 1]],

@@ -26,6 +26,17 @@ class ComicReader extends EPubReader
     public const EXTENSION = 'CBZ';
 
     /**
+     * Summary of isComicFile
+     * @param string $path
+     * @return bool
+     */
+    public static function isComicFile($path)
+    {
+        $format = strtoupper(pathinfo($path, PATHINFO_EXTENSION));
+        return $format == static::EXTENSION;
+    }
+
+    /**
      * Summary of getMetadata
      * @param string $filePath
      * @return Metadata|false
@@ -90,5 +101,70 @@ class ComicReader extends EPubReader
         ];
 
         return Format::template($data, $template);
+    }
+
+    /**
+     * Summary of getZipContent
+     * @param string $filePath
+     * @param string $component
+     * @param int $flags ignore directory for ComicReader
+     * @throws \InvalidArgumentException
+     * @return string|bool
+     */
+    public function getZipFileContent($filePath, $component, $flags = 0)
+    {
+        $zip = new ZipArchive();
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        if ($result !== true) {
+            throw new InvalidArgumentException('Invalid file ' . basename($filePath));
+        }
+        $cover = false;
+        $thumb = null;
+        $index = $zip->locateName($component, $flags);
+        if ($index === false) {
+            if ($component == 'cover.jpg' && static::isComicFile($filePath)) {
+                $cover = true;
+                $thumb = $this->request->get('size');
+                $index = $this->findCoverImage($zip);
+            }
+            if ($index === false) {
+                $zip->close();
+                throw new InvalidArgumentException('Unknown component ' . $component);
+            }
+        }
+        $data = $zip->getFromIndex($index);
+        $zip->close();
+
+        if ($cover && $thumb) {
+            // @todo resize image for thumbnail
+        }
+
+        return $data;
+    }
+
+    /**
+     * Summary of findCoverImage
+     * @param ZipArchive $zip
+     * @return int|bool
+     */
+    public function findCoverImage($zip)
+    {
+        // ... find FrontCover in metadata or use first image
+        $index = false;
+        $images = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            if (str_starts_with($filename, '__MACOSX')) {
+                continue;
+            }
+            if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/', $filename)) {
+                $images[] = $filename;
+            }
+        }
+        if (!empty($images)) {
+            natsort($images);
+            $index = $zip->locateName($images[0]);
+        }
+        return $index;
     }
 }

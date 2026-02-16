@@ -701,7 +701,7 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/folder/(.*)(*MARK:m)|/ebook/(.*)(*MARK:n)|/tags/letter/([^/]+)(*MARK:o)|/tags/(\\d+)/([^/]+)(*MARK:p)|/tags/(\\d+)(*MARK:q)|/custom/(\\d+)/([^/]+)(*MARK:r)|/custom/(\\d+)(*MARK:s)|/languages/(\\d+)/([^/]+)(*MARK:t)|/languages/(\\d+)(*MARK:u)|/publishers/letter/([^/]+)(*MARK:v)|/publishers/(\\d+)/([^/]+)(*MARK:w)|/publishers/(\\d+)(*MARK:x)|/ratings/(\\d+)/([^/]+)(*MARK:y)|/ratings/(\\d+)(*MARK:z)|/identifiers/(\\w+)/([^/]+)(*MARK:aa)|/identifiers/(\\w+)(*MARK:ab)|/formats/(\\w+)(*MARK:ac)|/feed/(\\w+)(*MARK:ad)|/feed/(.+)(*MARK:ae)|/files/(\\d+)/(\\d+)/(.+)(*MARK:af)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ag)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:ah)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:ai)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:aj))$~',
+        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/folder/(.*)(*MARK:m)|/ebook/(.+)(*MARK:n)|/tags/letter/([^/]+)(*MARK:o)|/tags/(\\d+)/([^/]+)(*MARK:p)|/tags/(\\d+)(*MARK:q)|/custom/(\\d+)/([^/]+)(*MARK:r)|/custom/(\\d+)(*MARK:s)|/languages/(\\d+)/([^/]+)(*MARK:t)|/languages/(\\d+)(*MARK:u)|/publishers/letter/([^/]+)(*MARK:v)|/publishers/(\\d+)/([^/]+)(*MARK:w)|/publishers/(\\d+)(*MARK:x)|/ratings/(\\d+)/([^/]+)(*MARK:y)|/ratings/(\\d+)(*MARK:z)|/identifiers/(\\w+)/([^/]+)(*MARK:aa)|/identifiers/(\\w+)(*MARK:ab)|/formats/(\\w+)(*MARK:ac)|/feed/(\\w+)(*MARK:ad)|/feed/(.+)(*MARK:ae)|/files/(\\d+)/(\\d+)/(.+)(*MARK:af)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ag)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:ah)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:ai)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:aj)|/format/(.+)(*MARK:ak))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -944,7 +944,7 @@
             ),
             2 => 
             array (
-              '_route' => '/ebook/{path:.*}',
+              '_route' => '/ebook/{path:.+}',
               '_name' => 'page-ebook',
             ),
           ),
@@ -1340,14 +1340,7 @@
               '_name' => 'fetch-data',
             ),
           ),
-        ),
-      ),
-      1 => 
-      array (
-        'regex' => '~^(?|/format/(.+)(*MARK:a)|/images/([^/]+)/(.+)(*MARK:b)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:e)|/read/(\\d+)/(\\d+)(*MARK:f)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:g)|/restapi/databases/([^/]+)/([^/]+)(*MARK:h)|/restapi/databases/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)/([^/]+)(*MARK:k)|/restapi/notes/([^/]+)(*MARK:l)|/restapi/preferences/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:n)|/restapi/annotations/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:q)|/restapi/metadata/([^/]+)(*MARK:r)|/restapi/folders/(.*)(*MARK:s)|/restapi/(.*)(*MARK:t)|/check/(.*)(*MARK:u)|/opds/(\\w+)(*MARK:v)|/opds/(.*)(*MARK:w)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:x)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:y)|/loader/([^/]+)/(\\d+)(*MARK:z)|/loader/([^/]+)/(*MARK:aa)|/loader/([^/]+)(*MARK:ab)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:ac)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ad)|/calibre/([^/]+)/([^/]+)/(.*)(*MARK:ae)|/calibre/([^/]+)/([^/]+)(*MARK:af)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ag)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ah)|/admin/(.*)(*MARK:ai))$~',
-        'routeMap' => 
-        array (
-          'a' => 
+          'ak' => 
           array (
             0 => 
             array (
@@ -1364,7 +1357,14 @@
               '_name' => 'fetch-format',
             ),
           ),
-          'b' => 
+        ),
+      ),
+      1 => 
+      array (
+        'regex' => '~^(?|/images/([^/]+)/(.+)(*MARK:a)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:b)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)(*MARK:e)|/read/(.+)(*MARK:f)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:g)|/restapi/databases/([^/]+)/([^/]+)(*MARK:h)|/restapi/databases/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)/([^/]+)(*MARK:k)|/restapi/notes/([^/]+)(*MARK:l)|/restapi/preferences/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:n)|/restapi/annotations/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:q)|/restapi/metadata/([^/]+)(*MARK:r)|/restapi/folders/(.*)(*MARK:s)|/restapi/(.*)(*MARK:t)|/check/(.*)(*MARK:u)|/opds/(\\w+)(*MARK:v)|/opds/(.*)(*MARK:w)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:x)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:y)|/loader/([^/]+)/(\\d+)(*MARK:z)|/loader/([^/]+)/(*MARK:aa)|/loader/([^/]+)(*MARK:ab)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:ac)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ad)|/calibre/([^/]+)/([^/]+)/(.*)(*MARK:ae)|/calibre/([^/]+)/([^/]+)(*MARK:af)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ag)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:ah)|/zipfs/(.+)(*MARK:ai)|/admin/(.*)(*MARK:aj))$~',
+        'routeMap' => 
+        array (
+          'a' => 
           array (
             0 => 
             array (
@@ -1383,7 +1383,7 @@
               '_name' => 'fetch-image',
             ),
           ),
-          'c' => 
+          'b' => 
           array (
             0 => 
             array (
@@ -1404,7 +1404,7 @@
               '_name' => 'fetch-view',
             ),
           ),
-          'd' => 
+          'c' => 
           array (
             0 => 
             array (
@@ -1424,7 +1424,7 @@
               '_name' => 'fetch-download',
             ),
           ),
-          'e' => 
+          'd' => 
           array (
             0 => 
             array (
@@ -1443,7 +1443,7 @@
               '_name' => 'read-title',
             ),
           ),
-          'f' => 
+          'e' => 
           array (
             0 => 
             array (
@@ -1459,6 +1459,23 @@
             array (
               '_route' => '/read/{db:\\d+}/{data:\\d+}',
               '_name' => 'read',
+            ),
+          ),
+          'f' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler',
+              '_route' => 'read-format',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/read/{path:.+}',
+              '_name' => 'read-format',
             ),
           ),
           'g' => 
@@ -1979,6 +1996,23 @@
           array (
             0 => 
             array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler',
+              '_route' => 'zipfs-format',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/zipfs/{path:.+}',
+              '_name' => 'zipfs-format',
+            ),
+          ),
+          'aj' => 
+          array (
+            0 => 
+            array (
               '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
               '_route' => 'admin-action',
             ),
@@ -2289,7 +2323,7 @@
         1 => 
         array (
           0 => 'path',
-          1 => '.*',
+          1 => '.+',
         ),
       ),
     ),
@@ -2898,6 +2932,18 @@
         ),
       ),
     ),
+    'read-format' => 
+    array (
+      0 => 
+      array (
+        0 => '/read/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
     'epubfs' => 
     array (
       0 => 
@@ -3487,6 +3533,18 @@
         5 => 
         array (
           0 => 'comp',
+          1 => '.+',
+        ),
+      ),
+    ),
+    'zipfs-format' => 
+    array (
+      0 => 
+      array (
+        0 => '/zipfs/',
+        1 => 
+        array (
+          0 => 'path',
           1 => '.+',
         ),
       ),

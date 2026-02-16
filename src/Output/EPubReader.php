@@ -245,8 +245,9 @@ class EPubReader extends BaseRenderer
         } else {
             $filePath = $book->getFilePath(static::EXTENSION, $idData);
             if (!$filePath || !file_exists($filePath)) {
-                throw new InvalidArgumentException('Unknown file ' . $filePath);
+                throw new InvalidArgumentException('Unknown file ' . basename($filePath));
             }
+            // @todo handle folder paths
             // URL format: index.php/zipfs/{db}/{data}/{comp} - let reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
             $params = ['db' => $db, 'data' => $idData, 'comp' => 'COMPONENT'];
@@ -290,6 +291,42 @@ class EPubReader extends BaseRenderer
     }
 
     /**
+     * Summary of getZipFilePath
+     * @param ?int $idData
+     * @param ?int $database
+     * @throws \InvalidArgumentException
+     * @return bool|string|null
+     */
+    public function getZipFilePath($idData, $database)
+    {
+        if (!empty($idData)) {
+            $book = Book::getBookByDataId($idData, $database);
+            if (!$book) {
+                throw new InvalidArgumentException('Unknown data ' . $idData);
+            }
+            return $book->getFilePath(static::EXTENSION, $idData);
+        }
+        if (!Config::get('browse_books_directory')) {
+            throw new InvalidArgumentException('Missing data');
+        }
+        $path = $this->request->get('path');
+        if (empty($path)) {
+            throw new InvalidArgumentException('Missing path');
+        }
+        $book = Book::getBookByFolderPath($path, $database);
+        if (!$book) {
+            throw new InvalidArgumentException('Unknown book ' . basename($path));
+        }
+        $fileName = basename($path);
+        $format = strtoupper(pathinfo($fileName, PATHINFO_EXTENSION));
+        $data = $book->getDataFormat($format);
+        if (!$data) {
+            throw new InvalidArgumentException('Unknown format ' . basename($path));
+        }
+        return $data->getLocalPath();
+    }
+
+    /**
      * Summary of getZipContent
      * @param string $filePath
      * @param string $component
@@ -300,16 +337,16 @@ class EPubReader extends BaseRenderer
     public function getZipFileContent($filePath, $component, $flags = 0)
     {
         $zip = new ZipArchive();
-        $res = $zip->open($filePath, ZipArchive::RDONLY);
-        if ($res !== true) {
-            throw new InvalidArgumentException('Invalid file ' . $filePath);
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        if ($result !== true) {
+            throw new InvalidArgumentException('Invalid file ' . basename($filePath));
         }
-        $res = $zip->locateName($component, $flags);
-        if ($res === false) {
+        $index = $zip->locateName($component, $flags);
+        if ($index === false) {
             $zip->close();
             throw new InvalidArgumentException('Unknown component ' . $component);
         }
-        $data = $zip->getFromIndex($res);
+        $data = $zip->getFromIndex($index);
         $zip->close();
 
         return $data;
@@ -317,7 +354,7 @@ class EPubReader extends BaseRenderer
 
     /**
      * Summary of sendZipContent
-     * @param int $idData
+     * @param ?int $idData
      * @param string $component
      * @param ?int $database
      * @throws \InvalidArgumentException
@@ -325,13 +362,9 @@ class EPubReader extends BaseRenderer
      */
     public function sendZipContent($idData, $component, $database = null)
     {
-        $book = Book::getBookByDataId($idData, $database);
-        if (!$book) {
-            throw new InvalidArgumentException('Unknown data ' . $idData);
-        }
-        $filePath = $book->getFilePath(static::EXTENSION, $idData);
+        $filePath = $this->getZipFilePath($idData, $database);
         if (!$filePath || !file_exists($filePath)) {
-            throw new InvalidArgumentException('Unknown file ' . $filePath);
+            throw new InvalidArgumentException('Unknown file ' . basename($filePath));
         }
 
         $data = $this->getZipFileContent($filePath, $component);

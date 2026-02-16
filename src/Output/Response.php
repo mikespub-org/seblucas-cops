@@ -50,7 +50,7 @@ class Response
      */
     public static function getMimeType($filepath)
     {
-        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
+        $extension = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
         if (array_key_exists($extension, Data::$mimetypes)) {
             $mimetype = Data::$mimetypes[$extension];
         } elseif (file_exists($filepath)) {

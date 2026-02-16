@@ -332,7 +332,7 @@
         {
             "name": "page-ebook",
             "route": [
-                "/ebook/{path:.*}",
+                "/ebook/{path:.+}",
                 {
                     "page": "folder",
                     "ebook": 1,
@@ -955,6 +955,20 @@
             ]
         },
         {
+            "name": "read-format",
+            "route": [
+                "/read/{path:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ReadHandler",
+                    "_route": "read-format"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "epubfs",
             "route": [
                 "/epubfs/{db:\\d+}/{data:\\d+}/{comp:.+}",
@@ -1559,6 +1573,20 @@
                 {
                     "_handler": "SebLucas\\Cops\\Handlers\\ZipFsHandler",
                     "_route": "zipfs"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "zipfs-format",
+            "route": [
+                "/zipfs/{path:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ZipFsHandler",
+                    "_route": "zipfs-format"
                 },
                 [
                     "GET"

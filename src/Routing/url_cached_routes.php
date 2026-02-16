@@ -335,7 +335,7 @@ $routes = [
     [],
   ],
   'page-ebook' => [
-    '/ebook/{path:.*}',
+    '/ebook/{path:.+}',
     [
       'page' => 'folder',
       'ebook' => 1,
@@ -827,6 +827,17 @@ $routes = [
     ],
     [],
   ],
+  'read-format' => [
+    '/read/{path:.+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler',
+      '_route' => 'read-format',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'epubfs' => [
     '/epubfs/{db:\\d+}/{data:\\d+}/{comp:.+}',
     [
@@ -1307,6 +1318,17 @@ $routes = [
     [
       '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler',
       '_route' => 'zipfs',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'zipfs-format' => [
+    '/zipfs/{path:.+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler',
+      '_route' => 'zipfs-format',
     ],
     [
       'GET',

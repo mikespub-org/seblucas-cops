@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
+use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\LinkImage;
@@ -24,6 +25,7 @@ class Cover
     public const ROUTE_COVER = "fetch-cover";
     public const ROUTE_THUMB = "fetch-thumb";
     public const ROUTE_IMAGE = "fetch-image";
+    public const ROUTE_ZIPFS = "zipfs-format";
 
     /** @var Book */
     public $book;
@@ -521,8 +523,20 @@ class Cover
     }
 
     /**
-     * Summary of getFolderLink
-     * @param string $thumb
+     * Summary of getFolderPath
+     * @return string
+     */
+    public function getFolderPath()
+    {
+        if (!empty($this->book->folderId)) {
+            return $this->book->folderId . '/' . $this->book->getTitle() . '.jpg';
+        }
+        return $this->book->getTitle() . '.jpg';
+    }
+
+    /**
+     * Summary of getFolderLink with real cover.jpg file in same directory
+     * @param string $thumb default 'full' for size here (see url format)
      * @return LinkImage
      */
     public function getFolderLink($thumb = 'full')
@@ -543,15 +557,27 @@ class Cover
     }
 
     /**
-     * Summary of getFolderPath
-     * @return string
+     * Summary of getFolderDataLink with fake cover.jpg in data file (.cbz)
+     * @param Data $data
+     * @param string $thumb default empty '' for size here (see url format)
+     * @return LinkImage
      */
-    public function getFolderPath()
+    public static function getFolderDataLink($data, $thumb = '')
     {
-        if (!empty($this->book->folderId)) {
-            return $this->book->folderId . '/' . $this->book->getTitle() . '.jpg';
-        }
-        return $this->book->getTitle() . '.jpg';
+        $params = [];
+        $params['path'] = $data->getFolderPath();
+        $params['comp'] = 'cover.jpg';  // use fixed value here
+        $params['size'] = $thumb;
+        $routeName = self::ROUTE_ZIPFS;
+        $href = fn() => ZipFsHandler::route($routeName, $params);
+        $mime = 'image/jpeg';
+        $rel = ($thumb == '') ? LinkImage::OPDS_IMAGE_TYPE : LinkImage::OPDS_THUMBNAIL_TYPE;
+        return new LinkImage(
+            $href,
+            $mime,
+            $rel
+            // no filepath here
+        );
     }
 
     /**

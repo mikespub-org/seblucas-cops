@@ -11,6 +11,8 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Handlers\TestHandler;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Output\ComicReader;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;
 use Exception;
@@ -30,6 +32,7 @@ class ZipFsHandler extends BaseHandler
         // support custom pattern for route placeholders - see nikic/fast-route
         return [
             "zipfs" => ["/zipfs/{db:\d+}/{data:\d+}/{comp:.+}"],
+            "zipfs-format" => ["/zipfs/{path:.+}"],
         ];
     }
 
@@ -39,9 +42,13 @@ class ZipFsHandler extends BaseHandler
             return;
         }
 
-        //$database = $request->getId('db');
         $idData = $request->getId('data');
-        if (empty($idData)) {
+        // check if we have a folder file path
+        $path = null;
+        if (Config::get('browse_books_directory')) {
+            $path = $request->get('path');
+        }
+        if (empty($idData) && empty($path)) {
             return Response::notFound($request);
         }
         $component = $request->get('comp');
@@ -53,7 +60,11 @@ class ZipFsHandler extends BaseHandler
         // create empty response to start with!?
         $response = new Response();
 
-        $reader = new EPubReader($request, $response);
+        if (!empty($path) && ComicReader::isComicFile($path)) {
+            $reader = new ComicReader($request, $response);
+        } else {
+            $reader = new EPubReader($request, $response);
+        }
 
         try {
             return $reader->sendZipContent($idData, $component, $database);
