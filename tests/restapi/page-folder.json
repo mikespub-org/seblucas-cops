@@ -21,7 +21,8 @@
                     {
                         "name": "CBZ",
                         "url": "vendor/bin/index.php/format/cba-cbam.cbz",
-                        "viewUrl": "vendor/bin/index.php/format/cba-cbam.cbz"
+                        "viewUrl": "vendor/bin/index.php/format/cba-cbam.cbz",
+                        "size": "141KB"
                     }
                 ],
                 "preferedCount": 1,

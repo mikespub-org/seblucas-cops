@@ -81,6 +81,7 @@ class JsonRenderer extends BaseRenderer
                     "name" => $format,
                     "url" => $data->getHtmlLink(),
                     "viewUrl" => $data->getViewHtmlLink(),
+                    "size" => $data->getHumanSize(),
                 ]);
             }
         }
@@ -213,6 +214,7 @@ class JsonRenderer extends BaseRenderer
                 "format" => $data->format,
                 "url" => $data->getHtmlLink(),
                 "viewUrl" => $data->getViewHtmlLink(),
+                "size" => $data->getHumanSize(),
                 "mail" => 0,
                 "qrcode" => 0,
                 "readerUrl" => "",

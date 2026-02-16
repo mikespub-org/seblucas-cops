@@ -108,7 +108,7 @@
                 {{? entry.book.preferedCount > 1}}<div class="btn-group">{{?}}
                     {{~entry.book.preferedData:data:i}}
                         {{? i == 0}}
-                            <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
+                            <a href="{{=data.url}}" title="{{=data.name}} {{=data.size}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
                             {{? entry.book.preferedCount > 1}}
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="caret"></span>
@@ -117,7 +117,7 @@
                                 {{? entry.book.preferedCount > 1}}<ul class="dropdown-menu">{{?}}
                             {{?}}
                         {{??}}
-                            <li><a href="{{=data.url}}">{{=data.name}}</a></li>
+                            <li><a href="{{=data.url}}" title="{{=data.name}} {{=data.size}}">{{=data.name}}</a></li>
                             {{? i + 1 == entry.book.preferedCount}}</ul>{{?}}
                         {{?}}
                     {{~}}

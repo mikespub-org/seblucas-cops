@@ -47,7 +47,7 @@
     {% endfor %}
 - Download:
     {% for data in entry.book.preferedData %}
-  * <a href="{{data.url}}">{{data.name}}</a>
+  * <a href="{{data.url}}" title="{{data.name}} {{data.size}}">{{data.name}}</a>
     {% endfor %}
   {% endfor %}
 {% endblock content %}

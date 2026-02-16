@@ -21,7 +21,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/21/La_curee_Emile_Zola.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/21/La_curee_Emile_Zola.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/21/La_curee_Emile_Zola.epub",
+                        "size": "2.1MB"
                     }
                 ],
                 "preferedCount": 1,

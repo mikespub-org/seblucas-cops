@@ -21,7 +21,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/4/The_Call_of_the_Wild_Jack_London.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/4/The_Call_of_the_Wild_Jack_London.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/4/The_Call_of_the_Wild_Jack_London.epub",
+                        "size": "593KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -67,7 +68,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "size": "826KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -117,7 +119,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/21/La_curee_Emile_Zola.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/21/La_curee_Emile_Zola.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/21/La_curee_Emile_Zola.epub",
+                        "size": "2.1MB"
                     }
                 ],
                 "preferedCount": 1,

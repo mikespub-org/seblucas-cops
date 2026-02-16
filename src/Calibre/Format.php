@@ -22,11 +22,10 @@ class Format extends Base
     public const ROUTE_ALL = "page-formats";
     public const ROUTE_DETAIL = "page-format";
     public const SQL_TABLE = "data";
-    //public const SQL_COLUMNS = "id, name, format";
+    public const SQL_COLUMNS = "data.format as id, data.format as name";
     public const SQL_LINK_TABLE = "data";
     public const SQL_LINK_COLUMN = "format";
     public const SQL_SORT = "format";
-    public const SQL_COLUMNS = "data.format as id, data.format as name";
     public const SQL_ALL_ROWS = "select {0} from data where 1=1 {1} group by data.format order by data.format";
     public const SQL_ROWS_FOR_SEARCH = "";  // "select {0} from tags, books_tags_link where tags.id = tag and upper (tags.name) like ? {1} group by tags.id, tags.name order by tags.name";
     public const SQL_BOOKLIST = 'select {0} from data, books ' . Book::SQL_BOOKS_LEFT_JOIN . '

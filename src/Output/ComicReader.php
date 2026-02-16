@@ -20,6 +20,10 @@ use InvalidArgumentException;
 
 /**
  * Comic Reader based on ?url=... templates (WIP)
+ *
+ * Special components:
+ * - cover.jpg find cover image
+ * - index.json list image files
  */
 class ComicReader extends EPubReader
 {
@@ -122,10 +126,15 @@ class ComicReader extends EPubReader
         $thumb = null;
         $index = $zip->locateName($component, $flags);
         if ($index === false) {
-            if ($component == 'cover.jpg' && static::isComicFile($filePath)) {
-                $cover = true;
-                $thumb = $this->request->get('size');
-                $index = $this->findCoverImage($zip);
+            if (static::isComicFile($filePath)) {
+                if ($component == 'index.json') {
+                    return $this->listImageFiles($zip);
+                }
+                if ($component == 'cover.jpg') {
+                    $cover = true;
+                    $thumb = $this->request->get('size');
+                    $index = $this->findCoverImage($zip);
+                }
             }
             if ($index === false) {
                 $zip->close();
@@ -143,6 +152,39 @@ class ComicReader extends EPubReader
     }
 
     /**
+     * Summary of listImageFiles
+     * @param ZipArchive $zip
+     * @return string
+     */
+    public function listImageFiles($zip)
+    {
+        $images = $this->getImageFiles($zip);
+        $zip->close();
+        return json_encode($images, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Summary of getImageFiles
+     * @param ZipArchive $zip
+     * @return array<string>
+     */
+    public function getImageFiles($zip)
+    {
+        $images = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            if (str_starts_with($filename, '__MACOSX')) {
+                continue;
+            }
+            if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $filename)) {
+                $images[] = $filename;
+            }
+        }
+        natcasesort($images);
+        return $images;
+    }
+
+    /**
      * Summary of findCoverImage
      * @param ZipArchive $zip
      * @return int|bool
@@ -151,18 +193,8 @@ class ComicReader extends EPubReader
     {
         // ... find FrontCover in metadata or use first image
         $index = false;
-        $images = [];
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $filename = $zip->getNameIndex($i);
-            if (str_starts_with($filename, '__MACOSX')) {
-                continue;
-            }
-            if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/', $filename)) {
-                $images[] = $filename;
-            }
-        }
+        $images = $this->getImageFiles($zip);
         if (!empty($images)) {
-            natsort($images);
             $index = $zip->locateName($images[0]);
         }
         return $index;

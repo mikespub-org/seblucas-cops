@@ -482,6 +482,7 @@ function link_Clicked (event) {
     var url = currentLink.attr('href');
     if (url.indexOf('/read/') !== -1 || // Replaced includes with indexOf
         url.indexOf('/fetch/') !== -1 ||
+        url.indexOf('/zipfs/') !== -1 ||
         url.indexOf('/zipper/') !== -1 ||
         url.indexOf('/covers/') !== -1 ||
         url.indexOf('/calibre/') !== -1 ||

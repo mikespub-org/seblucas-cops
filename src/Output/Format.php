@@ -38,6 +38,27 @@ class Format
     }
 
     /**
+     * Summary of human_size
+     * @param int $size
+     * @return string
+     */
+    public static function human_size($size)
+    {
+        if (empty($size)) {
+            return '';
+        }
+        $bytes = (string) $size;
+        $factor = (int) floor((strlen($bytes) - 1) / 3);
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        if ($factor > 1) {
+            $decimals = 1;
+        } else {
+            $decimals = 0;
+        }
+        return sprintf("%.{$decimals}f", $size / (1024 ** $factor)) . $units[$factor];
+    }
+
+    /**
      * Summary of template
      * @param ?array<mixed> $data
      * @param string $template

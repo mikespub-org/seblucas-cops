@@ -194,7 +194,10 @@ class Folder extends Category
             // several formats per book allowed - assume same bookName with different formats here
             $bookName = $file->getBasename('.' . $format);
             $fileList[$dirPath][$bookName] ??= [];
-            array_push($fileList[$dirPath][$bookName], $format);
+            $fileList[$dirPath][$bookName][$format] = [
+                'size' => $file->getSize(),
+                'mtime' => $file->getMTime(),
+            ];
         }
         ksort($fileList);
         /**
@@ -280,9 +283,10 @@ class Folder extends Category
                 }
             }
             foreach ($books as $bookName => $formats) {
-                $book = $bookFolder->addBookName($bookName, $bookPath, '', $metadata, $hasCover);
-                foreach ($formats as $format) {
-                    $bookFolder->addBookFormat($bookName, $format);
+                $info = reset($formats);
+                $book = $bookFolder->addBookName($bookName, $bookPath, $info['mtime'] ?? '', $metadata, $hasCover);
+                foreach ($formats as $format => $info) {
+                    $bookFolder->addBookFormat($bookName, $format, $info['size'] ?? 0);
                 }
                 array_push($bookList, $book);
             }
@@ -437,9 +441,10 @@ class Folder extends Category
      * Summary of addBookFormat
      * @param string $bookName
      * @param string $format
+     * @param int $size
      * @return Data
      */
-    public function addBookFormat($bookName, $format)
+    public function addBookFormat($bookName, $format, $size = 0)
     {
         // not checking for existing format here
         $book = $this->bookList[$bookName];
@@ -448,7 +453,7 @@ class Folder extends Category
             $book->timestamp = filemtime($filePath);
         }
         $dataId = 0;
-        $post = (object) ['id' => $dataId, 'name' => $bookName, 'format' => strtoupper($format)];
+        $post = (object) ['id' => $dataId, 'name' => $bookName, 'format' => strtoupper($format), 'size' => $size];
         $data = new Data($post, $book);
         $book->datas[] = $data;
         // $book->formats[] = ...;
@@ -754,9 +759,10 @@ class Folder extends Category
                     $child->count += 1;
                 } else {
                     $timestamp = $item['ModTime'] ?? '';
+                    $size = $item['Size'] ?? 0;
                     // add books in root folder
                     $book = $this->addBookName($info['filename'], $folderPath, $timestamp);
-                    $data = $this->addBookFormat($info['filename'], $info['extension']);
+                    $data = $this->addBookFormat($info['filename'], $info['extension'], $size);
                 }
                 $this->count += 1;
                 continue;
@@ -773,7 +779,10 @@ class Folder extends Category
                 $fileList[$info['dirname']] ??= [];
                 // several formats per book allowed - assume same bookName with different formats here
                 $fileList[$info['dirname']][$info['filename']] ??= [];
-                array_push($fileList[$info['dirname']][$info['filename']], $info['extension']);
+                $fileList[$info['dirname']][$info['filename']][$info['extension']] = [
+                    'size' => $item['Size'] ?? 0,
+                    'mtime' => $item['ModTime'] ?? '',
+                ];
             } elseif ($info['extension'] == 'opf') {
                 // only one .opf file per directory supported - assume one book per directory here
                 $metaList[$info['dirname']] = $info['basename'];

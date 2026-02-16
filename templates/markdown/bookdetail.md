@@ -10,9 +10,9 @@
     {% endif %}
 - Download:
     {% for data in it.book.datas %}
-    * <a title="Download // {{data.format}}" href="{{data.url}}">Download {{data.format}}</a>
+    * <a title="Download // {{data.format}} {{data.size}}" href="{{data.url}}">Download {{data.format}}</a>
     {% if data.readerUrl != "" %}
-    * <a title="Reader" href="{{data.readerUrl}}" target="blank">Read {{data.format}}</a>
+    * <a title="Reader // {{data.format}}" href="{{data.readerUrl}}" target="blank">Read {{data.format}}</a>
     {% endif %}
     {% endfor %}
 - Authors:

@@ -18,7 +18,7 @@
 <div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 text-xs-center text-sm-left ">
     {% for data in it.book.datas %}
     <div class="btn-group">
-        <a title="Download // {{data.format}}" href="{{data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{data.format}}</a>
+        <a title="Download // {{data.format}} {{data.size}}" href="{{data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{data.format}}</a>
         {% if data.qrcode == 1 %}
         <a id="qrButton" class="btn btn-primary" role="button" title="QR Code" href="#" onclick="showQRCode('qrcode', '{{data.url}}'); return false;">
         <span class="glyphicon glyphicon-qrcode"></span></a>
@@ -28,7 +28,7 @@
         <span class="glyphicon glyphicon-envelope"></span></a>
         {% endif %}
         {% if data.readerUrl != "" %}
-        <a title="Reader" class="btn btn-primary" role="button" href="{{data.readerUrl}}" target="blank">
+        <a title="Reader // {{data.format}}" class="btn btn-primary" role="button" href="{{data.readerUrl}}" target="blank">
         <span class="glyphicon glyphicon-eye-open"></span></a>
         {% endif %}
     </div>

@@ -46,6 +46,19 @@ class ComicReaderTest extends TestCase
         $this->assertEquals($expected, $title[0]);
     }
 
+    public function testGetImageFiles(): void
+    {
+        $filePath = dirname(__DIR__) . '/cba-cbam.cbz';
+        $zip = new ZipArchive();
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        $this->assertNotFalse($result);
+
+        $reader = new ComicReader();
+        $images = $reader->getImageFiles($zip);
+        $expected = ["cba-cbam 2/01.jpg"];
+        $this->assertEquals($expected, $images);
+    }
+
     public function testFindCoverImage(): void
     {
         $filePath = dirname(__DIR__) . '/cba-cbam.cbz';

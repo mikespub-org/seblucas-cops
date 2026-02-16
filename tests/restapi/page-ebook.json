@@ -11,7 +11,8 @@
             {
                 "name": "EPUB",
                 "url": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
-                "viewUrl": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"
+                "viewUrl": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
+                "size": "1.5MB"
             }
         ],
         "preferedCount": 1,
@@ -59,6 +60,7 @@
                 "format": "EPUB",
                 "url": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
                 "viewUrl": "vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub",
+                "size": "1.5MB",
                 "mail": 1,
                 "qrcode": 0,
                 "readerUrl": "vendor/bin/templates/custom-reader.html?url=vendor/bin/index.php/format/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub"

@@ -736,6 +736,9 @@ class Book
         foreach ($this->getDatas() as $data) {
             if ($data->isKnownType()) {
                 $linkResource = $data->getDataLink($data->format);
+                if (empty($linkResource->length) && !empty($data->size)) {
+                    $linkResource->length = (string) $data->size;
+                }
                 array_push($linkArray, $linkResource);
             }
         }
@@ -864,7 +867,7 @@ where data.book = books.id and data.id = ?';
     {
         $out = [];
 
-        $sql = 'select id, format, name from data where book = ?';
+        $sql = 'select id, format, name, uncompressed_size as size from data where book = ?';
 
         $ignored_formats = Config::get('ignored_formats');
         if (count($ignored_formats) > 0) {
