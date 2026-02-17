@@ -10,6 +10,7 @@ function postRefresh()
         $("#image-gallery").magnificPopup({
             delegate: '.image-item', // child items selector
             type: 'image',
+            mainClass: 'cops-full-height',
             gallery: {
                 enabled: true,
                 preload: [0,2]
