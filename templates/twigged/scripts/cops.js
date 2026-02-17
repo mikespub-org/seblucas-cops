@@ -21,6 +21,8 @@ function postRefresh()
             event.preventDefault();
             $("#image-gallery").magnificPopup('open');
         });
+    } else {
+        $("body").off ("click", "#open-gallery");
     }
 }
 
@@ -30,7 +32,6 @@ function getComicImages(url) {
         if (gallery && data) {
             for (var i in data) {
                 var item = data[i];
-                console.log('item: ' + JSON.stringify(item, null, 4));
                 var link = document.createElement('a');
                 link.href = item.href;
                 // link.title = item.name;

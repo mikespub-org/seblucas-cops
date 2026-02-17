@@ -26,6 +26,8 @@ class Metadata extends EPubMetadata
     public const ROUTE_ELEMENT = "restapi-metadata-element";
     public const ROUTE_ELEMENT_NAME = "restapi-metadata-element-name";
 
+    public string $filePath = '';
+
     /**
      * Summary of updateBook
      * @todo add other metadata from .opf file
@@ -65,6 +67,19 @@ class Metadata extends EPubMetadata
         $book->pages ??= 0;
         $book->datas ??= [];
         $book->extraFiles ??= [];
+        if (empty($book->uuid) && !empty($this->uniqueIdentifier)) {
+            $book->uuid = $this->uniqueIdentifier;
+        }
+        // set fake uuid for cover cache
+        if (empty($book->uuid) || str_contains($book->uuid, 'uuid')) {
+            if (!empty($this->filePath)) {
+                $mtime = filemtime($this->filePath);
+                $book->uuid = md5((string) $mtime . '-' . $this->filePath);
+            } else {
+                $mtime = $book->timestamp ?: 0;
+                $book->uuid = md5((string) $mtime . '-' . $book->path);
+            }
+        }
         return $book;
     }
 
@@ -100,6 +115,7 @@ class Metadata extends EPubMetadata
     public static function updateBookFromMetadata($book, $filePath)
     {
         $metadata = static::fromFile($filePath);
+        $metadata->filePath = $filePath;
         return $metadata->updateBook($book);
     }
 
@@ -158,6 +174,11 @@ class Metadata extends EPubMetadata
             }
         }
         $book->uuid = $epub->getUuid();
+        // set fake uuid for cover cache
+        if (empty($book->uuid) || str_contains($book->uuid, 'uuid')) {
+            $mtime = filemtime($filePath);
+            $book->uuid = md5((string) $mtime . '-' . $filePath);
+        }
         return $book;
     }
 
@@ -242,6 +263,11 @@ class Metadata extends EPubMetadata
             if (!empty($pages)) {
                 $book->pages = count($pages);
             }
+        }
+        // set fake uuid for cover cache
+        if (empty($book->uuid) || str_contains($book->uuid, 'uuid')) {
+            $mtime = filemtime($filePath);
+            $book->uuid = md5((string) $mtime . '-' . $filePath);
         }
         return $book;
     }

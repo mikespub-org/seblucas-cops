@@ -484,7 +484,7 @@ class UriGenerator
             if (in_array($param, ['file', 'path']) && !str_contains($value, '%')) {
                 $value = implode('/', array_map('rawurlencode', explode('/', $value)));
             }
-            // @todo do we need to handle 'comp' or 'path' anywhere?
+            // @todo do we need to handle 'comp' anywhere?
             if (!empty($pattern)) {
                 $path = str_replace('{' . $param . ':' . $pattern . '}', "$value", $path);
             } else {

@@ -24,6 +24,7 @@ use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Output\ImageResponse;
 use SebLucas\Cops\Routing\UriGenerator;
 
 /*
@@ -310,14 +311,15 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(2);
         $cover = new Cover($book);
+        $file = $cover->coverFileName;
 
-        $this->assertFalse($cover->getThumbnail(null, null, null));
+        $this->assertFalse($cover->getThumbnail($file, null, null, null));
 
         // Current cover is 400*600
-        $this->assertFalse($cover->getThumbnail(self::COVER_WIDTH, null, null));
-        $this->assertFalse($cover->getThumbnail(self::COVER_WIDTH + 1, null, null));
-        $this->assertFalse($cover->getThumbnail(null, self::COVER_HEIGHT, null));
-        $this->assertFalse($cover->getThumbnail(null, self::COVER_HEIGHT + 1, null));
+        $this->assertFalse($cover->getThumbnail($file, self::COVER_WIDTH, null, null));
+        $this->assertFalse($cover->getThumbnail($file, self::COVER_WIDTH + 1, null, null));
+        $this->assertFalse($cover->getThumbnail($file, null, self::COVER_HEIGHT, null));
+        $this->assertFalse($cover->getThumbnail($file, null, self::COVER_HEIGHT + 1, null));
     }
 
     /**
@@ -332,8 +334,9 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(2);
         $cover = new Cover($book);
+        $file = $cover->coverFileName;
 
-        $this->assertTrue($cover->getThumbnail($width, $height, self::TEST_THUMBNAIL));
+        $this->assertTrue($cover->getThumbnail($file, $width, $height, self::TEST_THUMBNAIL));
 
         $size = getimagesize(self::TEST_THUMBNAIL);
         $this->assertEquals($expectedWidth, $size [0]);
@@ -389,9 +392,10 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(2);
         $cover = new Cover($book);
+        $uuid = $book->uuid;
 
         Config::set('thumbnail_cache_directory', dirname(__DIR__) . '/cache/');
-        $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
+        $cachePath = $cover->getThumbnailCachePath($uuid, $width, $height, $type);
         $this->assertEquals($expectedCachePath, $cachePath);
 
         rmdir(dirname((string) $cachePath));
@@ -419,7 +423,7 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $cover = new Cover($book);
         $request = Request::build();
-        $response = new FileResponse();
+        $response = new ImageResponse();
 
         // send cover image
         ob_start();
@@ -431,7 +435,7 @@ class BookTest extends TestCase
         $expected = self::$expectedSize['cover'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
-        $expected = FileResponse::class;
+        $expected = ImageResponse::class;
         $this->assertEquals($expected, $result::class);
     }
 
@@ -440,7 +444,7 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $cover = new Cover($book);
         $request = Request::build();
-        $response = new FileResponse();
+        $response = new ImageResponse();
 
         // no thumbnail resizing
         ob_start();
@@ -452,7 +456,7 @@ class BookTest extends TestCase
         $expected = self::$expectedSize['cover'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
-        $expected = FileResponse::class;
+        $expected = ImageResponse::class;
         $this->assertEquals($expected, $result::class);
     }
 
@@ -462,7 +466,7 @@ class BookTest extends TestCase
         $cover = new Cover($book);
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
-        $response = new FileResponse();
+        $response = new ImageResponse();
 
         // no thumbnail cache
         ob_start();
@@ -474,7 +478,7 @@ class BookTest extends TestCase
         $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
-        $expected = FileResponse::class;
+        $expected = ImageResponse::class;
         $this->assertEquals($expected, $result::class);
     }
 
@@ -483,16 +487,17 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(17);
         $cover = new Cover($book);
+        $uuid = $book->uuid;
         $width = null;
         $height = Config::get('html_thumbnail_height');
         $type = 'jpg';
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
-        $response = new FileResponse();
+        $response = new ImageResponse();
 
         // use thumbnail cache
         Config::set('thumbnail_cache_directory', dirname(__DIR__) . '/cache/');
-        $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
+        $cachePath = $cover->getThumbnailCachePath($uuid, $width, $height, $type);
         if (file_exists($cachePath)) {
             unlink($cachePath);
             rmdir(dirname((string) $cachePath));
@@ -509,7 +514,7 @@ class BookTest extends TestCase
         $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
-        $expected = FileResponse::class;
+        $expected = ImageResponse::class;
         $this->assertEquals($expected, $result::class);
 
         Config::set('thumbnail_cache_directory', '');
@@ -543,12 +548,13 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(17);
         $cover = new Cover($book);
+        $uuid = $book->uuid;
         $width = null;
         $height = Config::get('html_thumbnail_height');
         $type = 'jpg';
         $thumb = 'html';
         $request = Request::build(['thumb' => $thumb]);
-        $response = new FileResponse();
+        $response = new ImageResponse();
 
         // use thumbnail cache
         Config::set('thumbnail_cache_directory', dirname(__DIR__) . '/cache/');
@@ -563,10 +569,10 @@ class BookTest extends TestCase
         $expected = self::$expectedSize['thumb'];
         $this->assertEquals(0, count($headers));
         $this->assertEquals($expected, strlen($output));
-        $expected = FileResponse::class;
+        $expected = ImageResponse::class;
         $this->assertEquals($expected, $result::class);
 
-        $cachePath = $cover->getThumbnailCachePath($width, $height, $type);
+        $cachePath = $cover->getThumbnailCachePath($uuid, $width, $height, $type);
         if (file_exists($cachePath)) {
             unlink($cachePath);
             rmdir(dirname((string) $cachePath));
@@ -585,7 +591,7 @@ class BookTest extends TestCase
 
         // resize without cache
         $request = Request::build(['thumb' => $thumb]);
-        $response = new FileResponse();
+        $response = new ImageResponse();
 
         ob_start();
         $result = $cover->sendThumbnail($request, $response);

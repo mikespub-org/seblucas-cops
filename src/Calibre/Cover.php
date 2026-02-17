@@ -16,7 +16,7 @@ use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\LinkImage;
-use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Output\ImageResponse;
 
 class Cover
 {
@@ -33,7 +33,7 @@ class Cover
     protected $databaseId;
     /** @var ?string */
     public $coverFileName = null;
-    /** @var ?FileResponse */
+    /** @var ?ImageResponse */
     protected $response = null;
 
     /**
@@ -117,14 +117,14 @@ class Cover
 
     /**
      * Summary of sendImage
-     * @param ?FileResponse $response
-     * @return FileResponse
+     * @param ?ImageResponse $response
+     * @return ImageResponse
      */
     public function sendImage($response = null)
     {
-        $response ??= new FileResponse();
+        $response ??= new ImageResponse();
         $file = $this->coverFileName;
-        $mime = FileResponse::getMimeType($file);
+        $mime = ImageResponse::getMimeType($file);
 
         $response->setHeaders($mime, 0);
         return $response->setFile($file);
@@ -132,12 +132,13 @@ class Cover
 
     /**
      * Summary of getThumbnailCachePath
+     * @param string $uuid
      * @param ?int $width
      * @param ?int $height
      * @param string $type
      * @return ?string
      */
-    public function getThumbnailCachePath($width, $height, $type = 'jpg')
+    public function getThumbnailCachePath($uuid, $width, $height, $type = 'jpg')
     {
         // moved some of the thumbnail cache from fetch.php to Cover
         //by default, we don't cache
@@ -146,7 +147,9 @@ class Cover
             return $cachePath;
         }
 
-        $uuid = $this->book->uuid;
+        if (empty($uuid)) {
+            return $cachePath;
+        }
         $database = $this->databaseId;
 
         $cachePath = Config::get('thumbnail_cache_directory');
@@ -170,24 +173,24 @@ class Cover
 
     /**
      * Summary of getThumbnail
+     * @param string $file
      * @param ?int $width
      * @param ?int $height
      * @param ?string $outputfile
      * @param string $inType
      * @return bool
      */
-    public function getThumbnail($width, $height, $outputfile = null, $inType = 'jpg')
+    public function getThumbnail($file, $width, $height, $outputfile = null, $inType = 'jpg')
     {
         if (is_null($width) && is_null($height)) {
             return false;
         }
-        if (empty($this->coverFileName) || !is_file($this->coverFileName) || !is_readable($this->coverFileName)) {
+        if (empty($file) || !is_file($file) || !is_readable($file)) {
             return false;
         }
         // @todo support creating (and caching) thumbnails for external cover images someday
 
         // -DC- Use cover file name
-        $file = $this->coverFileName;
         // get image size
         if ($size = getimagesize($file)) {
             $w = $size[0];
@@ -261,12 +264,12 @@ class Cover
     /**
      * Summary of sendThumbnail
      * @param Request $request
-     * @param ?FileResponse $response
-     * @return FileResponse
+     * @param ?ImageResponse $response
+     * @return ImageResponse
      */
     public function sendThumbnail($request, $response = null)
     {
-        $response ??= new FileResponse();
+        $response ??= new ImageResponse();
         $type = $request->get('type', 'jpg');
         $width = $request->get('width');
         $height = $request->get('height');
@@ -275,15 +278,16 @@ class Cover
             $height = $this->getThumbnailHeight($thumb);
         }
         $mime = ($type == 'jpg') ? 'image/jpeg' : 'image/png';
-        $file = $this->coverFileName;
+        $uuid = $this->book->uuid;
 
-        $cachePath = $this->getThumbnailCachePath($width, $height, $type);
+        $cachePath = $this->getThumbnailCachePath($uuid, $width, $height, $type);
 
         if ($cachePath !== null && file_exists($cachePath)) {
             //return the already cached thumbnail
             $response->setHeaders($mime, 0);
             return $response->setFile($cachePath, true);
         }
+        $file = $this->coverFileName;
 
         // use dummy etag with original timestamp for cachePath null here
         if (is_null($cachePath) && (!is_null($width) || !is_null($height))) {
@@ -299,7 +303,7 @@ class Cover
         }
 
         $this->response = $response;
-        if ($this->getThumbnail($width, $height, $cachePath, $type)) {
+        if ($this->getThumbnail($file, $width, $height, $cachePath, $type)) {
             //if we don't cache the thumbnail, imagejpeg() in $cover->getThumbnail() already return the image data
             if ($cachePath === null) {
                 // The cover had to be resized
@@ -464,7 +468,8 @@ class Cover
             $height = $this->getThumbnailHeight($thumb);
             // @todo get thumbnail cache path here?
             if ($thumb == "opds") {
-                $filePath = $this->getThumbnailCachePath(null, $height, $ext);
+                $uuid = $this->book->uuid;
+                $filePath = $this->getThumbnailCachePath($uuid, null, $height, $ext);
             } else {
                 $filePath = null;
             }

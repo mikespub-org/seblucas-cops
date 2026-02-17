@@ -561,7 +561,6 @@ $config['calibre_user_database'] = null;
 $config['cops_basic_authentication'] = null;
 
 /*
- * @todo see https://github.com/mikespub-org/seblucas-cops/pull/161 by @dcoffin88
  * Enable form password protection via login.html (You can use if htpasswd is not possible for you)
  * If possible prefer htpasswd or authentication done by reverse proxy!
  * Supported values:

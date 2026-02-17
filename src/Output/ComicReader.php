@@ -144,6 +144,9 @@ class ComicReader extends EPubReader
         $zip->close();
 
         if ($cover && $thumb) {
+            // set fake uuid for cover cache
+            $mtime = filemtime($filePath);
+            $uuid = md5((string) $mtime . '-' . $filePath);
             // @todo resize image for thumbnail
         }
 

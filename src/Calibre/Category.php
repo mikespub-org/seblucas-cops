@@ -231,8 +231,9 @@ abstract class Category extends Base
     }
 
     /**
-     * Find related categories for hierarchical tags or series - @todo needs title_sort function in sqlite for series
+     * Find related categories for hierarchical tags or series - needs 'title_sort' function in sqlite for series
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
+     * @see \SebLucas\Cops\Calibre\Database::createSqliteFunctions()
      * @param string|array<mixed> $find pattern match or exact match for name, or array of child ids
      * @return array<Category>
      */

@@ -19,6 +19,7 @@ use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Middleware\ProtectMiddleware;
 use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Output\ImageResponse;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
@@ -187,7 +188,7 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param string $type
-     * @return FileResponse|Response
+     * @return ImageResponse|Response
      */
     public function sendThumbnail($request, $book, $type)
     {
@@ -197,7 +198,7 @@ class FetchHandler extends BaseHandler
         }
         $cover = new Cover($book);
         // create empty file response to start with!?
-        $response = new FileResponse();
+        $response = new ImageResponse();
         $response = $cover->sendThumbnail($request, $response);
         if ($response->isNotModified($request)) {
             return $response->setNotModified();

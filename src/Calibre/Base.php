@@ -290,8 +290,6 @@ abstract class Base
      */
     public function getBooks($n = 1, $sort = null)
     {
-        // @todo see if we want to do something special for books, and deal with static:: inheritance
-        //return $this->getEntriesByInstance(Book::class, $n, $sort, $this->databaseId);
         $booklist = new BookList(null, $this->databaseId);
         $booklist->orderBy = $sort;
         [$entryArray, ] = $booklist->getBooksByInstance($this, $n);
