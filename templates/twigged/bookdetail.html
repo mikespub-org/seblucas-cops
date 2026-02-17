@@ -8,7 +8,7 @@
     <div class="cover-image">
         {% if it.book.hasCover == 1 %}
         <div class="visible-xs topspace"></div>
-        <a href="{{it.book.coverurl}}">
+        <a href="{{it.book.coverurl}}"{% if it.book.folderUrl != "" %} id="open-gallery"{% endif %}>
           <img class="img-responsive center-block" src="{{it.book.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
         </a>
         {% endif %}
@@ -129,5 +129,17 @@
     {% endif %}
 </div>
 </div>
+{% if it.book.folderUrl != "" %}
+    {% for data in it.book.datas %}
+        {% if data.format == "CBZ" %}
+            <div id="image-gallery" style="display:none;"></div>
+            <script type="text/javascript">
+                var url = '{{data.url}}';
+                url = url.replace('/format/', '/zipfs/') + '?comp=index.json';
+                getComicImages(url);
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 </div>
 {% endblock main %}

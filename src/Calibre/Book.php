@@ -720,7 +720,7 @@ class Book
         if ($coverLink) {
             array_push($linkArray, $coverLink);
         } elseif (isset($this->folderId)) {
-            // @see JsonRenderer::getFullBookContentArray()
+            // @see \SebLucas\Cops\Output\JsonRenderer::getFullBookContentArray()
         }
         // set height for thumbnail here depending on opds vs. html
         if (!empty($this->handler) && in_array($this->handler::HANDLER, ['feed', 'opds'])) {

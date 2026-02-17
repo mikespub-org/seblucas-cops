@@ -59,6 +59,27 @@ class ComicReaderTest extends TestCase
         $this->assertEquals($expected, $images);
     }
 
+    public function testListImageFiles(): void
+    {
+        $filePath = dirname(__DIR__) . '/cba-cbam.cbz';
+        $zip = new ZipArchive();
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        $this->assertNotFalse($result);
+
+        $reader = new ComicReader();
+        $datalink = 'vendor/bin/index.php/zipfs/cba-cbam.cbz?comp=';
+        $data = $reader->listImageFiles($zip, $datalink);
+        $expected = [
+            [
+                'name' => 'cba-cbam 2/01.jpg',
+                'type' => 'image',
+                'href' => $datalink . 'cba-cbam%202%2F01.jpg',
+            ],
+        ];
+        $images = json_decode($data, true);
+        $this->assertEquals($expected, $images);
+    }
+
     public function testFindCoverImage(): void
     {
         $filePath = dirname(__DIR__) . '/cba-cbam.cbz';

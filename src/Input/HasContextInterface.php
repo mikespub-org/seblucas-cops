@@ -4,7 +4,7 @@ namespace SebLucas\Cops\Input;
 
 /**
  * Interface for classes that have a context
- * @see HasContextTrait
+ * @see \SebLucas\Cops\Input\HasContextTrait
  */
 interface HasContextInterface
 {

@@ -443,7 +443,7 @@ abstract class Base
 
     /**
      * Summary of setFilterParams if we want to filter by virtual library etc.
-     * @see Page::getFilters()
+     * @see \SebLucas\Cops\Pages\PageWithDetail::getFilters()
      * @param array<string, mixed> $filterParams
      * @return void
      */

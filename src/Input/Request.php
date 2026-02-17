@@ -464,7 +464,7 @@ class Request
 
     /**
      * Get handler class corresponding to _handler param
-     * @see RequestContext::resolveHandlerName()
+     * @see \SebLucas\Cops\Input\RequestContext::resolveHandlerName()
      * @return class-string<BaseHandler>
      */
     public function getHandler()

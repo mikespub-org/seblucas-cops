@@ -85,19 +85,16 @@ class ComicReader extends EPubReader
     public function getComicReader($idData, $database = null, $template = null)
     {
         $template ??= "templates/comic-reader.html";
-        $book = Book::getBookByDataId($idData, $database);
-        if (!$book) {
-            throw new InvalidArgumentException('Unknown data ' . $idData);
-        }
+        $this->findBookData($idData, $database);
         $this->setHandler(ZipFsHandler::class);
 
-        $link = $this->getDataLink($book, $idData);
+        $link = $this->getDataLink();
         // Configurable settings (javascript object as text)
         $settings = Config::get('comic_reader_settings', '');
 
         $dist = $this->getPath(dirname((string) Config::get('assets')) . '/mikespub/web-comic-reader/assets');
         $data = [
-            'title'      => htmlspecialchars($book->title),
+            'title'      => htmlspecialchars($this->book->title),
             'version'    => Config::VERSION,
             'dist'       => $dist,
             'link'       => $link,
@@ -128,8 +125,10 @@ class ComicReader extends EPubReader
         if ($index === false) {
             if (static::isComicFile($filePath)) {
                 if ($component == 'index.json') {
-                    return $this->listImageFiles($zip);
+                    $datalink = $this->getDataLink();
+                    return $this->listImageFiles($zip, $datalink);
                 }
+                // @see \SebLucas\Cops\Calibre\Cover::getFolderDataLink()
                 if ($component == 'cover.jpg') {
                     $cover = true;
                     $thumb = $this->request->get('size');
@@ -154,13 +153,23 @@ class ComicReader extends EPubReader
     /**
      * Summary of listImageFiles
      * @param ZipArchive $zip
+     * @param string $datalink
      * @return string
      */
-    public function listImageFiles($zip)
+    public function listImageFiles($zip, $datalink)
     {
         $images = $this->getImageFiles($zip);
         $zip->close();
-        return json_encode($images, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        // get data ready for consumption
+        $data = [];
+        foreach ($images as $image) {
+            $data[] = [
+                'name' => htmlspecialchars($image),
+                'type' => 'image',
+                'href' => $datalink . rawurlencode($image),
+            ];
+        }
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 
     /**
