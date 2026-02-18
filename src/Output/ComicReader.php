@@ -209,17 +209,20 @@ class ComicReader extends EPubReader
         $image->mtime = filemtime($filePath);
         $image->name = (string) $index . '-' . $filePath;
         $image->uuid = md5((string) $image->mtime . '-' . $image->name);
-        $response = $image->checkCacheFile();
-        if ($response instanceof Response) {
+
+        $cacheFile = $image->checkCacheFile();
+        // already cached or not modified
+        if ($cacheFile instanceof Response) {
             $zip->close();
-            return $response;
+            return $cacheFile;
         }
 
-        // @todo resize image data for thumbnail
+        // get image data from zip file
         $data = $zip->getFromIndex($index);
         $zip->close();
 
-        return $data;
+        // resize image data for thumbnail
+        return $image->setThumbData($data, $cacheFile);
     }
 
     /**

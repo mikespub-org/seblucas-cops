@@ -69,17 +69,18 @@ class ImageResponse extends FileResponse
         $this->mtime = filemtime($file);
         $this->database = $database;
 
-        $cachePath = $this->checkCacheFile();
-        if ($cachePath instanceof Response) {
-            return $cachePath;
+        $cacheFile = $this->checkCacheFile();
+        // already cached or not modified
+        if ($cacheFile instanceof Response) {
+            return $cacheFile;
         }
         // @todo support creating (and caching) thumbnails for external cover images someday
 
         $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
 
-        if ($this->getThumbnail($file, $cachePath)) {
+        if ($this->getThumbnail($file, $cacheFile)) {
             //if we don't cache the thumbnail, imagejpeg() in $this->getThumbnail() already return the image data
-            if ($cachePath === null) {
+            if ($cacheFile === null) {
                 // The cover had to be resized
                 // tell response it's already sent
                 $this->isSent(true);
@@ -87,7 +88,7 @@ class ImageResponse extends FileResponse
             }
             //return the just cached thumbnail
             $this->setHeaders($mime, 0);
-            return $this->setFile($cachePath, true);
+            return $this->setFile($cacheFile, true);
         }
 
         $this->setHeaders($mime, 0);
@@ -122,6 +123,35 @@ class ImageResponse extends FileResponse
         }
 
         return $cachePath;
+    }
+
+    /**
+     * Summary of setThumbData
+     * @param string $data
+     * @param ?string $cacheFile
+     * @return static|string
+     */
+    public function setThumbData($data, $cacheFile)
+    {
+        // after running checkCacheFile() already here
+
+        $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
+
+        if ($this->getThumbnail(null, $cacheFile, $data)) {
+            //if we don't cache the thumbnail, imagejpeg() in $this->getThumbnail() already return the image data
+            if ($cacheFile === null) {
+                // The cover had to be resized
+                // tell response it's already sent
+                $this->isSent(true);
+                return $this;
+            }
+            //return the just cached thumbnail
+            $this->setHeaders($mime, 0);
+            return $this->setFile($cacheFile, true);
+        }
+
+        $this->setHeaders($mime, 0);
+        return $this->setContent($data);
     }
 
     /**
