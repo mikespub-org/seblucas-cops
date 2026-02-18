@@ -110,7 +110,7 @@ class ComicReader extends EPubReader
      * @param string $component
      * @param int $flags ignore directory for ComicReader
      * @throws \InvalidArgumentException
-     * @return string|bool
+     * @return Response|string|bool
      */
     public function getZipFileContent($filePath, $component, $flags = 0)
     {
@@ -119,8 +119,6 @@ class ComicReader extends EPubReader
         if ($result !== true) {
             throw new InvalidArgumentException('Invalid file ' . basename($filePath));
         }
-        $cover = false;
-        $thumb = null;
         $index = $zip->locateName($component, $flags);
         if ($index === false) {
             if (static::isComicFile($filePath)) {
@@ -130,25 +128,14 @@ class ComicReader extends EPubReader
                 }
                 // @see \SebLucas\Cops\Calibre\Cover::getFolderDataLink()
                 if ($component == 'cover.jpg') {
-                    $cover = true;
-                    $thumb = $this->request->get('size');
-                    $index = $this->findCoverImage($zip);
+                    return $this->sendCoverImage($zip, $filePath);
                 }
             }
-            if ($index === false) {
-                $zip->close();
-                throw new InvalidArgumentException('Unknown component ' . $component);
-            }
+            $zip->close();
+            throw new InvalidArgumentException('Unknown component ' . $component);
         }
         $data = $zip->getFromIndex($index);
         $zip->close();
-
-        if ($cover && $thumb) {
-            // set fake uuid for cover cache
-            $mtime = filemtime($filePath);
-            $uuid = md5((string) $mtime . '-' . $filePath);
-            // @todo resize image for thumbnail
-        }
 
         return $data;
     }
@@ -194,6 +181,45 @@ class ComicReader extends EPubReader
         }
         natcasesort($images);
         return $images;
+    }
+
+    /**
+     * Summary of sendCoverImage
+     * @param ZipArchive $zip
+     * @param string $filePath
+     * @throws \InvalidArgumentException
+     * @return Response|string|bool
+     */
+    public function sendCoverImage($zip, $filePath)
+    {
+        $index = $this->findCoverImage($zip);
+        if ($index === false) {
+            $zip->close();
+            throw new InvalidArgumentException('Unknown cover for ' . basename($filePath));
+        }
+
+        $thumb = $this->request->get('size');
+        if (!empty($thumb)) {
+            $this->request->set('thumb', $thumb);
+        }
+
+        $image = new ImageResponse();
+        $image->setRequest($this->request);
+        // set fake uuid for cover cache
+        $image->mtime = filemtime($filePath);
+        $image->name = (string) $index . '-' . $filePath;
+        $image->uuid = md5((string) $image->mtime . '-' . $image->name);
+        $response = $image->checkCacheFile();
+        if ($response instanceof Response) {
+            $zip->close();
+            return $response;
+        }
+
+        // @todo resize image data for thumbnail
+        $data = $zip->getFromIndex($index);
+        $zip->close();
+
+        return $data;
     }
 
     /**

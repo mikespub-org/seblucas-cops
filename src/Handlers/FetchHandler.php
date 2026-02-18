@@ -197,13 +197,11 @@ class FetchHandler extends BaseHandler
             return Response::notFound($request);
         }
         $cover = new Cover($book);
-        // create empty file response to start with!?
-        $response = new ImageResponse();
-        $response = $cover->sendThumbnail($request, $response);
-        if ($response->isNotModified($request)) {
-            return $response->setNotModified();
+        $image = $cover->sendThumbnail($request);
+        if ($image->isNotModified($request)) {
+            return $image->setNotModified();
         }
-        return $response;
+        return $image;
     }
 
     /**

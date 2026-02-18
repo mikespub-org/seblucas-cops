@@ -385,6 +385,11 @@ class EPubReader extends BaseRenderer
 
         $data = $this->getZipFileContent($filePath, $component);
 
+        // response is already prepared - see ComicReader cover image
+        if ($data instanceof Response) {
+            return $data;
+        }
+
         // get mimetype based on $component name alone here
         $mimetype = Response::getMimeType($component);
 

@@ -33,8 +33,6 @@ class Cover
     protected $databaseId;
     /** @var ?string */
     public $coverFileName = null;
-    /** @var ?ImageResponse */
-    protected $response = null;
 
     /**
      * Summary of __construct
@@ -117,17 +115,14 @@ class Cover
 
     /**
      * Summary of sendImage
-     * @param ?ImageResponse $response
+     * @param ?ImageResponse $image
      * @return ImageResponse
      */
-    public function sendImage($response = null)
+    public function sendImage($image = null)
     {
-        $response ??= new ImageResponse();
+        $image ??= new ImageResponse();
         $file = $this->coverFileName;
-        $mime = ImageResponse::getMimeType($file);
-
-        $response->setHeaders($mime, 0);
-        return $response->setFile($file);
+        return $image->setImageFile($file);
     }
 
     /**
@@ -136,39 +131,14 @@ class Cover
      * @param ?int $width
      * @param ?int $height
      * @param string $type
+     * @param ?int $database
      * @return ?string
+     * @deprecated 4.3.0 use ImageResponse::getCachePath() instead
      */
-    public function getThumbnailCachePath($uuid, $width, $height, $type = 'jpg')
+    public function getThumbnailCachePath($uuid, $width, $height, $type = 'jpg', $database = null)
     {
         // moved some of the thumbnail cache from fetch.php to Cover
-        //by default, we don't cache
-        $cachePath = null;
-        if (empty(Config::get('thumbnail_cache_directory'))) {
-            return $cachePath;
-        }
-
-        if (empty($uuid)) {
-            return $cachePath;
-        }
-        $database = $this->databaseId;
-
-        $cachePath = Config::get('thumbnail_cache_directory');
-        //if multiple databases, add a subfolder with the database ID
-        $cachePath .= !is_null($database) ? 'db-' . $database . DIRECTORY_SEPARATOR : '';
-        //when there are lots of thumbnails, it's better to save files in subfolders, so if the book's uuid is
-        //"01234567-89ab-cdef-0123-456789abcdef", we will save the thumbnail in .../0/12/34567-89ab-cdef-0123-456789abcdef-...
-        $cachePath .= substr($uuid, 0, 1) . DIRECTORY_SEPARATOR . substr($uuid, 1, 2) . DIRECTORY_SEPARATOR;
-        //check if cache folder exists or create it
-        if (file_exists($cachePath) || mkdir($cachePath, 0o700, true)) {
-            //we name the thumbnail from the book's uuid and it's dimensions (width and/or height)
-            $thumbnailCacheName = substr($uuid, 3) . '-' . strval($width) . 'x' . strval($height) . '.' . $type;
-            $cachePath = $cachePath . $thumbnailCacheName;
-        } else {
-            //error creating the folder, so we don't cache
-            $cachePath = null;
-        }
-
-        return $cachePath;
+        return ImageResponse::getCachePath($uuid, $width, $height, $type, $database);
     }
 
     /**
@@ -179,145 +149,43 @@ class Cover
      * @param ?string $outputfile
      * @param string $inType
      * @return bool
+     * @deprecated 4.3.0 use ImageResponse::getThumbnail() instead
      */
     public function getThumbnail($file, $width, $height, $outputfile = null, $inType = 'jpg')
     {
-        if (is_null($width) && is_null($height)) {
-            return false;
-        }
-        if (empty($file) || !is_file($file) || !is_readable($file)) {
-            return false;
-        }
-        // @todo support creating (and caching) thumbnails for external cover images someday
-
-        // -DC- Use cover file name
-        // get image size
-        if ($size = getimagesize($file)) {
-            $w = $size[0];
-            $h = $size[1];
-            //set new size
-            if (!is_null($width)) {
-                $nw = $width;
-                if ($nw >= $w) {
-                    return false;
-                }
-                $nh = intval(($nw * $h) / $w);
-            } else {
-                $nh = $height;
-                if ($nh >= $h) {
-                    return false;
-                }
-                $nw = intval(($nh * $w) / $h);
-            }
-        } else {
-            return false;
-        }
-
-        // Draw the image
-        if ($inType == 'png') {
-            $src_img = imagecreatefrompng($file);
-        } else {
-            $src_img = imagecreatefromjpeg($file);
-        }
-        $dst_img = imagecreatetruecolor($nw, $nh);
-        if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
-            return false;
-        }
-        //if we don't cache the thumbnail, this already returns the image data
-        if (is_null($outputfile)) {
-            $mimetype = ($inType == 'png') ? 'image/png' : 'image/jpeg';
-            // use cache control here
-            $this->response->setHeaders($mimetype, 0);
-            $this->response->sendHeaders();
-        }
-        if ($inType == 'png') {
-            if (!imagepng($dst_img, $outputfile, 9)) {
-                return false;
-            }
-        } else {
-            if (!imagejpeg($dst_img, $outputfile, 80)) {
-                return false;
-            }
-        }
-        imagedestroy($src_img);
-        imagedestroy($dst_img);
-
-        return true;
+        $image = new ImageResponse();
+        $image->type = $inType;
+        $image->width = $width;
+        $image->height = $height;
+        return $image->getThumbnail($file, $outputfile);
     }
 
     /**
      * Summary of getThumbnailHeight
      * @param string $thumb
      * @return int
+     * @deprecated 4.3.0 use ImageResponse::getThumbnailHeight() instead
      */
     public function getThumbnailHeight($thumb)
     {
-        return match ($thumb) {
-            "opds2" => intval(Config::get('opds_thumbnail_height')) * 2,
-            "opds" => intval(Config::get('opds_thumbnail_height')),
-            "html2" => intval(Config::get('html_thumbnail_height')) * 2,
-            "html" => intval(Config::get('html_thumbnail_height')),
-            default => intval($thumb),
-        };
+        return ImageResponse::getThumbnailHeight($thumb);
     }
 
     /**
      * Summary of sendThumbnail
      * @param Request $request
-     * @param ?ImageResponse $response
+     * @param ?ImageResponse $image
      * @return ImageResponse
      */
-    public function sendThumbnail($request, $response = null)
+    public function sendThumbnail($request, $image = null)
     {
-        $response ??= new ImageResponse();
-        $type = $request->get('type', 'jpg');
-        $width = $request->get('width');
-        $height = $request->get('height');
-        $thumb = $request->get('thumb');
-        if (!empty($thumb) && empty($height)) {
-            $height = $this->getThumbnailHeight($thumb);
-        }
-        $mime = ($type == 'jpg') ? 'image/jpeg' : 'image/png';
-        $uuid = $this->book->uuid;
-
-        $cachePath = $this->getThumbnailCachePath($uuid, $width, $height, $type);
-
-        if ($cachePath !== null && file_exists($cachePath)) {
-            //return the already cached thumbnail
-            $response->setHeaders($mime, 0);
-            return $response->setFile($cachePath, true);
-        }
+        $image ??= new ImageResponse();
+        // @todo support creating (and caching) thumbnails for external cover images someday
         $file = $this->coverFileName;
-
-        // use dummy etag with original timestamp for cachePath null here
-        if (is_null($cachePath) && (!is_null($width) || !is_null($height))) {
-            $mtime = filemtime($file);
-            $etag = '"' . md5((string) $mtime . '-' . $file . '-' . strval($width) . 'x' . strval($height) . '.' . $type) . '"';
-            $response->addHeader('ETag', $etag);
-            $modified = gmdate('D, d M Y H:i:s \G\M\T', $mtime);
-            $response->addHeader('Last-Modified', $modified);
-            // no encoding here: $response->addHeader('Vary', 'Accept-Encoding');
-            if ($response->isNotModified($request)) {
-                return $response->setNotModified();
-            }
-        }
-
-        $this->response = $response;
-        if ($this->getThumbnail($file, $width, $height, $cachePath, $type)) {
-            //if we don't cache the thumbnail, imagejpeg() in $cover->getThumbnail() already return the image data
-            if ($cachePath === null) {
-                // The cover had to be resized
-                // tell response it's already sent
-                $this->response->isSent(true);
-                return $this->response;
-            }
-            //return the just cached thumbnail
-            $response->setHeaders($mime, 0);
-            return $response->setFile($cachePath, true);
-        }
-
-        $response->setHeaders($mime, 0);
-        return $response->setFile($file);
+        $uuid = $this->book->uuid;
+        $database = $this->databaseId;
+        $image->setRequest($request);
+        return $image->setThumbFile($file, $uuid, $database);
     }
 
     /**
@@ -465,11 +333,12 @@ class Cover
         if (Config::get('thumbnail_handling') != "1") {
             $params['thumb'] = $thumb;
             $routeName = self::ROUTE_THUMB;
-            $height = $this->getThumbnailHeight($thumb);
+            $height = ImageResponse::getThumbnailHeight($thumb);
             // @todo get thumbnail cache path here?
             if ($thumb == "opds") {
                 $uuid = $this->book->uuid;
-                $filePath = $this->getThumbnailCachePath($uuid, null, $height, $ext);
+                $database = $this->databaseId;
+                $filePath = ImageResponse::getCachePath($uuid, null, $height, $ext, $database);
             } else {
                 $filePath = null;
             }

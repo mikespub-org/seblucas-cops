@@ -167,7 +167,7 @@ class AdminHandler extends BaseHandler
      * @param string $cachePath
      * @param bool $delete default false
      * @return array{0: int, 1: int}
-     * @see \SebLucas\Cops\Calibre\Cover::getThumbnailCachePath()
+     * @see \SebLucas\Cops\Output\ImageResponse::getCachePath()
      */
     public function getCacheSize($cachePath, $delete = false)
     {
