@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\Config;
 
 class FileResponse extends Response
 {
-    protected ?string $filepath;
+    protected ?string $filepath = null;
     protected bool $istmpfile = false;
 
     /**
@@ -106,7 +106,7 @@ class FileResponse extends Response
     public function send(bool $flush = true): static
     {
         if (empty($this->filepath)) {
-            return parent::send();
+            return parent::send($flush);
         }
         if ($this->sent) {
             return $this;

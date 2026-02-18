@@ -316,24 +316,24 @@ class BookTest extends TestCase
 
         $image->width = null;
         $image->height = null;
-        $this->assertFalse($image->getThumbnail($file));
+        $this->assertFalse($image->generateThumbnail($file));
 
         // Current cover is 400*600
         $image->width = self::COVER_WIDTH;
         $image->height = null;
-        $this->assertFalse($image->getThumbnail($file));
+        $this->assertFalse($image->generateThumbnail($file));
 
         $image->width = self::COVER_WIDTH + 1;
         $image->height = null;
-        $this->assertFalse($image->getThumbnail($file));
+        $this->assertFalse($image->generateThumbnail($file));
 
         $image->width = null;
         $image->height = self::COVER_HEIGHT;
-        $this->assertFalse($image->getThumbnail($file));
+        $this->assertFalse($image->generateThumbnail($file));
 
         $image->width = null;
         $image->height = self::COVER_HEIGHT + 1;
-        $this->assertFalse($image->getThumbnail($file));
+        $this->assertFalse($image->generateThumbnail($file));
     }
 
     /**
@@ -353,7 +353,7 @@ class BookTest extends TestCase
 
         $image->width = $width;
         $image->height = $height;
-        $this->assertTrue($image->getThumbnail($file, self::TEST_THUMBNAIL));
+        $this->assertTrue($image->generateThumbnail($file, self::TEST_THUMBNAIL));
 
         $size = getimagesize(self::TEST_THUMBNAIL);
         $this->assertEquals($expectedWidth, $size [0]);
@@ -608,9 +608,10 @@ class BookTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $this->assertNotEmpty($output);
+        $this->assertEmpty($output);
         $expected = 200;
         $this->assertSame($expected, $result->getStatusCode());
+        $this->assertNotEmpty($result->getContent());
 
         // get current ETag and Last-Modified
         $etag = $result->getHeader('ETag');

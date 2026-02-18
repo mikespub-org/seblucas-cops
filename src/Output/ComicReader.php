@@ -206,11 +206,12 @@ class ComicReader extends EPubReader
         $image = new ImageResponse();
         $image->setRequest($this->request);
         // set fake uuid for cover cache
-        $image->mtime = filemtime($filePath);
-        $image->name = (string) $index . '-' . $filePath;
-        $image->uuid = md5((string) $image->mtime . '-' . $image->name);
+        $mtime = filemtime($filePath);
+        $name = (string) $index . '-' . $filePath;
+        $uuid = md5((string) $mtime . '-' . $name);
+        $image->setSource($uuid, $name, $mtime);
 
-        $cacheFile = $image->checkCacheFile();
+        $cacheFile = $image->checkCache();
         // already cached or not modified
         if ($cacheFile instanceof Response) {
             $zip->close();
@@ -222,7 +223,7 @@ class ComicReader extends EPubReader
         $zip->close();
 
         // resize image data for thumbnail
-        return $image->setThumbData($data, $cacheFile);
+        return $image->getThumbFromData($data, $cacheFile);
     }
 
     /**

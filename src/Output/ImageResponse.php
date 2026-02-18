@@ -26,11 +26,11 @@ class ImageResponse extends FileResponse
     public ?int $database = null;
 
     /**
-     * Summary of setImageFile
+     * Summary of getImageFromFile
      * @param string $file
      * @return static
      */
-    public function setImageFile($file)
+    public function getImageFromFile($file)
     {
         $mime = static::getMimeType($file);
 
@@ -56,56 +56,33 @@ class ImageResponse extends FileResponse
     }
 
     /**
-     * Summary of setThumbFile
-     * @param string $file
+     * Summary of setSource
      * @param string $uuid
+     * @param string $name
+     * @param int $mtime
      * @param ?int $database
      * @return static
      */
-    public function setThumbFile($file, $uuid, $database = null)
+    public function setSource($uuid, $name, $mtime, $database = null)
     {
         $this->uuid = $uuid;
-        $this->name = $file;
-        $this->mtime = filemtime($file);
+        $this->name = $name;
+        $this->mtime = $mtime;
         $this->database = $database;
-
-        $cacheFile = $this->checkCacheFile();
-        // already cached or not modified
-        if ($cacheFile instanceof Response) {
-            return $cacheFile;
-        }
-        // @todo support creating (and caching) thumbnails for external cover images someday
-
-        $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
-
-        if ($this->getThumbnail($file, $cacheFile)) {
-            //if we don't cache the thumbnail, imagejpeg() in $this->getThumbnail() already return the image data
-            if ($cacheFile === null) {
-                // The cover had to be resized
-                // tell response it's already sent
-                $this->isSent(true);
-                return $this;
-            }
-            //return the just cached thumbnail
-            $this->setHeaders($mime, 0);
-            return $this->setFile($cacheFile, true);
-        }
-
-        $this->setHeaders($mime, 0);
-        return $this->setFile($file);
+        return $this;
     }
 
     /**
-     * Summary of checkCacheFile
+     * Summary of checkCache
      * @return static|string|null
      */
-    public function checkCacheFile()
+    public function checkCache()
     {
         $cachePath = static::getCachePath($this->uuid, $this->width, $this->height, $this->type, $this->database);
 
         if ($cachePath !== null && file_exists($cachePath)) {
             $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
-            //return the already cached thumbnail
+            // return the already cached thumbnail
             $this->setHeaders($mime, 0);
             return $this->setFile($cachePath, true);
         }
@@ -126,42 +103,49 @@ class ImageResponse extends FileResponse
     }
 
     /**
-     * Summary of setThumbData
+     * Summary of getThumbFromFile
+     * @param string $file
+     * @param ?string $cacheFile
+     * @return static
+     */
+    public function getThumbFromFile($file, $cacheFile)
+    {
+        $result = $this->generateThumbnail($file, $cacheFile);
+        if ($result) {
+            return $this->setThumbResult($result, $cacheFile);
+        }
+
+        $mime = static::getMimeType($file);
+        $this->setHeaders($mime, 0);
+        return $this->setFile($file);
+    }
+
+    /**
+     * Summary of getThumbFromData
      * @param string $data
      * @param ?string $cacheFile
      * @return static|string
      */
-    public function setThumbData($data, $cacheFile)
+    public function getThumbFromData($data, $cacheFile)
     {
-        // after running checkCacheFile() already here
-
-        $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
-
-        if ($this->getThumbnail(null, $cacheFile, $data)) {
-            //if we don't cache the thumbnail, imagejpeg() in $this->getThumbnail() already return the image data
-            if ($cacheFile === null) {
-                // The cover had to be resized
-                // tell response it's already sent
-                $this->isSent(true);
-                return $this;
-            }
-            //return the just cached thumbnail
-            $this->setHeaders($mime, 0);
-            return $this->setFile($cacheFile, true);
+        $result = $this->generateThumbnail(null, $cacheFile, $data);
+        if ($result) {
+            return $this->setThumbResult($result, $cacheFile);
         }
 
+        $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
         $this->setHeaders($mime, 0);
         return $this->setContent($data);
     }
 
     /**
-     * Summary of getThumbnail
+     * Summary of generateThumbnail
      * @param ?string $file real image file
      * @param ?string $outputfile save in cache file or output data now if resized
      * @param ?string $data image data
-     * @return bool true if resized, false otherwise
+     * @return bool|string true if resized and saved, string data if resized and not saved, false otherwise
      */
-    public function getThumbnail($file = null, $outputfile = null, $data = null)
+    public function generateThumbnail($file = null, $outputfile = null, $data = null)
     {
         if (empty($file) && empty($data)) {
             return false;
@@ -183,7 +167,7 @@ class ImageResponse extends FileResponse
         if ($size) {
             $w = $size[0];
             $h = $size[1];
-            //set new size
+            // set new size
             if (!is_null($this->width)) {
                 $nw = $this->width;
                 if ($nw >= $w) {
@@ -211,16 +195,22 @@ class ImageResponse extends FileResponse
         } else {
             $src_img = imagecreatefromstring($data);
         }
+        if (!$src_img) {
+            return false;
+        }
         $dst_img = imagecreatetruecolor($nw, $nh);
         if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
             return false;
         }
-        //if we don't cache the thumbnail, this already returns the image data
+        // if we don't cache the thumbnail, capture the output
         if (is_null($outputfile)) {
-            $mimetype = ($this->type == 'png') ? 'image/png' : 'image/jpeg';
-            // use cache control here
-            $this->setHeaders($mimetype, 0);
-            $this->sendHeaders();
+            ob_start();
+            if ($this->type == 'png') {
+                imagepng($dst_img, null, 9);
+            } else {
+                imagejpeg($dst_img, null, 80);
+            }
+            return ob_get_clean();
         }
         if ($this->type == 'png') {
             if (!imagepng($dst_img, $outputfile, 9)) {
@@ -233,6 +223,26 @@ class ImageResponse extends FileResponse
         }
 
         return true;
+    }
+
+    /**
+     * Summary of setThumbResult
+     * @param bool|string $result
+     * @param ?string $cacheFile
+     * @return static
+     */
+    protected function setThumbResult($result, $cacheFile)
+    {
+        $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
+
+        // if we don't cache the thumbnail, generateThumbnail() returns the image data
+        if ($cacheFile === null && is_string($result)) {
+            $this->setHeaders($mime, 0);
+            return $this->setContent($result);
+        }
+        // return the just cached thumbnail
+        $this->setHeaders($mime, 0);
+        return $this->setFile($cacheFile, true);
     }
 
     /**

@@ -122,7 +122,7 @@ class Cover
     {
         $image ??= new ImageResponse();
         $file = $this->coverFileName;
-        return $image->setImageFile($file);
+        return $image->getImageFromFile($file);
     }
 
     /**
@@ -149,7 +149,7 @@ class Cover
      * @param ?string $outputfile
      * @param string $inType
      * @return bool
-     * @deprecated 4.3.0 use ImageResponse::getThumbnail() instead
+     * @deprecated 4.3.0 use ImageResponse::generateThumbnail() instead
      */
     public function getThumbnail($file, $width, $height, $outputfile = null, $inType = 'jpg')
     {
@@ -157,7 +157,7 @@ class Cover
         $image->type = $inType;
         $image->width = $width;
         $image->height = $height;
-        return $image->getThumbnail($file, $outputfile);
+        return $image->generateThumbnail($file, $outputfile);
     }
 
     /**
@@ -185,7 +185,13 @@ class Cover
         $uuid = $this->book->uuid;
         $database = $this->databaseId;
         $image->setRequest($request);
-        return $image->setThumbFile($file, $uuid, $database);
+        $image->setSource($uuid, $file, filemtime($file), $database);
+
+        $cacheFile = $image->checkCache();
+        if ($cacheFile instanceof ImageResponse) {
+            return $cacheFile;
+        }
+        return $image->getThumbFromFile($file, $cacheFile);
     }
 
     /**
