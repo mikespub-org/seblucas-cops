@@ -39,6 +39,23 @@ class ImageResponse extends FileResponse
     }
 
     /**
+     * Summary of getImageFromData
+     * @param string|\Closure|callable $data
+     * @return static
+     */
+    public function getImageFromData($data): ImageResponse
+    {
+        $mime = ($this->type == 'jpg') ? 'image/jpeg' : 'image/png';
+
+        $this->setHeaders($mime, 0);
+        // we can wait to consume data until later
+        if (!is_string($data)) {
+            return $this->setCallback($data);
+        }
+        return $this->setContent($data);
+    }
+
+    /**
      * Summary of setRequest
      * @param Request $request
      * @return void
@@ -122,12 +139,16 @@ class ImageResponse extends FileResponse
 
     /**
      * Summary of getThumbFromData
-     * @param string $data
+     * @param string|\Closure|callable $data
      * @param ?string $cacheFile
      * @return static|string
      */
     public function getThumbFromData($data, $cacheFile)
     {
+        // we need to consume data here for thumbnail
+        if (!is_string($data)) {
+            $data = $data();
+        }
         $result = $this->generateThumbnail(null, $cacheFile, $data);
         if ($result) {
             return $this->setThumbResult($result, $cacheFile);

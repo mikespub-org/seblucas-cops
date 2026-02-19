@@ -130,7 +130,6 @@ class Response
 
     /**
      * Summary of setCallback
-     * @todo possibly use to send file or zipstream later in response handler?
      * @param Closure|callable $callback
      * @return static
      */
@@ -243,9 +242,14 @@ class Response
      */
     public function sendContent(): static
     {
-        // @todo check callback
+        if (isset($this->callback)) {
+            echo ($this->callback)();
+            $this->callback = null;
+            return $this;
+        }
         if (isset($this->content)) {
             echo $this->content;
+            $this->content = null;
         }
 
         return $this;
