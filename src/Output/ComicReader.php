@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
@@ -28,17 +27,6 @@ use InvalidArgumentException;
 class ComicReader extends EPubReader
 {
     public const EXTENSION = 'CBZ';
-
-    /**
-     * Summary of isComicFile
-     * @param string $path
-     * @return bool
-     */
-    public static function isComicFile($path)
-    {
-        $format = strtoupper(pathinfo($path, PATHINFO_EXTENSION));
-        return $format == static::EXTENSION;
-    }
 
     /**
      * Summary of getMetadata
@@ -105,52 +93,17 @@ class ComicReader extends EPubReader
     }
 
     /**
-     * Summary of getZipContent
-     * @param string $filePath
-     * @param string $component
-     * @param int $flags ignore directory for ComicReader
-     * @throws \InvalidArgumentException
-     * @return Response|string|bool
-     */
-    public function getZipFileContent($filePath, $component, $flags = 0)
-    {
-        $zip = new ZipArchive();
-        $result = $zip->open($filePath, ZipArchive::RDONLY);
-        if ($result !== true) {
-            throw new InvalidArgumentException('Invalid file ' . basename($filePath));
-        }
-        $index = $zip->locateName($component, $flags);
-        if ($index === false) {
-            if (static::isComicFile($filePath)) {
-                if ($component == 'index.json') {
-                    $datalink = $this->getDataLink();
-                    return $this->listImageFiles($zip, $datalink);
-                }
-                // @see \SebLucas\Cops\Calibre\Cover::getFolderDataLink()
-                if ($component == 'cover.jpg') {
-                    return $this->sendCoverImage($zip, $filePath);
-                }
-            }
-            $zip->close();
-            throw new InvalidArgumentException('Unknown component ' . $component);
-        }
-        $data = $zip->getFromIndex($index);
-        $zip->close();
-
-        return $data;
-    }
-
-    /**
-     * Summary of listImageFiles
+     * Summary of listContentFiles
      * @param ZipArchive $zip
-     * @param string $datalink
+     * @param string $filePath
      * @return string
      */
-    public function listImageFiles($zip, $datalink)
+    public function listContentFiles($zip, $filePath)
     {
         $images = $this->getImageFiles($zip);
         $zip->close();
         // get data ready for consumption
+        $datalink = $this->getDataLink();
         $data = [];
         foreach ($images as $image) {
             $data[] = [

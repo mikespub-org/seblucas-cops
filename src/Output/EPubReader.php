@@ -23,6 +23,10 @@ use InvalidArgumentException;
 
 /**
  * EPub Reader based on Monocle or EPub.js
+ *
+ * Special components:
+ * - cover.jpg find cover image
+ * - index.json list content files
  */
 class EPubReader extends BaseRenderer
 {
@@ -30,10 +34,23 @@ class EPubReader extends BaseRenderer
     public const ROUTE_ZIPFS = ZipFsHandler::HANDLER;
     public const ROUTE_FORMAT = "zipfs-format";
     public const EXTENSION = 'EPUB';
+    public const COVER_FILE = 'cover.jpg';
+    public const INDEX_FILE = 'index.json';
 
     public static string $epubClass = EPub::class;
     protected ?Book $book = null;
     protected ?Data $data = null;
+
+    /**
+     * Summary of isValidFile
+     * @param string $path
+     * @return bool
+     */
+    public static function isValidFile($path)
+    {
+        $format = strtoupper(pathinfo($path, PATHINFO_EXTENSION));
+        return $format == static::EXTENSION;
+    }
 
     /**
      * Summary of getComponentContent
@@ -346,7 +363,7 @@ class EPubReader extends BaseRenderer
      * @param string $component
      * @param int $flags ignore directory for ComicReader
      * @throws \InvalidArgumentException
-     * @return string|bool
+     * @return Response|string|bool
      */
     public function getZipFileContent($filePath, $component, $flags = 0)
     {
@@ -357,6 +374,15 @@ class EPubReader extends BaseRenderer
         }
         $index = $zip->locateName($component, $flags);
         if ($index === false) {
+            if (static::isValidFile($filePath)) {
+                if ($component == static::INDEX_FILE) {
+                    return $this->listContentFiles($zip, $filePath);
+                }
+                // @see \SebLucas\Cops\Calibre\Cover::getFolderDataLink()
+                if ($component == static::COVER_FILE) {
+                    return $this->sendCoverImage($zip, $filePath);
+                }
+            }
             $zip->close();
             throw new InvalidArgumentException('Unknown component ' . $component);
         }
@@ -396,5 +422,109 @@ class EPubReader extends BaseRenderer
         // use cache control here
         $this->response->setHeaders($mimetype, 0);
         return $this->response->setContent($data);
+    }
+
+    /**
+     * Summary of listContentFiles
+     * @param ZipArchive $zip
+     * @param string $filePath
+     * @return string
+     */
+    public function listContentFiles($zip, $filePath)
+    {
+        // @todo what do we want to send here
+        $zip->close();
+        $epub = new self::$epubClass($filePath);
+        $epub->initSpineComponent();
+        // get data ready for consumption
+        $datalink = $this->getDataLink();
+        $data = [];
+        $contents = $epub->contents();
+        $data['contents'] = [];
+        foreach ($contents as $item) {
+            $data['contents'][] = $this->prepareItem($item, $datalink);
+        }
+        $components = $epub->components();
+        $data['components'] = [];
+        foreach ($components as $item) {
+            $data['components'][] = $datalink . rawurlencode($item);
+        }
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+
+    /**
+     * Summary of prepareItem
+     * @param array<string, mixed> $item
+     * @param string $datalink
+     * @return array<string, mixed>
+     */
+    public function prepareItem($item, $datalink)
+    {
+        $item['title'] = htmlspecialchars($item['title']);
+        $item['src'] = $datalink . rawurlencode($item['src']);
+        if (empty($item['children'])) {
+            return $item;
+        }
+        foreach (array_keys($item['children']) as $idx) {
+            $item['children'][$idx] = $this->prepareItem($item['children'][$idx], $datalink);
+        }
+        return $item;
+    }
+
+    /**
+     * Summary of sendCoverImage
+     * @param ZipArchive $zip
+     * @param string $filePath
+     * @throws \InvalidArgumentException
+     * @return Response|string|bool
+     */
+    public function sendCoverImage($zip, $filePath)
+    {
+        $zip->close();
+        // get cover info from epub file
+        $info = $this->findCoverInfo($filePath);
+        if ($info === false || empty($info['found'])) {
+            throw new InvalidArgumentException('Unknown cover for ' . basename($filePath));
+        }
+
+        $thumb = $this->request->get('size');
+        if (!empty($thumb)) {
+            $this->request->set('thumb', $thumb);
+        }
+        $type = ($info['mime'] == "image/png") ? 'png' : 'jpg';
+        $this->request->set('type', $type);
+
+        $image = new ImageResponse();
+        $image->setRequest($this->request);
+        // set fake uuid for cover cache
+        $mtime = filemtime($filePath);
+        $name = (string) $info['found'] . '-' . $filePath;
+        $uuid = md5((string) $mtime . '-' . $name);
+        $image->setSource($uuid, $name, $mtime);
+
+        $cacheFile = $image->checkCache();
+        // already cached or not modified
+        if ($cacheFile instanceof Response) {
+            return $cacheFile;
+        }
+
+        // resize image data for thumbnail
+        return $image->getThumbFromData($info['data'], $cacheFile);
+    }
+
+    /**
+     * Summary of findCoverInfo
+     * @param string $filePath
+     * @return array<string, mixed>|bool
+     */
+    public function findCoverInfo($filePath)
+    {
+        $epub = new self::$epubClass($filePath);
+        if (!$epub->hasCover()) {
+            return false;
+        }
+        $info = $epub->getCoverInfo();
+        $epub->close();
+        return $info;
     }
 }

@@ -18,9 +18,11 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Output\ImageResponse;
 use SebLucas\Cops\Output\Response;
 use SebLucas\EPubMeta\EPub;
 use DOMDocument;
+use ZipArchive;
 
 class EpubReaderTest extends TestCase
 {
@@ -235,6 +237,190 @@ class EpubReaderTest extends TestCase
         $h1 = $html->getElementsByTagName('h1')->item(0)->nodeValue;
         $expected = "Alice's Adventures in Wonderland";
         $this->assertStringContainsString($expected, $h1);
+    }
+
+    public function testListContentFiles(): void
+    {
+        $filePath = self::$book->file();
+        $zip = new ZipArchive();
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        $this->assertNotFalse($result);
+        // Avoid phpunit notices about mock objects without expectations
+        $reader = new class extends EPubReader {
+            public function getDataLink()
+            {
+                return 'vendor/bin/index.php/zipfs/test.epub?comp=';
+            }
+        };
+
+        $json = $reader->listContentFiles($zip, $filePath);
+        $expected = [
+            'contents' => [
+                [
+                    'title' => 'Title',
+                    'src' => 'vendor/bin/index.php/zipfs/test.epub?comp=title.xml',
+                ],
+            ],
+            'components' => [
+                'vendor/bin/index.php/zipfs/test.epub?comp=title.xml',
+            ],
+        ];
+        $data = json_decode($json, true);
+        $this->assertEquals($expected['contents'][0], $data['contents'][0]);
+    }
+
+    public function testGetZipFileContentIndexJson(): void
+    {
+        $filePath = self::$book->file();
+        // Avoid phpunit notices about mock objects without expectations
+        $reader = new class extends EPubReader {
+            public function getDataLink()
+            {
+                return 'vendor/bin/index.php/zipfs/test.epub?comp=';
+            }
+        };
+
+        $json = $reader->getZipFileContent($filePath, 'index.json');
+        $this->assertJson($json);
+        $data = json_decode($json, true);
+        $this->assertIsArray($data);
+        $expected = [
+            'contents' => [
+                [
+                    'title' => 'Title',
+                    'src' => 'vendor/bin/index.php/zipfs/test.epub?comp=title.xml',
+                ],
+            ],
+            'components' => [
+                'vendor/bin/index.php/zipfs/test.epub?comp=title.xml',
+            ],
+        ];
+        $this->assertEquals($expected['contents'][0], $data['contents'][0]);
+    }
+
+    public function testGetCoverPath(): void
+    {
+        $path = self::$book->getCoverPath();
+        $expected = 'images/cover.png';
+        $this->assertEquals($expected, $path);
+
+        $meta = self::$book->meta();
+        $expected = 'OPS/fb.opf';
+        $this->assertEquals($expected, $meta);
+
+        // see EPub::getFullPath()
+        $path = dirname('/' . $meta) . '/' . $path; // image path is relative to meta file
+        $path = ltrim($path, '/');
+        $expected = 'OPS/images/cover.png';
+        $this->assertEquals($expected, $path);
+    }
+
+    public function testGetCoverInfo(): void
+    {
+        $hasCover = self::$book->hasCover();
+        $this->assertTrue($hasCover);
+
+        $info = self::$book->getCoverInfo();
+        $expected = [
+            'mime' => "image/png",
+            'data' => 763176,
+            'found' => "OPS/images/cover.png",
+        ];
+        $this->assertEquals($expected['mime'], $info['mime']);
+        $this->assertEquals($expected['found'], $info['found']);
+        $this->assertEquals($expected['data'], strlen($info['data']));
+    }
+
+    public function testGetZipFileContentCoverJpg(): void
+    {
+        $filePath = self::$book->file();
+        $request = new Request();
+        $reader = new EPubReader($request);
+
+        $response = $reader->getZipFileContent($filePath, 'cover.jpg');
+        $this->assertInstanceOf(ImageResponse::class, $response);
+        $expected = "png";
+        $this->assertEquals($expected, $response->type);
+        $expected = 763176;
+        $this->assertEquals($expected, strlen($response->getContent()));
+    }
+
+    public function testFindCoverInfo(): void
+    {
+        $filePath = self::$book->file();
+
+        $reader = new EPubReader();
+        $info = $reader->findCoverInfo($filePath);
+        $expected = [
+            'mime' => "image/png",
+            'data' => 763176,
+            'found' => "OPS/images/cover.png",
+        ];
+        $this->assertEquals($expected['mime'], $info['mime']);
+        $this->assertEquals($expected['found'], $info['found']);
+        $this->assertEquals($expected['data'], strlen($info['data']));
+    }
+
+    public function testSendCoverImage(): void
+    {
+        $filePath = self::$book->file();
+        $zip = new ZipArchive();
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        $this->assertNotFalse($result);
+
+        $request = new Request();
+        $reader = new EPubReader($request);
+
+        $response = $reader->sendCoverImage($zip, $filePath);
+        $this->assertInstanceOf(ImageResponse::class, $response);
+        $expected = "png";
+        $this->assertEquals($expected, $response->type);
+        $expected = 763176;
+        $this->assertEquals($expected, strlen($response->getContent()));
+    }
+
+    public function testSendCoverImageNoCover(): void
+    {
+        $filePath = self::$book->file();
+        $zip = new ZipArchive();
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        $this->assertNotFalse($result);
+
+        // Avoid phpunit notices about mock objects without expectations
+        $reader = new class extends EPubReader {
+            public function findCoverInfo($filePath)
+            {
+                return false;
+            }
+        };
+        $reader->setRequest(new Request());
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unknown cover for Alice's Adventures in Wonderland - Lewis Carroll.epub");
+        $reader->sendCoverImage($zip, $filePath);
+    }
+
+    public function testSendCoverImageWithSize(): void
+    {
+        $filePath = self::$book->file();
+        $zip = new ZipArchive();
+        $result = $zip->open($filePath, ZipArchive::RDONLY);
+        $this->assertNotFalse($result);
+
+        $request = new Request();
+        $request->set('size', 'html');
+        $reader = new EPubReader($request);
+
+        $response = $reader->sendCoverImage($zip, $filePath);
+        $this->assertInstanceOf(ImageResponse::class, $response);
+        $this->assertEquals('html', $request->get('thumb'));
+
+        $content = $response->getContent();
+        $this->assertNotEmpty($content);
+        $size = getimagesizefromstring($content);
+        $this->assertIsArray($size);
+        $height = ImageResponse::getThumbnailHeight('html');
+        $this->assertEquals($height, $size[1]);
     }
 
     public function testReadHandler(): void

@@ -29,11 +29,11 @@ class ComicReaderTest extends TestCase
     public function testIsComicFile(): void
     {
         $filePath = dirname(__DIR__) . '/cba-cbam.cbz';
-        $result = ComicReader::isComicFile($filePath);
+        $result = ComicReader::isValidFile($filePath);
         $this->assertTrue($result);
 
         $filePath = dirname(__DIR__) . '/cba-cbam.epub';
-        $result = ComicReader::isComicFile($filePath);
+        $result = ComicReader::isValidFile($filePath);
         $this->assertFalse($result);
     }
 
@@ -69,21 +69,26 @@ class ComicReaderTest extends TestCase
         $this->assertEquals($expected, $images);
     }
 
-    public function testListImageFiles(): void
+    public function testListContentFiles(): void
     {
         $filePath = dirname(__DIR__) . '/cba-cbam.cbz';
         $zip = new ZipArchive();
         $result = $zip->open($filePath, ZipArchive::RDONLY);
         $this->assertNotFalse($result);
+        // Avoid phpunit notices about mock objects without expectations
+        $reader = new class extends ComicReader {
+            public function getDataLink()
+            {
+                return 'vendor/bin/index.php/zipfs/test.epub?comp=';
+            }
+        };
 
-        $reader = new ComicReader();
-        $datalink = 'vendor/bin/index.php/zipfs/cba-cbam.cbz?comp=';
-        $data = $reader->listImageFiles($zip, $datalink);
+        $data = $reader->listContentFiles($zip, $filePath);
         $expected = [
             [
                 'name' => 'cba-cbam 2/01.jpg',
                 'type' => 'image',
-                'href' => $datalink . 'cba-cbam%202%2F01.jpg',
+                'href' => 'vendor/bin/index.php/zipfs/test.epub?comp=cba-cbam%202%2F01.jpg',
             ],
         ];
         $images = json_decode($data, true);
@@ -136,7 +141,11 @@ class ComicReaderTest extends TestCase
         $reader = new ComicReader($request);
 
         $response = $reader->getZipFileContent($filePath, 'cover.jpg');
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertInstanceOf(ImageResponse::class, $response);
+        $expected = "jpg";
+        $this->assertEquals($expected, $response->type);
+        $expected = 153544;
+        $this->assertEquals($expected, strlen($response->getContent()));
     }
 
     public function testFindCoverImage(): void
@@ -163,7 +172,11 @@ class ComicReaderTest extends TestCase
         $reader = new ComicReader($request);
 
         $response = $reader->sendCoverImage($zip, $filePath);
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertInstanceOf(ImageResponse::class, $response);
+        $expected = "jpg";
+        $this->assertEquals($expected, $response->type);
+        $expected = 153544;
+        $this->assertEquals($expected, strlen($response->getContent()));
     }
 
     public function testSendCoverImageNoCover(): void
@@ -199,7 +212,7 @@ class ComicReaderTest extends TestCase
         $reader = new ComicReader($request);
 
         $response = $reader->sendCoverImage($zip, $filePath);
-        $this->assertInstanceOf(Response::class, $response);
+        $this->assertInstanceOf(ImageResponse::class, $response);
         $this->assertEquals('html', $request->get('thumb'));
 
         $content = $response->getContent();

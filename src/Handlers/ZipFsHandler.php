@@ -60,7 +60,7 @@ class ZipFsHandler extends BaseHandler
         // create empty response to start with!?
         $response = new Response();
 
-        if (!empty($path) && ComicReader::isComicFile($path)) {
+        if (!empty($path) && ComicReader::isValidFile($path)) {
             $reader = new ComicReader($request, $response);
         } else {
             $reader = new EPubReader($request, $response);

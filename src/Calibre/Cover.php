@@ -16,6 +16,7 @@ use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\LinkImage;
+use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\ImageResponse;
 
 class Cover
@@ -446,7 +447,7 @@ class Cover
     {
         $params = [];
         $params['path'] = $data->getFolderPath();
-        $params['comp'] = 'cover.jpg';  // use fixed value here
+        $params['comp'] = EPubReader::COVER_FILE;  // use fixed value here
         $params['size'] = $thumb;
         $routeName = self::ROUTE_ZIPFS;
         $href = fn() => ZipFsHandler::route($routeName, $params);

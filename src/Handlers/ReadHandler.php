@@ -89,7 +89,7 @@ class ReadHandler extends BaseHandler
 
         $response = new Response(Response::MIME_TYPE_HTML);
 
-        if (!empty($path) && ComicReader::isComicFile($path)) {
+        if (!empty($path) && ComicReader::isValidFile($path)) {
             $reader = new ComicReader($request, $response);
         } else {
             $reader = new EPubReader($request, $response);
