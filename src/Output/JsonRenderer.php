@@ -181,16 +181,21 @@ class JsonRenderer extends BaseRenderer
         // Note: this will fail for books in folders /ebook/ if book title is updated based on EPUB file
         $out ["thumbnailurl"] = $cover->getThumbnailUri($thumb, false);
         $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
-        // Try getting cover from .cbz file instead
+        // Try getting cover from .cbz or .epub file instead for folders
         if (empty($out["thumbnailurl"]) && empty($book->getCoverFileName()) && isset($book->folderId)) {
-            $comic = $book->getDataFormat(ComicReader::EXTENSION);
-            if ($comic) {
-                $coverLink = Cover::getFolderDataLink($comic, $thumb);
+            $data = $book->getDataFormat(ComicReader::EXTENSION);
+            /** */
+            if (!$data) {
+                $data = $book->getDataFormat(EPubReader::EXTENSION);
+            }
+            /** */
+            if ($data) {
+                $coverLink = Cover::getFolderDataLink($data, $thumb);
                 if ($coverLink) {
                     $out ["thumbnailurl"] = $coverLink->getUri();
                     $out ["hasCover"] = true;
                 }
-                $coverLink = Cover::getFolderDataLink($comic);
+                $coverLink = Cover::getFolderDataLink($data);
                 if ($coverLink) {
                     $out ["coverurl"] = $coverLink->getUri();
                     $out ["hasCover"] = true;

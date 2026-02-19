@@ -148,6 +148,10 @@ class ComicReader extends EPubReader
         $index = $this->findCoverImage($zip);
         if ($index === false) {
             $zip->close();
+            if (Config::get('thumbnail_default')) {
+                $url = $this->getPath(Config::get('thumbnail_default'));
+                return Response::redirect($url);
+            }
             throw new InvalidArgumentException('Unknown cover for ' . basename($filePath));
         }
 

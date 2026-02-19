@@ -484,6 +484,10 @@ class EPubReader extends BaseRenderer
         // get cover info from epub file
         $info = $this->findCoverInfo($filePath);
         if ($info === false || empty($info['found'])) {
+            if (Config::get('thumbnail_default')) {
+                $url = $this->getPath(Config::get('thumbnail_default'));
+                return Response::redirect($url);
+            }
             throw new InvalidArgumentException('Unknown cover for ' . basename($filePath));
         }
 
