@@ -2111,7 +2111,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
                         }
                     },
                     {
@@ -2119,7 +2120,45 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to databases/{db}/{name} api - with api key",
+                "operationId": "post_restapi-database-table",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of databases/{db}/{name} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
                         }
                     }
                 ],
@@ -2148,7 +2187,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
                         }
                     },
                     {
@@ -3380,6 +3420,75 @@
                         "description": "Result of graphql handler"
                     }
                 },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/tables/{db}/{name}": {
+            "get": {
+                "summary": "Route to tables handler with db={db}&name={name} - with api key",
+                "operationId": "get_tables-db-name",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with db={db}&name={name}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/tables/{db}": {
+            "get": {
+                "summary": "Route to tables handler with db={db} - with api key",
+                "operationId": "get_tables-db",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with db={db}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    }
+                ],
                 "security": [
                     {
                         "ApiKeyAuth": []

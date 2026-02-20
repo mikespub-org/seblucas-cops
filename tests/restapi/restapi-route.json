@@ -1000,14 +1000,15 @@
         {
             "name": "restapi-database-table",
             "route": [
-                "/restapi/databases/{db}/{name}",
+                "/restapi/databases/{db:\\d+}/{name:\\w+}",
                 {
                     "_resource": "Database",
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
                     "_route": "restapi-database-table"
                 },
                 [
-                    "GET"
+                    "GET",
+                    "POST"
                 ],
                 []
             ]
@@ -1015,7 +1016,7 @@
         {
             "name": "restapi-database",
             "route": [
-                "/restapi/databases/{db}",
+                "/restapi/databases/{db:\\d+}",
                 {
                     "_resource": "Database",
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
@@ -1619,6 +1620,34 @@
                 [
                     "GET",
                     "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "tables-db-name",
+            "route": [
+                "/tables/{db:\\d+}/{name:\\w+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "tables-db-name"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "tables-db",
+            "route": [
+                "/tables/{db:\\d+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "tables-db"
+                },
+                [
+                    "GET"
                 ],
                 []
             ]

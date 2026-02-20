@@ -862,7 +862,7 @@ $routes = [
     [],
   ],
   'restapi-database-table' => [
-    '/restapi/databases/{db}/{name}',
+    '/restapi/databases/{db:\\d+}/{name:\\w+}',
     [
       '_resource' => 'Database',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
@@ -870,11 +870,12 @@ $routes = [
     ],
     [
       'GET',
+      'POST',
     ],
     [],
   ],
   'restapi-database' => [
-    '/restapi/databases/{db}',
+    '/restapi/databases/{db:\\d+}',
     [
       '_resource' => 'Database',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
@@ -1355,6 +1356,28 @@ $routes = [
     [
       'GET',
       'POST',
+    ],
+    [],
+  ],
+  'tables-db-name' => [
+    '/tables/{db:\\d+}/{name:\\w+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'tables-db-name',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'tables-db' => [
+    '/tables/{db:\\d+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'tables-db',
+    ],
+    [
+      'GET',
     ],
     [],
   ],

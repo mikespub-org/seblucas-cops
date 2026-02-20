@@ -7,7 +7,7 @@
     name="description"
     content="COPS - DataTables"
   />
-  <title>COPS - DataTables</title>
+  <title>COPS - {{=it.title}}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.3.7/css/dataTables.bootstrap5.min.css" />
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -16,34 +16,66 @@
   <script type="text/javascript" src="https://cdn.datatables.net/2.3.7/js/dataTables.bootstrap5.min.js"></script>
   <script type="text/javascript" charset="utf-8">
 		// Not supported for Javascript ES5
-    const baseUrl = '{{=it.link}}';
-
-    async function getData( url ) {
-      const response = await fetch(url, {
-        credentials: "same-origin"
-      });
-      return response.json();
-    }
-    
-    function link_Clicked (event) {
-      let currentLink = $(this);
-      event.preventDefault();
-      let nav = baseUrl + currentLink.text();
-      console.log('Clicked ' + nav);
-    }
-
-    function handleLinks() {
-      $('body').on("click", "a[class='route']", link_Clicked);
-    }
+    const ajaxUrl = '{{=it.ajax_url}}';
+    const table = '{{=it.table}}';
+    const columns = {{=it.json_columns}};
+    const foreignKeys = {{=it.foreign_keys}};
 
     $(document).ready(function() {
-      $('#example').DataTable();
-      handleLinks();
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchValue = urlParams.get('search') || '';
+
+      if (ajaxUrl && columns) {
+        columns.forEach(function(col) {
+            if (foreignKeys[col.data]) {
+                col.render = function(data, type, row) {
+                    if (type === 'display' && data) {
+                        return '<a href="' + foreignKeys[col.data] + '?id=' + data + '&from=' + table + '.' + row.id + '">' + data + '</a>';
+                    }
+                    return data;
+                };
+            }
+        });
+
+        $('#example').DataTable({
+          "processing": true,
+          "serverSide": true,
+          "search": {
+            "search": searchValue
+          },
+          "ajax": {
+            "url": ajaxUrl,
+            "type": "POST",
+            "data": function ( d ) {
+                for (const [key, value] of urlParams) {
+                    if (key !== 'search') d[key] = value;
+                }
+            },
+            "beforeSend": function (xhr) {
+              // You might need to send an API key if configured
+              xhr.setRequestHeader('X-API-KEY', '{{=it.api_key}}');
+            }
+          },
+          "columns": columns
+        });
+      } else {
+        $('#example').DataTable();
+      }
+
+      $('body').on('click', '.clickable-row', function() {
+        window.location = $(this).data("href");
+      });
+      $("<style type='text/css'> .clickable-row { cursor: pointer; } </style>").appendTo("head");
     } );
   </script>
 </head>
 <body>
   <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        {{=it.breadcrumb}}
+      </ol>
+    </nav>
     <table id="example" class="table table-striped table-bordered" style="width:100%">
       <thead>
         {{=it.thead}}

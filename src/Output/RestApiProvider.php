@@ -350,6 +350,11 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             $result["error"] = "Invalid api key";
             return $result;
         }
+        $draw = $request->post('draw');
+        if (!empty($draw)) {
+            return $this->getDataTable($database, $name, $request);
+        }
+
         $params = [];
         $params['db'] = $database;
         $params['name'] = $name;
@@ -375,6 +380,103 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         $result["columns"] = Database::getTableInfo($database, $name);
         return $result;
+    }
+
+    /**
+     * Summary of getDataTable for DataTables.net server-side processing
+     * @param int $database
+     * @param string $name
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public function getDataTable($database, $name, $request)
+    {
+        // add dummy functions for selecting in meta and tag_browser_* views
+        Database::addSqliteFunctions($database);
+        $query = "SELECT COUNT(*) FROM {$name}";
+        $total = Database::querySingle($query, $database);
+
+        $start = (int) $request->post('start', 0);
+        $length = (int) $request->post('length', $this->numberPerPage);
+        if ($length == -1 || $length > $this->numberPerPage) {
+            $length = $this->numberPerPage;
+        }
+
+        $columns = Database::getTableInfo($database, $name);
+
+        $where = '';
+        $bindings = [];
+        $searchValue = $request->post('search')['value'] ?? null;
+
+        // @todo support id=... and other filter params here
+        foreach ($columns as $column) {
+            $paramValue = $request->post($column['name']);
+            if (!is_null($paramValue) && $paramValue !== '') {
+                $where .= empty($where) ? ' WHERE ' : ' AND ';
+                $where .= "CAST(`{$column['name']}` AS TEXT) = ?";
+                $bindings[] = $paramValue;
+            }
+        }
+
+        $requestColumns = $request->post('columns');
+        if (!empty($searchValue)) {
+            $whereParts = [];
+            foreach ($columns as $i => $column) {
+                if (is_array($requestColumns) && isset($requestColumns[$i]['searchable']) && $requestColumns[$i]['searchable'] === 'false') {
+                    continue;
+                }
+                // Disable searching for BLOB columns
+                if (isset($column['type']) && str_contains(strtolower($column['type']), 'blob')) {
+                    continue;
+                }
+                $whereParts[] = "CAST(`{$column['name']}` AS TEXT) LIKE ?";
+                $bindings[] = '%' . $searchValue . '%';
+            }
+            if (!empty($whereParts)) {
+                $where .= empty($where) ? ' WHERE ' : ' AND ';
+                $where .= '(' . implode(' OR ', $whereParts) . ')';
+            }
+        }
+
+        $order = '';
+        $orderInfo = $request->post('order')[0] ?? null;
+        if (!empty($orderInfo)) {
+            $colIndex = intval($orderInfo['column']);
+            if (isset($columns[$colIndex])) {
+                $colName = $columns[$colIndex]['name'];
+                $dir = ($orderInfo['dir'] === 'asc') ? 'ASC' : 'DESC';
+                $order = " ORDER BY `{$colName}` {$dir}";
+            }
+        }
+
+        $filteredQuery = "SELECT COUNT(*) FROM {$name}" . $where;
+        $filtered = Database::query($filteredQuery, $bindings, $database)->fetchColumn();
+
+        $links = [
+            'authors' => 'books_authors_link.author',
+            //'languages' => 'books_languages_link.lang_code',
+            'publishers' => 'books_publishers_link.publisher',
+            'ratings' => 'books_ratings_link.rating',
+            'series' => 'books_series_link.series',
+            'tags' => 'books_tags_link.tag',
+        ];
+        if (array_key_exists($name, $links)) {
+            [$linkTable, $linkField] = explode('.', $links[$name]);
+            $query = "SELECT {$name}.*, COUNT(book) as books FROM {$name} LEFT JOIN {$linkTable} on {$linkTable}.{$linkField} = {$name}.id " . $where . " GROUP BY {$name}.id " . $order . " LIMIT ?, ?";
+        } else {
+            $query = "SELECT * FROM {$name}" . $where . $order . " LIMIT ?, ?";
+        }
+        $bindings[] = $start;
+        $bindings[] = $length;
+
+        $entries = Database::query($query, $bindings, $database)->fetchAll(\PDO::FETCH_ASSOC);
+
+        return [
+            'draw' => (int) $request->post('draw'),
+            'recordsTotal' => $total,
+            'recordsFiltered' => $filtered,
+            'data' => $entries,
+        ];
     }
 
     /**

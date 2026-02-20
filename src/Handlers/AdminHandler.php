@@ -102,6 +102,11 @@ class AdminHandler extends BaseHandler
             'description' => $description,
         ];
         $actions[] = [
+            'url' => TableHandler::route('tables'),
+            'title' => 'View Tables',
+            'description' => 'View tables in Calibre database',
+        ];
+        $actions[] = [
             'url' => self::route('admin-clearcache'),
             'title' => 'Clear Thumbnail Cache',
             'description' => 'with ' . $count . ' files (' . $size . ' MB)',

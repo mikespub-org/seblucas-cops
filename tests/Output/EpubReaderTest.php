@@ -395,9 +395,16 @@ class EpubReaderTest extends TestCase
         };
         $reader->setRequest(new Request());
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unknown cover for Alice's Adventures in Wonderland - Lewis Carroll.epub");
-        $reader->sendCoverImage($zip, $filePath);
+        if (!Config::get('thumbnail_default')) {
+            $this->expectException(\InvalidArgumentException::class);
+            $this->expectExceptionMessage("Unknown cover for Alice's Adventures in Wonderland - Lewis Carroll.epub");
+        }
+        $response = $reader->sendCoverImage($zip, $filePath);
+        $this->assertInstanceOf(Response::class, $response);
+        $status = 302;
+        $this->assertEquals($status, $response->getStatusCode());
+        $location = 'vendor/bin/images/icons/icon144.png';
+        $this->assertEquals($location, $response->getHeader('Location'));
     }
 
     public function testSendCoverImageWithSize(): void

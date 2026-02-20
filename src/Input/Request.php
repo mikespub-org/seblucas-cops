@@ -278,11 +278,12 @@ class Request
     /**
      * Summary of post
      * @param string $name
+     * @param mixed $default
      * @return mixed
      */
-    public function post($name)
+    public function post($name, $default = null)
     {
-        return $this->postParams[$name] ?? null;
+        return $this->postParams[$name] ?? $default;
     }
 
     /**

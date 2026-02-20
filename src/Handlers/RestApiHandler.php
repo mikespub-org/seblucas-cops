@@ -47,8 +47,8 @@ class RestApiHandler extends BaseHandler
         // extra routes supported by REST API
         return [
             "restapi-customtypes" => [self::PREFIX . "/custom", [self::RESOURCE => "CustomColumnType"]],
-            "restapi-database-table" => [self::PREFIX . "/databases/{db}/{name}", [self::RESOURCE => "Database"]],
-            "restapi-database" => [self::PREFIX . "/databases/{db}", [self::RESOURCE => "Database"]],
+            "restapi-database-table" => [self::PREFIX . "/databases/{db:\d+}/{name:\w+}", [self::RESOURCE => "Database"], ["GET", "POST"]],
+            "restapi-database" => [self::PREFIX . "/databases/{db:\d+}", [self::RESOURCE => "Database"]],
             "restapi-databases" => [self::PREFIX . "/databases", [self::RESOURCE => "Database"]],
             "restapi-openapi" => [self::PREFIX . "/openapi", [self::RESOURCE => "openapi"]],
             "restapi-route" => [self::PREFIX . "/routes", [self::RESOURCE => "route"]],

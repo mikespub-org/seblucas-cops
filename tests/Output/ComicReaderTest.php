@@ -10,10 +10,11 @@
 
 namespace SebLucas\Cops\Tests\Output;
 
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\ComicReader;
 use SebLucas\Cops\Output\ImageResponse;
 use SebLucas\Cops\Output\Response;
-use SebLucas\Cops\Input\Request;
 use ZipArchive;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
@@ -195,9 +196,16 @@ class ComicReaderTest extends TestCase
         };
         $reader->setRequest(new Request());
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown cover for cba-cbam.cbz');
-        $reader->sendCoverImage($zip, $filePath);
+        if (!Config::get('thumbnail_default')) {
+            $this->expectException(\InvalidArgumentException::class);
+            $this->expectExceptionMessage('Unknown cover for cba-cbam.cbz');
+        }
+        $response = $reader->sendCoverImage($zip, $filePath);
+        $this->assertInstanceOf(Response::class, $response);
+        $status = 302;
+        $this->assertEquals($status, $response->getStatusCode());
+        $location = 'vendor/bin/images/icons/icon144.png';
+        $this->assertEquals($location, $response->getHeader('Location'));
     }
 
     public function testSendCoverImageWithSize(): void

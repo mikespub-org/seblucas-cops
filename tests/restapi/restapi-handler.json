@@ -432,13 +432,17 @@
                     }
                 ],
                 "restapi-database-table": [
-                    "/restapi/databases/{db}/{name}",
+                    "/restapi/databases/{db:\\d+}/{name:\\w+}",
                     {
                         "_resource": "Database"
-                    }
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
                 ],
                 "restapi-database": [
-                    "/restapi/databases/{db}",
+                    "/restapi/databases/{db:\\d+}",
                     {
                         "_resource": "Database"
                     }
@@ -686,6 +690,12 @@
         {
             "handler": "tables",
             "routes": {
+                "tables-db-name": [
+                    "/tables/{db:\\d+}/{name:\\w+}"
+                ],
+                "tables-db": [
+                    "/tables/{db:\\d+}"
+                ],
                 "tables": [
                     "/tables"
                 ]
