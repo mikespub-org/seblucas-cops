@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Middleware\AdminMiddleware;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\TwigTemplate;
@@ -44,19 +45,15 @@ class AdminHandler extends BaseHandler
         ];
     }
 
+    public static function getMiddleware()
+    {
+        return [
+            AdminMiddleware::class,
+        ];
+    }
+
     public function handle($request)
     {
-        $admin = Config::get('enable_admin', false);
-        if (empty($admin)) {
-            return Response::redirect(PageHandler::link(['admin' => 0]));
-        }
-        if (is_string($admin) && $admin !== $request->getUserName()) {
-            return Response::redirect(PageHandler::link(['admin' => 1]));
-        }
-        if (is_array($admin) && !in_array($request->getUserName(), $admin)) {
-            return Response::redirect(PageHandler::link(['admin' => 2]));
-        }
-
         $response = new Response();
 
         $action = $request->get('action', 'none');
@@ -107,6 +104,11 @@ class AdminHandler extends BaseHandler
             'description' => 'View tables in Calibre database',
         ];
         $actions[] = [
+            'url' => TableHandler::route('editor'),
+            'title' => 'Edit Tables (dev only)',
+            'description' => 'Edit tables in Calibre database with Adminer Editor',
+        ];
+        $actions[] = [
             'url' => self::route('admin-clearcache'),
             'title' => 'Clear Thumbnail Cache',
             'description' => 'with ' . $count . ' files (' . $size . ' MB)',
@@ -117,7 +119,7 @@ class AdminHandler extends BaseHandler
         }
         $actions[] = [
             'url' => self::route('admin-config'),
-            'title' => 'Edit Local Config',
+            'title' => 'Edit Local Config (TODO)',
             'description' => $config_desc,
         ];
         $actions[] = [

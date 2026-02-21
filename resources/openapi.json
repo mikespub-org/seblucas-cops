@@ -3515,6 +3515,138 @@
                 ]
             }
         },
+        "/editor/static/{path}": {
+            "get": {
+                "summary": "Route to tables handler with editor=1&static=1&path={path} - with api key",
+                "operationId": "get_editor-static",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with editor=1&static=1&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/editor/": {
+            "get": {
+                "summary": "Route to tables handler with editor=1 - with api key",
+                "operationId": "get_editor",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with editor=1"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to tables handler with editor=1 - with api key",
+                "operationId": "post_editor",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with editor=1"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/adminer/static/{path}": {
+            "get": {
+                "summary": "Route to tables handler with adminer=1&static=1&path={path} - with api key",
+                "operationId": "get_adminer-static",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with adminer=1&static=1&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/adminer/": {
+            "get": {
+                "summary": "Route to tables handler with adminer=1 - with api key",
+                "operationId": "get_adminer",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with adminer=1"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to tables handler with adminer=1 - with api key",
+                "operationId": "post_adminer",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with adminer=1"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/test": {
             "get": {
                 "summary": "Route to phpunit handler",

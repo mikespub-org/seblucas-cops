@@ -68,6 +68,8 @@ $static = [
   '/mail' => 'mail',
   '/graphql' => 'graphql',
   '/tables' => 'tables',
+  '/editor/' => 'editor',
+  '/adminer/' => 'adminer',
   '/test' => 'test',
   '/admin/clearcache' => 'admin-clearcache',
   '/admin/config' => 'admin-config',
@@ -1389,6 +1391,58 @@ $routes = [
     ],
     [
       'GET',
+    ],
+    [],
+  ],
+  'editor-static' => [
+    '/editor/static/{path:.+}',
+    [
+      'editor' => 1,
+      'static' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'editor-static',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'editor' => [
+    '/editor/',
+    [
+      'editor' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'editor',
+    ],
+    [
+      'GET',
+      'POST',
+    ],
+    [],
+  ],
+  'adminer-static' => [
+    '/adminer/static/{path:.+}',
+    [
+      'adminer' => 1,
+      'static' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'adminer-static',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'adminer' => [
+    '/adminer/',
+    [
+      'adminer' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'adminer',
+    ],
+    [
+      'GET',
+      'POST',
     ],
     [],
   ],

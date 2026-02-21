@@ -1667,6 +1667,70 @@
             ]
         },
         {
+            "name": "editor-static",
+            "route": [
+                "/editor/static/{path:.+}",
+                {
+                    "editor": 1,
+                    "static": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "editor-static"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "editor",
+            "route": [
+                "/editor/",
+                {
+                    "editor": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "editor"
+                },
+                [
+                    "GET",
+                    "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "adminer-static",
+            "route": [
+                "/adminer/static/{path:.+}",
+                {
+                    "adminer": 1,
+                    "static": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "adminer-static"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "adminer",
+            "route": [
+                "/adminer/",
+                {
+                    "adminer": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "adminer"
+                },
+                [
+                    "GET",
+                    "POST"
+                ],
+                []
+            ]
+        },
+        {
             "name": "test",
             "route": [
                 "/test",

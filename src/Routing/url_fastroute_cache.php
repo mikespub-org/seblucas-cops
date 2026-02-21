@@ -556,6 +556,34 @@
           '_name' => 'tables',
         ),
       ),
+      '/editor/' => 
+      array (
+        0 => 
+        array (
+          'editor' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'editor',
+        ),
+        1 => 
+        array (
+          '_route' => '/editor/',
+          '_name' => 'editor',
+        ),
+      ),
+      '/adminer/' => 
+      array (
+        0 => 
+        array (
+          'adminer' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'adminer',
+        ),
+        1 => 
+        array (
+          '_route' => '/adminer/',
+          '_name' => 'adminer',
+        ),
+      ),
       '/test' => 
       array (
         0 => 
@@ -679,6 +707,34 @@
           '_name' => 'graphql',
         ),
       ),
+      '/editor/' => 
+      array (
+        0 => 
+        array (
+          'editor' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'editor',
+        ),
+        1 => 
+        array (
+          '_route' => '/editor/',
+          '_name' => 'editor',
+        ),
+      ),
+      '/adminer/' => 
+      array (
+        0 => 
+        array (
+          'adminer' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'adminer',
+        ),
+        1 => 
+        array (
+          '_route' => '/adminer/',
+          '_name' => 'adminer',
+        ),
+      ),
       '/admin/config' => 
       array (
         0 => 
@@ -701,7 +757,7 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/folder/(.*)(*MARK:m)|/ebook/(.+)(*MARK:n)|/tags/letter/([^/]+)(*MARK:o)|/tags/(\\d+)/([^/]+)(*MARK:p)|/tags/(\\d+)(*MARK:q)|/custom/(\\d+)/([^/]+)(*MARK:r)|/custom/(\\d+)(*MARK:s)|/languages/(\\d+)/([^/]+)(*MARK:t)|/languages/(\\d+)(*MARK:u)|/publishers/letter/([^/]+)(*MARK:v)|/publishers/(\\d+)/([^/]+)(*MARK:w)|/publishers/(\\d+)(*MARK:x)|/ratings/(\\d+)/([^/]+)(*MARK:y))$~',
+        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/folder/(.*)(*MARK:m)|/ebook/(.+)(*MARK:n)|/tags/letter/([^/]+)(*MARK:o)|/tags/(\\d+)/([^/]+)(*MARK:p)|/tags/(\\d+)(*MARK:q)|/custom/(\\d+)/([^/]+)(*MARK:r)|/custom/(\\d+)(*MARK:s)|/languages/(\\d+)/([^/]+)(*MARK:t)|/languages/(\\d+)(*MARK:u)|/publishers/letter/([^/]+)(*MARK:v)|/publishers/(\\d+)/([^/]+)(*MARK:w)|/publishers/(\\d+)(*MARK:x)|/ratings/(\\d+)/([^/]+)(*MARK:y)|/ratings/(\\d+)(*MARK:z))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -1140,14 +1196,7 @@
               '_name' => 'page-rating',
             ),
           ),
-        ),
-      ),
-      1 => 
-      array (
-        'regex' => '~^(?|/ratings/(\\d+)(*MARK:a)|/identifiers/(\\w+)/([^/]+)(*MARK:b)|/identifiers/(\\w+)(*MARK:c)|/formats/(\\w+)(*MARK:d)|/feed/(\\w+)(*MARK:e)|/feed/(.+)(*MARK:f)|/files/(\\d+)/(\\d+)/(.+)(*MARK:g)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:h)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:i)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:j)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:k)|/format/(.+)(*MARK:l)|/images/([^/]+)/(.+)(*MARK:m)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:n)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:o)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:p)|/read/(\\d+)/(\\d+)(*MARK:q)|/read/(.+)(*MARK:r)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:s)|/restapi/databases/(\\d+)/(\\w+)(*MARK:t)|/restapi/databases/(\\d+)(*MARK:u)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:v)|/restapi/notes/([^/]+)/([^/]+)(*MARK:w)|/restapi/notes/([^/]+)(*MARK:x)|/restapi/preferences/([^/]+)(*MARK:y))$~',
-        'routeMap' => 
-        array (
-          'a' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1164,7 +1213,14 @@
               '_name' => 'page-rating-id',
             ),
           ),
-          'b' => 
+        ),
+      ),
+      1 => 
+      array (
+        'regex' => '~^(?|/identifiers/(\\w+)/([^/]+)(*MARK:a)|/identifiers/(\\w+)(*MARK:b)|/formats/(\\w+)(*MARK:c)|/feed/(\\w+)(*MARK:d)|/feed/(.+)(*MARK:e)|/files/(\\d+)/(\\d+)/(.+)(*MARK:f)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:g)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:h)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:i)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:j)|/format/(.+)(*MARK:k)|/images/([^/]+)/(.+)(*MARK:l)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:m)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:n)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:o)|/read/(\\d+)/(\\d+)(*MARK:p)|/read/(.+)(*MARK:q)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:r)|/restapi/databases/(\\d+)/(\\w+)(*MARK:s)|/restapi/databases/(\\d+)(*MARK:t)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:u)|/restapi/notes/([^/]+)/([^/]+)(*MARK:v)|/restapi/notes/([^/]+)(*MARK:w)|/restapi/preferences/([^/]+)(*MARK:x)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:y)|/restapi/annotations/([^/]+)(*MARK:z))$~',
+        'routeMap' => 
+        array (
+          'a' => 
           array (
             0 => 
             array (
@@ -1182,7 +1238,7 @@
               '_name' => 'page-identifier',
             ),
           ),
-          'c' => 
+          'b' => 
           array (
             0 => 
             array (
@@ -1199,7 +1255,7 @@
               '_name' => 'page-identifier-id',
             ),
           ),
-          'd' => 
+          'c' => 
           array (
             0 => 
             array (
@@ -1216,7 +1272,7 @@
               '_name' => 'page-format',
             ),
           ),
-          'e' => 
+          'd' => 
           array (
             0 => 
             array (
@@ -1233,7 +1289,7 @@
               '_name' => 'feed-page',
             ),
           ),
-          'f' => 
+          'e' => 
           array (
             0 => 
             array (
@@ -1250,7 +1306,7 @@
               '_name' => 'feed-path',
             ),
           ),
-          'g' => 
+          'f' => 
           array (
             0 => 
             array (
@@ -1269,7 +1325,7 @@
               '_name' => 'fetch-file',
             ),
           ),
-          'h' => 
+          'g' => 
           array (
             0 => 
             array (
@@ -1288,7 +1344,7 @@
               '_name' => 'fetch-thumb',
             ),
           ),
-          'i' => 
+          'h' => 
           array (
             0 => 
             array (
@@ -1306,7 +1362,7 @@
               '_name' => 'fetch-cover',
             ),
           ),
-          'j' => 
+          'i' => 
           array (
             0 => 
             array (
@@ -1327,7 +1383,7 @@
               '_name' => 'fetch-inline',
             ),
           ),
-          'k' => 
+          'j' => 
           array (
             0 => 
             array (
@@ -1347,7 +1403,7 @@
               '_name' => 'fetch-data',
             ),
           ),
-          'l' => 
+          'k' => 
           array (
             0 => 
             array (
@@ -1364,7 +1420,7 @@
               '_name' => 'fetch-format',
             ),
           ),
-          'm' => 
+          'l' => 
           array (
             0 => 
             array (
@@ -1383,7 +1439,7 @@
               '_name' => 'fetch-image',
             ),
           ),
-          'n' => 
+          'm' => 
           array (
             0 => 
             array (
@@ -1404,7 +1460,7 @@
               '_name' => 'fetch-view',
             ),
           ),
-          'o' => 
+          'n' => 
           array (
             0 => 
             array (
@@ -1424,7 +1480,7 @@
               '_name' => 'fetch-download',
             ),
           ),
-          'p' => 
+          'o' => 
           array (
             0 => 
             array (
@@ -1443,7 +1499,7 @@
               '_name' => 'read-title',
             ),
           ),
-          'q' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -1461,7 +1517,7 @@
               '_name' => 'read',
             ),
           ),
-          'r' => 
+          'q' => 
           array (
             0 => 
             array (
@@ -1478,7 +1534,7 @@
               '_name' => 'read-format',
             ),
           ),
-          's' => 
+          'r' => 
           array (
             0 => 
             array (
@@ -1497,7 +1553,7 @@
               '_name' => 'epubfs',
             ),
           ),
-          't' => 
+          's' => 
           array (
             0 => 
             array (
@@ -1516,7 +1572,7 @@
               '_name' => 'restapi-database-table',
             ),
           ),
-          'u' => 
+          't' => 
           array (
             0 => 
             array (
@@ -1534,7 +1590,7 @@
               '_name' => 'restapi-database',
             ),
           ),
-          'v' => 
+          'u' => 
           array (
             0 => 
             array (
@@ -1554,7 +1610,7 @@
               '_name' => 'restapi-note',
             ),
           ),
-          'w' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -1573,7 +1629,7 @@
               '_name' => 'restapi-notes-type-id',
             ),
           ),
-          'x' => 
+          'w' => 
           array (
             0 => 
             array (
@@ -1591,7 +1647,7 @@
               '_name' => 'restapi-notes-type',
             ),
           ),
-          'y' => 
+          'x' => 
           array (
             0 => 
             array (
@@ -1609,14 +1665,7 @@
               '_name' => 'restapi-preference',
             ),
           ),
-        ),
-      ),
-      2 => 
-      array (
-        'regex' => '~^(?|/restapi/annotations/([^/]+)/([^/]+)(*MARK:a)|/restapi/annotations/([^/]+)(*MARK:b)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:c)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:d)|/restapi/metadata/([^/]+)(*MARK:e)|/restapi/folders/(.*)(*MARK:f)|/restapi/(.*)(*MARK:g)|/check/(.*)(*MARK:h)|/opds/(\\w+)(*MARK:i)|/opds/(.*)(*MARK:j)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:k)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:l)|/loader/([^/]+)/(\\d+)(*MARK:m)|/loader/([^/]+)/(*MARK:n)|/loader/([^/]+)(*MARK:o)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:p)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:q)|/calibre/([^/]+)/([^/]+)/(.*)(*MARK:r)|/calibre/([^/]+)/([^/]+)(*MARK:s)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:t)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:u)|/zipfs/(.+)(*MARK:v)|/tables/(\\d+)/(\\w+)(*MARK:w)|/tables/(\\d+)(*MARK:x)|/admin/(.*)(*MARK:y))$~',
-        'routeMap' => 
-        array (
-          'a' => 
+          'y' => 
           array (
             0 => 
             array (
@@ -1635,7 +1684,7 @@
               '_name' => 'restapi-annotation',
             ),
           ),
-          'b' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1653,7 +1702,14 @@
               '_name' => 'restapi-annotations-book',
             ),
           ),
-          'c' => 
+        ),
+      ),
+      2 => 
+      array (
+        'regex' => '~^(?|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:a)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:b)|/restapi/metadata/([^/]+)(*MARK:c)|/restapi/folders/(.*)(*MARK:d)|/restapi/(.*)(*MARK:e)|/check/(.*)(*MARK:f)|/opds/(\\w+)(*MARK:g)|/opds/(.*)(*MARK:h)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:i)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:j)|/loader/([^/]+)/(\\d+)(*MARK:k)|/loader/([^/]+)/(*MARK:l)|/loader/([^/]+)(*MARK:m)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:n)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:o)|/calibre/([^/]+)/([^/]+)/(.*)(*MARK:p)|/calibre/([^/]+)/([^/]+)(*MARK:q)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:r)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:s)|/zipfs/(.+)(*MARK:t)|/tables/(\\d+)/(\\w+)(*MARK:u)|/tables/(\\d+)(*MARK:v)|/editor/static/(.+)(*MARK:w)|/adminer/static/(.+)(*MARK:x)|/admin/(.*)(*MARK:y))$~',
+        'routeMap' => 
+        array (
+          'a' => 
           array (
             0 => 
             array (
@@ -1673,7 +1729,7 @@
               '_name' => 'restapi-metadata-element-name',
             ),
           ),
-          'd' => 
+          'b' => 
           array (
             0 => 
             array (
@@ -1692,7 +1748,7 @@
               '_name' => 'restapi-metadata-element',
             ),
           ),
-          'e' => 
+          'c' => 
           array (
             0 => 
             array (
@@ -1710,7 +1766,7 @@
               '_name' => 'restapi-metadata',
             ),
           ),
-          'f' => 
+          'd' => 
           array (
             0 => 
             array (
@@ -1728,7 +1784,7 @@
               '_name' => 'restapi-folders',
             ),
           ),
-          'g' => 
+          'e' => 
           array (
             0 => 
             array (
@@ -1745,7 +1801,7 @@
               '_name' => 'restapi-path',
             ),
           ),
-          'h' => 
+          'f' => 
           array (
             0 => 
             array (
@@ -1762,7 +1818,7 @@
               '_name' => 'check-more',
             ),
           ),
-          'i' => 
+          'g' => 
           array (
             0 => 
             array (
@@ -1779,7 +1835,7 @@
               '_name' => 'opds-page',
             ),
           ),
-          'j' => 
+          'h' => 
           array (
             0 => 
             array (
@@ -1796,7 +1852,7 @@
               '_name' => 'opds-path',
             ),
           ),
-          'k' => 
+          'i' => 
           array (
             0 => 
             array (
@@ -1816,7 +1872,7 @@
               '_name' => 'loader-action-dbNum-authorId-urlPath',
             ),
           ),
-          'l' => 
+          'j' => 
           array (
             0 => 
             array (
@@ -1835,7 +1891,7 @@
               '_name' => 'loader-action-dbNum-authorId',
             ),
           ),
-          'm' => 
+          'k' => 
           array (
             0 => 
             array (
@@ -1853,7 +1909,7 @@
               '_name' => 'loader-action-dbNum',
             ),
           ),
-          'n' => 
+          'l' => 
           array (
             0 => 
             array (
@@ -1870,7 +1926,7 @@
               '_name' => 'loader-action-',
             ),
           ),
-          'o' => 
+          'm' => 
           array (
             0 => 
             array (
@@ -1887,7 +1943,7 @@
               '_name' => 'loader-action',
             ),
           ),
-          'p' => 
+          'n' => 
           array (
             0 => 
             array (
@@ -1906,7 +1962,7 @@
               '_name' => 'zipper-page-id-type',
             ),
           ),
-          'q' => 
+          'o' => 
           array (
             0 => 
             array (
@@ -1924,7 +1980,7 @@
               '_name' => 'zipper-page-type',
             ),
           ),
-          'r' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -1943,7 +1999,7 @@
               '_name' => 'calibre-details',
             ),
           ),
-          's' => 
+          'q' => 
           array (
             0 => 
             array (
@@ -1961,7 +2017,7 @@
               '_name' => 'calibre-library',
             ),
           ),
-          't' => 
+          'r' => 
           array (
             0 => 
             array (
@@ -1980,7 +2036,7 @@
               '_name' => 'calres',
             ),
           ),
-          'u' => 
+          's' => 
           array (
             0 => 
             array (
@@ -1999,7 +2055,7 @@
               '_name' => 'zipfs',
             ),
           ),
-          'v' => 
+          't' => 
           array (
             0 => 
             array (
@@ -2016,7 +2072,7 @@
               '_name' => 'zipfs-format',
             ),
           ),
-          'w' => 
+          'u' => 
           array (
             0 => 
             array (
@@ -2034,7 +2090,7 @@
               '_name' => 'tables-db-name',
             ),
           ),
-          'x' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -2049,6 +2105,44 @@
             array (
               '_route' => '/tables/{db:\\d+}',
               '_name' => 'tables-db',
+            ),
+          ),
+          'w' => 
+          array (
+            0 => 
+            array (
+              'editor' => 1,
+              'static' => 1,
+              '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+              '_route' => 'editor-static',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/editor/static/{path:.+}',
+              '_name' => 'editor-static',
+            ),
+          ),
+          'x' => 
+          array (
+            0 => 
+            array (
+              'adminer' => 1,
+              'static' => 1,
+              '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+              '_route' => 'adminer-static',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/adminer/static/{path:.+}',
+              '_name' => 'adminer-static',
             ),
           ),
           'y' => 
@@ -3659,6 +3753,44 @@
       0 => 
       array (
         0 => '/tables',
+      ),
+    ),
+    'editor-static' => 
+    array (
+      0 => 
+      array (
+        0 => '/editor/static/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
+    'editor' => 
+    array (
+      0 => 
+      array (
+        0 => '/editor/',
+      ),
+    ),
+    'adminer-static' => 
+    array (
+      0 => 
+      array (
+        0 => '/adminer/static/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
+    'adminer' => 
+    array (
+      0 => 
+      array (
+        0 => '/adminer/',
       ),
     ),
     'test' => 

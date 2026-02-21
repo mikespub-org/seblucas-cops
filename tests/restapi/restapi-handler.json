@@ -698,6 +698,40 @@
                 ],
                 "tables": [
                     "/tables"
+                ],
+                "editor-static": [
+                    "/editor/static/{path:.+}",
+                    {
+                        "editor": 1,
+                        "static": 1
+                    }
+                ],
+                "editor": [
+                    "/editor/",
+                    {
+                        "editor": 1
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
+                ],
+                "adminer-static": [
+                    "/adminer/static/{path:.+}",
+                    {
+                        "adminer": 1,
+                        "static": 1
+                    }
+                ],
+                "adminer": [
+                    "/adminer/",
+                    {
+                        "adminer": 1
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
                 ]
             }
         },

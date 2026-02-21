@@ -57,7 +57,8 @@
         "mikespub/epub-loader": "^4.0",
         "mikespub/codedread-kthoom": "^2026.1",
         "opis/json-schema": "^2.6",
-        "webonyx/graphql-php": "^15.30"
+        "webonyx/graphql-php": "^15.30",
+        "adminer/editor": "^5.4"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks",
@@ -75,10 +76,6 @@
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        },
-        {
             "type": "package",
             "package": {
                 "name": "mozilla/pdfjs-dist",
@@ -91,6 +88,38 @@
                     "type": "zip"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "adminer/adminer",
+                "description": "Database management in a single PHP file",
+                "version": "5.4.2",
+                "homepage": "httphttps://github.com/vrana/adminer/wiki/Enable-sqlite3",
+                "license": "Apache License 2.0 or GPL 2",
+                "dist": {
+                    "url": "https://github.com/vrana/adminer/releases/download/v5.4.2/adminer-5.4.2.php",
+                    "type": "file"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "adminer/editor",
+                "description": "Database management in a single PHP file",
+                "version": "5.4.2",
+                "homepage": "httphttps://github.com/vrana/adminer/wiki/Enable-sqlite3",
+                "license": "Apache License 2.0 or GPL 2",
+                "dist": {
+                    "url": "https://github.com/vrana/adminer/releases/download/v5.4.2/editor-5.4.2.php",
+                    "type": "file"
+                }
+            }
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ],
     "config": {

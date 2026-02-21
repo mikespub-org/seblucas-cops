@@ -17,7 +17,11 @@ x.x.x - TODO
     - update $config['cops_twig_templates'] to include 'markdown' templates
     - new $config['cops_browse_books_directory'] to browse books in other folders
     - new $config['cops_browse_books_getfiles'] to get list of files in other folders
-  * Browse book files in other folders besides Calibre (WIP)
+  * Add Edit Tables (dev only) option in admin menu to edit Calibre database records
+  * Add virtual adminer/editor package to get Adminer Editor with composer (dev only)
+  * Get TableHandler working to view Calibre database tables
+  * Create AdminMiddleware for access to AdminHandler and TableHandler
+  * Browse book files in other folders besides Calibre
   * Start adding markdown templates as experiment (WIP)
 
 4.2.0 - 20260209 Support mapping of filepath for x-accel-redirect

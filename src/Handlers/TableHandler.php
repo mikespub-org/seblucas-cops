@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Handlers;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Middleware\AdminMiddleware;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 
@@ -24,6 +25,7 @@ class TableHandler extends BaseHandler
     public const HANDLER = "tables";
     public const PREFIX = "/tables";
     public const PARAMLIST = ["db", "name", "id"];
+    public const ADMINER_VERSION = "5.4.2";
 
     public static string $template = "templates/tables.html";
 
@@ -33,6 +35,17 @@ class TableHandler extends BaseHandler
             "tables-db-name" => ["/tables/{db:\d+}/{name:\w+}"],
             "tables-db" => ["/tables/{db:\d+}"],
             "tables" => ["/tables"],
+            "editor-static" => ["/editor/static/{path:.+}", ["editor" => 1, "static" => 1]],
+            "editor" => ["/editor/", ["editor" => 1], ["GET", "POST"]],
+            "adminer-static" => ["/adminer/static/{path:.+}", ["adminer" => 1, "static" => 1]],
+            "adminer" => ["/adminer/", ["adminer" => 1], ["GET", "POST"]],
+        ];
+    }
+
+    public static function getMiddleware()
+    {
+        return [
+            AdminMiddleware::class,
         ];
     }
 
@@ -43,6 +56,14 @@ class TableHandler extends BaseHandler
 
         if (is_null($db) && !Database::isMultipleDatabaseEnabled()) {
             $db = 0;
+        }
+
+        if ($request->get('editor')) {
+            return $this->showEditor($db, $request);
+        }
+
+        if ($request->get('adminer')) {
+            return $this->showAdminer($db, $request);
         }
 
         if (!is_null($db) && !is_null($name)) {
@@ -210,5 +231,74 @@ class TableHandler extends BaseHandler
 
         $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(Format::template($data, self::$template));
+    }
+
+    /**
+     * Summary of showAdminer
+     * @param int $db
+     * @param Request $request
+     * @return Response
+     */
+    private function showAdminer($db, $request)
+    {
+        // when using full distribution package - @todo fix relative paths in .php files
+        if (!empty($request->get('static'))) {
+            $path = $request->get('path');
+            $mime = Response::getMimeType($path);
+            $response = new Response($mime);
+            return $response;
+        }
+        require_once dirname(__DIR__, 2) . '/resources/adminer/sqlite.php';  // NOSONAR
+        if (!$request->get('username')) {
+            $this->setLoginVariables($db, $request);
+        }
+
+        require dirname(__DIR__, 2) . '/vendor/adminer/adminer/adminer-' . self::ADMINER_VERSION . '.php';  // NOSONAR
+        //require dirname(__DIR__, 2) . '/vendor/adminer/adminer/adminer/index.php';  // NOSONAR
+        $response = new Response(Response::MIME_TYPE_HTML);
+        $response->isSent(true);
+        return $response;
+    }
+
+    /**
+     * Summary of showEditor
+     * @param int $db
+     * @param Request $request
+     * @return Response
+     */
+    private function showEditor($db, $request)
+    {
+        // when using full distribution package - @todo fix relative paths in .php files
+        if (!empty($request->get('static'))) {
+            $path = $request->get('path');
+            $mime = Response::getMimeType($path);
+            $response = new Response($mime);
+            return $response;
+        }
+        require_once dirname(__DIR__, 2) . '/resources/adminer/sqlite.php';  // NOSONAR
+        if (!$request->get('username')) {
+            $this->setLoginVariables($db, $request);
+        }
+
+        require dirname(__DIR__, 2) . '/vendor/adminer/editor/editor-' . self::ADMINER_VERSION . '.php';  // NOSONAR
+        //require dirname(__DIR__, 2) . '/vendor/adminer/editor/editor/index.php';  // NOSONAR
+        $response = new Response(Response::MIME_TYPE_HTML);
+        $response->isSent(true);
+        return $response;
+    }
+
+    /**
+     * Summary of setLoginVariables
+     * @param int $db
+     * @param Request $request
+     * @return void
+     */
+    private function setLoginVariables($db, $request)
+    {
+        //$_POST['auth']['driver'] = 'sqlite';
+        //$_POST['auth']['server'] = 'localhost';
+        //$_POST['auth']['db'] = Database::getDbFileName($request->database());
+        //$_POST['auth']['username'] = 'admin';
+        //$_POST['auth']['password'] = 'mypassword';
     }
 }

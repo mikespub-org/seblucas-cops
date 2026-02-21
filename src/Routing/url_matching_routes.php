@@ -48,6 +48,8 @@ return [
         '/mail' => [[['_route' => 'mail', '_handler' => 'SebLucas\\Cops\\Handlers\\MailHandler'], null, ['POST' => 0], null, false, false, null]],
         '/graphql' => [[['_route' => 'graphql', '_handler' => 'SebLucas\\Cops\\Handlers\\GraphQLHandler'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/tables' => [[['_route' => 'tables', '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], null, ['GET' => 0], null, false, false, null]],
+        '/editor' => [[['_route' => 'editor', 'editor' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
+        '/adminer' => [[['_route' => 'adminer', 'adminer' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], null, ['GET' => 0, 'POST' => 1], null, true, false, null]],
         '/test' => [[['_route' => 'test', '_handler' => 'SebLucas\\Cops\\Handlers\\TestHandler'], null, ['GET' => 0], null, false, false, null]],
         '/admin/clearcache' => [[['_route' => 'admin-clearcache', 'action' => 'clearcache', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler'], null, ['GET' => 0], null, false, false, null]],
         '/admin/config' => [[['_route' => 'admin-config', 'action' => 'config', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
@@ -62,165 +64,167 @@ return [
                         .'|(\\d+)(*:70)'
                     .')'
                     .'|dmin(?'
-                        .'|/(.*)(*:90)'
-                        .'|(*:97)'
+                        .'|er/static/(.+)(*:99)'
+                        .'|/(.*)(*:111)'
+                        .'|(*:119)'
                     .')'
                 .')'
                 .'|/books/(?'
-                    .'|letter/([^/]++)(*:131)'
-                    .'|year/(\\d+)(*:149)'
-                    .'|(\\d+)/([^/]++)/([^/]++)(*:180)'
-                    .'|(\\d+)(*:193)'
+                    .'|letter/([^/]++)(*:154)'
+                    .'|year/(\\d+)(*:172)'
+                    .'|(\\d+)/([^/]++)/([^/]++)(*:203)'
+                    .'|(\\d+)(*:216)'
                 .')'
                 .'|/se(?'
                     .'|ries/(?'
-                        .'|letter/([^/]++)(*:231)'
-                        .'|(\\d+)/([^/]++)(*:253)'
-                        .'|(\\d+)(*:266)'
+                        .'|letter/([^/]++)(*:254)'
+                        .'|(\\d+)/([^/]++)(*:276)'
+                        .'|(\\d+)(*:289)'
                     .')'
                     .'|arch/([^/]++)(?'
-                        .'|/([^/]++)(*:300)'
-                        .'|(*:308)'
+                        .'|/([^/]++)(*:323)'
+                        .'|(*:331)'
                     .')'
                 .')'
                 .'|/f(?'
                     .'|o(?'
-                        .'|lder/(.*)(*:336)'
+                        .'|lder/(.*)(*:359)'
                         .'|rmat(?'
-                            .'|s/(\\w+)(*:358)'
-                            .'|/(.+)(*:371)'
+                            .'|s/(\\w+)(*:381)'
+                            .'|/(.+)(*:394)'
                         .')'
                     .')'
                     .'|e(?'
                         .'|ed/(?'
-                            .'|(\\w+)(*:396)'
-                            .'|(.+)(*:408)'
+                            .'|(\\w+)(*:419)'
+                            .'|(.+)(*:431)'
                         .')'
-                        .'|tch/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:453)'
+                        .'|tch/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:476)'
                     .')'
-                    .'|iles/(\\d+)/(\\d+)/(.+)(*:483)'
+                    .'|iles/(\\d+)/(\\d+)/(.+)(*:506)'
                 .')'
                 .'|/e(?'
-                    .'|book/(.+)(*:506)'
-                    .'|pubfs/(\\d+)/(\\d+)/(.+)(*:536)'
+                    .'|book/(.+)(*:529)'
+                    .'|pubfs/(\\d+)/(\\d+)/(.+)(*:559)'
+                    .'|ditor/static/(.+)(*:584)'
                 .')'
                 .'|/t(?'
                     .'|a(?'
                         .'|gs/(?'
-                            .'|letter/([^/]++)(*:575)'
-                            .'|(\\d+)/([^/]++)(*:597)'
-                            .'|(\\d+)(*:610)'
+                            .'|letter/([^/]++)(*:623)'
+                            .'|(\\d+)/([^/]++)(*:645)'
+                            .'|(\\d+)(*:658)'
                         .')'
                         .'|bles/(?'
-                            .'|(\\d+)/(\\w+)(*:638)'
-                            .'|(\\d+)(*:651)'
+                            .'|(\\d+)/(\\w+)(*:686)'
+                            .'|(\\d+)(*:699)'
                         .')'
                     .')'
-                    .'|humbs/(\\d+)/(\\d+)/([^/\\.]++)\\.jpg(*:694)'
+                    .'|humbs/(\\d+)/(\\d+)/([^/\\.]++)\\.jpg(*:742)'
                 .')'
                 .'|/c(?'
                     .'|ustom/(?'
-                        .'|(\\d+)/([^/]++)(*:731)'
-                        .'|(\\d+)(*:744)'
+                        .'|(\\d+)/([^/]++)(*:779)'
+                        .'|(\\d+)(*:792)'
                     .')'
-                    .'|overs/(\\d+)/(\\d+)\\.jpg(*:775)'
+                    .'|overs/(\\d+)/(\\d+)\\.jpg(*:823)'
                     .'|heck(?'
-                        .'|/(.*)(*:795)'
-                        .'|(*:803)'
+                        .'|/(.*)(*:843)'
+                        .'|(*:851)'
                     .')'
                     .'|al(?'
                         .'|ibre/([^/]++)/([^/]++)(?'
-                            .'|/(.*)(*:847)'
-                            .'|(*:855)'
+                            .'|/(.*)(*:895)'
+                            .'|(*:903)'
                         .')'
-                        .'|res/(\\d+)/([^/]++)/([^/]++)(*:891)'
+                        .'|res/(\\d+)/([^/]++)/([^/]++)(*:939)'
                     .')'
                 .')'
                 .'|/l(?'
                     .'|anguages/(?'
-                        .'|(\\d+)/([^/]++)(*:932)'
-                        .'|(\\d+)(*:945)'
+                        .'|(\\d+)/([^/]++)(*:980)'
+                        .'|(\\d+)(*:993)'
                     .')'
                     .'|oader/([^/]++)(?'
                         .'|/(?'
-                            .'|(\\d+)/(\\w+)/(.*)(*:991)'
-                            .'|(\\d+)/(\\w*)(*:1010)'
-                            .'|(\\d+)(*:1024)'
+                            .'|(\\d+)/(\\w+)/(.*)(*:1039)'
+                            .'|(\\d+)/(\\w*)(*:1059)'
+                            .'|(\\d+)(*:1073)'
                         .')'
-                        .'|(*:1034)'
-                        .'|(*:1043)'
+                        .'|(*:1083)'
+                        .'|(*:1092)'
                     .')'
                 .')'
                 .'|/publishers/(?'
-                    .'|letter/([^/]++)(*:1084)'
-                    .'|(\\d+)/([^/]++)(*:1107)'
-                    .'|(\\d+)(*:1121)'
+                    .'|letter/([^/]++)(*:1133)'
+                    .'|(\\d+)/([^/]++)(*:1156)'
+                    .'|(\\d+)(*:1170)'
                 .')'
                 .'|/r(?'
                     .'|atings/(?'
-                        .'|(\\d+)/([^/]++)(*:1160)'
-                        .'|(\\d+)(*:1174)'
+                        .'|(\\d+)/([^/]++)(*:1209)'
+                        .'|(\\d+)(*:1223)'
                     .')'
                     .'|e(?'
                         .'|ad/(?'
-                            .'|(\\d+)/(\\d+)/([^/]++)(*:1214)'
-                            .'|(\\d+)/(\\d+)(*:1234)'
-                            .'|(.+)(*:1247)'
+                            .'|(\\d+)/(\\d+)/([^/]++)(*:1263)'
+                            .'|(\\d+)/(\\d+)(*:1283)'
+                            .'|(.+)(*:1296)'
                         .')'
                         .'|stapi/(?'
                             .'|databases/(?'
-                                .'|(\\d+)/(\\w+)(*:1290)'
-                                .'|(\\d+)(*:1304)'
+                                .'|(\\d+)/(\\w+)(*:1339)'
+                                .'|(\\d+)(*:1353)'
                             .')'
                             .'|notes/([^/]++)(?'
                                 .'|/([^/]++)(?'
-                                    .'|/([^/]++)(*:1352)'
-                                    .'|(*:1361)'
+                                    .'|/([^/]++)(*:1401)'
+                                    .'|(*:1410)'
                                 .')'
-                                .'|(*:1371)'
+                                .'|(*:1420)'
                             .')'
-                            .'|preferences/([^/]++)(*:1401)'
+                            .'|preferences/([^/]++)(*:1450)'
                             .'|annotations/([^/]++)(?'
-                                .'|/([^/]++)(*:1442)'
-                                .'|(*:1451)'
+                                .'|/([^/]++)(*:1491)'
+                                .'|(*:1500)'
                             .')'
                             .'|metadata/([^/]++)(?'
                                 .'|/([^/]++)(?'
-                                    .'|/([^/]++)(*:1502)'
-                                    .'|(*:1511)'
+                                    .'|/([^/]++)(*:1551)'
+                                    .'|(*:1560)'
                                 .')'
-                                .'|(*:1521)'
+                                .'|(*:1570)'
                             .')'
-                            .'|folders/(.*)(*:1543)'
-                            .'|(.*)(*:1556)'
+                            .'|folders/(.*)(*:1592)'
+                            .'|(.*)(*:1605)'
                         .')'
                     .')'
                 .')'
                 .'|/i(?'
                     .'|dentifiers/(?'
-                        .'|(\\w+)/([^/]++)(*:1601)'
-                        .'|(\\w+)(*:1615)'
+                        .'|(\\w+)/([^/]++)(*:1650)'
+                        .'|(\\w+)(*:1664)'
                     .')'
-                    .'|nline/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:1663)'
-                    .'|mages/([^/]++)/(.+)(*:1691)'
+                    .'|nline/(\\d+)/(\\d+)/([^/\\.]++)\\.([^/]++)(*:1712)'
+                    .'|mages/([^/]++)/(.+)(*:1740)'
                 .')'
-                .'|/view/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1745)'
-                .'|/download/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1802)'
+                .'|/view/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1794)'
+                .'|/download/([^/]++)/([^/]++)/([^/\\.]++)\\.([^/]++)(*:1851)'
                 .'|/opds(?'
                     .'|/(?'
-                        .'|(\\w+)(*:1828)'
-                        .'|(.*)(*:1841)'
+                        .'|(\\w+)(*:1877)'
+                        .'|(.*)(*:1890)'
                     .')'
-                    .'|(*:1851)'
+                    .'|(*:1900)'
                 .')'
                 .'|/zip(?'
                     .'|per/([^/]++)/(?'
-                        .'|([^/]++)/([^/\\.]++)\\.zip(*:1908)'
-                        .'|([^/\\.]++)\\.zip(*:1932)'
+                        .'|([^/]++)/([^/\\.]++)\\.zip(*:1957)'
+                        .'|([^/\\.]++)\\.zip(*:1981)'
                     .')'
                     .'|fs/(?'
-                        .'|(\\d+)/(\\d+)/(.+)(*:1964)'
-                        .'|(.+)(*:1977)'
+                        .'|(\\d+)/(\\d+)/(.+)(*:2013)'
+                        .'|(.+)(*:2026)'
                     .')'
                 .')'
             .')/?$}sD',
@@ -229,81 +233,83 @@ return [
         37 => [[['_route' => 'page-authors-letter', 'page' => 'authors_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
         58 => [[['_route' => 'page-author', 'page' => 'author'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
         70 => [[['_route' => 'page-author-id', 'page' => 'author'], ['id'], ['GET' => 0], null, false, true, null]],
-        90 => [[['_route' => 'admin-action', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler'], ['action'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        97 => [[['_route' => 'admin', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler'], [], ['GET' => 0], null, false, false, null]],
-        131 => [[['_route' => 'page-books-letter', 'page' => 'books_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
-        149 => [[['_route' => 'page-books-year', 'page' => 'books_year'], ['year'], ['GET' => 0], null, false, true, null]],
-        180 => [[['_route' => 'page-book', 'page' => 'book'], ['id', 'author', 'title'], ['GET' => 0], null, false, true, null]],
-        193 => [[['_route' => 'page-book-id', 'page' => 'book'], ['id'], ['GET' => 0], null, false, true, null]],
-        231 => [[['_route' => 'page-series-letter', 'page' => 'series_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
-        253 => [[['_route' => 'page-serie', 'page' => 'serie'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        266 => [[['_route' => 'page-serie-id', 'page' => 'serie'], ['id'], ['GET' => 0], null, false, true, null]],
-        300 => [[['_route' => 'page-query-scope', 'page' => 'query'], ['query', 'scope'], ['GET' => 0], null, false, true, null]],
-        308 => [[['_route' => 'page-query', 'page' => 'query'], ['query'], ['GET' => 0], null, false, true, null]],
-        336 => [[['_route' => 'page-folder', 'page' => 'folder'], ['path'], ['GET' => 0], null, false, true, null]],
-        358 => [[['_route' => 'page-format', 'page' => 'format'], ['id'], ['GET' => 0], null, false, true, null]],
-        371 => [[['_route' => 'fetch-format', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['path'], ['GET' => 0], null, false, true, null]],
-        396 => [[['_route' => 'feed-page', '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler'], ['page'], ['GET' => 0], null, false, true, null]],
-        408 => [[['_route' => 'feed-path', '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler'], ['path'], ['GET' => 0], null, false, true, null]],
-        453 => [[['_route' => 'fetch-data', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        483 => [[['_route' => 'fetch-file', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'id', 'file'], ['GET' => 0], null, false, true, null]],
-        506 => [[['_route' => 'page-ebook', 'page' => 'folder', 'ebook' => 1], ['path'], ['GET' => 0], null, false, true, null]],
-        536 => [[['_route' => 'epubfs', '_handler' => 'SebLucas\\Cops\\Handlers\\EpubFsHandler'], ['db', 'data', 'comp'], ['GET' => 0], null, false, true, null]],
-        575 => [[['_route' => 'page-tags-letter', 'page' => 'tags_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
-        597 => [[['_route' => 'page-tag', 'page' => 'tag'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        610 => [[['_route' => 'page-tag-id', 'page' => 'tag'], ['id'], ['GET' => 0], null, false, true, null]],
-        638 => [[['_route' => 'tables-db-name', '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], ['db', 'name'], ['GET' => 0], null, false, true, null]],
-        651 => [[['_route' => 'tables-db', '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], ['db'], ['GET' => 0], null, false, true, null]],
-        694 => [[['_route' => 'fetch-thumb', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'id', 'thumb'], ['GET' => 0], null, false, false, null]],
-        731 => [[['_route' => 'page-custom', 'page' => 'custom'], ['custom', 'id'], ['GET' => 0], null, false, true, null]],
-        744 => [[['_route' => 'page-customtype', 'page' => 'customtype'], ['custom'], ['GET' => 0], null, false, true, null]],
-        775 => [[['_route' => 'fetch-cover', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'id'], ['GET' => 0], null, false, false, null]],
-        795 => [[['_route' => 'check-more', '_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler'], ['more'], ['GET' => 0], null, false, true, null]],
-        803 => [[['_route' => 'check', '_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler'], [], ['GET' => 0], null, false, false, null]],
-        847 => [[['_route' => 'calibre-details', '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler'], ['action', 'library', 'details'], ['GET' => 0], null, false, true, null]],
-        855 => [[['_route' => 'calibre-library', '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler'], ['action', 'library'], ['GET' => 0], null, false, true, null]],
-        891 => [[['_route' => 'calres', '_handler' => 'SebLucas\\Cops\\Handlers\\CalResHandler'], ['db', 'alg', 'digest'], ['GET' => 0], null, false, true, null]],
-        932 => [[['_route' => 'page-language', 'page' => 'language'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        945 => [[['_route' => 'page-language-id', 'page' => 'language'], ['id'], ['GET' => 0], null, false, true, null]],
-        991 => [[['_route' => 'loader-action-dbNum-authorId-urlPath', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action', 'dbNum', 'authorId', 'urlPath'], ['GET' => 0], null, false, true, null]],
-        1010 => [[['_route' => 'loader-action-dbNum-authorId', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action', 'dbNum', 'authorId'], ['GET' => 0], null, false, true, null]],
-        1024 => [[['_route' => 'loader-action-dbNum', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action', 'dbNum'], ['GET' => 0], null, false, true, null]],
-        1034 => [[['_route' => 'loader-action-', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action'], ['GET' => 0], null, true, true, null]],
-        1043 => [[['_route' => 'loader-action', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action'], ['GET' => 0], null, false, true, null]],
-        1084 => [[['_route' => 'page-publishers-letter', 'page' => 'publishers_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
-        1107 => [[['_route' => 'page-publisher', 'page' => 'publisher'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        1121 => [[['_route' => 'page-publisher-id', 'page' => 'publisher'], ['id'], ['GET' => 0], null, false, true, null]],
-        1160 => [[['_route' => 'page-rating', 'page' => 'rating'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        1174 => [[['_route' => 'page-rating-id', 'page' => 'rating'], ['id'], ['GET' => 0], null, false, true, null]],
-        1214 => [[['_route' => 'read-title', '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler'], ['db', 'data', 'title'], ['GET' => 0], null, false, true, null]],
-        1234 => [[['_route' => 'read', '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler'], ['db', 'data'], ['GET' => 0], null, false, true, null]],
-        1247 => [[['_route' => 'read-format', '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler'], ['path'], ['GET' => 0], null, false, true, null]],
-        1290 => [[['_route' => 'restapi-database-table', '_resource' => 'Database', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['db', 'name'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        1304 => [[['_route' => 'restapi-database', '_resource' => 'Database', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['db'], ['GET' => 0], null, false, true, null]],
-        1352 => [[['_route' => 'restapi-note', '_resource' => 'Note', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['type', 'item', 'title'], ['GET' => 0], null, false, true, null]],
-        1361 => [[['_route' => 'restapi-notes-type-id', '_resource' => 'Note', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['type', 'item'], ['GET' => 0], null, false, true, null]],
-        1371 => [[['_route' => 'restapi-notes-type', '_resource' => 'Note', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['type'], ['GET' => 0], null, false, true, null]],
-        1401 => [[['_route' => 'restapi-preference', '_resource' => 'Preference', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['key'], ['GET' => 0], null, false, true, null]],
-        1442 => [[['_route' => 'restapi-annotation', '_resource' => 'Annotation', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId', 'id'], ['GET' => 0], null, false, true, null]],
-        1451 => [[['_route' => 'restapi-annotations-book', '_resource' => 'Annotation', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId'], ['GET' => 0], null, false, true, null]],
-        1502 => [[['_route' => 'restapi-metadata-element-name', '_resource' => 'Metadata', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId', 'element', 'name'], ['GET' => 0], null, false, true, null]],
-        1511 => [[['_route' => 'restapi-metadata-element', '_resource' => 'Metadata', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId', 'element'], ['GET' => 0], null, false, true, null]],
-        1521 => [[['_route' => 'restapi-metadata', '_resource' => 'Metadata', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId'], ['GET' => 0], null, false, true, null]],
-        1543 => [[['_route' => 'restapi-folders', '_resource' => 'Folder', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['path'], ['GET' => 0], null, false, true, null]],
-        1556 => [[['_route' => 'restapi-path', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['path'], ['GET' => 0], null, false, true, null]],
-        1601 => [[['_route' => 'page-identifier', 'page' => 'identifier'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
-        1615 => [[['_route' => 'page-identifier-id', 'page' => 'identifier'], ['id'], ['GET' => 0], null, false, true, null]],
-        1663 => [[['_route' => 'fetch-inline', 'view' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        1691 => [[['_route' => 'fetch-image', 'image' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['size', 'path'], ['GET' => 0], null, false, true, null]],
-        1745 => [[['_route' => 'fetch-view', 'view' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        1802 => [[['_route' => 'fetch-download', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
-        1828 => [[['_route' => 'opds-page', '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler'], ['page'], ['GET' => 0], null, false, true, null]],
-        1841 => [[['_route' => 'opds-path', '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler'], ['path'], ['GET' => 0], null, false, true, null]],
-        1851 => [[['_route' => 'opds', '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler'], [], ['GET' => 0], null, false, false, null]],
-        1908 => [[['_route' => 'zipper-page-id-type', '_handler' => 'SebLucas\\Cops\\Handlers\\ZipperHandler'], ['page', 'id', 'type'], ['GET' => 0], null, false, false, null]],
-        1932 => [[['_route' => 'zipper-page-type', '_handler' => 'SebLucas\\Cops\\Handlers\\ZipperHandler'], ['page', 'type'], ['GET' => 0], null, false, false, null]],
-        1964 => [[['_route' => 'zipfs', '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler'], ['db', 'data', 'comp'], ['GET' => 0], null, false, true, null]],
-        1977 => [
+        99 => [[['_route' => 'adminer-static', 'adminer' => 1, 'static' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        111 => [[['_route' => 'admin-action', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler'], ['action'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        119 => [[['_route' => 'admin', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler'], [], ['GET' => 0], null, false, false, null]],
+        154 => [[['_route' => 'page-books-letter', 'page' => 'books_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
+        172 => [[['_route' => 'page-books-year', 'page' => 'books_year'], ['year'], ['GET' => 0], null, false, true, null]],
+        203 => [[['_route' => 'page-book', 'page' => 'book'], ['id', 'author', 'title'], ['GET' => 0], null, false, true, null]],
+        216 => [[['_route' => 'page-book-id', 'page' => 'book'], ['id'], ['GET' => 0], null, false, true, null]],
+        254 => [[['_route' => 'page-series-letter', 'page' => 'series_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
+        276 => [[['_route' => 'page-serie', 'page' => 'serie'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        289 => [[['_route' => 'page-serie-id', 'page' => 'serie'], ['id'], ['GET' => 0], null, false, true, null]],
+        323 => [[['_route' => 'page-query-scope', 'page' => 'query'], ['query', 'scope'], ['GET' => 0], null, false, true, null]],
+        331 => [[['_route' => 'page-query', 'page' => 'query'], ['query'], ['GET' => 0], null, false, true, null]],
+        359 => [[['_route' => 'page-folder', 'page' => 'folder'], ['path'], ['GET' => 0], null, false, true, null]],
+        381 => [[['_route' => 'page-format', 'page' => 'format'], ['id'], ['GET' => 0], null, false, true, null]],
+        394 => [[['_route' => 'fetch-format', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        419 => [[['_route' => 'feed-page', '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler'], ['page'], ['GET' => 0], null, false, true, null]],
+        431 => [[['_route' => 'feed-path', '_handler' => 'SebLucas\\Cops\\Handlers\\FeedHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        476 => [[['_route' => 'fetch-data', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        506 => [[['_route' => 'fetch-file', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'id', 'file'], ['GET' => 0], null, false, true, null]],
+        529 => [[['_route' => 'page-ebook', 'page' => 'folder', 'ebook' => 1], ['path'], ['GET' => 0], null, false, true, null]],
+        559 => [[['_route' => 'epubfs', '_handler' => 'SebLucas\\Cops\\Handlers\\EpubFsHandler'], ['db', 'data', 'comp'], ['GET' => 0], null, false, true, null]],
+        584 => [[['_route' => 'editor-static', 'editor' => 1, 'static' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        623 => [[['_route' => 'page-tags-letter', 'page' => 'tags_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
+        645 => [[['_route' => 'page-tag', 'page' => 'tag'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        658 => [[['_route' => 'page-tag-id', 'page' => 'tag'], ['id'], ['GET' => 0], null, false, true, null]],
+        686 => [[['_route' => 'tables-db-name', '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], ['db', 'name'], ['GET' => 0], null, false, true, null]],
+        699 => [[['_route' => 'tables-db', '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler'], ['db'], ['GET' => 0], null, false, true, null]],
+        742 => [[['_route' => 'fetch-thumb', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'id', 'thumb'], ['GET' => 0], null, false, false, null]],
+        779 => [[['_route' => 'page-custom', 'page' => 'custom'], ['custom', 'id'], ['GET' => 0], null, false, true, null]],
+        792 => [[['_route' => 'page-customtype', 'page' => 'customtype'], ['custom'], ['GET' => 0], null, false, true, null]],
+        823 => [[['_route' => 'fetch-cover', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'id'], ['GET' => 0], null, false, false, null]],
+        843 => [[['_route' => 'check-more', '_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler'], ['more'], ['GET' => 0], null, false, true, null]],
+        851 => [[['_route' => 'check', '_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler'], [], ['GET' => 0], null, false, false, null]],
+        895 => [[['_route' => 'calibre-details', '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler'], ['action', 'library', 'details'], ['GET' => 0], null, false, true, null]],
+        903 => [[['_route' => 'calibre-library', '_handler' => 'SebLucas\\Cops\\Handlers\\CalibreHandler'], ['action', 'library'], ['GET' => 0], null, false, true, null]],
+        939 => [[['_route' => 'calres', '_handler' => 'SebLucas\\Cops\\Handlers\\CalResHandler'], ['db', 'alg', 'digest'], ['GET' => 0], null, false, true, null]],
+        980 => [[['_route' => 'page-language', 'page' => 'language'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        993 => [[['_route' => 'page-language-id', 'page' => 'language'], ['id'], ['GET' => 0], null, false, true, null]],
+        1039 => [[['_route' => 'loader-action-dbNum-authorId-urlPath', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action', 'dbNum', 'authorId', 'urlPath'], ['GET' => 0], null, false, true, null]],
+        1059 => [[['_route' => 'loader-action-dbNum-authorId', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action', 'dbNum', 'authorId'], ['GET' => 0], null, false, true, null]],
+        1073 => [[['_route' => 'loader-action-dbNum', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action', 'dbNum'], ['GET' => 0], null, false, true, null]],
+        1083 => [[['_route' => 'loader-action-', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action'], ['GET' => 0], null, true, true, null]],
+        1092 => [[['_route' => 'loader-action', '_handler' => 'SebLucas\\Cops\\Handlers\\LoaderHandler'], ['action'], ['GET' => 0], null, false, true, null]],
+        1133 => [[['_route' => 'page-publishers-letter', 'page' => 'publishers_letter'], ['letter'], ['GET' => 0], null, false, true, null]],
+        1156 => [[['_route' => 'page-publisher', 'page' => 'publisher'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        1170 => [[['_route' => 'page-publisher-id', 'page' => 'publisher'], ['id'], ['GET' => 0], null, false, true, null]],
+        1209 => [[['_route' => 'page-rating', 'page' => 'rating'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        1223 => [[['_route' => 'page-rating-id', 'page' => 'rating'], ['id'], ['GET' => 0], null, false, true, null]],
+        1263 => [[['_route' => 'read-title', '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler'], ['db', 'data', 'title'], ['GET' => 0], null, false, true, null]],
+        1283 => [[['_route' => 'read', '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler'], ['db', 'data'], ['GET' => 0], null, false, true, null]],
+        1296 => [[['_route' => 'read-format', '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        1339 => [[['_route' => 'restapi-database-table', '_resource' => 'Database', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['db', 'name'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        1353 => [[['_route' => 'restapi-database', '_resource' => 'Database', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['db'], ['GET' => 0], null, false, true, null]],
+        1401 => [[['_route' => 'restapi-note', '_resource' => 'Note', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['type', 'item', 'title'], ['GET' => 0], null, false, true, null]],
+        1410 => [[['_route' => 'restapi-notes-type-id', '_resource' => 'Note', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['type', 'item'], ['GET' => 0], null, false, true, null]],
+        1420 => [[['_route' => 'restapi-notes-type', '_resource' => 'Note', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['type'], ['GET' => 0], null, false, true, null]],
+        1450 => [[['_route' => 'restapi-preference', '_resource' => 'Preference', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['key'], ['GET' => 0], null, false, true, null]],
+        1491 => [[['_route' => 'restapi-annotation', '_resource' => 'Annotation', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId', 'id'], ['GET' => 0], null, false, true, null]],
+        1500 => [[['_route' => 'restapi-annotations-book', '_resource' => 'Annotation', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId'], ['GET' => 0], null, false, true, null]],
+        1551 => [[['_route' => 'restapi-metadata-element-name', '_resource' => 'Metadata', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId', 'element', 'name'], ['GET' => 0], null, false, true, null]],
+        1560 => [[['_route' => 'restapi-metadata-element', '_resource' => 'Metadata', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId', 'element'], ['GET' => 0], null, false, true, null]],
+        1570 => [[['_route' => 'restapi-metadata', '_resource' => 'Metadata', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['bookId'], ['GET' => 0], null, false, true, null]],
+        1592 => [[['_route' => 'restapi-folders', '_resource' => 'Folder', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        1605 => [[['_route' => 'restapi-path', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        1650 => [[['_route' => 'page-identifier', 'page' => 'identifier'], ['id', 'title'], ['GET' => 0], null, false, true, null]],
+        1664 => [[['_route' => 'page-identifier-id', 'page' => 'identifier'], ['id'], ['GET' => 0], null, false, true, null]],
+        1712 => [[['_route' => 'fetch-inline', 'view' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['db', 'data', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        1740 => [[['_route' => 'fetch-image', 'image' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['size', 'path'], ['GET' => 0], null, false, true, null]],
+        1794 => [[['_route' => 'fetch-view', 'view' => 1, '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        1851 => [[['_route' => 'fetch-download', '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler'], ['data', 'db', 'ignore', 'type'], ['GET' => 0], null, false, true, null]],
+        1877 => [[['_route' => 'opds-page', '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler'], ['page'], ['GET' => 0], null, false, true, null]],
+        1890 => [[['_route' => 'opds-path', '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler'], ['path'], ['GET' => 0], null, false, true, null]],
+        1900 => [[['_route' => 'opds', '_handler' => 'SebLucas\\Cops\\Handlers\\OpdsHandler'], [], ['GET' => 0], null, false, false, null]],
+        1957 => [[['_route' => 'zipper-page-id-type', '_handler' => 'SebLucas\\Cops\\Handlers\\ZipperHandler'], ['page', 'id', 'type'], ['GET' => 0], null, false, false, null]],
+        1981 => [[['_route' => 'zipper-page-type', '_handler' => 'SebLucas\\Cops\\Handlers\\ZipperHandler'], ['page', 'type'], ['GET' => 0], null, false, false, null]],
+        2013 => [[['_route' => 'zipfs', '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler'], ['db', 'data', 'comp'], ['GET' => 0], null, false, true, null]],
+        2026 => [
             [['_route' => 'zipfs-format', '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler'], ['path'], ['GET' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
