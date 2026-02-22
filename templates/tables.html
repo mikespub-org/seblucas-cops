@@ -20,6 +20,7 @@
     const table = '{{=it.table}}';
     const columns = {{=it.json_columns}};
     const foreignKeys = {{=it.foreign_keys}};
+    const filterUrl = '{{=it.filter_url}}';
 
     $(document).ready(function() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -27,7 +28,14 @@
 
       if (ajaxUrl && columns) {
         columns.forEach(function(col) {
-            if (foreignKeys[col.data]) {
+            if (filterUrl && col.data == 'books') {
+                col.render = function(data, type, row) {
+                    if (type === 'display' && data) {
+                        return '<a href="' + filterUrl + row.id + '&from=' + table + '.' + row.id + '">' + data + '</a>';
+                    }
+                    return data;
+                };
+            } else if (foreignKeys[col.data]) {
                 col.render = function(data, type, row) {
                     if (type === 'display' && data) {
                         return '<a href="' + foreignKeys[col.data] + '?id=' + data + '&from=' + table + '.' + row.id + '">' + data + '</a>';
@@ -71,7 +79,7 @@
 </head>
 <body>
   <div class="container">
-    <nav aria-label="breadcrumb">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
       <ol class="breadcrumb">
         {{=it.breadcrumb}}
       </ol>

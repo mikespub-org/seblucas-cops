@@ -14,6 +14,7 @@ use JsonException;
 use SebLucas\Cops\Calibre\Annotation;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Calibre\Note;
@@ -413,8 +414,27 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             $paramValue = $request->post($column['name']);
             if (!is_null($paramValue) && $paramValue !== '') {
                 $where .= empty($where) ? ' WHERE ' : ' AND ';
-                $where .= "CAST(`{$column['name']}` AS TEXT) = ?";
+                $where .= "CAST({$name}.`{$column['name']}` AS TEXT) = ?";
                 $bindings[] = $paramValue;
+            }
+        }
+        $filterParams = [];
+        foreach (Filter::URL_PARAMS as $paramName => $className) {
+            $paramValue = $request->post($paramName, null);
+            if (!isset($paramValue)) {
+                continue;
+            }
+            $filterParams[$paramName] = $paramValue;
+        }
+        if (!empty($filterParams)) {
+            $req = Request::build($filterParams);
+            $filter = new Filter($req, [], 'books', $database);
+            $filterString = $filter->getFilterString();
+            $queryParams = $filter->getQueryParams();
+            if (!empty($filterString)) {
+                $where .= empty($where) ? ' WHERE true ' : '';
+                $where .= $filterString;
+                $bindings = array_merge($bindings, $queryParams);
             }
         }
 
@@ -429,7 +449,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
                 if (isset($column['type']) && str_contains(strtolower($column['type']), 'blob')) {
                     continue;
                 }
-                $whereParts[] = "CAST(`{$column['name']}` AS TEXT) LIKE ?";
+                $whereParts[] = "CAST({$name}.`{$column['name']}` AS TEXT) LIKE ?";
                 $bindings[] = '%' . $searchValue . '%';
             }
             if (!empty($whereParts)) {
@@ -445,7 +465,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             if (isset($columns[$colIndex])) {
                 $colName = $columns[$colIndex]['name'];
                 $dir = ($orderInfo['dir'] === 'asc') ? 'ASC' : 'DESC';
-                $order = " ORDER BY `{$colName}` {$dir}";
+                $order = " ORDER BY {$name}.`{$colName}` {$dir}";
             }
         }
 

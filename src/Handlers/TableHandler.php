@@ -93,7 +93,14 @@ class TableHandler extends BaseHandler
         $dbName = Database::getDbName($db) ?: '0';
         $data['breadcrumb'] = '<li class="breadcrumb-item"><a href="' . $homeLink . '">Databases</a></li>';
         $data['breadcrumb'] .= '<li class="breadcrumb-item"><a href="' . $dbLink . '">' . htmlspecialchars((string) $dbName) . '</a></li>';
-        if ($request->get('id')) {
+        $fromParam = $request->get('from', null, '/^\w+\.\d+$/');
+        if ($fromParam) {
+            $tableLink = self::route('tables-db-name', ['db' => $db, 'name' => $name]);
+            $data['breadcrumb'] .= '<li class="breadcrumb-item active" aria-current="page"><a href="' . $tableLink . '">' . $name . '</a></li>';
+            [$fromTable, $fromId] = explode('.', $fromParam);
+            $fromLink = self::route('tables-db-name', ['db' => $db, 'name' => $fromTable, 'id' => $fromId]);
+            $data['breadcrumb'] .= '<li class="breadcrumb-item">[ <a href="' . $fromLink . '">' . htmlspecialchars("$fromTable=$fromId") . '</a> ]</li>';
+        } elseif ($request->get('id')) {
             $tableLink = self::route('tables-db-name', ['db' => $db, 'name' => $name]);
             $data['breadcrumb'] .= '<li class="breadcrumb-item active" aria-current="page"><a href="' . $tableLink . '">' . $name . '</a></li>';
         } else {
@@ -103,18 +110,22 @@ class TableHandler extends BaseHandler
         $data['ajax_url'] = RestApiHandler::resource(Database::class, $params);
 
         $columns = Database::getTableInfo($db, $name);
-        $links = [
-            'authors' => 'books_authors_link.author',
-            //'languages' => 'books_languages_link.lang_code',
-            'publishers' => 'books_publishers_link.publisher',
-            'ratings' => 'books_ratings_link.rating',
-            'series' => 'books_series_link.series',
-            'tags' => 'books_tags_link.tag',
+        $filters = [
+            'authors' => 'a',
+            //'languages' => 'l',
+            'publishers' => 'p',
+            'ratings' => 'r',
+            'series' => 's',
+            'tags' => 't',
+            //'formats' => 'format',
         ];
-        if (array_key_exists($name, $links)) {
+        $filterUrl = '';
+        if (array_key_exists($name, $filters)) {
             $columns[] = [
                 'name' => 'books',
             ];
+            $filterUrl = self::route('tables-db-name', ['db' => $db, 'name' => 'books']);
+            $filterUrl .= '?' . $filters[$name] . '=';
         }
         $data['thead'] = '<tr>';
         $data['columns'] = [];
@@ -139,6 +150,7 @@ class TableHandler extends BaseHandler
         $data['json_columns'] = json_encode($data['columns']);
         // make sure we don't have an empty array, which causes problems in Javascript for 'sort'
         $data['foreign_keys'] = json_encode($foreignKeys, JSON_FORCE_OBJECT);
+        $data['filter_url'] = $filterUrl;
         $data['table'] = $name;
         $data['api_key'] = Config::get('api_key');
 
@@ -194,6 +206,7 @@ class TableHandler extends BaseHandler
         $data['tfoot'] = $data['thead'];
         $data['json_columns'] = 'null';
         $data['foreign_keys'] = '{}';
+        $data['filter_url'] = '';
         $data['table'] = '';
         $data['api_key'] = '';
 
@@ -226,6 +239,7 @@ class TableHandler extends BaseHandler
         $data['tfoot'] = $data['thead'];
         $data['json_columns'] = 'null';
         $data['foreign_keys'] = '{}';
+        $data['filter_url'] = '';
         $data['table'] = '';
         $data['api_key'] = '';
 
