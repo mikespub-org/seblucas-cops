@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "215b188bc29a09a01102ce121e452d90",
+    "content-hash": "959844e1f4a3bd470a3eb889a7662bce",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -135,16 +135,16 @@
         },
         {
             "name": "mikespub/php-epub-meta",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/php-epub-meta.git",
-                "reference": "2bf360232ddbf151034c3de2935392a3652540e7"
+                "reference": "f4fb2c70d8baff42a251742a16b337c8b782d260"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/2bf360232ddbf151034c3de2935392a3652540e7",
-                "reference": "2bf360232ddbf151034c3de2935392a3652540e7",
+                "url": "https://api.github.com/repos/mikespub-org/php-epub-meta/zipball/f4fb2c70d8baff42a251742a16b337c8b782d260",
+                "reference": "f4fb2c70d8baff42a251742a16b337c8b782d260",
                 "shasum": ""
             },
             "require": {
@@ -157,7 +157,7 @@
                 "php": ">=8.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^11.5 || ^12.0"
+                "phpunit/phpunit": "^12.5 || ^13.0"
             },
             "suggest": {
                 "mikespub/epub-loader": "epub-loader is a utility resource for ebooks",
@@ -201,9 +201,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mikespub-org/php-epub-meta/issues",
-                "source": "https://github.com/mikespub-org/php-epub-meta/tree/4.0.1"
+                "source": "https://github.com/mikespub-org/php-epub-meta/tree/4.0.2"
             },
-            "time": "2026-01-24T14:03:48+00:00"
+            "time": "2026-02-22T17:52:33+00:00"
         },
         {
             "name": "mikespub/web-comic-reader",
@@ -1535,11 +1535,6 @@
                 "url": "https://github.com/vrana/adminer/releases/download/v5.4.2/editor-5.4.2.php"
             },
             "type": "library",
-            "autoload": {
-                "classmap": [
-                    "./"
-                ]
-            },
             "license": [
                 "Apache License 2.0 or GPL 2"
             ],
@@ -1850,16 +1845,16 @@
         },
         {
             "name": "mikespub/epub-loader",
-            "version": "4.0.3",
+            "version": "4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/epub-loader.git",
-                "reference": "582c08288de53d3757d511c1bee3a3a7e9632337"
+                "reference": "b3ac3e11445bf1f97db45a1e5436456d947aee6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/582c08288de53d3757d511c1bee3a3a7e9632337",
-                "reference": "582c08288de53d3757d511c1bee3a3a7e9632337",
+                "url": "https://api.github.com/repos/mikespub-org/epub-loader/zipball/b3ac3e11445bf1f97db45a1e5436456d947aee6a",
+                "reference": "b3ac3e11445bf1f97db45a1e5436456d947aee6a",
                 "shasum": ""
             },
             "require": {
@@ -1875,7 +1870,7 @@
                 "twig/twig": "^3.23"
             },
             "require-dev": {
-                "phpunit/phpunit": "^12.5"
+                "phpunit/phpunit": "^12.5 || ^13.0"
             },
             "suggest": {
                 "google/apiclient": "Client library for Google APIs",
@@ -1915,22 +1910,22 @@
             "description": "epub-loader is a utility resource for ebooks",
             "support": {
                 "issues": "https://github.com/mikespub-org/epub-loader/issues",
-                "source": "https://github.com/mikespub-org/epub-loader/tree/4.0.3"
+                "source": "https://github.com/mikespub-org/epub-loader/tree/4.0.4"
             },
-            "time": "2026-02-03T16:44:27+00:00"
+            "time": "2026-02-22T18:14:25+00:00"
         },
         {
             "name": "mikespub/survos-wikidata",
-            "version": "6.0.2",
+            "version": "6.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mikespub-org/survos-wikidata.git",
-                "reference": "8b2f72ba01f1a3022edbbeecfb4627c21de5e1e3"
+                "reference": "4c9e854a312378a11654273643996bc3cbf992cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/8b2f72ba01f1a3022edbbeecfb4627c21de5e1e3",
-                "reference": "8b2f72ba01f1a3022edbbeecfb4627c21de5e1e3",
+                "url": "https://api.github.com/repos/mikespub-org/survos-wikidata/zipball/4c9e854a312378a11654273643996bc3cbf992cd",
+                "reference": "4c9e854a312378a11654273643996bc3cbf992cd",
                 "shasum": ""
             },
             "require": {
@@ -1940,7 +1935,7 @@
             },
             "require-dev": {
                 "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^12.5",
+                "phpunit/phpunit": "^12.5 || ^13.0",
                 "rector/rector": "^2.3",
                 "roave/security-advisories": "dev-latest"
             },
@@ -1979,7 +1974,7 @@
                 "wikidata"
             ],
             "support": {
-                "source": "https://github.com/mikespub-org/survos-wikidata/tree/6.0.2"
+                "source": "https://github.com/mikespub-org/survos-wikidata/tree/6.0.3"
             },
             "funding": [
                 {
@@ -1991,7 +1986,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-01-24T19:27:17+00:00"
+            "time": "2026-02-22T18:10:35+00:00"
         },
         {
             "name": "myclabs/deep-copy",
