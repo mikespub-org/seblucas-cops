@@ -27,7 +27,7 @@
         "ext-zip": "*",
         "ext-zlib": "*",
         "mikespub/epubjs-reader": "^2026.1",
-        "mikespub/php-epub-meta": "^4.0",
+        "mikespub/php-epub-meta": "^4.1",
         "mikespub/web-comic-reader": "^2026.1",
         "mozilla/pdfjs-dist": "^5.4",
         "npm-asset/bootstrap": "^3.4",
@@ -95,7 +95,7 @@
                 "name": "adminer/adminer",
                 "description": "Database management in a single PHP file",
                 "version": "5.4.2",
-                "homepage": "httphttps://github.com/vrana/adminer/wiki/Enable-sqlite3",
+                "homepage": "https://github.com/vrana/adminer/wiki/Enable-sqlite3",
                 "license": "Apache License 2.0 or GPL 2",
                 "dist": {
                     "url": "https://github.com/vrana/adminer/releases/download/v5.4.2/adminer-5.4.2.php",
@@ -109,7 +109,7 @@
                 "name": "adminer/editor",
                 "description": "Database management in a single PHP file",
                 "version": "5.4.2",
-                "homepage": "httphttps://github.com/vrana/adminer/wiki/Enable-sqlite3",
+                "homepage": "https://github.com/vrana/adminer/wiki/Enable-sqlite3",
                 "license": "Apache License 2.0 or GPL 2",
                 "dist": {
                     "url": "https://github.com/vrana/adminer/releases/download/v5.4.2/editor-5.4.2.php",

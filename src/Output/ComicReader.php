@@ -103,7 +103,7 @@ class ComicReader extends EPubReader
         $images = $this->getImageFiles($zip);
         $zip->close();
         // get data ready for consumption
-        $datalink = $this->getDataLink();
+        $datalink = $this->getDataLink(false);
         $data = [];
         foreach ($images as $image) {
             $data[] = [

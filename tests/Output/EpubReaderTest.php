@@ -247,7 +247,7 @@ class EpubReaderTest extends TestCase
         $this->assertNotFalse($result);
         // Avoid phpunit notices about mock objects without expectations
         $reader = new class extends EPubReader {
-            public function getDataLink()
+            public function getDataLink($reader = true)
             {
                 return 'vendor/bin/index.php/zipfs/test.epub?comp=';
             }
@@ -274,7 +274,7 @@ class EpubReaderTest extends TestCase
         $filePath = self::$book->file();
         // Avoid phpunit notices about mock objects without expectations
         $reader = new class extends EPubReader {
-            public function getDataLink()
+            public function getDataLink($reader = true)
             {
                 return 'vendor/bin/index.php/zipfs/test.epub?comp=';
             }

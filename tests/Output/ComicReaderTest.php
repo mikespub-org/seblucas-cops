@@ -78,7 +78,7 @@ class ComicReaderTest extends TestCase
         $this->assertNotFalse($result);
         // Avoid phpunit notices about mock objects without expectations
         $reader = new class extends ComicReader {
-            public function getDataLink()
+            public function getDataLink($reader = true)
             {
                 return 'vendor/bin/index.php/zipfs/test.epub?comp=';
             }
@@ -116,7 +116,7 @@ class ComicReaderTest extends TestCase
         $filePath = dirname(__DIR__) . '/cba-cbam.cbz';
         // Avoid phpunit notices about mock objects without expectations
         $reader = new class extends ComicReader {
-            public function getDataLink()
+            public function getDataLink($reader = true)
             {
                 return '/cops/index.php/zipfs/cba-cbam.cbz?comp=';
             }

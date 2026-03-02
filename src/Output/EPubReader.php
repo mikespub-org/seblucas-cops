@@ -291,15 +291,20 @@ class EPubReader extends BaseRenderer
 
     /**
      * Summary of getDataLink
+     * @param bool $reader let reader handle components in folder
      * @return string
      */
-    public function getDataLink()
+    public function getDataLink($reader = true)
     {
         if ($this->book->isExternal()) {
             // URL format: full url to external data file here - let reader handle parsing etc. in browser
             return $this->data->getExternalPath();
         }
         if (isset($this->book->folderId)) {
+            // URL format: index.php/format/{path} - let reader handle parsing etc. in browser
+            if ($reader) {
+                return $this->data->getHtmlLink();
+            }
             // URL format: index.php/zipfs/{path}?comp={comp} - let reader retrieve individual components
             $params = [];
             $params['path'] = $this->data->getFolderPath();
@@ -437,7 +442,7 @@ class EPubReader extends BaseRenderer
         $epub = new self::$epubClass($filePath);
         $epub->initSpineComponent();
         // get data ready for consumption
-        $datalink = $this->getDataLink();
+        $datalink = $this->getDataLink(false);
         $data = [];
         $contents = $epub->contents();
         $data['contents'] = [];
