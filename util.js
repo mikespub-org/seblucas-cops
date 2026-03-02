@@ -491,6 +491,12 @@ function link_Clicked (event) {
         url.indexOf('/files/') !== -1) {
         return;
     }
+
+    // If the link has a download attribute let the browser handle it
+    if (currentLink.attr('download') !== undefined) {
+        return;
+    }
+    
     event.preventDefault();
 
     if ($(".mfp-ready").length)
