@@ -1,0 +1,78 @@
+{# base.html is extended by all other templates #}
+{% block header %}
+<div class="navbar navbar-dark bg-dark navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMainCollapse" aria-controls="navbarMainCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>      
+      {% if it.parenturl != "" %}
+        <a class="navbar-brand" href="{{it.parenturl}}">{{it.fullTitle}}</a>
+      {% else %}
+        <a class="navbar-brand" href="{{it.homeurl}}">{{it.fullTitle}}</a>
+      {% endif %}
+      {% block download %}{% endblock download %}
+      {% block filterlinks %}
+      {% if it.filters  %}
+        <!-- show current filter(s) -->
+        {% for filter in it.filters %}
+        <a class="navbar-brand" href="{{filter.navlink}}" data-bs-toggle="tooltip" data-placement="bottom" title="{{filter.class}} {{filter.title}}">
+          <i class="bi bi-filter"></i>
+        </a>
+        {% endfor %}
+      {% else %}
+        {% if it.filterurl  %}
+          <!-- show links to filter -->
+          {% if it.containsBook == 0  %}
+            <a class="navbar-brand" href="{{it.filterurl}}" data-bs-toggle="tooltip" data-placement="bottom" title="{{it.c.i18n.bookwordTitle}}">
+              <i class="bi bi-list-ul"></i>
+            </a>
+          {% else %}
+            <a class="navbar-brand" href="{{it.filterurl}}" data-bs-toggle="tooltip" data-placement="bottom" title="{{it.c.i18n.linksTitle}}">
+              <i class="bi bi-link-45deg"></i>
+            </a>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+      {% endblock filterlinks %}
+    </div>
+    <form id="searchForm" class="d-flex" role="search" action="{{it.baseurl}}" method="get">
+      <div class="input-group">
+        <input type="hidden" name="page" value="query">
+        {% if it.databaseId != "" %}
+            <input type="hidden" name="db" value="{{it.databaseId}}">
+        {% endif %}
+        {% if it.libraryId != "" %}
+            <input type="hidden" name="vl" value="{{it.libraryId}}">
+        {% endif %}
+        <input id="queryInput" type="text" class="form-control" placeholder="{{it.c.i18n.searchAlt}}" name="query" aria-label="Search">
+        <button id="searchButton" type="submit" class="btn btn-success"><i class="bi bi-search"></i></button>
+      </div>
+    </form>     
+    <div class="collapse navbar-collapse" id="navbarMainCollapse">
+      {% block sortlinks %}{% endblock sortlinks %}
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-bs-toggle="tooltip" data-placement="bottom" title="{{it.c.i18n.defaultTemplate}}">
+          <i class="bi bi-image"></i><span class="d-none d-sm-inline"> {{it.c.i18n.defaultTemplate}}</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-link" href="{{it.customizeurl}}" data-bs-toggle="tooltip" data-placement="bottom" title="{{it.c.i18n.customizeTitle}}">
+          <i class="bi bi-tools"></i><span class="d-none d-sm-inline"> {{it.c.i18n.customizeTitle}}</span>
+        </a></li>
+        <li class="nav-item"><a class="nav-link" href="{{it.abouturl}}" data-bs-toggle="tooltip" data-placement="bottom" title="{{it.c.i18n.aboutTitle}}">
+          <i class="bi bi-info-circle"></i><span class="d-none d-sm-inline"> {{it.c.i18n.aboutTitle}}</span>
+        </a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+{% endblock header %}
+
+{% block main %}
+<div id="main">
+  This is the main block
+</div>
+{% endblock main %}
+
+{% block extra %}{% endblock extra %}
+
+{% block footer %}{% endblock footer %}

@@ -1,0 +1,40 @@
+{
+  "short_name": "COPS",
+  "name": "Calibre OPDS PHP Server",
+  "description": "Browse and download ebooks from your Calibre library.",
+  "id": "../",
+  "icons": [
+    {
+      "src": "../favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+        "src": "../images/icons/icon57.png",
+        "sizes": "57x57",
+        "type": "image/png"
+    },
+    {
+        "src": "../images/icons/icon72.png",
+        "sizes": "72x72",
+        "type": "image/png"
+    },
+    {
+        "src": "../images/icons/icon114.png",
+        "sizes": "114x114",
+        "type": "image/png"
+    },
+    {
+        "src": "../images/icons/icon144.png",
+        "sizes": "144x144",
+        "type": "image/png",
+        "purpose": "maskable any"
+    }
+  ],
+  "start_url": "../index.php",
+  "display": "standalone",
+  "theme_color": "#f2f2f2",
+  "background_color": "#f2f2f2",
+  "orientation": "any",
+  "scope": "../"
+}

@@ -43,7 +43,7 @@
                     }
                 ],
                 "page-books-letter": [
-                    "/books/letter/{letter:\\w}",
+                    "/books/letter/{letter}",
                     {
                         "page": "books_letter"
                     }
@@ -517,7 +517,8 @@
                 "restapi-user-details": [
                     "/restapi/user/details",
                     {
-                        "_resource": "User"
+                        "_resource": "User",
+                        "details": true
                     }
                 ],
                 "restapi-user": [
@@ -593,6 +594,17 @@
                 ],
                 "zipper-page-type": [
                     "/zipper/{page}/{type}.zip"
+                ]
+            }
+        },
+        {
+            "handler": "calibre",
+            "routes": {
+                "calibre-details": [
+                    "/calibre/{action}/{library}/{details:.*}"
+                ],
+                "calibre-library": [
+                    "/calibre/{action}/{library}"
                 ]
             }
         },

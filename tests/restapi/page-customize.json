@@ -14,7 +14,7 @@
         {
             "class": "",
             "title": "Template",
-            "content": "<select id='template' name='template' onchange='updateCookie (this); window.location=window.location;'><option value='bootstrap' >bootstrap</option><option value='bootstrap2' selected='selected'>bootstrap2</option><option value='bootstrap5' >bootstrap5</option><option value='default' >default</option><option value='twigged' >twigged</option></select>",
+            "content": "<select id='template' name='template' onchange='updateCookie (this); window.location=window.location;'><option value='bootstrap' >bootstrap</option><option value='bootstrap2' selected='selected'>bootstrap2</option><option value='bootstrap5' >bootstrap5</option><option value='default' >default</option><option value='twigged' >twigged</option><option value='twigged5' >twigged5</option></select>",
             "navlink": "#",
             "number": ""
         },

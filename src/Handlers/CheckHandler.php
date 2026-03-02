@@ -14,12 +14,11 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
-use PDO;
+use Pdo\Sqlite;
 
 /**
  * Summary of CheckHandler
@@ -50,7 +49,7 @@ class CheckHandler extends BaseHandler
         } catch (Exception $e) {
             echo "<h2>Error in normal handling:</h2>";
             echo "<h4>" . $e->getMessage() . "<h4><br/>";
-            include 'checkconfig.php';
+            include 'checkconfig.php';  // NOSONAR
         }
     }
 
@@ -72,6 +71,7 @@ class CheckHandler extends BaseHandler
         $data['baseurl'] = $this->getBaseURL($request);
         $data['render'] = $this->getRender($request);
         $data['agent'] = $this->getAgent($request);
+        $data['language'] = $this->getLanguage($request);
         $data['full']  = $request->get('full');
         $data['databases'] = $this->getDatabases($data['full']);
 
@@ -118,12 +118,12 @@ class CheckHandler extends BaseHandler
     public function getPhpVersion()
     {
         if (defined('PHP_VERSION_ID')) {
-            if (PHP_VERSION_ID >= 80200) {
+            if (PHP_VERSION_ID >= 80400) {
                 return 'OK (' . PHP_VERSION . ')';
             }
-            return 'Please install PHP >= 8.2 (' . PHP_VERSION . ')';
+            return 'Please install PHP >= 8.4 (' . PHP_VERSION . ')';
         }
-        return 'Please install PHP >= 8.2';
+        return 'Please install PHP >= 8.4';
     }
 
     /**
@@ -217,7 +217,7 @@ class CheckHandler extends BaseHandler
         $result .= 'SERVER_ADDR: ' . ($request->server('SERVER_ADDR') ?? '') . '<br>';
         $result .= 'SERVER_PORT: ' . ($request->server('SERVER_PORT') ?? '') . '<br>';
         $result .= 'REQUEST_SCHEME: ' . ($request->server('REQUEST_SCHEME') ?? '') . '<br>';
-        $result .= 'REQUEST_URI: ' . ($request->server('REQUEST_URI') ?? '') . '<br>';
+        $result .= 'REQUEST_URI: ' . htmlspecialchars($request->server('REQUEST_URI') ?? '') . '<br>';
         return $result;
     }
 
@@ -242,6 +242,16 @@ class CheckHandler extends BaseHandler
     public function getAgent($request)
     {
         return $request->agent();
+    }
+
+    /**
+     * Summary of getLanguage
+     * @param Request $request
+     * @return string
+     */
+    public function getLanguage($request)
+    {
+        return $request->language() . ' (locale: ' . $request->locale() . ')';
     }
 
     /**
@@ -284,7 +294,7 @@ Please check
             }
             $title = 'Check if Calibre database file can be opened with PHP';
             try {
-                $db = new PDO('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
                 $message = $name . ' OK';
             } catch (Exception $e) {
                 $message = $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
@@ -293,7 +303,7 @@ Please check
 
             $title = 'Check if Calibre database file contains at least some of the needed tables';
             try {
-                $db = new PDO('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
                 $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
                 if ($count == 4) {
                     $message = $name . ' OK';
@@ -324,7 +334,7 @@ Please check
      */
     public function handleMore($request)
     {
-        unset($request->urlParams[Route::HANDLER_PARAM]);
+        unset($request->urlParams[Request::HANDLER_PARAM]);
         $request->serverParams = ['HTTP_REDACTED' => true];
         $message = var_export($request, true);
 

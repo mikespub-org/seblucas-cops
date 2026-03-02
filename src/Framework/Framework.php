@@ -14,9 +14,10 @@ use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Middleware\AuthMiddleware;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\Routing;
 use SebLucas\Cops\Handlers\QueueBasedHandler;
 
@@ -34,7 +35,10 @@ class Framework
     /** @var HandlerManager|null */
     protected static $handlerManager = null;
     /** @var array<mixed> */
-    protected static $middlewares = [];
+    protected static $middlewares = [
+        // Use authentication middleware with updateConfig()
+        AuthMiddleware::class,
+    ];
 
     protected ?RequestContext $context = null;
     protected HandlerManager $manager;
@@ -85,7 +89,7 @@ class Framework
             $params = $context->matchRequest();
             $handler = $context->resolveHandler();
 
-            // Apply middleware if configured
+            // Apply middleware - incl. AuthMiddleware with updateConfig()
             if (!empty(self::$middlewares)) {
                 $queue = new QueueBasedHandler($context, $handler);
                 foreach (self::$middlewares as $middleware) {
@@ -129,7 +133,7 @@ class Framework
             $this->context = new RequestContext(
                 $request,
                 $this->manager,
-                $this->routerInstance
+                $this->routerInstance,
             );
         }
         return $this->context;
@@ -164,19 +168,9 @@ class Framework
      */
     protected function initializeRoutes(): void
     {
-        self::loadRoutes();
-    }
-
-    /**
-     * Load routes for all handlers
-     * @return void
-     */
-    public static function loadRoutes()
-    {
-        //Route::load();
-        Route::init();
-        // @todo add cors options after the last handler or use middleware or...
-        //'cors' => ['/{path:.*}', ['_handler' => 'TODO'], ['OPTIONS']],
+        $routes = new RouteCollection($this->manager);
+        $this->routerInstance = new self::$routerClass($routes);
+        self::$router = $this->routerInstance;
     }
 
     /**

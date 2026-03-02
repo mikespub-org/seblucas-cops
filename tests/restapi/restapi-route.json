@@ -90,7 +90,7 @@
         {
             "name": "page-books-letter",
             "route": [
-                "/books/letter/{letter:\\w}",
+                "/books/letter/{letter}",
                 {
                     "page": "books_letter",
                     "_route": "page-books-letter"
@@ -1201,6 +1201,7 @@
                 "/restapi/user/details",
                 {
                     "_resource": "User",
+                    "details": true,
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
                     "_route": "restapi-user-details"
                 },
@@ -1429,6 +1430,34 @@
                 {
                     "_handler": "SebLucas\\Cops\\Handlers\\ZipperHandler",
                     "_route": "zipper-page-type"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "calibre-details",
+            "route": [
+                "/calibre/{action}/{library}/{details:.*}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\CalibreHandler",
+                    "_route": "calibre-details"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "calibre-library",
+            "route": [
+                "/calibre/{action}/{library}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\CalibreHandler",
+                    "_route": "calibre-library"
                 },
                 [
                     "GET"

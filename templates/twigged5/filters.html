@@ -1,0 +1,75 @@
+{# filters.html is used for it.isFilterPage #}
+{% extends 'mainlist.html' %}
+
+{% block content %}
+<div id="content" class="container-fluid">
+    <div class="row">
+        <form id="filterForm" method="POST">
+        <!-- group entries by filter group -->
+        {% for group in it.filterGroups %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-12 col-half-padding">
+            {% block filtergroup %}
+            <div class="card h-100">
+                <div class="card-header h-100">
+                    <a href="{{group.header.navlink}}">
+                        {{group.header.title|escape}}
+                    </a>
+                </div>
+                {% for entry in group.entries %}
+                    <div class="card-body">
+                        <div class="form-check">
+                            {% if it.page == 'filter' and entry.class != 'Paging' %}
+                                {% set params = entry.content|split('=') %}
+                                {% if it.checked[params.0] and it.checked[params.0][params.1] %}
+                                    <input class="form-check-input" type="checkbox" id="check_{{params.0}}_{{params.1}}" name="{{params.0}}[{{params.1}}]" value="1" checked="checked" />
+                                {% else %}
+                                    <input class="form-check-input" type="checkbox" id="check_{{params.0}}_{{params.1}}" name="{{params.0}}[{{params.1}}]" value="1" />
+                                {% endif %}
+                            {% endif %}
+                            <label class="form-check-label" for="check_{{params.0}}_{{params.1}}">
+                                {{entry.title|escape}}
+                            </label>
+                            <span class="badge bg-primary rounded-pill float-end">{{entry.number}}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endblock filtergroup %}
+        </div>
+        {% endfor %}
+        {% if it.page == 'filter' %}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-12 col-half-padding">
+            <div class="card h-100">
+                <div class="card-header h-100">
+                    {{it.c.i18n.filtersTitle}}
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <button id="filterSubmitButton" type="submit" class="btn btn-success" title="{{it.c.i18n.filtersTitle}}"><i class="bi bi-check-lg"></i></button>
+                        <button id="filterClearButton" type="button" class="btn btn-danger" title="{{it.c.i18n.filterClearAll}}"><i class="bi bi-x-lg"></i></button>
+                        <input type="hidden" name="page" value="filter" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        </form>
+        {% if it.page == 'filter' %}
+        <script type="text/javascript">
+            var form = document.getElementById('filterForm'); // Replaced const with var
+            var btn = document.getElementById('filterClearButton');
+            btn.addEventListener("click", function () {
+                var boxes = form.getElementsByTagName('input'); // Replaced let with var
+                for (var i = 0; i < boxes.length; i++) { // Replaced for...of with traditional for loop
+                    var box = boxes[i];
+                    if (box.type == 'checkbox') {
+                        box.checked = false;
+                    }
+                }
+                form.submit();
+            });
+        </script>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

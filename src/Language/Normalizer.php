@@ -41,7 +41,7 @@ class Normalizer
      */
     public static function normAndUp($s)
     {
-        return (string) (new UnicodeString($s))->ascii()->upper();
+        return (string) new UnicodeString($s)->ascii()->upper();
     }
 
     /**
@@ -51,7 +51,7 @@ class Normalizer
      */
     public static function normalize($s)
     {
-        return (string) (new UnicodeString($s))->ascii();
+        return (string) new UnicodeString($s)->ascii();
     }
 
     /**

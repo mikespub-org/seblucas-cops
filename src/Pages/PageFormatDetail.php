@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Format;
+use InvalidArgumentException;
 
 /**
  * This shows the books with a particular format, e.g. epub, pdf, ...
@@ -24,6 +25,9 @@ class PageFormatDetail extends PageWithDetail
     {
         // this would be the identifier - override here
         $this->idGet = $this->request->get('id', null, '/^\w+$/');
+        if (is_null($this->idGet)) {
+            throw new InvalidArgumentException('Invalid Format');
+        }
         /** @var Format $instance */
         $instance = Format::getInstanceById($this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);

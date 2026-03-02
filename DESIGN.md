@@ -52,14 +52,7 @@ flowchart LR
 
 The Framework was introduced in COPS 2.7.0 to move all custom code from the Endpoint scripts to dedicated Handlers.
 
-Endpoint scripts in COPS 2.7.x all shared the same minimal code:
-```php
-use SebLucas\Cops\Framework;
-
-require_once __DIR__ . '/config.php';
-
-Framework::run('...');
-```
+Endpoint scripts in COPS 2.7.x all shared the same `Framework::run('...');` code
 and they only differentiate by the `name` of the handler to be called. With COPS 3.1.x this code is replaced with a redirect to `index.php/name` and they are permanently removed in release 3.3.1.
 
 Within the Framework, the run() method is equally simple and basically covers the following steps:
@@ -209,8 +202,14 @@ In development mode, some additional packages are used:
 - PHP Packages
   - kiwilan/php-opds for OPDS 2.0 feeds
   - mikespub/epub-loader to search information on books, authors etc.
-  - nikic/fast-route as alternative for symfony/routing (test)
+  - nikic/fast-route as alternative for symfony/routing (legacy)
   - webonyx/graphql-php for the GraphQL interface
 - Via CDN in templates
   - datatables.net with datatables.net-bs5
   - graphiql with react, react-dom and graphql
+
+Note: NPM assets are also documented in [package.json](https://github.com/mikespub-org/seblucas-cops/blob/main/package.json) for information only.
+
+## Framework Integration
+
+COPS can be integrated within other popular PHP frameworks like Symfony, Laravel, or Slim - see [Framework/README.md](https://github.com/mikespub-org/seblucas-cops/blob/main/src/Framework/README.md)

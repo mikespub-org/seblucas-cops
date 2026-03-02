@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -36,7 +36,7 @@ class PageHandler extends BaseHandler
             "page-author" => ["/authors/{id:\d+}/{title}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-author-id" => ["/authors/{id:\d+}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-authors" => ["/authors", ["page" => PageId::ALL_AUTHORS]],
-            "page-books-letter" => ["/books/letter/{letter:\w}", ["page" => PageId::ALL_BOOKS_LETTER]],
+            "page-books-letter" => ["/books/letter/{letter}", ["page" => PageId::ALL_BOOKS_LETTER]],
             "page-books-letters" => ["/books/letter", ["page" => PageId::ALL_BOOKS, "letter" => 1]],
             "page-books-year" => ["/books/year/{year:\d+}", ["page" => PageId::ALL_BOOKS_YEAR]],
             "page-books-years" => ["/books/year", ["page" => PageId::ALL_BOOKS, "year" => 1]],
@@ -93,7 +93,7 @@ class PageHandler extends BaseHandler
     public static function link($params = [])
     {
         // use default page handler to find the route for html and json
-        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Request::HANDLER_PARAM]);
         return UriGenerator::process($params);
     }
 
@@ -135,29 +135,6 @@ class PageHandler extends BaseHandler
             $routes = $parent::getRoutes();
         }
         return $routes;
-    }
-
-    /**
-     * Summary of findRouteName - @todo adapt to actual routes for each handler
-     * @deprecated 3.5.7 use HasRouteTrait::getRoute() or BaseHandler::route() instead
-     * @param array<mixed> $params
-     * @return string
-     */
-    public static function findRouteName($params)
-    {
-        if (!empty($params[Route::ROUTE_PARAM])) {
-            return $params[Route::ROUTE_PARAM];
-        }
-        $name = self::HANDLER;
-        $name .= '-' . ($params["page"] ?? '');
-        unset($params["page"]);
-        if (count(static::getRoutes()) > 1) {
-            $accept = array_intersect(array_keys($params), static::PARAMLIST);
-            if (!empty($accept)) {
-                $name = $name . '-' . implode('-', $accept);
-            }
-        }
-        return $name;
     }
 
     public function handle($request)

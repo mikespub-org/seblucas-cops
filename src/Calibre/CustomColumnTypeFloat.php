@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
-use UnexpectedValueException;
+use InvalidArgumentException;
 
 class CustomColumnTypeFloat extends CustomColumnType
 {
@@ -47,14 +47,14 @@ class CustomColumnTypeFloat extends CustomColumnType
     /**
      * Summary of getQueryByRange
      * @param string $range
-     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
      * @return ?array{0: string, 1: array<mixed>}
      */
     public function getQueryByRange($range)
     {
         $matches = [];
         if (!preg_match(self::GET_PATTERN, $range, $matches)) {
-            throw new UnexpectedValueException();
+            throw new InvalidArgumentException('Invalid Range');
         }
         $lower = $matches[1];
         $upper = $matches[2];

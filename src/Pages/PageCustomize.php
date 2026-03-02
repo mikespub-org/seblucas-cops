@@ -67,6 +67,9 @@ class PageCustomize extends Page
         $result = [];
         foreach (glob("templates/*", GLOB_ONLYDIR) as $filename) {
             if (preg_match('/templates\/(.*)/', $filename, $m)) {
+                if ($m[1] === 'admin') {
+                    continue;
+                }
                 array_push($result, $m [1]);
             }
         }

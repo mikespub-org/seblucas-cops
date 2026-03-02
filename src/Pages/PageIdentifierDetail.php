@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Identifier;
+use InvalidArgumentException;
 
 /**
  * This shows the books with a particular identifier type, e.g. amazon, isbn, url, ...
@@ -24,6 +25,9 @@ class PageIdentifierDetail extends PageWithDetail
     {
         // this would be the identifier - override here
         $this->idGet = $this->request->get('id', null, '/^\w+$/');
+        if (is_null($this->idGet)) {
+            throw new InvalidArgumentException('Invalid Identifier');
+        }
         /** @var Identifier $instance */
         $instance = Identifier::getInstanceById($this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);

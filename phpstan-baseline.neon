@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Comparison operation "\>\=" between int\<80200, 80499\> and 70400 is always true\.$#'
+			message: '#^Comparison operation "\>\=" between int\<80400, 80599\> and 80400 is always true\.$#'
 			identifier: greaterOrEqual.alwaysTrue
 			count: 1
 			path: checkconfig.php
@@ -11,12 +11,6 @@ parameters:
 			identifier: method.unused
 			count: 1
 			path: src/Calibre/Annotation.php
-
-		-
-			message: '#^Call to an undefined static method SebLucas\\Cops\\Calibre\\Base\|SebLucas\\Cops\\Calibre\\Data\:\:getCount\(\)\.$#'
-			identifier: staticMethod.notFound
-			count: 1
-			path: src/Calibre/BaseList.php
 
 		-
 			message: '#^PHPDoc tag @var with type SebLucas\\Cops\\Calibre\\Category is not subtype of native type static\(SebLucas\\Cops\\Calibre\\Category\)\.$#'
@@ -31,25 +25,13 @@ parameters:
 			path: src/Calibre/Format.php
 
 		-
-			message: '#^Call to an undefined method DOMNode\:\:getAttribute\(\)\.$#'
-			identifier: method.notFound
+			message: '#^Instanceof between SebLucas\\Cops\\Output\\Response and SebLucas\\Cops\\Output\\Response will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
 			count: 1
-			path: src/Calibre/Metadata.php
+			path: src/Framework/FrameworkTodo.php
 
 		-
-			message: '#^Call to an undefined method DOMNode\:\:getElementsByTagName\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Calibre/Metadata.php
-
-		-
-			message: '#^Right side of && is always false\.$#'
-			identifier: booleanAnd.rightAlwaysFalse
-			count: 1
-			path: src/Handlers/AdminHandler.php
-
-		-
-			message: '#^Comparison operation "\>\=" between int\<80200, 80499\> and 80200 is always true\.$#'
+			message: '#^Comparison operation "\>\=" between int\<80400, 80599\> and 80400 is always true\.$#'
 			identifier: greaterOrEqual.alwaysTrue
 			count: 1
 			path: src/Handlers/CheckHandler.php
@@ -88,4 +70,4 @@ parameters:
 			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 12
-			path: tests/ConfigTest.php
+			path: tests/Input/ConfigTest.php

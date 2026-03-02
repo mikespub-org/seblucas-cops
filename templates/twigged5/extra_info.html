@@ -1,0 +1,21 @@
+{# extra_info.html is included in booklist.html if it.extra.title is not empty #}
+
+<div id="extra-info" class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-half-padding">
+            <div class="card h-100">
+                <div class="card-header">
+                  {{it.extra.title}}
+                </div>
+                <div class="card-body">
+                  {% if it.extra.link %}
+                    <p>{{it.c.i18n.linkTitle}}: <a rel="external" target="_blank" href="{{it.extra.link}}">{{it.extra.link}}</a></p>
+                  {% endif %}
+                  {% if it.extra.content %}
+                    {{it.extra.content|raw}}
+                  {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

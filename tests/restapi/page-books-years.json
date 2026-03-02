@@ -78,7 +78,7 @@
             "class": "Letter",
             "title": "孙",
             "content": "1 book",
-            "navlink": "vendor/bin/index.php?letter=%E5%AD%99",
+            "navlink": "vendor/bin/index.php/restapi/books/letter/%E5%AD%99",
             "number": 1
         }
     ],

@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Middleware\ProtectMiddleware;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
@@ -33,19 +34,19 @@ class ZipperHandler extends BaseHandler
         ];
     }
 
+    public static function getMiddleware()
+    {
+        return [
+            ProtectMiddleware::class,
+        ];
+    }
+
     public function handle($request)
     {
         if (empty(Config::get('download_page'))) {
             return Response::sendError($request, 'Downloads by page are disabled in config');
         }
-        if (Config::get('fetch_protect') == '1') {
-            $session = $this->getContext()->getSession();
-            $session->start();
-            $connected = $session->get('connected');
-            if (!isset($connected)) {
-                return Response::notFound($request);
-            }
-        }
+        // check if session connected in ProtectMiddleware
 
         // create empty file response to start with!?
         $response = new FileResponse();

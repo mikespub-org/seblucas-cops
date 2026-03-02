@@ -11,7 +11,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\HtmlRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
@@ -30,6 +30,13 @@ class HtmlHandler extends PageHandler
     public static function getRoutes()
     {
         return parent::getRoutes();
+    }
+
+    public static function getMiddleware()
+    {
+        return [
+            ConnectMiddleware::class,
+        ];
     }
 
     public function handle($request)
@@ -52,15 +59,10 @@ class HtmlHandler extends PageHandler
         // It has to be done before any header is sent.
         Database::checkDatabaseAvailability($database);
 
-        if (Config::get('fetch_protect') == '1') {
-            $session = $this->getContext()->getSession();
-            $session->start();
-            $connected = $session->get('connected');
-            if (!isset($connected)) {
-                $session->set('connected', 0);
-            }
-            $request->setSession($session);
-        } elseif (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER])) {
+        // set session connected in ConnectMiddleware
+
+        if (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER])) {
+            // @todo avoid double work with ConnectMiddleware
             $session = $this->getContext()->getSession();
             $session->start();
             $request->setSession($session);

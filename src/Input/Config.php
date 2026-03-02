@@ -17,7 +17,7 @@ use Exception;
  */
 class Config
 {
-    public const VERSION = '3.6.5';
+    public const VERSION = '4.1.0';
     public const ENDPOINT = 'index.php';
     protected const PREFIX = 'cops_';
 
@@ -34,6 +34,7 @@ class Config
      */
     public static function load($values)
     {
+        // add user- and/or database-specific config after AuthMiddleware
         // some phpunit tests re-load the config so we merge here
         self::$values = array_merge(self::$values, $values);
     }
@@ -77,7 +78,7 @@ class Config
     }
 
     /**
-     * Summary of getDefaultConfig
+     * Get config/default.php
      * @return array<string, mixed>
      */
     public static function getDefaultConfig()
@@ -89,7 +90,7 @@ class Config
     }
 
     /**
-     * Summary of getLocalConfig
+     * Get config/local.php
      * @return array<string, mixed>
      */
     public static function getLocalConfig()
@@ -100,5 +101,68 @@ class Config
             require $filepath;  // NOSONAR
         }
         return $config;
+    }
+
+    /**
+     * Get config/local.{$username}.php
+     * @param string $username
+     * @return array<string, mixed>
+     */
+    public static function getUserConfig($username)
+    {
+        $config = [];
+        // Clean username, only allow a-z, A-Z, 0-9, -_ chars
+        $username = preg_replace('/[^a-zA-Z0-9_-]/', '', $username);
+        if (empty($username)) {
+            return $config;
+        }
+        $filepath = dirname(__DIR__, 2) . '/config/local.' . $username . '.php';
+        if (file_exists($filepath)) {
+            require $filepath;  // NOSONAR
+        }
+        return $config;
+    }
+
+    /**
+     * Get config/local.{$username}.db-{$database}.php or config/local.db-{$database}.php
+     * @param ?int $database
+     * @param ?string $username
+     * @return array<string, mixed>
+     */
+    public static function getDatabaseConfig($database, $username = null)
+    {
+        $config = [];
+        $database ??= 0;
+        $username ??= '';
+        // Clean username, only allow a-z, A-Z, 0-9, -_ chars
+        $username = preg_replace('/[^a-zA-Z0-9_-]/', '', $username);
+        if (!empty($username)) {
+            $filepath = dirname(__DIR__, 2) . '/config/local.' . $username . '.db-' . $database . '.php';
+            if (file_exists($filepath)) {
+                require $filepath;  // NOSONAR
+                // username-specific database setup
+                return $config;
+            }
+            // common database setup across users
+        }
+        $filepath = dirname(__DIR__, 2) . '/config/local.db-' . $database . '.php';
+        if (file_exists($filepath)) {
+            require $filepath;  // NOSONAR
+        }
+        return $config;
+    }
+
+    /**
+     * List config/local.*.php files
+     * @return array<string>
+     */
+    public static function listLocalConfigFiles()
+    {
+        $files = [];
+        $dirpath = dirname(__DIR__, 2) . '/config';
+        foreach (glob($dirpath . '/local.*.php') as $filename) {
+            $files[] = basename($filename);
+        }
+        return $files;
     }
 }

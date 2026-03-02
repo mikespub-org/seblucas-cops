@@ -1,0 +1,32 @@
+/*
+ * Bootstrap 5 overrides to restore some Bootstrap 3 look and feel.
+ */
+
+/*
+ * Restore the default Bootstrap 3 badge appearance.
+ * This makes any .badge gray and pill-shaped by default.
+ */
+.badge:not([class*="bg-"]) {
+    background-color: #777;
+    color: #fff;
+}
+
+.badge {
+    border-radius: 10em; /* Replicates .rounded-pill */
+}
+
+/*
+ * Restore the classic blue link color for links inside cards and list groups.
+ */
+.card a,
+.list-group-item a {
+    color: var(--bs-link-color);
+    text-decoration: none;
+}
+
+.card a:hover,
+.list-group-item a:hover {
+    color: var(--bs-link-hover-color);
+}
+
+.bottomright {position:absolute; bottom:0;  margin-bottom:25px; right: 20px;}

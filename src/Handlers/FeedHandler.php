@@ -10,11 +10,12 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
+use InvalidArgumentException;
+use Throwable;
 
 /**
  * Handle OPDS 1.2 feed
@@ -38,13 +39,20 @@ class FeedHandler extends BaseHandler
         ];
     }
 
+    public static function getMiddleware()
+    {
+        return [
+            ConnectMiddleware::class,
+        ];
+    }
+
     public function handle($request)
     {
         // deal with /handler/{path:.*}
         $path = $request->get('path');
         if (!empty($path)) {
             // match path against default page handler
-            $params = Route::match('/' . $path);
+            $params = $this->getContext()->getRouter()->match('/' . $path);
             if (!isset($params)) {
                 return Response::sendError($request, 'Unknown path for feed: ' . $path);
             }
@@ -59,14 +67,7 @@ class FeedHandler extends BaseHandler
         // @todo handle special case of OPDS not expecting filter while HTML does better
         $request->set('filter', null);
 
-        if (Config::get('fetch_protect') == '1') {
-            $session = $this->getContext()->getSession();
-            $session->start();
-            $connected = $session->get('connected');
-            if (!isset($connected)) {
-                $session->set('connected', 0);
-            }
-        }
+        // set session connected in ConnectMiddleware
 
         $response = new Response(Response::MIME_TYPE_XML);
 
@@ -77,8 +78,16 @@ class FeedHandler extends BaseHandler
             case PageId::SEARCH :
                 return $response->setContent($opdsRenderer->getOpenSearch($request));
             default:
-                $currentPage = PageId::getPage($page, $request);
-                return $response->setContent($opdsRenderer->render($currentPage, $request));
+                break;
+        }
+        try {
+            $currentPage = PageId::getPage($page, $request);
+            return $response->setContent($opdsRenderer->render($currentPage, $request));
+        } catch (InvalidArgumentException $e) {
+            return Response::notFound($request, $e->getMessage());
+        } catch (Throwable $e) {
+            error_log($e);
+            return Response::sendError($request, $e->getMessage());
         }
     }
 }

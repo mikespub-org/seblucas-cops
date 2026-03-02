@@ -279,9 +279,9 @@ class OpdsRenderer extends BaseRenderer
     {
         $dateYmd = substr($book->pubdate, 0, 10);
         $pubdate = \DateTime::createFromFormat('Y-m-d', $dateYmd);
-        if ($pubdate === false ||
-            $pubdate->format("Y") == "0101" ||
-            $pubdate->format("Y") == "0100") {
+        if ($pubdate === false
+            || $pubdate->format("Y") == "0101"
+            || $pubdate->format("Y") == "0100") {
             return "";
         }
         return $pubdate->format("Y-m-d");

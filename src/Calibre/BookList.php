@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -118,7 +117,7 @@ class BookList
      */
     public function getBookCount()
     {
-        if ($this->request->hasFilter()) {
+        if ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
             return $this->getFilterBookCount();
         }
         return Database::querySingle('select count(*) from books', $this->databaseId);
@@ -295,8 +294,8 @@ class BookList
             PageQueryScope::PUBLISHER,
             PageQueryScope::BOOK] as $scope) {
             $key = $scope->value;
-            if (in_array($key, $ignoredCategories) ||
-                (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
+            if (in_array($key, $ignoredCategories)
+                || (!array_key_exists($key, $queryScope) && !array_key_exists('all', $queryScope))) {
                 $critArray[$i] = self::BAD_SEARCH;
             } else {
                 if (array_key_exists($key, $queryScope)) {

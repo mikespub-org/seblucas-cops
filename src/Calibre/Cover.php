@@ -407,8 +407,8 @@ class Cover
      */
     public function getThumbnailLink($thumb, $useDefault = true)
     {
-        if (Config::get('thumbnail_handling') != "1" &&
-            !empty(Config::get('thumbnail_handling'))) {
+        if (Config::get('thumbnail_handling') != "1"
+            && !empty(Config::get('thumbnail_handling'))) {
             return $this->getDefaultLink(Config::get('thumbnail_handling'));
         }
 

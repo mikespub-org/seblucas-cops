@@ -28,10 +28,10 @@ class Mail
     {
         $mailConfig = Config::get('mail_configuration');
 
-        if (is_null($mailConfig) ||
-            !is_array($mailConfig) ||
-            empty($mailConfig["smtp.host"]) ||
-            empty($mailConfig["address.from"])) {
+        if (is_null($mailConfig)
+            || !is_array($mailConfig)
+            || empty($mailConfig["smtp.host"])
+            || empty($mailConfig["address.from"])) {
             return "NOK. bad configuration.";
         }
         return false;

@@ -50,7 +50,7 @@
             "class": "Letter",
             "title": "孙",
             "content": "1 author",
-            "navlink": "vendor/bin/index.php/restapi/authors/letter/孙",
+            "navlink": "vendor/bin/index.php/restapi/authors/letter/%E5%AD%99",
             "number": 1
         }
     ],

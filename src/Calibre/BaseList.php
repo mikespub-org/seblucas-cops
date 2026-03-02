@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\Entry;
@@ -172,6 +171,7 @@ class BaseList
      */
     public function getEntryCount()
     {
+        assert(is_subclass_of($this->className, Base::class));
         return $this->className::getCount($this->databaseId, $this->handler);
     }
 
@@ -181,7 +181,7 @@ class BaseList
      */
     public function countRequestEntries()
     {
-        if ($this->request->hasFilter()) {
+        if ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
             return $this->countEntriesByFilter();
         }
         return $this->countAllEntries();
@@ -281,7 +281,15 @@ class BaseList
         }
         $query = $this->className::SQL_BOOKLIST_NULL;
         $columns = 'count(distinct books.id)';
-        return Database::countFilter($query, $columns, "", [], $this->databaseId);
+        if (!empty(Config::get('database_filter'))) {
+            $filter = new Filter([], [], "books", $this->databaseId);
+            $filterString = $filter->getFilterString();
+            $params = $filter->getQueryParams();
+        } else {
+            $filterString = "";
+            $params = [];
+        }
+        return Database::countFilter($query, $columns, $filterString, $params, $this->databaseId);
     }
 
     /**
@@ -291,7 +299,7 @@ class BaseList
      */
     public function getRequestEntries($n = 1)
     {
-        if ($this->request->hasFilter()) {
+        if ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
             // we *do* pass along parentClass here - see also Filter::getEntryArray()
             return $this->getEntriesByFilter($n, $this->className);
         }
@@ -330,7 +338,7 @@ class BaseList
         $columns = $this->getCountColumns();
         // Author has 2 params, the rest 1
         $params = array_fill(0, $repeat, '%' . $find . '%');
-        if ($this->request->hasFilter()) {
+        if ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
             $filter = new Filter($this->request, $params, $this->getLinkTable(), $this->databaseId);
             $filterString = $filter->getFilterString();
             $params = $filter->getQueryParams();

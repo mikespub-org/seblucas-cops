@@ -18,6 +18,7 @@ use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
 use ZipArchive;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * EPub Reader based on Monocle or EPub.js
@@ -81,13 +82,14 @@ class EPubReader extends BaseRenderer
      * @param int $idData
      * @param string $component
      * @param ?int $database
+     * @throws \InvalidArgumentException
      * @return Response
      */
     public function sendContent($idData, $component, $database = null)
     {
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
-            throw new Exception('Unknown data ' . $idData);
+            throw new InvalidArgumentException('Unknown data ' . $idData);
         }
         $this->setHandler(EpubFsHandler::class);
         $db = $book->getDatabaseId() ?? 0;
@@ -128,6 +130,7 @@ class EPubReader extends BaseRenderer
      * @param int $idData
      * @param ?int $database
      * @param ?string $template
+     * @throws \InvalidArgumentException
      * @return string
      */
     public function getMonocleReader($idData, $database = null, $template = null)
@@ -135,7 +138,7 @@ class EPubReader extends BaseRenderer
         $template ??= "templates/epubreader.html";
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
-            throw new Exception('Unknown data ' . $idData);
+            throw new InvalidArgumentException('Unknown data ' . $idData);
         }
         if ($book->isExternal()) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
@@ -228,6 +231,7 @@ class EPubReader extends BaseRenderer
      * @param int $idData
      * @param ?int $database
      * @param ?string $template
+     * @throws \InvalidArgumentException
      * @return string
      */
     public function getEpubjsReader($idData, $database = null, $template = null)
@@ -235,19 +239,19 @@ class EPubReader extends BaseRenderer
         $template ??= "templates/epubjs-reader.html";
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
-            throw new Exception('Unknown data ' . $idData);
+            throw new InvalidArgumentException('Unknown data ' . $idData);
         }
         $this->setHandler(ZipFsHandler::class);
         if ($book->isExternal()) {
             // URL format: full url to external epub file here - let epubjs reader handle parsing etc. in browser
             $link = $book->getFilePath('EPUB', $idData);
             if (!$link) {
-                throw new Exception('Unknown link ' . $idData);
+                throw new InvalidArgumentException('Unknown link ' . $idData);
             }
         } else {
             $epub = $book->getFilePath('EPUB', $idData);
             if (!$epub || !file_exists($epub)) {
-                throw new Exception('Unknown file ' . $epub);
+                throw new InvalidArgumentException('Unknown file ' . $epub);
             }
             // URL format: index.php/zipfs/{db}/{data}/{comp} - let epubjs reader retrieve individual components
             $db = $book->getDatabaseId() ?? 0;
@@ -274,6 +278,7 @@ class EPubReader extends BaseRenderer
      * Summary of getZipContent
      * @param string $filePath
      * @param string $component
+     * @throws \InvalidArgumentException
      * @return ?string
      */
     public function getZipFileContent($filePath, $component)
@@ -281,12 +286,12 @@ class EPubReader extends BaseRenderer
         $zip = new ZipArchive();
         $res = $zip->open($filePath, ZipArchive::RDONLY);
         if ($res !== true) {
-            throw new Exception('Invalid file ' . $filePath);
+            throw new InvalidArgumentException('Invalid file ' . $filePath);
         }
         $res = $zip->locateName($component);
         if ($res === false) {
             $zip->close();
-            throw new Exception('Unknown component ' . $component);
+            throw new InvalidArgumentException('Unknown component ' . $component);
         }
         $data = $zip->getFromName($component);
         $zip->close();
@@ -299,17 +304,18 @@ class EPubReader extends BaseRenderer
      * @param int $idData
      * @param string $component
      * @param ?int $database
+     * @throws \InvalidArgumentException
      * @return Response
      */
     public function sendZipContent($idData, $component, $database = null)
     {
         $book = Book::getBookByDataId($idData, $database);
         if (!$book) {
-            throw new Exception('Unknown data ' . $idData);
+            throw new InvalidArgumentException('Unknown data ' . $idData);
         }
         $filePath = $book->getFilePath('EPUB', $idData);
         if (!$filePath || !file_exists($filePath)) {
-            throw new Exception('Unknown file ' . $filePath);
+            throw new InvalidArgumentException('Unknown file ' . $filePath);
         }
 
         $data = $this->getZipFileContent($filePath, $component);

@@ -382,7 +382,7 @@ class Response
      * Summary of getExpires
      * @return int|null
      */
-    public function getExpires(): int|null
+    public function getExpires(): ?int
     {
         return $this->expires;
     }
@@ -391,7 +391,7 @@ class Response
      * Summary of getFilename
      * @return string|null
      */
-    public function getFilename(): string|null
+    public function getFilename(): ?string
     {
         return $this->filename;
     }
@@ -400,7 +400,7 @@ class Response
      * Summary of getContent
      * @return string|null
      */
-    public function getContent(): string|null
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -409,7 +409,7 @@ class Response
      * Summary of getCallback
      * @return Closure|null
      */
-    public function getCallback(): Closure|null
+    public function getCallback(): ?Closure
     {
         return $this->callback;
     }
@@ -459,7 +459,23 @@ class Response
     public static function redirect($location): self
     {
         $response = new self();
+        $response->setStatusCode(302);
         $response->addHeader('Location', $location);
+        return $response;
+    }
+
+    /**
+     * Summary of unauthorized
+     * @param string $realm
+     * @return self
+     */
+    public static function unauthorized($realm = 'COPS Authentication'): self
+    {
+        $response = new self();
+        $response->setStatusCode(401);
+        $authenticate = 'Basic realm="' . $realm . '"';
+        $response->addHeader('WWW-Authenticate', $authenticate);
+        $response->setContent('This site is password protected');
         return $response;
     }
 }

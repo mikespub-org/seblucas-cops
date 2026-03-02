@@ -11,7 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
-use PDO;
+use Pdo\Sqlite;
 use Exception;
 use JsonException;
 
@@ -52,7 +52,7 @@ class User
     /**
      * Summary of getUserDb
      * @param string|null $userDbFile
-     * @return \PDO
+     * @return \Pdo\Sqlite
      */
     public static function getUserDb($userDbFile = null)
     {
@@ -60,7 +60,7 @@ class User
         if (!is_string($userDbFile) || !is_readable($userDbFile)) {
             throw new Exception('Invalid users database ' . $userDbFile);
         }
-        return new PDO('sqlite:' . $userDbFile);
+        return new Sqlite('sqlite:' . $userDbFile);
     }
 
     /**
@@ -89,52 +89,41 @@ class User
 
     /**
      * Summary of verifyLogin
-     * @param array<mixed> $serverVars
+     * @param ?array<mixed> $serverVars
+     * @param ?array<mixed> $requestVars
      * @return bool
+     * @deprecated 3.8.1 use AuthMiddleware instead - see PR #161
      */
-    public static function verifyLogin($serverVars = null)
+    public static function verifyLogin($serverVars = null, $requestVars = null)
     {
-        $basicAuth = Config::get('basic_authentication');
-        if (empty($basicAuth)) {
-            return true;
-        }
-        $serverVars ??= $_SERVER;
-        if (empty($serverVars['PHP_AUTH_USER']) || empty($serverVars['PHP_AUTH_PW'])) {
-            return false;
-        }
-        // array( "username" => "xxx", "password" => "secret")
-        if (is_array($basicAuth)) {
-            return self::checkBasicAuthArray($basicAuth, $serverVars);
-        }
-        // /config/.config/calibre/server-users.sqlite
-        if (is_string($basicAuth)) {
-            return self::checkBasicAuthDatabase($basicAuth, $serverVars);
-        }
-        return false;
+        // throw new Exception('Please update your config/config.php file and remove the User::verifyLogin() part');
+        return true;
     }
 
     /**
-     * Summary of checkBasicAuthArray
+     * Summary of checkAuthArray
      * @param array<string, mixed> $authArray
-     * @param array<mixed> $serverVars
+     * @param string $username
+     * @param string $password
      * @return bool
      */
-    public static function checkBasicAuthArray($authArray, $serverVars)
+    public static function checkAuthArray($authArray, $username, $password)
     {
-        if (($serverVars['PHP_AUTH_USER'] != $authArray['username'] ||
-            $serverVars['PHP_AUTH_PW'] != $authArray['password'])) {
+        if ($username !== $authArray['username']
+            || $password !== $authArray['password']) {
             return false;
         }
         return true;
     }
 
     /**
-     * Summary of checkBasicAuthDatabase
+     * Summary of checkAuthDatabase
      * @param string $userDbFile
-     * @param array<mixed> $serverVars
+     * @param string $username
+     * @param string $password
      * @return bool
      */
-    public static function checkBasicAuthDatabase($userDbFile, $serverVars)
+    public static function checkAuthDatabase($userDbFile, $username, $password)
     {
         try {
             $db = self::getUserDb($userDbFile);
@@ -144,10 +133,10 @@ class User
         }
         $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' where name = ? and pw = ?';
         $stmt = $db->prepare($query);
-        $params = [ $serverVars['PHP_AUTH_USER'], $serverVars['PHP_AUTH_PW'] ];
+        $params = [ $username, $password ];
         $stmt->execute($params);
         $result = $stmt->fetchObject();
-        if (empty($result) || $result->name != $serverVars['PHP_AUTH_USER']) {
+        if (empty($result) || $result->name !== $username) {
             return false;
         }
         return true;

@@ -4,7 +4,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Middleware\BaseMiddleware;
 
 /**
  * Manages handler registration and creation in COPS
@@ -14,9 +14,33 @@ class HandlerManager implements HasContextInterface
     use HasContextTrait;
 
     /** @var array<string, class-string<BaseHandler>> */
+    public static array $registry = [
+        "html" => HtmlHandler::class,
+        "feed" => FeedHandler::class,
+        "json" => JsonHandler::class,
+        "fetch" => FetchHandler::class,
+        "read" => ReadHandler::class,
+        "epubfs" => EpubFsHandler::class,
+        "restapi" => RestApiHandler::class,
+        "check" => CheckHandler::class,
+        "opds" => OpdsHandler::class,
+        "loader" => LoaderHandler::class,
+        "zipper" => ZipperHandler::class,
+        "calibre" => CalibreHandler::class,
+        "calres" => CalResHandler::class,
+        "zipfs" => ZipFsHandler::class,
+        "mail" => MailHandler::class,
+        "graphql" => GraphQLHandler::class,
+        "tables" => TableHandler::class,
+        "error" => ErrorHandler::class,
+        "phpunit" => TestHandler::class,
+        "admin" => AdminHandler::class,
+        // ... other default handlers
+    ];
+    /** @var array<string, class-string<BaseHandler>> */
     private array $handlers = [];
 
-    /** @var array<string, array<string>> */
+    /** @var array<class-string<BaseHandler>, array<class-string<BaseMiddleware>>> */
     private array $middleware = [];
 
     /**
@@ -41,28 +65,7 @@ class HandlerManager implements HasContextInterface
      */
     protected function getDefaultHandlers(): array
     {
-        return [
-            "html" => HtmlHandler::class,
-            "feed" => FeedHandler::class,
-            "json" => JsonHandler::class,
-            "fetch" => FetchHandler::class,
-            "read" => ReadHandler::class,
-            "epubfs" => EpubFsHandler::class,
-            "restapi" => RestApiHandler::class,
-            "check" => CheckHandler::class,
-            "opds" => OpdsHandler::class,
-            "loader" => LoaderHandler::class,
-            "zipper" => ZipperHandler::class,
-            "calres" => CalResHandler::class,
-            "zipfs" => ZipFsHandler::class,
-            "mail" => MailHandler::class,
-            "graphql" => GraphQLHandler::class,
-            "tables" => TableHandler::class,
-            "error" => ErrorHandler::class,
-            "phpunit" => TestHandler::class,
-            "admin" => AdminHandler::class,
-            // ... other default handlers
-        ];
+        return self::$registry;
     }
 
     /**
@@ -80,6 +83,11 @@ class HandlerManager implements HasContextInterface
         }
 
         $this->handlers[$name] = $handlerClass;
+
+        $this->middleware[$handlerClass] = [];
+        foreach ($handlerClass::getMiddleware() as $middlewareClass) {
+            $this->registerMiddleware($handlerClass, $middlewareClass);
+        }
     }
 
     /**
@@ -93,15 +101,17 @@ class HandlerManager implements HasContextInterface
 
     /**
      * Register middleware for a handler
+     * @param class-string<BaseHandler> $handlerClass
+     * @param class-string<BaseMiddleware> $middlewareClass
      * @throws \InvalidArgumentException
      */
-    public function registerMiddleware(string $handlerName, string $middlewareClass): void
+    public function registerMiddleware(string $handlerClass, string $middlewareClass): void
     {
-        if (!isset($this->handlers[$handlerName])) {
-            throw new \InvalidArgumentException("Unknown handler: $handlerName");
+        if (!in_array($handlerClass, $this->handlers)) {
+            throw new \InvalidArgumentException("Unknown handler: $handlerClass");
         }
 
-        $this->middleware[$handlerName][] = $middlewareClass;
+        $this->middleware[$handlerClass][] = $middlewareClass;
     }
 
     /**
@@ -140,15 +150,15 @@ class HandlerManager implements HasContextInterface
         $handler = new $handlerClass($this->getContext());
 
         // Apply middleware if any exists
-        return $this->applyMiddleware($handler, $name);
+        return $this->applyMiddleware($handler);
     }
 
     /**
      * Apply middleware to handler if configured
      */
-    protected function applyMiddleware(BaseHandler $handler, string $name): BaseHandler
+    protected function applyMiddleware(BaseHandler $handler): BaseHandler
     {
-        $middleware = $this->middleware[$name] ?? [];
+        $middleware = $this->middleware[$handler::class] ?? [];
         if (empty($middleware)) {
             return $handler;
         }
@@ -170,28 +180,11 @@ class HandlerManager implements HasContextInterface
     {
         $routes = [];
         foreach ($this->handlers as $handlerName => $handlerClass) {
+            // Get routes from handler class
             if (method_exists($handlerClass, 'getRoutes')) {
-                $handlerRoutes = $this->addHandlerRoutes($handlerClass);
-                $routes = array_merge($routes, $handlerRoutes);
+                $routes = array_merge($routes, $handlerClass::getRoutes());
             }
         }
         return $routes;
-    }
-
-    /**
-     * Summary of addHandlerRoutes
-     * @param class-string<BaseHandler> $handlerClass
-     * @return array<string, array<mixed>>
-     */
-    public function addHandlerRoutes($handlerClass): array
-    {
-        // Skip invalid handler classes
-        if (!method_exists($handlerClass, 'getRoutes')) {
-            return [];
-        }
-        // Get routes from handler class
-        $routes = $handlerClass::getRoutes();
-        // Add handler class to route data
-        return Route::addRoutes($routes, $handlerClass);
     }
 }

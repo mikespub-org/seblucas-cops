@@ -138,12 +138,44 @@ function sendToMailAddress (component, dataid) {
         }
         Cookies.set('email', email, { expires: COOKIE_LIFETIME });
     }
-    var url = currentData.baseurl + '/mail';
+    // fix https://github.com/dunxd/HomeAssistantAddons/issues/90
+    var url = currentData.baseurl;
+    if (url.indexOf('index.php') !== -1) {
+        url = url + '/mail';
+    } else {
+        url = url + 'index.php/mail';
+    }
     if (currentData.databaseId) {
         url = url + '?db=' + currentData.databaseId;
     }
     $("#mailButton :first-child").removeClass ("fas fa-envelope").addClass ("fas fa-spinner fa-pulse");
     $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail, 'error': errorMail});
+}
+
+/*exported showQRCode */
+function showQRCode (id, link) {
+    var qr = document.getElementById(id);
+    if (qr === null) {
+        return;
+    }
+    // clear qr code if already set
+    if (qr.innerHTML !== "") {
+        qr.innerHTML = "";
+        return;
+    }
+    // use dynamic script loading here
+    if (link.indexOf('://') !== -1) { // Replaced includes with indexOf
+        var el = document.createElement('script');
+        el.type = 'text/javascript';
+        el.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        el.onload = function() {
+            new QRCode(qr, {
+                text: link,
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+        qr.appendChild(el);
+    }
 }
 
 /*exported asset */
@@ -417,7 +449,14 @@ navigateTo = function (url) {
         window.history.pushState(jsonurl, "", url);
         updatePage (cachedData);
     } else {
-        $.getJSON(jsonurl, function(data) {
+        $.getJSON(jsonurl, function(data, status, xhr) {
+            // handle redirected json requests - see CalibreHandler
+            if (typeof xhr !== undefined) {
+                var redirected = xhr.getResponseHeader('X-Response-Url');
+                if (redirected) {
+                    url = redirected;
+                }
+            }
             window.history.pushState(jsonurl, "", url);
             cache.put (jsonurl, data);
             updatePage (data);
@@ -557,7 +596,7 @@ $(document).on("keydown", function(e){
 /*exported initiateAjax */
 function initiateAjax (url, theme, templates, version) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
-    version = typeof version !== 'undefined' ? version : '3.6.5';
+    version = typeof version !== 'undefined' ? version : '4.1.0';
     // allow caching to get() template files here, but not for getJSON()
     $.when($.get({url: templates + '/' + theme + '/header.html?v=' + version, cache: true}),
            $.get({url: templates + '/' + theme + '/footer.html?v=' + version, cache: true}),
@@ -603,38 +642,4 @@ function initiateAjax (url, theme, templates, version) {
     });
 }
 
-/** Moved from util.js to twigged cops.js due to unknown issue with Kindle - see #36
-function initiateTwig(url, theme, templates, version) {
-    templates = typeof templates !== 'undefined' ? templates : 'templates';
-    Twig.extendFunction("str_format", str_format);
-    Twig.extendFunction("asset", asset);
-
-    var template = Twig.twig({
-        id: 'page',
-        href: templates + '/' + theme + '/page.html',
-        async: false 
-     });
-
-     templatePage = function (data) {
-        return Twig.twig({ref: 'page'}).render({it: data});
-     };
-
-     $.when($.getJSON(url)).done(function(data){
-        currentData = data;
-
-        updatePage (currentData);
-        cache.put (url, currentData);
-        if (isPushStateEnabled) {
-            window.history.replaceState(url, "", window.location);
-        }
-        handleLinks ();
-    }).fail(function (error) {
-        if (error.responseText) {
-            document.write (error.responseText);
-        } else {
-            document.write ('Error loading templates from directory "' + encodeURI(templates + '/' + theme) + '/" for url: ' + encodeURI(url));
-        }
-        console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
-    });
-}
- */
+/** Moved initiateTwig from util.js to twigged cops.js due to unknown issue with Kindle - see #36 */

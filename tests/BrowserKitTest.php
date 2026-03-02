@@ -26,7 +26,6 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\UriGenerator;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
@@ -170,10 +169,11 @@ class BrowserKitTest extends TestCase
     /**
      * Summary of testClientSideRendering
      * @param string $template
+     * @param string $ignored
      * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('providerTemplates')]
-    public function testClientSideRendering($template = 'default'): void
+    public function testClientSideRendering($template = 'default', $ignored = ''): void
     {
         $this->createBrowser($template, 'Chrome');
 

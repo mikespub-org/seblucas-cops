@@ -11,13 +11,10 @@ $tooltips['calibre_directory'] = <<<'EOT'
         "My database name" => "/home/directory/calibre1/",
         "My other database name" => "/home/directory/calibre2/",
     ];
-    EOT;
-
-$tooltips['calibre_internal_directory'] = <<<'EOT'
-    SPECIFIC TO NGINX
-    The internal directory set in nginx config file
-    Leave empty if you don't know what you're doing
-    @deprecated 1.3.1 use absolute paths in calibre_directory
+    Each user can have its own set of databases in config/local.{remote_user}.php
+    Each database can have its own config options in config/local.db-{database}.php
+    for common database setup, or config/local.{remote_user}.db-{database}.php for
+    user-specific set of databases (see issue #160)
     EOT;
 
 $tooltips['calibre_external_storage'] = <<<'EOT'
@@ -60,7 +57,7 @@ $tooltips['cops_full_url'] = <<<'EOT'
 $tooltips['cops_trusted_proxies'] = <<<'EOT'
     As an alternative for cops_full_url above, if you're using a reverse proxy and you want to
     change how COPS is accessed depending on the entrypoint (e.g. direct, local network, internet)
-    you can define trusted proxies and trusted headers here (dev only)
+    you can define trusted proxies and trusted headers here
     Note: using symfony/http-foundation to support X-Forwarded-* and Forwarded headers from proxies
     @see https://symfony.com/doc/current/deployment/proxies.html
     EOT;
@@ -104,6 +101,20 @@ $tooltips['cops_x_accel_redirect'] = <<<'EOT'
       X-Accel-Redirect   : For Nginx
       X-Sendfile         : For Lightttpd or Apache (with mod_xsendfile)
       No value (default) : Let PHP handle the download
+    EOT;
+
+$tooltips['cops_x_accel_mapping'] = <<<'EOT'
+    Absolute path mapping for books is assumed to be the same between web server and PHP COPS
+    Example: if COPS finds books in /mapped/library, then nginx config must have something like:
+    # X-Accel-Redirect uri from COPS - see config/local.php
+    location /mapped/library {
+        # internal redirect for nginx
+        internal;
+        # actual path on nginx server
+        alias /volume1/Calibre
+        # or if COPS and nginx are on the same server
+        #root /
+    }
     EOT;
 
 $tooltips['cops_opds_thumbnail_height'] = <<<'EOT'
@@ -234,6 +245,21 @@ $tooltips['cops_virtual_library'] = <<<'EOT'
     Default virtual library to use (and filter on) in COPS
     based on the Calibre list of virtual libraries (starting with 1)
     This is not supported in combination with multiple databases
+    EOT;
+
+$tooltips['cops_database_filter'] = <<<'EOT'
+    Filter Calibre database by tags, languages etc.
+    Example:
+    $config['cops_database_filter'] = [
+        "tags": "Short Stories",
+        "language": "eng",
+    ];
+
+    For negative filters start with !, example: "!Short Stories"
+
+    Can be used as alternative to virtual libraries
+    also in multi-database/multi-user configurations
+    by putting this in the right local.*.php file(s)
     EOT;
 
 $tooltips['cops_calibre_custom_column'] = <<<'EOT'
@@ -443,6 +469,15 @@ $tooltips['cops_basic_authentication'] = <<<'EOT'
         string with $config['calibre_user_database'] : Calibre user accounts database - WARNING: passwords are in clear!
     EOT;
 
+$tooltips['cops_form_authentication'] = <<<'EOT'
+    Enable form password protection via login.html (You can use if htpasswd is not possible for you)
+    If possible prefer htpasswd or authentication done by reverse proxy!
+    Supported values:
+        array with ["username" => "xxx", "password" => "secret"] : Enable form password protection
+        null : Disable form password protection (You can still use htpasswd or reverse proxy)
+        string with $config['calibre_user_database'] : Calibre user accounts database - WARNING: passwords are in clear!
+    EOT;
+
 $tooltips['cops_template'] = <<<'EOT'
     Which template is used by default :
     'default'
@@ -585,6 +620,31 @@ $tooltips['cops_epub_reader'] = <<<'EOT'
     Choose preferred epub reader when viewing epub files online:
     'monocle' (default)
     'epubjs'
+    'custom-reader.html?url=' (custom reader template - adapt as needed)
+    EOT;
+
+$tooltips['cops_comic_reader'] = <<<'EOT'
+    Choose comic-reader template URL when viewing comic files online:
+    '' (default)
+    'comic-reader.html?url='
+    'codedread-kthoom.html?bookUri=' (with mikespub/codedread-kthoom package)
+
+    Note: for kthoom please install the package with composer:
+
+    $ composer require mikespub/codedread-kthoom
+    EOT;
+
+$tooltips['cops_pdfjs_viewer'] = <<<'EOT'
+    Choose pdfjs-viewer template URL when viewing pdf files online:
+    '' (default)
+    'pdfjs-viewer.html?file='
+
+    Note: the release package cops-3.x.x-php82.zip only contains
+    minimal parts of the mozilla/pdfjs-dist package. If your PDF
+    shows errors, please install the full package with composer:
+
+    $ rm -r vendor/mozilla/pdfjs-dist/
+    $ composer install -o
     EOT;
 
 $tooltips['cops_customize'] = <<<'EOT'

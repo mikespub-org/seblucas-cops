@@ -5,9 +5,9 @@
     "id": 1,
     "item": 3,
     "colname": "authors",
-    "doc": "<div>\n<p>This is a <strong>note</strong> for Lewis Carroll</p>\n<p><a href=\"https://en.wikipedia.org/wiki/Lewis_Carroll\">Wikipedia</a></p>\n<p><img src=\"calres://xxh64/7c301792c52eebf7?placement=kUxDpm6orDperFNdIqiU9A\"></p></div>",
+    "doc": "<div>\n<p>This is a <strong>note</strong> for Lewis Carroll</p>\n<p><a href=\"https://en.wikipedia.org/wiki/Lewis_Carroll\">Wikipedia</a></p>\n<p><img src=\"calres://xxh64/7c301792c52eebf7?placement=kUxDpm6orDperFNdIqiU9A\"></p>\n<p>Links: Alice's Adventures in Wonderland - Lewis Carroll <a href=\"calibre://show-book/_/17\">show book</a> <a href=\"calibre://book-details/_hex_-4261736557697468536f6d65426f6f6b73/17\">book details</a> </p></div>",
     "mtime": 1708880895.654,
-    "size": 227,
+    "size": 434,
     "resources": {
         "xxh64:7c301792c52eebf7": {
             "hash": "xxh64:7c301792c52eebf7",

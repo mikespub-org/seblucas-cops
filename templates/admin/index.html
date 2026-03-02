@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- using Twig syntax with it.* variables -->
+    <title>COPS - {{ it.title }}</title>
+    <style>
+        body { font-family: sans-serif; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        h2, h3 { color: #333; }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+        .action-list { list-style-type: none; padding-left: 0; }
+        .action-item {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: .25rem;
+        }
+        .action-item h3 { margin-top: 0; }
+        .action-item p { margin-bottom: 0; color: #6c757d; }
+{% block styles %}{% endblock styles %}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>{{ it.title }}</h2>
+
+{% block content %}
+    {% if it.content is defined and it.content %}
+        <p>{{ it.content|raw }}</p>
+    {% elseif it.actions is defined and it.actions %}
+        <ul class="action-list">
+            {% for action in it.actions %}
+                <li class="action-item">
+                    <h3><a href="{{ action.url }}">{{ action.title }}</a></h3>
+                    <p>{{ action.description }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="action-item">
+            <p>No actions available.</p>
+        </div>
+    {% endif %}
+{% endblock content %}
+
+    <p>
+        <a href="{{ it.link }}">&larr; Back to {{ it.home }}</a>
+    </p>
+</div>
+</body>
+</html>

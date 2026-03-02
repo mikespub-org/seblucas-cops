@@ -73,7 +73,7 @@ class CustomColumn extends Category
         // @todo handle case where we have several values, e.g. array of text for type 2 (csv)
         $params['custom'] = $this->getCustomId();
         $params['id'] = $this->id ?? self::NOT_SET;
-        // we need databaseId here because we use Route::link with $handler
+        // we need databaseId here because we use $handler::link()
         $params['db'] = $this->getDatabaseId();
         return $this->getRoute(self::ROUTE_DETAIL, $params);
     }

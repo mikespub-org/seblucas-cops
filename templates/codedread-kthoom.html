@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>kthoom Comic Reader</title>
+  <link rel="stylesheet" href="../vendor/mikespub/codedread-kthoom/code/kthoom.css" type="text/css" />
+  <link rel="icon" type="image/png" href="../vendor/mikespub/codedread-kthoom/images/logo.png" sizes="300x300" />
+  <link rel="apple-touch-icon" href="../vendor/mikespub/codedread-kthoom/images/logo.png" />
+  <link rel="manifest" href="../vendor/mikespub/codedread-kthoom/kthoom.webmanifest" />
+  <link rel="preload" href="../vendor/mikespub/codedread-kthoom/code/book.js" crossorigin="use-credentials" as="script" />
+  <link rel="preload" href="../vendor/mikespub/codedread-kthoom/code/book-viewer.js" crossorigin="use-credentials" as="script" />
+  <link rel="preload" href="../vendor/mikespub/codedread-kthoom/code/common/helpers.js" crossorigin="use-credentials" as="script" />
+  <link rel="preload" href="../vendor/mikespub/codedread-kthoom/code/page.js" crossorigin="use-credentials" as="script" />
+  <link rel="preload" href="../vendor/mikespub/codedread-kthoom/code/reading-stack.js" crossorigin="use-credentials" as="script" />
+
+  <meta charset="utf-8">
+  <meta name="Description" content="Open source comic book reader built using web technologies." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ffff00" />
+
+  <!-- The crossorigin attribute is needed so that credentials are forwarded through UberProxy -->
+  <script type="module" src="../vendor/mikespub/codedread-kthoom/code/main.js" crossorigin="use-credentials"></script>
+
+  <script type="application/javascript" src="../vendor/mikespub/codedread-kthoom/code/kthoom-google.js"></script>
+  <script type="application/javascript" src="../vendor/mikespub/codedread-kthoom/code/kthoom-ipfs.js"></script>
+</head>
+
+<body>
+  <div id="background" style="background-image: url('../vendor/mikespub/codedread-kthoom/images/logo.svg')"></div>
+  <div class="foreground">
+    <div id="header">
+      <button id="main-menu-button" class="menuButton" tabindex="0" aria-haspopup="true" aria-expanded="false"
+        aria-label="Menu button">
+        <svg viewBox="0 0 100 100" stroke="currentColor">
+          <line stroke-width="10" x1="20" x2="80" y1="30" y2="30"></line>
+          <line stroke-width="10" x1="20" x2="80" y1="50" y2="50"></line>
+          <line stroke-width="10" x1="20" x2="80" y1="70" y2="70"></line>
+        </svg>
+      </button>
+      <div id="progress" role="progressbar" aria-label="Progress bar">
+        <svg id="svgprogress" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <defs>
+            <pattern id="load_progress_pattern" width="30" height="20" patternUnits="userSpaceOnUse">
+              <rect width="100%" height="100%" fill="#660000"></rect>
+              <polygon fill="#777700" points="15,0 30,0 15,20 0,20"></polygon>
+            </pattern>
+            <pattern id="zip_progress_pattern" width="30" height="20" patternUnits="userSpaceOnUse">
+              <rect width="100%" height="100%" fill="#990000"></rect>
+              <polygon fill="#aaaa00" points="15,0 30,0 15,20 0,20"></polygon>
+            </pattern>
+            <pattern id="layout_progress_pattern" width="30" height="20" patternUnits="userSpaceOnUse">
+              <rect width="100%" height="100%" fill="#cc2929"></rect>
+              <polygon fill="#ffff00" points="15,0 30,0 15,20 0,20"></polygon>
+            </pattern>
+          </defs>
+          <g>
+            <rect id="border" y="1" width="100%" height="15" fill="#777" stroke="white" rx="5" ry="5"></rect>
+            <rect id="loadmeter" class="meter" width="0%" height="17" fill="url(#load_progress_pattern)" rx="5" ry="5">
+            </rect>
+            <rect id="zipmeter" class="meter" width="0%" height="17" fill="url(#zip_progress_pattern)" rx="5" ry="5">
+            </rect>
+            <!-- Progress text is hidden by layout meter once layout reaches 100%. -->
+            <rect id="progress_bkgnd" x="95%" y="0.5" width="14ex" height="16" fill="black" stroke="none" rx="5" ry="5"
+              fill-opacity="0.6"></rect>
+            <text id="progress_title" y="13" x="99.5%" fill="white" font-size="12px" text-anchor="end">0%</text>
+            <rect id="throbber_0" y="1" x="3%" width="4%" height="15" fill="#cc2929" transform="skewX(-45)"></rect>
+            <rect id="throbber_1" y="1" x="31%" width="4%" height="15" fill="#ffff00" transform="skewX(-45)"></rect>
+            <rect id="throbber_2" y="1" x="62%" width="4%" height="15" fill="#cc2929" transform="skewX(-45)"></rect>
+            <rect id="throbber_3" y="1" x="91%" width="4%" height="15" fill="#ffff00" transform="skewX(-45)"></rect>
+            <rect id="layoutmeter" class="meter" width="0%" height="17" fill="url(#layout_progress_pattern)" rx="5"
+              ry="5"></rect>
+            <rect id="pagemeter" class="meter" width="0%" height="17" opacity="0.8" fill="#007fff" rx="5" ry="5"></rect>
+            <!-- Page text is on top of all the meters. -->
+            <rect id="page_bkgnd" y="0.5" width="4ex" height="16" fill="black" stroke="none" rx="5" ry="5"
+              fill-opacity="0.6"></rect>
+            <text id="page" y="13" x="0.5%" fill="white" font-size="12px">0/0</text>
+          </g>
+        </svg>
+      </div>
+      <div id="nav">
+        <button id="prevBook" class="navbutton" title="Previous Book ([)" disabled aria-label="Previous Book button">
+          &lt;&lt;
+        </button>
+        <button id="prev" class="navbutton" title="Previous Page (Left Arrow)" disabled
+          aria-label="Previous Page button">
+          &lt;
+        </button>
+        <button id="next" class="navbutton" title="Next Page (Right Arrow)" disabled aria-label="Next Page button">
+          &gt;
+        </button>
+        <button id="nextBook" class="navbutton" title="Next Book (])" disabled aria-label="Next Book button">
+          &gt;&gt;
+        </button>
+        <button id="fullScreen" class="navbutton" title="Full Screen (F)" aria-label="Full Screen button"
+          style="display:none">
+          &#x26f6;
+        </button>
+      </div>
+    </div> <!-- header -->
+    <div id="bookViewer">
+      <svg id="pages" style="display:none">
+        <defs>
+          <g id="pageTemplate">
+            <image></image>
+            <foreignObject></foreignObject>
+          </g>
+        </defs>
+        <g id="bvViewport"></g>
+      </svg>
+    </div> <!-- bookViewer -->
+    <div id="readingStackOverlay" class="fullScreenOverlay hidden"></div>
+    <div id="readingStack" class="tray">
+      <div id="readingStackContents" class="trayContents">
+        No books loaded
+      </div>
+      <button id="readingStackButton" class="trayButton" title="Reading Stack" aria-label="Reading Stack button">
+        <svg stroke="currentColor" stroke-width="2" width="30" height="50">
+          <defs>
+            <g id="singleRow" stroke="currentColor">
+              <path d="M2,0 l2,3 l5,-7" />
+              <line x1="11" y1="0" x2="24" y2="0" />
+            </g>
+          </defs>
+          <use y="9" href="#singleRow" />
+          <use y="19" href="#singleRow" />
+          <use y="29" href="#singleRow" />
+          <use y="39" href="#singleRow" />
+        </svg>
+      </button>
+    </div> <!-- readingStack -->
+    <div id="metadataViewerOverlay" class="fullScreenOverlay hidden"></div>
+    <div id="metadataViewer" class="tray">
+      <button id="metadataViewerButton" class="trayButton" title="Metadata Viewer" aria-label="Metadata Viewer button">
+        <svg fill="currentColor" viewBox="-20 0 275 275" width="30" height="50">
+          <polygon points="255,155 110,10 10,10 10,110 155,255" stroke="black" stroke-linejoin="round" />
+          <circle cx="66.5" cy="67" r="22.5" fill="black" stroke="none" />
+          <circle id="metadataIsPresent" cx="200" cy="30" r="30" fill="yellow" stroke="black" style="display:none"/>
+        </svg>        
+      </button>
+      <div class="trayContents">
+        <div id="metadataTrayContents">
+          No book loaded
+        </div>
+        <div id="metadataToolbar" style="display:none">
+          <button id="closeMetadataButton" class="metadataButton"
+                  title="Close (T)" aria-label="Close Metadata viewer/editor button">✕</button>
+          <button id="editMetadataButton" class="metadataButton"
+                  title="Edit (E)" aria-label="Edit Metadata button">✎</button>
+          <button id="addRowMetadataButton" class="metadataButton" style="display:none"
+                  title="Add Row (R)" aria-label="Add Row of Metadata button">＋</button>
+          <button id="saveMetadataButton" class="metadataButton" style="display:none"
+                  title="Save (S)" aria-label="Save Metadata button">💾</button>
+        </div>
+      </div>
+    </div> <!-- metadataViewer-->
+  </div>
+
+  <div id="helpOverlay">
+    <div id="helpOverlayInner">
+      <section class="helpSection">
+        <h2>Navigation</h2>
+        <dl class="helplist">
+          <dt>?</dt>
+          <dd>Show/hide this help screen</dd>
+
+          <dt>&#x2190; <span class="separator">/</span> &#x2192;</dt>
+          <dd>Go to previous / next page</dd>
+
+          <dt>Shift + &#x2190; <span class="separator">/</span> &#x2192;</dt>
+          <dd>Go to first / last page</dd>
+
+          <dt>[ <span class="separator">/</span> ]</dt>
+          <dd>Load previous / next book</dd>
+
+          <dt>M</dt>
+          <dd>Open/close the Menu</dd>
+
+          <dt>S</dt>
+          <dd>Open/close the Reading Stack</dd>
+
+          <dt>T</dt>
+          <dd>Open/close the Tag (Metadata) Viewer</dd>
+        </dl>
+      </section>
+      <section class="helpSection">
+        <h2>Book Viewing</h2>
+        <dl class="helplist">
+          <dt>L <span class="separator">/</span> R</dt>
+          <dd>Rotate left &#x27F2; / Rotate right &#x27F3;</dd>
+
+          <dt>H <span class="separator">/</span> W</dt>
+          <dd>Scale to height / Scale to width</dd>
+
+          <dt>B</dt>
+          <dd>Best fit mode</dd>
+
+          <dt>1 <span class="separator">/</span> 2 <span class="separator">/</span> 3 <span class="separator">/</span> 4</dt>
+          <dd>1-page / 2-page / Long-strip / Wide-strip</dd>
+
+          <dt>F</dt>
+          <dd>Toggle Fullscreen Mode (if available)</dd>
+
+          <dt>P</dt>
+          <dd>Hide metadata viewer and reading stack panel buttons</dd>
+        </dl>
+      </section>
+      <section id="help-load-section" class="helpSection">
+        <h2>Loading Books</h2>
+        <dl class="helplist">
+          <dt>O</dt>
+          <dd>Open local books (use Shift to open multiple)</dd>
+
+          <dt class="hideEnableDirectoryElem">D</dt>
+          <dd class="hideEnableDirectoryElem">Open local directory</dd>
+
+          <dt>U</dt>
+          <dd>Open a book / reading list from a URL</dd>
+
+          <dt>G</dt>
+          <dd>Open a book / reading list from Google Drive (if available)</dd>
+        </dl>
+      </section>
+      <ul class="helpLinks">
+        <li><a href="https://codedread.com/kthoom/privacy.html" target="_blank">Privacy Policy</a></li>
+        <li><a href="https://github.com/codedread/kthoom" target="_blank">GitHub Project</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <template id="mainMenu">
+    <ul id="mainMenuItems" class="menuItems" role="menu" aria-label="Main Menu">
+      <li role="none">
+        <button id="menu-open" class="menuItem" role="menuitem" tabindex="-1" aria-expanded="false">
+          <span class="menuItemText">Open</span>
+          <span class="subMenuArrow">&#x25B6;</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-download" style="display:none" disabled="true" class="menuItem"
+                role="menuitem" tabindex="-1" aria-expanded="false">
+          <span class="menuItemText">Download a copy</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-close-all" style="display:none" disabled="true" class="menuItem"
+                role="menuitem" tabindex="-1">
+          <span class="menuItemText">Close All</span>
+        </button>
+      </li>
+      <li role="none">
+        <hr class="menuSeparator" />
+      </li>
+      <li role="none">
+        <button id="menu-view" class="menuItem" role="menuitem" tabindex="-1" aria-expanded="false">
+          <span class="menuItemText">View</span>
+          <span class="subMenuArrow">&#x25B6;</span>
+        </button>
+      </li>
+      <li role="none">
+        <hr class="menuSeparator" />
+      </li>
+      <li role="none">
+        <button id="menu-help" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Help (Keyboard Shortcuts)</span>
+          <span class="menuItemKey">?</span>
+        </button>
+      </li>
+    </ul>
+  </template>
+
+  <template id="openMenu">
+    <ul id="openMenuItems" class="menuItems" role="menu" aria-label="Open Menu">
+      <li role="none">
+        <button id="menu-open-local-files" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Open Files</span>
+          <span class="menuItemKey">O</span>
+        </button>
+        <!-- TODO: Remove this once all browsers support the File System Access API. -->
+        <input id="menu-open-local-files-input" type="file" multiple tabindex="-1">
+      </li>
+      <li role="none">
+        <button id="menu-open-directory" class="menuItem hideEnableDirectoryElem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Open Directory</span>
+          <span class="menuItemKey">D</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-open-url" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Open from URL</span>
+          <span class="menuItemKey">U</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-open-google-drive" style="display:none" disabled="true" class="menuItem"
+                role="menuitem" tabindex="-1">
+          <span class="menuItemText">Open from Google Drive</span>
+          <span class="menuItemKey">G</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-open-ipfs-hash" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Open from IPFS</span>
+          <span class="menuItemKey">I</span>
+        </button>
+      </li>
+    </ul>
+  </template>
+
+  <template id="viewMenu">
+    <ul id="viewMenuItems" class="menuItems" role="menu" aria-label="View Menu">
+      <li role="none">
+        <button id="menu-view-rotate-right" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Rotate Right</span>
+          <span class="menuItemKey">R</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-view-rotate-left" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Rotate Left</span>
+          <span class="menuItemKey">L</span>
+        </button>
+      </li>
+      <li role="none">
+        <hr class="menuSeparator" />
+      </li>
+      <!-- TODO: Proper a11y for which item is selected -->
+      <li role="none">
+        <button id="menu-view-one-page" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">1-page viewer</span>
+          <span class="menuItemKey">1</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-view-two-page" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">2-page viewer</span>
+          <span class="menuItemKey">2</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-view-long-strip" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">Long Strip</span>
+          <span class="menuItemKey">3</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-view-wide-strip" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">Wide Strip</span>
+          <span class="menuItemKey">4</span>
+        </button>
+      </li>
+      <li role="none">
+        <hr class="menuSeparator" />
+      </li>
+      <li role="none">
+        <button id="menu-view-fit-best" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">Best Fit</span>
+          <span class="menuItemKey">B</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-view-fit-height" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">Fit to Height</span>
+          <span class="menuItemKey">H</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="menu-view-fit-width" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">Fit to Width</span>
+          <span class="menuItemKey">W</span>
+        </button>
+      </li>
+      <li role="none">
+        <hr class="menuSeparator" />
+      </li>
+      <li role="none">
+        <button id="menu-view-hide-panel-buttons" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuCheckmark"></span>
+          <span class="menuItemText">Hide panel buttons</span>
+          <span class="menuItemKey">P</span>
+        </button>
+      </li>
+    </ul>
+  </template>
+
+  <template id="viewerContextMenu">
+    <ul id="viewerContextMenuItems" class="menuItems" role="menu" aria-label="Viewer Context Menu">
+      <li role="none">
+        <button id="save-page-as-png" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Save page as PNG</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="save-page-as-jpg" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Save page as JPG</span>
+        </button>
+      </li>
+      <li role="none">
+        <button id="save-page-as-webp" class="menuItem" role="menuitem" tabindex="-1">
+          <span class="menuItemText">Save page as WebP</span>
+        </button>
+      </li>
+    </ul>
+  </template>
+
+  <template id="metadataTable">
+    <table class="metadataTable">
+      <thead>
+        <th>Property</th>
+        <th>Value</th>
+      </thead>
+    </table>
+  </template>
+
+  <template id="metadataTableRow">
+    <tr>
+      <td class="metadataPropName">property_name</td>
+      <td class="metadataPropValue">property_value</td>
+    </tr>
+  </template>
+</body>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('../vendor/mikespub/codedread-kthoom/service-worker.js')
+    .then((registration) => {      
+      console.log(`Registered: ${registration}`);
+    })
+    .catch((error) => {
+      console.log(`Registration failed: ${error}`);
+    });
+  }  
+</script>
+
+<!-- Google tag (gtag.js) -->
+<!-- see privacy.html
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-665JQ152W7"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-665JQ152W7');
+</script>
+-->
+
+</html>

@@ -16,6 +16,7 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Middleware\ProtectMiddleware;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
@@ -47,6 +48,13 @@ class FetchHandler extends BaseHandler
         ];
     }
 
+    public static function getMiddleware()
+    {
+        return [
+            ProtectMiddleware::class,
+        ];
+    }
+
     /**
      * Summary of handle
      * @param Request $request
@@ -54,14 +62,8 @@ class FetchHandler extends BaseHandler
      */
     public function handle($request)
     {
-        if (Config::get('fetch_protect') == '1') {
-            $session = $this->getContext()->getSession();
-            $session->start();
-            $connected = $session->get('connected');
-            if (!isset($connected)) {
-                return Response::notFound($request);
-            }
-        }
+        // check if session connected in ProtectMiddleware
+
         // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
         if (ob_get_length() !== false && $request->getHandler() !== TestHandler::class) {
             ob_end_clean();

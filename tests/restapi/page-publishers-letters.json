@@ -50,7 +50,7 @@
             "class": "Letter",
             "title": "青",
             "content": "1 publisher",
-            "navlink": "vendor/bin/index.php/restapi/publishers/letter/青",
+            "navlink": "vendor/bin/index.php/restapi/publishers/letter/%E9%9D%92",
             "number": 1
         }
     ],

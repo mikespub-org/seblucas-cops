@@ -11,7 +11,7 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Routing\UriGenerator;
 
 /**
@@ -19,16 +19,21 @@ use SebLucas\Cops\Routing\UriGenerator;
  */
 class OpenApi
 {
+    /** @var array<string, mixed> */
+    protected array $definition = [];
+
     /**
      * Summary of getDefinition
+     * @param array<string, mixed> $routes
      * @return array<string, mixed>
      */
-    public function getDefinition()
+    public function getDefinition($routes)
     {
         $openapi = $this->initOpenApi();
         $openapi["servers"] = $this->getServers();
         $openapi["components"] = $this->getComponents();
-        $openapi["paths"] = $this->getPaths();
+        $openapi["paths"] = $this->getPaths($routes);
+        $this->definition = $openapi;
         return $openapi;
     }
 
@@ -115,12 +120,13 @@ class OpenApi
 
     /**
      * Summary of getPaths
+     * @param array<string, mixed> $routes
      * @return array<mixed>
      */
-    public function getPaths()
+    public function getPaths($routes)
     {
         $paths = [];
-        foreach (Route::getRoutes() as $name => $route) {
+        foreach ($routes as $name => $route) {
             [$path, $pathItem] = $this->getPathItem($name, $route);
             if (empty($path)) {
                 continue;
@@ -150,12 +156,12 @@ class OpenApi
 
         // @todo clean up queryString with handler_param here
         $handler = 'default';
-        if (!empty($queryParams[Route::HANDLER_PARAM])) {
-            $handler = $queryParams[Route::HANDLER_PARAM]::HANDLER;
+        if (!empty($queryParams[Request::HANDLER_PARAM])) {
+            $handler = $queryParams[Request::HANDLER_PARAM]::HANDLER;
         }
         if ($handler == "restapi") {
             $queryString = substr($path, 1) . ' api';
-        } elseif (!empty($queryParams[Route::HANDLER_PARAM])) {
+        } elseif (!empty($queryParams[Request::HANDLER_PARAM])) {
             if (!empty($queryString)) {
                 $queryString = $handler . ' handler with ' . trim($queryString, '&');
             } else {
@@ -242,10 +248,10 @@ class OpenApi
             ]);
         }
         if (
-            !str_starts_with($path, "/databases") &&
-            !in_array($path, ["/openapi", "/routes", "/handlers", "/about"]) &&
-            (empty($queryParams[Route::HANDLER_PARAM]) ||
-            in_array($queryParams[Route::HANDLER_PARAM]::HANDLER, ['restapi', 'zipper']))
+            !str_starts_with($path, "/databases")
+            && !in_array($path, ["/openapi", "/routes", "/handlers", "/about"])
+            && (empty($queryParams[Request::HANDLER_PARAM])
+            || in_array($queryParams[Request::HANDLER_PARAM]::HANDLER, ['restapi', 'zipper']))
         ) {
             array_push($params, [
                 '$ref' => "#/components/parameters/dbParam",
@@ -298,8 +304,8 @@ class OpenApi
                 ["BasicAuth" => []],
             ];
         }
-        if (!empty($queryParams[Route::HANDLER_PARAM])) {
-            $handler = $queryParams[Route::HANDLER_PARAM]::HANDLER;
+        if (!empty($queryParams[Request::HANDLER_PARAM])) {
+            $handler = $queryParams[Request::HANDLER_PARAM]::HANDLER;
             if (!in_array($handler, ["restapi", "check", "phpunit"])) {
                 $operation["summary"] .= " - with api key";
                 $operation["security"] = [
@@ -317,8 +323,7 @@ class OpenApi
     public function dump($schemaFile = null)
     {
         $schemaFile ??= dirname(__DIR__, 2) . '/' . RestApiProvider::DEFINITION_FILE;
-        $definition = $this->getDefinition();
-        $content = Format::json($definition);
+        $content = Format::json($this->definition);
         file_put_contents($schemaFile, $content);
     }
 }

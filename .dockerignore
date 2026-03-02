@@ -19,9 +19,17 @@ docker-compose*.yaml
 .yarn/
 #!.yarn/releases
 #!.yarn/plugins
+.yarnrc.yml
 .pnp.*
+yarn.lock
+.editorconfig
+.gitattributes
+.gitremotes
 # remove unused directories
 tools/
 clover.xml
 coverage/
 *.cache
+cache/*.php
+rector.php
+templates/twigged5/

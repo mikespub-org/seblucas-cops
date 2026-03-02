@@ -9,11 +9,12 @@
 
 namespace SebLucas\Cops\Routing;
 
-use SebLucas\Cops\Input\Route;
+//use SebLucas\Cops\Controller\CopsController;
+use SebLucas\Cops\Input\Request;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route as SymfonyRoute;
-use Exception;
+use RuntimeException;
 
 /**
  * Load routes from handlers with getRoutes()
@@ -22,18 +23,23 @@ use Exception;
 class RouteLoader extends Loader
 {
     /**
+     * @param \SebLucas\Cops\Routing\RouteCollection|null $routeCollection
+     */
+    public function __construct(private ?\SebLucas\Cops\Routing\RouteCollection $routeCollection = null) {}
+
+    /**
      * Summary of load
      * @param mixed $resource not used here
      * @param string|null $type not used here
      * @return RouteCollection
      */
-    public function load(mixed $resource, string|null $type = null): mixed
+    public function load(mixed $resource, ?string $type = null): mixed
     {
         $routes = new RouteCollection();
-        return self::addRouteCollection($routes);
+        return $this->addRouteCollection($routes);
     }
 
-    public function supports(mixed $resource, string|null $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return true;
     }
@@ -41,15 +47,18 @@ class RouteLoader extends Loader
     /**
      * Summary of addRouteCollection
      * @param RouteCollection $routes
+     * @throws \RuntimeException
      * @return RouteCollection
      */
-    public static function addRouteCollection($routes)
+    public function addRouteCollection($routes)
     {
         $seen = [];
-        foreach (Route::getRoutes() as $name => $route) {
+        foreach ($this->routeCollection->all() as $name => $route) {
             [$path, $params, $methods, $options] = $route;
             // set route param in request once we find matching route
-            $params[Route::ROUTE_PARAM] ??= $name;
+            $params[Request::ROUTE_PARAM] ??= $name;
+            // Set the default controller for all COPS routes
+            //$params['_controller'] = CopsController::class;
             [$path, $requirements] = self::getPathRequirements($path);
             // use the 'defaults' to store any fixed params here
             $route = new SymfonyRoute($path, $params);
@@ -64,7 +73,7 @@ class RouteLoader extends Loader
                 $route->setOptions($options);
             }
             if (!empty($seen[$name])) {
-                throw new Exception('Duplicate route name ' . $name . ' for ' . $path);
+                throw new RuntimeException('Duplicate route name ' . $name . ' for ' . $path);
             }
             $seen[$name] = $path;
             $routes->add($name, $route);

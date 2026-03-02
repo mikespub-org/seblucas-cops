@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- using Twig syntax with it.* variables -->
+    <title>COPS - {{ it.title }}</title>
+    <style>
+        body { font-family: sans-serif; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        h2, h3 { color: #333; }
+        .container { max-width: 960px; margin: 0 auto; padding: 20px; }
+        .alert { padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; }
+        .alert-warning { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+        .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+        .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+        .form-group {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 1rem;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        .form-group label { font-weight: bold; text-align: right; padding-top: .375rem; }
+        .form-group .input-wrapper { display: grid; grid-template-columns: 1fr 300px; gap: 1rem; align-items: start; }
+        .form-group .help-text { font-size: 0.8em; color: #6c757d; margin-top: .25rem; }
+        .form-group .input-wrapper input[type="text"], .form-group .input-wrapper input[type="number"], .form-group .input-wrapper select, .form-group .input-wrapper textarea {
+            width: 100%;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            box-sizing: border-box;
+        }
+        .form-group .input-wrapper input[type="checkbox"] { margin-right: 5px; }
+        .submit-btn {
+            display: inline-block;
+            font-weight: 400;
+            color: #fff;
+            text-align: center;
+            vertical-align: middle;
+            cursor: pointer;
+            background-color: #007bff;
+            border: 1px solid #007bff;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+        }
+        .submit-btn:disabled { background-color: #6c757d; border-color: #6c757d; }
+        .config-section { border-top: 2px solid #eee; padding-top: 20px; margin-top: 20px; }
+        ul { list-style-type: none; padding-left: 0; }
+        li { margin-bottom: 5px; }
+{% block styles %}{% endblock styles %}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>{{ it.title }}</h2>
+
+{% block content %}
+    {{ it.content|raw }}
+
+    {% if it.updated is defined %}
+        <h3>{{ it.updated|length }} modified config settings</h3>
+
+        {% if not it.writable %}
+            <div class="alert alert-warning">Warning: config/local.php cannot be written by the web server - this is actually a good thing security-wise, but it also means this action will not work...</div>
+        {% elseif it.errors > 0 %}
+            <div class="alert alert-danger">Warning: please correct the errors for the changes below</div>
+        {% elseif it.changes|length > 0 %}
+            <div class="alert alert-success">Changes saved to config/local.php</div>
+        {% endif %}
+
+        {% if it.changes|length > 0 %}
+            <p>Changes applied:</p>
+            <ul>
+                {% for key, msg in it.changes %}
+                <li>{{ key }}: {{ msg|raw }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if it.files is not empty %}
+            <p>Note: user-specific config files are also present: {{ it.files|join(', ') }}</p>
+        {% endif %}
+
+        <form id="configForm" method="POST">
+            <p><input id="submit" type="submit" class="submit-btn" {% if not it.writable %}disabled="disabled"{% endif %} /></p>
+
+            {% macro render_config(config, defaultConfig, tooltips) %}
+                {% for key, value in config %}
+                    {% set defaultValue = defaultConfig[key] ?? null %}
+                    {% set tooltip = tooltips[key] ?? '' %}
+                    {% set type = get_type(defaultValue) %}
+
+                    <div class="form-group">
+                        <label for="{{ key }}">{{ key }}</label>
+
+                        <div class="input-wrapper">
+                            <div>
+                            {% if type == 'boolean' %}
+                                <input type="checkbox" id="{{ key }}" name="{{ key }}" {{ value ? 'checked' : '' }}> (boolean)
+                            {% elseif type == 'integer' or type == 'double' or type == 'float' %}
+                                <input type="number" id="{{ key }}" name="{{ key }}" value="{{ value }}"> (number)
+                            {% elseif type == 'string' %}
+                                {% if key == 'cops_template' %}
+                                    <select id="{{ key }}" name="{{ key }}">
+                                        {% for option in ['default', 'bootstrap', 'bootstrap2', 'bootstrap5', 'twigged'] %}
+                                            <option value="{{ option }}"{{ option == value ? ' selected' : '' }}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elseif key == 'cops_style' %}
+                                    <select id="{{ key }}" name="{{ key }}">
+                                        {% for option in ['base', 'default', 'eink', 'iphone', 'iphone7', 'kindle'] %}
+                                            <option value="{{ option }}"{{ option == value ? ' selected' : '' }}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elseif key == 'cops_home_page' %}
+                                    <select id="{{ key }}" name="{{ key }}">
+                                        {% for option in ['INDEX', 'ALL_RECENT_BOOKS', 'AUTHORS_FIRST_LETTER', 'ALL_TAGS'] %}
+                                            <option value="{{ option }}"{{ option == value ? ' selected' : '' }}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elseif key == 'cops_epub_reader' %}
+                                    <select id="{{ key }}" name="{{ key }}">
+                                        {% for option in ['monocle', 'epubjs'] %}
+                                            <option value="{{ option }}"{{ option == value ? ' selected' : '' }}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% else %}
+                                    <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}">
+                                {% endif %} (string)
+                            {% elseif type == 'array' or type == 'object' or type == 'NULL' or type == 'null' %}
+                                <textarea id="{{ key }}" name="{{ key }}" rows="5">{{ value|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')) }}</textarea> ({{ type }})
+                            {% else %}
+                                <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}"> ({{ type }})
+                            {% endif %}
+                            </div>
+                            {% if tooltip %}
+                                <div class="help-text">{{ tooltip|nl2br }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endmacro %}
+
+            <div class="config-section">
+                <h3>Local Modified</h3>
+                {{ _self.render_config(it.updated, it.default, it.tooltips) }}
+            </div>
+
+            <div class="config-section">
+                <h3>Local Unchanged (from default)</h3>
+                {{ _self.render_config(it.original, it.default, it.tooltips) }}
+            </div>
+
+            <div class="config-section">
+                <h3>Default Others</h3>
+                {{ _self.render_config(it.others, it.default, it.tooltips) }}
+            </div>
+
+            <p><input id="submit-bottom" type="submit" class="submit-btn" {% if not it.writable %}disabled="disabled"{% endif %} /></p>
+        </form>
+    {% endif %}
+{% endblock content %}
+
+    <p>
+        <a href="{{ it.link }}">&larr; Back to {{ it.home }}</a>
+    </p>
+</div>
+</body>
+</html>

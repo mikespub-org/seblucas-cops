@@ -31,6 +31,7 @@
                 <include name="**" />
                 <exclude name="DESIGN.md" />
                 <exclude name="templates/tables.html" />
+                <exclude name="templates/twigged5/**" />
                 <exclude name="tests/**" />
                 <exclude name=".git/**" />
                 <exclude name="docker/**" />
@@ -65,6 +66,14 @@
                 <exclude name="vendor/mikespub/php-epub-meta/app/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/assets/**" />
                 <exclude name="vendor/mikespub/php-epub-meta/test/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/**.map" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/cmaps/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/iccs/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/locale/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/standard_fonts/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/wasm/**" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/debugger.*" />
+                <exclude name="vendor/mozilla/pdfjs-dist/web/**.pdf" />
                 <exclude name="vendor/npm-asset/dot/benchmarks/**" />
                 <exclude name="vendor/npm-asset/dot/bin/**" />
                 <exclude name="vendor/npm-asset/dot/examples/**" />
@@ -107,6 +116,7 @@
                 <exclude name="composer.lock" />
                 <exclude name="*.cache" />
                 <exclude name="*.cache/**" />
+                <exclude name=".php-cs-fixer.dist.php" />
             </fileset>
         </zip>
 

@@ -20,9 +20,9 @@ use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\RestApiHandler;
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasContextInterface;
+use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
@@ -31,8 +31,10 @@ use Exception;
  * Basic REST API routing to JSON Renderer
  * Note: this supports all other paths with /restapi prefix
  */
-class RestApiProvider extends BaseRenderer
+class RestApiProvider extends BaseRenderer implements HasContextInterface
 {
+    use HasContextTrait;
+
     public const DEFINITION_FILE = 'resources/openapi.json';
     public const RESTAPI_CACHE_FILE = 'resources/cache.restapi.php';
     public const PREFIX = RestApiHandler::PREFIX;
@@ -80,7 +82,7 @@ class RestApiProvider extends BaseRenderer
         // handle extra functions
         $root = '/' . explode('/', $path . '/')[1];
         if (array_key_exists($root, $this->extra)) {
-            $params = Route::match($path);
+            $params = $this->getContext()->getRouter()->match($path);
             // @todo handle non-matching path here too!?
             $params ??= [];
             if (!empty($params['page']) && $params['page'] != PageId::REST_API) {
@@ -98,7 +100,7 @@ class RestApiProvider extends BaseRenderer
         }
 
         // match path with routes
-        return Route::match($path);
+        return $this->getContext()->getRouter()->match($path);
     }
 
     /**
@@ -121,17 +123,18 @@ class RestApiProvider extends BaseRenderer
     public function runHandler($path, $params, $run = null)
     {
         // we are using class-string now
-        if (empty($params[Route::HANDLER_PARAM]) || !in_array($params[Route::HANDLER_PARAM], Framework::getHandlers())) {
+        $handlers = $this->getContext()->getHandlerManager()->getHandlers();
+        if (empty($params[Request::HANDLER_PARAM]) || !in_array($params[Request::HANDLER_PARAM], $handlers)) {
             return ["error" => "Invalid handler"];
         }
-        $handler = $params[Route::HANDLER_PARAM]::HANDLER;
+        $handler = $params[Request::HANDLER_PARAM]::HANDLER;
         if (!in_array($handler, ["check", "phpunit"]) && !$this->request->hasValidApiKey()) {
             return ["error" => "Invalid api key"];
         }
-        $name = $params[Route::HANDLER_PARAM];
+        $name = $params[Request::HANDLER_PARAM];
         // run via handler now
         $handler = Framework::createHandler($name);
-        unset($params[Route::HANDLER_PARAM]);
+        unset($params[Request::HANDLER_PARAM]);
         $run ??= $this->doRunHandler;
         if ($run) {
             // create request without using globals
@@ -139,7 +142,7 @@ class RestApiProvider extends BaseRenderer
             $response = $handler->handle($request);
             return $response;
         }
-        $result = [Route::HANDLER_PARAM => $name, "path" => $path, "params" => $params];
+        $result = [Request::HANDLER_PARAM => $name, "path" => $path, "params" => $params];
         return $result;
     }
 
@@ -169,7 +172,7 @@ class RestApiProvider extends BaseRenderer
         }
         if ($this->isExtra) {
             $result = $params;
-        } elseif (empty($params[Route::HANDLER_PARAM]) || $params[Route::HANDLER_PARAM]::HANDLER == 'json') {
+        } elseif (empty($params[Request::HANDLER_PARAM]) || $params[Request::HANDLER_PARAM]::HANDLER == 'json') {
             $this->request->setParams($params);
             $result = $this->getJson();
         } else {
@@ -372,7 +375,8 @@ class RestApiProvider extends BaseRenderer
     public function getOpenApi($request)
     {
         $openapi = new OpenApi();
-        return $openapi->getDefinition();
+        $routes = $this->getContext()->getRoutes();
+        return $openapi->getDefinition($routes);
     }
 
     /**
@@ -388,7 +392,8 @@ class RestApiProvider extends BaseRenderer
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach (Route::getRoutes() as $name => $route) {
+        $routes = $this->getContext()->getRoutes();
+        foreach ($routes as $name => $route) {
             array_push($result["entries"], [
                 "name" => $name,
                 "route" => $route,
@@ -410,7 +415,8 @@ class RestApiProvider extends BaseRenderer
             "baseurl" => $baseurl,
             "entries" => [],
         ];
-        foreach (Framework::getHandlers() as $name => $class) {
+        $handlers = $this->getContext()->getHandlerManager()->getHandlers();
+        foreach ($handlers as $name => $class) {
             $routes = $class::getRoutes();
             array_push($result["entries"], [
                 "handler" => $name,

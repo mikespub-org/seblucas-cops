@@ -29,7 +29,6 @@ use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
@@ -42,6 +41,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Executor\Executor;
 use GraphQL\Error\DebugFlag;
 use Exception;
+use InvalidArgumentException;
 use JsonException;
 
 /**
@@ -65,7 +65,7 @@ class GraphQLExecutor
         $input = json_decode((string) $request->content(), true);
         // set request handler for navlink
         $handler ??= RestApiHandler::class;
-        $request->set(Route::HANDLER_PARAM, $handler);
+        $request->set(Request::HANDLER_PARAM, $handler);
 
         $schema = $this->getSchema();
 
@@ -639,6 +639,7 @@ class GraphQLExecutor
     /**
      * Summary of fromGlobalIdentier
      * @param string $globalId
+     * @throws \InvalidArgumentException
      * @return array<mixed>
      */
     public static function fromGlobalIdentier($globalId)
@@ -662,13 +663,13 @@ class GraphQLExecutor
                 return [null, null, null];
             }
         } catch (Exception) {
-            throw new Exception('Invalid global identifier db');
+            throw new InvalidArgumentException('Invalid global identifier db');
         }
         if (!in_array($type, ['authors', 'books', 'datas', 'formats', 'identifiers', 'languagues', 'publishers', 'ratings', 'series', 'tags'])) {
-            throw new Exception('Invalid global identifier type');
+            throw new InvalidArgumentException('Invalid global identifier type');
         }
         if ($id === '') {
-            throw new Exception('Invalid global identifier id');
+            throw new InvalidArgumentException('Invalid global identifier id');
         }
         return [$db, $type, $id];
     }

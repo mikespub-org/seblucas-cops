@@ -18,7 +18,6 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;

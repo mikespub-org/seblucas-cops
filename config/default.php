@@ -3,7 +3,10 @@
 /**
  * COPS (Calibre OPDS PHP Server) default configuration
  * Settings can be overridden in config/local.php and
- * optional config/local.{remote_user}.php
+ * optional config/local.{remote_user}.php and
+ * for request handling options only:
+ * optional config/local.db-{database}.php (using db number 0, 1, ... across users) or
+ * optional config/local.{remote_user}.db-{database}.php (using db number 0, 1, ... of remote_user)
  *
  * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
@@ -23,16 +26,12 @@ if (!isset($config)) {
  *     "My database name" => "/home/directory/calibre1/",
  *     "My other database name" => "/home/directory/calibre2/",
  * ];
+ * Each user can have its own set of databases in config/local.{remote_user}.php
+ * Each database can have its own config options in config/local.db-{database}.php
+ * for common database setup, or config/local.{remote_user}.db-{database}.php for
+ * user-specific set of databases (see issue #160)
  */
 $config['calibre_directory'] = './';
-
-/*
- * SPECIFIC TO NGINX
- * The internal directory set in nginx config file
- * Leave empty if you don't know what you're doing
- * @deprecated 1.3.1 use absolute paths in calibre_directory
- */
-$config['calibre_internal_directory'] = '';
 
 /**
  * Custom configuration if your Calibre library is stored elsewhere and
@@ -78,7 +77,7 @@ $config['cops_full_url'] = '';
 /*
  * As an alternative for cops_full_url above, if you're using a reverse proxy and you want to
  * change how COPS is accessed depending on the entrypoint (e.g. direct, local network, internet)
- * you can define trusted proxies and trusted headers here (dev only)
+ * you can define trusted proxies and trusted headers here
  * Note: using symfony/http-foundation to support X-Forwarded-* and Forwarded headers from proxies
  * @see https://symfony.com/doc/current/deployment/proxies.html
  */
@@ -130,6 +129,21 @@ $config['cops_subtitle_default'] = '';
  *   No value (default) : Let PHP handle the download
  */
 $config['cops_x_accel_redirect'] = '';
+
+/*
+ * Absolute path mapping for books is assumed to be the same between web server and PHP COPS
+ * Example: if COPS finds books in /mapped/library, then nginx config must have something like:
+ * # X-Accel-Redirect uri from COPS
+ * location /mapped/library {
+ *     # internal redirect for nginx
+ *     internal;
+ *     # actual path on nginx server
+ *     alias /volume1/Calibre
+ *     # or if COPS and nginx are on the same server
+ *     #root /
+ * }
+ */
+$config['cops_x_accel_mapping'] = '';
 
 /*
  * Height of thumbnail image for OPDS (thumb=opds)
@@ -280,6 +294,22 @@ $config['cops_calibre_virtual_libraries'] = [];
  * This is not supported in combination with multiple databases
  */
 $config['cops_virtual_library'] = '0';
+
+/*
+ * Filter Calibre database by tags, languages etc.
+ * Example:
+ * $config['cops_database_filter'] = [
+ *     "tags": "Short Stories",
+ *     "language": "eng",
+ * ];
+ *
+ * For negative filters start with !, example: "!Short Stories"
+ *
+ * Can be used as alternative to virtual libraries
+ * also in multi-database/multi-user configurations
+ * by putting this in the right local.*.php file(s)
+ */
+$config['cops_database_filter'] = [];
 
 /*
  * Custom Columns for the index page
@@ -511,6 +541,17 @@ $config['calibre_user_database'] = null;
 $config['cops_basic_authentication'] = null;
 
 /*
+ * @todo see https://github.com/mikespub-org/seblucas-cops/pull/161 by @dcoffin88
+ * Enable form password protection via login.html (You can use if htpasswd is not possible for you)
+ * If possible prefer htpasswd or authentication done by reverse proxy!
+ * Supported values:
+ *     array with ["username" => "xxx", "password" => "secret"] : Enable form password protection
+ *     null : Disable form password protection (You can still use htpasswd or reverse proxy)
+ *     string with $config['calibre_user_database'] : Calibre user accounts database - WARNING: passwords are in clear!
+ */
+$config['cops_form_authentication'] = null;
+
+/*
  * Which template is used by default :
  * 'default'
  * 'bootstrap'
@@ -535,7 +576,7 @@ $config['cops_style'] = 'default';
  * Which of these templates use the Twig template engine
  * Only the 'twigged' template for now...
  */
-$config['cops_twig_templates'] = ['twigged'];
+$config['cops_twig_templates'] = ['twigged', 'twigged5', 'admin'];
 
 /*
  * Which URL prefix to use in templates for js & css assets (without trailing /)
@@ -670,8 +711,35 @@ $config['cops_api_key'] = '';
  * Choose preferred epub reader when viewing epub files online:
  * 'monocle' (default)
  * 'epubjs'
+ * 'custom-reader.html?url=' (custom reader template - adapt as needed)
  */
 $config['cops_epub_reader'] = 'monocle';
+
+/*
+ * Choose comic-reader template URL when viewing comic files online:
+ * '' (default)
+ * 'comic-reader.html?url='
+ * 'codedread-kthoom.html?bookUri=' (with mikespub/codedread-kthoom package)
+ *
+ * Note: for kthoom please install the package with composer:
+ *
+ * $ composer require mikespub/codedread-kthoom
+ */
+$config['cops_comic_reader'] = '';
+
+/*
+ * Choose pdfjs-viewer template URL when viewing pdf files online:
+ * '' (default)
+ * 'pdfjs-viewer.html?file='
+ *
+ * Note: the release package cops-3.x.x-php82.zip only contains
+ * minimal parts of the mozilla/pdfjs-dist package. If your PDF
+ * shows errors, please install the full package with composer:
+ *
+ * $ rm -r vendor/mozilla/pdfjs-dist/
+ * $ composer install -o
+ */
+$config['cops_pdfjs_viewer'] = '';
 
 /*
  * Default customize values per user - @todo

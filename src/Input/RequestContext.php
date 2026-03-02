@@ -72,19 +72,62 @@ class RequestContext
                 $this->matchParams = [];
             }
 
-            // Enhance route with request context
-            //$this->matchParams->setContext($this);
             // Update request with matched parameters
-            $this->request->updateFromMatch($this->matchParams);
+            $this->updateRequest($this->matchParams);
 
             return $this->matchParams;
         } catch (\Throwable $e) {
             // Return default route match for error handling
             return [
-                Route::HANDLER_PARAM => 'error',
+                Request::HANDLER_PARAM => 'error',
                 'error' => $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * Update request parameters after route matching
+     * @param array<mixed> $params from router match()
+     */
+    public function updateRequest($params): Request
+    {
+        $default = $this->manager->getHandlerClass('html');
+        if (empty($params[Request::HANDLER_PARAM])) {
+            $params[Request::HANDLER_PARAM] = $default;
+        }
+        // JsonHandler uses same routes as HtmlHandler - see util.js
+        if ($params[Request::HANDLER_PARAM] == $default && $this->request->isAjax()) {
+            $params[Request::HANDLER_PARAM] = $this->manager->getHandlerClass('json');
+        }
+        foreach ($params as $name => $value) {
+            $this->request->set($name, $value);
+        }
+        return $this->request;
+    }
+
+    /**
+     * Load user- and/or database-specific config after request match & update + authentication
+     * @see SebLucas\Cops\Middleware\AuthMiddleware::checkUserAuthentication()
+     */
+    public function updateConfig(): Config
+    {
+        // first load user-specific config in case they have their own database(s)
+        $username = $this->request->getUserName();
+        if (!empty($username)) {
+            $config = Config::getUserConfig($username);
+            if (!empty($config)) {
+                Config::load($config);
+                $this->config = new Config();
+            }
+        }
+        // then load database- (and user-) specific config
+        $database = $this->request->database();
+        $config = Config::getDatabaseConfig($database, $username);
+        if (!empty($config)) {
+            Config::load($config);
+            $this->config = new Config();
+        }
+        return $this->config;
     }
 
     public function resolveHandler(): BaseHandler
@@ -97,14 +140,12 @@ class RequestContext
         $handlerName = $this->resolveHandlerName();
 
         try {
-            $handlerClass = $this->manager->getHandlerClass($handlerName);
-            $this->handler = $this->createHandler($handlerClass);
+            $this->handler = $this->manager->createHandler($handlerName);
             return $this->handler;
         } catch (\RuntimeException $e) {
             // Fallback to error handler
             //return $this->createErrorHandler($e);
-            $errorHandlerClass = $this->manager->getHandlerClass('error');
-            $this->handler = $this->createHandler($errorHandlerClass);
+            $this->handler = $this->manager->createHandler('error');
             return $this->handler;
         }
     }
@@ -117,13 +158,13 @@ class RequestContext
         }
 
         // 2. Check matched route handler
-        if ($this->matchParams && !empty($this->matchParams[Route::HANDLER_PARAM])) {
-            return $this->matchParams[Route::HANDLER_PARAM];
+        if ($this->matchParams && !empty($this->matchParams[Request::HANDLER_PARAM])) {
+            return $this->matchParams[Request::HANDLER_PARAM];
         }
 
         // 3. Check request parameters
-        if (!empty($this->request->urlParams[Route::HANDLER_PARAM])) {
-            $name = $this->request->urlParams[Route::HANDLER_PARAM];
+        if (!empty($this->request->urlParams[Request::HANDLER_PARAM])) {
+            $name = $this->request->urlParams[Request::HANDLER_PARAM];
             return $name;
         }
 
@@ -209,6 +250,11 @@ class RequestContext
         return $this->session;
     }
 
+    public function setSession(Session $session): void
+    {
+        $this->session = $session;
+    }
+
     public function getHandlerManager(): HandlerManager
     {
         return $this->manager;
@@ -217,5 +263,14 @@ class RequestContext
     public function getRouter(): RouterInterface
     {
         return $this->router;
+    }
+
+    /**
+     * Summary of getRoutes
+     * @return array<string, mixed>
+     */
+    public function getRoutes(): array
+    {
+        return $this->router->getRouteCollection()?->all() ?? [];
     }
 }

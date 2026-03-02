@@ -10,8 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\KiwilanOPDS as OpdsRenderer;
 use SebLucas\Cops\Output\Response as CopsResponse;
 use SebLucas\Cops\Pages\PageId;
@@ -38,6 +37,13 @@ class OpdsHandler extends BaseHandler
         ];
     }
 
+    public static function getMiddleware()
+    {
+        return [
+            ConnectMiddleware::class,
+        ];
+    }
+
     public function handle($request)
     {
         if (!class_exists('\Kiwilan\Opds\OpdsResponse')) {
@@ -50,7 +56,7 @@ class OpdsHandler extends BaseHandler
         $path = $request->get('path');
         if (!empty($path)) {
             // match path against default page handler
-            $params = Route::match('/' . $path);
+            $params = $this->getContext()->getRouter()->match('/' . $path);
             if (!isset($params)) {
                 return CopsResponse::sendError($request, 'Unknown path for feed: ' . $path);
             }
@@ -63,14 +69,7 @@ class OpdsHandler extends BaseHandler
             $page = PageId::OPENSEARCH_QUERY;
         }
 
-        if (Config::get('fetch_protect') == '1') {
-            $session = $this->getContext()->getSession();
-            $session->start();
-            $connected = $session->get('connected');
-            if (!isset($connected)) {
-                $session->set('connected', 0);
-            }
-        }
+        // set session connected in ConnectMiddleware
 
         $opdsRenderer = new OpdsRenderer();
 

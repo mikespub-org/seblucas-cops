@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Book;
 use InvalidArgumentException;
+use SebLucas\Cops\Calibre\Comment;
 
 class PageBookDetail extends Page
 {
@@ -26,6 +27,9 @@ class PageBookDetail extends Page
         $this->book = Book::getBookById($this->idGet, $this->getDatabaseId());
         if (is_null($this->book)) {
             throw new InvalidArgumentException('Invalid Book');
+        }
+        if (Comment::hasCalibreLinks($this->book->comment)) {
+            $this->book->comment = Comment::fixCalibreLinks($this->book->comment, $this->getDatabaseId());
         }
         $this->book->setHandler($this->handler);
         $this->idPage = $this->book->getEntryId();

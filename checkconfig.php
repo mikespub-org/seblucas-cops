@@ -15,7 +15,6 @@
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Routing\UriGenerator;
 
 require_once __DIR__ . '/config/config.php';
@@ -60,13 +59,13 @@ if (!empty($err) && $err == 1) {
             <h4>
             <?php
     if (defined('PHP_VERSION_ID')) {
-        if (PHP_VERSION_ID >= 70400) {
+        if (PHP_VERSION_ID >= 80400) {
             echo 'OK (' . PHP_VERSION . ')';
         } else {
-            echo 'Please install PHP >= 7.4 (' . PHP_VERSION . ')';
+            echo 'Please install PHP >= 8.4 (' . PHP_VERSION . ')';
         }
     } else {
-        echo 'Please install PHP >= 7.4';
+        echo 'Please install PHP >= 8.4';
     }
 ?>
             </h4>
@@ -218,7 +217,7 @@ echo 'SERVER_NAME: ' . ($_SERVER['SERVER_NAME'] ?? '') . '<br>';
 echo 'SERVER_ADDR: ' . ($_SERVER['SERVER_ADDR'] ?? '') . '<br>';
 echo 'SERVER_PORT: ' . ($_SERVER['SERVER_PORT'] ?? '') . '<br>';
 echo 'REQUEST_SCHEME: ' . ($_SERVER['REQUEST_SCHEME'] ?? '') . '<br>';
-echo 'REQUEST_URI: ' . ($_SERVER['REQUEST_URI'] ?? '') . '<br>';
+echo 'REQUEST_URI: ' . htmlspecialchars($_SERVER['REQUEST_URI'] ?? '') . '<br>';
 ?>
             </h4>
         </article>
@@ -235,6 +234,8 @@ if ($request->render()) {
             </h4>
             <h2>User agent detected</h2>
             <h4><?php echo $_SERVER["HTTP_USER_AGENT"] ?></h4>
+            <h2>Accept language detected</h2>
+            <h4><?php echo $_SERVER["HTTP_ACCEPT_LANGUAGE"] ?></h4>
         </article>
 <?php
 $i = 0;

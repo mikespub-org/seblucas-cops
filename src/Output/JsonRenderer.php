@@ -20,12 +20,11 @@ use SebLucas\Cops\Handlers\ReadHandler;
 use SebLucas\Cops\Handlers\ZipperHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
-use \SebLucas\Cops\Pages\PageAbout;
+use SebLucas\Cops\Pages\PageAbout;
 use Exception;
 
 class JsonRenderer extends BaseRenderer
@@ -180,6 +179,7 @@ class JsonRenderer extends BaseRenderer
         $out ["thumbnailurl"] = $cover->getThumbnailUri($thumb, false);
         $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
         $out ["content"] = $book->getComment(false);
+        $out ["pages"] = $book->getPages();
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
         foreach ($book->getDatas() as $data) {
@@ -189,18 +189,19 @@ class JsonRenderer extends BaseRenderer
                 "url" => $data->getHtmlLink(),
                 "viewUrl" => $data->getViewHtmlLink(),
                 "mail" => 0,
+                "qrcode" => 0,
                 "readerUrl" => "",
             ];
-            if (!empty(Config::get('mail_configuration')) && !is_null($dataKindle) && $data->id == $dataKindle->id) {
-                $tab ["mail"] = 1;
+            if (!is_null($dataKindle) && $data->id == $dataKindle->id) {
+                // only show QR code if we have a full url here
+                if (str_contains($tab["url"], '://')) {
+                    $tab ["qrcode"] = 1;
+                }
+                if (!empty(Config::get('mail_configuration'))) {
+                    $tab ["mail"] = 1;
+                }
             }
-            if ($data->format == "EPUB") {
-                $params = [];
-                $params['data'] = $data->id;
-                $params['db'] = $database;
-                $params['title'] = $book->getTitle();
-                $tab ["readerUrl"] = self::$reader::route('read-title', $params);
-            }
+            $tab ["readerUrl"] = self::$reader::getReaderUrl($data);
             array_push($out ["datas"], $tab);
         }
         $out ["extraFiles"] = [];
@@ -366,6 +367,7 @@ class JsonRenderer extends BaseRenderer
                 "permalinkAlt" => localize("permalink.alternate"),
                 "publisherName" => localize("publisher.name"),
                 "pubdateTitle" => localize("pubdate.title"),
+                "pagesTitle" => localize("pages.title"),
                 "languagesTitle" => localize("languages.title"),
                 "languageTitle" => localize("language.title"),
                 "contentTitle" => localize("content.summary"),
@@ -801,6 +803,7 @@ class JsonRenderer extends BaseRenderer
             $out ["extra"]["series"] = $this->getSeries($currentPage, $extraParams);
         }
         $out ["assets"] = $this->getPath(Config::get('assets'));
+        // $out ["templates"] = $this->getPath('templates');
         $out ["download"] = $this->getDownloadLinks($currentPage, $qid);
 
         /** @phpstan-ignore-next-line */

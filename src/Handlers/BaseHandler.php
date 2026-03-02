@@ -14,7 +14,7 @@ use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\Route;
+use SebLucas\Cops\Middleware\BaseMiddleware;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -32,10 +32,19 @@ abstract class BaseHandler implements HasContextInterface
 
     /**
      * Array of path => params for this handler
-     * Note: Route will add Route::HANDLER_PARAM => static::class to params
+     * Note: Route will add Request::HANDLER_PARAM => static::class to params
      * @return array<string, mixed>
      */
     public static function getRoutes()
+    {
+        return [];
+    }
+
+    /**
+     * Array of middleware classes that should apply for this handler
+     * @return array<class-string<BaseMiddleware>>
+     */
+    public static function getMiddleware()
     {
         return [];
     }
@@ -48,7 +57,7 @@ abstract class BaseHandler implements HasContextInterface
     public static function link($params = [])
     {
         // use this specific handler to find the route
-        $params[Route::HANDLER_PARAM] = static::class;
+        $params[Request::HANDLER_PARAM] = static::class;
         return UriGenerator::process($params);
     }
 
@@ -74,7 +83,7 @@ abstract class BaseHandler implements HasContextInterface
      */
     public static function route($routeName, $params = [])
     {
-        $params[Route::ROUTE_PARAM] = $routeName;
+        $params[Request::ROUTE_PARAM] = $routeName;
         return static::link($params);
     }
 
@@ -86,27 +95,6 @@ abstract class BaseHandler implements HasContextInterface
     {
         $routes = static::getRoutes();
         return $routes;
-    }
-
-    /**
-     * Summary of findRouteName - @todo adapt to actual routes for each handler
-     * @deprecated 3.5.7 use HasRouteTrait::getRoute() or BaseHandler::route() instead
-     * @param array<mixed> $params
-     * @return string
-     */
-    public static function findRouteName($params)
-    {
-        if (!empty($params[Route::ROUTE_PARAM])) {
-            return $params[Route::ROUTE_PARAM];
-        }
-        $name = static::HANDLER;
-        if (count(static::getRoutes()) > 1) {
-            $accept = array_intersect(array_keys($params), static::PARAMLIST);
-            if (!empty($accept)) {
-                $name = $name . '-' . implode('-', $accept);
-            }
-        }
-        return $name;
     }
 
     /**

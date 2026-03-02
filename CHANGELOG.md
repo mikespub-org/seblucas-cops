@@ -6,17 +6,73 @@ or directly at https://github.com/seblucas/cops/blob/master/CHANGELOG
 x.x.x - TODO
   * Changes in config/default.php file:
     - new $config['cops_customize'] for default customize values per user (TODO)
-  * Upgrade graphiql CDN template for react 19.x - see PR graphql/graphiql#3902
   * Experiment with default customize values per user (TODO)
   * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.5
 
-2.8.x - 2024xxxx Maintenance release for 2.x (PHP >= 8.1)
+3.8.x - 2026xxxx Maintenance release for 3.x (PHP >= 8.2)
   * ...
 
-1.5.x - 2024xxxx Maintenance release for 1.x (PHP >= 7.4)
+4.x.x - 2026xxxx 
   * ...
 
-3.x.x - 2025xxxx 
+4.1.0 - 20260208 Book pages, calibre links, database filters, web app manifest 
+  * Changes in config/default.php file:
+    - new $config['cops_database_filter'] option to filter Calibre databases - see #133
+  * Support Calibre database filters in config/local[.*].php file(s) - see #133
+  * Add web app manifest file in resources + adapt templates - see PR #167 from @dunxd
+  * Move symfony/http-foundation package to --no-dev to support trusted proxy headers
+  * Replace calibre:// links in comments and notes with corresponding COPS links
+  * Get book pages for Calibre version 9.0 and later + update test databases
+
+4.0.2 - 20260124 Fix mail without index.php + update packages 
+  * Update php/npm packages and templates
+  * Fix sending mail when front_controller is set - see dunxd/HomeAssistantAddons#90 by @saya6k
+
+4.0.0 - 20251127 Pre-release for PHP 8.4+
+  * Update platform reqs in composer.json
+
+3.8.2 - 20251127 Use form authentication + update packages & readers
+  * Changes in config/default.php file:
+    - add $config['cops_form_authentication'] option to use form authentication
+  * Update php/npm packages and ebook readers
+  * Drop loading user-specific config before auth in config/config.php
+  * Use new AuthMiddleware to handle authentication + update Config
+  * Support form authentication with login.html again - see PR #161 from @dcoffin88
+
+3.8.0 - 20251011 Add custom readers, database config files + prepare symfony upgrade 
+  * Changes in config/default.php file:
+    - add $config['cops_epub_reader'] option to use custom reader template
+    - add $config['cops_comic_reader'] option to use codedread-kthoom template
+  * Prepare upgrade of symfony/* packages to new 7.4 LTS version
+  * Support custom reader template for epub files too
+  * Add option to use different comic reader based on kthoom from @codedread
+  * Move admin templates to subdirectory and use Twig template engine
+  * Support user-specific or common database config files - see issue #160 from @tgiraud
+  * Add minimal mozilla/pdfjs-dist to release package cops-3.x.x-php82.zip
+  * Upgrade mozilla/pdfjs-dist to v5.4.296 and refresh pdfjs-viewer template
+  * Hide dropzone in comic-reader if url is specified
+
+3.7.8 - 20251004 Add QR code, Comic Reader and PDF Viewer (dev only) + fixes
+  * Changes in config/default.php file:
+    - new $config['cops_comic_reader'] to read comic books
+    - new $config['cops_pdfjs_viewer'] to view pdf files (dev only)
+  * Add PDF.js Viewer for PDF books - see issue #159 from @tgiraud (dev only)
+  * Add Comic Reader for CBZ/CBR/CBT books - see issue #159 from @tgiraud
+  * Add icu-data-full package for alpine in Dockerfile
+  * Start twigged5 template to convert twigged to Bootstrap 5 (WIP)
+  * Use generic RouteCollection and deprecate Route class
+  * Add framework integration for Laravel, Slim and Symfony (dev only)
+  * Fix non-ASCII book letter in uri generator and page route
+  * Add qr code to download book in bootstrap2/twigged templates
+  * Add qr code to web site for sharing with others in About page
+  * Upgrade mikespub/epub-loader to 3.6.5 and update loader templates
+
+3.7.2 - 20250917 Update packages + include PRs and reported issues 
+  * Check uri generator without intl extension - see issue #158 from @shaoyangx
+  * Fix Kindle style in default templates - see PR #156 from @dunxd
+  * Increase cookie lifetime - see PR #155 from @dunxd
+  * Set ETag and Last-Modified for files and images
+  * Upgrade graphiql CDN template for react 19.x - see PR graphql/graphiql#3902
   * Update package.json dependencies (info only)
   * Upgrade mikespub/epub-loader to 3.6.3 and php-epub-meta to 3.5
   * Upgrade mikespub/php-epub-meta to 3.4 and adapt Calibre\Metadata class

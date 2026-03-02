@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom eBook Reader with URL Parameter</title>
+    <!--
+    <style>
+        body { font-family: sans-serif; padding: 2em; }
+        code { background-color: #eee; padding: 0.2em 0.4em; border-radius: 3px; }
+    </style>
+    -->
+</head>
+<body>
+
+    <h1>Custom eBook Reader</h1>
+    <p>Replace this template to use your own custom eBook reader(s) here</p>
+    <p>The value of the <code>url</code> parameter is: <strong id="url-value"></strong></p>
+
+    <script>
+        // This script runs after the page has loaded
+        window.onload = () => {
+            // Create a URLSearchParams object from the current URL's search string
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlDisplayElement = document.getElementById('url-value');
+
+            // Get the value of the 'url' parameter
+            const urlValue = urlParams.get('url');
+
+            if (!urlValue) {
+                urlDisplayElement.textContent = "[not provided]";
+                return;
+            }
+
+            try {
+                // Create a URL object to safely parse the parameter.
+                // The second argument provides a base, making relative URLs like 'page.html' work.
+                const targetUrl = new URL(urlValue, window.location.href);
+
+                // --- Security Check ---
+                // Only create a link if the hostname matches the current page's hostname.
+                // This prevents linking to external, potentially malicious, sites.
+                if (targetUrl.hostname === window.location.hostname) {
+                    const link = document.createElement('a');
+                    link.href = targetUrl.href;
+                    link.textContent = targetUrl.href; // Display the absolute URL as the link text.
+                    urlDisplayElement.appendChild(link);
+                } else {
+                    // If not from the same host, display as plain text for safety.
+                    urlDisplayElement.textContent = urlValue;
+                }
+            } catch (e) {
+                // If new URL() fails, it's not a valid URL. Display as plain text.
+                console.error("Invalid URL parameter:", e);
+                urlDisplayElement.textContent = urlValue;
+            }
+        };
+    </script>
+
+</body>
+</html>
