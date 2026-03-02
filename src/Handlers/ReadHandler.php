@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Output\ComicReader;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -19,7 +20,7 @@ use InvalidArgumentException;
 use Throwable;
 
 /**
- * Handle epub reader with monocle
+ * Handle epub reader with monocle or epubjs + link to comic reader or pdf viewer
  * URL format: index.php/read?data={idData}&version={version}
  */
 class ReadHandler extends BaseHandler
@@ -33,6 +34,7 @@ class ReadHandler extends BaseHandler
         return [
             "read-title" => ["/read/{db:\d+}/{data:\d+}/{title}"],
             "read" => ["/read/{db:\d+}/{data:\d+}"],
+            "read-format" => ["/read/{path:.+}"],
         ];
     }
 
@@ -44,7 +46,19 @@ class ReadHandler extends BaseHandler
     public static function getReaderUrl(Data $data)
     {
         if ($data->format == "EPUB" && Config::get('epub_reader')) {
-            if (in_array(Config::get('epub_reader'), ['monocle', 'epubjs'])) {
+            $reader = Config::get('epub_reader');
+            if (in_array($reader, ['monocle', 'epubjs'])) {
+                // support reader for epub books in folders (epubjs only)
+                if (empty($data->id) && isset($data->book->folderId)) {
+                    if ($reader == 'epubjs') {
+                        // URL format: index.php/read/{path} - let reader handle parsing etc. in browser
+                        $params = [];
+                        $params['path'] = $data->getFolderPath();
+                        return self::route('read-format', $params) ?? '';
+                    }
+                    // use templates/custom-reader.html?url=... format here for now
+                    return UriGenerator::path('templates/custom-reader.html?url=') . $data->getHtmlLink();
+                }
                 // use standard epub reader here
                 $params = [];
                 $params['data'] = $data->id;
@@ -52,8 +66,8 @@ class ReadHandler extends BaseHandler
                 $params['title'] = $data->book->getTitle();
                 return self::route('read-title', $params) ?? '';
             }
-            // use templates/custom-reader?url=... format here for now
-            return UriGenerator::path('templates/' . Config::get('epub_reader')) . $data->getHtmlLink();
+            // use templates/custom-reader.html?url=... format here for now
+            return UriGenerator::path('templates/' . $reader) . $data->getHtmlLink();
         }
         // use templates/comic-reader?url=... format here for now
         if (in_array($data->format, ["CBZ", "CBR", "CBT"]) && Config::get('comic_reader')) {
@@ -69,7 +83,12 @@ class ReadHandler extends BaseHandler
     public function handle($request)
     {
         $idData = $request->getId('data');
-        if (empty($idData)) {
+        // check if we have a folder file path
+        $path = null;
+        if (Config::get('browse_books_directory')) {
+            $path = $request->get('path');
+        }
+        if (empty($idData) && empty($path)) {
             return Response::notFound($request);
         }
         $version = $request->get('version', Config::get('epub_reader', 'monocle'));
@@ -77,7 +96,11 @@ class ReadHandler extends BaseHandler
 
         $response = new Response(Response::MIME_TYPE_HTML);
 
-        $reader = new EPubReader($request, $response);
+        if (!empty($path) && ComicReader::isValidFile($path)) {
+            $reader = new ComicReader($request, $response);
+        } else {
+            $reader = new EPubReader($request, $response);
+        }
 
         try {
             return $response->setContent($reader->getReader($idData, $version, $database));

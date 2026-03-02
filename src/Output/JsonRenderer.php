@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Handlers\ReadHandler;
@@ -80,6 +81,7 @@ class JsonRenderer extends BaseRenderer
                     "name" => $format,
                     "url" => $data->getHtmlLink(),
                     "viewUrl" => $data->getViewHtmlLink(),
+                    "size" => $data->getHumanSize(),
                 ]);
             }
         }
@@ -176,10 +178,39 @@ class JsonRenderer extends BaseRenderer
         } else {
             $thumb = "html2";
         }
+        // Note: this will fail for books in folders /ebook/ if book title is updated based on EPUB file
         $out ["thumbnailurl"] = $cover->getThumbnailUri($thumb, false);
         $out ["coverurl"] = $cover->getCoverUri() ?? $out ["thumbnailurl"];
+        // Try getting cover from .cbz or .epub file instead for folders
+        if (empty($out["thumbnailurl"]) && empty($book->getCoverFileName()) && isset($book->folderId)) {
+            $data = $book->getDataFormat(ComicReader::EXTENSION);
+            /** */
+            if (!$data) {
+                $data = $book->getDataFormat(EPubReader::EXTENSION);
+            }
+            /** */
+            if ($data) {
+                $coverLink = Cover::getFolderDataLink($data, $thumb);
+                if ($coverLink) {
+                    $out ["thumbnailurl"] = $coverLink->getUri();
+                    $out ["hasCover"] = true;
+                }
+                $coverLink = Cover::getFolderDataLink($data);
+                if ($coverLink) {
+                    $out ["coverurl"] = $coverLink->getUri();
+                    $out ["hasCover"] = true;
+                }
+            }
+        }
         $out ["content"] = $book->getComment(false);
         $out ["pages"] = $book->getPages();
+        if (isset($book->folderId)) {
+            $out ["folderId"] = $book->folderId ?: localize("folders.root");
+            $out ["folderUrl"] = JsonHandler::route(Folder::ROUTE_DETAIL, ["path" => $book->folderId]);
+        } else {
+            $out ["folderId"] = '';
+            $out ["folderUrl"] = '';
+        }
         $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
         foreach ($book->getDatas() as $data) {
@@ -188,6 +219,7 @@ class JsonRenderer extends BaseRenderer
                 "format" => $data->format,
                 "url" => $data->getHtmlLink(),
                 "viewUrl" => $data->getViewHtmlLink(),
+                "size" => $data->getHumanSize(),
                 "mail" => 0,
                 "qrcode" => 0,
                 "readerUrl" => "",
@@ -290,6 +322,7 @@ class JsonRenderer extends BaseRenderer
             'Rating' => localize("ratings.title"),
             'Serie' => localize("series.title"),
             'Tag' => localize("tags.title"),
+            'Folder' => localize("folders.title"),
             default => $entry->className,
         };
         return [
@@ -347,6 +380,7 @@ class JsonRenderer extends BaseRenderer
                 "authorTitle" => localize("author.title"),
                 "allbooksTitle" => localize("allbooks.title"),
                 "bookwordTitle" => localize("bookword.title"),
+                "foldersTitle" => localize("folders.title"),
                 "recentTitle" => localize("recent.title"),
                 "tagsTitle" => localize("tags.title"),
                 "tagwordTitle" => localize("tagword.title"),
@@ -381,6 +415,7 @@ class JsonRenderer extends BaseRenderer
                 "libraryTitle" => localize("library.title"),
                 "linkTitle" => localize("extra.link"),
                 "filesTitle" => localize("extra.files"),
+                "folderTitle" => localize("folder.title"),
                 "titleTitle" => localize("title.title"),
                 "filtersTitle" => localize("filters.title"),
                 "downloadAllTitle" => localize("downloadall.title"),
@@ -596,7 +631,7 @@ class JsonRenderer extends BaseRenderer
         if (!$currentPage->hierarchy) {
             return $hierarchy;
         }
-        $hastree = $this->request->get('tree', false);
+        $hastree = $currentPage->hierarchy['hastree'];
         if ($hastree) {
             $current = $this->getContentArray($currentPage->hierarchy['current'], $extraParams);
         } else {
@@ -717,6 +752,11 @@ class JsonRenderer extends BaseRenderer
 
         $currentPage = PageId::getPage($this->page, $request);
 
+        // handle folder book as book page
+        if ($this->page == "folder" && !empty($currentPage->book)) {
+            $this->page = "book";
+        }
+
         if ($search) {
             return $this->getContentArrayTypeahead($currentPage);
         }
@@ -725,8 +765,9 @@ class JsonRenderer extends BaseRenderer
         $out ["parentTitle"] = $currentPage->parentTitle;
         if (!empty($out ["parentTitle"])) {
             if ($currentPage->hierarchy) {
+                $separator = $currentPage->hierarchy["separator"];
                 // @todo add link to parent(s) for hierarchical series, tags etc.
-                $out ["title"] = $out ["parentTitle"] . " > " . str_replace(".", " > ", $out ["title"]);
+                $out ["title"] = $out ["parentTitle"] . " > " . str_replace($separator, " > ", $out ["title"]);
             } else {
                 $out ["title"] = $out ["parentTitle"] . " > " . $out ["title"];
             }

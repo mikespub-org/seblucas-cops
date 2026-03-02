@@ -111,7 +111,7 @@ class Routing implements RouterInterface
     public function context($request)
     {
         $baseUrl = UriGenerator::absolute('');
-        // @see RoutingTest::testRoutingContext() = vendor/bin/index.php
+        // @see \SebLucas\Cops\Tests\Routing\RoutingTest::testRoutingContext() = vendor/bin/index.php
         if (!str_starts_with($baseUrl, '/')) {
             $baseUrl = '/' . $baseUrl;
         }

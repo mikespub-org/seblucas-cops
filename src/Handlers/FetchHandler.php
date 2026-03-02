@@ -16,8 +16,10 @@ use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Middleware\ProtectMiddleware;
 use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Output\ImageResponse;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\Zipper;
 
@@ -42,6 +44,8 @@ class FetchHandler extends BaseHandler
             "fetch-cover" => ["/covers/{db:\d+}/{id:\d+}.jpg"],
             "fetch-inline" => ["/inline/{db:\d+}/{data:\d+}/{ignore}.{type}", ["view" => 1]],
             "fetch-data" => ["/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}"],
+            "fetch-format" => ["/format/{path:.+}"],
+            "fetch-image" => ["/images/{size}/{path:.+}", ["image" => 1]],
             // @todo handle url rewriting if enabled separately - path parameters are different
             "fetch-view" => ["/view/{data}/{db}/{ignore}.{type}", ["view" => 1]],
             "fetch-download" => ["/download/{data}/{db}/{ignore}.{type}"],
@@ -67,6 +71,14 @@ class FetchHandler extends BaseHandler
         // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
         if (ob_get_length() !== false && $request->getHandler() !== TestHandler::class) {
             ob_end_clean();
+        }
+
+        // check if we have a folder file path
+        if (Config::get('browse_books_directory')) {
+            $path = $request->get('path');
+            if (!empty($path)) {
+                return $this->sendFolderFile($request, $path);
+            }
         }
 
         $bookId   = $request->getId();
@@ -176,7 +188,7 @@ class FetchHandler extends BaseHandler
      * @param Request $request
      * @param Book $book
      * @param string $type
-     * @return FileResponse|Response
+     * @return ImageResponse|Response
      */
     public function sendThumbnail($request, $book, $type)
     {
@@ -185,13 +197,11 @@ class FetchHandler extends BaseHandler
             return Response::notFound($request);
         }
         $cover = new Cover($book);
-        // create empty file response to start with!?
-        $response = new FileResponse();
-        $response = $cover->sendThumbnail($request, $response);
-        if ($response->isNotModified($request)) {
-            return $response->setNotModified();
+        $image = $cover->sendThumbnail($request);
+        if ($image->isNotModified($request)) {
+            return $image->setNotModified();
         }
-        return $response;
+        return $image;
     }
 
     /**
@@ -209,5 +219,44 @@ class FetchHandler extends BaseHandler
         }
         // set updateForKepub if necessary
         return $data->sendUpdatedEpub($book->updateForKepub);
+    }
+
+    /**
+     * Summary of sendFolderFile
+     * @param Request $request
+     * @param string $path
+     * @return FileResponse|Response
+     */
+    public function sendFolderFile($request, $path)
+    {
+        $database = $request->database();
+        $book = Folder::getBookByFolderPath($path, $database);
+        if (is_null($book)) {
+            return Response::sendError($request, "Invalid Book");
+        }
+        $image = $request->get('image', false);
+        if ($image) {
+            if (!$book->hasCover) {
+                return Response::sendError($request, "Invalid Cover");
+            }
+            $coverFile = $book->getCoverFileName();
+            if (empty($coverFile) || !file_exists($coverFile)) {
+                return Response::sendError($request, "Invalid Cover");
+            }
+            $cover = new Cover($book);
+            $thumb = $request->get('size', 'full');
+            if ($thumb == 'full') {
+                return $cover->sendImage();
+            }
+            $request->set('thumb', $thumb);
+            return $cover->sendThumbnail($request);
+        }
+        $fileName = basename($path);
+        $format = strtoupper(pathinfo($fileName, PATHINFO_EXTENSION));
+        $data = $book->getDataFormat($format);
+        if (empty($data)) {
+            return Response::sendError($request, "Invalid Format");
+        }
+        return $data->sendFile();
     }
 }

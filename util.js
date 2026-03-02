@@ -482,8 +482,12 @@ function link_Clicked (event) {
     var url = currentLink.attr('href');
     if (url.indexOf('/read/') !== -1 || // Replaced includes with indexOf
         url.indexOf('/fetch/') !== -1 ||
+        url.indexOf('/zipfs/') !== -1 ||
         url.indexOf('/zipper/') !== -1 ||
         url.indexOf('/covers/') !== -1 ||
+        url.indexOf('/calibre/') !== -1 ||
+        url.indexOf('/format/') !== -1 ||
+        url.indexOf('/images/') !== -1 ||
         url.indexOf('/files/') !== -1) {
         return;
     }
@@ -596,7 +600,7 @@ $(document).on("keydown", function(e){
 /*exported initiateAjax */
 function initiateAjax (url, theme, templates, version) {
     templates = typeof templates !== 'undefined' ? templates : 'templates';
-    version = typeof version !== 'undefined' ? version : '4.1.0';
+    version = typeof version !== 'undefined' ? version : '4.2.0';
     // allow caching to get() template files here, but not for getJSON()
     $.when($.get({url: templates + '/' + theme + '/header.html?v=' + version, cache: true}),
            $.get({url: templates + '/' + theme + '/footer.html?v=' + version, cache: true}),

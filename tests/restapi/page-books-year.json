@@ -21,7 +21,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/2/The_Casebook_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "size": "826KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -71,7 +72,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/12/The_Hound_of_the_Baskervilles_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/12/The_Hound_of_the_Baskervilles_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/12/The_Hound_of_the_Baskervilles_Arthur_Conan_Doyle.epub",
+                        "size": "668KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -117,7 +119,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/8/The_Lost_World_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/8/The_Lost_World_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/8/The_Lost_World_Arthur_Conan_Doyle.epub",
+                        "size": "588KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -163,7 +166,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/11/The_Memoirs_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/11/The_Memoirs_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/11/The_Memoirs_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "size": "663KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -213,7 +217,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/1/The_Return_of_Sherlock_Holmes_Arthur_Conan_Doyle.epub",
+                        "size": "787KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -263,7 +268,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/9/The_Sign_of_the_Four_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/9/The_Sign_of_the_Four_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/9/The_Sign_of_the_Four_Arthur_Conan_Doyle.epub",
+                        "size": "960KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -309,7 +315,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/10/A_Study_in_Scarlet_Arthur_Conan_Doyle.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/10/A_Study_in_Scarlet_Arthur_Conan_Doyle.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/10/A_Study_in_Scarlet_Arthur_Conan_Doyle.epub",
+                        "size": "890KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -355,7 +362,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/5/Through_the_Looking_Glass_And_What_Alic_Lewis_Carroll.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/5/Through_the_Looking_Glass_And_What_Alic_Lewis_Carroll.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/5/Through_the_Looking_Glass_And_What_Alic_Lewis_Carroll.epub",
+                        "size": "98KB"
                     }
                 ],
                 "preferedCount": 1,
@@ -405,7 +413,8 @@
                     {
                         "name": "EPUB",
                         "url": "vendor/bin/index.php/fetch/0/7/The_War_of_the_Worlds_H_G_Wells.epub",
-                        "viewUrl": "vendor/bin/index.php/inline/0/7/The_War_of_the_Worlds_H_G_Wells.epub"
+                        "viewUrl": "vendor/bin/index.php/inline/0/7/The_War_of_the_Worlds_H_G_Wells.epub",
+                        "size": "765KB"
                     }
                 ],
                 "preferedCount": 1,

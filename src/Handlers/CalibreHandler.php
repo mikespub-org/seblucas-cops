@@ -54,7 +54,7 @@ class CalibreHandler extends BaseHandler
                     if (!empty($book)) {
                         // use html handler by default here
                         $book->setHandler(HtmlHandler::class);
-                        return Response::redirect($book->getUri(['redirected' => 1]));
+                        return Response::redirect($book->getUri());
                     }
                 }
                 return Response::notFound($request, 'Invalid Book');

@@ -10,16 +10,21 @@
 
 namespace SebLucas\Cops\Output;
 
+use JsonException;
 use SebLucas\Cops\Calibre\Annotation;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Filter;
+use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
 use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\Request;
@@ -57,6 +62,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         "/annotations" => 'getAnnotations',
         "/metadata" => 'getMetadata',
         "/user" => 'getUser',
+        "/folders" => 'getFolders',
     ];
 
     public bool $isExtra = false;
@@ -163,7 +169,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getOutput($result = null)
     {
         if (isset($result)) {
-            return json_encode($result, JSON_UNESCAPED_SLASHES);
+            return json_encode($result, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
         }
         $path = $this->getPathInfo();
         $params = $this->matchPathInfo($path);
@@ -185,7 +191,12 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
                 return $result;
             }
         }
-        $output = json_encode($result, JSON_UNESCAPED_SLASHES);
+        try {
+            $output = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $result['Exception'] ??= $e->getMessage();
+            $output = json_encode($result, JSON_UNESCAPED_SLASHES | JSON_PARTIAL_OUTPUT_ON_ERROR);
+        }
 
         return $output;
     }
@@ -340,6 +351,11 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             $result["error"] = "Invalid api key";
             return $result;
         }
+        $draw = $request->post('draw');
+        if (!empty($draw)) {
+            return $this->getDataTable($database, $name, $request);
+        }
+
         $params = [];
         $params['db'] = $database;
         $params['name'] = $name;
@@ -365,6 +381,122 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         $result["columns"] = Database::getTableInfo($database, $name);
         return $result;
+    }
+
+    /**
+     * Summary of getDataTable for DataTables.net server-side processing
+     * @param int $database
+     * @param string $name
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public function getDataTable($database, $name, $request)
+    {
+        // add dummy functions for selecting in meta and tag_browser_* views
+        Database::addSqliteFunctions($database);
+        $query = "SELECT COUNT(*) FROM {$name}";
+        $total = Database::querySingle($query, $database);
+
+        $start = (int) $request->post('start', 0);
+        $length = (int) $request->post('length', $this->numberPerPage);
+        if ($length == -1 || $length > $this->numberPerPage) {
+            $length = $this->numberPerPage;
+        }
+
+        $columns = Database::getTableInfo($database, $name);
+
+        $where = '';
+        $bindings = [];
+        $searchValue = $request->post('search')['value'] ?? null;
+
+        // @todo support id=... and other filter params here
+        foreach ($columns as $column) {
+            $paramValue = $request->post($column['name']);
+            if (!is_null($paramValue) && $paramValue !== '') {
+                $where .= empty($where) ? ' WHERE ' : ' AND ';
+                $where .= "CAST({$name}.`{$column['name']}` AS TEXT) = ?";
+                $bindings[] = $paramValue;
+            }
+        }
+        $filterParams = [];
+        foreach (Filter::URL_PARAMS as $paramName => $className) {
+            $paramValue = $request->post($paramName, null);
+            if (!isset($paramValue)) {
+                continue;
+            }
+            $filterParams[$paramName] = $paramValue;
+        }
+        if (!empty($filterParams)) {
+            $req = Request::build($filterParams);
+            $filter = new Filter($req, [], 'books', $database);
+            $filterString = $filter->getFilterString();
+            $queryParams = $filter->getQueryParams();
+            if (!empty($filterString)) {
+                $where .= empty($where) ? ' WHERE true ' : '';
+                $where .= $filterString;
+                $bindings = array_merge($bindings, $queryParams);
+            }
+        }
+
+        $requestColumns = $request->post('columns');
+        if (!empty($searchValue)) {
+            $whereParts = [];
+            foreach ($columns as $i => $column) {
+                if (is_array($requestColumns) && isset($requestColumns[$i]['searchable']) && $requestColumns[$i]['searchable'] === 'false') {
+                    continue;
+                }
+                // Disable searching for BLOB columns
+                if (isset($column['type']) && str_contains(strtolower($column['type']), 'blob')) {
+                    continue;
+                }
+                $whereParts[] = "CAST({$name}.`{$column['name']}` AS TEXT) LIKE ?";
+                $bindings[] = '%' . $searchValue . '%';
+            }
+            if (!empty($whereParts)) {
+                $where .= empty($where) ? ' WHERE ' : ' AND ';
+                $where .= '(' . implode(' OR ', $whereParts) . ')';
+            }
+        }
+
+        $order = '';
+        $orderInfo = $request->post('order')[0] ?? null;
+        if (!empty($orderInfo)) {
+            $colIndex = intval($orderInfo['column']);
+            if (isset($columns[$colIndex])) {
+                $colName = $columns[$colIndex]['name'];
+                $dir = ($orderInfo['dir'] === 'asc') ? 'ASC' : 'DESC';
+                $order = " ORDER BY {$name}.`{$colName}` {$dir}";
+            }
+        }
+
+        $filteredQuery = "SELECT COUNT(*) FROM {$name}" . $where;
+        $filtered = Database::query($filteredQuery, $bindings, $database)->fetchColumn();
+
+        $links = [
+            'authors' => 'books_authors_link.author',
+            //'languages' => 'books_languages_link.lang_code',
+            'publishers' => 'books_publishers_link.publisher',
+            'ratings' => 'books_ratings_link.rating',
+            'series' => 'books_series_link.series',
+            'tags' => 'books_tags_link.tag',
+        ];
+        if (array_key_exists($name, $links)) {
+            [$linkTable, $linkField] = explode('.', $links[$name]);
+            $query = "SELECT {$name}.*, COUNT(book) as books FROM {$name} LEFT JOIN {$linkTable} on {$linkTable}.{$linkField} = {$name}.id " . $where . " GROUP BY {$name}.id " . $order . " LIMIT ?, ?";
+        } else {
+            $query = "SELECT * FROM {$name}" . $where . $order . " LIMIT ?, ?";
+        }
+        $bindings[] = $start;
+        $bindings[] = $length;
+
+        $entries = Database::query($query, $bindings, $database)->fetchAll(\PDO::FETCH_ASSOC);
+
+        return [
+            'draw' => (int) $request->post('draw'),
+            'recordsTotal' => $total,
+            'recordsFiltered' => $filtered,
+            'data' => $entries,
+        ];
     }
 
     /**
@@ -772,6 +904,61 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         if ($request->path() == RestApiHandler::PREFIX . "/user/details") {
             $user = User::getInstanceByName($username);
             $result = array_replace($result, (array) $user);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of getFolders
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public function getFolders($request)
+    {
+        $root = Config::get('browse_books_directory');
+        if (empty($root) || !is_dir($root)) {
+            return ["error" => "Invalid root folder"];
+        }
+        $folderId = $request->get('path', '');
+        if (str_contains($folderId, '..') || str_contains($folderId, './')) {
+            return ["error" => "Invalid folderId"];
+        }
+        $db = $request->database();
+        $baseurl = $this->getBaseUrl();
+        $result = [
+            "title" => "Folder",
+            "baseurl" => $baseurl,
+            "databaseId" => $db,
+            "root" => $root,
+            "folderId" => $folderId,
+            "folder" => null,
+        ];
+        $folder = Folder::getRootFolder($root);
+        $folder->setHandler(HtmlHandler::class);
+        if (!empty($folderId)) {
+            $folderPath = $folder->getFolderPath($folderId);
+            if (is_dir($folderPath)) {
+                $folder->findBookFiles($folderId);
+                $result["folder"] = $folder->getChildFolderById($folderId);
+                $result["children"] = $result["folder"]->getChildFolders();
+                $result["parent"] = $result["folder"]->getParentTrail();
+            } elseif (is_file($folderPath)) {
+                $fileId = basename($folderId);
+                $folderId = dirname($folderId);
+                $folder->findBookFiles($folderId);
+                $result["folder"] = $folder->getChildFolderById($folderId);
+                $result["children"] = $result["folder"]->getChildFolders();
+                $result["parent"] = $result["folder"]->getParentTrail();
+                $result["file"] = pathinfo($result["folder"]->getFolderPath() . '/' . $fileId);
+            } else {
+                $folder->findBookFiles();
+                $result["folder"] = $folder;
+            }
+        } else {
+            $folder->findBookFiles();
+            $result["folder"] = $folder;
+            $result["children"] = $folder->getChildFolders();
+            $result["parent"] = $folder->getParentTrail();
         }
         return $result;
     }

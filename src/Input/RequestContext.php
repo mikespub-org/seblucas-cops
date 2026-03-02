@@ -107,7 +107,7 @@ class RequestContext
 
     /**
      * Load user- and/or database-specific config after request match & update + authentication
-     * @see SebLucas\Cops\Middleware\AuthMiddleware::checkUserAuthentication()
+     * @see \SebLucas\Cops\Middleware\AuthMiddleware::checkUserAuthentication()
      */
     public function updateConfig(): Config
     {

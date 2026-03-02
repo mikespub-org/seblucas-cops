@@ -67,7 +67,9 @@ class Request
      */
     public function render()
     {
-        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent()) || $this->method() == 'POST';
+        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent())
+            || $this->method() == 'POST'
+            || $this->isMarkdown();
     }
 
     /**
@@ -276,11 +278,12 @@ class Request
     /**
      * Summary of post
      * @param string $name
+     * @param mixed $default
      * @return mixed
      */
-    public function post($name)
+    public function post($name, $default = null)
     {
-        return $this->postParams[$name] ?? null;
+        return $this->postParams[$name] ?? $default;
     }
 
     /**
@@ -462,7 +465,7 @@ class Request
 
     /**
      * Get handler class corresponding to _handler param
-     * @see RequestContext::resolveHandlerName()
+     * @see \SebLucas\Cops\Input\RequestContext::resolveHandlerName()
      * @return class-string<BaseHandler>
      */
     public function getHandler()
@@ -556,6 +559,15 @@ class Request
         }
         // @todo https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Mode
         return false;
+    }
+
+    /**
+     * Summary of isMarkdown
+     * @return bool
+     */
+    public function isMarkdown()
+    {
+        return str_contains($this->server('HTTP_ACCEPT') ?? '', 'text/markdown');
     }
 
     /**

@@ -1,0 +1,18 @@
+[
+{"Path":"BaseWithSomeBooks/hierarchical_type2.sql","Name":"hierarchical_type2.sql","Size":292,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/metadata.db","Name":"metadata.db","Size":232448,"ModTime":"2026-02-04T20:32:14.139528646+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/metadata_db_prefs_backup.json","Name":"metadata_db_prefs_backup.json","Size":17415,"ModTime":"2025-03-07T16:08:16.430854349+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/users.db","Name":"users.db","Size":12288,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithOneBook/metadata.db","Name":"metadata.db","Size":148480,"ModTime":"2026-02-02T16:54:51.463154089+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Sun Wu/Sun Zi Bing Fa (19)/Sun Zi Bing Fa - Sun Wu.epub","Name":"Sun Zi Bing Fa - Sun Wu.epub","Size":1800,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Sun Wu/Sun Zi Bing Fa (19)/cover.jpg","Name":"cover.jpg","Size":30295,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Sun Wu/Sun Zi Bing Fa (19)/metadata.opf","Name":"metadata.opf","Size":4431,"ModTime":"2025-03-07T16:03:38.684472583+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Lewis Carroll/Through the Looking Glass (And What Alic (6)/metadata.opf","Name":"metadata.opf","Size":5149,"ModTime":"2026-02-04T20:32:14.131499744+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/.calnotes/notes.db","Name":"notes.db","Size":147456,"ModTime":"2026-02-04T16:22:18.828376648+01:00","IsDir":false},
+{"Path":"BaseWithCustomColumns/metadata.db","Name":"metadata.db","Size":384000,"ModTime":"2026-02-02T16:54:51.463154089+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub","Name":"Alice's Adventures in Wonderland - Lewis Carroll.epub","Size":1598906,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg","Name":"cover.jpg","Size":200128,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/metadata.opf","Name":"metadata.opf","Size":9282,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/data/hello.txt","Name":"hello.txt","Size":12,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false},
+{"Path":"BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/data/sub folder/copied file.txt","Name":"copied file.txt","Size":12,"ModTime":"2025-01-24T22:33:18.946792651+01:00","IsDir":false}
+]

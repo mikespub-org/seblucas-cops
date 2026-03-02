@@ -63,7 +63,7 @@
             <div class="card-footer">
                 <!-- download buttons for each available format -->
                     {{~ entry.book.preferedData:data:i}}
-                    <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
+                    <a href="{{=data.url}}" title="{{=data.name}} {{=data.size}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
                     {{~}}
             </div>
         </div>

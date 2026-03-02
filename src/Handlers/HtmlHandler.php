@@ -68,7 +68,13 @@ class HtmlHandler extends PageHandler
             $request->setSession($session);
         }
 
-        $response = new Response(Response::MIME_TYPE_HTML);
+        if ($request->isMarkdown()) {
+            // set cookie param template to 'markdown' here
+            $request->cookieParams['template'] = 'markdown';
+            $response = new Response(Response::MIME_TYPE_MARKDOWN);
+        } else {
+            $response = new Response(Response::MIME_TYPE_HTML);
+        }
 
         $html = new HtmlRenderer($request, $response);
 

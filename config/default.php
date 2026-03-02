@@ -125,7 +125,7 @@ $config['cops_subtitle_default'] = '';
  * Wich header to use when downloading books outside the web directory
  * Possible values are :
  *   X-Accel-Redirect   : For Nginx
- *   X-Sendfile         : For Lightttpd or Apache (with mod_xsendfile)
+ *   X-Sendfile         : For Caddy or Lightttpd or Apache (with mod_xsendfile)
  *   No value (default) : Let PHP handle the download
  */
 $config['cops_x_accel_redirect'] = '';
@@ -134,14 +134,19 @@ $config['cops_x_accel_redirect'] = '';
  * Absolute path mapping for books is assumed to be the same between web server and PHP COPS
  * Example: if COPS finds books in /mapped/library, then nginx config must have something like:
  * # X-Accel-Redirect uri from COPS
- * location /mapped/library {
+ * location /mapped/library/ {
  *     # internal redirect for nginx
  *     internal;
  *     # actual path on nginx server
- *     alias /volume1/Calibre
+ *     alias /volume1/Calibre/
  *     # or if COPS and nginx are on the same server
  *     #root /
  * }
+ * But if COPS finds books in /volume1/Calibre and nginx only knows /mapped/library urls
+ * then you can configure COPS mapping from real filepath to uri filepath here:
+ * $config['cops_x_accel_mapping'] = [
+ *     '/volume1/Calibre/' => '/mapped/library/',
+ * ];
  */
 $config['cops_x_accel_mapping'] = '';
 
@@ -310,6 +315,21 @@ $config['cops_virtual_library'] = '0';
  * by putting this in the right local.*.php file(s)
  */
 $config['cops_database_filter'] = [];
+
+/*
+ * Browse book files in other folders besides Calibre (WIP)
+ */
+$config['cops_browse_books_directory'] = '';
+
+/*
+ * Get list of files in other folders besides Calibre
+ * for rclone mount or large filesystem on slow device (WIP)
+ * Example:
+ * ```sh
+ * $ rclone lsjson -R --fast-list --no-mimetype --files-only /volume1/calibre/ >getfiles.json
+ * ```
+ */
+$config['cops_browse_books_getfiles'] = '';
 
 /*
  * Custom Columns for the index page
@@ -541,7 +561,6 @@ $config['calibre_user_database'] = null;
 $config['cops_basic_authentication'] = null;
 
 /*
- * @todo see https://github.com/mikespub-org/seblucas-cops/pull/161 by @dcoffin88
  * Enable form password protection via login.html (You can use if htpasswd is not possible for you)
  * If possible prefer htpasswd or authentication done by reverse proxy!
  * Supported values:
@@ -576,7 +595,7 @@ $config['cops_style'] = 'default';
  * Which of these templates use the Twig template engine
  * Only the 'twigged' template for now...
  */
-$config['cops_twig_templates'] = ['twigged', 'twigged5', 'admin'];
+$config['cops_twig_templates'] = ['twigged', 'twigged5', 'admin', 'markdown'];
 
 /*
  * Which URL prefix to use in templates for js & css assets (without trailing /)

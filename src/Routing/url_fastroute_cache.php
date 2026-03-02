@@ -556,6 +556,34 @@
           '_name' => 'tables',
         ),
       ),
+      '/editor/' => 
+      array (
+        0 => 
+        array (
+          'editor' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'editor',
+        ),
+        1 => 
+        array (
+          '_route' => '/editor/',
+          '_name' => 'editor',
+        ),
+      ),
+      '/adminer/' => 
+      array (
+        0 => 
+        array (
+          'adminer' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'adminer',
+        ),
+        1 => 
+        array (
+          '_route' => '/adminer/',
+          '_name' => 'adminer',
+        ),
+      ),
       '/test' => 
       array (
         0 => 
@@ -679,6 +707,34 @@
           '_name' => 'graphql',
         ),
       ),
+      '/editor/' => 
+      array (
+        0 => 
+        array (
+          'editor' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'editor',
+        ),
+        1 => 
+        array (
+          '_route' => '/editor/',
+          '_name' => 'editor',
+        ),
+      ),
+      '/adminer/' => 
+      array (
+        0 => 
+        array (
+          'adminer' => 1,
+          '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+          '_route' => 'adminer',
+        ),
+        1 => 
+        array (
+          '_route' => '/adminer/',
+          '_name' => 'adminer',
+        ),
+      ),
       '/admin/config' => 
       array (
         0 => 
@@ -701,7 +757,7 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/tags/letter/([^/]+)(*MARK:m)|/tags/(\\d+)/([^/]+)(*MARK:n)|/tags/(\\d+)(*MARK:o)|/custom/(\\d+)/([^/]+)(*MARK:p)|/custom/(\\d+)(*MARK:q)|/languages/(\\d+)/([^/]+)(*MARK:r)|/languages/(\\d+)(*MARK:s)|/publishers/letter/([^/]+)(*MARK:t)|/publishers/(\\d+)/([^/]+)(*MARK:u)|/publishers/(\\d+)(*MARK:v)|/ratings/(\\d+)/([^/]+)(*MARK:w)|/ratings/(\\d+)(*MARK:x)|/identifiers/(\\w+)/([^/]+)(*MARK:y)|/identifiers/(\\w+)(*MARK:z)|/formats/(\\w+)(*MARK:aa)|/feed/(\\w+)(*MARK:ab)|/feed/(.+)(*MARK:ac)|/files/(\\d+)/(\\d+)/(.+)(*MARK:ad)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:ae)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:af)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:ag))$~',
+        'regex' => '~^(?|/authors/letter/([^/]+)(*MARK:a)|/authors/(\\d+)/([^/]+)(*MARK:b)|/authors/(\\d+)(*MARK:c)|/books/letter/([^/]+)(*MARK:d)|/books/year/(\\d+)(*MARK:e)|/books/(\\d+)/([^/]+)/([^/]+)(*MARK:f)|/books/(\\d+)(*MARK:g)|/series/letter/([^/]+)(*MARK:h)|/series/(\\d+)/([^/]+)(*MARK:i)|/series/(\\d+)(*MARK:j)|/search/([^/]+)/([^/]+)(*MARK:k)|/search/([^/]+)(*MARK:l)|/folder/(.*)(*MARK:m)|/ebook/(.+)(*MARK:n)|/tags/letter/([^/]+)(*MARK:o)|/tags/(\\d+)/([^/]+)(*MARK:p)|/tags/(\\d+)(*MARK:q)|/custom/(\\d+)/([^/]+)(*MARK:r)|/custom/(\\d+)(*MARK:s)|/languages/(\\d+)/([^/]+)(*MARK:t)|/languages/(\\d+)(*MARK:u)|/publishers/letter/([^/]+)(*MARK:v)|/publishers/(\\d+)/([^/]+)(*MARK:w)|/publishers/(\\d+)(*MARK:x)|/ratings/(\\d+)/([^/]+)(*MARK:y)|/ratings/(\\d+)(*MARK:z))$~',
         'routeMap' => 
         array (
           'a' => 
@@ -917,6 +973,41 @@
           array (
             0 => 
             array (
+              'page' => 'folder',
+              '_route' => 'page-folder',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/folder/{path:.*}',
+              '_name' => 'page-folder',
+            ),
+          ),
+          'n' => 
+          array (
+            0 => 
+            array (
+              'page' => 'folder',
+              'ebook' => 1,
+              '_route' => 'page-ebook',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/ebook/{path:.+}',
+              '_name' => 'page-ebook',
+            ),
+          ),
+          'o' => 
+          array (
+            0 => 
+            array (
               'page' => 'tags_letter',
               '_route' => 'page-tags-letter',
             ),
@@ -930,7 +1021,7 @@
               '_name' => 'page-tags-letter',
             ),
           ),
-          'n' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -948,7 +1039,7 @@
               '_name' => 'page-tag',
             ),
           ),
-          'o' => 
+          'q' => 
           array (
             0 => 
             array (
@@ -965,7 +1056,7 @@
               '_name' => 'page-tag-id',
             ),
           ),
-          'p' => 
+          'r' => 
           array (
             0 => 
             array (
@@ -983,7 +1074,7 @@
               '_name' => 'page-custom',
             ),
           ),
-          'q' => 
+          's' => 
           array (
             0 => 
             array (
@@ -1000,7 +1091,7 @@
               '_name' => 'page-customtype',
             ),
           ),
-          'r' => 
+          't' => 
           array (
             0 => 
             array (
@@ -1018,7 +1109,7 @@
               '_name' => 'page-language',
             ),
           ),
-          's' => 
+          'u' => 
           array (
             0 => 
             array (
@@ -1035,7 +1126,7 @@
               '_name' => 'page-language-id',
             ),
           ),
-          't' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -1052,7 +1143,7 @@
               '_name' => 'page-publishers-letter',
             ),
           ),
-          'u' => 
+          'w' => 
           array (
             0 => 
             array (
@@ -1070,7 +1161,7 @@
               '_name' => 'page-publisher',
             ),
           ),
-          'v' => 
+          'x' => 
           array (
             0 => 
             array (
@@ -1087,7 +1178,7 @@
               '_name' => 'page-publisher-id',
             ),
           ),
-          'w' => 
+          'y' => 
           array (
             0 => 
             array (
@@ -1105,7 +1196,7 @@
               '_name' => 'page-rating',
             ),
           ),
-          'x' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1122,7 +1213,14 @@
               '_name' => 'page-rating-id',
             ),
           ),
-          'y' => 
+        ),
+      ),
+      1 => 
+      array (
+        'regex' => '~^(?|/identifiers/(\\w+)/([^/]+)(*MARK:a)|/identifiers/(\\w+)(*MARK:b)|/formats/(\\w+)(*MARK:c)|/feed/(\\w+)(*MARK:d)|/feed/(.+)(*MARK:e)|/files/(\\d+)/(\\d+)/(.+)(*MARK:f)|/thumbs/(\\d+)/(\\d+)/([^/]+)\\.jpg(*MARK:g)|/covers/(\\d+)/(\\d+)\\.jpg(*MARK:h)|/inline/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:i)|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:j)|/format/(.+)(*MARK:k)|/images/([^/]+)/(.+)(*MARK:l)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:m)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:n)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:o)|/read/(\\d+)/(\\d+)(*MARK:p)|/read/(.+)(*MARK:q)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:r)|/restapi/databases/(\\d+)/(\\w+)(*MARK:s)|/restapi/databases/(\\d+)(*MARK:t)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:u)|/restapi/notes/([^/]+)/([^/]+)(*MARK:v)|/restapi/notes/([^/]+)(*MARK:w)|/restapi/preferences/([^/]+)(*MARK:x)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:y)|/restapi/annotations/([^/]+)(*MARK:z))$~',
+        'routeMap' => 
+        array (
+          'a' => 
           array (
             0 => 
             array (
@@ -1140,7 +1238,7 @@
               '_name' => 'page-identifier',
             ),
           ),
-          'z' => 
+          'b' => 
           array (
             0 => 
             array (
@@ -1157,7 +1255,7 @@
               '_name' => 'page-identifier-id',
             ),
           ),
-          'aa' => 
+          'c' => 
           array (
             0 => 
             array (
@@ -1174,7 +1272,7 @@
               '_name' => 'page-format',
             ),
           ),
-          'ab' => 
+          'd' => 
           array (
             0 => 
             array (
@@ -1191,7 +1289,7 @@
               '_name' => 'feed-page',
             ),
           ),
-          'ac' => 
+          'e' => 
           array (
             0 => 
             array (
@@ -1208,7 +1306,7 @@
               '_name' => 'feed-path',
             ),
           ),
-          'ad' => 
+          'f' => 
           array (
             0 => 
             array (
@@ -1227,7 +1325,7 @@
               '_name' => 'fetch-file',
             ),
           ),
-          'ae' => 
+          'g' => 
           array (
             0 => 
             array (
@@ -1246,7 +1344,7 @@
               '_name' => 'fetch-thumb',
             ),
           ),
-          'af' => 
+          'h' => 
           array (
             0 => 
             array (
@@ -1264,7 +1362,7 @@
               '_name' => 'fetch-cover',
             ),
           ),
-          'ag' => 
+          'i' => 
           array (
             0 => 
             array (
@@ -1285,14 +1383,7 @@
               '_name' => 'fetch-inline',
             ),
           ),
-        ),
-      ),
-      1 => 
-      array (
-        'regex' => '~^(?|/fetch/(\\d+)/(\\d+)/([^/]+)\\.([^/]+)(*MARK:a)|/view/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:b)|/download/([^/]+)/([^/]+)/([^/]+)\\.([^/]+)(*MARK:c)|/read/(\\d+)/(\\d+)/([^/]+)(*MARK:d)|/read/(\\d+)/(\\d+)(*MARK:e)|/epubfs/(\\d+)/(\\d+)/(.+)(*MARK:f)|/restapi/databases/([^/]+)/([^/]+)(*MARK:g)|/restapi/databases/([^/]+)(*MARK:h)|/restapi/notes/([^/]+)/([^/]+)/([^/]+)(*MARK:i)|/restapi/notes/([^/]+)/([^/]+)(*MARK:j)|/restapi/notes/([^/]+)(*MARK:k)|/restapi/preferences/([^/]+)(*MARK:l)|/restapi/annotations/([^/]+)/([^/]+)(*MARK:m)|/restapi/annotations/([^/]+)(*MARK:n)|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:o)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:p)|/restapi/metadata/([^/]+)(*MARK:q)|/restapi/(.*)(*MARK:r)|/check/(.*)(*MARK:s)|/opds/(\\w+)(*MARK:t)|/opds/(.*)(*MARK:u)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:v)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:w)|/loader/([^/]+)/(\\d+)(*MARK:x)|/loader/([^/]+)/(*MARK:y)|/loader/([^/]+)(*MARK:z)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:aa)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:ab)|/calibre/([^/]+)/([^/]+)/(.*)(*MARK:ac)|/calibre/([^/]+)/([^/]+)(*MARK:ad)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:ae)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:af)|/admin/(.*)(*MARK:ag))$~',
-        'routeMap' => 
-        array (
-          'a' => 
+          'j' => 
           array (
             0 => 
             array (
@@ -1312,7 +1403,43 @@
               '_name' => 'fetch-data',
             ),
           ),
-          'b' => 
+          'k' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
+              '_route' => 'fetch-format',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/format/{path:.+}',
+              '_name' => 'fetch-format',
+            ),
+          ),
+          'l' => 
+          array (
+            0 => 
+            array (
+              'image' => 1,
+              '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
+              '_route' => 'fetch-image',
+            ),
+            1 => 
+            array (
+              'size' => 'size',
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/images/{size}/{path:.+}',
+              '_name' => 'fetch-image',
+            ),
+          ),
+          'm' => 
           array (
             0 => 
             array (
@@ -1333,7 +1460,7 @@
               '_name' => 'fetch-view',
             ),
           ),
-          'c' => 
+          'n' => 
           array (
             0 => 
             array (
@@ -1353,7 +1480,7 @@
               '_name' => 'fetch-download',
             ),
           ),
-          'd' => 
+          'o' => 
           array (
             0 => 
             array (
@@ -1372,7 +1499,7 @@
               '_name' => 'read-title',
             ),
           ),
-          'e' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -1390,7 +1517,24 @@
               '_name' => 'read',
             ),
           ),
-          'f' => 
+          'q' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler',
+              '_route' => 'read-format',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/read/{path:.+}',
+              '_name' => 'read-format',
+            ),
+          ),
+          'r' => 
           array (
             0 => 
             array (
@@ -1409,7 +1553,7 @@
               '_name' => 'epubfs',
             ),
           ),
-          'g' => 
+          's' => 
           array (
             0 => 
             array (
@@ -1424,11 +1568,11 @@
             ),
             2 => 
             array (
-              '_route' => '/restapi/databases/{db}/{name}',
+              '_route' => '/restapi/databases/{db:\\d+}/{name:\\w+}',
               '_name' => 'restapi-database-table',
             ),
           ),
-          'h' => 
+          't' => 
           array (
             0 => 
             array (
@@ -1442,11 +1586,11 @@
             ),
             2 => 
             array (
-              '_route' => '/restapi/databases/{db}',
+              '_route' => '/restapi/databases/{db:\\d+}',
               '_name' => 'restapi-database',
             ),
           ),
-          'i' => 
+          'u' => 
           array (
             0 => 
             array (
@@ -1466,7 +1610,7 @@
               '_name' => 'restapi-note',
             ),
           ),
-          'j' => 
+          'v' => 
           array (
             0 => 
             array (
@@ -1485,7 +1629,7 @@
               '_name' => 'restapi-notes-type-id',
             ),
           ),
-          'k' => 
+          'w' => 
           array (
             0 => 
             array (
@@ -1503,7 +1647,7 @@
               '_name' => 'restapi-notes-type',
             ),
           ),
-          'l' => 
+          'x' => 
           array (
             0 => 
             array (
@@ -1521,7 +1665,7 @@
               '_name' => 'restapi-preference',
             ),
           ),
-          'm' => 
+          'y' => 
           array (
             0 => 
             array (
@@ -1540,7 +1684,7 @@
               '_name' => 'restapi-annotation',
             ),
           ),
-          'n' => 
+          'z' => 
           array (
             0 => 
             array (
@@ -1558,7 +1702,14 @@
               '_name' => 'restapi-annotations-book',
             ),
           ),
-          'o' => 
+        ),
+      ),
+      2 => 
+      array (
+        'regex' => '~^(?|/restapi/metadata/([^/]+)/([^/]+)/([^/]+)(*MARK:a)|/restapi/metadata/([^/]+)/([^/]+)(*MARK:b)|/restapi/metadata/([^/]+)(*MARK:c)|/restapi/folders/(.*)(*MARK:d)|/restapi/(.*)(*MARK:e)|/check/(.*)(*MARK:f)|/opds/(\\w+)(*MARK:g)|/opds/(.*)(*MARK:h)|/loader/([^/]+)/(\\d+)/(\\w+)/(.*)(*MARK:i)|/loader/([^/]+)/(\\d+)/(\\w*)(*MARK:j)|/loader/([^/]+)/(\\d+)(*MARK:k)|/loader/([^/]+)/(*MARK:l)|/loader/([^/]+)(*MARK:m)|/zipper/([^/]+)/([^/]+)/([^/]+)\\.zip(*MARK:n)|/zipper/([^/]+)/([^/]+)\\.zip(*MARK:o)|/calibre/([^/]+)/([^/]+)/(.*)(*MARK:p)|/calibre/([^/]+)/([^/]+)(*MARK:q)|/calres/(\\d+)/([^/]+)/([^/]+)(*MARK:r)|/zipfs/(\\d+)/(\\d+)/(.+)(*MARK:s)|/zipfs/(.+)(*MARK:t)|/tables/(\\d+)/(\\w+)(*MARK:u)|/tables/(\\d+)(*MARK:v)|/editor/static/(.+)(*MARK:w)|/adminer/static/(.+)(*MARK:x)|/admin/(.*)(*MARK:y))$~',
+        'routeMap' => 
+        array (
+          'a' => 
           array (
             0 => 
             array (
@@ -1578,7 +1729,7 @@
               '_name' => 'restapi-metadata-element-name',
             ),
           ),
-          'p' => 
+          'b' => 
           array (
             0 => 
             array (
@@ -1597,7 +1748,7 @@
               '_name' => 'restapi-metadata-element',
             ),
           ),
-          'q' => 
+          'c' => 
           array (
             0 => 
             array (
@@ -1615,7 +1766,25 @@
               '_name' => 'restapi-metadata',
             ),
           ),
-          'r' => 
+          'd' => 
+          array (
+            0 => 
+            array (
+              '_resource' => 'Folder',
+              '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
+              '_route' => 'restapi-folders',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/restapi/folders/{path:.*}',
+              '_name' => 'restapi-folders',
+            ),
+          ),
+          'e' => 
           array (
             0 => 
             array (
@@ -1632,7 +1801,7 @@
               '_name' => 'restapi-path',
             ),
           ),
-          's' => 
+          'f' => 
           array (
             0 => 
             array (
@@ -1649,7 +1818,7 @@
               '_name' => 'check-more',
             ),
           ),
-          't' => 
+          'g' => 
           array (
             0 => 
             array (
@@ -1666,7 +1835,7 @@
               '_name' => 'opds-page',
             ),
           ),
-          'u' => 
+          'h' => 
           array (
             0 => 
             array (
@@ -1683,7 +1852,7 @@
               '_name' => 'opds-path',
             ),
           ),
-          'v' => 
+          'i' => 
           array (
             0 => 
             array (
@@ -1703,7 +1872,7 @@
               '_name' => 'loader-action-dbNum-authorId-urlPath',
             ),
           ),
-          'w' => 
+          'j' => 
           array (
             0 => 
             array (
@@ -1722,7 +1891,7 @@
               '_name' => 'loader-action-dbNum-authorId',
             ),
           ),
-          'x' => 
+          'k' => 
           array (
             0 => 
             array (
@@ -1740,7 +1909,7 @@
               '_name' => 'loader-action-dbNum',
             ),
           ),
-          'y' => 
+          'l' => 
           array (
             0 => 
             array (
@@ -1757,7 +1926,7 @@
               '_name' => 'loader-action-',
             ),
           ),
-          'z' => 
+          'm' => 
           array (
             0 => 
             array (
@@ -1774,7 +1943,7 @@
               '_name' => 'loader-action',
             ),
           ),
-          'aa' => 
+          'n' => 
           array (
             0 => 
             array (
@@ -1793,7 +1962,7 @@
               '_name' => 'zipper-page-id-type',
             ),
           ),
-          'ab' => 
+          'o' => 
           array (
             0 => 
             array (
@@ -1811,7 +1980,7 @@
               '_name' => 'zipper-page-type',
             ),
           ),
-          'ac' => 
+          'p' => 
           array (
             0 => 
             array (
@@ -1830,7 +1999,7 @@
               '_name' => 'calibre-details',
             ),
           ),
-          'ad' => 
+          'q' => 
           array (
             0 => 
             array (
@@ -1848,7 +2017,7 @@
               '_name' => 'calibre-library',
             ),
           ),
-          'ae' => 
+          'r' => 
           array (
             0 => 
             array (
@@ -1867,7 +2036,7 @@
               '_name' => 'calres',
             ),
           ),
-          'af' => 
+          's' => 
           array (
             0 => 
             array (
@@ -1886,7 +2055,97 @@
               '_name' => 'zipfs',
             ),
           ),
-          'ag' => 
+          't' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler',
+              '_route' => 'zipfs-format',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/zipfs/{path:.+}',
+              '_name' => 'zipfs-format',
+            ),
+          ),
+          'u' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+              '_route' => 'tables-db-name',
+            ),
+            1 => 
+            array (
+              'db' => 'db',
+              'name' => 'name',
+            ),
+            2 => 
+            array (
+              '_route' => '/tables/{db:\\d+}/{name:\\w+}',
+              '_name' => 'tables-db-name',
+            ),
+          ),
+          'v' => 
+          array (
+            0 => 
+            array (
+              '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+              '_route' => 'tables-db',
+            ),
+            1 => 
+            array (
+              'db' => 'db',
+            ),
+            2 => 
+            array (
+              '_route' => '/tables/{db:\\d+}',
+              '_name' => 'tables-db',
+            ),
+          ),
+          'w' => 
+          array (
+            0 => 
+            array (
+              'editor' => 1,
+              'static' => 1,
+              '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+              '_route' => 'editor-static',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/editor/static/{path:.+}',
+              '_name' => 'editor-static',
+            ),
+          ),
+          'x' => 
+          array (
+            0 => 
+            array (
+              'adminer' => 1,
+              'static' => 1,
+              '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+              '_route' => 'adminer-static',
+            ),
+            1 => 
+            array (
+              'path' => 'path',
+            ),
+            2 => 
+            array (
+              '_route' => '/adminer/static/{path:.+}',
+              '_name' => 'adminer-static',
+            ),
+          ),
+          'y' => 
           array (
             0 => 
             array (
@@ -1910,10 +2169,29 @@
     array (
       0 => 
       array (
-        'regex' => '~^(?|/admin/(.*)(*MARK:a))$~',
+        'regex' => '~^(?|/restapi/databases/(\\d+)/(\\w+)(*MARK:a)|/admin/(.*)(*MARK:b))$~',
         'routeMap' => 
         array (
           'a' => 
+          array (
+            0 => 
+            array (
+              '_resource' => 'Database',
+              '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
+              '_route' => 'restapi-database-table',
+            ),
+            1 => 
+            array (
+              'db' => 'db',
+              'name' => 'name',
+            ),
+            2 => 
+            array (
+              '_route' => '/restapi/databases/{db:\\d+}/{name:\\w+}',
+              '_name' => 'restapi-database-table',
+            ),
+          ),
+          'b' => 
           array (
             0 => 
             array (
@@ -2178,6 +2456,30 @@
       0 => 
       array (
         0 => '/search',
+      ),
+    ),
+    'page-folder' => 
+    array (
+      0 => 
+      array (
+        0 => '/folder/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.*',
+        ),
+      ),
+    ),
+    'page-ebook' => 
+    array (
+      0 => 
+      array (
+        0 => '/ebook/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
       ),
     ),
     'page-recent' => 
@@ -2653,6 +2955,36 @@
         ),
       ),
     ),
+    'fetch-format' => 
+    array (
+      0 => 
+      array (
+        0 => '/format/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
+    'fetch-image' => 
+    array (
+      0 => 
+      array (
+        0 => '/images/',
+        1 => 
+        array (
+          0 => 'size',
+          1 => '[^/]+',
+        ),
+        2 => '/',
+        3 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
     'fetch-view' => 
     array (
       0 => 
@@ -2755,6 +3087,18 @@
         ),
       ),
     ),
+    'read-format' => 
+    array (
+      0 => 
+      array (
+        0 => '/read/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
     'epubfs' => 
     array (
       0 => 
@@ -2794,13 +3138,13 @@
         1 => 
         array (
           0 => 'db',
-          1 => '[^/]+',
+          1 => '\\d+',
         ),
         2 => '/',
         3 => 
         array (
           0 => 'name',
-          1 => '[^/]+',
+          1 => '\\w+',
         ),
       ),
     ),
@@ -2812,7 +3156,7 @@
         1 => 
         array (
           0 => 'db',
-          1 => '[^/]+',
+          1 => '\\d+',
         ),
       ),
     ),
@@ -3027,6 +3371,18 @@
       0 => 
       array (
         0 => '/restapi/user',
+      ),
+    ),
+    'restapi-folders' => 
+    array (
+      0 => 
+      array (
+        0 => '/restapi/folders/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.*',
+        ),
       ),
     ),
     'restapi-path' => 
@@ -3336,6 +3692,18 @@
         ),
       ),
     ),
+    'zipfs-format' => 
+    array (
+      0 => 
+      array (
+        0 => '/zipfs/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
     'mail' => 
     array (
       0 => 
@@ -3350,11 +3718,79 @@
         0 => '/graphql',
       ),
     ),
+    'tables-db-name' => 
+    array (
+      0 => 
+      array (
+        0 => '/tables/',
+        1 => 
+        array (
+          0 => 'db',
+          1 => '\\d+',
+        ),
+        2 => '/',
+        3 => 
+        array (
+          0 => 'name',
+          1 => '\\w+',
+        ),
+      ),
+    ),
+    'tables-db' => 
+    array (
+      0 => 
+      array (
+        0 => '/tables/',
+        1 => 
+        array (
+          0 => 'db',
+          1 => '\\d+',
+        ),
+      ),
+    ),
     'tables' => 
     array (
       0 => 
       array (
         0 => '/tables',
+      ),
+    ),
+    'editor-static' => 
+    array (
+      0 => 
+      array (
+        0 => '/editor/static/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
+    'editor' => 
+    array (
+      0 => 
+      array (
+        0 => '/editor/',
+      ),
+    ),
+    'adminer-static' => 
+    array (
+      0 => 
+      array (
+        0 => '/adminer/static/',
+        1 => 
+        array (
+          0 => 'path',
+          1 => '.+',
+        ),
+      ),
+    ),
+    'adminer' => 
+    array (
+      0 => 
+      array (
+        0 => '/adminer/',
       ),
     ),
     'test' => 

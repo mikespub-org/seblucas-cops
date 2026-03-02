@@ -12,6 +12,7 @@ parameters:
         - vendor/autoload.php
     excludePaths:
         - vendor/*
+        - resources/adminer/sqlite.php
         - tests/WebDriverTestCase.php
         - tests/WebDriverTest.php
         - tests/Framework/CopsControllerTest.php

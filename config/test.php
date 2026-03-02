@@ -8,6 +8,8 @@ require __DIR__ . '/default.php';  // NOSONAR
 
 $config['calibre_directory'] = "./tests/BaseWithSomeBooks/";
 
+$config['cops_browse_books_directory'] = dirname(__DIR__) . '/tests';
+
 $config['cops_mail_configuration'] = [
     "smtp.host"     => "smtp.free.fr",
     "smtp.username" => "",

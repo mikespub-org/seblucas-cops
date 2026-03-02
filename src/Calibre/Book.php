@@ -35,6 +35,7 @@ class Book
     public const PAGE_DETAIL = PageId::BOOK_DETAIL;
     public const ROUTE_ALL = "page-books";
     public const ROUTE_DETAIL = "page-book";
+    public const ROUTE_FOLDER = "page-ebook";
     // used to generate detailUrl in JsonRenderer
     public const ROUTE_PAGEID = "page-book-id";
     public const ROUTE_FILE = "fetch-file";
@@ -99,6 +100,8 @@ class Book
     /** @var ?int */
     public $pages = null;
     /** @var ?string */
+    public $folderId = null;
+    /** @var ?string */
     protected $coverFileName = null;
     public bool $updateForKepub = false;
 
@@ -111,8 +114,8 @@ class Book
     {
         $this->id = $line->id;
         $this->title = $line->title;
-        $this->timestamp = strtotime($line->timestamp);
-        $this->pubdate = $line->pubdate;
+        $this->timestamp = strtotime($line->timestamp ?? '');
+        $this->pubdate = $line->pubdate ?? '';
         //$this->path = Database::getDbDirectory() . $line->path;
         //$this->relativePath = $line->path;
         // -DC- Init relative or full path
@@ -121,11 +124,11 @@ class Book
         } else {
             $this->setLocalPath($line->path, $database);
         }
-        $this->seriesIndex = $line->series_index;
+        $this->seriesIndex = $line->series_index ?? null;
         $this->comment = $line->comment ?? '';
-        $this->uuid = $line->uuid;
-        $this->hasCover = $line->has_cover;
-        $this->rating = $line->rating;
+        $this->uuid = $line->uuid ?? '';
+        $this->hasCover = $line->has_cover ?? false;
+        $this->rating = $line->rating ?? null;
         $this->databaseId = $database;
         // do this at the end when all properties are set
         if ($this->hasCover) {
@@ -193,6 +196,10 @@ class Book
      */
     public function getUri($params = [])
     {
+        if (isset($this->folderId)) {
+            $params['path'] = $this->folderId ? $this->folderId . '/' . $this->getTitle() : $this->getTitle();
+            return $this->getRoute(self::ROUTE_FOLDER, $params);
+        }
         $params['id'] = $this->id;
         // we need databaseId here because we use $handler::link()
         $params['db'] = $this->databaseId;
@@ -586,7 +593,7 @@ class Book
      */
     public function setLocalPath($path, $database)
     {
-        if (!is_dir($path)) {
+        if (!str_starts_with($path, '/')) {
             $this->path = Database::getDbDirectory($database) . $path;
         } else {
             $this->path = $path;
@@ -712,6 +719,8 @@ class Book
         $coverLink = $cover->getCoverLink();
         if ($coverLink) {
             array_push($linkArray, $coverLink);
+        } elseif (isset($this->folderId)) {
+            // @see \SebLucas\Cops\Output\JsonRenderer::getFullBookContentArray()
         }
         // set height for thumbnail here depending on opds vs. html
         if (!empty($this->handler) && in_array($this->handler::HANDLER, ['feed', 'opds'])) {
@@ -727,6 +736,9 @@ class Book
         foreach ($this->getDatas() as $data) {
             if ($data->isKnownType()) {
                 $linkResource = $data->getDataLink($data->format);
+                if (empty($linkResource->length) && !empty($data->size)) {
+                    $linkResource->length = (string) $data->size;
+                }
                 array_push($linkArray, $linkResource);
             }
         }
@@ -855,7 +867,7 @@ where data.book = books.id and data.id = ?';
     {
         $out = [];
 
-        $sql = 'select id, format, name from data where book = ?';
+        $sql = 'select id, format, name, uncompressed_size as size from data where book = ?';
 
         $ignored_formats = Config::get('ignored_formats');
         if (count($ignored_formats) > 0) {
@@ -871,6 +883,17 @@ where data.book = books.id and data.id = ?';
             array_push($out, new Data($post, $book));
         }
         return $out;
+    }
+
+    /**
+     * Summary of getBookByFolderPath
+     * @param string $path
+     * @param ?int $database
+     * @return Book
+     */
+    public static function getBookByFolderPath($path, $database = null)
+    {
+        return Folder::getBookByFolderPath($path, $database);
     }
 
     /**

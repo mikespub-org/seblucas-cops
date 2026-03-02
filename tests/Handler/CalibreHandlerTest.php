@@ -65,7 +65,7 @@ class CalibreHandlerTest extends TestCase
 
         $expected = 302;
         $this->assertEquals($expected, $response->getStatusCode());
-        $expected = 'vendor/bin/index.php/books/17/Lewis_Carroll/Alice_s_Adventures_in_Wonderland?redirected=1';
+        $expected = 'vendor/bin/index.php/books/17/Lewis_Carroll/Alice_s_Adventures_in_Wonderland';
         $this->assertEquals($expected, $response->getHeader('Location'));
     }
 

@@ -68,6 +68,8 @@ $static = [
   '/mail' => 'mail',
   '/graphql' => 'graphql',
   '/tables' => 'tables',
+  '/editor/' => 'editor',
+  '/adminer/' => 'adminer',
   '/test' => 'test',
   '/admin/clearcache' => 'admin-clearcache',
   '/admin/config' => 'admin-config',
@@ -317,6 +319,29 @@ $routes = [
     [
       'page' => 'opensearch',
       '_route' => 'page-search',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-folder' => [
+    '/folder/{path:.*}',
+    [
+      'page' => 'folder',
+      '_route' => 'page-folder',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-ebook' => [
+    '/ebook/{path:.+}',
+    [
+      'page' => 'folder',
+      'ebook' => 1,
+      '_route' => 'page-ebook',
     ],
     [
       'GET',
@@ -736,6 +761,29 @@ $routes = [
     ],
     [],
   ],
+  'fetch-format' => [
+    '/format/{path:.+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
+      '_route' => 'fetch-format',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'fetch-image' => [
+    '/images/{size}/{path:.+}',
+    [
+      'image' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\FetchHandler',
+      '_route' => 'fetch-image',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'fetch-view' => [
     '/view/{data}/{db}/{ignore}.{type}',
     [
@@ -781,6 +829,17 @@ $routes = [
     ],
     [],
   ],
+  'read-format' => [
+    '/read/{path:.+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ReadHandler',
+      '_route' => 'read-format',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'epubfs' => [
     '/epubfs/{db:\\d+}/{data:\\d+}/{comp:.+}',
     [
@@ -805,7 +864,7 @@ $routes = [
     [],
   ],
   'restapi-database-table' => [
-    '/restapi/databases/{db}/{name}',
+    '/restapi/databases/{db:\\d+}/{name:\\w+}',
     [
       '_resource' => 'Database',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
@@ -813,11 +872,12 @@ $routes = [
     ],
     [
       'GET',
+      'POST',
     ],
     [],
   ],
   'restapi-database' => [
-    '/restapi/databases/{db}',
+    '/restapi/databases/{db:\\d+}',
     [
       '_resource' => 'Database',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
@@ -1045,6 +1105,18 @@ $routes = [
     ],
     [],
   ],
+  'restapi-folders' => [
+    '/restapi/folders/{path:.*}',
+    [
+      '_resource' => 'Folder',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
+      '_route' => 'restapi-folders',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'restapi-path' => [
     '/restapi/{path:.*}',
     [
@@ -1255,6 +1327,17 @@ $routes = [
     ],
     [],
   ],
+  'zipfs-format' => [
+    '/zipfs/{path:.+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ZipFsHandler',
+      '_route' => 'zipfs-format',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'mail' => [
     '/mail',
     [
@@ -1278,6 +1361,28 @@ $routes = [
     ],
     [],
   ],
+  'tables-db-name' => [
+    '/tables/{db:\\d+}/{name:\\w+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'tables-db-name',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'tables-db' => [
+    '/tables/{db:\\d+}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'tables-db',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
   'tables' => [
     '/tables',
     [
@@ -1286,6 +1391,58 @@ $routes = [
     ],
     [
       'GET',
+    ],
+    [],
+  ],
+  'editor-static' => [
+    '/editor/static/{path:.+}',
+    [
+      'editor' => 1,
+      'static' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'editor-static',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'editor' => [
+    '/editor/',
+    [
+      'editor' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'editor',
+    ],
+    [
+      'GET',
+      'POST',
+    ],
+    [],
+  ],
+  'adminer-static' => [
+    '/adminer/static/{path:.+}',
+    [
+      'adminer' => 1,
+      'static' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'adminer-static',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'adminer' => [
+    '/adminer/',
+    [
+      'adminer' => 1,
+      '_handler' => 'SebLucas\\Cops\\Handlers\\TableHandler',
+      '_route' => 'adminer',
+    ],
+    [
+      'GET',
+      'POST',
     ],
     [],
   ],

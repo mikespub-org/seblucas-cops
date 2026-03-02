@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Middleware\AdminMiddleware;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\TwigTemplate;
@@ -44,19 +45,15 @@ class AdminHandler extends BaseHandler
         ];
     }
 
+    public static function getMiddleware()
+    {
+        return [
+            AdminMiddleware::class,
+        ];
+    }
+
     public function handle($request)
     {
-        $admin = Config::get('enable_admin', false);
-        if (empty($admin)) {
-            return Response::redirect(PageHandler::link(['admin' => 0]));
-        }
-        if (is_string($admin) && $admin !== $request->getUserName()) {
-            return Response::redirect(PageHandler::link(['admin' => 1]));
-        }
-        if (is_array($admin) && !in_array($request->getUserName(), $admin)) {
-            return Response::redirect(PageHandler::link(['admin' => 2]));
-        }
-
         $response = new Response();
 
         $action = $request->get('action', 'none');
@@ -89,6 +86,28 @@ class AdminHandler extends BaseHandler
         $writable = $this->isLocalConfigWritable();
 
         $actions = [];
+        $description = 'Browse book files in other folders besides Calibre';
+        $root = Config::get('browse_books_directory');
+        if (empty($root)) {
+            $description .= ' - set $config[\'cops_browse_books_directory\'] in config/local.php';
+        } else {
+            $description .= ': ' . htmlspecialchars($root);
+        }
+        $actions[] = [
+            'url' => HtmlHandler::route('page-folder', ['path' => '0']),
+            'title' => 'Browse Folders',
+            'description' => $description,
+        ];
+        $actions[] = [
+            'url' => TableHandler::route('tables'),
+            'title' => 'View Tables',
+            'description' => 'View tables in Calibre database',
+        ];
+        $actions[] = [
+            'url' => TableHandler::route('editor'),
+            'title' => 'Edit Tables (dev only)',
+            'description' => 'Edit tables in Calibre database with Adminer Editor',
+        ];
         $actions[] = [
             'url' => self::route('admin-clearcache'),
             'title' => 'Clear Thumbnail Cache',
@@ -100,7 +119,7 @@ class AdminHandler extends BaseHandler
         }
         $actions[] = [
             'url' => self::route('admin-config'),
-            'title' => 'Edit Local Config',
+            'title' => 'Edit Local Config (TODO)',
             'description' => $config_desc,
         ];
         $actions[] = [
@@ -155,7 +174,7 @@ class AdminHandler extends BaseHandler
      * @param string $cachePath
      * @param bool $delete default false
      * @return array{0: int, 1: int}
-     * @see \SebLucas\Cops\Calibre\Cover::getThumbnailCachePath()
+     * @see \SebLucas\Cops\Output\ImageResponse::getCachePath()
      */
     public function getCacheSize($cachePath, $delete = false)
     {
@@ -438,6 +457,7 @@ if (!isset($config)) {
      */
     public function getContent($request, $data, $name = 'index.html')
     {
+        // set cookie param template to 'admin' here
         $request->cookieParams['template'] = basename($this->templateDir);
         $template = new TwigTemplate($request);
         $twig = $template->getTwigEnvironment($this->templateDir);

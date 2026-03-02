@@ -24,7 +24,7 @@ use SebLucas\Cops\Calibre\User;
 class AuthMiddleware extends BaseMiddleware
 {
     /**
-     * Check user authentation before handling request
+     * Check user authentication before handling request
      * @param Request $request
      * @param BaseHandler $handler
      * @return Response|void

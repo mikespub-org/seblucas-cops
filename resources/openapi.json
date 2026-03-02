@@ -2,7 +2,7 @@
     "openapi": "3.0.3",
     "info": {
         "title": "COPS REST API",
-        "version": "4.1.0"
+        "version": "4.2.0"
     },
     "servers": [
         {
@@ -590,6 +590,62 @@
                     }
                 },
                 "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/folder/{path}": {
+            "get": {
+                "summary": "Route to page handler with page=folder&path={path}",
+                "operationId": "get_page-folder",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=folder&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
+        "/ebook/{path}": {
+            "get": {
+                "summary": "Route to page handler with page=folder&ebook=1&path={path}",
+                "operationId": "get_page-ebook",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=folder&ebook=1&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    },
                     {
                         "$ref": "#/components/parameters/dbParam"
                     }
@@ -1680,6 +1736,74 @@
                 ]
             }
         },
+        "/format/{path}": {
+            "get": {
+                "summary": "Route to fetch handler with path={path} - with api key",
+                "operationId": "get_fetch-format",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/images/{size}/{path}": {
+            "get": {
+                "summary": "Route to fetch handler with image=1&size={size}&path={path} - with api key",
+                "operationId": "get_fetch-image",
+                "tags": [
+                    "fetch"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of fetch handler with image=1&size={size}&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "size",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/view/{data}/{db}/{ignore}.{type}": {
             "get": {
                 "summary": "Route to fetch handler with view=1&data={data}&db={db}&type={type} - with api key",
@@ -1872,6 +1996,36 @@
                 ]
             }
         },
+        "/read/{path}": {
+            "get": {
+                "summary": "Route to read handler with path={path} - with api key",
+                "operationId": "get_read-format",
+                "tags": [
+                    "read"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of read handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/epubfs/{db}/{data}/{comp}": {
             "get": {
                 "summary": "Route to epubfs handler with db={db}&data={data}&comp={comp} - with api key",
@@ -1957,7 +2111,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
                         }
                     },
                     {
@@ -1965,7 +2120,45 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to databases/{db}/{name} api - with api key",
+                "operationId": "post_restapi-database-table",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of databases/{db}/{name} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
                         }
                     }
                 ],
@@ -1994,7 +2187,8 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "pattern": "^\\d+$"
                         }
                     },
                     {
@@ -2468,6 +2662,34 @@
                 "security": [
                     {
                         "BasicAuth": []
+                    }
+                ]
+            }
+        },
+        "/folders/{path}": {
+            "get": {
+                "summary": "Route to folders/{path} api",
+                "operationId": "get_restapi-folders",
+                "tags": [
+                    "restapi"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of folders/{path} api"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.*$"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/dbParam"
                     }
                 ]
             }
@@ -3120,6 +3342,36 @@
                 ]
             }
         },
+        "/zipfs/{path}": {
+            "get": {
+                "summary": "Route to zipfs handler with path={path} - with api key",
+                "operationId": "get_zipfs-format",
+                "tags": [
+                    "zipfs"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of zipfs handler with path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/mail": {
             "post": {
                 "summary": "Route to mail handler - with api key",
@@ -3175,6 +3427,75 @@
                 ]
             }
         },
+        "/tables/{db}/{name}": {
+            "get": {
+                "summary": "Route to tables handler with db={db}&name={name} - with api key",
+                "operationId": "get_tables-db-name",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with db={db}&name={name}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\w+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/tables/{db}": {
+            "get": {
+                "summary": "Route to tables handler with db={db} - with api key",
+                "operationId": "get_tables-db",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with db={db}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "db",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
         "/tables": {
             "get": {
                 "summary": "Route to tables handler - with api key",
@@ -3185,6 +3506,138 @@
                 "responses": {
                     "200": {
                         "description": "Result of tables handler"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/editor/static/{path}": {
+            "get": {
+                "summary": "Route to tables handler with editor=1&static=1&path={path} - with api key",
+                "operationId": "get_editor-static",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with editor=1&static=1&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/editor/": {
+            "get": {
+                "summary": "Route to tables handler with editor=1 - with api key",
+                "operationId": "get_editor",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with editor=1"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to tables handler with editor=1 - with api key",
+                "operationId": "post_editor",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with editor=1"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/adminer/static/{path}": {
+            "get": {
+                "summary": "Route to tables handler with adminer=1&static=1&path={path} - with api key",
+                "operationId": "get_adminer-static",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with adminer=1&static=1&path={path}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "path",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^.+$"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/adminer/": {
+            "get": {
+                "summary": "Route to tables handler with adminer=1 - with api key",
+                "operationId": "get_adminer",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with adminer=1"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to tables handler with adminer=1 - with api key",
+                "operationId": "post_adminer",
+                "tags": [
+                    "tables"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of tables handler with adminer=1"
                     }
                 },
                 "security": [

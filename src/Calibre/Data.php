@@ -15,6 +15,7 @@ use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\FileResponse;
+use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use Exception;
 
@@ -24,8 +25,9 @@ class Data
 
     public const ROUTE_DATA = "fetch-data";
     public const ROUTE_INLINE = "fetch-inline";
+    public const ROUTE_FORMAT = "fetch-format";
     public const SQL_TABLE = "data";
-    public const SQL_COLUMNS = "id, name, format";
+    public const SQL_COLUMNS = "id, name, format, uncompressed_size as size";
     public const SQL_LINK_TABLE = "data";
     public const SQL_LINK_COLUMN = "id";
     public const SQL_SORT = "name";
@@ -35,6 +37,7 @@ class Data
     public string $format;
     public string $realFormat;
     public string $extension;
+    public int $size;
     /** @var ?Book */
     public $book;
     /** @var ?int */
@@ -57,9 +60,12 @@ class Data
         'epub'  => 'application/epub+zip',
         'fb2'   => 'text/fb2+xml',
         'gif'   => 'image/gif',
+        'htm'   => 'text/html',
+        'html'  => 'text/html',
         'ibooks' => 'application/x-ibooks+zip',
         'jpeg'  => 'image/jpeg',
         'jpg'   => 'image/jpeg',
+        'json'  => 'application/json',
         'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
         'm4a'   => 'audio/mp4',
@@ -103,6 +109,7 @@ class Data
         $this->id = $post->id;
         $this->name = $post->name;
         $this->format = $post->format;
+        $this->size = property_exists($post, 'size') ? $post->size : 0;
         $this->realFormat = str_replace("ORIGINAL_", "", $post->format);
         $this->extension = strtolower($this->realFormat);
         $this->setBook($book);
@@ -153,6 +160,15 @@ class Data
     public function isEpubValidOnKobo()
     {
         return $this->format == "EPUB" || $this->format == "KEPUB";
+    }
+
+    /**
+     * Summary of getHumanSize
+     * @return string
+     */
+    public function getHumanSize()
+    {
+        return Format::human_size($this->size);
     }
 
     /**
@@ -371,6 +387,18 @@ class Data
     }
 
     /**
+     * Summary of getFolderPath
+     * @return string
+     */
+    public function getFolderPath()
+    {
+        if (!empty($this->book->folderId)) {
+            return $this->book->folderId . '/' . $this->getFilename();
+        }
+        return $this->getFilename();
+    }
+
+    /**
      * Summary of getExternalPath
      * @return string
      */
@@ -398,6 +426,21 @@ class Data
      */
     public function getLinkResource($title = null, $view = false)
     {
+        if (isset($this->book->folderId)) {
+            $params = [];
+            $params['path'] = $this->getFolderPath();
+            $routeName = self::ROUTE_FORMAT;
+            $href = fn() => $this->getRoute($routeName, $params);
+            return new LinkAcquisition(
+                $href,
+                $this->getMimeType(),
+                LinkAcquisition::OPDS_ACQUISITION_TYPE,
+                $title,
+                // no filepath here
+                null
+            );
+        }
+
         if ($this->book->isExternal()) {
             // external storage is assumed to be already url-encoded if needed
             $href = $this->getExternalPath();

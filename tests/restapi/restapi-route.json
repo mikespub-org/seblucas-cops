@@ -316,6 +316,35 @@
             ]
         },
         {
+            "name": "page-folder",
+            "route": [
+                "/folder/{path:.*}",
+                {
+                    "page": "folder",
+                    "_route": "page-folder"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "page-ebook",
+            "route": [
+                "/ebook/{path:.+}",
+                {
+                    "page": "folder",
+                    "ebook": 1,
+                    "_route": "page-ebook"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "page-recent",
             "route": [
                 "/recent",
@@ -840,6 +869,35 @@
             ]
         },
         {
+            "name": "fetch-format",
+            "route": [
+                "/format/{path:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-format"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "fetch-image",
+            "route": [
+                "/images/{size}/{path:.+}",
+                {
+                    "image": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\FetchHandler",
+                    "_route": "fetch-image"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "fetch-view",
             "route": [
                 "/view/{data}/{db}/{ignore}.{type}",
@@ -897,6 +955,20 @@
             ]
         },
         {
+            "name": "read-format",
+            "route": [
+                "/read/{path:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ReadHandler",
+                    "_route": "read-format"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "epubfs",
             "route": [
                 "/epubfs/{db:\\d+}/{data:\\d+}/{comp:.+}",
@@ -928,14 +1000,15 @@
         {
             "name": "restapi-database-table",
             "route": [
-                "/restapi/databases/{db}/{name}",
+                "/restapi/databases/{db:\\d+}/{name:\\w+}",
                 {
                     "_resource": "Database",
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
                     "_route": "restapi-database-table"
                 },
                 [
-                    "GET"
+                    "GET",
+                    "POST"
                 ],
                 []
             ]
@@ -943,7 +1016,7 @@
         {
             "name": "restapi-database",
             "route": [
-                "/restapi/databases/{db}",
+                "/restapi/databases/{db:\\d+}",
                 {
                     "_resource": "Database",
                     "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
@@ -1227,6 +1300,21 @@
             ]
         },
         {
+            "name": "restapi-folders",
+            "route": [
+                "/restapi/folders/{path:.*}",
+                {
+                    "_resource": "Folder",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-folders"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "restapi-path",
             "route": [
                 "/restapi/{path:.*}",
@@ -1494,6 +1582,20 @@
             ]
         },
         {
+            "name": "zipfs-format",
+            "route": [
+                "/zipfs/{path:.+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ZipFsHandler",
+                    "_route": "zipfs-format"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "mail",
             "route": [
                 "/mail",
@@ -1523,6 +1625,34 @@
             ]
         },
         {
+            "name": "tables-db-name",
+            "route": [
+                "/tables/{db:\\d+}/{name:\\w+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "tables-db-name"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "tables-db",
+            "route": [
+                "/tables/{db:\\d+}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "tables-db"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "tables",
             "route": [
                 "/tables",
@@ -1532,6 +1662,70 @@
                 },
                 [
                     "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "editor-static",
+            "route": [
+                "/editor/static/{path:.+}",
+                {
+                    "editor": 1,
+                    "static": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "editor-static"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "editor",
+            "route": [
+                "/editor/",
+                {
+                    "editor": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "editor"
+                },
+                [
+                    "GET",
+                    "POST"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "adminer-static",
+            "route": [
+                "/adminer/static/{path:.+}",
+                {
+                    "adminer": 1,
+                    "static": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "adminer-static"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
+            "name": "adminer",
+            "route": [
+                "/adminer/",
+                {
+                    "adminer": 1,
+                    "_handler": "SebLucas\\Cops\\Handlers\\TableHandler",
+                    "_route": "adminer"
+                },
+                [
+                    "GET",
+                    "POST"
                 ],
                 []
             ]

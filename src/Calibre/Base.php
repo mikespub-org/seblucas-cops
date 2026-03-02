@@ -92,6 +92,18 @@ abstract class Base
      */
     public function getUri($params = [])
     {
+        if (!isset($this->id)) {
+            // try to find corresponding instance by name for books in folders
+            $instance = static::getInstanceByName($this->name, $this->getDatabaseId());
+            if ($instance) {
+                $instance->setHandler($this->handler);
+                return $instance->getUri($params);
+            }
+            // link to overview page with (dummy) query
+            $params['db'] = $this->getDatabaseId();
+            $params['query'] = $this->getTitle();
+            return $this->getRoute(static::ROUTE_ALL, $params);
+        }
         $params['id'] = $this->id;
         // we need databaseId here because we use $handler::link()
         $params['db'] = $this->getDatabaseId();
@@ -278,8 +290,6 @@ abstract class Base
      */
     public function getBooks($n = 1, $sort = null)
     {
-        // @todo see if we want to do something special for books, and deal with static:: inheritance
-        //return $this->getEntriesByInstance(Book::class, $n, $sort, $this->databaseId);
         $booklist = new BookList(null, $this->databaseId);
         $booklist->orderBy = $sort;
         [$entryArray, ] = $booklist->getBooksByInstance($this, $n);
@@ -431,7 +441,7 @@ abstract class Base
 
     /**
      * Summary of setFilterParams if we want to filter by virtual library etc.
-     * @see Page::getFilters()
+     * @see \SebLucas\Cops\Pages\PageWithDetail::getFilters()
      * @param array<string, mixed> $filterParams
      * @return void
      */

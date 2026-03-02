@@ -142,6 +142,19 @@
                         "page": "opensearch"
                     }
                 ],
+                "page-folder": [
+                    "/folder/{path:.*}",
+                    {
+                        "page": "folder"
+                    }
+                ],
+                "page-ebook": [
+                    "/ebook/{path:.+}",
+                    {
+                        "page": "folder",
+                        "ebook": 1
+                    }
+                ],
                 "page-recent": [
                     "/recent",
                     {
@@ -367,6 +380,15 @@
                 "fetch-data": [
                     "/fetch/{db:\\d+}/{data:\\d+}/{ignore}.{type}"
                 ],
+                "fetch-format": [
+                    "/format/{path:.+}"
+                ],
+                "fetch-image": [
+                    "/images/{size}/{path:.+}",
+                    {
+                        "image": 1
+                    }
+                ],
                 "fetch-view": [
                     "/view/{data}/{db}/{ignore}.{type}",
                     {
@@ -386,6 +408,9 @@
                 ],
                 "read": [
                     "/read/{db:\\d+}/{data:\\d+}"
+                ],
+                "read-format": [
+                    "/read/{path:.+}"
                 ]
             }
         },
@@ -407,13 +432,17 @@
                     }
                 ],
                 "restapi-database-table": [
-                    "/restapi/databases/{db}/{name}",
+                    "/restapi/databases/{db:\\d+}/{name:\\w+}",
                     {
                         "_resource": "Database"
-                    }
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
                 ],
                 "restapi-database": [
-                    "/restapi/databases/{db}",
+                    "/restapi/databases/{db:\\d+}",
                     {
                         "_resource": "Database"
                     }
@@ -527,6 +556,12 @@
                         "_resource": "User"
                     }
                 ],
+                "restapi-folders": [
+                    "/restapi/folders/{path:.*}",
+                    {
+                        "_resource": "Folder"
+                    }
+                ],
                 "restapi-path": [
                     "/restapi/{path:.*}"
                 ]
@@ -621,6 +656,9 @@
             "routes": {
                 "zipfs": [
                     "/zipfs/{db:\\d+}/{data:\\d+}/{comp:.+}"
+                ],
+                "zipfs-format": [
+                    "/zipfs/{path:.+}"
                 ]
             }
         },
@@ -652,8 +690,48 @@
         {
             "handler": "tables",
             "routes": {
+                "tables-db-name": [
+                    "/tables/{db:\\d+}/{name:\\w+}"
+                ],
+                "tables-db": [
+                    "/tables/{db:\\d+}"
+                ],
                 "tables": [
                     "/tables"
+                ],
+                "editor-static": [
+                    "/editor/static/{path:.+}",
+                    {
+                        "editor": 1,
+                        "static": 1
+                    }
+                ],
+                "editor": [
+                    "/editor/",
+                    {
+                        "editor": 1
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
+                ],
+                "adminer-static": [
+                    "/adminer/static/{path:.+}",
+                    {
+                        "adminer": 1,
+                        "static": 1
+                    }
+                ],
+                "adminer": [
+                    "/adminer/",
+                    {
+                        "adminer": 1
+                    },
+                    [
+                        "GET",
+                        "POST"
+                    ]
                 ]
             }
         },

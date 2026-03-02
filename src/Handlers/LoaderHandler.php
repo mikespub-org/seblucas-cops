@@ -82,6 +82,14 @@ class LoaderHandler extends BaseHandler
         if (!is_array($calibreDir)) {
             $calibreDir = ['COPS Database' => $calibreDir];
         }
+        // add browse directory to import epub files if defined
+        $browseDb = -1;
+        if (Config::get('browse_books_directory')) {
+            $gConfig['groups']['Import'] ??= [];
+            $gConfig['groups']['Import']['db_load'] ??= 'Create Calibre database with available epub files';
+            $calibreDir['Browse Books'] = Config::get('browse_books_directory');
+            $browseDb = count($calibreDir) - 1;
+        }
         foreach ($calibreDir as $name => $path) {
             $gConfig['databases'][] = ['name' => $name, 'db_path' => rtrim((string) $path, '/'), 'epub_path' => '.'];
         }
@@ -104,6 +112,10 @@ class LoaderHandler extends BaseHandler
         $urlParams = $request->urlParams;
         if (!is_null($dbNum) && !empty($gConfig['databases'][$dbNum])) {
             $this->dbFileName = $gConfig['databases'][$dbNum]['db_path'] . '/metadata.db';
+            // create database in browse directory if needed
+            if ($dbNum == $browseDb && (!file_exists($this->dbFileName) || filesize($this->dbFileName) == 0)) {
+                $gConfig['create_db'] = true;
+            }
         }
 
         // you can define extra actions for your app - see example.php
@@ -139,7 +151,11 @@ class LoaderHandler extends BaseHandler
         if (isset($this->writer) || empty($this->dbFileName)) {
             return $this->writer;
         }
-        $this->writer = new CalibreWriter($this->dbFileName, false);
+        if (!file_exists($this->dbFileName) || filesize($this->dbFileName) == 0) {
+            $this->writer = new CalibreWriter($this->dbFileName, true);
+        } else {
+            $this->writer = new CalibreWriter($this->dbFileName, false);
+        }
         return $this->writer;
     }
 

@@ -23,6 +23,8 @@ class TwigTemplate extends BaseRenderer
     protected $theme = 'twigged';
     /** @var bool */
     protected $serverSide = false;
+    /** @var bool */
+    protected $markdown = false;
     /** @var \Twig\Environment */
     protected $twig;
 
@@ -36,6 +38,7 @@ class TwigTemplate extends BaseRenderer
         $this->request = $request;
         $this->theme = $request->template();
         $this->serverSide = $request->render() ? true : false;
+        $this->markdown = $request->isMarkdown();
         // support other Twig template directories too
         $this->twig = $this->getTwigEnvironment('templates/' . $this->theme);
     }
@@ -136,7 +139,10 @@ class TwigTemplate extends BaseRenderer
             if ($data['title'] != $data['page_it']['title']) {
                 $data['title'] .= ' - ' . $data['page_it']['title'];
             }
-            // twig template will automatically include 'page.html' if needed
+            // twig template will automatically include 'page.html' or 'page.md' if needed
+            if ($this->markdown && str_ends_with($name, '.html')) {
+                $name = str_replace('.html', '.md', $name);
+            }
         }
         return $this->twig->render($name, ['it' => $data]);
     }

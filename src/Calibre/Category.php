@@ -20,6 +20,7 @@ abstract class Category extends Base
 {
     public const SQL_CREATE = 'insert into categories (name) values (?)';
     public const CATEGORY = "categories";
+    public const SEPARATOR = ".";
 
     /** @var ?array<Category> */
     protected $children = null;
@@ -94,7 +95,7 @@ abstract class Category extends Base
             }
             // skip entries deeper in hierarchy like Fiction.Historical.Mystery
             $siblingName = substr($sibling->getTitle(), strlen($parentName) + 1);
-            if (str_contains($siblingName, '.')) {
+            if (str_contains($siblingName, static::SEPARATOR)) {
                 continue;
             }
             array_push($entryArray, $sibling->getEntry($sibling->count));
@@ -109,7 +110,7 @@ abstract class Category extends Base
      */
     public static function findCurrentName($name)
     {
-        $parts = explode('.', $name);
+        $parts = explode(static::SEPARATOR, $name);
         $current = array_pop($parts);
         return $current;
     }
@@ -121,12 +122,12 @@ abstract class Category extends Base
      */
     public static function findParentName($name)
     {
-        $parts = explode('.', $name);
+        $parts = explode(static::SEPARATOR, $name);
         $current = array_pop($parts);
         if (empty($parts)) {
             return '';
         }
-        $parent = implode('.', $parts);
+        $parent = implode(static::SEPARATOR, $parts);
         return $parent;
     }
 
@@ -230,8 +231,9 @@ abstract class Category extends Base
     }
 
     /**
-     * Find related categories for hierarchical tags or series - @todo needs title_sort function in sqlite for series
+     * Find related categories for hierarchical tags or series - needs 'title_sort' function in sqlite for series
      * Format: tag_browser_tags(id,name,count,avg_rating,sort)
+     * @see \SebLucas\Cops\Calibre\Database::createSqliteFunctions()
      * @param string|array<mixed> $find pattern match or exact match for name, or array of child ids
      * @return array<Category>
      */
@@ -274,11 +276,14 @@ abstract class Category extends Base
     public function getHierarchy($expand = false)
     {
         $parents = $this->getParentTrail();
-        $current = $this->getEntry();
+        $current = $this->getEntry($this->count ?? 0);
         $children = $this->getChildEntries($expand);
         // remove current title from children
         foreach ($children as $id => $entry) {
-            $childTitle = substr($entry->title, strlen($current->title) + 1);
+            $childTitle = $entry->title;
+            if (str_starts_with($childTitle, $current->title)) {
+                $childTitle = substr($childTitle, strlen($current->title) + 1);
+            }
             $children[$id]->title = $childTitle;
         }
         // remove parent title from current
@@ -287,6 +292,8 @@ abstract class Category extends Base
             "parents" => $parents,
             "current" => $current,
             "children" => $children,
+            "hastree" => $expand,
+            "separator" => static::SEPARATOR,
         ];
     }
 

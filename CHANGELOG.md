@@ -13,7 +13,21 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
-  * ...
+  * Changes in config/default.php file:
+    - update $config['cops_twig_templates'] to include 'markdown' templates
+    - new $config['cops_browse_books_directory'] to browse books in other folders
+    - new $config['cops_browse_books_getfiles'] to get list of files in other folders
+  * Add Edit Tables (dev only) option in admin menu to edit Calibre database records
+  * Add virtual adminer/editor package to get Adminer Editor with composer (dev only)
+  * Get TableHandler working to view Calibre database tables
+  * Create AdminMiddleware for access to AdminHandler and TableHandler
+  * Browse book files in other folders besides Calibre
+  * Start adding markdown templates as experiment (WIP)
+
+4.2.0 - 20260209 Support mapping of filepath for x-accel-redirect
+  * Changes in config/default.php file:
+    - new $config['cops_x_accel_mapping'] option to map file paths for x-accel-redirect
+  * Support mapping of real filepath to uri filepath for x-accel-redirect
 
 4.1.0 - 20260208 Book pages, calibre links, database filters, web app manifest 
   * Changes in config/default.php file:
