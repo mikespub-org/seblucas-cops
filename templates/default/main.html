@@ -20,14 +20,14 @@
     <article class="books">
             <span class="cover">
             {{? entry.thumbnailurl }}
-                <a class="fancycover" href="{{=entry.coverurl}}" {{=it.c.config.kindleHack}}>
+                <a class="fancycover" href="{{=entry.coverurl}}" data-link="direct" {{=it.c.config.kindleHack}}>
                     <img src="{{=entry.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
                 </a>
             {{?}}
             </span>
             <h2 class="download">
                 {{~entry.book.preferedData:data:j}}
-                 <a href="{{=data.url}}" title="{{=data.name}} {{=data.size}}" {{=it.c.config.kindleHack}}><i class="fas fa-download"></i> {{=data.name}}</a>
+                 <a href="{{=data.url}}" title="{{=data.name}} {{=data.size}}" data-link="direct" {{=it.c.config.kindleHack}}><i class="fas fa-download"></i> {{=data.name}}</a>
                  <a href="{{=data.viewUrl}}" {{=it.c.config.kindleHack}}><i class="fas fa-folder-open fa-lg"></i></a>
                  <br />
                 {{~}}

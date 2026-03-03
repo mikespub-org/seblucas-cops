@@ -17,10 +17,13 @@ x.x.x - TODO
     - update $config['cops_twig_templates'] to include 'markdown' templates
     - new $config['cops_browse_books_directory'] to browse books in other folders
     - new $config['cops_browse_books_getfiles'] to get list of files in other folders
+  * Fix downloading files and covers with relative path + front controller - see issue #169 and PR #170 from @dunxd
   * Add Edit Tables (dev only) option in admin menu to edit Calibre database records
   * Add virtual adminer/editor package to get Adminer Editor with composer (dev only)
   * Get TableHandler working to view Calibre database tables
   * Create AdminMiddleware for access to AdminHandler and TableHandler
+  * Add basic image gallery for comics in other folders besides Calibre
+  * Use list of files in other folders for rclone mount or slow devices
   * Browse book files in other folders besides Calibre
   * Start adding markdown templates as experiment (WIP)
 

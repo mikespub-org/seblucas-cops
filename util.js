@@ -467,7 +467,7 @@ navigateTo = function (url) {
             } else {
                 $("#error").html ('Error loading url: ' + encodeURI(jsonurl));
             }
-            console.log('getJSON failed: ' + JSON.stringify(error, null, 4));
+            console.log('getJSON failed: ' + url + ' ' + JSON.stringify(error, null, 4));
         });
     }
 };
@@ -492,8 +492,8 @@ function link_Clicked (event) {
         return;
     }
 
-    // If the link has a download attribute let the browser handle it
-    if (currentLink.attr('download') !== undefined) {
+    // If the link has a data-link attribute let the browser handle it
+    if (currentLink.attr('data-link') !== undefined) {
         return;
     }
     

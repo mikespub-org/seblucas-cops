@@ -1,14 +1,14 @@
 <article class="bookpopup">
     <span class="cover">
         {{? it.book.hasCover == 1}}
-        <a href="{{=it.book.coverurl}}" {{=it.c.config.kindleHack}}>
+        <a href="{{=it.book.coverurl}}" data-link="direct" {{=it.c.config.kindleHack}}>
           <img src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
         </a>
         {{?}}
     </span>
     <h2 class="download">
         {{~it.book.datas:data:i}}
-        <a title="Download // {{=data.format}} {{=data.size}}" href="{{=data.url}}" {{=it.c.config.kindleHack}}><i class="fas fa-download"></i> {{=data.format}}</a>
+        <a title="Download // {{=data.format}} {{=data.size}}" href="{{=data.url}}" data-link="direct" {{=it.c.config.kindleHack}}><i class="fas fa-download"></i> {{=data.format}}</a>
         <a title="Open // {{=data.format}}" href="{{=data.viewUrl}}" {{=it.c.config.kindleHack}}><i class="fas fa-folder-open fa-lg"></i></a>
         {{? data.mail == 1}}
         <a id="mailButton" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="fas fa-envelope fa-lg"></i></a>
@@ -77,7 +77,7 @@
     <p class="popupless">
         <h3>{{=it.c.i18n.filesTitle}}: </h3>
         {{~it.book.extraFiles:extraFile:i}}
-        <a href="{{=extraFile.url}}" {{=it.c.config.kindleHack}}>{{=htmlspecialchars (extraFile.name)}}</a>
+        <a href="{{=extraFile.url}}" data-link="direct" {{=it.c.config.kindleHack}}>{{=htmlspecialchars (extraFile.name)}}</a>
         {{~}}
     </p>
     {{?}}

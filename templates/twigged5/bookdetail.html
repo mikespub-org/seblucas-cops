@@ -8,7 +8,7 @@
     <div class="cover-image">
         {% if it.book.hasCover == 1 %}
         <div class="d-block d-sm-none topspace"></div>
-        <a href="{{it.book.coverurl}}">
+        <a href="{{it.book.coverurl}}" data-link="direct">
           <img class="img-fluid mx-auto d-block" src="{{it.book.thumbnailurl}}" alt="{{it.c.i18n.coverAlt}}" />
         </a>
         {% endif %}
@@ -18,7 +18,7 @@
 <div class="col-lg-4 col-md-5 col-sm-6 col-12 text-center text-sm-start ">
     {% for data in it.book.datas %}
     <div class="btn-group">
-        <a title="Download // {{data.format}} {{data.size}}" href="{{data.url}}" class="btn btn-primary" role="button"><i class="bi bi-download"></i> {{data.format}}</a>
+        <a title="Download // {{data.format}} {{data.size}}" href="{{data.url}}" class="btn btn-primary" role="button" data-link="direct"><i class="bi bi-download"></i> {{data.format}}</a>
         {% if data.qrcode == 1 %}
         <a id="qrButton" class="btn btn-primary" role="button" title="QR Code" href="#" onclick="showQRCode('qrcode', '{{data.url}}'); return false;">
         <i class="bi bi-qr-code"></i></a>
@@ -104,7 +104,7 @@
     {% endfor %}
     {% if it.book.extraFiles != "" %}
     <p>
-        <h4>{{it.c.i18n.filesTitle}}: {% for extraFile in it.book.extraFiles %}<a href="{{extraFile.url}}">{{extraFile.name|escape}}</a> {% endfor %}</h4>
+        <h4>{{it.c.i18n.filesTitle}}: {% for extraFile in it.book.extraFiles %}<a href="{{extraFile.url}}" data-link="direct">{{extraFile.name|escape}}</a> {% endfor %}</h4>
     </p>
     {% endif %}
     <p>
