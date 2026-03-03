@@ -19,7 +19,7 @@
             {{?}}
             {{~it.book.datas:data:i}}
             <div class="btn-group">
-                <a title="Download {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><i class="bi-download pe-1"></i>{{=data.format}}</a>
+                <a title="Download {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button" download><i class="bi-download pe-1"></i>{{=data.format}}</a>
                 {{? data.mail == 1}}
                 <a id="mailButton" class="btn btn-primary" role="button" title="Send by eMail - {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
                 <i class="bi-envelope-at-fill"></i></a>
@@ -58,7 +58,7 @@
             <p><span class="fw-bold">{{=column.customColumnType.columnTitle}}</span>: {{=column.htmlvalue}}</p>
             {{~}}
             {{? it.book.extraFiles != ""}}
-            <p><span class="fw-bold">{{=it.c.i18n.filesTitle}}</span>: {{~it.book.extraFiles:extraFile:i}}<a href="{{=extraFile.url}}">{{=htmlspecialchars (extraFile.name)}}</a> {{~}}</p>
+            <p><span class="fw-bold">{{=it.c.i18n.filesTitle}}</span>: {{~it.book.extraFiles:extraFile:i}}<a href="{{=extraFile.url}}" download>{{=htmlspecialchars (extraFile.name)}}</a> {{~}}</p>
             {{?}}
         </div>
     </div>
