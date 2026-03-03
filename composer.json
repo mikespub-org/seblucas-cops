@@ -29,7 +29,7 @@
         "mikespub/epubjs-reader": "^2026.1",
         "mikespub/php-epub-meta": "^4.1",
         "mikespub/web-comic-reader": "^2026.1",
-        "mozilla/pdfjs-dist": "^5.4",
+        "mozilla/pdfjs-dist": "^5.5",
         "npm-asset/bootstrap": "^3.4",
         "npm-asset/dot": "^1.1",
         "npm-asset/jquery": "^3.7",
@@ -80,11 +80,11 @@
             "package": {
                 "name": "mozilla/pdfjs-dist",
                 "description": "Legacy build for PDF.js from official release",
-                "version": "5.4.624",
+                "version": "5.5.207",
                 "homepage": "https://github.com/mozilla/pdf.js/wiki/Setup-pdf.js-in-a-website",
                 "license": "Apache-2.0",
                 "dist": {
-                    "url": "https://github.com/mozilla/pdf.js/releases/download/v5.4.624/pdfjs-5.4.624-legacy-dist.zip",
+                    "url": "https://github.com/mozilla/pdf.js/releases/download/v5.5.207/pdfjs-5.5.207-legacy-dist.zip",
                     "type": "zip"
                 }
             }

@@ -88,19 +88,6 @@ class User
     }
 
     /**
-     * Summary of verifyLogin
-     * @param ?array<mixed> $serverVars
-     * @param ?array<mixed> $requestVars
-     * @return bool
-     * @deprecated 3.8.1 use AuthMiddleware instead - see PR #161
-     */
-    public static function verifyLogin($serverVars = null, $requestVars = null)
-    {
-        // throw new Exception('Please update your config/config.php file and remove the User::verifyLogin() part');
-        return true;
-    }
-
-    /**
      * Summary of checkAuthArray
      * @param array<string, mixed> $authArray
      * @param string $username

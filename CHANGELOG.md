@@ -13,10 +13,14 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * ...
+
+4.3.1 - 20260303 Browse folders, view tables + fix download issues
   * Changes in config/default.php file:
     - update $config['cops_twig_templates'] to include 'markdown' templates
     - new $config['cops_browse_books_directory'] to browse books in other folders
     - new $config['cops_browse_books_getfiles'] to get list of files in other folders
+  * Upgrade mozilla/pdfjs-dist to v5.5.207 and refresh pdfjs-viewer template
   * Fix downloading files and covers with relative path + front controller - see issue #169 and PR #170 from @dunxd
   * Add Edit Tables (dev only) option in admin menu to edit Calibre database records
   * Add virtual adminer/editor package to get Adminer Editor with composer (dev only)
