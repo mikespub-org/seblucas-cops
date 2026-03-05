@@ -1,4 +1,4 @@
-# COPS Architecture & Design (2.7.x and later)
+# COPS Architecture & Design (3.x and later)
 
 ## Introduction
 
@@ -20,20 +20,24 @@ Every product is based on goals, design principles, choices and preferences that
 ## Overall Architecture
 
 The overall flow to handle a request and prepare a response now looks like this:
-
 ```mermaid
 flowchart LR
   request((Request))
   endpoints[Endpoints]
   framework[Framework]
+  middleware[Middleware]
   handlers[Handlers]
   output[Output]
   response((Response))
-  request --> endpoints --> framework --> handlers --> output --> response
-  click framework "https://github.com/mikespub-org/seblucas-cops/tree/main/src" _blank
+  request --> endpoints --> framework --> middleware --> handlers --> output --> response
+  click request "https://github.com/mikespub-org/seblucas-cops/tree/main/src/Input" _blank
+  click framework "https://github.com/mikespub-org/seblucas-cops/tree/main/src/Framework" _blank
+  click middleware "https://github.com/mikespub-org/seblucas-cops/tree/main/src/Middleware" _blank
   click handlers "https://github.com/mikespub-org/seblucas-cops/tree/main/src/Handlers" _blank
   click output "https://github.com/mikespub-org/seblucas-cops/tree/main/src/Output" _blank
 ```
+
+Since COPS 3.1.x, Middleware will process requests before they reach the final Handlers.
 
 The HTML/JSON and OPDS Output is still organized in Pages, each related to Calibre entities, and mapped to a common entry/link Model. These models are then enriched and rendered as needed for all HTML/JSON pages or OPDS feeds.
 
@@ -56,15 +60,16 @@ Endpoint scripts in COPS 2.7.x all shared the same `Framework::run('...');` code
 and they only differentiate by the `name` of the handler to be called. With COPS 3.1.x this code is replaced with a redirect to `index.php/name` and they are permanently removed in release 3.3.1.
 
 Within the Framework, the run() method is equally simple and basically covers the following steps:
-1. get Request based on input + use Routing (3.4.x) to find parameters
+1. get [Request](https://github.com/mikespub-org/seblucas-cops/tree/main/src/Input) based on input + use [Routing](https://github.com/mikespub-org/seblucas-cops/tree/main/src/Routing) (3.4.x) to find parameters
 2. match Request to the right Handler based on name and Route
 3. create Handler
-4. let Handler handle the Request
-5. send back the Response (3.2.x)
+4. dispatch Request through Middleware queue handler (3.1.x)
+5. let Handler handle the Request
+6. send back the Response (3.2.x)
 
 In COPS 2.x both old-style URL parameters (getJSON.php?page=...&id=...) and new-style Route URLs (/authors/...) are supported by the Framework.
 
-COPS 3.x enables Route URLs by default. This gives us nicer-looking URLs, and it allows us to use a single front controller. Support for generating old-style URLs is removed in release 3.4.x.
+COPS 3.x enables Route URLs by default, using `symfony/routing` since 3.5.7. This gives us nicer-looking URLs, and it allows us to use a single front controller. Support for generating old-style URLs is removed in release 3.4.x.
 
 ## Endpoints, Handlers & Output
 
@@ -168,6 +173,10 @@ $ curl -H 'X-API-KEY: myApiKey' http://localhost/cops/index.php/restapi/fetch/..
 
 With `/index.php/graphql` you'll see the GraphiQL playground to explore the GraphQL schema for COPS. This gives you access to most data in the Calibre database, and allows you to retrieve exactly the data you want with custom queries like [test.query.graphql](https://github.com/mikespub-org/seblucas-cops/blob/main/tests/graphql/test.query.graphql)
 
+5. View/Edit Tables (dev admin only)
+
+With `/index.php/tables/` you'll be able to view Calibre database tables, and with `/index.php/editor/` you'll be able to edit table records with Adminer Editor if the database is write-enabled. Please proceed with caution...
+
 ## Dependencies
 
 COPS requires both [PHP packages](https://packagist.org/) and [NPM assets](https://www.npmjs.com/) which are defined in [composer.json](https://github.com/mikespub-org/seblucas-cops/blob/main/composer.json) using [Asset Packagist](https://asset-packagist.org/)
@@ -175,25 +184,28 @@ COPS requires both [PHP packages](https://packagist.org/) and [NPM assets](https
 - PHP Packages
   - mikespub/epubjs-reader for the epub.js reader
   - mikespub/php-epub-meta to open EPUB files
+  - mikespub/web-comic-reader for the comic reader
   - phpmailer/phpmailer to send mail to Kindle
   - symfony/routing for URL routing
   - symfony/string as alternative for normAndUp and slugify
   - twig/twig to support Twig templates
+- Git Packages
+  - mozilla/pdfjs-dist for the PDF viewer
 - NPM Assets
   - bootstrap 3
+  - corejs-typeahead
   - dot
   - jquery
   - js-cookie
   - lru-fast
   - magnific-popup
   - normalize.css
-  - corejs-typeahead
   - twig
 - Via CDN in templates
   - bootstrap 5
   - swagger-ui-dist
 - Local Resources
-  - monocle
+  - monocle for the old epub reader
   - seblucas/dot-php
   - simonpioli/sortelements
 
@@ -201,9 +213,12 @@ In development mode, some additional packages are used:
 
 - PHP Packages
   - kiwilan/php-opds for OPDS 2.0 feeds
+  - mikespub/codedread-kthoom for the comic reader
   - mikespub/epub-loader to search information on books, authors etc.
   - nikic/fast-route as alternative for symfony/routing (legacy)
   - webonyx/graphql-php for the GraphQL interface
+- Git Packages
+  - adminer/editor to edit Calibre database tables
 - Via CDN in templates
   - datatables.net with datatables.net-bs5
   - graphiql with react, react-dom and graphql
