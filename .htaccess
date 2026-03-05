@@ -1,4 +1,6 @@
 DirectoryIndex index.php
+# Disable default indexes and multiviews
+Options -Indexes -MultiViews
 
 ###########################################
 # Apache module mod_xsendfile is deprecated
