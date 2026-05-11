@@ -45,11 +45,11 @@
         "symfony/routing": "^7.4 || ^8.0",
         "symfony/string": "^7.4 || ^8.0",
         "symfony/translation-contracts": "^3.6",
-        "twig/twig": "^3.23"
+        "twig/twig": "^3.24"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.2",
-        "phpunit/phpunit": "^12.5 || ^13.0",
+        "phpunit/phpunit": "^12.5 || ^13.1",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^7.4 || ^8.0",
         "symfony/http-client": "^7.4 || ^8.0",
@@ -57,7 +57,7 @@
         "mikespub/epub-loader": "^4.0",
         "mikespub/codedread-kthoom": "^2026.1",
         "opis/json-schema": "^2.6",
-        "webonyx/graphql-php": "^15.30",
+        "webonyx/graphql-php": "^15.32",
         "adminer/editor": "^5.4"
     },
     "suggest": {

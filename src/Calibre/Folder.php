@@ -263,7 +263,7 @@ class Folder extends Category
                 continue;
             } else {
                 $bookPath = $folderPath . $dirPath;
-                $folderId = $parent->id ? $parent->id . '/' . $dirPath : $dirPath;
+                $folderId = !empty($parent->id) ? $parent->id . '/' . $dirPath : $dirPath;
                 $bookFolder = $parent->getChildFolderById($folderId);
                 if (empty($bookFolder)) {
                     $bookFolder = $parent->buildHierarchy($dirPath);

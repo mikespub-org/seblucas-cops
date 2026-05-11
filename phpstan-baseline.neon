@@ -19,6 +19,12 @@ parameters:
 			path: src/Calibre/Category.php
 
 		-
+			message: '#^PHPDoc type string\|null of property SebLucas\\Cops\\Calibre\\Folder\:\:\$id is not covariant with PHPDoc type int\|null of overridden property SebLucas\\Cops\\Calibre\\Base\:\:\$id\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Calibre/Folder.php
+
+		-
 			message: '#^PHPDoc type string\|null of property SebLucas\\Cops\\Calibre\\Format\:\:\$id is not covariant with PHPDoc type int\|null of overridden property SebLucas\\Cops\\Calibre\\Base\:\:\$id\.$#'
 			identifier: property.phpDocType
 			count: 1
@@ -65,6 +71,18 @@ parameters:
 			identifier: empty.property
 			count: 1
 			path: src/Output/Zipper.php
+
+		-
+			message: '#^Cannot unset offset ''PATH_INFO'' on array\<mixed, mixed\>\.$#'
+			identifier: unset.offset
+			count: 1
+			path: tests/Framework/FrameworkTest.php
+
+		-
+			message: '#^Cannot unset offset ''PATH_INFO'' on array\<mixed, mixed\>\.$#'
+			identifier: unset.offset
+			count: 1
+			path: tests/Framework/FrameworkTodoTest.php
 
 		-
 			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
