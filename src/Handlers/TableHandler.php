@@ -128,7 +128,7 @@ class TableHandler extends BaseHandler
             $filterUrl .= '?' . $filters[$name] . '=';
         }
         $data['thead'] = '<tr>';
-        $data['columns'] = [];
+        $columnDefs = [];
         $foreignKeys = [];
         foreach ($columns as $column) {
             $data['thead'] .= '<th>' . htmlspecialchars($column['name']) . '</th>';
@@ -137,7 +137,7 @@ class TableHandler extends BaseHandler
             if (isset($column['type']) && str_contains(strtolower($column['type']), 'blob')) {
                 $colDef['searchable'] = false;
             }
-            $data['columns'][] = $colDef;
+            $columnDefs[] = $colDef;
 
             $refTable = $this->getReferencedTable($column['name']);
             if ($refTable && $refTable != $name) {
@@ -147,7 +147,7 @@ class TableHandler extends BaseHandler
         $data['thead'] .= '</tr>';
         $data['tfoot'] = $data['thead'];
         $data['tbody'] = ''; // Will be populated by datatables
-        $data['json_columns'] = json_encode($data['columns']);
+        $data['json_columns'] = json_encode($columnDefs);
         // make sure we don't have an empty array, which causes problems in Javascript for 'sort'
         $data['foreign_keys'] = json_encode($foreignKeys, JSON_FORCE_OBJECT);
         $data['filter_url'] = $filterUrl;
