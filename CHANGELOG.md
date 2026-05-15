@@ -15,6 +15,12 @@ x.x.x - TODO
 4.x.x - 2026xxxx 
   * ...
 
+4.3.3 - 20260515 Update packages + include minor fixes
+  * Add markdown response test (wip)
+  * Update php/npm packages
+  * Fix GLOB_BRACE in admin handler for Alpine Linux
+  * Fix template data in table handler
+
 4.3.1 - 20260303 Browse folders, view tables + fix download issues
   * Changes in config/default.php file:
     - update $config['cops_twig_templates'] to include 'markdown' templates

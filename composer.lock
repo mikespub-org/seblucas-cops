@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42ca65b62c150d64495b23ee46cc9291",
+    "content-hash": "971a0d289fa457ee9c691df970eed41f",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -244,10 +244,10 @@
         },
         {
             "name": "mozilla/pdfjs-dist",
-            "version": "5.5.207",
+            "version": "5.7.284",
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/mozilla/pdf.js/releases/download/v5.5.207/pdfjs-5.5.207-legacy-dist.zip"
+                "url": "https://github.com/mozilla/pdf.js/releases/download/v5.7.284/pdfjs-5.7.284-legacy-dist.zip"
             },
             "type": "library",
             "license": [

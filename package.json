@@ -17,11 +17,11 @@
     "lru-fast": "^0.2.2",
     "magnific-popup": "^1.2.0",
     "normalize.css": "^8.0.1",
-    "pdfjs-dist": "^5.5.207",
+    "pdfjs-dist": "^5.7.284",
     "qrcodejs": "^1.0.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "swagger-ui-dist": "^5.32.5",
+    "swagger-ui-dist": "^5.32.6",
     "twig": "^1.17.1"
   },
   "license": "GPL-2.0-or-later"

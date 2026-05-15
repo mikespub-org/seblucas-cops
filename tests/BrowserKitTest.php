@@ -20,6 +20,8 @@
 
 namespace SebLucas\Cops\Tests;
 
+use SebLucas\Cops\Handlers\CheckHandler;
+
 require_once dirname(__DIR__) . '/config/test.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
@@ -272,5 +274,45 @@ class BrowserKitTest extends TestCase
         $result = $this->ajax($uri);
 
         $this->assertEquals($expectedEntries, $result['entries']);
+    }
+
+    public function testMarkdownResponseHome(): void
+    {
+        // identify MCP agent with Accept: text/markdown header here
+        $this->createBrowser('default', 'MCP Agent');
+        $this->browser->setServerParameter('HTTP_ACCEPT', 'text/markdown');
+
+        $uri = HtmlHandler::index();
+        $crawler = $this->url($uri);
+
+        $response = $this->browser->getResponse();
+
+        $expected = "text/markdown;charset=utf-8";
+        $contentType = $response->getHeader('Content-Type');
+        $this->assertEquals($expected, $contentType);
+
+        $expected = "### Entries";
+        $content = $response->getContent();
+        $this->assertStringContainsString($expected, $content);
+    }
+
+    public function testMarkdownResponseCheck(): void
+    {
+        // identify MCP agent with Accept: text/markdown header here
+        $this->createBrowser('default', 'MCP Agent');
+        $this->browser->setServerParameter('HTTP_ACCEPT', 'text/markdown');
+
+        $uri = CheckHandler::route('check');
+        $crawler = $this->url($uri);
+
+        $response = $this->browser->getResponse();
+
+        $expected = "text/markdown;charset=utf-8";
+        $contentType = $response->getHeader('Content-Type');
+        $this->assertEquals($expected, $contentType);
+
+        $expected = "# COPS Configuration Check";
+        $content = $response->getContent();
+        $this->assertStringContainsString($expected, $content);
     }
 }
