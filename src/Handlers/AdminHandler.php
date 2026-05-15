@@ -186,13 +186,31 @@ class AdminHandler extends BaseHandler
         }
         $count = 0;
         $size = 0;
-        // cache/db-0/0/12/34567-89ab-cdef-0123-456789abcdef-...jpg
-        foreach (glob($cachePath . '/db-*/?/??/*.{jpg,png}', \GLOB_BRACE) as $filePath) {
-            if ($delete && unlink($filePath)) {
-                continue;
+        // GLOB_BRACE is not available in Alpine Linux
+        if (defined('\GLOB_BRACE')) {
+            // cache/db-0/0/12/34567-89ab-cdef-0123-456789abcdef-...jpg
+            foreach (glob($cachePath . '/db-*/?/??/*.{jpg,png}', \GLOB_BRACE) as $filePath) {
+                if ($delete && unlink($filePath)) {
+                    continue;
+                }
+                $count += 1;
+                $size += filesize($filePath);
             }
-            $count += 1;
-            $size += filesize($filePath);
+        } else {
+            foreach (glob($cachePath . '/db-*/?/??/*.jpg') as $filePath) {
+                if ($delete && unlink($filePath)) {
+                    continue;
+                }
+                $count += 1;
+                $size += filesize($filePath);
+            }
+            foreach (glob($cachePath . '/db-*/?/??/*.png') as $filePath) {
+                if ($delete && unlink($filePath)) {
+                    continue;
+                }
+                $count += 1;
+                $size += filesize($filePath);
+            }
         }
         return [$count, $size];
     }

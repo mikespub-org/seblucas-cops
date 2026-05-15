@@ -1,4 +1,4 @@
-FROM alpine:3.22 AS build
+FROM alpine:3.23 AS build
 RUN apk add --no-cache --upgrade \
     php84 \
     php84-dom \
@@ -10,6 +10,7 @@ RUN apk add --no-cache --upgrade \
     php84-phar \
     composer \
     icu-data-full \
+    php84-ctype \
     php84-curl \
     php84-fileinfo \
     php84-iconv \
@@ -19,7 +20,7 @@ RUN apk add --no-cache --upgrade \
     php84-tokenizer \
     php84-xmlwriter
 # https://www.dannyvankooten.com/blog/2025/composer-php-version-alpine-linux/
-RUN sed -i 's/php83/php84/g' /usr/bin/composer
+#RUN sed -i 's/php83/php84/g' /usr/bin/composer
 
 WORKDIR /app
 COPY . /app
