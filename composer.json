@@ -49,7 +49,7 @@
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.2",
-        "phpunit/phpunit": "^12.5 || ^13.1",
+        "phpunit/phpunit": "^12.5 || ^13.2",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^7.4 || ^8.1",
         "symfony/http-client": "^7.4 || ^8.1",

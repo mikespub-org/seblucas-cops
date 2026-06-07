@@ -413,6 +413,8 @@ class Book
                     }
                     array_push($this->extraFiles, substr((string) $file->getPathname(), strlen($dataPath)));
                 }
+                // use "natural" sort order for extra files
+                natsort($this->extraFiles);
             }
         }
         return $this->extraFiles;

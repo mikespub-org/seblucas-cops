@@ -312,7 +312,7 @@ class BookListTest extends TestCase
         //};
         $booklist = new BookList($request);
 
-        $entryArray = $booklist->getAllRecentBooks();
+        $entryArray = $booklist->getRecentBooks();
         $this->assertCount(16, $entryArray);
         foreach ($entryArray as $entry) {
             $booklist->bookList[$entry->book->id] = $entry->book;
@@ -325,21 +325,21 @@ class BookListTest extends TestCase
         $booklist->setDatas();
     }
 
-    public function testGetAllRecentBooks(): void
+    public function testGetRecentBooks(): void
     {
         // All recent books
         Config::set('recentbooks_limit', 2);
         $request = new Request();
         $booklist = new BookList($request);
 
-        $entryArray = $booklist->getAllRecentBooks();
+        $entryArray = $booklist->getRecentBooks();
         $this->assertCount(2, $entryArray);
 
         Config::set('recentbooks_limit', 50);
         $request = new Request();
         $booklist = new BookList($request);
 
-        $entryArray = $booklist->getAllRecentBooks();
+        $entryArray = $booklist->getRecentBooks();
         $this->assertCount(16, $entryArray);
     }
 

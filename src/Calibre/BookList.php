@@ -141,8 +141,21 @@ class BookList
      */
     public function getCount()
     {
+        $entryArray = [];
+        array_push($entryArray, $this->getAllBooksCountEntry());
+        if (Config::get('recentbooks_limit') > 0) {
+            array_push($entryArray, $this->getRecentCountEntry());
+        }
+        return $entryArray;
+    }
+
+    /**
+     * Summary of getAllBooksCountEntry
+     * @return Entry
+     */
+    public function getAllBooksCountEntry()
+    {
         $nBooks = $this->getBookCount();
-        $result = [];
         $params = $this->request->getFilterParams();
         $params["db"] ??= $this->databaseId;
         $href = fn() => $this->getRoute(Book::ROUTE_ALL, $params);
@@ -164,23 +177,35 @@ class BookList
             '',
             $nBooks
         );
-        array_push($result, $entry);
-        if (Config::get('recentbooks_limit') > 0) {
-            $href = fn() => $this->getRoute(self::ROUTE_RECENT, $params);
-            $count = ($nBooks > Config::get('recentbooks_limit')) ? Config::get('recentbooks_limit') : $nBooks;
-            $entry = new Entry(
-                localize('recent.title'),
-                PageId::ALL_RECENT_BOOKS_ID,
-                str_format(localize('recent.list'), $count),
-                'text',
-                [ new LinkFeed($href, 'http://opds-spec.org/sort/new')],
-                $this->databaseId,
-                '',
-                $count
-            );
-            array_push($result, $entry);
+        return $entry;
+    }
+
+    /**
+     * Summary of getRecentCountEntry
+     * @return ?Entry
+     */
+    public function getRecentCountEntry()
+    {
+        $limit = Config::get('recentbooks_limit');
+        if ($limit < 1) {
+            return null;
         }
-        return $result;
+        $nBooks = $this->getBookCount();
+        $params = $this->request->getFilterParams();
+        $params["db"] ??= $this->databaseId;
+        $href = fn() => $this->getRoute(self::ROUTE_RECENT, $params);
+        $count = ($nBooks > $limit) ? $limit : $nBooks;
+        $entry = new Entry(
+            localize('recent.title'),
+            PageId::ALL_RECENT_BOOKS_ID,
+            str_format(localize('recent.list'), $count),
+            'text',
+            [ new LinkFeed($href, 'http://opds-spec.org/sort/new')],
+            $this->databaseId,
+            '',
+            $count
+        );
+        return $entry;
     }
 
     /**
@@ -430,10 +455,10 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     }
 
     /**
-     * Summary of getAllRecentBooks
+     * Summary of getRecentBooks
      * @return array<EntryBook>
      */
-    public function getAllRecentBooks()
+    public function getRecentBooks()
     {
         [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . Config::get('recentbooks_limit'), [], -1);
         return $entryArray;

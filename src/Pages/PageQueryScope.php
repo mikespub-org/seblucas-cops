@@ -22,6 +22,8 @@ enum PageQueryScope: string
     case SERIES = "series";
     case TAG = "tag";
     case LIBRARIES = "libraries";
+    case ALLBOOKS = "allbooks";
+    case RECENT = "recent";
 
     /**
      * Summary of in_array
@@ -51,6 +53,8 @@ enum PageQueryScope: string
             self::SERIES => localize("series.title"),
             self::TAG => localize("tags.title"),
             self::LIBRARIES => localize("libraries.title"),
+            self::ALLBOOKS => localize("allbooks.title"),
+            self::RECENT => localize("recent.title"),
         };
     }
 }

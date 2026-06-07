@@ -146,10 +146,14 @@ class PageIndex extends Page
                 array_push($this->entryArray, $library);
             }
         }
-        // @todo differentiate between ignored search & index categories
-        if (!in_array(PageQueryScope::BOOK->value, $this->ignoredCategories)) {
+        // differentiate between ignored search & index categories BOOK (search) vs. ALLBOOKS/RECENT (home screen)
+        if (!in_array(PageQueryScope::ALLBOOKS->value, $this->ignoredCategories)) {
             $booklist = new BookList($this->request);
-            $this->addEntries($booklist->getCount());
+            $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
+        }
+        if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && Config::get('recentbooks_limit') > 0) {
+            $booklist = new BookList($this->request);
+            $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 
         if (Database::isMultipleDatabaseEnabled()) {
@@ -214,10 +218,14 @@ class PageIndex extends Page
         if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
             $this->addCountEntry(VirtualLibrary::class);
         }
-        // @todo differentiate between ignored search & index categories
-        if (!in_array(PageQueryScope::BOOK->value, $this->ignoredCategories)) {
+        // differentiate between ignored search & index categories BOOK(search) vs. ALLBOOKS/RECENT (home screen)
+        if (!in_array(PageQueryScope::ALLBOOKS->value, $this->ignoredCategories)) {
             $booklist = new BookList($this->request);
-            $this->addEntries($booklist->getCount());
+            $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
+        }
+        if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && Config::get('recentbooks_limit') > 0) {
+            $booklist = new BookList($this->request);
+            $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 
         if (Database::isMultipleDatabaseEnabled()) {

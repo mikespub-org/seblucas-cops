@@ -15,6 +15,12 @@ x.x.x - TODO
 4.x.x - 2026xxxx 
   * ...
 
+4.3.5 - 20260607 Security updates + split book in ignored categories 
+  * Changes in config/default.php file:
+    - update $config['cops_ignored_categories'] to include 'allbooks' and 'recent' choices
+  * Split 'book' in ignored categories to differentiate search and home screen - see issue #172 from @Thomas-O
+  * Update php/npm packages
+
 4.3.3 - 20260515 Update packages + include minor fixes
   * Add markdown response test (wip)
   * Update php/npm packages

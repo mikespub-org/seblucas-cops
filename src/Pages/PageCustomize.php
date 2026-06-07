@@ -184,6 +184,7 @@ class PageCustomize extends Page
     {
         return [
             PageQueryScope::AUTHOR,
+            PageQueryScope::BOOK,
             PageQueryScope::SERIES,
             PageQueryScope::PUBLISHER,
             PageQueryScope::TAG,
@@ -191,7 +192,8 @@ class PageCustomize extends Page
             PageQueryScope::LANGUAGE,
             PageQueryScope::FORMAT,
             PageQueryScope::IDENTIFIER,
-            PageQueryScope::BOOK,
+            PageQueryScope::ALLBOOKS,
+            PageQueryScope::RECENT,
         ];
     }
 

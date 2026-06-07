@@ -429,7 +429,7 @@ $tooltips['cops_ignored_categories'] = <<<'EOT'
     Meaning that if you don't want to search in publishers or tags just add them from the list
     Only accepted values :
     - author
-    - book
+    - book (search by title)
     - series
     - tag
     - publisher
@@ -438,6 +438,8 @@ $tooltips['cops_ignored_categories'] = <<<'EOT'
     - format
     - identifier
     - libraries
+    - allbooks (home screen)
+    - recent (home screen)
     EOT;
 
 $tooltips['cops_fetch_protect'] = <<<'EOT'

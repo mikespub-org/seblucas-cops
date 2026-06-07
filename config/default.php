@@ -494,7 +494,7 @@ $config['cops_server_side_render'] = 'Kindle\/1\.\d|Kindle\/2\.\d|Kindle\/3\.\d|
  * Meaning that if you don't want to search in publishers or tags just add them from the list
  * Only accepted values :
  * - author
- * - book
+ * - book (search by title)
  * - series
  * - tag
  * - publisher
@@ -503,6 +503,8 @@ $config['cops_server_side_render'] = 'Kindle\/1\.\d|Kindle\/2\.\d|Kindle\/3\.\d|
  * - format
  * - identifier
  * - libraries
+ * - allbooks (home screen)
+ * - recent (home screen)
  */
 $config['cops_ignored_categories'] = ['format', 'identifier'];
 
