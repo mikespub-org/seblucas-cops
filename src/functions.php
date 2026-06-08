@@ -16,7 +16,7 @@ if (!function_exists('str_format')) {
     /**
      * Summary of str_format
      * @param string $format
-     * @param array<mixed> $args
+     * @param string ...$args
      * @return string
      */
     function str_format($format, ...$args)

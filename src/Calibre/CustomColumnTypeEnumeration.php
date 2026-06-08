@@ -122,7 +122,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      */
     public function getContent($count = 0)
     {
-        return str_format(localize("customcolumn.description.enum", $count), $count);
+        return str_format(localize("customcolumn.description.enum", $count), (string) $count);
     }
 
     /**

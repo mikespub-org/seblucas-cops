@@ -170,7 +170,7 @@ class BookList
         $entry = new Entry(
             localize('allbooks.title'),
             Book::PAGE_ID,
-            str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
+            str_format(localize('allbooks.alphabetical', $nBooks), (string) $nBooks),
             'text',
             $linkArray,
             $this->databaseId,

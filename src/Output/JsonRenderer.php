@@ -133,7 +133,7 @@ class JsonRenderer extends BaseRenderer
             } else {
                 $sn = $serie->name;
             }
-            $scn = str_format(localize("content.series.data"), $book->seriesIndex, $serie->name);
+            $scn = str_format(localize("content.series.data"), (string) $book->seriesIndex, (string) $serie->name);
             $su = $serie->getUri();
         }
         $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);

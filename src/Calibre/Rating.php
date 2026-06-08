@@ -39,7 +39,8 @@ class Rating extends Base
      */
     public function getTitle()
     {
-        return str_format(localize("ratingword", intval($this->name) / 2), intval($this->name) / 2);
+        $rating = intval($this->name) / 2;
+        return str_format(localize("ratingword", $rating), (string) $rating);
     }
 
     /**

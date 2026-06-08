@@ -90,7 +90,7 @@ class PageIndex extends Page
         return new Entry(
             $name,
             "cops:{$idx}:catalog",
-            str_format(localize("bookword", $count), $count),
+            str_format(localize("bookword", $count), (string) $count),
             "text",
             [ new LinkNavigation($href) ],
             null,

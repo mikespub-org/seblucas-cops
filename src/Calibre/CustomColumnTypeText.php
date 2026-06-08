@@ -83,7 +83,7 @@ class CustomColumnTypeText extends CustomColumnType
         // handle case where we have several values, e.g. array of text for type 2 (csv)
         if ($this->datatype == self::TYPE_CSV && str_contains((string) $id, ',')) {
             $params = array_map('trim', explode(',', $id));
-            $query = str_format(self::SQL_BOOKLIST_CSV, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn(), count($params));
+            $query = str_format(self::SQL_BOOKLIST_CSV, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn(), (string) count($params));
             $query = str_replace(' = ? ', ' IN (' . str_repeat('?,', count($params) - 1) . '?) ', $query);
             return [$query, $params];
         }

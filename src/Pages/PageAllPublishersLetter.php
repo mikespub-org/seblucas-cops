@@ -35,7 +35,7 @@ class PageAllPublishersLetter extends Page
         if ($count == -1) {
             $count = count($this->entryArray);
         }
-        $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("publisherword", $count), $count), $this->idGet);
+        $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("publisherword", $count), (string) $count), (string) $this->idGet);
         $this->parentTitle = "";  // localize("publishers.title");
         $filterParams = $this->request->getFilterParams();
         $this->parentUri = $this->getRoute(Publisher::ROUTE_ALL, $filterParams);

@@ -19,19 +19,18 @@ class Format
      * This method is a direct copy-paste from
      * http://tmont.com/blargh/2010/1/string-format-in-php
      * @param string $format
+     * @param string ...$args
      * @return string
      */
-    public static function str_format($format)
+    public static function str_format($format, ...$args)
     {
-        $args = func_get_args();
-        $format = array_shift($args);
-
         preg_match_all('/(?=\{)\{(\d+)\}(?!\})/', (string) $format, $matches, PREG_OFFSET_CAPTURE);
         $offset = 0;
         foreach ($matches[1] as $data) {
             $i = $data[0];
-            $format = substr_replace($format, (string) $args[(int) $i], $offset + $data[1] - 1, 2 + strlen($i));
-            $offset += strlen((string) $args[(int) $i]) - 2 - strlen($i);
+            $replace = $args[(int) $i];
+            $format = substr_replace($format, $replace, $offset + $data[1] - 1, 2 + strlen($i));
+            $offset += strlen($replace) - 2 - strlen($i);
         }
 
         return $format;

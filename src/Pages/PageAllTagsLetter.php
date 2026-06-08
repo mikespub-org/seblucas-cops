@@ -35,7 +35,7 @@ class PageAllTagsLetter extends Page
         if ($count == -1) {
             $count = count($this->entryArray);
         }
-        $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("tagword", $count), $count), $this->idGet);
+        $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("tagword", $count), (string) $count), (string) $this->idGet);
         $this->parentTitle = "";  // localize("tags.title");
         $filterParams = $this->request->getFilterParams();
         $this->parentUri = $this->getRoute(Tag::ROUTE_ALL, $filterParams);

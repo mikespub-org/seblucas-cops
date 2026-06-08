@@ -525,7 +525,7 @@ class Book
         $addition = '';
         $se = $this->getSerie();
         if (!empty($se) && $withSerie) {
-            $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
+            $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), (string) $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
         //if (preg_match('/<\/(div|p|a|span)>/', $this->comment)) {
         return $addition . OutputFormat::html2xhtml($this->comment);
@@ -770,7 +770,7 @@ class Book
                 new LinkFeed(
                     $href,
                     'related',
-                    str_format(localize('content.series.data'), $this->seriesIndex, $serie->name)
+                    str_format(localize('content.series.data'), (string) $this->seriesIndex, (string) $serie->name)
                 )
             );
         }

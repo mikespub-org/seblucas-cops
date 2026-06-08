@@ -158,7 +158,7 @@ abstract class Base
      */
     public function getContent($count = 0)
     {
-        return str_format(localize("bookword", $count), $count);
+        return str_format(localize("bookword", $count), (string) $count);
     }
 
     /**
@@ -583,7 +583,7 @@ abstract class Base
         $entry = new Entry(
             localize(static::SQL_TABLE . ".title"),
             static::PAGE_ID,
-            str_format(localize($numberOfString, $count), $count),
+            str_format(localize($numberOfString, $count), (string) $count),
             "text",
             // issue #26 for koreader: section is not supported
             [ new LinkNavigation($href, "subsection") ],

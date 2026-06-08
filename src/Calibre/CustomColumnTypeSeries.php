@@ -125,7 +125,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      */
     public function getContent($count = 0)
     {
-        return str_format(localize("customcolumn.description.series", $count), $count);
+        return str_format(localize("customcolumn.description.series", $count), (string) $count);
     }
 
     /**

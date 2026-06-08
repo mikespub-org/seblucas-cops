@@ -299,7 +299,7 @@ class PageQueryResult extends Page
         return new Entry(
             $name,
             "db:query:{$idx}",
-            str_format(localize("bookword", $count), $count),
+            str_format(localize("bookword", $count), (string) $count),
             "text",
             [ new LinkNavigation($href) ],
             null,
