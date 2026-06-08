@@ -162,7 +162,7 @@ class RoutingTest extends TestCase
             $params['title'] = UriGenerator::slugify($params['title']);
         }
         //if (!empty($params['file'])) {
-        //    $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
+        //    $params['file'] = implode('/', array_map(rawurlencode(...), explode('/', $params['file'])));
         //}
         try {
             $result = self::$routing->generate($route, $params);
@@ -266,7 +266,7 @@ class RoutingTest extends TestCase
             $params['ignore'] = UriGenerator::slugify($params['ignore']);
         }
         //if (!empty($params['file'])) {
-        //    $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
+        //    $params['file'] = implode('/', array_map(rawurlencode(...), explode('/', $params['file'])));
         //}
         try {
             $result = self::$routing->generate($route, $params);

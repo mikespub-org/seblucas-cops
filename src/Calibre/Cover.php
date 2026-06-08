@@ -245,7 +245,7 @@ class Cover
         $file = 'cover.' . $ext;
         $filePath = $this->book->path . "/" . $file;
         if (!Database::useAbsolutePath($this->databaseId)) {
-            $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
+            $urlPath = implode('/', array_map(rawurlencode(...), explode('/', $filePath)));
             $href = fn() => $this->getPath($urlPath);
             return new LinkImage(
                 $href,

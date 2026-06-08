@@ -100,7 +100,7 @@ class FastRouter implements RouterInterface
     public function generate($name, $params)
     {
         $generator = $this->getUriGenerator();
-        $params = array_map("strval", $params);
+        $params = array_map(strval(...), $params);
         // @todo slugify & rawurlencode title & author
         // @todo add fixed params!?
         // @todo add remaining params in query string

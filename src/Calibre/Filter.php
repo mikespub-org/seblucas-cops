@@ -198,7 +198,7 @@ class Filter
             if (!is_array($idlist)) {
                 $idlist = explode(',', (string) $idlist);
             }
-            $idlist = array_map('intval', $idlist);
+            $idlist = array_map(intval(...), $idlist);
             $this->addBookIdListFilter($idlist);
         }
         // @todo use idlist filter for other entities as well?

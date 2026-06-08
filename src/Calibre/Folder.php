@@ -163,7 +163,7 @@ class Folder extends Category
             // for FetchHandler
             $iterator = new \FilesystemIterator($folderPath);
         }
-        $allowed = array_map('strtolower', Config::get('prefered_format'));
+        $allowed = array_map(strtolower(...), Config::get('prefered_format'));
         $fileList = [];
         $metaList = [];
         $coverList = [];
@@ -725,7 +725,7 @@ class Folder extends Category
         $content = file_get_contents($fileName);
         $data = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
         unset($content);
-        $allowed = array_map('strtolower', Config::get('prefered_format'));
+        $allowed = array_map(strtolower(...), Config::get('prefered_format'));
         $fileList = [];
         $metaList = [];
         $coverList = [];

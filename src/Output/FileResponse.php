@@ -92,7 +92,7 @@ class FileResponse extends Response
         }
         // @see https://github.com/caddyserver/caddy/issues/4180
         if (Config::get('x_accel_redirect') !== 'X-Sendfile') {
-            $path = implode('/', array_map('rawurlencode', explode('/', $path)));
+            $path = implode('/', array_map(rawurlencode(...), explode('/', $path)));
         }
         header(Config::get('x_accel_redirect') . ': ' . $path);
 

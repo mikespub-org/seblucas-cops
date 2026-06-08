@@ -462,7 +462,7 @@ class OpdsRenderer extends BaseRenderer
             $href = fn() => $entry->getNavLink($extraParams);
             // replace "1 / N" pagination with "1" page number for OPDS feeds
             if (!empty($entry->numberOfElement) && is_string($entry->numberOfElement) && str_contains($entry->numberOfElement, '/')) {
-                $entry->numberOfElement = intval(array_map('trim', explode('/', $entry->numberOfElement))[0]);
+                $entry->numberOfElement = intval(array_map(trim(...), explode('/', $entry->numberOfElement))[0]);
             }
             $link = new LinkFacet(
                 $href,

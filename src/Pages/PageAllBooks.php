@@ -41,7 +41,7 @@ class PageAllBooks extends Page
             if (!is_array($idlist)) {
                 $idlist = explode(',', string: $idlist);
             }
-            $idlist = array_map('intval', $idlist);
+            $idlist = array_map(intval(...), $idlist);
             // sort entryArray by order in idlist here
             [$this->entryArray, $this->totalNumber] = $booklist->getBooksByIdList($idlist);
             $this->sorted = $booklist->orderBy ?? "id";

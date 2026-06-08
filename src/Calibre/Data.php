@@ -483,7 +483,7 @@ class Data
             );
         }
 
-        $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
+        $urlPath = implode('/', array_map(rawurlencode(...), explode('/', $filePath)));
         $href = fn() => $this->getPath($urlPath);
         return new LinkAcquisition(
             $href,

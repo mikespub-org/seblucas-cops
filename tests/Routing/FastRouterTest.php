@@ -157,7 +157,7 @@ class FastRouterTest extends TestCase
             $params['title'] = UriGenerator::slugify($params['title']);
         }
         //if (!empty($params['file'])) {
-        //    $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
+        //    $params['file'] = implode('/', array_map(rawurlencode(...), explode('/', $params['file'])));
         //}
         try {
             $result = self::$routing->generate($route, $params);
@@ -234,7 +234,7 @@ class FastRouterTest extends TestCase
             $expected['ignore'] = UriGenerator::slugify($expected['ignore']);
         }
         if (!empty($result['file'])) {
-            $result['file'] = implode('/', array_map('rawurldecode', explode('/', $result['file'])));
+            $result['file'] = implode('/', array_map(rawurldecode(...), explode('/', $result['file'])));
         }
         unset($expected['ignore']);
         $this->assertEquals($expected, $result);
@@ -268,7 +268,7 @@ class FastRouterTest extends TestCase
             $params['ignore'] = UriGenerator::slugify($params['ignore']);
         }
         if (!empty($params['file'])) {
-            $params['file'] = implode('/', array_map('rawurlencode', explode('/', $params['file'])));
+            $params['file'] = implode('/', array_map(rawurlencode(...), explode('/', $params['file'])));
         }
         try {
             $result = self::$routing->generate($route, $params);

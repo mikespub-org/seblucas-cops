@@ -245,7 +245,7 @@ class RouteTest extends TestCase
                     $value = UriGenerator::getSlugger()->slug($value, '_');
                 }
                 if (in_array($param, ['file', 'path']) && !str_contains($value, '%')) {
-                    $encoded = implode('/', array_map('rawurlencode', explode('/', $value)));
+                    $encoded = implode('/', array_map(rawurlencode(...), explode('/', $value)));
                     $path = str_replace('{' . $match . '}', $encoded, $path);
                 } else {
                     $path = str_replace('{' . $match . '}', $value, $path);

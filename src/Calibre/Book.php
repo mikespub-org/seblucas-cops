@@ -435,7 +435,7 @@ class Book
             $params['file'] = $fileName;
             $href = fn() => FetchHandler::route(self::ROUTE_FILE, $params);
         } else {
-            $urlPath = implode('/', array_map('rawurlencode', explode('/', $filePath)));
+            $urlPath = implode('/', array_map(rawurlencode(...), explode('/', $filePath)));
             $href = fn() => $this->getPath($urlPath);
         }
         $linkResource = new LinkResource(
@@ -614,7 +614,7 @@ class Book
             $this->path = $path;
         } else {
             // external storage is assumed to be already url-encoded if needed
-            $urlPath = implode('/', array_map('rawurlencode', explode('/', $path)));
+            $urlPath = implode('/', array_map(rawurlencode(...), explode('/', $path)));
             $this->path = Config::get('calibre_external_storage') . $urlPath;
         }
         return $this->path;

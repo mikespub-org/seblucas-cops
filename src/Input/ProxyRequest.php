@@ -49,7 +49,7 @@ class ProxyRequest
         if (!isset(self::$proxyRequest)) {
             $proxies = Config::get('trusted_proxies');
             $headers = Config::get('trusted_headers');
-            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map('trim', explode(',', (string) $proxies)), self::resolveTrustedHeaders($headers));
+            $class::setTrustedProxies(is_array($proxies) ? $proxies : array_map(trim(...), explode(',', (string) $proxies)), self::resolveTrustedHeaders($headers));
             self::$proxyRequest = $class::createFromGlobals();
         }
         return true;
