@@ -302,9 +302,7 @@ class WebDriverTestCase extends TestCase
     {
         // wait until the target page is loaded
         $result = static::$driver->wait($timeout)->until(
-            function ($driver) use ($test, $args) {
-                return call_user_func_array($test, $args);
-            },
+            fn($driver) => call_user_func_array($test, $args),
             $msg
         );
         //WebDriverExpectedCondition::titleContains('Revision history')

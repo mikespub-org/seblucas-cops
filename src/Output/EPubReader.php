@@ -172,13 +172,9 @@ class EPubReader extends BaseRenderer
             return $e->getMessage();
         }
 
-        $components = implode(', ', array_map(function ($comp) {
-            return "'" . $comp . "'";
-        }, $epub->components()));
+        $components = implode(', ', array_map(fn($comp) => "'" . $comp . "'", $epub->components()));
 
-        $contents = implode(', ', array_map(function ($content) {
-            return self::addContentItem($content);
-        }, $epub->contents()));
+        $contents = implode(', ', array_map(self::addContentItem(...), $epub->contents()));
 
         // URL format: index.php/epubfs/{db}/{data}/{comp} - let monocle reader retrieve individual components
         $db = $this->book->getDatabaseId() ?? 0;

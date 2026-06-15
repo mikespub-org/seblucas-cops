@@ -447,9 +447,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         if ($sorted == "id") {
             // sort entryArray by order in idlist
             $order = array_flip($idlist);
-            uasort($entryArray, function ($a, $b) use ($order) {
-                return $order[$a->book->id] <=> $order[$b->book->id];
-            });
+            uasort($entryArray, fn($a, $b) => $order[$a->book->id] <=> $order[$b->book->id]);
         }
         return [$entryArray, $totalNumber];
     }

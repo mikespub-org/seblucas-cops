@@ -98,9 +98,9 @@ class LoaderHandler extends BaseHandler
          * Define callbacks to update information here
          */
         $gConfig['callbacks'] = [
-            'setAuthorInfo' => [$this, 'setAuthorInfo'],  // $this->setAuthorInfo(...),
-            'setSeriesInfo' => [$this, 'setSeriesInfo'],  // $this->setSeriesInfo(...),
-            'setBookInfo' => [$this, 'setBookInfo'],  // $this->setBookInfo(...),
+            'setAuthorInfo' => $this->setAuthorInfo(...),  // [$this, 'setAuthorInfo'],
+            'setSeriesInfo' => $this->setSeriesInfo(...),  // [$this, 'setSeriesInfo'],
+            'setBookInfo' => $this->setBookInfo(...),  // [$this, 'setBookInfo'],
         ];
         $this->request = $request;
 
@@ -307,9 +307,7 @@ class LoaderHandler extends BaseHandler
         }
         if (!empty($bookInfo->uri) && str_contains($bookInfo->uri, '://')) {
             // check for duplicate links
-            $links = array_filter($book->getIdentifiers(), function ($identifier) use ($bookInfo) {
-                return $identifier->getLink() == $bookInfo->uri;
-            });
+            $links = array_filter($book->getIdentifiers(), fn($identifier) => $identifier->getLink() == $bookInfo->uri);
             if (empty($links)) {
                 $link = $writer->setBookUri($bookInfo, $bookId);
             } else {

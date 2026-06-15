@@ -35,9 +35,9 @@ id:6 (8 books)   Strand Magazine:            Arthur Conan Doyle
 
 class CoverTest extends TestCase
 {
-    private const TEST_THUMBNAIL = __DIR__ . "/../thumbnail.jpg";
-    private const COVER_WIDTH = 400;
-    private const COVER_HEIGHT = 600;
+    private const string TEST_THUMBNAIL = __DIR__ . "/../thumbnail.jpg";
+    private const int COVER_WIDTH = 400;
+    private const int COVER_HEIGHT = 600;
 
     /** @var array<string, int> */
     protected static $expectedSize = [

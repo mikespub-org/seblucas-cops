@@ -38,19 +38,11 @@ class SlimAdapterTest extends TestCase
         $container = new Container();
 
         // 2. Teach the container how to create COPS services
-        $container->set(HandlerManager::class, static function () {
-            return new HandlerManager();
-        });
-        $container->set(RouterInterface::class, static function () {
-            return new Routing();
-        });
+        $container->set(HandlerManager::class, static fn() => new HandlerManager());
+        $container->set(RouterInterface::class, static fn() => new Routing());
         // Add PSR-7 factories to the container for middleware bridging
-        $container->set(ServerRequestFactoryInterface::class, static function () {
-            return new ServerRequestFactory();
-        });
-        $container->set(ResponseFactoryInterface::class, static function () {
-            return new ResponseFactory();
-        });
+        $container->set(ServerRequestFactoryInterface::class, static fn() => new ServerRequestFactory());
+        $container->set(ResponseFactoryInterface::class, static fn() => new ResponseFactory());
 
         // 3. Set the container on the AppFactory and create the Slim App
         AppFactory::setContainer($container);

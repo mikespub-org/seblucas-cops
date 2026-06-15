@@ -70,14 +70,10 @@ class PageFilter extends Page
                 continue;
             }
             if (in_array($name, [Identifier::URL_PARAM, Format::URL_PARAM])) {
-                $filter[$name] = array_filter($values, function ($id) {
-                    return preg_match('/^\w+$/', $id);
-                }, ARRAY_FILTER_USE_KEY);
+                $filter[$name] = array_filter($values, fn($id) => preg_match('/^\w+$/', $id), ARRAY_FILTER_USE_KEY);
                 continue;
             }
-            $filter[$name] = array_filter($values, function ($id) {
-                return preg_match('/^\d+$/', $id);
-            }, ARRAY_FILTER_USE_KEY);
+            $filter[$name] = array_filter($values, fn($id) => preg_match('/^\d+$/', $id), ARRAY_FILTER_USE_KEY);
         }
         return $filter;
     }

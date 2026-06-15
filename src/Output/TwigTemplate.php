@@ -53,15 +53,16 @@ class TwigTemplate extends BaseRenderer
         $loader = new \Twig\Loader\FilesystemLoader($templateDir);
         $twig = new \Twig\Environment($loader);
         // add Twig functions for COPS templates
-        $function = new \Twig\TwigFunction('str_format', function ($format, ...$args) {
-            //return str_format($format, ...$args);
-            return Format::str_format($format, ...$args);
-        });
+        $function = new \Twig\TwigFunction(
+            'str_format',
+            fn($format, ...$args) => Format::str_format($format, ...$args)
+        );
         $twig->addFunction($function);
         $assets = $this->getPath(Config::get('assets'));
-        $function = new \Twig\TwigFunction('asset', function ($file) use ($assets) {
-            return $assets . '/' . $file . '?v=' . Config::VERSION;
-        });
+        $function = new \Twig\TwigFunction(
+            'asset',
+            fn($file) => $assets . '/' . $file . '?v=' . Config::VERSION
+        );
         $twig->addFunction($function);
 
         return $twig;

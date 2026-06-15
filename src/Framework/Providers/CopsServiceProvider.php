@@ -24,24 +24,19 @@ class CopsServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Bind the core COPS services as singletons, so they are only created once.
-        $this->app->singleton(HandlerManager::class, function (Container $app) {
-            return new HandlerManager();
-        });
+        $this->app->singleton(HandlerManager::class, fn(Container $app) => new HandlerManager());
 
         // Define how to build the processed RouteCollection as a singleton service.
-        $this->app->singleton(RouteCollection::class, function (Container $app) {
-            return new RouteCollection($app->make(HandlerManager::class));
-        });
+        $this->app->singleton(RouteCollection::class, fn(Container $app) => new RouteCollection($app->make(HandlerManager::class)));
 
-        $this->app->singleton(RouterInterface::class, function (Container $app) {
+        $this->app->singleton(
+            RouterInterface::class,
             // The router now depends on the injectable RouteCollection service.
-            return new Routing($app->make(RouteCollection::class));
-        });
+            fn(Container $app) => new Routing($app->make(RouteCollection::class))
+        );
 
         // Bind the LaravelAdapter itself, giving it access to the container.
-        $this->app->singleton(LaravelAdapter::class, function (Container $app) {
-            return new LaravelAdapter($app);
-        });
+        $this->app->singleton(LaravelAdapter::class, fn(Container $app) => new LaravelAdapter($app));
     }
 
     /**

@@ -238,9 +238,7 @@ class Book
      */
     public function getAuthorsName()
     {
-        return implode(', ', array_map(function ($author) {
-            return $author->name;
-        }, $this->getAuthors()));
+        return implode(', ', array_map(fn($author) => $author->name, $this->getAuthors()));
     }
 
     /**
@@ -249,9 +247,7 @@ class Book
      */
     public function getAuthorsSort()
     {
-        return implode(', ', array_map(function ($author) {
-            return $author->sort;
-        }, $this->getAuthors()));
+        return implode(', ', array_map(fn($author) => $author->sort, $this->getAuthors()));
     }
 
     /**
@@ -309,9 +305,7 @@ class Book
      */
     public function getTagsName()
     {
-        return implode(', ', array_map(function ($tag) {
-            return $tag->name;
-        }, $this->getTags()));
+        return implode(', ', array_map(fn($tag) => $tag->name, $this->getTags()));
     }
 
     /**
@@ -474,9 +468,7 @@ class Book
      */
     public function getDataById($idData)
     {
-        $reduced = array_filter($this->getDatas(), function ($data) use ($idData) {
-            return $data->id == $idData;
-        });
+        $reduced = array_filter($this->getDatas(), fn($data) => $data->id == $idData);
         return reset($reduced);
     }
 
@@ -541,9 +533,7 @@ class Book
      */
     public function getDataFormat($format)
     {
-        $reduced = array_filter($this->getDatas(), function ($data) use ($format) {
-            return $data->format == $format;
-        });
+        $reduced = array_filter($this->getDatas(), fn($data) => $data->format == $format);
         return reset($reduced);
     }
 

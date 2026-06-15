@@ -85,7 +85,7 @@ class FrameworkTodoTest extends TestCase
             }
         };
 
-        $result = $adapter->addMiddleware(get_class($testMiddleware));
+        $result = $adapter->addMiddleware($testMiddleware::class);
 
         $expected = $adapter;
         $this->assertSame($expected, $result); // Middleware added successfully

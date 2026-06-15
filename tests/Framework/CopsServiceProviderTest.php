@@ -33,9 +33,7 @@ class CopsServiceProviderTest extends TestCase
         $this->container = new Container();
 
         // Bind the callable dispatcher contract to its implementation for the router to work
-        $this->container->singleton(CallableDispatcherContract::class, function ($container) {
-            return new CallableDispatcher($container);
-        });
+        $this->container->singleton(CallableDispatcherContract::class, fn($container) => new CallableDispatcher($container));
 
         // 2. Set up a mock Laravel Router and bind it to the container
         $laravelRouter = new LaravelRouter(new Dispatcher(), $this->container);

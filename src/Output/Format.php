@@ -28,7 +28,7 @@ class Format
         $offset = 0;
         foreach ($matches[1] as $data) {
             $i = $data[0];
-            $replace = $args[(int) $i];
+            $replace = $args[(int) $i] ?? '';
             $format = substr_replace($format, $replace, $offset + $data[1] - 1, 2 + strlen($i));
             $offset += strlen($replace) - 2 - strlen($i);
         }

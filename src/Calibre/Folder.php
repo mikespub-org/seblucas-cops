@@ -546,9 +546,7 @@ class Folder extends Category
     public static function getEntryArray($folder, $bookList, $n)
     {
         $sorted = $folder->orderBy ?? 'title';
-        usort($bookList, function ($a, $b) use ($sorted) {
-            return strcmp($a->{$sorted}, $b->{$sorted});
-        });
+        usort($bookList, fn($a, $b) => strcmp($a->{$sorted}, $b->{$sorted}));
         $totalNumber = count($bookList);
         $numberPerPage = Config::get('max_item_per_page');
         if ($numberPerPage != -1 && $n != -1) {

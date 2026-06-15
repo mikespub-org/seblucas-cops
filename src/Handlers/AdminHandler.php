@@ -270,9 +270,7 @@ class AdminHandler extends BaseHandler
                 $updated[$key] = $value;
             }
         }
-        $others = array_filter($default, function ($key) use ($updated, $original) {
-            return !array_key_exists($key, $updated) && !array_key_exists($key, $original);
-        }, ARRAY_FILTER_USE_KEY);
+        $others = array_filter($default, fn($key) => !array_key_exists($key, $updated) && !array_key_exists($key, $original), ARRAY_FILTER_USE_KEY);
         ksort($updated);
         ksort($original);
         ksort($others);

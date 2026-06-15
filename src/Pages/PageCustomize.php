@@ -149,9 +149,7 @@ class PageCustomize extends Page
         }
         $ignored = $this->request->post('ignored_categories');
         if (isset($ignored) && is_array($ignored)) {
-            $allowed = array_map(function ($enum) {
-                return $enum->value;
-            }, $this->getIgnoredCategoryList());
+            $allowed = array_map(fn($enum) => $enum->value, $this->getIgnoredCategoryList());
             $custom['ignored_categories'] = array_intersect($ignored, $allowed);
         }
         // do not customize virtual libraries for multiple databases

@@ -28,9 +28,7 @@ class ImageResponseTest extends TestCase
 
         // Test with callback data
         $response = new ImageResponse();
-        $callback = function () {
-            return 'callback data';
-        };
+        $callback = (fn() => 'callback data');
 
         $result = $response->getImageFromData($callback);
         $this->assertEquals($callback, $result->getCallback());
@@ -58,9 +56,7 @@ class ImageResponseTest extends TestCase
         $response = new ImageResponse();
         $response->width = 5;
 
-        $callback = function () use ($data) {
-            return $data;
-        };
+        $callback = (fn() => $data);
         $result = $response->getThumbFromData($callback, null);
         $this->assertNotEmpty($result);
         $this->assertInstanceOf(ImageResponse::class, $result);
