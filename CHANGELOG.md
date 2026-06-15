@@ -14,6 +14,9 @@ x.x.x - TODO
 
 4.x.x - 2026xxxx 
   * ...
+  * Update php/npm packages
+  * Replace closures with arrow functions (rector)
+  * Update portuguese translation - see PR #173 from @horus68
 
 4.3.5 - 20260607 Security updates + split book in ignored categories 
   * Changes in config/default.php file:

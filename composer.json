@@ -54,10 +54,10 @@
         "symfony/browser-kit": "^7.4 || ^8.1",
         "symfony/http-client": "^7.4 || ^8.1",
         "nikic/fast-route": "2.0.0-beta1",
-        "mikespub/epub-loader": "^4.0",
+        "mikespub/epub-loader": "^4.1",
         "mikespub/codedread-kthoom": "^2026.1",
         "opis/json-schema": "^2.6",
-        "webonyx/graphql-php": "^15.32",
+        "webonyx/graphql-php": "^15.33",
         "adminer/editor": "^5.4"
     },
     "suggest": {
