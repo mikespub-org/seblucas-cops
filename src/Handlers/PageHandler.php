@@ -30,12 +30,13 @@ class PageHandler extends BaseHandler
         // Format: name => [path, [page => page, fixed => 1, ...], ['GET', ...], ['utf8' => true]] with page & fixed params, methods and options
         return [
             "page-index" => ["/index", ["page" => PageId::INDEX]],
-            // @todo support unicode pattern \pL for first letter - but see https://github.com/nikic/FastRoute/issues/154
+            // support unicode pattern \pL for first letter here too - see PageAllAuthorsLetter regex
             "page-authors-letter" => ["/authors/letter/{letter}", ["page" => PageId::AUTHORS_FIRST_LETTER]],
             "page-authors-letters" => ["/authors/letter", ["page" => PageId::ALL_AUTHORS, "letter" => 1]],
             "page-author" => ["/authors/{id:\d+}/{title}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-author-id" => ["/authors/{id:\d+}", ["page" => PageId::AUTHOR_DETAIL]],
             "page-authors" => ["/authors", ["page" => PageId::ALL_AUTHORS]],
+            // support unicode pattern \pL for first letter here too - see PageAllBooksLetter regex
             "page-books-letter" => ["/books/letter/{letter}", ["page" => PageId::ALL_BOOKS_LETTER]],
             "page-books-letters" => ["/books/letter", ["page" => PageId::ALL_BOOKS, "letter" => 1]],
             "page-books-year" => ["/books/year/{year:\d+}", ["page" => PageId::ALL_BOOKS_YEAR]],
@@ -43,6 +44,7 @@ class PageHandler extends BaseHandler
             "page-book" => ["/books/{id:\d+}/{author}/{title}", ["page" => PageId::BOOK_DETAIL]],
             "page-book-id" => ["/books/{id:\d+}", ["page" => PageId::BOOK_DETAIL]],
             "page-books" => ["/books", ["page" => PageId::ALL_BOOKS]],
+            // support unicode pattern \pL for first letter here too - see PageAllSeriesLetter regex
             "page-series-letter" => ["/series/letter/{letter}", ["page" => PageId::SERIES_FIRST_LETTER]],
             "page-series-letters" => ["/series/letter", ["page" => PageId::ALL_SERIES, "letter" => 1]],
             "page-serie" => ["/series/{id:\d+}/{title}", ["page" => PageId::SERIE_DETAIL]],
@@ -57,6 +59,7 @@ class PageHandler extends BaseHandler
             "page-folder" => ["/folder/{path:.*}", ["page" => PageId::FOLDER]],
             "page-ebook" => ["/ebook/{path:.+}", ["page" => PageId::FOLDER, "ebook" => 1]],
             "page-recent" => ["/recent", ["page" => PageId::ALL_RECENT_BOOKS]],
+            // support unicode pattern \pL for first letter here too - see PageAllTagsLetter regex
             "page-tags-letter" => ["/tags/letter/{letter}", ["page" => PageId::TAGS_FIRST_LETTER]],
             "page-tags-letters" => ["/tags/letter", ["page" => PageId::ALL_TAGS, "letter" => 1]],
             "page-tag" => ["/tags/{id:\d+}/{title}", ["page" => PageId::TAG_DETAIL]],
@@ -69,6 +72,7 @@ class PageHandler extends BaseHandler
             "page-language-id" => ["/languages/{id:\d+}", ["page" => PageId::LANGUAGE_DETAIL]],
             "page-languages" => ["/languages", ["page" => PageId::ALL_LANGUAGES]],
             "page-customize" => ["/customize", ["page" => PageId::CUSTOMIZE], ["GET", "POST"]],
+            // support unicode pattern \pL for first letter here too - see PageAllPublishersLetter regex
             "page-publishers-letter" => ["/publishers/letter/{letter}", ["page" => PageId::PUBLISHERS_FIRST_LETTER]],
             "page-publishers-letters" => ["/publishers/letter", ["page" => PageId::ALL_PUBLISHERS, "letter" => 1]],
             "page-publisher" => ["/publishers/{id:\d+}/{title}", ["page" => PageId::PUBLISHER_DETAIL]],

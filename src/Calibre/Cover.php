@@ -127,52 +127,6 @@ class Cover
     }
 
     /**
-     * Summary of getThumbnailCachePath
-     * @param string $uuid
-     * @param ?int $width
-     * @param ?int $height
-     * @param string $type
-     * @param ?int $database
-     * @return ?string
-     * @deprecated 4.3.0 use ImageResponse::getCachePath() instead
-     */
-    public function getThumbnailCachePath($uuid, $width, $height, $type = 'jpg', $database = null)
-    {
-        // moved some of the thumbnail cache from fetch.php to Cover
-        return ImageResponse::getCachePath($uuid, $width, $height, $type, $database);
-    }
-
-    /**
-     * Summary of getThumbnail
-     * @param string $file
-     * @param ?int $width
-     * @param ?int $height
-     * @param ?string $outputfile
-     * @param string $inType
-     * @return bool
-     * @deprecated 4.3.0 use ImageResponse::generateThumbnail() instead
-     */
-    public function getThumbnail($file, $width, $height, $outputfile = null, $inType = 'jpg')
-    {
-        $image = new ImageResponse();
-        $image->type = $inType;
-        $image->width = $width;
-        $image->height = $height;
-        return $image->generateThumbnail($file, $outputfile);
-    }
-
-    /**
-     * Summary of getThumbnailHeight
-     * @param string $thumb
-     * @return int
-     * @deprecated 4.3.0 use ImageResponse::getThumbnailHeight() instead
-     */
-    public function getThumbnailHeight($thumb)
-    {
-        return ImageResponse::getThumbnailHeight($thumb);
-    }
-
-    /**
      * Summary of sendThumbnail
      * @param Request $request
      * @param ?ImageResponse $image

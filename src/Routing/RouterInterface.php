@@ -10,7 +10,7 @@
 namespace SebLucas\Cops\Routing;
 
 /**
- * Common router interface for FastRouter and Symfony Routing
+ * Common router interface for FastRouter (removed) and Symfony Routing
  */
 interface RouterInterface
 {

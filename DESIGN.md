@@ -215,7 +215,7 @@ In development mode, some additional packages are used:
   - kiwilan/php-opds for OPDS 2.0 feeds
   - mikespub/codedread-kthoom for the comic reader
   - mikespub/epub-loader to search information on books, authors etc.
-  - nikic/fast-route as alternative for symfony/routing (legacy)
+  - nikic/fast-route as alternative for symfony/routing (removed)
   - webonyx/graphql-php for the GraphQL interface
 - Git Packages
   - adminer/editor to edit Calibre database tables

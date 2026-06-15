@@ -335,7 +335,7 @@ class UriGenerator
         if (empty($name) || empty($routes[$name])) {
             return null;
         }
-        // @todo test FastRoute\GenerateUri - some issues left to deal with ;-)
+        // @todo switch to Symfony Routing generate()
         //return self::generate($name, $params);
         $route = $routes[$name];
         // for known route, not all fixed params may be available (e.g. page) - ignore them
@@ -464,7 +464,7 @@ class UriGenerator
                 return null;
             }
             $value = $subst[$param];
-            // @todo support unicode pattern for first letter - but see https://github.com/nikic/FastRoute/issues/154
+            // @todo support unicode pattern for first letter - see PageAll*Letter regex
             if (!empty($pattern) && !preg_match('/^' . $pattern . '$/', (string) $value)) {
                 return null;
             }
