@@ -23,6 +23,7 @@ use SebLucas\Cops\Handlers\QueueBasedHandler;
 
 /**
  * Minimal Framework (legacy)
+ * @deprecated 4.4.1 use Framework() instead
  */
 class LegacyFramework
 {

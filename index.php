@@ -9,8 +9,8 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Framework\LegacyFramework;
+use SebLucas\Cops\Framework\Framework;
 
 require_once __DIR__ . '/config/config.php';  // NOSONAR
 
-LegacyFramework::run();
+Framework::run();

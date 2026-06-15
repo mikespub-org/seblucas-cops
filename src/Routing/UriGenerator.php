@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Routing;
 
-use SebLucas\Cops\Framework\LegacyFramework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\HtmlHandler;
@@ -45,7 +45,7 @@ class UriGenerator
         unset($params[Request::HANDLER_PARAM]);
         unset($params[Request::ROUTE_PARAM]);
         // @todo get router from elsewhere
-        $router ??= LegacyFramework::getRouter();
+        $router ??= Framework::getInstance()->getRouter();
         return $router->generate($name, $params);
     }
 

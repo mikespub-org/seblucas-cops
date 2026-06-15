@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Tests\Output;
 
 use SebLucas\Cops\Calibre\Metadata;
-use SebLucas\Cops\Framework\LegacyFramework;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Handlers\FetchHandler;
@@ -66,7 +65,7 @@ class RestApiTest extends TestCase
 
     public function testGetPathInfo(): void
     {
-        $request = LegacyFramework::getRequest();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $expected = "/index";
@@ -74,7 +73,7 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
 
         $path = "/books/2";
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
 
         $expected = "/books/2";
@@ -85,7 +84,7 @@ class RestApiTest extends TestCase
     public function testMatchPathInfo(): void
     {
         $path = "/books/2";
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $path = $apiProvider->getPathInfo();
@@ -95,7 +94,7 @@ class RestApiTest extends TestCase
         $this->assertEquals($expected, $test);
 
         $path = "/restapi/openapi";
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $path = $apiProvider->getPathInfo();
@@ -112,7 +111,7 @@ class RestApiTest extends TestCase
     public function testSetParams(): void
     {
         $path = "/books/2";
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $path = $apiProvider->getPathInfo();
@@ -130,7 +129,7 @@ class RestApiTest extends TestCase
 
     public function testGetJson(): void
     {
-        $request = LegacyFramework::getRequest();
+        $request = Framework::getRequest();
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $renderer = new JsonRenderer();
@@ -416,7 +415,7 @@ class RestApiTest extends TestCase
 
     public function testGetUserNoAuth(): void
     {
-        $request = LegacyFramework::getRequest();
+        $request = Framework::getRequest();
         $expected = "Invalid username";
         $test = self::$apiProvider->getUser($request);
         $this->assertEquals($expected, $test["error"]);
@@ -425,7 +424,7 @@ class RestApiTest extends TestCase
     public function testGetUser(): void
     {
         $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
-        $request = LegacyFramework::getRequest();
+        $request = Framework::getRequest();
         $request->serverParams[$http_auth_user] = "admin";
         $expected = "admin";
         $test = self::$apiProvider->getUser($request);
@@ -437,7 +436,7 @@ class RestApiTest extends TestCase
         Config::set('calibre_user_database', dirname(__DIR__) . "/BaseWithSomeBooks/users.db");
         $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
         $path = '/restapi/user/details';
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $request->serverParams[$http_auth_user] = "admin";
 
         $expected = "admin";
@@ -456,7 +455,7 @@ class RestApiTest extends TestCase
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
         $path = '/zipfs/0/20/META-INF/container.xml';
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         $apiProvider = new RestApiProvider($request);
@@ -485,7 +484,7 @@ class RestApiTest extends TestCase
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
         $path = '/calres/0/xxh64/7c301792c52eebf7';
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         ob_start();
@@ -511,7 +510,7 @@ class RestApiTest extends TestCase
         $apiKey = bin2hex(random_bytes(20));
         Config::set('api_key', $apiKey);
         $path = '/thumbs/0/17/html.jpg';
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $request->serverParams['HTTP_X_API_KEY'] = Config::get('api_key');
 
         $apiProvider = new RestApiProvider($request);
@@ -633,7 +632,7 @@ class RestApiTest extends TestCase
     {
         $path = $routeUrl;
         //$request = Request::build($params, self::$handler);
-        $request = LegacyFramework::getRequest($path);
+        $request = Framework::getRequest($path);
         $apiProvider = new RestApiProvider($request);
         $apiProvider->setContext(self::$context);
         $result = $apiProvider->getOutput();

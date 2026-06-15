@@ -21,7 +21,7 @@ use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
-use SebLucas\Cops\Framework\LegacyFramework;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\Config;
@@ -145,7 +145,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $run ??= $this->doRunHandler;
         if ($run) {
             // create request without using globals
-            $request = LegacyFramework::getRequest($path, $params);
+            $request = Framework::getRequest($path, $params);
             $response = $handler->handle($request);
             return $response;
         }
