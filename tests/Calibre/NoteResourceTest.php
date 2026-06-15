@@ -18,7 +18,7 @@ require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\FileResponse;
@@ -141,7 +141,7 @@ class NoteResourceTest extends TestCase
     public function testCalResHandler(): void
     {
         $request = Request::build(["db" => 0, "alg" => "xxh64", "digest" => "7c301792c52eebf7"]);
-        $framework = FrameworkTodo::getInstance();
+        $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
         $handler = $manager->createHandler('calres');
 

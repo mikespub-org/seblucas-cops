@@ -7,7 +7,7 @@ use SebLucas\Cops\Framework\Adapter\CustomAdapter;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Routing\RouterInterface;
 
@@ -21,7 +21,7 @@ class CustomAdapterTest extends TestCase
     {
         // Use real dependencies for integration testing
         $this->handlerManager = new HandlerManager();
-        $framework = new FrameworkTodo($this->handlerManager);
+        $framework = new Framework($this->handlerManager);
         $this->router = $framework->getRouter();
         $this->adapter = new CustomAdapter($framework);
 

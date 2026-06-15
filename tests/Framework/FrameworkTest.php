@@ -2,7 +2,7 @@
 
 namespace SebLucas\Cops\Tests\Framework;
 
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
@@ -16,7 +16,7 @@ use SebLucas\Cops\Middleware\TestMiddleware;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
 
-class FrameworkTodoTest extends TestCase
+class FrameworkTest extends TestCase
 {
     public function testFrameworkAndFrameworkTodoSingleton(): void
     {
@@ -24,15 +24,15 @@ class FrameworkTodoTest extends TestCase
         $framework2 = LegacyFramework::getInstance();
         $this->assertSame($framework1, $framework2);
 
-        $frameworkTodo1 = FrameworkTodo::getInstance();
-        $frameworkTodo2 = FrameworkTodo::getInstance();
+        $frameworkTodo1 = Framework::getInstance();
+        $frameworkTodo2 = Framework::getInstance();
         $this->assertSame($frameworkTodo1, $frameworkTodo2);
     }
 
     public function testHandlerManagerAccess(): void
     {
         $handlerManager1 = LegacyFramework::getHandlerManager();
-        $framework2 = new FrameworkTodo();
+        $framework2 = new Framework();
         $handlerManager2 = $framework2->getHandlerManager();
 
         $this->assertSame($handlerManager1->getHandlers(), $handlerManager2->getHandlers());
@@ -41,7 +41,7 @@ class FrameworkTodoTest extends TestCase
     public function testRouterAccess(): void
     {
         $router1 = LegacyFramework::getRouter();
-        $framework2  = new FrameworkTodo();
+        $framework2  = new Framework();
         $router2 = $framework2->getRouter();
 
         $this->assertInstanceOf(RouterInterface::class, $router1);
@@ -53,7 +53,7 @@ class FrameworkTodoTest extends TestCase
     {
         $_SERVER['PATH_INFO'] = '/check';
 
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
         $context = $framework->getContext();
         // match route and update request with matched parameters
         $params = $context->matchRequest();
@@ -74,7 +74,7 @@ class FrameworkTodoTest extends TestCase
 
     public function testMiddlewareSupport(): void
     {
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
         $adapter = $framework->getAdapter();
 
         // Test middleware class
@@ -93,7 +93,7 @@ class FrameworkTodoTest extends TestCase
 
     public function testErrorHandling(): void
     {
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
         $handler = $framework->getHandlerManager()->createHandler('error');
 
         // set request handler to 'TestHandler' class to avoid exit() in Response::notFound()
@@ -104,7 +104,7 @@ class FrameworkTodoTest extends TestCase
 
     public function testRouteRegistration(): void
     {
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
 
         // Verify routes are registered
         $router = $framework->getRouter();
@@ -115,7 +115,7 @@ class FrameworkTodoTest extends TestCase
 
     public function testHandleRequest(): void
     {
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
         $request = new Request();
         $request->setPath('/check');
 
@@ -129,7 +129,7 @@ class FrameworkTodoTest extends TestCase
 
     public function testHandleRequestWithMiddleware(): void
     {
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
         $request = new Request();
         $request->setPath('/check/more');
 
@@ -154,7 +154,7 @@ class FrameworkTodoTest extends TestCase
         $_SERVER['PATH_INFO'] = '/check';
 
         ob_start();
-        FrameworkTodo::run(true);
+        Framework::run(true);
         $output = ob_get_clean();
 
         $expected = "<title>COPS Configuration Check</title>";
@@ -172,7 +172,7 @@ class FrameworkTodoTest extends TestCase
         ini_set('error_log', $logFile);
 
         ob_start();
-        FrameworkTodo::run(true);
+        Framework::run(true);
         $output = ob_get_clean();
 
         // The ErrorHandler should output a "Invalid request path" message
@@ -194,7 +194,7 @@ class FrameworkTodoTest extends TestCase
         $_SERVER['PHP_AUTH_PW'] = 'secret';
 
         ob_start();
-        FrameworkTodo::run(true);
+        Framework::run(true);
         $output = ob_get_clean();
         Config::set('basic_authentication', null);
 
@@ -212,7 +212,7 @@ class FrameworkTodoTest extends TestCase
         $_SERVER['PATH_INFO'] = '/check';
 
         ob_start();
-        FrameworkTodo::run(true);
+        Framework::run(true);
         $output = ob_get_clean();
         Config::set('basic_authentication', null);
 
@@ -227,7 +227,7 @@ class FrameworkTodoTest extends TestCase
         unset($_SERVER['PATH_INFO']);
         $_SERVER['REDIRECT_PATH_INFO'] = '/test/path';
 
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
         $request = $framework->getContext()->getRequest();
 
         $this->assertEquals('/test/path', $request->path());

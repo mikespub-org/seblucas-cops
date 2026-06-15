@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Tests\Routing;
 
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Request;
@@ -293,7 +293,7 @@ class RouteTest extends TestCase
     {
         // @todo get router from elsewhere
         if (!isset(self::$router)) {
-            $framework = FrameworkTodo::getInstance();
+            $framework = Framework::getInstance();
             self::$router = $framework->getRouter();
         }
         try {

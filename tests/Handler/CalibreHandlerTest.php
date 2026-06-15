@@ -13,7 +13,7 @@ namespace SebLucas\Cops\Tests\Handler;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -26,7 +26,7 @@ class CalibreHandlerTest extends TestCase
     {
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
         Database::clearDb();
-        $framework = FrameworkTodo::getInstance();
+        $framework = Framework::getInstance();
         self::$manager = $framework->getHandlerManager();
     }
 

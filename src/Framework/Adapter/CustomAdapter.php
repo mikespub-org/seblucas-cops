@@ -2,7 +2,7 @@
 
 namespace SebLucas\Cops\Framework\Adapter;
 
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Routing\RouterInterface;
 
@@ -15,7 +15,7 @@ class CustomAdapter implements AdapterInterface
     protected array $middlewares = [];
 
     public function __construct(
-        protected readonly FrameworkTodo $framework,
+        protected readonly Framework $framework,
     ) {}
 
     public function getName(): string
@@ -25,7 +25,7 @@ class CustomAdapter implements AdapterInterface
 
     public function registerRoutes(): void
     {
-        // In the standalone FrameworkTodo, routes are already processed and injected
+        // In the standalone Framework, routes are already processed and injected
         // into the router during construction. This method is only required for
         // external framework adapters that need to register routes at boot time.
     }

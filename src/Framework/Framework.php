@@ -17,7 +17,7 @@ use SebLucas\Cops\Routing\Routing;
 /**
  * COPS framework implementation
  */
-class FrameworkTodo
+class Framework
 {
     protected static ?self $instance = null;
     /** @var array<string, class-string> */

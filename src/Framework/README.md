@@ -32,11 +32,11 @@ The integration relies on several key classes:
 
 ### Standalone (Custom Adapter)
 
-*   **Kernel**: `Framework.php` / `FrameworkTodo.php`
+*   **Kernel**: `Framework.php` / `LegacyFramework.php`
 *   **Adapter**: `Adapter\CustomAdapter.php`
 *   **How it works**: This is the default mode where COPS runs as its own application. The main `index.php` file calls `Framework::run()`, which boots the application kernel.
-    *   The `Framework` class is the original kernel, which relies heavily on static methods and a singleton pattern to manage the application.
-    *   `FrameworkTodo.php` is a more modern, refactored version of the kernel that uses constructor dependency injection and is designed to work cleanly with the adapter system. It is currently used primarily in tests but represents the future direction of the standalone application.
+    *   The `LegacyFramework` class is the original kernel, which relies heavily on static methods and a singleton pattern to manage the application.
+    *   `Framework.php` is a more modern, refactored version of the kernel that uses constructor dependency injection and is designed to work cleanly with the adapter system. It is currently used primarily in tests but represents the future direction of the standalone application.
     *   In this mode, the kernel is responsible for the entire request-response lifecycle: creating the `Request`, matching a route, executing the appropriate `Handler` (and any middleware), and sending the final `Response` to the browser. The `CustomAdapter` is used to provide the routing and handler logic specific to this standalone operation.
 
 ### Slim Integration

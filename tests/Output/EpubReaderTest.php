@@ -15,7 +15,7 @@ use SebLucas\Cops\Output\EPubReader;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\ImageResponse;
@@ -433,7 +433,7 @@ class EpubReaderTest extends TestCase
     public function testReadHandler(): void
     {
         $request = Request::build(['data' => 20]);
-        $framework = FrameworkTodo::getInstance();
+        $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
         $handler = $manager->createHandler('read');
 

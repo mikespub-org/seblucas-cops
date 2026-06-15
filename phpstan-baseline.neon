@@ -34,7 +34,7 @@ parameters:
 			message: '#^Instanceof between SebLucas\\Cops\\Output\\Response and SebLucas\\Cops\\Output\\Response will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
 			count: 1
-			path: src/Framework/FrameworkTodo.php
+			path: src/Framework/Framework.php
 
 		-
 			message: '#^Comparison operation "\>\=" between int\<80400, 80599\> and 80400 is always true\.$#'
@@ -76,7 +76,7 @@ parameters:
 			message: '#^Cannot unset offset ''PATH_INFO'' on array\<mixed, mixed\>\.$#'
 			identifier: unset.offset
 			count: 1
-			path: tests/Framework/FrameworkTodoTest.php
+			path: tests/Framework/FrameworkTest.php
 
 		-
 			message: '#^Cannot unset offset ''PATH_INFO'' on array\<mixed, mixed\>\.$#'

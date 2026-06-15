@@ -15,6 +15,7 @@ x.x.x - TODO
 4.x.x - 2026xxxx 
   * ...
   * Update php/npm packages
+  * Rename legacy and todo framework classes
   * Remove deprecated FastRouter class based on nikic/fast-route
   * Replace closures with arrow functions (rector)
   * Update portuguese translation - see PR #173 from @horus68

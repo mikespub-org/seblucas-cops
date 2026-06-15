@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Tests\Output;
 
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Framework\LegacyFramework;
-use SebLucas\Cops\Framework\FrameworkTodo;
+use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
@@ -53,7 +53,7 @@ class RestApiTest extends TestCase
         self::$handler = TestHandler::class;
         UriGenerator::setScriptName($_SERVER["SCRIPT_NAME"]);
         UriGenerator::setBaseUrl(null);
-        $framework = new FrameworkTodo();
+        $framework = new Framework();
         self::$context = $framework->getContext();
         self::$apiProvider = new RestApiProvider(self::$context->getRequest());
         self::$apiProvider->setContext(self::$context);
