@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Routing;
 
-use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Framework\LegacyFramework;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\HtmlHandler;
@@ -37,13 +37,16 @@ class UriGenerator
      * Generate uri with Symfony Routing
      * @param string $name
      * @param array<mixed> $params
+     * @param RouterInterface $router
      * @return string|null
      */
-    public static function generate($name, $params)
+    public static function generate($name, $params, $router = null)
     {
         unset($params[Request::HANDLER_PARAM]);
         unset($params[Request::ROUTE_PARAM]);
-        return Framework::getRouter()->generate($name, $params);
+        // @todo get router from elsewhere
+        $router ??= LegacyFramework::getRouter();
+        return $router->generate($name, $params);
     }
 
     /**

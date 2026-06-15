@@ -6,7 +6,7 @@ use SebLucas\Cops\Framework\FrameworkTodo;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Framework\LegacyFramework;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\CheckHandler;
@@ -20,8 +20,8 @@ class FrameworkTodoTest extends TestCase
 {
     public function testFrameworkAndFrameworkTodoSingleton(): void
     {
-        $framework1 = Framework::getInstance();
-        $framework2 = Framework::getInstance();
+        $framework1 = LegacyFramework::getInstance();
+        $framework2 = LegacyFramework::getInstance();
         $this->assertSame($framework1, $framework2);
 
         $frameworkTodo1 = FrameworkTodo::getInstance();
@@ -31,7 +31,7 @@ class FrameworkTodoTest extends TestCase
 
     public function testHandlerManagerAccess(): void
     {
-        $handlerManager1 = Framework::getHandlerManager();
+        $handlerManager1 = LegacyFramework::getHandlerManager();
         $framework2 = new FrameworkTodo();
         $handlerManager2 = $framework2->getHandlerManager();
 
@@ -40,7 +40,7 @@ class FrameworkTodoTest extends TestCase
 
     public function testRouterAccess(): void
     {
-        $router1 = Framework::getRouter();
+        $router1 = LegacyFramework::getRouter();
         $framework2  = new FrameworkTodo();
         $router2 = $framework2->getRouter();
 

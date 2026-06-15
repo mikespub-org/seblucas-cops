@@ -22,13 +22,13 @@ use SebLucas\Cops\Routing\Routing;
 use SebLucas\Cops\Handlers\QueueBasedHandler;
 
 /**
- * Minimal Framework
+ * Minimal Framework (legacy)
  */
-class Framework
+class LegacyFramework
 {
     /** @var class-string */
     protected static $routerClass = Routing::class;
-    /** @var Framework|null */
+    /** @var LegacyFramework|null */
     protected static ?self $instance = null;
     /** @var RouterInterface|null */
     protected static $router = null;

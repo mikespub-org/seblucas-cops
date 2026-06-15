@@ -76,13 +76,13 @@ parameters:
 			message: '#^Cannot unset offset ''PATH_INFO'' on array\<mixed, mixed\>\.$#'
 			identifier: unset.offset
 			count: 1
-			path: tests/Framework/FrameworkTest.php
+			path: tests/Framework/FrameworkTodoTest.php
 
 		-
 			message: '#^Cannot unset offset ''PATH_INFO'' on array\<mixed, mixed\>\.$#'
 			identifier: unset.offset
 			count: 1
-			path: tests/Framework/FrameworkTodoTest.php
+			path: tests/Framework/LegacyFrameworkTest.php
 
 		-
 			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'

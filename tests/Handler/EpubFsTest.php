@@ -13,7 +13,7 @@ namespace SebLucas\Cops\Tests\Handler;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Request;
@@ -149,7 +149,9 @@ class EpubFsTest extends TestCase
     {
         // set request handler to 'TestHandler' class to override cli check in handler
         $request = Request::build(['data' => 20, 'comp' => EPubReader::encode('title.xml')], TestHandler::class);
-        $handler = Framework::createHandler('epubfs');
+        $framework = FrameworkTodo::getInstance();
+        $manager = $framework->getHandlerManager();
+        $handler = $manager->createHandler('epubfs');
 
         ob_start();
         $response = $handler->handle($request);
@@ -165,7 +167,9 @@ class EpubFsTest extends TestCase
     {
         // set request handler to 'TestHandler' class to override cli check in handler
         $request = Request::build(['db' => 0, 'data' => 20, 'comp' => 'META-INF/container.xml'], TestHandler::class);
-        $handler = Framework::createHandler('zipfs');
+        $framework = FrameworkTodo::getInstance();
+        $manager = $framework->getHandlerManager();
+        $handler = $manager->createHandler('zipfs');
 
         ob_start();
         $response = $handler->handle($request);

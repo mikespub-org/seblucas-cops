@@ -1,6 +1,6 @@
 <?php
 
-use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Framework\LegacyFramework;
 use SebLucas\Cops\Input\Config;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
@@ -22,4 +22,4 @@ $config['cops_mail_configuration'] = [
 Config::load($config);
 
 // initialize framework with routes etc. for tests
-Framework::getInstance()->getContext();
+LegacyFramework::getInstance()->getContext();

@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Tests\Framework;
 
-use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Framework\LegacyFramework;
 use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Middleware\AuthMiddleware;
 use SebLucas\Cops\Middleware\TestMiddleware;
@@ -20,7 +20,7 @@ use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Input\Config;
 
-class FrameworkTest extends TestCase
+class LegacyFrameworkTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
@@ -34,7 +34,7 @@ class FrameworkTest extends TestCase
     public static function getHandlers(): array
     {
         $result = [];
-        foreach (Framework::getHandlers() as $handler => $className) {
+        foreach (LegacyFramework::getHandlers() as $handler => $className) {
             array_push($result, [$handler, $className]);
         }
         return $result;
@@ -55,7 +55,7 @@ class FrameworkTest extends TestCase
     public function testGetRequest(): void
     {
         $path = '/check';
-        $request = Framework::getRequest($path);
+        $request = LegacyFramework::getRequest($path);
 
         $expected = CheckHandler::class;
         $this->assertEquals($expected, $request->getHandler());
@@ -63,7 +63,7 @@ class FrameworkTest extends TestCase
 
     public function testGetHandler(): void
     {
-        $handler = Framework::createHandler('check');
+        $handler = LegacyFramework::createHandler('check');
 
         $expected = CheckHandler::class;
         $this->assertEquals($expected, $handler::class);
@@ -72,7 +72,7 @@ class FrameworkTest extends TestCase
     public function testRunHome(): void
     {
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -85,7 +85,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PATH_INFO'] = '/check';
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -101,7 +101,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PATH_INFO'] = '/loader';
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -116,7 +116,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PATH_INFO'] = '/admin';
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -134,7 +134,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PATH_INFO'] = '/admin';
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -148,7 +148,7 @@ class FrameworkTest extends TestCase
 
     public function testMiddleware(): void
     {
-        $className = Framework::class;
+        $className = LegacyFramework::class;
         // test protected method using closure bind & call or use reflection
         // @see https://www.php.net/manual/en/closure.bind.php
         $addMiddleware = \Closure::bind(static function ($add = null) use ($className) {
@@ -165,7 +165,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PATH_INFO'] = '/check/more';
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -178,7 +178,7 @@ class FrameworkTest extends TestCase
         $this->assertCount($expected, $middlewares);
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
 
@@ -209,7 +209,7 @@ class FrameworkTest extends TestCase
         ini_set('error_log', $logFile);
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $output = ob_get_clean();
 
         // The ErrorHandler should output a "Invalid request path" message
@@ -231,7 +231,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PHP_AUTH_PW'] = 'secret';
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
         Config::set('basic_authentication', null);
@@ -250,7 +250,7 @@ class FrameworkTest extends TestCase
         $_SERVER['PATH_INFO'] = '/check';
 
         ob_start();
-        Framework::run();
+        LegacyFramework::run();
         $headers = headers_list();
         $output = ob_get_clean();
         Config::set('basic_authentication', null);
@@ -269,7 +269,7 @@ class FrameworkTest extends TestCase
         unset($_SERVER['PATH_INFO']);
         $_SERVER['REDIRECT_PATH_INFO'] = '/test/path';
 
-        $request = Framework::getInstance()->getContext(true)->getRequest();
+        $request = LegacyFramework::getInstance()->getContext(true)->getRequest();
 
         $this->assertEquals('/test/path', $request->path());
 

@@ -16,7 +16,7 @@ require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Framework\Framework;
+use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\FileResponse;
@@ -180,7 +180,9 @@ class ZipperTest extends TestCase
         $request->set('page', $page);
         $request->set('type', 'any');
 
-        $handler = Framework::createHandler('zipper');
+        $framework = FrameworkTodo::getInstance();
+        $manager = $framework->getHandlerManager();
+        $handler = $manager->createHandler('zipper');
 
         ob_start();
         $response = $handler->handle($request);

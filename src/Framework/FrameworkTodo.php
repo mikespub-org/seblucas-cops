@@ -15,7 +15,7 @@ use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 
 /**
- * COPS framework implementation - @todo
+ * COPS framework implementation
  */
 class FrameworkTodo
 {

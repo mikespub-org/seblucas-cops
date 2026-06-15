@@ -10,9 +10,11 @@
 
 namespace SebLucas\Cops\Tests\Routing;
 
+use SebLucas\Cops\Framework\FrameworkTodo;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -45,6 +47,7 @@ class RouteTest extends TestCase
         "tables" => "tables.php",
     ];
     protected static HandlerManager $manager;
+    protected static RouterInterface $router;
 
     public static function setUpBeforeClass(): void
     {
@@ -288,8 +291,13 @@ class RouteTest extends TestCase
      */
     public static function generateRoute($test, $routeUrl, $route, $params, $prefix = "")
     {
+        // @todo get router from elsewhere
+        if (!isset(self::$router)) {
+            $framework = FrameworkTodo::getInstance();
+            self::$router = $framework->getRouter();
+        }
         try {
-            $result = UriGenerator::generate($route, $params);
+            $result = UriGenerator::generate($route, $params, self::$router);
         } catch (Throwable) {
             $test->assertNull($routeUrl);
             return;
