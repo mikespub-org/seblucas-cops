@@ -16,7 +16,6 @@ cops_folders.php
 .pnp.*
 yarn.lock
 .editorconfig
-.gitattributes
 *.cache
 .devcontainer
 /cache/*.php
