@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Tests\Routing;
 use SebLucas\Cops\Routing\UriGenerator;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
+require_once dirname(__DIR__) . '/Routing/RouteTest.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Handlers\HandlerManager;

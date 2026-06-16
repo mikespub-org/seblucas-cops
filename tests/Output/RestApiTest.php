@@ -22,6 +22,7 @@ use SebLucas\Cops\Output\RestApiProvider;
 use SebLucas\Cops\Tests\Routing\RouteTest;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
+require_once dirname(__DIR__) . '/Routing/RouteTest.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Handlers\BaseHandler;

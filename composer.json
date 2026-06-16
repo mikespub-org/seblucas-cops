@@ -66,8 +66,7 @@
     "autoload": {
         "classmap": [
             "src/",
-            "resources/",
-            "tests/"
+            "resources/"
         ],
         "files": [
             "src/functions.php"

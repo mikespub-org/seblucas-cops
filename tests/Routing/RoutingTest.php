@@ -15,6 +15,7 @@ use SebLucas\Cops\Routing\RouteLoader;
 use SebLucas\Cops\Routing\Routing;
 
 require_once dirname(__DIR__, 2) . "/config/test.php";
+require_once dirname(__DIR__) . '/Routing/RouteTest.php';
 use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
