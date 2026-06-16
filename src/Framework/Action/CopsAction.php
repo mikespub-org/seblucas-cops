@@ -31,6 +31,7 @@ class CopsAction
         // 1. Convert PSR-7 Request to COPS Request
         $copsRequest = new CopsRequest(false);
         $copsRequest->serverParams = $request->getServerParams();
+        $copsRequest->cookieParams = $request->getCookieParams();
         $copsRequest->setPath($request->getUri()->getPath());
         $copsRequest->urlParams = array_merge($defaults, $args, $request->getQueryParams());
         // @todo $copsRequest->setUserName() if authenticated by framework

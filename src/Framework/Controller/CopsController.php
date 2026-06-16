@@ -21,6 +21,7 @@ class CopsController
         // 1. Convert Symfony Request to COPS Request
         $copsRequest = new CopsRequest(false);
         $copsRequest->serverParams = $request->headers->all();
+        $copsRequest->cookieParams = $request->cookies->all();
         $copsRequest->setPath($request->getPathInfo());
 
         // Get defaults and route params from Symfony request attributes

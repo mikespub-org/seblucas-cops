@@ -78,6 +78,7 @@ class LaravelAdapter implements AdapterInterface
             // 1. Convert Laravel Request to COPS Request
             $copsRequest = new CopsRequest(false);
             $copsRequest->serverParams = $request->headers->all();
+            $copsRequest->cookieParams = $request->cookies->all();
             $copsRequest->setPath($request->getPathInfo());
             $copsRequest->urlParams = array_merge(
                 $defaults,
