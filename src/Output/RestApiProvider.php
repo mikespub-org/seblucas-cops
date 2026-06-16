@@ -145,7 +145,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $run ??= $this->doRunHandler;
         if ($run) {
             // create request without using globals
-            $request = Framework::getRequest($path, $params);
+            $request = $this->getContext()->newRequest($path, $params);
             $response = $handler->handle($request);
             return $response;
         }

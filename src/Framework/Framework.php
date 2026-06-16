@@ -141,29 +141,14 @@ class Framework
 
     /**
      * Get request instance with optional path and params
+     * @deprecated 4.4.1 use RequestContext::newRequest() instead
      * @param array<string, mixed> $params
      * @return Request
      */
     public static function getRequest(string $path = '', array $params = [])
     {
-        // inherit globals from original request here!
-        $request = new Request();
-        // set path and params in request
-        if (!empty($path)) {
-            $request->setPath($path);
-        }
-        if (!empty($params)) {
-            $request->setParams($params, false);
-        }
-
-        $framework = self::getInstance();
-        // reset context for static calls in tests
-        $context = $framework->getContext($request);
-
-        // match route and update request with matched parameters
-        $params = $context->matchRequest();
-        // return request
-        return $context->getRequest();
+        $context = self::getInstance()->getContext();
+        return $context->newRequest($path, $params);
     }
 
     public static function run(bool $reset = false): void

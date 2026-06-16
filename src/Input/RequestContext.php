@@ -178,7 +178,7 @@ class RequestContext
     }
 
     /**
-     * Summary of createHandler
+     * Summary of createHandler - not used
      * @param class-string<BaseHandler> $handlerClass
      * @return BaseHandler
      */
@@ -191,7 +191,7 @@ class RequestContext
     }
 
     /**
-     * Summary of generateUrl
+     * Summary of generateUrl - not used
      * @param string $name
      * @param array<mixed> $params
      * @return string
@@ -227,11 +227,40 @@ class RequestContext
     public function setRequest(Request $request): void
     {
         $this->request = $request;
+        // reset properties for this request
+        $this->locale = $this->request->locale();
+        $this->matchParams = null;
     }
 
     public function getRequest(): Request
     {
         return $this->request;
+    }
+
+    /**
+     * Get request instance with optional path and params
+     * @param array<string, mixed> $params
+     */
+    public function newRequest(string $path = '', array $params = []): Request
+    {
+        // inherit globals from original request here!
+        $request = new Request();
+        // set path and params in request
+        if (!empty($path)) {
+            $request->setPath($path);
+        }
+        if (!empty($params)) {
+            $request->setParams($params, false);
+        }
+
+        // reset context for static calls in tests
+        $context = clone $this;
+        $context->setRequest($request);
+
+        // match route and update request with matched parameters
+        $params = $context->matchRequest();
+        // return request
+        return $context->getRequest();
     }
 
     public function getHandler(): BaseHandler
