@@ -68,6 +68,23 @@ class FileResponse extends Response
     }
 
     /**
+     * Summary of getContent
+     * @return string|null
+     */
+    public function getContent(): ?string
+    {
+        // when we use another way to send content, e.g. via other framework
+        if (empty($this->filepath)) {
+            return $this->content;
+        }
+        if ($this->sent) {
+            return null;
+        }
+
+        return file_get_contents($this->filepath);
+    }
+
+    /**
      * Summary of sendFile
      * @return static
      */

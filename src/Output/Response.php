@@ -362,6 +362,13 @@ class Response
      */
     public function getHeaders(): array
     {
+        // when we use another way to send headers, e.g. via other framework
+        if (!$this->sent) {
+            $this->setContentType($this->mimetype);
+            $this->setExpires($this->expires);
+            $this->setContentDisposition($this->filename);
+        }
+
         return $this->headers;
     }
 

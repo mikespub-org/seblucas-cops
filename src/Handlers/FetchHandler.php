@@ -46,6 +46,7 @@ class FetchHandler extends BaseHandler
             // @todo not supporting Ignore_Title.kepub.epub in URL here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
             "fetch-data" => ["/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}"],
             "fetch-format" => ["/format/{path:.+}"],
+            // @todo overlap with actual ./images/icons/*.png files
             "fetch-image" => ["/images/{size}/{path:.+}", ["image" => 1]],
             // @todo handle url rewriting if enabled separately - path parameters are different
             "fetch-view" => ["/view/{data}/{db}/{ignore}.{type}", ["view" => 1]],
