@@ -66,7 +66,7 @@ class PageCustomize extends Page
     {
         $result = [];
         $hidden = ['admin', 'markdown'];
-        foreach (glob("templates/*", GLOB_ONLYDIR) as $filename) {
+        foreach (glob(Config::get('templates_directory') . "*", GLOB_ONLYDIR) as $filename) {
             if (preg_match('/templates\/(.*)/', $filename, $m)) {
                 if (in_array($m[1], $hidden)) {
                     continue;
@@ -86,7 +86,7 @@ class PageCustomize extends Page
     {
         $template ??= $this->request->template();
         $result = [];
-        foreach (glob("templates/" . $template . "/styles/style-*.css") as $filename) {
+        foreach (glob(Config::get('templates_directory') . $template . "/styles/style-*.css") as $filename) {
             if (preg_match('/styles\/style-(.*?)\.css/', $filename, $m)) {
                 array_push($result, $m [1]);
             }

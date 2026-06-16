@@ -13,8 +13,11 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * Changes in config/default.php file:
+    - new $config['cops_templates_directory'] to adapt templates directory
   * ...
   * Update php/npm packages
+  * Use Config::get('templates_directory') for templates directory
   * Rename legacy and todo framework classes
   * Remove deprecated FastRouter class based on nikic/fast-route
   * Replace closures with arrow functions (rector)

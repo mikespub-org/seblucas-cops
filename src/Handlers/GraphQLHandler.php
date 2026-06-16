@@ -25,6 +25,7 @@ class GraphQLHandler extends BaseHandler
     public const HANDLER = "graphql";
     public const PREFIX = "/graphql";
 
+    public static string $template = "graphql.html";
     public static int $numberPerPage = 100;
 
     public static function getRoutes()
@@ -68,7 +69,7 @@ class GraphQLHandler extends BaseHandler
     public function renderPlayground()
     {
         $data = ['link' => self::link()];
-        $template = dirname(__DIR__, 2) . '/templates/graphql.html';
+        $template = Config::get('templates_directory') . self::$template;
 
         $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(OutputFormat::template($data, $template));

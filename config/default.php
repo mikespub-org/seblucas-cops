@@ -572,6 +572,12 @@ $config['cops_basic_authentication'] = null;
  */
 $config['cops_form_authentication'] = null;
 
+/**
+ * The directory containing the COPS templates
+ * BEWARE : it has to end with a /
+ */
+$config['cops_templates_directory'] = dirname(__DIR__) . '/templates/';
+
 /*
  * Which template is used by default :
  * 'default'

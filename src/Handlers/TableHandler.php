@@ -27,7 +27,7 @@ class TableHandler extends BaseHandler
     public const PARAMLIST = ["db", "name", "id"];
     public const ADMINER_VERSION = "5.4.2";
 
-    public static string $template = "templates/tables.html";
+    public static string $template = "tables.html";
 
     public static function getRoutes()
     {
@@ -155,7 +155,8 @@ class TableHandler extends BaseHandler
         $data['api_key'] = Config::get('api_key');
 
         $response = new Response(Response::MIME_TYPE_HTML);
-        return $response->setContent(Format::template($data, self::$template));
+        $template = Config::get('templates_directory') . self::$template;
+        return $response->setContent(Format::template($data, $template));
     }
 
     private function getReferencedTable(string $colName): ?string
@@ -211,7 +212,8 @@ class TableHandler extends BaseHandler
         $data['api_key'] = '';
 
         $response = new Response(Response::MIME_TYPE_HTML);
-        return $response->setContent(Format::template($data, self::$template));
+        $template = Config::get('templates_directory') . self::$template;
+        return $response->setContent(Format::template($data, $template));
     }
 
     /**
@@ -244,7 +246,8 @@ class TableHandler extends BaseHandler
         $data['api_key'] = '';
 
         $response = new Response(Response::MIME_TYPE_HTML);
-        return $response->setContent(Format::template($data, self::$template));
+        $template = Config::get('templates_directory') . self::$template;
+        return $response->setContent(Format::template($data, $template));
     }
 
     /**

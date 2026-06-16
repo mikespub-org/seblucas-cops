@@ -37,6 +37,7 @@ class RestApiHandler extends BaseHandler
     ];
     public const GROUP_PARAM = "_resource";
 
+    public static string $template = "restapi.html";
     /** @var ?string */
     protected static $baseUrl = null;
 
@@ -146,7 +147,7 @@ class RestApiHandler extends BaseHandler
     public function getSwaggerUI()
     {
         $data = ['link' => self::link([self::RESOURCE => 'openapi'])];
-        $template = dirname(__DIR__, 2) . '/templates/restapi.html';
+        $template = Config::get('templates_directory') . self::$template;
 
         $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(Format::template($data, $template));

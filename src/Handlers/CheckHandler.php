@@ -29,6 +29,7 @@ class CheckHandler extends BaseHandler
     public const PREFIX = "/check";
     public const PARAMLIST = ["more"];
 
+    public static string $template = "checkconfig.html";
     /** @var bool */
     protected $markdown = false;
 
@@ -82,10 +83,10 @@ class CheckHandler extends BaseHandler
         $data['databases'] = $this->getDatabases($data['full']);
 
         if ($this->markdown) {
-            $template = dirname(__DIR__, 2) . '/templates/markdown/checkconfig.md';
+            $template = Config::get('templates_directory') . 'markdown/checkconfig.md';
             $response = new Response(Response::MIME_TYPE_MARKDOWN);
         } else {
-            $template = dirname(__DIR__, 2) . '/templates/checkconfig.html';
+            $template = Config::get('templates_directory') . self::$template;
             $response = new Response(Response::MIME_TYPE_HTML);
         }
 

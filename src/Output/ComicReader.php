@@ -58,7 +58,7 @@ class ComicReader extends EPubReader
     public function getReader($idData, $version = null, $database = null)
     {
         $version ??= Config::get('comic_reader', 'comic-reader.html?url=');
-        $template = "templates/" . explode('?', $version)[0];
+        $template = Config::get('templates_directory') . explode('?', $version)[0];
         return $this->getComicReader($idData, $database, $template);
     }
 
@@ -72,7 +72,7 @@ class ComicReader extends EPubReader
      */
     public function getComicReader($idData, $database = null, $template = null)
     {
-        $template ??= "templates/comic-reader.html";
+        $template ??= Config::get('templates_directory') . "comic-reader.html";
         $this->findBookData($idData, $database);
         $this->setHandler(ZipFsHandler::class);
 

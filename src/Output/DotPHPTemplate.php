@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Template\doT;
 
@@ -60,12 +61,13 @@ class DotPHPTemplate extends BaseRenderer
      */
     public function serverSide($data, $name = 'page.html')
     {
+        $themeDir = Config::get('templates_directory') . $this->theme . '/';
         // Get the templates
-        $header = file_get_contents('templates/' . $this->theme . '/header.html');
-        $footer = file_get_contents('templates/' . $this->theme . '/footer.html');
-        $main = file_get_contents('templates/' . $this->theme . '/main.html');
-        $bookdetail = file_get_contents('templates/' . $this->theme . '/bookdetail.html');
-        $page = file_get_contents('templates/' . $this->theme . '/' . $name);
+        $header = file_get_contents($themeDir . 'header.html');
+        $footer = file_get_contents($themeDir . 'footer.html');
+        $main = file_get_contents($themeDir . 'main.html');
+        $bookdetail = file_get_contents($themeDir . 'bookdetail.html');
+        $page = file_get_contents($themeDir . $name);
 
         // Generate the function for the template
         $template = new doT();
@@ -94,7 +96,8 @@ class DotPHPTemplate extends BaseRenderer
      */
     public function renderPage($data, $name = 'file.html')
     {
-        $dot = $this->getDotTemplate('templates/' . $this->theme . '/' . $name);
+        $themeDir = Config::get('templates_directory') . $this->theme . '/';
+        $dot = $this->getDotTemplate($themeDir . $name);
         if ($this->serverSide) {
             // Get the page data
             $json = new JsonRenderer();

@@ -40,7 +40,7 @@ class TwigTemplate extends BaseRenderer
         $this->serverSide = $request->render() ? true : false;
         $this->markdown = $request->isMarkdown();
         // support other Twig template directories too
-        $this->twig = $this->getTwigEnvironment('templates/' . $this->theme);
+        $this->twig = $this->getTwigEnvironment(Config::get('templates_directory') . $this->theme);
     }
 
     /**

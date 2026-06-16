@@ -498,6 +498,11 @@ $tooltips['cops_form_authentication'] = <<<'EOT'
         string with $config['calibre_user_database'] : Calibre user accounts database - WARNING: passwords are in clear!
     EOT;
 
+$tooltips['cops_templates_directory'] = <<<'EOT'
+    The directory containing the COPS templates
+    BEWARE : it has to end with a /
+    EOT;
+
 $tooltips['cops_template'] = <<<'EOT'
     Which template is used by default :
     'default'

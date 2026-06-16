@@ -30,7 +30,7 @@ class AdminHandler extends BaseHandler
     public const PREFIX = "/admin";
     public const PARAMLIST = ["action"];
 
-    protected string $templateDir = 'templates/admin';
+    protected string $templateDir = 'admin';
     /** @var array<string, string> */
     protected array $tooltips = [];
 
@@ -476,7 +476,7 @@ if (!isset($config)) {
         // set cookie param template to 'admin' here
         $request->cookieParams['template'] = basename($this->templateDir);
         $template = new TwigTemplate($request);
-        $twig = $template->getTwigEnvironment($this->templateDir);
+        $twig = $template->getTwigEnvironment(Config::get('templates_directory') . $this->templateDir);
         $getTypeFunction = new \Twig\TwigFunction('get_type', function ($value) {
             if (is_iterable($value)) {
                 return 'array';

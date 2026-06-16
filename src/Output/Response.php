@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Handlers\HtmlHandler;
+use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Pages\PageId;
@@ -434,9 +435,9 @@ class Response
         $data['error'] = htmlspecialchars($error ?? "I'm sorry Dave, I'm afraid I can't do that");
         if ($request?->isMarkdown()) {
             $response->setHeaders(self::MIME_TYPE_MARKDOWN);
-            $template = 'templates/markdown/notfound.md';
+            $template = Config::get('templates_directory') . 'markdown/notfound.md';
         } else {
-            $template = 'templates/notfound.html';
+            $template = Config::get('templates_directory') . 'notfound.html';
         }
         $response->setContent(Format::template($data, $template));
         return $response;
@@ -458,9 +459,9 @@ class Response
         $data['error'] = htmlspecialchars($error ?? 'Unknown Error');
         if ($request?->isMarkdown()) {
             $response->setHeaders(self::MIME_TYPE_MARKDOWN);
-            $template = 'templates/markdown/error.md';
+            $template = Config::get('templates_directory') . 'markdown/error.md';
         } else {
-            $template = 'templates/error.html';
+            $template = Config::get('templates_directory') . 'error.html';
         }
         $response->setContent(Format::template($data, $template));
         return $response;

@@ -17,7 +17,7 @@ use SebLucas\Cops\Output\Format;
 
 class PageAbout extends Page
 {
-    protected string $template = 'templates/about.html';
+    protected string $template = 'about.html';
 
     /**
      * Summary of initializeContent
@@ -40,6 +40,7 @@ class PageAbout extends Page
             'site_url'   => HtmlHandler::index(),
             'opds_url'   => FeedHandler::route(FeedHandler::HANDLER),
         ];
-        return Format::template($data, $this->template);
+        $template = Config::get('templates_directory') . $this->template;
+        return Format::template($data, $template);
     }
 }

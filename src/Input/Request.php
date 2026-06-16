@@ -372,7 +372,7 @@ class Request
     public function template()
     {
         $template = $this->option('template');
-        if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $template) && is_dir("templates/{$template}/")) {
+        if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $template) && is_dir(Config::get('templates_directory') . "{$template}/")) {
             return $template;
         }
         return Config::get('template');

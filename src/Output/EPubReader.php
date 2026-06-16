@@ -157,7 +157,7 @@ class EPubReader extends BaseRenderer
      */
     public function getMonocleReader($idData, $database = null, $template = null)
     {
-        $template ??= "templates/epubreader.html";
+        $template ??= Config::get('templates_directory') . "epubreader.html";
         $this->findBookData($idData, $database);
         if ($this->book->isExternal()) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
@@ -325,7 +325,7 @@ class EPubReader extends BaseRenderer
      */
     public function getEpubjsReader($idData, $database = null, $template = null)
     {
-        $template ??= "templates/epubjs-reader.html";
+        $template ??= Config::get('templates_directory') . "epubjs-reader.html";
         $this->findBookData($idData, $database);
         $this->setHandler(ZipFsHandler::class);
 
