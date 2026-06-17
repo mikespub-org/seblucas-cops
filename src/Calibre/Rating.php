@@ -49,7 +49,7 @@ class Rating extends Base
      */
     public function getParentTitle()
     {
-        return $this->localize("ratings.title");
+        return "ratings.title";
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */

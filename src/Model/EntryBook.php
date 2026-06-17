@@ -20,7 +20,7 @@ class EntryBook extends Entry
      * EntryBook constructor.
      * @param string $title
      * @param string $id
-     * @param string $content
+     * @param string|\Closure $content
      * @param string $contentType
      * @param array<LinkFeed|LinkResource> $linkArray
      * @param Book $book

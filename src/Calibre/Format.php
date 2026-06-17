@@ -57,7 +57,7 @@ class Format extends Base
      */
     public function getParentTitle()
     {
-        return $this->localize("formats.title");
+        return "formats.title";
     }
 
     /**

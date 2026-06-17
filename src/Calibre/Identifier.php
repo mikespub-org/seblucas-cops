@@ -137,7 +137,7 @@ class Identifier extends Base
      */
     public function getParentTitle()
     {
-        return $this->localize("identifiers.title");
+        return "identifiers.title";
     }
 
     /**

@@ -226,7 +226,7 @@ abstract class Base
      */
     public function getParentTitle()
     {
-        return $this->localize("title.title");
+        return "title.title";
     }
 
     /**

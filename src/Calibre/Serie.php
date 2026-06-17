@@ -43,7 +43,7 @@ class Serie extends Category
      */
     public function getParentTitle()
     {
-        return $this->localize("series.title");
+        return "series.title";
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */

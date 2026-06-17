@@ -39,7 +39,7 @@ class Publisher extends Base
      */
     public function getParentTitle()
     {
-        return $this->localize("publishers.title");
+        return "publishers.title";
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */

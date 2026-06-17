@@ -44,7 +44,7 @@ class Language extends Base
      */
     public function getParentTitle()
     {
-        return $this->localize("languages.title");
+        return "languages.title";
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */

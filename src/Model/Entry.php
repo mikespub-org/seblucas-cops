@@ -19,7 +19,7 @@ class Entry
 {
     public string $title;
     public string $id;
-    public string $content;
+    public string|\Closure $content;
     /** @var string|int */
     public $numberOfElement;
     public string $contentType;
@@ -77,7 +77,7 @@ class Entry
      * Summary of __construct
      * @param string $title
      * @param string $id
-     * @param string $content
+     * @param string|\Closure $content
      * @param string $contentType
      * @param array<LinkFeed|LinkResource> $linkArray
      * @param string|int|null $database
@@ -106,6 +106,20 @@ class Entry
         if (!is_null($database)) {
             $this->id = str_replace("cops:", "cops:" . strval($database) . ":", $this->id);
         }
+    }
+
+    /**
+     * Summary of getContent
+     * @todo investigate delaying call to localize() until we are in Output Renderer
+     * @param ?string $locale
+     * @return string
+     */
+    public function getContent($locale = null)
+    {
+        if ($this->content instanceof \Closure) {
+            $this->content = ($this->content)($locale);
+        }
+        return $this->content;
     }
 
     /**

@@ -58,7 +58,7 @@ class PageWithDetail extends Page
         $this->title = $instance->getTitle();
         // this is the unfiltered uri here, used in JsonRenderer - @todo do we want to use request->urlParams?
         $this->currentUri = $instance->getUri();
-        $this->parentTitle = $instance->getParentTitle();
+        $this->parentTitle = $this->localize($instance->getParentTitle());
         $filterParams = $this->request->getFilterParams();
         $this->parentUri = $instance->getParentUri($filterParams);
     }

@@ -99,7 +99,7 @@ class Folder extends Category
      */
     public function getParentTitle()
     {
-        return $this->localize("folders.title");
+        return "folders.title";
     }
 
     /**

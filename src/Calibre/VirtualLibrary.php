@@ -68,7 +68,7 @@ class VirtualLibrary extends Base
      */
     public function getParentTitle()
     {
-        return $this->localize("libraries.title");
+        return "libraries.title";
     }
 
     /**
