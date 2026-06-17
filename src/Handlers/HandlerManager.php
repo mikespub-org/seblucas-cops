@@ -2,17 +2,14 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\HasContextInterface;
-use SebLucas\Cops\Input\HasContextTrait;
+use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Middleware\BaseMiddleware;
 
 /**
  * Manages handler registration and creation in COPS
  */
-class HandlerManager implements HasContextInterface
+class HandlerManager
 {
-    use HasContextTrait;
-
     /** @var array<string, class-string<BaseHandler>> */
     public static array $registry = [
         "html" => HtmlHandler::class,
@@ -141,13 +138,13 @@ class HandlerManager implements HasContextInterface
      * @param string|class-string<BaseHandler> $name Handler name or class
      * @throws \RuntimeException
      */
-    public function createHandler(string $name): BaseHandler
+    public function createHandler(string $name, RequestContext $context): BaseHandler
     {
         // Get handler class by name
         $handlerClass = $this->getHandlerClass($name);
 
         // Create handler instance with context
-        $handler = new $handlerClass($this->getContext());
+        $handler = new $handlerClass($context);
 
         // Apply middleware if any exists
         return $this->applyMiddleware($handler);

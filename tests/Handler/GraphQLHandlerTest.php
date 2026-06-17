@@ -52,7 +52,8 @@ class GraphQLHandlerTest extends TestCase
         $request = Request::build([], null, $server);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler(self::$handler);
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler(self::$handler, $context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -72,7 +73,8 @@ class GraphQLHandlerTest extends TestCase
         $request->content = $this->getBasicQuery();
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler(self::$handler);
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler(self::$handler, $context);
 
         ob_start();
         $response = $handler->handle($request);

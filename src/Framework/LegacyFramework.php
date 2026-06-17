@@ -114,7 +114,7 @@ class LegacyFramework
     protected function handleError(\Throwable $e, ?Request $request): void
     {
         error_log("COPS error: " . $e->getMessage());
-        $handler = $this->manager->createHandler('error');
+        $handler = $this->manager->createHandler('error', $this->getContext());
         $response = $handler->handle($request ?? new Request());
         if ($response instanceof Response) {
             $response->send();
@@ -213,7 +213,8 @@ class LegacyFramework
      */
     public static function createHandler($name)
     {
-        return self::getHandlerManager()->createHandler($name);
+        $context = self::getInstance()->getContext();
+        return self::getHandlerManager()->createHandler($name, $context);
     }
 
     /**

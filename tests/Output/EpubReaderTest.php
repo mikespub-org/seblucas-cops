@@ -435,7 +435,8 @@ class EpubReaderTest extends TestCase
         $request = Request::build(['data' => 20]);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('read');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('read', $context);
 
         ob_start();
         $response = $handler->handle($request);

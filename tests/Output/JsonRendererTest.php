@@ -269,7 +269,8 @@ class JsonRendererTest extends TestCase
         $request = Request::build(['page' => $page]);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('json');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('json', $context);
 
         ob_start();
         $response = $handler->handle($request);

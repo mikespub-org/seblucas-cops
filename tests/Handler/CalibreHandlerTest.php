@@ -17,10 +17,12 @@ use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\RequestContext;
 
 class CalibreHandlerTest extends TestCase
 {
     private static HandlerManager $manager;
+    private static RequestContext $context;
 
     public static function setUpBeforeClass(): void
     {
@@ -28,12 +30,13 @@ class CalibreHandlerTest extends TestCase
         Database::clearDb();
         $framework = Framework::getInstance();
         self::$manager = $framework->getHandlerManager();
+        self::$context = $framework->getContext();
     }
 
     public function testSwitchLibrarySingle(): void
     {
         $request = Request::build(['action' => 'switch-library', 'library' => '_hex_-4261736557697468536f6d65426f6f6b73']);
-        $handler = self::$manager->createHandler('calibre');
+        $handler = self::$manager->createHandler('calibre', self::$context);
 
         $response = $handler->handle($request);
 
@@ -50,7 +53,7 @@ class CalibreHandlerTest extends TestCase
             'BaseWithSomeBooks' => dirname(__DIR__) . "/BaseWithSomeBooks/",
         ]);
         $request = Request::build(['action' => 'switch-library', 'library' => '_hex_-4261736557697468536f6d65426f6f6b73']);
-        $handler = self::$manager->createHandler('calibre');
+        $handler = self::$manager->createHandler('calibre', self::$context);
 
         $response = $handler->handle($request);
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
@@ -64,7 +67,7 @@ class CalibreHandlerTest extends TestCase
     public function testBookDetails(): void
     {
         $request = Request::build(['action' => 'book-details', 'library' => '_hex_-4261736557697468536f6d65426f6f6b73', 'details' => '17']);
-        $handler = self::$manager->createHandler('calibre');
+        $handler = self::$manager->createHandler('calibre', self::$context);
 
         $response = $handler->handle($request);
 
@@ -77,7 +80,7 @@ class CalibreHandlerTest extends TestCase
     public function testBookDetailsInvalid(): void
     {
         $request = Request::build(['action' => 'book-details', 'library' => '_hex_-4261736557697468536f6d65426f6f6b73', 'details' => '999']);
-        $handler = self::$manager->createHandler('calibre');
+        $handler = self::$manager->createHandler('calibre', self::$context);
 
         $response = $handler->handle($request);
 
@@ -90,7 +93,7 @@ class CalibreHandlerTest extends TestCase
     public function testShowNoteById(): void
     {
         $request = Request::build(['action' => 'show-note', 'library' => '_hex_-4261736557697468536f6d65426f6f6b73', 'details' => 'authors/id_3']);
-        $handler = self::$manager->createHandler('calibre');
+        $handler = self::$manager->createHandler('calibre', self::$context);
 
         $response = $handler->handle($request);
 
@@ -104,7 +107,7 @@ class CalibreHandlerTest extends TestCase
     {
         $hex = bin2hex('Lewis Carroll');
         $request = Request::build(['action' => 'show-note', 'library' => '_hex_-4261736557697468536f6d65426f6f6b73', 'details' => 'authors/hex_' . $hex]);
-        $handler = self::$manager->createHandler('calibre');
+        $handler = self::$manager->createHandler('calibre', self::$context);
 
         $response = $handler->handle($request);
 
@@ -118,7 +121,7 @@ class CalibreHandlerTest extends TestCase
     {
         $val = rawurlencode('Lewis Carroll');
         $request = Request::build(['action' => 'show-note', 'library' => '_hex_-4261736557697468536f6d65426f6f6b73', 'details' => 'authors/val_' . $val]);
-        $handler = self::$manager->createHandler('calibre');
+        $handler = self::$manager->createHandler('calibre', self::$context);
 
         $response = $handler->handle($request);
 

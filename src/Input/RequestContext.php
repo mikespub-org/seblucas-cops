@@ -43,8 +43,7 @@ class RequestContext
 
     protected function initializeContext(): void
     {
-        $this->manager->setContext($this);
-        // set locale for Route Slugger
+        // @todo set locale for Route Slugger per request
         UriGenerator::setLocale($this->locale);
         UriGenerator::setScriptName((string) $this->request->script());
     }
@@ -140,12 +139,12 @@ class RequestContext
         $handlerName = $this->resolveHandlerName();
 
         try {
-            $this->handler = $this->manager->createHandler($handlerName);
+            $this->handler = $this->manager->createHandler($handlerName, $this);
             return $this->handler;
         } catch (\RuntimeException $e) {
             // Fallback to error handler
             //return $this->createErrorHandler($e);
-            $this->handler = $this->manager->createHandler('error');
+            $this->handler = $this->manager->createHandler('error', $this);
             return $this->handler;
         }
     }

@@ -151,7 +151,8 @@ class EpubFsTest extends TestCase
         $request = Request::build(['data' => 20, 'comp' => EPubReader::encode('title.xml')], TestHandler::class);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('epubfs');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('epubfs', $context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -169,7 +170,8 @@ class EpubFsTest extends TestCase
         $request = Request::build(['db' => 0, 'data' => 20, 'comp' => 'META-INF/container.xml'], TestHandler::class);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('zipfs');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('zipfs', $context);
 
         ob_start();
         $response = $handler->handle($request);

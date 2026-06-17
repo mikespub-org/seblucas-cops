@@ -42,7 +42,7 @@ class CopsController
         $this->copsManager->setContext($context);
 
         // 2. Resolve and handle the request using COPS components
-        $handler = $this->copsManager->createHandler($handlerName);
+        $handler = $this->copsManager->createHandler($handlerName, $context);
         $copsResponse = $handler->handle($copsRequest);
 
         // 3. Convert COPS Response to Symfony Response

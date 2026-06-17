@@ -362,7 +362,8 @@ class KiwilanTest extends TestCase
         $request = Request::build(['page' => $page]);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('opds');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('opds', $context);
 
         ob_start();
         $response = $handler->handle($request);

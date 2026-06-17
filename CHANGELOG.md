@@ -17,6 +17,7 @@ x.x.x - TODO
     - new $config['cops_templates_directory'] to adapt templates directory
   * ...
   * Update php/npm packages
+  * Move RequestContext from HandlerManager to createHandler()
   * Use Config::get('templates_directory') for templates directory
   * Rename legacy and todo framework classes
   * Remove deprecated FastRouter class based on nikic/fast-route

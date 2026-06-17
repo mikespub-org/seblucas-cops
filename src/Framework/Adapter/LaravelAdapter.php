@@ -95,7 +95,7 @@ class LaravelAdapter implements AdapterInterface
 
             // 2. Resolve and handle the request using COPS components
             $handlerName = $defaults['_handler'] ?? 'html';
-            $handler = $copsManager->createHandler($handlerName);
+            $handler = $copsManager->createHandler($handlerName, $context);
             $copsResponse = $handler->handle($copsRequest);
 
             // 3. Convert COPS Response to Laravel Response

@@ -151,7 +151,8 @@ class MailTest extends TestCase
         $request = Request::build([], TestHandler::class, null, $post);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('mail');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('mail', $context);
 
         ob_start();
         $response = $handler->handle($request);

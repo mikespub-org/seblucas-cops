@@ -182,7 +182,8 @@ class ZipperTest extends TestCase
 
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('zipper');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('zipper', $context);
 
         ob_start();
         $response = $handler->handle($request);

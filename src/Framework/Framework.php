@@ -81,7 +81,7 @@ class Framework
             // Handle request
             return $handler->handle($context->getRequest());
         } catch (\Exception $e) {
-            return $this->handleError($e);
+            return $this->handleError($e, $context);
         }
     }
 
@@ -93,11 +93,12 @@ class Framework
         return new Request();
     }
 
-    protected function handleError(\Throwable $e): Response
+    protected function handleError(\Throwable $e, ?RequestContext $context = null): Response
     {
         error_log("COPS error: " . $e->getMessage());
+        $context ??= $this->context;
         try {
-            $handler = $this->manager->createHandler('error');
+            $handler = $this->manager->createHandler('error', $context);
             return $handler->handle(new Request());
         } catch (\Exception $e2) {
             http_response_code(500);

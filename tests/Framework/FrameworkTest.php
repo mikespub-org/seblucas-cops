@@ -94,7 +94,9 @@ class FrameworkTest extends TestCase
     public function testErrorHandling(): void
     {
         $framework = new Framework();
-        $handler = $framework->getHandlerManager()->createHandler('error');
+        $manager = $framework->getHandlerManager();
+        $context = $framework->getContext();
+        $handler = $manager->createHandler('error', $context);
 
         // set request handler to 'TestHandler' class to avoid exit() in Response::notFound()
         $request = Request::build([], TestHandler::class);

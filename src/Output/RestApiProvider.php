@@ -140,7 +140,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $name = $params[Request::HANDLER_PARAM];
         // run via handler now
         $manager = $this->getContext()->getHandlerManager();
-        $handler = $manager->createHandler($name);
+        $handler = $manager->createHandler($name, $this->getContext());
         unset($params[Request::HANDLER_PARAM]);
         $run ??= $this->doRunHandler;
         if ($run) {

@@ -18,6 +18,7 @@ use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\RequestContext;
 
 class FetchHandlerTest extends TestCase
 {
@@ -37,6 +38,7 @@ class FetchHandlerTest extends TestCase
     /** @var class-string */
     private static $handler = TestHandler::class;
     private static HandlerManager $manager;
+    private static RequestContext $context;
 
     public static function setUpBeforeClass(): void
     {
@@ -44,13 +46,14 @@ class FetchHandlerTest extends TestCase
         Database::clearDb();
         $framework = Framework::getInstance();
         self::$manager = $framework->getHandlerManager();
+        self::$context = $framework->getContext();
     }
 
     public function testCover(): void
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['id' => 17], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -67,7 +70,7 @@ class FetchHandlerTest extends TestCase
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['id' => 17, 'thumb' => 'html'], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -84,7 +87,7 @@ class FetchHandlerTest extends TestCase
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub', 'view' => 1], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -101,7 +104,7 @@ class FetchHandlerTest extends TestCase
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -121,7 +124,7 @@ class FetchHandlerTest extends TestCase
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -145,7 +148,7 @@ class FetchHandlerTest extends TestCase
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler, $server);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -171,7 +174,7 @@ class FetchHandlerTest extends TestCase
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler, $server);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -193,7 +196,7 @@ class FetchHandlerTest extends TestCase
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['id' => 17, 'file' => 'hello.txt'], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -210,7 +213,7 @@ class FetchHandlerTest extends TestCase
     {
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['id' => 17, 'file' => 'zipped'], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -228,7 +231,7 @@ class FetchHandlerTest extends TestCase
         Config::set('fetch_protect', 1);
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
-        $handler = self::$manager->createHandler('fetch');
+        $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -248,7 +251,7 @@ class FetchHandlerTest extends TestCase
         Config::set('fetch_protect', 1);
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['page' => 'book', 'id' => '2'], self::$handler);
-        $handler = self::$manager->createHandler('html');
+        $handler = self::$manager->createHandler('html', self::$context);
 
         ob_start();
         $response = $handler->handle($request);
@@ -271,7 +274,7 @@ class FetchHandlerTest extends TestCase
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('fetch');
+        $handler = $manager->createHandler('fetch', $context);
 
         ob_start();
         $response = $handler->handle($request);

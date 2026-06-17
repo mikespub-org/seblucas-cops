@@ -345,7 +345,8 @@ class OpdsRendererTest extends TestCase
         $request = Request::build(['page' => $page]);
         $framework = Framework::getInstance();
         $manager = $framework->getHandlerManager();
-        $handler = $manager->createHandler('feed');
+        $context = $framework->getContext($request);
+        $handler = $manager->createHandler('feed', $context);
 
         ob_start();
         $response = $handler->handle($request);
