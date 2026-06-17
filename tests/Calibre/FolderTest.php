@@ -30,7 +30,7 @@ class FolderTest extends TestCase
     public function testFindBookFiles(): void
     {
         $root = dirname(__DIR__, 2);
-        $folder = Folder::getRootFolder($root);
+        $folder = Folder::getRootFolder($root, null, 'en');
         $folder->setHandler(HtmlHandler::class);
         $books = $folder->findBookFiles();
         $expected = 4;
@@ -51,7 +51,7 @@ class FolderTest extends TestCase
         └── cba-cbam.cbz
         */
         $root = dirname(__DIR__, 2) . '/tests';
-        $folder = Folder::getRootFolder($root);
+        $folder = Folder::getRootFolder($root, null, 'en');
         $folder->setHandler(HtmlHandler::class);
 
         $books = $folder->findBookFiles();
@@ -94,6 +94,7 @@ class FolderTest extends TestCase
         $this->assertNotNull($carroll, 'BaseWithSomeBooks/Lewis Carroll folder not found');
         $this->assertEquals($lewis, $carroll);
 
+        $carroll->setLocale('en');
         // Find book entries in Lewis Carroll folder
         [$entries, $total] = Folder::getBooksByFolderOrChildren($carroll);
         $this->assertEquals(1, count($entries));
@@ -117,6 +118,7 @@ class FolderTest extends TestCase
         $expected = $carroll->id . "/Alice's Adventures in Wonderland (17)/" . $expected;
         $this->assertEquals($expected, $data->getFolderPath());
 
+        $lewis->setLocale('en');
         // Find parent trail for $lewis
         $trail = $lewis->getParentTrail();
     }
@@ -125,7 +127,7 @@ class FolderTest extends TestCase
     {
         $root = '/volume1/calibre/';
         $files = dirname(__DIR__, 2) . '/tests/getfiles.json';
-        $folder = Folder::getRootFolder($root);
+        $folder = Folder::getRootFolder($root, null, 'en');
         $result = $folder->parseGetFiles($files);
         $this->assertEmpty($result);
         $this->assertNotNull($result);

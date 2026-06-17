@@ -76,6 +76,7 @@ class PageQueryResult extends Page
         } else {
             $req = Request::build([], $this->handler);
         }
+        $req->locale = $this->locale;
         switch ($scope) {
             case PageQueryScope::BOOK:
                 $booklist = new BookList($req, $database, $numberPerPage);
@@ -164,20 +165,20 @@ class PageQueryResult extends Page
                 }
                 if ($total > 0) {
                     // Comment to help the perl i18n script
-                    // str_format (localize("bookword", count($array))
-                    // str_format (localize("authorword", count($array))
-                    // str_format (localize("seriesword", count($array))
-                    // str_format (localize("tagword", count($array))
-                    // str_format (localize("publisherword", count($array))
+                    // str_format ($this->localize("bookword", count($array))
+                    // str_format ($this->localize("authorword", count($array))
+                    // str_format ($this->localize("seriesword", count($array))
+                    // str_format ($this->localize("tagword", count($array))
+                    // str_format ($this->localize("publisherword", count($array))
                     $params = ['query' => $query, 'db' => $d, 'scope' => $value];
                     if (!empty($libraryId)) {
                         $params['vl'] = $libraryId;
                     }
                     $href = fn() => $this->getRoute(self::ROUTE_SCOPE, $params);
                     array_push($this->entryArray, new Entry(
-                        str_format(localize("search.result.{$value}"), $this->query),
+                        str_format($this->localize("search.result.{$value}"), $this->query),
                         "db:query:{$d}:{$value}",
-                        str_format(localize("{$value}word", $total), $total),
+                        str_format($this->localize("{$value}word", $total), $total),
                         "text",
                         [ new LinkNavigation($href) ],
                         $database,
@@ -214,10 +215,10 @@ class PageQueryResult extends Page
         $this->idPage = PageId::SEARCH_ID;
         $value = $this->request->get("scope");
         if (empty($value)) {
-            $this->title = str_format(localize("search.result"), $this->query);
+            $this->title = str_format($this->localize("search.result"), $this->query);
         } else {
             $scope = PageQueryScope::from($value);
-            $this->title = str_format($scope->result(), $this->query);
+            $this->title = str_format($this->localize($scope->result()), $this->query);
         }
         $this->getEntries();
     }
@@ -299,7 +300,7 @@ class PageQueryResult extends Page
         return new Entry(
             $name,
             "db:query:{$idx}",
-            str_format(localize("bookword", $count), (string) $count),
+            str_format($this->localize("bookword", $count), (string) $count),
             "text",
             [ new LinkNavigation($href) ],
             null,
@@ -319,7 +320,7 @@ class PageQueryResult extends Page
         $params = ['db' => $database, 'scope' => $scope];
         $href = fn() => $this->getRoute(self::ROUTE_SEARCH, $params);
         return new Entry(
-            str_format(localize("search.result.none"), $this->query),
+            str_format($this->localize("search.result.none"), $this->query),
             "db:query:{$database}:{$scope}",
             " ",
             "text",

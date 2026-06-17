@@ -35,8 +35,8 @@ class PageAllSeriesLetter extends Page
         if ($count == -1) {
             $count = count($this->entryArray);
         }
-        $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("seriesword", $count), (string) $count), (string) $this->idGet);
-        $this->parentTitle = "";  // localize("series.title");
+        $this->title = str_format($this->localize("splitByLetter.letter"), str_format($this->localize("seriesword", $count), (string) $count), (string) $this->idGet);
+        $this->parentTitle = "";  // $this->localize("series.title");
         $filterParams = $this->request->getFilterParams();
         $this->parentUri = $this->getRoute(Serie::ROUTE_ALL, $filterParams);
     }

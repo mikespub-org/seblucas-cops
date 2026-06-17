@@ -251,7 +251,7 @@ class FilterTest extends TestCase
     public function testTagWithout(): void
     {
         /** @var Tag $tag */
-        $tag = Tag::getInstanceById(null);
+        $tag = Tag::getInstanceById(null, null, 'en');
         $this->assertEquals(0, $tag->id);
 
         $books = $tag->getBooks();

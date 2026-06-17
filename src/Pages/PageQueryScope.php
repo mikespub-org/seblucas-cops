@@ -37,24 +37,24 @@ enum PageQueryScope: string
 
     public function result(): string
     {
-        return localize("search.result.{$this->value}");
+        return "search.result.{$this->value}";
     }
 
     public function title(): string
     {
         return match ($this) {
-            self::AUTHOR => localize("authors.title"),
-            self::BOOK => localize("bookword.title"),
-            self::FORMAT => localize("formats.title"),
-            self::IDENTIFIER => localize("identifiers.title"),
-            self::LANGUAGE => localize("languages.title"),
-            self::PUBLISHER => localize("publishers.title"),
-            self::RATING => localize("ratings.title"),
-            self::SERIES => localize("series.title"),
-            self::TAG => localize("tags.title"),
-            self::LIBRARIES => localize("libraries.title"),
-            self::ALLBOOKS => localize("allbooks.title"),
-            self::RECENT => localize("recent.title"),
+            self::AUTHOR => "authors.title",
+            self::BOOK => "bookword.title",
+            self::FORMAT => "formats.title",
+            self::IDENTIFIER => "identifiers.title",
+            self::LANGUAGE => "languages.title",
+            self::PUBLISHER => "publishers.title",
+            self::RATING => "ratings.title",
+            self::SERIES => "series.title",
+            self::TAG => "tags.title",
+            self::LIBRARIES => "libraries.title",
+            self::ALLBOOKS => "allbooks.title",
+            self::RECENT => "recent.title",
         };
     }
 }

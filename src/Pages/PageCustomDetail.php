@@ -37,6 +37,7 @@ class PageCustomDetail extends PageWithDetail
         $customId = $this->request->get("custom", null);
         $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);
+        $instance->setLocale($this->locale);
         // $this->title may get updated below here
         $this->setInstance($instance);
         if ($this->request->get('filter')) {

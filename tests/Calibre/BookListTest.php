@@ -34,6 +34,7 @@ class BookListTest extends TestCase
     {
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
         self::$request = new Request();
+        self::$request->locale = 'en';
         Database::clearDb();
     }
 
@@ -119,7 +120,7 @@ class BookListTest extends TestCase
     {
         $booklist = new BookList(self::$request);
         /** @var Serie $series */
-        $series = Serie::getInstanceById(null);
+        $series = Serie::getInstanceById(null, null, 'en');
 
         // All books without series
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($series, -1);
@@ -155,7 +156,7 @@ class BookListTest extends TestCase
     {
         $booklist = new BookList(self::$request);
         /** @var Tag $tag */
-        $tag = Tag::getInstanceById(null);
+        $tag = Tag::getInstanceById(null, null, 'en');
 
         // All books without tag
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($tag, -1);
@@ -215,7 +216,7 @@ class BookListTest extends TestCase
     {
         $booklist = new BookList(self::$request);
         /** @var Identifier $identifier */
-        $identifier = Identifier::getInstanceById(null);
+        $identifier = Identifier::getInstanceById(null, null, 'en');
 
         // All books without identifier
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($identifier, -1);
@@ -239,7 +240,7 @@ class BookListTest extends TestCase
     {
         $booklist = new BookList(self::$request);
         /** @var Format $format */
-        $format = Format::getInstanceById(null);
+        $format = Format::getInstanceById(null, null, 'en');
 
         // All books without format
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($format, -1);

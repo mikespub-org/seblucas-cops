@@ -26,6 +26,7 @@ class PageLanguageDetail extends PageWithDetail
         /** @var Language $instance */
         $instance = Language::getInstanceById($this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);
+        $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {
             $this->filterParams = [Language::URL_PARAM => $this->idGet];
             $this->getFilters($instance);

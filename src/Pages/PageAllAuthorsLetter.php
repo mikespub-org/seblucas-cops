@@ -35,8 +35,8 @@ class PageAllAuthorsLetter extends Page
         if ($count == -1) {
             $count = count($this->entryArray);
         }
-        $this->title = str_format(localize("splitByLetter.letter"), str_format(localize("authorword", $count), (string) $count), (string) $this->idGet);
-        $this->parentTitle = "";  // localize("authors.title");
+        $this->title = str_format($this->localize("splitByLetter.letter"), str_format($this->localize("authorword", $count), (string) $count), (string) $this->idGet);
+        $this->parentTitle = "";  // $this->localize("authors.title");
         $filterParams = $this->request->getFilterParams();
         $this->parentUri = $this->getRoute(Author::ROUTE_ALL, $filterParams);
     }

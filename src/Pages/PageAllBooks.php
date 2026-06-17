@@ -25,7 +25,7 @@ class PageAllBooks extends Page
     {
         $this->getEntries();
         $this->idPage = Book::PAGE_ID;
-        $this->title = localize("allbooks.title");
+        $this->title = $this->localize("allbooks.title");
     }
 
     /**

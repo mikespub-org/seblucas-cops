@@ -26,18 +26,17 @@ if (!function_exists('str_format')) {
 }
 
 if (!function_exists('localize')) {
-    $translator = new Translation($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? null);
-    Config::set('_translator_', $translator);
-
+    // set locale for Translation per request
     /**
      * Summary of localize
      * @param string $phrase
      * @param int $count
+     * @param string $locale
      * @param bool $reset
      * @return string
      */
-    function localize($phrase, $count = -1, $reset = false)
+    function localize($phrase, $count = -1, $locale = 'en', $reset = false)
     {
-        return Config::get('_translator_')->localize($phrase, $count, $reset);
+        return Translation::getInstance($locale)->localize($phrase, $count, $reset);
     }
 }

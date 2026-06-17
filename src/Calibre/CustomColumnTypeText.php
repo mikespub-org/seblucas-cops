@@ -143,7 +143,7 @@ class CustomColumnTypeText extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.boolean.unknown"), $this);
     }
 
     /**

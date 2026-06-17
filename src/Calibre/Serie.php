@@ -43,7 +43,7 @@ class Serie extends Category
      */
     public function getParentTitle()
     {
-        return localize("series.title");
+        return $this->localize("series.title");
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -72,6 +72,6 @@ where series.id = series and book = ?';
      */
     public static function getDefaultName()
     {
-        return localize("seriesword.none");
+        return "seriesword.none";
     }
 }

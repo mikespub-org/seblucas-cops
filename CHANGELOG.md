@@ -17,6 +17,8 @@ x.x.x - TODO
     - new $config['cops_templates_directory'] to adapt templates directory
   * ...
   * Update php/npm packages
+  * Add HasLocaleTrait to pass along request locale to classes
+  * Change localize() and Translation to work with request locale
   * Move RequestContext from HandlerManager to createHandler()
   * Use Config::get('templates_directory') for templates directory
   * Rename legacy and todo framework classes

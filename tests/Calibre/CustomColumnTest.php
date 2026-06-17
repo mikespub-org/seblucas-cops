@@ -61,6 +61,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("text", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/8", $coltype->getUri());
         $this->assertEquals("cops:custom:8", $coltype->getEntryId());
@@ -86,6 +87,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("text", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/16", $coltype->getUri());
         $this->assertEquals("cops:custom:16", $coltype->getEntryId());
@@ -111,6 +113,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("csv", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeText::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(8, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/6", $coltype->getUri());
         $this->assertEquals("cops:custom:6", $coltype->getEntryId());
@@ -184,6 +187,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("series", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeSeries::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/4", $coltype->getUri());
         $this->assertEquals("cops:custom:4", $coltype->getEntryId());
@@ -210,6 +214,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("enumeration", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeEnumeration::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(4, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/5", $coltype->getUri());
         $this->assertEquals("cops:custom:5", $coltype->getEntryId());
@@ -236,6 +241,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("datetime", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeDate::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(5, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/12", $coltype->getUri());
         $this->assertEquals("cops:custom:12", $coltype->getEntryId());
@@ -261,6 +267,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("float", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeFloat::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(6, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/14", $coltype->getUri());
         $this->assertEquals("cops:custom:14", $coltype->getEntryId());
@@ -286,6 +293,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("int", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeInteger::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(4, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/10", $coltype->getUri());
         $this->assertEquals("cops:custom:10", $coltype->getEntryId());
@@ -311,6 +319,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("rating", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeRating::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(6, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/9", $coltype->getUri());
         $this->assertEquals("cops:custom:9", $coltype->getEntryId());
@@ -336,6 +345,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("bool", $coltype->datatype);
         $this->assertEquals(CustomColumnTypeBool::class, $coltype !== null ? $coltype::class : self::class);
 
+        $coltype->setLocale('en');
         $this->assertCount(3, $coltype->getAllCustomValues());
         $this->assertEquals(self::$handler::link() . "/custom/11", $coltype->getUri());
         $this->assertEquals("cops:custom:11", $coltype->getEntryId());
@@ -921,6 +931,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
         Database::clearDb();
         $request = self::$handler::request(['custom' => 11, 'id' => "0"]);
+        $request->locale = 'en';
 
         $currentPage = PageId::getPage(PageId::CUSTOM_DETAIL, $request);
 
@@ -959,7 +970,9 @@ class CustomColumnTest extends TestCase
 
         $book = Book::getBookById(223);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
         $renderer = new JsonRenderer();
+        $renderer->setLocale('en');
         $result = $renderer->getBookContentArray($book);
 
         /* @var CustomColumn[] $custom */

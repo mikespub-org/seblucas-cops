@@ -90,7 +90,7 @@ class PageIndex extends Page
         return new Entry(
             $name,
             "cops:{$idx}:catalog",
-            str_format(localize("bookword", $count), (string) $count),
+            str_format($this->localize("bookword", $count), (string) $count),
             "text",
             [ new LinkNavigation($href) ],
             null,
@@ -137,11 +137,12 @@ class PageIndex extends Page
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
+                $customColumn->setLocale($this->locale);
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
         if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
-            $library = VirtualLibrary::getCount($this->databaseId, $this->handler);
+            $library = VirtualLibrary::getCount($this->databaseId, $this->handler, $this->locale);
             if (!is_null($library)) {
                 array_push($this->entryArray, $library);
             }
@@ -172,7 +173,7 @@ class PageIndex extends Page
         $baselist = new BaseList($className, $this->request, $this->databaseId);
         $count = $baselist->countRequestEntries();
         if ($count > 0) {
-            array_push($this->entryArray, $className::getCountEntry($count, $this->databaseId, $numberOfString, $this->handler, $this->filterParams));
+            array_push($this->entryArray, $className::getCountEntry($count, $this->databaseId, $numberOfString, $this->handler, $this->filterParams, $this->locale));
         }
     }
 
@@ -212,6 +213,7 @@ class PageIndex extends Page
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
+                $customColumn->setLocale($this->locale);
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
@@ -240,7 +242,7 @@ class PageIndex extends Page
      */
     public function addCountEntry($className)
     {
-        $entry = $className::getCount($this->databaseId, $this->handler);
+        $entry = $className::getCount($this->databaseId, $this->handler, $this->locale);
         if (!is_null($entry)) {
             array_push($this->entryArray, $entry);
         }

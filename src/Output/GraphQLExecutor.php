@@ -308,6 +308,7 @@ class GraphQLExecutor
                 $params = array_intersect_key($filterParams, $find);
                 $params['db'] = $request->database();
                 $current = Request::build($params, $request->getHandler());
+                $current->locale = $request->locale();
             } catch (JsonException $e) {
                 error_log('COPS: Invalid where argument ' . $args['where'] . ': ' . $e->getMessage());
             }
@@ -328,6 +329,7 @@ class GraphQLExecutor
     public static function getQueryField($fieldName, $args, $request)
     {
         $handler = $request->getHandler();
+        $locale = $request->locale();
         switch ($fieldName) {
             case 'books':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -340,6 +342,7 @@ class GraphQLExecutor
                     return $book;
                 }
                 $book->setHandler($handler);
+                $book->setLocale($locale);
                 return $book->getEntry();
             case 'datas':
                 $book = Book::getBookById($args['bookId'], $request->database());
@@ -347,6 +350,7 @@ class GraphQLExecutor
                     return $book;
                 }
                 $book->setHandler($handler);
+                $book->setLocale($locale);
                 return $book->getDatas();
             case 'data':
                 $book = Book::getBookByDataId($args['id'], $request->database());
@@ -354,6 +358,7 @@ class GraphQLExecutor
                     return $book;
                 }
                 $book->setHandler($handler);
+                $book->setLocale($locale);
                 $data = $book->datas[0];
                 return $data;
             case 'authors':
@@ -364,6 +369,7 @@ class GraphQLExecutor
             case 'author':
                 $instance = Author::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'formats':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -373,6 +379,7 @@ class GraphQLExecutor
             case 'format':
                 $instance = Format::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'identifiers':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -382,6 +389,7 @@ class GraphQLExecutor
             case 'identifier':
                 $instance = Identifier::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'languages':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -391,6 +399,7 @@ class GraphQLExecutor
             case 'language':
                 $instance = Language::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'publishers':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -400,6 +409,7 @@ class GraphQLExecutor
             case 'publisher':
                 $instance = Publisher::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'ratings':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -409,6 +419,7 @@ class GraphQLExecutor
             case 'rating':
                 $instance = Rating::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'series':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -418,6 +429,7 @@ class GraphQLExecutor
             case 'serie':
                 $instance = Serie::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'tags':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -427,6 +439,7 @@ class GraphQLExecutor
             case 'tag':
                 $instance = Tag::getInstanceById($args['id'], $request->database());
                 $instance->setHandler($handler);
+                $instance->setLocale($locale);
                 return $instance->getEntry();
             case 'nodelist':
                 // @todo add other requested fields on demand
@@ -504,6 +517,7 @@ class GraphQLExecutor
                 $authors = $book->getAuthors();
                 $entryArray = [];
                 foreach ($authors as $author) {
+                    $author->setLocale($book->getLocale());
                     array_push($entryArray, $author->getEntry());
                 }
                 return $entryArray;
@@ -514,6 +528,7 @@ class GraphQLExecutor
                 $formats = $book->getFormats();
                 $entryArray = [];
                 foreach ($formats as $format) {
+                    $format->setLocale($book->getLocale());
                     array_push($entryArray, $format->getEntry());
                 }
                 return $entryArray;
@@ -521,6 +536,7 @@ class GraphQLExecutor
                 $identifiers = $book->getIdentifiers();
                 $entryArray = [];
                 foreach ($identifiers as $identifier) {
+                    $identifier->setLocale($book->getLocale());
                     array_push($entryArray, $identifier->getEntry());
                 }
                 return $entryArray;
@@ -529,17 +545,20 @@ class GraphQLExecutor
                 return $languages;
             case 'publisher':
                 $publisher = $book->getPublisher();
+                $publisher->setLocale($book->getLocale());
                 return $publisher->getEntry();
             case 'rating':
                 $rating = $book->getRating();
                 return $rating;
             case 'serie':
                 $serie = $book->getSerie();
+                $serie->setLocale($book->getLocale());
                 return $serie->getEntry();
             case 'tags':
                 $tags = $book->getTags();
                 $entryArray = [];
                 foreach ($tags as $tag) {
+                    $tag->setLocale($book->getLocale());
                     array_push($entryArray, $tag->getEntry());
                 }
                 return $entryArray;

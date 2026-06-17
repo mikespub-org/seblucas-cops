@@ -92,7 +92,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return new CustomColumn(null, localize("customcolumn.enum.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.enum.unknown"), $this);
     }
 
     /**
@@ -122,7 +122,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      */
     public function getContent($count = 0)
     {
-        return str_format(localize("customcolumn.description.enum", $count), (string) $count);
+        return str_format($this->localize("customcolumn.description.enum", $count), (string) $count);
     }
 
     /**
@@ -139,7 +139,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
-        return new CustomColumn(null, localize("customcolumn.enum.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.enum.unknown"), $this);
     }
 
     /**

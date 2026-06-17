@@ -113,7 +113,7 @@ class CustomColumnTypeComment extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value, $this);
         }
-        return new CustomColumn(null, localize("customcolumn.float.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.float.unknown"), $this);
     }
 
     /**

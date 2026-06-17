@@ -36,19 +36,17 @@ class LanguageTest extends TestCase
     public function testLocalizeFr(): void
     {
         $acceptLanguage = "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
-        $translator = new Translation($acceptLanguage);
+        [$locale, ] = Translation::getLangAndTranslationFile($acceptLanguage);
+        $translator = new Translation($locale);
         $this->assertEquals("Auteurs", $translator->localize("authors.title", -1, true));
-
-        localize("authors.title", -1, true);
     }
 
     public function testLocalizeUnknown(): void
     {
         $acceptLanguage = "aa";
-        $translator = new Translation($acceptLanguage);
+        [$locale, ] = Translation::getLangAndTranslationFile($acceptLanguage);
+        $translator = new Translation($locale);
         $this->assertEquals("Authors", $translator->localize("authors.title", -1, true));
-
-        localize("authors.title", -1, true);
     }
 
     /**
@@ -59,11 +57,8 @@ class LanguageTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('providerGetLangAndTranslationFile')]
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
-        $translator = new Translation($acceptLanguage);
-        [$lang, $lang_file] = $translator->getLangAndTranslationFile();
+        [$lang, $lang_file] = Translation::getLangAndTranslationFile($acceptLanguage);
         $this->assertEquals($result, $lang);
-
-        localize("authors.title", -1, true);
     }
 
     /**
@@ -91,11 +86,8 @@ class LanguageTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('providerGetAcceptLanguages')]
     public function testGetAcceptLanguages($acceptLanguage, $result)
     {
-        $translator = new Translation($acceptLanguage);
-        $langs = array_keys($translator->getAcceptLanguages($acceptLanguage));
+        $langs = array_keys(Translation::getAcceptLanguages($acceptLanguage));
         $this->assertEquals($result, $langs[0]);
-
-        localize("authors.title", -1, true);
     }
 
     /**

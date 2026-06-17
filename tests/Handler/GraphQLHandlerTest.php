@@ -265,6 +265,7 @@ class GraphQLHandlerTest extends TestCase
     {
         $request = Request::build();
         $request->content = $this->getNodeQuery($id);
+        $request->locale = 'en';
         $context = new RequestContext($request);
 
         $executor = new GraphQLExecutor();

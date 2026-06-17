@@ -26,6 +26,7 @@ class PageRatingDetail extends PageWithDetail
         /** @var Rating $instance */
         $instance = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);
+        $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {
             $this->filterParams = [Rating::URL_PARAM => $this->idGet];
             $this->getFilters($instance);

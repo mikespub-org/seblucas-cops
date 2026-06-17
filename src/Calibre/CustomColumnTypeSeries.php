@@ -95,7 +95,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.boolean.unknown"), $this);
     }
 
     /**
@@ -125,7 +125,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      */
     public function getContent($count = 0)
     {
-        return str_format(localize("customcolumn.description.series", $count), (string) $count);
+        return str_format($this->localize("customcolumn.description.series", $count), (string) $count);
     }
 
     /**

@@ -133,7 +133,7 @@ class JsonRenderer extends BaseRenderer
             } else {
                 $sn = $serie->name;
             }
-            $scn = str_format(localize("content.series.data"), (string) $book->seriesIndex, (string) $serie->name);
+            $scn = str_format($this->localize("content.series.data"), (string) $book->seriesIndex, (string) $serie->name);
             $su = $serie->getUri();
         }
         $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);
@@ -205,7 +205,7 @@ class JsonRenderer extends BaseRenderer
         $out ["content"] = $book->getComment(false);
         $out ["pages"] = $book->getPages();
         if (isset($book->folderId)) {
-            $out ["folderId"] = $book->folderId ?: localize("folders.root");
+            $out ["folderId"] = $book->folderId ?: $this->localize("folders.root");
             $out ["folderUrl"] = JsonHandler::route(Folder::ROUTE_DETAIL, ["path" => $book->folderId]);
         } else {
             $out ["folderId"] = '';
@@ -315,14 +315,14 @@ class JsonRenderer extends BaseRenderer
             return $out;
         }
         $label = match ($entry->className) {
-            'Author' => localize("authors.title"),
-            'Identifier' => localize("identifiers.title"),
-            'Language' => localize("languages.title"),
-            'Publisher' => localize("publishers.title"),
-            'Rating' => localize("ratings.title"),
-            'Serie' => localize("series.title"),
-            'Tag' => localize("tags.title"),
-            'Folder' => localize("folders.title"),
+            'Author' => $this->localize("authors.title"),
+            'Identifier' => $this->localize("identifiers.title"),
+            'Language' => $this->localize("languages.title"),
+            'Publisher' => $this->localize("publishers.title"),
+            'Rating' => $this->localize("ratings.title"),
+            'Serie' => $this->localize("series.title"),
+            'Tag' => $this->localize("tags.title"),
+            'Folder' => $this->localize("folders.title"),
             default => $entry->className,
         };
         return [
@@ -374,52 +374,52 @@ class JsonRenderer extends BaseRenderer
         $complete = [
             "version" => Config::VERSION,
             "i18n" => [
-                "addedDateTitle" => localize("addeddate.title"),
-                "coverAlt" => localize("i18n.coversection"),
-                "authorsTitle" => localize("authors.title"),
-                "authorTitle" => localize("author.title"),
-                "allbooksTitle" => localize("allbooks.title"),
-                "bookwordTitle" => localize("bookword.title"),
-                "foldersTitle" => localize("folders.title"),
-                "recentTitle" => localize("recent.title"),
-                "tagsTitle" => localize("tags.title"),
-                "tagwordTitle" => localize("tagword.title"),
-                "linksTitle" => localize("links.title"),
-                "seriesTitle" => localize("series.title"),
-                "defaultTemplate" => localize("default.template"),
-                "customizeTitle" => localize("customize.title"),
-                "aboutTitle" => localize("about.title"),
-                "firstAlt" => localize("paging.first.alternate"),
-                "previousAlt" => localize("paging.previous.alternate"),
-                "nextAlt" => localize("paging.next.alternate"),
-                "lastAlt" => localize("paging.last.alternate"),
-                "searchAlt" => localize("search.alternate"),
-                "sortAlt" => localize("sort.alternate"),
-                "sortByTitle" => localize("sortby.title"),
-                "homeAlt" => localize("home.alternate"),
-                "cogAlt" => localize("cog.alternate"),
-                "permalinkAlt" => localize("permalink.alternate"),
-                "publisherName" => localize("publisher.name"),
-                "pubdateTitle" => localize("pubdate.title"),
-                "pagesTitle" => localize("pages.title"),
-                "languagesTitle" => localize("languages.title"),
-                "languageTitle" => localize("language.title"),
-                "contentTitle" => localize("content.summary"),
-                "filterClearAll" => localize("filter.clearall"),
-                "sortorderAsc" => localize("search.sortorder.asc"),
-                "sortorderDesc" => localize("search.sortorder.desc"),
-                "customizeEmail" => localize("customize.email"),
-                "ratingsTitle" => localize("ratings.title"),
-                "ratingTitle" => localize("rating.title"),
-                "librariesTitle" => localize("libraries.title"),
-                "libraryTitle" => localize("library.title"),
-                "linkTitle" => localize("extra.link"),
-                "filesTitle" => localize("extra.files"),
-                "folderTitle" => localize("folder.title"),
-                "titleTitle" => localize("title.title"),
-                "filtersTitle" => localize("filters.title"),
-                "downloadAllTitle" => localize("downloadall.title"),
-                "downloadAllTooltip" => localize("downloadall.tooltip"),
+                "addedDateTitle" => $this->localize("addeddate.title"),
+                "coverAlt" => $this->localize("i18n.coversection"),
+                "authorsTitle" => $this->localize("authors.title"),
+                "authorTitle" => $this->localize("author.title"),
+                "allbooksTitle" => $this->localize("allbooks.title"),
+                "bookwordTitle" => $this->localize("bookword.title"),
+                "foldersTitle" => $this->localize("folders.title"),
+                "recentTitle" => $this->localize("recent.title"),
+                "tagsTitle" => $this->localize("tags.title"),
+                "tagwordTitle" => $this->localize("tagword.title"),
+                "linksTitle" => $this->localize("links.title"),
+                "seriesTitle" => $this->localize("series.title"),
+                "defaultTemplate" => $this->localize("default.template"),
+                "customizeTitle" => $this->localize("customize.title"),
+                "aboutTitle" => $this->localize("about.title"),
+                "firstAlt" => $this->localize("paging.first.alternate"),
+                "previousAlt" => $this->localize("paging.previous.alternate"),
+                "nextAlt" => $this->localize("paging.next.alternate"),
+                "lastAlt" => $this->localize("paging.last.alternate"),
+                "searchAlt" => $this->localize("search.alternate"),
+                "sortAlt" => $this->localize("sort.alternate"),
+                "sortByTitle" => $this->localize("sortby.title"),
+                "homeAlt" => $this->localize("home.alternate"),
+                "cogAlt" => $this->localize("cog.alternate"),
+                "permalinkAlt" => $this->localize("permalink.alternate"),
+                "publisherName" => $this->localize("publisher.name"),
+                "pubdateTitle" => $this->localize("pubdate.title"),
+                "pagesTitle" => $this->localize("pages.title"),
+                "languagesTitle" => $this->localize("languages.title"),
+                "languageTitle" => $this->localize("language.title"),
+                "contentTitle" => $this->localize("content.summary"),
+                "filterClearAll" => $this->localize("filter.clearall"),
+                "sortorderAsc" => $this->localize("search.sortorder.asc"),
+                "sortorderDesc" => $this->localize("search.sortorder.desc"),
+                "customizeEmail" => $this->localize("customize.email"),
+                "ratingsTitle" => $this->localize("ratings.title"),
+                "ratingTitle" => $this->localize("rating.title"),
+                "librariesTitle" => $this->localize("libraries.title"),
+                "libraryTitle" => $this->localize("library.title"),
+                "linkTitle" => $this->localize("extra.link"),
+                "filesTitle" => $this->localize("extra.files"),
+                "folderTitle" => $this->localize("folder.title"),
+                "titleTitle" => $this->localize("title.title"),
+                "filtersTitle" => $this->localize("filters.title"),
+                "downloadAllTitle" => $this->localize("downloadall.title"),
+                "downloadAllTooltip" => $this->localize("downloadall.tooltip"),
             ],
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here + url does not include author or title
@@ -532,8 +532,8 @@ class JsonRenderer extends BaseRenderer
                 $params['sort'] = 'SORTED';
                 $out ["sorturl"] = str_replace('SORTED', '{0}', $this->getLink($params));
                 $out ["sortoptions"] = [
-                    'name' => localize("sort.names"),
-                    'count' => localize("sort.count"),
+                    'name' => $this->localize("sort.names"),
+                    'count' => $this->localize("sort.count"),
                 ];
             } else {
                 $out ["sortoptions"] = [];
@@ -868,6 +868,7 @@ class JsonRenderer extends BaseRenderer
         $this->database = $request->database();
         // Adapt handler based on $request e.g. for rest api
         $this->setHandler($request->getHandler());
+        $this->setLocale($request->locale());
         // Use the configured home page if needed
         $this->homepage = PageId::getHomePage();
         $this->page = $request->get("page", $this->homepage);

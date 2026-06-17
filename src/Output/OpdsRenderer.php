@@ -213,7 +213,7 @@ class OpdsRenderer extends BaseRenderer
                 $link = new LinkFacet(
                     $href,
                     $lib,
-                    localize("tagword.title"),
+                    $this->localize("tagword.title"),
                     $filter == $Urlfilter,
                     null
                 );
@@ -400,7 +400,7 @@ class OpdsRenderer extends BaseRenderer
         } else {
             $sortUrl .= "?sort={0}";
         }
-        $sortLabel = localize("sort.alternate");
+        $sortLabel = $this->localize("sort.alternate");
         $sortParam = $request->get('sort');
         $sortOptions = $page->getSortOptions();
         // @todo we can't use really facetGroups here, or OPDS reader thinks we're drilling down :-()
@@ -436,8 +436,8 @@ class OpdsRenderer extends BaseRenderer
         //$params = $request->getCleanParams();
         //$params['filter'] = 1;
         //$href = fn() => $this->getLink($params);
-        //$filterLabel = localize("cog.alternate");
-        //$title = localize("links.title");
+        //$filterLabel = $this->localize("cog.alternate");
+        //$title = $this->localize("links.title");
         //$link = new LinkFacet($href, $title, $filterLabel, false, null);
         //$this->renderLink($link);
         // Note: facets are only shown if there are books available, so we need to get a filter page here
@@ -458,7 +458,7 @@ class OpdsRenderer extends BaseRenderer
                 continue;
             }
             $group = strtolower($entry->className);
-            $group = localize($group . 's.title');
+            $group = $this->localize($group . 's.title');
             $href = fn() => $entry->getNavLink($extraParams);
             // replace "1 / N" pagination with "1" page number for OPDS feeds
             if (!empty($entry->numberOfElement) && is_string($entry->numberOfElement) && str_contains($entry->numberOfElement, '/')) {

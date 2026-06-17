@@ -270,7 +270,8 @@ class EPubReader extends BaseRenderer
         if (empty($path)) {
             throw new InvalidArgumentException('Missing path');
         }
-        $book = Book::getBookByFolderPath($path, $database);
+        $locale = $this->request->locale();
+        $book = Book::getBookByFolderPath($path, $database, $locale);
         if (!$book) {
             throw new InvalidArgumentException('Unknown book ' . basename($path));
         }

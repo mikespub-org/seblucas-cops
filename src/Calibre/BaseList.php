@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -20,6 +21,7 @@ use SebLucas\Cops\Model\LinkNavigation;
 class BaseList
 {
     use HasRouteTrait;
+    use HasLocaleTrait;
 
     public const URL_PARAM_LIST = "idlist";
 
@@ -49,6 +51,8 @@ class BaseList
         $this->setOrderBy();
         // get handler based on $this->request
         $this->setHandler($this->request->getHandler());
+        // get locale based on $this->request
+        $this->setLocale($this->request->locale());
     }
 
     /**
@@ -139,7 +143,7 @@ class BaseList
     public function getInstanceById($id)
     {
         assert(is_subclass_of($this->className, Base::class));
-        return $this->className::getInstanceById($id, $this->databaseId);
+        return $this->className::getInstanceById($id, $this->databaseId, $this->locale);
     }
 
     /**
@@ -162,6 +166,7 @@ class BaseList
         $count = $this->countWithoutEntries();
         $instance = $this->getInstanceById(null);
         $instance->setHandler($this->handler);
+        $instance->setLocale($this->locale);
         return $instance->getEntry($count);
     }
 
@@ -396,7 +401,7 @@ class BaseList
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->className::PAGE_ID . ':' . $param . ':' . $post->groupid,
-                str_format(localize($countword, $post->count), $post->count),
+                str_format($this->localize($countword, $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, "subsection") ],
                 $this->databaseId,
@@ -479,6 +484,7 @@ class BaseList
         if (!isset($instance)) {
             $instance = $this->getInstanceById(null);
             $instance->setHandler($this->handler);
+            $instance->setLocale($this->locale);
             $instance->setFilterLimit($this->numberPerPage);
         }
         $limit = $instance->getFilterLimit();
@@ -495,7 +501,7 @@ class BaseList
         // @todo we can't use facetGroups here, or OPDS reader thinks we're drilling down :-()
         $className = $instance->getClassName($this->className);
         $title = strtolower($className);
-        $title = localize($title . 's.title');
+        $title = $this->localize($title . 's.title');
         $href = $instance->getUri();
         $maxPage = ceil($total / $limit);
         if ($n > 1) {
@@ -509,7 +515,7 @@ class BaseList
                 $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n - 1);
             }
             $entry = new Entry(
-                localize("paging.previous.alternate") . " " . $title,
+                $this->localize("paging.previous.alternate") . " " . $title,
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
@@ -529,7 +535,7 @@ class BaseList
             }
             $paging .= '&g[' . $this->className::URL_PARAM . ']=' . strval($n + 1);
             $entry = new Entry(
-                localize("paging.next.alternate") . " " . $title,
+                $this->localize("paging.next.alternate") . " " . $title,
                 $instance->getEntryId() . ':filter:',
                 $instance->getContent($count),
                 "text",
@@ -633,6 +639,7 @@ class BaseList
         while ($post = $result->fetchObject()) {
             $instance = new $this->className($post, $this->databaseId);
             $instance->setHandler($this->handler);
+            $instance->setLocale($this->locale);
             array_push($entryArray, $instance->getEntry($post->count, $params));
         }
         return $entryArray;
@@ -678,6 +685,7 @@ class BaseList
             /** @var Category $instance */
             $instance = new $this->className($post, $this->databaseId);
             $instance->setHandler($this->handler);
+            $instance->setLocale($this->locale);
             if (!$expand && $instance->hasParentCategory()) {
                 // add count to parent entry
                 $parent = $instance->getParentCategory();
@@ -755,6 +763,7 @@ class BaseList
                 assert(is_subclass_of($this->className, Base::class));
                 $instances[$post->id] = new $this->className($post, $this->databaseId);
                 $instances[$post->id]->setHandler($this->handler);
+                $instances[$post->id]->setLocale($this->locale);
             }
         }
         return $instances;

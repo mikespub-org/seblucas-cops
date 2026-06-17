@@ -91,7 +91,7 @@ class CustomColumnTypeRating extends CustomColumnType
     public function getCustom($id)
     {
         $value = intval($id) / 2;
-        return new CustomColumn($id, str_format(localize("customcolumn.stars", $value), (string) $value), $this);
+        return new CustomColumn($id, str_format($this->localize("customcolumn.stars", $value), (string) $value), $this);
     }
 
     /**
@@ -118,7 +118,7 @@ class CustomColumnTypeRating extends CustomColumnType
         for ($i = 0; $i <= 5; $i++) {
             $id = $i * 2;
             $count = $countArray[$id];
-            $name = str_format(localize("customcolumn.stars", $i), (string) $i);
+            $name = str_format($this->localize("customcolumn.stars", $i), (string) $i);
             $customcolumn = new CustomColumn($id, $name, $this);
             array_push($entryArray, $customcolumn->getEntry($count));
         }
@@ -142,7 +142,7 @@ class CustomColumnTypeRating extends CustomColumnType
      */
     public function getContent($count = 0)
     {
-        return localize("customcolumn.description.rating");
+        return $this->localize("customcolumn.description.rating");
     }
 
     /**
@@ -158,9 +158,9 @@ class CustomColumnTypeRating extends CustomColumnType
         $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
             $rating = intval($post->value) / 2;
-            return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $rating), (string) $rating), $this);
+            return new CustomColumn($post->value, str_format($this->localize("customcolumn.stars", $rating), (string) $rating), $this);
         }
-        return new CustomColumn(null, localize("customcolumn.rating.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.rating.unknown"), $this);
     }
 
     /**

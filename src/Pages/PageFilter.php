@@ -53,7 +53,7 @@ class PageFilter extends Page
         $this->filterParams = $this->request->getFilterParams();
         $this->getEntries();
         $this->idPage = Filter::PAGE_ID;
-        $this->title = localize("filters.title");
+        $this->title = $this->localize("filters.title");
     }
 
     /**
@@ -109,9 +109,10 @@ class PageFilter extends Page
         $params = $this->filterParams;
         $params['db'] = $this->getDatabaseId();
         $req = Request::build($params, $this->handler);
-        $filtersTitle = localize("filters.title");
+        $req->locale = $this->locale;
+        $filtersTitle = $this->localize("filters.title");
         if (in_array('author', $filterLinks)) {
-            $title = localize("authors.title");
+            $title = $this->localize("authors.title");
             $href = fn() => $this->getRoute(Author::ROUTE_ALL, $params);
             $relation = "authors";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
@@ -121,7 +122,7 @@ class PageFilter extends Page
             $this->addEntries($baselist->getRequestEntries($paging[Author::URL_PARAM]));
         }
         if (in_array('language', $filterLinks)) {
-            $title = localize("languages.title");
+            $title = $this->localize("languages.title");
             $href = fn() => $this->getRoute(Language::ROUTE_ALL, $params);
             $relation = "languages";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
@@ -131,7 +132,7 @@ class PageFilter extends Page
             $this->addEntries($baselist->getRequestEntries($paging[Language::URL_PARAM]));
         }
         if (in_array('publisher', $filterLinks)) {
-            $title = localize("publishers.title");
+            $title = $this->localize("publishers.title");
             $href = fn() => $this->getRoute(Publisher::ROUTE_ALL, $params);
             $relation = "publishers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
@@ -141,7 +142,7 @@ class PageFilter extends Page
             $this->addEntries($baselist->getRequestEntries($paging[Publisher::URL_PARAM]));
         }
         if (in_array('rating', $filterLinks)) {
-            $title = localize("ratings.title");
+            $title = $this->localize("ratings.title");
             $href = fn() => $this->getRoute(Rating::ROUTE_ALL, $params);
             $relation = "ratings";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
@@ -151,7 +152,7 @@ class PageFilter extends Page
             $this->addEntries($baselist->getRequestEntries($paging[Rating::URL_PARAM]));
         }
         if (in_array('series', $filterLinks)) {
-            $title = localize("series.title");
+            $title = $this->localize("series.title");
             $href = fn() => $this->getRoute(Serie::ROUTE_ALL, $params);
             $relation = "series";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
@@ -161,7 +162,7 @@ class PageFilter extends Page
             $this->addEntries($baselist->getRequestEntries($paging[Serie::URL_PARAM]));
         }
         if (in_array('tag', $filterLinks)) {
-            $title = localize("tags.title");
+            $title = $this->localize("tags.title");
             $href = fn() => $this->getRoute(Tag::ROUTE_ALL, $params);
             $relation = "tags";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
@@ -171,7 +172,7 @@ class PageFilter extends Page
             $this->addEntries($baselist->getRequestEntries($paging[Tag::URL_PARAM]));
         }
         if (in_array('identifier', $filterLinks)) {
-            $title = localize("identifiers.title");
+            $title = $this->localize("identifiers.title");
             $href = fn() => $this->getRoute(Identifier::ROUTE_ALL, $params);
             $relation = "identifiers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
@@ -181,7 +182,7 @@ class PageFilter extends Page
             $this->addEntries($baselist->getRequestEntries($paging[Identifier::URL_PARAM]));
         }
         if (in_array('format', $filterLinks)) {
-            $title = localize("formats.title");
+            $title = $this->localize("formats.title");
             $href = fn() => $this->getRoute(Format::ROUTE_ALL, $params);
             $relation = "formats";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);

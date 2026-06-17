@@ -93,11 +93,11 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getCustom($id)
     {
         if (empty($id)) {
-            return new CustomColumn(null, localize("customcolumn.date.unknown"), $this);
+            return new CustomColumn(null, $this->localize("customcolumn.date.unknown"), $this);
         }
         $date = new DateTime($id);
 
-        return new CustomColumn($id, $date->format(localize("customcolumn.date.format")), $this);
+        return new CustomColumn($id, $date->format($this->localize("customcolumn.date.format")), $this);
     }
 
     /**
@@ -121,7 +121,7 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
             $id = $date->format("Y-m-d");
-            $name = $date->format(localize("customcolumn.date.format"));
+            $name = $date->format($this->localize("customcolumn.date.format"));
 
             $customcolumn = new CustomColumn($id, $name, $this);
             array_push($entryArray, $customcolumn->getEntry($post->count));
@@ -168,7 +168,7 @@ class CustomColumnTypeDate extends CustomColumnType
             array_push($entryArray, new Entry(
                 $post->groupid,
                 $this->getEntryId() . ':' . $param . ':' . $post->groupid,
-                str_format(localize('bookword', $post->count), $post->count),
+                str_format($this->localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, null, null) ],
                 $this->databaseId,
@@ -206,7 +206,7 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
             $id = $date->format("Y-m-d");
-            $name = $date->format(localize("customcolumn.date.format"));
+            $name = $date->format($this->localize("customcolumn.date.format"));
 
             $customcolumn = new CustomColumn($id, $name, $this);
             array_push($entryArray, $customcolumn->getEntry($post->count));
@@ -229,9 +229,9 @@ class CustomColumnTypeDate extends CustomColumnType
         if ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
 
-            return new CustomColumn($date->format("Y-m-d"), $date->format(localize("customcolumn.date.format")), $this);
+            return new CustomColumn($date->format("Y-m-d"), $date->format($this->localize("customcolumn.date.format")), $this);
         }
-        return new CustomColumn(null, localize("customcolumn.date.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.date.unknown"), $this);
     }
 
     /**

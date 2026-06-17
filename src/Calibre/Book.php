@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkResource;
@@ -29,6 +30,7 @@ use UnexpectedValueException;
 class Book
 {
     use HasRouteTrait;
+    use HasLocaleTrait;
 
     public const PAGE_ID = PageId::ALL_BOOKS_ID;
     public const PAGE_ALL = PageId::ALL_BOOKS;
@@ -281,7 +283,7 @@ class Book
     public function getLanguages($n = -1, $sort = null)
     {
         if (is_null($this->languages)) {
-            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId);
+            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId, $this->locale);
         }
         return $this->languages;
     }
@@ -517,7 +519,7 @@ class Book
         $addition = '';
         $se = $this->getSerie();
         if (!empty($se) && $withSerie) {
-            $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), (string) $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
+            $addition = $addition . '<strong>' . $this->localize('content.series') . '</strong>' . str_format($this->localize('content.series.data'), (string) $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
         //if (preg_match('/<\/(div|p|a|span)>/', $this->comment)) {
         return $addition . OutputFormat::html2xhtml($this->comment);
@@ -684,8 +686,10 @@ class Book
         foreach ($columns as $lookup) {
             $col = CustomColumnType::createByLookup($lookup, $database);
             if (!is_null($col)) {
+                $col->setLocale($this->getLocale());
                 $cust = $col->getCustomByBook($this);
                 $cust->setHandler($this->getHandler());
+                $cust->setLocale($this->getLocale());
                 if ($asArray) {
                     array_push($result, $cust->toArray());
                 } else {
@@ -745,7 +749,7 @@ class Book
                 new LinkFeed(
                     $href,
                     'related',
-                    str_format(localize('bookentry.author'), localize('splitByLetter.book.other'), $author->name)
+                    str_format($this->localize('bookentry.author'), $this->localize('splitByLetter.book.other'), $author->name)
                 )
             );
         }
@@ -760,7 +764,7 @@ class Book
                 new LinkFeed(
                     $href,
                     'related',
-                    str_format(localize('content.series.data'), (string) $this->seriesIndex, (string) $serie->name)
+                    str_format($this->localize('content.series.data'), (string) $this->seriesIndex, (string) $serie->name)
                 )
             );
         }
@@ -881,11 +885,12 @@ where data.book = books.id and data.id = ?';
      * Summary of getBookByFolderPath
      * @param string $path
      * @param ?int $database
+     * @param ?string $locale
      * @return Book
      */
-    public static function getBookByFolderPath($path, $database = null)
+    public static function getBookByFolderPath($path, $database = null, $locale = null)
     {
-        return Folder::getBookByFolderPath($path, $database);
+        return Folder::getBookByFolderPath($path, $database, $locale);
     }
 
     /**

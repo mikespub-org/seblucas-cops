@@ -98,6 +98,7 @@ class BookTest extends TestCase
         // also check most of book's class methods
         $book = Book::getBookById(2);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
 
         $linkArray = $book->getLinkArray();
         $this->assertCount(4, $linkArray);
@@ -234,6 +235,7 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(2);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
 
         $linkArray = $book->getLinkArray();
         foreach ($linkArray as $link) {
@@ -253,6 +255,7 @@ class BookTest extends TestCase
 
         $book = Book::getBookById(17);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
 
         $linkArray = $book->getLinkArray();
         $found = 0;
@@ -363,6 +366,7 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $response = new FileResponse();
 
+        $book->setLocale('en');
         ob_start();
         $result = $book->sendUpdatedEpub(20, $response);
         $result->send();

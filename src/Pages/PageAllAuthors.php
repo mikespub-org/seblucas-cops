@@ -25,7 +25,7 @@ class PageAllAuthors extends Page
     {
         $this->getEntries();
         $this->idPage = Author::PAGE_ID;
-        $this->title = localize("authors.title");
+        $this->title = $this->localize("authors.title");
     }
 
     /**

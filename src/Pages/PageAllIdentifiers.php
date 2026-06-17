@@ -26,7 +26,7 @@ class PageAllIdentifiers extends Page
     {
         $this->getEntries();
         $this->idPage = Identifier::PAGE_ID;
-        $this->title = localize("identifiers.title");
+        $this->title = $this->localize("identifiers.title");
     }
 
     /**

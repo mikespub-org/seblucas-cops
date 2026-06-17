@@ -24,7 +24,7 @@ class PageRecentBooks extends Page
     {
         $this->getEntries();
         $this->idPage = PageId::ALL_RECENT_BOOKS_ID;
-        $this->title = localize("recent.title");
+        $this->title = $this->localize("recent.title");
     }
 
     /**

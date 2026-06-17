@@ -26,7 +26,7 @@ class PageAllFormats extends Page
     {
         $this->getEntries();
         $this->idPage = Format::PAGE_ID;
-        $this->title = localize("formats.title");
+        $this->title = $this->localize("formats.title");
     }
 
     /**

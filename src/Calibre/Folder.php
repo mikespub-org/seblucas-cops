@@ -99,7 +99,7 @@ class Folder extends Category
      */
     public function getParentTitle()
     {
-        return localize("folders.title");
+        return $this->localize("folders.title");
     }
 
     /**
@@ -426,6 +426,7 @@ class Folder extends Category
         $line = (object) ['id' => $bookId, 'title' => $bookName, 'path' => $bookPath, 'timestamp' => $timestamp, 'has_cover' => $hasCover];
         $book = new Book($line);
         $book->setHandler($this->handler);
+        $book->setLocale($this->locale);
         if (!empty($metadata)) {
             $metadata->updateBook($book);
         }
@@ -474,6 +475,7 @@ class Folder extends Category
         $post = (object) ['id' => $childId, 'name' => $name, 'root' => $this->root];
         $childFolder = new Folder($post, $this->getDatabaseId());
         $childFolder->setHandler($this->handler);
+        $childFolder->setLocale($this->locale);
         $childFolder->parent = $this;
         $childFolder->scanned = true;
         $this->children[$name] = $childFolder;
@@ -490,6 +492,8 @@ class Folder extends Category
         $folder = $this;
         while ($folder->parent) {
             $folder = $folder->parent;
+            // when parentTrail is built before $this gets locale
+            $folder->setLocale($this->locale);
             $entry = $folder->getEntry($folder->count);
             $entry->title = static::findCurrentName($entry->title);
             $trail[] = $entry;
@@ -501,12 +505,13 @@ class Folder extends Category
      * Summary of getCount
      * @param ?int $database not used here
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getCount($database, $handler)
+    public static function getCount($database, $handler, $locale = null)
     {
         $count = 1;
-        return static::getCountEntry($count, $database, "folders", $handler);
+        return static::getCountEntry($count, $database, "folders", $handler, [], $locale);
     }
 
     /**
@@ -554,6 +559,8 @@ class Folder extends Category
         }
         $entryArray = [];
         foreach ($bookList as $book) {
+            // when bookList is built before $folder gets locale
+            $book->setLocale($folder->locale);
             array_push($entryArray, $book->getEntry());
         }
         return [$entryArray, $totalNumber];
@@ -564,15 +571,16 @@ class Folder extends Category
      * @param string|int|null $id used for the folder here
      * @param ?int $database not used here
      * @param ?string $root
+     * @param ?string $locale
      * @return self
      */
-    public static function getInstanceById($id, $database = null, $root = null)
+    public static function getInstanceById($id, $database = null, $root = null, $locale = null)
     {
         if (!empty($id)) {
             $name = static::findCurrentName($id);
             return new Folder((object) ['id' => $id, 'name' => $name, 'root' => $root], $database);
         }
-        return self::getRootFolder($root, $database);
+        return self::getRootFolder($root, $database, $locale);
     }
 
     /**
@@ -581,18 +589,20 @@ class Folder extends Category
      */
     public static function getDefaultName()
     {
-        return localize("folders.root");
+        return "folders.root";
     }
 
     /**
      * Summary of getRootFolder
      * @param ?string $root
      * @param ?int $database not used here
+     * @param ?string $locale
      * @return Folder
      */
-    public static function getRootFolder($root = null, $database = null)
+    public static function getRootFolder($root = null, $database = null, $locale = null)
     {
         $default = self::getDefaultName();
+        $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'root' => $root];
         return new Folder($post, $database);
@@ -602,10 +612,11 @@ class Folder extends Category
      * Summary of getBookByFolderPath
      * @param string $path
      * @param ?int $database
+     * @param ?string $locale
      * @throws \InvalidArgumentException
      * @return Book
      */
-    public static function getBookByFolderPath($path, $database = null)
+    public static function getBookByFolderPath($path, $database = null, $locale = null)
     {
         $fileName = basename($path);
         $folderId = dirname($path);
@@ -616,8 +627,9 @@ class Folder extends Category
         if (empty($root) || !is_dir($root)) {
             throw new InvalidArgumentException("Invalid Root");
         }
-        $folder = Folder::getInstanceById($folderId, $database, $root);
+        $folder = Folder::getInstanceById($folderId, $database, $root, $locale);
         $folder->setHandler(HtmlHandler::class);
+        $folder->setLocale($locale);
         // force looking for book files here
         $folder->findBookFiles(null, false);
         $instance = $folder->getChildFolderById($folderId, false);

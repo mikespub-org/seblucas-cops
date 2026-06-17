@@ -162,7 +162,7 @@ class CustomColumnTypeInteger extends CustomColumnType
             array_push($entryArray, new Entry(
                 $range,
                 $this->getEntryId() . ':' . $param . ':' . $range,
-                str_format(localize('bookword', $post->count), $post->count),
+                str_format($this->localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, null, null) ],
                 $this->databaseId,
@@ -222,7 +222,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }
-        return new CustomColumn(null, localize("customcolumn.int.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.int.unknown"), $this);
     }
 
     /**

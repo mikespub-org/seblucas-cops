@@ -42,8 +42,9 @@ class PageFolderDetail extends PageWithDetail
         if (!empty($getFiles) && !is_file($getFiles)) {
             throw new InvalidArgumentException('Invalid Files (browse_books_getfiles)');
         }
-        $folder = Folder::getRootFolder($root, $this->getDatabaseId());
+        $folder = Folder::getRootFolder($root, $this->getDatabaseId(), $this->getLocale());
         $folder->setHandler($this->handler);
+        $folder->setLocale($this->locale);
         $bookName = null;
         if (!empty($this->idGet)) {
             $ebook = $this->request->get('ebook');
@@ -117,6 +118,7 @@ class PageFolderDetail extends PageWithDetail
             $this->book->comment = Comment::fixCalibreLinks($this->book->comment, $this->getDatabaseId());
         }
         $this->book->setHandler($this->handler);
+        $this->book->setLocale($this->locale);
         $this->idPage = $this->book->getEntryId();
         $this->title = $this->book->getTitle();
         $this->currentUri = $this->book->getUri();

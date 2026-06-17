@@ -106,8 +106,7 @@ class Request
     public function locale()
     {
         if (!isset($this->locale)) {
-            $translator = new Translation($this->language());
-            [$this->locale, ] = $translator->getLangAndTranslationFile();
+            [$this->locale, ] = Translation::getLangAndTranslationFile($this->language());
         }
         return $this->locale;
     }

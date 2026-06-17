@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
+use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
@@ -24,6 +25,7 @@ use Exception;
 class BookList
 {
     use HasRouteTrait;
+    use HasLocaleTrait;
 
     public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
     public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
@@ -76,6 +78,8 @@ class BookList
         $this->setOrderBy();
         // get handler based on $this->request
         $this->setHandler($this->request->getHandler());
+        // get locale based on $this->request
+        $this->setLocale($this->request->locale());
     }
 
     /**
@@ -168,9 +172,9 @@ class BookList
             $linkArray = [ new LinkFeed($href, null) ];
         }
         $entry = new Entry(
-            localize('allbooks.title'),
+            $this->localize('allbooks.title'),
             Book::PAGE_ID,
-            str_format(localize('allbooks.alphabetical', $nBooks), (string) $nBooks),
+            str_format($this->localize('allbooks.alphabetical', $nBooks), (string) $nBooks),
             'text',
             $linkArray,
             $this->databaseId,
@@ -196,9 +200,9 @@ class BookList
         $href = fn() => $this->getRoute(self::ROUTE_RECENT, $params);
         $count = ($nBooks > $limit) ? $limit : $nBooks;
         $entry = new Entry(
-            localize('recent.title'),
+            $this->localize('recent.title'),
             PageId::ALL_RECENT_BOOKS_ID,
-            str_format(localize('recent.list'), $count),
+            str_format($this->localize('recent.list'), $count),
             'text',
             [ new LinkFeed($href, 'http://opds-spec.org/sort/new')],
             $this->databaseId,
@@ -394,7 +398,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
             array_push($entryArray, new Entry(
                 $post->groupid,
                 Book::PAGE_ID . ':' . $param . ':' . $post->groupid,
-                str_format(localize('bookword', $post->count), $post->count),
+                str_format($this->localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkFeed($href, "subsection") ],
                 $this->databaseId,
@@ -495,6 +499,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $this->databaseId);
             $book->setHandler($this->handler);
+            $book->setLocale($this->locale);
             array_push($entryArray, $book->getEntry());
         }
         return [$entryArray, $totalNumber];
@@ -513,6 +518,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         while ($post = $result->fetchObject()) {
             $book = new Book($post, $this->databaseId);
             $book->setHandler($this->handler);
+            $book->setLocale($this->locale);
             $this->bookList[$book->id] = $book;
         }
         $entryArray = [];

@@ -84,6 +84,7 @@ class JsonRendererTest extends TestCase
     {
         $book = Book::getBookById(17);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
 
         $renderer = new JsonRenderer();
         $test = $renderer->getBookContentArray($book);
@@ -102,8 +103,10 @@ class JsonRendererTest extends TestCase
     {
         $book = Book::getBookById(2);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
 
         $renderer = new JsonRenderer();
+        $renderer->setLocale('en');
         $test = $renderer->getBookContentArray($book);
 
         $this->assertCount(1, $test ["preferedData"]);
@@ -120,8 +123,10 @@ class JsonRendererTest extends TestCase
     {
         $book = Book::getBookById(17);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
 
         $renderer = new JsonRenderer();
+        $renderer->setLocale('en');
         $test = $renderer->getFullBookContentArray($book);
 
         $this->assertEquals(self::$fetcher::link() . "/covers/0/17.jpg", $test ["coverurl"]);
@@ -141,8 +146,10 @@ class JsonRendererTest extends TestCase
         Database::clearDb();
         $book = Book::getBookById(17);
         $book->setHandler(self::$handler);
+        $book->setLocale('en');
 
         $renderer = new JsonRenderer();
+        $renderer->setLocale('en');
         $test = $renderer->getFullBookContentArray($book);
 
         $this->assertEquals(UriGenerator::path("./tests/BaseWithSomeBooks/Lewis%20Carroll/Alice%27s%20Adventures%20in%20Wonderland%20%2817%29/cover.jpg"), $test ["coverurl"]);

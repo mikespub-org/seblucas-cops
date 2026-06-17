@@ -168,7 +168,8 @@ class LoaderHandler extends BaseHandler
     public function setAuthorInfo($authorId, $authorInfo)
     {
         $database = $this->request->database();
-        $instance = Author::getInstanceById($authorId, $database);
+        $locale = $this->request->locale();
+        $instance = Author::getInstanceById($authorId, $database, $locale);
         if (empty($instance->id)) {
             return false;
         }
@@ -227,7 +228,8 @@ class LoaderHandler extends BaseHandler
     public function setSeriesInfo($seriesId, $seriesInfo)
     {
         $database = $this->request->database();
-        $instance = Serie::getInstanceById($seriesId, $database);
+        $locale = $this->request->locale();
+        $instance = Serie::getInstanceById($seriesId, $database, $locale);
         if (empty($instance->id)) {
             return false;
         }

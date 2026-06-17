@@ -26,7 +26,7 @@ class PageAllTags extends Page
     {
         $this->getEntries();
         $this->idPage = Tag::PAGE_ID;
-        $this->title = localize("tags.title");
+        $this->title = $this->localize("tags.title");
     }
 
     /**

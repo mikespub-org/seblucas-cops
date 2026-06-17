@@ -47,12 +47,13 @@ class MailHandler extends BaseHandler
             return Response::sendError($request, $error);
         }
 
+        $locale = $request->locale();
         if ($error = $mailer->sendMail($idData, $emailDest, $request, $dryRun)) {
             $response = new Response('text/plain');
-            return $response->setContent(localize("mail.messagenotsent") . $error);
+            return $response->setContent(localize("mail.messagenotsent", -1, $locale) . $error);
         }
 
         $response = new Response('text/plain');
-        return $response->setContent(localize("mail.messagesent"));
+        return $response->setContent(localize("mail.messagesent", -1, $locale));
     }
 }

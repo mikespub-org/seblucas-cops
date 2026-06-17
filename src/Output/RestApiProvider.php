@@ -809,6 +809,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         // @todo get item from annotations + corresponding title from instance
         foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
             $instance->setHandler($this->handler);
+            $instance->setLocale($this->locale);
             $entry = $instance->getEntry();
             array_push($result["entries"], [
                 "class" => $entry->className,
@@ -934,8 +935,10 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "folderId" => $folderId,
             "folder" => null,
         ];
-        $folder = Folder::getRootFolder($root);
+        $locale = $request->locale();
+        $folder = Folder::getRootFolder($root, $db, $locale);
         $folder->setHandler(HtmlHandler::class);
+        $folder->setLocale($locale);
         if (!empty($folderId)) {
             $folderPath = $folder->getFolderPath($folderId);
             if (is_dir($folderPath)) {

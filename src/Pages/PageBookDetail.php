@@ -32,6 +32,7 @@ class PageBookDetail extends Page
             $this->book->comment = Comment::fixCalibreLinks($this->book->comment, $this->getDatabaseId());
         }
         $this->book->setHandler($this->handler);
+        $this->book->setLocale($this->locale);
         $this->idPage = $this->book->getEntryId();
         $this->title = $this->book->getTitle();
         $this->currentUri = $this->book->getUri();

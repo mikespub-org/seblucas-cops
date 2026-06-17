@@ -68,7 +68,7 @@ class VirtualLibrary extends Base
      */
     public function getParentTitle()
     {
-        return localize("libraries.title");
+        return $this->localize("libraries.title");
     }
 
     /**
@@ -118,9 +118,10 @@ class VirtualLibrary extends Base
      * Summary of getEntries
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return array<Entry>
      */
-    public static function getEntries($database, $handler)
+    public static function getEntries($database, $handler, $locale = null)
     {
         $libraryList = Config::get('calibre_virtual_libraries', []);
         if (!empty($libraryList) && $libraryList === static::ALL_WILDCARD) {
@@ -138,6 +139,7 @@ class VirtualLibrary extends Base
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $value, 'count' => 0];
             $instance = new self($post, $database);
             $instance->setHandler($handler);
+            $instance->setLocale($locale);
             array_push($entryArray, $instance->getEntry($post->count));
             $id += 1;
         }
@@ -148,14 +150,16 @@ class VirtualLibrary extends Base
      * Summary of getWithoutEntry
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getWithoutEntry($database, $handler)
+    public static function getWithoutEntry($database, $handler, $locale = null)
     {
         $booklist = new BookList(null, $database);
         $count = $booklist->getBookCount();
-        $instance = self::getInstanceById(null, $database);
+        $instance = self::getInstanceById(null, $database, $locale);
         $instance->setHandler($handler);
+        $instance->setLocale($locale);
         return $instance->getEntry($count);
     }
 
@@ -165,29 +169,31 @@ class VirtualLibrary extends Base
      */
     public static function getDefaultName()
     {
-        return localize("libraries.none");
+        return "libraries.none";
     }
 
     /**
      * Summary of getCount
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getCount($database, $handler)
+    public static function getCount($database, $handler, $locale = null)
     {
         $libraries = self::getLibraries($database);
         $count = count($libraries);
-        return self::getCountEntry($count, $database, "libraries", $handler);
+        return self::getCountEntry($count, $database, "libraries", $handler, [], $locale);
     }
 
     /**
      * Summary of getInstanceById
      * @param string|int|null $id
      * @param ?int $database
+     * @param ?string $locale
      * @return self
      */
-    public static function getInstanceById($id, $database = null)
+    public static function getInstanceById($id, $database = null, $locale = null)
     {
         $libraries = self::getLibraries($database);
         if (!empty($id)) {
@@ -195,10 +201,11 @@ class VirtualLibrary extends Base
             $id = intval($id) - 1;
             $name = array_keys($libraries)[$id] ?? null;
             if (!empty($name)) {
-                return self::getInstanceByName($name);
+                return self::getInstanceByName($name, $database);
             }
         }
         $default = self::getDefaultName();
+        $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'value' => ''];
         return new self($post, $database);

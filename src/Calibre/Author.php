@@ -67,7 +67,7 @@ class Author extends Base
      */
     public function getParentTitle()
     {
-        return localize("authors.title");
+        return $this->localize("authors.title");
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */

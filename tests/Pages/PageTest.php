@@ -464,6 +464,7 @@ class PageTest extends TestCase
     {
         $author = Author::getInstanceById(1);
         $author->setHandler(JsonHandler::class);
+        $author->setLocale('en');
         $params = ['n' => 2];
 
         // navlink contains the paginated uri

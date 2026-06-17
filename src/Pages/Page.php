@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -22,6 +23,7 @@ use SebLucas\Cops\Model\LinkNavigation;
 class Page
 {
     use HasRouteTrait;
+    use HasLocaleTrait;
 
     /** @var string */
     public $title;
@@ -105,6 +107,7 @@ class Page
         $this->ignoredCategories = $this->request->option('ignored_categories');
         $this->databaseId = $this->request->database();
         $this->setHandler($this->request->getHandler());
+        $this->setLocale($this->request->locale());
     }
 
     /**
@@ -201,7 +204,7 @@ class Page
             return new LinkNavigation(
                 $href,
                 "first",
-                localize("paging.first.alternate")
+                $this->localize("paging.first.alternate")
             );
         }
         return null;
@@ -220,7 +223,7 @@ class Page
             return new LinkNavigation(
                 $href,
                 "last",
-                localize("paging.last.alternate")
+                $this->localize("paging.last.alternate")
             );
         }
         return null;
@@ -239,7 +242,7 @@ class Page
             return new LinkNavigation(
                 $href,
                 "next",
-                localize("paging.next.alternate")
+                $this->localize("paging.next.alternate")
             );
         }
         return null;
@@ -258,7 +261,7 @@ class Page
             return new LinkNavigation(
                 $href,
                 "previous",
-                localize("paging.previous.alternate")
+                $this->localize("paging.previous.alternate")
             );
         }
         return null;
@@ -286,15 +289,15 @@ class Page
         }
         $allowed = array_flip($sortLinks);
         $sortOptions = [
-            //'title' => localize("bookword.title"),
-            'title' => localize("sort.titles"),
-            'author' => localize("authors.title"),
-            'pubdate' => localize("pubdate.title"),
-            'rating' => localize("ratings.title"),
-            'timestamp' => localize("recent.title"),
-            //'series' => localize("series.title"),
-            //'language' => localize("languages.title"),
-            //'publisher' => localize("publishers.title"),
+            //'title' => $this->localize("bookword.title"),
+            'title' => $this->localize("sort.titles"),
+            'author' => $this->localize("authors.title"),
+            'pubdate' => $this->localize("pubdate.title"),
+            'rating' => $this->localize("ratings.title"),
+            'timestamp' => $this->localize("recent.title"),
+            //'series' => $this->localize("series.title"),
+            //'language' => $this->localize("languages.title"),
+            //'publisher' => $this->localize("publishers.title"),
         ];
         return array_intersect_key($sortOptions, $allowed);
     }

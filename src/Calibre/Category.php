@@ -170,6 +170,7 @@ abstract class Category extends Base
         if (!empty($this->parent)) {
             $this->parent->count = 0;
             $this->parent->setHandler($this->handler);
+            $this->parent->setLocale($this->locale);
             return $this->parent;
         }
         // parent is missing - try to create it
@@ -222,6 +223,7 @@ abstract class Category extends Base
                 }
             }
             $parent->setHandler($this->handler);
+            $parent->setLocale($this->locale);
             $entry = $parent->getEntry();
             $entry->title = static::findCurrentName($entry->title);
             $trail[] = $entry;
@@ -263,6 +265,7 @@ abstract class Category extends Base
             $instance = new $className($post, $this->databaseId);
             $instance->count = $post->count;
             $instance->setHandler($this->handler);
+            $instance->setLocale($this->locale);
             array_push($instances, $instance);
         }
         return $instances;
@@ -312,12 +315,14 @@ abstract class Category extends Base
         if ($instance) {
             $instance->count = 0;
             $instance->setHandler($this->handler);
+            $instance->setLocale($this->locale);
         } else {
             // create dummy parent for missing hierarchy? doesn't help filter by it afterwards :-(
             //$className = static::class;
             // use id = 0 to support route urls
             //$instance = new $className((object) ['id' => 0, 'name' => $name, 'sort' => $name, 'count' => 0], $this->databaseId);
             //$instance->setHandler($this->handler);
+            //$instance->setLocale($this->locale);
         }
         return $instance;
     }

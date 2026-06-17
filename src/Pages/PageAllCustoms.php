@@ -33,6 +33,7 @@ class PageAllCustoms extends Page
         $customId = $this->request->get("custom", null);
         $columnType = CustomColumnType::createByCustomID($customId, $this->getDatabaseId(), false);
         $columnType->setHandler($this->handler);
+        $columnType->setLocale($this->locale);
 
         $this->idPage = $columnType->getEntryId();
         $this->title = $columnType->getTitle();
@@ -88,7 +89,7 @@ class PageAllCustoms extends Page
             /** @var Entry $entry */
             $count += $entry->numberOfElement;
         }
-        $this->title = str_format(localize("splitByYear.year"), str_format(localize("bookword", $count), $count), $year);
+        $this->title = str_format($this->localize("splitByYear.year"), str_format($this->localize("bookword", $count), $count), $year);
         $this->parentTitle = $columnType->getTitle();
         $this->parentUri = $columnType->getUri();
     }
@@ -115,7 +116,7 @@ class PageAllCustoms extends Page
             /** @var Entry $entry */
             $count += $entry->numberOfElement;
         }
-        $this->title = str_format(localize("splitByRange.range"), str_format(localize("bookword", $count), $count), $range);
+        $this->title = str_format($this->localize("splitByRange.range"), str_format($this->localize("bookword", $count), $count), $range);
         $this->parentTitle = $columnType->getTitle();
         $this->parentUri = $columnType->getUri();
     }
@@ -131,8 +132,9 @@ class PageAllCustoms extends Page
         if ($columnType instanceof CustomColumnTypeBool || $columnType instanceof CustomColumnTypeRating) {
             return;
         }
-        $instance = new CustomColumn(null, localize("customcolumn.boolean.unknown"), $columnType);
+        $instance = new CustomColumn(null, $this->localize("customcolumn.boolean.unknown"), $columnType);
         $instance->setHandler($this->handler);
+        $instance->setLocale($this->locale);
         // @todo support countWithoutEntries() for CustomColumn
         $booklist = new BookList($this->request);
         $booklist->orderBy = null;

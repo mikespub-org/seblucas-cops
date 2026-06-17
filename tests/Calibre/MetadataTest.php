@@ -36,6 +36,7 @@ class MetadataTest extends TestCase
         $expected = $this->getExpectedComicInfo();
         $this->assertEquals($expected['title'], $book->getTitle());
         $this->assertEquals($expected['pubdate'], $book->pubdate);
+        $book->setLocale('en');
         $this->assertStringContainsString($expected['comment'], $book->getComment());
         $this->assertEquals($expected['authors'][0]['name'], $book->getAuthors()[0]->name);
         $this->assertEquals($expected['publisher']['name'], $book->getPublisher()->name);

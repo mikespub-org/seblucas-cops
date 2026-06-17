@@ -124,6 +124,7 @@ class FetchHandlerTest extends TestCase
 
         // set request handler to 'TestHandler' class to override output buffer check in handler
         $request = Request::build(['data' => 20, 'type' => 'epub'], self::$handler);
+        $request->locale = 'en';
         $handler = self::$manager->createHandler('fetch', self::$context);
 
         ob_start();

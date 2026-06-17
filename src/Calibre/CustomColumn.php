@@ -51,6 +51,7 @@ class CustomColumn extends Category
         $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value);
         $this->databaseId = $this->customColumnType->getDatabaseId();
         $this->handler = $this->customColumnType->getHandler();
+        $this->locale = $this->customColumnType->getLocale();
     }
 
     /**
@@ -245,6 +246,18 @@ class CustomColumn extends Category
         // set handler for customColumnType too - see getParentUri()
         $this->customColumnType->setHandler($handler);
         $this->handler = $handler;
+    }
+
+    /**
+     * Summary of setLocale
+     * @param string $locale
+     * @return void
+     */
+    public function setLocale($locale)
+    {
+        // set locale for customColumnType too - if needed
+        $this->customColumnType->setLocale($locale);
+        $this->locale = $locale;
     }
 
     /**

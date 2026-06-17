@@ -22,9 +22,9 @@ class CustomColumnTypeBool extends CustomColumnType
     // PHP pre 5.6 does not support const arrays
     /** @var array<int, string> */
     protected $BOOLEAN_NAMES = [
-        -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
-        0 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
-        +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
+        -1 => "customcolumn.boolean.unknown", // $this->localize("customcolumn.boolean.unknown")
+        0 => "customcolumn.boolean.no",      // $this->localize("customcolumn.boolean.no")
+        +1 => "customcolumn.boolean.yes",     // $this->localize("customcolumn.boolean.yes")
     ];
 
     /**
@@ -92,7 +92,7 @@ class CustomColumnTypeBool extends CustomColumnType
      */
     public function getCustom($id)
     {
-        return new CustomColumn($id, localize($this->BOOLEAN_NAMES[$id]), $this);
+        return new CustomColumn($id, $this->localize($this->BOOLEAN_NAMES[$id]), $this);
     }
 
     /**
@@ -110,7 +110,7 @@ class CustomColumnTypeBool extends CustomColumnType
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $name = localize($this->BOOLEAN_NAMES[$post->id]);
+            $name = $this->localize($this->BOOLEAN_NAMES[$post->id]);
             $customcolumn = new CustomColumn($post->id, $name, $this);
             array_push($entryArray, $customcolumn->getEntry($post->count));
         }
@@ -133,7 +133,7 @@ class CustomColumnTypeBool extends CustomColumnType
      */
     public function getContent($count = 0)
     {
-        return localize("customcolumn.description.bool");
+        return $this->localize("customcolumn.description.bool");
     }
 
     /**
@@ -148,9 +148,9 @@ class CustomColumnTypeBool extends CustomColumnType
 
         $result = Database::query($query, [$book->id], $this->databaseId);
         if ($post = $result->fetchObject()) {
-            return new CustomColumn($post->boolvalue, localize($this->BOOLEAN_NAMES[$post->boolvalue]), $this);
+            return new CustomColumn($post->boolvalue, $this->localize($this->BOOLEAN_NAMES[$post->boolvalue]), $this);
         } else {
-            return new CustomColumn(-1, localize($this->BOOLEAN_NAMES[-1]), $this);
+            return new CustomColumn(-1, $this->localize($this->BOOLEAN_NAMES[-1]), $this);
         }
     }
 

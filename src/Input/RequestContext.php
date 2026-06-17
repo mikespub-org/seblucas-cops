@@ -21,6 +21,9 @@ use SebLucas\Cops\Routing\UriGenerator;
  */
 class RequestContext
 {
+    /** @var class-string */
+    public static $sessionClass = Session::class;
+
     private Request $request;
     private HandlerManager $manager;
     private RouterInterface $router;
@@ -274,7 +277,7 @@ class RequestContext
 
     public function getSession(): Session
     {
-        $this->session ??= new Session();
+        $this->session ??= new self::$sessionClass();
         return $this->session;
     }
 

@@ -115,6 +115,7 @@ class FetchHandler extends BaseHandler
         }
 
         if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
+            $book->setLocale($request->locale());
             return $this->sendUpdatedEpub($request, $book, $data);
         }
 
@@ -232,7 +233,8 @@ class FetchHandler extends BaseHandler
     public function sendFolderFile($request, $path)
     {
         $database = $request->database();
-        $book = Folder::getBookByFolderPath($path, $database);
+        $locale = $request->locale();
+        $book = Folder::getBookByFolderPath($path, $database, $locale);
         if (is_null($book)) {
             return Response::sendError($request, "Invalid Book");
         }

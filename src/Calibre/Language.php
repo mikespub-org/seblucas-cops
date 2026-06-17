@@ -35,7 +35,7 @@ class Language extends Base
      */
     public function getTitle()
     {
-        return self::getLanguageString($this->name);
+        return self::getLanguageString($this->name, $this->getLocale());
     }
 
     /**
@@ -44,7 +44,7 @@ class Language extends Base
      */
     public function getParentTitle()
     {
-        return localize("languages.title");
+        return $this->localize("languages.title");
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -52,11 +52,12 @@ class Language extends Base
     /**
      * Summary of getLanguageString
      * @param string $code
+     * @param ?string $locale
      * @return string
      */
-    public static function getLanguageString($code)
+    public static function getLanguageString($code, $locale = null)
     {
-        $string = localize("languages." . $code);
+        $string = localize("languages." . $code, -1, $locale);
         if (preg_match("/^languages/", $string)) {
             return $code;
         }
@@ -69,16 +70,17 @@ class Language extends Base
      */
     public static function getDefaultName()
     {
-        return localize("language.title");
+        return "language.title";
     }
 
     /**
      * Summary of getLanguagesByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?string $locale
      * @return string
      */
-    public static function getLanguagesByBookId($bookId, $database = null)
+    public static function getLanguagesByBookId($bookId, $database = null, $locale = null)
     {
         $lang = [];
         $query = 'select ' . self::getInstanceColumns($database) . '
@@ -88,7 +90,7 @@ class Language extends Base
             order by item_order';
         $result = Database::query($query, [$bookId], $database);
         while ($post = $result->fetchObject()) {
-            array_push($lang, self::getLanguageString($post->name));
+            array_push($lang, self::getLanguageString($post->name, $locale));
         }
         return implode(', ', $lang);
     }

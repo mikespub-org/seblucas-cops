@@ -62,6 +62,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("37", $serie->id);
         $this->assertEquals("The Enderverse", $serie->name);
 
+        $serie->setLocale('en');
         // Ender's Saga, The First Formic War, The Shadow Series
         $children = $serie->getChildEntries();
         $this->assertCount(3, $children);
@@ -86,6 +87,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("18", $serie->id);
         $this->assertEquals("The Enderverse.Ender's Saga", $serie->name);
 
+        $serie->setLocale('en');
         // The First Formic War, The Shadow Series
         $siblings = $serie->getSiblingEntries();
         $this->assertCount(2, $siblings);
@@ -128,6 +130,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("7", $tag->id);
         $this->assertEquals("Tree", $tag->name);
 
+        $tag->setLocale('en');
         // Tree.More, Tree.Tag1 (top-level children)
         $children = $tag->getChildEntries();
         $this->assertCount(2, $children);
@@ -147,6 +150,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("6", $tag->id);
         $this->assertEquals("Tree.More", $tag->name);
 
+        $tag->setLocale('en');
         // Tree.More.Tag2, Tree.More.Tag3
         $children = $tag->getChildEntries();
         $this->assertCount(2, $children);
@@ -166,6 +170,7 @@ class HierarchyTest extends TestCase
 
         // books with child tags
         $request = Request::build();
+        $request->locale = 'en';
         $booklist = new BookList($request);
         [$entries, $count] = $booklist->getBooksByInstanceOrChildren($tag, 1);
         $this->assertCount(2, $entries);
@@ -239,6 +244,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("custom_02", $custom->customColumnType->getTitle());
         $this->assertEquals("d", $custom->getTitle());
 
+        $custom->setLocale('en');
         $children = $custom->getChildEntries();
         $this->assertCount(2, $children);
         $this->assertEquals("cops:custom:6:4", $children[0]->id);

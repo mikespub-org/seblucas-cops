@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
@@ -24,6 +25,7 @@ use InvalidArgumentException;
 abstract class Base
 {
     use HasRouteTrait;
+    use HasLocaleTrait;
 
     public const PAGE_ID = PageId::ALL_BASES_ID;
     public const PAGE_ALL = 0;
@@ -97,6 +99,7 @@ abstract class Base
             $instance = static::getInstanceByName($this->name, $this->getDatabaseId());
             if ($instance) {
                 $instance->setHandler($this->handler);
+                //$instance->setLocale($this->locale);
                 return $instance->getUri($params);
             }
             // link to overview page with (dummy) query
@@ -158,7 +161,7 @@ abstract class Base
      */
     public function getContent($count = 0)
     {
-        return str_format(localize("bookword", $count), (string) $count);
+        return str_format($this->localize("bookword", $count), (string) $count);
     }
 
     /**
@@ -223,7 +226,7 @@ abstract class Base
      */
     public function getParentTitle()
     {
-        return localize("title.title");
+        return $this->localize("title.title");
     }
 
     /**
@@ -312,6 +315,7 @@ abstract class Base
         // @todo get rid of extraParams in JsonRenderer and OpdsRenderer as filters should be included in navlink now
         $params = $this->getExtraParams();
         $request = Request::build($params, $this->handler);
+        $request->locale = $this->locale;
         $baselist = new BaseList($className, $request, $database, $numberPerPage);
         $baselist->orderBy = $sort;
         $baselist->pagination = true;
@@ -485,10 +489,11 @@ abstract class Base
      * Summary of getInstanceById
      * @param string|int|null $id
      * @param ?int $database
+     * @param ?string $locale
      * @throws \InvalidArgumentException
      * @return static
      */
-    public static function getInstanceById($id, $database = null)
+    public static function getInstanceById($id, $database = null, $locale = null)
     {
         $className = static::class;
         if (isset($id)) {
@@ -503,6 +508,9 @@ abstract class Base
             }
         }
         $default = static::getDefaultName();
+        if (!empty($default)) {
+            $default = localize($default, -1, $locale);
+        }
         // use id = 0 to support route urls
         return new $className((object) ['id' => 0, 'name' => $default, 'sort' => $default], $database);
     }
@@ -552,12 +560,13 @@ abstract class Base
      * Summary of getCount
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getCount($database, $handler)
+    public static function getCount($database, $handler, $locale = null)
     {
         $count = Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
-        return static::getCountEntry($count, $database, null, $handler);
+        return static::getCountEntry($count, $database, null, $handler, [], $locale);
     }
 
     /**
@@ -567,9 +576,10 @@ abstract class Base
      * @param ?string $numberOfString
      * @param class-string<BaseHandler> $handler
      * @param array<mixed> $params
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getCountEntry($count, $database, $numberOfString, $handler, $params = [])
+    public static function getCountEntry($count, $database, $numberOfString, $handler, $params = [], $locale = null)
     {
         if ($count == 0) {
             return null;
@@ -581,9 +591,9 @@ abstract class Base
         // @todo replace static calls with handler instance and method calls someday
         $href = fn() => self::getHandlerRoute($handler, static::ROUTE_ALL, $params);
         $entry = new Entry(
-            localize(static::SQL_TABLE . ".title"),
+            localize(static::SQL_TABLE . ".title", -1, $locale),
             static::PAGE_ID,
-            str_format(localize($numberOfString, $count), (string) $count),
+            str_format(localize($numberOfString, $count, $locale), (string) $count),
             "text",
             // issue #26 for koreader: section is not supported
             [ new LinkNavigation($href, "subsection") ],

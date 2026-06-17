@@ -137,7 +137,7 @@ class Identifier extends Base
      */
     public function getParentTitle()
     {
-        return localize("identifiers.title");
+        return $this->localize("identifiers.title");
     }
 
     /**
@@ -153,27 +153,30 @@ class Identifier extends Base
      * Summary of getCount
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getCount($database, $handler)
+    public static function getCount($database, $handler, $locale = null)
     {
         $count = Database::querySingle('select count(distinct type) from ' . static::SQL_TABLE, $database);
-        return static::getCountEntry($count, $database, null, $handler);
+        return static::getCountEntry($count, $database, null, $handler, [], $locale);
     }
 
     /**
      * Summary of getInstanceById
      * @param string|int|null $id used for the type of identifier here
      * @param ?int $database
+     * @param ?string $locale
      * @return self
      */
-    public static function getInstanceById($id, $database = null)
+    public static function getInstanceById($id, $database = null, $locale = null)
     {
         // get identifier type here, not actual identifier
         if (!empty($id)) {
             return new Identifier((object) ['id' => $id, 'type' => $id, 'val' => ''], $database);
         }
         $default = self::getDefaultName();
+        $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
         return new Identifier((object) ['id' => 0, 'type' => $default, 'val' => ''], $database);
     }
@@ -184,7 +187,7 @@ class Identifier extends Base
      */
     public static function getDefaultName()
     {
-        return localize("identifierword.none");
+        return "identifierword.none";
     }
 
     /**

@@ -26,7 +26,7 @@ class PageAllRating extends Page
     {
         $this->getEntries();
         $this->idPage = Rating::PAGE_ID;
-        $this->title = localize("ratings.title");
+        $this->title = $this->localize("ratings.title");
     }
 
     /**

@@ -40,7 +40,7 @@ class Rating extends Base
     public function getTitle()
     {
         $rating = intval($this->name) / 2;
-        return str_format(localize("ratingword", $rating), (string) $rating);
+        return str_format($this->localize("ratingword", $rating), (string) $rating);
     }
 
     /**
@@ -49,7 +49,7 @@ class Rating extends Base
      */
     public function getParentTitle()
     {
-        return localize("ratings.title");
+        return $this->localize("ratings.title");
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -58,13 +58,14 @@ class Rating extends Base
      * Summary of getCount
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getCount($database, $handler)
+    public static function getCount($database, $handler, $locale = null)
     {
         $count = Database::querySingle('select count(*) from ' . self::SQL_TABLE, $database);
         // str_format (localize("ratings", count(array))
-        return self::getCountEntry($count, $database, "ratings", $handler);
+        return self::getCountEntry($count, $database, "ratings", $handler, [], $locale);
     }
 
     /**

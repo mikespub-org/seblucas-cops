@@ -617,6 +617,7 @@ class Filter
     public static function getEntryArray($request, $database = null)
     {
         $handler = $request->getHandler();
+        $locale = $request->locale();
         $libraryId = $request->getVirtualLibrary();
         $entryArray = [];
         foreach (self::URL_PARAMS as $paramName => $className) {
@@ -635,6 +636,7 @@ class Filter
             // @todo do we want to filter by virtual library etc. here?
             if ($className == BookList::class) {
                 $booklist = new BookList(Request::build([$paramName => $paramValue], $handler), $database);
+                $booklist->setLocale($locale);
                 $groupFunc = ($paramName == 'f') ? 'getCountByFirstLetter' : 'getCountByPubYear';
                 $entryArray = array_merge($entryArray, $booklist->$groupFunc());
                 continue;
@@ -643,6 +645,7 @@ class Filter
                 foreach ($paramValue as $customId => $valueId) {
                     $custom = CustomColumn::createCustom($customId, $valueId, $database);
                     $custom->setHandler($handler);
+                    $custom->setLocale($locale);
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);
                 }
                 continue;
@@ -656,6 +659,7 @@ class Filter
             } else {
                 $req = Request::build([$paramName => $paramValue], $handler);
             }
+            $req->locale = $locale;
             $baselist = new BaseList($className, $req, $database);
             // apply Not Set filters here but skip other entries
             if (empty($paramValue)) {

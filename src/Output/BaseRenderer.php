@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\HasLocaleTrait;
 
 /**
  * Base Renderer
@@ -19,6 +20,7 @@ use SebLucas\Cops\Input\Request;
 abstract class BaseRenderer
 {
     use HasRouteTrait;
+    use HasLocaleTrait;
 
     public const PREFIX = "";
 
@@ -50,6 +52,7 @@ abstract class BaseRenderer
     public function setRequest($request)
     {
         $this->request = $request;
+        $this->setLocale($request->locale());
     }
 
     /**

@@ -15,18 +15,27 @@ use SebLucas\Cops\Input\Config;
 class Translation
 {
     public const BASE_DIR = 'lang';
-    protected string $baseDir;
-    /** @var ?string */
-    protected $acceptLanguageHeader;
 
-    /**
-     * Summary of __construct
-     * @param ?string $acceptLanguageHeader from $_SERVER['HTTP_ACCEPT_LANGUAGE']
-     */
-    public function __construct($acceptLanguageHeader = null)
+    /** @var array<string, self> */
+    protected static array $instances = [];
+
+    protected string $locale;
+    /** @var array<string, string> */
+    protected array $translations = [];
+
+    public function __construct(string $locale = 'en')
     {
-        $this->baseDir = dirname(__DIR__, 2) . '/' . self::BASE_DIR;
-        $this->acceptLanguageHeader = $acceptLanguageHeader;
+        $this->locale = $locale;
+        $this->translations = self::loadLocaleTranslations($this->locale);
+    }
+
+    public static function getInstance(string $locale): self
+    {
+        /* Static keyword is used to ensure the file is loaded only once */
+        if (!array_key_exists($locale, self::$instances)) {
+            self::$instances[$locale] = new self($locale);
+        }
+        return self::$instances[$locale];
     }
 
     /**
@@ -35,7 +44,7 @@ class Translation
      * @param ?string $accept from $_SERVER['HTTP_ACCEPT_LANGUAGE']
      * @return array<mixed> of languages
      */
-    public function getAcceptLanguages($accept)
+    public static function getAcceptLanguages($accept)
     {
         $langs = [];
 
@@ -80,20 +89,22 @@ class Translation
 
     /**
      * Find the best translation file possible based on the accepted languages
+     * @param ?string $acceptLanguage from $_SERVER['HTTP_ACCEPT_LANGUAGE']
      * @return array<mixed> of language and language file
      */
-    public function getLangAndTranslationFile()
+    public static function getLangAndTranslationFile($acceptLanguage)
     {
         $langs = [];
         $lang = 'en';
         if (!empty(Config::get('language'))) {
             $lang = Config::get('language');
-        } elseif (!empty($this->acceptLanguageHeader)) {
-            $langs = $this->getAcceptLanguages($this->acceptLanguageHeader);
+        } elseif (!empty($acceptLanguage)) {
+            $langs = self::getAcceptLanguages($acceptLanguage);
         }
+        $base_dir = dirname(__DIR__, 2) . '/' . self::BASE_DIR;
         $lang_file = null;
         foreach ($langs as $language => $val) {
-            $temp_file = $this->baseDir . '/Localization_' . $language . '.json';
+            $temp_file = $base_dir . '/Localization_' . $language . '.json';
             if (file_exists($temp_file)) {
                 $lang = $language;
                 $lang_file = $temp_file;
@@ -101,9 +112,44 @@ class Translation
             }
         }
         if (empty($lang_file)) {
-            $lang_file = $this->baseDir . '/Localization_' . $lang . '.json';
+            $lang_file = $base_dir . '/Localization_' . $lang . '.json';
         }
         return [$lang, $lang_file];
+    }
+
+    /**
+     * Summary of loadLocaleTranslations
+     * @param string $locale
+     * @return array<string, string>
+     */
+    public static function loadLocaleTranslations($locale)
+    {
+        $base_dir = dirname(__DIR__, 2) . '/' . self::BASE_DIR;
+        $lang_file = $base_dir . '/Localization_' . $locale . '.json';
+
+        $lang_file_en = null;
+        if ($locale != 'en') {
+            $base_dir = dirname(__DIR__, 2) . '/' . self::BASE_DIR;
+            $lang_file_en = $base_dir . '/Localization_en.json';
+        }
+
+        $lang_file_content = file_get_contents($lang_file);
+        /* Load the language file as a JSON object and transform it into an associative array */
+        $translations = json_decode($lang_file_content, true);
+
+        /* Clean the array of all unfinished translations */
+        foreach (array_keys($translations) as $key) {
+            if (preg_match('/^##TODO##/', $key)) {
+                unset($translations [$key]);
+            }
+        }
+        if (!is_null($lang_file_en)) {
+            $lang_file_content = file_get_contents($lang_file_en);
+            $translations_en = json_decode($lang_file_content, true);
+            $translations = array_merge($translations_en, $translations);
+        }
+
+        return $translations;
     }
 
     /**
@@ -126,37 +172,11 @@ class Translation
             $phrase .= '.many';
         }
 
-        /* Static keyword is used to ensure the file is loaded only once */
-        static $translations = null;
         if ($reset) {
-            $translations = null;
+            $this->translations = self::loadLocaleTranslations($this->locale);
         }
-        /* If no instance of $translations has occured load the language file */
-        if (is_null($translations)) {
-            $lang_file_en = null;
-            [$lang, $lang_file] = $this->getLangAndTranslationFile();
-            if ($lang != 'en') {
-                $lang_file_en = $this->baseDir . '/Localization_en.json';
-            }
-
-            $lang_file_content = file_get_contents($lang_file);
-            /* Load the language file as a JSON object and transform it into an associative array */
-            $translations = json_decode($lang_file_content, true);
-
-            /* Clean the array of all unfinished translations */
-            foreach (array_keys($translations) as $key) {
-                if (preg_match('/^##TODO##/', $key)) {
-                    unset($translations [$key]);
-                }
-            }
-            if (!is_null($lang_file_en)) {
-                $lang_file_content = file_get_contents($lang_file_en);
-                $translations_en = json_decode($lang_file_content, true);
-                $translations = array_merge($translations_en, $translations);
-            }
-        }
-        if (array_key_exists($phrase, $translations)) {
-            return $translations[$phrase];
+        if (array_key_exists($phrase, $this->translations)) {
+            return $this->translations[$phrase];
         }
         return $phrase;
     }

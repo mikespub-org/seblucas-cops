@@ -57,33 +57,36 @@ class Format extends Base
      */
     public function getParentTitle()
     {
-        return localize("formats.title");
+        return $this->localize("formats.title");
     }
 
     /**
      * Summary of getCount
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
+     * @param ?string $locale
      * @return ?Entry
      */
-    public static function getCount($database, $handler)
+    public static function getCount($database, $handler, $locale = null)
     {
         $count = Database::querySingle('select count(distinct format) from ' . static::SQL_TABLE, $database);
-        return static::getCountEntry($count, $database, null, $handler);
+        return static::getCountEntry($count, $database, null, $handler, [], $locale);
     }
 
     /**
      * Summary of getInstanceById
      * @param string|int|null $id used for the format here
      * @param ?int $database
+     * @param ?string $locale
      * @return self
      */
-    public static function getInstanceById($id, $database = null)
+    public static function getInstanceById($id, $database = null, $locale = null)
     {
         if (!empty($id)) {
             return new Format((object) ['id' => $id, 'name' => $id], $database);
         }
         $default = self::getDefaultName();
+        $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
         return new Format((object) ['id' => 0, 'name' => $default], $database);
     }
@@ -105,7 +108,7 @@ class Format extends Base
      */
     public static function getDefaultName()
     {
-        return localize("formatword.none");
+        return "formatword.none";
     }
 
     /**

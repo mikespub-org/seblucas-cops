@@ -43,7 +43,7 @@ class Tag extends Category
      */
     public function getParentTitle()
     {
-        return localize("tags.title");
+        return $this->localize("tags.title");
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */
@@ -54,7 +54,7 @@ class Tag extends Category
      */
     public static function getDefaultName()
     {
-        return localize("tagword.none");
+        return "tagword.none";
     }
 
     /**

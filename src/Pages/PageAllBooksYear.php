@@ -35,8 +35,8 @@ class PageAllBooksYear extends Page
         if ($count == -1) {
             $count = count($this->entryArray);
         }
-        $this->title = str_format(localize("splitByYear.year"), str_format(localize("bookword", $count), (string) $count), (string) $this->idGet);
-        $this->parentTitle = "";  // localize("allbooks.title");
+        $this->title = str_format($this->localize("splitByYear.year"), str_format($this->localize("bookword", $count), (string) $count), (string) $this->idGet);
+        $this->parentTitle = "";  // $this->localize("allbooks.title");
         $filterParams = $this->request->getFilterParams();
         $this->parentUri = $this->getRoute(Book::ROUTE_ALL, $filterParams);
     }

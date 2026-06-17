@@ -151,6 +151,7 @@ class CoverTest extends TestCase
 
         // The thumbnails should be the same as the covers
         Config::set('thumbnail_handling', "1");
+        $book->setLocale('en');
         $entry = $book->getEntry();
         $thumbnailurl = $entry->getThumbnail();
         $this->assertEquals(self::$fetcher::link() . "/covers/0/2.jpg", $thumbnailurl);
@@ -311,6 +312,7 @@ class CoverTest extends TestCase
         // use thumbnail cache
         Config::set('thumbnail_cache_directory', dirname(__DIR__) . '/cache/');
 
+        $book->setLocale('en');
         $entry = $book->getEntry();
         foreach ($entry->linkArray as $link) {
             if ($link instanceof LinkImage && $link->hasFileInfo()) {

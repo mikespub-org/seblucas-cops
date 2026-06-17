@@ -256,10 +256,12 @@ class OpdsRendererTest extends TestCase
         $request = self::$handler::request(['page' => $page]);
         $request->set('id', "1");
         $request->set('db', "0");
+        //$request->locale = 'en';
 
         $currentPage = PageId::getPage($page, $request);
 
         $OPDSRender = new OpdsRenderer();
+        $OPDSRender->setLocale('en');
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -283,6 +285,7 @@ class OpdsRendererTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
 
         $OPDSRender = new OpdsRenderer();
+        $OPDSRender->setLocale('en');
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -294,6 +297,7 @@ class OpdsRendererTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
 
         $OPDSRender = new OpdsRenderer();
+        $OPDSRender->setLocale('en');
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -314,6 +318,7 @@ class OpdsRendererTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
 
         $OPDSRender = new OpdsRenderer();
+        $OPDSRender->setLocale('en');
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));
@@ -333,6 +338,7 @@ class OpdsRendererTest extends TestCase
         $currentPage->idPage = null;
 
         $OPDSRender = new OpdsRenderer();
+        $OPDSRender->setLocale('en');
 
         file_put_contents(self::TEST_FEED, $OPDSRender->render($currentPage, $request));
         $this->AssertTrue($this->opdsCompleteValidation(self::TEST_FEED));

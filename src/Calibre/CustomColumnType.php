@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use SebLucas\Cops\Pages\PageId;
@@ -23,6 +24,7 @@ use UnexpectedValueException;
 abstract class CustomColumnType
 {
     use HasRouteTrait;
+    use HasLocaleTrait;
 
     public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
     public const PAGE_ALL = PageId::ALL_CUSTOMS;
@@ -180,7 +182,7 @@ abstract class CustomColumnType
     {
         $desc = $this->getDatabaseDescription();
         if ($desc === null || empty($desc)) {
-            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+            $desc = str_format($this->localize("customcolumn.description"), $this->getTitle());
         }
         return $desc;
     }
@@ -628,7 +630,7 @@ abstract class CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
-        return new CustomColumn(null, localize("customcolumn.boolean.unknown"), $this);
+        return new CustomColumn(null, $this->localize("customcolumn.boolean.unknown"), $this);
     }
 
     /**

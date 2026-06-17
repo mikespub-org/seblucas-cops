@@ -31,6 +31,7 @@ class PageFormatDetail extends PageWithDetail
         /** @var Format $instance */
         $instance = Format::getInstanceById($this->idGet, $this->getDatabaseId());
         $instance->setHandler($this->handler);
+        $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {
             $this->filterParams = [Format::URL_PARAM => $this->idGet];
             $this->getFilters($instance);
