@@ -70,7 +70,7 @@ class JsonRenderer extends BaseRenderer
         $handler = $book->getHandler();
         $i = 0;
         $preferedData = [];
-        foreach (Config::get('prefered_format') as $format) {
+        foreach ($this->config('prefered_format') as $format) {
             if ($i == 2) {
                 break;
             }
@@ -136,7 +136,7 @@ class JsonRenderer extends BaseRenderer
             $scn = str_format($this->localize("content.series.data"), (string) $book->seriesIndex, (string) $serie->name);
             $su = $serie->getUri();
         }
-        $cc = $book->getCustomColumnValues(Config::get('calibre_custom_column_list'), true);
+        $cc = $book->getCustomColumnValues($this->config('calibre_custom_column_list'), true);
 
         return [
             "id" => $book->id,
@@ -229,11 +229,16 @@ class JsonRenderer extends BaseRenderer
                 if (str_contains($tab["url"], '://')) {
                     $tab ["qrcode"] = 1;
                 }
-                if (!empty(Config::get('mail_configuration'))) {
+                if (!empty($this->config('mail_configuration'))) {
                     $tab ["mail"] = 1;
                 }
             }
-            $tab ["readerUrl"] = self::$reader::getReaderUrl($data);
+            $readers = [
+                'epub' => $this->config('epub_reader'),
+                'comic' => $this->config('epub_reader'),
+                'pdf' => $this->config('pdfjs_viewer'),
+            ];
+            $tab ["readerUrl"] = self::$reader::getReaderUrl($data, $readers);
             array_push($out ["datas"], $tab);
         }
         $out ["extraFiles"] = [];
@@ -288,7 +293,7 @@ class JsonRenderer extends BaseRenderer
             ]);
         }
 
-        $out ["customcolumns_preview"] = $book->getCustomColumnValues(Config::get('calibre_custom_column_preview'), true);
+        $out ["customcolumns_preview"] = $book->getCustomColumnValues($this->config('calibre_custom_column_preview'), true);
 
         return $out;
     }
@@ -428,18 +433,18 @@ class JsonRenderer extends BaseRenderer
                 "thumbnailUrl" => str_replace(['0', '1'], ['{0}', '{1}'], self::$fetcher::route(Cover::ROUTE_THUMB, ['thumb' => 'html', 'id' => '0', 'db' => '1'])),
             ],
             "config" => [
-                "use_fancyapps" => Config::get('use_fancyapps'),
-                "max_item_per_page" => Config::get('max_item_per_page'),
+                "use_fancyapps" => $this->config('use_fancyapps'),
+                "max_item_per_page" => $this->config('max_item_per_page'),
                 "kindleHack"        => "",
                 "server_side_rendering" => $this->request->render(),
-                "html_tag_filter" => Config::get('html_tag_filter'),
+                "html_tag_filter" => $this->config('html_tag_filter'),
                 "ignored_categories" => $ignoredCategories,
             ],
         ];
-        if (Config::get('thumbnail_handling') == "1") {
+        if ($this->config('thumbnail_handling') == "1") {
             $complete["url"]["thumbnailUrl"] = $complete["url"]["coverUrl"];
-        } elseif (!empty(Config::get('thumbnail_handling'))) {
-            $complete["url"]["thumbnailUrl"] = Config::get('thumbnail_handling');
+        } elseif (!empty($this->config('thumbnail_handling'))) {
+            $complete["url"]["thumbnailUrl"] = $this->config('thumbnail_handling');
         }
         if (preg_match("/./", $this->request->agent())) {
             $complete["config"]["kindleHack"] = 'style="text-decoration: none !important;"';
@@ -691,11 +696,11 @@ class JsonRenderer extends BaseRenderer
             return $download;
         }
         // download per page
-        if (empty(Config::get('download_page'))) {
+        if (empty($this->config('download_page'))) {
             return $download;
         }
         $download = [];
-        foreach (Config::get('download_page') as $format) {
+        foreach ($this->config('download_page') as $format) {
             $params = $this->request->getCleanParams();
             $params['type'] = strtolower((string) $format);
             unset($params['title']);
@@ -794,7 +799,7 @@ class JsonRenderer extends BaseRenderer
         }
         if (!is_null($currentPage->book)) {
             // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
-            if (Config::get('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
+            if ($this->config('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
                 $currentPage->book->updateForKepub = true;
             }
             $out ["book"] = $this->getFullBookContentArray($currentPage->book);
@@ -808,7 +813,7 @@ class JsonRenderer extends BaseRenderer
             $out ["databaseName"] = "";
         }
         $out ["libraryId"] = $libraryId ?? "";
-        $out ["libraryName"] = Config::get('title_default');
+        $out ["libraryName"] = $this->config('title_default');
         $out ["fullTitle"] = $out ["title"];
         $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
         if (!empty($out ["multipleDatabase"]) && $out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
@@ -843,7 +848,7 @@ class JsonRenderer extends BaseRenderer
         if (!empty($currentPage->extra['series'])) {
             $out ["extra"]["series"] = $this->getSeries($currentPage, $extraParams);
         }
-        $out ["assets"] = $this->getPath(Config::get('assets'));
+        $out ["assets"] = $this->getPath($this->config('assets'));
         // $out ["templates"] = $this->getPath('templates');
         $out ["download"] = $this->getDownloadLinks($currentPage, $qid);
 

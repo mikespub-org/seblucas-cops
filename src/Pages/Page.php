@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
@@ -24,6 +25,7 @@ class Page
 {
     use HasRouteTrait;
     use HasLocaleTrait;
+    use HasConfigTrait;
 
     /** @var string */
     public $title;
@@ -118,10 +120,10 @@ class Page
     public function setConfig($config = null)
     {
         $config ??= new Config();
-        $this->favicon = Config::get('icon');
-        $this->authorName = Config::get('author_name') ?: 'Sébastien Lucas';
-        $this->authorUri = Config::get('author_uri') ?: 'https://blog.slucas.fr';
-        $this->authorEmail = Config::get('author_email') ?: 'sebastien@slucas.fr';
+        $this->favicon = $this->config('icon');
+        $this->authorName = $this->config('author_name') ?: 'Sébastien Lucas';
+        $this->authorUri = $this->config('author_uri') ?: 'https://blog.slucas.fr';
+        $this->authorEmail = $this->config('author_email') ?: 'sebastien@slucas.fr';
     }
 
     /**
@@ -159,8 +161,8 @@ class Page
     {
         $this->getEntries();
         $this->idPage = PageId::INDEX_ID;
-        $this->title = Config::get('title_default');
-        $this->subtitle = Config::get('subtitle_default');
+        $this->title = $this->config('title_default');
+        $this->subtitle = $this->config('subtitle_default');
     }
 
     /**
@@ -283,9 +285,9 @@ class Page
     public function getSortOptions()
     {
         if ($this->request->isFeed()) {
-            $sortLinks = Config::get('opds_sort_links');
+            $sortLinks = $this->config('opds_sort_links');
         } else {
-            $sortLinks = Config::get('html_sort_links');
+            $sortLinks = $this->config('html_sort_links');
         }
         $allowed = array_flip($sortLinks);
         $sortOptions = [

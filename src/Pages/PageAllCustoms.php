@@ -38,7 +38,7 @@ class PageAllCustoms extends Page
         $this->idPage = $columnType->getEntryId();
         $this->title = $columnType->getTitle();
         $this->getCustomEntries($columnType);
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("custom", Config::get('show_not_set_filter'))) {
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("custom", $this->config('show_not_set_filter'))) {
             $this->addCustomNotSetEntry($columnType);
         }
     }
@@ -51,9 +51,9 @@ class PageAllCustoms extends Page
     public function getCustomEntries($columnType)
     {
         // @todo do we want to filter by virtual library etc. here?
-        if (Config::get('custom_date_split_year') == 1 && $columnType instanceof CustomColumnTypeDate) {
+        if ($this->config('custom_date_split_year') == 1 && $columnType instanceof CustomColumnTypeDate) {
             $this->getCustomEntriesByYear($columnType);
-        } elseif (Config::get('custom_integer_split_range') > 0 && $columnType instanceof CustomColumnTypeInteger) {
+        } elseif ($this->config('custom_integer_split_range') > 0 && $columnType instanceof CustomColumnTypeInteger) {
             $this->getCustomEntriesByRange($columnType);
         } elseif ($columnType->hasChildCategories()) {
             $this->sorted = $this->request->getSorted("sort");

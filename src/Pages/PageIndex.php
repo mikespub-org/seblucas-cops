@@ -39,14 +39,14 @@ class PageIndex extends Page
     {
         if (Database::noDatabaseSelected($this->databaseId)) {
             $this->getDatabaseEntries();
-        } elseif ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
+        } elseif ($this->request->hasFilter() || !empty($this->config('database_filter'))) {
             $this->getFilteredEntries();
         } else {
             $this->getEntries();
         }
         $this->idPage = PageId::INDEX_ID;
-        $this->title = Config::get('title_default');
-        $this->subtitle = Config::get('subtitle_default');
+        $this->title = $this->config('title_default');
+        $this->subtitle = $this->config('subtitle_default');
     }
 
     /**
@@ -132,7 +132,7 @@ class PageIndex extends Page
         }
         // @todo apply filter?
         // for multi-database setup, not all databases may have all custom columns - see issue #89
-        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());
+        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId());
         foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
@@ -141,7 +141,7 @@ class PageIndex extends Page
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
-        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
+        if (!empty($this->config('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
             $library = VirtualLibrary::getCount($this->databaseId, $this->handler, $this->locale);
             if (!is_null($library)) {
                 array_push($this->entryArray, $library);
@@ -152,7 +152,7 @@ class PageIndex extends Page
             $booklist = new BookList($this->request);
             $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
         }
-        if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && Config::get('recentbooks_limit') > 0) {
+        if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && $this->config('recentbooks_limit') > 0) {
             $booklist = new BookList($this->request);
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
@@ -208,7 +208,7 @@ class PageIndex extends Page
             $this->addCountEntry(Identifier::class);
         }
         // for multi-database setup, not all databases may have all custom columns - see issue #89
-        $customColumnList = CustomColumnType::checkCustomColumnList(Config::get('calibre_custom_column'), $this->getDatabaseId());
+        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId());
         foreach ($customColumnList as $lookup) {
             $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
@@ -217,7 +217,7 @@ class PageIndex extends Page
                 array_push($this->entryArray, $customColumn->getCount());
             }
         }
-        if (!empty(Config::get('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
+        if (!empty($this->config('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
             $this->addCountEntry(VirtualLibrary::class);
         }
         // differentiate between ignored search & index categories BOOK(search) vs. ALLBOOKS/RECENT (home screen)
@@ -225,7 +225,7 @@ class PageIndex extends Page
             $booklist = new BookList($this->request);
             $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
         }
-        if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && Config::get('recentbooks_limit') > 0) {
+        if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && $this->config('recentbooks_limit') > 0) {
             $booklist = new BookList($this->request);
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }

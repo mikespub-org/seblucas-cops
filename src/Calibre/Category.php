@@ -33,7 +33,8 @@ abstract class Category extends Base
      */
     public function hasChildCategories()
     {
-        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array(static::CATEGORY, Config::get('calibre_categories_using_hierarchy'))) {
+        $categories = Config::get('calibre_categories_using_hierarchy');
+        if (empty($categories) || !in_array(static::CATEGORY, $categories)) {
             return false;
         }
         return true;

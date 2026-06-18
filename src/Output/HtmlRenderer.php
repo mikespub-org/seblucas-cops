@@ -26,15 +26,15 @@ class HtmlRenderer extends BaseRenderer
     public function getTemplateData($request)
     {
         $data = [
-            'title'                 => Config::get('title_default'),
+            'title'                 => $this->config('title_default'),
             'version'               => Config::VERSION,
             'opds_url'              => FeedHandler::route(self::ROUTE_FEED),
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),
             'current_css'           => $this->getPath($request->style()),
-            'favico'                => $this->getPath(Config::get('icon')),
-            'assets'                => $this->getPath(Config::get('assets')),
+            'favico'                => $this->getPath($this->config('icon')),
+            'assets'                => $this->getPath($this->config('assets')),
             'images'                => $this->getPath('images'),
             'resources'             => $this->getPath('resources'),
             'templates'             => $this->getPath('templates'),
@@ -59,7 +59,7 @@ class HtmlRenderer extends BaseRenderer
     public function render($request)
     {
         $data = $this->getTemplateData($request);
-        if (in_array($request->template(), Config::get('twig_templates'))) {
+        if (in_array($request->template(), $this->config('twig_templates'))) {
             $template = new TwigTemplate($request);
             return $template->renderPage($data);
         }

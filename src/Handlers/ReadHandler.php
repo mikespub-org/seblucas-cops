@@ -41,12 +41,13 @@ class ReadHandler extends BaseHandler
     /**
      * Summary of getReaderUrl
      * @param Data $data
+     * @param array<string, string> $readers
      * @return string
      */
-    public static function getReaderUrl(Data $data)
+    public static function getReaderUrl(Data $data, array $readers)
     {
-        if ($data->format == "EPUB" && Config::get('epub_reader')) {
-            $reader = Config::get('epub_reader');
+        if ($data->format == "EPUB" && !empty($readers['epub'])) {
+            $reader = $readers['epub'];
             if (in_array($reader, ['monocle', 'epubjs'])) {
                 // support reader for epub books in folders (epubjs only)
                 if (empty($data->id) && isset($data->book->folderId)) {
@@ -70,12 +71,12 @@ class ReadHandler extends BaseHandler
             return UriGenerator::path('templates/' . $reader) . $data->getHtmlLink();
         }
         // use templates/comic-reader?url=... format here for now
-        if (in_array($data->format, ["CBZ", "CBR", "CBT"]) && Config::get('comic_reader')) {
-            return UriGenerator::path('templates/' . Config::get('comic_reader')) . $data->getHtmlLink();
+        if (in_array($data->format, ["CBZ", "CBR", "CBT"]) && !empty($readers['comic'])) {
+            return UriGenerator::path('templates/' . $readers['comic']) . $data->getHtmlLink();
         }
         // use templates/pdfjs-viewer?file=... format here for now
-        if ($data->format == "PDF" && Config::get('pdfjs_viewer')) {
-            return UriGenerator::path('templates/' . Config::get('pdfjs_viewer')) . $data->getHtmlLink();
+        if ($data->format == "PDF" && !empty($readers['pdf'])) {
+            return UriGenerator::path('templates/' . $readers['pdf']) . $data->getHtmlLink();
         }
         return '';
     }
@@ -85,13 +86,13 @@ class ReadHandler extends BaseHandler
         $idData = $request->getId('data');
         // check if we have a folder file path
         $path = null;
-        if (Config::get('browse_books_directory')) {
+        if ($this->config('browse_books_directory')) {
             $path = $request->get('path');
         }
         if (empty($idData) && empty($path)) {
             return Response::notFound($request);
         }
-        $version = $request->get('version', Config::get('epub_reader', 'monocle'));
+        $version = $request->get('version', $this->config('epub_reader', 'monocle'));
         $database = $request->database();
 
         $response = new Response(Response::MIME_TYPE_HTML);

@@ -140,7 +140,7 @@ class EPubReader extends BaseRenderer
      */
     public function getReader($idData, $version = null, $database = null)
     {
-        $version ??= Config::get('epub_reader', 'monocle');
+        $version ??= $this->config('epub_reader', 'monocle');
         if ($version == 'epubjs') {
             return $this->getEpubjsReader($idData, $database);
         }
@@ -157,7 +157,7 @@ class EPubReader extends BaseRenderer
      */
     public function getMonocleReader($idData, $database = null, $template = null)
     {
-        $template ??= Config::get('templates_directory') . "epubreader.html";
+        $template ??= $this->config('templates_directory') . "epubreader.html";
         $this->findBookData($idData, $database);
         if ($this->book->isExternal()) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
@@ -186,7 +186,7 @@ class EPubReader extends BaseRenderer
             'version'    => Config::VERSION,
             'resources'  => $this->getPath('resources'),
             'styles'     => $this->getPath('styles'),
-            'favicon'    => $this->getPath(Config::get('icon')),
+            'favicon'    => $this->getPath($this->config('icon')),
             'components' => $components,
             'contents'   => $contents,
             'link'       => $link,
@@ -263,7 +263,7 @@ class EPubReader extends BaseRenderer
             $this->data = $data;
             return $data;
         }
-        if (!Config::get('browse_books_directory')) {
+        if (!$this->config('browse_books_directory')) {
             throw new InvalidArgumentException('Missing data');
         }
         $path = $this->request->get('path');
@@ -326,15 +326,15 @@ class EPubReader extends BaseRenderer
      */
     public function getEpubjsReader($idData, $database = null, $template = null)
     {
-        $template ??= Config::get('templates_directory') . "epubjs-reader.html";
+        $template ??= $this->config('templates_directory') . "epubjs-reader.html";
         $this->findBookData($idData, $database);
         $this->setHandler(ZipFsHandler::class);
 
         $link = $this->getDataLink();
         // Configurable settings (javascript object as text)
-        $settings = Config::get('epubjs_reader_settings');
+        $settings = $this->config('epubjs_reader_settings');
 
-        $dist = $this->getPath(dirname((string) Config::get('assets')) . '/mikespub/epubjs-reader/dist');
+        $dist = $this->getPath(dirname((string) $this->config('assets')) . '/mikespub/epubjs-reader/dist');
         $data = [
             'title'      => htmlspecialchars($this->book->title),
             'version'    => Config::VERSION,
@@ -486,8 +486,8 @@ class EPubReader extends BaseRenderer
         // get cover info from epub file
         $info = $this->findCoverInfo($filePath);
         if ($info === false || empty($info['found'])) {
-            if (Config::get('thumbnail_default')) {
-                $url = $this->getPath(Config::get('thumbnail_default'));
+            if ($this->config('thumbnail_default')) {
+                $url = $this->getPath($this->config('thumbnail_default'));
                 return Response::redirect($url);
             }
             throw new InvalidArgumentException('Unknown cover for ' . basename($filePath));

@@ -96,6 +96,7 @@ class Translation
     {
         $langs = [];
         $lang = 'en';
+        // @todo get from instance config
         if (!empty(Config::get('language'))) {
             $lang = Config::get('language');
         } elseif (!empty($acceptLanguage)) {

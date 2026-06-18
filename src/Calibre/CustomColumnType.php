@@ -344,7 +344,8 @@ abstract class CustomColumnType
     public function hasChildCategories()
     {
         // @todo this only works with column titles/names, not the lookup names used elsewhere
-        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->columnTitle, Config::get('calibre_categories_using_hierarchy'))) {
+        $categories = Config::get('calibre_categories_using_hierarchy');
+        if (empty($categories) || !in_array($this->columnTitle, $categories)) {
             return false;
         }
         return true;

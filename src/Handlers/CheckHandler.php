@@ -83,10 +83,10 @@ class CheckHandler extends BaseHandler
         $data['databases'] = $this->getDatabases($data['full']);
 
         if ($this->markdown) {
-            $template = Config::get('templates_directory') . 'markdown/checkconfig.md';
+            $template = $this->config('templates_directory') . 'markdown/checkconfig.md';
             $response = new Response(Response::MIME_TYPE_MARKDOWN);
         } else {
-            $template = Config::get('templates_directory') . self::$template;
+            $template = $this->config('templates_directory') . self::$template;
             $response = new Response(Response::MIME_TYPE_HTML);
         }
 
@@ -218,11 +218,11 @@ class CheckHandler extends BaseHandler
         $br = $this->markdown ? "\n" : '<br>';
         $result = '';
         $result .= 'Base URL detected by the script: ' . $base . $br;
-        $result .= 'Full URL specified in $config[\'cops_full_url\']: ' . Config::get('full_url') . $br;
+        $result .= 'Full URL specified in $config[\'cops_full_url\']: ' . $this->config('full_url') . $br;
         if (ProxyRequest::hasTrustedProxies()) {
-            $result .= 'Trusted proxies configured: ' . Config::get('trusted_proxies') . $br;
-            $result .= 'Trusted headers configured: ' . json_encode(Config::get('trusted_headers')) . $br;
-            foreach (Config::get('trusted_headers') as $name) {
+            $result .= 'Trusted proxies configured: ' . $this->config('trusted_proxies') . $br;
+            $result .= 'Trusted headers configured: ' . json_encode($this->config('trusted_headers')) . $br;
+            foreach ($this->config('trusted_headers') as $name) {
                 $header = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
                 $result .= $header . ': ' . ($request->server($header) ?? '') . $br;
             }
@@ -355,6 +355,14 @@ Please check
     {
         unset($request->urlParams[Request::HANDLER_PARAM]);
         $request->serverParams = ['HTTP_REDACTED' => true];
+
+        if ($request->isAjax()) {
+            $message = json_encode($request, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+
+            $response = new Response(Response::MIME_TYPE_JSON);
+            return $response->setContent($message);
+        }
+
         $message = var_export($request, true);
 
         $response = new Response(Response::MIME_TYPE_TEXT);

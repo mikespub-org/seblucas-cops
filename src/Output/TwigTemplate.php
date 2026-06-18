@@ -40,7 +40,7 @@ class TwigTemplate extends BaseRenderer
         $this->serverSide = $request->render() ? true : false;
         $this->markdown = $request->isMarkdown();
         // support other Twig template directories too
-        $this->twig = $this->getTwigEnvironment(Config::get('templates_directory') . $this->theme);
+        $this->twig = $this->getTwigEnvironment($this->config('templates_directory') . $this->theme);
     }
 
     /**
@@ -58,7 +58,7 @@ class TwigTemplate extends BaseRenderer
             fn($format, ...$args) => Format::str_format($format, ...$args)
         );
         $twig->addFunction($function);
-        $assets = $this->getPath(Config::get('assets'));
+        $assets = $this->getPath($this->config('assets'));
         $function = new \Twig\TwigFunction(
             'asset',
             fn($file) => $assets . '/' . $file . '?v=' . Config::VERSION

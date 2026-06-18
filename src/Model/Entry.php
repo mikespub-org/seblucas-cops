@@ -94,6 +94,7 @@ class Entry
         $this->className = $classShortName;
         $this->numberOfElement = $count;
 
+        // @todo get from instance config
         if (Config::get('show_icons') == 1) {
             foreach (static::$icons as $reg => $image) {
                 if (preg_match("/" . $reg . "/", $id)) {

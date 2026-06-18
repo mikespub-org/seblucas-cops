@@ -40,7 +40,7 @@ class PageAbout extends Page
             'site_url'   => HtmlHandler::index(),
             'opds_url'   => FeedHandler::route(FeedHandler::HANDLER),
         ];
-        $template = Config::get('templates_directory') . $this->template;
+        $template = $this->config('templates_directory') . $this->template;
         return Format::template($data, $template);
     }
 }

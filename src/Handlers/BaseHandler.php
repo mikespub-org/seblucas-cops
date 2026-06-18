@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\RequestContext;
@@ -23,6 +24,7 @@ use SebLucas\Cops\Routing\UriGenerator;
  */
 abstract class BaseHandler implements HasContextInterface
 {
+    use HasConfigTrait;
     use HasContextTrait;
 
     public const HANDLER = "";

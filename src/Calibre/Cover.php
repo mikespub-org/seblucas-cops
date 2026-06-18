@@ -247,9 +247,10 @@ class Cover
      */
     public function getThumbnailLink($thumb, $useDefault = true)
     {
-        if (Config::get('thumbnail_handling') != "1"
-            && !empty(Config::get('thumbnail_handling'))) {
-            return $this->getDefaultLink(Config::get('thumbnail_handling'));
+        $thumbnailHandling = (string) Config::get('thumbnail_handling');
+        if (!empty($thumbnailHandling)
+            && $thumbnailHandling != "1") {
+            return $this->getDefaultLink($thumbnailHandling);
         }
 
         if (empty($this->coverFileName)) {
@@ -419,15 +420,15 @@ class Cover
      * Summary of findCoverFileName
      * @param Book $book
      * @param object $line
+     * @param ?string $field
      * @return ?string
      */
-    public static function findCoverFileName($book, $line)
+    public static function findCoverFileName($book, $line, $field = null)
     {
         // -DC- Use cover file name
         $coverFileName = null;
         $cover = new Cover($book);
-        if (!empty(Config::get('calibre_database_field_cover'))) {
-            $field = Config::get('calibre_database_field_cover');
+        if (!empty($field)) {
             $coverFileName = $cover->checkDatabaseFieldCover($line->{$field});
         }
         // Else try with default cover file name

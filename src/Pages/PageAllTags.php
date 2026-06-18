@@ -39,7 +39,7 @@ class PageAllTags extends Page
         if ($this->request->option("tag_split_first_letter") == 1 || $this->request->get('letter')) {
             $this->entryArray = $baselist->getCountByFirstLetter();
             $this->sorted = $baselist->orderBy;
-            if (in_array("tag", Config::get('show_not_set_filter'))) {
+            if (in_array("tag", $this->config('show_not_set_filter'))) {
                 array_push($this->entryArray, $baselist->getWithoutEntry());
             }
             return;
@@ -53,7 +53,7 @@ class PageAllTags extends Page
         }
         $this->totalNumber = $baselist->countRequestEntries();
         $this->sorted = $baselist->orderBy;
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", Config::get('show_not_set_filter'))) {
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("tag", $this->config('show_not_set_filter'))) {
             array_push($this->entryArray, $baselist->getWithoutEntry());
         }
     }

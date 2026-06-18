@@ -66,7 +66,7 @@ class PageCustomize extends Page
     {
         $result = [];
         $hidden = ['admin', 'markdown'];
-        foreach (glob(Config::get('templates_directory') . "*", GLOB_ONLYDIR) as $filename) {
+        foreach (glob($this->config('templates_directory') . "*", GLOB_ONLYDIR) as $filename) {
             if (preg_match('/templates\/(.*)/', $filename, $m)) {
                 if (in_array($m[1], $hidden)) {
                     continue;
@@ -86,7 +86,7 @@ class PageCustomize extends Page
     {
         $template ??= $this->request->template();
         $result = [];
-        foreach (glob(Config::get('templates_directory') . $template . "/styles/style-*.css") as $filename) {
+        foreach (glob($this->config('templates_directory') . $template . "/styles/style-*.css") as $filename) {
             if (preg_match('/styles\/style-(.*?)\.css/', $filename, $m)) {
                 array_push($result, $m [1]);
             }
@@ -101,7 +101,7 @@ class PageCustomize extends Page
     public function initializeContent()
     {
         // @todo use $this->default here too?
-        $this->default = Config::get('customize', []);
+        $this->default = $this->config('customize', []);
         // @todo use $this->custom
         $session = $this->request->getSession();
         if ($session) {

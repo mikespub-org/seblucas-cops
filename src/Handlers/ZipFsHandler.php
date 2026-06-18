@@ -45,7 +45,7 @@ class ZipFsHandler extends BaseHandler
         $idData = $request->getId('data');
         // check if we have a folder file path
         $path = null;
-        if (Config::get('browse_books_directory')) {
+        if ($this->config('browse_books_directory')) {
             $path = $request->get('path');
         }
         if (empty($idData) && empty($path)) {

@@ -43,7 +43,7 @@ class ZipperHandler extends BaseHandler
 
     public function handle($request)
     {
-        if (empty(Config::get('download_page'))) {
+        if (empty($this->config('download_page'))) {
             return Response::sendError($request, 'Downloads by page are disabled in config');
         }
         // check if session connected in ProtectMiddleware

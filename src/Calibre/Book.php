@@ -134,7 +134,7 @@ class Book
         $this->databaseId = $database;
         // do this at the end when all properties are set
         if ($this->hasCover) {
-            $this->coverFileName = Cover::findCoverFileName($this, $line);
+            $this->coverFileName = Cover::findCoverFileName($this, $line, Config::get('calibre_database_field_cover'));
             if (empty($this->coverFileName)) {
                 $this->hasCover = false;
             }
@@ -602,12 +602,13 @@ class Book
      */
     public function setExternalPath($path)
     {
-        if (str_starts_with($path, Config::get('calibre_external_storage'))) {
+        $externalStorage = (string) Config::get('calibre_external_storage');
+        if (str_starts_with($path, $externalStorage)) {
             $this->path = $path;
         } else {
             // external storage is assumed to be already url-encoded if needed
             $urlPath = implode('/', array_map(rawurlencode(...), explode('/', $path)));
-            $this->path = Config::get('calibre_external_storage') . $urlPath;
+            $this->path = $externalStorage . $urlPath;
         }
         return $this->path;
     }
@@ -618,7 +619,8 @@ class Book
      */
     public function isExternal()
     {
-        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->path, (string) Config::get('calibre_external_storage'))) {
+        $externalStorage = Config::get('calibre_external_storage');
+        if (!empty($externalStorage) && str_starts_with($this->path, (string) $externalStorage)) {
             return true;
         }
         return false;
@@ -800,8 +802,9 @@ class Book
     public static function getBookColumns()
     {
         $res = self::SQL_COLUMNS;
-        if (!empty(Config::get('calibre_database_field_cover'))) {
-            $res = str_replace('has_cover,', 'has_cover, ' . Config::get('calibre_database_field_cover') . ',', $res);
+        $field = Config::get('calibre_database_field_cover');
+        if (!empty($field)) {
+            $res = str_replace('has_cover,', 'has_cover, ' . $field . ',', $res);
         }
 
         return $res;

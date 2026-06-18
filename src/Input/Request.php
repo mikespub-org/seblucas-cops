@@ -24,6 +24,8 @@ use SebLucas\Cops\Output\Response;
  */
 class Request
 {
+    use HasConfigTrait;
+
     public const HANDLER_PARAM = "_handler";
     public const ROUTE_PARAM = "_route";
     public const SYMFONY_REQUEST = '\Symfony\Component\HttpFoundation\Request';
@@ -67,7 +69,7 @@ class Request
      */
     public function render()
     {
-        return preg_match('/' . Config::get('server_side_render') . '/', $this->agent())
+        return preg_match('/' . $this->config('server_side_render') . '/', $this->agent())
             || $this->method() == 'POST'
             || $this->isMarkdown();
     }
@@ -188,7 +190,7 @@ class Request
                 $this->urlParams['vl'] = $this->option('virtual_library');
             }
         }
-        if (!empty(Config::get('calibre_user_database'))) {
+        if (!empty($this->config('calibre_user_database'))) {
             $user = $this->getUserName();
             // @todo use restriction etc. from Calibre user database
         }
@@ -335,7 +337,7 @@ class Request
     public function option($option)
     {
         if (!is_null($this->cookie($option))) {
-            if (!is_null(Config::get($option)) && is_array(Config::get($option))) {
+            if (!is_null($this->config($option)) && is_array($this->config($option))) {
                 return explode(',', (string) $this->cookie($option));
             } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', (string) $this->cookie($option))) {
                 return $this->cookie($option);
@@ -343,9 +345,9 @@ class Request
         }
         // @todo use session or default here? see PageCustomize()
         //$session = $this->getSession();
-        //$default = Config::get('customize', []);
-        if (!is_null(Config::get($option))) {
-            return Config::get($option);
+        //$default = $this->config('customize', []);
+        if (!is_null($this->config($option))) {
+            return $this->config($option);
         }
 
         return '';
@@ -361,7 +363,7 @@ class Request
         if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $style)) {
             return 'templates/' . $this->template() . '/styles/style-' . $style . '.css';
         }
-        return 'templates/' . Config::get('template') . '/styles/style-' . Config::get('style') . '.css';
+        return 'templates/' . $this->config('template') . '/styles/style-' . $this->config('style') . '.css';
     }
 
     /**
@@ -371,10 +373,10 @@ class Request
     public function template()
     {
         $template = $this->option('template');
-        if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $template) && is_dir(Config::get('templates_directory') . "{$template}/")) {
+        if (!preg_match('/[^A-Za-z0-9\-_]/', (string) $template) && is_dir($this->config('templates_directory') . "{$template}/")) {
             return $template;
         }
-        return Config::get('template');
+        return $this->config('template');
     }
 
     /**
@@ -435,7 +437,7 @@ class Request
      */
     public function getUserName($name = null)
     {
-        $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
+        $http_auth_user = $this->config('http_auth_user', 'PHP_AUTH_USER');
         $name ??= $this->server($http_auth_user);
         return $name;
     }
@@ -447,7 +449,7 @@ class Request
      */
     public function setUserName($name = null)
     {
-        $http_auth_user = Config::get('http_auth_user', 'PHP_AUTH_USER');
+        $http_auth_user = $this->config('http_auth_user', 'PHP_AUTH_USER');
         $this->serverParams[$http_auth_user] = $name;
     }
 
@@ -517,7 +519,7 @@ class Request
      */
     public function hasValidApiKey()
     {
-        if (empty(Config::get('api_key')) || Config::get('api_key') !== $this->getApiKey()) {
+        if (empty($this->config('api_key')) || $this->config('api_key') !== $this->getApiKey()) {
             return false;
         }
         return true;

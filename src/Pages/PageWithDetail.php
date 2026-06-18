@@ -71,11 +71,11 @@ class PageWithDetail extends Page
     public function getFilters($instance)
     {
         if ($this->request->isFeed()) {
-            $filterLinks = Config::get('opds_filter_links');
-            $instance->setFilterLimit(Config::get('opds_filter_limit'));
+            $filterLinks = $this->config('opds_filter_links');
+            $instance->setFilterLimit($this->config('opds_filter_limit'));
         } else {
-            $filterLinks = Config::get('html_filter_links');
-            $instance->setFilterLimit(Config::get('html_filter_limit'));
+            $filterLinks = $this->config('html_filter_links');
+            $instance->setFilterLimit($this->config('html_filter_limit'));
         }
         $this->entryArray = [];
         if (empty($filterLinks)) {
@@ -197,9 +197,9 @@ class PageWithDetail extends Page
     public function canFilter()
     {
         if ($this->request->isFeed()) {
-            $filterLinks = Config::get('opds_filter_links');
+            $filterLinks = $this->config('opds_filter_links');
         } else {
-            $filterLinks = Config::get('html_filter_links');
+            $filterLinks = $this->config('html_filter_links');
         }
         if (!empty($filterLinks)) {
             return true;

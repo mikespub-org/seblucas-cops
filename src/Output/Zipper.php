@@ -66,7 +66,7 @@ class Zipper extends BaseRenderer
      */
     public function hasPage()
     {
-        if (!in_array($this->format, Config::get('download_page'))) {
+        if (!in_array($this->format, $this->config('download_page'))) {
             $this->message ??= 'Invalid format for page';
             return false;
         }
@@ -113,11 +113,11 @@ class Zipper extends BaseRenderer
         }
         $this->fileList = [];
         if ($this->format == 'ANY') {
-            $checkFormats = Config::get('prefered_format');
+            $checkFormats = $this->config('prefered_format');
         } else {
             $checkFormats = [ $this->format ];
         }
-        $template = Config::get('download_template');
+        $template = $this->config('download_template');
         foreach ($entries as $entry) {
             if ($entry::class != EntryBook::class) {
                 continue;

@@ -651,7 +651,8 @@ class BaseList
      */
     public function hasChildCategories()
     {
-        if (empty(Config::get('calibre_categories_using_hierarchy')) || !in_array($this->className::CATEGORY, Config::get('calibre_categories_using_hierarchy'))) {
+        $categories = Config::get('calibre_categories_using_hierarchy');
+        if (empty($categories) || !in_array($this->className::CATEGORY, $categories)) {
             return false;
         }
         return true;

@@ -147,7 +147,7 @@ class RestApiHandler extends BaseHandler
     public function getSwaggerUI()
     {
         $data = ['link' => self::link([self::RESOURCE => 'openapi'])];
-        $template = Config::get('templates_directory') . self::$template;
+        $template = $this->config('templates_directory') . self::$template;
 
         $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(Format::template($data, $template));

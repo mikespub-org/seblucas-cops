@@ -79,7 +79,7 @@ class AdminHandler extends BaseHandler
      */
     public function handleAdmin($request, $response)
     {
-        $cachePath = Config::get('thumbnail_cache_directory');
+        $cachePath = $this->config('thumbnail_cache_directory');
         [$count, $size] = $this->getCacheSize($cachePath);
         $size = $size > 0 ? sprintf('%.3f', $size / 1024 / 1024) : $size;
         $updated = $this->getUpdatedConfig();
@@ -87,7 +87,7 @@ class AdminHandler extends BaseHandler
 
         $actions = [];
         $description = 'Browse book files in other folders besides Calibre';
-        $root = Config::get('browse_books_directory');
+        $root = $this->config('browse_books_directory');
         if (empty($root)) {
             $description .= ' - set $config[\'cops_browse_books_directory\'] in config/local.php';
         } else {
@@ -150,7 +150,7 @@ class AdminHandler extends BaseHandler
      */
     public function handleClearCache($request, $response)
     {
-        $cachePath = Config::get('thumbnail_cache_directory');
+        $cachePath = $this->config('thumbnail_cache_directory');
         if (empty($cachePath)) {
             $content = 'Clear Thumbnail Cache - no cache directory';
         } elseif (!is_dir($cachePath)) {
@@ -476,7 +476,7 @@ if (!isset($config)) {
         // set cookie param template to 'admin' here
         $request->cookieParams['template'] = basename($this->templateDir);
         $template = new TwigTemplate($request);
-        $twig = $template->getTwigEnvironment(Config::get('templates_directory') . $this->templateDir);
+        $twig = $template->getTwigEnvironment($this->config('templates_directory') . $this->templateDir);
         $getTypeFunction = new \Twig\TwigFunction('get_type', function ($value) {
             if (is_iterable($value)) {
                 return 'array';

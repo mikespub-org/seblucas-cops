@@ -140,7 +140,7 @@ class BookList
     }
 
     /**
-     * Summary of getCount
+     * Summary of getCount - not used except in tests
      * @return array<Entry>
      */
     public function getCount()

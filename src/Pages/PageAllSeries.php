@@ -39,7 +39,7 @@ class PageAllSeries extends Page
         if ($this->request->option("series_split_first_letter") == 1 || $this->request->get('letter')) {
             $this->entryArray = $baselist->getCountByFirstLetter();
             $this->sorted = $baselist->orderBy;
-            if (in_array("series", Config::get('show_not_set_filter'))) {
+            if (in_array("series", $this->config('show_not_set_filter'))) {
                 array_push($this->entryArray, $baselist->getWithoutEntry());
             }
             return;
@@ -52,7 +52,7 @@ class PageAllSeries extends Page
         }
         $this->totalNumber = $baselist->countRequestEntries();
         $this->sorted = $baselist->orderBy;
-        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", Config::get('show_not_set_filter'))) {
+        if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("series", $this->config('show_not_set_filter'))) {
             array_push($this->entryArray, $baselist->getWithoutEntry());
         }
     }

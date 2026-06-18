@@ -61,7 +61,7 @@ class DotPHPTemplate extends BaseRenderer
      */
     public function serverSide($data, $name = 'page.html')
     {
-        $themeDir = Config::get('templates_directory') . $this->theme . '/';
+        $themeDir = $this->config('templates_directory') . $this->theme . '/';
         // Get the templates
         $header = file_get_contents($themeDir . 'header.html');
         $footer = file_get_contents($themeDir . 'footer.html');
@@ -96,7 +96,7 @@ class DotPHPTemplate extends BaseRenderer
      */
     public function renderPage($data, $name = 'file.html')
     {
-        $themeDir = Config::get('templates_directory') . $this->theme . '/';
+        $themeDir = $this->config('templates_directory') . $this->theme . '/';
         $dot = $this->getDotTemplate($themeDir . $name);
         if ($this->serverSide) {
             // Get the page data

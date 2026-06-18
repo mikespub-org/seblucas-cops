@@ -69,7 +69,7 @@ class GraphQLHandler extends BaseHandler
     public function renderPlayground()
     {
         $data = ['link' => self::link()];
-        $template = Config::get('templates_directory') . self::$template;
+        $template = $this->config('templates_directory') . self::$template;
 
         $response = new Response(Response::MIME_TYPE_HTML);
         return $response->setContent(OutputFormat::template($data, $template));

@@ -10,13 +10,15 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use PHPMailer\PHPMailer\PHPMailer;
 use SebLucas\Cops\Calibre\Book;
 
 class Mail
 {
+    use HasConfigTrait;
+
     public static int $maxSize = 10 * 1024 * 1024;
 
     /**
@@ -26,7 +28,7 @@ class Mail
      */
     public function checkConfiguration()
     {
-        $mailConfig = Config::get('mail_configuration');
+        $mailConfig = $this->config('mail_configuration');
 
         if (is_null($mailConfig)
             || !is_array($mailConfig)
@@ -84,7 +86,7 @@ class Mail
             return 'No email sent. Attachment too big';
         }
 
-        $mailConfig = Config::get('mail_configuration');
+        $mailConfig = $this->config('mail_configuration');
 
         $mail = new PHPMailer();
 
@@ -110,7 +112,7 @@ class Mail
         }
 
         $mail->From = $mailConfig["address.from"];
-        $mail->FromName = Config::get('title_default');
+        $mail->FromName = $this->config('title_default');
 
         $mail->AddAddress($emailDest);
 

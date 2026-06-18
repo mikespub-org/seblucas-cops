@@ -21,7 +21,7 @@ use Kiwilan\Opds\Entries\OpdsEntryNavigation;
 use Kiwilan\Opds\Enums\OpdsVersionEnum;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\OpdsHandler;
-use SebLucas\Cops\Input\Config as CopsConfig;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request as CopsRequest;
 use SebLucas\Cops\Model\Entry as CopsEntry;
 use SebLucas\Cops\Model\EntryBook as CopsEntryBook;
@@ -32,6 +32,7 @@ use DateTime;
 class KiwilanOPDS
 {
     use HasRouteTrait;
+    use HasConfigTrait;
 
     public const ROUTE_FEED = OpdsHandler::HANDLER;
     public const ROUTE_SEARCH = OpdsHandler::SEARCH;
@@ -64,16 +65,16 @@ class KiwilanOPDS
     private function getOpdsConfig()
     {
         return new OpdsConfig(
-            name: 'Calibre',  // CopsConfig::get('title_default')
-            author: CopsConfig::get('author_name') ?: 'Sébastien Lucas',
-            authorUrl: CopsConfig::get('author_uri') ?: 'https://blog.slucas.fr',
-            iconUrl: CopsConfig::get('icon'),
+            name: 'Calibre',  // $this->config('title_default')
+            author: $this->config('author_name') ?: 'Sébastien Lucas',
+            authorUrl: $this->config('author_uri') ?: 'https://blog.slucas.fr',
+            iconUrl: $this->config('icon'),
             startUrl: $this->getRoute(self::ROUTE_FEED),
             // @todo php-opds uses this to identify search (not page=query) and adds '?q=' without checking for existing ? params
             searchUrl: $this->getRoute(self::ROUTE_SEARCH),
             //searchQuery: 'query',  // 'q' by default for php-opds
             updated: $this->getUpdatedTime(),
-            maxItemsPerPage: CopsConfig::get('max_item_per_page'),
+            maxItemsPerPage: $this->config('max_item_per_page'),
             forceJson: true,
         );
     }

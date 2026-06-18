@@ -152,10 +152,10 @@ class TableHandler extends BaseHandler
         $data['foreign_keys'] = json_encode($foreignKeys, JSON_FORCE_OBJECT);
         $data['filter_url'] = $filterUrl;
         $data['table'] = $name;
-        $data['api_key'] = Config::get('api_key');
+        $data['api_key'] = $this->config('api_key');
 
         $response = new Response(Response::MIME_TYPE_HTML);
-        $template = Config::get('templates_directory') . self::$template;
+        $template = $this->config('templates_directory') . self::$template;
         return $response->setContent(Format::template($data, $template));
     }
 
@@ -212,7 +212,7 @@ class TableHandler extends BaseHandler
         $data['api_key'] = '';
 
         $response = new Response(Response::MIME_TYPE_HTML);
-        $template = Config::get('templates_directory') . self::$template;
+        $template = $this->config('templates_directory') . self::$template;
         return $response->setContent(Format::template($data, $template));
     }
 
@@ -246,7 +246,7 @@ class TableHandler extends BaseHandler
         $data['api_key'] = '';
 
         $response = new Response(Response::MIME_TYPE_HTML);
-        $template = Config::get('templates_directory') . self::$template;
+        $template = $this->config('templates_directory') . self::$template;
         return $response->setContent(Format::template($data, $template));
     }
 

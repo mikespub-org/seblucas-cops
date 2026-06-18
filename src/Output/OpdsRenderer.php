@@ -100,7 +100,7 @@ class OpdsRenderer extends BaseRenderer
         $xml->writeAttribute("type", "image/x-icon");
         $xml->writeAttribute("width", "16");
         $xml->writeAttribute("height", "16");
-        $xml->text(Config::get('icon'));
+        $xml->text($this->config('icon'));
         $xml->endElement();
         $xml->startElement("Url");
         $xml->writeAttribute("type", 'application/atom+xml');
@@ -183,7 +183,7 @@ class OpdsRenderer extends BaseRenderer
         }
         $this->renderLink($link);
         $params = ["db" => $database];
-        if (Config::get('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
+        if ($this->config('generate_invalid_opds_stream') == 0 || preg_match("/(MantanoReader|FBReader)/", $request->agent())) {
             // Good and compliant way of handling search
             //$params["page"] = PageId::SEARCH;
             $href = fn() => $this->getRoute(self::ROUTE_SEARCH, $params);
@@ -205,9 +205,9 @@ class OpdsRenderer extends BaseRenderer
             );
         }
         $this->renderLink($link);
-        if ($page->containsBook() && !is_null(Config::get('books_filter')) && count(Config::get('books_filter')) > 0) {
+        if ($page->containsBook() && !is_null($this->config('books_filter')) && count($this->config('books_filter')) > 0) {
             $Urlfilter = $request->get("tag", "");
-            foreach (Config::get('books_filter') as $lib => $filter) {
+            foreach ($this->config('books_filter') as $lib => $filter) {
                 $params = array_replace($request->urlParams, ["tag" => $filter]);
                 $href = fn() => $this->getLink($params);
                 $link = new LinkFacet(
@@ -364,10 +364,10 @@ class OpdsRenderer extends BaseRenderer
         $this->getXmlStream()->text((string) $page->totalNumber);
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->startElement("opensearch:itemsPerPage");
-        $this->getXmlStream()->text(Config::get('max_item_per_page'));
+        $this->getXmlStream()->text($this->config('max_item_per_page'));
         $this->getXmlStream()->endElement();
         $this->getXmlStream()->startElement("opensearch:startIndex");
-        $this->getXmlStream()->text((string) (($page->n - 1) * Config::get('max_item_per_page') + 1));
+        $this->getXmlStream()->text((string) (($page->n - 1) * $this->config('max_item_per_page') + 1));
         $this->getXmlStream()->endElement();
         $prevLink = $page->getPrevLink();
         $nextLink = $page->getNextLink();
@@ -389,7 +389,7 @@ class OpdsRenderer extends BaseRenderer
      */
     public function addSort($page, $request)
     {
-        if (!$page->containsBook() || empty(Config::get('opds_sort_links'))) {
+        if (!$page->containsBook() || empty($this->config('opds_sort_links'))) {
             return;
         }
         $params = $request->getCleanParams();

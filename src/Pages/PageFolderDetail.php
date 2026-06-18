@@ -34,11 +34,11 @@ class PageFolderDetail extends PageWithDetail
         if (empty($this->idGet)) {
             $this->idGet = '0';
         }
-        $root = Config::get('browse_books_directory', '');
+        $root = $this->config('browse_books_directory', '');
         if (empty($root) || !is_dir($root)) {
             throw new InvalidArgumentException('Invalid Root (browse_books_directory)');
         }
-        $getFiles = Config::get('browse_books_getfiles', '');
+        $getFiles = $this->config('browse_books_getfiles', '');
         if (!empty($getFiles) && !is_file($getFiles)) {
             throw new InvalidArgumentException('Invalid Files (browse_books_getfiles)');
         }
@@ -102,7 +102,7 @@ class PageFolderDetail extends PageWithDetail
             throw new InvalidArgumentException('Invalid Book');
         }
         if (!$this->book->isExternal()) {
-            foreach (Config::get('prefered_format') as $format) {
+            foreach ($this->config('prefered_format') as $format) {
                 if (!in_array($format, ['EPUB', 'CBZ'])) {
                     continue;
                 }

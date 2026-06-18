@@ -57,8 +57,8 @@ class ComicReader extends EPubReader
      */
     public function getReader($idData, $version = null, $database = null)
     {
-        $version ??= Config::get('comic_reader', 'comic-reader.html?url=');
-        $template = Config::get('templates_directory') . explode('?', $version)[0];
+        $version ??= $this->config('comic_reader', 'comic-reader.html?url=');
+        $template = $this->config('templates_directory') . explode('?', $version)[0];
         return $this->getComicReader($idData, $database, $template);
     }
 
@@ -72,15 +72,15 @@ class ComicReader extends EPubReader
      */
     public function getComicReader($idData, $database = null, $template = null)
     {
-        $template ??= Config::get('templates_directory') . "comic-reader.html";
+        $template ??= $this->config('templates_directory') . "comic-reader.html";
         $this->findBookData($idData, $database);
         $this->setHandler(ZipFsHandler::class);
 
         $link = $this->getDataLink();
         // Configurable settings (javascript object as text)
-        $settings = Config::get('comic_reader_settings', '');
+        $settings = $this->config('comic_reader_settings', '');
 
-        $dist = $this->getPath(dirname((string) Config::get('assets')) . '/mikespub/web-comic-reader/assets');
+        $dist = $this->getPath(dirname((string) $this->config('assets')) . '/mikespub/web-comic-reader/assets');
         $data = [
             'title'      => htmlspecialchars($this->book->title),
             'version'    => Config::VERSION,
@@ -148,8 +148,8 @@ class ComicReader extends EPubReader
         $index = $this->findCoverImage($zip);
         if ($index === false) {
             $zip->close();
-            if (Config::get('thumbnail_default')) {
-                $url = $this->getPath(Config::get('thumbnail_default'));
+            if ($this->config('thumbnail_default')) {
+                $url = $this->getPath($this->config('thumbnail_default'));
                 return Response::redirect($url);
             }
             throw new InvalidArgumentException('Unknown cover for ' . basename($filePath));

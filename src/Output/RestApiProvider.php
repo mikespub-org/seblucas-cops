@@ -918,7 +918,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      */
     public function getFolders($request)
     {
-        $root = Config::get('browse_books_directory');
+        $root = $this->config('browse_books_directory');
         if (empty($root) || !is_dir($root)) {
             return ["error" => "Invalid root folder"];
         }

@@ -85,11 +85,11 @@ class PageFilter extends Page
     public function getEntries()
     {
         if ($this->request->isFeed()) {
-            $filterLinks = Config::get('opds_filter_links');
-            $limit = Config::get('opds_filter_limit');
+            $filterLinks = $this->config('opds_filter_links');
+            $limit = $this->config('opds_filter_limit');
         } else {
-            $filterLinks = Config::get('html_filter_links');
-            $limit = Config::get('html_filter_limit');
+            $filterLinks = $this->config('html_filter_links');
+            $limit = $this->config('html_filter_limit');
         }
         $this->entryArray = [];
         if (empty($filterLinks)) {

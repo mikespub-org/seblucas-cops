@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\HasLocaleTrait;
 
@@ -21,6 +22,7 @@ abstract class BaseRenderer
 {
     use HasRouteTrait;
     use HasLocaleTrait;
+    use HasConfigTrait;
 
     public const PREFIX = "";
 

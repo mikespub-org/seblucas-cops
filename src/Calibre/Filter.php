@@ -109,8 +109,9 @@ class Filter
         }
 
         // See $config['cops_database_filter'] - filter data everywhere
-        if (!empty(Config::get('database_filter'))) {
-            $filter = array_filter(Config::get('database_filter'));
+        $databaseFilter = Config::get('database_filter');
+        if (!empty($databaseFilter)) {
+            $filter = array_filter($databaseFilter);
             $this->addDatabaseFilter($filter);
         }
 

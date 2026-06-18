@@ -22,6 +22,7 @@ class Normalizer
      */
     public static function useNormAndUp()
     {
+        // @todo get from instance config
         if (Config::get('normalized_search') == '1') {
             if (!extension_loaded('intl')) {
                 // this will call exit()

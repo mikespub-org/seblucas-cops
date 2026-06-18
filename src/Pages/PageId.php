@@ -149,14 +149,16 @@ class PageId
 
     /**
      * Summary of getHomePage
+     * @todo move to instance method (somewhere)
      * @return string|int
      */
     public static function getHomePage()
     {
         // Use the configured home page if needed
         $page = PageId::INDEX;
-        if (!empty(Config::get('home_page')) && defined('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'))) {
-            $page = constant('SebLucas\Cops\Pages\PageId::' . Config::get('home_page'));
+        $home = Config::get('home_page');
+        if (!empty($home) && defined('SebLucas\Cops\Pages\PageId::' . $home)) {
+            $page = constant('SebLucas\Cops\Pages\PageId::' . $home);
         }
         return $page;
     }

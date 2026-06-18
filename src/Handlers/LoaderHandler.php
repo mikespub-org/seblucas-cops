@@ -78,16 +78,16 @@ class LoaderHandler extends BaseHandler
         }
 
         // get the current COPS calibre directories
-        $calibreDir = Config::get('calibre_directory');
+        $calibreDir = $this->config('calibre_directory');
         if (!is_array($calibreDir)) {
             $calibreDir = ['COPS Database' => $calibreDir];
         }
         // add browse directory to import epub files if defined
         $browseDb = -1;
-        if (Config::get('browse_books_directory')) {
+        if ($this->config('browse_books_directory')) {
             $gConfig['groups']['Import'] ??= [];
             $gConfig['groups']['Import']['db_load'] ??= 'Create Calibre database with available epub files';
-            $calibreDir['Browse Books'] = Config::get('browse_books_directory');
+            $calibreDir['Browse Books'] = $this->config('browse_books_directory');
             $browseDb = count($calibreDir) - 1;
         }
         foreach ($calibreDir as $name => $path) {
@@ -181,9 +181,9 @@ class LoaderHandler extends BaseHandler
         $result = true;
         if (!empty($authorInfo->image) && str_contains($authorInfo->image, '://')) {
             $image = true;
-            if (empty(Config::get('thumbnail_handling'))
-                || Config::get('thumbnail_handling') == "1") {
-                $imageField = Config::get('calibre_database_field_image', '');
+            if (empty($this->config('thumbnail_handling'))
+                || $this->config('thumbnail_handling') == "1") {
+                $imageField = $this->config('calibre_database_field_image', '');
                 $image = $writer->setAuthorImage($authorInfo, $authorId, $imageField);
             }
             $result = $result && ($image ? true : false);
@@ -241,9 +241,9 @@ class LoaderHandler extends BaseHandler
         $result = true;
         if (!empty($seriesInfo->image) && str_contains($seriesInfo->image, '://')) {
             $image = true;
-            if (empty(Config::get('thumbnail_handling'))
-                || Config::get('thumbnail_handling') == "1") {
-                $imageField = Config::get('calibre_database_field_image', '');
+            if (empty($this->config('thumbnail_handling'))
+                || $this->config('thumbnail_handling') == "1") {
+                $imageField = $this->config('calibre_database_field_image', '');
                 $image = $writer->setSeriesImage($seriesInfo, $seriesId, $imageField);
             }
             $result = $result && ($image ? true : false);
@@ -300,9 +300,9 @@ class LoaderHandler extends BaseHandler
         $result = true;
         if (!empty($bookInfo->cover) && str_contains($bookInfo->cover, '://')) {
             $image = true;
-            if (empty(Config::get('thumbnail_handling'))
-                || Config::get('thumbnail_handling') == "1") {
-                $coverField = Config::get('calibre_database_field_cover', '');
+            if (empty($this->config('thumbnail_handling'))
+                || $this->config('thumbnail_handling') == "1") {
+                $coverField = $this->config('calibre_database_field_cover', '');
                 $image = $writer->setBookCover($bookInfo, $bookId, $coverField);
             }
             $result = $result && ($image ? true : false);

@@ -76,7 +76,7 @@ class FetchHandler extends BaseHandler
         }
 
         // check if we have a folder file path
-        if (Config::get('browse_books_directory')) {
+        if ($this->config('browse_books_directory')) {
             $path = $request->get('path');
             if (!empty($path)) {
                 return $this->sendFolderFile($request, $path);
@@ -114,7 +114,7 @@ class FetchHandler extends BaseHandler
             return Response::notFound($request);
         }
 
-        if (!$viewOnly && $type == 'epub' && Config::get('update_epub-metadata')) {
+        if (!$viewOnly && $type == 'epub' && $this->config('update_epub-metadata')) {
             $book->setLocale($request->locale());
             return $this->sendUpdatedEpub($request, $book, $data);
         }
@@ -124,7 +124,7 @@ class FetchHandler extends BaseHandler
             return $data->sendFile(true);
         }
 
-        if ($type == 'epub' && Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
+        if ($type == 'epub' && $this->config('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
             return $data->sendConvertedKepub();
         }
 
@@ -217,7 +217,7 @@ class FetchHandler extends BaseHandler
     public function sendUpdatedEpub($request, $book, $data)
     {
         // update epub metadata + provide kepub if needed (with update of opf properties for cover-image in EPub)
-        if (Config::get('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
+        if ($this->config('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
             $book->updateForKepub = true;
         }
         // set updateForKepub if necessary
