@@ -17,6 +17,7 @@ x.x.x - TODO
     - new $config['cops_templates_directory'] to adapt templates directory
   * ...
   * Update php/npm packages
+  * Add SessionInterface to allow other frameworks to replace Session
   * Add HasLocaleTrait to pass along request locale to classes
   * Change localize() and Translation to work with request locale
   * Move RequestContext from HandlerManager to createHandler()

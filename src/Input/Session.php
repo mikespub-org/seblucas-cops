@@ -16,7 +16,7 @@ use SebLucas\Cops\Routing\UriGenerator;
  * Summary of Session
  * @see https://github.com/symfony/symfony/blob/7.2/src/Symfony/Component/HttpFoundation/Session/Session.php
  */
-class Session
+class Session implements SessionInterface
 {
     public function __construct()
     {
@@ -94,6 +94,9 @@ class Session
         return $result;
     }
 
+    /**
+     * Start new session or resume existing session
+     */
     public function start(): bool
     {
         if (!function_exists('\session_status')) {
@@ -111,6 +114,20 @@ class Session
         return $started;
     }
 
+    /**
+     * Get session id
+     */
+    public function getId(): string
+    {
+        if (!function_exists('\session_id')) {
+            return '';
+        }
+        return \session_id();
+    }
+
+    /**
+     * Set session id and restore session (start)
+     */
     public function restore(string $id): bool
     {
         if (!function_exists('\session_id')) {
@@ -120,6 +137,9 @@ class Session
         return $this->start();
     }
 
+    /**
+     * Regenerate session id and optionally destroy values
+     */
     public function regenerate(bool $destroy = false): bool
     {
         if (!function_exists('\session_regenerate_id')) {
@@ -155,6 +175,7 @@ class Session
     }
 
     /**
+     * Get all session values
      * @return array<string, mixed>
      */
     public function all(): array
@@ -163,6 +184,7 @@ class Session
     }
 
     /**
+     * Remove session value by name
      * @see https://github.com/symfony/symfony/blob/7.2/src/Symfony/Component/HttpFoundation/Session/Attribute/AttributeBag.php
      */
     public function remove(string $name): mixed

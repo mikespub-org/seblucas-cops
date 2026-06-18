@@ -45,7 +45,7 @@ class Request
     public $content = null;
     /** @var string|null */
     public $locale = null;
-    /** @var Session|null */
+    /** @var SessionInterface|null */
     public $session = null;
     public bool $invalid = false;
 
@@ -525,7 +525,7 @@ class Request
 
     /**
      * Summary of getSession
-     * @return Session|null
+     * @return SessionInterface|null
      */
     public function getSession()
     {
@@ -534,7 +534,7 @@ class Request
 
     /**
      * Summary of setSession
-     * @param Session|null $session
+     * @param SessionInterface|null $session
      * @return void
      */
     public function setSession($session)

@@ -28,14 +28,23 @@ class SessionTest extends TestCase
         $sessionId = session_id();
         $this->assertEquals($expected, $sessionId);
 
+        $expected = $sessionId;
+        $sessionId = $session->getId();
+        $this->assertEquals($expected, $sessionId);
+
         $expected = Config::get('session_name');
         $sessionName = session_name();
         $this->assertEquals($expected, $sessionName);
 
         // session is started -> session id
         $session->start();
+        $notExpected = '';
         $sessionId = session_id();
-        $this->assertNotEquals($expected, $sessionId);
+        $this->assertNotEquals($notExpected, $sessionId);
+
+        $expected = $sessionId;
+        $sessionId = $session->getId();
+        $this->assertEquals($expected, $sessionId);
 
         $expected = null;
         $connected = $session->get('connected');
@@ -96,8 +105,9 @@ class SessionTest extends TestCase
         $session->regenerate();
 
         // session regenerated -> new session id
-        $expected = session_id();
-        $this->assertNotEquals($expected, $sessionId);
+        $notExpected = $sessionId;
+        $sessionId = session_id();
+        $this->assertNotEquals($notExpected, $sessionId);
 
         // session regenerated -> session data kept
         $expected = 0;
@@ -107,7 +117,7 @@ class SessionTest extends TestCase
         // force expires on next start()
         $session->set('expires', time() - 24 * 60 * 60);
 
-        $this->putSessionId((string) $expected);
+        $this->putSessionId((string) $sessionId);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testSessionRegenerate')]
@@ -120,8 +130,9 @@ class SessionTest extends TestCase
         $session->restore($sessionId);
 
         // session expired -> new session id
-        $expected = session_id();
-        $this->assertNotEquals($expected, $sessionId);
+        $notExpected = $sessionId;
+        $sessionId = session_id();
+        $this->assertNotEquals($notExpected, $sessionId);
 
         // session expired -> reset expires
         $expected = time();
@@ -152,8 +163,9 @@ class SessionTest extends TestCase
         $session->regenerate(true);
 
         // session regenerated -> new session id
-        $expected = session_id();
-        $this->assertNotEquals($expected, $sessionId);
+        $notExpected = $sessionId;
+        $sessionId = session_id();
+        $this->assertNotEquals($notExpected, $sessionId);
 
         // session destroyed - no session data
         $expected = null;

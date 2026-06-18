@@ -32,7 +32,7 @@ class RequestContext
     private ?BaseHandler $handler = null;
     private Config $config;
     private string $locale;
-    private ?Session $session = null;
+    private ?SessionInterface $session = null;
 
     public function __construct(Request $request, ?HandlerManager $manager = null, ?RouterInterface $router = null)
     {
@@ -275,13 +275,13 @@ class RequestContext
         return $this->config;
     }
 
-    public function getSession(): Session
+    public function getSession(): SessionInterface
     {
         $this->session ??= new self::$sessionClass();
         return $this->session;
     }
 
-    public function setSession(Session $session): void
+    public function setSession(SessionInterface $session): void
     {
         $this->session = $session;
     }
