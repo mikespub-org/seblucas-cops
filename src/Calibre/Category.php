@@ -202,7 +202,7 @@ abstract class Category extends Base
      */
     public function getParentByName($parentName)
     {
-        return static::getInstanceByName($parentName, $this->databaseId);
+        return static::getInstanceByName($parentName, $this->databaseId, $this->locale);
     }
 
     /**

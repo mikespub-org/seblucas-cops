@@ -261,8 +261,9 @@ class Filter
         if (str_contains($libraryId, '.')) {
             [$libraryId, $slug] = explode('.', $libraryId);
         }
+        $locale = $this->request->locale();
         /** @var VirtualLibrary $instance */
-        $instance = VirtualLibrary::getInstanceById($libraryId);
+        $instance = VirtualLibrary::getInstanceById($libraryId, $this->databaseId, $locale);
         if (empty($instance->id)) {
             return;
         }
@@ -285,7 +286,7 @@ class Filter
             if (isset($match['quoted']) && str_starts_with($match['quoted'], '=')) {
                 $value = substr($match['quoted'], 1);
                 $className = self::SEARCH_FIELDS[$match['attr']];
-                $instance = $className::getInstanceByName($value, $this->databaseId);
+                $instance = $className::getInstanceByName($value, $this->databaseId, $locale);
                 if (empty($instance)) {
                     throw new UnexpectedValueException('Invalid search criteria: ' . $match['attr'] . ':' . $match['value']);
                 }
@@ -315,6 +316,7 @@ class Filter
     {
         $query = [];
         $params = [];
+        $locale = $this->request->locale();
         foreach ($filter as $field => $value) {
             if (empty($value)) {
                 continue;
@@ -335,7 +337,7 @@ class Filter
                 $exists = false;
                 $value = substr($value, 1);
             }
-            $instance = $className::getInstanceByName($value, $this->databaseId);
+            $instance = $className::getInstanceByName($value, $this->databaseId, $locale);
             if (empty($instance)) {
                 throw new UnexpectedValueException('Invalid filter criteria: ' . $field . ':' . $value);
             }

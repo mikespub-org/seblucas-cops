@@ -192,7 +192,7 @@ class BookListTest extends TestCase
     {
         $booklist = new BookList(self::$request);
         /** @var Rating $rating */
-        $rating = Rating::getInstanceById(null);
+        $rating = Rating::getInstanceById(null, null, 'en');
 
         // All books with no stars
         [$entryArray, $totalNumber] = $booklist->getBooksByInstance($rating, -1);

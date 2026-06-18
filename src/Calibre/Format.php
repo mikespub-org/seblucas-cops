@@ -95,11 +95,12 @@ class Format extends Base
      * Summary of getInstanceByName
      * @param string|int|null $name used for the format here
      * @param ?int $database
+     * @param ?string $locale
      * @return self
      */
-    public static function getInstanceByName($name, $database = null)
+    public static function getInstanceByName($name, $database = null, $locale = null)
     {
-        return self::getInstanceById($name, $database);
+        return self::getInstanceById($name, $database, $locale);
     }
 
     /**

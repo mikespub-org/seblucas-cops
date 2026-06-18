@@ -95,7 +95,8 @@ class CustomColumnTypeSeries extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return new CustomColumn(null, $this->localize("customcolumn.boolean.unknown"), $this);
+        $default = static::getDefaultName();
+        return new CustomColumn(null, $this->localize($default), $this);
     }
 
     /**
@@ -152,5 +153,14 @@ class CustomColumnTypeSeries extends CustomColumnType
     public function isSearchable()
     {
         return true;
+    }
+
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
+    public static function getDefaultName()
+    {
+        return "customcolumn.boolean.unknown";
     }
 }

@@ -154,7 +154,7 @@ class BaseList
     public function getInstanceByName($name)
     {
         assert(is_subclass_of($this->className, Base::class));
-        return $this->className::getInstanceByName($name, $this->databaseId);
+        return $this->className::getInstanceByName($name, $this->databaseId, $this->locale);
     }
 
     /**

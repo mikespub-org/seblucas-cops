@@ -830,8 +830,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getAnnotationById($bookId, $id, $request)
     {
         $db = $request->database();
+        $locale = $request->locale();
         /** @var Annotation $annotation */
-        $annotation = Annotation::getInstanceById($id, $db);
+        $annotation = Annotation::getInstanceById($id, $db, $locale);
         if (empty($annotation->id)) {
             return ["error" => "Invalid annotation id"];
         }

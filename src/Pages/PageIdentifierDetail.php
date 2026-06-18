@@ -29,7 +29,7 @@ class PageIdentifierDetail extends PageWithDetail
             throw new InvalidArgumentException('Invalid Identifier');
         }
         /** @var Identifier $instance */
-        $instance = Identifier::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance = Identifier::getInstanceById($this->idGet, $this->getDatabaseId(), $this->locale);
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {

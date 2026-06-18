@@ -93,7 +93,8 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getCustom($id)
     {
         if (empty($id)) {
-            return new CustomColumn(null, $this->localize("customcolumn.date.unknown"), $this);
+            $default = static::getDefaultName();
+            return new CustomColumn(null, $this->localize($default), $this);
         }
         $date = new DateTime($id);
 
@@ -231,7 +232,8 @@ class CustomColumnTypeDate extends CustomColumnType
 
             return new CustomColumn($date->format("Y-m-d"), $date->format($this->localize("customcolumn.date.format")), $this);
         }
-        return new CustomColumn(null, $this->localize("customcolumn.date.unknown"), $this);
+        $default = static::getDefaultName();
+        return new CustomColumn(null, $this->localize($default), $this);
     }
 
     /**
@@ -241,5 +243,14 @@ class CustomColumnTypeDate extends CustomColumnType
     public function isSearchable()
     {
         return true;
+    }
+
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
+    public static function getDefaultName()
+    {
+        return "customcolumn.date.unknown";
     }
 }

@@ -96,7 +96,7 @@ abstract class Base
     {
         if (!isset($this->id)) {
             // try to find corresponding instance by name for books in folders
-            $instance = static::getInstanceByName($this->name, $this->getDatabaseId());
+            $instance = static::getInstanceByName($this->name, $this->getDatabaseId(), $this->locale);
             if ($instance) {
                 $instance->setHandler($this->handler);
                 //$instance->setLocale($this->locale);
@@ -519,9 +519,10 @@ abstract class Base
      * Summary of getInstanceByName
      * @param string $name
      * @param ?int $database
+     * @param ?string $locale
      * @return static|null
      */
-    public static function getInstanceByName($name, $database = null)
+    public static function getInstanceByName($name, $database = null, $locale = null)
     {
         $className = static::class;
         $query = 'select ' . static::getInstanceColumns($database) . ' from ' . $className::SQL_TABLE . ' where name = ?';

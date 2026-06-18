@@ -24,7 +24,7 @@ class PageRatingDetail extends PageWithDetail
     public function initializeContent()
     {
         /** @var Rating $instance */
-        $instance = Rating::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance = Rating::getInstanceById($this->idGet, $this->getDatabaseId(), $this->locale);
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {

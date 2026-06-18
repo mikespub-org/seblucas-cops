@@ -630,7 +630,8 @@ abstract class CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
-        return new CustomColumn(null, $this->localize("customcolumn.boolean.unknown"), $this);
+        $default = static::getDefaultName();
+        return new CustomColumn(null, $this->localize($default), $this);
     }
 
     /**
@@ -657,4 +658,13 @@ abstract class CustomColumnType
      * @return bool
      */
     abstract public function isSearchable();
+
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
+    public static function getDefaultName()
+    {
+        return "customcolumn.boolean.unknown";
+    }
 }

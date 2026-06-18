@@ -24,7 +24,7 @@ class PageAuthorDetail extends PageWithDetail
     public function initializeContent()
     {
         /** @var Author $instance */
-        $instance = Author::getInstanceById($this->idGet, $this->getDatabaseId());
+        $instance = Author::getInstanceById($this->idGet, $this->getDatabaseId(), $this->locale);
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {

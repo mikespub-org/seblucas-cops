@@ -201,7 +201,7 @@ class VirtualLibrary extends Base
             $id = intval($id) - 1;
             $name = array_keys($libraries)[$id] ?? null;
             if (!empty($name)) {
-                return self::getInstanceByName($name, $database);
+                return self::getInstanceByName($name, $database, $locale);
             }
         }
         $default = self::getDefaultName();
@@ -215,9 +215,10 @@ class VirtualLibrary extends Base
      * Summary of getInstanceByName
      * @param string $name
      * @param ?int $database
+     * @param ?string $locale
      * @return self|null
      */
-    public static function getInstanceByName($name, $database = null)
+    public static function getInstanceByName($name, $database = null, $locale = null)
     {
         $libraries = self::getLibraries($database);
         if (!empty($libraries) && array_key_exists($name, $libraries)) {

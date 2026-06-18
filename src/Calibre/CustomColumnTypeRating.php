@@ -160,7 +160,8 @@ class CustomColumnTypeRating extends CustomColumnType
             $rating = intval($post->value) / 2;
             return new CustomColumn($post->value, str_format($this->localize("customcolumn.stars", $rating), (string) $rating), $this);
         }
-        return new CustomColumn(null, $this->localize("customcolumn.rating.unknown"), $this);
+        $default = static::getDefaultName();
+        return new CustomColumn(null, $this->localize($default), $this);
     }
 
     /**
@@ -170,5 +171,14 @@ class CustomColumnTypeRating extends CustomColumnType
     public function isSearchable()
     {
         return true;
+    }
+
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
+    public static function getDefaultName()
+    {
+        return "customcolumn.rating.unknown";
     }
 }

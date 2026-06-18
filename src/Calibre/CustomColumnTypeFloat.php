@@ -125,7 +125,8 @@ class CustomColumnTypeFloat extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }
-        return new CustomColumn(null, $this->localize("customcolumn.float.unknown"), $this);
+        $default = static::getDefaultName();
+        return new CustomColumn(null, $this->localize($default), $this);
     }
 
     /**
@@ -135,5 +136,14 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function isSearchable()
     {
         return true;
+    }
+
+    /**
+     * Summary of getDefaultName
+     * @return string
+     */
+    public static function getDefaultName()
+    {
+        return "customcolumn.float.unknown";
     }
 }
