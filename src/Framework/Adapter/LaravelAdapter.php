@@ -91,7 +91,6 @@ class LaravelAdapter implements AdapterInterface
             $context = new RequestContext($copsRequest, $copsManager, $copsRouter);
             // @todo load user- and/or database-dependent config here?
             //$context->updateConfig();
-            $copsManager->setContext($context);
 
             // 2. Resolve and handle the request using COPS components
             $handlerName = $defaults['_handler'] ?? 'html';

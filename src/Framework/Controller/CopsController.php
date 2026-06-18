@@ -39,7 +39,6 @@ class CopsController
         $context = new RequestContext($copsRequest, $this->copsManager, $this->copsRouter);
         // @todo load user- and/or database-dependent config here?
         //$context->updateConfig();
-        $this->copsManager->setContext($context);
 
         // 2. Resolve and handle the request using COPS components
         $handler = $this->copsManager->createHandler($handlerName, $context);
