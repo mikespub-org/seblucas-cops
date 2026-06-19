@@ -109,7 +109,7 @@ class EPubReader extends BaseRenderer
      */
     public function sendContent($idData, $component, $database = null)
     {
-        $book = Book::getBookByDataId($idData, $database);
+        $book = Book::getBookByDataId($idData, $database, $this->getConfig());
         if (!$book) {
             throw new InvalidArgumentException('Unknown data ' . $idData);
         }
@@ -251,7 +251,7 @@ class EPubReader extends BaseRenderer
     public function findBookData($idData, $database)
     {
         if (!empty($idData)) {
-            $book = Book::getBookByDataId($idData, $database);
+            $book = Book::getBookByDataId($idData, $database, $this->getConfig());
             if (!$book) {
                 throw new InvalidArgumentException('Unknown data ' . $idData);
             }

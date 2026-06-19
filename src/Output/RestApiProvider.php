@@ -235,7 +235,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getDatabases($request)
     {
         $db = $request->database();
-        if (!is_null($db) && Database::checkDatabaseAvailability($db)) {
+        if (!is_null($db) && Database::checkDatabaseAvailability($db, $request->getConfig())) {
             return $this->getDatabase($db, $request);
         }
         $baseurl = $this->getBaseUrl();
@@ -246,7 +246,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         ];
         $params = [];
         $id = 0;
-        foreach (Database::getDbNameList() as $key) {
+        foreach (Database::getDbNameList($request->getConfig()) as $key) {
             $params['db'] = $id;
             $link = $this->getResource(Database::class, $params);
             array_push($result["entries"], [
@@ -268,7 +268,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      */
     public function getDatabase($database, $request)
     {
-        if (!Database::isMultipleDatabaseEnabled() && $database != 0) {
+        if (!Database::isMultipleDatabaseEnabled($request->getConfig()) && $database != 0) {
             return [
                 "title" => "Database Invalid",
                 "entries" => [],
@@ -279,7 +279,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             return $this->getTable($database, $name, $request);
         }
         $title = "Database";
-        $dbName = Database::getDbName($database);
+        $dbName = Database::getDbName($database, $request->getConfig());
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
@@ -294,14 +294,14 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
                 "entries" => [],
             ];
             $params['db'] = $database;
-            $entries = Database::getDbSchema($database, $type);
+            $entries = Database::getDbSchema($database, $type, $request->getConfig());
             foreach ($entries as $entry) {
                 $params['name'] = $entry['tbl_name'];
                 $entry["navlink"] = $this->getResource(Database::class, $params);
                 unset($entry["sql"]);
                 array_push($result["entries"], $entry);
             }
-            $result["version"] = Database::getUserVersion($database);
+            $result["version"] = Database::getUserVersion($database, $request->getConfig());
             return $result;
         }
         $title .= " Types";
@@ -323,7 +323,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
                 "navlink" => $this->getResource(Database::class, $params),
             ]);
         }
-        $result["version"] = Database::getUserVersion($database);
+        $result["version"] = Database::getUserVersion($database, $request->getConfig());
         return $result;
     }
 
@@ -337,7 +337,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getTable($database, $name, $request)
     {
         $title = "Database";
-        $dbName = Database::getDbName($database);
+        $dbName = Database::getDbName($database, $request->getConfig());
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
@@ -361,9 +361,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $params['db'] = $database;
         $params['name'] = $name;
         // add dummy functions for selecting in meta and tag_browser_* views
-        Database::addSqliteFunctions($database);
+        Database::addSqliteFunctions($database, $request->getConfig());
         $query = "SELECT COUNT(*) FROM {$name}";
-        $count = Database::querySingle($query, $database);
+        $count = Database::querySingle($query, $database, $request->getConfig());
         $result["total"] = $count;
         $result["limit"] = $this->numberPerPage;
         $start = 0;
@@ -373,14 +373,14 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         $result["offset"] = $start;
         $query = "SELECT * FROM {$name} LIMIT ?, ?";
-        $res = Database::query($query, [$start, $this->numberPerPage], $database);
+        $res = Database::query($query, [$start, $this->numberPerPage], $database, $request->getConfig());
         while ($post = $res->fetchObject()) {
             $entry = (array) $post;
             $params['id'] = $entry['id'];
             $entry["navlink"] = $this->getResource(Database::class, $params);
             array_push($result["entries"], $entry);
         }
-        $result["columns"] = Database::getTableInfo($database, $name);
+        $result["columns"] = Database::getTableInfo($database, $name, $request->getConfig());
         return $result;
     }
 
@@ -394,9 +394,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getDataTable($database, $name, $request)
     {
         // add dummy functions for selecting in meta and tag_browser_* views
-        Database::addSqliteFunctions($database);
+        Database::addSqliteFunctions($database, $request->getConfig());
         $query = "SELECT COUNT(*) FROM {$name}";
-        $total = Database::querySingle($query, $database);
+        $total = Database::querySingle($query, $database, $request->getConfig());
 
         $start = (int) $request->post('start', 0);
         $length = (int) $request->post('length', $this->numberPerPage);
@@ -404,7 +404,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             $length = $this->numberPerPage;
         }
 
-        $columns = Database::getTableInfo($database, $name);
+        $columns = Database::getTableInfo($database, $name, $request->getConfig());
 
         $where = '';
         $bindings = [];
@@ -471,7 +471,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
 
         $filteredQuery = "SELECT COUNT(*) FROM {$name}" . $where;
-        $filtered = Database::query($filteredQuery, $bindings, $database)->fetchColumn();
+        $filtered = Database::query($filteredQuery, $bindings, $database, $request->getConfig())->fetchColumn();
 
         $links = [
             'authors' => 'books_authors_link.author',
@@ -490,7 +490,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $bindings[] = $start;
         $bindings[] = $length;
 
-        $entries = Database::query($query, $bindings, $database)->fetchAll(\PDO::FETCH_ASSOC);
+        $entries = Database::query($query, $bindings, $database, $request->getConfig())->fetchAll(\PDO::FETCH_ASSOC);
 
         return [
             'draw' => (int) $request->post('draw'),
@@ -580,7 +580,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         ];
         $params = [];
         $params['db'] = $db;
-        foreach (Note::getCountByType($db) as $type => $count) {
+        foreach (Note::getCountByType($db, $request->getConfig()) as $type => $count) {
             $params['type'] = $type;
             $link = $this->getResource(Note::class, $params);
             array_push($result["entries"], [
@@ -617,7 +617,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $params['db'] = $db;
         $params['type'] = $type;
         // @todo get item from notes + corresponding title from instance
-        foreach (Note::getEntriesByType($type, $db) as $entry) {
+        foreach (Note::getEntriesByType($type, $db, $request->getConfig()) as $entry) {
             $params['item'] = $entry['item'];
             if (!empty($entry["title"])) {
                 $title = UriGenerator::slugify($entry["title"]);
@@ -657,7 +657,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getNoteByTypeItem($type, $item, $request)
     {
         $db = $request->database();
-        $note = Note::getInstanceByTypeItem($type, $item, $db);
+        $note = Note::getInstanceByTypeItem($type, $item, $db, $request->getConfig());
         if (empty($note)) {
             return ["error" => "Invalid note type item"];
         }
@@ -670,8 +670,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $result = array_replace($result, get_object_vars($note));
         $result["size"] = strlen($result["doc"]);
         $result["resources"] = [];
-        foreach ($note->getResources() as $hash => $resource) {
-            $path = Resource::getResourcePath($hash, $db);
+        foreach ($note->getResources($request->getConfig()) as $hash => $resource) {
+            $path = Resource::getResourcePath($hash, $db, $request->getConfig());
             $size = !empty($path) ? filesize($path) : 0;
             $mtime = !empty($path) ? filemtime($path) : 0;
             $link = $resource->getUri();
@@ -707,7 +707,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         ];
         $params = [];
         $params['db'] = $db;
-        foreach (Preference::getInstances($db) as $key => $preference) {
+        foreach (Preference::getInstances($db, $request->getConfig()) as $key => $preference) {
             if (is_array($preference->val)) {
                 $count = count($preference->val);
             } elseif (is_string($preference->val)) {
@@ -738,7 +738,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getPreferenceByKey($key, $request)
     {
         $db = $request->database();
-        $preference = Preference::getInstanceByKey($key, $db);
+        $preference = Preference::getInstanceByKey($key, $db, $request->getConfig());
         if (empty($preference)) {
             return ["error" => "Invalid preference key"];
         }
@@ -859,7 +859,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         $db = $request->database();
         $baseurl = $this->getBaseUrl();
-        $metadata = Metadata::getInstanceByBookId($bookId, $db);
+        $metadata = Metadata::getInstanceByBookId($bookId, $db, $request->getConfig());
         if (empty($metadata)) {
             $result["error"] = "Invalid metadata for book id";
             return $result;

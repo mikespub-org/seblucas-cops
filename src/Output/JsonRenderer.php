@@ -808,14 +808,14 @@ class JsonRenderer extends BaseRenderer
         }
 
         $out ["databaseId"] = $this->database ?? "";
-        $out ["databaseName"] = Database::getDbName($this->database);
+        $out ["databaseName"] = Database::getDbName($this->database, $this->getConfig());
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
         $out ["libraryId"] = $libraryId ?? "";
         $out ["libraryName"] = $this->config('title_default');
         $out ["fullTitle"] = $out ["title"];
-        $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled() ? 1 : 0;
+        $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled($this->getConfig()) ? 1 : 0;
         if (!empty($out ["multipleDatabase"]) && $out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
         }
@@ -875,7 +875,7 @@ class JsonRenderer extends BaseRenderer
         $this->setHandler($request->getHandler());
         $this->setLocale($request->locale());
         // Use the configured home page if needed
-        $this->homepage = PageId::getHomePage();
+        $this->homepage = PageId::getHomePage($this->getConfig());
         $this->page = $request->get("page", $this->homepage);
     }
 }

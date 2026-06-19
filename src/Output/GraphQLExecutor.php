@@ -158,7 +158,7 @@ class GraphQLExecutor
             /** @var RequestContext $context */
             $request = $context->getRequest();
             $fieldName = $info->fieldName;
-            $result = self::getQueryField($fieldName, $args, $request);
+            $result = self::getQueryField($fieldName, $args, $request, $context);
             if ($result !== false) {
                 return $result;
             }
@@ -235,7 +235,7 @@ class GraphQLExecutor
         $resolver = static function ($objectValue, array $args, $context, ResolveInfo $info) {
             //$request = $context->getRequest();
             $fieldName = $info->fieldName;
-            $result = self::getNoteField($fieldName, $objectValue);
+            $result = self::getNoteField($fieldName, $objectValue, $context);
             if ($result !== false) {
                 return $result;
             }
@@ -324,9 +324,10 @@ class GraphQLExecutor
      * @param string $fieldName
      * @param array<mixed> $args
      * @param Request $request
+     * @param RequestContext $context
      * @return mixed
      */
-    public static function getQueryField($fieldName, $args, $request)
+    public static function getQueryField($fieldName, $args, $request, $context)
     {
         $handler = $request->getHandler();
         $locale = $request->locale();
@@ -337,7 +338,7 @@ class GraphQLExecutor
                 [$entryArray, $totalNumber] = $booklist->getAllBooks($n);
                 return $entryArray;
             case 'book':
-                $book = Book::getBookById($args['id'], $request->database());
+                $book = Book::getBookById($args['id'], $request->database(), $context->getConfig());
                 if (is_null($book)) {
                     return $book;
                 }
@@ -345,7 +346,7 @@ class GraphQLExecutor
                 $book->setLocale($locale);
                 return $book->getEntry();
             case 'datas':
-                $book = Book::getBookById($args['bookId'], $request->database());
+                $book = Book::getBookById($args['bookId'], $request->database(), $context->getConfig());
                 if (is_null($book)) {
                     return $book;
                 }
@@ -353,7 +354,7 @@ class GraphQLExecutor
                 $book->setLocale($locale);
                 return $book->getDatas();
             case 'data':
-                $book = Book::getBookByDataId($args['id'], $request->database());
+                $book = Book::getBookByDataId($args['id'], $request->database(), $context->getConfig());
                 if (is_null($book)) {
                     return $book;
                 }
@@ -367,7 +368,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'author':
-                $instance = Author::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Author::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -377,7 +378,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'format':
-                $instance = Format::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Format::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -387,7 +388,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'identifier':
-                $instance = Identifier::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Identifier::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -397,7 +398,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'language':
-                $instance = Language::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Language::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -407,7 +408,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'publisher':
-                $instance = Publisher::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Publisher::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -417,7 +418,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'rating':
-                $instance = Rating::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Rating::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -427,7 +428,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'serie':
-                $instance = Serie::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Serie::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -437,7 +438,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'tag':
-                $instance = Tag::getInstanceById($args['id'], $request->database(), $locale);
+                $instance = Tag::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -446,7 +447,7 @@ class GraphQLExecutor
                 $result = [];
                 foreach ($args['idlist'] as $id) {
                     try {
-                        $result[] = self::getNode((string) $id, $request);
+                        $result[] = self::getNode((string) $id, $request, $context);
                     } catch (Exception $e) {
                         // see https://github.com/webonyx/graphql-php/issues/374 or
                         // see https://github.com/webonyx/graphql-php/issues/432
@@ -456,7 +457,7 @@ class GraphQLExecutor
                 return $result;
             case 'node':
                 // @todo add other requested fields on demand
-                return self::getNode((string) ($args['id'] ?? ''), $request);
+                return self::getNode((string) ($args['id'] ?? ''), $request, $context);
             case 'search':
                 return self::getSearch($args, $request);
             default:
@@ -599,9 +600,10 @@ class GraphQLExecutor
      * Summary of getNoteField
      * @param string $fieldName
      * @param Note $note
+     * @param RequestContext $context
      * @return mixed
      */
-    public static function getNoteField($fieldName, $note)
+    public static function getNoteField($fieldName, $note, $context)
     {
         switch ($fieldName) {
             case 'type':
@@ -615,7 +617,7 @@ class GraphQLExecutor
             case 'navlink':
                 return $note->getUri();
             case 'resources':
-                return $note->getResources();
+                return $note->getResources($context->getConfig());
             default:
                 return false;
         }
@@ -625,11 +627,12 @@ class GraphQLExecutor
      * Summary of getNode
      * @param string $globalId
      * @param Request $request
+     * @param RequestContext $context
      * @return mixed
      */
-    public static function getNode($globalId, $request)
+    public static function getNode($globalId, $request, $context)
     {
-        [$db, $type, $id] = self::fromGlobalIdentier($globalId);
+        [$db, $type, $id] = self::fromGlobalIdentier($globalId, $context);
         if (empty($type) || empty($id)) {
             return null;
         }
@@ -641,7 +644,7 @@ class GraphQLExecutor
         // books => book, authors => author etc.
         $fieldName = substr($type, 0, -1);
         // @todo add other requested fields on demand
-        $entry = self::getQueryField($fieldName, ['id' => $id], $current);
+        $entry = self::getQueryField($fieldName, ['id' => $id], $current, $context);
         if (!empty($entry)) {
             return $entry;
         }
@@ -658,10 +661,11 @@ class GraphQLExecutor
     /**
      * Summary of fromGlobalIdentier
      * @param string $globalId
+     * @param RequestContext $context
      * @throws \InvalidArgumentException
      * @return array<mixed>
      */
-    public static function fromGlobalIdentier($globalId)
+    public static function fromGlobalIdentier($globalId, $context)
     {
         // format: /{type}/{id} or /{db}/{type}/{id} e.g. /books/17 or /1/books/17
         $globalId = trim($globalId, '/');
@@ -678,7 +682,7 @@ class GraphQLExecutor
         }
         // basic validation of global identifier parts
         try {
-            if (empty(Database::getDbFileName($db))) {
+            if (empty(Database::getDbFileName($db, $context->getConfig()))) {
                 return [null, null, null];
             }
         } catch (Exception) {

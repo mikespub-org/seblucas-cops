@@ -70,7 +70,7 @@ class Mail
      */
     public function sendMail($idData, $emailDest, $request, $dryRun = false)
     {
-        $book = Book::getBookByDataId($idData, $request->database());
+        $book = Book::getBookByDataId($idData, $request->database(), $request->getConfig());
         if (!$book) {
             return 'No email sent. Unknown book data';
         }
