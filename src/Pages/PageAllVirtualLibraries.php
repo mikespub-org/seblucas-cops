@@ -34,8 +34,8 @@ class PageAllVirtualLibraries extends Page
      */
     public function getEntries()
     {
-        $this->entryArray = VirtualLibrary::getEntries($this->getDatabaseId(), $this->handler, $this->locale);
-        $this->totalNumber = VirtualLibrary::countEntries($this->getDatabaseId());
+        $this->entryArray = VirtualLibrary::getEntries($this->getDatabaseId(), $this->handler, $this->locale, $this->getConfig());
+        $this->totalNumber = VirtualLibrary::countEntries($this->getDatabaseId(), $this->getConfig());
         $this->sorted = null;
         if ((!$this->isPaginated() || $this->n == $this->getMaxPage()) && in_array("libraries", $this->config('show_not_set_filter'))) {
             array_push($this->entryArray, VirtualLibrary::getWithoutEntry($this->getDatabaseId(), $this->handler, $this->locale));

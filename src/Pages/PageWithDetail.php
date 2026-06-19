@@ -35,8 +35,8 @@ class PageWithDetail extends Page
      */
     public function __construct($request = null, $instance = null)
     {
-        $this->setConfig();
         $this->setRequest($request);
+        $this->setConfigInfo();
 
         // move to constructor as this is always called directly after PageId::getPage()
         if (empty($instance)) {

@@ -35,7 +35,7 @@ class PageCustomDetail extends PageWithDetail
         }
         // handle case where we have several values, e.g. array of text for type 2 (csv)
         $customId = $this->request->get("custom", null);
-        $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId());
+        $instance = CustomColumn::createCustom($customId, $this->idGet, $this->getDatabaseId(), $this->getConfig());
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         // $this->title may get updated below here

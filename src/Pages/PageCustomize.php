@@ -153,13 +153,13 @@ class PageCustomize extends Page
             $custom['ignored_categories'] = array_intersect($ignored, $allowed);
         }
         // do not customize virtual libraries for multiple databases
-        if (Database::isMultipleDatabaseEnabled()) {
+        if (Database::isMultipleDatabaseEnabled($this->getConfig())) {
             return $custom;
         }
         $library = $this->request->post('virtual_library');
         if (isset($library) && !empty($library)) {
             $database = $this->getDatabaseId();
-            $libraries = VirtualLibrary::getLibraries($database);
+            $libraries = VirtualLibrary::getLibraries($database, $this->getConfig());
             $allowed = [];
             $id = 1;
             foreach ($libraries as $name => $value) {
@@ -265,7 +265,7 @@ class PageCustomize extends Page
         $this->addHeaderEntry($title, $content);
 
         // do not customize virtual libraries for multiple databases
-        if (!Database::isMultipleDatabaseEnabled()) {
+        if (!Database::isMultipleDatabaseEnabled($this->getConfig())) {
             $this->addVirtualLibraries($database);
         }
     }
@@ -286,7 +286,7 @@ class PageCustomize extends Page
      */
     public function addVirtualLibraries($database = null)
     {
-        $libraries = VirtualLibrary::getLibraries($database);
+        $libraries = VirtualLibrary::getLibraries($database, $this->getConfig());
         if (empty($libraries)) {
             return;
         }

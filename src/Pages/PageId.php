@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\RequestConfig;
 
 class PageId
 {
@@ -100,7 +101,7 @@ class PageId
      */
     public static function getPage($pageId, $request, $instance = null)
     {
-        $pageId ??= PageId::getHomePage();
+        $pageId ??= PageId::getHomePage($request->getConfig());
 
         // @see https://www.php.net/manual/en/control-structures.match.php
         // Unlike switch, the comparison is an identity check (===) rather than a weak equality check (==)
@@ -149,14 +150,14 @@ class PageId
 
     /**
      * Summary of getHomePage
-     * @todo move to instance method (somewhere)
+     * @param ?RequestConfig $config
      * @return string|int
      */
-    public static function getHomePage()
+    public static function getHomePage($config = null)
     {
         // Use the configured home page if needed
         $page = PageId::INDEX;
-        $home = Config::get('home_page');
+        $home = Config::getFrom($config, 'home_page');
         if (!empty($home) && defined('SebLucas\Cops\Pages\PageId::' . $home)) {
             $page = constant('SebLucas\Cops\Pages\PageId::' . $home);
         }

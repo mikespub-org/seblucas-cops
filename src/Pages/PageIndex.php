@@ -37,7 +37,7 @@ class PageIndex extends Page
      */
     public function initializeContent()
     {
-        if (Database::noDatabaseSelected($this->databaseId)) {
+        if (Database::noDatabaseSelected($this->databaseId, $this->getConfig())) {
             $this->getDatabaseEntries();
         } elseif ($this->request->hasFilter() || !empty($this->config('database_filter'))) {
             $this->getFilteredEntries();
@@ -56,7 +56,7 @@ class PageIndex extends Page
     public function getDatabaseEntries()
     {
         $i = 0;
-        foreach (Database::getDbNameList() as $key) {
+        foreach (Database::getDbNameList($this->getConfig()) as $key) {
             $booklist = new BookList($this->request, $i);
             $nBooks = $booklist->getBookCount();
             $this->addDatabaseEntry($key, $i, $nBooks);
@@ -132,9 +132,9 @@ class PageIndex extends Page
         }
         // @todo apply filter?
         // for multi-database setup, not all databases may have all custom columns - see issue #89
-        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId());
+        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId(), $this->getConfig());
         foreach ($customColumnList as $lookup) {
-            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
+            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), $this->getConfig(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
                 $customColumn->setLocale($this->locale);
@@ -142,7 +142,7 @@ class PageIndex extends Page
             }
         }
         if (!empty($this->config('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
-            $library = VirtualLibrary::getCount($this->databaseId, $this->handler, $this->locale);
+            $library = VirtualLibrary::getCount($this->databaseId, $this->handler, $this->locale, $this->getConfig());
             if (!is_null($library)) {
                 array_push($this->entryArray, $library);
             }
@@ -157,8 +157,8 @@ class PageIndex extends Page
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 
-        if (Database::isMultipleDatabaseEnabled()) {
-            $this->title =  Database::getDbName($this->getDatabaseId());
+        if (Database::isMultipleDatabaseEnabled($this->getConfig())) {
+            $this->title =  Database::getDbName($this->getDatabaseId(), $this->getConfig());
         }
     }
 
@@ -208,9 +208,9 @@ class PageIndex extends Page
             $this->addCountEntry(Identifier::class);
         }
         // for multi-database setup, not all databases may have all custom columns - see issue #89
-        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId());
+        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId(), $this->getConfig());
         foreach ($customColumnList as $lookup) {
-            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), false);
+            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), $this->getConfig(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
                 $customColumn->setLocale($this->locale);
@@ -230,8 +230,8 @@ class PageIndex extends Page
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 
-        if (Database::isMultipleDatabaseEnabled()) {
-            $this->title =  Database::getDbName($this->getDatabaseId());
+        if (Database::isMultipleDatabaseEnabled($this->getConfig())) {
+            $this->title =  Database::getDbName($this->getDatabaseId(), $this->getConfig());
         }
     }
 
@@ -242,7 +242,7 @@ class PageIndex extends Page
      */
     public function addCountEntry($className)
     {
-        $entry = $className::getCount($this->databaseId, $this->handler, $this->locale);
+        $entry = $className::getCount($this->databaseId, $this->handler, $this->locale, $this->getConfig());
         if (!is_null($entry)) {
             array_push($this->entryArray, $entry);
         }

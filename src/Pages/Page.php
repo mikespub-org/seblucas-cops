@@ -16,6 +16,7 @@ use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -87,8 +88,8 @@ class Page
      */
     public function __construct($request = null)
     {
-        $this->setConfig();
         $this->setRequest($request);
+        $this->setConfigInfo();
 
         // move to constructor as this is always called directly after PageId::getPage()
         $this->initializeContent();
@@ -102,6 +103,9 @@ class Page
     public function setRequest($request)
     {
         $this->request = $request ?? new Request();
+        if ($this->request->getConfig() !== null) {
+            $this->setConfig($this->request->getConfig());
+        }
         // this could be string for first letter, identifier or custom columns - override there
         $this->idGet = $this->request->getId();
         $this->n = $this->request->get('n', 1, '/^\d+$/');  // use default here
@@ -113,13 +117,11 @@ class Page
     }
 
     /**
-     * Summary of setConfig
-     * @param ?Config $config not used for now - see RequestContext
+     * Summary of setConfigInfo
      * @return void
      */
-    public function setConfig($config = null)
+    public function setConfigInfo()
     {
-        $config ??= new Config();
         $this->favicon = $this->config('icon');
         $this->authorName = $this->config('author_name') ?: 'Sébastien Lucas';
         $this->authorUri = $this->config('author_uri') ?: 'https://blog.slucas.fr';
