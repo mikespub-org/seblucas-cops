@@ -282,7 +282,7 @@ class CheckHandler extends BaseHandler
     {
         $i = 0;
         $result = '';
-        foreach (Database::getDbList() as $name => $database) {
+        foreach (Database::getDbList($this->getConfig()) as $name => $database) {
             $title = 'Check if Calibre database path is not an URL';
             if (!preg_match('#^http#', $database)) {
                 $message = $name . ' OK';
@@ -292,10 +292,11 @@ class CheckHandler extends BaseHandler
             $result .= $this->getMessage($title, $message);
 
             $title = 'Check if Calibre database file exists and is readable';
-            if (is_readable(Database::getDbFileName($i))) {
+            $dbFileName = Database::getDbFileName($i, $this->getConfig());
+            if (is_readable($dbFileName)) {
                 $message = $name . ' OK';
             } else {
-                $message = $name . ' File ' . Database::getDbFileName($i) . ' not found,
+                $message = $name . ' File ' . $dbFileName . ' not found,
 Please check
 <ul>
 <li>Value of $config[\'calibre_directory\'] in config/local.php <strong>(Does it end with a \'/\'?)</strong></li>
@@ -307,13 +308,13 @@ Please check
             }
             $result .= $this->getMessage($title, $message);
 
-            if (!is_readable(Database::getDbFileName($i))) {
+            if (!is_readable($dbFileName)) {
                 $i++;
                 continue;
             }
             $title = 'Check if Calibre database file can be opened with PHP';
             try {
-                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . $dbFileName);
                 $message = $name . ' OK';
             } catch (Exception $e) {
                 $message = $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
@@ -322,7 +323,7 @@ Please check
 
             $title = 'Check if Calibre database file contains at least some of the needed tables';
             try {
-                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . $dbFileName);
                 $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
                 if ($count == 4) {
                     $message = $name . ' OK';

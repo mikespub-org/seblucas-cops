@@ -36,6 +36,7 @@ class MailHandler extends BaseHandler
         $dryRun = ($request->getHandler() === TestHandler::class) ? true : false;
 
         $mailer = new Mail();
+        $mailer->setConfig($this->getContext()->getConfig());
 
         if ($error = $mailer->checkConfiguration()) {
             return Response::sendError($request, $error);

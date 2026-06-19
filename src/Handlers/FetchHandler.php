@@ -90,10 +90,11 @@ class FetchHandler extends BaseHandler
         $database = $request->database();
         $file     = $request->get('file');
 
+        $config = $this->getContext()->getConfig();
         if (is_null($bookId)) {
-            $book = Book::getBookByDataId($idData, $database);
+            $book = Book::getBookByDataId($idData, $database, $config);
         } else {
-            $book = Book::getBookById($bookId, $database);
+            $book = Book::getBookById($bookId, $database, $config);
         }
 
         if (!$book) {

@@ -117,6 +117,9 @@ abstract class BaseHandler implements HasContextInterface
     public function __construct($context)
     {
         $this->setContext($context);
+        if ($context->getConfig() !== null) {
+            $this->setConfig($context->getConfig());
+        }
     }
 
     /**

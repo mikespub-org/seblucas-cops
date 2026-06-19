@@ -34,7 +34,7 @@ class QueueBasedHandler extends BaseHandler
      */
     public function __construct($context, $handler)
     {
-        $this->setContext($context);
+        parent::__construct($context);
         $this->handler = $handler;
     }
 

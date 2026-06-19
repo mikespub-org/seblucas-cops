@@ -43,7 +43,7 @@ class CalResHandler extends BaseHandler
         // create empty file response to start with!?
         $response = new FileResponse();
 
-        $result = Resource::sendImageResource($hash, $response, null, intval($database));
+        $result = Resource::sendImageResource($hash, $response, null, intval($database), $this->getConfig());
         if (is_null($result)) {
             return Response::notFound($request);
         }

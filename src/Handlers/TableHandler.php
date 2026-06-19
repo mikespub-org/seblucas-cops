@@ -54,7 +54,7 @@ class TableHandler extends BaseHandler
         $db = $request->getId('db');
         $name = $request->get('name', null, '/^\w+$/');
 
-        if (is_null($db) && !Database::isMultipleDatabaseEnabled()) {
+        if (is_null($db) && !Database::isMultipleDatabaseEnabled($this->getConfig())) {
             $db = 0;
         }
 
@@ -90,7 +90,7 @@ class TableHandler extends BaseHandler
         $data['title'] = "Table $name";
         $homeLink = self::route('tables');
         $dbLink = self::route('tables-db', ['db' => $db]);
-        $dbName = Database::getDbName($db) ?: '0';
+        $dbName = Database::getDbName($db, $this->getConfig()) ?: '0';
         $data['breadcrumb'] = '<li class="breadcrumb-item"><a href="' . $homeLink . '">Databases</a></li>';
         $data['breadcrumb'] .= '<li class="breadcrumb-item"><a href="' . $dbLink . '">' . htmlspecialchars((string) $dbName) . '</a></li>';
         $fromParam = $request->get('from', null, '/^\w+\.\d+$/');
@@ -109,7 +109,7 @@ class TableHandler extends BaseHandler
         $params = ['db' => $db, 'name' => $name];
         $data['ajax_url'] = RestApiHandler::resource(Database::class, $params);
 
-        $columns = Database::getTableInfo($db, $name);
+        $columns = Database::getTableInfo($db, $name, $this->getConfig());
         $filters = [
             'authors' => 'a',
             //'languages' => 'l',
@@ -183,15 +183,15 @@ class TableHandler extends BaseHandler
     private function showDbTables(int $db, $request): Response
     {
         $data = ['link' => RestApiHandler::getBaseUrl()];
-        $data['title'] = "Database " . Database::getDbName($db);
+        $data['title'] = "Database " . Database::getDbName($db, $this->getConfig());
         $homeLink = self::route('tables');
-        $dbName = Database::getDbName($db) ?: '0';
+        $dbName = Database::getDbName($db, $this->getConfig()) ?: '0';
         $data['breadcrumb'] = '<li class="breadcrumb-item"><a href="' . $homeLink . '">Databases</a></li>';
         $data['breadcrumb'] .= '<li class="breadcrumb-item active" aria-current="page">' . htmlspecialchars((string) $dbName) . '</li>';
         $data['ajax_url'] = '';
         $data['thead'] = '<tr><th>Table</th><th>Rows</th></tr>';
         $data['tbody'] = '';
-        $tables = Database::getDbSchema($db, 'table');
+        $tables = Database::getDbSchema($db, 'table', $this->getConfig());
         foreach ($tables as $table) {
             $tableName = $table['tbl_name'];
             if (str_contains($tableName, '_')) {
@@ -200,7 +200,7 @@ class TableHandler extends BaseHandler
             if (in_array($tableName, ['preferences'])) {
                 continue;
             }
-            $count = Database::querySingle("SELECT COUNT(*) FROM {$tableName}", $db);
+            $count = Database::querySingle("SELECT COUNT(*) FROM {$tableName}", $db, $this->getConfig());
             $link = self::route('tables-db-name', ['db' => $db, 'name' => $tableName]);
             $data['tbody'] .= '<tr class="clickable-row" data-href="' . $link . '"><td><a href="' . $link . '">' . $tableName . '</a></td><td>' . $count . '</td></tr>';
         }
@@ -230,7 +230,7 @@ class TableHandler extends BaseHandler
         $data['thead'] = '<tr><th class="text-start">Database</th></tr>';
         $data['tbody'] = '';
         $id = 0;
-        foreach (Database::getDbNameList() as $key) {
+        foreach (Database::getDbNameList($this->getConfig()) as $key) {
             if (empty($key)) {
                 $key = '0';
             }
@@ -314,7 +314,7 @@ class TableHandler extends BaseHandler
     {
         //$_POST['auth']['driver'] = 'sqlite';
         //$_POST['auth']['server'] = 'localhost';
-        //$_POST['auth']['db'] = Database::getDbFileName($request->database());
+        //$_POST['auth']['db'] = Database::getDbFileName($request->database(), $this->getConfig());
         //$_POST['auth']['username'] = 'admin';
         //$_POST['auth']['password'] = 'mypassword';
     }

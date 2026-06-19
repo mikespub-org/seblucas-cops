@@ -288,7 +288,7 @@ class LoaderHandler extends BaseHandler
     public function setBookInfo($bookId, $bookInfo)
     {
         $database = $this->request->database();
-        $book = Book::getBookById($bookId, $database);
+        $book = Book::getBookById($bookId, $database, $this->getContext()->getConfig());
         if (empty($book) || empty($book->id)) {
             return false;
         }

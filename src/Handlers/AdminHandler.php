@@ -420,15 +420,16 @@ if (!isset($config)) {
     {
         $i = 0;
         $content = '<strong>Missing Books:</strong><ul>';
-        foreach (Database::getDbList() as $name => $database) {
+        foreach (Database::getDbList($this->getConfig()) as $name => $database) {
             $content .= "<li>Database $i: $name $database\n<ul>\n";
             try {
-                $db = new Sqlite('sqlite:' . Database::getDbFileName($i));
+                $db = new Sqlite('sqlite:' . Database::getDbFileName($i, $this->getConfig()));
                 $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
                 $result->execute();
+                $dbDirectory = Database::getDbDirectory($i, $this->getConfig());
                 while ($post = $result->fetchObject()) {
-                    if (!is_file(Database::getDbDirectory($i) . $post->fullpath)) {
-                        $content .= '<li>' . Database::getDbDirectory($i) . $post->fullpath . '</li>';
+                    if (!is_file($dbDirectory . $post->fullpath)) {
+                        $content .= '<li>' . $dbDirectory . $post->fullpath . '</li>';
                     }
                 }
             } catch (Exception $e) {

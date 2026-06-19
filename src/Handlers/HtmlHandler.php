@@ -51,13 +51,13 @@ class HtmlHandler extends PageHandler
 
         // Use the configured home page if needed
         if (!isset($page)) {
-            $page = PageId::getHomePage();
+            $page = PageId::getHomePage($this->getConfig());
             $request->set('page', $page);
         }
 
         // Access the database ASAP to be sure it's readable, redirect if that's not the case.
         // It has to be done before any header is sent.
-        Database::checkDatabaseAvailability($database);
+        Database::checkDatabaseAvailability($database, $this->getConfig());
 
         // set session connected in ConnectMiddleware
 
