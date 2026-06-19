@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Author extends Base
@@ -76,15 +77,16 @@ class Author extends Base
      * Summary of getInstancesByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<Author>
      */
-    public static function getInstancesByBookId($bookId, $database = null)
+    public static function getInstancesByBookId($bookId, $database = null, $config = null)
     {
-        $query = 'select ' . self::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database, $config) . '
 from authors, books_authors_link
 where author = authors.id
 and book = ? order by books_authors_link.id';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         $authorArray = [];
         while ($post = $result->fetchObject()) {
             array_push($authorArray, new Author($post, $database));

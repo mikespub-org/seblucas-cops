@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 
 class CustomColumnTypeBool extends CustomColumnType
@@ -31,11 +32,12 @@ class CustomColumnTypeBool extends CustomColumnType
      * Summary of __construct
      * @param int $customId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($customId, $database = null, $displaySettings = [])
+    protected function __construct($customId, $database = null, $displaySettings = [], $config = null)
     {
-        parent::__construct($customId, self::TYPE_BOOL, $database, $displaySettings);
+        parent::__construct($customId, self::TYPE_BOOL, $database, $displaySettings, $config);
     }
 
     /**
@@ -106,7 +108,7 @@ class CustomColumnTypeBool extends CustomColumnType
         // this includes the "Not Set" entry here
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = Database::query($query, [], $this->databaseId);
+        $result = Database::query($query, [], $this->databaseId, $this->getConfig());
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -146,7 +148,7 @@ class CustomColumnTypeBool extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = Database::query($query, [$book->id], $this->databaseId);
+        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->boolvalue, $this->localize($this->BOOLEAN_NAMES[$post->boolvalue]), $this);
         } else {

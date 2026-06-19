@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
@@ -154,11 +155,12 @@ class Identifier extends Base
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null)
+    public static function getCount($database, $handler, $locale = null, $config = null)
     {
-        $count = Database::querySingle('select count(distinct type) from ' . static::SQL_TABLE, $database);
+        $count = Database::querySingle('select count(distinct type) from ' . static::SQL_TABLE, $database, $config);
         return static::getCountEntry($count, $database, null, $handler, [], $locale);
     }
 
@@ -167,9 +169,10 @@ class Identifier extends Base
      * @param string|int|null $id used for the type of identifier here
      * @param ?int $database
      * @param ?string $locale
+     * @param ?RequestConfig $config - not used here
      * @return self
      */
-    public static function getInstanceById($id, $database = null, $locale = null)
+    public static function getInstanceById($id, $database = null, $locale = null, $config = null)
     {
         // get identifier type here, not actual identifier
         if (!empty($id)) {
@@ -194,9 +197,10 @@ class Identifier extends Base
      * Summary of getInstancesByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<Identifier>
      */
-    public static function getInstancesByBookId($bookId, $database = null)
+    public static function getInstancesByBookId($bookId, $database = null, $config = null)
     {
         $identifiers = [];
 
@@ -205,7 +209,7 @@ class Identifier extends Base
             from identifiers
             where book = ?
             order by type';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         while ($post = $result->fetchObject()) {
             array_push($identifiers, new Identifier($post, $database));
         }

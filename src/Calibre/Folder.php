@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Output\Format;
@@ -78,6 +79,7 @@ class Folder extends Category
             throw new Exception('Invalid folder id ' . $post->id);
         }
         parent::__construct($post, $database);
+        // @todo $this->config is not defined here yet
         $this->root = $post->root ?? Config::get('browse_books_directory', '');
     }
 
@@ -506,9 +508,10 @@ class Folder extends Category
      * @param ?int $database not used here
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null)
+    public static function getCount($database, $handler, $locale = null, $config = null)
     {
         $count = 1;
         return static::getCountEntry($count, $database, "folders", $handler, [], $locale);

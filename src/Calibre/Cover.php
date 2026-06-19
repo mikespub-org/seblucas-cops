@@ -13,7 +13,7 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\ZipFsHandler;
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\LinkImage;
 use SebLucas\Cops\Output\EPubReader;
@@ -22,6 +22,7 @@ use SebLucas\Cops\Output\ImageResponse;
 class Cover
 {
     use HasRouteTrait;
+    use HasConfigTrait;
 
     public const ROUTE_COVER = "fetch-cover";
     public const ROUTE_THUMB = "fetch-thumb";
@@ -48,6 +49,9 @@ class Cover
         }
         $this->databaseId = $database ?? $book->getDatabaseId();
         $this->setHandler(FetchHandler::class);
+        if ($book->getConfig() !== null) {
+            $this->setConfig($book->getConfig());
+        }
     }
 
     /**
@@ -61,7 +65,7 @@ class Cover
             $this->coverFileName = $fileName;
             return $this->coverFileName;
         }
-        $imgDirectory = Database::getImgDirectory($this->databaseId);
+        $imgDirectory = Database::getImgDirectory($this->databaseId, $this->getConfig());
         $this->coverFileName = $fileName;
         if (!file_exists($this->coverFileName)) {
             $this->coverFileName = null;
@@ -99,7 +103,7 @@ class Cover
     public function checkCoverFilePath()
     {
         $cover = $this->book->getCoverFilePath("jpg");
-        if (!empty($cover) && !empty(Config::get('calibre_external_storage'))) {
+        if (!empty($cover) && !empty($this->config('calibre_external_storage'))) {
             $this->coverFileName = $cover;
             return $this->coverFileName;
         }
@@ -179,7 +183,7 @@ class Cover
         // -DC- Use cover file name
         $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
         $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
-        if (!empty(Config::get('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
+        if (!empty($this->config('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
             $href = $this->coverFileName;
             return new LinkImage(
                 $href,
@@ -198,7 +202,7 @@ class Cover
         }
         $file = 'cover.' . $ext;
         $filePath = $this->book->path . "/" . $file;
-        if (!Database::useAbsolutePath($this->databaseId)) {
+        if (!Database::useAbsolutePath($this->databaseId, $this->getConfig())) {
             $urlPath = implode('/', array_map(rawurlencode(...), explode('/', $filePath)));
             $href = fn() => $this->getPath($urlPath);
             return new LinkImage(
@@ -247,7 +251,7 @@ class Cover
      */
     public function getThumbnailLink($thumb, $useDefault = true)
     {
-        $thumbnailHandling = (string) Config::get('thumbnail_handling');
+        $thumbnailHandling = (string) $this->config('thumbnail_handling');
         if (!empty($thumbnailHandling)
             && $thumbnailHandling != "1") {
             return $this->getDefaultLink($thumbnailHandling);
@@ -268,7 +272,7 @@ class Cover
         $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
         $mime = ($ext == 'jpg') ? 'image/jpeg' : 'image/png';
         // @todo support creating (and caching) thumbnails for external cover images someday
-        if (!empty(Config::get('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
+        if (!empty($this->config('calibre_database_field_cover')) && str_contains($this->coverFileName, '://')) {
             $href = $this->coverFileName;
             return new LinkImage(
                 $href,
@@ -292,7 +296,7 @@ class Cover
         if ($ext != 'jpg') {
             $params['type'] = $ext;
         }
-        if (Config::get('thumbnail_handling') != "1") {
+        if ($this->config('thumbnail_handling') != "1") {
             $params['thumb'] = $thumb;
             $routeName = self::ROUTE_THUMB;
             $height = ImageResponse::getThumbnailHeight($thumb);
@@ -327,7 +331,7 @@ class Cover
      */
     public function getDefaultLink($filePath = null)
     {
-        $filePath ??= (string) Config::get('thumbnail_default');
+        $filePath ??= (string) $this->config('thumbnail_default');
         if (empty($filePath)) {
             return null;
         }
@@ -352,7 +356,8 @@ class Cover
         if (empty($this->coverFileName)) {
             return false;
         }
-        if (!empty(Config::get('calibre_external_storage')) && str_starts_with($this->coverFileName, (string) Config::get('calibre_external_storage'))) {
+        $externalStorage = $this->config('calibre_external_storage', null);
+        if (!empty($externalStorage) && str_starts_with($this->coverFileName, (string) $externalStorage)) {
             return true;
         }
         return false;

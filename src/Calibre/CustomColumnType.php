@@ -12,6 +12,8 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -25,6 +27,7 @@ abstract class CustomColumnType
 {
     use HasRouteTrait;
     use HasLocaleTrait;
+    use HasConfigTrait;
 
     public const PAGE_ID = PageId::ALL_CUSTOMS_ID;
     public const PAGE_ALL = PageId::ALL_CUSTOMS;
@@ -84,16 +87,20 @@ abstract class CustomColumnType
      * @param int $customId
      * @param string $datatype
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($customId, $datatype, $database = null, $displaySettings = [])
+    protected function __construct($customId, $datatype, $database = null, $displaySettings = [], $config = null)
     {
-        $this->columnTitle = static::getTitleByCustomID($customId, $database);
+        if (!empty($config)) {
+            $this->setConfig($config);
+        }
+        $this->columnTitle = static::getTitleByCustomID($customId, $database, $config);
         $this->customId = $customId;
         $this->datatype = $datatype;
         $this->customValues = null;
         $this->databaseId = $database;
-        $this->numberPerPage = Config::get('max_item_per_page');
+        $this->numberPerPage = $this->config('max_item_per_page');
         $this->displaySettings = $displaySettings;
     }
 
@@ -195,7 +202,7 @@ abstract class CustomColumnType
     public function getDatabaseDescription()
     {
         $query = 'SELECT display FROM custom_columns WHERE id = ?';
-        $result = Database::query($query, [$this->customId], $this->databaseId);
+        $result = Database::query($query, [$this->customId], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
             return (isset($json->description) && !empty($json->description)) ? $json->description : null;
@@ -257,7 +264,7 @@ abstract class CustomColumnType
             $query .= " LIMIT ?, ?";
             array_push($params, ($n - 1) * $this->numberPerPage, $this->numberPerPage);
         }
-        $result = Database::query($query, $params, $this->databaseId);
+        $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
 
         return $result;
     }
@@ -272,7 +279,7 @@ abstract class CustomColumnType
         $queryFormat = "SELECT COUNT(DISTINCT value) AS count FROM {0}";
         $query = str_format($queryFormat, $this->getTableName());
         // @todo do we want to filter by virtual library etc. here?
-        return Database::querySingle($query, $this->databaseId);
+        return Database::querySingle($query, $this->databaseId, $this->getConfig());
     }
 
     /**
@@ -344,7 +351,7 @@ abstract class CustomColumnType
     public function hasChildCategories()
     {
         // @todo this only works with column titles/names, not the lookup names used elsewhere
-        $categories = Config::get('calibre_categories_using_hierarchy');
+        $categories = $this->config('calibre_categories_using_hierarchy');
         if (empty($categories) || !in_array($this->columnTitle, $categories)) {
             return false;
         }
@@ -374,7 +381,7 @@ abstract class CustomColumnType
             $params = [$find];
         }
         $query = str_format($queryFormat, $tableName);
-        $result = Database::query($query, $params, $this->databaseId);
+        $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
 
         $instances = [];
         while ($post = $result->fetchObject()) {
@@ -394,7 +401,7 @@ abstract class CustomColumnType
     {
         $query = str_format(static::SQL_CREATE, $this->getTableName());
         $params = [ $name ];
-        $result = Database::getDb($this->databaseId)->prepare($query);
+        $result = Database::getDb($this->databaseId, $this->getConfig())->prepare($query);
         $result->execute($params);
         $instance = $this->getCustomByValue($name);
         if ($instance) {
@@ -437,12 +444,13 @@ abstract class CustomColumnType
      *
      * @param int $customId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<mixed>
      */
-    protected static function getDatatypeAndDisplaySettingsByCustomID($customId, $database = null)
+    protected static function getDatatypeAndDisplaySettingsByCustomID($customId, $database = null, $config = null)
     {
         $query = 'SELECT datatype, is_multiple, display FROM custom_columns WHERE id = ?';
-        $result = Database::query($query, [$customId], $database);
+        $result = Database::query($query, [$customId], $database, $config);
         if ($post = $result->fetchObject()) {
 
             $settings = $post->display ? json_decode($post->display, true) : [];
@@ -461,12 +469,14 @@ abstract class CustomColumnType
      *
      * @param int $customId the id of the custom column
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param bool $cached
      * @return ?CustomColumnType
      * @throws \UnexpectedValueException If the $customId is not found or the datatype is unknown
      */
-    public static function createByCustomID($customId, $database = null, $cached = true)
+    public static function createByCustomID($customId, $database = null, $config = null, $cached = true)
     {
+        // @todo adapt cache based on config
         if (!$cached) {
             static::$customColumnCacheID = [];
         }
@@ -475,19 +485,19 @@ abstract class CustomColumnType
             return static::$customColumnCacheID[$customId];
         }
 
-        [$datatype, $displaySettings] = static::getDatatypeAndDisplaySettingsByCustomID($customId, $database);
+        [$datatype, $displaySettings] = static::getDatatypeAndDisplaySettingsByCustomID($customId, $database, $config);
 
         static::$customColumnCacheID[$customId] = match ($datatype) {
-            static::TYPE_TEXT => new CustomColumnTypeText($customId, static::TYPE_TEXT, $database, $displaySettings),
-            static::TYPE_CSV => new CustomColumnTypeText($customId, static::TYPE_CSV, $database, $displaySettings),
-            static::TYPE_SERIES => new CustomColumnTypeSeries($customId, $database, $displaySettings),
-            static::TYPE_ENUM => new CustomColumnTypeEnumeration($customId, $database, $displaySettings),
-            static::TYPE_COMMENT => new CustomColumnTypeComment($customId, $database, $displaySettings),
-            static::TYPE_DATE => new CustomColumnTypeDate($customId, $database, $displaySettings),
-            static::TYPE_FLOAT => new CustomColumnTypeFloat($customId, $database, $displaySettings),
-            static::TYPE_INT => new CustomColumnTypeInteger($customId, static::TYPE_INT, $database, $displaySettings),
-            static::TYPE_RATING => new CustomColumnTypeRating($customId, $database, $displaySettings),
-            static::TYPE_BOOL => new CustomColumnTypeBool($customId, $database, $displaySettings),
+            static::TYPE_TEXT => new CustomColumnTypeText($customId, static::TYPE_TEXT, $database, $displaySettings, $config),
+            static::TYPE_CSV => new CustomColumnTypeText($customId, static::TYPE_CSV, $database, $displaySettings, $config),
+            static::TYPE_SERIES => new CustomColumnTypeSeries($customId, $database, $displaySettings, $config),
+            static::TYPE_ENUM => new CustomColumnTypeEnumeration($customId, $database, $displaySettings, $config),
+            static::TYPE_COMMENT => new CustomColumnTypeComment($customId, $database, $displaySettings, $config),
+            static::TYPE_DATE => new CustomColumnTypeDate($customId, $database, $displaySettings, $config),
+            static::TYPE_FLOAT => new CustomColumnTypeFloat($customId, $database, $displaySettings, $config),
+            static::TYPE_INT => new CustomColumnTypeInteger($customId, static::TYPE_INT, $database, $displaySettings, $config),
+            static::TYPE_RATING => new CustomColumnTypeRating($customId, $database, $displaySettings, $config),
+            static::TYPE_BOOL => new CustomColumnTypeBool($customId, $database, $displaySettings, $config),
             static::TYPE_COMPOSITE => null,
             default => throw new UnexpectedValueException("Unknown column type: " . $datatype),
         };
@@ -499,11 +509,13 @@ abstract class CustomColumnType
      *
      * @param string $lookup the lookup-name of the custom column
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param bool $cached
      * @return ?CustomColumnType
      */
-    public static function createByLookup($lookup, $database = null, $cached = true)
+    public static function createByLookup($lookup, $database = null, $config = null, $cached = true)
     {
+        // @todo adapt cache based on config
         if (!$cached) {
             static::$customColumnCacheLookup = [];
         }
@@ -513,9 +525,9 @@ abstract class CustomColumnType
         }
 
         $query = 'SELECT id FROM custom_columns WHERE label = ?';
-        $result = Database::query($query, [$lookup], $database);
+        $result = Database::query($query, [$lookup], $database, $config);
         if ($post = $result->fetchObject()) {
-            return static::$customColumnCacheLookup[$lookup] = static::createByCustomID($post->id, $database);
+            return static::$customColumnCacheLookup[$lookup] = static::createByCustomID($post->id, $database, $config);
         }
         return static::$customColumnCacheLookup[$lookup] = null;
     }
@@ -525,12 +537,13 @@ abstract class CustomColumnType
      *
      * @param int $customId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return string
      */
-    protected static function getTitleByCustomID($customId, $database = null)
+    protected static function getTitleByCustomID($customId, $database = null, $config = null)
     {
         $query = 'SELECT name FROM custom_columns WHERE id = ?';
-        $result = Database::query($query, [$customId], $database);
+        $result = Database::query($query, [$customId], $database, $config);
         if ($post = $result->fetchObject()) {
             return $post->name;
         }
@@ -542,12 +555,13 @@ abstract class CustomColumnType
      *
      * @param array<string> $columnList
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<string>
      */
-    public static function checkCustomColumnList($columnList, $database = null)
+    public static function checkCustomColumnList($columnList, $database = null, $config = null)
     {
         if ($columnList === static::ALL_WILDCARD) {
-            $columnList = array_keys(static::getAllCustomColumns($database));
+            $columnList = array_keys(static::getAllCustomColumns($database, $config));
         }
         return $columnList;
     }
@@ -556,12 +570,13 @@ abstract class CustomColumnType
      * Get all defined custom columns from the database
      *
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<string, array<mixed>>
      */
-    public static function getAllCustomColumns($database = null)
+    public static function getAllCustomColumns($database = null, $config = null)
     {
         $query = 'SELECT id, label, name, datatype, display, is_multiple, normalized FROM custom_columns';
-        $result = Database::query($query, [], $database);
+        $result = Database::query($query, [], $database, $config);
         $columns = [];
         while ($post = $result->fetchObject()) {
             $columns[$post->label] = (array) $post;
@@ -627,7 +642,7 @@ abstract class CustomColumnType
     public function getCustomByValue($value)
     {
         $query = str_format("SELECT id, value AS name FROM {0} WHERE value = ?", $this->getTableName());
-        $result = Database::query($query, [$value], $this->databaseId);
+        $result = Database::query($query, [$value], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }

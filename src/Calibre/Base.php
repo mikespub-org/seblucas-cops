@@ -12,7 +12,9 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HasRouteTrait;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
@@ -26,6 +28,7 @@ abstract class Base
 {
     use HasRouteTrait;
     use HasLocaleTrait;
+    use HasConfigTrait;
 
     public const PAGE_ID = PageId::ALL_BASES_ID;
     public const PAGE_ALL = 0;
@@ -243,6 +246,10 @@ abstract class Base
         $params['db'] = $this->getDatabaseId();
         $params['title'] = $this->getTitle();
         $request = Request::build($params, $this->handler);
+        $request->locale = $this->locale;
+        if ($this->getConfig() !== null) {
+            $request->setConfig($this->getConfig());
+        }
         $page = PageId::getPage(static::PAGE_DETAIL, $request, $this);
         if (!empty($count)) {
             $page->totalNumber = $count;
@@ -316,6 +323,9 @@ abstract class Base
         $params = $this->getExtraParams();
         $request = Request::build($params, $this->handler);
         $request->locale = $this->locale;
+        if ($this->getConfig() !== null) {
+            $request->setConfig($this->getConfig());
+        }
         $baselist = new BaseList($className, $request, $database, $numberPerPage);
         $baselist->orderBy = $sort;
         $baselist->pagination = true;
@@ -480,7 +490,7 @@ abstract class Base
     {
         $className = static::class;
         $tableName = $className::SQL_TABLE;
-        return Note::getInstanceByTypeItem($tableName, $this->id, $this->databaseId);
+        return Note::getInstanceByTypeItem($tableName, $this->id, $this->databaseId, $this->getConfig());
     }
 
     /** Generic methods inherited by Author, Language, Publisher, Rating, Series, Tag classes */
@@ -490,15 +500,16 @@ abstract class Base
      * @param string|int|null $id
      * @param ?int $database
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @throws \InvalidArgumentException
      * @return static
      */
-    public static function getInstanceById($id, $database = null, $locale = null)
+    public static function getInstanceById($id, $database = null, $locale = null, $config = null)
     {
         $className = static::class;
         if (isset($id)) {
-            $query = 'select ' . static::getInstanceColumns($database) . ' from ' . $className::SQL_TABLE . ' where id = ?';
-            $result = Database::query($query, [$id], $database);
+            $query = 'select ' . static::getInstanceColumns($database, $config) . ' from ' . $className::SQL_TABLE . ' where id = ?';
+            $result = Database::query($query, [$id], $database, $config);
             if ($post = $result->fetchObject()) {
                 return new $className($post, $database);
             }
@@ -520,13 +531,14 @@ abstract class Base
      * @param string $name
      * @param ?int $database
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return static|null
      */
-    public static function getInstanceByName($name, $database = null, $locale = null)
+    public static function getInstanceByName($name, $database = null, $locale = null, $config = null)
     {
         $className = static::class;
-        $query = 'select ' . static::getInstanceColumns($database) . ' from ' . $className::SQL_TABLE . ' where name = ?';
-        $result = Database::query($query, [$name], $database);
+        $query = 'select ' . static::getInstanceColumns($database, $config) . ' from ' . $className::SQL_TABLE . ' where name = ?';
+        $result = Database::query($query, [$name], $database, $config);
         if ($post = $result->fetchObject()) {
             return new $className($post, $database);
         }
@@ -536,13 +548,14 @@ abstract class Base
     /**
      * Summary of getInstanceColumns
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return string
      */
-    public static function getInstanceColumns($database = null)
+    public static function getInstanceColumns($database = null, $config = null)
     {
         $className = static::class;
         // add link field for database user_version 26 = Calibre version 6.15.0 and later (Apr 7, 2023)
-        if (in_array($className::SQL_TABLE, ['languages', 'publishers', 'ratings', 'series', 'tags']) && Database::getUserVersion($database) > 25) {
+        if (in_array($className::SQL_TABLE, ['languages', 'publishers', 'ratings', 'series', 'tags']) && Database::getUserVersion($database, $config) > 25) {
             return $className::SQL_COLUMNS . ', ' . $className::SQL_TABLE . '.link as link';
         }
         return $className::SQL_COLUMNS;
@@ -562,11 +575,12 @@ abstract class Base
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null)
+    public static function getCount($database, $handler, $locale = null, $config = null)
     {
-        $count = Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database);
+        $count = Database::querySingle('select count(*) from ' . static::SQL_TABLE, $database, $config);
         return static::getCountEntry($count, $database, null, $handler, [], $locale);
     }
 

@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 
 class CustomColumnTypeSeries extends CustomColumnType
@@ -22,11 +23,12 @@ class CustomColumnTypeSeries extends CustomColumnType
      * Summary of __construct
      * @param int $customId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($customId, $database = null, $displaySettings = [])
+    protected function __construct($customId, $database = null, $displaySettings = [], $config = null)
     {
-        parent::__construct($customId, self::TYPE_SERIES, $database, $displaySettings);
+        parent::__construct($customId, self::TYPE_SERIES, $database, $displaySettings, $config);
     }
 
     /**
@@ -57,7 +59,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+        if (empty($id) && in_array("custom", $this->config('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
@@ -91,7 +93,7 @@ class CustomColumnTypeSeries extends CustomColumnType
     public function getCustom($id)
     {
         $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
-        $result = Database::query($query, [$id], $this->databaseId);
+        $result = Database::query($query, [$id], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
@@ -139,7 +141,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = Database::query($query, [$book->id], $this->databaseId);
+        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value . " [" . $post->extra . "]", $this);
         }

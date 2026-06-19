@@ -33,7 +33,7 @@ abstract class Category extends Base
      */
     public function hasChildCategories()
     {
-        $categories = Config::get('calibre_categories_using_hierarchy');
+        $categories = $this->config('calibre_categories_using_hierarchy');
         if (empty($categories) || !in_array(static::CATEGORY, $categories)) {
             return false;
         }
@@ -258,7 +258,7 @@ abstract class Category extends Base
             $params = [$find];
         }
         $query = str_format($queryFormat, $tableName);
-        $result = Database::query($query, $params, $this->databaseId);
+        $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
 
         $instances = [];
         while ($post = $result->fetchObject()) {
@@ -310,7 +310,7 @@ abstract class Category extends Base
     {
         $query = static::SQL_CREATE;
         $params = [ $name ];
-        $result = Database::getDb($this->databaseId)->prepare($query);
+        $result = Database::getDb($this->databaseId, $this->getConfig())->prepare($query);
         $result->execute($params);
         $instance = $this->getParentByName($name);
         if ($instance) {

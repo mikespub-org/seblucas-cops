@@ -19,6 +19,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\CalResHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -94,12 +95,13 @@ class Resource
      * Summary of getResourcePath
      * @param string $hash
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return string|null
      */
-    public static function getResourcePath($hash, $database = null)
+    public static function getResourcePath($hash, $database = null, $config = null)
     {
         [$alg, $digest] = explode(':', $hash);
-        $resourcesDir = dirname(Database::getDbFileName($database)) . '/' . Database::NOTES_DIR_NAME . '/resources';
+        $resourcesDir = dirname(Database::getDbFileName($database, $config)) . '/' . Database::NOTES_DIR_NAME . '/resources';
         $resourcePath = $resourcesDir . '/' . substr($digest, 0, 2) . '/' . $alg . '-' . $digest;
         if (file_exists($resourcePath)) {
             return $resourcePath;
@@ -113,11 +115,12 @@ class Resource
      * @param FileResponse $response
      * @param ?string $name
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return FileResponse|null
      */
-    public static function sendImageResource($hash, $response, $name = null, $database = null)
+    public static function sendImageResource($hash, $response, $name = null, $database = null, $config = null)
     {
-        $path = self::getResourcePath($hash, $database);
+        $path = self::getResourcePath($hash, $database, $config);
         if (empty($path)) {
             return null;
         }

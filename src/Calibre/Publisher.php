@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Publisher extends Base
@@ -48,14 +49,15 @@ class Publisher extends Base
      * Summary of getInstanceByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return Publisher|false
      */
-    public static function getInstanceByBookId($bookId, $database = null)
+    public static function getInstanceByBookId($bookId, $database = null, $config = null)
     {
-        $query = 'select ' . self::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database, $config) . '
 from books_publishers_link, publishers
 where publishers.id = publisher and book = ?';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         if ($post = $result->fetchObject()) {
             return new Publisher($post, $database);
         }

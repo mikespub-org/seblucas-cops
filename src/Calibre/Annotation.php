@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
 
@@ -89,13 +90,14 @@ class Annotation extends Base
     /**
      * Summary of getCountByBookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<mixed>
      */
-    public static function getCountByBookId($database = null)
+    public static function getCountByBookId($database = null, $config = null)
     {
         $entries = [];
         $query = 'select book, count(*) as count from annotations group by book order by book';
-        $result = Database::query($query, [], $database);
+        $result = Database::query($query, [], $database, $config);
         while ($post = $result->fetchObject()) {
             $entries[$post->book] = $post->count;
         }
@@ -106,15 +108,16 @@ class Annotation extends Base
      * Summary of getInstancesByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<Annotation>
      */
-    public static function getInstancesByBookId($bookId, $database = null)
+    public static function getInstancesByBookId($bookId, $database = null, $config = null)
     {
         // @todo filter by format, user, annotType etc.
-        $query = 'select ' . self::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database, $config) . '
 from annotations
 where book = ?';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         $annotationArray = [];
         while ($post = $result->fetchObject()) {
             array_push($annotationArray, new Annotation($post, $database));

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Language extends Base
@@ -78,17 +79,18 @@ class Language extends Base
      * @param int $bookId
      * @param ?int $database
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return string
      */
-    public static function getLanguagesByBookId($bookId, $database = null, $locale = null)
+    public static function getLanguagesByBookId($bookId, $database = null, $locale = null, $config = null)
     {
         $lang = [];
-        $query = 'select ' . self::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database, $config) . '
             from books_languages_link, languages
             where books_languages_link.lang_code = languages.id
             and book = ?
             order by item_order';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         while ($post = $result->fetchObject()) {
             array_push($lang, self::getLanguageString($post->name, $locale));
         }

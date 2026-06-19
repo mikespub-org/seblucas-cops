@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Note
@@ -81,11 +82,12 @@ class Note
 
     /**
      * Summary of getResources
+     * @param ?RequestConfig $config
      * @return array<mixed>
      */
-    public function getResources()
+    public function getResources($config = null)
     {
-        $notesDb = Database::getNotesDb($this->databaseId);
+        $notesDb = Database::getNotesDb($this->databaseId, $config);
         if (is_null($notesDb)) {
             return [];
         }
@@ -103,11 +105,12 @@ class Note
     /**
      * Summary of getCountByType
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<mixed>
      */
-    public static function getCountByType($database = null)
+    public static function getCountByType($database = null, $config = null)
     {
-        $notesDb = Database::getNotesDb($database);
+        $notesDb = Database::getNotesDb($database, $config);
         if (is_null($notesDb)) {
             return [];
         }
@@ -125,14 +128,15 @@ class Note
      * Summary of getEntriesByType
      * @param string $type
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<mixed>
      */
-    public static function getEntriesByType($type, $database = null)
+    public static function getEntriesByType($type, $database = null, $config = null)
     {
         if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return [];
         }
-        $notesDb = Database::getNotesDb($database);
+        $notesDb = Database::getNotesDb($database, $config);
         if (is_null($notesDb)) {
             return [];
         }
@@ -151,7 +155,7 @@ class Note
             return $entries;
         }
         $query = "select id, name from {$type} where id in (" . str_repeat('?,', count($itemIdList) - 1) . '?)';
-        $result = Database::query($query, $itemIdList, $database);
+        $result = Database::query($query, $itemIdList, $database, $config);
         while ($post = $result->fetchObject()) {
             if (array_key_exists($post->id, $entries)) {
                 $entries[$post->id]["title"] = $post->name;
@@ -167,14 +171,15 @@ class Note
      * @param string $type
      * @param int $item
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getInstanceByTypeItem($type, $item, $database = null)
+    public static function getInstanceByTypeItem($type, $item, $database = null, $config = null)
     {
         if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return null;
         }
-        $notesDb = Database::getNotesDb($database);
+        $notesDb = Database::getNotesDb($database, $config);
         if (is_null($notesDb)) {
             return null;
         }
@@ -193,22 +198,23 @@ class Note
      * @param string $type
      * @param string $name
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getInstanceByTypeName($type, $name, $database = null)
+    public static function getInstanceByTypeName($type, $name, $database = null, $config = null)
     {
         if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return null;
         }
-        $notesDb = Database::getNotesDb($database);
+        $notesDb = Database::getNotesDb($database, $config);
         if (is_null($notesDb)) {
             return null;
         }
         $query = "select id, name from {$type} where name = ?";
-        $result = Database::query($query, [$name], $database);
+        $result = Database::query($query, [$name], $database, $config);
         if ($post = $result->fetchObject()) {
             $item = (int) $post->id;
-            return self::getInstanceByTypeItem($type, $item, $database);
+            return self::getInstanceByTypeItem($type, $item, $database, $config);
         }
         return null;
     }

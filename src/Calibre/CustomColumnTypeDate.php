@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use DateTime;
@@ -28,11 +29,12 @@ class CustomColumnTypeDate extends CustomColumnType
      * Summary of __construct
      * @param int $customId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($customId, $database = null, $displaySettings = [])
+    protected function __construct($customId, $database = null, $displaySettings = [], $config = null)
     {
-        parent::__construct($customId, self::TYPE_DATE, $database, $displaySettings);
+        parent::__construct($customId, self::TYPE_DATE, $database, $displaySettings, $config);
     }
 
     /**
@@ -42,7 +44,7 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+        if (empty($id) && in_array("custom", $this->config('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
@@ -139,7 +141,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $queryFormat = "SELECT COUNT(DISTINCT date(value)) AS count FROM {0}";
         $query = str_format($queryFormat, $this->getTableName());
-        return Database::querySingle($query, $this->databaseId);
+        return Database::querySingle($query, $this->databaseId, $this->getConfig());
     }
 
     /**
@@ -157,7 +159,7 @@ class CustomColumnTypeDate extends CustomColumnType
             $queryFormat .= ' ORDER BY groupid';
         }
         $query = str_format($queryFormat, $this->getTableName());
-        $result = Database::query($query, [], $this->databaseId);
+        $result = Database::query($query, [], $this->databaseId, $this->getConfig());
 
         $entryArray = [];
         $param = 'year';
@@ -201,7 +203,7 @@ class CustomColumnTypeDate extends CustomColumnType
         }
         $query = str_format($queryFormat, $this->getTableName());
         $params = [ $year ];
-        $result = Database::query($query, $params, $this->databaseId);
+        $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -226,7 +228,7 @@ class CustomColumnTypeDate extends CustomColumnType
         $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = Database::query($query, [$book->id], $this->databaseId);
+        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
 

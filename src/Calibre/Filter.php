@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
@@ -18,6 +19,8 @@ use UnexpectedValueException;
 
 class Filter
 {
+    use HasConfigTrait;
+
     public const PAGE_ID = PageId::FILTER_ID;
     public const PAGE_DETAIL = PageId::FILTER;
     public const ROUTE_ALL = "page-filter";
@@ -73,6 +76,9 @@ class Filter
         $this->parentTable = $parent;
         $this->queryString = "";
         $this->databaseId = $database;
+        if ($this->request->getConfig() !== null) {
+            $this->setConfig($this->request->getConfig());
+        }
 
         $this->checkForFilters($parentClass);
     }
@@ -109,7 +115,7 @@ class Filter
         }
 
         // See $config['cops_database_filter'] - filter data everywhere
-        $databaseFilter = Config::get('database_filter');
+        $databaseFilter = $this->config('database_filter');
         if (!empty($databaseFilter)) {
             $filter = array_filter($databaseFilter);
             $this->addDatabaseFilter($filter);
@@ -503,7 +509,7 @@ class Filter
             if (!preg_match('/^\d+$/', $customId)) {
                 continue;
             }
-            $customType = CustomColumnType::createByCustomID($customId, $this->databaseId);
+            $customType = CustomColumnType::createByCustomID($customId, $this->databaseId, $this->getConfig());
             $this->addCustomIdFilter($customType, $valueId);
         }
     }
@@ -638,7 +644,12 @@ class Filter
             }
             // @todo do we want to filter by virtual library etc. here?
             if ($className == BookList::class) {
-                $booklist = new BookList(Request::build([$paramName => $paramValue], $handler), $database);
+                $req = Request::build([$paramName => $paramValue], $handler);
+                $req->locale = $locale;
+                if ($request->getConfig() !== null) {
+                    $req->setConfig($request->getConfig());
+                }
+                $booklist = new BookList($req, $database);
                 $booklist->setLocale($locale);
                 $groupFunc = ($paramName == 'f') ? 'getCountByFirstLetter' : 'getCountByPubYear';
                 $entryArray = array_merge($entryArray, $booklist->$groupFunc());
@@ -646,7 +657,7 @@ class Filter
             }
             if ($className == CustomColumn::class) {
                 foreach ($paramValue as $customId => $valueId) {
-                    $custom = CustomColumn::createCustom($customId, $valueId, $database);
+                    $custom = CustomColumn::createCustom($customId, $valueId, $database, $request->getConfig());
                     $custom->setHandler($handler);
                     $custom->setLocale($locale);
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);
@@ -663,6 +674,9 @@ class Filter
                 $req = Request::build([$paramName => $paramValue], $handler);
             }
             $req->locale = $locale;
+            if ($request->getConfig() !== null) {
+                $req->setConfig($request->getConfig());
+            }
             $baselist = new BaseList($className, $req, $database);
             // apply Not Set filters here but skip other entries
             if (empty($paramValue)) {

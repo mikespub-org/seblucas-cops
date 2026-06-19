@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
@@ -65,11 +66,12 @@ class Format extends Base
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null)
+    public static function getCount($database, $handler, $locale = null, $config = null)
     {
-        $count = Database::querySingle('select count(distinct format) from ' . static::SQL_TABLE, $database);
+        $count = Database::querySingle('select count(distinct format) from ' . static::SQL_TABLE, $database, $config);
         return static::getCountEntry($count, $database, null, $handler, [], $locale);
     }
 
@@ -78,9 +80,10 @@ class Format extends Base
      * @param string|int|null $id used for the format here
      * @param ?int $database
      * @param ?string $locale
+     * @param ?RequestConfig $config - not used here
      * @return self
      */
-    public static function getInstanceById($id, $database = null, $locale = null)
+    public static function getInstanceById($id, $database = null, $locale = null, $config = null)
     {
         if (!empty($id)) {
             return new Format((object) ['id' => $id, 'name' => $id], $database);
@@ -96,11 +99,12 @@ class Format extends Base
      * @param string|int|null $name used for the format here
      * @param ?int $database
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return self
      */
-    public static function getInstanceByName($name, $database = null, $locale = null)
+    public static function getInstanceByName($name, $database = null, $locale = null, $config = null)
     {
-        return self::getInstanceById($name, $database, $locale);
+        return self::getInstanceById($name, $database, $locale, $config);
     }
 
     /**
@@ -116,18 +120,19 @@ class Format extends Base
      * Summary of getInstancesByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<Format>
      */
-    public static function getInstancesByBookId($bookId, $database = null)
+    public static function getInstancesByBookId($bookId, $database = null, $config = null)
     {
         $formats = [];
 
         // get formats here, not actual data
-        $query = 'select ' . self::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database, $config) . '
             from data
             where data.book = ?
             order by data.format';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         while ($post = $result->fetchObject()) {
             array_push($formats, new Format($post, $database));
         }

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Tag extends Category
@@ -61,17 +62,18 @@ class Tag extends Category
      * Summary of getInstancesByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<Tag>
      */
-    public static function getInstancesByBookId($bookId, $database = null)
+    public static function getInstancesByBookId($bookId, $database = null, $config = null)
     {
         $tags = [];
-        $query = 'select ' . self::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database, $config) . '
             from books_tags_link, tags
             where tag = tags.id
             and book = ?
             order by name';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         while ($post = $result->fetchObject()) {
             array_push($tags, new Tag($post, $database));
         }

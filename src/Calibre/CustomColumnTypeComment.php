@@ -11,7 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Input\RequestConfig;
 
 class CustomColumnTypeComment extends CustomColumnType
 {
@@ -19,11 +19,12 @@ class CustomColumnTypeComment extends CustomColumnType
      * Summary of __construct
      * @param int $customId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($customId, $database = null, $displaySettings = [])
+    protected function __construct($customId, $database = null, $displaySettings = [], $config = null)
     {
-        parent::__construct($customId, self::TYPE_COMMENT, $database, $displaySettings);
+        parent::__construct($customId, self::TYPE_COMMENT, $database, $displaySettings, $config);
     }
 
     /**
@@ -33,7 +34,7 @@ class CustomColumnTypeComment extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+        if (empty($id) && in_array("custom", $this->config('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
@@ -109,7 +110,7 @@ class CustomColumnTypeComment extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = Database::query($query, [$book->id], $this->databaseId);
+        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value, $this);
         }

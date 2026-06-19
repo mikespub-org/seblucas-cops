@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use UnexpectedValueException;
 
@@ -24,24 +25,25 @@ class CustomColumnTypeText extends CustomColumnType
      * @param int $customId
      * @param string $datatype
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param array<string, mixed> $displaySettings
      * @return void
      * @throws \UnexpectedValueException
      */
-    protected function __construct($customId, $datatype = self::TYPE_TEXT, $database = null, $displaySettings = [])
+    protected function __construct($customId, $datatype = self::TYPE_TEXT, $database = null, $displaySettings = [], $config = null)
     {
         switch ($datatype) {
             case self::TYPE_TEXT:
-                parent::__construct($customId, self::TYPE_TEXT, $database, $displaySettings);
+                parent::__construct($customId, self::TYPE_TEXT, $database, $displaySettings, $config);
                 return;
             case self::TYPE_CSV:
-                parent::__construct($customId, self::TYPE_CSV, $database, $displaySettings);
+                parent::__construct($customId, self::TYPE_CSV, $database, $displaySettings, $config);
                 return;
             case self::TYPE_ENUM:
-                parent::__construct($customId, self::TYPE_ENUM, $database, $displaySettings);
+                parent::__construct($customId, self::TYPE_ENUM, $database, $displaySettings, $config);
                 return;
             case self::TYPE_SERIES:
-                parent::__construct($customId, self::TYPE_SERIES, $database, $displaySettings);
+                parent::__construct($customId, self::TYPE_SERIES, $database, $displaySettings, $config);
                 return;
             default:
                 throw new UnexpectedValueException();
@@ -76,7 +78,7 @@ class CustomColumnTypeText extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (empty($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+        if (empty($id) && in_array("custom", $this->config('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
@@ -129,7 +131,7 @@ class CustomColumnTypeText extends CustomColumnType
             $params = array_map(trim(...), explode(',', $id));
             $query = str_format("SELECT id, value AS name FROM {0}", $this->getTableName());
             $query .= ' WHERE id IN (' . str_repeat('?,', count($params) - 1) . '?)';
-            $result = Database::query($query, $params, $this->databaseId);
+            $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
             $idArray = [];
             $nameArray = [];
             while ($post = $result->fetchObject()) {
@@ -139,7 +141,7 @@ class CustomColumnTypeText extends CustomColumnType
             return new CustomColumn(implode(",", $idArray), implode(",", $nameArray), $this);
         }
         $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
-        $result = Database::query($query, [$id], $this->databaseId);
+        $result = Database::query($query, [$id], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
@@ -184,7 +186,7 @@ class CustomColumnTypeText extends CustomColumnType
         };
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = Database::query($query, [$book->id], $this->databaseId);
+        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
         // handle case where we have several values, e.g. array of text for type 2 (csv)
         if ($this->datatype === self::TYPE_CSV) {
             $idArray = [];

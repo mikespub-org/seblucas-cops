@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Serie extends Category
@@ -52,14 +53,15 @@ class Serie extends Category
      * Summary of getInstanceByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return Serie|false
      */
-    public static function getInstanceByBookId($bookId, $database = null)
+    public static function getInstanceByBookId($bookId, $database = null, $config = null)
     {
-        $query = 'select ' . self::getInstanceColumns($database) . '
+        $query = 'select ' . self::getInstanceColumns($database, $config) . '
 from books_series_link, series
 where series.id = series and book = ?';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         if ($post = $result->fetchObject()) {
             return new Serie($post, $database);
         }

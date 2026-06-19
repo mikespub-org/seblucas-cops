@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use InvalidArgumentException;
@@ -25,14 +26,15 @@ class CustomColumnTypeInteger extends CustomColumnType
      * @param int $customId
      * @param string $datatype
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @param array<string, mixed> $displaySettings
      * @throws \UnexpectedValueException
      */
-    protected function __construct($customId, $datatype = self::TYPE_INT, $database = null, $displaySettings = [])
+    protected function __construct($customId, $datatype = self::TYPE_INT, $database = null, $displaySettings = [], $config = null)
     {
         match ($datatype) {
-            self::TYPE_INT => parent::__construct($customId, self::TYPE_INT, $database, $displaySettings),
-            self::TYPE_FLOAT => parent::__construct($customId, self::TYPE_FLOAT, $database, $displaySettings),
+            self::TYPE_INT => parent::__construct($customId, self::TYPE_INT, $database, $displaySettings, $config),
+            self::TYPE_FLOAT => parent::__construct($customId, self::TYPE_FLOAT, $database, $displaySettings, $config),
             default => throw new UnexpectedValueException(),
         };
     }
@@ -44,7 +46,7 @@ class CustomColumnTypeInteger extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (is_null($id) && in_array("custom", Config::get('show_not_set_filter'))) {
+        if (is_null($id) && in_array("custom", $this->config('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
@@ -132,9 +134,9 @@ class CustomColumnTypeInteger extends CustomColumnType
      */
     public function getCountByRange($routeName, $sort = null)
     {
-        $numtiles = Config::get('custom_integer_split_range');
+        $numtiles = $this->config('custom_integer_split_range');
         if ($numtiles <= 1) {
-            $numtiles = Config::get('max_item_per_page');
+            $numtiles = $this->config('max_item_per_page');
         }
         if ($numtiles < 1) {
             $numtiles = 1;
@@ -149,7 +151,7 @@ class CustomColumnTypeInteger extends CustomColumnType
             $queryFormat .= ' ORDER BY groupid';
         }
         $query = str_format($queryFormat, $this->getTableName());
-        $result = Database::query($query, [], $this->databaseId);
+        $result = Database::query($query, [], $this->databaseId, $this->getConfig());
 
         $entryArray = [];
         $param = 'range';
@@ -196,7 +198,7 @@ class CustomColumnTypeInteger extends CustomColumnType
             $queryFormat .= ' ORDER BY value';
         }
         $query = str_format($queryFormat, $this->getTableName());
-        $result = Database::query($query, [$lower, $upper], $this->databaseId);
+        $result = Database::query($query, [$lower, $upper], $this->databaseId, $this->getConfig());
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -218,7 +220,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = Database::query($query, [$book->id], $this->databaseId);
+        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }

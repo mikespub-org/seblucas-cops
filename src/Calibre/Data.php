@@ -13,6 +13,8 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\LinkAcquisition;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Format;
@@ -22,6 +24,7 @@ use Exception;
 class Data
 {
     use HasRouteTrait;
+    use HasConfigTrait;
 
     public const ROUTE_DATA = "fetch-data";
     public const ROUTE_INLINE = "fetch-inline";
@@ -129,6 +132,9 @@ class Data
         if (!is_null($book) && $book->updateForKepub && $this->isEpubValidOnKobo()) {
             $this->updateForKepub = true;
         }
+        if ($this->book?->getConfig() !== null) {
+            $this->setConfig($this->book->getConfig());
+        }
     }
 
     /**
@@ -186,7 +192,7 @@ class Data
      */
     public function getDownloadFilename()
     {
-        $filename = Config::get('download_filename', '');
+        $filename = $this->config('download_filename', '');
         if (empty($filename)) {
             return $this->name;
         }
@@ -219,7 +225,7 @@ class Data
      */
     public function getUpdatedFilename()
     {
-        $filename = Config::get('download_filename', '');
+        $filename = $this->config('download_filename', '');
         if (empty($filename)) {
             return $this->book->getAuthorsSort() . " - " . $this->book->title;
         }
@@ -260,7 +266,7 @@ class Data
         $updateForKepub ??= $this->updateForKepub;
         $response ??= new FileResponse();
         // if we want to update metadata and then use kepubify, we need to save the updated Epub first
-        if ($updateForKepub && !empty(Config::get('kepubify_path'))) {
+        if ($updateForKepub && !empty($this->config('kepubify_path'))) {
             // make a temp copy for the updated Epub file
             $tmpfile = FileResponse::getTempFile('epub');
             if (!copy($this->getLocalPath(), $tmpfile)) {
@@ -280,11 +286,12 @@ class Data
                 // @todo no cache control here!?
                 $response->setHeaders($this->getMimeType(), null, basename($filename));
                 // save updated Epub file and convert to kepub
-                if (!empty(Config::get('kepubify_path'))) {
+                $kepubify = $this->config('kepubify_path');
+                if (!empty($kepubify)) {
                     $epub->save();
 
                     // run kepubify on updated Epub file and send converted tmpfile
-                    $tmpfile = self::runKepubify($filePath);
+                    $tmpfile = self::runKepubify($filePath, $kepubify);
                     if (empty($tmpfile)) {
                         return Response::sendError(null, 'Error: failed to convert epub file');
                     }
@@ -313,10 +320,11 @@ class Data
     {
         $file = $this->getLocalPath();
         // run kepubify on original Epub file and send converted tmpfile
-        if (!empty(Config::get('kepubify_path'))) {
+        $kepubify = $this->config('kepubify_path');
+        if (!empty($kepubify)) {
             // @todo no cache control here!?
             $response ??= new FileResponse($this->getMimeType(), null, basename($this->getUpdatedFilenameKepub()));
-            $tmpfile = self::runKepubify($file);
+            $tmpfile = self::runKepubify($file, $kepubify);
             if (empty($tmpfile)) {
                 return Response::sendError(null, 'Error: failed to convert epub file');
             }
@@ -330,15 +338,16 @@ class Data
     /**
      * Summary of runKepubify
      * @param string $filepath
+     * @param ?string $kepubify
      * @return string|null
      */
-    public static function runKepubify($filepath)
+    public static function runKepubify($filepath, $kepubify)
     {
-        if (empty(Config::get('kepubify_path'))) {
+        if (empty($kepubify)) {
             return null;
         }
         $tmpfile = FileResponse::getTempFile('kepub.epub');
-        $cmd = escapeshellarg((string) Config::get('kepubify_path'));
+        $cmd = escapeshellarg((string) $kepubify);
         $cmd .= ' -o ' . escapeshellarg($tmpfile);
         $cmd .= ' ' . escapeshellarg($filepath);
         exec($cmd, $output, $return);
@@ -411,11 +420,12 @@ class Data
     /**
      * Summary of getDataByBook
      * @param mixed $book
+     * @param ?RequestConfig $config
      * @return array<Data>
      */
-    public static function getDataByBook($book)
+    public static function getDataByBook($book, $config = null)
     {
-        return Book::getDataByBook($book);
+        return Book::getDataByBook($book, $config);
     }
 
     /**
@@ -455,9 +465,7 @@ class Data
         }
 
         $filePath = $this->getLocalPath();
-        if (!empty(Config::get('download_filename'))
-            || Database::useAbsolutePath($this->databaseId)
-            || ($this->extension == "epub" && Config::get('update_epub-metadata'))) {
+        if (!$this->book->isLocal($this->extension)) {
             $params = [];
             $params['db'] = $this->databaseId ?? 0;
             $params['type'] = $this->extension;

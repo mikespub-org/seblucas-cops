@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Output\ComicReader;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Metadata as EPubMetadata;
@@ -292,11 +293,12 @@ class Metadata extends EPubMetadata
      * Summary of getInstanceByBookId
      * @param int $bookId
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return Metadata|false
      */
-    public static function getInstanceByBookId($bookId, $database = null)
+    public static function getInstanceByBookId($bookId, $database = null, $config = null)
     {
-        $book = Book::getBookById($bookId, $database);
+        $book = Book::getBookById($bookId, $database, $config);
         if (empty($book)) {
             return false;
         }

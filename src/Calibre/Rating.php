@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
@@ -59,11 +60,12 @@ class Rating extends Base
      * @param ?int $database
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
+     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null)
+    public static function getCount($database, $handler, $locale = null, $config = null)
     {
-        $count = Database::querySingle('select count(*) from ' . self::SQL_TABLE, $database);
+        $count = Database::querySingle('select count(*) from ' . self::SQL_TABLE, $database, $config);
         // str_format (localize("ratings", count(array))
         return self::getCountEntry($count, $database, "ratings", $handler, [], $locale);
     }

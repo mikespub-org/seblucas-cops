@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 use Exception;
@@ -135,7 +136,7 @@ class CustomColumn extends Category
     {
         [$query, $params] = $this->getQuery();
         $columns = 'count(*)';
-        $count = Database::countFilter($query, $columns, "", $params, $this->databaseId);
+        $count = Database::countFilter($query, $columns, "", $params, $this->databaseId, $this->getConfig());
         return $this->getEntry($count);
     }
 
@@ -227,11 +228,12 @@ class CustomColumn extends Category
      * @param int $customId the id of the customColumn
      * @param string|int|null $id the id of the chosen value
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return ?CustomColumn
      */
-    public static function createCustom($customId, $id, $database = null)
+    public static function createCustom($customId, $id, $database = null, $config = null)
     {
-        $columnType = CustomColumnType::createByCustomID($customId, $database);
+        $columnType = CustomColumnType::createByCustomID($customId, $database, $config);
 
         return $columnType->getCustom($id);
     }

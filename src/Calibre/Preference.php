@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
 
@@ -64,13 +65,14 @@ class Preference
     /**
      * Summary of getInstances
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return array<mixed>
      */
-    public static function getInstances($database = null)
+    public static function getInstances($database = null, $config = null)
     {
         $preferences = [];
         $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' order by key';
-        $result = Database::query($query, [], $database);
+        $result = Database::query($query, [], $database, $config);
         while ($post = $result->fetchObject()) {
             $preferences[$post->key] = new self($post, $database);
         }
@@ -81,13 +83,14 @@ class Preference
      * Summary of getInstanceByKey
      * @param string $key
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getInstanceByKey($key, $database = null)
+    public static function getInstanceByKey($key, $database = null, $config = null)
     {
         $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' where key = ?';
         $params = [$key];
-        $result = Database::query($query, $params, $database);
+        $result = Database::query($query, $params, $database, $config);
         if ($post = $result->fetchObject()) {
             return new self($post, $database);
         }
@@ -103,43 +106,47 @@ class Preference
      * }
      * See https://github.com/seblucas/cops/pull/233
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getVirtualLibraries($database = null)
+    public static function getVirtualLibraries($database = null, $config = null)
     {
-        return self::getInstanceByKey('virtual_libraries', $database);
+        return self::getInstanceByKey('virtual_libraries', $database, $config);
     }
 
     /**
      * Summary of getCategoriesUsingHierarchy
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getCategoriesUsingHierarchy($database = null)
+    public static function getCategoriesUsingHierarchy($database = null, $config = null)
     {
-        return self::getInstanceByKey('categories_using_hierarchy', $database);
+        return self::getInstanceByKey('categories_using_hierarchy', $database, $config);
     }
 
     /**
      * Summary of getFieldMetadata
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getFieldMetadata($database = null)
+    public static function getFieldMetadata($database = null, $config = null)
     {
         // @todo investigate format
-        return self::getInstanceByKey('field_metadata', $database);
+        return self::getInstanceByKey('field_metadata', $database, $config);
     }
 
     /**
      * Summary of getUserCategories
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getUserCategories($database = null)
+    public static function getUserCategories($database = null, $config = null)
     {
         // @todo investigate format
-        return self::getInstanceByKey('user_categories', $database);
+        return self::getInstanceByKey('user_categories', $database, $config);
     }
 
     /**
@@ -148,11 +155,12 @@ class Preference
      *   "Author One": "authors:one and not authors:two"
      * }
      * @param ?int $database
+     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getSavedSearches($database = null)
+    public static function getSavedSearches($database = null, $config = null)
     {
         // @todo map search string from saved search to filters
-        return self::getInstanceByKey('saved_searches', $database);
+        return self::getInstanceByKey('saved_searches', $database, $config);
     }
 }
