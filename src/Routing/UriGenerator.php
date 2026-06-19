@@ -505,6 +505,7 @@ class UriGenerator
      */
     public static function getSlugger($locale = null)
     {
+        // @todo adapt cache based on locale
         if (!isset(self::$slugger)) {
             self::$slugger = new self::$sluggerClass($locale);
         }
@@ -528,6 +529,7 @@ class UriGenerator
      */
     public static function setLocale($locale)
     {
+        // @todo adapt cache based on locale
         if (is_null($locale)) {
             self::$slugger = null;
             return;

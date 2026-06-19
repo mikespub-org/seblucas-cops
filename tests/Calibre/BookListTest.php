@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Tests\Calibre;
 
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Input\RequestConfig;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
@@ -35,6 +36,7 @@ class BookListTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
         self::$request = new Request();
         self::$request->locale = 'en';
+        self::$request->setConfig(new RequestConfig());
         Database::clearDb();
     }
 

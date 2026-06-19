@@ -69,7 +69,7 @@ class DatabaseTest extends TestCase
         Database::clearDb();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Database <1> not found.');
+        $this->expectExceptionMessage('Database <1> not found');
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 
@@ -85,7 +85,7 @@ class DatabaseTest extends TestCase
         Database::clearDb();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Database <0> not found.');
+        $this->expectExceptionMessage('Database <0> not found');
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
 

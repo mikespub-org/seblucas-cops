@@ -257,10 +257,11 @@ foreach (Database::getDbList() as $name => $database) {
             <h2>Check if Calibre database file exists and is readable</h2>
             <h4>
             <?php
-    if (is_readable(Database::getDbFileName($i))) {
+    $dbFileName = Database::getDbFileName($i);
+    if (is_readable($dbFileName)) {
         echo $name . ' OK';
     } else {
-        echo $name . ' File ' . Database::getDbFileName($i) . ' not found,
+        echo $name . ' File ' . $dbFileName . ' not found,
 Please check
 <ul>
 <li>Value of $config[\'calibre_directory\'] in config/local.php <strong>(Does it end with a \'/\'?)</strong></li>
@@ -273,13 +274,13 @@ Please check
     ?>
             </h4>
         </article>
-    <?php if (is_readable(Database::getDbFileName($i))) { ?>
+    <?php if (is_readable($dbFileName)) { ?>
         <article class="frontpage">
             <h2>Check if Calibre database file can be opened with PHP</h2>
             <h4>
             <?php
     try {
-        $db = new PDO('sqlite:' . Database::getDbFileName($i));
+        $db = new PDO('sqlite:' . $dbFileName);
         echo $name . ' OK';
     } catch (Exception $e) {
         echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
@@ -292,7 +293,7 @@ Please check
             <h4>
             <?php
         try {
-            $db = new PDO('sqlite:' . Database::getDbFileName($i));
+            $db = new PDO('sqlite:' . $dbFileName);
             $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
             if ($count == 4) {
                 echo $name . ' OK';

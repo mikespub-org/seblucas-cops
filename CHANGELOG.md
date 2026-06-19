@@ -17,7 +17,11 @@ x.x.x - TODO
     - new $config['cops_templates_directory'] to adapt templates directory
   * ...
   * Update php/npm packages
-  * Add HasConfigTrait to use instance method $this->config() in classes (WIP)
+  * Adapt other classes to make use of RequestConfig
+  * Try out DatabaseContext to simplify Database method calls in classes (WIP)
+  * Refactor Database to use RequestConfig and split off DatabaseConnection
+  * Add RequestConfig to store user- and/or database-specific config
+  * Add HasConfigTrait to use instance method $this->config() in classes
   * Add SessionInterface to allow other frameworks to replace Session
   * Add HasLocaleTrait to pass along request locale to classes
   * Change localize() and Translation to work with request locale
