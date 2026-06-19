@@ -12,7 +12,8 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\FetchHandler;
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Language\Normalizer;
 use SebLucas\Cops\Model\EntryBook;
@@ -31,6 +32,7 @@ class Book
 {
     use HasRouteTrait;
     use HasLocaleTrait;
+    use HasConfigTrait;
 
     public const PAGE_ID = PageId::ALL_BOOKS_ID;
     public const PAGE_ALL = PageId::ALL_BOOKS;
@@ -79,6 +81,8 @@ class Book
     public $rating;
     /** @var ?int */
     protected $databaseId = null;
+    /** @var ?DatabaseContext */
+    protected ?DatabaseContext $databaseContext = null;
     /** @var ?array<Data> */
     public $datas = null;
     /** @var ?array<string> */
@@ -111,30 +115,32 @@ class Book
      * Summary of __construct
      * @param \stdClass $line
      * @param ?int $database
+     * @param ?RequestConfig $config
      */
-    public function __construct($line, $database = null)
+    public function __construct($line, $database = null, $config = null)
     {
+        $this->databaseId = $database;
+        $this->config = $config;
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp ?? '');
         $this->pubdate = $line->pubdate ?? '';
-        //$this->path = Database::getDbDirectory() . $line->path;
+        //$this->path = Database::getDbDirectory($database, $config) . $line->path;
         //$this->relativePath = $line->path;
         // -DC- Init relative or full path
-        if (!empty(Config::get('calibre_external_storage'))) {
+        if (!empty($this->config('calibre_external_storage', null))) {
             $this->setExternalPath($line->path);
         } else {
-            $this->setLocalPath($line->path, $database);
+            $this->setLocalPath($line->path);
         }
         $this->seriesIndex = $line->series_index ?? null;
         $this->comment = $line->comment ?? '';
         $this->uuid = $line->uuid ?? '';
         $this->hasCover = $line->has_cover ?? false;
         $this->rating = $line->rating ?? null;
-        $this->databaseId = $database;
         // do this at the end when all properties are set
         if ($this->hasCover) {
-            $this->coverFileName = Cover::findCoverFileName($this, $line, Config::get('calibre_database_field_cover'));
+            $this->coverFileName = Cover::findCoverFileName($this, $line, $this->config('calibre_database_field_cover', null));
             if (empty($this->coverFileName)) {
                 $this->hasCover = false;
             }
@@ -148,6 +154,15 @@ class Book
     public function getDatabaseId()
     {
         return $this->databaseId;
+    }
+
+    /**
+     * Summary of getDatabaseContext
+     * @return DatabaseContext
+     */
+    public function getDatabaseContext()
+    {
+        return $this->databaseContext ??= new DatabaseContext($this->databaseId, $this->config);
     }
 
     /**
@@ -229,7 +244,7 @@ class Book
     public function getAuthors($n = -1, $sort = null)
     {
         if (is_null($this->authors)) {
-            $this->authors = Author::getInstancesByBookId($this->id, $this->databaseId);
+            $this->authors = Author::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
         }
         return $this->authors;
     }
@@ -259,7 +274,7 @@ class Book
     public function getPublisher()
     {
         if (is_null($this->publisher)) {
-            $this->publisher = Publisher::getInstanceByBookId($this->id, $this->databaseId);
+            $this->publisher = Publisher::getInstanceByBookId($this->id, $this->databaseId, $this->getConfig());
         }
         return $this->publisher;
     }
@@ -270,7 +285,7 @@ class Book
     public function getSerie()
     {
         if (is_null($this->serie)) {
-            $this->serie = Serie::getInstanceByBookId($this->id, $this->databaseId);
+            $this->serie = Serie::getInstanceByBookId($this->id, $this->databaseId, $this->getConfig());
         }
         return $this->serie;
     }
@@ -283,7 +298,7 @@ class Book
     public function getLanguages($n = -1, $sort = null)
     {
         if (is_null($this->languages)) {
-            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId, $this->locale);
+            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId, $this->locale, $this->getConfig());
         }
         return $this->languages;
     }
@@ -296,7 +311,7 @@ class Book
     public function getTags($n = -1, $sort = null)
     {
         if (is_null($this->tags)) {
-            $this->tags = Tag::getInstancesByBookId($this->id, $this->databaseId);
+            $this->tags = Tag::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
         }
         return $this->tags;
     }
@@ -316,7 +331,7 @@ class Book
     public function getIdentifiers()
     {
         if (is_null($this->identifiers)) {
-            $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->databaseId);
+            $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
         }
         return $this->identifiers;
     }
@@ -327,7 +342,7 @@ class Book
     public function getFormats()
     {
         if (is_null($this->formats)) {
-            $this->formats = Format::getInstancesByBookId($this->id, $this->databaseId);
+            $this->formats = Format::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
         }
         return $this->formats;
     }
@@ -338,7 +353,7 @@ class Book
     public function getAnnotations()
     {
         if (is_null($this->annotations)) {
-            $this->annotations = Annotation::getInstancesByBookId($this->id, $this->databaseId);
+            $this->annotations = Annotation::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
         }
         return $this->annotations;
     }
@@ -351,10 +366,10 @@ class Book
         if (is_null($this->pages)) {
             $this->pages = 0;
             // add pages for database user_version 27 = Calibre version 9.0.0 and later (Jan 30, 2026)
-            if (Database::getUserVersion($this->databaseId) > 26) {
+            if ($this->getDatabaseContext()->getUserVersion() > 26) {
                 // @see https://manual.calibre-ebook.com/_modules/calibre/db/cache.html#Cache.get_pages
                 $query = 'select pages from books_pages_link where book = ? and pages > 0 limit 1';
-                $result = Database::query($query, [$this->id], $this->databaseId);
+                $result = $this->getDatabaseContext()->query($query, [$this->id]);
                 if ($post = $result->fetchObject()) {
                     $this->pages = (int) $post->pages;
                 }
@@ -425,7 +440,7 @@ class Book
     {
         $filePath = $this->path . '/' . self::DATA_DIR_NAME . '/' . $fileName;
         $mimetype = Response::getMimeType($filePath) ?? 'application/octet-stream';
-        if (Database::useAbsolutePath($this->databaseId)) {
+        if ($this->getDatabaseContext()->useAbsolutePath()) {
             $params = ['id' => $this->id, 'db' => $this->databaseId];
             $params['db'] ??= 0;
             $params['file'] = $fileName;
@@ -582,17 +597,31 @@ class Book
     /**
      * Summary of setLocalPath
      * @param string $path
-     * @param ?int $database
      * @return string
      */
-    public function setLocalPath($path, $database)
+    public function setLocalPath($path)
     {
         if (!str_starts_with($path, '/')) {
-            $this->path = Database::getDbDirectory($database) . $path;
+            $this->path = $this->getDatabaseContext()->getDbDirectory() . $path;
         } else {
             $this->path = $path;
         }
         return $this->path;
+    }
+
+    /**
+     * Summary of isLocal
+     * @param string $extension
+     * @return bool
+     */
+    public function isLocal($extension)
+    {
+        if (!empty($this->config('download_filename'))
+            || Database::useAbsolutePath($this->databaseId, $this->getConfig())
+            || ($extension == "epub" && $this->config('update_epub-metadata'))) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -602,7 +631,7 @@ class Book
      */
     public function setExternalPath($path)
     {
-        $externalStorage = (string) Config::get('calibre_external_storage');
+        $externalStorage = (string) $this->config('calibre_external_storage', '');
         if (str_starts_with($path, $externalStorage)) {
             $this->path = $path;
         } else {
@@ -619,7 +648,7 @@ class Book
      */
     public function isExternal()
     {
-        $externalStorage = Config::get('calibre_external_storage');
+        $externalStorage = $this->config('calibre_external_storage', null);
         if (!empty($externalStorage) && str_starts_with($this->path, (string) $externalStorage)) {
             return true;
         }
@@ -683,10 +712,10 @@ class Book
         $result = [];
         $database = $this->databaseId;
 
-        $columns = CustomColumnType::checkCustomColumnList($columns, $database);
+        $columns = CustomColumnType::checkCustomColumnList($columns, $database, $this->getConfig());
 
         foreach ($columns as $lookup) {
-            $col = CustomColumnType::createByLookup($lookup, $database);
+            $col = CustomColumnType::createByLookup($lookup, $database, $this->getConfig());
             if (!is_null($col)) {
                 $col->setLocale($this->getLocale());
                 $cust = $col->getCustomByBook($this);
@@ -797,13 +826,13 @@ class Book
     // -DC- Get customisable book columns
     /**
      * Summary of getBookColumns
-     * @param ?Config $config
+     * @param ?RequestConfig $config
      * @return string
      */
     public static function getBookColumns($config = null)
     {
         $res = self::SQL_COLUMNS;
-        $field = Config::get('calibre_database_field_cover');
+        $field = self::configFrom($config, 'calibre_database_field_cover', null);
         if (!empty($field)) {
             $res = str_replace('has_cover,', 'has_cover, ' . $field . ',', $res);
         }
@@ -815,7 +844,7 @@ class Book
      * Summary of getBookById
      * @param int $bookId
      * @param ?int $database
-     * @param ?Config $config
+     * @param ?RequestConfig $config
      * @return ?Book
      */
     public static function getBookById($bookId, $database = null, $config = null)
@@ -823,9 +852,10 @@ class Book
         $query = 'select ' . self::getBookColumns($config) . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $databaseContext = new DatabaseContext($database, $config);
+        $result = $databaseContext->query($query, [$bookId]);
         if ($post = $result->fetchObject()) {
-            $book = new Book($post, $database);
+            $book = new Book($post, $database, $config);
             return $book;
         }
         return null;
@@ -835,7 +865,7 @@ where books.id = ?';
      * Summary of getBookByDataId
      * @param int $dataId
      * @param ?int $database
-     * @param ?Config $config
+     * @param ?RequestConfig $config
      * @return ?Book
      */
     public static function getBookByDataId($dataId, $database = null, $config = null)
@@ -843,15 +873,16 @@ where books.id = ?';
         $query = 'select ' . self::getBookColumns($config) . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?';
-        $ignored_formats = Config::get('ignored_formats');
+        $ignored_formats = self::configFrom($config, 'ignored_formats', []);
         if (count($ignored_formats) > 0) {
             $query .= " and data.format not in ('"
             . implode("','", $ignored_formats)
             . "')";
         }
-        $result = Database::query($query, [$dataId], $database, $config);
+        $databaseContext = new DatabaseContext($database, $config);
+        $result = $databaseContext->query($query, [$dataId]);
         if ($post = $result->fetchObject()) {
-            $book = new Book($post, $database);
+            $book = new Book($post, $database, $config);
             $data = new Data($post, $book);
             $data->id = $dataId;
             $book->datas = [$data];
@@ -863,7 +894,7 @@ where data.book = books.id and data.id = ?';
     /**
      * Summary of getDataByBook
      * @param Book $book
-     * @param ?Config $config
+     * @param ?RequestConfig $config
      * @return array<Data>
      */
     public static function getDataByBook($book, $config = null)
@@ -872,7 +903,7 @@ where data.book = books.id and data.id = ?';
 
         $sql = 'select id, format, name, uncompressed_size as size from data where book = ?';
 
-        $ignored_formats = Config::get('ignored_formats');
+        $ignored_formats = self::configFrom($config, 'ignored_formats', []);
         if (count($ignored_formats) > 0) {
             $sql .= " and format not in ('"
             . implode("','", $ignored_formats)
@@ -880,7 +911,8 @@ where data.book = books.id and data.id = ?';
         }
 
         $database = $book->getDatabaseId();
-        $result = Database::query($sql, [$book->id], $database, $config);
+        $databaseContext = new DatabaseContext($database, $config);
+        $result = $databaseContext->query($sql, [$book->id]);
 
         while ($post = $result->fetchObject()) {
             array_push($out, new Data($post, $book));

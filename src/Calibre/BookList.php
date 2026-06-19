@@ -11,9 +11,10 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
-use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
@@ -26,6 +27,7 @@ class BookList
 {
     use HasRouteTrait;
     use HasLocaleTrait;
+    use HasConfigTrait;
 
     public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
     public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
@@ -80,6 +82,10 @@ class BookList
         $this->setHandler($this->request->getHandler());
         // get locale based on $this->request
         $this->setLocale($this->request->locale());
+        // get config based on $this->request
+        if ($this->request->getConfig() !== null) {
+            $this->setConfig($this->request->getConfig());
+        }
     }
 
     /**
@@ -121,10 +127,10 @@ class BookList
      */
     public function getBookCount()
     {
-        if ($this->request->hasFilter() || !empty(Config::get('database_filter'))) {
+        if ($this->request->hasFilter() || !empty($this->config('database_filter'))) {
             return $this->getFilterBookCount();
         }
-        return Database::querySingle('select count(*) from books', $this->databaseId);
+        return Database::querySingle('select count(*) from books', $this->databaseId, $this->getConfig());
     }
 
     /**
@@ -136,7 +142,7 @@ class BookList
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return Database::countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params, $this->databaseId);
+        return Database::countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params, $this->databaseId, $this->getConfig());
     }
 
     /**
@@ -147,7 +153,7 @@ class BookList
     {
         $entryArray = [];
         array_push($entryArray, $this->getAllBooksCountEntry());
-        if (Config::get('recentbooks_limit') > 0) {
+        if ($this->config('recentbooks_limit') > 0) {
             array_push($entryArray, $this->getRecentCountEntry());
         }
         return $entryArray;
@@ -164,9 +170,9 @@ class BookList
         $params["db"] ??= $this->databaseId;
         $href = fn() => $this->getRoute(Book::ROUTE_ALL, $params);
         // issue #26 for koreader: section is not supported
-        if (!empty(Config::get('titles_split_first_letter'))) {
+        if (!empty($this->config('titles_split_first_letter'))) {
             $linkArray = [ new LinkNavigation($href, "subsection") ];
-        } elseif (!empty(Config::get('titles_split_publication_year'))) {
+        } elseif (!empty($this->config('titles_split_publication_year'))) {
             $linkArray = [ new LinkNavigation($href, "subsection") ];
         } else {
             $linkArray = [ new LinkFeed($href, null) ];
@@ -190,7 +196,7 @@ class BookList
      */
     public function getRecentCountEntry()
     {
-        $limit = Config::get('recentbooks_limit');
+        $limit = $this->config('recentbooks_limit');
         if ($limit < 1) {
             return null;
         }
@@ -258,7 +264,7 @@ class BookList
      */
     public function getBooksWithoutInstance($instance, $n)
     {
-        // in_array("series", Config::get('show_not_set_filter'))
+        // in_array("series", $this->config('show_not_set_filter'))
         if ($instance instanceof CustomColumn) {
             return $this->getBooksWithoutCustom($instance->customColumnType, $n);
         }
@@ -389,7 +395,7 @@ class BookList
 from books
 where 1=1 {1}
 group by groupid
-order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId);
+order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId, null, $this->getConfig());
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -462,7 +468,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
      */
     public function getRecentBooks()
     {
-        [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . Config::get('recentbooks_limit'), [], -1);
+        [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . $this->config('recentbooks_limit'), [], -1);
         return $entryArray;
     }
 
@@ -489,7 +495,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
         /** @var integer $totalNumber */
         /** @var \PDOStatement $result */
-        [$totalNumber, $result] = Database::queryTotal($query, Book::getBookColumns(), $filterString, $params, $n, $this->databaseId, $this->numberPerPage);
+        [$totalNumber, $result] = Database::queryTotal($query, Book::getBookColumns($this->getConfig()), $filterString, $params, $n, $this->databaseId, $this->numberPerPage, $this->getConfig());
 
         /** @phpstan-ignore-next-line */
         if (self::BATCH_QUERY) {
@@ -497,7 +503,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         }
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $book = new Book($post, $this->databaseId);
+            $book = new Book($post, $this->databaseId, $this->getConfig());
             $book->setHandler($this->handler);
             $book->setLocale($this->locale);
             array_push($entryArray, $book->getEntry());
@@ -516,7 +522,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     {
         $this->bookList = [];
         while ($post = $result->fetchObject()) {
-            $book = new Book($post, $this->databaseId);
+            $book = new Book($post, $this->databaseId, $this->getConfig());
             $book->setHandler($this->handler);
             $book->setLocale($this->locale);
             $this->bookList[$book->id] = $book;
@@ -667,7 +673,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $baselist = new BaseList(Data::class, $this->request, $this->databaseId);
         $dataIds = $baselist->getInstanceIdsByBookIds($bookIds);
         $datas = $baselist->getInstancesByIds($dataIds);
-        $ignored_formats = Config::get('ignored_formats');
+        $ignored_formats = $this->config('ignored_formats');
         foreach ($bookIds as $bookId) {
             $this->bookList[$bookId]->datas = [];
             $dataIds[$bookId] ??= [];
