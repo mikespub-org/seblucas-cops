@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Language;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 
 class Translation
 {
@@ -90,15 +91,16 @@ class Translation
     /**
      * Find the best translation file possible based on the accepted languages
      * @param ?string $acceptLanguage from $_SERVER['HTTP_ACCEPT_LANGUAGE']
+     * @param ?RequestConfig $config
      * @return array<mixed> of language and language file
      */
-    public static function getLangAndTranslationFile($acceptLanguage)
+    public static function getLangAndTranslationFile($acceptLanguage, $config = null)
     {
         $langs = [];
         $lang = 'en';
-        // @todo get from instance config
-        if (!empty(Config::get('language'))) {
-            $lang = Config::get('language');
+        $default = Config::getFrom($config, 'language');
+        if (!empty($default)) {
+            $lang = $default;
         } elseif (!empty($acceptLanguage)) {
             $langs = self::getAcceptLanguages($acceptLanguage);
         }

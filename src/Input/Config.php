@@ -19,7 +19,7 @@ class Config
 {
     public const VERSION = '4.3.5';
     public const ENDPOINT = 'index.php';
-    protected const PREFIX = 'cops_';
+    public const PREFIX = 'cops_';
 
     /**
      * Summary of values
@@ -75,6 +75,22 @@ class Config
     public static function dump()
     {
         return self::$values;
+    }
+
+    /**
+     * Summary of getFrom
+     * @param mixed $config
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function getFrom($config, string $name, mixed $default = null): mixed
+    {
+        if (is_object($config) && method_exists($config, 'get')) {
+            return $config->get($name, $default);
+        }
+
+        return self::get($name, $default);
     }
 
     /**

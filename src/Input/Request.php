@@ -108,7 +108,7 @@ class Request
     public function locale()
     {
         if (!isset($this->locale)) {
-            [$this->locale, ] = Translation::getLangAndTranslationFile($this->language());
+            [$this->locale, ] = Translation::getLangAndTranslationFile($this->language(), $this->getConfig());
         }
         return $this->locale;
     }
@@ -186,7 +186,7 @@ class Request
         }
         // get virtual library from option (see customize)
         if (!isset($this->urlParams['vl']) && !empty($this->option('virtual_library'))) {
-            if (!Database::isMultipleDatabaseEnabled()) {
+            if (!Database::isMultipleDatabaseEnabled($this->getConfig())) {
                 $this->urlParams['vl'] = $this->option('virtual_library');
             }
         }
@@ -336,18 +336,21 @@ class Request
      */
     public function option($option)
     {
-        if (!is_null($this->cookie($option))) {
-            if (!is_null($this->config($option)) && is_array($this->config($option))) {
-                return explode(',', (string) $this->cookie($option));
-            } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', (string) $this->cookie($option))) {
-                return $this->cookie($option);
+        // cookie has precedence over config for selected keys here
+        $default = $this->config($option);
+        $value = $this->cookie($option);
+        if (!is_null($value)) {
+            if (!is_null($default) && is_array($default)) {
+                return explode(',', (string) $value);
+            } elseif (!preg_match('/[^A-Za-z0-9\-_.@()]/', (string) $value)) {
+                return $value;
             }
         }
         // @todo use session or default here? see PageCustomize()
         //$session = $this->getSession();
         //$default = $this->config('customize', []);
-        if (!is_null($this->config($option))) {
-            return $this->config($option);
+        if (!is_null($default)) {
+            return $default;
         }
 
         return '';

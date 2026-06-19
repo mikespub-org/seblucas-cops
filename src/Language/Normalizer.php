@@ -18,9 +18,10 @@ class Normalizer
 {
     /**
      * Summary of useNormAndUp
+     * @param ?Config $config
      * @return bool
      */
-    public static function useNormAndUp()
+    public static function useNormAndUp($config = null)
     {
         // @todo get from instance config
         if (Config::get('normalized_search') == '1') {

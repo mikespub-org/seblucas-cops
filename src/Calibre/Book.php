@@ -797,9 +797,10 @@ class Book
     // -DC- Get customisable book columns
     /**
      * Summary of getBookColumns
+     * @param ?Config $config
      * @return string
      */
-    public static function getBookColumns()
+    public static function getBookColumns($config = null)
     {
         $res = self::SQL_COLUMNS;
         $field = Config::get('calibre_database_field_cover');
@@ -814,14 +815,15 @@ class Book
      * Summary of getBookById
      * @param int $bookId
      * @param ?int $database
+     * @param ?Config $config
      * @return ?Book
      */
-    public static function getBookById($bookId, $database = null)
+    public static function getBookById($bookId, $database = null, $config = null)
     {
-        $query = 'select ' . self::getBookColumns() . '
+        $query = 'select ' . self::getBookColumns($config) . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?';
-        $result = Database::query($query, [$bookId], $database);
+        $result = Database::query($query, [$bookId], $database, $config);
         if ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             return $book;
@@ -833,11 +835,12 @@ where books.id = ?';
      * Summary of getBookByDataId
      * @param int $dataId
      * @param ?int $database
+     * @param ?Config $config
      * @return ?Book
      */
-    public static function getBookByDataId($dataId, $database = null)
+    public static function getBookByDataId($dataId, $database = null, $config = null)
     {
-        $query = 'select ' . self::getBookColumns() . ', data.name, data.format
+        $query = 'select ' . self::getBookColumns($config) . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?';
         $ignored_formats = Config::get('ignored_formats');
@@ -846,7 +849,7 @@ where data.book = books.id and data.id = ?';
             . implode("','", $ignored_formats)
             . "')";
         }
-        $result = Database::query($query, [$dataId], $database);
+        $result = Database::query($query, [$dataId], $database, $config);
         if ($post = $result->fetchObject()) {
             $book = new Book($post, $database);
             $data = new Data($post, $book);
@@ -860,9 +863,10 @@ where data.book = books.id and data.id = ?';
     /**
      * Summary of getDataByBook
      * @param Book $book
+     * @param ?Config $config
      * @return array<Data>
      */
-    public static function getDataByBook($book)
+    public static function getDataByBook($book, $config = null)
     {
         $out = [];
 
@@ -876,7 +880,7 @@ where data.book = books.id and data.id = ?';
         }
 
         $database = $book->getDatabaseId();
-        $result = Database::query($sql, [$book->id], $database);
+        $result = Database::query($sql, [$book->id], $database, $config);
 
         while ($post = $result->fetchObject()) {
             array_push($out, new Data($post, $book));

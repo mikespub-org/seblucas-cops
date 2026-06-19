@@ -11,7 +11,10 @@
 namespace SebLucas\Cops\Input;
 
 use SebLucas\Cops\Handlers\HandlerManager;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Handlers\BaseHandler;
+use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -30,16 +33,18 @@ class RequestContext
     /** @var array<mixed> */
     private ?array $matchParams = null;
     private ?BaseHandler $handler = null;
-    private Config $config;
+    private RequestConfig $config;
     private string $locale;
     private ?SessionInterface $session = null;
+    /** @var array<int|null, DatabaseContext> */
+    private array $databaseContexts = [];
 
     public function __construct(Request $request, ?HandlerManager $manager = null, ?RouterInterface $router = null)
     {
         $this->request = $request;
         $this->manager = $manager ?? new HandlerManager();
         $this->router = $router ?? new Routing();
-        $this->config = new Config();
+        $this->config = new RequestConfig();
         $this->locale = $this->request->locale();
         $this->initializeContext();
     }
@@ -109,26 +114,27 @@ class RequestContext
 
     /**
      * Load user- and/or database-specific config after request match & update + authentication
+     * @todo also load cookie options and/or session values for specific keys?
      * @see \SebLucas\Cops\Middleware\AuthMiddleware::checkUserAuthentication()
      */
-    public function updateConfig(): Config
+    public function updateConfig(): RequestConfig
     {
         // first load user-specific config in case they have their own database(s)
         $username = $this->request->getUserName();
         if (!empty($username)) {
             $config = Config::getUserConfig($username);
             if (!empty($config)) {
-                Config::load($config);
-                $this->config = new Config();
+                $this->config->load($config);
             }
         }
         // then load database- (and user-) specific config
         $database = $this->request->database();
         $config = Config::getDatabaseConfig($database, $username);
         if (!empty($config)) {
-            Config::load($config);
-            $this->config = new Config();
+            $this->config->load($config);
         }
+        $this->databaseContexts = [];
+        $this->request->setConfig($this->config);
         return $this->config;
     }
 
@@ -232,6 +238,7 @@ class RequestContext
         // reset properties for this request
         $this->locale = $this->request->locale();
         $this->matchParams = null;
+        $this->databaseContexts = [];
     }
 
     public function getRequest(): Request
@@ -270,9 +277,17 @@ class RequestContext
         return $this->handler;
     }
 
-    public function getConfig(): Config
+    public function getConfig(): RequestConfig
     {
         return $this->config;
+    }
+
+    public function getDatabaseContext(?int $database = null): DatabaseContext
+    {
+        if (!array_key_exists($database, $this->databaseContexts)) {
+            $this->databaseContexts[$database] = new DatabaseContext($database, $this->config);
+        }
+        return $this->databaseContexts[$database];
     }
 
     public function getSession(): SessionInterface
