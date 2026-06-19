@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Language;
 
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Output\Response;
 use Symfony\Component\String\UnicodeString;
 
@@ -18,13 +19,12 @@ class Normalizer
 {
     /**
      * Summary of useNormAndUp
-     * @param ?Config $config
+     * @param ?RequestConfig $config
      * @return bool
      */
     public static function useNormAndUp($config = null)
     {
-        // @todo get from instance config
-        if (Config::get('normalized_search') == '1') {
+        if (Config::getFrom($config, 'normalized_search') == '1') {
             if (!extension_loaded('intl')) {
                 // this will call exit()
                 $response = Response::sendError(null, 'Please enable the "intl" extension to use normalized search');
