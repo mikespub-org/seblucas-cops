@@ -72,6 +72,21 @@ class Database
     }
 
     /**
+     * Summary of getContextConnection
+     * @param DatabaseContext $dbContext
+     * @return DatabaseConnection
+     */
+    public static function getContextConnection($dbContext)
+    {
+        $dbFileName = $dbContext->getDbFileName();
+        $key = self::getConnectionKey($dbFileName);
+        if (!isset(self::$connections[$key])) {
+            self::$connections[$key] = new DatabaseConnection($dbFileName, $dbContext->getConfig(), $dbContext->getDatabase());
+        }
+        return self::$connections[$key];
+    }
+
+    /**
      * Summary of isMultipleDatabaseEnabled
      * @param ?RequestConfig $config
      * @return bool
@@ -288,15 +303,7 @@ class Database
      */
     protected static function attachDatabase($dbFileName, $attachDatabase, $database = null, $config = null)
     {
-        // Attach the database file
-        try {
-            $sql = "ATTACH DATABASE '{$dbFileName}' AS {$attachDatabase};";
-            $stmt = self::getConnection($database, $config)->getDb()->prepare($sql);
-            $stmt->execute();
-        } catch (Exception $e) {
-            $error = sprintf('Cannot attach %s database [%s]: %s', $attachDatabase, $dbFileName, $e->getMessage());
-            throw new Exception($error);
-        }
+        self::getConnection($database, $config)->attachDatabase($dbFileName, $attachDatabase);
     }
 
     /**
@@ -354,9 +361,9 @@ class Database
         if (self::KEEP_STATS) {
             array_push(self::$queries, $query);
         }
-        return self::getConnection($database, $config)->getDb()->query($query)->fetchColumn();
-    }
 
+        return self::getConnection($database, $config)->querySingle($query);
+    }
 
     /**
      * Summary of query
@@ -372,14 +379,8 @@ class Database
         if (self::KEEP_STATS) {
             array_push(self::$queries, $query);
         }
-        $db = self::getConnection($database, $config)->getDb();
-        if (count($params) > 0) {
-            $result = $db->prepare($query);
-            $result->execute($params);
-        } else {
-            $result = $db->query($query);
-        }
-        return $result;
+
+        return self::getConnection($database, $config)->query($query, $params);
     }
 
     /**
@@ -400,8 +401,6 @@ class Database
         if (self::KEEP_STATS) {
             array_push(self::$queries, [$query, $columns, $filter]);
         }
-        $totalResult = -1;
-
         if (Normalizer::useNormAndUp($config)) {
             $query = str_replace("upper", "normAndUp", $query);
             $columns = str_replace("upper", "normAndUp", $columns);
@@ -411,18 +410,7 @@ class Database
             $numberPerPage = Config::getFrom($config, 'max_item_per_page');
         }
 
-        if ($numberPerPage != -1 && $n != -1) {
-            // First check total number of results
-            $totalResult = self::countFilter($query, 'count(*)', $filter, $params, $database, $config);
-
-            // Next modify the query and params
-            $query .= " limit ?, ?";
-            array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
-        }
-        $db = self::getConnection($database, $config)->getDb();
-        $result = $db->prepare(str_format($query, $columns, $filter));
-        $result->execute($params);
-        return [$totalResult, $result];
+        return self::getConnection($database, $config)->queryTotal($query, $columns, $filter, $params, $n, $numberPerPage);
     }
 
     /**
@@ -452,16 +440,7 @@ class Database
             $numberPerPage = Config::getFrom($config, 'max_item_per_page');
         }
 
-        if ($numberPerPage != -1 && $n != -1) {
-            // Next modify the query and params
-            $query .= " limit ?, ?";
-            array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
-        }
-
-        $db = self::getConnection($database, $config)->getDb();
-        $result = $db->prepare(str_format($query, $columns, $filter));
-        $result->execute($params);
-        return $result;
+        return self::getConnection($database, $config)->queryFilter($query, $columns, $filter, $params, $n, $numberPerPage);
     }
 
     /**
@@ -480,13 +459,8 @@ class Database
         if (self::KEEP_STATS) {
             array_push(self::$queries, [$query, $columns, $filter]);
         }
-        // assuming order by ... is at the end of the query here
-        $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|).*$/i', '', $query);
-        $db = self::getConnection($database, $config)->getDb();
-        $result = $db->prepare(str_format($query, $columns, $filter));
-        $result->execute($params);
-        $totalResult = $result->fetchColumn();
-        return $totalResult;
+
+        return self::getConnection($database, $config)->countFilter($query, $columns, $filter, $params);
     }
 
     /**
@@ -498,19 +472,7 @@ class Database
      */
     public static function getDbSchema($database = null, $type = null, $config = null)
     {
-        $query = 'SELECT type, name, tbl_name, rootpage, sql FROM sqlite_schema';
-        $params = [];
-        if (!empty($type)) {
-            $query .= ' WHERE type = ?';
-            $params[] = $type;
-        }
-        $entries = [];
-        $result = self::query($query, $params, $database, $config);
-        while ($post = $result->fetchObject()) {
-            $entry = (array) $post;
-            array_push($entries, $entry);
-        }
-        return $entries;
+        return self::getConnection($database, $config)->getDbSchema($type);
     }
 
     /**
@@ -522,15 +484,7 @@ class Database
      */
     public static function getTableInfo($database = null, $name = 'books', $config = null)
     {
-        $query = "PRAGMA table_info({$name})";
-        $params = [];
-        $result = self::query($query, $params, $database, $config);
-        $entries = [];
-        while ($post = $result->fetchObject()) {
-            $entry = (array) $post;
-            array_push($entries, $entry);
-        }
-        return $entries;
+        return self::getConnection($database, $config)->getTableInfo($name);
     }
 
     /**
@@ -541,9 +495,7 @@ class Database
      */
     public static function getUserVersion($database = null, $config = null)
     {
-        $query = "PRAGMA user_version";
-        $result = self::querySingle($query, $database, $config);
-        return $result;
+        return self::getConnection($database, $config)->getUserVersion();
     }
 
     /**
@@ -554,30 +506,7 @@ class Database
      */
     public static function getDatabaseList($database = null, $config = null)
     {
-        // PRAGMA database_list;
-        $sql = 'select * from pragma_database_list;';
-        $stmt = self::getConnection($database, $config)->getDb()->prepare($sql);
-        $stmt->execute();
-        $databases = [];
-        while ($post = $stmt->fetchObject()) {
-            $databases[$post->name] = (array) $post;
-        }
-        return $databases;
-    }
-
-    /**
-     * Summary of hasNotes
-     * @param ?int $database
-     * @param ?RequestConfig $config
-     * @return bool
-     */
-    public static function hasNotes($database = null, $config = null)
-    {
-        // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
-        if (file_exists(dirname(self::getDbFileName($database, $config)) . '/' . self::NOTES_DIR_NAME . '/' . self::NOTES_DB_FILE)) {
-            return true;
-        }
-        return false;
+        return self::getConnection($database, $config)->getDatabaseList();
     }
 
     /**
@@ -588,20 +517,6 @@ class Database
      */
     public static function getNotesDb($database = null, $config = null)
     {
-        if (!self::hasNotes($database, $config)) {
-            return null;
-        }
-        // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
-        $databases = self::getDatabaseList($database, $config);
-        if (!empty($databases[self::NOTES_DB_NAME])) {
-            return self::getDb($database, $config);
-        }
-        $notesFileName = dirname(self::getDbFileName($database, $config)) . '/' . self::NOTES_DIR_NAME . '/' . self::NOTES_DB_FILE;
-        self::attachDatabase($notesFileName, self::NOTES_DB_NAME, $database, $config);
-        $databases = self::getDatabaseList($database, $config);
-        if (!empty($databases[self::NOTES_DB_NAME])) {
-            return self::getConnection($database, $config)->getDb();
-        }
-        return null;
+        return self::getConnection($database, $config)->getNotesDb();
     }
 }

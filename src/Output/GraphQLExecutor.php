@@ -16,6 +16,7 @@ use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Data;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
@@ -309,6 +310,9 @@ class GraphQLExecutor
                 $params['db'] = $request->database();
                 $current = Request::build($params, $request->getHandler());
                 $current->locale = $request->locale();
+                if ($request->getConfig() !== null) {
+                    $current->setConfig($request->getConfig());
+                }
             } catch (JsonException $e) {
                 error_log('COPS: Invalid where argument ' . $args['where'] . ': ' . $e->getMessage());
             }
@@ -331,6 +335,7 @@ class GraphQLExecutor
     {
         $handler = $request->getHandler();
         $locale = $request->locale();
+        $dbContext = new DatabaseContext($request->database(), $context->getConfig());
         switch ($fieldName) {
             case 'books':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -338,7 +343,7 @@ class GraphQLExecutor
                 [$entryArray, $totalNumber] = $booklist->getAllBooks($n);
                 return $entryArray;
             case 'book':
-                $book = Book::getBookById($args['id'], $request->database(), $context->getConfig());
+                $book = Book::getBookById($args['id'], $dbContext);
                 if (is_null($book)) {
                     return $book;
                 }
@@ -346,7 +351,7 @@ class GraphQLExecutor
                 $book->setLocale($locale);
                 return $book->getEntry();
             case 'datas':
-                $book = Book::getBookById($args['bookId'], $request->database(), $context->getConfig());
+                $book = Book::getBookById($args['bookId'], $dbContext);
                 if (is_null($book)) {
                     return $book;
                 }
@@ -354,7 +359,7 @@ class GraphQLExecutor
                 $book->setLocale($locale);
                 return $book->getDatas();
             case 'data':
-                $book = Book::getBookByDataId($args['id'], $request->database(), $context->getConfig());
+                $book = Book::getBookByDataId($args['id'], $dbContext);
                 if (is_null($book)) {
                     return $book;
                 }
@@ -368,7 +373,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'author':
-                $instance = Author::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Author::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -378,7 +383,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'format':
-                $instance = Format::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Format::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -388,7 +393,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'identifier':
-                $instance = Identifier::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Identifier::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -398,7 +403,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'language':
-                $instance = Language::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Language::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -408,7 +413,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'publisher':
-                $instance = Publisher::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Publisher::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -418,7 +423,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'rating':
-                $instance = Rating::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Rating::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -428,7 +433,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'serie':
-                $instance = Serie::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Serie::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -438,7 +443,7 @@ class GraphQLExecutor
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'tag':
-                $instance = Tag::getInstanceById($args['id'], $request->database(), $locale, $context->getConfig());
+                $instance = Tag::getInstanceById($args['id'], $dbContext, $locale);
                 $instance->setHandler($handler);
                 $instance->setLocale($locale);
                 return $instance->getEntry();
@@ -617,7 +622,7 @@ class GraphQLExecutor
             case 'navlink':
                 return $note->getUri();
             case 'resources':
-                return $note->getResources($context->getConfig());
+                return $note->getResources();
             default:
                 return false;
         }

@@ -110,6 +110,9 @@ class PageFilter extends Page
         $params['db'] = $this->getDatabaseId();
         $req = Request::build($params, $this->handler);
         $req->locale = $this->locale;
+        if ($this->getConfig() !== null) {
+            $req->setConfig($this->getConfig());
+        }
         $filtersTitle = $this->localize("filters.title");
         if (in_array('author', $filterLinks)) {
             $title = $this->localize("authors.title");

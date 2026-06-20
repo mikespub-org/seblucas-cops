@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Tests\Handler;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
@@ -33,7 +35,8 @@ class EpubFsTest extends TestCase
     {
         $idData = 20;
         self::$params = ["data" => $idData, "db" => 0];
-        $myBook = Book::getBookByDataId($idData);
+        $dbContext = new DatabaseContext();
+        $myBook = Book::getBookByDataId($idData, $dbContext);
 
         self::$book = new EPub($myBook->getFilePath("EPUB", $idData));
         self::$book->initSpineComponent();

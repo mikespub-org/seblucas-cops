@@ -94,14 +94,13 @@ class Resource
     /**
      * Summary of getResourcePath
      * @param string $hash
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return string|null
      */
-    public static function getResourcePath($hash, $database = null, $config = null)
+    public static function getResourcePath($hash, $dbContext)
     {
         [$alg, $digest] = explode(':', $hash);
-        $resourcesDir = dirname(Database::getDbFileName($database, $config)) . '/' . Database::NOTES_DIR_NAME . '/resources';
+        $resourcesDir = dirname($dbContext->getDbFileName()) . '/' . Database::NOTES_DIR_NAME . '/resources';
         $resourcePath = $resourcesDir . '/' . substr($digest, 0, 2) . '/' . $alg . '-' . $digest;
         if (file_exists($resourcePath)) {
             return $resourcePath;
@@ -112,15 +111,14 @@ class Resource
     /**
      * Summary of sendImageResource
      * @param string $hash
+     * @param DatabaseContext $dbContext
      * @param FileResponse $response
      * @param ?string $name
-     * @param ?int $database
-     * @param ?RequestConfig $config
      * @return FileResponse|null
      */
-    public static function sendImageResource($hash, $response, $name = null, $database = null, $config = null)
+    public static function sendImageResource($hash, $dbContext, $response, $name = null)
     {
-        $path = self::getResourcePath($hash, $database, $config);
+        $path = self::getResourcePath($hash, $dbContext);
         if (empty($path)) {
             return null;
         }

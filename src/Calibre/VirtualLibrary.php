@@ -36,13 +36,17 @@ class VirtualLibrary extends Base
      * Summary of __construct
      * @param \stdClass $post
      * @param ?int $database
+     * @param ?RequestConfig $config
      */
-    public function __construct($post, $database = null)
+    public function __construct($post, $database = null, $config = null)
     {
         $this->id = $post->id;
         $this->name = $post->name;
         $this->value = $post->value;
         $this->databaseId = $database;
+        if (!empty($config)) {
+            $this->setConfig($config);
+        }
     }
 
     /**
@@ -86,53 +90,50 @@ class VirtualLibrary extends Base
 
     /**
      * Summary of getLibraries
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<string, mixed>
      */
-    public static function getLibraries($database = null, $config = null)
+    public static function getLibraries($dbContext)
     {
-        // @todo adapt cache based on config
-        $db = $database ?? 0;
+        // @todo adapt cache based on $dbContext
+        $db = $dbContext->getDatabase() ?? 0;
         if (array_key_exists($db, self::$libraries)) {
             return self::$libraries[$db];
         }
-        $preference = Preference::getVirtualLibraries($database, $config);
+        $preference = Preference::getVirtualLibraries($dbContext);
         self::$libraries[$db] = $preference->val ?? [];
         return self::$libraries[$db];
     }
 
     /**
      * Summary of countEntries
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return int
      */
-    public static function countEntries($database = null, $config = null)
+    public static function countEntries($dbContext)
     {
-        $libraryList = Config::getFrom($config, 'calibre_virtual_libraries', []);
+        $libraryList = Config::getFrom($dbContext->getConfig(), 'calibre_virtual_libraries', []);
         if (!empty($libraryList) && $libraryList !== static::ALL_WILDCARD) {
             return count($libraryList);
         }
-        $libraries = self::getLibraries($database, $config);
+        $libraries = self::getLibraries($dbContext);
         return count($libraries);
     }
 
     /**
      * Summary of getEntries
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return array<Entry>
      */
-    public static function getEntries($database, $handler, $locale = null, $config = null)
+    public static function getEntries($dbContext, $handler, $locale = null)
     {
-        $libraryList = Config::getFrom($config, 'calibre_virtual_libraries', []);
+        $libraryList = Config::getFrom($dbContext->getConfig(), 'calibre_virtual_libraries', []);
         if (!empty($libraryList) && $libraryList === static::ALL_WILDCARD) {
             $libraryList = [];
         }
-        $libraries = self::getLibraries($database, $config);
+        $libraries = self::getLibraries($dbContext);
         $entryArray = [];
         $id = 1;
         foreach ($libraries as $name => $value) {
@@ -142,7 +143,7 @@ class VirtualLibrary extends Base
             }
             // @todo get book count filtered by value
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $value, 'count' => 0];
-            $instance = new self($post, $database);
+            $instance = new self($post, $dbContext->getDatabase());
             $instance->setHandler($handler);
             $instance->setLocale($locale);
             array_push($entryArray, $instance->getEntry($post->count));
@@ -153,17 +154,18 @@ class VirtualLibrary extends Base
 
     /**
      * Summary of getWithoutEntry
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
      * @return ?Entry
      */
-    public static function getWithoutEntry($database, $handler, $locale = null)
+    public static function getWithoutEntry($dbContext, $handler, $locale = null)
     {
-        // @todo set request for config
+        $database = $dbContext->getDatabase();
         $booklist = new BookList(null, $database);
+        $booklist->setDbContext($dbContext);
         $count = $booklist->getBookCount();
-        $instance = self::getInstanceById(null, $database, $locale);
+        $instance = self::getInstanceById(null, $dbContext, $locale);
         $instance->setHandler($handler);
         $instance->setLocale($locale);
         return $instance->getEntry($count);
@@ -180,36 +182,36 @@ class VirtualLibrary extends Base
 
     /**
      * Summary of getCount
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null, $config = null)
+    public static function getCount($dbContext, $handler, $locale = null)
     {
-        $libraries = self::getLibraries($database, $config);
+        $libraries = self::getLibraries($dbContext);
         $count = count($libraries);
-        return self::getCountEntry($count, $database, "libraries", $handler, [], $locale);
+        return self::getCountEntry($count, $dbContext->getDatabase(), "libraries", $handler, [], $locale);
     }
 
     /**
      * Summary of getInstanceById
      * @param string|int|null $id
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext - allow null here for tests
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return self
      */
-    public static function getInstanceById($id, $database = null, $locale = null, $config = null)
+    public static function getInstanceById($id, $dbContext = null, $locale = null)
     {
-        $libraries = self::getLibraries($database, $config);
+        $dbContext ??= new DatabaseContext();
+        $database = $dbContext->getDatabase();
+        $libraries = self::getLibraries($dbContext);
         if (!empty($id)) {
             // id = key position in array + 1
             $id = intval($id) - 1;
             $name = array_keys($libraries)[$id] ?? null;
             if (!empty($name)) {
-                return self::getInstanceByName($name, $database, $locale, $config);
+                return self::getInstanceByName($name, $dbContext, $locale);
             }
         }
         $default = self::getDefaultName();
@@ -222,19 +224,18 @@ class VirtualLibrary extends Base
     /**
      * Summary of getInstanceByName
      * @param string $name
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return self|null
      */
-    public static function getInstanceByName($name, $database = null, $locale = null, $config = null)
+    public static function getInstanceByName($name, $dbContext, $locale = null)
     {
-        $libraries = self::getLibraries($database, $config);
+        $libraries = self::getLibraries($dbContext);
         if (!empty($libraries) && array_key_exists($name, $libraries)) {
             // id = key position in array + 1
             $id = array_search($name, array_keys($libraries)) + 1;
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $libraries[$name]];
-            return new self($post, $database);
+            return new self($post, $dbContext->getDatabase());
         }
         return null;
     }

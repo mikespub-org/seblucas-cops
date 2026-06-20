@@ -420,12 +420,11 @@ class Data
     /**
      * Summary of getDataByBook
      * @param mixed $book
-     * @param ?RequestConfig $config
      * @return array<Data>
      */
-    public static function getDataByBook($book, $config = null)
+    public static function getDataByBook($book)
     {
-        return Book::getDataByBook($book, $config);
+        return Book::getDataByBook($book);
     }
 
     /**

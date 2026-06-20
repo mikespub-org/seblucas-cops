@@ -52,18 +52,17 @@ class Serie extends Category
     /**
      * Summary of getInstanceByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return Serie|false
      */
-    public static function getInstanceByBookId($bookId, $database = null, $config = null)
+    public static function getInstanceByBookId($bookId, $dbContext)
     {
-        $query = 'select ' . self::getInstanceColumns($database, $config) . '
+        $query = 'select ' . self::getInstanceColumns($dbContext) . '
 from books_series_link, series
 where series.id = series and book = ?';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         if ($post = $result->fetchObject()) {
-            return new Serie($post, $database);
+            return new Serie($post, $dbContext->getDatabase());
         }
         return false;
     }

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use PhpParser\Node\Stmt\TryCatch;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\Normalizer;
@@ -36,6 +37,10 @@ class DatabaseConnection
         $this->database = $database;
     }
 
+    /**
+     * Summary of getDb
+     * @throws \Exception
+     */
     public function getDb(): Sqlite
     {
         if ($this->db === null) {
@@ -43,22 +48,35 @@ class DatabaseConnection
                 throw new Exception(sprintf("Database <%s> not found or not readable.", $this->database));
             }
             $this->db = new Sqlite('sqlite:' . $this->dbFileName);
-            $this->createSqliteFunctions();
+            try {
+                $this->createSqliteFunctions();
+            } catch (\Throwable $e) {
+                var_dump($e);
+            }
         }
         return $this->db;
     }
 
+    /**
+     * Summary of getDbFileName
+     */
     public function getDbFileName(): string
     {
         return $this->dbFileName;
     }
 
+    /**
+     * Summary of clear
+     */
     public function clear(): void
     {
         $this->db = null;
         $this->functions = false;
     }
 
+    /**
+     * Summary of addSqliteFunctions
+     */
     public function addSqliteFunctions(): void
     {
         if ($this->functions) {
@@ -89,6 +107,9 @@ class DatabaseConnection
         $this->functions = true;
     }
 
+    /**
+     * Summary of createSqliteFunctions
+     */
     protected function createSqliteFunctions(): void
     {
         $db = $this->db;
@@ -137,6 +158,140 @@ class DatabaseConnection
     }
 
     /**
+     * Query and return a single value
+     */
+    public function querySingle(string $query): mixed
+    {
+        return $this->getDb()->query($query)->fetchColumn();
+    }
+
+    /**
+     * Summary of query
+     * @param array<mixed> $params
+     */
+    public function query(string $query, array $params = []): \PDOStatement
+    {
+        $db = $this->getDb();
+        if (count($params) > 0) {
+            $result = $db->prepare($query);
+            $result->execute($params);
+        } else {
+            $result = $db->query($query);
+        }
+        return $result;
+    }
+
+    /**
+     * Summary of queryTotal
+     * @param array<mixed> $params
+     * @return array{0: integer, 1: \PDOStatement}
+     */
+    public function queryTotal(string $query, string $columns, string $filter, array $params, int $n, ?int $numberPerPage = null): array
+    {
+        $totalResult = -1;
+
+        // Normalizer::useNormAndUp() and default max_item_per_page in calling method
+
+        if ($numberPerPage != -1 && $n != -1) {
+            // First check total number of results
+            $totalResult = $this->countFilter($query, 'count(*)', $filter, $params);
+
+            // Next modify the query and params
+            $query .= " limit ?, ?";
+            array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
+        }
+        $db = $this->getDb();
+        $result = $db->prepare(str_format($query, $columns, $filter));
+        $result->execute($params);
+        return [$totalResult, $result];
+    }
+
+    /**
+     * Summary of queryFilter
+     * @param array<mixed> $params
+     */
+    public function queryFilter(string $query, string $columns, string $filter, array $params, int $n, ?int $numberPerPage = null): \PDOStatement
+    {
+        // Normalizer::useNormAndUp() and default max_item_per_page in calling method
+
+        if ($numberPerPage != -1 && $n != -1) {
+            // Next modify the query and params
+            $query .= " limit ?, ?";
+            array_push($params, ($n - 1) * $numberPerPage, $numberPerPage);
+        }
+
+        $db = $this->getDb();
+        $result = $db->prepare(str_format($query, $columns, $filter));
+        $result->execute($params);
+        return $result;
+    }
+
+    /**
+     * Summary of countFilter
+     * @param array<mixed> $params
+     */
+    public function countFilter(string $query, string $columns = 'count(*)', string $filter = '', array $params = []): int
+    {
+        // assuming order by ... is at the end of the query here
+        $query = preg_replace('/\s+order\s+by\s+[\w.]+(\s+(asc|desc)|).*$/i', '', $query);
+        $db = $this->getDb();
+        $result = $db->prepare(str_format($query, $columns, $filter));
+        $result->execute($params);
+        $totalResult = (int) $result->fetchColumn();
+        return $totalResult;
+    }
+
+    /**
+     * Summary of getDbSchema
+     * @param ?string $type get table or view entries
+     * @return array<mixed>
+     */
+    public function getDbSchema(?string $type = null): array
+    {
+        $query = 'SELECT type, name, tbl_name, rootpage, sql FROM sqlite_schema';
+        $params = [];
+        if (!empty($type)) {
+            $query .= ' WHERE type = ?';
+            $params[] = $type;
+        }
+        $entries = [];
+        $result = $this->query($query, $params);
+        while ($post = $result->fetchObject()) {
+            $entry = (array) $post;
+            array_push($entries, $entry);
+        }
+        return $entries;
+    }
+
+    /**
+     * Summary of getTableInfo
+     * @param string $name table or view name
+     * @return array<mixed>
+     */
+    public function getTableInfo(string $name = 'books'): array
+    {
+        $query = "PRAGMA table_info({$name})";
+        $params = [];
+        $result = $this->query($query, $params);
+        $entries = [];
+        while ($post = $result->fetchObject()) {
+            $entry = (array) $post;
+            array_push($entries, $entry);
+        }
+        return $entries;
+    }
+
+    /**
+     * Summary of getUserVersion
+     */
+    public function getUserVersion(): int
+    {
+        $query = "PRAGMA user_version";
+        $result = (int) $this->querySingle($query);
+        return $result;
+    }
+
+    /**
      * Get list of databases (open or attach) from SQLite
      * @return array<string, mixed>
      */
@@ -152,4 +307,46 @@ class DatabaseConnection
         return $databases;
     }
 
+    /**
+     * Summary of hasNotes
+     */
+    protected function hasNotes(): bool
+    {
+        // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
+        if (file_exists($this->getNotesFileName())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Summary of getNotesFileName
+     */
+    protected function getNotesFileName(): string
+    {
+        // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
+        return dirname($this->getDbFileName()) . '/' . Database::NOTES_DIR_NAME . '/' . Database::NOTES_DB_FILE;
+    }
+
+    /**
+     * Summary of getNotesDb
+     */
+    public function getNotesDb(): ?Sqlite
+    {
+        if (!$this->hasNotes()) {
+            return null;
+        }
+        // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
+        $databases = $this->getDatabaseList();
+        if (!empty($databases[Database::NOTES_DB_NAME])) {
+            return $this->getDb();
+        }
+        $notesFileName = $this->getNotesFileName();
+        $this->attachDatabase($notesFileName, Database::NOTES_DB_NAME);
+        $databases = $this->getDatabaseList();
+        if (!empty($databases[Database::NOTES_DB_NAME])) {
+            return $this->getDb();
+        }
+        return null;
+    }
 }

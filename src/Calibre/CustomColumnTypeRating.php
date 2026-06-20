@@ -107,7 +107,7 @@ class CustomColumnTypeRating extends CustomColumnType
         // this includes the "Not Set" entry here
         $queryFormat = "SELECT coalesce({0}.value, 0) AS value, count(*) AS count FROM books  LEFT JOIN {1} ON  books.id = {1}.book LEFT JOIN {0} ON {0}.id = {1}.value GROUP BY coalesce({0}.value, 0)";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName());
-        $result = Database::query($query, [], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, []);
 
         $countArray = [0 => 0, 2 => 0, 4 => 0, 6 => 0, 8 => 0, 10 => 0];
         while ($row = $result->fetchObject()) {
@@ -157,7 +157,7 @@ class CustomColumnTypeRating extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
             $rating = intval($post->value) / 2;
             return new CustomColumn($post->value, str_format($this->localize("customcolumn.stars", $rating), (string) $rating), $this);

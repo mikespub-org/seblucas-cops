@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Tests\Calibre;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Model\LinkImage;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
@@ -59,7 +60,8 @@ class BookTest extends TestCase
 
     public function testGetBookByDataId(): void
     {
-        $book = Book::getBookByDataId(17);
+        $dbContext = new DatabaseContext();
+        $book = Book::getBookByDataId(17, $dbContext);
 
         $this->assertEquals("Alice's Adventures in Wonderland", $book->getTitle());
     }

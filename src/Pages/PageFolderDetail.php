@@ -42,7 +42,7 @@ class PageFolderDetail extends PageWithDetail
         if (!empty($getFiles) && !is_file($getFiles)) {
             throw new InvalidArgumentException('Invalid Files (browse_books_getfiles)');
         }
-        $folder = Folder::getRootFolder($root, $this->getDatabaseId(), $this->getLocale());
+        $folder = Folder::getRootFolder($root, $this->getDbContext(), $this->getLocale());
         $folder->setHandler($this->handler);
         $folder->setLocale($this->locale);
         $bookName = null;

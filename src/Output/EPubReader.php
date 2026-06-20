@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
@@ -109,7 +110,8 @@ class EPubReader extends BaseRenderer
      */
     public function sendContent($idData, $component, $database = null)
     {
-        $book = Book::getBookByDataId($idData, $database, $this->getConfig());
+        $dbContext = new DatabaseContext($database, $this->getConfig());
+        $book = Book::getBookByDataId($idData, $dbContext);
         if (!$book) {
             throw new InvalidArgumentException('Unknown data ' . $idData);
         }
@@ -250,8 +252,9 @@ class EPubReader extends BaseRenderer
      */
     public function findBookData($idData, $database)
     {
+        $dbContext = new DatabaseContext($database, $this->getConfig());
         if (!empty($idData)) {
-            $book = Book::getBookByDataId($idData, $database, $this->getConfig());
+            $book = Book::getBookByDataId($idData, $dbContext);
             if (!$book) {
                 throw new InvalidArgumentException('Unknown data ' . $idData);
             }
@@ -271,7 +274,7 @@ class EPubReader extends BaseRenderer
             throw new InvalidArgumentException('Missing path');
         }
         $locale = $this->request->locale();
-        $book = Book::getBookByFolderPath($path, $database, $locale);
+        $book = Book::getBookByFolderPath($path, $dbContext, $locale);
         if (!$book) {
             throw new InvalidArgumentException('Unknown book ' . basename($path));
         }

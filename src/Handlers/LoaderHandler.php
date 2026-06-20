@@ -12,6 +12,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -35,6 +36,7 @@ class LoaderHandler extends BaseHandler
     protected Request $request;
     protected ?string $dbFileName = null;
     protected ?CalibreWriter $writer = null;
+    protected ?DatabaseContext $dbContext = null;
 
     public static function getRoutes()
     {
@@ -118,6 +120,8 @@ class LoaderHandler extends BaseHandler
             }
         }
 
+        $this->dbContext = new DatabaseContext($this->request->database(), $this->request->getConfig());
+
         // you can define extra actions for your app - see example.php
         $handler = new RequestHandler($gConfig, ExtraActions::class, $cacheDir);
         $result = $handler->request($action, $dbNum, $urlParams, $urlPath);
@@ -167,9 +171,9 @@ class LoaderHandler extends BaseHandler
      */
     public function setAuthorInfo($authorId, $authorInfo)
     {
-        $database = $this->request->database();
         $locale = $this->request->locale();
-        $instance = Author::getInstanceById($authorId, $database, $locale);
+        // $this->dbContext is defined in handle()
+        $instance = Author::getInstanceById($authorId, $this->dbContext, $locale);
         if (empty($instance->id)) {
             return false;
         }
@@ -227,9 +231,9 @@ class LoaderHandler extends BaseHandler
      */
     public function setSeriesInfo($seriesId, $seriesInfo)
     {
-        $database = $this->request->database();
         $locale = $this->request->locale();
-        $instance = Serie::getInstanceById($seriesId, $database, $locale);
+        // $this->dbContext is defined in handle()
+        $instance = Serie::getInstanceById($seriesId, $this->dbContext, $locale);
         if (empty($instance->id)) {
             return false;
         }
@@ -287,8 +291,8 @@ class LoaderHandler extends BaseHandler
      */
     public function setBookInfo($bookId, $bookInfo)
     {
-        $database = $this->request->database();
-        $book = Book::getBookById($bookId, $database, $this->getContext()->getConfig());
+        // $this->dbContext is defined in handle()
+        $book = Book::getBookById($bookId, $this->dbContext);
         if (empty($book) || empty($book->id)) {
             return false;
         }

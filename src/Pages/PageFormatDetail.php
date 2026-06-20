@@ -29,7 +29,7 @@ class PageFormatDetail extends PageWithDetail
             throw new InvalidArgumentException('Invalid Format');
         }
         /** @var Format $instance */
-        $instance = Format::getInstanceById($this->idGet, $this->getDatabaseId(), $this->locale);
+        $instance = Format::getInstanceById($this->idGet, $this->getDbContext(), $this->locale);
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {

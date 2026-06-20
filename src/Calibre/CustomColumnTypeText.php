@@ -131,7 +131,7 @@ class CustomColumnTypeText extends CustomColumnType
             $params = array_map(trim(...), explode(',', $id));
             $query = str_format("SELECT id, value AS name FROM {0}", $this->getTableName());
             $query .= ' WHERE id IN (' . str_repeat('?,', count($params) - 1) . '?)';
-            $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
+            $result = $this->getDbContext()->query($query, $params);
             $idArray = [];
             $nameArray = [];
             while ($post = $result->fetchObject()) {
@@ -141,7 +141,7 @@ class CustomColumnTypeText extends CustomColumnType
             return new CustomColumn(implode(",", $idArray), implode(",", $nameArray), $this);
         }
         $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
-        $result = Database::query($query, [$id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
@@ -186,7 +186,7 @@ class CustomColumnTypeText extends CustomColumnType
         };
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$book->id]);
         // handle case where we have several values, e.g. array of text for type 2 (csv)
         if ($this->datatype === self::TYPE_CSV) {
             $idArray = [];

@@ -24,7 +24,7 @@ class PagePublisherDetail extends PageWithDetail
     public function initializeContent()
     {
         /** @var Publisher $instance */
-        $instance = Publisher::getInstanceById($this->idGet, $this->getDatabaseId(), $this->locale);
+        $instance = Publisher::getInstanceById($this->idGet, $this->getDbContext(), $this->locale);
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {

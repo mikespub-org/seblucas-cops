@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -70,7 +71,8 @@ class Mail
      */
     public function sendMail($idData, $emailDest, $request, $dryRun = false)
     {
-        $book = Book::getBookByDataId($idData, $request->database(), $request->getConfig());
+        $dbContext = new DatabaseContext($request->database(), $request->getConfig());
+        $book = Book::getBookByDataId($idData, $dbContext);
         if (!$book) {
             return 'No email sent. Unknown book data';
         }

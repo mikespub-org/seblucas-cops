@@ -61,21 +61,20 @@ class Tag extends Category
     /**
      * Summary of getInstancesByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<Tag>
      */
-    public static function getInstancesByBookId($bookId, $database = null, $config = null)
+    public static function getInstancesByBookId($bookId, $dbContext)
     {
         $tags = [];
-        $query = 'select ' . self::getInstanceColumns($database, $config) . '
+        $query = 'select ' . self::getInstanceColumns($dbContext) . '
             from books_tags_link, tags
             where tag = tags.id
             and book = ?
             order by name';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         while ($post = $result->fetchObject()) {
-            array_push($tags, new Tag($post, $database));
+            array_push($tags, new Tag($post, $dbContext->getDatabase()));
         }
         return $tags;
     }

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Tests\Calibre;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Handlers\CalResHandler;
@@ -53,13 +54,19 @@ class NoteResourceTest extends TestCase
 
     public function testGetCountByType(): void
     {
+        $dbContext = new DatabaseContext();
         $expected = ["authors" => 3];
-        $result = Note::getCountByType();
+        try {
+            $result = Note::getCountByType($dbContext);
+        } catch (\Throwable $e) {
+            var_dump($e);
+        }
         $this->assertEquals($expected, $result);
     }
 
     public function testGetEntriesByType(): void
     {
+        $dbContext = new DatabaseContext();
         $expected = [];
         $expected[3] = [
             "item" => 3,
@@ -67,7 +74,7 @@ class NoteResourceTest extends TestCase
             "mtime" => 1770217333.384,
             "title" => "Lewis Carroll",
         ];
-        $result = Note::getEntriesByType("authors");
+        $result = Note::getEntriesByType("authors", $dbContext);
         $this->assertEquals($expected[3], $result[3]);
     }
 
@@ -87,12 +94,12 @@ class NoteResourceTest extends TestCase
         UriGenerator::setBaseUrl(null);
 
         $note = self::$author->getNote();
-        $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
+        $html = Resource::fixResourceLinks($note->doc, $note->getDatabaseId());
         $expected = '<img src="/cops/index.php/calres/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
 
         Config::set('resources_cdn', 'https://fastly.site.com/cops/');
-        $html = Resource::fixResourceLinks($note->doc, $note->databaseId);
+        $html = Resource::fixResourceLinks($note->doc, $note->getDatabaseId());
         $expected = '<img src="https://fastly.site.com/cops/index.php/calres/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
 
@@ -103,6 +110,7 @@ class NoteResourceTest extends TestCase
 
     public function testGetResources(): void
     {
+        $dbContext = new DatabaseContext();
         $note = self::$author->getNote();
         $resources = $note->getResources();
         $this->assertCount(1, $resources);
@@ -113,7 +121,7 @@ class NoteResourceTest extends TestCase
         $expected = "330px-LewisCarrollSelfPhoto.jpg";
         $this->assertEquals($expected, $resources[$hash]->name);
         $expected = "/.calnotes/resources/7c/xxh64-7c301792c52eebf7";
-        $this->assertStringEndsWith($expected, Resource::getResourcePath($resources[$hash]->hash));
+        $this->assertStringEndsWith($expected, Resource::getResourcePath($resources[$hash]->hash, $dbContext));
         $expected = CalResHandler::link() . "/calres/0/xxh64/7c301792c52eebf7";
         $this->assertEquals($expected, $resources[$hash]->getUri());
     }
@@ -123,10 +131,11 @@ class NoteResourceTest extends TestCase
         $hash = "xxh64:7c301792c52eebf7";
         $name = null;
         $database = 0;
+        $dbContext = new DatabaseContext($database);
         $response = new FileResponse();
 
         ob_start();
-        $result = Resource::sendImageResource($hash, $response, $name, $database);
+        $result = Resource::sendImageResource($hash, $dbContext, $response, $name);
         $result->send();
         $headers = headers_list();
         $output = ob_get_clean();

@@ -14,6 +14,7 @@ use JsonException;
 use SebLucas\Cops\Calibre\Annotation;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Calibre\Metadata;
@@ -203,6 +204,16 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     }
 
     /**
+     * Summary of getRequestDbContext
+     * @param Request $request
+     * @return DatabaseContext
+     */
+    public function getRequestDbContext($request)
+    {
+        return new DatabaseContext($request->database(), $request->getConfig());
+    }
+
+    /**
      * Summary of getCustomColumns
      * @param Request $request
      * @return array<string, mixed>
@@ -210,7 +221,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getCustomColumns($request)
     {
         $db = $request->database();
-        $columns = CustomColumnType::getAllCustomColumns();
+        $dbContext = $this->getRequestDbContext($request);
+        $columns = CustomColumnType::getAllCustomColumns($dbContext);
         $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Custom Columns",
@@ -580,7 +592,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         ];
         $params = [];
         $params['db'] = $db;
-        foreach (Note::getCountByType($db, $request->getConfig()) as $type => $count) {
+        $dbContext = $this->getRequestDbContext($request);
+        foreach (Note::getCountByType($dbContext) as $type => $count) {
             $params['type'] = $type;
             $link = $this->getResource(Note::class, $params);
             array_push($result["entries"], [
@@ -616,8 +629,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $params = [];
         $params['db'] = $db;
         $params['type'] = $type;
+        $dbContext = $this->getRequestDbContext($request);
         // @todo get item from notes + corresponding title from instance
-        foreach (Note::getEntriesByType($type, $db, $request->getConfig()) as $entry) {
+        foreach (Note::getEntriesByType($type, $dbContext) as $entry) {
             $params['item'] = $entry['item'];
             if (!empty($entry["title"])) {
                 $title = UriGenerator::slugify($entry["title"]);
@@ -657,7 +671,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public function getNoteByTypeItem($type, $item, $request)
     {
         $db = $request->database();
-        $note = Note::getInstanceByTypeItem($type, $item, $db, $request->getConfig());
+        $dbContext = $this->getRequestDbContext($request);
+        $note = Note::getInstanceByTypeItem($type, $item, $dbContext);
         if (empty($note)) {
             return ["error" => "Invalid note type item"];
         }
@@ -670,8 +685,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $result = array_replace($result, get_object_vars($note));
         $result["size"] = strlen($result["doc"]);
         $result["resources"] = [];
-        foreach ($note->getResources($request->getConfig()) as $hash => $resource) {
-            $path = Resource::getResourcePath($hash, $db, $request->getConfig());
+        foreach ($note->getResources() as $hash => $resource) {
+            $path = Resource::getResourcePath($hash, $dbContext);
             $size = !empty($path) ? filesize($path) : 0;
             $mtime = !empty($path) ? filemtime($path) : 0;
             $link = $resource->getUri();
@@ -707,7 +722,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         ];
         $params = [];
         $params['db'] = $db;
-        foreach (Preference::getInstances($db, $request->getConfig()) as $key => $preference) {
+        $dbContext = $this->getRequestDbContext($request);
+        foreach (Preference::getInstances($dbContext) as $key => $preference) {
             if (is_array($preference->val)) {
                 $count = count($preference->val);
             } elseif (is_string($preference->val)) {
@@ -737,11 +753,12 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      */
     public function getPreferenceByKey($key, $request)
     {
-        $db = $request->database();
-        $preference = Preference::getInstanceByKey($key, $db, $request->getConfig());
+        $dbContext = $this->getRequestDbContext($request);
+        $preference = Preference::getInstanceByKey($key, $dbContext);
         if (empty($preference)) {
             return ["error" => "Invalid preference key"];
         }
+        $db = $request->database();
         $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Preference for {$key}",
@@ -771,7 +788,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "databaseId" => $db,
             "entries" => [],
         ];
-        foreach (Annotation::getCountByBookId($db) as $bookId => $count) {
+        $dbContext = $this->getRequestDbContext($request);
+        foreach (Annotation::getCountByBookId($dbContext) as $bookId => $count) {
             $params = [];
             $params['bookId'] = $bookId;
             $params['db'] = $db;
@@ -806,8 +824,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "databaseId" => $db,
             "entries" => [],
         ];
+        $dbContext = $this->getRequestDbContext($request);
         // @todo get item from annotations + corresponding title from instance
-        foreach (Annotation::getInstancesByBookId($bookId, $db) as $instance) {
+        foreach (Annotation::getInstancesByBookId($bookId, $dbContext) as $instance) {
             $instance->setHandler($this->handler);
             $instance->setLocale($this->locale);
             $entry = $instance->getEntry();
@@ -831,8 +850,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     {
         $db = $request->database();
         $locale = $request->locale();
+        $dbContext = $this->getRequestDbContext($request);
         /** @var Annotation $annotation */
-        $annotation = Annotation::getInstanceById($id, $db, $locale);
+        $annotation = Annotation::getInstanceById($id, $dbContext, $locale);
         if (empty($annotation->id)) {
             return ["error" => "Invalid annotation id"];
         }
@@ -857,13 +877,14 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         if (empty($bookId)) {
             return ["error" => "Invalid book id"];
         }
-        $db = $request->database();
-        $baseurl = $this->getBaseUrl();
-        $metadata = Metadata::getInstanceByBookId($bookId, $db, $request->getConfig());
+        $dbContext = $this->getRequestDbContext($request);
+        $metadata = Metadata::getInstanceByBookId($bookId, $dbContext);
         if (empty($metadata)) {
             $result["error"] = "Invalid metadata for book id";
             return $result;
         }
+        $db = $request->database();
+        $baseurl = $this->getBaseUrl();
         $result = [
             "title" => "Metadata for {$bookId}",
             "baseurl" => $baseurl,
@@ -905,6 +926,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         ];
         $result["username"] = $username;
         if ($request->path() == RestApiHandler::PREFIX . "/user/details") {
+            //$dbContext = $this->getRequestDbContext($request);
             $user = User::getInstanceByName($username);
             $result = array_replace($result, (array) $user);
         }
@@ -937,7 +959,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "folder" => null,
         ];
         $locale = $request->locale();
-        $folder = Folder::getRootFolder($root, $db, $locale);
+        $dbContext = $this->getRequestDbContext($request);
+        $folder = Folder::getRootFolder($root, $dbContext, $locale);
         $folder->setHandler(HtmlHandler::class);
         $folder->setLocale($locale);
         if (!empty($folderId)) {

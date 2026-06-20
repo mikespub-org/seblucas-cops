@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
@@ -23,8 +22,6 @@ use ZipStream\ZipStream;
  */
 class Zipper extends BaseRenderer
 {
-    /** @var ?int */
-    protected $databaseId = null;
     /** @var string */
     protected $format = 'EPUB';
     /** @var string */
@@ -41,9 +38,8 @@ class Zipper extends BaseRenderer
      */
     public function setRequest($request)
     {
-        $this->request = $request;
-        $this->databaseId = $this->request->database();
-        $type = $this->request->get('type', 'any');
+        parent::setRequest($request);
+        $type = $request->get('type', 'any');
         $this->format = strtoupper((string) $type);
     }
 

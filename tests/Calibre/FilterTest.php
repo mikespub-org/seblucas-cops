@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Tests\Calibre;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Filter;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
@@ -358,7 +359,8 @@ class FilterTest extends TestCase
 
     public function testCustomFilters(): void
     {
-        $custom = CustomColumn::createCustom(1, 1);
+        $dbContext = new DatabaseContext();
+        $custom = CustomColumn::createCustom(1, 1, $dbContext);
         $this->assertEquals("Type4", $custom->customColumnType->getTitle());
         $this->assertEquals("SeriesLike", $custom->getTitle());
 

@@ -48,18 +48,17 @@ class Publisher extends Base
     /**
      * Summary of getInstanceByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return Publisher|false
      */
-    public static function getInstanceByBookId($bookId, $database = null, $config = null)
+    public static function getInstanceByBookId($bookId, $dbContext)
     {
-        $query = 'select ' . self::getInstanceColumns($database, $config) . '
+        $query = 'select ' . self::getInstanceColumns($dbContext) . '
 from books_publishers_link, publishers
 where publishers.id = publisher and book = ?';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         if ($post = $result->fetchObject()) {
-            return new Publisher($post, $database);
+            return new Publisher($post, $dbContext->getDatabase());
         }
         return false;
     }

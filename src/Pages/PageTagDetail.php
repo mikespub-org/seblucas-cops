@@ -24,7 +24,7 @@ class PageTagDetail extends PageWithDetail
     public function initializeContent()
     {
         /** @var Tag $instance */
-        $instance = Tag::getInstanceById($this->idGet, $this->getDatabaseId(), $this->locale);
+        $instance = Tag::getInstanceById($this->idGet, $this->getDbContext(), $this->locale);
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {

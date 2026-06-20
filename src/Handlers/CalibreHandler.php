@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Input\RequestConfig;
@@ -42,7 +43,9 @@ class CalibreHandler extends BaseHandler
         $library = $request->get('library');
         $details = $request->get('details');
 
-        $database = self::findDatabaseId($library, $request->database(), $request->getConfig());
+        $dbContext = new DatabaseContext($request->database(), $request->getConfig());
+        $database = self::findDatabaseId($library, $dbContext);
+        $dbContext->setDatabase($database);
 
         switch ($action) {
             case 'switch-library':
@@ -51,7 +54,7 @@ class CalibreHandler extends BaseHandler
                 // show book details here - fall through
             case 'book-details':
                 if (is_numeric($details)) {
-                    $book = Book::getBookById((int) $details, $database, $this->getContext()->getConfig());
+                    $book = Book::getBookById((int) $details, $dbContext);
                     if (!empty($book)) {
                         // use html handler by default here
                         $book->setHandler(HtmlHandler::class);
@@ -70,13 +73,13 @@ class CalibreHandler extends BaseHandler
                 }
                 if (str_starts_with($item, 'id_')) {
                     $item = (int) substr($item, 3);
-                    $note = Note::getInstanceByTypeItem($type, $item, $database, $this->getConfig());
+                    $note = Note::getInstanceByTypeItem($type, $item, $dbContext);
                 } elseif (str_starts_with($item, 'hex_')) {
                     $name = hex2bin(substr($item, 4));
-                    $note = Note::getInstanceByTypeName($type, $name, $database, $this->getConfig());
+                    $note = Note::getInstanceByTypeName($type, $name, $dbContext);
                 } elseif (str_starts_with($item, 'val_')) {
                     $name = rawurldecode(substr($item, 4));
-                    $note = Note::getInstanceByTypeName($type, $name, $database, $this->getConfig());
+                    $note = Note::getInstanceByTypeName($type, $name, $dbContext);
                 } else {
                     return Response::notFound($request, 'Invalid Note Item');
                 }
@@ -102,30 +105,30 @@ class CalibreHandler extends BaseHandler
     /**
      * Summary of findDatabaseId
      * @param string $library
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return int|null
      */
-    public static function findDatabaseId($library, $database = null, $config = null)
+    public static function findDatabaseId($library, $dbContext)
     {
+        $database = $dbContext->getDatabase();
         // use current database
         if (empty($library) || $library == '_') {
             return $database;
         }
         // only one database configured for COPS - assume this one
-        if (!Database::isMultipleDatabaseEnabled($config)) {
+        if (!$dbContext->isMultipleDatabaseEnabled()) {
             return $database;
         }
         // /calibre/book-details/_hex_-4261736557697468536f6d65426f6f6b73/17
         if (str_starts_with($library, '_hex_-')) {
             $library = hex2bin(substr($library, 6));
         }
-        $database = Database::findDatabaseId($library, $config);
+        $database = $dbContext->findDatabaseId($library);
         // Library names are the folder name of the library folder with spaces replaced by underscores
         // /calibre/book-details/Library_Name/17
         if (is_null($database) && str_contains($library, '_')) {
             $library = str_replace('_', ' ', $library);
-            $database = Database::findDatabaseId($library, $config);
+            $database = $dbContext->findDatabaseId($library);
         }
         return $database;
     }

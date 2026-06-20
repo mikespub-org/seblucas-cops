@@ -505,16 +505,15 @@ class Folder extends Category
 
     /**
      * Summary of getCount
-     * @param ?int $database not used here
+     * @param DatabaseContext $dbContext
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null, $config = null)
+    public static function getCount($dbContext, $handler, $locale = null)
     {
         $count = 1;
-        return static::getCountEntry($count, $database, "folders", $handler, [], $locale);
+        return static::getCountEntry($count, $dbContext->getDatabase(), "folders", $handler, [], $locale);
     }
 
     /**
@@ -572,18 +571,19 @@ class Folder extends Category
     /**
      * Summary of getInstanceById
      * @param string|int|null $id used for the folder here
-     * @param ?int $database not used here
+     * @param ?DatabaseContext $dbContext - allow null here for tests
      * @param ?string $root
      * @param ?string $locale
      * @return self
      */
-    public static function getInstanceById($id, $database = null, $root = null, $locale = null)
+    public static function getInstanceById($id, $dbContext = null, $root = null, $locale = null)
     {
+        $database = $dbContext?->getDatabase() ?? null;
         if (!empty($id)) {
             $name = static::findCurrentName($id);
             return new Folder((object) ['id' => $id, 'name' => $name, 'root' => $root], $database);
         }
-        return self::getRootFolder($root, $database, $locale);
+        return self::getRootFolder($root, $dbContext, $locale);
     }
 
     /**
@@ -598,12 +598,13 @@ class Folder extends Category
     /**
      * Summary of getRootFolder
      * @param ?string $root
-     * @param ?int $database not used here
+     * @param ?DatabaseContext $dbContext - not used here
      * @param ?string $locale
      * @return Folder
      */
-    public static function getRootFolder($root = null, $database = null, $locale = null)
+    public static function getRootFolder($root = null, $dbContext = null, $locale = null)
     {
+        $database = $dbContext?->getDatabase() ?? null;
         $default = self::getDefaultName();
         $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
@@ -614,12 +615,12 @@ class Folder extends Category
     /**
      * Summary of getBookByFolderPath
      * @param string $path
-     * @param ?int $database
+     * @param DatabaseContext $dbContext - not really used here
      * @param ?string $locale
      * @throws \InvalidArgumentException
      * @return Book
      */
-    public static function getBookByFolderPath($path, $database = null, $locale = null)
+    public static function getBookByFolderPath($path, $dbContext, $locale = null)
     {
         $fileName = basename($path);
         $folderId = dirname($path);
@@ -630,7 +631,7 @@ class Folder extends Category
         if (empty($root) || !is_dir($root)) {
             throw new InvalidArgumentException("Invalid Root");
         }
-        $folder = Folder::getInstanceById($folderId, $database, $root, $locale);
+        $folder = Folder::getInstanceById($folderId, $dbContext, $root, $locale);
         $folder->setHandler(HtmlHandler::class);
         $folder->setLocale($locale);
         // force looking for book files here

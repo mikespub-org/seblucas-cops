@@ -53,6 +53,9 @@ class CustomColumn extends Category
         $this->databaseId = $this->customColumnType->getDatabaseId();
         $this->handler = $this->customColumnType->getHandler();
         $this->locale = $this->customColumnType->getLocale();
+        if ($this->customColumnType->getConfig() !== null) {
+            $this->setConfig($this->customColumnType->getConfig());
+        }
     }
 
     /**
@@ -136,7 +139,7 @@ class CustomColumn extends Category
     {
         [$query, $params] = $this->getQuery();
         $columns = 'count(*)';
-        $count = Database::countFilter($query, $columns, "", $params, $this->databaseId, $this->getConfig());
+        $count = $this->getDbContext()->countFilter($query, $columns, "", $params);
         return $this->getEntry($count);
     }
 
@@ -227,13 +230,12 @@ class CustomColumn extends Category
      *
      * @param int $customId the id of the customColumn
      * @param string|int|null $id the id of the chosen value
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return ?CustomColumn
      */
-    public static function createCustom($customId, $id, $database = null, $config = null)
+    public static function createCustom($customId, $id, $dbContext)
     {
-        $columnType = CustomColumnType::createByCustomID($customId, $database, $config);
+        $columnType = CustomColumnType::createByCustomID($customId, $dbContext);
 
         return $columnType->getCustom($id);
     }

@@ -15,6 +15,7 @@ use SebLucas\Cops\Calibre\CustomColumn;
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
@@ -50,11 +51,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(8);
+        $coltype = CustomColumnType::createByCustomID(8, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_01"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_01", $dbContext));
 
         $this->assertEquals(8, $coltype->customId);
         $this->assertEquals("custom_01", $coltype->columnTitle);
@@ -76,11 +78,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01b"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(16);
+        $coltype = CustomColumnType::createByCustomID(16, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_01b"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_01b", $dbContext));
 
         $this->assertEquals(16, $coltype->customId);
         $this->assertEquals("custom_01b", $coltype->columnTitle);
@@ -102,11 +105,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_02"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(6);
+        $coltype = CustomColumnType::createByCustomID(6, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_02"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_02", $dbContext));
 
         $this->assertEquals(6, $coltype->customId);
         $this->assertEquals("custom_02", $coltype->columnTitle);
@@ -122,7 +126,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Custom column example 02 (csv)", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
 
-        $custom = CustomColumn::createCustom(6, 3);
+        $custom = CustomColumn::createCustom(6, 3, $dbContext);
         $this->assertEquals("c", $custom->htmlvalue);
         [$query, $params] = $custom->getQuery();
         $expected = "where books_custom_column_6_link.book = books.id and books_custom_column_6_link.value = ? {1} order by books.sort";
@@ -130,7 +134,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals([3], $params);
 
         // handle case where we have several values, e.g. array of text for type 2 (csv)
-        $custom = CustomColumn::createCustom(6, "1,3");
+        $custom = CustomColumn::createCustom(6, "1,3", $dbContext);
         $this->assertEquals("a,c", $custom->htmlvalue);
         [$query, $params] = $custom->getQuery();
         $expected = "where books_custom_column_6_link.book = books.id and books.id in (select book from books_custom_column_6_link where value IN (?,?) group by book having count(*) = 2) {1} order by books.sort";
@@ -138,7 +142,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals([1, 3], $params);
 
         Config::set('show_not_set_filter', ['custom']);
-        $custom = CustomColumn::createCustom(6, null);
+        $custom = CustomColumn::createCustom(6, null, $dbContext);
         $this->assertEquals("Not Set", $custom->htmlvalue);
         [$query, $params] = $custom->getQuery();
         $expected = "where books.id not in (select book from books_custom_column_6_link) {1} order by books.sort";
@@ -152,11 +156,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_03"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(7);
+        $coltype = CustomColumnType::createByCustomID(7, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_03"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_03", $dbContext));
 
         $this->assertEquals(7, $coltype->customId);
         $this->assertEquals("custom_03", $coltype->columnTitle);
@@ -176,11 +181,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_04"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(4);
+        $coltype = CustomColumnType::createByCustomID(4, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_04"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_04", $dbContext));
 
         $this->assertEquals(4, $coltype->customId);
         $this->assertEquals("custom_04", $coltype->columnTitle);
@@ -203,11 +209,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_05"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(5);
+        $coltype = CustomColumnType::createByCustomID(5, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_05"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_05", $dbContext));
 
         $this->assertEquals(5, $coltype->customId);
         $this->assertEquals("custom_05", $coltype->columnTitle);
@@ -230,11 +237,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_06"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(12);
+        $coltype = CustomColumnType::createByCustomID(12, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_06"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_06", $dbContext));
 
         $this->assertEquals(12, $coltype->customId);
         $this->assertEquals("custom_06", $coltype->columnTitle);
@@ -256,11 +264,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_07"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(14);
+        $coltype = CustomColumnType::createByCustomID(14, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_07"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_07", $dbContext));
 
         $this->assertEquals(14, $coltype->customId);
         $this->assertEquals("custom_07", $coltype->columnTitle);
@@ -282,11 +291,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_08"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(10);
+        $coltype = CustomColumnType::createByCustomID(10, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_08"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_08", $dbContext));
 
         $this->assertEquals(10, $coltype->customId);
         $this->assertEquals("custom_08", $coltype->columnTitle);
@@ -308,11 +318,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_09"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(9);
+        $coltype = CustomColumnType::createByCustomID(9, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_09"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_09", $dbContext));
 
         $this->assertEquals(9, $coltype->customId);
         $this->assertEquals("custom_09", $coltype->columnTitle);
@@ -334,11 +345,12 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_10"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(11);
+        $coltype = CustomColumnType::createByCustomID(11, $dbContext);
         $coltype->setHandler(self::$handler);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_10"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_10", $dbContext));
 
         $this->assertEquals(11, $coltype->customId);
         $this->assertEquals("custom_10", $coltype->columnTitle);
@@ -360,10 +372,11 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_11"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(15);
+        $coltype = CustomColumnType::createByCustomID(15, $dbContext);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_11"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_11", $dbContext));
 
         $this->assertEquals(null, $coltype);
     }
@@ -373,10 +386,11 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_12"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByCustomID(13);
+        $coltype = CustomColumnType::createByCustomID(13, $dbContext);
 
-        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_12"));
+        $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_12", $dbContext));
 
         $this->assertEquals(null, $coltype);
     }
@@ -386,10 +400,11 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_12"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
         $catch = false;
         try {
-            CustomColumnType::createByCustomID(999);
+            CustomColumnType::createByCustomID(999, $dbContext);
         } catch (Exception) {
             $catch = true;
         }
@@ -402,8 +417,9 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_12"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $coltype = CustomColumnType::createByLookup("__ERR__");
+        $coltype = CustomColumnType::createByLookup("__ERR__", $dbContext);
 
         $this->assertEquals(null, $coltype);
     }
@@ -434,6 +450,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -445,7 +462,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("text", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(8)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(8, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -455,6 +472,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_02"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -466,7 +484,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(9, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("csv", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(6)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(6, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -488,6 +506,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_04"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -499,7 +518,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("series", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(4)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(4, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -509,6 +528,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_05"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -520,7 +540,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(4, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("enumeration", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(5)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(5, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -530,6 +550,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_06"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -541,7 +562,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(5, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("datetime", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(12)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(12, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -551,6 +572,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_07"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -562,7 +584,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(6, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("float", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(14)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(14, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -572,6 +594,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_08"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -583,7 +606,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(4, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("int", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(10)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(10, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -593,6 +616,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_09"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -604,7 +628,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(6, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("rating", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(9)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(9, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -614,6 +638,7 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_10"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
         $request = self::$handler::request([]);
 
         $currentPage = PageId::getPage(PageId::INDEX, $request);
@@ -625,7 +650,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
         $this->assertEquals("bool", $currentPage->entryArray[5]->contentType);
         $currentPage->entryArray[5]->getNavLink();
-        $countEntry = CustomColumnType::createByCustomID(11)->getCount();
+        $countEntry = CustomColumnType::createByCustomID(11, $dbContext)->getCount();
         $countEntry->getNavLink();
         $this->assertEquals($currentPage->entryArray[5], $countEntry);
     }
@@ -909,7 +934,8 @@ class CustomColumnTest extends TestCase
     public function testAllCustomColumns(): void
     {
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
-        $columns = CustomColumnType::getAllCustomColumns();
+        $dbContext = new DatabaseContext();
+        $columns = CustomColumnType::getAllCustomColumns($dbContext);
 
         $expected = [
             'id' => 8,
@@ -1017,83 +1043,85 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
+
         $request = self::$handler::request([]);
         $booklist = new BookList($request);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_01")->getCustom("1")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_01", $dbContext)->getCustom("1")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(5, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_01"], true);
         $this->assertEquals("sample_text", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_02")->getCustom("3")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_02", $dbContext)->getCustom("3")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(4, $entryArray);
         // handle case where we have several values, e.g. array of text for type 2 (csv)
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_02"], true);
         $this->assertEquals("a,c", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_03")->getCustom("3")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_03", $dbContext)->getCustom("3")->getQuery();
         [$entryArray, $totalNumber] =  $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(1, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_03"], true);
         $this->assertEquals("<div><p>simple test no formatting</p></div>", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_04")->getCustom("4")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_04", $dbContext)->getCustom("4")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(2, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_04"], true);
         $this->assertEquals("GroupA [1]", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_05")->getCustom("6")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_05", $dbContext)->getCustom("6")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(6, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_05"], true);
         $this->assertEquals("val05", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_06")->getCustom("2016-04-24")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_06", $dbContext)->getCustom("2016-04-24")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(6, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_06"], true);
         $this->assertEquals("2016-04-24", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_07")->getCustom("11.0")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_07", $dbContext)->getCustom("11.0")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(2, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_07"], true);
         $this->assertEquals("11", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_08")->getCustom("-2")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_08", $dbContext)->getCustom("-2")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(3, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_08"], true);
         $this->assertEquals("-2", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_09")->getCustom("0")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_09", $dbContext)->getCustom("0")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(12, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_09"], true);
         $this->assertEquals("Not Set", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_09")->getCustom("2")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_09", $dbContext)->getCustom("2")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(4, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_09"], true);
         $this->assertEquals("1 Star", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("-1")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_10", $dbContext)->getCustom("-1")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(9, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
         $this->assertEquals("Not Set", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("0")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_10", $dbContext)->getCustom("0")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(6, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
         $this->assertEquals("No", $custom[0]['htmlvalue']);
 
-        [$query, $params] = CustomColumnType::createByLookup("custom_10")->getCustom("1")->getQuery();
+        [$query, $params] = CustomColumnType::createByLookup("custom_10", $dbContext)->getCustom("1")->getQuery();
         [$entryArray, $totalNumber] = $booklist->getEntryArray($query, $params, 1);
         $this->assertCount(7, $entryArray);
         $custom = $entryArray[0]->book->getCustomColumnValues(["custom_10"], true);
@@ -1105,46 +1133,47 @@ class CustomColumnTest extends TestCase
         Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithCustomColumns/");
         Config::set('calibre_custom_column', ["custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11"]);
         Database::clearDb();
+        $dbContext = new DatabaseContext();
 
-        $custom = CustomColumnType::createByLookup("custom_01")->getCustom("1");
+        $custom = CustomColumnType::createByLookup("custom_01", $dbContext)->getCustom("1");
         $this->assertEquals($custom->customColumnType->getQuery("1"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_02")->getCustom("3");
+        $custom = CustomColumnType::createByLookup("custom_02", $dbContext)->getCustom("3");
         $this->assertEquals($custom->customColumnType->getQuery("3"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_03")->getCustom("3");
+        $custom = CustomColumnType::createByLookup("custom_03", $dbContext)->getCustom("3");
         $this->assertEquals($custom->customColumnType->getQuery("3"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_04")->getCustom("4");
+        $custom = CustomColumnType::createByLookup("custom_04", $dbContext)->getCustom("4");
         $this->assertEquals($custom->customColumnType->getQuery("4"), $custom->getQuery());
         [$query, $params] = $custom->getQuery();
         $this->assertStringEndsWith("_link.extra", $query);
 
-        $custom = CustomColumnType::createByLookup("custom_05")->getCustom("6");
+        $custom = CustomColumnType::createByLookup("custom_05", $dbContext)->getCustom("6");
         $this->assertEquals($custom->customColumnType->getQuery("6"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_06")->getCustom("2016-04-24");
+        $custom = CustomColumnType::createByLookup("custom_06", $dbContext)->getCustom("2016-04-24");
         $this->assertEquals($custom->customColumnType->getQuery("2016-04-24"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_07")->getCustom("11.0");
+        $custom = CustomColumnType::createByLookup("custom_07", $dbContext)->getCustom("11.0");
         $this->assertEquals($custom->customColumnType->getQuery("11.0"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_08")->getCustom("-2");
+        $custom = CustomColumnType::createByLookup("custom_08", $dbContext)->getCustom("-2");
         $this->assertEquals($custom->customColumnType->getQuery("-2"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_09")->getCustom("0");
+        $custom = CustomColumnType::createByLookup("custom_09", $dbContext)->getCustom("0");
         $this->assertEquals($custom->customColumnType->getQuery("0"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_09")->getCustom("1");
+        $custom = CustomColumnType::createByLookup("custom_09", $dbContext)->getCustom("1");
         $this->assertEquals($custom->customColumnType->getQuery("1"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_10")->getCustom("-1");
+        $custom = CustomColumnType::createByLookup("custom_10", $dbContext)->getCustom("-1");
         $this->assertEquals($custom->customColumnType->getQuery("-1"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_10")->getCustom("0");
+        $custom = CustomColumnType::createByLookup("custom_10", $dbContext)->getCustom("0");
         $this->assertEquals($custom->customColumnType->getQuery("0"), $custom->getQuery());
 
-        $custom = CustomColumnType::createByLookup("custom_10")->getCustom("1");
+        $custom = CustomColumnType::createByLookup("custom_10", $dbContext)->getCustom("1");
         $this->assertEquals($custom->customColumnType->getQuery("1"), $custom->getQuery());
     }
 

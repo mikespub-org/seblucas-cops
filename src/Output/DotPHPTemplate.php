@@ -32,7 +32,7 @@ class DotPHPTemplate extends BaseRenderer
      */
     public function setRequest($request)
     {
-        $this->request = $request;
+        parent::setRequest($request);
         $this->theme = $request->template();
         $this->serverSide = $request->render() ? true : false;
     }

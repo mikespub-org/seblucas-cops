@@ -123,7 +123,7 @@ class CustomColumnTypeFloat extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }

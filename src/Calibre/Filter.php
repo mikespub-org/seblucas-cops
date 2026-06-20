@@ -20,6 +20,7 @@ use UnexpectedValueException;
 class Filter
 {
     use HasConfigTrait;
+    use HasDatabaseTrait;
 
     public const PAGE_ID = PageId::FILTER_ID;
     public const PAGE_DETAIL = PageId::FILTER;
@@ -55,8 +56,6 @@ class Filter
     protected $params = [];
     protected string $parentTable = "books";
     protected string $queryString = "";
-    /** @var ?int */
-    protected $databaseId;
 
     /**
      * Summary of __construct
@@ -269,8 +268,9 @@ class Filter
             [$libraryId, $slug] = explode('.', $libraryId);
         }
         $locale = $this->request->locale();
+        $dbContext = $this->getDbContext();
         /** @var VirtualLibrary $instance */
-        $instance = VirtualLibrary::getInstanceById($libraryId, $this->databaseId, $locale);
+        $instance = VirtualLibrary::getInstanceById($libraryId, $dbContext, $locale);
         if (empty($instance->id)) {
             return;
         }
@@ -293,7 +293,7 @@ class Filter
             if (isset($match['quoted']) && str_starts_with($match['quoted'], '=')) {
                 $value = substr($match['quoted'], 1);
                 $className = self::SEARCH_FIELDS[$match['attr']];
-                $instance = $className::getInstanceByName($value, $this->databaseId, $locale);
+                $instance = $className::getInstanceByName($value, $dbContext, $locale);
                 if (empty($instance)) {
                     throw new UnexpectedValueException('Invalid search criteria: ' . $match['attr'] . ':' . $match['value']);
                 }
@@ -324,6 +324,7 @@ class Filter
         $query = [];
         $params = [];
         $locale = $this->request->locale();
+        $dbContext = $this->getDbContext();
         foreach ($filter as $field => $value) {
             if (empty($value)) {
                 continue;
@@ -344,7 +345,7 @@ class Filter
                 $exists = false;
                 $value = substr($value, 1);
             }
-            $instance = $className::getInstanceByName($value, $this->databaseId, $locale);
+            $instance = $className::getInstanceByName($value, $dbContext, $locale);
             if (empty($instance)) {
                 throw new UnexpectedValueException('Invalid filter criteria: ' . $field . ':' . $value);
             }
@@ -505,11 +506,12 @@ class Filter
      */
     public function addCustomIdArrayFilters($customIdArray)
     {
+        $dbContext = $this->getDbContext();
         foreach ($customIdArray as $customId => $valueId) {
             if (!preg_match('/^\d+$/', $customId)) {
                 continue;
             }
-            $customType = CustomColumnType::createByCustomID($customId, $this->databaseId, $this->getConfig());
+            $customType = CustomColumnType::createByCustomID($customId, $dbContext);
             $this->addCustomIdFilter($customType, $valueId);
         }
     }
@@ -628,6 +630,7 @@ class Filter
         $handler = $request->getHandler();
         $locale = $request->locale();
         $libraryId = $request->getVirtualLibrary();
+        $dbContext = new DatabaseContext($database, $request->getConfig());
         $entryArray = [];
         foreach (self::URL_PARAMS as $paramName => $className) {
             if ($className == VirtualLibrary::class) {
@@ -651,13 +654,14 @@ class Filter
                 }
                 $booklist = new BookList($req, $database);
                 $booklist->setLocale($locale);
+                $booklist->setDbContext($dbContext);
                 $groupFunc = ($paramName == 'f') ? 'getCountByFirstLetter' : 'getCountByPubYear';
                 $entryArray = array_merge($entryArray, $booklist->$groupFunc());
                 continue;
             }
             if ($className == CustomColumn::class) {
                 foreach ($paramValue as $customId => $valueId) {
-                    $custom = CustomColumn::createCustom($customId, $valueId, $database, $request->getConfig());
+                    $custom = CustomColumn::createCustom($customId, $valueId, $dbContext);
                     $custom->setHandler($handler);
                     $custom->setLocale($locale);
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);

@@ -77,20 +77,19 @@ class Language extends Base
     /**
      * Summary of getLanguagesByBookId
      * @param int $bookId
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return string
      */
-    public static function getLanguagesByBookId($bookId, $database = null, $locale = null, $config = null)
+    public static function getLanguagesByBookId($bookId, $dbContext, $locale = null)
     {
         $lang = [];
-        $query = 'select ' . self::getInstanceColumns($database, $config) . '
+        $query = 'select ' . self::getInstanceColumns($dbContext) . '
             from books_languages_link, languages
             where books_languages_link.lang_code = languages.id
             and book = ?
             order by item_order';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         while ($post = $result->fetchObject()) {
             array_push($lang, self::getLanguageString($post->name, $locale));
         }

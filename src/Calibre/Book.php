@@ -33,6 +33,7 @@ class Book
     use HasRouteTrait;
     use HasLocaleTrait;
     use HasConfigTrait;
+    use HasDatabaseTrait;
 
     public const PAGE_ID = PageId::ALL_BOOKS_ID;
     public const PAGE_ALL = PageId::ALL_BOOKS;
@@ -71,18 +72,12 @@ class Book
     public $uuid;
     /** @var bool */
     public $hasCover;
-    /** @var string */
-    public $relativePath;
     /** @var ?float */
     public $seriesIndex;
     /** @var string */
     public $comment;
     /** @var ?int */
     public $rating;
-    /** @var ?int */
-    protected $databaseId = null;
-    /** @var ?DatabaseContext */
-    protected ?DatabaseContext $databaseContext = null;
     /** @var ?array<Data> */
     public $datas = null;
     /** @var ?array<string> */
@@ -125,8 +120,6 @@ class Book
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp ?? '');
         $this->pubdate = $line->pubdate ?? '';
-        //$this->path = Database::getDbDirectory($database, $config) . $line->path;
-        //$this->relativePath = $line->path;
         // -DC- Init relative or full path
         if (!empty($this->config('calibre_external_storage', null))) {
             $this->setExternalPath($line->path);
@@ -145,24 +138,6 @@ class Book
                 $this->hasCover = false;
             }
         }
-    }
-
-    /**
-     * Summary of getDatabaseId
-     * @return ?int
-     */
-    public function getDatabaseId()
-    {
-        return $this->databaseId;
-    }
-
-    /**
-     * Summary of getDatabaseContext
-     * @return DatabaseContext
-     */
-    public function getDatabaseContext()
-    {
-        return $this->databaseContext ??= new DatabaseContext($this->databaseId, $this->config);
     }
 
     /**
@@ -244,7 +219,7 @@ class Book
     public function getAuthors($n = -1, $sort = null)
     {
         if (is_null($this->authors)) {
-            $this->authors = Author::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
+            $this->authors = Author::getInstancesByBookId($this->id, $this->getDbContext());
         }
         return $this->authors;
     }
@@ -274,7 +249,7 @@ class Book
     public function getPublisher()
     {
         if (is_null($this->publisher)) {
-            $this->publisher = Publisher::getInstanceByBookId($this->id, $this->databaseId, $this->getConfig());
+            $this->publisher = Publisher::getInstanceByBookId($this->id, $this->getDbContext());
         }
         return $this->publisher;
     }
@@ -285,7 +260,7 @@ class Book
     public function getSerie()
     {
         if (is_null($this->serie)) {
-            $this->serie = Serie::getInstanceByBookId($this->id, $this->databaseId, $this->getConfig());
+            $this->serie = Serie::getInstanceByBookId($this->id, $this->getDbContext());
         }
         return $this->serie;
     }
@@ -298,7 +273,7 @@ class Book
     public function getLanguages($n = -1, $sort = null)
     {
         if (is_null($this->languages)) {
-            $this->languages = Language::getLanguagesByBookId($this->id, $this->databaseId, $this->locale, $this->getConfig());
+            $this->languages = Language::getLanguagesByBookId($this->id, $this->getDbContext(), $this->locale);
         }
         return $this->languages;
     }
@@ -311,7 +286,7 @@ class Book
     public function getTags($n = -1, $sort = null)
     {
         if (is_null($this->tags)) {
-            $this->tags = Tag::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
+            $this->tags = Tag::getInstancesByBookId($this->id, $this->getDbContext());
         }
         return $this->tags;
     }
@@ -331,7 +306,7 @@ class Book
     public function getIdentifiers()
     {
         if (is_null($this->identifiers)) {
-            $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
+            $this->identifiers = Identifier::getInstancesByBookId($this->id, $this->getDbContext());
         }
         return $this->identifiers;
     }
@@ -342,7 +317,7 @@ class Book
     public function getFormats()
     {
         if (is_null($this->formats)) {
-            $this->formats = Format::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
+            $this->formats = Format::getInstancesByBookId($this->id, $this->getDbContext());
         }
         return $this->formats;
     }
@@ -353,7 +328,7 @@ class Book
     public function getAnnotations()
     {
         if (is_null($this->annotations)) {
-            $this->annotations = Annotation::getInstancesByBookId($this->id, $this->databaseId, $this->getConfig());
+            $this->annotations = Annotation::getInstancesByBookId($this->id, $this->getDbContext());
         }
         return $this->annotations;
     }
@@ -366,10 +341,10 @@ class Book
         if (is_null($this->pages)) {
             $this->pages = 0;
             // add pages for database user_version 27 = Calibre version 9.0.0 and later (Jan 30, 2026)
-            if ($this->getDatabaseContext()->getUserVersion() > 26) {
+            if ($this->getDbContext()->getUserVersion() > 26) {
                 // @see https://manual.calibre-ebook.com/_modules/calibre/db/cache.html#Cache.get_pages
                 $query = 'select pages from books_pages_link where book = ? and pages > 0 limit 1';
-                $result = $this->getDatabaseContext()->query($query, [$this->id]);
+                $result = $this->getDbContext()->query($query, [$this->id]);
                 if ($post = $result->fetchObject()) {
                     $this->pages = (int) $post->pages;
                 }
@@ -440,7 +415,7 @@ class Book
     {
         $filePath = $this->path . '/' . self::DATA_DIR_NAME . '/' . $fileName;
         $mimetype = Response::getMimeType($filePath) ?? 'application/octet-stream';
-        if ($this->getDatabaseContext()->useAbsolutePath()) {
+        if ($this->getDbContext()->useAbsolutePath()) {
             $params = ['id' => $this->id, 'db' => $this->databaseId];
             $params['db'] ??= 0;
             $params['file'] = $fileName;
@@ -602,7 +577,7 @@ class Book
     public function setLocalPath($path)
     {
         if (!str_starts_with($path, '/')) {
-            $this->path = $this->getDatabaseContext()->getDbDirectory() . $path;
+            $this->path = $this->getDbContext()->getDbDirectory() . $path;
         } else {
             $this->path = $path;
         }
@@ -617,7 +592,7 @@ class Book
     public function isLocal($extension)
     {
         if (!empty($this->config('download_filename'))
-            || Database::useAbsolutePath($this->databaseId, $this->getConfig())
+            || $this->getDbContext()->useAbsolutePath()
             || ($extension == "epub" && $this->config('update_epub-metadata'))) {
             return false;
         }
@@ -712,10 +687,9 @@ class Book
         $result = [];
         $database = $this->databaseId;
 
-        $columns = CustomColumnType::checkCustomColumnList($columns, $database, $this->getConfig());
-
+        $columns = CustomColumnType::checkCustomColumnList($columns, $this->getDbContext());
         foreach ($columns as $lookup) {
-            $col = CustomColumnType::createByLookup($lookup, $database, $this->getConfig());
+            $col = CustomColumnType::createByLookup($lookup, $this->getDbContext());
             if (!is_null($col)) {
                 $col->setLocale($this->getLocale());
                 $cust = $col->getCustomByBook($this);
@@ -843,17 +817,18 @@ class Book
     /**
      * Summary of getBookById
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext - allow null here for tests
      * @return ?Book
      */
-    public static function getBookById($bookId, $database = null, $config = null)
+    public static function getBookById($bookId, $dbContext = null)
     {
+        $dbContext ??= new DatabaseContext();
+        $database = $dbContext->getDatabase();
+        $config = $dbContext->getConfig();
         $query = 'select ' . self::getBookColumns($config) . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?';
-        $databaseContext = new DatabaseContext($database, $config);
-        $result = $databaseContext->query($query, [$bookId]);
+        $result = $dbContext->query($query, [$bookId]);
         if ($post = $result->fetchObject()) {
             $book = new Book($post, $database, $config);
             return $book;
@@ -864,12 +839,13 @@ where books.id = ?';
     /**
      * Summary of getBookByDataId
      * @param int $dataId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return ?Book
      */
-    public static function getBookByDataId($dataId, $database = null, $config = null)
+    public static function getBookByDataId($dataId, $dbContext)
     {
+        $database = $dbContext->getDatabase();
+        $config = $dbContext->getConfig();
         $query = 'select ' . self::getBookColumns($config) . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?';
@@ -879,8 +855,7 @@ where data.book = books.id and data.id = ?';
             . implode("','", $ignored_formats)
             . "')";
         }
-        $databaseContext = new DatabaseContext($database, $config);
-        $result = $databaseContext->query($query, [$dataId]);
+        $result = $dbContext->query($query, [$dataId]);
         if ($post = $result->fetchObject()) {
             $book = new Book($post, $database, $config);
             $data = new Data($post, $book);
@@ -894,11 +869,12 @@ where data.book = books.id and data.id = ?';
     /**
      * Summary of getDataByBook
      * @param Book $book
-     * @param ?RequestConfig $config
      * @return array<Data>
      */
-    public static function getDataByBook($book, $config = null)
+    public static function getDataByBook($book)
     {
+        $config = $book->getConfig();
+        $dbContext = $book->getDbContext();
         $out = [];
 
         $sql = 'select id, format, name, uncompressed_size as size from data where book = ?';
@@ -910,9 +886,7 @@ where data.book = books.id and data.id = ?';
             . "')";
         }
 
-        $database = $book->getDatabaseId();
-        $databaseContext = new DatabaseContext($database, $config);
-        $result = $databaseContext->query($sql, [$book->id]);
+        $result = $dbContext->query($sql, [$book->id]);
 
         while ($post = $result->fetchObject()) {
             array_push($out, new Data($post, $book));
@@ -923,13 +897,13 @@ where data.book = books.id and data.id = ?';
     /**
      * Summary of getBookByFolderPath
      * @param string $path
-     * @param ?int $database
+     * @param DatabaseContext $dbContext - not really used here
      * @param ?string $locale
      * @return Book
      */
-    public static function getBookByFolderPath($path, $database = null, $locale = null)
+    public static function getBookByFolderPath($path, $dbContext, $locale = null)
     {
-        return Folder::getBookByFolderPath($path, $database, $locale);
+        return Folder::getBookByFolderPath($path, $dbContext, $locale);
     }
 
     /**

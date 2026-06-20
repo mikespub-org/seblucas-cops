@@ -16,9 +16,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Input\RequestConfig;
-use SebLucas\Cops\Input\RequestContext;
 
 class DatabaseContextTest extends TestCase
 {
@@ -31,37 +29,12 @@ class DatabaseContextTest extends TestCase
     public function testDatabaseContextDelegatesHelpers(): void
     {
         $config = new RequestConfig();
-        $context = new DatabaseContext(null, $config);
+        $dbContext = new DatabaseContext(null, $config);
 
-        $this->assertSame($config, $context->getConfig());
-        $this->assertFalse($context->isMultipleDatabaseEnabled());
-        $this->assertSame(['' => dirname(__DIR__) . "/BaseWithSomeBooks/"], $context->getDbList());
-        $this->assertSame(dirname(__DIR__) . "/BaseWithSomeBooks/metadata.db", $context->getDbFileName());
-        $this->assertSame('', $context->getDbName());
-    }
-
-    public function testRequestContextCachesDatabaseContextByDatabase(): void
-    {
-        $request = new Request();
-        $context = new RequestContext($request);
-
-        $databaseContextA = $context->getDatabaseContext(0);
-        $databaseContextB = $context->getDatabaseContext(0);
-        $databaseContextC = $context->getDatabaseContext(1);
-
-        $this->assertSame($databaseContextA, $databaseContextB);
-        $this->assertNotSame($databaseContextA, $databaseContextC);
-    }
-
-    public function testRequestContextInvalidatesDatabaseContextAfterUpdateConfig(): void
-    {
-        $request = new Request();
-        $context = new RequestContext($request);
-
-        $databaseContextA = $context->getDatabaseContext(0);
-        $context->updateConfig();
-        $databaseContextB = $context->getDatabaseContext(0);
-
-        $this->assertNotSame($databaseContextA, $databaseContextB);
+        $this->assertSame($config, $dbContext->getConfig());
+        $this->assertFalse($dbContext->isMultipleDatabaseEnabled());
+        $this->assertSame(['' => dirname(__DIR__) . "/BaseWithSomeBooks/"], $dbContext->getDbList());
+        $this->assertSame(dirname(__DIR__) . "/BaseWithSomeBooks/metadata.db", $dbContext->getDbFileName());
+        $this->assertSame('', $dbContext->getDbName());
     }
 }

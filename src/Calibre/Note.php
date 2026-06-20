@@ -12,12 +12,15 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
+use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Note
 {
     use HasRouteTrait;
+    use HasConfigTrait;
+    use HasDatabaseTrait;
 
     public const PAGE_ID = PageId::ALL_NOTES_ID;
     public const PAGE_ALL = PageId::ALL_NOTES;
@@ -40,7 +43,6 @@ class Note
     public string $colname;
     public string $doc;
     public float $mtime;
-    public ?int $databaseId = null;
 
     /**
      * Summary of __construct
@@ -82,12 +84,12 @@ class Note
 
     /**
      * Summary of getResources
-     * @param ?RequestConfig $config
      * @return array<mixed>
      */
-    public function getResources($config = null)
+    public function getResources()
     {
-        $notesDb = Database::getNotesDb($this->databaseId, $config);
+        $dbContext = $this->getDbContext();
+        $notesDb = $dbContext->getNotesDb();
         if (is_null($notesDb)) {
             return [];
         }
@@ -104,13 +106,12 @@ class Note
 
     /**
      * Summary of getCountByType
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<mixed>
      */
-    public static function getCountByType($database = null, $config = null)
+    public static function getCountByType($dbContext)
     {
-        $notesDb = Database::getNotesDb($database, $config);
+        $notesDb = $dbContext->getNotesDb();
         if (is_null($notesDb)) {
             return [];
         }
@@ -127,16 +128,15 @@ class Note
     /**
      * Summary of getEntriesByType
      * @param string $type
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<mixed>
      */
-    public static function getEntriesByType($type, $database = null, $config = null)
+    public static function getEntriesByType($type, $dbContext)
     {
         if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return [];
         }
-        $notesDb = Database::getNotesDb($database, $config);
+        $notesDb = $dbContext->getNotesDb();
         if (is_null($notesDb)) {
             return [];
         }
@@ -155,7 +155,7 @@ class Note
             return $entries;
         }
         $query = "select id, name from {$type} where id in (" . str_repeat('?,', count($itemIdList) - 1) . '?)';
-        $result = Database::query($query, $itemIdList, $database, $config);
+        $result = $dbContext->query($query, $itemIdList);
         while ($post = $result->fetchObject()) {
             if (array_key_exists($post->id, $entries)) {
                 $entries[$post->id]["title"] = $post->name;
@@ -170,16 +170,15 @@ class Note
      * Summary of getInstanceByTypeItem
      * @param string $type
      * @param int $item
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getInstanceByTypeItem($type, $item, $database = null, $config = null)
+    public static function getInstanceByTypeItem($type, $item, $dbContext)
     {
         if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return null;
         }
-        $notesDb = Database::getNotesDb($database, $config);
+        $notesDb = $dbContext->getNotesDb();
         if (is_null($notesDb)) {
             return null;
         }
@@ -188,7 +187,7 @@ class Note
         $result = $notesDb->prepare($query);
         $result->execute($params);
         if ($post = $result->fetchObject()) {
-            return new self($post, $database);
+            return new self($post, $dbContext->getDatabase());
         }
         return null;
     }
@@ -197,24 +196,23 @@ class Note
      * Summary of getInstanceByTypeItem
      * @param string $type
      * @param string $name
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getInstanceByTypeName($type, $name, $database = null, $config = null)
+    public static function getInstanceByTypeName($type, $name, $dbContext)
     {
         if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
             return null;
         }
-        $notesDb = Database::getNotesDb($database, $config);
+        $notesDb = $dbContext->getNotesDb();
         if (is_null($notesDb)) {
             return null;
         }
         $query = "select id, name from {$type} where name = ?";
-        $result = Database::query($query, [$name], $database, $config);
+        $result = $dbContext->query($query, [$name]);
         if ($post = $result->fetchObject()) {
             $item = (int) $post->id;
-            return self::getInstanceByTypeItem($type, $item, $database, $config);
+            return self::getInstanceByTypeItem($type, $item, $dbContext);
         }
         return null;
     }

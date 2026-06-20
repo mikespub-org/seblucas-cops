@@ -292,13 +292,12 @@ class Metadata extends EPubMetadata
     /**
      * Summary of getInstanceByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return Metadata|false
      */
-    public static function getInstanceByBookId($bookId, $database = null, $config = null)
+    public static function getInstanceByBookId($bookId, $dbContext)
     {
-        $book = Book::getBookById($bookId, $database, $config);
+        $book = Book::getBookById($bookId, $dbContext);
         if (empty($book)) {
             return false;
         }

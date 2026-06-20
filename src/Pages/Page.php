@@ -12,6 +12,8 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Calibre\HasDatabaseTrait;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasConfigTrait;
@@ -27,6 +29,7 @@ class Page
     use HasRouteTrait;
     use HasLocaleTrait;
     use HasConfigTrait;
+    use HasDatabaseTrait;
 
     /** @var string */
     public $title;
@@ -68,8 +71,6 @@ class Page
     protected $numberPerPage = -1;
     /** @var array<string> */
     protected $ignoredCategories = [];
-    /** @var ?int */
-    protected $databaseId = null;
 
     /**
      * Summary of getPage
@@ -144,15 +145,6 @@ class Page
     public function getIgnoredCategories()
     {
         return $this->ignoredCategories;
-    }
-
-    /**
-     * Summary of getDatabaseId
-     * @return ?int
-     */
-    public function getDatabaseId()
-    {
-        return $this->databaseId;
     }
 
     /**

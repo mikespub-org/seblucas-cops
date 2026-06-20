@@ -93,7 +93,7 @@ class CustomColumnTypeSeries extends CustomColumnType
     public function getCustom($id)
     {
         $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
-        $result = Database::query($query, [$id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
@@ -141,7 +141,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value . " [" . $post->extra . "]", $this);
         }

@@ -869,12 +869,11 @@ class JsonRenderer extends BaseRenderer
      */
     public function setRequest($request)
     {
-        $this->request = $request;
+        parent::setRequest($request);
         $this->database = $request->database();
         // Adapt handler based on $request e.g. for rest api
         $this->setHandler($request->getHandler());
-        $this->setLocale($request->locale());
-        // Use the configured home page if needed
+        // Use the configured home page if needed - call after parent::setRequest()
         $this->homepage = PageId::getHomePage($this->getConfig());
         $this->page = $request->get("page", $this->homepage);
     }

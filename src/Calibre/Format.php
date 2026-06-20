@@ -63,28 +63,27 @@ class Format extends Base
 
     /**
      * Summary of getCount
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null, $config = null)
+    public static function getCount($dbContext, $handler, $locale = null)
     {
-        $count = Database::querySingle('select count(distinct format) from ' . static::SQL_TABLE, $database, $config);
-        return static::getCountEntry($count, $database, null, $handler, [], $locale);
+        $count = $dbContext->querySingle('select count(distinct format) from ' . static::SQL_TABLE);
+        return static::getCountEntry($count, $dbContext->getDatabase(), null, $handler, [], $locale);
     }
 
     /**
      * Summary of getInstanceById
      * @param string|int|null $id used for the format here
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext - allow null here for tests
      * @param ?string $locale
-     * @param ?RequestConfig $config - not used here
      * @return self
      */
-    public static function getInstanceById($id, $database = null, $locale = null, $config = null)
+    public static function getInstanceById($id, $dbContext = null, $locale = null)
     {
+        $database = $dbContext?->getDatabase() ?? null;
         if (!empty($id)) {
             return new Format((object) ['id' => $id, 'name' => $id], $database);
         }
@@ -97,14 +96,13 @@ class Format extends Base
     /**
      * Summary of getInstanceByName
      * @param string|int|null $name used for the format here
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return self
      */
-    public static function getInstanceByName($name, $database = null, $locale = null, $config = null)
+    public static function getInstanceByName($name, $dbContext, $locale = null)
     {
-        return self::getInstanceById($name, $database, $locale, $config);
+        return self::getInstanceById($name, $dbContext, $locale);
     }
 
     /**
@@ -119,22 +117,21 @@ class Format extends Base
     /**
      * Summary of getInstancesByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<Format>
      */
-    public static function getInstancesByBookId($bookId, $database = null, $config = null)
+    public static function getInstancesByBookId($bookId, $dbContext)
     {
         $formats = [];
 
         // get formats here, not actual data
-        $query = 'select ' . self::getInstanceColumns($database, $config) . '
+        $query = 'select ' . self::getInstanceColumns($dbContext) . '
             from data
             where data.book = ?
             order by data.format';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         while ($post = $result->fetchObject()) {
-            array_push($formats, new Format($post, $database));
+            array_push($formats, new Format($post, $dbContext->getDatabase()));
         }
         return $formats;
     }

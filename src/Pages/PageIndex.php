@@ -37,7 +37,7 @@ class PageIndex extends Page
      */
     public function initializeContent()
     {
-        if (Database::noDatabaseSelected($this->databaseId, $this->getConfig())) {
+        if ($this->getDbContext()->noDatabaseSelected()) {
             $this->getDatabaseEntries();
         } elseif ($this->request->hasFilter() || !empty($this->config('database_filter'))) {
             $this->getFilteredEntries();
@@ -132,9 +132,9 @@ class PageIndex extends Page
         }
         // @todo apply filter?
         // for multi-database setup, not all databases may have all custom columns - see issue #89
-        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId(), $this->getConfig());
+        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDbContext());
         foreach ($customColumnList as $lookup) {
-            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), $this->getConfig(), false);
+            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDbContext(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
                 $customColumn->setLocale($this->locale);
@@ -142,7 +142,7 @@ class PageIndex extends Page
             }
         }
         if (!empty($this->config('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
-            $library = VirtualLibrary::getCount($this->databaseId, $this->handler, $this->locale, $this->getConfig());
+            $library = VirtualLibrary::getCount($this->getDbContext(), $this->handler, $this->locale);
             if (!is_null($library)) {
                 array_push($this->entryArray, $library);
             }
@@ -157,8 +157,8 @@ class PageIndex extends Page
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 
-        if (Database::isMultipleDatabaseEnabled($this->getConfig())) {
-            $this->title =  Database::getDbName($this->getDatabaseId(), $this->getConfig());
+        if ($this->getDbContext()->isMultipleDatabaseEnabled()) {
+            $this->title =  $this->getDbContext()->getDbName();
         }
     }
 
@@ -208,9 +208,9 @@ class PageIndex extends Page
             $this->addCountEntry(Identifier::class);
         }
         // for multi-database setup, not all databases may have all custom columns - see issue #89
-        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDatabaseId(), $this->getConfig());
+        $customColumnList = CustomColumnType::checkCustomColumnList($this->config('calibre_custom_column'), $this->getDbContext());
         foreach ($customColumnList as $lookup) {
-            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDatabaseId(), $this->getConfig(), false);
+            $customColumn = CustomColumnType::createByLookup($lookup, $this->getDbContext(), false);
             if (!is_null($customColumn) && $customColumn->isSearchable()) {
                 $customColumn->setHandler($this->handler);
                 $customColumn->setLocale($this->locale);
@@ -230,8 +230,8 @@ class PageIndex extends Page
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 
-        if (Database::isMultipleDatabaseEnabled($this->getConfig())) {
-            $this->title =  Database::getDbName($this->getDatabaseId(), $this->getConfig());
+        if ($this->getDbContext()->isMultipleDatabaseEnabled()) {
+            $this->title =  $this->getDbContext()->getDbName();
         }
     }
 
@@ -242,7 +242,7 @@ class PageIndex extends Page
      */
     public function addCountEntry($className)
     {
-        $entry = $className::getCount($this->databaseId, $this->handler, $this->locale, $this->getConfig());
+        $entry = $className::getCount($this->getDbContext(), $this->handler, $this->locale);
         if (!is_null($entry)) {
             array_push($this->entryArray, $entry);
         }

@@ -108,7 +108,7 @@ class CustomColumnTypeBool extends CustomColumnType
         // this includes the "Not Set" entry here
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = Database::query($query, [], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, []);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -148,7 +148,7 @@ class CustomColumnTypeBool extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->boolvalue, $this->localize($this->BOOLEAN_NAMES[$post->boolvalue]), $this);
         } else {

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;

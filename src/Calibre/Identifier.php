@@ -43,8 +43,6 @@ class Identifier extends Base
     /** @var string */
     public $val;
     public string $uri;
-    /** @var ?int */
-    protected $databaseId;
 
     /**
      * Summary of __construct
@@ -152,28 +150,27 @@ class Identifier extends Base
 
     /**
      * Summary of getCount
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null, $config = null)
+    public static function getCount($dbContext, $handler, $locale = null)
     {
-        $count = Database::querySingle('select count(distinct type) from ' . static::SQL_TABLE, $database, $config);
-        return static::getCountEntry($count, $database, null, $handler, [], $locale);
+        $count = $dbContext->querySingle('select count(distinct type) from ' . static::SQL_TABLE);
+        return static::getCountEntry($count, $dbContext->getDatabase(), null, $handler, [], $locale);
     }
 
     /**
      * Summary of getInstanceById
      * @param string|int|null $id used for the type of identifier here
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext - allow null here for tests
      * @param ?string $locale
-     * @param ?RequestConfig $config - not used here
      * @return self
      */
-    public static function getInstanceById($id, $database = null, $locale = null, $config = null)
+    public static function getInstanceById($id, $dbContext = null, $locale = null)
     {
+        $database = $dbContext?->getDatabase() ?? null;
         // get identifier type here, not actual identifier
         if (!empty($id)) {
             return new Identifier((object) ['id' => $id, 'type' => $id, 'val' => ''], $database);
@@ -196,11 +193,10 @@ class Identifier extends Base
     /**
      * Summary of getInstancesByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<Identifier>
      */
-    public static function getInstancesByBookId($bookId, $database = null, $config = null)
+    public static function getInstancesByBookId($bookId, $dbContext)
     {
         $identifiers = [];
 
@@ -209,9 +205,9 @@ class Identifier extends Base
             from identifiers
             where book = ?
             order by type';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         while ($post = $result->fetchObject()) {
-            array_push($identifiers, new Identifier($post, $database));
+            array_push($identifiers, new Identifier($post, $dbContext->getDatabase()));
         }
         return $identifiers;
     }

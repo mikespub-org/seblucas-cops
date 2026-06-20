@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
@@ -34,16 +35,17 @@ class CalResHandler extends BaseHandler
 
     public function handle($request)
     {
-        $database = $request->getId('db');
+        $database = $request->database();
         $alg = $request->get('alg');
         $digest = $request->get('digest');
 
         $hash = $alg . ':' . $digest;
+        $dbContext = new DatabaseContext(intval($database), $this->getConfig());
 
         // create empty file response to start with!?
         $response = new FileResponse();
 
-        $result = Resource::sendImageResource($hash, $response, null, intval($database), $this->getConfig());
+        $result = Resource::sendImageResource($hash, $dbContext, $response, null);
         if (is_null($result)) {
             return Response::notFound($request);
         }

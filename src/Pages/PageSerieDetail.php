@@ -24,7 +24,7 @@ class PageSerieDetail extends PageWithDetail
     public function initializeContent()
     {
         /** @var Serie $instance */
-        $instance = Serie::getInstanceById($this->idGet, $this->getDatabaseId(), $this->locale);
+        $instance = Serie::getInstanceById($this->idGet, $this->getDbContext(), $this->locale);
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         if ($this->request->get('filter')) {

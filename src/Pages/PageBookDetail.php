@@ -24,7 +24,7 @@ class PageBookDetail extends Page
      */
     public function initializeContent()
     {
-        $this->book = Book::getBookById($this->idGet, $this->getDatabaseId(), $this->getConfig());
+        $this->book = Book::getBookById($this->idGet, $this->getDbContext());
         if (is_null($this->book)) {
             throw new InvalidArgumentException('Invalid Book');
         }

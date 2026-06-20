@@ -55,8 +55,8 @@ abstract class BaseRenderer
     {
         $this->request = $request;
         $this->setLocale($request->locale());
-        if ($this->request->getConfig() !== null) {
-            $this->setConfig($this->request->getConfig());
+        if ($request->getConfig() !== null) {
+            $this->setConfig($request->getConfig());
         }
     }
 

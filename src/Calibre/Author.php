@@ -76,20 +76,19 @@ class Author extends Base
     /**
      * Summary of getInstancesByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<Author>
      */
-    public static function getInstancesByBookId($bookId, $database = null, $config = null)
+    public static function getInstancesByBookId($bookId, $dbContext)
     {
-        $query = 'select ' . self::getInstanceColumns($database, $config) . '
+        $query = 'select ' . self::getInstanceColumns($dbContext) . '
 from authors, books_authors_link
 where author = authors.id
 and book = ? order by books_authors_link.id';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         $authorArray = [];
         while ($post = $result->fetchObject()) {
-            array_push($authorArray, new Author($post, $database));
+            array_push($authorArray, new Author($post, $dbContext->getDatabase()));
         }
         return $authorArray;
     }

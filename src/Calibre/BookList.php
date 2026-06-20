@@ -28,6 +28,7 @@ class BookList
     use HasRouteTrait;
     use HasLocaleTrait;
     use HasConfigTrait;
+    use HasDatabaseTrait;
 
     public const PAGE_LETTER = PageId::ALL_BOOKS_LETTER;
     public const PAGE_YEAR = PageId::ALL_BOOKS_YEAR;
@@ -58,8 +59,6 @@ class BookList
     public const BATCH_QUERY = false;
 
     public Request $request;
-    /** @var ?int */
-    protected $databaseId = null;
     /** @var ?int */
     protected $numberPerPage = null;
     /** @var ?string */
@@ -130,7 +129,7 @@ class BookList
         if ($this->request->hasFilter() || !empty($this->config('database_filter'))) {
             return $this->getFilterBookCount();
         }
-        return Database::querySingle('select count(*) from books', $this->databaseId, $this->getConfig());
+        return $this->getDbContext()->querySingle('select count(*) from books');
     }
 
     /**
@@ -142,7 +141,7 @@ class BookList
         $filter = new Filter($this->request, [], "books", $this->databaseId);
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return Database::countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params, $this->databaseId, $this->getConfig());
+        return $this->getDbContext()->countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params);
     }
 
     /**
@@ -391,11 +390,11 @@ class BookList
             $this->orderBy = 'groupid';
         }
         $sortBy = $this->getOrderBy();
-        $result = Database::queryFilter('select {0}
+        $result = $this->getDbContext()->queryFilter('select {0}
 from books
 where 1=1 {1}
 group by groupid
-order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, $this->databaseId, null, $this->getConfig());
+order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, null);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -495,7 +494,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
         /** @var integer $totalNumber */
         /** @var \PDOStatement $result */
-        [$totalNumber, $result] = Database::queryTotal($query, Book::getBookColumns($this->getConfig()), $filterString, $params, $n, $this->databaseId, $this->numberPerPage, $this->getConfig());
+        [$totalNumber, $result] = $this->getDbContext()->queryTotal($query, Book::getBookColumns($this->getConfig()), $filterString, $params, $n, $this->numberPerPage);
 
         /** @phpstan-ignore-next-line */
         if (self::BATCH_QUERY) {

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Tests\Output;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Output\EPubReader;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
@@ -31,7 +32,8 @@ class EpubReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         $idData = 20;
-        $myBook = Book::getBookByDataId($idData);
+        $dbContext = new DatabaseContext();
+        $myBook = Book::getBookByDataId($idData, $dbContext);
 
         self::$book = new EPub($myBook->getFilePath("EPUB", $idData));
         self::$book->initSpineComponent();
@@ -72,6 +74,7 @@ class EpubReaderTest extends TestCase
         $request = new Request();
         $response = new Response();
         $reader = new EPubReader($request, $response);
+        $dbContext = new DatabaseContext();
 
         ob_start();
         $result = $reader->sendContent($idData, $component, $database);

@@ -57,17 +57,16 @@ class Rating extends Base
 
     /**
      * Summary of getCount
-     * @param ?int $database
+     * @param DatabaseContext $dbContext
      * @param class-string<BaseHandler> $handler
      * @param ?string $locale
-     * @param ?RequestConfig $config
      * @return ?Entry
      */
-    public static function getCount($database, $handler, $locale = null, $config = null)
+    public static function getCount($dbContext, $handler, $locale = null)
     {
-        $count = Database::querySingle('select count(*) from ' . self::SQL_TABLE, $database, $config);
+        $count = $dbContext->querySingle('select count(*) from ' . self::SQL_TABLE);
         // str_format (localize("ratings", count(array))
-        return self::getCountEntry($count, $database, "ratings", $handler, [], $locale);
+        return self::getCountEntry($count, $dbContext->getDatabase(), "ratings", $handler, [], $locale);
     }
 
     /**

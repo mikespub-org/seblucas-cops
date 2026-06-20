@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
 
@@ -64,17 +63,16 @@ class Preference
 
     /**
      * Summary of getInstances
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<mixed>
      */
-    public static function getInstances($database = null, $config = null)
+    public static function getInstances($dbContext)
     {
         $preferences = [];
         $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' order by key';
-        $result = Database::query($query, [], $database, $config);
+        $result = $dbContext->query($query, []);
         while ($post = $result->fetchObject()) {
-            $preferences[$post->key] = new self($post, $database);
+            $preferences[$post->key] = new self($post, $dbContext->getDatabase());
         }
         return $preferences;
     }
@@ -82,17 +80,16 @@ class Preference
     /**
      * Summary of getInstanceByKey
      * @param string $key
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getInstanceByKey($key, $database = null, $config = null)
+    public static function getInstanceByKey($key, $dbContext)
     {
         $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' where key = ?';
         $params = [$key];
-        $result = Database::query($query, $params, $database, $config);
+        $result = $dbContext->query($query, $params);
         if ($post = $result->fetchObject()) {
-            return new self($post, $database);
+            return new self($post, $dbContext->getDatabase());
         }
         return null;
     }
@@ -105,48 +102,44 @@ class Preference
      *   "No Device": "not tags:\"=Kindle_Mike\" and not tags:\"=Kindle_Luca\" and not tags:\"=Kindle_Lydia\""
      * }
      * See https://github.com/seblucas/cops/pull/233
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getVirtualLibraries($database = null, $config = null)
+    public static function getVirtualLibraries($dbContext)
     {
-        return self::getInstanceByKey('virtual_libraries', $database, $config);
+        return self::getInstanceByKey('virtual_libraries', $dbContext);
     }
 
     /**
      * Summary of getCategoriesUsingHierarchy
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getCategoriesUsingHierarchy($database = null, $config = null)
+    public static function getCategoriesUsingHierarchy($dbContext)
     {
-        return self::getInstanceByKey('categories_using_hierarchy', $database, $config);
+        return self::getInstanceByKey('categories_using_hierarchy', $dbContext);
     }
 
     /**
      * Summary of getFieldMetadata
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getFieldMetadata($database = null, $config = null)
+    public static function getFieldMetadata($dbContext)
     {
         // @todo investigate format
-        return self::getInstanceByKey('field_metadata', $database, $config);
+        return self::getInstanceByKey('field_metadata', $dbContext);
     }
 
     /**
      * Summary of getUserCategories
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getUserCategories($database = null, $config = null)
+    public static function getUserCategories($dbContext)
     {
         // @todo investigate format
-        return self::getInstanceByKey('user_categories', $database, $config);
+        return self::getInstanceByKey('user_categories', $dbContext);
     }
 
     /**
@@ -154,13 +147,12 @@ class Preference
      * {
      *   "Author One": "authors:one and not authors:two"
      * }
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return self|null
      */
-    public static function getSavedSearches($database = null, $config = null)
+    public static function getSavedSearches($dbContext)
     {
         // @todo map search string from saved search to filters
-        return self::getInstanceByKey('saved_searches', $database, $config);
+        return self::getInstanceByKey('saved_searches', $dbContext);
     }
 }

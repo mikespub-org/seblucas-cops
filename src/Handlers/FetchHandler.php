@@ -11,11 +11,11 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Handlers\TestHandler;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Middleware\ProtectMiddleware;
 use SebLucas\Cops\Output\FileResponse;
@@ -87,14 +87,13 @@ class FetchHandler extends BaseHandler
         $type     = $request->get('type', 'jpg');
         $idData   = $request->getId('data');
         $viewOnly = $request->get('view', false);
-        $database = $request->database();
         $file     = $request->get('file');
 
-        $config = $this->getContext()->getConfig();
+        $dbContext = new DatabaseContext($request->database(), $request->getConfig());
         if (is_null($bookId)) {
-            $book = Book::getBookByDataId($idData, $database, $config);
+            $book = Book::getBookByDataId($idData, $dbContext);
         } else {
-            $book = Book::getBookById($bookId, $database, $config);
+            $book = Book::getBookById($bookId, $dbContext);
         }
 
         if (!$book) {
@@ -235,7 +234,8 @@ class FetchHandler extends BaseHandler
     {
         $database = $request->database();
         $locale = $request->locale();
-        $book = Folder::getBookByFolderPath($path, $database, $locale);
+        $dbContext = new DatabaseContext($request->database(), $request->getConfig());
+        $book = Folder::getBookByFolderPath($path, $dbContext, $locale);
         if (is_null($book)) {
             return Response::sendError($request, "Invalid Book");
         }

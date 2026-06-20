@@ -24,14 +24,13 @@ class BaseList
     use HasRouteTrait;
     use HasLocaleTrait;
     use HasConfigTrait;
+    use HasDatabaseTrait;
 
     public const URL_PARAM_LIST = "idlist";
 
     public Request $request;
     /** @var class-string<Base|Data> */
     public $className;
-    /** @var ?int */
-    protected $databaseId = null;
     /** @var ?int */
     protected $numberPerPage = null;
     /** @var ?string */
@@ -81,15 +80,6 @@ class BaseList
             'count' => 'count desc, name',
             default => $this->orderBy,
         };
-    }
-
-    /**
-     * Summary of getDatabaseId
-     * @return ?int
-     */
-    public function getDatabaseId()
-    {
-        return $this->databaseId;
     }
 
     /** Use inherited class methods to get entries from <Whatever> by instance (linked via books) */
@@ -149,7 +139,7 @@ class BaseList
     public function getInstanceById($id)
     {
         assert(is_subclass_of($this->className, Base::class));
-        return $this->className::getInstanceById($id, $this->databaseId, $this->locale);
+        return $this->className::getInstanceById($id, $this->getDbContext(), $this->locale);
     }
 
     /**
@@ -160,7 +150,7 @@ class BaseList
     public function getInstanceByName($name)
     {
         assert(is_subclass_of($this->className, Base::class));
-        return $this->className::getInstanceByName($name, $this->databaseId, $this->locale);
+        return $this->className::getInstanceByName($name, $this->getDbContext(), $this->locale);
     }
 
     /**
@@ -183,7 +173,7 @@ class BaseList
     public function getEntryCount()
     {
         assert(is_subclass_of($this->className, Base::class));
-        return $this->className::getCount($this->databaseId, $this->handler);
+        return $this->className::getCount($this->getDbContext(), $this->handler);
     }
 
     /**
@@ -204,7 +194,7 @@ class BaseList
      */
     public function countAllEntries()
     {
-        return Database::querySingle('select count(*) from ' . $this->getTable(), $this->databaseId, $this->getConfig());
+        return $this->getDbContext()->querySingle('select count(*) from ' . $this->getTable());
     }
 
     /**
@@ -215,7 +205,7 @@ class BaseList
     public function countDistinctEntries($column = null)
     {
         $column ??= $this->getSort();
-        return Database::querySingle('select count(distinct ' . $column . ') from ' . $this->getTable(), $this->databaseId, $this->getConfig());
+        return $this->getDbContext()->querySingle('select count(distinct ' . $column . ') from ' . $this->getTable());
     }
 
     /**
@@ -277,7 +267,7 @@ class BaseList
         $filterString = $filter->getFilterString();
         // [1]
         $params = $filter->getQueryParams();
-        return Database::countFilter($query, $columns, $filterString, $params, $this->databaseId, $this->getConfig());
+        return $this->getDbContext()->countFilter($query, $columns, $filterString, $params);
     }
 
     /**
@@ -300,7 +290,7 @@ class BaseList
             $filterString = "";
             $params = [];
         }
-        return Database::countFilter($query, $columns, $filterString, $params, $this->databaseId, $this->getConfig());
+        return $this->getDbContext()->countFilter($query, $columns, $filterString, $params);
     }
 
     /**
@@ -394,7 +384,7 @@ class BaseList
         $query .= ' order by ' . $sortBy;
         // $groupField as groupid, count(distinct authors.id) as count
         $columns = $groupField . ' as groupid, count(distinct ' . $this->getTable() . '.id) as count';
-        $result = Database::queryFilter($query, $columns, $filterString, $params, -1, $this->databaseId, null, $this->getConfig());
+        $result = $this->getDbContext()->queryFilter($query, $columns, $filterString, $params, -1, null);
 
         // authorword, publisherword, seriesword, tagword
         $countword = $this->getLinkColumn() . 'word';
@@ -634,7 +624,7 @@ class BaseList
      */
     public function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $n)
     {
-        $result = Database::queryFilter($query, $columns, $filter, $params, $n, $this->databaseId, $this->numberPerPage, $this->getConfig());
+        $result = $this->getDbContext()->queryFilter($query, $columns, $filter, $params, $n, $this->numberPerPage);
         $entryArray = [];
         $params = [];
         if ($this->request->hasFilter()) {
@@ -683,7 +673,7 @@ class BaseList
         }
         $query = str_format($queryFormat, $tableName, $this->getOrderBy());
 
-        $result = Database::queryFilter($query, "", "", [], $n, $this->databaseId, $this->numberPerPage, $this->getConfig());
+        $result = $this->getDbContext()->queryFilter($query, "", "", [], $n, $this->numberPerPage);
         $entryArray = [];
         $parents = [];
         $counter = [];
@@ -738,7 +728,7 @@ class BaseList
         }
         $queryFormat = 'SELECT book, {1} as instanceId FROM {0} WHERE book IN (' . str_repeat('?,', count($bookIds) - 1) . '?)';
         $query = str_format($queryFormat, $this->getLinkTable(), $this->getLinkColumn());
-        $result = Database::query($query, $bookIds, $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, $bookIds);
 
         $instanceIds = [];
         while ($post = $result->fetchObject()) {
@@ -760,7 +750,7 @@ class BaseList
             return [];
         }
         $query = 'select ' . $this->className::SQL_COLUMNS . ' from ' . $this->className::SQL_TABLE . ' where id IN (' . str_repeat('?,', count($uniqueIds) - 1) . '?)';
-        $result = Database::query($query, $uniqueIds, $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, $uniqueIds);
         $instances = [];
         while ($post = $result->fetchObject()) {
             if ($this->className == Data::class) {

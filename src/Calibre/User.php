@@ -18,6 +18,7 @@ use JsonException;
 /**
  * The user db file is specified via $config['cops_basic_authentication'],
  * $config['cops_form_authentication'] or $config['calibre_user_database']
+ * in config/local.php - this cannot be overridden in config/local.*.php
  */
 class User
 {

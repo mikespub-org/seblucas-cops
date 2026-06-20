@@ -89,15 +89,14 @@ class Annotation extends Base
 
     /**
      * Summary of getCountByBookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<mixed>
      */
-    public static function getCountByBookId($database = null, $config = null)
+    public static function getCountByBookId($dbContext)
     {
         $entries = [];
         $query = 'select book, count(*) as count from annotations group by book order by book';
-        $result = Database::query($query, [], $database, $config);
+        $result = $dbContext->query($query, []);
         while ($post = $result->fetchObject()) {
             $entries[$post->book] = $post->count;
         }
@@ -107,20 +106,19 @@ class Annotation extends Base
     /**
      * Summary of getInstancesByBookId
      * @param int $bookId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param DatabaseContext $dbContext
      * @return array<Annotation>
      */
-    public static function getInstancesByBookId($bookId, $database = null, $config = null)
+    public static function getInstancesByBookId($bookId, $dbContext)
     {
         // @todo filter by format, user, annotType etc.
-        $query = 'select ' . self::getInstanceColumns($database, $config) . '
+        $query = 'select ' . self::getInstanceColumns($dbContext) . '
 from annotations
 where book = ?';
-        $result = Database::query($query, [$bookId], $database, $config);
+        $result = $dbContext->query($query, [$bookId]);
         $annotationArray = [];
         while ($post = $result->fetchObject()) {
-            array_push($annotationArray, new Annotation($post, $database));
+            array_push($annotationArray, new Annotation($post, $dbContext->getDatabase()));
         }
         return $annotationArray;
     }

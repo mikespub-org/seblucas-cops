@@ -141,7 +141,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $queryFormat = "SELECT COUNT(DISTINCT date(value)) AS count FROM {0}";
         $query = str_format($queryFormat, $this->getTableName());
-        return Database::querySingle($query, $this->databaseId, $this->getConfig());
+        return $this->getDbContext()->querySingle($query);
     }
 
     /**
@@ -159,7 +159,7 @@ class CustomColumnTypeDate extends CustomColumnType
             $queryFormat .= ' ORDER BY groupid';
         }
         $query = str_format($queryFormat, $this->getTableName());
-        $result = Database::query($query, [], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, []);
 
         $entryArray = [];
         $param = 'year';
@@ -203,7 +203,7 @@ class CustomColumnTypeDate extends CustomColumnType
         }
         $query = str_format($queryFormat, $this->getTableName());
         $params = [ $year ];
-        $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, $params);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -228,7 +228,7 @@ class CustomColumnTypeDate extends CustomColumnType
         $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = Database::query($query, [$book->id], $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
 

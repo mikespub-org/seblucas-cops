@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\CustomColumn;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\BaseList;
@@ -239,8 +240,9 @@ class HierarchyTest extends TestCase
     {
         // for hierarchical custom columns like Fiction, Fiction.Historical, Fiction.Romance etc.
         Config::set('calibre_categories_using_hierarchy', ['custom_02']);
+        $dbContext = new DatabaseContext();
 
-        $custom = CustomColumn::createCustom(6, 5);
+        $custom = CustomColumn::createCustom(6, 5, $dbContext);
         $this->assertEquals("custom_02", $custom->customColumnType->getTitle());
         $this->assertEquals("d", $custom->getTitle());
 
@@ -259,7 +261,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("cops:custom:6:7", $children[2]->id);
         $this->assertEquals("d.g", $children[2]->title);
 
-        $custom = CustomColumn::createCustom(6, 6);
+        $custom = CustomColumn::createCustom(6, 6, $dbContext);
         $this->assertEquals("custom_02", $custom->customColumnType->getTitle());
         $this->assertEquals("d.e.f", $custom->getTitle());
 
@@ -267,7 +269,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("cops:custom:6:4", $parent->id);
         $this->assertEquals("d.e", $parent->title);
 
-        $columnType = CustomColumnType::createByCustomID(6);
+        $columnType = CustomColumnType::createByCustomID(6, $dbContext);
         $columnType->setHandler(self::$handler);
         $entries = $columnType->browseAllCustomValues();
         $this->assertCount(5, $entries);

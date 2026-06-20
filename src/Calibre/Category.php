@@ -203,7 +203,7 @@ abstract class Category extends Base
      */
     public function getParentByName($parentName)
     {
-        return static::getInstanceByName($parentName, $this->databaseId, $this->locale);
+        return static::getInstanceByName($parentName, $this->getDbContext(), $this->locale);
     }
 
     /**
@@ -258,7 +258,7 @@ abstract class Category extends Base
             $params = [$find];
         }
         $query = str_format($queryFormat, $tableName);
-        $result = Database::query($query, $params, $this->databaseId, $this->getConfig());
+        $result = $this->getDbContext()->query($query, $params);
 
         $instances = [];
         while ($post = $result->fetchObject()) {
@@ -310,7 +310,7 @@ abstract class Category extends Base
     {
         $query = static::SQL_CREATE;
         $params = [ $name ];
-        $result = Database::getDb($this->databaseId, $this->getConfig())->prepare($query);
+        $result = $this->getDbContext()->getDb()->prepare($query);
         $result->execute($params);
         $instance = $this->getParentByName($name);
         if ($instance) {
