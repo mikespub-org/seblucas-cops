@@ -272,7 +272,7 @@ class ImageResponse extends FileResponse
      * @param ?int $width
      * @param ?int $height
      * @param string $type
-     * @param ?int $database cache per database for cover files
+     * @param ?int $database cache per database for cover files - @todo handle multiple user/database setup
      * @return ?string
      */
     public static function getCachePath($uuid, $width, $height, $type = 'jpg', $database = null)

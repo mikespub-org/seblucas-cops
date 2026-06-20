@@ -43,7 +43,7 @@ class PageRatingDetail extends PageWithDetail
      */
     public function getEntries($instance = null)
     {
-        $booklist = new BookList($this->request);
+        $booklist = new BookList($this->request, $this->getDbContext());
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
     }

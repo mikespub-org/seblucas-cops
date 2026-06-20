@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -35,18 +34,16 @@ class VirtualLibrary extends Base
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null, $config = null)
+    public function __construct($post, $dbContext = null)
     {
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->name = $post->name;
         $this->value = $post->value;
-        $this->databaseId = $database;
-        if (!empty($config)) {
-            $this->setConfig($config);
-        }
     }
 
     /**
@@ -143,7 +140,7 @@ class VirtualLibrary extends Base
             }
             // @todo get book count filtered by value
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $value, 'count' => 0];
-            $instance = new self($post, $dbContext->getDatabase());
+            $instance = new self($post, $dbContext);
             $instance->setHandler($handler);
             $instance->setLocale($locale);
             array_push($entryArray, $instance->getEntry($post->count));
@@ -161,9 +158,7 @@ class VirtualLibrary extends Base
      */
     public static function getWithoutEntry($dbContext, $handler, $locale = null)
     {
-        $database = $dbContext->getDatabase();
-        $booklist = new BookList(null, $database);
-        $booklist->setDbContext($dbContext);
+        $booklist = new BookList(null, $dbContext);
         $count = $booklist->getBookCount();
         $instance = self::getInstanceById(null, $dbContext, $locale);
         $instance->setHandler($handler);
@@ -204,7 +199,6 @@ class VirtualLibrary extends Base
     public static function getInstanceById($id, $dbContext = null, $locale = null)
     {
         $dbContext ??= new DatabaseContext();
-        $database = $dbContext->getDatabase();
         $libraries = self::getLibraries($dbContext);
         if (!empty($id)) {
             // id = key position in array + 1
@@ -218,7 +212,7 @@ class VirtualLibrary extends Base
         $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'value' => ''];
-        return new self($post, $database);
+        return new self($post, $dbContext);
     }
 
     /**
@@ -235,7 +229,7 @@ class VirtualLibrary extends Base
             // id = key position in array + 1
             $id = array_search($name, array_keys($libraries)) + 1;
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $libraries[$name]];
-            return new self($post, $dbContext->getDatabase());
+            return new self($post, $dbContext);
         }
         return null;
     }

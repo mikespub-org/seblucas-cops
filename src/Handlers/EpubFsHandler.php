@@ -49,7 +49,6 @@ class EpubFsHandler extends BaseHandler
         if (empty($component)) {
             return Response::notFound($request);
         }
-        $database = $request->database();
 
         // create empty response to start with!?
         $response = new Response();
@@ -57,7 +56,7 @@ class EpubFsHandler extends BaseHandler
         $reader = new EPubReader($request, $response);
 
         try {
-            return $reader->sendContent($idData, $component, $database);
+            return $reader->sendContent($idData, $component, $request);
 
         } catch (Exception $e) {
             error_log($e);

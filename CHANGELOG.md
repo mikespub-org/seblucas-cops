@@ -17,6 +17,7 @@ x.x.x - TODO
     - new $config['cops_templates_directory'] to adapt templates directory
   * ...
   * Update php/npm packages
+  * Use DatabaseContext in constructors instead of database + config
   * Use DatabaseContext in static methods instead of database + config
   * Add HasDatabaseTrait to simplify Database method calls in classes
   * Adapt other classes to make use of RequestConfig

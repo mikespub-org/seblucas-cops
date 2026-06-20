@@ -109,13 +109,13 @@ class Book
     /**
      * Summary of __construct
      * @param \stdClass $line
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($line, $database = null, $config = null)
+    public function __construct($line, $dbContext = null)
     {
-        $this->databaseId = $database;
-        $this->config = $config;
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp ?? '');
@@ -830,7 +830,7 @@ from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?';
         $result = $dbContext->query($query, [$bookId]);
         if ($post = $result->fetchObject()) {
-            $book = new Book($post, $database, $config);
+            $book = new Book($post, $dbContext);
             return $book;
         }
         return null;
@@ -857,7 +857,7 @@ where data.book = books.id and data.id = ?';
         }
         $result = $dbContext->query($query, [$dataId]);
         if ($post = $result->fetchObject()) {
-            $book = new Book($post, $database, $config);
+            $book = new Book($post, $dbContext);
             $data = new Data($post, $book);
             $data->id = $dataId;
             $book->datas = [$data];

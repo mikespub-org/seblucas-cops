@@ -70,14 +70,12 @@ class EpubReaderTest extends TestCase
     {
         $idData = 20;
         $component = 'title.xml';
-        $database = null;
         $request = new Request();
         $response = new Response();
         $reader = new EPubReader($request, $response);
-        $dbContext = new DatabaseContext();
 
         ob_start();
-        $result = $reader->sendContent($idData, $component, $database);
+        $result = $reader->sendContent($idData, $component, $request);
         $result->send();
         $headers = headers_list();
         $output = ob_get_clean();
@@ -216,13 +214,12 @@ class EpubReaderTest extends TestCase
     {
         $idData = 20;
         $component = 'OPS/title.xml';
-        $database = null;
         $request = new Request();
         $response = new Response();
         $reader = new EPubReader($request, $response);
 
         ob_start();
-        $result = $reader->sendZipContent($idData, $component, $database);
+        $result = $reader->sendZipContent($idData, $component, $request);
         $result->send();
         $headers = headers_list();
         $output = ob_get_clean();

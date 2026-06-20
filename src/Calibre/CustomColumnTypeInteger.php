@@ -10,8 +10,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 use InvalidArgumentException;
@@ -25,16 +23,15 @@ class CustomColumnTypeInteger extends CustomColumnType
      * Summary of __construct
      * @param int $customId
      * @param string $datatype
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext
      * @param array<string, mixed> $displaySettings
      * @throws \UnexpectedValueException
      */
-    protected function __construct($customId, $datatype = self::TYPE_INT, $database = null, $displaySettings = [], $config = null)
+    protected function __construct($customId, $datatype = self::TYPE_INT, $dbContext = null, $displaySettings = [])
     {
         match ($datatype) {
-            self::TYPE_INT => parent::__construct($customId, self::TYPE_INT, $database, $displaySettings, $config),
-            self::TYPE_FLOAT => parent::__construct($customId, self::TYPE_FLOAT, $database, $displaySettings, $config),
+            self::TYPE_INT => parent::__construct($customId, self::TYPE_INT, $dbContext, $displaySettings),
+            self::TYPE_FLOAT => parent::__construct($customId, self::TYPE_FLOAT, $dbContext, $displaySettings),
             default => throw new UnexpectedValueException(),
         };
     }

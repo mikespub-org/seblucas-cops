@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
@@ -47,15 +46,17 @@ class Identifier extends Base
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null)
+    public function __construct($post, $dbContext = null)
     {
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->type = strtolower($post->type);
         $this->val = $post->val;
         $this->formatType();
-        $this->databaseId = $database;
     }
 
     /**
@@ -170,15 +171,14 @@ class Identifier extends Base
      */
     public static function getInstanceById($id, $dbContext = null, $locale = null)
     {
-        $database = $dbContext?->getDatabase() ?? null;
         // get identifier type here, not actual identifier
         if (!empty($id)) {
-            return new Identifier((object) ['id' => $id, 'type' => $id, 'val' => ''], $database);
+            return new self((object) ['id' => $id, 'type' => $id, 'val' => ''], $dbContext);
         }
         $default = self::getDefaultName();
         $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
-        return new Identifier((object) ['id' => 0, 'type' => $default, 'val' => ''], $database);
+        return new self((object) ['id' => 0, 'type' => $default, 'val' => ''], $dbContext);
     }
 
     /**
@@ -207,7 +207,7 @@ class Identifier extends Base
             order by type';
         $result = $dbContext->query($query, [$bookId]);
         while ($post = $result->fetchObject()) {
-            array_push($identifiers, new Identifier($post, $dbContext->getDatabase()));
+            array_push($identifiers, new self($post, $dbContext));
         }
         return $identifiers;
     }

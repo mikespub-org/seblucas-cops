@@ -47,16 +47,18 @@ class Note
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null)
+    public function __construct($post, $dbContext = null)
     {
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->item = $post->item;
         $this->colname = $post->colname;
         $this->doc = $post->doc;
         $this->mtime = $post->mtime;
-        $this->databaseId = $database;
         $this->setHandler(RestApiHandler::class);
     }
 
@@ -99,7 +101,7 @@ class Note
         $result = $notesDb->prepare($query);
         $result->execute($params);
         while ($post = $result->fetchObject()) {
-            $resources[$post->hash] = new Resource($post, $this->databaseId);
+            $resources[$post->hash] = new Resource($post, $dbContext);
         }
         return $resources;
     }
@@ -187,7 +189,7 @@ class Note
         $result = $notesDb->prepare($query);
         $result->execute($params);
         if ($post = $result->fetchObject()) {
-            return new self($post, $dbContext->getDatabase());
+            return new self($post, $dbContext);
         }
         return null;
     }

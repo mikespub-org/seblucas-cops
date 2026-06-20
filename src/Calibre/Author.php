@@ -41,16 +41,18 @@ class Author extends Base
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null)
+    public function __construct($post, $dbContext = null)
     {
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->name = str_replace("|", ",", (string) $post->name);
         $this->sort = $post->sort;
         $this->link = property_exists($post, 'link') ? $post->link : null;
         $this->count = property_exists($post, 'count') ? $post->count : null;
-        $this->databaseId = $database;
     }
 
     /**
@@ -88,7 +90,7 @@ and book = ? order by books_authors_link.id';
         $result = $dbContext->query($query, [$bookId]);
         $authorArray = [];
         while ($post = $result->fetchObject()) {
-            array_push($authorArray, new Author($post, $dbContext->getDatabase()));
+            array_push($authorArray, new Author($post, $dbContext));
         }
         return $authorArray;
     }

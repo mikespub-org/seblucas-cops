@@ -12,9 +12,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
-use SebLucas\Cops\Calibre\BookList;
-use SebLucas\Cops\Calibre\CustomColumnType;
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
@@ -119,7 +116,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Author::ROUTE_ALL, $params);
             $relation = "authors";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Author::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Author::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Author::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Author::URL_PARAM]));
@@ -129,7 +126,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Language::ROUTE_ALL, $params);
             $relation = "languages";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Language::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Language::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Language::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Language::URL_PARAM]));
@@ -139,7 +136,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Publisher::ROUTE_ALL, $params);
             $relation = "publishers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Publisher::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Publisher::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Publisher::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Publisher::URL_PARAM]));
@@ -149,7 +146,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Rating::ROUTE_ALL, $params);
             $relation = "ratings";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Rating::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Rating::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Rating::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Rating::URL_PARAM]));
@@ -159,7 +156,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Serie::ROUTE_ALL, $params);
             $relation = "series";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Serie::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Serie::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Serie::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Serie::URL_PARAM]));
@@ -169,7 +166,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Tag::ROUTE_ALL, $params);
             $relation = "tags";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Tag::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Tag::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Tag::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Tag::URL_PARAM]));
@@ -179,7 +176,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Identifier::ROUTE_ALL, $params);
             $relation = "identifiers";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Identifier::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Identifier::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Identifier::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Identifier::URL_PARAM]));
@@ -189,7 +186,7 @@ class PageFilter extends Page
             $href = fn() => $this->getRoute(Format::ROUTE_ALL, $params);
             $relation = "formats";
             $this->addHeaderEntry($title, $filtersTitle, $href, $relation);
-            $baselist = new BaseList(Format::class, $req, $this->databaseId, $limit);
+            $baselist = new BaseList(Format::class, $req, $this->getDbContext(), $limit);
             $baselist->pagination = true;
             $paging[Format::URL_PARAM] ??= 1;
             $this->addEntries($baselist->getRequestEntries($paging[Format::URL_PARAM]));

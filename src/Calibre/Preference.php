@@ -35,10 +35,13 @@ class Preference
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null)
+    public function __construct($post, $dbContext = null)
     {
+        //$this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        //$this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->key = $post->key;
         try {
@@ -46,7 +49,6 @@ class Preference
         } catch (JsonException) {
             $this->val = $post->val;
         }
-        $this->databaseId = $database;
         $this->setHandler(RestApiHandler::class);
     }
 
@@ -72,7 +74,7 @@ class Preference
         $query = 'select ' . self::SQL_COLUMNS . ' from ' . self::SQL_TABLE . ' order by key';
         $result = $dbContext->query($query, []);
         while ($post = $result->fetchObject()) {
-            $preferences[$post->key] = new self($post, $dbContext->getDatabase());
+            $preferences[$post->key] = new self($post, $dbContext);
         }
         return $preferences;
     }
@@ -89,7 +91,7 @@ class Preference
         $params = [$key];
         $result = $dbContext->query($query, $params);
         if ($post = $result->fetchObject()) {
-            return new self($post, $dbContext->getDatabase());
+            return new self($post, $dbContext);
         }
         return null;
     }

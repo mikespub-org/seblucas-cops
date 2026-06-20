@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
@@ -62,10 +61,10 @@ class Filter
      * @param Request|array<mixed> $request current request or urlParams array
      * @param array<mixed> $params initial query params
      * @param string $parent optional parent link table if we need to link books, e.g. books_series_link
-     * @param ?int $database current database in multiple database setup
+     * @param ?DatabaseContext $dbContext current database context in multiple user/database setup
      * @param ?string $parentClass current class the filter applies to, to limit results to self (or not for tags/identifiers)
      */
-    public function __construct($request, array $params = [], string $parent = "books", $database = null, $parentClass = null)
+    public function __construct($request, array $params = [], string $parent = "books", $dbContext = null, $parentClass = null)
     {
         if (is_array($request)) {
             $request = Request::build($request);
@@ -74,9 +73,12 @@ class Filter
         $this->params = $params;
         $this->parentTable = $parent;
         $this->queryString = "";
-        $this->databaseId = $database;
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? $this->request->database();
         if ($this->request->getConfig() !== null) {
             $this->setConfig($this->request->getConfig());
+        } elseif ($this->dbContext?->getConfig() !== null) {
+            $this->setConfig($this->dbContext->getConfig());
         }
 
         $this->checkForFilters($parentClass);
@@ -622,15 +624,15 @@ class Filter
     /**
      * Summary of getEntryArray
      * @param Request $request
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @return array<Entry>
      */
-    public static function getEntryArray($request, $database = null)
+    public static function getEntryArray($request, $dbContext = null)
     {
         $handler = $request->getHandler();
         $locale = $request->locale();
         $libraryId = $request->getVirtualLibrary();
-        $dbContext = new DatabaseContext($database, $request->getConfig());
+        $dbContext ??= new DatabaseContext();
         $entryArray = [];
         foreach (self::URL_PARAMS as $paramName => $className) {
             if ($className == VirtualLibrary::class) {
@@ -652,9 +654,8 @@ class Filter
                 if ($request->getConfig() !== null) {
                     $req->setConfig($request->getConfig());
                 }
-                $booklist = new BookList($req, $database);
+                $booklist = new BookList($req, $dbContext);
                 $booklist->setLocale($locale);
-                $booklist->setDbContext($dbContext);
                 $groupFunc = ($paramName == 'f') ? 'getCountByFirstLetter' : 'getCountByPubYear';
                 $entryArray = array_merge($entryArray, $booklist->$groupFunc());
                 continue;
@@ -681,7 +682,7 @@ class Filter
             if ($request->getConfig() !== null) {
                 $req->setConfig($request->getConfig());
             }
-            $baselist = new BaseList($className, $req, $database);
+            $baselist = new BaseList($className, $req, $dbContext);
             // apply Not Set filters here but skip other entries
             if (empty($paramValue)) {
                 array_push($entryArray, $baselist->getWithoutEntry());

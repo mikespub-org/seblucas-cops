@@ -73,12 +73,12 @@ class Folder extends Category
     /** @var bool */
     public $scanned = false;
 
-    public function __construct($post, $database = null)
+    public function __construct($post, $dbContext = null)
     {
         if (str_contains($post->id, '..') || str_contains($post->id, './')) {
             throw new Exception('Invalid folder id ' . $post->id);
         }
-        parent::__construct($post, $database);
+        parent::__construct($post, $dbContext);
         // @todo $this->config is not defined here yet
         $this->root = $post->root ?? Config::get('browse_books_directory', '');
     }
@@ -426,7 +426,7 @@ class Folder extends Category
         }
         $bookId = 0;
         $line = (object) ['id' => $bookId, 'title' => $bookName, 'path' => $bookPath, 'timestamp' => $timestamp, 'has_cover' => $hasCover];
-        $book = new Book($line);
+        $book = new Book($line, $this->getDbContext());
         $book->setHandler($this->handler);
         $book->setLocale($this->locale);
         if (!empty($metadata)) {
@@ -475,7 +475,7 @@ class Folder extends Category
         }
         $childId = $this->id ? $this->id . '/' . $name : $name;
         $post = (object) ['id' => $childId, 'name' => $name, 'root' => $this->root];
-        $childFolder = new Folder($post, $this->getDatabaseId());
+        $childFolder = new Folder($post, $this->getDbContext());
         $childFolder->setHandler($this->handler);
         $childFolder->setLocale($this->locale);
         $childFolder->parent = $this;
@@ -578,10 +578,9 @@ class Folder extends Category
      */
     public static function getInstanceById($id, $dbContext = null, $root = null, $locale = null)
     {
-        $database = $dbContext?->getDatabase() ?? null;
         if (!empty($id)) {
             $name = static::findCurrentName($id);
-            return new Folder((object) ['id' => $id, 'name' => $name, 'root' => $root], $database);
+            return new Folder((object) ['id' => $id, 'name' => $name, 'root' => $root], $dbContext);
         }
         return self::getRootFolder($root, $dbContext, $locale);
     }
@@ -604,12 +603,11 @@ class Folder extends Category
      */
     public static function getRootFolder($root = null, $dbContext = null, $locale = null)
     {
-        $database = $dbContext?->getDatabase() ?? null;
         $default = self::getDefaultName();
         $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'root' => $root];
-        return new Folder($post, $database);
+        return new Folder($post, $dbContext);
     }
 
     /**

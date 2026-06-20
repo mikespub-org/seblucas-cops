@@ -47,7 +47,7 @@ class PageAllPublishersLetter extends Page
      */
     public function getEntries()
     {
-        $baselist = new BaseList($this->className, $this->request);
+        $baselist = new BaseList($this->className, $this->request, $this->getDbContext());
         $this->entryArray = $baselist->getEntriesByFirstLetter($this->idGet, $this->n);
         $this->totalNumber = $baselist->countEntriesByFirstLetter($this->idGet);
         $this->sorted = $baselist->orderBy;

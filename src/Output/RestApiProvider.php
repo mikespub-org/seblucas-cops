@@ -441,7 +441,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         if (!empty($filterParams)) {
             $req = Request::build($filterParams);
-            $filter = new Filter($req, [], 'books', $database);
+            $filter = new Filter($req, [], 'books', null);
             $filterString = $filter->getFilterString();
             $queryParams = $filter->getQueryParams();
             if (!empty($filterString)) {

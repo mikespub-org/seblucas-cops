@@ -56,11 +56,7 @@ class NoteResourceTest extends TestCase
     {
         $dbContext = new DatabaseContext();
         $expected = ["authors" => 3];
-        try {
-            $result = Note::getCountByType($dbContext);
-        } catch (\Throwable $e) {
-            var_dump($e);
-        }
+        $result = Note::getCountByType($dbContext);
         $this->assertEquals($expected, $result);
     }
 

@@ -16,6 +16,7 @@ use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
 use ZipArchive;
@@ -104,13 +105,13 @@ class EPubReader extends BaseRenderer
      * Summary of sendContent
      * @param int $idData
      * @param string $component
-     * @param ?int $database
+     * @param ?Request $request
      * @throws \InvalidArgumentException
      * @return Response
      */
-    public function sendContent($idData, $component, $database = null)
+    public function sendContent($idData, $component, $request = null)
     {
-        $dbContext = new DatabaseContext($database, $this->getConfig());
+        $dbContext = new DatabaseContext($request?->database(), $request?->getConfig());
         $book = Book::getBookByDataId($idData, $dbContext);
         if (!$book) {
             throw new InvalidArgumentException('Unknown data ' . $idData);
@@ -137,30 +138,31 @@ class EPubReader extends BaseRenderer
      * Summary of getReader
      * @param int $idData
      * @param ?string $version
-     * @param ?int $database
+     * @param ?Request $request
      * @return string
      */
-    public function getReader($idData, $version = null, $database = null)
+    public function getReader($idData, $version = null, $request = null)
     {
         $version ??= $this->config('epub_reader', 'monocle');
+        $dbContext = new DatabaseContext($request?->database(), $request?->getConfig());
         if ($version == 'epubjs') {
-            return $this->getEpubjsReader($idData, $database);
+            return $this->getEpubjsReader($idData, $dbContext);
         }
-        return $this->getMonocleReader($idData, $database);
+        return $this->getMonocleReader($idData, $dbContext);
     }
 
     /**
      * Summary of getMonocleReader
      * @param int $idData
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @param ?string $template
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function getMonocleReader($idData, $database = null, $template = null)
+    public function getMonocleReader($idData, $dbContext = null, $template = null)
     {
         $template ??= $this->config('templates_directory') . "epubreader.html";
-        $this->findBookData($idData, $database);
+        $this->findBookData($idData, $dbContext);
         if ($this->book->isExternal()) {
             return 'The "monocle" epub reader does not work with calibre_external_storage - please use "epubjs" reader instead';
         }
@@ -246,13 +248,12 @@ class EPubReader extends BaseRenderer
     /**
      * Summary of findBookData
      * @param int $idData
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @throws \InvalidArgumentException
      * @return Data
      */
-    public function findBookData($idData, $database)
+    public function findBookData($idData, $dbContext)
     {
-        $dbContext = new DatabaseContext($database, $this->getConfig());
         if (!empty($idData)) {
             $book = Book::getBookByDataId($idData, $dbContext);
             if (!$book) {
@@ -322,15 +323,15 @@ class EPubReader extends BaseRenderer
     /**
      * Summary of getEpubjsReader
      * @param int $idData
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @param ?string $template
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function getEpubjsReader($idData, $database = null, $template = null)
+    public function getEpubjsReader($idData, $dbContext = null, $template = null)
     {
         $template ??= $this->config('templates_directory') . "epubjs-reader.html";
-        $this->findBookData($idData, $database);
+        $this->findBookData($idData, $dbContext);
         $this->setHandler(ZipFsHandler::class);
 
         $link = $this->getDataLink();
@@ -401,13 +402,14 @@ class EPubReader extends BaseRenderer
      * Summary of sendZipContent
      * @param ?int $idData
      * @param string $component
-     * @param ?int $database
+     * @param ?Request $request
      * @throws \InvalidArgumentException
      * @return Response
      */
-    public function sendZipContent($idData, $component, $database = null)
+    public function sendZipContent($idData, $component, $request = null)
     {
-        $this->findBookData($idData, $database);
+        $dbContext = new DatabaseContext($request?->database(), $request?->getConfig());
+        $this->findBookData($idData, $dbContext);
         $filePath = $this->getZipFilePath();
         if (!$filePath || !file_exists($filePath)) {
             throw new InvalidArgumentException('Unknown file ' . basename($filePath));

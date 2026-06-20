@@ -16,6 +16,7 @@ use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;
@@ -24,8 +25,6 @@ use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\VirtualLibrary;
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
 
@@ -57,7 +56,8 @@ class PageIndex extends Page
     {
         $i = 0;
         foreach (Database::getDbNameList($this->getConfig()) as $key) {
-            $booklist = new BookList($this->request, $i);
+            $dbContext = new DatabaseContext($i, $this->getConfig());
+            $booklist = new BookList($this->request, $dbContext);
             $nBooks = $booklist->getBookCount();
             $this->addDatabaseEntry($key, $i, $nBooks);
             $i++;
@@ -149,11 +149,11 @@ class PageIndex extends Page
         }
         // differentiate between ignored search & index categories BOOK (search) vs. ALLBOOKS/RECENT (home screen)
         if (!in_array(PageQueryScope::ALLBOOKS->value, $this->ignoredCategories)) {
-            $booklist = new BookList($this->request);
+            $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
         }
         if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && $this->config('recentbooks_limit') > 0) {
-            $booklist = new BookList($this->request);
+            $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 
@@ -170,7 +170,7 @@ class PageIndex extends Page
      */
     public function addFilterCountEntry($className, $numberOfString = null)
     {
-        $baselist = new BaseList($className, $this->request, $this->databaseId);
+        $baselist = new BaseList($className, $this->request, $this->getDbContext());
         $count = $baselist->countRequestEntries();
         if ($count > 0) {
             array_push($this->entryArray, $className::getCountEntry($count, $this->databaseId, $numberOfString, $this->handler, $this->filterParams, $this->locale));
@@ -222,11 +222,11 @@ class PageIndex extends Page
         }
         // differentiate between ignored search & index categories BOOK(search) vs. ALLBOOKS/RECENT (home screen)
         if (!in_array(PageQueryScope::ALLBOOKS->value, $this->ignoredCategories)) {
-            $booklist = new BookList($this->request);
+            $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
         }
         if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && $this->config('recentbooks_limit') > 0) {
-            $booklist = new BookList($this->request);
+            $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
         }
 

@@ -68,13 +68,15 @@ class BookList
 
     /**
      * @param ?Request $request
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @param ?int $numberPerPage
      */
-    public function __construct($request, $database = null, $numberPerPage = null)
+    public function __construct($request, $dbContext = null, $numberPerPage = null)
     {
         $this->request = $request ?? new Request();
-        $this->databaseId = $database ?? $this->request->database();
+        // set dbContext here if available
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? $this->request->database();
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->setOrderBy();
         // get handler based on $this->request
@@ -84,6 +86,8 @@ class BookList
         // get config based on $this->request
         if ($this->request->getConfig() !== null) {
             $this->setConfig($this->request->getConfig());
+        } elseif ($this->dbContext?->getConfig() !== null) {
+            $this->setConfig($this->dbContext->getConfig());
         }
     }
 
@@ -138,7 +142,7 @@ class BookList
      */
     public function getFilterBookCount()
     {
-        $filter = new Filter($this->request, [], "books", $this->databaseId);
+        $filter = new Filter($this->request, [], "books", $this->getDbContext());
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
         return $this->getDbContext()->countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params);
@@ -381,7 +385,7 @@ class BookList
      */
     public function getCountByGroup($groupField, $routeName, $param)
     {
-        $filter = new Filter($this->request, [], "books", $this->databaseId);
+        $filter = new Filter($this->request, [], "books", $this->getDbContext());
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 
@@ -480,7 +484,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
      */
     public function getEntryArray($query, $params, $n)
     {
-        $filter = new Filter($this->request, $params, "books", $this->databaseId);
+        $filter = new Filter($this->request, $params, "books", $this->getDbContext());
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 
@@ -502,7 +506,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         }
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $book = new Book($post, $this->databaseId, $this->getConfig());
+            $book = new Book($post, $this->getDbContext());
             $book->setHandler($this->handler);
             $book->setLocale($this->locale);
             array_push($entryArray, $book->getEntry());
@@ -521,7 +525,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     {
         $this->bookList = [];
         while ($post = $result->fetchObject()) {
-            $book = new Book($post, $this->databaseId, $this->getConfig());
+            $book = new Book($post, $this->getDbContext());
             $book->setHandler($this->handler);
             $book->setLocale($this->locale);
             $this->bookList[$book->id] = $book;
@@ -551,7 +555,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function setAuthors()
     {
         $bookIds = array_keys($this->bookList);
-        $baselist = new BaseList(Author::class, $this->request, $this->databaseId);
+        $baselist = new BaseList(Author::class, $this->request, $this->getDbContext());
         $authorIds = $baselist->getInstanceIdsByBookIds($bookIds);
         $authors = $baselist->getInstancesByIds($authorIds);
         foreach ($bookIds as $bookId) {
@@ -574,7 +578,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function setSerie()
     {
         $bookIds = array_keys($this->bookList);
-        $baselist = new BaseList(Serie::class, $this->request, $this->databaseId);
+        $baselist = new BaseList(Serie::class, $this->request, $this->getDbContext());
         $seriesIds = $baselist->getInstanceIdsByBookIds($bookIds);
         $series = $baselist->getInstancesByIds($seriesIds);
         foreach ($bookIds as $bookId) {
@@ -598,7 +602,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function setPublisher()
     {
         $bookIds = array_keys($this->bookList);
-        $baselist = new BaseList(Publisher::class, $this->request, $this->databaseId);
+        $baselist = new BaseList(Publisher::class, $this->request, $this->getDbContext());
         $publisherIds = $baselist->getInstanceIdsByBookIds($bookIds);
         $publishers = $baselist->getInstancesByIds($publisherIds);
         foreach ($bookIds as $bookId) {
@@ -622,7 +626,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function setTags()
     {
         $bookIds = array_keys($this->bookList);
-        $baselist = new BaseList(Tag::class, $this->request, $this->databaseId);
+        $baselist = new BaseList(Tag::class, $this->request, $this->getDbContext());
         $tagIds = $baselist->getInstanceIdsByBookIds($bookIds);
         $tags = $baselist->getInstancesByIds($tagIds);
         foreach ($bookIds as $bookId) {
@@ -645,7 +649,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function setLanguages()
     {
         $bookIds = array_keys($this->bookList);
-        $baselist = new BaseList(Language::class, $this->request, $this->databaseId);
+        $baselist = new BaseList(Language::class, $this->request, $this->getDbContext());
         $languageIds = $baselist->getInstanceIdsByBookIds($bookIds);
         $languages = $baselist->getInstancesByIds($languageIds);
         foreach ($bookIds as $bookId) {
@@ -669,7 +673,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function setDatas()
     {
         $bookIds = array_keys($this->bookList);
-        $baselist = new BaseList(Data::class, $this->request, $this->databaseId);
+        $baselist = new BaseList(Data::class, $this->request, $this->getDbContext());
         $dataIds = $baselist->getInstanceIdsByBookIds($bookIds);
         $datas = $baselist->getInstancesByIds($dataIds);
         $ignored_formats = $this->config('ignored_formats');

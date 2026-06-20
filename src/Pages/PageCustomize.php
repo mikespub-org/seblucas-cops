@@ -203,8 +203,6 @@ class PageCustomize extends Page
     {
         $this->entryArray = [];
 
-        $database = $this->getDatabaseId();
-
         $title = $this->localize("customize.template");
         $content = "";
         if ($this->useSelectTag()) {
@@ -266,7 +264,7 @@ class PageCustomize extends Page
 
         // do not customize virtual libraries for multiple databases
         if (!$this->getDbContext()->isMultipleDatabaseEnabled()) {
-            $this->addVirtualLibraries($database);
+            $this->addVirtualLibraries();
         }
     }
 
@@ -281,10 +279,9 @@ class PageCustomize extends Page
 
     /**
      * Summary of addVirtualLibraries
-     * @param int|null $database
      * @return void
      */
-    public function addVirtualLibraries($database = null)
+    public function addVirtualLibraries()
     {
         $libraries = VirtualLibrary::getLibraries($this->getDbContext());
         if (empty($libraries)) {

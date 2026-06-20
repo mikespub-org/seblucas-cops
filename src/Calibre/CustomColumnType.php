@@ -11,9 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasConfigTrait;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
@@ -85,17 +83,17 @@ abstract class CustomColumnType
      * Summary of __construct
      * @param int $customId
      * @param string $datatype
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($customId, $datatype, $database = null, $displaySettings = [], $config = null)
+    protected function __construct($customId, $datatype, $dbContext = null, $displaySettings = [])
     {
-        // set config and databaseId first
-        if (!empty($config)) {
-            $this->setConfig($config);
+        // set dbContext, config and databaseId first
+        $this->dbContext = $dbContext;
+        if (!empty($dbContext?->getConfig())) {
+            $this->setConfig($dbContext->getConfig());
         }
-        $this->databaseId = $database;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
         $this->columnTitle = static::getTitleByCustomID($customId, $this->getDbContext());
         $this->customId = $customId;
         $this->datatype = $datatype;
@@ -477,19 +475,17 @@ abstract class CustomColumnType
 
         [$datatype, $displaySettings] = static::getDatatypeAndDisplaySettingsByCustomID($customId, $dbContext);
 
-        $database = $dbContext->getDatabase();
-        $config = $dbContext->getConfig();
         static::$customColumnCacheID[$cacheKey] = match ($datatype) {
-            static::TYPE_TEXT => new CustomColumnTypeText($customId, static::TYPE_TEXT, $database, $displaySettings, $config),
-            static::TYPE_CSV => new CustomColumnTypeText($customId, static::TYPE_CSV, $database, $displaySettings, $config),
-            static::TYPE_SERIES => new CustomColumnTypeSeries($customId, $database, $displaySettings, $config),
-            static::TYPE_ENUM => new CustomColumnTypeEnumeration($customId, $database, $displaySettings, $config),
-            static::TYPE_COMMENT => new CustomColumnTypeComment($customId, $database, $displaySettings, $config),
-            static::TYPE_DATE => new CustomColumnTypeDate($customId, $database, $displaySettings, $config),
-            static::TYPE_FLOAT => new CustomColumnTypeFloat($customId, $database, $displaySettings, $config),
-            static::TYPE_INT => new CustomColumnTypeInteger($customId, static::TYPE_INT, $database, $displaySettings, $config),
-            static::TYPE_RATING => new CustomColumnTypeRating($customId, $database, $displaySettings, $config),
-            static::TYPE_BOOL => new CustomColumnTypeBool($customId, $database, $displaySettings, $config),
+            static::TYPE_TEXT => new CustomColumnTypeText($customId, static::TYPE_TEXT, $dbContext, $displaySettings),
+            static::TYPE_CSV => new CustomColumnTypeText($customId, static::TYPE_CSV, $dbContext, $displaySettings),
+            static::TYPE_SERIES => new CustomColumnTypeSeries($customId, $dbContext, $displaySettings),
+            static::TYPE_ENUM => new CustomColumnTypeEnumeration($customId, $dbContext, $displaySettings),
+            static::TYPE_COMMENT => new CustomColumnTypeComment($customId, $dbContext, $displaySettings),
+            static::TYPE_DATE => new CustomColumnTypeDate($customId, $dbContext, $displaySettings),
+            static::TYPE_FLOAT => new CustomColumnTypeFloat($customId, $dbContext, $displaySettings),
+            static::TYPE_INT => new CustomColumnTypeInteger($customId, static::TYPE_INT, $dbContext, $displaySettings),
+            static::TYPE_RATING => new CustomColumnTypeRating($customId, $dbContext, $displaySettings),
+            static::TYPE_BOOL => new CustomColumnTypeBool($customId, $dbContext, $displaySettings),
             static::TYPE_COMPOSITE => null,
             default => throw new UnexpectedValueException("Unknown column type: " . $datatype),
         };

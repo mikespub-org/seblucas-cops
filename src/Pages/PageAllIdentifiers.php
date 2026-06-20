@@ -35,7 +35,7 @@ class PageAllIdentifiers extends Page
      */
     public function getEntries()
     {
-        $baselist = new BaseList($this->className, $this->request);
+        $baselist = new BaseList($this->className, $this->request, $this->getDbContext());
         $this->entryArray = $baselist->getRequestEntries($this->n);
         $this->totalNumber = $baselist->countDistinctEntries();
         $this->sorted = $baselist->orderBy;

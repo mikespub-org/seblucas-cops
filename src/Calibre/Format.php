@@ -83,14 +83,13 @@ class Format extends Base
      */
     public static function getInstanceById($id, $dbContext = null, $locale = null)
     {
-        $database = $dbContext?->getDatabase() ?? null;
         if (!empty($id)) {
-            return new Format((object) ['id' => $id, 'name' => $id], $database);
+            return new Format((object) ['id' => $id, 'name' => $id], $dbContext);
         }
         $default = self::getDefaultName();
         $default = localize($default, -1, $locale);
         // use id = 0 to support route urls
-        return new Format((object) ['id' => 0, 'name' => $default], $database);
+        return new Format((object) ['id' => 0, 'name' => $default], $dbContext);
     }
 
     /**
@@ -131,7 +130,7 @@ class Format extends Base
             order by data.format';
         $result = $dbContext->query($query, [$bookId]);
         while ($post = $result->fetchObject()) {
-            array_push($formats, new Format($post, $dbContext->getDatabase()));
+            array_push($formats, new Format($post, $dbContext));
         }
         return $formats;
     }

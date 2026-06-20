@@ -56,6 +56,7 @@ class CustomColumn extends Category
         if ($this->customColumnType->getConfig() !== null) {
             $this->setConfig($this->customColumnType->getConfig());
         }
+        $this->dbContext = $this->customColumnType->getDbContext();
     }
 
     /**

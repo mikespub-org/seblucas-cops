@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
@@ -80,30 +81,36 @@ class PageQueryResult extends Page
         if ($this->getConfig() !== null) {
             $req->setConfig($this->getConfig());
         }
+        // optimize re-use of existing dbContext
+        if ($database !== $this->getDatabaseId()) {
+            $dbContext = new DatabaseContext($database, $this->getConfig());
+        } else {
+            $dbContext = $this->getDbContext();
+        }
         switch ($scope) {
             case PageQueryScope::BOOK:
-                $booklist = new BookList($req, $database, $numberPerPage);
+                $booklist = new BookList($req, $dbContext, $numberPerPage);
                 $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
                 break;
             case PageQueryScope::AUTHOR:
-                $baselist = new BaseList(Author::class, $req, $database, $numberPerPage);
+                $baselist = new BaseList(Author::class, $req, $dbContext, $numberPerPage);
                 // we need to repeat the query x 2 here because Author checks both name and sort fields
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
                 break;
             case PageQueryScope::SERIES:
-                $baselist = new BaseList(Serie::class, $req, $database, $numberPerPage);
+                $baselist = new BaseList(Serie::class, $req, $dbContext, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case PageQueryScope::TAG:
-                $baselist = new BaseList(Tag::class, $req, $database, $numberPerPage);
+                $baselist = new BaseList(Tag::class, $req, $dbContext, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             case PageQueryScope::PUBLISHER:
-                $baselist = new BaseList(Publisher::class, $req, $database, $numberPerPage);
+                $baselist = new BaseList(Publisher::class, $req, $dbContext, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
             default:
-                $booklist = new BookList($req, $database, $numberPerPage);
+                $booklist = new BookList($req, $dbContext, $numberPerPage);
                 $array = $booklist->getBooksByQueryScope(
                     ["all" => "%" . $queryNormedAndUp . "%"],
                     $n
@@ -270,7 +277,8 @@ class PageQueryResult extends Page
         $dbNum = 0;
         foreach (Database::getDbNameList($this->getConfig()) as $key) {
             Database::clearDb();
-            $booklist = new BookList($this->request, $dbNum, 1);
+            $dbContext = new DatabaseContext($dbNum, $this->getConfig());
+            $booklist = new BookList($this->request, $dbContext, 1);
             [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
             $this->addDatabaseEntry($key, $dbNum, $totalNumber, $query);
             $dbNum++;

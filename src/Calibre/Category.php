@@ -263,7 +263,7 @@ abstract class Category extends Base
         $instances = [];
         while ($post = $result->fetchObject()) {
             /** @var Category $instance */
-            $instance = new $className($post, $this->databaseId);
+            $instance = new $className($post, $this->getDbContext());
             $instance->count = $post->count;
             $instance->setHandler($this->handler);
             $instance->setLocale($this->locale);
@@ -321,7 +321,7 @@ abstract class Category extends Base
             // create dummy parent for missing hierarchy? doesn't help filter by it afterwards :-(
             //$className = static::class;
             // use id = 0 to support route urls
-            //$instance = new $className((object) ['id' => 0, 'name' => $name, 'sort' => $name, 'count' => 0], $this->databaseId);
+            //$instance = new $className((object) ['id' => 0, 'name' => $name, 'sort' => $name, 'count' => 0], $this->getDbContext());
             //$instance->setHandler($this->handler);
             //$instance->setLocale($this->locale);
         }

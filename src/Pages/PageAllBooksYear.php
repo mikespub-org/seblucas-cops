@@ -47,7 +47,7 @@ class PageAllBooksYear extends Page
      */
     public function getEntries()
     {
-        $booklist = new BookList($this->request);
+        $booklist = new BookList($this->request, $this->getDbContext());
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByPubYear($this->idGet, $this->n);
         $this->sorted = $booklist->orderBy ?? Book::SQL_SORT;
     }

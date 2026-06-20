@@ -17,7 +17,6 @@ use SebLucas\Cops\Calibre\CustomColumnTypeBool;
 use SebLucas\Cops\Calibre\CustomColumnTypeDate;
 use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 use SebLucas\Cops\Calibre\CustomColumnTypeRating;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;
 
 class PageAllCustoms extends Page
@@ -136,7 +135,7 @@ class PageAllCustoms extends Page
         $instance->setHandler($this->handler);
         $instance->setLocale($this->locale);
         // @todo support countWithoutEntries() for CustomColumn
-        $booklist = new BookList($this->request);
+        $booklist = new BookList($this->request, $this->getDbContext());
         $booklist->orderBy = null;
         [$result,] = $booklist->getBooksWithoutCustom($columnType, -1);
         array_push($this->entryArray, $instance->getEntry(count($result)));

@@ -10,21 +10,17 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\RequestConfig;
-
 class CustomColumnTypeComment extends CustomColumnType
 {
     /**
      * Summary of __construct
      * @param int $customId
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext
      * @param array<string, mixed> $displaySettings
      */
-    protected function __construct($customId, $database = null, $displaySettings = [], $config = null)
+    protected function __construct($customId, $dbContext = null, $displaySettings = [])
     {
-        parent::__construct($customId, self::TYPE_COMMENT, $database, $displaySettings, $config);
+        parent::__construct($customId, self::TYPE_COMMENT, $dbContext, $displaySettings);
     }
 
     /**

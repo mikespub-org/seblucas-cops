@@ -43,10 +43,13 @@ class Annotation extends Base
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null)
+    public function __construct($post, $dbContext = null)
     {
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->book = $post->book;
         $this->format = $post->format;
@@ -60,7 +63,6 @@ class Annotation extends Base
         } catch (JsonException) {
             $this->data = [ $post->annot_data ];
         }
-        $this->databaseId = $database;
         $this->setHandler(RestApiHandler::class);
     }
 
@@ -118,7 +120,7 @@ where book = ?';
         $result = $dbContext->query($query, [$bookId]);
         $annotationArray = [];
         while ($post = $result->fetchObject()) {
-            array_push($annotationArray, new Annotation($post, $dbContext->getDatabase()));
+            array_push($annotationArray, new Annotation($post, $dbContext));
         }
         return $annotationArray;
     }

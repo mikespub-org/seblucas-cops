@@ -55,7 +55,6 @@ class ZipFsHandler extends BaseHandler
         if (empty($component)) {
             return Response::notFound($request);
         }
-        $database = $request->database();
 
         // create empty response to start with!?
         $response = new Response();
@@ -67,7 +66,7 @@ class ZipFsHandler extends BaseHandler
         }
 
         try {
-            return $reader->sendZipContent($idData, $component, $database);
+            return $reader->sendZipContent($idData, $component, $request);
 
         } catch (Exception $e) {
             // @see https://github.com/mikespub-org/seblucas-cops/issues/136

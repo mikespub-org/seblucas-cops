@@ -40,14 +40,15 @@ class BaseList
     /**
      * @param class-string<Base|Data> $className
      * @param ?Request $request
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @param ?int $numberPerPage
      */
-    public function __construct($className, $request, $database = null, $numberPerPage = null)
+    public function __construct($className, $request, $dbContext = null, $numberPerPage = null)
     {
         $this->className = $className;
         $this->request = $request ?? new Request();
-        $this->databaseId = $database ?? $this->request->database();
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? $this->request->database();
         $this->numberPerPage = $numberPerPage ?? $this->request->option("max_item_per_page");
         $this->setOrderBy();
         // get handler based on $this->request
@@ -57,6 +58,8 @@ class BaseList
         // get config based on $this->request
         if ($this->request->getConfig() !== null) {
             $this->setConfig($this->request->getConfig());
+        } elseif ($this->dbContext?->getConfig() !== null) {
+            $this->setConfig($this->dbContext->getConfig());
         }
     }
 
@@ -220,7 +223,7 @@ class BaseList
             $filterString = str_replace("upper", "normAndUp", $filterString);
         }
         $param =  $letter . "%";
-        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->getDbContext());
         $filter->addFilter($filterString, $param);
         return $this->countFilteredEntries($filter);
     }
@@ -231,7 +234,7 @@ class BaseList
      */
     public function countEntriesByFilter()
     {
-        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->getDbContext());
         return $this->countFilteredEntries($filter);
     }
 
@@ -243,7 +246,7 @@ class BaseList
      */
     public function countEntriesByInstance($instance, $filterParams = [])
     {
-        $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->getDbContext());
         $filter->addInstanceFilter($instance);
         return $this->countFilteredEntries($filter);
     }
@@ -283,7 +286,7 @@ class BaseList
         $query = $this->className::SQL_BOOKLIST_NULL;
         $columns = 'count(distinct books.id)';
         if (!empty($this->config('database_filter'))) {
-            $filter = new Filter([], [], "books", $this->databaseId);
+            $filter = new Filter([], [], "books", $this->getDbContext());
             $filterString = $filter->getFilterString();
             $params = $filter->getQueryParams();
         } else {
@@ -340,7 +343,7 @@ class BaseList
         // Author has 2 params, the rest 1
         $params = array_fill(0, $repeat, '%' . $find . '%');
         if ($this->request->hasFilter() || !empty($this->config('database_filter'))) {
-            $filter = new Filter($this->request, $params, $this->getLinkTable(), $this->databaseId);
+            $filter = new Filter($this->request, $params, $this->getLinkTable(), $this->getDbContext());
             $filterString = $filter->getFilterString();
             $params = $filter->getQueryParams();
             return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
@@ -368,7 +371,7 @@ class BaseList
      */
     public function getCountByGroup($groupField, $routeName, $param)
     {
-        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->getDbContext());
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
 
@@ -423,7 +426,7 @@ class BaseList
         }
         $query = $this->addOrderByClause($query);
         $columns = $this->getCountColumns();
-        $filter = new Filter($this->request, [$letter . "%"], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($this->request, [$letter . "%"], $this->getLinkTable(), $this->getDbContext());
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
         return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
@@ -437,7 +440,7 @@ class BaseList
      */
     public function getEntriesByFilter($n = 1, $parentClass = null)
     {
-        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->databaseId, $parentClass);
+        $filter = new Filter($this->request, [], $this->getLinkTable(), $this->getDbContext(), $parentClass);
         $entries = $this->getFilteredEntries($filter, $n);
         if (!$this->pagination) {
             return $entries;
@@ -456,7 +459,7 @@ class BaseList
      */
     public function getEntriesByInstance($instance, $n = 1, $filterParams = [])
     {
-        $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter($filterParams, [], $this->getLinkTable(), $this->getDbContext());
         $filter->addInstanceFilter($instance);
         $entries = $this->getFilteredEntries($filter, $n);
         if (!$this->pagination) {
@@ -554,7 +557,7 @@ class BaseList
      */
     public function getEntriesByCustomValueId($customType, $valueId, $n = 1)
     {
-        $filter = new Filter([], [], $this->getLinkTable(), $this->databaseId);
+        $filter = new Filter([], [], $this->getLinkTable(), $this->getDbContext());
         $filter->addCustomIdFilter($customType, $valueId);
         return $this->getFilteredEntries($filter, $n);
     }
@@ -633,7 +636,7 @@ class BaseList
         }
         assert(is_subclass_of($this->className, Base::class));
         while ($post = $result->fetchObject()) {
-            $instance = new $this->className($post, $this->databaseId);
+            $instance = new $this->className($post, $this->getDbContext());
             $instance->setHandler($this->handler);
             $instance->setLocale($this->locale);
             array_push($entryArray, $instance->getEntry($post->count, $params));
@@ -680,7 +683,7 @@ class BaseList
         assert(is_subclass_of($this->className, Base::class));
         while ($post = $result->fetchObject()) {
             /** @var Category $instance */
-            $instance = new $this->className($post, $this->databaseId);
+            $instance = new $this->className($post, $this->getDbContext());
             $instance->setHandler($this->handler);
             $instance->setLocale($this->locale);
             if (!$expand && $instance->hasParentCategory()) {
@@ -758,7 +761,7 @@ class BaseList
                 $instances[$post->id] = new $this->className($post);
             } else {
                 assert(is_subclass_of($this->className, Base::class));
-                $instances[$post->id] = new $this->className($post, $this->databaseId);
+                $instances[$post->id] = new $this->className($post, $this->getDbContext());
                 $instances[$post->id]->setHandler($this->handler);
                 $instances[$post->id]->setLocale($this->locale);
             }

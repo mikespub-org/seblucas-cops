@@ -93,7 +93,6 @@ class ReadHandler extends BaseHandler
             return Response::notFound($request);
         }
         $version = $request->get('version', $this->config('epub_reader', 'monocle'));
-        $database = $request->database();
 
         $response = new Response(Response::MIME_TYPE_HTML);
 
@@ -104,7 +103,7 @@ class ReadHandler extends BaseHandler
         }
 
         try {
-            return $response->setContent($reader->getReader($idData, $version, $database));
+            return $response->setContent($reader->getReader($idData, $version, $request));
         } catch (InvalidArgumentException $e) {
             return Response::notFound($request, $e->getMessage());
         } catch (Throwable $e) {

@@ -29,9 +29,15 @@ class DatabaseContext
     protected ?string $dbName = null;
     protected ?int $userVersion = null;
     protected ?DatabaseConnection $dbConn = null;
+    protected static int $counter = 0;
 
     public function __construct(?int $database = null, ?RequestConfig $config = null)
     {
+        //self::$counter++;
+        //if (self::$counter > 1) {
+        //    debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
+        //    echo "<br>\n";
+        //}
         $this->database = $database;
         $this->config = $config;
     }

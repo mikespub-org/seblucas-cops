@@ -10,9 +10,11 @@
 
 namespace SebLucas\Cops\Output;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Metadata;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
 use ZipArchive;
 use InvalidArgumentException;
@@ -52,28 +54,29 @@ class ComicReader extends EPubReader
      * Summary of getReader - @todo not used here
      * @param int $idData
      * @param ?string $version
-     * @param ?int $database
+     * @param ?Request $request
      * @return string
      */
-    public function getReader($idData, $version = null, $database = null)
+    public function getReader($idData, $version = null, $request = null)
     {
         $version ??= $this->config('comic_reader', 'comic-reader.html?url=');
+        $dbContext = new DatabaseContext($request?->database(), $request?->getConfig());
         $template = $this->config('templates_directory') . explode('?', $version)[0];
-        return $this->getComicReader($idData, $database, $template);
+        return $this->getComicReader($idData, $dbContext, $template);
     }
 
     /**
      * Summary of getComicReader - @todo not used here
      * @param int $idData
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @param ?string $template
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function getComicReader($idData, $database = null, $template = null)
+    public function getComicReader($idData, $dbContext = null, $template = null)
     {
         $template ??= $this->config('templates_directory') . "comic-reader.html";
-        $this->findBookData($idData, $database);
+        $this->findBookData($idData, $dbContext);
         $this->setHandler(ZipFsHandler::class);
 
         $link = $this->getDataLink();

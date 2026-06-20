@@ -69,19 +69,17 @@ abstract class Base
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null, $config = null)
+    public function __construct($post, $dbContext = null)
     {
+        $this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->name = $post->name;
         $this->link = property_exists($post, 'link') ? $post->link : null;
         $this->count = property_exists($post, 'count') ? $post->count : null;
-        $this->databaseId = $database;
-        if (!empty($config)) {
-            $this->setConfig($config);
-        }
         // Note: handler and locale are undefined at this point
     }
 
@@ -295,12 +293,11 @@ abstract class Base
      */
     public function getBooks($n = 1, $sort = null)
     {
-        $booklist = new BookList(null, $this->databaseId);
+        $booklist = new BookList(null, $this->getDbContext());
         $booklist->orderBy = $sort;
         if (!empty($this->locale)) {
             $booklist->setLocale($this->locale);
         }
-        $booklist->setDbContext($this->getDbContext());
         [$entryArray, ] = $booklist->getBooksByInstance($this, $n);
         return $entryArray;
     }
@@ -310,13 +307,11 @@ abstract class Base
      * @param class-string<Base> $className
      * @param int $n
      * @param ?string $sort
-     * @param ?int $database
      * @param ?int $numberPerPage
      * @return array<Entry>
      */
-    public function getEntriesByInstance($className, $n = 1, $sort = null, $database = null, $numberPerPage = null)
+    public function getEntriesByInstance($className, $n = 1, $sort = null, $numberPerPage = null)
     {
-        $database ??= $this->databaseId;
         $numberPerPage ??= $this->filterLimit;
         // @todo get rid of extraParams in JsonRenderer and OpdsRenderer as filters should be included in navlink now
         $params = $this->getExtraParams();
@@ -325,7 +320,7 @@ abstract class Base
         if ($this->getConfig() !== null) {
             $request->setConfig($this->getConfig());
         }
-        $baselist = new BaseList($className, $request, $database, $numberPerPage);
+        $baselist = new BaseList($className, $request, $this->getDbContext(), $numberPerPage);
         $baselist->orderBy = $sort;
         $baselist->pagination = true;
         return $baselist->getEntriesByInstance($this, $n, $this->filterParams);
@@ -506,12 +501,11 @@ abstract class Base
     {
         $className = static::class;
         $dbContext ??= new DatabaseContext();
-        $database = $dbContext->getDatabase();
         if (isset($id)) {
             $query = 'select ' . static::getInstanceColumns($dbContext) . ' from ' . $className::SQL_TABLE . ' where id = ?';
             $result = $dbContext->query($query, [$id]);
             if ($post = $result->fetchObject()) {
-                return new $className($post, $dbContext->getDatabase());
+                return new $className($post, $dbContext);
             }
             if (!empty($id)) {
                 $classParts = explode('\\', $className);
@@ -523,7 +517,7 @@ abstract class Base
             $default = localize($default, -1, $locale);
         }
         // use id = 0 to support route urls
-        return new $className((object) ['id' => 0, 'name' => $default, 'sort' => $default], $database);
+        return new $className((object) ['id' => 0, 'name' => $default, 'sort' => $default], $dbContext);
     }
 
     /**
@@ -539,7 +533,7 @@ abstract class Base
         $query = 'select ' . static::getInstanceColumns($dbContext) . ' from ' . $className::SQL_TABLE . ' where name = ?';
         $result = $dbContext->query($query, [$name]);
         if ($post = $result->fetchObject()) {
-            return new $className($post, $dbContext->getDatabase());
+            return new $className($post, $dbContext);
         }
         return null;
     }

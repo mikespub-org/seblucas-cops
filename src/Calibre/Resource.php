@@ -19,7 +19,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\CalResHandler;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Routing\UriGenerator;
 
@@ -46,13 +45,15 @@ class Resource
     /**
      * Summary of __construct
      * @param \stdClass $post
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      */
-    public function __construct($post, $database = null)
+    public function __construct($post, $dbContext = null)
     {
+        //$this->dbContext = $dbContext;
+        $this->databaseId = $dbContext?->getDatabase() ?? null;
+        //$this->config = $dbContext?->getConfig() ?? null;
         $this->hash = $post->hash;
         $this->name = $post->name;
-        $this->databaseId = $database;
         $this->setHandler(CalResHandler::class);
     }
 

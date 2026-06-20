@@ -35,7 +35,7 @@ class PageAllTags extends Page
      */
     public function getEntries()
     {
-        $baselist = new BaseList($this->className, $this->request);
+        $baselist = new BaseList($this->className, $this->request, $this->getDbContext());
         if ($this->request->option("tag_split_first_letter") == 1 || $this->request->get('letter')) {
             $this->entryArray = $baselist->getCountByFirstLetter();
             $this->sorted = $baselist->orderBy;

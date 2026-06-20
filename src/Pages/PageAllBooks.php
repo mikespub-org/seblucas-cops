@@ -34,7 +34,7 @@ class PageAllBooks extends Page
      */
     public function getEntries()
     {
-        $booklist = new BookList($this->request);
+        $booklist = new BookList($this->request, $this->getDbContext());
         $idlist = $this->request->get('idlist');
         if (!empty($idlist)) {
             // [$this->entryArray, $this->totalNumber] = $booklist->getAllBooks($this->n);

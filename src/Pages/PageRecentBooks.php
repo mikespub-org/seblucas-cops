@@ -33,7 +33,7 @@ class PageRecentBooks extends Page
      */
     public function getEntries()
     {
-        $booklist = new BookList($this->request);
+        $booklist = new BookList($this->request, $this->getDbContext());
         $this->entryArray = $booklist->getRecentBooks();
         $this->sorted = $booklist->orderBy ?? "timestamp desc";
     }

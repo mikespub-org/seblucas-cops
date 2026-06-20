@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Output;
 use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Handlers\FetchHandler;
@@ -562,8 +563,9 @@ class JsonRenderer extends BaseRenderer
         if (!$this->request->hasFilter()) {
             return $filters;
         }
+        $dbContext = new DatabaseContext($this->database, $this->request->getConfig());
         $filters = [];
-        foreach (Filter::getEntryArray($this->request, $this->database) as $entry) {
+        foreach (Filter::getEntryArray($this->request, $dbContext) as $entry) {
             array_push($filters, $this->getContentArray($entry, ['filter' => 1]));
         }
         if (empty($filters)) {

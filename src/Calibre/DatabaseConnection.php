@@ -48,11 +48,7 @@ class DatabaseConnection
                 throw new Exception(sprintf("Database <%s> not found or not readable.", $this->database));
             }
             $this->db = new Sqlite('sqlite:' . $this->dbFileName);
-            try {
-                $this->createSqliteFunctions();
-            } catch (\Throwable $e) {
-                var_dump($e);
-            }
+            $this->createSqliteFunctions();
         }
         return $this->db;
     }

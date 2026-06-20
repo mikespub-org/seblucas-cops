@@ -62,7 +62,7 @@ from books_series_link, series
 where series.id = series and book = ?';
         $result = $dbContext->query($query, [$bookId]);
         if ($post = $result->fetchObject()) {
-            return new Serie($post, $dbContext->getDatabase());
+            return new self($post, $dbContext);
         }
         return false;
     }

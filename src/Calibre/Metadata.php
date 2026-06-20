@@ -38,6 +38,7 @@ class Metadata extends EPubMetadata
     public function updateBook($book)
     {
         $creator = $this->getElement('dc:creator');
+        $dbContext = $book->getDbContext();
         if (!empty($creator)) {
             $name = $creator[0]['value'];
             if (!empty($creator[0]['file-as'])) {
@@ -49,7 +50,7 @@ class Metadata extends EPubMetadata
                 $sort = $last . ', ' . implode(' ', $pieces);
             }
             $post = (object) ['id' => null, 'name' => $name, 'sort' => $sort];
-            $author = new Author($post);
+            $author = new Author($post, $dbContext);
             $book->authors = [$author];
         }
         $description = $this->getElement('dc:description');
@@ -129,6 +130,7 @@ class Metadata extends EPubMetadata
     public static function updateBookFromEPub($book, $filePath)
     {
         $epub = new EPub($filePath);
+        $dbContext = $book->getDbContext();
         // Note: cover URLs will fail in JsonRenderer::getFullBookContentArray()
         // for books in folders /ebook/ if book title is updated based on EPUB file
         //$book->title = $epub->getTitle();
@@ -136,7 +138,7 @@ class Metadata extends EPubMetadata
         $book->authors = [];
         foreach ($epub->getAuthors() as $sort => $name) {
             $post = (object) ['id' => null, 'name' => $name, 'sort' => $sort];
-            $author = new Author($post);
+            $author = new Author($post, $dbContext);
             $book->authors[] = $author;
         }
         $description = $epub->getDescription();
@@ -146,18 +148,18 @@ class Metadata extends EPubMetadata
         $publisher = $epub->getPublisher();
         if ($publisher) {
             $post = (object) ['id' => null, 'name' => $publisher];
-            $book->publisher = new Publisher($post);
+            $book->publisher = new Publisher($post, $dbContext);
         }
         [$series, $index] = $epub->getSeriesOrCollection();
         if ($series) {
             $post = (object) ['id' => null, 'name' => $series];
-            $book->serie = new Serie($post);
+            $book->serie = new Serie($post, $dbContext);
             $book->seriesIndex = (float) $index;
         }
         $book->tags = [];
         foreach ($epub->getSubjects() as $name) {
             $post = (object) ['id' => null, 'name' => $name];
-            $tag = new Tag($post);
+            $tag = new Tag($post, $dbContext);
             $book->tags[] = $tag;
         }
         //$book->rating = $epub->getRating();
@@ -170,7 +172,7 @@ class Metadata extends EPubMetadata
                     $type = 'url';
                 }
                 $post = (object) ['id' => null, 'type' => $type, 'val' => $val];
-                $identifier = new Identifier($post);
+                $identifier = new Identifier($post, $dbContext);
                 $book->identifiers[] = $identifier;
             }
         }
@@ -196,6 +198,7 @@ class Metadata extends EPubMetadata
         if (empty($metadata)) {
             return $book;
         }
+        $dbContext = $book->getDbContext();
         $title = $metadata->getElement('Title');
         if (!empty($title)) {
             $book->title = $title[0];
@@ -216,7 +219,7 @@ class Metadata extends EPubMetadata
         $book->authors = [];
         if (!empty($writer)) {
             $post = (object) ['id' => null, 'name' => $writer[0], 'sort' => $writer[0]];
-            $author = new Author($post);
+            $author = new Author($post, $dbContext);
             $book->authors[] = $author;
         }
         $summary = $metadata->getElement('Summary');
@@ -226,12 +229,12 @@ class Metadata extends EPubMetadata
         $publisher = $metadata->getElement('Publisher');
         if (!empty($publisher)) {
             $post = (object) ['id' => null, 'name' => $publisher[0]];
-            $book->publisher = new Publisher($post);
+            $book->publisher = new Publisher($post, $dbContext);
         }
         $series = $metadata->getElement('Series');
         if (!empty($series)) {
             $post = (object) ['id' => null, 'name' => $series[0]];
-            $book->serie = new Serie($post);
+            $book->serie = new Serie($post, $dbContext);
             $index = $metadata->getElement('Number');
             if (!empty($index)) {
                 $book->seriesIndex = (float) $index[0];
@@ -241,7 +244,7 @@ class Metadata extends EPubMetadata
         $book->tags = [];
         if (!empty($genre)) {
             $post = (object) ['id' => null, 'name' => $genre[0]];
-            $tag = new Tag($post);
+            $tag = new Tag($post, $dbContext);
             $book->tags[] = $tag;
         }
         $language = $metadata->getElement('LanguageISO');
@@ -253,7 +256,7 @@ class Metadata extends EPubMetadata
         if (!empty($web)) {
             $type = 'url';
             $post = (object) ['id' => null, 'type' => $type, 'val' => $web[0]];
-            $identifier = new Identifier($post);
+            $identifier = new Identifier($post, $dbContext);
             $book->identifiers[] = $identifier;
         }
         $count = $metadata->getElement('PageCount');

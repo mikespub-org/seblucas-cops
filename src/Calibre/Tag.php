@@ -74,7 +74,7 @@ class Tag extends Category
             order by name';
         $result = $dbContext->query($query, [$bookId]);
         while ($post = $result->fetchObject()) {
-            array_push($tags, new Tag($post, $dbContext->getDatabase()));
+            array_push($tags, new self($post, $dbContext));
         }
         return $tags;
     }

@@ -51,7 +51,7 @@ class PageSerieDetail extends PageWithDetail
      */
     public function getEntriesWithChildren($instance)
     {
-        $booklist = new BookList($this->request);
+        $booklist = new BookList($this->request, $this->getDbContext());
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstanceOrChildren($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "sort";
         $this->getExtra($instance);
@@ -64,7 +64,7 @@ class PageSerieDetail extends PageWithDetail
      */
     public function getEntries($instance = null)
     {
-        $booklist = new BookList($this->request);
+        $booklist = new BookList($this->request, $this->getDbContext());
         [$this->entryArray, $this->totalNumber] = $booklist->getBooksByInstance($instance, $this->n);
         $this->sorted = $booklist->orderBy ?? "series_index";
         $this->getExtra($instance);

@@ -339,7 +339,7 @@ class GraphQLExecutor
         switch ($fieldName) {
             case 'books':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $booklist = new BookList($current, null, $numberPerPage);
+                $booklist = new BookList($current, $dbContext, $numberPerPage);
                 [$entryArray, $totalNumber] = $booklist->getAllBooks($n);
                 return $entryArray;
             case 'book':
@@ -369,7 +369,7 @@ class GraphQLExecutor
                 return $data;
             case 'authors':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Author::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Author::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'author':
@@ -379,7 +379,7 @@ class GraphQLExecutor
                 return $instance->getEntry();
             case 'formats':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Format::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Format::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'format':
@@ -389,7 +389,7 @@ class GraphQLExecutor
                 return $instance->getEntry();
             case 'identifiers':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Identifier::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Identifier::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'identifier':
@@ -399,7 +399,7 @@ class GraphQLExecutor
                 return $instance->getEntry();
             case 'languages':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Language::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Language::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'language':
@@ -409,7 +409,7 @@ class GraphQLExecutor
                 return $instance->getEntry();
             case 'publishers':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Publisher::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Publisher::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'publisher':
@@ -419,7 +419,7 @@ class GraphQLExecutor
                 return $instance->getEntry();
             case 'ratings':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Rating::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Rating::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'rating':
@@ -429,7 +429,7 @@ class GraphQLExecutor
                 return $instance->getEntry();
             case 'series':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Serie::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Serie::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'serie':
@@ -439,7 +439,7 @@ class GraphQLExecutor
                 return $instance->getEntry();
             case 'tags':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
-                $baselist = new BaseList(Tag::class, $current, null, $numberPerPage);
+                $baselist = new BaseList(Tag::class, $current, $dbContext, $numberPerPage);
                 $entryArray = $baselist->getRequestEntries($n);
                 return $entryArray;
             case 'tag':
@@ -485,6 +485,7 @@ class GraphQLExecutor
                 // get books for parent instance(s)
                 $instance = $entry->instance;
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
+                // @todo get dbContext from somewhere
                 $booklist = new BookList($current, null, $numberPerPage);
                 [$entryArray, $totalNumber] = $booklist->getBooksByInstance($instance, $n);
                 return $entryArray;

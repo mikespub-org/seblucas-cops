@@ -10,8 +10,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use UnexpectedValueException;
 
@@ -24,26 +22,25 @@ class CustomColumnTypeText extends CustomColumnType
      * Summary of __construct
      * @param int $customId
      * @param string $datatype
-     * @param ?int $database
-     * @param ?RequestConfig $config
+     * @param ?DatabaseContext $dbContext
      * @param array<string, mixed> $displaySettings
      * @return void
      * @throws \UnexpectedValueException
      */
-    protected function __construct($customId, $datatype = self::TYPE_TEXT, $database = null, $displaySettings = [], $config = null)
+    protected function __construct($customId, $datatype = self::TYPE_TEXT, $dbContext = null, $displaySettings = [])
     {
         switch ($datatype) {
             case self::TYPE_TEXT:
-                parent::__construct($customId, self::TYPE_TEXT, $database, $displaySettings, $config);
+                parent::__construct($customId, self::TYPE_TEXT, $dbContext, $displaySettings);
                 return;
             case self::TYPE_CSV:
-                parent::__construct($customId, self::TYPE_CSV, $database, $displaySettings, $config);
+                parent::__construct($customId, self::TYPE_CSV, $dbContext, $displaySettings);
                 return;
             case self::TYPE_ENUM:
-                parent::__construct($customId, self::TYPE_ENUM, $database, $displaySettings, $config);
+                parent::__construct($customId, self::TYPE_ENUM, $dbContext, $displaySettings);
                 return;
             case self::TYPE_SERIES:
-                parent::__construct($customId, self::TYPE_SERIES, $database, $displaySettings, $config);
+                parent::__construct($customId, self::TYPE_SERIES, $dbContext, $displaySettings);
                 return;
             default:
                 throw new UnexpectedValueException();
