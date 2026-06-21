@@ -13,10 +13,13 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * ...
+
+4.4.11 - 20260621 Use config per request + refactor Database context
   * Changes in config/default.php file:
     - new $config['cops_templates_directory'] to adapt templates directory
-  * ...
   * Update php/npm packages
+  * Deprecate most static Database methods for clean-up in next release
   * Use DatabaseContext in constructors instead of database + config
   * Use DatabaseContext in static methods instead of database + config
   * Add HasDatabaseTrait to simplify Database method calls in classes
