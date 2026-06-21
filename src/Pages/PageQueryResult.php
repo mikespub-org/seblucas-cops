@@ -107,11 +107,25 @@ class PageQueryResult extends Page
             case PageQueryScope::COMMENT:
                 $baselist = new BaseList(Comment::class, $req, $dbContext, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
-                // re-map comments to books
                 if (!$limit) {
+                    // re-map comments to books
                     $idlist = array_map(fn($entry) => (int) $entry->instance->name, $array);
                     $booklist = new BookList($req, $dbContext, $numberPerPage);
                     $array = $booklist->getBooksByIdList($idlist);
+                } elseif ($this->useTypeahead()) {
+                    // update title based on books
+                    $idlist = array_map(fn($entry) => (int) $entry->instance->name, $array);
+                    $booklist = new BookList($req, $dbContext, $numberPerPage);
+                    [$bookArray, ] = $booklist->getBooksByIdList($idlist);
+                    $titles = [];
+                    foreach ($bookArray as $entryBook) {
+                        $titles[$entryBook->book->id] = $entryBook->title;
+                    }
+                    foreach ($array as $id => $entry) {
+                        if (!empty($titles[$entry->instance->name])) {
+                            $array[$id]->title = $titles[$entry->instance->name];
+                        }
+                    }
                 }
                 break;
             case PageQueryScope::NOTE:
