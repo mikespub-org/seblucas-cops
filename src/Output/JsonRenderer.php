@@ -10,12 +10,12 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Folder;
+use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Handlers\ReadHandler;

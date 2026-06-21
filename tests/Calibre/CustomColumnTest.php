@@ -14,8 +14,6 @@ use SebLucas\Cops\Calibre\CustomColumn;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\CustomColumnType;
@@ -28,6 +26,8 @@ use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
 use SebLucas\Cops\Calibre\CustomColumnTypeRating;
 use SebLucas\Cops\Calibre\CustomColumnTypeSeries;
 use SebLucas\Cops\Calibre\CustomColumnTypeText;
+use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\EntryBook;

@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Middleware\AdminMiddleware;

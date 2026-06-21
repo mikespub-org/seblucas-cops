@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\DatabaseContext;
+use SebLucas\Cops\Database\HasDatabaseTrait;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;

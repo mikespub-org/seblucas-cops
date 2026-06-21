@@ -10,13 +10,13 @@
 
 namespace SebLucas\Cops\Tests\Handler;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Handlers\EpubFsHandler;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Framework\Framework;
-use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\EPubReader;

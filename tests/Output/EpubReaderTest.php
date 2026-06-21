@@ -10,12 +10,12 @@
 
 namespace SebLucas\Cops\Tests\Output;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Output\EPubReader;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Model\Entry;

@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use PHPMailer\PHPMailer\PHPMailer;

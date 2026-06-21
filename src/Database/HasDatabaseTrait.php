@@ -1,6 +1,6 @@
 <?php
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Database;
 
 /**
  * Trait for classes that use DatabaseContext instance methods

@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\HtmlRenderer;
 use SebLucas\Cops\Output\Response;

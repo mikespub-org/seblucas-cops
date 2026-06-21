@@ -16,7 +16,7 @@ use SebLucas\Cops\Output\TwigTemplate;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\JsonRenderer;

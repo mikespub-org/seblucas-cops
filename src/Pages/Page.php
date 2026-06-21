@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\HasDatabaseTrait;
+use SebLucas\Cops\Database\HasDatabaseTrait;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;

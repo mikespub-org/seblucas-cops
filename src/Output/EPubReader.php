@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Data;
-use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;

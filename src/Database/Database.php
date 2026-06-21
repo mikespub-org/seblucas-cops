@@ -8,7 +8,7 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Database;
 
 use SebLucas\Cops\Input\RequestConfig;
 

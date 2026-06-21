@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Input;
 
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;

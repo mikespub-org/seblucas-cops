@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\DatabaseContext;
+use SebLucas\Cops\Database\HasDatabaseTrait;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\HasConfigTrait;

@@ -10,15 +10,15 @@
 
 namespace SebLucas\Cops\Tests\Calibre;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
-use SebLucas\Cops\Calibre\Note;
-use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Handlers\CalResHandler;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Author;
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Calibre\Note;
+use SebLucas\Cops\Calibre\Resource;
+use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;

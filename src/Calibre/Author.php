@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Pages\PageId;
 
 class Author extends Base

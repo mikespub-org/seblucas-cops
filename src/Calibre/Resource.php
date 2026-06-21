@@ -17,6 +17,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\CalResHandler;
 use SebLucas\Cops\Output\FileResponse;

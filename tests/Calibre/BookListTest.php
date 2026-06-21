@@ -15,7 +15,6 @@ use SebLucas\Cops\Input\RequestConfig;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
@@ -24,6 +23,7 @@ use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
+use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Output\ComicReader;
 use SebLucas\EPubMeta\EPub;
 use SebLucas\EPubMeta\Metadata as EPubMetadata;

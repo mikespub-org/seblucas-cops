@@ -12,7 +12,7 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Routing\UriGenerator;

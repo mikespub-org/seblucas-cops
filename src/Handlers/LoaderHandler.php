@@ -12,8 +12,8 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Serie;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Response;

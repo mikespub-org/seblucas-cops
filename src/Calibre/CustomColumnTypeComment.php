@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\DatabaseContext;
+
 class CustomColumnTypeComment extends CustomColumnType
 {
     /**

@@ -11,12 +11,12 @@
 namespace SebLucas\Cops\Tests\Calibre;
 
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Model\LinkImage;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;

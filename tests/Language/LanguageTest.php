@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Tests\Language;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
+use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Slugger;
 use SebLucas\Cops\Language\Translation;

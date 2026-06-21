@@ -14,8 +14,8 @@ use SebLucas\Cops\Output\JsonRenderer;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\FetchHandler;
 use SebLucas\Cops\Handlers\ReadHandler;

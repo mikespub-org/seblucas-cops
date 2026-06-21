@@ -10,8 +10,8 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Resource;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;
 

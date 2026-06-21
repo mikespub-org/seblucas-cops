@@ -8,13 +8,13 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Tests\Calibre;
+namespace SebLucas\Cops\Tests\Database;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\RequestConfig;
 

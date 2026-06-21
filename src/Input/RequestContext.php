@@ -10,7 +10,7 @@
 
 namespace SebLucas\Cops\Input;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Routing\RouterInterface;

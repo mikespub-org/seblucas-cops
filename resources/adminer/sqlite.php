@@ -40,7 +40,7 @@ function adminer_object()
             echo '<div class="error">' . \Adminer\lang('Warning: don\'t use this via public Internet connection!') . '</div>';
             echo "<table cellspacing='0' class='layout'>\n";
             echo '<input type="hidden" name="auth[driver]" value="sqlite">';
-            $dbContext = new \SebLucas\Cops\Calibre\DatabaseContext();
+            $dbContext = new \SebLucas\Cops\Database\DatabaseContext();
             if ($dbContext->isMultipleDatabaseEnabled()) {
                 $input = '<select name="auth[db]">';
                 $db = 0;
@@ -84,7 +84,7 @@ function adminer_object()
             }
             $found = false;
             $db = 0;
-            $dbContext = new \SebLucas\Cops\Calibre\DatabaseContext();
+            $dbContext = new \SebLucas\Cops\Database\DatabaseContext();
             if ($dbContext->isMultipleDatabaseEnabled()) {
                 foreach ($dbContext->getDbNameList() as $name) {
                     $dbContext->setDatabase($db);

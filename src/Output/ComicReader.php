@@ -10,8 +10,8 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Metadata;
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
