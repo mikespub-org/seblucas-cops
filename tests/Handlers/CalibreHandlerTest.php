@@ -8,7 +8,7 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Tests\Handler;
+namespace SebLucas\Cops\Tests\Handlers;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;

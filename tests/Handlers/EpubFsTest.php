@@ -8,7 +8,7 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Tests\Handler;
+namespace SebLucas\Cops\Tests\Handlers;
 
 use SebLucas\Cops\Handlers\EpubFsHandler;
 
