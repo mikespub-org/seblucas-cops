@@ -322,6 +322,7 @@ class BookList
 
     /**
      * Summary of getBooksByQueryScope
+     * Note: no optional search criteria like book comments, extra notes or user annotations here
      * @param array<string, string> $queryScope
      * @param int $n
      * @param array<string> $ignoredCategories

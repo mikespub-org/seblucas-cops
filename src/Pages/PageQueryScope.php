@@ -21,6 +21,9 @@ enum PageQueryScope: string
     case RATING = "rating";
     case SERIES = "series";
     case TAG = "tag";
+    case COMMENT = "comment";
+    case NOTE = "note";
+    case ANNOTATION = "annotation";
     case LIBRARIES = "libraries";
     case ALLBOOKS = "allbooks";
     case RECENT = "recent";
@@ -52,6 +55,11 @@ enum PageQueryScope: string
             self::RATING => "ratings.title",
             self::SERIES => "series.title",
             self::TAG => "tags.title",
+            // only used in search options
+            self::COMMENT => "content.summary",
+            self::NOTE => "extra.title",
+            self::ANNOTATION => "extra.title",
+            // only used for home screen
             self::LIBRARIES => "libraries.title",
             self::ALLBOOKS => "allbooks.title",
             self::RECENT => "recent.title",

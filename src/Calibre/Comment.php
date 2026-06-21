@@ -13,9 +13,41 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\CalibreHandler;
 use SebLucas\Cops\Routing\UriGenerator;
 
-class Comment
+class Comment extends Base
 {
     public const CALIBRE_URL_SCHEME = CalibreHandler::URL_SCHEME;
+    public const SQL_TABLE = "comments";
+    public const SQL_LINK_TABLE = "comments";
+    public const SQL_LINK_COLUMN = "id";
+    public const SQL_SORT = "id";
+    public const SQL_COLUMNS = "id, book as name, text";
+    public const SQL_ALL_ROWS = "select {0} from comments where 1=1 {1}";
+    public const SQL_ROWS_FOR_SEARCH = "select {0} from comments where upper (strip_html(comments.text)) like ? {1} group by comments.id order by comments.id";
+
+    /**
+     * Summary of getUri
+     * @param array<mixed> $params
+     * @return string
+     */
+    public function getUri($params = [])
+    {
+        $params['id'] = $this->name;
+        // we need databaseId here because we use $handler::link()
+        $params['db'] = $this->databaseId;
+        return $this->getRoute(Book::ROUTE_PAGEID, $params);
+        //$params['author'] = $this->getAuthorsName();
+        //$params['title'] = $this->getTitle();
+        //return $this->getRoute(self::ROUTE_DETAIL, $params);
+    }
+
+    /**
+     * Summary of getTitle
+     * @return string
+     */
+    public function getTitle()
+    {
+        return '(' . strval($this->name) . ')';
+    }
 
     /**
      * Summary of hasCalibreLinks

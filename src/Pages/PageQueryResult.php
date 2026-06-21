@@ -13,6 +13,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\Comment;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
@@ -103,6 +104,22 @@ class PageQueryResult extends Page
                 $baselist = new BaseList(Publisher::class, $req, $dbContext, $numberPerPage);
                 $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
                 break;
+            case PageQueryScope::COMMENT:
+                $baselist = new BaseList(Comment::class, $req, $dbContext, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
+                // re-map comments to books
+                if (!$limit) {
+                    $idlist = array_map(fn($entry) => (int) $entry->instance->name, $array);
+                    $booklist = new BookList($req, $dbContext, $numberPerPage);
+                    $array = $booklist->getBooksByIdList($idlist);
+                }
+                break;
+            case PageQueryScope::NOTE:
+                $array = [];
+                break;
+            case PageQueryScope::ANNOTATION:
+                $array = [];
+                break;
             default:
                 $booklist = new BookList($req, $dbContext, $numberPerPage);
                 $array = $booklist->getBooksByQueryScope(
@@ -135,6 +152,22 @@ class PageQueryResult extends Page
             $dbContext = $this->getDbContext();
             $libraryId = $this->request->getVirtualLibrary();
         }
+        $scopeList = [
+            PageQueryScope::BOOK,
+            PageQueryScope::AUTHOR,
+            PageQueryScope::SERIES,
+            PageQueryScope::TAG,
+            PageQueryScope::PUBLISHER,
+        ];
+        if (!empty($this->config('search_comments', 0))) {
+            $scopeList[] = PageQueryScope::COMMENT;
+        }
+        if (!empty($this->config('search_notes', 0))) {
+            $scopeList[] = PageQueryScope::NOTE;
+        }
+        if (!empty($this->config('search_annotations', 0))) {
+            $scopeList[] = PageQueryScope::ANNOTATION;
+        }
         foreach ($dbArray as $key) {
             if ($noDatabaseSelected) {
                 $href = fn() => $this->getLink(["db" => $dbNum]);
@@ -149,11 +182,7 @@ class PageQueryResult extends Page
                 ));
                 $dbContext->setDatabase($dbNum);
             }
-            foreach ([PageQueryScope::BOOK,
-                PageQueryScope::AUTHOR,
-                PageQueryScope::SERIES,
-                PageQueryScope::TAG,
-                PageQueryScope::PUBLISHER] as $scope) {
+            foreach ($scopeList as $scope) {
                 $value = $scope->value;
                 if (in_array($value, $this->getIgnoredCategories())) {
                     continue;

@@ -442,6 +442,30 @@ $tooltips['cops_ignored_categories'] = <<<'EOT'
     - recent (home screen)
     EOT;
 
+$tooltips['cops_search_comments'] = <<<'EOT'
+    Enable search in book comments
+    1 : Yes (enable)
+    0 : No
+    EOT;
+
+$tooltips['cops_search_notes'] = <<<'EOT'
+    Enable search in extra notes
+    1 : Yes (enable)
+    0 : No
+    EOT;
+
+$tooltips['cops_search_annotations'] = <<<'EOT'
+    Enable search in user annotations - @todo
+    1 : Yes (enable)
+    0 : No
+    EOT;
+
+$tooltips['cops_search_strip_html'] = <<<'EOT'
+    Strip html tags for search in comments, notes or annotations
+    1 : Yes (enable)
+    0 : No
+    EOT;
+
 $tooltips['cops_fetch_protect'] = <<<'EOT'
     If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
     is password protected. A simple workaround is to leave index.php/fetch not protected (see .htaccess).

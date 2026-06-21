@@ -187,6 +187,9 @@ class PageCustomize extends Page
             PageQueryScope::RATING,
             PageQueryScope::LANGUAGE,
             PageQueryScope::FORMAT,
+            // only used in search options
+            //PageQueryScope::COMMENT,
+            //PageQueryScope::NOTE,
             PageQueryScope::IDENTIFIER,
             PageQueryScope::ALLBOOKS,
             PageQueryScope::RECENT,

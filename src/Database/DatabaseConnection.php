@@ -119,6 +119,13 @@ class DatabaseConnection
             $db->createFunction('title_sort', fn($s) => Normalizer::getTitleSort($s), 1);
         }
 
+        if (!empty($this->config('search_strip_html', 0))) {
+            $db->createFunction('strip_html', fn($s) => preg_replace('/<[^>]*>/', ' ', $s), 1);
+        } else {
+            // no-op
+            $db->createFunction('strip_html', fn($s) => $s, 1);
+        }
+
         $sql = 'SELECT sqlite_version() as version;';
         $stmt = $db->prepare($sql);
         $stmt->execute();

@@ -13,7 +13,14 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * Changes in config/default.php file:
+    - new $config['cops_search_comments'] to search in book comments
+    - new $config['cops_search_notes'] to search in extra notes
+    - new $config['cops_search_strip_html'] to strip html tags for search (WIP)
   * ...
+  * Add new search options for book comments or extra notes - see issue #174 from @cslondon
+  * Move Database classes and CustomColumns classes to their own namespace
+  * Remove deprecated static Database methods
 
 4.4.11 - 20260621 Use config per request + refactor Database context
   * Changes in config/default.php file:

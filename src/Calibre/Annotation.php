@@ -31,7 +31,7 @@ class Annotation extends Base
     public const SQL_COLUMNS = "id, book, format, user_type, user, timestamp, annot_id, annot_type, annot_data";
     public const SQL_ALL_ROWS = "select {0} from annotations where 1=1 {1}";
 
-    public int $book;
+    public int $bookId;
     public string $format;
     public string $userType;
     public string $user;
@@ -51,7 +51,7 @@ class Annotation extends Base
         $this->databaseId = $dbContext?->getDatabase() ?? null;
         $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
-        $this->book = $post->book;
+        $this->bookId = $post->book;
         $this->format = $post->format;
         $this->userType = $post->user_type;
         $this->user = $post->user;
@@ -73,7 +73,7 @@ class Annotation extends Base
      */
     public function getUri($params = [])
     {
-        $params['bookId'] = $this->book;
+        $params['bookId'] = $this->bookId;
         $params['id'] = $this->id;
         return $this->getResource(static::class, $params);
     }
@@ -84,7 +84,7 @@ class Annotation extends Base
      */
     public function getTitle()
     {
-        return '(' . strval($this->book) . ') ' . ucfirst($this->type) . ' ' . $this->name;
+        return '(' . strval($this->bookId) . ') ' . ucfirst($this->type) . ' ' . $this->name;
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */

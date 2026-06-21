@@ -509,6 +509,34 @@ $config['cops_server_side_render'] = 'Kindle\/1\.\d|Kindle\/2\.\d|Kindle\/3\.\d|
 $config['cops_ignored_categories'] = ['format', 'identifier'];
 
 /*
+ * Enable search in book comments
+ * 1 : Yes (enable)
+ * 0 : No
+ */
+$config['cops_search_comments'] = '0';
+
+/*
+ * Enable search in extra notes
+ * 1 : Yes (enable)
+ * 0 : No
+ */
+$config['cops_search_notes'] = '0';
+
+/*
+ * Enable search in user annotations - @todo
+ * 1 : Yes (enable)
+ * 0 : No
+ */
+$config['cops_search_annotations'] = '0';
+
+/*
+ * Strip html tags for search in comments, notes or annotations
+ * 1 : Yes (enable)
+ * 0 : No
+ */
+$config['cops_search_strip_html'] = '0';
+
+/*
  * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
  * is password protected. A simple workaround is to leave index.php/fetch not protected (see .htaccess).
  * But In that case your COPS installation is not completely safe.
