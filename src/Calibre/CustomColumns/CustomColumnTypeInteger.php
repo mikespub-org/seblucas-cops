@@ -8,31 +8,34 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Calibre\CustomColumns;
 
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkNavigation;
-use DateTime;
 use InvalidArgumentException;
+use UnexpectedValueException;
 
-class CustomColumnTypeDate extends CustomColumnType
+class CustomColumnTypeInteger extends CustomColumnType
 {
-    public const SQL_BOOKLIST = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and date({2}.value) = ? {1} order by books.sort';
-    public const SQL_BOOKLIST_YEAR = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
-    where {2}.book = books.id and substr(date({2}.value), 1, 4) = ? {1} order by {2}.value';
-    public const GET_PATTERN = '/^(\d+)$/';
+    public const GET_PATTERN = '/^(-?[0-9]+)-(-?[0-9]+)$/';
 
     /**
      * Summary of __construct
      * @param int $customId
+     * @param string $datatype
      * @param ?DatabaseContext $dbContext
      * @param array<string, mixed> $displaySettings
+     * @throws \UnexpectedValueException
      */
-    protected function __construct($customId, $dbContext = null, $displaySettings = [])
+    protected function __construct($customId, $datatype = self::TYPE_INT, $dbContext = null, $displaySettings = [])
     {
-        parent::__construct($customId, self::TYPE_DATE, $dbContext, $displaySettings);
+        match ($datatype) {
+            self::TYPE_INT => parent::__construct($customId, self::TYPE_INT, $dbContext, $displaySettings),
+            self::TYPE_FLOAT => parent::__construct($customId, self::TYPE_FLOAT, $dbContext, $displaySettings),
+            default => throw new UnexpectedValueException(),
+        };
     }
 
     /**
@@ -42,28 +45,30 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (empty($id) && in_array("custom", $this->config('show_not_set_filter'))) {
+        if (is_null($id) && in_array("custom", $this->config('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $date = new DateTime($id);
-        $query = str_format(self::SQL_BOOKLIST, "{0}", "{1}", $this->getTableName());
-        return [$query, [$date->format("Y-m-d")]];
+        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
+        return [$query, [$id]];
     }
 
     /**
-     * Summary of getQueryByYear
-     * @param mixed $year
+     * Summary of getQueryByRange
+     * @param string $range
      * @throws \InvalidArgumentException
      * @return ?array{0: string, 1: array<mixed>}
      */
-    public function getQueryByYear($year)
+    public function getQueryByRange($range)
     {
-        if (!preg_match(self::GET_PATTERN, (string) $year)) {
-            throw new InvalidArgumentException('Invalid Year');
+        $matches = [];
+        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
+            throw new InvalidArgumentException('Invalid Range');
         }
-        $query = str_format(self::SQL_BOOKLIST_YEAR, "{0}", "{1}", $this->getTableName());
-        return [$query, [$year]];
+        $lower = $matches[1];
+        $upper = $matches[2];
+        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
+        return [$query, [$lower, $upper]];
     }
 
     /**
@@ -74,15 +79,14 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getFilter($id, $parentTable = null)
     {
-        $date = new DateTime($id);
         $linkTable = $this->getTableName();
         $linkColumn = "value";
         if (!empty($parentTable) && $parentTable != "books") {
             $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
-            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and date({$linkTable}.{$linkColumn}) = ?)";
+            $filter = "exists (select null from {$linkTable} where {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         }
-        return [$filter, [$date->format("Y-m-d")]];
+        return [$filter, [$id]];
     }
 
     /**
@@ -92,13 +96,7 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getCustom($id)
     {
-        if (empty($id)) {
-            $default = static::getDefaultName();
-            return new CustomColumn(null, $this->localize($default), $this);
-        }
-        $date = new DateTime($id);
-
-        return new CustomColumn($id, $date->format($this->localize("customcolumn.date.format")), $this);
+        return new CustomColumn($id, $id, $this);
     }
 
     /**
@@ -109,48 +107,43 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
-        $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue";
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
         if (!empty($sort) && $sort == 'count') {
-            $queryFormat .= ' ORDER BY count desc, datevalue';
+            $queryFormat .= ' ORDER BY count desc, value';
         } else {
-            $queryFormat .= ' ORDER BY datevalue';
+            $queryFormat .= ' ORDER BY value';
         }
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getPaginatedResult($query, [], $n);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $date = new DateTime($post->datevalue);
-            $id = $date->format("Y-m-d");
-            $name = $date->format($this->localize("customcolumn.date.format"));
-
-            $customcolumn = new CustomColumn($id, $name, $this);
+            $name = $post->id;
+            $customcolumn = new CustomColumn($post->id, $name, $this);
             array_push($entryArray, $customcolumn->getEntry($post->count));
         }
-
         return $entryArray;
     }
 
     /**
-     * Summary of getDistinctValueCount
-     * @return mixed
-     */
-    public function getDistinctValueCount()
-    {
-        $queryFormat = "SELECT COUNT(DISTINCT date(value)) AS count FROM {0}";
-        $query = str_format($queryFormat, $this->getTableName());
-        return $this->getDbContext()->querySingle($query);
-    }
-
-    /**
-     * Summary of getCountByYear
+     * Summary of getCountByRange
      * @param mixed $routeName can be $columnType::ROUTE_ALL or $columnType::ROUTE_DETAIL
      * @param ?string $sort
      * @return array<Entry>
      */
-    public function getCountByYear($routeName, $sort = null)
+    public function getCountByRange($routeName, $sort = null)
     {
-        $queryFormat = "SELECT substr(date(value), 1, 4) AS groupid, count(*) AS count FROM {0} GROUP BY groupid";
+        $numtiles = $this->config('custom_integer_split_range');
+        if ($numtiles <= 1) {
+            $numtiles = $this->config('max_item_per_page');
+        }
+        if ($numtiles < 1) {
+            $numtiles = 1;
+        }
+        // Equal height distribution using NTILE() has problem with overlapping range
+        //$queryFormat = "SELECT groupid, MIN(value) AS min_value, MAX(value) AS max_value, COUNT(*) AS count FROM (SELECT value, NTILE({$numtiles}) OVER (ORDER BY value) AS groupid FROM {0}) x GROUP BY groupid";
+        // Semi-equal height distribution using CUME_DIST()
+        $queryFormat = "SELECT CAST(ROUND(dist * ({$numtiles} - 1), 0) AS INTEGER) AS groupid, MIN(value) AS min_value, MAX(value) AS max_value, COUNT(*) AS count FROM (SELECT value, CUME_DIST() OVER (ORDER BY value) dist FROM {0}) GROUP BY groupid";
         if (!empty($sort) && $sort == 'count') {
             $queryFormat .= ' ORDER BY count desc, groupid';
         } else {
@@ -160,15 +153,16 @@ class CustomColumnTypeDate extends CustomColumnType
         $result = $this->getDbContext()->query($query, []);
 
         $entryArray = [];
-        $param = 'year';
+        $param = 'range';
         while ($post = $result->fetchObject()) {
-            $params = ['custom' => $this->customId, $param => $post->groupid, 'db' => $this->databaseId];
+            $range = $post->min_value . "-" . $post->max_value;
+            $params = ['custom' => $this->customId, $param => $range, 'db' => $this->databaseId];
             // @todo if we want to use ROUTE_DETAIL we need to add id= here
             $params['id'] = '0';
             $href = fn() => $this->getRoute($routeName, $params);
             array_push($entryArray, new Entry(
-                $post->groupid,
-                $this->getEntryId() . ':' . $param . ':' . $post->groupid,
+                $range,
+                $this->getEntryId() . ':' . $param . ':' . $range,
                 str_format($this->localize('bookword', $post->count), $post->count),
                 'text',
                 [ new LinkNavigation($href, null, null) ],
@@ -182,34 +176,33 @@ class CustomColumnTypeDate extends CustomColumnType
     }
 
     /**
-     * Summary of getCustomValuesByYear
-     * @param mixed $year
+     * Summary of getCustomValuesByRange
+     * @param string $range
      * @param ?string $sort
      * @throws \InvalidArgumentException
      * @return array<Entry>
      */
-    public function getCustomValuesByYear($year, $sort = null)
+    public function getCustomValuesByRange($range, $sort = null)
     {
-        if (!preg_match(self::GET_PATTERN, (string) $year)) {
-            throw new InvalidArgumentException('Invalid Year');
+        $matches = [];
+        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
+            throw new InvalidArgumentException('Invalid Range');
         }
-        $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} WHERE substr(date(value), 1, 4) = ? GROUP BY datevalue";
+        $lower = $matches[1];
+        $upper = $matches[2];
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} WHERE value >= ? AND value <= ? GROUP BY value";
         if (!empty($sort) && $sort == 'count') {
-            $queryFormat .= ' ORDER BY count desc, datevalue';
+            $queryFormat .= ' ORDER BY count desc, value';
         } else {
-            $queryFormat .= ' ORDER BY datevalue';
+            $queryFormat .= ' ORDER BY value';
         }
         $query = str_format($queryFormat, $this->getTableName());
-        $params = [ $year ];
-        $result = $this->getDbContext()->query($query, $params);
+        $result = $this->getDbContext()->query($query, [$lower, $upper]);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $date = new DateTime($post->datevalue);
-            $id = $date->format("Y-m-d");
-            $name = $date->format($this->localize("customcolumn.date.format"));
-
-            $customcolumn = new CustomColumn($id, $name, $this);
+            $name = $post->id;
+            $customcolumn = new CustomColumn($post->id, $name, $this);
             array_push($entryArray, $customcolumn->getEntry($post->count));
         }
 
@@ -223,14 +216,12 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = ?";
+        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
-            $date = new DateTime($post->datevalue);
-
-            return new CustomColumn($date->format("Y-m-d"), $date->format($this->localize("customcolumn.date.format")), $this);
+            return new CustomColumn($post->value, $post->value, $this);
         }
         $default = static::getDefaultName();
         return new CustomColumn(null, $this->localize($default), $this);
@@ -251,6 +242,6 @@ class CustomColumnTypeDate extends CustomColumnType
      */
     public static function getDefaultName()
     {
-        return "customcolumn.date.unknown";
+        return "customcolumn.int.unknown";
     }
 }

@@ -14,7 +14,7 @@ use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
-use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnType;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;

@@ -8,16 +8,14 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Calibre\CustomColumns;
 
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Model\Entry;
-use InvalidArgumentException;
 
-class CustomColumnTypeFloat extends CustomColumnType
+class CustomColumnTypeEnumeration extends CustomColumnType
 {
-    public const GET_PATTERN = '/^(-?[0-9.]+)-(-?[0-9.]+)$/';
-
     /**
      * Summary of __construct
      * @param int $customId
@@ -26,7 +24,28 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     protected function __construct($customId, $dbContext = null, $displaySettings = [])
     {
-        parent::__construct($customId, self::TYPE_FLOAT, $dbContext, $displaySettings);
+        parent::__construct($customId, self::TYPE_ENUM, $dbContext, $displaySettings);
+    }
+
+    /**
+     * Get the name of the linking sqlite table for this column
+     * (or NULL if there is no linktable)
+     *
+     * @return string
+     */
+    protected function getTableLinkName()
+    {
+        return "books_custom_column_{$this->customId}_link";
+    }
+
+    /**
+     * Get the name of the linking column in the linktable
+     *
+     * @return string
+     */
+    protected function getTableLinkColumn()
+    {
+        return "value";
     }
 
     /**
@@ -36,30 +55,12 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (is_null($id) && in_array("custom", $this->config('show_not_set_filter'))) {
-            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
+        if (empty($id) && in_array("custom", $this->config('show_not_set_filter'))) {
+            $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableLinkName());
             return [$query, []];
         }
-        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_LINK, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return [$query, [$id]];
-    }
-
-    /**
-     * Summary of getQueryByRange
-     * @param string $range
-     * @throws \InvalidArgumentException
-     * @return ?array{0: string, 1: array<mixed>}
-     */
-    public function getQueryByRange($range)
-    {
-        $matches = [];
-        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
-            throw new InvalidArgumentException('Invalid Range');
-        }
-        $lower = $matches[1];
-        $upper = $matches[2];
-        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
-        return [$query, [$lower, $upper]];
     }
 
     /**
@@ -70,8 +71,8 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     public function getFilter($id, $parentTable = null)
     {
-        $linkTable = $this->getTableName();
-        $linkColumn = "value";
+        $linkTable = $this->getTableLinkName();
+        $linkColumn = $this->getTableLinkColumn();
         if (!empty($parentTable) && $parentTable != "books") {
             $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
@@ -87,7 +88,13 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     public function getCustom($id)
     {
-        return new CustomColumn($id, $id, $this);
+        $query = str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName());
+        $result = $this->getDbContext()->query($query, [$id]);
+        if ($post = $result->fetchObject()) {
+            return new CustomColumn($id, $post->name, $this);
+        }
+        $default = static::getDefaultName();
+        return new CustomColumn(null, $this->localize($default), $this);
     }
 
     /**
@@ -98,17 +105,26 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
-        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
-        $query = str_format($queryFormat, $this->getTableName());
+        $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = $this->getPaginatedResult($query, [], $n);
         $entryArray = [];
         while ($post = $result->fetchObject()) {
-            $name = $post->id;
-            $customcolumn = new CustomColumn($post->id, $name, $this);
+            $customcolumn = new CustomColumn($post->id, $post->name, $this);
             array_push($entryArray, $customcolumn->getEntry($post->count));
         }
         return $entryArray;
+    }
+
+    /**
+     * Summary of getContent
+     * @param int $count
+     * @return string
+     */
+    public function getContent($count = 0)
+    {
+        return str_format($this->localize("customcolumn.description.enum", $count), (string) $count);
     }
 
     /**
@@ -118,12 +134,12 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
-        $query = str_format($queryFormat, $this->getTableName());
+        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
-            return new CustomColumn($post->value, $post->value, $this);
+            return new CustomColumn($post->id, $post->name, $this);
         }
         $default = static::getDefaultName();
         return new CustomColumn(null, $this->localize($default), $this);
@@ -144,6 +160,6 @@ class CustomColumnTypeFloat extends CustomColumnType
      */
     public static function getDefaultName()
     {
-        return "customcolumn.float.unknown";
+        return "customcolumn.enum.unknown";
     }
 }

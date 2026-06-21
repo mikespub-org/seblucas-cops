@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Output;
 
 use JsonException;
 use SebLucas\Cops\Calibre\Annotation;
-use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnType;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Calibre\Metadata;

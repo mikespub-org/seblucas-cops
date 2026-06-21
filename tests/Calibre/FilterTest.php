@@ -22,7 +22,7 @@ use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Format;
-use SebLucas\Cops\Calibre\CustomColumn;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumn;
 use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\JsonHandler;

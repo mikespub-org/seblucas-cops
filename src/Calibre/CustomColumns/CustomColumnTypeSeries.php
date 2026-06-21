@@ -8,13 +8,17 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Calibre\CustomColumns;
 
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Model\Entry;
 
-class CustomColumnTypeEnumeration extends CustomColumnType
+class CustomColumnTypeSeries extends CustomColumnType
 {
+    public const SQL_BOOKLIST_LINK = 'select {0} from {2}, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where {2}.book = books.id and {2}.{3} = ? {1} order by {2}.extra';
+
     /**
      * Summary of __construct
      * @param int $customId
@@ -23,7 +27,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      */
     protected function __construct($customId, $dbContext = null, $displaySettings = [])
     {
-        parent::__construct($customId, self::TYPE_ENUM, $dbContext, $displaySettings);
+        parent::__construct($customId, self::TYPE_SERIES, $dbContext, $displaySettings);
     }
 
     /**
@@ -123,25 +127,24 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      */
     public function getContent($count = 0)
     {
-        return str_format($this->localize("customcolumn.description.enum", $count), (string) $count);
+        return str_format($this->localize("customcolumn.description.series", $count), (string) $count);
     }
 
     /**
      * Summary of getCustomByBook
-     * @param Book $book
+     * @param mixed $book
      * @return CustomColumn
      */
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
+        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS value, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = ?";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
-            return new CustomColumn($post->id, $post->name, $this);
+            return new CustomColumn($post->id, $post->value . " [" . $post->extra . "]", $this);
         }
-        $default = static::getDefaultName();
-        return new CustomColumn(null, $this->localize($default), $this);
+        return new CustomColumn(null, "", $this);
     }
 
     /**
@@ -159,6 +162,6 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      */
     public static function getDefaultName()
     {
-        return "customcolumn.enum.unknown";
+        return "customcolumn.boolean.unknown";
     }
 }

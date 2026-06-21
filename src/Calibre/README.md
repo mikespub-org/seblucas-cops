@@ -5,7 +5,7 @@ The `Calibre` namespace is the data access layer for the application. It is resp
 ## Components
 
 ### Database
-This class manages the connection to one or more `metadata.db` files. It provides methods for executing SQL queries and handles the logic for multi-database setups.
+These classes manage the connection to one or more `metadata.db` files. They provide methods for executing SQL queries with `DatabaseConnection` and handle the logic for multi-database setups with `DatabaseContext`.
 
 ### Entity Classes
 A set of classes (`Book`, `Author`, `Series`, `Tag`, `CustomColumn`, etc.) that represent individual records from the database. They provide an object-oriented interface to the raw data and contain logic for finding associated data (e.g., finding all books for an author).

@@ -13,7 +13,7 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Comment;
-use SebLucas\Cops\Calibre\CustomColumn;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumn;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Language;

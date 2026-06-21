@@ -12,8 +12,8 @@ namespace SebLucas\Cops\Tests\Calibre;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Calibre\CustomColumn;
-use SebLucas\Cops\Calibre\CustomColumnType;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumn;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnType;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\BaseList;

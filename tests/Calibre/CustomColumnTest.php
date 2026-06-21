@@ -10,22 +10,22 @@
 
 namespace SebLucas\Cops\Tests\Calibre;
 
-use SebLucas\Cops\Calibre\CustomColumn;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumn;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
-use SebLucas\Cops\Calibre\CustomColumnType;
-use SebLucas\Cops\Calibre\CustomColumnTypeBool;
-use SebLucas\Cops\Calibre\CustomColumnTypeComment;
-use SebLucas\Cops\Calibre\CustomColumnTypeDate;
-use SebLucas\Cops\Calibre\CustomColumnTypeEnumeration;
-use SebLucas\Cops\Calibre\CustomColumnTypeFloat;
-use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
-use SebLucas\Cops\Calibre\CustomColumnTypeRating;
-use SebLucas\Cops\Calibre\CustomColumnTypeSeries;
-use SebLucas\Cops\Calibre\CustomColumnTypeText;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnType;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeBool;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeComment;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeDate;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeEnumeration;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeFloat;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeInteger;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeRating;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeSeries;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeText;
 use SebLucas\Cops\Database\Database;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\JsonHandler;

@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnType;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Database\HasDatabaseTrait;
 use SebLucas\Cops\Handlers\HasRouteTrait;

@@ -8,12 +8,17 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Calibre\CustomColumns;
 
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Database\DatabaseContext;
+use SebLucas\Cops\Model\Entry;
+use InvalidArgumentException;
 
-class CustomColumnTypeComment extends CustomColumnType
+class CustomColumnTypeFloat extends CustomColumnType
 {
+    public const GET_PATTERN = '/^(-?[0-9.]+)-(-?[0-9.]+)$/';
+
     /**
      * Summary of __construct
      * @param int $customId
@@ -22,7 +27,7 @@ class CustomColumnTypeComment extends CustomColumnType
      */
     protected function __construct($customId, $dbContext = null, $displaySettings = [])
     {
-        parent::__construct($customId, self::TYPE_COMMENT, $dbContext, $displaySettings);
+        parent::__construct($customId, self::TYPE_FLOAT, $dbContext, $displaySettings);
     }
 
     /**
@@ -32,12 +37,30 @@ class CustomColumnTypeComment extends CustomColumnType
      */
     public function getQuery($id)
     {
-        if (empty($id) && in_array("custom", $this->config('show_not_set_filter'))) {
+        if (is_null($id) && in_array("custom", $this->config('show_not_set_filter'))) {
             $query = str_format(self::SQL_BOOKLIST_NULL, "{0}", "{1}", $this->getTableName());
             return [$query, []];
         }
-        $query = str_format(self::SQL_BOOKLIST_ID, "{0}", "{1}", $this->getTableName());
+        $query = str_format(self::SQL_BOOKLIST_VALUE, "{0}", "{1}", $this->getTableName());
         return [$query, [$id]];
+    }
+
+    /**
+     * Summary of getQueryByRange
+     * @param string $range
+     * @throws \InvalidArgumentException
+     * @return ?array{0: string, 1: array<mixed>}
+     */
+    public function getQueryByRange($range)
+    {
+        $matches = [];
+        if (!preg_match(self::GET_PATTERN, $range, $matches)) {
+            throw new InvalidArgumentException('Invalid Range');
+        }
+        $lower = $matches[1];
+        $upper = $matches[2];
+        $query = str_format(self::SQL_BOOKLIST_RANGE, "{0}", "{1}", $this->getTableName());
+        return [$query, [$lower, $upper]];
     }
 
     /**
@@ -49,7 +72,7 @@ class CustomColumnTypeComment extends CustomColumnType
     public function getFilter($id, $parentTable = null)
     {
         $linkTable = $this->getTableName();
-        $linkColumn = "id";
+        $linkColumn = "value";
         if (!empty($parentTable) && $parentTable != "books") {
             $filter = "exists (select null from {$linkTable}, books where {$parentTable}.book = books.id and {$linkTable}.book = books.id and {$linkTable}.{$linkColumn} = ?)";
         } else {
@@ -69,33 +92,24 @@ class CustomColumnTypeComment extends CustomColumnType
     }
 
     /**
-     * Summary of encodeHTMLValue
-     * @param string $value
-     * @return string
-     */
-    public function encodeHTMLValue($value)
-    {
-        return "<div>" . $value . "</div>"; // no htmlspecialchars, this is already HTML
-    }
-
-    /**
      * Summary of getAllCustomValuesFromDatabase
      * @param int $n
      * @param ?string $sort
-     * @return null
+     * @return array<Entry>
      */
     protected function getAllCustomValuesFromDatabase($n = -1, $sort = null)
     {
-        return null;
-    }
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
+        $query = str_format($queryFormat, $this->getTableName());
 
-    /**
-     * Summary of getDistinctValueCount
-     * @return int
-     */
-    public function getDistinctValueCount()
-    {
-        return 0;
+        $result = $this->getPaginatedResult($query, [], $n);
+        $entryArray = [];
+        while ($post = $result->fetchObject()) {
+            $name = $post->id;
+            $customcolumn = new CustomColumn($post->id, $name, $this);
+            array_push($entryArray, $customcolumn->getEntry($post->count));
+        }
+        return $entryArray;
     }
 
     /**
@@ -105,12 +119,12 @@ class CustomColumnTypeComment extends CustomColumnType
      */
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = ?";
+        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = ?";
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getDbContext()->query($query, [$book->id]);
         if ($post = $result->fetchObject()) {
-            return new CustomColumn($post->id, $post->value, $this);
+            return new CustomColumn($post->value, $post->value, $this);
         }
         $default = static::getDefaultName();
         return new CustomColumn(null, $this->localize($default), $this);
@@ -122,7 +136,7 @@ class CustomColumnTypeComment extends CustomColumnType
      */
     public function isSearchable()
     {
-        return false;
+        return true;
     }
 
     /**

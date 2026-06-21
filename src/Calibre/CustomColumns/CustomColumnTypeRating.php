@@ -8,8 +8,9 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Calibre\CustomColumns;
 
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Model\Entry;
 

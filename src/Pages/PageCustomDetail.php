@@ -11,12 +11,12 @@
 namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\BookList;
-use SebLucas\Cops\Calibre\CustomColumn;
-use SebLucas\Cops\Calibre\CustomColumnTypeBool;
-use SebLucas\Cops\Calibre\CustomColumnTypeDate;
-use SebLucas\Cops\Calibre\CustomColumnTypeFloat;
-use SebLucas\Cops\Calibre\CustomColumnTypeInteger;
-use SebLucas\Cops\Calibre\CustomColumnTypeRating;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumn;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeBool;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeDate;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeFloat;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeInteger;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumnTypeRating;
 
 class PageCustomDetail extends PageWithDetail
 {

@@ -8,8 +8,9 @@
  * @author     mikespub
  */
 
-namespace SebLucas\Cops\Calibre;
+namespace SebLucas\Cops\Calibre\CustomColumns;
 
+use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Database\HasDatabaseTrait;
 use SebLucas\Cops\Handlers\HasRouteTrait;
