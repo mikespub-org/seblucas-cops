@@ -5,48 +5,45 @@ namespace SebLucas\Cops\Tests\Framework;
 use SebLucas\Cops\Framework\Framework;
 
 require_once dirname(__DIR__, 2) . '/config/test.php';
+use PHPUnit\Framework\Attributes\RequiresMethod;
 use PHPUnit\Framework\TestCase;
-use SebLucas\Cops\Framework\LegacyFramework;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\CheckHandler;
+use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Middleware\TestMiddleware;
 use SebLucas\Cops\Output\Response;
+use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\RouterInterface;
 
 class FrameworkTest extends TestCase
 {
-    public function testFrameworkAndFrameworkTodoSingleton(): void
+    public function testFrameworkSingleton(): void
     {
-        $framework1 = LegacyFramework::getInstance();
-        $framework2 = LegacyFramework::getInstance();
+        $framework1 = Framework::getInstance();
+        $framework2 = Framework::getInstance();
         $this->assertSame($framework1, $framework2);
-
-        $frameworkTodo1 = Framework::getInstance();
-        $frameworkTodo2 = Framework::getInstance();
-        $this->assertSame($frameworkTodo1, $frameworkTodo2);
     }
 
     public function testHandlerManagerAccess(): void
     {
-        $handlerManager1 = LegacyFramework::getHandlerManager();
-        $framework2 = new Framework();
-        $handlerManager2 = $framework2->getHandlerManager();
+        $framework = new Framework();
+        $handlerManager = $framework->getHandlerManager();
 
-        $this->assertSame($handlerManager1->getHandlers(), $handlerManager2->getHandlers());
+        $this->assertInstanceOf(HandlerManager::class, $handlerManager);
+        $expected = 20;
+        $this->assertCount($expected, $handlerManager->getHandlers());
     }
 
     public function testRouterAccess(): void
     {
-        $router1 = LegacyFramework::getRouter();
-        $framework2  = new Framework();
-        $router2 = $framework2->getRouter();
+        $framework  = new Framework();
+        $router = $framework->getRouter();
 
-        $this->assertInstanceOf(RouterInterface::class, $router1);
-        $this->assertInstanceOf(RouterInterface::class, $router2);
-        $this->assertNotSame($router1, $router2);
+        $this->assertInstanceOf(RouterInterface::class, $router);
+        $this->assertInstanceOf(RouteCollection::class, $router->getRouteCollection());
     }
 
     public function testRequestHandling(): void
@@ -162,6 +159,54 @@ class FrameworkTest extends TestCase
         $expected = "<title>COPS Configuration Check</title>";
         $this->assertStringContainsString($expected, $output);
 
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    #[RequiresMethod('\Marsender\EPubLoader\RequestHandler', '__construct')]
+    public function testRunLoader(): void
+    {
+        $_SERVER['PATH_INFO'] = '/loader';
+
+        ob_start();
+        Framework::run(true);
+        $output = ob_get_clean();
+
+        $expected = "<title>COPS Loader</title>";
+        $this->assertStringContainsString($expected, $output);
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testRunAdminDisabled(): void
+    {
+        $_SERVER['PATH_INFO'] = '/admin';
+
+        ob_start();
+        Framework::run(true);
+        $output = ob_get_clean();
+
+        // redirect with empty content
+        $expected = "";
+        $this->assertEquals($expected, $output);
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
+    public function testRunAdminEnabled(): void
+    {
+        // enable admin in test config
+        Config::set('enable_admin', true);
+        $_SERVER['PATH_INFO'] = '/admin';
+
+        ob_start();
+        Framework::run(true);
+        $output = ob_get_clean();
+
+        $expected = "<title>COPS - Admin Features</title>";
+        $this->assertStringContainsString($expected, $output);
+
+        // disable admin in test config
+        Config::set('enable_admin', false);
         unset($_SERVER['PATH_INFO']);
     }
 

@@ -140,18 +140,6 @@ class Framework
         return self::$instance;
     }
 
-    /**
-     * Get request instance with optional path and params
-     * @deprecated 4.4.1 use RequestContext::newRequest() instead
-     * @param array<string, mixed> $params
-     * @return Request
-     */
-    public static function getRequest(string $path = '', array $params = [])
-    {
-        $context = self::getInstance()->getContext();
-        return $context->newRequest($path, $params);
-    }
-
     public static function run(bool $reset = false): void
     {
         // Handle request

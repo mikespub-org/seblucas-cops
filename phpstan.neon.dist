@@ -10,9 +10,6 @@ parameters:
         - .
     bootstrapFiles:
         - vendor/autoload.php
-    ignoreErrors:
-        - '#Call to method [a-zA-Z0-9\\_]+\(\) of deprecated class SebLucas\\Cops\\Framework\\LegacyFramework#'
-        - '#Access to constant on deprecated class SebLucas\\Cops\\Framework\\LegacyFramework#'
     excludePaths:
         - vendor/*
         - resources/adminer/sqlite.php

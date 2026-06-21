@@ -24,28 +24,6 @@ class DatabaseTest extends TestCase
         Database::clearDb();
     }
 
-    /**
-     * @deprecated 4.4.10 use DatabaseContext() instead
-     */
-    public function testBaseFunction(): void
-    {
-        $this->assertFalse(Database::isMultipleDatabaseEnabled());
-        $this->assertEquals(["" => dirname(__DIR__) . "/BaseWithSomeBooks/"], Database::getDbList());
-
-        Config::set('calibre_directory', [
-            "Some books" => dirname(__DIR__) . "/BaseWithSomeBooks/",
-            "One book" => dirname(__DIR__) . "/BaseWithOneBook/"]);
-        Database::clearDb();
-
-        $this->assertTrue(Database::isMultipleDatabaseEnabled());
-        $this->assertEquals("Some books", Database::getDbName(0));
-        $this->assertEquals("One book", Database::getDbName(1));
-        $this->assertEquals(Config::get('calibre_directory'), Database::getDbList());
-
-        Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
-        Database::clearDb();
-    }
-
     public function testCheckDatabaseAvailability_1(): void
     {
         $this->assertTrue(Database::checkDatabaseAvailability(null));
