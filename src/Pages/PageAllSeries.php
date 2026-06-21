@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Serie;
-use SebLucas\Cops\Input\Config;
 
 class PageAllSeries extends Page
 {

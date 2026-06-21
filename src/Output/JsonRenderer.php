@@ -27,7 +27,6 @@ use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageAbout;
-use Exception;
 
 class JsonRenderer extends BaseRenderer
 {
@@ -555,15 +554,15 @@ class JsonRenderer extends BaseRenderer
 
     /**
      * Summary of getFiltersArray
+     * @param DatabaseContext $dbContext
      * @return array<mixed>|false
      */
-    public function getFiltersArray()
+    public function getFiltersArray($dbContext)
     {
         $filters = false;
         if (!$this->request->hasFilter()) {
             return $filters;
         }
-        $dbContext = new DatabaseContext($this->database, $this->request->getConfig());
         $filters = [];
         foreach (Filter::getEntryArray($this->request, $dbContext) as $entry) {
             array_push($filters, $this->getContentArray($entry, ['filter' => 1]));
@@ -758,6 +757,7 @@ class JsonRenderer extends BaseRenderer
         $libraryId = $request->getVirtualLibrary();
 
         $currentPage = PageId::getPage($this->page, $request);
+        $dbContext = $currentPage->getDbContext();
 
         // handle folder book as book page
         if ($this->page == "folder" && !empty($currentPage->book)) {
@@ -810,14 +810,14 @@ class JsonRenderer extends BaseRenderer
         }
 
         $out ["databaseId"] = $this->database ?? "";
-        $out ["databaseName"] = Database::getDbName($this->database, $this->getConfig());
+        $out ["databaseName"] = $dbContext->getDbName();
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
         $out ["libraryId"] = $libraryId ?? "";
         $out ["libraryName"] = $this->config('title_default');
         $out ["fullTitle"] = $out ["title"];
-        $out ["multipleDatabase"] = Database::isMultipleDatabaseEnabled($this->getConfig()) ? 1 : 0;
+        $out ["multipleDatabase"] = $dbContext->isMultipleDatabaseEnabled() ? 1 : 0;
         if (!empty($out ["multipleDatabase"]) && $out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
         }
@@ -830,7 +830,7 @@ class JsonRenderer extends BaseRenderer
         }
 
         $out = array_replace($out, $this->addSortFilter($currentPage));
-        $out["filters"] = $this->getFiltersArray();
+        $out["filters"] = $this->getFiltersArray($dbContext);
 
         $params = [];
         $params['db'] = $this->database;

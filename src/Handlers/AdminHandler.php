@@ -10,13 +10,13 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Middleware\AdminMiddleware;
 use SebLucas\Cops\Output\Format;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Output\TwigTemplate;
-use SebLucas\Cops\Calibre\Database;
 use Exception;
 use JsonException;
 use Pdo\Sqlite;
@@ -419,14 +419,16 @@ if (!isset($config)) {
     public function handleCheckBooks($request, $response)
     {
         $i = 0;
+        $dbContext = new DatabaseContext($i, $this->getConfig());
         $content = '<strong>Missing Books:</strong><ul>';
-        foreach (Database::getDbList($this->getConfig()) as $name => $database) {
+        foreach ($dbContext->getDbList() as $name => $database) {
+            $dbContext->setDatabase($i);
             $content .= "<li>Database $i: $name $database\n<ul>\n";
             try {
-                $db = new Sqlite('sqlite:' . Database::getDbFileName($i, $this->getConfig()));
-                $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
+                $db = new Sqlite('sqlite:' . $dbContext->getDbFileName());
+                $result = $db->prepare('select books.path || "/" || data.name || "." || lower (data.format) as fullpath from data join books on data.book = books.id order by fullpath');
                 $result->execute();
-                $dbDirectory = Database::getDbDirectory($i, $this->getConfig());
+                $dbDirectory = $dbContext->getDbDirectory();
                 while ($post = $result->fetchObject()) {
                     if (!is_file($dbDirectory . $post->fullpath)) {
                         $content .= '<li>' . $dbDirectory . $post->fullpath . '</li>';

@@ -53,23 +53,24 @@ class PageQueryResult extends Page
      * Summary of searchByScope
      * @param PageQueryScope $scope
      * @param bool $limit
-     * @param ?int $database
+     * @param ?DatabaseContext $dbContext
      * @return array<mixed>
      */
-    protected function searchByScope($scope, $limit = false, $database = null)
+    protected function searchByScope($scope, $limit = false, $dbContext = null)
     {
         $n = $this->n;
         $numberPerPage = null;
         $queryNormedAndUp = trim((string) $this->query);
-        if (Normalizer::useNormAndUp()) {
+        if (Normalizer::useNormAndUp($this->getConfig())) {
             $queryNormedAndUp = Normalizer::normAndUp($this->query);
         }
         if ($limit) {
             $n = 1;
             $numberPerPage = 5;
         }
+        $dbContext ??= $this->getDbContext();
         $libraryId = "";
-        if (!Database::noDatabaseSelected($database, $this->getConfig())) {
+        if (!$dbContext->noDatabaseSelected()) {
             $libraryId = $this->request->getVirtualLibrary();
         }
         if (!empty($libraryId)) {
@@ -80,12 +81,6 @@ class PageQueryResult extends Page
         $req->locale = $this->locale;
         if ($this->getConfig() !== null) {
             $req->setConfig($this->getConfig());
-        }
-        // optimize re-use of existing dbContext
-        if ($database !== $this->getDatabaseId()) {
-            $dbContext = new DatabaseContext($database, $this->getConfig());
-        } else {
-            $dbContext = $this->getDbContext();
         }
         switch ($scope) {
             case PageQueryScope::BOOK:
@@ -127,17 +122,18 @@ class PageQueryResult extends Page
      */
     public function doSearchByCategory($database = null)
     {
-        $pagequery = $this->idPage;
         $dbArray = [""];
         $dbNum = $database;
         $query = $this->query;
         $libraryId = "";
         // Special case when no databases were chosen, we search on all databases
-        $noDatabaseSelected = Database::noDatabaseSelected($database, $this->getConfig());
+        $noDatabaseSelected = $this->getDbContext()->noDatabaseSelected();
         if ($noDatabaseSelected) {
-            $dbArray = Database::getDbNameList($this->getConfig());
+            $dbArray = $this->getDbContext()->getDbNameList();
+            $dbContext = clone $this->getDbContext();
             $dbNum = 0;
         } else {
+            $dbContext = $this->getDbContext();
             $libraryId = $this->request->getVirtualLibrary();
         }
         foreach ($dbArray as $key) {
@@ -152,7 +148,7 @@ class PageQueryResult extends Page
                     null,
                     "tt-header"
                 ));
-                Database::getDb($dbNum, $this->getConfig());
+                $dbContext->setDatabase($dbNum);
             }
             foreach ([PageQueryScope::BOOK,
                 PageQueryScope::AUTHOR,
@@ -163,7 +159,7 @@ class PageQueryResult extends Page
                 if (in_array($value, $this->getIgnoredCategories())) {
                     continue;
                 }
-                $array = $this->searchByScope($scope, true, $dbNum);
+                $array = $this->searchByScope($scope, true, $dbContext);
 
                 $i = 0;
                 if (count($array) == 2 && is_array($array [0])) {
@@ -207,10 +203,10 @@ class PageQueryResult extends Page
                     }
                 }
             }
-            $dbNum++;
             if ($noDatabaseSelected) {
-                Database::clearDb();
+                $dbContext->clear();
             }
+            $dbNum++;
         }
         if (empty($this->entryArray) && !$this->request->isFeed()) {
             array_push($this->entryArray, $this->getNoResultEntry($database));
@@ -240,13 +236,13 @@ class PageQueryResult extends Page
      */
     public function getEntries()
     {
-        $database = $this->getDatabaseId();
         // Special case when we are doing a search and no database is selected
-        if (Database::noDatabaseSelected($database, $this->getConfig()) && !$this->useTypeahead()) {
+        if ($this->getDbContext()->noDatabaseSelected() && !$this->useTypeahead()) {
             $this->getDatabaseEntries();
             return;
         }
 
+        $database = $this->getDatabaseId();
         $value = $this->request->get("scope");
         if (empty($value)) {
             $this->doSearchByCategory($database);
@@ -254,7 +250,7 @@ class PageQueryResult extends Page
         }
         $scope = PageQueryScope::from($value);
 
-        $array = $this->searchByScope($scope, false, $database);
+        $array = $this->searchByScope($scope, false, $this->getDbContext());
         if (count($array) == 2 && is_array($array [0])) {
             [$this->entryArray, $this->totalNumber] = $array;
         } else {
@@ -275,12 +271,12 @@ class PageQueryResult extends Page
         $query = $this->query;
         $crit = "%" . $this->query . "%";
         $dbNum = 0;
-        foreach (Database::getDbNameList($this->getConfig()) as $key) {
-            Database::clearDb();
+        foreach ($this->getDbContext()->getDbNameList() as $key) {
             $dbContext = new DatabaseContext($dbNum, $this->getConfig());
             $booklist = new BookList($this->request, $dbContext, 1);
             [$array, $totalNumber] = $booklist->getBooksByQueryScope(["all" => $crit], 1, $ignoredCategories);
             $this->addDatabaseEntry($key, $dbNum, $totalNumber, $query);
+            $dbContext->clear();
             $dbNum++;
         }
     }

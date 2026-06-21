@@ -10,8 +10,6 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Handlers\TestHandler;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\ComicReader;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;

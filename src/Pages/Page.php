@@ -12,13 +12,10 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\Base;
 use SebLucas\Cops\Calibre\Book;
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\HasDatabaseTrait;
 use SebLucas\Cops\Handlers\HasRouteTrait;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;

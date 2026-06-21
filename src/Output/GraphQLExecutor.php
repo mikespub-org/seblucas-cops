@@ -15,8 +15,6 @@ use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Data;
-use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\Identifier;
@@ -27,7 +25,6 @@ use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Handlers\RestApiHandler;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\RequestContext;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
@@ -335,7 +332,7 @@ class GraphQLExecutor
     {
         $handler = $request->getHandler();
         $locale = $request->locale();
-        $dbContext = new DatabaseContext($request->database(), $context->getConfig());
+        $dbContext = $context->getDbContext();
         switch ($fieldName) {
             case 'books':
                 [$numberPerPage, $n, $current] = self::parseListArgs($args, $request);
@@ -688,7 +685,8 @@ class GraphQLExecutor
         }
         // basic validation of global identifier parts
         try {
-            if (empty(Database::getDbFileName($db, $context->getConfig()))) {
+            $dbContext = $context->getDbContext();
+            if (empty($dbContext->getDbDirectory())) {
                 return [null, null, null];
             }
         } catch (Exception) {

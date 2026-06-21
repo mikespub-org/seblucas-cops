@@ -116,7 +116,8 @@ class BookTest extends TestCase
         $author = $book->getAuthors()[0];
         $this->assertEquals("http://www.wikidata.org/entity/Q35610", $author->link);
         $publisher = $book->getPublisher();
-        if (Database::getUserVersion() > 25) {
+        $dbContext = $book->getDbContext();
+        if ($dbContext->getUserVersion() > 25) {
             $this->assertNotNull($publisher->link);
         } else {
             $this->assertNull($publisher->link);
@@ -386,23 +387,26 @@ class BookTest extends TestCase
     public function testGetCoverFilePath(): void
     {
         $book = Book::getBookById(17);
+        $dbContext = $book->getDbContext();
 
-        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getCoverFilePath("jpg"));
-        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null));
+        $this->assertEquals($dbContext->getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getCoverFilePath("jpg"));
+        $this->assertEquals($dbContext->getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null));
     }
 
     public function testGetFilePath_Epub(): void
     {
         $book = Book::getBookById(17);
+        $dbContext = $book->getDbContext();
 
-        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20));
+        $this->assertEquals($dbContext->getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20));
     }
 
     public function testGetFilePath_Mobi(): void
     {
         $book = Book::getBookById(17);
+        $dbContext = $book->getDbContext();
 
-        $this->assertEquals(Database::getDbDirectory(null) . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17));
+        $this->assertEquals($dbContext->getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17));
     }
 
     public function testGetDataFormat_EPUB(): void

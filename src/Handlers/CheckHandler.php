@@ -10,8 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Calibre\DatabaseContext;
 use SebLucas\Cops\Input\ProxyRequest;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format;
@@ -281,8 +280,10 @@ class CheckHandler extends BaseHandler
     public function getDatabases($full)
     {
         $i = 0;
+        $dbContext = new DatabaseContext($i, $this->getConfig());
         $result = '';
-        foreach (Database::getDbList($this->getConfig()) as $name => $database) {
+        foreach ($dbContext->getDbList() as $name => $database) {
+            $dbContext->setDatabase($i);
             $title = 'Check if Calibre database path is not an URL';
             if (!preg_match('#^http#', $database)) {
                 $message = $name . ' OK';
@@ -292,7 +293,7 @@ class CheckHandler extends BaseHandler
             $result .= $this->getMessage($title, $message);
 
             $title = 'Check if Calibre database file exists and is readable';
-            $dbFileName = Database::getDbFileName($i, $this->getConfig());
+            $dbFileName = $dbContext->getDbFileName();
             if (is_readable($dbFileName)) {
                 $message = $name . ' OK';
             } else {

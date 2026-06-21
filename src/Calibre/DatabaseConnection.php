@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use PhpParser\Node\Stmt\TryCatch;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\Normalizer;

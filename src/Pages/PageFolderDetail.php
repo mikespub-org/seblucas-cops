@@ -13,7 +13,6 @@ namespace SebLucas\Cops\Pages;
 use SebLucas\Cops\Calibre\Comment;
 use SebLucas\Cops\Calibre\Folder;
 use SebLucas\Cops\Calibre\Metadata;
-use SebLucas\Cops\Input\Config;
 use InvalidArgumentException;
 
 class PageFolderDetail extends PageWithDetail

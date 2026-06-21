@@ -21,7 +21,6 @@ use SebLucas\Cops\Calibre\Rating;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\VirtualLibrary;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\LinkFeed;

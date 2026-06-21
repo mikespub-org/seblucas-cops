@@ -14,7 +14,6 @@ use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Language\HasLocaleTrait;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;

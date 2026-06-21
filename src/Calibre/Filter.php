@@ -632,7 +632,7 @@ class Filter
         $handler = $request->getHandler();
         $locale = $request->locale();
         $libraryId = $request->getVirtualLibrary();
-        $dbContext ??= new DatabaseContext();
+        $dbContext ??= new DatabaseContext($request->database(), $request->getConfig());
         $entryArray = [];
         foreach (self::URL_PARAMS as $paramName => $className) {
             if ($className == VirtualLibrary::class) {

@@ -239,7 +239,9 @@ if ($request->render()) {
         </article>
 <?php
 $i = 0;
-foreach (Database::getDbList() as $name => $database) {
+$dbContext = Database::getContext();
+$dbArray = $dbContext->getDbList();
+foreach ($dbArray as $name => $database) {
     ?>
         <article class="frontpage">
             <h2>Check if Calibre database path is not an URL</h2>
@@ -257,7 +259,8 @@ foreach (Database::getDbList() as $name => $database) {
             <h2>Check if Calibre database file exists and is readable</h2>
             <h4>
             <?php
-    $dbFileName = Database::getDbFileName($i);
+    $dbContext->setDatabase($i);
+    $dbFileName = $dbContext->getDbFileName();
     if (is_readable($dbFileName)) {
         echo $name . ' OK';
     } else {

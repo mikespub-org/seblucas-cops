@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Handlers\FeedHandler;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;

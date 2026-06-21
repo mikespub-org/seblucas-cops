@@ -57,6 +57,7 @@ class Database
 
     /**
      * Summary of getConnection
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return DatabaseConnection
@@ -69,6 +70,17 @@ class Database
             self::$connections[$key] = new DatabaseConnection($dbFileName, $config, $database);
         }
         return self::$connections[$key];
+    }
+
+    /**
+     * Summary of getContext
+     * @param ?int $database
+     * @param ?RequestConfig $config
+     * @return DatabaseContext
+     */
+    public static function getContext($database = null, $config = null)
+    {
+        return new DatabaseContext($database, $config);
     }
 
     /**
@@ -88,6 +100,7 @@ class Database
 
     /**
      * Summary of isMultipleDatabaseEnabled
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?RequestConfig $config
      * @return bool
      */
@@ -98,6 +111,7 @@ class Database
 
     /**
      * Summary of findDatabaseId
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param string $dbName
      * @param ?RequestConfig $config
      * @return int|null
@@ -117,6 +131,7 @@ class Database
 
     /**
      * Summary of useAbsolutePath
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return bool
@@ -130,6 +145,7 @@ class Database
 
     /**
      * Summary of noDatabaseSelected
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return bool
@@ -141,6 +157,7 @@ class Database
 
     /**
      * Summary of getDbList
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?RequestConfig $config
      * @return array<string, string>
      */
@@ -155,6 +172,7 @@ class Database
 
     /**
      * Summary of getDbNameList
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?RequestConfig $config
      * @return array<string>
      */
@@ -169,6 +187,7 @@ class Database
 
     /**
      * Summary of getDbName
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return string
@@ -187,6 +206,7 @@ class Database
 
     /**
      * Summary of getDbDirectory
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @throws Exception if error
      * @param ?RequestConfig $config
@@ -210,6 +230,7 @@ class Database
     // -DC- Add image directory
     /**
      * Summary of getImgDirectory
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return string
@@ -228,6 +249,7 @@ class Database
 
     /**
      * Summary of getDbFileName
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return string
@@ -239,6 +261,7 @@ class Database
 
     /**
      * Summary of getLastModified
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return string
@@ -251,6 +274,7 @@ class Database
 
     /**
      * Summary of error
+     * @deprecated 4.4.10 not used
      * @param ?int $database
      * @throws \Exception
      * @return never
@@ -267,6 +291,7 @@ class Database
 
     /**
      * Summary of getDb
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return \Pdo\Sqlite
@@ -282,6 +307,7 @@ class Database
 
     /**
      * Summary of createSqliteFunctions
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?RequestConfig $config
      * @return void
      */
@@ -294,6 +320,7 @@ class Database
 
     /**
      * Attach an sqlite database to existing db connection
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param string $dbFileName Database file name
      * @param string $attachDatabase
      * @param ?int $database
@@ -308,6 +335,7 @@ class Database
 
     /**
      * Summary of addSqliteFunctions
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return void
@@ -325,13 +353,16 @@ class Database
      */
     public static function checkDatabaseAvailability($database, $config = null)
     {
-        if (self::noDatabaseSelected($database, $config)) {
-            for ($i = 0; $i < count(self::getDbList($config)); $i++) {
-                self::getDb($i, $config);
+        $dbContext = self::getContext($database, $config);
+        if ($dbContext->noDatabaseSelected()) {
+            $count = count($dbContext->getDbList());
+            for ($i = 0; $i < $count; $i++) {
+                $dbContext->setDatabase($i);
+                $dbContext->getDb();
                 self::clearDb();
             }
         } else {
-            self::getDb($database, $config);
+            $dbContext->getDb();
         }
         return true;
     }
@@ -350,6 +381,7 @@ class Database
 
     /**
      * Summary of querySingle
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param string $query
      * @param ?int $database
      * @param ?RequestConfig $config
@@ -367,6 +399,7 @@ class Database
 
     /**
      * Summary of query
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param string $query
      * @param array<mixed> $params
      * @param ?int $database
@@ -385,6 +418,7 @@ class Database
 
     /**
      * Summary of queryTotal
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param string $query
      * @param string $columns
      * @param string $filter
@@ -415,6 +449,7 @@ class Database
 
     /**
      * Summary of queryFilter
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param string $query
      * @param string $columns
      * @param string $filter
@@ -445,6 +480,7 @@ class Database
 
     /**
      * Summary of countFilter
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param string $query
      * @param string $columns
      * @param string $filter
@@ -465,6 +501,7 @@ class Database
 
     /**
      * Summary of getDbSchema
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?string $type get table or view entries
      * @param ?RequestConfig $config
@@ -477,6 +514,7 @@ class Database
 
     /**
      * Summary of getTableInfo
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param string $name table or view name
      * @param ?RequestConfig $config
@@ -489,6 +527,7 @@ class Database
 
     /**
      * Summary of getUserVersion
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return int
@@ -500,6 +539,7 @@ class Database
 
     /**
      * Get list of databases (open or attach) from SQLite
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return array<mixed>
@@ -511,6 +551,7 @@ class Database
 
     /**
      * Summary of getNotesDb
+     * @deprecated 4.4.10 use DatabaseContext() instead
      * @param ?int $database
      * @param ?RequestConfig $config
      * @return \Pdo\Sqlite|null

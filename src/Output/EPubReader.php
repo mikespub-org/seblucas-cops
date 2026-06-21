@@ -17,7 +17,6 @@ use SebLucas\Cops\Handlers\EpubFsHandler;
 use SebLucas\Cops\Handlers\ZipFsHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
-use SebLucas\Cops\Output\Format;
 use SebLucas\EPubMeta\EPub;
 use ZipArchive;
 use Exception;

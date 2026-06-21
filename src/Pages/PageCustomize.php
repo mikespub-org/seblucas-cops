@@ -10,9 +10,7 @@
 
 namespace SebLucas\Cops\Pages;
 
-use SebLucas\Cops\Calibre\Database;
 use SebLucas\Cops\Calibre\VirtualLibrary;
-use SebLucas\Cops\Input\Config;
 
 class PageCustomize extends Page
 {

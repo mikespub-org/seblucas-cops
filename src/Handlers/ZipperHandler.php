@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Middleware\ProtectMiddleware;
 use SebLucas\Cops\Output\FileResponse;
 use SebLucas\Cops\Output\Response;

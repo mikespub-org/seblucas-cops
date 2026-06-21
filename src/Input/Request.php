@@ -186,7 +186,7 @@ class Request
         }
         // get virtual library from option (see customize)
         if (!isset($this->urlParams['vl']) && !empty($this->option('virtual_library'))) {
-            if (!Database::isMultipleDatabaseEnabled($this->getConfig())) {
+            if (!is_array($this->config('calibre_directory', null))) {
                 $this->urlParams['vl'] = $this->option('virtual_library');
             }
         }

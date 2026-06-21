@@ -22,10 +22,8 @@ use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Preference;
 use SebLucas\Cops\Calibre\User;
-use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Handlers\RestApiHandler;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\Request;
@@ -47,6 +45,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     public int $numberPerPage = 100;
     public bool $doRunHandler = true;
     protected ?string $baseUrl = null;
+    protected ?DatabaseContext $dbContext = null;
 
     /**
      * Summary of extra - use instance methods instead of static
@@ -256,9 +255,10 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "baseurl" => $baseurl,
             "entries" => [],
         ];
+        $dbContext = $this->getRequestDbContext($request);
         $params = [];
         $id = 0;
-        foreach (Database::getDbNameList($request->getConfig()) as $key) {
+        foreach ($dbContext->getDbNameList() as $key) {
             $params['db'] = $id;
             $link = $this->getResource(Database::class, $params);
             array_push($result["entries"], [
@@ -280,7 +280,8 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      */
     public function getDatabase($database, $request)
     {
-        if (!Database::isMultipleDatabaseEnabled($request->getConfig()) && $database != 0) {
+        $dbContext = $this->getRequestDbContext($request);
+        if (!$dbContext->isMultipleDatabaseEnabled() && $database != 0) {
             return [
                 "title" => "Database Invalid",
                 "entries" => [],
@@ -291,7 +292,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             return $this->getTable($database, $name, $request);
         }
         $title = "Database";
-        $dbName = Database::getDbName($database, $request->getConfig());
+        $dbName = $dbContext->getDbName();
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
@@ -306,14 +307,14 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
                 "entries" => [],
             ];
             $params['db'] = $database;
-            $entries = Database::getDbSchema($database, $type, $request->getConfig());
+            $entries = $dbContext->getDbSchema($type);
             foreach ($entries as $entry) {
                 $params['name'] = $entry['tbl_name'];
                 $entry["navlink"] = $this->getResource(Database::class, $params);
                 unset($entry["sql"]);
                 array_push($result["entries"], $entry);
             }
-            $result["version"] = Database::getUserVersion($database, $request->getConfig());
+            $result["version"] = $dbContext->getUserVersion();
             return $result;
         }
         $title .= " Types";
@@ -335,7 +336,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
                 "navlink" => $this->getResource(Database::class, $params),
             ]);
         }
-        $result["version"] = Database::getUserVersion($database, $request->getConfig());
+        $result["version"] = $dbContext->getUserVersion();
         return $result;
     }
 
@@ -348,8 +349,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      */
     public function getTable($database, $name, $request)
     {
+        $dbContext = $this->getRequestDbContext($request);
         $title = "Database";
-        $dbName = Database::getDbName($database, $request->getConfig());
+        $dbName = $dbContext->getDbName();
         if (!empty($dbName)) {
             $title .= " $dbName";
         }
@@ -373,9 +375,9 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $params['db'] = $database;
         $params['name'] = $name;
         // add dummy functions for selecting in meta and tag_browser_* views
-        Database::addSqliteFunctions($database, $request->getConfig());
+        $dbContext->addSqliteFunctions();
         $query = "SELECT COUNT(*) FROM {$name}";
-        $count = Database::querySingle($query, $database, $request->getConfig());
+        $count = $dbContext->querySingle($query);
         $result["total"] = $count;
         $result["limit"] = $this->numberPerPage;
         $start = 0;
@@ -385,14 +387,14 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         $result["offset"] = $start;
         $query = "SELECT * FROM {$name} LIMIT ?, ?";
-        $res = Database::query($query, [$start, $this->numberPerPage], $database, $request->getConfig());
+        $res = $dbContext->query($query, [$start, $this->numberPerPage]);
         while ($post = $res->fetchObject()) {
             $entry = (array) $post;
             $params['id'] = $entry['id'];
             $entry["navlink"] = $this->getResource(Database::class, $params);
             array_push($result["entries"], $entry);
         }
-        $result["columns"] = Database::getTableInfo($database, $name, $request->getConfig());
+        $result["columns"] = $dbContext->getTableInfo($name);
         return $result;
     }
 
@@ -405,10 +407,11 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
      */
     public function getDataTable($database, $name, $request)
     {
+        $dbContext = $this->getRequestDbContext($request);
         // add dummy functions for selecting in meta and tag_browser_* views
-        Database::addSqliteFunctions($database, $request->getConfig());
+        $dbContext->addSqliteFunctions();
         $query = "SELECT COUNT(*) FROM {$name}";
-        $total = Database::querySingle($query, $database, $request->getConfig());
+        $total = $dbContext->querySingle($query);
 
         $start = (int) $request->post('start', 0);
         $length = (int) $request->post('length', $this->numberPerPage);
@@ -416,7 +419,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             $length = $this->numberPerPage;
         }
 
-        $columns = Database::getTableInfo($database, $name, $request->getConfig());
+        $columns = $dbContext->getTableInfo($name);
 
         $where = '';
         $bindings = [];
@@ -441,7 +444,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         if (!empty($filterParams)) {
             $req = Request::build($filterParams);
-            $filter = new Filter($req, [], 'books', null);
+            $filter = new Filter($req, [], 'books', $dbContext);
             $filterString = $filter->getFilterString();
             $queryParams = $filter->getQueryParams();
             if (!empty($filterString)) {
@@ -483,7 +486,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
 
         $filteredQuery = "SELECT COUNT(*) FROM {$name}" . $where;
-        $filtered = Database::query($filteredQuery, $bindings, $database, $request->getConfig())->fetchColumn();
+        $filtered = $dbContext->query($filteredQuery, $bindings)->fetchColumn();
 
         $links = [
             'authors' => 'books_authors_link.author',
@@ -502,7 +505,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         $bindings[] = $start;
         $bindings[] = $length;
 
-        $entries = Database::query($query, $bindings, $database, $request->getConfig())->fetchAll(\PDO::FETCH_ASSOC);
+        $entries = $dbContext->query($query, $bindings)->fetchAll(\PDO::FETCH_ASSOC);
 
         return [
             'draw' => (int) $request->post('draw'),

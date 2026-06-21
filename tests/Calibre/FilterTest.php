@@ -25,8 +25,6 @@ use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\Identifier;
 use SebLucas\Cops\Calibre\Format;
 use SebLucas\Cops\Calibre\CustomColumn;
-use SebLucas\Cops\Calibre\BaseList;
-use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;

@@ -8,7 +8,6 @@
  * @author     mikespub
  */
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Output\Format;
 

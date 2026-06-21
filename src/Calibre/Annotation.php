@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\RestApiHandler;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 use JsonException;
 

@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Calibre\Data;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Output\ComicReader;
 use SebLucas\Cops\Output\EPubReader;
 use SebLucas\Cops\Output\Response;

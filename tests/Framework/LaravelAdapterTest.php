@@ -17,7 +17,6 @@ use Illuminate\Events\Dispatcher;
 use Illuminate\Routing\CallableDispatcher;
 use Illuminate\Routing\Contracts\CallableDispatcher as CallableDispatcherContract;
 use Illuminate\Http\Request as LaravelRequest;
-use Illuminate\Routing\RouteCollection;
 use Illuminate\Routing\Router as LaravelRouter;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Routing\RouterInterface;

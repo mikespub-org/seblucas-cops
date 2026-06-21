@@ -24,6 +24,9 @@ class DatabaseTest extends TestCase
         Database::clearDb();
     }
 
+    /**
+     * @deprecated 4.4.10 use DatabaseContext() instead
+     */
     public function testBaseFunction(): void
     {
         $this->assertFalse(Database::isMultipleDatabaseEnabled());

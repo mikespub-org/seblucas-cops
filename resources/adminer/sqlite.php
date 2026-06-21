@@ -40,11 +40,13 @@ function adminer_object()
             echo '<div class="error">' . \Adminer\lang('Warning: don\'t use this via public Internet connection!') . '</div>';
             echo "<table cellspacing='0' class='layout'>\n";
             echo '<input type="hidden" name="auth[driver]" value="sqlite">';
-            if (\SebLucas\Cops\Calibre\Database::isMultipleDatabaseEnabled()) {
+            $dbContext = new \SebLucas\Cops\Calibre\DatabaseContext();
+            if ($dbContext->isMultipleDatabaseEnabled()) {
                 $input = '<select name="auth[db]">';
                 $db = 0;
-                foreach (\SebLucas\Cops\Calibre\Database::getDbNameList() as $name) {
-                    $dbFile = \SebLucas\Cops\Calibre\Database::getDbFileName($db);
+                foreach ($dbContext->getDbNameList() as $name) {
+                    $dbContext->setDatabase($db);
+                    $dbFile = $dbContext->getDbFileName();
                     $name = $name ?: basename(dirname($dbFile));
                     $input .= '<option value="' . htmlspecialchars($dbFile) . '">' . htmlspecialchars($name) . '</option>';
                     $db++;
@@ -52,7 +54,7 @@ function adminer_object()
                 $input .= '</select>';
             } else {
                 $db = 0;
-                $dbFile = \SebLucas\Cops\Calibre\Database::getDbFileName($db);
+                $dbFile = $dbContext->getDbFileName();
                 $input = '<input type="hidden" name="auth[db]" value="' . htmlspecialchars($dbFile) . '">';
                 $input .= basename(dirname($dbFile));
             }
@@ -82,16 +84,17 @@ function adminer_object()
             }
             $found = false;
             $db = 0;
-            if (\SebLucas\Cops\Calibre\Database::isMultipleDatabaseEnabled()) {
-                foreach (\SebLucas\Cops\Calibre\Database::getDbNameList() as $name) {
-                    $dbFile = \SebLucas\Cops\Calibre\Database::getDbFileName($db);
-                    if ($dbFile == \SebLucas\Cops\Calibre\Database::getDbFileName($db)) {
+            $dbContext = new \SebLucas\Cops\Calibre\DatabaseContext();
+            if ($dbContext->isMultipleDatabaseEnabled()) {
+                foreach ($dbContext->getDbNameList() as $name) {
+                    $dbContext->setDatabase($db);
+                    if ($dbFile == $dbContext->getDbFileName()) {
                         $found = true;
                         break;
                     }
                     $db++;
                 }
-            } elseif ($dbFile == \SebLucas\Cops\Calibre\Database::getDbFileName($db)) {
+            } elseif ($dbFile == $dbContext->getDbFileName()) {
                 $found = true;
             }
             if (!$found) {

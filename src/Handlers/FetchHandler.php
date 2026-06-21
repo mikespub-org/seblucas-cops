@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Cover;
@@ -232,7 +231,6 @@ class FetchHandler extends BaseHandler
      */
     public function sendFolderFile($request, $path)
     {
-        $database = $request->database();
         $locale = $request->locale();
         $dbContext = new DatabaseContext($request->database(), $request->getConfig());
         $book = Folder::getBookByFolderPath($path, $dbContext, $locale);

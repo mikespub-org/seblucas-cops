@@ -9,7 +9,7 @@ namespace SebLucas\Cops\Calibre;
 trait HasDatabaseTrait
 {
     protected ?int $databaseId = null;
-    protected ?DatabaseContext $dbContext = null;  // use public for CustomColumnType -> CustomColumn?
+    protected ?DatabaseContext $dbContext = null;
 
     /**
      * Summary of getDatabaseId

@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Handlers;
 
-use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Output\Mail;
 use SebLucas\Cops\Output\Response;
 

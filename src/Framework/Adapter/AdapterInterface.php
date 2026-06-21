@@ -3,8 +3,6 @@
 namespace SebLucas\Cops\Framework\Adapter;
 
 use SebLucas\Cops\Handlers\HandlerManager;
-use SebLucas\Cops\Input\RequestContext;
-use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Routing\RouterInterface;
 
 /**

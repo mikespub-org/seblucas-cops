@@ -10,8 +10,6 @@
 
 namespace SebLucas\Cops\Input;
 
-use SebLucas\Cops\Input\Config;
-
 /**
  * Summary of ProxyRequest
  */

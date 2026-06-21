@@ -39,15 +39,14 @@ class Cover
     /**
      * Summary of __construct
      * @param Book $book
-     * @param ?int $database
      */
-    public function __construct($book, $database = null)
+    public function __construct($book)
     {
         $this->book = $book;
         if ($book->hasCover) {
             $this->coverFileName = $book->getCoverFileName();
         }
-        $this->databaseId = $database ?? $book->getDatabaseId();
+        $this->databaseId = $book->getDatabaseId();
         $this->setHandler(FetchHandler::class);
         if ($book->getConfig() !== null) {
             $this->setConfig($book->getConfig());
@@ -65,7 +64,7 @@ class Cover
             $this->coverFileName = $fileName;
             return $this->coverFileName;
         }
-        $imgDirectory = Database::getImgDirectory($this->databaseId, $this->getConfig());
+        $imgDirectory = $this->book->getDbContext()->getImgDirectory();
         $this->coverFileName = $fileName;
         if (!file_exists($this->coverFileName)) {
             $this->coverFileName = null;
@@ -202,7 +201,7 @@ class Cover
         }
         $file = 'cover.' . $ext;
         $filePath = $this->book->path . "/" . $file;
-        if (!Database::useAbsolutePath($this->databaseId, $this->getConfig())) {
+        if (!$this->book->getDbContext()->useAbsolutePath()) {
             $urlPath = implode('/', array_map(rawurlencode(...), explode('/', $filePath)));
             $href = fn() => $this->getPath($urlPath);
             return new LinkImage(

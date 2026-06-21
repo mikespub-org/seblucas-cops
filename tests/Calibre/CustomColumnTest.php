@@ -30,7 +30,6 @@ use SebLucas\Cops\Calibre\CustomColumnTypeSeries;
 use SebLucas\Cops\Calibre\CustomColumnTypeText;
 use SebLucas\Cops\Handlers\JsonHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Pages\PageId;

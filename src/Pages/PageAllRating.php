@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Rating;
-use SebLucas\Cops\Input\Config;
 
 class PageAllRating extends Page
 {

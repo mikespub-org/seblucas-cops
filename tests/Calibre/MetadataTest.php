@@ -16,7 +16,6 @@ require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Calibre\Book;
 use SebLucas\Cops\Calibre\Database;
-use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
 
 class MetadataTest extends TestCase

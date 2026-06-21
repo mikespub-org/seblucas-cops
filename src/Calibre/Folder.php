@@ -13,7 +13,6 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Output\Format;

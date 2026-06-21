@@ -48,7 +48,8 @@ class NoteResourceTest extends TestCase
 
     public function testGetNotesDb(): void
     {
-        $notesDb = Database::getNotesDb();
+        $dbContext = new DatabaseContext();
+        $notesDb = $dbContext->getNotesDb();
         $this->assertNotNull($notesDb);
     }
 

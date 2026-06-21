@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Pages;
 
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\Identifier;
-use SebLucas\Cops\Input\Config;
 
 class PageAllIdentifiers extends Page
 {

@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Output;
 
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Template\doT;
 

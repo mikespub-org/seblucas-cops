@@ -9,7 +9,6 @@ use Illuminate\Routing\Router as LaravelRouter;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Input\Request as CopsRequest;
 use SebLucas\Cops\Input\RequestContext;
-use SebLucas\Cops\Output\Response as CopsResponse;
 use SebLucas\Cops\Routing\RouterInterface;
 
 /**

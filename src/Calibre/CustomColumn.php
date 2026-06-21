@@ -11,10 +11,8 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Handlers\BaseHandler;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
-use Exception;
 
 /**
  * A CustomColumn with an value

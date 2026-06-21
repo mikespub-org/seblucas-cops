@@ -55,13 +55,13 @@ class PageIndex extends Page
     public function getDatabaseEntries()
     {
         $i = 0;
-        foreach (Database::getDbNameList($this->getConfig()) as $key) {
+        foreach ($this->getDbContext()->getDbNameList() as $key) {
             $dbContext = new DatabaseContext($i, $this->getConfig());
             $booklist = new BookList($this->request, $dbContext);
             $nBooks = $booklist->getBookCount();
             $this->addDatabaseEntry($key, $i, $nBooks);
+            $dbContext->clear();
             $i++;
-            Database::clearDb();
         }
     }
 

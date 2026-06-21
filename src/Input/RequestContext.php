@@ -10,11 +10,9 @@
 
 namespace SebLucas\Cops\Input;
 
-use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Calibre\DatabaseContext;
+use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Handlers\BaseHandler;
-use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -34,6 +32,7 @@ class RequestContext
     private ?array $matchParams = null;
     private ?BaseHandler $handler = null;
     private RequestConfig $config;
+    private ?DatabaseContext $dbContext = null;
     private string $locale;
     private ?SessionInterface $session = null;
 
@@ -233,6 +232,7 @@ class RequestContext
     {
         $this->request = $request;
         // reset properties for this request
+        $this->dbContext = null;
         $this->locale = $this->request->locale();
         $this->matchParams = null;
     }
@@ -276,6 +276,12 @@ class RequestContext
     public function getConfig(): RequestConfig
     {
         return $this->config;
+    }
+
+    public function getDbContext(): DatabaseContext
+    {
+        // for static field resolvers in GraphQLExecutor
+        return $this->dbContext ??= new DatabaseContext($this->request->database(), $this->config);
     }
 
     public function getSession(): SessionInterface

@@ -10,7 +10,6 @@
 
 namespace SebLucas\Cops\Calibre;
 
-use SebLucas\Cops\Input\RequestConfig;
 use SebLucas\Cops\Pages\PageId;
 
 class Serie extends Category

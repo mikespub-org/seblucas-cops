@@ -23,7 +23,6 @@ use SebLucas\Cops\Calibre\Resource;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
 use SebLucas\Cops\Calibre\VirtualLibrary;
-use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
 
 class PageWithDetail extends Page
