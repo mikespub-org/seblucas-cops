@@ -150,7 +150,7 @@ class PageQueryResultTest extends TestCase
     {
         Config::set('search_comments', 0);
         $request = new Request();
-        $request->set('query', "sherlock");
+        $request->set('query', "dodgson");
         $request->set('scope', PageQueryScope::COMMENT->value);
         $page = PageId::OPENSEARCH_QUERY;
 
@@ -167,22 +167,47 @@ class PageQueryResultTest extends TestCase
     {
         Config::set('search_comments', 1);
         $request = new Request();
-        $request->set('query', "sherlock");
+        $request->set('query', "dodgson");
         $request->set('scope', PageQueryScope::COMMENT->value);
         $page = PageId::OPENSEARCH_QUERY;
 
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertNotEmpty($currentPage->entryArray);
-        $this->assertStringContainsString("sherlock", $currentPage->title);
+        $this->assertStringContainsString("dodgson", $currentPage->title);
         // Comments are replaced with book entries
         $this->assertTrue($currentPage->containsBook());
 
         // Verify first entry (book found via comment search)
         $firstEntry = $this->getFirstNonHeaderEntry($currentPage->entryArray);
         $this->assertNotNull($firstEntry);
-        $this->assertSame("A Study in Scarlet", $firstEntry->title);
-        $this->assertSame("urn:uuid:f3a4534e-d7bc-415a-8887-ba2b2810c980", $firstEntry->id);
+        $this->assertSame("Alice's Adventures in Wonderland", $firstEntry->title);
+        $this->assertSame("urn:uuid:d74fec58-06bc-4ba8-b8b4-24a91a58e6f9", $firstEntry->id);
+
+        Config::set('search_comments', 0);
+    }
+
+    public function testSearchByCategory_CommentScope_TypeaheadMode(): void
+    {
+        Config::set('search_comments', 1);
+        $request = new Request();
+        $request->set('query', "dodgson");
+        //$request->set('scope', PageQueryScope::COMMENT->value);
+        $request->set('search', 1);  // typeahead mode
+        $page = PageId::OPENSEARCH_QUERY;
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertNotEmpty($currentPage->entryArray);
+        $this->assertStringContainsString("dodgson", $currentPage->title);
+        // Comments are replaced with book entries even in typeahead mode
+        $this->assertFalse($currentPage->containsBook());
+
+        // Verify first entry (book found via comment search in typeahead mode)
+        $firstEntry = $this->getFirstNonHeaderEntry($currentPage->entryArray);
+        $this->assertNotNull($firstEntry);
+        $this->assertSame("Search result for *dodgson* in book comments", $firstEntry->title);
+        $this->assertSame("db:query::comment", $firstEntry->id);
 
         Config::set('search_comments', 0);
     }
@@ -191,7 +216,7 @@ class PageQueryResultTest extends TestCase
     {
         Config::set('search_notes', 0);
         $request = new Request();
-        $request->set('query', "test");
+        $request->set('query', "wiki");
         $request->set('scope', PageQueryScope::NOTE->value);
         $page = PageId::OPENSEARCH_QUERY;
 
@@ -207,20 +232,45 @@ class PageQueryResultTest extends TestCase
     {
         Config::set('search_notes', 1);
         $request = new Request();
-        $request->set('query', "test");
+        $request->set('query', "wiki");
         $request->set('scope', PageQueryScope::NOTE->value);
         $page = PageId::OPENSEARCH_QUERY;
 
         $currentPage = PageId::getPage($page, $request);
 
-        $this->assertStringContainsString("test", $currentPage->title);
+        $this->assertStringContainsString("wiki", $currentPage->title);
         // Notes are replaced with type item entries
         $this->assertFalse($currentPage->containsBook());
 
         // Verify first entry
         $firstEntry = $this->getFirstNonHeaderEntry($currentPage->entryArray);
         $this->assertNotNull($firstEntry);
-        $this->assertSame("No search result for *test*", $firstEntry->title);
+        $this->assertSame("Lewis Carroll", $firstEntry->title);
+        $this->assertSame("cops:authors:3", $firstEntry->id);
+
+        Config::set('search_notes', 0);
+    }
+
+    public function testSearchByCategory_NoteScope_TypeaheadMode(): void
+    {
+        Config::set('search_notes', 1);
+        $request = new Request();
+        $request->set('query', "wiki");
+        //$request->set('scope', PageQueryScope::NOTE->value);
+        $request->set('search', 1);  // typeahead mode
+        $page = PageId::OPENSEARCH_QUERY;
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertNotEmpty($currentPage->entryArray);
+        $this->assertStringContainsString("wiki", $currentPage->title);
+        // Notes are replaced with type item entries even in typeahead mode
+        $this->assertFalse($currentPage->containsBook());
+
+        // Verify first entry (type item found via note search in typeahead mode)
+        $firstEntry = $this->getFirstNonHeaderEntry($currentPage->entryArray);
+        $this->assertNotNull($firstEntry);
+        $this->assertSame("Search result for *wiki* in extra notes", $firstEntry->title);
         $this->assertSame("db:query::note", $firstEntry->id);
 
         Config::set('search_notes', 0);
