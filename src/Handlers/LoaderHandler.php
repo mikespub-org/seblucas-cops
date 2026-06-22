@@ -201,13 +201,13 @@ class LoaderHandler extends BaseHandler
             }
             $result = $result && ($link ? true : false);
         }
-        if (!empty($authorInfo->note) && !empty($authorInfo->note->doc)) {
+        if (!empty($authorInfo->note) && !empty($authorInfo->note->text)) {
             $root = self::link();
             $dbNum = $this->request->getId('dbNum');
             $urlPrefix = $root . self::PREFIX . '/resource/' . $dbNum;
             $content = $authorInfo->note->parseHtml($urlPrefix);
             $curNote = $instance->getNote();
-            if (empty($curNote) || $curNote->doc != $content) {
+            if (empty($curNote) || $curNote->text != $content) {
                 $note = $writer->addNote($authorInfo->note);
             } else {
                 $note = true;
@@ -261,13 +261,13 @@ class LoaderHandler extends BaseHandler
             }
             $result = $result && ($link ? true : false);
         }
-        if (!empty($seriesInfo->note) && !empty($seriesInfo->note->doc)) {
+        if (!empty($seriesInfo->note) && !empty($seriesInfo->note->text)) {
             $root = self::link();
             $dbNum = $this->request->getId('dbNum');
             $urlPrefix = $root . self::PREFIX . '/resource/' . $dbNum;
             $content = $seriesInfo->note->parseHtml($urlPrefix);
             $curNote = $instance->getNote();
-            if (empty($curNote) || $curNote->doc != $content) {
+            if (empty($curNote) || $curNote->text != $content) {
                 $note = $writer->addNote($seriesInfo->note);
             } else {
                 $note = true;

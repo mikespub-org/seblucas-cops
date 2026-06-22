@@ -216,8 +216,8 @@ class PageWithDetail extends Page
         if (!is_null($instance) && !empty($instance->id)) {
             $content = null;
             $note = $instance->getNote();
-            if (!empty($note) && !empty($note->doc)) {
-                $content = Resource::fixResourceLinks($note->doc, $instance->getDatabaseId());
+            if (!empty($note) && !empty($note->text)) {
+                $content = Resource::fixResourceLinks($note->text, $instance->getDatabaseId());
                 if (Comment::hasCalibreLinks($content)) {
                     $content = Comment::fixCalibreLinks($content, $instance->getDatabaseId());
                 }

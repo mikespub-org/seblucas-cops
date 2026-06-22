@@ -336,9 +336,10 @@ class BaseList
      * @param string $find
      * @param int $n
      * @param int $repeat for SCOPE_AUTHOR we need to repeat the query x 2 because Author checks both name and sort fields
+     * @param array<mixed> $urlParams extra URL params for getEntry()
      * @return array<Entry>
      */
-    public function getAllEntriesByQuery($find, $n = 1, $repeat = 1)
+    public function getAllEntriesByQuery($find, $n = 1, $repeat = 1, $urlParams = [])
     {
         $query = $this->className::SQL_ROWS_FOR_SEARCH;
         $columns = $this->getCountColumns();
@@ -348,9 +349,9 @@ class BaseList
             $filter = new Filter($this->request, $params, $this->getLinkTable(), $this->getDbContext());
             $filterString = $filter->getFilterString();
             $params = $filter->getQueryParams();
-            return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+            return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n, $urlParams);
         }
-        return $this->getEntryArrayWithBookNumber($query, $columns, "", $params, $n);
+        return $this->getEntryArrayWithBookNumber($query, $columns, "", $params, $n, $urlParams);
     }
 
     /**
@@ -625,9 +626,10 @@ class BaseList
      * @param string $filter
      * @param array<mixed> $params
      * @param int $n
+     * @param array<mixed> $urlParams extra URL params for getEntry()
      * @return array<Entry>
      */
-    public function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $n)
+    public function getEntryArrayWithBookNumber($query, $columns, $filter, $params, $n, $urlParams = [])
     {
         $result = $this->getDbContext()->queryFilter($query, $columns, $filter, $params, $n, $this->numberPerPage);
         $entryArray = [];
@@ -636,12 +638,13 @@ class BaseList
             $params = $this->request->getFilterParams();
             //$params["db"] ??= $this->databaseId;
         }
+        $urlParams = array_replace($params, $urlParams);
         assert(is_subclass_of($this->className, Base::class));
         while ($post = $result->fetchObject()) {
             $instance = new $this->className($post, $this->getDbContext());
             $instance->setHandler($this->handler);
             $instance->setLocale($this->locale);
-            array_push($entryArray, $instance->getEntry($post->count, $params));
+            array_push($entryArray, $instance->getEntry($post->count, $urlParams));
         }
         return $entryArray;
     }

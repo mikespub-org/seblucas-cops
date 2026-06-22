@@ -66,10 +66,12 @@ class NoteResourceTest extends TestCase
         $dbContext = new DatabaseContext();
         $expected = [];
         $expected[3] = [
+            "id" => 1,
             "item" => 3,
+            "type" => "authors",
             "size" => 434,
             "mtime" => 1770217333.384,
-            "title" => "Lewis Carroll",
+            "name" => "Lewis Carroll",
         ];
         $result = Note::getEntriesByType("authors", $dbContext);
         $this->assertEquals($expected[3], $result[3]);
@@ -80,8 +82,8 @@ class NoteResourceTest extends TestCase
         $note = self::$author->getNote();
         $this->assertEquals(Note::class, $note !== null ? $note::class : self::class);
         $this->assertEquals(3, $note->item);
-        $this->assertEquals("authors", $note->colname);
-        $this->assertEquals(self::$expectedSize['note'], strlen($note->doc));
+        $this->assertEquals("authors", $note->type);
+        $this->assertEquals(self::$expectedSize['note'], strlen($note->text));
         $this->assertEquals(1770217333.384, $note->mtime);
     }
 
@@ -91,18 +93,32 @@ class NoteResourceTest extends TestCase
         UriGenerator::setBaseUrl(null);
 
         $note = self::$author->getNote();
-        $html = Resource::fixResourceLinks($note->doc, $note->getDatabaseId());
+        $html = Resource::fixResourceLinks($note->text, $note->getDatabaseId());
         $expected = '<img src="/cops/index.php/calres/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
 
         Config::set('resources_cdn', 'https://fastly.site.com/cops/');
-        $html = Resource::fixResourceLinks($note->doc, $note->getDatabaseId());
+        $html = Resource::fixResourceLinks($note->text, $note->getDatabaseId());
         $expected = '<img src="https://fastly.site.com/cops/index.php/calres/0/xxh64/7c301792c52eebf7?placement=';
         $this->assertStringContainsString($expected, $html);
 
         Config::set('resources_cdn', '');
         Config::set('full_url', '');
         UriGenerator::setBaseUrl(null);
+    }
+
+    public function testGetTypeItem(): void
+    {
+        $note = self::$author->getNote();
+        $instance = $note->getTypeItem();
+        $this->assertEquals(Author::class, $instance::class);
+        $expected = get_object_vars(self::$author);
+        $this->assertEquals($expected, get_object_vars($instance));
+
+        $expected = $instance->name;
+        $this->assertEquals($expected, $note->name);
+        $expected = 'vendor/bin/index.php/restapi/authors/3/Lewis_Carroll';
+        $this->assertEquals($expected, $note->link);
     }
 
     public function testGetResources(): void

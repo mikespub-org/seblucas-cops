@@ -428,9 +428,10 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
      * Summary of getBooksByFirstLetter
      * @param string $letter
      * @param int $n
+     * @param array<mixed> $urlParams extra URL params for getEntry() - not used here
      * @return array{0: EntryBook[], 1: integer}
      */
-    public function getBooksByFirstLetter($letter, $n)
+    public function getBooksByFirstLetter($letter, $n, $urlParams = [])
     {
         return $this->getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n);
     }
@@ -449,9 +450,10 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     /**
      * Summary of getBooksByIdList
      * @param array<int> $idlist
+     * @param array<mixed> $urlParams extra URL params for getEntry() - not used here
      * @return array{0: EntryBook[], 1: integer}
      */
-    public function getBooksByIdList($idlist)
+    public function getBooksByIdList($idlist, $urlParams = [])
     {
         if (count($idlist) < 1) {
             $this->orderBy ??= 'id';

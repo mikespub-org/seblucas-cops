@@ -610,11 +610,11 @@ class GraphQLExecutor
     {
         switch ($fieldName) {
             case 'type':
-                return $note->colname;
+                return $note->type;
             case 'content':
-                return $note->doc;
+                return $note->text;
             case 'size':
-                return strlen($note->doc);
+                return strlen($note->text);
             case 'mtime':
                 return date(DATE_ATOM, (int) $note->mtime);
             case 'navlink':

@@ -229,12 +229,12 @@ class JsonRendererTest extends TestCase
             [
                 'class' => 'Tag',
                 'title' => 'Fiction',
-                'navlink' => self::$handler::link() . '/tags/1/Fiction',
+                'navlink' => self::$handler::link() . '/tags/1/Fiction?query=fic',
             ],
             [
                 'class' => 'Tag',
                 'title' => 'Science Fiction',
-                'navlink' => self::$handler::link() . '/tags/7/Science_Fiction',
+                'navlink' => self::$handler::link() . '/tags/7/Science_Fiction?query=fic',
             ],
         ];
         $this->assertEquals($expected, $test);

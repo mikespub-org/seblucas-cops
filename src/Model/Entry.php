@@ -162,6 +162,32 @@ class Entry
     }
 
     /**
+     * Summary of setNavLink
+     * @param string|\Closure $href uri or closure including the endpoint
+     * @param ?string $rel relation in the OPDS catalog
+     * @param ?string $title title in the OPDS catalog and elsewhere
+     * @return void
+     */
+    public function setNavLink($href, $rel = null, $title = null)
+    {
+        foreach ($this->linkArray as $idx => $link) {
+            /** @var LinkFeed|LinkResource $link */
+
+            if (!($link instanceof LinkFeed)) {
+                continue;
+            }
+
+            $this->linkArray[$idx]->href = $href;
+            if (isset($rel)) {
+                $this->linkArray[$idx]->rel = $rel;
+            }
+            if (isset($title)) {
+                $this->linkArray[$idx]->title = $title;
+            }
+        }
+    }
+
+    /**
      * Summary of getRelation
      * @return ?string
      */

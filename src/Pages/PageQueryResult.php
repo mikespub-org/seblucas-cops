@@ -14,6 +14,7 @@ use SebLucas\Cops\Calibre\Author;
 use SebLucas\Cops\Calibre\BaseList;
 use SebLucas\Cops\Calibre\BookList;
 use SebLucas\Cops\Calibre\Comment;
+use SebLucas\Cops\Calibre\Note;
 use SebLucas\Cops\Calibre\Publisher;
 use SebLucas\Cops\Calibre\Serie;
 use SebLucas\Cops\Calibre\Tag;
@@ -82,54 +83,60 @@ class PageQueryResult extends Page
         if ($this->getConfig() !== null) {
             $req->setConfig($this->getConfig());
         }
+        // set query + scope in instance links
+        if (!empty($this->query)) {
+            $params = ['query' => $this->query];  // 'scope' => $scope
+        } else {
+            $params = [];
+        }
         switch ($scope) {
             case PageQueryScope::BOOK:
                 $booklist = new BookList($req, $dbContext, $numberPerPage);
-                $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n);
+                $array = $booklist->getBooksByFirstLetter('%' . $queryNormedAndUp, $n, $params);
                 break;
             case PageQueryScope::AUTHOR:
                 $baselist = new BaseList(Author::class, $req, $dbContext, $numberPerPage);
                 // we need to repeat the query x 2 here because Author checks both name and sort fields
-                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 2, $params);
                 break;
             case PageQueryScope::SERIES:
                 $baselist = new BaseList(Serie::class, $req, $dbContext, $numberPerPage);
-                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 1, $params);
                 break;
             case PageQueryScope::TAG:
                 $baselist = new BaseList(Tag::class, $req, $dbContext, $numberPerPage);
-                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 1, $params);
                 break;
             case PageQueryScope::PUBLISHER:
                 $baselist = new BaseList(Publisher::class, $req, $dbContext, $numberPerPage);
-                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 1, $params);
                 break;
             case PageQueryScope::COMMENT:
                 $baselist = new BaseList(Comment::class, $req, $dbContext, $numberPerPage);
-                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 1);
                 if (!$limit) {
-                    // re-map comments to books
-                    $idlist = array_map(fn($entry) => (int) $entry->instance->name, $array);
-                    $booklist = new BookList($req, $dbContext, $numberPerPage);
-                    $array = $booklist->getBooksByIdList($idlist);
+                    // replace comment entries with book entries
+                    $array = Comment::replaceEntryArray($array, $req, $dbContext, $params);
                 } elseif ($this->useTypeahead()) {
-                    // update title based on books
-                    $idlist = array_map(fn($entry) => (int) $entry->instance->name, $array);
-                    $booklist = new BookList($req, $dbContext, $numberPerPage);
-                    [$bookArray, ] = $booklist->getBooksByIdList($idlist);
-                    $titles = [];
-                    foreach ($bookArray as $entryBook) {
-                        $titles[$entryBook->book->id] = $entryBook->title;
-                    }
-                    foreach ($array as $id => $entry) {
-                        if (!empty($titles[$entry->instance->name])) {
-                            $array[$id]->title = $titles[$entry->instance->name];
-                        }
-                    }
+                    // update entry title and navlink based on book instance
+                    $array = Comment::updateEntryArray($array, $req, $dbContext, $params);
+                } else {
+                    // we don't really care since we only count entries here
                 }
                 break;
             case PageQueryScope::NOTE:
-                $array = [];
+                $dbContext->getNotesDb();
+                $baselist = new BaseList(Note::class, $req, $dbContext, $numberPerPage);
+                $array = $baselist->getAllEntriesByQuery($queryNormedAndUp, $n, 1);
+                if (!$limit) {
+                    // replace note entries with type item entries
+                    $array = Note::replaceEntryArray($array, $req, $dbContext, $params);
+                } elseif ($this->useTypeahead()) {
+                    // update entry title and navlink based on type item instance
+                    $array = Note::updateEntryArray($array, $req, $dbContext, $params);
+                } else {
+                    // we don't really care since we only count entries here
+                }
                 break;
             case PageQueryScope::ANNOTATION:
                 $array = [];

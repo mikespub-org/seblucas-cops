@@ -15,7 +15,7 @@
             "class": "Authors",
             "title": "Lewis Carroll",
             "content": "2 books",
-            "navlink": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll",
+            "navlink": "vendor/bin/index.php/restapi/authors/3/Lewis_Carroll?query=car",
             "number": 2
         }
     ],

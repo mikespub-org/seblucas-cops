@@ -11,18 +11,13 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Database\DatabaseContext;
-use SebLucas\Cops\Database\HasDatabaseTrait;
-use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Handlers\RestApiHandler;
-use SebLucas\Cops\Input\HasConfigTrait;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
-class Note
+class Note extends Base
 {
-    use HasRouteTrait;
-    use HasConfigTrait;
-    use HasDatabaseTrait;
-
     public const PAGE_ID = PageId::ALL_NOTES_ID;
     public const PAGE_ALL = PageId::ALL_NOTES;
     public const PAGE_TYPE = PageId::ALL_NOTES_TYPE;
@@ -30,7 +25,7 @@ class Note
     public const ROUTE_ALL = "restapi-notes";
     public const ROUTE_TYPE = "restapi-notes-type";
     public const ROUTE_DETAIL = "restapi-note";
-    public const ALLOWED_FIELDS = [
+    public const ALLOWED_TYPES = [
         'authors' => Author::class,
         //'languages' => Language::class,
         'publishers' => Publisher::class,
@@ -38,12 +33,19 @@ class Note
         'series' => Serie::class,
         'tags' => Tag::class,
     ];
+    public const SQL_TABLE = "notes_db.notes";
+    public const SQL_LINK_TABLE = '{$type}';  // dummy placeholder for $type table
+    public const SQL_LINK_COLUMN = "item";
+    public const SQL_SORT = "colname, item";
+    public const SQL_COLUMNS = "id, item, colname as type, doc as text, mtime";
+    public const SQL_ALL_ROWS = "select {0} from notes_db.notes where 1=1 {1}";
+    public const SQL_ROWS_FOR_SEARCH = "select {0} from notes_db.notes where upper (strip_html(doc)) like ? {1} group by id order by colname, item";
 
-    public int $id;
     public int $item;
-    public string $colname;
-    public string $doc;
+    public string $type;
+    public string $text;
     public float $mtime;
+    public int $size = 0;
 
     /**
      * Summary of __construct
@@ -57,9 +59,12 @@ class Note
         $this->config = $dbContext?->getConfig() ?? null;
         $this->id = $post->id;
         $this->item = $post->item;
-        $this->colname = $post->colname;
-        $this->doc = $post->doc;
+        $this->type = $post->type;
+        $this->text = property_exists($post, 'text') ? $post->text : '';
         $this->mtime = $post->mtime;
+        $this->size = property_exists($post, 'size') ? $post->size : strlen($this->text);
+        $this->name = property_exists($post, 'name') ? $post->name : null;
+        $this->link = property_exists($post, 'link') ? $post->link : null;
         $this->setHandler(RestApiHandler::class);
     }
 
@@ -70,8 +75,14 @@ class Note
      */
     public function getUri($params = [])
     {
-        $params['type'] = $this->colname;
+        if (!empty($this->link)) {
+            return $this->link;
+        }
+        $params['type'] = $this->type;
         $params['item'] = $this->item;
+        if (!empty($this->name)) {
+            $params['title'] = $this->name;
+        }
         return $this->getResource(static::class, $params);
     }
 
@@ -81,8 +92,35 @@ class Note
      */
     public function getTitle()
     {
-        // @todo get corresponding title from item instance
-        return '';
+        if (!empty($this->name)) {
+            return $this->name;
+        }
+        // @todo get corresponding name from type item instance
+        return "Note for {$this->type} #{$this->item}";
+    }
+
+    /**
+     * Summary of getTypeItem
+     * @return Base|null
+     */
+    public function getTypeItem()
+    {
+        if (empty($this->type) || empty(self::ALLOWED_TYPES[$this->type]) || empty($this->item)) {
+            return null;
+        }
+        /** @var class-string<Base> $className */
+        $className = self::ALLOWED_TYPES[$this->type];
+        $instance = $className::getInstanceById($this->item, $this->getDbContext());
+        $instance->setHandler($this->handler);
+        //$instance->setLocale($this->locale);
+        if (empty($this->name)) {
+            $this->name = $instance->getTitle();
+        }
+        // update link to point to instance REST API link here
+        if (empty($this->link)) {
+            $this->link = $instance->getUri();
+        }
+        return $instance;
     }
 
     /**
@@ -136,7 +174,7 @@ class Note
      */
     public static function getEntriesByType($type, $dbContext)
     {
-        if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
+        if (!array_key_exists($type, self::ALLOWED_TYPES)) {
             return [];
         }
         $notesDb = $dbContext->getNotesDb();
@@ -144,7 +182,7 @@ class Note
             return [];
         }
         $entries = [];
-        $query = 'select item, length(doc) as size, mtime from notes_db.notes where colname = ? order by item';
+        $query = 'select id, item, colname as type, length(doc) as size, mtime from notes_db.notes where colname = ? order by item';
         $params = [$type];
         $result = $notesDb->prepare($query);
         $result->execute($params);
@@ -161,7 +199,7 @@ class Note
         $result = $dbContext->query($query, $itemIdList);
         while ($post = $result->fetchObject()) {
             if (array_key_exists($post->id, $entries)) {
-                $entries[$post->id]["title"] = $post->name;
+                $entries[$post->id]["name"] = $post->name;
                 // @todo add link to resource
                 //$link = RestApiHandler::resource(self::class, $params);
             }
@@ -178,14 +216,14 @@ class Note
      */
     public static function getInstanceByTypeItem($type, $item, $dbContext)
     {
-        if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
+        if (!array_key_exists($type, self::ALLOWED_TYPES)) {
             return null;
         }
         $notesDb = $dbContext->getNotesDb();
         if (is_null($notesDb)) {
             return null;
         }
-        $query = 'select id, item, colname, doc, mtime from notes_db.notes where item = ? and colname = ?';
+        $query = 'select id, item, colname as type, doc as text, mtime from notes_db.notes where item = ? and colname = ?';
         $params = [$item, $type];
         $result = $notesDb->prepare($query);
         $result->execute($params);
@@ -204,7 +242,7 @@ class Note
      */
     public static function getInstanceByTypeName($type, $name, $dbContext)
     {
-        if (!array_key_exists($type, self::ALLOWED_FIELDS)) {
+        if (!array_key_exists($type, self::ALLOWED_TYPES)) {
             return null;
         }
         $notesDb = $dbContext->getNotesDb();
@@ -218,5 +256,81 @@ class Note
             return self::getInstanceByTypeItem($type, $item, $dbContext);
         }
         return null;
+    }
+
+    /**
+     * Replace note entries with type item entries
+     * @param array<Entry> $entryArray
+     * @param Request $request
+     * @param DatabaseContext $dbContext
+     * @param array<mixed> $params set query + scope in instance links
+     * @return array<Entry>
+     */
+    public static function replaceEntryArray($entryArray, $request, $dbContext, $params = [])
+    {
+        $types = [];
+        foreach ($entryArray as $entry) {
+            /** @var self $instance */
+            $instance = $entry->instance;
+            $types[$instance->type] ??= [];
+            array_push($types[$instance->type], $instance->item);
+        }
+        $entries = [];
+        foreach ($types as $type => $idlist) {
+            $className = self::ALLOWED_TYPES[$type];
+            $baselist = new BaseList($className, $request, $dbContext);
+            // this expects an array like [$bookId => $instanceIdList]
+            $instances = $baselist->getInstancesByIds([1 => $idlist]);
+            foreach ($instances as $instance) {
+                // set query + scope in instance links
+                $entries[] = $instance->getEntry(0, $params);
+            }
+        }
+        if (!empty($entries)) {
+            return $entries;
+        }
+        return $entryArray;
+    }
+
+    /**
+     * Update entry title and navlink based on type item instance
+     * @param array<Entry> $entryArray
+     * @param Request $request
+     * @param DatabaseContext $dbContext
+     * @param array<mixed> $params set query + scope in instance links
+     * @return array<Entry>
+     */
+    public static function updateEntryArray($entryArray, $request, $dbContext, $params = [])
+    {
+        $types = [];
+        foreach ($entryArray as $entry) {
+            /** @var self $instance */
+            $instance = $entry->instance;
+            $types[$instance->type] ??= [];
+            array_push($types[$instance->type], $instance->item);
+        }
+        $items = [];
+        foreach ($types as $type => $idlist) {
+            $items[$type] = [];
+            $className = self::ALLOWED_TYPES[$type];
+            $baselist = new BaseList($className, $request, $dbContext);
+            // this expects an array like [$bookId => $instanceIdList]
+            $instances = $baselist->getInstancesByIds([1 => $idlist]);
+            foreach ($instances as $id => $instance) {
+                $items[$type][$id] = $instance;
+            }
+        }
+        foreach ($entryArray as $idx => $entry) {
+            /** @var self $instance */
+            $instance = $entry->instance;
+            $type = $instance->type;
+            $item = $instance->item;
+            if (!empty($items[$type]) && !empty($items[$type][$item])) {
+                $entryArray[$idx]->title = $items[$type][$item]->getTitle();
+                // set query + scope in instance links
+                $entryArray[$idx]->setNavLink($items[$type][$item]->getUri($params));
+            }
+        }
+        return $entryArray;
     }
 }

@@ -16,8 +16,9 @@ x.x.x - TODO
   * Changes in config/default.php file:
     - new $config['cops_search_comments'] to search in book comments
     - new $config['cops_search_notes'] to search in extra notes
-    - new $config['cops_search_strip_html'] to strip html tags for search (WIP)
+    - new $config['cops_search_strip_html'] to strip html tags for search
   * ...
+  * Change Note fields to align with other Calibre classes + adapt API providers
   * Add new search options for book comments or extra notes - see issue #174 from @cslondon
   * Move Database classes and CustomColumns classes to their own namespace
   * Remove deprecated static Database methods

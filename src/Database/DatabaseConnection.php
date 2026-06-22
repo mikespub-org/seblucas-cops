@@ -28,6 +28,7 @@ class DatabaseConnection
     protected ?int $database;
     protected ?Sqlite $db = null;
     protected bool $functions = false;
+    protected ?bool $notesDb = null;
 
     public function __construct(string $dbFileName, ?RequestConfig $config = null, ?int $database = null)
     {
@@ -67,6 +68,7 @@ class DatabaseConnection
     {
         $this->db = null;
         $this->functions = false;
+        $this->notesDb = null;
     }
 
     /**
@@ -335,18 +337,24 @@ class DatabaseConnection
      */
     public function getNotesDb(): ?Sqlite
     {
+        if (!is_null($this->notesDb)) {
+            return $this->notesDb ? $this->getDb() : null;
+        }
+        $this->notesDb = false;
         if (!$this->hasNotes()) {
             return null;
         }
         // calibre_dir/.calnotes/notes.db file -> notes_db database in sqlite
         $databases = $this->getDatabaseList();
         if (!empty($databases[Database::NOTES_DB_NAME])) {
+            $this->notesDb = true;
             return $this->getDb();
         }
         $notesFileName = $this->getNotesFileName();
         $this->attachDatabase($notesFileName, Database::NOTES_DB_NAME);
         $databases = $this->getDatabaseList();
         if (!empty($databases[Database::NOTES_DB_NAME])) {
+            $this->notesDb = true;
             return $this->getDb();
         }
         return null;

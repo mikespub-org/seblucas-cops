@@ -10,7 +10,11 @@
 
 namespace SebLucas\Cops\Calibre;
 
+use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\CalibreHandler;
+use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\Entry;
+use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Routing\UriGenerator;
 
 class Comment extends Base
@@ -31,10 +35,14 @@ class Comment extends Base
      */
     public function getUri($params = [])
     {
+        if (!empty($this->link)) {
+            return $this->link;
+        }
         $params['id'] = $this->name;
         // we need databaseId here because we use $handler::link()
         $params['db'] = $this->databaseId;
         return $this->getRoute(Book::ROUTE_PAGEID, $params);
+        // @todo get corresponding title + author from book instance
         //$params['author'] = $this->getAuthorsName();
         //$params['title'] = $this->getTitle();
         //return $this->getRoute(self::ROUTE_DETAIL, $params);
@@ -46,7 +54,8 @@ class Comment extends Base
      */
     public function getTitle()
     {
-        return '(' . strval($this->name) . ')';
+        // @todo get corresponding title from book instance
+        return "Summary for book #{$this->name}";
     }
 
     /**
@@ -70,5 +79,50 @@ class Comment extends Base
         // @todo add database param if not null and Library_Name is _ (current)
         $baseurl = UriGenerator::absolute(CalibreHandler::PREFIX);
         return str_replace(self::CALIBRE_URL_SCHEME . '://', $baseurl . '/', $text);
+    }
+
+    /**
+     * Replace comment entries with book entries
+     * @param array<Entry> $entryArray
+     * @param Request $request
+     * @param DatabaseContext $dbContext
+     * @param array<mixed> $params set query + scope in book links - not used here
+     * @return array{0: EntryBook[], 1: integer}
+     */
+    public static function replaceEntryArray($entryArray, $request, $dbContext, $params = [])
+    {
+        $idlist = array_map(fn($entry) => (int) $entry->instance->name, $entryArray);
+        $booklist = new BookList($request, $dbContext);
+        $entryArray = $booklist->getBooksByIdList($idlist, $params);
+        return $entryArray;
+    }
+
+    /**
+     * Update entry title and navlink based on book instance
+     * @param array<Entry> $entryArray
+     * @param Request $request
+     * @param DatabaseContext $dbContext
+     * @param array<mixed> $params set query + scope in book links
+     * @return array<Entry>
+     */
+    public static function updateEntryArray($entryArray, $request, $dbContext, $params = [])
+    {
+        $idlist = array_map(fn($entry) => (int) $entry->instance->name, $entryArray);
+        $booklist = new BookList($request, $dbContext);
+        [$bookArray, ] = $booklist->getBooksByIdList($idlist);
+        $books = [];
+        foreach ($bookArray as $entryBook) {
+            $bookId = $entryBook->book->id;
+            $books[$bookId] = $entryBook->book;
+        }
+        foreach ($entryArray as $idx => $entry) {
+            $bookId = $entry->instance->name;
+            if (!empty($books[$bookId])) {
+                $entryArray[$idx]->title = $books[$bookId]->getTitle();
+                // set query + scope in book links
+                $entryArray[$idx]->setNavLink($books[$bookId]->getUri($params));
+            }
+        }
+        return $entryArray;
     }
 }

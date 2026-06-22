@@ -636,13 +636,13 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         // @todo get item from notes + corresponding title from instance
         foreach (Note::getEntriesByType($type, $dbContext) as $entry) {
             $params['item'] = $entry['item'];
-            if (!empty($entry["title"])) {
-                $title = UriGenerator::slugify($entry["title"]);
+            if (!empty($entry["name"])) {
+                $title = UriGenerator::slugify($entry["name"]);
                 $params['title'] = $title;
                 $link = $this->getResource(Note::class, $params);
                 array_push($result["entries"], [
                     "class" => "Notes",
-                    "title" => $entry["title"],
+                    "title" => $entry["name"],
                     "id" => $entry["item"],
                     "navlink" => $link,
                     "size" => $entry["size"],
@@ -686,7 +686,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             "databaseId" => $db,
         ];
         $result = array_replace($result, get_object_vars($note));
-        $result["size"] = strlen($result["doc"]);
+        $result["size"] = strlen($result["text"]);
         $result["resources"] = [];
         foreach ($note->getResources() as $hash => $resource) {
             $path = Resource::getResourcePath($hash, $dbContext);

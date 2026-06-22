@@ -63,9 +63,10 @@ class JsonRenderer extends BaseRenderer
 
     /**
      * @param Book $book
+     * @param array<string, mixed> $extraParams
      * @return array<string, mixed>
      */
-    public function getBookContentArray($book)
+    public function getBookContentArray($book, $extraParams = [])
     {
         $handler = $book->getHandler();
         $i = 0;
@@ -140,7 +141,7 @@ class JsonRenderer extends BaseRenderer
 
         return [
             "id" => $book->id,
-            "detailurl" => $book->getUri(),
+            "detailurl" => $book->getUri($extraParams),
             "hasCover" => $book->hasCover,
             "preferedData" => $preferedData,
             "preferedCount" => count($preferedData),
@@ -312,7 +313,7 @@ class JsonRenderer extends BaseRenderer
         if ($entry instanceof EntryBook) {
             $out = [
                 "title" => $entry->title,
-                "book" => $this->getBookContentArray($entry->book),
+                "book" => $this->getBookContentArray($entry->book, $extraParams),
                 "thumbnailurl" => $entry->getThumbnail(),
                 "coverurl" => $entry->getImage(),
             ];
