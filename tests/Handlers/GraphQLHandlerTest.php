@@ -305,8 +305,9 @@ class GraphQLHandlerTest extends TestCase
             }
             $operation = 'get' . ucfirst($name);
             $field = $queryType->getField($name);
-            if ($field->getType() instanceof ListOfType) {
-                $type = $field->getType()->getWrappedType()->toString();
+            $fieldType = $field->getType();
+            if ($fieldType instanceof ListOfType) {
+                $type = $fieldType->getWrappedType()->toString();
                 if ($name == 'datas') {
                     $vars = ['bookId' => 17];
                     $query = 'query ' . $operation . "(\$bookId: ID) {\n";

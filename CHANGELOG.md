@@ -7,17 +7,20 @@ x.x.x - TODO
   * Changes in config/default.php file:
     - new $config['cops_customize'] for default customize values per user (TODO)
   * Experiment with default customize values per user (TODO)
-  * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.5
+  * Upgrade npm-asset/bootstrap 3.4.1 to 5.3.8
+  * Upgrade npm-asset/jquery 3.7.1 to 4.0.0
 
 3.8.x - 2026xxxx Maintenance release for 3.x (PHP >= 8.2)
   * ...
 
 4.x.x - 2026xxxx 
+  * ...
+
+4.5.1 - 20260623 Clean up refactor + search in comments and notes 
   * Changes in config/default.php file:
     - new $config['cops_search_comments'] to search in book comments
     - new $config['cops_search_notes'] to search in extra notes
     - new $config['cops_search_strip_html'] to strip html tags for search
-  * ...
   * Change Note fields to align with other Calibre classes + adapt API providers
   * Add new search options for book comments or extra notes - see issue #174 from @cslondon
   * Move Database classes and CustomColumns classes to their own namespace

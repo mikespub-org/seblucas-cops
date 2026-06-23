@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Book;
+use SebLucas\Cops\Calibre\Category;
 use SebLucas\Cops\Calibre\Cover;
 use SebLucas\Cops\Calibre\Filter;
 use SebLucas\Cops\Calibre\Folder;
@@ -676,7 +677,7 @@ class JsonRenderer extends BaseRenderer
         $series = [];
         foreach ($currentPage->extra['series'] as $entry) {
             // @todo add link to parent(s) for hierarchical series?
-            if (!empty($entry->instance) && $entry->instance->hasChildCategories()) {
+            if (!empty($entry->instance) && $entry->instance instanceof Category && $entry->instance->hasChildCategories()) {
                 $entry->title = str_replace(".", " > ", $entry->title);
             }
             array_push($series, $this->getContentArray($entry, $extraParams));

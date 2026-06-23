@@ -11,7 +11,6 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Input\Context;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Output\Format as OutputFormat;
 use SebLucas\Cops\Output\GraphQLExecutor;
