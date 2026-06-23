@@ -23,7 +23,6 @@ class Database
     public const NOTES_DIR_NAME = '.calnotes';
     public const NOTES_DB_FILE = 'notes.db';
     public const NOTES_DB_NAME = 'notes_db';
-    public const ROUTE_CHECK = "check";
 
     /** @var array<string, DatabaseConnection> */
     protected static array $connections = [];

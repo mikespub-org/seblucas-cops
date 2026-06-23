@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Database\Database;
+use SebLucas\Cops\Database\DatabaseException;
 use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\HtmlRenderer;
 use SebLucas\Cops\Output\Response;
@@ -57,7 +58,11 @@ class HtmlHandler extends PageHandler
 
         // Access the database ASAP to be sure it's readable, redirect if that's not the case.
         // It has to be done before any header is sent.
-        Database::checkDatabaseAvailability($database, $this->getConfig());
+        try {
+            Database::checkDatabaseAvailability($database, $this->getConfig());
+        } catch (DatabaseException $e) {
+            return Response::sendDbCheck($e->getMessage());
+        }
 
         // set session connected in ConnectMiddleware
 
@@ -80,6 +85,8 @@ class HtmlHandler extends PageHandler
 
         try {
             return $response->setContent($html->render($request));
+        } catch (DatabaseException $e) {
+            return Response::sendDbCheck($e->getMessage());
         } catch (InvalidArgumentException $e) {
             return Response::notFound($request, $e->getMessage());
         } catch (Throwable $e) {

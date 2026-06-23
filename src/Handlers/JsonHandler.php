@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Database\DatabaseException;
 use SebLucas\Cops\Output\JsonRenderer;
 use SebLucas\Cops\Output\Response;
 use SebLucas\Cops\Pages\PageId;
@@ -46,6 +47,8 @@ class JsonHandler extends PageHandler
 
         try {
             return $response->setContent(json_encode($json->getJson($request)));
+        } catch (DatabaseException $e) {
+            return Response::sendDbCheck($e->getMessage());
         } catch (InvalidArgumentException $e) {
             return Response::notFound($request, $e->getMessage());
         } catch (Throwable $e) {

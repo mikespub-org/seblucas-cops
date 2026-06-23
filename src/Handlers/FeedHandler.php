@@ -10,6 +10,7 @@
 
 namespace SebLucas\Cops\Handlers;
 
+use SebLucas\Cops\Database\DatabaseException;
 use SebLucas\Cops\Middleware\ConnectMiddleware;
 use SebLucas\Cops\Output\OpdsRenderer;
 use SebLucas\Cops\Output\Response;
@@ -83,6 +84,8 @@ class FeedHandler extends BaseHandler
         try {
             $currentPage = PageId::getPage($page, $request);
             return $response->setContent($opdsRenderer->render($currentPage, $request));
+        } catch (DatabaseException $e) {
+            return Response::sendDbCheck($e->getMessage());
         } catch (InvalidArgumentException $e) {
             return Response::notFound($request, $e->getMessage());
         } catch (Throwable $e) {

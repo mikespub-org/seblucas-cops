@@ -76,7 +76,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     /**
      * Summary of matchPathInfo
      * @param string $path
-     * @throws Exception if the $path is not found in $routes or $extra
+     * @throws \Exception if the $path is not found in $routes or $extra
      * @return ?array<mixed>
      */
     public function matchPathInfo($path)

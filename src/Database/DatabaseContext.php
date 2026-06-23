@@ -172,7 +172,7 @@ class DatabaseContext
 
     /**
      * Summary of getDbDirectory
-     * @throws \Exception
+     * @throws \SebLucas\Cops\Database\DatabaseException
      */
     public function getDbDirectory(): string
     {
@@ -181,7 +181,7 @@ class DatabaseContext
                 $database = $this->database ?? 0;
                 $array = array_values(Config::getFrom($this->config, 'calibre_directory', []));
                 if ($database > count($array) - 1) {
-                    throw new \Exception("Database <{$database}> not found.");
+                    throw new DatabaseException("Database <{$database}> not found.");
                 }
                 $this->dbDirectory = $array[$database];
             } else {

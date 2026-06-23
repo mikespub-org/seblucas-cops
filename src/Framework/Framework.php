@@ -2,6 +2,7 @@
 
 namespace SebLucas\Cops\Framework;
 
+use SebLucas\Cops\Database\DatabaseException;
 use SebLucas\Cops\Framework\Adapter\AdapterInterface;
 use SebLucas\Cops\Framework\Adapter\CustomAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
@@ -80,6 +81,8 @@ class Framework
 
             // Handle request
             return $handler->handle($context->getRequest());
+        } catch (DatabaseException $e) {
+            return Response::sendDbCheck($e->getMessage());
         } catch (\Exception $e) {
             return $this->handleError($e, $context);
         }

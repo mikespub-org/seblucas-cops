@@ -10,6 +10,8 @@
 
 namespace SebLucas\Cops\Tests\Database;
 
+use SebLucas\Cops\Database\DatabaseException;
+
 require_once dirname(__DIR__, 2) . '/config/test.php';
 use PHPUnit\Framework\TestCase;
 use SebLucas\Cops\Database\Database;
@@ -49,7 +51,7 @@ class DatabaseTest extends TestCase
             "One book" => dirname(__DIR__) . "/OneBook/"]);
         Database::clearDb();
 
-        $this->expectException(Exception::class);
+        $this->expectException(DatabaseException::class);
         $this->expectExceptionMessage('Database <1> not found');
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));
@@ -65,7 +67,7 @@ class DatabaseTest extends TestCase
             "One book" => dirname(__DIR__) . "/BaseWithOneBook/"]);
         Database::clearDb();
 
-        $this->expectException(Exception::class);
+        $this->expectException(DatabaseException::class);
         $this->expectExceptionMessage('Database <0> not found');
 
         $this->assertTrue(Database::checkDatabaseAvailability(null));

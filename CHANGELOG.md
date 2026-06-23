@@ -16,6 +16,9 @@ x.x.x - TODO
 4.x.x - 2026xxxx 
   * ...
 
+4.5.2 - 20260623 Fix redirect to /check if database is missing
+  * Use DatabaseException to redirect to CheckHandler if needed
+
 4.5.1 - 20260623 Clean up refactor + search in comments and notes 
   * Changes in config/default.php file:
     - new $config['cops_search_comments'] to search in book comments

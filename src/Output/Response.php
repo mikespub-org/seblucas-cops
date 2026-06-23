@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Output;
 
 use SebLucas\Cops\Calibre\Data;
+use SebLucas\Cops\Handlers\CheckHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
@@ -500,5 +501,19 @@ class Response
         $response->addHeader('WWW-Authenticate', $authenticate);
         $response->setContent('This site is password protected');
         return $response;
+    }
+
+    /**
+     * Summary of sendDbCheck
+     * @param string|null $error
+     * @return self
+     */
+    public static function sendDbCheck($error = null): self
+    {
+        $error ??= "Database <> not found.";
+        if (php_sapi_name() != "cli") {
+            return Response::redirect(CheckHandler::route('check', ['err' => 1]));
+        }
+        return Response::sendError(null, $error);
     }
 }

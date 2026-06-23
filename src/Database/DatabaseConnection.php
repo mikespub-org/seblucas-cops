@@ -39,16 +39,20 @@ class DatabaseConnection
 
     /**
      * Summary of getDb
-     * @throws \Exception
+     * @throws \SebLucas\Cops\Database\DatabaseException
      */
     public function getDb(): Sqlite
     {
         if ($this->db === null) {
-            if (!is_readable($this->dbFileName)) {
-                throw new Exception(sprintf("Database <%s> not found or not readable.", $this->database));
+            try {
+                if (!is_readable($this->dbFileName)) {
+                    throw new DatabaseException("Database <{$this->database}> not found or not readable.");
+                }
+                $this->db = new Sqlite('sqlite:' . $this->dbFileName);
+                $this->createSqliteFunctions();
+            } catch (Exception) {
+                throw new DatabaseException("Database <{$this->database}> not found.");
             }
-            $this->db = new Sqlite('sqlite:' . $this->dbFileName);
-            $this->createSqliteFunctions();
         }
         return $this->db;
     }
