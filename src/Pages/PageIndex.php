@@ -146,7 +146,7 @@ class PageIndex extends Page
                 array_push($this->entryArray, $library);
             }
         }
-        // differentiate between ignored search & index categories BOOK (search) vs. ALLBOOKS/RECENT (home screen)
+        // differentiate between ignored search & index categories BOOK (search) vs. ALLBOOKS/RECENT/RANDOM (home screen)
         if (!in_array(PageQueryScope::ALLBOOKS->value, $this->ignoredCategories)) {
             $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
@@ -154,6 +154,10 @@ class PageIndex extends Page
         if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && $this->config('recentbooks_limit') > 0) {
             $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
+        }
+        if (!in_array(PageQueryScope::RANDOM->value, $this->ignoredCategories) && $this->config('random_books') > 0) {
+            $booklist = new BookList($this->request, $this->getDbContext());
+            $this->addEntries([ $booklist->getRandomCountEntry() ]);
         }
 
         if ($this->getDbContext()->isMultipleDatabaseEnabled()) {
@@ -219,7 +223,7 @@ class PageIndex extends Page
         if (!empty($this->config('calibre_virtual_libraries')) && !in_array(PageQueryScope::LIBRARIES->value, $this->ignoredCategories)) {
             $this->addCountEntry(VirtualLibrary::class);
         }
-        // differentiate between ignored search & index categories BOOK(search) vs. ALLBOOKS/RECENT (home screen)
+        // differentiate between ignored search & index categories BOOK(search) vs. ALLBOOKS/RECENT/RANDOM (home screen)
         if (!in_array(PageQueryScope::ALLBOOKS->value, $this->ignoredCategories)) {
             $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getAllBooksCountEntry() ]);
@@ -227,6 +231,10 @@ class PageIndex extends Page
         if (!in_array(PageQueryScope::RECENT->value, $this->ignoredCategories) && $this->config('recentbooks_limit') > 0) {
             $booklist = new BookList($this->request, $this->getDbContext());
             $this->addEntries([ $booklist->getRecentCountEntry() ]);
+        }
+        if (!in_array(PageQueryScope::RANDOM->value, $this->ignoredCategories) && $this->config('random_books') > 0) {
+            $booklist = new BookList($this->request, $this->getDbContext());
+            $this->addEntries([ $booklist->getRandomCountEntry() ]);
         }
 
         if ($this->getDbContext()->isMultipleDatabaseEnabled()) {

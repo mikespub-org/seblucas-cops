@@ -113,6 +113,8 @@
     "publisherword.many": "{0} publishers",
     "publisherword.none": "No publishers",
     "publisherword.one": "1 publisher",
+    "random.list": "{0} random books",
+    "random.title": "Random books",
     "ratings.many": "{0} ratings",
     "ratings.none": "no ratings",
     "ratings.one": "1 rating",

@@ -31,6 +31,7 @@ class PageId
     public const FOLDER = "folder";
     public const OPENSEARCH_QUERY = "query";
     public const ALL_RECENT_BOOKS = "recent";
+    public const ALL_RANDOM_BOOKS = "random";
     public const ALL_TAGS = "tags";
     public const TAGS_FIRST_LETTER = "tags_letter";
     public const TAG_DETAIL = "tag";
@@ -75,6 +76,7 @@ class PageId
     public const ALL_BOOKS_UUID = 'urn:uuid';
     public const ALL_BOOKS_ID = 'cops:books';
     public const ALL_RECENT_BOOKS_ID = 'cops:recentbooks';
+    public const ALL_RANDOM_BOOKS_ID = 'cops:randombooks';
     public const ALL_CUSTOMS_ID       = "cops:custom";
     public const ALL_LANGUAGES_ID = "cops:languages";
     public const ALL_PUBLISHERS_ID = "cops:publishers";
@@ -126,6 +128,7 @@ class PageId
             PageId::ALL_BOOKS_LETTER => new PageAllBooksLetter($request),
             PageId::ALL_BOOKS_YEAR => new PageAllBooksYear($request),
             PageId::ALL_RECENT_BOOKS => new PageRecentBooks($request),
+            PageId::ALL_RANDOM_BOOKS => new PageRandomBooks($request),
             PageId::SERIE_DETAIL => new PageSerieDetail($request, $instance),
             PageId::OPENSEARCH_QUERY => new PageQueryResult($request),
             // support ?query=... URL param by default for opensearch

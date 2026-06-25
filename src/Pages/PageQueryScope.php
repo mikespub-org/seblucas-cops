@@ -27,6 +27,7 @@ enum PageQueryScope: string
     case LIBRARIES = "libraries";
     case ALLBOOKS = "allbooks";
     case RECENT = "recent";
+    case RANDOM = "random";
 
     /**
      * Summary of in_array
@@ -63,6 +64,7 @@ enum PageQueryScope: string
             self::LIBRARIES => "libraries.title",
             self::ALLBOOKS => "allbooks.title",
             self::RECENT => "recent.title",
+            self::RANDOM => "random.title",
         };
     }
 }

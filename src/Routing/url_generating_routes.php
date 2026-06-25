@@ -28,6 +28,7 @@ return [
     'page-folder' => [['path'], ['page' => 'folder', '_route' => 'page-folder'], ['path' => '.*'], [['variable', '/', '.*', 'path'], ['text', '/folder']], [], [], []],
     'page-ebook' => [['path'], ['page' => 'folder', 'ebook' => 1, '_route' => 'page-ebook'], ['path' => '.+'], [['variable', '/', '.+', 'path'], ['text', '/ebook']], [], [], []],
     'page-recent' => [[], ['page' => 'recent', '_route' => 'page-recent'], [], [['text', '/recent']], [], [], []],
+    'page-random' => [[], ['page' => 'random', '_route' => 'page-random'], [], [['text', '/random']], [], [], []],
     'page-tags-letter' => [['letter'], ['page' => 'tags_letter', '_route' => 'page-tags-letter'], [], [['variable', '/', '[^/]++', 'letter'], ['text', '/tags/letter']], [], [], []],
     'page-tags-letters' => [[], ['page' => 'tags', 'letter' => 1, '_route' => 'page-tags-letters'], [], [['text', '/tags/letter']], [], [], []],
     'page-tag' => [['id', 'title'], ['page' => 'tag', '_route' => 'page-tag'], ['id' => '\\d+'], [['variable', '/', '[^/]++', 'title'], ['variable', '/', '\\d+', 'id'], ['text', '/tags']], [], [], []],

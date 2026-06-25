@@ -75,6 +75,19 @@ $tooltips['cops_recentbooks_limit'] = <<<'EOT'
     Number of recent books to show
     EOT;
 
+$tooltips['cops_random_books'] = <<<'EOT'
+    Number of random books to show (0 to disable)
+    EOT;
+
+$tooltips['cops_random_filter'] = <<<'EOT'
+    Optional filter for random books (similar to cops_database_filter)
+    Example:
+    $config['cops_random_filter'] = [
+        "tags": "Short Stories",
+        "language": "eng",
+    ];
+    EOT;
+
 $tooltips['cops_author_name'] = <<<'EOT'
     Catalog's author name
     EOT;
@@ -440,6 +453,7 @@ $tooltips['cops_ignored_categories'] = <<<'EOT'
     - libraries
     - allbooks (home screen)
     - recent (home screen)
+    - random (home screen)
     EOT;
 
 $tooltips['cops_search_comments'] = <<<'EOT'

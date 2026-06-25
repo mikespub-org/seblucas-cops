@@ -40,7 +40,10 @@ class BookList
     public const ROUTE_LETTER = "page-books-letter";
     public const ROUTE_YEAR = "page-books-year";
     public const ROUTE_RECENT = "page-recent";
+    public const ROUTE_RANDOM = "page-random";
     public const SQL_BOOKS_ALL = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . ' where 1=1 {1} order by books.sort ';
+    public const SQL_BOOKS_RANDOM = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+    where 1=1 {1} order by random() limit ';
     public const SQL_BOOKS_BY_FIRST_LETTER = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
     where upper (books.sort) like ? {1} order by books.sort';
     public const SQL_BOOKS_BY_PUB_YEAR = 'select {0} from books ' . Book::SQL_BOOKS_LEFT_JOIN . '
@@ -480,6 +483,79 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     public function getRecentBooks()
     {
         [$entryArray, ] = $this->getEntryArray(self::SQL_BOOKS_RECENT . $this->config('recentbooks_limit'), [], -1);
+        return $entryArray;
+    }
+
+    /**
+     * Summary of getRandomCountEntry
+     * @return ?Entry
+     */
+    public function getRandomCountEntry()
+    {
+        $limit = $this->config('random_books');
+        if ($limit < 1) {
+            return null;
+        }
+        $nBooks = $this->getBookCount();
+        $params = $this->request->getFilterParams();
+        $params["db"] ??= $this->databaseId;
+        $href = fn() => $this->getRoute(self::ROUTE_RANDOM, $params);
+        $count = ($nBooks > $limit) ? $limit : $nBooks;
+        $entry = new Entry(
+            $this->localize('random.title'),
+            PageId::ALL_RANDOM_BOOKS_ID,
+            str_format($this->localize('random.list'), $count),
+            'text',
+            [ new LinkFeed($href) ],
+            $this->databaseId,
+            '',
+            $count
+        );
+        return $entry;
+    }
+
+    /**
+     * Summary of getRandomBooks
+     * @return array<EntryBook>
+     */
+    public function getRandomBooks()
+    {
+        $limit = $this->config('random_books');
+        if ($limit < 1) {
+            return [];
+        }
+        $query = self::SQL_BOOKS_RANDOM . $limit;
+        $params = [];
+        // Apply database_filter and optional random_filter on top of any existing filters
+        $filter = new Filter($this->request, $params, "books", $this->getDbContext());
+        $randomFilter = $this->config('random_filter');
+        if (!empty($randomFilter) && !empty(array_filter($randomFilter))) {
+            $filter->addDatabaseFilter(array_filter($randomFilter));
+        }
+        $filterString = $filter->getFilterString();
+        $params = $filter->getQueryParams();
+        // Get book columns (same as getEntryArray)
+        $columns = Book::getBookColumns($this->getConfig());
+        [$totalNumber, $result] = $this->getDbContext()->queryTotal($query, $columns, $filterString, $params, -1, -1);
+        /** @phpstan-ignore-next-line */
+        if (self::BATCH_QUERY) {
+            // We cannot use batchQuery here as it relies on bookList state
+            $entryArray = [];
+            while ($post = $result->fetchObject()) {
+                $book = new Book($post, $this->getDbContext());
+                $book->setHandler($this->handler);
+                $book->setLocale($this->locale);
+                array_push($entryArray, $book->getEntry());
+            }
+            return $entryArray;
+        }
+        $entryArray = [];
+        while ($post = $result->fetchObject()) {
+            $book = new Book($post, $this->getDbContext());
+            $book->setHandler($this->handler);
+            $book->setLocale($this->locale);
+            array_push($entryArray, $book->getEntry());
+        }
         return $entryArray;
     }
 

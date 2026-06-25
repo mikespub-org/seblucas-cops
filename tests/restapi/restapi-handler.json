@@ -161,6 +161,12 @@
                         "page": "recent"
                     }
                 ],
+                "page-random": [
+                    "/random",
+                    {
+                        "page": "random"
+                    }
+                ],
                 "page-tags-letter": [
                     "/tags/letter/{letter}",
                     {

@@ -359,6 +359,20 @@
             ]
         },
         {
+            "name": "page-random",
+            "route": [
+                "/random",
+                {
+                    "page": "random",
+                    "_route": "page-random"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "page-tags-letter",
             "route": [
                 "/tags/letter/{letter}",

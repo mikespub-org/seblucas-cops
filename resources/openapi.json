@@ -671,6 +671,25 @@
                 ]
             }
         },
+        "/random": {
+            "get": {
+                "summary": "Route to page handler with page=random",
+                "operationId": "get_page-random",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=random"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
         "/tags/letter/{letter}": {
             "get": {
                 "summary": "Route to page handler with page=tags_letter&letter={letter}",

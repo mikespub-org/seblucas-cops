@@ -97,6 +97,21 @@ $config['cops_resources_cdn'] = '';
 $config['cops_recentbooks_limit'] = '50';
 
 /*
+ * Number of random books to show (0 to disable)
+ */
+$config['cops_random_books'] = '0';
+
+/*
+ * Optional filter for random books (similar to cops_database_filter)
+ * Example:
+ * $config['cops_random_filter'] = [
+ *     "tags": "Short Stories",
+ *     "language": "eng",
+ * ];
+ */
+$config['cops_random_filter'] = [];
+
+/*
  * Catalog's author name
  */
 $config['cops_author_name'] = 'Sébastien Lucas';
@@ -505,6 +520,7 @@ $config['cops_server_side_render'] = 'Kindle\/1\.\d|Kindle\/2\.\d|Kindle\/3\.\d|
  * - libraries
  * - allbooks (home screen)
  * - recent (home screen)
+ * - random (home screen)
  */
 $config['cops_ignored_categories'] = ['format', 'identifier'];
 

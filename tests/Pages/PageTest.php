@@ -100,6 +100,73 @@ class PageTest extends TestCase
         Config::set('ignored_categories', ["format", "identifier"]);
     }
 
+    public function testPageIndexWithRandomBooks(): void
+    {
+        $page = PageId::INDEX;
+        $request = new Request();
+
+        Config::set('random_books', '5');
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertCount(9, $currentPage->entryArray);
+        $this->assertEquals("All books", $currentPage->entryArray [6]->title);
+        $this->assertEquals("Recent additions", $currentPage->entryArray [7]->title);
+        $this->assertEquals("Random books", $currentPage->entryArray [8]->title);
+        $this->assertEquals("5 random books", $currentPage->entryArray [8]->content);
+        $this->assertEquals(5, $currentPage->entryArray [8]->numberOfElement);
+        $this->assertFalse($currentPage->containsBook());
+
+        Config::set('random_books', '0');
+    }
+
+    public function testPageRandomBooks(): void
+    {
+        $page = PageId::ALL_RANDOM_BOOKS;
+        $request = new Request();
+
+        Config::set('random_books', '3');
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("Random books", $currentPage->title);
+        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertContainsOnlyInstancesOf(\SebLucas\Cops\Model\EntryBook::class, $currentPage->entryArray);
+        $this->assertTrue($currentPage->containsBook());
+
+        Config::set('random_books', '0');
+    }
+
+    public function testPageRandomBooksWithFilter(): void
+    {
+        $page = PageId::ALL_RANDOM_BOOKS;
+        $request = new Request();
+
+        // Filter to only "Short Stories" tagged books (4 books in test DB)
+        Config::set('random_books', '3');
+        Config::set('random_filter', ["tags" => "Short Stories"]);
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("Random books", $currentPage->title);
+        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertTrue($currentPage->containsBook());
+
+        // Verify all returned books have the "Short Stories" tag
+        $knownShortStories = [
+            "The Adventures of Sherlock Holmes",
+            "The Casebook of Sherlock Holmes",
+            "The Memoirs of Sherlock Holmes",
+            "The Return of Sherlock Holmes",
+        ];
+        foreach ($currentPage->entryArray as $entry) {
+            $this->assertContains($entry->title, $knownShortStories);
+        }
+
+        Config::set('random_books', '0');
+        Config::set('random_filter', []);
+    }
+
     public function testPageIndexWithCustomColumn_Type1(): void
     {
         $page = PageId::INDEX;

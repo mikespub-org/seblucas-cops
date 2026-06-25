@@ -59,6 +59,7 @@ class PageHandler extends BaseHandler
             "page-folder" => ["/folder/{path:.*}", ["page" => PageId::FOLDER]],
             "page-ebook" => ["/ebook/{path:.+}", ["page" => PageId::FOLDER, "ebook" => 1]],
             "page-recent" => ["/recent", ["page" => PageId::ALL_RECENT_BOOKS]],
+            "page-random" => ["/random", ["page" => PageId::ALL_RANDOM_BOOKS]],
             // support unicode pattern \pL for first letter here too - see PageAllTagsLetter regex
             "page-tags-letter" => ["/tags/letter/{letter}", ["page" => PageId::TAGS_FIRST_LETTER]],
             "page-tags-letters" => ["/tags/letter", ["page" => PageId::ALL_TAGS, "letter" => 1]],

@@ -14,7 +14,11 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * Changes in config/default.php file:
+    - new $config['cops_random_books'] to show random books
+    - new $config['cops_random_filter'] to filter random books
   * ...
+  * Add option to show Random books (Discover) with cline
 
 4.5.2 - 20260623 Fix redirect to /check if database is missing
   * Use DatabaseException to redirect to CheckHandler if needed

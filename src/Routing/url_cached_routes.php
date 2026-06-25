@@ -37,6 +37,7 @@ $static = [
   '/typeahead' => 'page-typeahead',
   '/search' => 'page-search',
   '/recent' => 'page-recent',
+  '/random' => 'page-random',
   '/tags/letter' => 'page-tags-letters',
   '/tags' => 'page-tags',
   '/about' => 'page-about',
@@ -353,6 +354,17 @@ $routes = [
     [
       'page' => 'recent',
       '_route' => 'page-recent',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-random' => [
+    '/random',
+    [
+      'page' => 'random',
+      '_route' => 'page-random',
     ],
     [
       'GET',

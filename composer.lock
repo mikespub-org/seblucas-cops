@@ -1534,7 +1534,7 @@
         },
         {
             "name": "illuminate/collections",
-            "version": "v13.16.1",
+            "version": "v13.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/collections.git",
@@ -1594,7 +1594,7 @@
         },
         {
             "name": "illuminate/conditionable",
-            "version": "v13.16.1",
+            "version": "v13.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/conditionable.git",
@@ -1688,7 +1688,7 @@
         },
         {
             "name": "illuminate/macroable",
-            "version": "v13.16.1",
+            "version": "v13.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/macroable.git",
