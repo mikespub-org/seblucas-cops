@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Database\DatabaseContext;
+use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 
 class Serie extends Category
@@ -45,6 +46,45 @@ class Serie extends Category
     public function getParentTitle()
     {
         return "series.title";
+    }
+
+    /**
+     * Summary of getPrevNextBooks
+     * @param float $seriesIndex
+     * @return array{0: ?EntryBook, 1: ?EntryBook}
+     */
+    public function getPrevNextBooks($seriesIndex)
+    {
+        $prev = null;
+        $next = null;
+        $config = $this->getDbContext()->getConfig();
+        $columns = Book::getBookColumns($config);
+
+        $prevQuery = 'select ' . $columns . ' from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+        where books_series_link.book = books.id and books_series_link.series = ? and books.series_index < ?
+        order by books.series_index desc limit 1';
+
+        $nextQuery = 'select ' . $columns . ' from books_series_link, books ' . Book::SQL_BOOKS_LEFT_JOIN . '
+        where books_series_link.book = books.id and books_series_link.series = ? and books.series_index > ?
+        order by books.series_index asc limit 1';
+
+        $result = $this->getDbContext()->query($prevQuery, [$this->id, $seriesIndex]);
+        if ($post = $result->fetchObject()) {
+            $book = new Book($post, $this->getDbContext());
+            $book->setHandler($this->handler);
+            $book->setLocale($this->locale);
+            $prev = $book->getEntry();
+        }
+
+        $result = $this->getDbContext()->query($nextQuery, [$this->id, $seriesIndex]);
+        if ($post = $result->fetchObject()) {
+            $book = new Book($post, $this->getDbContext());
+            $book->setHandler($this->handler);
+            $book->setLocale($this->locale);
+            $next = $book->getEntry();
+        }
+
+        return [$prev, $next];
     }
 
     /** Use inherited class methods to query static SQL_TABLE for this class */

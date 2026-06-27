@@ -18,6 +18,7 @@ x.x.x - TODO
     - new $config['cops_random_books'] to show random books
     - new $config['cops_random_filter'] to filter random books
   * ...
+  * Get prev/next book in series for book detail templates
   * Add option to show Random books (Discover) with cline
 
 4.5.2 - 20260623 Fix redirect to /check if database is missing

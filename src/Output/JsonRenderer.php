@@ -286,6 +286,28 @@ class JsonRenderer extends BaseRenderer
                 "url" => $tag->getUri(),
             ]);
         }
+        // @todo show prev/next book in series in book detail templates
+        $out ["series"] = [];
+        $serie = $book->getSerie();
+        if (!empty($serie)) {
+            $serie->setHandler($book->getHandler());
+            $serie->setLocale($book->getLocale());
+            [$prev, $next] = $serie->getPrevNextBooks($book->seriesIndex);
+            if (!empty($prev)) {
+                $out ["series"]["prev"] = [
+                    "title" => $prev->title,
+                    "url" => $prev->book->getUri(),
+                    "index" => $prev->book->seriesIndex,
+                ];
+            }
+            if (!empty($next)) {
+                $out ["series"]["next"] = [
+                    "title" => $next->title,
+                    "url" => $next->book->getUri(),
+                    "index" => $next->book->seriesIndex,
+                ];
+            }
+        }
 
         $out ["identifiers"] = [];
         foreach ($book->getIdentifiers() as $ident) {

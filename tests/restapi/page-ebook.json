@@ -67,6 +67,7 @@
             }
         ],
         "extraFiles": [],
+        "series": [],
         "identifiers": [
             {
                 "name": "url",
