@@ -237,7 +237,7 @@ class JsonRenderer extends BaseRenderer
             }
             $readers = [
                 'epub' => $this->config('epub_reader'),
-                'comic' => $this->config('epub_reader'),
+                'comic' => $this->config('comic_reader'),
                 'pdf' => $this->config('pdfjs_viewer'),
             ];
             $tab ["readerUrl"] = self::$reader::getReaderUrl($data, $readers);

@@ -18,6 +18,7 @@ x.x.x - TODO
     - new $config['cops_random_books'] to show random books
     - new $config['cops_random_filter'] to filter random books
   * ...
+  * Fix wrong reader url for comics - see issue #176 from @tgiraud
   * Get prev/next book in series for book detail templates
   * Add option to show Random books (Discover) with cline
 
