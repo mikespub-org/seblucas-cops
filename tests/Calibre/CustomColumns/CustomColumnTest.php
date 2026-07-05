@@ -125,7 +125,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Custom column example 02 (csv)", $coltype->getContent());
         $this->assertEquals(true, $coltype->isSearchable());
 
-        $custom = CustomColumn::createCustom(6, 3, $dbContext);
+        $custom = CustomColumn::createCustom(6, 3, $dbContext, 'en');
         $this->assertEquals("c", $custom->htmlvalue);
         [$query, $params] = $custom->getQuery();
         $expected = "where books_custom_column_6_link.book = books.id and books_custom_column_6_link.value = ? {1} order by books.sort";
@@ -133,7 +133,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals([3], $params);
 
         // handle case where we have several values, e.g. array of text for type 2 (csv)
-        $custom = CustomColumn::createCustom(6, "1,3", $dbContext);
+        $custom = CustomColumn::createCustom(6, "1,3", $dbContext, 'en');
         $this->assertEquals("a,c", $custom->htmlvalue);
         [$query, $params] = $custom->getQuery();
         $expected = "where books_custom_column_6_link.book = books.id and books.id in (select book from books_custom_column_6_link where value IN (?,?) group by book having count(*) = 2) {1} order by books.sort";
@@ -141,7 +141,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals([1, 3], $params);
 
         Config::set('show_not_set_filter', ['custom']);
-        $custom = CustomColumn::createCustom(6, null, $dbContext);
+        $custom = CustomColumn::createCustom(6, null, $dbContext, 'en');
         $this->assertEquals("Not Set", $custom->htmlvalue);
         [$query, $params] = $custom->getQuery();
         $expected = "where books.id not in (select book from books_custom_column_6_link) {1} order by books.sort";

@@ -666,7 +666,7 @@ class Filter
             }
             if ($className == CustomColumn::class) {
                 foreach ($paramValue as $customId => $valueId) {
-                    $custom = CustomColumn::createCustom($customId, $valueId, $dbContext);
+                    $custom = CustomColumn::createCustom($customId, $valueId, $dbContext, $locale);
                     $custom->setHandler($handler);
                     $custom->setLocale($locale);
                     $entryArray = array_merge($entryArray, [ $custom->getCustomCount() ]);

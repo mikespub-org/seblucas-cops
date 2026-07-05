@@ -232,11 +232,13 @@ class CustomColumn extends Category
      * @param int $customId the id of the customColumn
      * @param string|int|null $id the id of the chosen value
      * @param DatabaseContext $dbContext
+     * @param string $locale
      * @return ?CustomColumn
      */
-    public static function createCustom($customId, $id, $dbContext)
+    public static function createCustom($customId, $id, $dbContext, $locale)
     {
         $columnType = CustomColumnType::createByCustomID($customId, $dbContext);
+        $columnType->setLocale($locale);
 
         return $columnType->getCustom($id);
     }

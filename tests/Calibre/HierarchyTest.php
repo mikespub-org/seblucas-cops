@@ -242,7 +242,7 @@ class HierarchyTest extends TestCase
         Config::set('calibre_categories_using_hierarchy', ['custom_02']);
         $dbContext = new DatabaseContext();
 
-        $custom = CustomColumn::createCustom(6, 5, $dbContext);
+        $custom = CustomColumn::createCustom(6, 5, $dbContext, 'en');
         $this->assertEquals("custom_02", $custom->customColumnType->getTitle());
         $this->assertEquals("d", $custom->getTitle());
 
@@ -261,7 +261,7 @@ class HierarchyTest extends TestCase
         $this->assertEquals("cops:custom:6:7", $children[2]->id);
         $this->assertEquals("d.g", $children[2]->title);
 
-        $custom = CustomColumn::createCustom(6, 6, $dbContext);
+        $custom = CustomColumn::createCustom(6, 6, $dbContext, 'en');
         $this->assertEquals("custom_02", $custom->customColumnType->getTitle());
         $this->assertEquals("d.e.f", $custom->getTitle());
 

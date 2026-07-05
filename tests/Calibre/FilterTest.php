@@ -358,7 +358,7 @@ class FilterTest extends TestCase
     public function testCustomFilters(): void
     {
         $dbContext = new DatabaseContext();
-        $custom = CustomColumn::createCustom(1, 1, $dbContext);
+        $custom = CustomColumn::createCustom(1, 1, $dbContext, 'en');
         $this->assertEquals("Type4", $custom->customColumnType->getTitle());
         $this->assertEquals("SeriesLike", $custom->getTitle());
 
