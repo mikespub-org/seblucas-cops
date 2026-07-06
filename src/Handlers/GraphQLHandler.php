@@ -47,6 +47,7 @@ class GraphQLHandler extends BaseHandler
 
         // update request context if needed here - see tests
         $this->getContext()->setRequest($request);
+        // @todo use $this->config->set() here?
         // override splitting authors and books by first letter here?
         Config::set('author_split_first_letter', '0');
         Config::set('titles_split_first_letter', '0');

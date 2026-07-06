@@ -42,6 +42,7 @@ class RequestContext
         $this->manager = $manager ?? new HandlerManager();
         $this->router = $router ?? new Routing();
         $this->config = new RequestConfig();
+        // @todo (re)set locale after updateConfig()
         $this->locale = $this->request->locale();
         $this->initializeContext();
     }
@@ -131,6 +132,10 @@ class RequestContext
             $this->config->load($config);
         }
         $this->request->setConfig($this->config);
+        // (re)set locale after updateConfig()
+        $this->request->locale = null;
+        $this->locale = $this->request->locale();
+        UriGenerator::setLocale($this->locale);
         return $this->config;
     }
 

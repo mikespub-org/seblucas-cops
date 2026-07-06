@@ -30,7 +30,7 @@ class UriGenerator
     protected static $scriptName = null;
     /** @var class-string */
     protected static $sluggerClass = Slugger::class;
-    /** @var Slugger|bool|null */
+    /** @var Slugger|null */
     protected static $slugger = null;
 
     /**
@@ -515,11 +515,12 @@ class UriGenerator
     /**
      * Summary of slugify
      * @param string $string
+     * @param ?string $locale
      * @return string
      */
-    public static function slugify($string)
+    public static function slugify($string, $locale = null)
     {
-        return (string) self::getSlugger()->slug($string, '_');
+        return (string) self::getSlugger($locale)->slug($string, '_');
     }
 
     /**
