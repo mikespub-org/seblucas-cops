@@ -25,7 +25,7 @@ class TableHandler extends BaseHandler
     public const HANDLER = "tables";
     public const PREFIX = "/tables";
     public const PARAMLIST = ["db", "name", "id"];
-    public const ADMINER_VERSION = "5.4.2";
+    public const ADMINER_VERSION = "6.1.0";
 
     public static string $template = "tables.html";
     protected ?DatabaseContext $dbContext = null;

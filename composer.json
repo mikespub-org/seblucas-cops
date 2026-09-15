@@ -45,19 +45,19 @@
         "symfony/routing": "^7.4 || ^8.1",
         "symfony/string": "^7.4 || ^8.1",
         "symfony/translation-contracts": "^3.6",
-        "twig/twig": "^3.27"
+        "twig/twig": "^3.28"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.2",
-        "phpunit/phpunit": "^12.5 || ^13.2",
+        "phpunit/phpunit": "^12.5 || ^13.3",
         "php-webdriver/webdriver": "dev-main",
         "symfony/browser-kit": "^7.4 || ^8.1",
         "symfony/http-client": "^7.4 || ^8.1",
         "mikespub/epub-loader": "^4.1",
         "mikespub/codedread-kthoom": "^2026.1",
         "opis/json-schema": "^2.6",
-        "webonyx/graphql-php": "^15.33",
-        "adminer/editor": "^5.4"
+        "webonyx/graphql-php": "^15.37",
+        "adminer/editor": "^6.1"
     },
     "suggest": {
         "mikespub/epub-loader": "epub-loader is a utility package for ebooks",
@@ -92,11 +92,11 @@
             "package": {
                 "name": "adminer/adminer",
                 "description": "Database management in a single PHP file",
-                "version": "5.4.2",
+                "version": "6.1.0",
                 "homepage": "https://github.com/vrana/adminer/wiki/Enable-sqlite3",
                 "license": "Apache License 2.0 or GPL 2",
                 "dist": {
-                    "url": "https://github.com/vrana/adminer/releases/download/v5.4.2/adminer-5.4.2.php",
+                    "url": "https://github.com/vrana/adminer/releases/download/v6.1.0/adminer-6.1.0.php",
                     "type": "file"
                 }
             }
@@ -106,11 +106,11 @@
             "package": {
                 "name": "adminer/editor",
                 "description": "Database management in a single PHP file",
-                "version": "5.4.2",
+                "version": "6.1.0",
                 "homepage": "https://github.com/vrana/adminer/wiki/Enable-sqlite3",
                 "license": "Apache License 2.0 or GPL 2",
                 "dist": {
-                    "url": "https://github.com/vrana/adminer/releases/download/v5.4.2/editor-5.4.2.php",
+                    "url": "https://github.com/vrana/adminer/releases/download/v6.1.0/editor-6.1.0.php",
                     "type": "file"
                 }
             }
