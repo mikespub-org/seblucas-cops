@@ -14,10 +14,14 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
+  * ...
+
+4.5.4 - 20260917 Add random books + fix issues
   * Changes in config/default.php file:
     - new $config['cops_random_books'] to show random books
     - new $config['cops_random_filter'] to filter random books
   * Support custom columns in download filename or template - see issue #180 from @Sirence
+  * Add book count per virtual library - see issue #179 from @peroksid5
   * Reset request locale after updateConfig() + use in custom columns
   * Fix wrong reader url for comics - see issue #176 from @tgiraud
   * Get prev/next book in series for book detail templates
