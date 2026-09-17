@@ -510,6 +510,24 @@ class BookTest extends TestCase
         Config::set('download_filename', '');
     }
 
+    public function testReplaceTemplateFieldsWithCustomColumns(): void
+    {
+        $template = "{author_sort}{series:| - | #}{series_index} - {title}{#type1:| T1=| |}{#type2:| T2=| |}{#type4:| T4=||}";
+        Config::set('download_filename', $template);
+
+        $book = Book::getBookById(17);
+        $result = Book::replaceTemplateFields($template, $book);
+        $expected = "Carroll, Lewis - Alice's Adventures in Wonderland T1=text T2=tag1,tag2 T4=SeriesLike [1]";
+        $this->assertEquals($expected, $result);
+
+        $book = Book::getBookById(18);
+        $result = Book::replaceTemplateFields($template, $book);
+        $expected = "Zola, Émile - Série des Rougon-Macquart #1 - La curée";
+        $this->assertEquals($expected, $result);
+
+        Config::set('download_filename', '');
+    }
+
     public function testDataWithDownloadFilename(): void
     {
         $template = "{author_sort}{series:| - | #}{series_index} - {title}";

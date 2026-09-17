@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Calibre\CustomColumns\CustomColumnType;
+use SebLucas\Cops\Calibre\CustomColumns\CustomColumn;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Database\HasDatabaseTrait;
 use SebLucas\Cops\Handlers\HasRouteTrait;
@@ -920,7 +921,7 @@ where data.book = books.id and data.id = ?';
     {
         $found = [];
         // check and replace template fields - see https://manual.calibre-ebook.com/template_lang.html
-        $count = preg_match_all("~\{(\w+(|:[^}]+))\}~", $template, $found);
+        $count = preg_match_all("~\{(#?\w+(|:[^}]+))\}~", $template, $found);
         if ($count === false) {
             throw new UnexpectedValueException('Unsupported template match ' . $template);
         }
@@ -936,7 +937,7 @@ where data.book = books.id and data.id = ?';
             }
             $value = self::getTemplateField($field, $book);
             if (!empty($format)) {
-                // limited support for prefix and suffix
+                // limited support for prefix and suffix, e.g. {series:| - | #}
                 if (str_starts_with($format, '|') && $value !== '') {
                     [$dummy, $prefix, $suffix] = explode('|', $format);
                     $template = str_replace('{' . $field . ':' . $format . '}', "{$prefix}{$value}{$suffix}", $template);
@@ -988,7 +989,15 @@ where data.book = books.id and data.id = ?';
                 }
                 return '';
             default:
-                return '{' . $field . ':?}';
+                if (!str_starts_with($field, '#')) {
+                    return '{' . $field . ':?}';
+                }
+                $columns = [ substr($field, 1) ];
+                $result = $book->getCustomColumnValues($columns, false);
+                if (empty($result) || !($result[0] instanceof CustomColumn)) {
+                    return '{' . $field . ':?}';
+                }
+                return $result[0]->getTitle();
         }
     }
 }

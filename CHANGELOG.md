@@ -17,7 +17,8 @@ x.x.x - TODO
   * Changes in config/default.php file:
     - new $config['cops_random_books'] to show random books
     - new $config['cops_random_filter'] to filter random books
-  * ...
+  * Support custom columns in download filename or template - see issue #180 from @Sirence
+  * Reset request locale after updateConfig() + use in custom columns
   * Fix wrong reader url for comics - see issue #176 from @tgiraud
   * Get prev/next book in series for book detail templates
   * Add option to show Random books (Discover) with cline
