@@ -13,9 +13,11 @@ namespace SebLucas\Cops\Calibre;
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Input\Config;
+use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
+use UnexpectedValueException;
 
 class VirtualLibrary extends Base
 {
@@ -139,8 +141,18 @@ class VirtualLibrary extends Base
                 $id += 1;
                 continue;
             }
-            // @todo get book count filtered by value
+            // get book count filtered by virtual library
             $post = (object) ['id' => $id, 'name' => $name, 'value' => $value, 'count' => 0];
+            try {
+                $request = new Request();
+                $request->set('vl', self::formatParameter($id, $name));
+                $booklist = new BookList($request, $dbContext);
+                $booklist->setHandler($handler);
+                $booklist->setLocale($locale);
+                $post->count = $booklist->getBookCount();
+            } catch (UnexpectedValueException) {
+                $post->count = 0;
+            }
             $instance = new self($post, $dbContext);
             $instance->setHandler($handler);
             $instance->setLocale($locale);

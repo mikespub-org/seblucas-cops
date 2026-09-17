@@ -21,9 +21,9 @@
         {
             "class": "VirtualLibrary",
             "title": "Short Stories in English",
-            "content": "No books",
+            "content": "4 books",
             "navlink": "vendor/bin/index.php/restapi/index?vl=2.Short_Stories_in_English",
-            "number": 0
+            "number": 4
         },
         {
             "class": "VirtualLibrary",
