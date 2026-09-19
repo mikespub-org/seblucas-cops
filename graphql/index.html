@@ -85,7 +85,7 @@
       import { buildSchema } from 'graphql/utilities';
 
       const source = await fetch('https://github-org.mikespub.net/seblucas-cops/graphql/schema.graphql');
-      const schema = buildSchema(source);
+      const schema = buildSchema(source.text());
 
       const fetcher = createGraphiQLFetcher({
         url: 'https://github-org.mikespub.net/seblucas-cops/graphql/',
