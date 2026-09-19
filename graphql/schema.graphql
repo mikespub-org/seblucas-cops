@@ -1,0 +1,341 @@
+"""
+Adapted from https://github.com/mikespub-org/acdibble-tuql
+Goal: create GraphQL interface to Calibre database (maybe)
+"""
+type Query {
+  authors(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  author(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  books(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [EntryBook]
+  book(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): EntryBook
+  customColumns(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  customColumn(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  datas(
+    bookId: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): [Data]
+  data(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Data
+  formats(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  format(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  identifiers(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  identifier(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  languages(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  language(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  preferences(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  preference(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  publishers(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  publisher(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  ratings(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  rating(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  series(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  serie(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  tags(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [Entry]
+  tag(
+    id: ID
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+  ): Entry
+  """
+  Node root field with Global Object Identifier
+  See https://relay.dev/graphql/objectidentification.htm#sec-Node-root-field
+  """
+  node(
+    id: ID!
+  ): Node
+  """
+  Plural identifying root field
+  See https://relay.dev/graphql/objectidentification.htm#sec-Plural-identifying-root-fields
+  """
+  nodelist(
+    idlist: [ID!]!
+  ): [Node]
+  """
+  Search by query and scope
+  """
+  search(
+    query: String!
+    scope: String
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [SearchResult]
+}
+
+"""The `JSON` scalar type represents raw JSON as values."""
+scalar SequelizeJSON
+
+"""
+Node Interface with Global Object Identifier
+See https://relay.dev/graphql/objectidentification.htm#sec-Node-Interface
+"""
+interface Node {
+  id: ID!
+}
+
+type Entry implements Node {
+  id: ID!
+  title: String!
+  content: String
+  contentType: String
+  linkArray: [Link]
+  className: String
+  numberOfElement: String
+  books(
+    limit: Int
+    order: String
+
+    """
+    A JSON-encoded string containing the COPS filter params, e.g. {"a":3}
+    """
+    where: SequelizeJSON
+    offset: Int
+  ): [EntryBook]
+  navlink: String
+  thumbnail: String
+  note: Note
+}
+
+type EntryBook implements Node {
+  id: ID!
+  title: String!
+  content: String
+  contentType: String
+  linkArray: [Link]
+  className: String
+  numberOfElement: String
+  authors: [Entry]
+  customColumns: [Entry]
+  datas: [Data]
+  formats: [Entry]
+  identifiers: [Entry]
+  languages: String
+  publisher: Entry
+  rating: String
+  serie: Entry
+  tags: [Entry]
+  navlink: String
+  thumbnail: String
+  cover: String
+}
+
+type Link {
+  href: String!
+  type: String!
+  rel: String
+  title: String
+}
+
+type Data implements Node {
+  id: ID!
+  book: EntryBook
+  format: String
+  name: String
+  size: Int
+  mtime: String
+  navlink: String
+}
+
+type Note implements Node {
+  id: ID!
+  item: ID!
+  type: String!
+  content: String
+  size: Int
+  mtime: String
+  navlink: String
+  resources: [Resource]
+}
+
+type Resource {
+  hash: ID!
+  name: String
+}
+
+union SearchResult = Entry | EntryBook
