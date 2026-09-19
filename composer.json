@@ -45,7 +45,7 @@
         "symfony/routing": "^7.4 || ^8.1",
         "symfony/string": "^7.4 || ^8.1",
         "symfony/translation-contracts": "^3.6",
-        "twig/twig": "^3.28"
+        "twig/twig": "^3.29"
     },
     "require-dev": {
         "kiwilan/php-opds": "^2.2",

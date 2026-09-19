@@ -22,7 +22,7 @@ None if you upgrade from 3.x, besides the PHP version
 - Release 2.x.x will only work with PHP >= 8.1 - typical for most source code & docker image installs in 2023 and later. *Note: updating .epub files for metadata or cover requires a 64-bit platform*
 - Release 1.x.x still works with PHP 7.4 if necessary - earlier PHP 7.x (or 5.x) versions are *not* supported with this fork
 
-User support issues remain available at https://github.com/seblucas/cops/issues - please use it if you need help with COPS in general.
+User support issues for 1.x versions remain available at https://github.com/seblucas/cops/issues - please check it if you need help with COPS in general.
 For the 2.x, 3.x and 4.x versions please report any new issues at https://github.com/mikespub-org/seblucas-cops/issues
 
 Pull requests should be against the latest source code at https://github.com/mikespub-org/seblucas-cops/pulls - thanks for any contributions :-)
@@ -34,13 +34,13 @@ See [CHANGELOG](CHANGELOG.md) for changes compared to upstream repository https:
 Same options as original:
 
 1. Release package
-  - get latest cops-3.x.x-php8x.zip file from https://github.com/mikespub-org/seblucas-cops/releases
+  - get latest cops-4.x.x-php8x.zip file from https://github.com/mikespub-org/seblucas-cops/releases
 
-  Note: the release packages `cops-3.x.x-php8x.zip` include the vendor/ packages for a particular PHP version. If you have an older or newer (supported) PHP version, you can download the `Source code (zip)` for that release, and run *composer* to update the dependencies:
+  Note: the release packages `cops-4.x.x-php8x.zip` include the vendor/ packages for a particular PHP version. If you have an older or newer (supported) PHP version, you can download the `Source code (zip)` for that release, and run *composer* to update the dependencies:
   ```
-  $ wget -O cops-3.x.x.zip https://github.com/mikespub-org/seblucas-cops/archive/refs/tags/3.x.x.zip
-  $ unzip cops-3.x.x.zip
-  $ cd seblucas-cops-3.x.x
+  $ wget -O cops-4.x.x.zip https://github.com/mikespub-org/seblucas-cops/archive/refs/tags/4.x.x.zip
+  $ unzip cops-4.x.x.zip
+  $ cd seblucas-cops-4.x.x
   $ composer update --no-dev -o
   ```
 
@@ -69,7 +69,7 @@ Notice: for a first-time installation, you need to copy *[config/local.php.examp
 
 COPS stands for Calibre OPDS (and HTML) Php Server.
 
-See : [COPS's home](https://blog.slucas.fr/en/oss/calibre-opds-php-server) for more details.
+See : [COPS's home (archive)](https://github.com/mikespub-org/seblucas-cops/wiki/Original-Project-Page) for more details.
 
 Don't forget to check the [Wiki](https://github.com/seblucas/cops/wiki).
 

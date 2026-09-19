@@ -656,6 +656,7 @@ $tooltips['cops_download_filename'] = <<<'EOT'
 
     Supported fields:
     {title}, {title_sort}, {authors}, {author_sort}, {author}, {series}, {series_index}
+    and custom columns, e.g. {#genre:| [|]} to add ' [Fiction]' if defined - see issue #180
 
     Note: any extra formats or functions after the field are simply ignored here
     EOT;
@@ -702,7 +703,7 @@ $tooltips['cops_pdfjs_viewer'] = <<<'EOT'
     '' (default)
     'pdfjs-viewer.html?file='
 
-    Note: the release package cops-3.x.x-php82.zip only contains
+    Note: the release package cops-4.x.x-php84.zip only contains
     minimal parts of the mozilla/pdfjs-dist package. If your PDF
     shows errors, please install the full package with composer:
 
