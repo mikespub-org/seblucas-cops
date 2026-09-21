@@ -4,6 +4,11 @@ function postRefresh()
     hash = window.location.hash.replace("#", "");
     var elmnt = document.getElementById(hash);
     if (elmnt) elmnt.scrollIntoView();
+    
+    // Update shelf UI
+    if (typeof ShelfManager !== 'undefined' && typeof ShelfManager.updateUI === 'function') {
+        ShelfManager.updateUI();
+    }
 
     var gallery = document.getElementById('image-gallery');
     if (gallery) {
@@ -69,6 +74,12 @@ function initiateTwig(url, theme, templates, version) {
             window.history.replaceState(url, "", window.location);
         }
         handleLinks ();
+        
+        // Initialize shelves
+        if (typeof ShelfManager !== 'undefined' && typeof ShelfManager.init === 'function') {
+            ShelfManager.init();
+            ShelfManager.updateUI();
+        }
     }).fail(function (error) {
         if (error.responseText) {
             document.write (error.responseText);

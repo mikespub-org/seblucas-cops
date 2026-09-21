@@ -57,6 +57,12 @@
     <div class="collapse navbar-collapse">
       {% block sortlinks %}{% endblock sortlinks %}
       <ul class="nav navbar-nav navbar-right">
+        {% if it.server_side_rendering == 0 %}
+        <li><a href="javascript:void(0);" id="shelf-toggle" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.c.i18n.shelvesTitle|default('My Shelves')}}">
+          <span class="glyphicon glyphicon-book"></span><span class="hidden-sm hidden-md"> {{it.c.i18n.shelvesTitle|default('Shelves')}}</span>
+          <span id="shelf-count" class="badge" style="display:none">0</span>
+        </a></li>
+        {% endif %}
         <li><a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{it.c.i18n.defaultTemplate}}">
           <span class="glyphicon glyphicon-picture"></span><span class="hidden-sm hidden-md"> {{it.c.i18n.defaultTemplate}}</span>
         </a></li>
@@ -81,3 +87,14 @@
 {% block extra %}{% endblock extra %}
 
 {% block footer %}{% endblock footer %}
+
+{% if it.server_side_rendering == 0 %}
+<!-- Shelf Management Modal -->
+<div id="shelf-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" id="shelf-modal-content">
+      <!-- Dynamically filled by ShelfManager -->
+    </div>
+  </div>
+</div>
+{% endif %}

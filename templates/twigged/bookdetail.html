@@ -33,6 +33,19 @@
         {% endif %}
     </div>
     {% endfor %}
+    {% if it.server_side_rendering == 0 %}
+    <div class="btn-group">
+        <button class="btn btn-sm btn-default shelf-toggle-btn"
+                data-book-id="{{it.book.id}}"
+                data-book-title="{{it.title|escape}}"
+                data-book-author="{% for author in it.book.authors %}{% if not loop.first %}, {% endif %}{{author.name|escape}}{% endfor %}"
+                data-book-thumbnail="{{it.book.thumbnailurl}}"
+                data-book-detailurl="{{it.book.detailurl}}"
+                title="Add to Shelf">
+            <span class="glyphicon glyphicon-bookmark"></span>
+        </button>
+    </div>
+    {% endif %}
 </div>
 
 

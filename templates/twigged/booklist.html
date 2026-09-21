@@ -85,6 +85,18 @@
                         {% endif %}
                     {% endfor %}
                 {% if entry.book.preferedCount > 1 %}</div>{% endif %}
+                {% if it.server_side_rendering == 0 %}
+                <!-- shelf toggle button -->
+                <button type="button" class="btn btn-sm btn-default shelf-toggle-btn"
+                        data-book-id="{{entry.book.id}}"
+                        data-book-title="{{entry.title|escape}}"
+                        data-book-author="{{entry.book.authorsName|escape}}"
+                        data-book-thumbnail="{{entry.thumbnailurl}}"
+                        data-book-detailurl="{{entry.book.detailurl}}"
+                        title="Add to Shelf">
+                    <span class="glyphicon glyphicon-bookmark"></span>
+                </button>
+                {% endif %}
             </div>
         </div>
     {% endfor %}
