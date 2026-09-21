@@ -275,6 +275,13 @@ $config['cops_tag_split_first_letter'] = '0';
 $config['cops_use_fancyapps'] = '1';
 
 /*
+ * Enable client-side virtual shelves (favorites) in 'twigged' template with client side rendering
+ * 1 : Yes (enable)
+ * 0 : No
+ */
+$config['cops_use_client_shelves'] = '0';
+
+/*
  * Update Epub metadata before download
  * 1 : Yes (enable)
  * 0 : No

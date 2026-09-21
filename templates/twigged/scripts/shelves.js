@@ -94,6 +94,7 @@ var ShelfManager = (function() {
     
     // Check if a book is in the active shelf
     function isInShelf(bookId) {
+        // @todo check databaseId
         var books = getBooks();
         for (var i = 0; i < books.length; i++) {
             if (books[i].id === bookId) {
@@ -110,6 +111,7 @@ var ShelfManager = (function() {
         var books = data.shelves[shelfName];
         var index = -1;
         
+        // @todo check databaseId
         for (var i = 0; i < books.length; i++) {
             if (books[i].id === bookId) {
                 index = i;
@@ -157,6 +159,7 @@ var ShelfManager = (function() {
         var books = data.shelves[shelfName];
         var index = -1;
         
+        // @todo check databaseId
         for (var i = 0; i < books.length; i++) {
             if (books[i].id === bookId) {
                 index = i;
@@ -235,11 +238,13 @@ var ShelfManager = (function() {
     
     // Render HTML for a shelf toggle button
     function renderShelfButton(bookId, bookData) {
+        // @todo check databaseId
         var inShelf = isInShelf(bookId);
         var btnClass = inShelf ? 'btn-warning' : 'btn-default';
         var title = inShelf ? 'Remove from Shelf' : 'Add to Shelf';
         
         return '<button type="button" class="btn btn-sm ' + btnClass + ' shelf-toggle-btn" ' +
+               'data-book-db="' + escapeHtml(bookData.db || '') + '" ' +
                'data-book-id="' + bookId + '" ' +
                'data-book-title="' + escapeHtml(bookData.title || '') + '" ' +
                'data-book-author="' + escapeHtml(bookData.author || '') + '" ' +
@@ -314,7 +319,7 @@ var ShelfManager = (function() {
                 
                 html += '</div>' +
                         '<div class="col-sm-2">' +
-                        '<button type="button" class="btn btn-sm btn-danger shelf-remove-btn" data-book-id="' + escapeHtml(book.id) + '">' +
+                        '<button type="button" class="btn btn-sm btn-danger shelf-remove-btn" data-book-db="' + escapeHtml(book.db) + '" data-book-id="' + escapeHtml(book.id) + '">' +
                         '<span class="glyphicon glyphicon-remove"></span> Remove</button>' +
                         '</div>' +
                         '</div>' +
@@ -359,6 +364,7 @@ var ShelfManager = (function() {
             var bookId = btn.getAttribute('data-book-id');
             if (bookId) {
                 var bookData = {
+                    db: btn.getAttribute('data-book-db') || '',
                     title: btn.getAttribute('data-book-title') || '',
                     author: btn.getAttribute('data-book-author') || '',
                     thumbnailurl: btn.getAttribute('data-book-thumbnail') || '',
@@ -432,6 +438,7 @@ var ShelfManager = (function() {
             });
         }
         
+        // @todo check databaseId
         var removeButtons = document.querySelectorAll('.shelf-remove-btn');
         for (var j = 0; j < removeButtons.length; j++) {
             (function(bookId) {
@@ -468,6 +475,7 @@ var ShelfManager = (function() {
             var btn = this;
             var bookId = btn.getAttribute('data-book-id');
             var bookData = {
+                db: btn.getAttribute('data-book-db') || '',
                 title: btn.getAttribute('data-book-title') || '',
                 author: btn.getAttribute('data-book-author') || '',
                 thumbnailurl: btn.getAttribute('data-book-thumbnail') || '',

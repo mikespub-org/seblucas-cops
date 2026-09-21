@@ -85,9 +85,10 @@
                         {% endif %}
                     {% endfor %}
                 {% if entry.book.preferedCount > 1 %}</div>{% endif %}
-                {% if it.server_side_rendering == 0 %}
+                {% if it.c.config.use_client_shelves %}
                 <!-- shelf toggle button -->
                 <button type="button" class="btn btn-sm btn-default shelf-toggle-btn"
+                        data-book-db="{{it.databaseId}}"
                         data-book-id="{{entry.book.id}}"
                         data-book-title="{{entry.title|escape}}"
                         data-book-author="{{entry.book.authorsName|escape}}"

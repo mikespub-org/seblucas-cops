@@ -449,6 +449,7 @@ class JsonRenderer extends BaseRenderer
                 "filtersTitle" => $this->localize("filters.title"),
                 "downloadAllTitle" => $this->localize("downloadall.title"),
                 "downloadAllTooltip" => $this->localize("downloadall.tooltip"),
+                "shelvesTitle" => $this->localize("shelves.title"),
             ],
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here + url does not include author or title
@@ -458,6 +459,7 @@ class JsonRenderer extends BaseRenderer
             ],
             "config" => [
                 "use_fancyapps" => $this->config('use_fancyapps'),
+                "use_client_shelves" => (!empty($this->request->option('use_client_shelves')) && $this->request->template() === "twigged") ? true : false,
                 "max_item_per_page" => $this->config('max_item_per_page'),
                 "kindleHack"        => "",
                 "server_side_rendering" => $this->request->render(),

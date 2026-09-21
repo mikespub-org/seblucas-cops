@@ -133,6 +133,10 @@ class PageCustomize extends Page
         if (isset($fancybox)) {
             $custom['use_fancyapps'] = $fancybox ? true : false;
         }
+        $client_shelves = $this->request->post('use_client_shelves');
+        if (isset($client_shelves)) {
+            $custom['use_client_shelves'] = $client_shelves ? true : false;
+        }
         $paging = $this->request->post('max_item_per_page');
         if (isset($paging) && filter_var($paging, FILTER_VALIDATE_INT, ['min_range' => -1, 'max_range' => 1200])) {
             $custom['max_item_per_page'] = (int) $paging;
@@ -239,6 +243,13 @@ class PageCustomize extends Page
         if (!$this->request->render() && $this->request->template() === 'default') {
             $title = $this->localize("customize.fancybox");
             $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" name="use_fancyapps" ' . $this->isChecked("use_fancyapps") . ' />';
+            $this->addHeaderEntry($title, $content);
+        }
+
+        // Enable client-side virtual shelves in 'twigged' template with client side rendering
+        if (!$this->request->render() && $this->request->template() === 'twigged') {
+            $title = $this->localize("customize.client_shelves");
+            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_client_shelves" name="use_client_shelves" ' . $this->isChecked("use_client_shelves") . ' />';
             $this->addHeaderEntry($title, $content);
         }
 

@@ -115,7 +115,7 @@ This ensures:
 
 The feature is conditionally rendered in templates using:
 ```twig
-{% if it.server_side_rendering == 0 %}
+{% if it.c.config.use_client_shelves %}
     <!-- shelf UI elements -->
 {% endif %}
 ```

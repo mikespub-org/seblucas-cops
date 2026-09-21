@@ -14,7 +14,9 @@ x.x.x - TODO
   * ...
 
 4.x.x - 2026xxxx 
-  * ...
+  * Changes in config/default.php file:
+    - new $config['cops_use_client_shelves'] to use client-side shelves
+  * Try client-side virtual shelves (favorites) in 'twigged' template (WIP)
 
 4.5.4 - 20260917 Add random books + fix issues
   * Changes in config/default.php file:

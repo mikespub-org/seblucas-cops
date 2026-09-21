@@ -228,6 +228,12 @@ $tooltips['cops_use_fancyapps'] = <<<'EOT'
     0 : No
     EOT;
 
+$tooltips['cops_use_client_shelves'] = <<<'EOT'
+    Enable client-side virtual shelves (favorites) in 'twigged' template with client side rendering
+    1 : Yes (enable)
+    0 : No
+    EOT;
+
 $tooltips['cops_update_epub-metadata'] = <<<'EOT'
     Update Epub metadata before download
     1 : Yes (enable)
