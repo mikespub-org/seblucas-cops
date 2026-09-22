@@ -60,6 +60,15 @@ function debug_log(text) {
     }
 }
 
+/*exported getI18n */
+function getI18n (key, fallback) {
+    if (typeof currentData !== 'undefined' && currentData.c &&
+        currentData.c.i18n && currentData.c.i18n[key]) {
+        return currentData.c.i18n[key];
+    }
+    return fallback;
+}
+
 /*exported updateCookie */
 function updateCookie (id) {
     if ($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {

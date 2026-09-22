@@ -146,6 +146,8 @@
     "seriesword.many": "{0} series",
     "seriesword.none": "No series",
     "seriesword.one": "1 series",
+    "shelf.add": "Add to Shelf",
+    "shelf.remove": "Remove from Shelf",
     "shelves.title": "Shelves",
     "sort.alternate": "Sort",
     "sort.count": "Count",

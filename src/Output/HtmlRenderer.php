@@ -32,6 +32,7 @@ class HtmlRenderer extends BaseRenderer
             'customHeader'          => '',
             'template'              => $request->template(),
             'server_side_rendering' => $request->render(),
+            'use_client_shelves'    => (!empty($request->option('use_client_shelves')) && $request->template() === "twigged") ? true : false,
             'current_css'           => $this->getPath($request->style()),
             'favico'                => $this->getPath($this->config('icon')),
             'assets'                => $this->getPath($this->config('assets')),

@@ -94,7 +94,7 @@
                         data-book-author="{{entry.book.authorsName|escape}}"
                         data-book-thumbnail="{{entry.thumbnailurl}}"
                         data-book-detailurl="{{entry.book.detailurl}}"
-                        title="Add to Shelf">
+                        title="{{it.c.i18n.shelfAddTitle}}|default('Add to Shelf')">
                     <span class="glyphicon glyphicon-bookmark"></span>
                 </button>
                 {% endif %}

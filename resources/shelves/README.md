@@ -6,12 +6,14 @@ This implementation adds client-side virtual shelves to the twigged template usi
 
 ## Files Modified
 
-1. **`templates/twigged/scripts/shelves.js`** (NEW) - Core ShelfManager JavaScript library
-2. **`templates/twigged/base.html`** - Added shelf navbar link and modal container
-3. **`templates/twigged/booklist.html`** - Added shelf toggle button to each book card
-4. **`templates/twigged/bookdetail.html`** - Added shelf toggle button on book detail page
-5. **`templates/twigged/index.html`** - Included shelves.js script
-6. **`templates/twigged/scripts/cops.js`** - Initialize ShelfManager and update UI on page loads
+1. **`resources/shelves/shelves.js`** (NEW) - Shared ShelfManager core JavaScript library
+2. **`resources/shelves/SHELVES.md`** (NEW) - This documentation file
+3. **`templates/twigged/scripts/shelves.js`** (MODIFIED) - Template-specific UI extensions for ShelfManager
+4. **`templates/twigged/base.html`** - Added shelf navbar link and modal container
+5. **`templates/twigged/booklist.html`** - Added shelf toggle button to each book card
+6. **`templates/twigged/bookdetail.html`** - Added shelf toggle button on book detail page
+7. **`templates/twigged/index.html`** - Included shared shelves.js and template-specific shelves.js
+8. **`templates/twigged/scripts/cops.js`** - Initialize ShelfManager and update UI on page loads
 
 ## Features
 
@@ -90,6 +92,27 @@ If localStorage is unavailable, the feature gracefully degrades (buttons do noth
 1. **`initiateTwig()`** in `cops.js`: Initializes ShelfManager after first page load
 2. **`postRefresh()`** in `cops.js`: Updates shelf UI (badge count, button states) after AJAX navigation
 3. **Bootstrap Modal**: Uses existing Bootstrap modal for shelf management UI
+
+### File Structure
+
+```
+resources/shelves/
+├── shelves.js           # Shared ShelfManager core library (data + localStorage)
+└── SHELVES.md           # This documentation file
+
+templates/twigged/
+├── scripts/
+│   ├── shelves.js       # Template-specific UI extensions (extends ShelfManager)
+│   └── cops.js          # Initializes ShelfManager, updates UI on page loads
+├── index.html           # Loads shared shelves.js, then template-specific shelves.js
+├── base.html            # Contains shelf navbar link and modal container
+├── booklist.html        # Shelf toggle button on each book card
+└── bookdetail.html      # Shelf toggle button on book detail page
+```
+
+The shared `resources/shelves/shelves.js` provides the core library with data management (`load`, `save`, `toggleBook`, etc.) and event delegation that calls template-specific methods (`openModal`, `handleToggle`, `updateBookButtons`).
+
+The template-specific `templates/twigged/scripts/shelves.js` extends ShelfManager with UI rendering functions (bookmark buttons, modal content with Bootstrap 3/4 markup).
 
 ## Browser Compatibility
 

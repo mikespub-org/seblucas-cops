@@ -35,14 +35,14 @@
     {% endfor %}
     {% if it.c.config.use_client_shelves %}
     <div class="btn-group">
-        <button class="btn btn-sm btn-default shelf-toggle-btn"
+        <button class="btn btn-default shelf-toggle-btn"
                 data-book-db="{{it.databaseId}}"
                 data-book-id="{{it.book.id}}"
                 data-book-title="{{it.title|escape}}"
                 data-book-author="{% for author in it.book.authors %}{% if not loop.first %}, {% endif %}{{author.name|escape}}{% endfor %}"
                 data-book-thumbnail="{{it.book.thumbnailurl}}"
                 data-book-detailurl="{{it.book.detailurl}}"
-                title="Add to Shelf">
+                title="{{it.c.i18n.shelfAddTitle}}|default('Add to Shelf')">
             <span class="glyphicon glyphicon-bookmark"></span>
         </button>
     </div>
