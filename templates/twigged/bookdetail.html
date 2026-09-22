@@ -42,7 +42,7 @@
                 data-book-author="{% for author in it.book.authors %}{% if not loop.first %}, {% endif %}{{author.name|escape}}{% endfor %}"
                 data-book-thumbnail="{{it.book.thumbnailurl}}"
                 data-book-detailurl="{{it.book.detailurl}}"
-                title="{{it.c.i18n.shelfAddTitle}}|default('Add to Shelf')">
+                title="{{it.c.i18n.shelfAddTitle|default('Add to Shelf')}}">
             <span class="glyphicon glyphicon-bookmark"></span>
         </button>
     </div>
