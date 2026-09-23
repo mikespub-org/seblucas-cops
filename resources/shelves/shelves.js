@@ -92,12 +92,26 @@ var ShelfManager = (function() {
         return Object.keys(load().shelves);
     }
     
+    // Normalize database id: undefined, null, '' and 0 are equivalent to ''
+    function normalizeDb(db) {
+        if (db === undefined || db === null || db === '' || db === 0 || db === '0') {
+            return '';
+        }
+        return String(db);
+    }
+    
+    // Get the unique key of a book: "db:id" (db may be '')
+    function getBookKey(book) {
+        if (!book) return '';
+        return normalizeDb(book.db) + ':' + book.id;
+    }
+    
     // Check if a book is in the active shelf
-    function isInShelf(bookId) {
-        // @todo check databaseId
+    function isInShelf(book) {
+        var key = getBookKey(book);
         var books = getBooks();
         for (var i = 0; i < books.length; i++) {
-            if (books[i].id === bookId) {
+            if (getBookKey(books[i]) === key) {
                 return true;
             }
         }
@@ -105,15 +119,15 @@ var ShelfManager = (function() {
     }
     
     // Toggle a book in the active shelf (add if not present, remove if present)
-    function toggleBook(bookId, bookData) {
+    function toggleBook(book) {
         var data = load();
         var shelfName = data.activeShelf;
         var books = data.shelves[shelfName];
+        var key = getBookKey(book);
         var index = -1;
         
-        // @todo check databaseId
         for (var i = 0; i < books.length; i++) {
-            if (books[i].id === bookId) {
+            if (getBookKey(books[i]) === key) {
                 index = i;
                 break;
             }
@@ -124,44 +138,44 @@ var ShelfManager = (function() {
             save(data);
             return false;
         } else {
-            bookData.id = bookId;
-            books.push(bookData);
+            books.push(book);
             save(data);
             return true;
         }
     }
     
     // Add a book to a specific shelf
-    function addBook(shelfName, bookData) {
+    function addBook(shelfName, book) {
         var data = load();
         if (!data.shelves[shelfName]) {
             data.shelves[shelfName] = [];
         }
         var books = data.shelves[shelfName];
+        var key = getBookKey(book);
         
         for (var i = 0; i < books.length; i++) {
-            if (books[i].id === bookData.id) {
+            if (getBookKey(books[i]) === key) {
                 return false;
             }
         }
         
-        books.push(bookData);
+        books.push(book);
         save(data);
         return true;
     }
     
     // Remove a book from a specific shelf
-    function removeBook(shelfName, bookId) {
+    function removeBook(shelfName, book) {
         var data = load();
         if (!data.shelves[shelfName]) {
             return false;
         }
         var books = data.shelves[shelfName];
+        var key = getBookKey(book);
         var index = -1;
         
-        // @todo check databaseId
         for (var i = 0; i < books.length; i++) {
-            if (books[i].id === bookId) {
+            if (getBookKey(books[i]) === key) {
                 index = i;
                 break;
             }
@@ -227,8 +241,8 @@ var ShelfManager = (function() {
     
     // Escape HTML entities
     function escapeHtml(text) {
-        if (!text) return '';
-        return text
+        if (text === undefined || text === null || text === '') return '';
+        return String(text)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;')
@@ -274,15 +288,15 @@ var ShelfManager = (function() {
                 ShelfManager.handleToggle(this);
             } else {
                 // Fallback: just toggle book and update UI
-                var bookId = this.getAttribute('data-book-id');
                 var bookData = {
                     db: this.getAttribute('data-book-db') || '',
+                    id: this.getAttribute('data-book-id'),
                     title: this.getAttribute('data-book-title') || '',
                     author: this.getAttribute('data-book-author') || '',
                     thumbnailurl: this.getAttribute('data-book-thumbnail') || '',
                     detailurl: this.getAttribute('data-book-detailurl') || ''
                 };
-                toggleBook(bookId, bookData);
+                toggleBook(bookData);
                 updateUI();
             }
         });
@@ -303,6 +317,7 @@ var ShelfManager = (function() {
         getBooks: getBooks,
         getBooksInShelf: getBooksInShelf,
         getShelfNames: getShelfNames,
+        getBookKey: getBookKey,
         isInShelf: isInShelf,
         toggleBook: toggleBook,
         addBook: addBook,

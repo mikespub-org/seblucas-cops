@@ -7,7 +7,7 @@ This implementation adds client-side virtual shelves to the twigged template usi
 ## Files Modified
 
 1. **`resources/shelves/shelves.js`** (NEW) - Shared ShelfManager core JavaScript library
-2. **`resources/shelves/SHELVES.md`** (NEW) - This documentation file
+2. **`resources/shelves/README.md`** (NEW) - This documentation file
 3. **`templates/twigged/scripts/shelves.js`** (MODIFIED) - Template-specific UI extensions for ShelfManager
 4. **`templates/twigged/base.html`** - Added shelf navbar link and modal container
 5. **`templates/twigged/booklist.html`** - Added shelf toggle button to each book card
@@ -39,6 +39,7 @@ This implementation adds client-side virtual shelves to the twigged template usi
     "Favorites": [
       {
         "id": "123",
+        "db": "",
         "title": "The Hobbit",
         "author": "J.R.R. Tolkien",
         "thumbnailurl": "...",
@@ -53,6 +54,8 @@ This implementation adds client-side virtual shelves to the twigged template usi
 ```
 
 **localStorage key**: `cops_shelves`
+
+**Book identity**: A book is uniquely identified by its `(databaseId, book id)` pair, normalized to a `"db:id"` key. The `db` values `undefined`, `null`, `''` and `0` are all considered equivalent (empty key), so the default/single database always matches regardless of how the id was rendered. Books from other databases (`db: "1"`, `"2"`, ...) keep distinct identities even if they share the same book id.
 
 ## Usage
 
@@ -98,7 +101,7 @@ If localStorage is unavailable, the feature gracefully degrades (buttons do noth
 ```
 resources/shelves/
 ├── shelves.js           # Shared ShelfManager core library (data + localStorage)
-└── SHELVES.md           # This documentation file
+└── README.md            # This documentation file
 
 templates/twigged/
 ├── scripts/
@@ -110,9 +113,19 @@ templates/twigged/
 └── bookdetail.html      # Shelf toggle button on book detail page
 ```
 
-The shared `resources/shelves/shelves.js` provides the core library with data management (`load`, `save`, `toggleBook`, etc.) and event delegation that calls template-specific methods (`openModal`, `handleToggle`, `updateBookButtons`).
+The shared `resources/shelves/shelves.js` provides the core library with data management (`load`, `save`, `toggleBook`, etc.), book identity via `getBookKey(book)` (`"db:id"` with falsy db normalized to `''`), and event delegation that calls template-specific methods (`openModal`, `handleToggle`, `updateBookButtons`).
 
-The template-specific `templates/twigged/scripts/shelves.js` extends ShelfManager with UI rendering functions (bookmark buttons, modal content with Bootstrap 3/4 markup).
+The template-specific `templates/twigged/scripts/shelves.js` extends ShelfManager with UI rendering functions (bookmark buttons, modal content with Bootstrap 3/4 markup, styled to match the book cards in `booklist.html`).
+
+## Functional Test
+
+A standalone Node.js functional test is available at **`tests/shelf_modal_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, modal rendering (including XSS escaping), and error handling - without requiring a browser, webserver or PHP.
+
+```bash
+node tests/shelf_modal_test.js
+```
+
+The test exits with code 0 on success and 1 on failure, so it can be used in automated pipelines.
 
 ## Browser Compatibility
 

@@ -8,18 +8,16 @@ $(document).ready(function() {
         
         // Handle toggle button clicks for twigged
         ShelfManager.handleToggle = function(btn) {
-            var bookId = btn.getAttribute('data-book-id');
             var bookData = {
                 db: btn.getAttribute('data-book-db') || '',
+                id: btn.getAttribute('data-book-id'),
                 title: btn.getAttribute('data-book-title') || '',
                 author: btn.getAttribute('data-book-author') || '',
                 thumbnailurl: btn.getAttribute('data-book-thumbnail') || '',
                 detailurl: btn.getAttribute('data-book-detailurl') || ''
             };
             
-            ShelfManager.toggleBook(bookId, bookData);
-            // var newHtml = ShelfManager.renderBookmarkButton(bookId, bookData);
-            // btn.outerHTML = newHtml;
+            ShelfManager.toggleBook(bookData);
             ShelfManager.updateUI();
         };
 
@@ -30,7 +28,11 @@ $(document).ready(function() {
                 var btn = buttons[i];
                 var bookId = btn.getAttribute('data-book-id');
                 if (bookId) {
-                    var inShelf = ShelfManager.isInShelf(bookId);
+                    var book = {
+                        db: btn.getAttribute('data-book-db') || '',
+                        id: bookId
+                    };
+                    var inShelf = ShelfManager.isInShelf(book);
                     
                     // Update button class
                     if (inShelf) {
@@ -59,11 +61,11 @@ $(document).ready(function() {
                        '<h4 class="modal-title">' + getI18n('shelvesTitle', 'My Shelves') + '</h4>' +
                        '</div>' +
                        '<div class="modal-body">' +
-                       '<div class="form-group">' +
-                       '<label>' + getI18n('currentShelfTitle', 'Current Shelf:') + '</label> ' +
+                       '<div class="panel panel-default">' +
+                       '<div class="panel-body">' +
                        '<div class="btn-group">' +
                        '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">' +
-                       ShelfManager.escapeHtml(activeShelf) + ' <span class="caret"></span></button>' +
+                       ShelfManager.escapeHtml(activeShelf) + ' <span class="badge pull-right">' + books.length + '</span> <span class="caret"></span></button>' +
                        '<ul class="dropdown-menu" id="shelf-switcher">';
 
             for (var i = 0; i < shelfNames.length; i++) {
@@ -74,45 +76,47 @@ $(document).ready(function() {
 
             html += '</ul>' +
                     '</div>' +
-                    '<button type="button" class="btn btn-success" id="shelf-create-btn">' +
+                    ' <button type="button" class="btn btn-success" id="shelf-create-btn" title="' + getI18n('shelfCreatePrompt', 'Enter shelf name:') + '">' +
                     '<span class="glyphicon glyphicon-plus"></span> ' + getI18n('shelfNewTitle', 'New') + '</button> ';
 
             if (shelfNames.length > 1) {
-                html += '<button type="button" class="btn btn-danger" id="shelf-delete-btn">' +
+                html += '<button type="button" class="btn btn-danger" id="shelf-delete-btn" title="' + getI18n('shelfDeleteTitle', 'Delete') + '">' +
                         '<span class="glyphicon glyphicon-trash"></span> ' + getI18n('shelfDeleteTitle', 'Delete') + '</button> ';
             }
 
-            html += '<button type="button" class="btn btn-info" id="shelf-rename-btn">' +
+            html += '<button type="button" class="btn btn-info" id="shelf-rename-btn" title="' + getI18n('shelfRenameTitle', 'Rename') + '">' +
                     '<span class="glyphicon glyphicon-pencil"></span> ' + getI18n('shelfRenameTitle', 'Rename') + '</button>' +
+                    '</div>' +
                     '</div>';
 
             // Book list
-            html += '<hr><h5>' + getI18n('shelfBooksInTitle', 'Books in') + ' "' + ShelfManager.escapeHtml(activeShelf) + '"</h5>';
+            html += '<h4>' + getI18n('shelfBooksInTitle', 'Books in') + ' "' + ShelfManager.escapeHtml(activeShelf) + '"' +
+                    ' <span class="badge pull-right">' + books.length + '</span></h4>';
 
             if (books.length === 0) {
                 html += '<p class="text-muted">' + getI18n('shelfEmptyTitle', 'This shelf is empty. Browse books and add them using the bookmark button.') + '</p>';
             } else {
-                html += '<div class="list-group" id="shelf-book-list">';
+                html += '<div class="row d-flex" id="shelf-book-list">';
                 for (var j = 0; j < books.length; j++) {
                     var book = books[j];
-                    html += '<div class="list-group-item" data-book-id="' + ShelfManager.escapeHtml(book.id) + '">' +
-                            '<div class="row">' +
-                            '<div class="col-sm-2">' +
-                            '<img src="' + ShelfManager.escapeHtml(book.thumbnailurl || '') + '" class="img-thumbnail" style="max-height: 80px;">' +
+                    html += '<div class="col-lg-2 col-sm-3 col-xs-6 books" data-book-id="' + ShelfManager.escapeHtml(book.id) + '">' +
+                            '<div class="cover-image">' +
+                            '<a href="' + ShelfManager.escapeHtml(book.detailurl || '#') + '">' +
+                            '<img class="img-responsive" src="' + ShelfManager.escapeHtml(book.thumbnailurl || '') + '" alt="' + ShelfManager.escapeHtml(book.title) + '">' +
+                            '</a>' +
                             '</div>' +
-                            '<div class="col-sm-8">' +
-                            '<strong><a href="' + ShelfManager.escapeHtml(book.detailurl || '#') + '">' + ShelfManager.escapeHtml(book.title) + '</a></strong><br>' +
-                            '<small>' + ShelfManager.escapeHtml(book.author || getI18n('shelfUnknownAuthor', 'Unknown')) + '</small>';
+                            '<div class="meta">' +
+                            '<p class="title ellipsis"><a href="' + ShelfManager.escapeHtml(book.detailurl || '#') + '">' + ShelfManager.escapeHtml(book.title) + '</a></p>' +
+                            '<div class="author ellipsis">' + ShelfManager.escapeHtml(book.author || getI18n('shelfUnknownAuthor', 'Unknown')) + '</div>';
 
                     if (book.seriesName) {
-                        html += '<br><small><em>' + ShelfManager.escapeHtml(book.seriesName) + ' #' + ShelfManager.escapeHtml(book.seriesIndex || '') + '</em></small>';
+                        html += '<div class="series ellipsis"><em>' + ShelfManager.escapeHtml(book.seriesName) + ' #' + ShelfManager.escapeHtml(book.seriesIndex || '') + '</em></div>';
                     }
 
                     html += '</div>' +
-                            '<div class="col-sm-2">' +
-                            '<button type="button" class="btn btn-sm btn-danger shelf-remove-btn" data-book-db="' + ShelfManager.escapeHtml(book.db) + '" data-book-id="' + ShelfManager.escapeHtml(book.id) + '">' +
+                            '<div class="text-center" style="height: 40px;">' +
+                            '<button type="button" class="btn btn-sm btn-danger shelf-remove-btn" data-book-db="' + ShelfManager.escapeHtml(book.db) + '" data-book-id="' + ShelfManager.escapeHtml(book.id) + '" title="' + getI18n('shelfRemoveTitle', 'Remove from Shelf') + '">' +
                             '<span class="glyphicon glyphicon-remove"></span> ' + getI18n('shelfRemoveAlt', 'Remove') + '</button>' +
-                            '</div>' +
                             '</div>' +
                             '</div>';
                 }
@@ -198,17 +202,19 @@ $(document).ready(function() {
                 });
             }
 
-            // @todo check databaseId
             var removeButtons = document.querySelectorAll('.shelf-remove-btn');
             for (var j = 0; j < removeButtons.length; j++) {
-                (function(bookId) {
+                (function(book) {
                     removeButtons[j].addEventListener('click', function() {
                         var shelfName = ShelfManager.getActiveShelfName();
-                        ShelfManager.removeBook(shelfName, bookId);
+                        ShelfManager.removeBook(shelfName, book);
                         ShelfManager.refreshShelfModal();
                         ShelfManager.updateUI();
                     });
-                })(removeButtons[j].getAttribute('data-book-id'));
+                })({
+                    db: removeButtons[j].getAttribute('data-book-db') || '',
+                    id: removeButtons[j].getAttribute('data-book-id')
+                });
             }
         };
 
