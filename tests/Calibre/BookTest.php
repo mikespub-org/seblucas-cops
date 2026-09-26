@@ -353,7 +353,8 @@ class BookTest extends TestCase
         $book = Book::getBookById(17);
         $book->updateForKepub = true;
         $epub = $book->getDataById(20);
-        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Carroll_Lewis_Alice_s_Adventures_in_Wonderland_kepub.epub", $epub->getHtmlLink());
+        // Note: with Ignore_Title.kepub.epub in URL $type will be 'kepub.epub' here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Carroll_Lewis_Alice_s_Adventures_in_Wonderland.kepub.epub", $epub->getHtmlLink());
         $this->assertEquals(self::$fetcher::link() . "/fetch/0/17/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.mobi", $mobi->getHtmlLink());
 
         Config::set('provide_kepub', "0");
@@ -370,8 +371,9 @@ class BookTest extends TestCase
         $response = new FileResponse();
 
         $book->setLocale('en');
+        $data = $book->getDataById(20);
         ob_start();
-        $result = $book->sendUpdatedEpub(20, $response);
+        $result = $data->sendUpdatedEpub(null, $response);
         $result->send();
         $headers = headers_list();
         $output = ob_get_clean();

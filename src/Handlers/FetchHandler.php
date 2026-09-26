@@ -42,7 +42,7 @@ class FetchHandler extends BaseHandler
             "fetch-thumb" => ["/thumbs/{db:\d+}/{id:\d+}/{thumb}.jpg"],
             "fetch-cover" => ["/covers/{db:\d+}/{id:\d+}.jpg"],
             "fetch-inline" => ["/inline/{db:\d+}/{data:\d+}/{ignore}.{type}", ["view" => 1]],
-            // @todo not supporting Ignore_Title.kepub.epub in URL here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
+            // Note: with Ignore_Title.kepub.epub in URL $type will be 'kepub.epub' here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
             "fetch-data" => ["/fetch/{db:\d+}/{data:\d+}/{ignore}.{type}"],
             "fetch-format" => ["/format/{path:.+}"],
             // @todo overlap with actual ./images/icons/*.png files
@@ -113,7 +113,8 @@ class FetchHandler extends BaseHandler
             return Response::notFound($request);
         }
 
-        if (!$viewOnly && $type == 'epub' && $this->config('update_epub-metadata')) {
+        // Note: with Ignore_Title.kepub.epub in URL $type will be 'kepub.epub' here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
+        if (!$viewOnly && str_ends_with($type, 'epub') && $this->config('update_epub-metadata')) {
             $book->setLocale($request->locale());
             return $this->sendUpdatedEpub($request, $book, $data);
         }
@@ -123,7 +124,7 @@ class FetchHandler extends BaseHandler
             return $data->sendFile(true);
         }
 
-        if ($type == 'epub' && $this->config('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
+        if (str_ends_with($type, 'epub') && $this->config('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
             return $data->sendConvertedKepub();
         }
 

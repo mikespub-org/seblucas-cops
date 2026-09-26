@@ -666,6 +666,7 @@ class Book
 
     /**
      * Summary of sendUpdatedEpub
+     * @deprecated 3.5.2 move send and kepubify to Data
      * @param int $idData
      * @param ?FileResponse $response
      * @return FileResponse|Response

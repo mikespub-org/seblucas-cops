@@ -462,14 +462,18 @@ class Data
         }
 
         $filePath = $this->getLocalPath();
-        if (!$this->book->isLocal($this->extension)) {
+        if (!$this->book->isLocal($this->extension) || $this->updateForKepub) {
             $params = [];
             $params['db'] = $this->databaseId ?? 0;
             $params['type'] = $this->extension;
             $params['data'] = $this->id;
             // this is set on book in JsonRenderer now
             if ($this->updateForKepub) {
-                $params['ignore'] = $this->getUpdatedFilename() . '.kepub';
+                $params['ignore'] = $this->getUpdatedFilename();
+                // Note: with Ignore_Title.kepub.epub in URL $type will be 'kepub.epub' here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
+                if ($this->extension !== "kepub") {
+                    $params['type'] = 'kepub.' . $this->extension;
+                }
             } else {
                 $params['ignore'] = $this->getDownloadFilename();
             }

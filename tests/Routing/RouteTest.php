@@ -167,8 +167,8 @@ class RouteTest extends TestCase
             ["/covers/0/17.jpg", "fetch-cover", ["_handler" => "fetch", "db" => "0", "id" => "17"]],
             ["/inline/0/20/ignore.epub", "fetch-inline", ["_handler" => "fetch", "view" => "1", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
             ["/fetch/0/20/ignore.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "ignore", "type" => "epub"]],
-            // @todo not supporting Ignore_Title.kepub.epub in URL here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
-            ["/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll_kepub.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "Alice's Adventures in Wonderland - Lewis Carroll.kepub", "type" => "epub"]],
+            // Note: with Ignore_Title.kepub.epub in URL $type will be 'kepub.epub' here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
+            ["/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.kepub.epub", "fetch-data", ["_handler" => "fetch", "db" => "0", "data" => "20", "ignore" => "Alice's Adventures in Wonderland - Lewis Carroll", "type" => "kepub.epub"]],
             ["/files/0/17/hello.txt", "fetch-file", ["_handler" => "fetch", "db" => "0", "id" => "17", "file" => "hello.txt"]],
             ["/files/0/17/sub%20dir/hello%20world.txt", "fetch-file", ["_handler" => "fetch", "db" => 0, "id" => 17, "file" => "sub dir/hello world.txt"]],
             ["/zipper/author/3/any.zip", "zipper-page-id-type", ["_handler" => "zipper", "page" => "author", "type" => "any", "id" => "3"]],
