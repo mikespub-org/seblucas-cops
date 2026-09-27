@@ -126,7 +126,7 @@ class Data
     {
         $this->book = $book;
         $this->databaseId = ($nullsafeVariable1 = $book) ? $nullsafeVariable1->getDatabaseId() : null;
-        // this is set on book in JsonRenderer now
+        // this is set on book in BookList or PageBookDetail now
         if (!is_null($book) && $book->updateForKepub && $this->isEpubValidOnKobo()) {
             $this->updateForKepub = true;
         }
@@ -467,7 +467,7 @@ class Data
             $params['db'] = $this->databaseId ?? 0;
             $params['type'] = $this->extension;
             $params['data'] = $this->id;
-            // this is set on book in JsonRenderer now
+            // this is set on book in BookList or PageBookDetail now
             if ($this->updateForKepub) {
                 $params['ignore'] = $this->getUpdatedFilename();
                 // Note: with Ignore_Title.kepub.epub in URL $type will be 'kepub.epub' here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}

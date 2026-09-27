@@ -108,6 +108,11 @@ class FetchHandler extends BaseHandler
             return $this->sendThumbnail($request, $book, $type);
         }
 
+        // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
+        if ($this->config('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
+            $book->updateForKepub = true;
+        }
+
         $data = $book->getDataById($idData);
         if (!$data) {
             return Response::notFound($request);
@@ -116,7 +121,8 @@ class FetchHandler extends BaseHandler
         // Note: with Ignore_Title.kepub.epub in URL $type will be 'kepub.epub' here - match excludes \. in {ignore} by default for Symfony with {ignore}.{type}
         if (!$viewOnly && str_ends_with($type, 'epub') && $this->config('update_epub-metadata')) {
             $book->setLocale($request->locale());
-            return $this->sendUpdatedEpub($request, $book, $data);
+            // update epub metadata + provide kepub if needed (with update of opf properties for cover-image in EPub)
+            return $data->sendUpdatedEpub($book->updateForKepub);
         }
 
         if ($viewOnly) {
@@ -124,7 +130,7 @@ class FetchHandler extends BaseHandler
             return $data->sendFile(true);
         }
 
-        if (str_ends_with($type, 'epub') && $this->config('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
+        if (str_ends_with($type, 'epub') && $book->updateForKepub) {
             return $data->sendConvertedKepub();
         }
 
@@ -209,6 +215,7 @@ class FetchHandler extends BaseHandler
 
     /**
      * Summary of sendUpdatedEpub
+     * @deprecated 4.5.5 called directly in handle()
      * @param Request $request
      * @param Book $book
      * @param Data $data
@@ -217,10 +224,6 @@ class FetchHandler extends BaseHandler
     public function sendUpdatedEpub($request, $book, $data)
     {
         // update epub metadata + provide kepub if needed (with update of opf properties for cover-image in EPub)
-        if ($this->config('provide_kepub') == '1'  && preg_match('/Kobo/', $request->agent())) {
-            $book->updateForKepub = true;
-        }
-        // set updateForKepub if necessary
         return $data->sendUpdatedEpub($book->updateForKepub);
     }
 

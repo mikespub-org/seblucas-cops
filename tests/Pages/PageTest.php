@@ -1167,6 +1167,8 @@ class PageTest extends TestCase
         $this->assertEquals("The Return of Sherlock Holmes", $currentPage->title);
         $this->assertCount(0, $currentPage->entryArray);
         $this->assertFalse($currentPage->containsBook());
+        $this->assertNotNull($currentPage->book);
+        $this->assertEquals("The Return of Sherlock Holmes", $currentPage->book->getTitle());
     }
 
     public function testPageSearch_WithOnlyBooksReturned(): void

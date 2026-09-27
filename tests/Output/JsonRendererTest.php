@@ -172,6 +172,27 @@ class JsonRendererTest extends TestCase
         $this->assertEquals("Recent additions", $test["title"]);
         $this->assertCount(16, $test["entries"]);
         $this->assertEquals("La curée", $test["entries"][1]["title"]);
+        $data = $test["entries"][1]["book"]["preferedData"];
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/21/La_curee_Emile_Zola.epub", $data[0]["url"]);
+    }
+
+    public function testGetJsonForKobo(): void
+    {
+        Config::set('provide_kepub', 1);
+        $page = PageId::ALL_RECENT_BOOKS;
+        $server = ['HTTP_USER_AGENT' => "Kobo"];
+
+        $request = self::$handler::request(['page' => $page], $server);
+        $renderer = new JsonRenderer();
+        $test = $renderer->getJson($request);
+
+        $this->assertEquals("Recent additions", $test["title"]);
+        $this->assertCount(16, $test["entries"]);
+        $this->assertEquals("La curée", $test["entries"][1]["title"]);
+        $data = $test["entries"][1]["book"]["preferedData"];
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/21/Zola_Emile_La_curee.kepub.epub", $data[0]["url"]);
+
+        Config::set('provide_kepub', 0);
     }
 
     public function testGetJsonIsPaginated(): void
@@ -210,6 +231,42 @@ class JsonRendererTest extends TestCase
         $this->assertCount(1, $test["filters"]);
         $this->assertEquals("Arthur Conan Doyle", $test["filters"][0]["title"]);
         $this->assertStringEndsWith("/authors/1/Arthur_Conan_Doyle?filter=1", $test["filters"][0]["navlink"]);
+    }
+
+    public function testGetJsonBook(): void
+    {
+        $page = PageId::BOOK_DETAIL;
+        $bookId = 17;
+
+        $request = self::$handler::request(['page' => $page, 'id' => $bookId]);
+        $renderer = new JsonRenderer();
+        $test = $renderer->getJson($request);
+
+        $this->assertEquals("Alice's Adventures in Wonderland", $test["title"]);
+        $this->assertCount(0, $test["entries"]);
+
+        $this->assertCount(3, $test["book"]["datas"]);
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Alice_s_Adventures_in_Wonderland_Lewis_Carroll.epub", $test["book"]["datas"][2]["url"]);
+    }
+
+    public function testGetJsonBookForKobo(): void
+    {
+        Config::set('provide_kepub', 1);
+        $page = PageId::BOOK_DETAIL;
+        $bookId = 17;
+        $server = ['HTTP_USER_AGENT' => "Kobo"];
+
+        $request = self::$handler::request(['page' => $page, 'id' => $bookId], $server);
+        $renderer = new JsonRenderer();
+        $test = $renderer->getJson($request);
+
+        $this->assertEquals("Alice's Adventures in Wonderland", $test["title"]);
+        $this->assertCount(0, $test["entries"]);
+
+        $this->assertCount(3, $test["book"]["datas"]);
+        $this->assertEquals(self::$fetcher::link() . "/fetch/0/20/Carroll_Lewis_Alice_s_Adventures_in_Wonderland.kepub.epub", $test["book"]["datas"][2]["url"]);
+
+        Config::set('provide_kepub', 0);
     }
 
     public function testGetJsonSearch(): void

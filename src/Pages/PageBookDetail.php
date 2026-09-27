@@ -33,6 +33,10 @@ class PageBookDetail extends Page
         }
         $this->book->setHandler($this->handler);
         $this->book->setLocale($this->locale);
+        // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
+        if ($this->config('provide_kepub') == "1" && preg_match("/Kobo/", $this->request->agent())) {
+            $this->book->updateForKepub = true;
+        }
         $this->idPage = $this->book->getEntryId();
         $this->title = $this->book->getTitle();
         $this->currentUri = $this->book->getUri();

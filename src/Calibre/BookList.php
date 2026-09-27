@@ -593,6 +593,10 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
             $book = new Book($post, $this->getDbContext());
             $book->setHandler($this->handler);
             $book->setLocale($this->locale);
+            // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
+            if ($this->config('provide_kepub') == "1" && preg_match("/Kobo/", $this->request->agent())) {
+                $book->updateForKepub = true;
+            }
             array_push($entryArray, $book->getEntry());
         }
         return [$entryArray, $totalNumber];

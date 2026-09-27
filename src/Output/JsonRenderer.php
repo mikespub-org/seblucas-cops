@@ -334,6 +334,7 @@ class JsonRenderer extends BaseRenderer
             return false;
         }
         if ($entry instanceof EntryBook) {
+            // Note: checking 'provide_kepub' is already done in BookList
             $out = [
                 "title" => $entry->title,
                 "book" => $this->getBookContentArray($entry->book, $extraParams),
@@ -828,10 +829,7 @@ class JsonRenderer extends BaseRenderer
             $out["filterGroups"] = $this->getFilterGroups($entries);
         }
         if (!is_null($currentPage->book)) {
-            // setting this on Book gets cascaded down to Data if isEpubValidOnKobo()
-            if ($this->config('provide_kepub') == "1" && preg_match("/Kobo/", $request->agent())) {
-                $currentPage->book->updateForKepub = true;
-            }
+            // Note: checking 'provide_kepub' is already done in PageBookDetail
             $out ["book"] = $this->getFullBookContentArray($currentPage->book);
         } elseif ($this->page == PageId::BOOK_DETAIL) {
             $this->page = PageId::INDEX;
