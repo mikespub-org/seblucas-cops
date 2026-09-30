@@ -220,9 +220,7 @@ class ImageResponse extends FileResponse
             return false;
         }
         $dst_img = imagecreatetruecolor($nw, $nh);
-        if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
-            return false;
-        }
+        imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);
         // if we don't cache the thumbnail, capture the output
         if (is_null($outputfile)) {
             ob_start();

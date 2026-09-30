@@ -30,7 +30,6 @@ class RequestContextTest extends TestCase
         // Use reflection to access the protected static property
         $reflection = new \ReflectionClass(\SebLucas\Cops\Language\Translation::class);
         $property = $reflection->getProperty('instances');
-        $property->setAccessible(true);
         $property->setValue(null, []);
     }
 

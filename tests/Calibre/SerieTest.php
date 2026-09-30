@@ -46,7 +46,7 @@ class SerieTest extends TestCase
         // Build a map: series_index => EntryBook
         $indexMap = [];
         foreach ($allBooks as $entryBook) {
-            $indexMap[$entryBook->book->seriesIndex] = $entryBook;
+            $indexMap[(int) $entryBook->book->seriesIndex] = $entryBook;
         }
 
         // Verify we have known books with these indexes (from Sherlock Holmes series id=1)
