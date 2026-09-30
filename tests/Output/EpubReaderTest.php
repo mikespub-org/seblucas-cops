@@ -397,7 +397,7 @@ class EpubReaderTest extends TestCase
 
         if (!Config::get('thumbnail_default')) {
             $this->expectException(\InvalidArgumentException::class);
-            $this->expectExceptionMessage("Unknown cover for Alice's Adventures in Wonderland - Lewis Carroll.epub");
+            $this->expectExceptionMessageIsOrContains("Unknown cover for Alice's Adventures in Wonderland - Lewis Carroll.epub");
         }
         $response = $reader->sendCoverImage($zip, $filePath);
         $this->assertInstanceOf(Response::class, $response);

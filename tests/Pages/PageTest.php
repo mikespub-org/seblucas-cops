@@ -631,7 +631,7 @@ class PageTest extends TestCase
         $request->set('letter', "\n");
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid Letter');
+        $this->expectExceptionMessageIsOrContains('Invalid Letter');
 
         $currentPage = PageId::getPage($page, $request);
 

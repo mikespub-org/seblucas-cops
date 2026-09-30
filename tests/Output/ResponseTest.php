@@ -89,7 +89,7 @@ class ResponseTest extends TestCase
     public function testResponseIso88591File(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid UTF-8 string.');
+        $this->expectExceptionMessageIsOrContains('Invalid UTF-8 string.');
 
         $filename = 'Émile Zola - Série des Rougon-Macquart #1 - La curée.epub';
         $isofile = mb_convert_encoding($filename, 'ISO-8859-1', 'UTF-8');

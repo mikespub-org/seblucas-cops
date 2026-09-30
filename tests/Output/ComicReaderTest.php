@@ -198,7 +198,7 @@ class ComicReaderTest extends TestCase
 
         if (!Config::get('thumbnail_default')) {
             $this->expectException(\InvalidArgumentException::class);
-            $this->expectExceptionMessage('Unknown cover for cba-cbam.cbz');
+            $this->expectExceptionMessageIsOrContains('Unknown cover for cba-cbam.cbz');
         }
         $response = $reader->sendCoverImage($zip, $filePath);
         $this->assertInstanceOf(Response::class, $response);

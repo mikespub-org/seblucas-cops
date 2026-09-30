@@ -73,52 +73,7 @@ parameters:
 			path: src/Output/Zipper.php
 
 		-
-			message: '''
-				#^Call to deprecated method expectExceptionMessage\(\) of class PHPUnit\\Framework\\TestCase\:
-				https\://github\.com/sebastianbergmann/phpunit/issues/6560$#
-			'''
-			identifier: method.deprecated
-			count: 2
-			path: tests/Database/DatabaseTest.php
-
-		-
 			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 12
 			path: tests/Input/ConfigTest.php
-
-		-
-			message: '''
-				#^Call to deprecated method expectExceptionMessage\(\) of class PHPUnit\\Framework\\TestCase\:
-				https\://github\.com/sebastianbergmann/phpunit/issues/6560$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: tests/Output/ComicReaderTest.php
-
-		-
-			message: '''
-				#^Call to deprecated method expectExceptionMessage\(\) of class PHPUnit\\Framework\\TestCase\:
-				https\://github\.com/sebastianbergmann/phpunit/issues/6560$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: tests/Output/EpubReaderTest.php
-
-		-
-			message: '''
-				#^Call to deprecated method expectExceptionMessage\(\) of class PHPUnit\\Framework\\TestCase\:
-				https\://github\.com/sebastianbergmann/phpunit/issues/6560$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: tests/Output/ResponseTest.php
-
-		-
-			message: '''
-				#^Call to deprecated method expectExceptionMessage\(\) of class PHPUnit\\Framework\\TestCase\:
-				https\://github\.com/sebastianbergmann/phpunit/issues/6560$#
-			'''
-			identifier: method.deprecated
-			count: 1
-			path: tests/Pages/PageTest.php
