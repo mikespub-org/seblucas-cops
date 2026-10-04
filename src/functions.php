@@ -28,6 +28,7 @@ if (!function_exists('localize')) {
     // set locale for Translation per request
     /**
      * Summary of localize
+     * @deprecated 4.5.5 use HasLocaleTrait::localize() instead
      * @param string $phrase
      * @param int $count
      * @param string $locale

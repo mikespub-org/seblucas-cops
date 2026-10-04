@@ -14,6 +14,7 @@ use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
@@ -222,7 +223,7 @@ class VirtualLibrary extends Base
             }
         }
         $default = self::getDefaultName();
-        $default = localize($default, -1, $locale);
+        $default = Translation::getInstance($locale ?? "en")->localize($default);
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'value' => ''];
         return new self($post, $dbContext);

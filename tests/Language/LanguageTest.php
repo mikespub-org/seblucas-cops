@@ -27,9 +27,10 @@ class LanguageTest extends TestCase
 
     public function testLocalize(): void
     {
-        $this->assertEquals("Authors", localize("authors.title"));
+        $translation = new Translation();
+        $this->assertEquals("Authors", $translation->localize("authors.title"));
 
-        $this->assertEquals("unknow.key", localize("unknow.key"));
+        $this->assertEquals("unknow.key", $translation->localize("unknow.key"));
     }
 
     public function testLocalizeFr(): void

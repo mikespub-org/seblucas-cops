@@ -11,6 +11,7 @@
 namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Database\DatabaseContext;
+use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Pages\PageId;
 
 class Language extends Base
@@ -58,7 +59,7 @@ class Language extends Base
      */
     public static function getLanguageString($code, $locale = null)
     {
-        $string = localize("languages." . $code, -1, $locale);
+        $string = Translation::getInstance($locale ?? "en")->localize("languages." . $code);
         if (preg_match("/^languages/", $string)) {
             return $code;
         }

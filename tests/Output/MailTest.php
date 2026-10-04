@@ -18,6 +18,7 @@ use SebLucas\Cops\Framework\Framework;
 use SebLucas\Cops\Handlers\TestHandler;
 use SebLucas\Cops\Input\Config;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Language\Translation;
 
 class MailTest extends TestCase
 {
@@ -160,7 +161,8 @@ class MailTest extends TestCase
         $headers = headers_list();
         $output = ob_get_clean();
 
-        $expected = localize("mail.messagesent");
+        $locale = $request->locale();
+        $expected = Translation::getInstance($locale)->localize("mail.messagesent");
         $this->assertEquals($expected, $output);
     }
 }

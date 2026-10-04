@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Comparison operation "\>\=" between int\<80400, 80599\> and 80400 is always true\.$#'
+			message: '#^Comparison operation "\>\=" between int\<80400, 80699\> and 80400 is always true\.$#'
 			identifier: greaterOrEqual.alwaysTrue
 			count: 1
 			path: checkconfig.php
@@ -37,7 +37,7 @@ parameters:
 			path: src/Framework/Framework.php
 
 		-
-			message: '#^Comparison operation "\>\=" between int\<80400, 80599\> and 80400 is always true\.$#'
+			message: '#^Comparison operation "\>\=" between int\<80400, 80699\> and 80400 is always true\.$#'
 			identifier: greaterOrEqual.alwaysTrue
 			count: 1
 			path: src/Handlers/CheckHandler.php
