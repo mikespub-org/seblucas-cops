@@ -12,6 +12,7 @@ use Slim\Routing\RouteContext;
 
 /**
  * A generic, invokable action to handle all COPS routes within a Slim application.
+ * @suppress PHP0413
  */
 class CopsAction
 {

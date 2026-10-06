@@ -21,6 +21,9 @@ use SebLucas\Cops\Framework\Adapter\LaravelAdapter;
 use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Routing\RouterInterface;
 
+/**
+ * @suppress PHP0413
+ */
 #[RequiresMethod('\Illuminate\Routing\Router', '__construct')]
 class CopsServiceProviderTest extends TestCase
 {

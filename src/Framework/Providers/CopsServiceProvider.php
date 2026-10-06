@@ -14,6 +14,9 @@ use SebLucas\Cops\Routing\RouteCollection;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 
+/**
+ * @suppress PHP0413
+ */
 class CopsServiceProvider extends ServiceProvider
 {
     /**

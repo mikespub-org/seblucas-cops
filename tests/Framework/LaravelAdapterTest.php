@@ -22,6 +22,9 @@ use SebLucas\Cops\Handlers\HandlerManager;
 use SebLucas\Cops\Routing\RouterInterface;
 use SebLucas\Cops\Routing\Routing;
 
+/**
+ * @suppress PHP0413
+ */
 #[RequiresMethod('\Illuminate\Routing\Router', '__construct')]
 class LaravelAdapterTest extends TestCase
 {

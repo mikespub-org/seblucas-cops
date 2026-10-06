@@ -25,6 +25,9 @@ use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Factory\ServerRequestFactory;
 
+/**
+ * @suppress PHP0413
+ */
 #[RequiresMethod('\Slim\App', '__construct')]
 class SlimAdapterTest extends TestCase
 {

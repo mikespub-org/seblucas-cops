@@ -22,6 +22,9 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Router as SymfonyRouter;
 
+/**
+ * @suppress PHP0413
+ */
 #[RequiresMethod('\Symfony\Component\HttpKernel\KernelInterface', 'getContainer')]
 class SymfonyAdapterTest extends TestCase
 {

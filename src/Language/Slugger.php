@@ -14,5 +14,13 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class Slugger extends AsciiSlugger
 {
+    /**
+     * Explicit constructor for private property promotion in parent class (PHP0441)
+     */
+    public function __construct(?string $locale = null)
+    {
+        parent::__construct($locale);
+    }
+
     // use slug()
 }

@@ -60,4 +60,11 @@ interface RouterInterface
      * @return RouteCollection|null
      */
     public function getRouteCollection();
+
+    /**
+     * Summary of setLoader
+     * @param ?RouteLoader $loader
+     * @return void
+     */
+    public function setLoader($loader = null);
 }

@@ -13,6 +13,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Framework adapter for Symfony Framework
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @suppress PHP0413
  */
 class SymfonyAdapter implements AdapterInterface
 {

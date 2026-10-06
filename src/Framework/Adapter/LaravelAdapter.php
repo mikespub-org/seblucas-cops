@@ -14,6 +14,7 @@ use SebLucas\Cops\Routing\RouterInterface;
 /**
  * Framework adapter for Laravel Framework
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @suppress PHP0413
  */
 class LaravelAdapter implements AdapterInterface
 {

@@ -16,6 +16,7 @@ use Slim\Routing\Route;
 /**
  * Framework adapter for Slim Framework
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @suppress PHP0413
  */
 class SlimAdapter implements AdapterInterface
 {
