@@ -18,7 +18,6 @@ use SebLucas\Cops\Handlers\HasRouteTrait;
 use SebLucas\Cops\Input\HasConfigTrait;
 use SebLucas\Cops\Input\Request;
 use SebLucas\Cops\Language\HasLocaleTrait;
-use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Model\LinkFeed;
@@ -522,7 +521,7 @@ abstract class Base
         }
         $default = static::getDefaultName();
         if (!empty($default)) {
-            $default = Translation::getInstance($locale ?? "en")->localize($default);
+            $default = self::getTranslation($locale)->localize($default);
         }
         // use id = 0 to support route urls
         return new $className((object) ['id' => 0, 'name' => $default, 'sort' => $default], $dbContext);
@@ -601,7 +600,7 @@ abstract class Base
         if (!$numberOfString) {
             $numberOfString = static::SQL_TABLE . ".alphabetical";
         }
-        $translation = Translation::getInstance($locale ?? "en");
+        $translation = self::getTranslation($locale);
         $params["db"] ??= $database;
         // @todo replace static calls with handler instance and method calls someday
         $href = fn() => self::getHandlerRoute($handler, static::ROUTE_ALL, $params);

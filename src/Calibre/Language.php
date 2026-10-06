@@ -59,7 +59,7 @@ class Language extends Base
      */
     public static function getLanguageString($code, $locale = null)
     {
-        $string = Translation::getInstance($locale ?? "en")->localize("languages." . $code);
+        $string = self::getTranslation($locale)->localize("languages." . $code);
         if (preg_match("/^languages/", $string)) {
             return $code;
         }

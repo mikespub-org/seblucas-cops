@@ -12,7 +12,7 @@ namespace SebLucas\Cops\Handlers;
 
 use SebLucas\Cops\Output\Mail;
 use SebLucas\Cops\Output\Response;
-use SebLucas\Cops\Language\Translation;
+use SebLucas\Cops\Language\HasLocaleTrait;
 
 /**
  * Send books by email
@@ -20,6 +20,8 @@ use SebLucas\Cops\Language\Translation;
  */
 class MailHandler extends BaseHandler
 {
+    use HasLocaleTrait;
+
     public const HANDLER = "mail";
     public const PREFIX = "/mail";
 
@@ -48,15 +50,15 @@ class MailHandler extends BaseHandler
             return Response::sendError($request, $error);
         }
 
-        $locale = $request->locale();
+        $this->setLocale($request->locale());
         if ($error = $mailer->sendMail($idData, $emailDest, $request, $dryRun)) {
             $response = new Response('text/plain');
-            $content = Translation::getInstance($locale)->localize("mail.messagenotsent");
+            $content = $this->localize("mail.messagenotsent");
             return $response->setContent($content . $error);
         }
 
         $response = new Response('text/plain');
-        $content = Translation::getInstance($locale)->localize("mail.messagesent");
+        $content = $this->localize("mail.messagesent");
         return $response->setContent($content);
     }
 }

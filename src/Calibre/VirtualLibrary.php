@@ -223,7 +223,7 @@ class VirtualLibrary extends Base
             }
         }
         $default = self::getDefaultName();
-        $default = Translation::getInstance($locale ?? "en")->localize($default);
+        $default = self::getTranslation($locale)->localize($default);
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'value' => ''];
         return new self($post, $dbContext);

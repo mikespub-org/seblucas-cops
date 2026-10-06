@@ -39,4 +39,14 @@ trait HasLocaleTrait
     {
         return Translation::getInstance($this->locale)->localize($phrase, $count);
     }
+
+    /**
+     * Summary of getTranslation
+     * @param ?string $locale
+     * @return Translation
+     */
+    public static function getTranslation($locale)
+    {
+        return Translation::getInstance($locale ?? 'en');
+    }
 }

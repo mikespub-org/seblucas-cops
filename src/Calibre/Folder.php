@@ -14,7 +14,6 @@ use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\BaseHandler;
 use SebLucas\Cops\Handlers\HtmlHandler;
 use SebLucas\Cops\Input\Config;
-use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Output\Format;
@@ -605,7 +604,7 @@ class Folder extends Category
     public static function getRootFolder($root = null, $dbContext = null, $locale = null)
     {
         $default = self::getDefaultName();
-        $default = Translation::getInstance($locale ?? "en")->localize($default);
+        $default = self::getTranslation($locale)->localize($default);
         // use id = 0 to support route urls
         $post = (object) ['id' => 0, 'name' => $default, 'root' => $root];
         return new Folder($post, $dbContext);

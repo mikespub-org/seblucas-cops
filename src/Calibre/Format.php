@@ -12,7 +12,6 @@ namespace SebLucas\Cops\Calibre;
 
 use SebLucas\Cops\Database\DatabaseContext;
 use SebLucas\Cops\Handlers\BaseHandler;
-use SebLucas\Cops\Language\Translation;
 use SebLucas\Cops\Model\Entry;
 use SebLucas\Cops\Pages\PageId;
 
@@ -88,7 +87,7 @@ class Format extends Base
             return new Format((object) ['id' => $id, 'name' => $id], $dbContext);
         }
         $default = self::getDefaultName();
-        $default = Translation::getInstance($locale ?? "en")->localize($default);
+        $default = self::getTranslation($locale)->localize($default);
         // use id = 0 to support route urls
         return new Format((object) ['id' => 0, 'name' => $default], $dbContext);
     }
