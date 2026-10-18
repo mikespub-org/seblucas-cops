@@ -6,8 +6,13 @@ function postRefresh()
     if (elmnt) elmnt.scrollIntoView();
     
     // Update shelf UI
-    if (typeof ShelfManager !== 'undefined' && typeof ShelfManager.updateUI === 'function') {
-        ShelfManager.updateUI();
+    if (typeof ShelfManager !== 'undefined') {
+        if (typeof ShelfManager.updateUI === 'function') {
+            ShelfManager.updateUI();
+        }
+        if (typeof ShelfManager.renderShelfPage === 'function') {
+            ShelfManager.renderShelfPage();
+        }
     }
 
     var gallery = document.getElementById('image-gallery');
@@ -79,6 +84,9 @@ function initiateTwig(url, theme, templates, version) {
         if (typeof ShelfManager !== 'undefined' && typeof ShelfManager.init === 'function') {
             ShelfManager.init();
             ShelfManager.updateUI();
+            if (typeof ShelfManager.renderShelfPage === 'function') {
+                ShelfManager.renderShelfPage();
+            }
         }
     }).fail(function (error) {
         if (error.responseText) {

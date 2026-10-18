@@ -69,6 +69,7 @@ class PageHandler extends BaseHandler
             "page-custom" => ["/custom/{custom:\d+}/{id}", ["page" => PageId::CUSTOM_DETAIL]],
             "page-customtype" => ["/custom/{custom:\d+}", ["page" => PageId::ALL_CUSTOMS]],
             "page-about" => ["/about", ["page" => PageId::ABOUT]],
+            "page-shelves" => ["/shelves", ["page" => PageId::SHELVES]],
             "page-language" => ["/languages/{id:\d+}/{title}", ["page" => PageId::LANGUAGE_DETAIL]],
             "page-language-id" => ["/languages/{id:\d+}", ["page" => PageId::LANGUAGE_DETAIL]],
             "page-languages" => ["/languages", ["page" => PageId::ALL_LANGUAGES]],

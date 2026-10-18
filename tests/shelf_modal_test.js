@@ -77,12 +77,16 @@ function setup(options) {
     }
 
     var fakeModalContent = options.modalContent || { innerHTML: '' };
+    var fakePageContent = options.pageContent || { innerHTML: '' };
 
     // stub document with just what the scripts use
     var documentStub = {
         getElementById: function (id) {
             if (id === 'shelf-modal-content') {
                 return fakeModalContent;
+            }
+            if (id === 'shelf-page-content') {
+                return fakePageContent;
             }
             return null;
         },
@@ -133,6 +137,7 @@ function setup(options) {
     vm.runInContext(fs.readFileSync(twiggedScript, 'utf8'), context, { filename: twiggedScript });
 
     sandbox.modalContent = fakeModalContent;
+    sandbox.pageContent = fakePageContent;
     sandbox.storage = storage;
     return sandbox;
 }
@@ -302,6 +307,27 @@ var fixtureShelves = {
     // data attributes needed by bindModalEvents are present
     check('data-book-db attribute present', html.indexOf('data-book-db') > -1);
     check('data-book-id attribute present', html.indexOf('data-book-id') > -1);
+})();
+
+// ---------------------------------------------------------------------------
+// 5b. Dedicated page rendering: renderShelfPage()
+// ---------------------------------------------------------------------------
+
+(function testPageRendering() {
+    var env = setup({ initialShelves: fixtureShelves });
+
+    env.ShelfManager.renderShelfPage();
+    var pageHtml = env.pageContent.innerHTML;
+
+    check('page toolbar in panel panel-default + panel-body', pageHtml.indexOf('panel panel-default') > -1 && pageHtml.indexOf('panel-body') > -1);
+    check('page badge count in dropdown and heading', pageHtml.split('badge pull-right').length - 1 >= 2);
+    check('page h4 section heading', pageHtml.indexOf('<h4>') > -1);
+    check('page book cards use row d-flex grid', pageHtml.indexOf('row d-flex') > -1);
+    check('page book cards use same columns as booklist', pageHtml.indexOf('col-lg-2 col-sm-3 col-xs-6 books') > -1);
+    check('page covers use cover-image + img-responsive', pageHtml.indexOf('cover-image') > -1 && pageHtml.indexOf('img-responsive') > -1);
+    check('page metadata uses meta + ellipsis classes', pageHtml.indexOf('class="meta"') > -1 && pageHtml.indexOf('ellipsis') > -1);
+    check('page remove button present', pageHtml.indexOf('shelf-remove-btn') > -1);
+    check('page does not include modal-header or modal-footer', pageHtml.indexOf('modal-header') === -1 && pageHtml.indexOf('modal-footer') === -1);
 })();
 
 // ---------------------------------------------------------------------------

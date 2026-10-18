@@ -216,6 +216,12 @@
                         "page": "about"
                     }
                 ],
+                "page-shelves": [
+                    "/shelves",
+                    {
+                        "page": "shelves"
+                    }
+                ],
                 "page-language": [
                     "/languages/{id:\\d+}/{title}",
                     {

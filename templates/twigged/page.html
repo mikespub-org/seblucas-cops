@@ -5,6 +5,8 @@
     {% include 'about.html' %}
 {% elseif it.page == "customize" %}
     {% include 'customize.html' %}
+{% elseif it.page == "shelves" %}
+    {% include 'shelves.html' %}
 {% elseif it.isFilterPage %}
     {% include 'filters.html' %}
 {% elseif it.containsBook == 0 %}

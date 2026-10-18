@@ -862,6 +862,7 @@ class JsonRenderer extends BaseRenderer
         $params['db'] = $this->database;
         $out["abouturl"] = $this->getRoute(PageId::ROUTE_ABOUT, $params);
         $out["customizeurl"] = $this->getRoute(PageId::ROUTE_CUSTOMIZE, $params);
+        $out["shelvesurl"] = $this->getRoute(PageId::ROUTE_SHELVES, $params);
 
         if ($this->page == PageId::ABOUT) {
             /** @var PageAbout $currentPage */

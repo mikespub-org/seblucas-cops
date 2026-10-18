@@ -486,6 +486,20 @@
             ]
         },
         {
+            "name": "page-shelves",
+            "route": [
+                "/shelves",
+                {
+                    "page": "shelves",
+                    "_route": "page-shelves"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "page-language",
             "route": [
                 "/languages/{id:\\d+}/{title}",

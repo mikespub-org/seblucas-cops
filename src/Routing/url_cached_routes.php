@@ -41,6 +41,7 @@ $static = [
   '/tags/letter' => 'page-tags-letters',
   '/tags' => 'page-tags',
   '/about' => 'page-about',
+  '/shelves' => 'page-shelves',
   '/languages' => 'page-languages',
   '/customize' => 'page-customize',
   '/publishers/letter' => 'page-publishers-letters',
@@ -454,6 +455,17 @@ $routes = [
     [
       'page' => 'about',
       '_route' => 'page-about',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'page-shelves' => [
+    '/shelves',
+    [
+      'page' => 'shelves',
+      '_route' => 'page-shelves',
     ],
     [
       'GET',

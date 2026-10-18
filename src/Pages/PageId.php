@@ -39,6 +39,7 @@ class PageId
     public const ALL_CUSTOMS = "customtype";
     public const CUSTOM_DETAIL = "custom";
     public const ABOUT = "about";
+    public const SHELVES = "shelves";
     public const ALL_LANGUAGES = "languages";
     public const LANGUAGE_DETAIL = "language";
     public const CUSTOMIZE = "customize";
@@ -89,10 +90,12 @@ class PageId
     public const ALL_PREFERENCES_ID = "cops:preferences";
     public const ALL_FORMATS_ID = "cops:formats";
     public const ALL_ANNOTATIONS_ID = "cops:annotations";
+    public const ALL_SHELVES_ID = "cops:shelves";
     // @todo move elsewhere
     public const ROUTE_INDEX = "page-index";
     public const ROUTE_ABOUT = "page-about";
     public const ROUTE_CUSTOMIZE = "page-customize";
+    public const ROUTE_SHELVES = "page-shelves";
 
     /**
      * Summary of getPage
@@ -144,6 +147,7 @@ class PageId
             PageId::FORMAT_DETAIL => new PageFormatDetail($request, $instance),
             PageId::ALL_LIBRARIES => new PageAllVirtualLibraries($request),
             PageId::ABOUT => new PageAbout($request),
+            PageId::SHELVES => new PageShelves($request),
             PageId::CUSTOMIZE => new PageCustomize($request),
             PageId::FILTER => new PageFilter($request),
             // @todo return error for unknown page

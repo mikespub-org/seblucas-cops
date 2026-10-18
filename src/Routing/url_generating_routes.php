@@ -37,6 +37,7 @@ return [
     'page-custom' => [['custom', 'id'], ['page' => 'custom', '_route' => 'page-custom'], ['custom' => '\\d+'], [['variable', '/', '[^/]++', 'id'], ['variable', '/', '\\d+', 'custom'], ['text', '/custom']], [], [], []],
     'page-customtype' => [['custom'], ['page' => 'customtype', '_route' => 'page-customtype'], ['custom' => '\\d+'], [['variable', '/', '\\d+', 'custom'], ['text', '/custom']], [], [], []],
     'page-about' => [[], ['page' => 'about', '_route' => 'page-about'], [], [['text', '/about']], [], [], []],
+    'page-shelves' => [[], ['page' => 'shelves', '_route' => 'page-shelves'], [], [['text', '/shelves']], [], [], []],
     'page-language' => [['id', 'title'], ['page' => 'language', '_route' => 'page-language'], ['id' => '\\d+'], [['variable', '/', '[^/]++', 'title'], ['variable', '/', '\\d+', 'id'], ['text', '/languages']], [], [], []],
     'page-language-id' => [['id'], ['page' => 'language', '_route' => 'page-language-id'], ['id' => '\\d+'], [['variable', '/', '\\d+', 'id'], ['text', '/languages']], [], [], []],
     'page-languages' => [[], ['page' => 'languages', '_route' => 'page-languages'], [], [['text', '/languages']], [], [], []],

@@ -1430,6 +1430,18 @@ class PageTest extends TestCase
         $this->assertFalse($currentPage->containsBook());
     }
 
+    public function testPageShelves(): void
+    {
+        $page = PageId::SHELVES;
+        $request = new Request();
+
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertEquals("Shelves", $currentPage->title);
+        $this->assertCount(0, $currentPage->entryArray);
+        $this->assertFalse($currentPage->containsBook());
+    }
+
     public function testPageCustomize(): void
     {
         $page = PageId::CUSTOMIZE;

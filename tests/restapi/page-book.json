@@ -101,13 +101,13 @@
                 "name": "hello.txt",
                 "url": "vendor/bin/index.php/files/0/17/hello.txt",
                 "length": "12",
-                "mtime": "2025-01-24T21:33:18+00:00"
+                "mtime": "2026-09-19T17:23:28+00:00"
             },
             {
                 "name": "sub folder/copied file.txt",
                 "url": "vendor/bin/index.php/files/0/17/sub%20folder/copied%20file.txt",
                 "length": "12",
-                "mtime": "2025-01-24T21:33:18+00:00"
+                "mtime": "2026-09-19T17:23:28+00:00"
             }
         ],
         "series": [],
@@ -133,6 +133,7 @@
     "filters": false,
     "abouturl": "vendor/bin/index.php/restapi/about",
     "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "shelvesurl": "vendor/bin/index.php/restapi/shelves",
     "homeurl": "vendor/bin/index.php",
     "parenturl": "vendor/bin/index.php",
     "hierarchy": false,

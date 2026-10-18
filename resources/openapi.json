@@ -897,6 +897,25 @@
                 }
             }
         },
+        "/shelves": {
+            "get": {
+                "summary": "Route to page handler with page=shelves",
+                "operationId": "get_page-shelves",
+                "tags": [
+                    "default"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of page handler with page=shelves"
+                    }
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/dbParam"
+                    }
+                ]
+            }
+        },
         "/languages/{id}/{title}": {
             "get": {
                 "summary": "Route to page handler with page=language&id={id}&title={title}",

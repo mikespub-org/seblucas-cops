@@ -72,6 +72,7 @@
     "filters": false,
     "abouturl": "vendor/bin/index.php/restapi/about",
     "customizeurl": "vendor/bin/index.php/restapi/customize",
+    "shelvesurl": "vendor/bin/index.php/restapi/shelves",
     "homeurl": "vendor/bin/index.php",
     "parenturl": "vendor/bin/index.php",
     "hierarchy": false,
