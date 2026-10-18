@@ -162,9 +162,10 @@ class BrowserKitTest extends TestCase
         return [
             ['default', '//body/div/section/article'],
             // using partial match - could use //div[contains(concat(' ',normalize-space(@class),' '),' foobar ')]
-            ['bootstrap', '//div[contains(@class, "panel-default")]'],
+            //['bootstrap', '//div[contains(@class, "panel-default")]'],
             // using exact match
             ['bootstrap2', '//div[@class="panel panel-default"]'],
+            ['bootstrap5', '//div[@class="card"]'],
         ];
     }
 
@@ -223,7 +224,7 @@ class BrowserKitTest extends TestCase
         //$expected = ['page' => 'query', 'query' => ''];
         $this->assertArrayHasKey('query', $form->getValues());
 
-        // for bootstrap & bootstrap2 the correct URI was set in util.js and there was no hidden 'page' field
+        // for bootstrap2 & bootstrap5 the correct URI was set in util.js and there was no hidden 'page' field
         if (!$form->has('page')) {
             $query = 'ali';
             $expected = [
@@ -248,10 +249,12 @@ class BrowserKitTest extends TestCase
             $this->assertCount(1, $articles);
             if ($template == 'bootstrap2') {
                 $this->assertEquals('Search result for *ali* in books 2', $articles->filterXPath('//div[@class="panel-body"]')->text());
+            } elseif ($template == 'bootstrap5') {
+                $this->assertStringContainsString('Search result for *ali* in books', $articles->filterXPath('//div[@class="card-body"]')->text());
             } else {
                 $this->assertEquals('Search result for *ali* in books', $articles->filterXPath('//h2')->text());
             }
-            if ($template == 'bootstrap') {
+            if ($template == 'bootstrap5') {
                 $this->assertEquals('2', $articles->filterXPath('//span')->text());
             }
             if ($template == 'default') {

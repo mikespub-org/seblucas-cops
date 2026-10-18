@@ -121,7 +121,8 @@ class ConfigTest extends TestCase
 
     public function testCheckConfigurationTemplate(): void
     {
-        $templateName = 'bootstrap';
+        $templateName = 'bootstrap2';
+        $libraryName = 'bootstrap';
 
         Config::set('template', $templateName);
         $request = new Request();
@@ -129,7 +130,7 @@ class ConfigTest extends TestCase
         $renderer = new HtmlRenderer();
         $head = $renderer->render($request);
 
-        $this->assertStringContainsString($templateName . ".min.css", $head);
-        $this->assertStringContainsString($templateName . ".min.js", $head);
+        $this->assertStringContainsString($libraryName . ".min.css", $head);
+        $this->assertStringContainsString($libraryName . ".min.js", $head);
     }
 }

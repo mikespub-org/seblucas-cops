@@ -31,6 +31,7 @@
 namespace SebLucas\Cops\Tests;
 
 require_once dirname(__DIR__) . '/config/test.php';
+require_once __DIR__ . '/WebDriverTestCase.php';
 //use PHPUnit\Framework\TestCase;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
@@ -168,14 +169,14 @@ class WebDriverTest extends WebDriverTestCase
     {
         return [
             ['default', 0, 0],
-            ['bootstrap', 0, 0],
             ['bootstrap2', 0, 0],
+            ['bootstrap5', 0, 0],
             ['default', 320, 720],
-            ['bootstrap', 320, 720],
             ['bootstrap2', 320, 720],
+            ['bootstrap5', 320, 720],
             ['default', 1920, 1080],
-            ['bootstrap', 1920, 1080],
             ['bootstrap2', 1920, 1080],
+            ['bootstrap5', 1920, 1080],
         ];
     }
 

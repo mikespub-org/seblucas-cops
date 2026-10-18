@@ -632,7 +632,6 @@ $config['cops_templates_directory'] = dirname(__DIR__) . '/templates/';
 /*
  * Which template is used by default :
  * 'default'
- * 'bootstrap'
  * 'bootstrap2'
  * 'bootstrap5'
  * 'twigged'

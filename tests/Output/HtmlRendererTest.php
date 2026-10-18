@@ -69,6 +69,7 @@ class HtmlRendererTest extends TestCase
 
         $json = new JsonRenderer();
         $data = $json->getJson($request, true);
+        // Note: this will trigger warning for undefined array key in bootstrap5 - see it.c.config.ignored_categories.* checks in header.html
         $output = $template->serverSide($data);
 
         $old = libxml_use_internal_errors(true);
@@ -94,7 +95,7 @@ class HtmlRendererTest extends TestCase
     {
         return [
             ["bootstrap2"],
-            ["bootstrap"],
+            ["bootstrap5"],
             ["default"],
         ];
     }

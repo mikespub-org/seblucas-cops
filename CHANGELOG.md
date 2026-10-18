@@ -16,6 +16,7 @@ x.x.x - TODO
 4.x.x - 2026xxxx 
   * Changes in config/default.php file:
     - new $config['cops_use_client_shelves'] to use client-side shelves
+  * Remove 'bootstrap' template in this release - see issue #181 from @mikespub
   * Clean up provide_kepub checks and Ignore_Title.kepub.epub in URLs - see issue #182 from @dunxd
   * Try client-side virtual shelves (favorites) in 'twigged' template (WIP)
 
