@@ -8,7 +8,7 @@
  *
  * This test does not require PHP or a webserver - run it with node:
  *
- *   node tests/shelf_modal_test.js
+ *   node tests/shelves_test.js
  *
  * @license    GPL v2 or later (https://www.gnu.org/licenses/gpl.html)
  * @author     mikespub
@@ -76,15 +76,11 @@ function setup(options) {
         storage.setItem('cops_shelves', JSON.stringify(options.initialShelves));
     }
 
-    var fakeModalContent = options.modalContent || { innerHTML: '' };
     var fakePageContent = options.pageContent || { innerHTML: '' };
 
     // stub document with just what the scripts use
     var documentStub = {
         getElementById: function (id) {
-            if (id === 'shelf-modal-content') {
-                return fakeModalContent;
-            }
             if (id === 'shelf-page-content') {
                 return fakePageContent;
             }
@@ -136,7 +132,6 @@ function setup(options) {
     vm.runInContext(fs.readFileSync(coreScript, 'utf8'), context, { filename: coreScript });
     vm.runInContext(fs.readFileSync(twiggedScript, 'utf8'), context, { filename: twiggedScript });
 
-    sandbox.modalContent = fakeModalContent;
     sandbox.pageContent = fakePageContent;
     sandbox.storage = storage;
     return sandbox;
@@ -259,27 +254,26 @@ var fixtureShelves = {
 })();
 
 // ---------------------------------------------------------------------------
-// 5. Modal rendering: style alignment with twigged template
+// 5. Page rendering: dedicated shelf page content
 // ---------------------------------------------------------------------------
 
-(function testModalRendering() {
+(function testPageRendering() {
     var env = setup({ initialShelves: fixtureShelves });
 
-    env.ShelfManager.refreshShelfModal();
-    var html = env.modalContent.innerHTML;
+    env.ShelfManager.renderShelfPage();
+    var html = env.pageContent.innerHTML;
 
-    check('modal header rendered', html.indexOf('modal-header') > -1);
-    check('toolbar in panel panel-default + panel-body', html.indexOf('panel panel-default') > -1 && html.indexOf('panel-body') > -1);
-    check('badge count in dropdown and heading', html.split('badge pull-right').length - 1 >= 2);
-    check('h4 section heading', html.indexOf('<h4>') > -1);
-    check('book cards use row d-flex grid', html.indexOf('row d-flex') > -1);
-    check('book cards use same columns as booklist', html.indexOf('col-lg-2 col-sm-3 col-xs-6 books') > -1);
-    check('covers use cover-image + img-responsive', html.indexOf('cover-image') > -1 && html.indexOf('img-responsive') > -1);
-    check('metadata uses meta + ellipsis classes', html.indexOf('class="meta"') > -1 && html.indexOf('ellipsis') > -1);
-    check('no list-group markup left', html.indexOf('list-group') === -1);
-    check('no img-thumbnail markup left', html.indexOf('img-thumbnail') === -1);
+    check('page toolbar in panel panel-default + panel-body', html.indexOf('panel panel-default') > -1 && html.indexOf('panel-body') > -1);
+    check('page badge count in dropdown and heading', html.split('badge pull-right').length - 1 >= 2);
+    check('page h4 section heading', html.indexOf('<h4>') > -1);
+    check('page book cards use row d-flex grid', html.indexOf('row d-flex') > -1);
+    check('page book cards use same columns as booklist', html.indexOf('col-lg-2 col-sm-3 col-xs-6 books') > -1);
+    check('page covers use cover-image + img-responsive', html.indexOf('cover-image') > -1 && html.indexOf('img-responsive') > -1);
+    check('page metadata uses meta + ellipsis classes', html.indexOf('class="meta"') > -1 && html.indexOf('ellipsis') > -1);
+    check('page remove button present', html.indexOf('shelf-remove-btn') > -1);
+    check('page does not include modal-header or modal-footer', html.indexOf('modal-header') === -1 && html.indexOf('modal-footer') === -1);
 
-    // XSS escaping
+    // XSS escaping via page content
     var xssShelves = {
         activeShelf: 'Favorites',
         shelves: {
@@ -296,38 +290,50 @@ var fixtureShelves = {
         }
     };
     var xssEnv = setup({ initialShelves: xssShelves });
-    xssEnv.ShelfManager.refreshShelfModal();
-    var xssHtml = xssEnv.modalContent.innerHTML;
+    xssEnv.ShelfManager.renderShelfPage();
+    var xssHtml = xssEnv.pageContent.innerHTML;
     check('book title is HTML-escaped', xssHtml.indexOf('&lt;script&gt;') > -1 && xssHtml.indexOf('<script>') === -1);
     check('book author is HTML-escaped', xssHtml.indexOf('Evil &amp; &lt;Co&gt;') > -1);
 
     // numeric seriesIndex no longer breaks escapeHtml
     check('numeric seriesIndex rendered', html.indexOf('Sherlock Holmes #2') > -1);
 
-    // data attributes needed by bindModalEvents are present
+    // data attributes needed by bindPageEvents are present
     check('data-book-db attribute present', html.indexOf('data-book-db') > -1);
     check('data-book-id attribute present', html.indexOf('data-book-id') > -1);
 })();
 
 // ---------------------------------------------------------------------------
-// 5b. Dedicated page rendering: renderShelfPage()
+// 5c. Empty thumbnail handling: no  with empty src
 // ---------------------------------------------------------------------------
 
-(function testPageRendering() {
-    var env = setup({ initialShelves: fixtureShelves });
-
+(function testEmptyThumbnail() {
+    var noThumbShelves = {
+        activeShelf: 'Favorites',
+        shelves: {
+            'Favorites': [
+                {
+                    db: '',
+                    id: '42',
+                    title: 'Book Without Cover',
+                    author: 'An Author',
+                    thumbnailurl: '',
+                    detailurl: '/book/0/42'
+                }
+            ]
+        }
+    };
+    var env = setup({ initialShelves: noThumbShelves });
     env.ShelfManager.renderShelfPage();
-    var pageHtml = env.pageContent.innerHTML;
+    var html = env.pageContent.innerHTML;
 
-    check('page toolbar in panel panel-default + panel-body', pageHtml.indexOf('panel panel-default') > -1 && pageHtml.indexOf('panel-body') > -1);
-    check('page badge count in dropdown and heading', pageHtml.split('badge pull-right').length - 1 >= 2);
-    check('page h4 section heading', pageHtml.indexOf('<h4>') > -1);
-    check('page book cards use row d-flex grid', pageHtml.indexOf('row d-flex') > -1);
-    check('page book cards use same columns as booklist', pageHtml.indexOf('col-lg-2 col-sm-3 col-xs-6 books') > -1);
-    check('page covers use cover-image + img-responsive', pageHtml.indexOf('cover-image') > -1 && pageHtml.indexOf('img-responsive') > -1);
-    check('page metadata uses meta + ellipsis classes', pageHtml.indexOf('class="meta"') > -1 && pageHtml.indexOf('ellipsis') > -1);
-    check('page remove button present', pageHtml.indexOf('shelf-remove-btn') > -1);
-    check('page does not include modal-header or modal-footer', pageHtml.indexOf('modal-header') === -1 && pageHtml.indexOf('modal-footer') === -1);
+    // no img tag with empty src (which would trigger a browser request to current page)
+    check('no img with empty src when thumbnailurl missing', html.indexOf('<img') === -1 || html.indexOf('src=""') === -1);
+    // book metadata still rendered
+    check('book title still rendered', html.indexOf('Book Without Cover') > -1);
+    check('book author still rendered', html.indexOf('An Author') > -1);
+    // remove button still present
+    check('remove button present for book without cover', html.indexOf('shelf-remove-btn') > -1);
 })();
 
 // ---------------------------------------------------------------------------

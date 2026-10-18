@@ -271,16 +271,6 @@ var ShelfManager = (function() {
     
     // Initialize event handlers with template delegation
     function init() {
-        // Use event delegation for shelf toggle to survive AJAX navigation
-        $(document).off('click', '#shelf-toggle').on('click', '#shelf-toggle', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            // Delegate to template implementation
-            if (typeof ShelfManager.openModal === 'function') {
-                ShelfManager.openModal();
-            }
-        });
-        
         $(document).off('click', '.shelf-toggle-btn').on('click', '.shelf-toggle-btn', function(e) {
             e.preventDefault();
             // Delegate to template implementation

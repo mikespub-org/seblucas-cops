@@ -114,6 +114,8 @@ class TwigTemplate extends BaseRenderer
             return 'about.html';
         } elseif ($data['page'] == "customize") {
             return 'customize.html';
+        } elseif ($data['page'] == "shelves") {
+            return 'shelves.html';
         } elseif ($data['isFilterPage']) {
             return 'filters.html';
         } elseif ($data['containsBook'] == 0) {

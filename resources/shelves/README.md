@@ -9,11 +9,12 @@ This implementation adds client-side virtual shelves to the twigged template usi
 1. **`resources/shelves/shelves.js`** (NEW) - Shared ShelfManager core JavaScript library
 2. **`resources/shelves/README.md`** (NEW) - This documentation file
 3. **`templates/twigged/scripts/shelves.js`** (MODIFIED) - Template-specific UI extensions for ShelfManager
-4. **`templates/twigged/base.html`** - Added shelf navbar link and modal container
+4. **`templates/twigged/base.html`** - Added shelf navbar link (modal container removed)
 5. **`templates/twigged/booklist.html`** - Added shelf toggle button to each book card
 6. **`templates/twigged/bookdetail.html`** - Added shelf toggle button on book detail page
 7. **`templates/twigged/index.html`** - Included shared shelves.js and template-specific shelves.js
 8. **`templates/twigged/scripts/cops.js`** - Initialize ShelfManager and update UI on page loads
+9. **`templates/twigged/shelves.html`** (NEW) - Dedicated shelf page template with `#shelf-page-content` container
 
 ## Features
 
@@ -24,7 +25,7 @@ This implementation adds client-side virtual shelves to the twigged template usi
 - **Visual Feedback**: 
   - Badge count in navbar shows books in active shelf
   - Button changes appearance when book is in shelf
-- **Shelf Management Modal**: 
+- **Shelf Management Page**: 
   - Switch between shelves
   - View all books in current shelf with thumbnails
   - Remove books from shelf
@@ -60,12 +61,12 @@ This implementation adds client-side virtual shelves to the twigged template usi
 ## Usage
 
 1. **Add a book to shelf**: Click the bookmark icon (☆) on any book card or detail page
-2. **View shelves**: Click "Shelves" in the top navigation bar
-3. **Switch shelves**: Use the dropdown in the shelf modal
-4. **Create new shelf**: Click "New" button in the modal
-5. **Rename shelf**: Click "Rename" button in the modal
+2. **View shelves**: Click "Shelves" in the top navigation bar (navigates to the dedicated shelves page)
+3. **Switch shelves**: Use the dropdown on the shelves page
+4. **Create new shelf**: Click "New" button on the shelves page
+5. **Rename shelf**: Click "Rename" button on the shelves page
 6. **Delete shelf**: Click "Delete" button (only available when more than one shelf exists)
-7. **Remove book**: Click "Remove" button next to a book in the shelf modal
+7. **Remove book**: Click "Remove" button next to a book on the shelves page
 
 ## Technical Details
 
@@ -108,21 +109,22 @@ templates/twigged/
 │   ├── shelves.js       # Template-specific UI extensions (extends ShelfManager)
 │   └── cops.js          # Initializes ShelfManager, updates UI on page loads
 ├── index.html           # Loads shared shelves.js, then template-specific shelves.js
-├── base.html            # Contains shelf navbar link and modal container
+├── base.html            # Contains shelf navbar link (modal container removed)
+├── shelves.html         # Dedicated shelf page template with #shelf-page-content container
 ├── booklist.html        # Shelf toggle button on each book card
 └── bookdetail.html      # Shelf toggle button on book detail page
 ```
 
-The shared `resources/shelves/shelves.js` provides the core library with data management (`load`, `save`, `toggleBook`, etc.), book identity via `getBookKey(book)` (`"db:id"` with falsy db normalized to `''`), and event delegation that calls template-specific methods (`openModal`, `handleToggle`, `updateBookButtons`).
+The shared `resources/shelves/shelves.js` provides the core library with data management (`load`, `save`, `toggleBook`, etc.), book identity via `getBookKey(book)` (`"db:id"` with falsy db normalized to `''`), and event delegation that calls template-specific methods (`openShelvesPage`, `handleToggle`, `updateBookButtons`).
 
-The template-specific `templates/twigged/scripts/shelves.js` extends ShelfManager with UI rendering functions (bookmark buttons, modal content with Bootstrap 3/4 markup, styled to match the book cards in `booklist.html`).
+The template-specific `templates/twigged/scripts/shelves.js` extends ShelfManager with UI rendering functions (bookmark buttons, dedicated page content styled to match the book cards in `booklist.html`).
 
 ## Functional Test
 
-A standalone Node.js functional test is available at **`tests/shelf_modal_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, modal rendering (including XSS escaping), and error handling - without requiring a browser, webserver or PHP.
+A standalone Node.js functional test is available at **`tests/shelves_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, dedicated page rendering (including XSS escaping), and error handling - without requiring a browser, webserver or PHP.
 
 ```bash
-node tests/shelf_modal_test.js
+node tests/shelves_test.js
 ```
 
 The test exits with code 0 on success and 1 on failure, so it can be used in automated pipelines.
@@ -141,7 +143,7 @@ The test exits with code 0 on success and 1 on failure, so it can be used in aut
 When `server_side_rendering == 1` (server-side rendering):
 - The shelves.js script is NOT loaded
 - The "Shelves" navbar link does NOT appear
-- The shelf modal is NOT rendered
+- The shelf page is NOT rendered
 - Bookmark buttons do NOT appear on book cards or detail pages
 
 This ensures:
@@ -169,6 +171,5 @@ Possible improvements for future versions:
 - Export/import shelf data as JSON
 - Sort books within shelves
 - Search/filter within shelf view
-- Dedicated shelf page template (instead of modal-only)
 - Shelf sharing via URL encoding
 - Sync with Calibre reading lists

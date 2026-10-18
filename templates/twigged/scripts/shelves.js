@@ -94,13 +94,15 @@ $(document).ready(function() {
                 html += '<div class="row d-flex" id="shelf-book-list">';
                 for (var j = 0; j < books.length; j++) {
                     var book = books[j];
-                    html += '<div class="col-lg-2 col-sm-3 col-xs-6 books" data-book-id="' + ShelfManager.escapeHtml(book.id) + '">' +
-                            '<div class="cover-image">' +
-                            '<a href="' + ShelfManager.escapeHtml(book.detailurl || '#') + '">' +
-                            '<img class="img-responsive" src="' + ShelfManager.escapeHtml(book.thumbnailurl || '') + '" alt="' + ShelfManager.escapeHtml(book.title) + '">' +
-                            '</a>' +
-                            '</div>' +
-                            '<div class="meta">' +
+                    html += '<div class="col-lg-2 col-sm-3 col-xs-6 books" data-book-id="' + ShelfManager.escapeHtml(book.id) + '">';
+                    if (book.thumbnailurl) {
+                        html += '<div class="cover-image">' +
+                                '<a href="' + ShelfManager.escapeHtml(book.detailurl || '#') + '">' +
+                                '<img class="img-responsive" src="' + ShelfManager.escapeHtml(book.thumbnailurl) + '" alt="' + ShelfManager.escapeHtml(book.title) + '">' +
+                                '</a>' +
+                                '</div>';
+                    }
+                    html += '<div class="meta">' +
                             '<p class="title ellipsis"><a href="' + ShelfManager.escapeHtml(book.detailurl || '#') + '">' + ShelfManager.escapeHtml(book.title) + '</a></p>' +
                             '<div class="author ellipsis">' + ShelfManager.escapeHtml(book.author || getI18n('shelfUnknownAuthor', 'Unknown')) + '</div>';
 
@@ -121,23 +123,6 @@ $(document).ready(function() {
             return html;
         };
 
-        // Render shelf modal content (legacy/fallback with modal wrapper)
-        ShelfManager.renderShelfModal = function() {
-            var html = '<div class="modal-header">' +
-                       '<button type="button" class="close" data-dismiss="modal" aria-label="' + getI18n('shelfCloseTitle', 'Close') + '">' +
-                       '<span aria-hidden="true">&times;</span></button>' +
-                       '<h4 class="modal-title">' + getI18n('shelvesTitle', 'My Shelves') + '</h4>' +
-                       '</div>' +
-                       '<div class="modal-body">' +
-                       ShelfManager.renderShelfContent() +
-                       '</div>' +
-                       '<div class="modal-footer">' +
-                       '<button type="button" class="btn btn-default" data-dismiss="modal">' + getI18n('shelfCloseTitle', 'Close') + '</button>' +
-                       '</div>';
-
-            return html;
-        };
-
         // Render dedicated shelf page content
         ShelfManager.renderShelfPage = function() {
             var pageContent = document.getElementById('shelf-page-content');
@@ -147,22 +132,12 @@ $(document).ready(function() {
             }
         };
 
-        // Refresh shelf UI on both dedicated page and modal (if present)
+        // Refresh shelf page content
         ShelfManager.refreshShelfPage = function() {
             ShelfManager.renderShelfPage();
-            ShelfManager.refreshShelfModal();
         };
 
-        // Refresh the shelf modal content (if modal element exists)
-        ShelfManager.refreshShelfModal = function() {
-            var content = document.getElementById('shelf-modal-content');
-            if (content) {
-                content.innerHTML = ShelfManager.renderShelfModal();
-                ShelfManager.bindModalEvents();
-            }
-        };
-
-        // Bind events for shelf page and modal interactions
+        // Bind events for shelf page interactions
         ShelfManager.bindPageEvents = function() {
             var switcherLinks = document.querySelectorAll('#shelf-switcher a');
             for (var i = 0; i < switcherLinks.length; i++) {
@@ -240,16 +215,9 @@ $(document).ready(function() {
             }
         };
 
-        // Alias bindModalEvents to bindPageEvents for backward compatibility
-        ShelfManager.bindModalEvents = ShelfManager.bindPageEvents;
-
-        // Open the shelf modal (fallback) or navigate to shelves page
-        ShelfManager.openModal = function() {
-            var modal = document.getElementById('shelf-modal');
-            if (modal) {
-                ShelfManager.refreshShelfModal();
-                $(modal).modal('show');
-            } else if (typeof navigateTo === 'function' && typeof currentData !== 'undefined' && currentData.shelvesurl) {
+        // Navigate to the dedicated shelves page
+        ShelfManager.openShelvesPage = function() {
+            if (typeof navigateTo === 'function' && typeof currentData !== 'undefined' && currentData.shelvesurl) {
                 navigateTo(currentData.shelvesurl);
             }
         };
