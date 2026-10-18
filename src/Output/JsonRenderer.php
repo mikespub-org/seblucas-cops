@@ -462,7 +462,7 @@ class JsonRenderer extends BaseRenderer
             ],
             "config" => [
                 "use_fancyapps" => $this->config('use_fancyapps'),
-                "use_client_shelves" => (!empty($this->request->option('use_client_shelves')) && $this->request->template() === "twigged") ? true : false,
+                "use_client_shelves" => (!empty($this->request->option('use_client_shelves')) && in_array($this->request->template(), ["twigged", "bootstrap2"])) ? true : false,
                 "max_item_per_page" => $this->config('max_item_per_page'),
                 "kindleHack"        => "",
                 "server_side_rendering" => $this->request->render(),

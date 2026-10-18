@@ -165,6 +165,33 @@ The feature is conditionally rendered in templates using:
 - **No sharing**: Cannot share shelf lists with other users
 - **Stale metadata**: Book titles/authors may become outdated if library changes (links still work)
 
+## Adding shelves to another template
+
+The shelf feature is split into two layers:
+
+1. **Shared data core** — `resources/shelves/shelves.js`
+   - Data only (localStorage, book identity, shelf CRUD, `escapeHtml`)
+   - No HTML rendering, no CSS classes, no Bootstrap assumptions
+   - Exposed as the `ShelfManager` global
+   - Two template extension points called by `init()` / `updateUI()`:
+     - `ShelfManager.handleToggle(btn)` — per-book toggle click handler
+     - `ShelfManager.updateBookButtons()` — update active-state styling on `.shelf-toggle-btn` elements
+
+2. **Template-specific UI** — `templates/<template>/scripts/shelves.js`
+   - Owns all HTML rendering with that template's classes/icons/styling
+   - `renderShelfContent()` — full shelf page HTML (toolbar + book cards)
+   - `bindPageEvents()` — wire up shelf switcher, create/delete/rename/remove buttons
+   - `openShelvesPage()` — navigate to `shelvesurl` when "Shelves" is clicked
+   - `renderShelfPage()` / `refreshShelfPage()` — write content to `#shelf-page-content`
+
+To add shelves to bootstrap2 or bootstrap5:
+
+1. Create `templates/<template>/scripts/shelves.js` implementing the five methods above with that template's styling (e.g. Bootstrap 5 uses `card`, `bi-*` icons, `data-bs-toggle`, no `caret`, no `col-xs`).
+2. Add conditional script includes in `templates/<template>/file.html` for `resources/shelves/shelves.js` + the template's `scripts/shelves.js` (when client-side rendering + `use_client_shelves`).
+3. Add a "Shelves" nav link to `templates/<template>/header.html` pointing to `shelvesurl`.
+4. Add shelf toggle buttons to book cards in `templates/<template>/main.html` and handle `it.page == "shelves"`.
+5. Add shelf UI calls (`ShelfManager.init()`, `updateUI()`, `renderShelfPage()`) to `templates/<template>/scripts/cops.js`.
+
 ## Future Enhancements
 
 Possible improvements for future versions:
