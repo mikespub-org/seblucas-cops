@@ -29,11 +29,11 @@ class FolderTest extends TestCase
 
     public function testFindBookFiles(): void
     {
-        $root = dirname(__DIR__, 2);
+        $root = dirname(__DIR__);
         $folder = Folder::getRootFolder($root, null, 'en');
         $folder->setHandler(HtmlHandler::class);
         $books = $folder->findBookFiles();
-        $expected = 4;
+        $expected = 3;
         $this->assertEquals($expected, $folder->count);
     }
 

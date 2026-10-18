@@ -207,10 +207,24 @@ class Filter
         $idlist = $this->request->get(BookList::URL_PARAM_LIST, null);
         if (!empty($idlist) && $this->parentTable == 'books') {
             // URL format: ...&idlist[]=3&idlist[]=7 or ...&idlist=3,7 (csv)
-            if (!is_array($idlist)) {
+            // Nested form idlist[<db>]=<csv>: only apply the group that
+            // belongs to this filter's database context
+            if (is_array($idlist)) {
+                $idlist = BookList::parseIdListGroups($idlist);
+                $dbId = (int) $this->getDatabaseId();
+                $default = array_key_exists('', $idlist) ? $idlist[''] : [];
+                if (array_key_exists($dbId, $idlist)) {
+                    $idlist = $idlist[$dbId];
+                } elseif ($dbId === 0 && !empty($default)) {
+                    $idlist = $default;
+                } else {
+                    $idlist = [];
+                }
+                $idlist = !empty($idlist) ? array_map('intval', $idlist) : [];
+            } else {
                 $idlist = explode(',', (string) $idlist);
+                $idlist = array_map('intval', $idlist);
             }
-            $idlist = array_map(intval(...), $idlist);
             $this->addBookIdListFilter($idlist);
         }
         // @todo use idlist filter for other entities as well?

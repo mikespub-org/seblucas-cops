@@ -1450,9 +1450,9 @@ class PageTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertEquals("Customize COPS UI", $currentPage->title);
-        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("Template", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Virtual library", $currentPage->entryArray [6]->title);
+        $this->assertEquals("Virtual library", $currentPage->entryArray [7]->title);
         $this->assertFalse($currentPage->containsBook());
     }
 
@@ -1474,9 +1474,9 @@ class PageTest extends TestCase
         $currentPage = PageId::getPage($page, $request);
 
         $this->assertEquals("Customize COPS UI", $currentPage->title);
-        $this->assertCount(7, $currentPage->entryArray);
+        $this->assertCount(8, $currentPage->entryArray);
         $this->assertEquals("Template", $currentPage->entryArray [0]->title);
-        $this->assertEquals("Virtual library", $currentPage->entryArray [6]->title);
+        $this->assertEquals("Virtual library", $currentPage->entryArray [7]->title);
         $this->assertFalse($currentPage->containsBook());
 
         $expected = $custom;
@@ -1516,5 +1516,63 @@ class PageTest extends TestCase
 
         $expected = $post;
         $this->assertEquals($expected, $currentPage->custom);
+    }
+
+    public function testPageAllBooksWithIdlist(): void
+    {
+        $page = PageId::ALL_BOOKS;
+        $request = new Request();
+
+        // nested idlist[db]=csv: default shelf 1..10
+        $currentPage = PageId::getPage($page, $request);
+        $this->assertCount(10, $currentPage->entryArray);
+
+        Config::set('calibre_directory', [
+            "Shelf A" => dirname(__DIR__) . "/BaseWithSomeBooks/",
+            "Shelf B" => dirname(__DIR__) . "/BaseWithOneBook/",
+        ]);
+        Database::clearDb();
+
+        // nested groups: db 0 -> books 17,18,19 from shelf A; db 1 -> book 1 from shelf B
+        $request = new Request();
+        $request->set('idlist', ["0" => "17,18,19", 1 => "1"]);
+        $request->set('source', "Favorites");
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertCount(4, $currentPage->entryArray);
+        $this->assertEquals(4, $currentPage->totalNumber);
+        $this->assertEquals("Favorites", $currentPage->parentTitle);
+
+        // unknown db group is ignored
+        $request = new Request();
+        $request->set('idlist', ["0" => "17,18", 99 => "1"]);
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertEquals(2, $currentPage->totalNumber);
+
+        Config::set('calibre_directory', [
+            "Shelf A" => dirname(__DIR__) . "/BaseWithSomeBooks/",
+        ]);
+        Database::clearDb();
+
+        // flat form keeps backward compatibility on all-books page
+        $request = new Request();
+        $request->set('idlist', "19,17");
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertEquals(2, $currentPage->totalNumber);
+
+        // negative ids are dropped
+        $request = new Request();
+        $request->set('idlist', "-5,17,0,3");
+        $currentPage = PageId::getPage($page, $request);
+
+        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertEquals(2, $currentPage->totalNumber);
+
+        Config::set('calibre_directory', dirname(__DIR__) . "/BaseWithSomeBooks/");
+        Database::clearDb();
     }
 }
