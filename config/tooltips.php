@@ -229,7 +229,7 @@ $tooltips['cops_use_fancyapps'] = <<<'EOT'
     EOT;
 
 $tooltips['cops_use_client_shelves'] = <<<'EOT'
-    Enable client-side virtual shelves (favorites) in 'twigged' template with client side rendering
+    Enable client-side virtual shelves (favorites) in supported templates with client side rendering
     1 : Yes (enable)
     0 : No
     EOT;

@@ -212,6 +212,55 @@ var fixtureShelves = {
 })();
 
 // ---------------------------------------------------------------------------
+// 2b. Attribute sanitizing: literal "null"/"undefined" strings treated as empty
+// ---------------------------------------------------------------------------
+
+(function testAttributeSanitizing() {
+    var env = setup();
+
+    function fakeButton(attrs) {
+        return {
+            getAttribute: function (name) {
+                return Object.prototype.hasOwnProperty.call(attrs, name) ? attrs[name] : null;
+            }
+        };
+    }
+
+    // simulate a button whose thumbnail rendered as the literal string "null"
+    // (as doT templates do for null values without an || '' fallback)
+    var nullBtn = fakeButton({
+        'data-book-db': 'null',
+        'data-book-id': '19',
+        'data-book-title': 'Book With Null Thumbnail',
+        'data-book-author': 'undefined',
+        'data-book-thumbnail': 'null',
+        'data-book-detailurl': 'null'
+    });
+    env.ShelfManager.handleToggle(nullBtn);
+
+    var books = env.ShelfManager.getBooks();
+    checkEquals('one book stored from null-attribute button', 1, books.length);
+    checkEquals('db "null" sanitized to empty', '', books[0].db);
+    checkEquals('author "undefined" sanitized to empty', '', books[0].author);
+    checkEquals('thumbnailurl "null" sanitized to empty', '', books[0].thumbnailurl);
+    checkEquals('detailurl "null" sanitized to empty', '', books[0].detailurl);
+    checkEquals('title kept as-is', 'Book With Null Thumbnail', books[0].title);
+
+    // normal values still pass through unchanged
+    var okBtn = fakeButton({
+        'data-book-db': '',
+        'data-book-id': '20',
+        'data-book-title': 'Normal Book',
+        'data-book-author': 'An Author',
+        'data-book-thumbnail': '/thumb/20',
+        'data-book-detailurl': '/book/20'
+    });
+    env.ShelfManager.handleToggle(okBtn);
+    var after = env.ShelfManager.getBooks();
+    checkEquals('normal thumbnailurl kept as-is', '/thumb/20', after[1].thumbnailurl);
+})();
+
+// ---------------------------------------------------------------------------
 // 3. Multi-database shelves: addBook / removeBook
 // ---------------------------------------------------------------------------
 

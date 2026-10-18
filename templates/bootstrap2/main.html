@@ -134,7 +134,7 @@
                         data-book-id="{{=entry.book.id}}"
                         data-book-title="{{=htmlspecialchars(entry.title)}}"
                         data-book-author="{{=htmlspecialchars(entry.book.authorsName)}}"
-                        data-book-thumbnail="{{=entry.thumbnailurl}}"
+                        data-book-thumbnail="{{=entry.thumbnailurl || ''}}"
                         data-book-detailurl="{{=entry.book.detailurl}}"
                         title="{{=it.c.i18n.shelfAddTitle ? it.c.i18n.shelfAddTitle : 'Add to Shelf'}}">
                     <span class="glyphicon glyphicon-bookmark"></span>

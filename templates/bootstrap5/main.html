@@ -1,9 +1,15 @@
 <div class="container-fluid p-1">
-{{? it.page == "book" || it.page == "about"}}
+{{? it.page == "book" || it.page == "about" || it.page == "shelves"}}
     {{? it.page == "book"}}
         {{#def.bookdetail}}
     {{??}}
-        {{= it.fullhtml}}
+        {{? it.page == "shelves"}}
+            <div id="shelf-page-content">
+                <!-- Dynamically filled by ShelfManager -->
+            </div>
+        {{??}}
+            {{= it.fullhtml}}
+        {{?}}
     {{?}}
 {{??}}
 
@@ -65,6 +71,18 @@
                     {{~ entry.book.preferedData:data:i}}
                     <a href="{{=data.url}}" title="{{=data.name}} {{=data.size}}" class="btn btn-primary btn-sm" role="button" data-link="direct">{{=data.name}}</a>
                     {{~}}
+                    {{? it.c.config.use_client_shelves }}
+                    <button type="button" class="btn btn-outline-secondary btn-sm shelf-toggle-btn"
+                            data-book-db="{{=it.databaseId}}"
+                            data-book-id="{{=entry.book.id}}"
+                            data-book-title="{{=htmlspecialchars(entry.title)}}"
+                            data-book-author="{{=htmlspecialchars(entry.book.authorsName)}}"
+                            data-book-thumbnail="{{=entry.thumbnailurl || ''}}"
+                            data-book-detailurl="{{=entry.book.detailurl}}"
+                            title="{{=it.c.i18n.shelfAddTitle ? it.c.i18n.shelfAddTitle : 'Add to Shelf'}}">
+                        <i class="bi-bookmark"></i>
+                    </button>
+                    {{?}}
             </div>
         </div>
     {{~}}

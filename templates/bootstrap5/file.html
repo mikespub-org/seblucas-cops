@@ -26,6 +26,10 @@
     <link rel="stylesheet" type="text/css" href="{{=it.assets}}/magnific-popup/dist/magnific-popup.css?v={{=it.version}}" media="screen" />
     <script type="text/javascript" src="{{=it.assets}}/dot/doT.min.js?v={{=it.version}}"></script>
     <script type="text/javascript" src="{{=it.assets}}/corejs-typeahead/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
+    {{? it.use_client_shelves }}
+    <script type="text/javascript" src="{{=it.resources}}/shelves/shelves.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="{{=it.templates}}/bootstrap5/scripts/shelves.js?v={{=it.version}}"></script>
+    {{?}}
 {{?}}
     <script type="text/javascript" src="{{=it.assets}}/lru-fast/lru.js?v={{=it.version}}"></script>
     <script type="text/javascript" src="{{=it.templates}}/bootstrap5/scripts/cops.js?v={{=it.version}}"></script>

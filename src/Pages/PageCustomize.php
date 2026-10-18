@@ -246,8 +246,8 @@ class PageCustomize extends Page
             $this->addHeaderEntry($title, $content);
         }
 
-        // Enable client-side virtual shelves in 'twigged' or 'bootstrap2' templates with client side rendering
-        if (!$this->request->render() && in_array($this->request->template(), ['twigged', 'bootstrap2'])) {
+        // Enable client-side virtual shelves in supported templates with client side rendering
+        if (!$this->request->render() && in_array($this->request->template(), ['twigged', 'bootstrap2', 'bootstrap5'])) {
             $title = $this->localize("customize.client_shelves");
             $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_client_shelves" name="use_client_shelves" ' . $this->isChecked("use_client_shelves") . ' />';
             $this->addHeaderEntry($title, $content);

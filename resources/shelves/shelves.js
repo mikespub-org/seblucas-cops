@@ -250,6 +250,133 @@ var ShelfManager = (function() {
             .replace(/'/g, '&#039;');
     }
     
+    // Read a string attribute, treating missing values and the literal
+    // strings "null"/"undefined" (as emitted by some template engines for
+    // null values) as empty
+    function getStringAttribute(btn, name) {
+        var value = btn.getAttribute(name);
+        if (!value || value === 'null' || value === 'undefined') {
+            return '';
+        }
+        return value;
+    }
+
+    // Handle toggle button clicks (shared across all templates)
+    function handleToggle(btn) {
+        var bookData = {
+            db: getStringAttribute(btn, 'data-book-db'),
+            id: btn.getAttribute('data-book-id'),
+            title: getStringAttribute(btn, 'data-book-title'),
+            author: getStringAttribute(btn, 'data-book-author'),
+            thumbnailurl: getStringAttribute(btn, 'data-book-thumbnail'),
+            detailurl: getStringAttribute(btn, 'data-book-detailurl')
+        };
+        
+        toggleBook(bookData);
+        updateUI();
+        refreshShelfPage();
+    }
+    
+    // Render the dedicated shelf page into #shelf-page-content
+    function renderShelfPage() {
+        var pageContent = document.getElementById('shelf-page-content');
+        if (pageContent) {
+            pageContent.innerHTML = ShelfManager.renderShelfContent();
+            ShelfManager.bindPageEvents();
+        }
+    }
+    
+    // Refresh shelf page content
+    function refreshShelfPage() {
+        renderShelfPage();
+    }
+    
+    // Bind events for shelf page interactions (shared across all templates,
+    // as all templates use the same element ids and data attributes)
+    function bindPageEvents() {
+        var switcherLinks = document.querySelectorAll('#shelf-switcher a');
+        for (var i = 0; i < switcherLinks.length; i++) {
+            (function(shelfName) {
+                switcherLinks[i].addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveShelf(shelfName);
+                    refreshShelfPage();
+                    updateUI();
+                });
+            })(switcherLinks[i].getAttribute('data-shelf'));
+        }
+
+        var createBtn = document.getElementById('shelf-create-btn');
+        if (createBtn) {
+            createBtn.addEventListener('click', function() {
+                var name = prompt(getI18n('shelfCreatePrompt', 'Enter shelf name:'));
+                if (name && name.trim()) {
+                    if (createShelf(name.trim())) {
+                        setActiveShelf(name.trim());
+                        refreshShelfPage();
+                        updateUI();
+                    } else {
+                        alert(getI18n('shelfExistsError', 'Shelf already exists or could not be created.'));
+                    }
+                }
+            });
+        }
+
+        var deleteBtn = document.getElementById('shelf-delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function() {
+                var activeName = getActiveShelfName();
+                if (confirm(getI18n('shelfDeleteConfirm', 'Delete shelf "') + activeName + '"?')) {
+                    if (deleteShelf(activeName)) {
+                        refreshShelfPage();
+                        updateUI();
+                    } else {
+                        alert(getI18n('shelfDeleteError', 'Cannot delete the last shelf.'));
+                    }
+                }
+            });
+        }
+
+        var renameBtn = document.getElementById('shelf-rename-btn');
+        if (renameBtn) {
+            renameBtn.addEventListener('click', function() {
+                var oldName = getActiveShelfName();
+                var newName = prompt(getI18n('shelfRenamePrompt', 'Enter new shelf name:'), oldName);
+                if (newName && newName.trim() && newName.trim() !== oldName) {
+                    if (renameShelf(oldName, newName.trim())) {
+                        refreshShelfPage();
+                        updateUI();
+                    } else {
+                        alert(getI18n('shelfRenameError', 'Shelf name already exists or could not be renamed.'));
+                    }
+                }
+            });
+        }
+
+        var removeButtons = document.querySelectorAll('.shelf-remove-btn');
+        for (var j = 0; j < removeButtons.length; j++) {
+            (function(book) {
+                removeButtons[j].addEventListener('click', function() {
+                    var shelfName = getActiveShelfName();
+                    removeBook(shelfName, book);
+                    refreshShelfPage();
+                    updateUI();
+                });
+            })({
+                db: removeButtons[j].getAttribute('data-book-db') || '',
+                id: removeButtons[j].getAttribute('data-book-id')
+            });
+        }
+    }
+    
+    // Navigate to the dedicated shelves page (shared across all templates)
+    function openShelvesPage() {
+        if (typeof navigateTo === 'function' && typeof currentData !== 'undefined' && currentData.shelvesurl) {
+            navigateTo(currentData.shelvesurl);
+        }
+    }
+    
     // Update UI elements (badge count only - templates handle button states)
     function updateUI() {
         var count = getBooks().length;
@@ -273,22 +400,7 @@ var ShelfManager = (function() {
     function init() {
         $(document).off('click', '.shelf-toggle-btn').on('click', '.shelf-toggle-btn', function(e) {
             e.preventDefault();
-            // Delegate to template implementation
-            if (typeof ShelfManager.handleToggle === 'function') {
-                ShelfManager.handleToggle(this);
-            } else {
-                // Fallback: just toggle book and update UI
-                var bookData = {
-                    db: this.getAttribute('data-book-db') || '',
-                    id: this.getAttribute('data-book-id'),
-                    title: this.getAttribute('data-book-title') || '',
-                    author: this.getAttribute('data-book-author') || '',
-                    thumbnailurl: this.getAttribute('data-book-thumbnail') || '',
-                    detailurl: this.getAttribute('data-book-detailurl') || ''
-                };
-                toggleBook(bookData);
-                updateUI();
-            }
+            handleToggle(this);
         });
         
         // Call template-specific initialization if available
@@ -316,6 +428,11 @@ var ShelfManager = (function() {
         deleteShelf: deleteShelf,
         renameShelf: renameShelf,
         escapeHtml: escapeHtml,
+        handleToggle: handleToggle,
+        renderShelfPage: renderShelfPage,
+        refreshShelfPage: refreshShelfPage,
+        bindPageEvents: bindPageEvents,
+        openShelvesPage: openShelvesPage,
         updateUI: updateUI,
         init: init
     };

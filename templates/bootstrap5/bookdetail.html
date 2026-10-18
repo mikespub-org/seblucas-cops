@@ -30,6 +30,20 @@
                 {{?}}
             </div>
             {{~}}
+            {{? it.c.config.use_client_shelves }}
+            <div class="btn-group">
+                <button class="btn btn-outline-secondary shelf-toggle-btn"
+                        data-book-db="{{=it.databaseId}}"
+                        data-book-id="{{=it.book.id}}"
+                        data-book-title="{{=htmlspecialchars(it.title)}}"
+                        data-book-author="{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}{{=htmlspecialchars(author.name)}}{{~}}"
+                        data-book-thumbnail="{{=it.book.thumbnailurl || ''}}"
+                        data-book-detailurl="{{=it.book.detailurl}}"
+                        title="{{=it.c.i18n.shelfAddTitle ? it.c.i18n.shelfAddTitle : 'Add to Shelf'}}">
+                    <i class="bi-bookmark"></i>
+                </button>
+            </div>
+            {{?}}
             {{? it.book.content != ""}}
             <h4>{{=it.c.i18n.contentTitle}}</h4>
             <div>{{=it.book.content}}</div>

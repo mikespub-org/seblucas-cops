@@ -1,27 +1,15 @@
 /**
  * Twigged template - extends shared ShelfManager with template-specific UI
  * Uses shared ShelfManager from resources/shelves/shelves.js
+ *
+ * Shared functions (handleToggle, renderShelfPage, refreshShelfPage,
+ * bindPageEvents, openShelvesPage) live in the core library.
+ * This file only defines template-specific styling:
+ * - updateBookButtons() - active-state CSS classes
+ * - renderShelfContent() - Bootstrap 3 markup with glyphicons
  */
 $(document).ready(function() {
     if (typeof ShelfManager !== 'undefined') {
-        // Extend ShelfManager with twigged-specific implementations
-        
-        // Handle toggle button clicks for twigged
-        ShelfManager.handleToggle = function(btn) {
-            var bookData = {
-                db: btn.getAttribute('data-book-db') || '',
-                id: btn.getAttribute('data-book-id'),
-                title: btn.getAttribute('data-book-title') || '',
-                author: btn.getAttribute('data-book-author') || '',
-                thumbnailurl: btn.getAttribute('data-book-thumbnail') || '',
-                detailurl: btn.getAttribute('data-book-detailurl') || ''
-            };
-            
-            ShelfManager.toggleBook(bookData);
-            ShelfManager.updateUI();
-            ShelfManager.refreshShelfPage();
-        };
-
         // Update book button states in booklist views
         ShelfManager.updateBookButtons = function() {
             var buttons = document.querySelectorAll('.shelf-toggle-btn');
@@ -121,105 +109,6 @@ $(document).ready(function() {
             }
 
             return html;
-        };
-
-        // Render dedicated shelf page content
-        ShelfManager.renderShelfPage = function() {
-            var pageContent = document.getElementById('shelf-page-content');
-            if (pageContent) {
-                pageContent.innerHTML = ShelfManager.renderShelfContent();
-                ShelfManager.bindPageEvents();
-            }
-        };
-
-        // Refresh shelf page content
-        ShelfManager.refreshShelfPage = function() {
-            ShelfManager.renderShelfPage();
-        };
-
-        // Bind events for shelf page interactions
-        ShelfManager.bindPageEvents = function() {
-            var switcherLinks = document.querySelectorAll('#shelf-switcher a');
-            for (var i = 0; i < switcherLinks.length; i++) {
-                (function(shelfName) {
-                    switcherLinks[i].addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        ShelfManager.setActiveShelf(shelfName);
-                        ShelfManager.refreshShelfPage();
-                        ShelfManager.updateUI();
-                    });
-                })(switcherLinks[i].getAttribute('data-shelf'));
-            }
-
-            var createBtn = document.getElementById('shelf-create-btn');
-            if (createBtn) {
-                createBtn.addEventListener('click', function() {
-                    var name = prompt(getI18n('shelfCreatePrompt', 'Enter shelf name:'));
-                    if (name && name.trim()) {
-                        if (ShelfManager.createShelf(name.trim())) {
-                            ShelfManager.setActiveShelf(name.trim());
-                            ShelfManager.refreshShelfPage();
-                            ShelfManager.updateUI();
-                        } else {
-                            alert(getI18n('shelfExistsError', 'Shelf already exists or could not be created.'));
-                        }
-                    }
-                });
-            }
-
-            var deleteBtn = document.getElementById('shelf-delete-btn');
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', function() {
-                    var activeName = ShelfManager.getActiveShelfName();
-                    if (confirm(getI18n('shelfDeleteConfirm', 'Delete shelf "') + activeName + '"?')) {
-                        if (ShelfManager.deleteShelf(activeName)) {
-                            ShelfManager.refreshShelfPage();
-                            ShelfManager.updateUI();
-                        } else {
-                            alert(getI18n('shelfDeleteError', 'Cannot delete the last shelf.'));
-                        }
-                    }
-                });
-            }
-
-            var renameBtn = document.getElementById('shelf-rename-btn');
-            if (renameBtn) {
-                renameBtn.addEventListener('click', function() {
-                    var oldName = ShelfManager.getActiveShelfName();
-                    var newName = prompt(getI18n('shelfRenamePrompt', 'Enter new shelf name:'), oldName);
-                    if (newName && newName.trim() && newName.trim() !== oldName) {
-                        if (ShelfManager.renameShelf(oldName, newName.trim())) {
-                            ShelfManager.refreshShelfPage();
-                            ShelfManager.updateUI();
-                        } else {
-                            alert(getI18n('shelfRenameError', 'Shelf name already exists or could not be renamed.'));
-                        }
-                    }
-                });
-            }
-
-            var removeButtons = document.querySelectorAll('.shelf-remove-btn');
-            for (var j = 0; j < removeButtons.length; j++) {
-                (function(book) {
-                    removeButtons[j].addEventListener('click', function() {
-                        var shelfName = ShelfManager.getActiveShelfName();
-                        ShelfManager.removeBook(shelfName, book);
-                        ShelfManager.refreshShelfPage();
-                        ShelfManager.updateUI();
-                    });
-                })({
-                    db: removeButtons[j].getAttribute('data-book-db') || '',
-                    id: removeButtons[j].getAttribute('data-book-id')
-                });
-            }
-        };
-
-        // Navigate to the dedicated shelves page
-        ShelfManager.openShelvesPage = function() {
-            if (typeof navigateTo === 'function' && typeof currentData !== 'undefined' && currentData.shelvesurl) {
-                navigateTo(currentData.shelvesurl);
-            }
         };
     }
 });
