@@ -37,9 +37,9 @@
                         data-book-id="{{=it.book.id}}"
                         data-book-title="{{=htmlspecialchars(it.title)}}"
                         data-book-author="{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}{{=htmlspecialchars(author.name)}}{{~}}"
-                        data-book-thumbnail="{{=it.book.thumbnailurl || ''}}"
+                        data-book-thumbnail="{{=it.book.thumbnailurl || ""}}"
                         data-book-detailurl="{{=it.book.detailurl}}"
-                        title="{{=it.c.i18n.shelfAddTitle ? it.c.i18n.shelfAddTitle : 'Add to Shelf'}}">
+                        title="{{=it.c.i18n.shelfAddTitle || "Add to Shelf"}}">
                     <i class="bi-bookmark"></i>
                 </button>
             </div>
