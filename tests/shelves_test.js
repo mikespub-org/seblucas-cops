@@ -303,7 +303,91 @@ var fixtureShelves = {
 })();
 
 // ---------------------------------------------------------------------------
-// 5. Page rendering: dedicated shelf page content
+// 5. Export/Import: JSON round-trip and validation
+// ---------------------------------------------------------------------------
+
+(function testExportImport() {
+    var env = setup();
+    var sm = env.ShelfManager;
+
+    // Add books to To Read shelf and make it active
+    sm.createShelf('To Read');
+    sm.addBook('To Read', { db: '', id: '17', title: 'Book One', author: 'Author A' });
+    sm.addBook('To Read', { db: '1', id: '42', title: 'Book Two', author: 'Author B' });
+    sm.setActiveShelf('To Read');
+
+    var exported = sm.exportData();
+    check('exportData returns a string', typeof exported === 'string');
+
+    try {
+        var parsed = JSON.parse(exported);
+        check('exportData is valid JSON', true);
+        check('exported contains shelves object', typeof parsed.shelves === 'object');
+        check('exported contains activeShelf', typeof parsed.activeShelf === 'string');
+        check('exported activeShelf is To Read', parsed.activeShelf === 'To Read');
+        // Only the active shelf should be exported
+        check('exported has only To Read shelf', Object.keys(parsed.shelves).length === 1);
+        check('exported has To Read shelf', parsed.shelves['To Read'] && parsed.shelves['To Read'].length === 2);
+        check('exported does not have Favorites shelf', parsed.shelves['Favorites'] === undefined);
+    } catch (e) {
+        check('exportData is valid JSON', false);
+        check('exported contains shelves object', false);
+        check('exported contains activeShelf', false);
+        check('exported activeShelf is To Read', false);
+        check('exported has only To Read shelf', false);
+        check('exported has To Read shelf', false);
+        check('exported does not have Favorites shelf', false);
+    }
+
+    // Import into a fresh environment - replace active shelf
+    var env2 = setup();
+    var sm2 = env2.ShelfManager;
+    var imported = sm2.importData(exported, 'replace');
+    check('importData accepts exported JSON in replace mode', imported === true);
+    check('import replaced active shelf has 2 books', sm2.getBooks().length === 2);
+    check('import replaced active shelf book title', sm2.getBooks()[0] && sm2.getBooks()[0].title === 'Book One');
+
+    // Import into a fresh environment - create new "Imported" shelf
+    var env3 = setup();
+    var sm3 = env3.ShelfManager;
+    var importedNew = sm3.importData(exported, 'new');
+    check('importData accepts exported JSON in new mode', importedNew === true);
+    check('import new - Imported shelf exists', sm3.getShelfNames().indexOf('Imported') > -1);
+    check('import new - Imported shelf has 2 books', sm3.getBooksInShelf('Imported').length === 2);
+
+    // Import into a fresh environment - merge into active shelf
+    var env4 = setup();
+    var sm4 = env4.ShelfManager;
+    sm4.addBook('Favorites', { db: '', id: '99', title: 'Existing Book', author: 'Existing Author' });
+    var importedMerge = sm4.importData(exported, 'merge');
+    check('importData accepts exported JSON in merge mode', importedMerge === true);
+    var mergedBooks = sm4.getBooks();
+    check('import merge - active shelf has existing + imported books', mergedBooks.length === 3);
+    check('import merge - existing book kept', mergedBooks.some(function(b) { return b.id === '99'; }));
+    check('import merge - imported book added', mergedBooks.some(function(b) { return b.id === '17'; }));
+
+    // Import merge with duplicate book (should not duplicate)
+    var env5 = setup();
+    var sm5 = env5.ShelfManager;
+    sm5.addBook('Favorites', { db: '', id: '17', title: 'Already There', author: 'Someone' });
+    sm5.importData(exported, 'merge');
+    var mergeBooks = sm5.getBooks();
+    var count17 = 0;
+    for (var m = 0; m < mergeBooks.length; m++) {
+        if (mergeBooks[m].id === '17') { count17++; }
+    }
+    check('import merge - no duplicate books', count17 === 1);
+
+    // Import invalid JSON
+    check('importData rejects invalid JSON', sm3.importData('not json') === false);
+    check('importData rejects empty string', sm3.importData('') === false);
+
+    // Import missing shelves structure
+    check('importData rejects missing shelves', sm3.importData(JSON.stringify({ foo: 'bar' })) === false);
+})();
+
+// ---------------------------------------------------------------------------
+// 6. Page rendering: dedicated shelf page content
 // ---------------------------------------------------------------------------
 
 (function testPageRendering() {

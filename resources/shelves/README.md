@@ -8,7 +8,7 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
 
 ### Shared (all templates)
 
-1. **`resources/shelves/shelves.js`** (NEW) - Shared ShelfManager core JavaScript library (data layer only, no template-specific markup)
+1. **`resources/shelves/shelves.js`** (NEW) - Shared ShelfManager core JavaScript library (data management + shared UI logic, no template-specific markup)
 2. **`resources/shelves/README.md`** (NEW) - This documentation file
 3. **`src/Pages/PageShelves.php`** (NEW) - Server-side shelves page route
 4. **`src/Pages/PageId.php`** - Added `SHELVES` page id and `ROUTE_SHELVES`
@@ -56,6 +56,10 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
   - View all books in current shelf with thumbnails
   - Remove books from shelf
   - Create/rename/delete shelves
+- **Export / Import**: 
+  - Export the active shelf to a JSON file (`cops_shelves_export.json`)
+  - Import from a JSON file via a modal dialog with three options: replace the active shelf, create a new "Imported" shelf, or merge into the active shelf (no duplicates)
+  - Success/error feedback shown as an on-page status message (no browser alerts)
 
 ## Storage Format
 
@@ -82,6 +86,8 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
 
 **localStorage key**: `cops_shelves`
 
+**Export file format**: same structure as the storage format above, but contains only the active shelf (e.g. `{ "activeShelf": "To Read", "shelves": { "To Read": [...] } }`).
+
 **Book identity**: A book is uniquely identified by its `(databaseId, book id)` pair, normalized to a `"db:id"` key. The `db` values `undefined`, `null`, `''` and `0` are all considered equivalent (empty key), so the default/single database always matches regardless of how the id was rendered. Books from other databases (`db: "1"`, `"2"`, ...) keep distinct identities even if they share the same book id.
 
 ## Usage
@@ -93,6 +99,8 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
 5. **Rename shelf**: Click "Rename" button on the shelves page
 6. **Delete shelf**: Click "Delete" button (only available when more than one shelf exists)
 7. **Remove book**: Click "Remove" button next to a book on the shelves page
+8. **Export shelf**: Click "Export" button on the shelves page to download the active shelf as a JSON file
+9. **Import shelf**: Click "Import" button on the shelves page, pick a `.json` file, then choose Replace / New / Merge in the modal dialog
 
 ## Technical Details
 
@@ -123,7 +131,9 @@ If localStorage is unavailable, the feature gracefully degrades (buttons do noth
    - twigged: inside `initiateTwig()` in `cops.js`
    - bootstrap2/bootstrap5: inside `$(document).ready()` in `cops.js`
 2. **`postRefresh()`** in `cops.js`: Updates shelf UI (badge count, button states, shelf page) after every AJAX navigation
-3. **Dedicated shelves page**: Renders into `#shelf-page-content` container (no modal)
+3. **Dedicated shelves page**: Renders into `#shelf-page-content` container (no modal); the import dialog is a separate modal created on demand by `ensureImportModal()`
+4. **Import mode dialog**: `ShelfManager.showImportDialog()` — core provides a `prompt()`-based default; each template overrides it with a Bootstrap modal (replace / new / merge)
+5. **Status messages**: `ShelfManager.showStatusMessage()` shows import/export feedback in a `#shelf-status-message` banner at the top of the shelf page (auto-hides after 5s)
 
 ### File Structure
 
@@ -163,17 +173,20 @@ templates/bootstrap5/
 
 The shared `resources/shelves/shelves.js` provides the core library with:
 - Data management (`load`, `save`, `toggleBook`, `createShelf`, `deleteShelf`, `renameShelf`, etc.)
+- Export/import (`exportData`, `importData` with replace/new/merge modes, `downloadExport`, `handleImportResult`)
 - Book identity via `getBookKey(book)` (`"db:id"` with falsy db normalized to `''`)
 - Shared UI logic: `handleToggle`, `renderShelfPage`, `refreshShelfPage`, `bindPageEvents`, `openShelvesPage`
+- Default import dialog `showImportDialog()` (prompt-based, overridable per template) and `showStatusMessage()` for on-page feedback
 - Event delegation that calls the template-specific `updateBookButtons()`
 
 Each template's `templates/<template>/scripts/shelves.js` defines only the styling-dependent parts:
 - `updateBookButtons()` - active-state CSS classes for bookmark buttons
 - `renderShelfContent()` - shelf page markup with that template's CSS classes, icons, and grid structure
+- `ensureImportModal()` + `showImportDialog()` - import modal markup in the template's Bootstrap style, created on demand
 
 ## Functional Test
 
-A standalone Node.js functional test is available at **`tests/shelves_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, dedicated page rendering (including XSS escaping), and error handling - without requiring a browser, webserver or PHP.
+A standalone Node.js functional test is available at **`tests/shelves_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, export/import (active-shelf export, replace/new/merge import, validation), dedicated page rendering (including XSS escaping), and error handling - without requiring a browser, webserver or PHP.
 
 ```bash
 node tests/shelves_test.js
@@ -235,16 +248,17 @@ The shelf feature is split into two layers:
    - Shared UI logic (`handleToggle`, `renderShelfPage`, `refreshShelfPage`, `bindPageEvents`, `openShelvesPage`)
    - No CSS classes, no Bootstrap assumptions
    - Exposed as the `ShelfManager` global
-   - One template extension point: `updateBookButtons()` (active-state styling, called by `updateUI()`)
+   - Template extension points: `updateBookButtons()` (active-state styling, called by `updateUI()`) and `showImportDialog()` (import mode dialog, called from the import handler; prompt-based default)
 
 2. **Template-specific UI** — `templates/<template>/scripts/shelves.js`
    - Owns all HTML rendering with that template's classes/icons/styling
    - `renderShelfContent()` — full shelf page HTML (toolbar + book cards)
    - `updateBookButtons()` — toggle active-state CSS classes on `.shelf-toggle-btn` elements
+   - `ensureImportModal()` + `showImportDialog()` — import modal (replace/new/merge choice) in the template's style
 
 To add shelves to a new template, follow the pattern used by bootstrap2 and bootstrap5:
 
-1. Create `templates/<template>/scripts/shelves.js` defining `renderShelfContent()` and `updateBookButtons()` with that template's styling (e.g. Bootstrap 5 uses `card`, `bi-*` icons, `data-bs-toggle`, no `caret`, no `col-xs`).
+1. Create `templates/<template>/scripts/shelves.js` defining `renderShelfContent()`, `updateBookButtons()`, and `ensureImportModal()`/`showImportDialog()` with that template's styling (e.g. Bootstrap 5 uses `card`, `bi-*` icons, `data-bs-toggle`, no `caret`, no `col-xs`).
 2. Add conditional script includes in `templates/<template>/file.html` for `resources/shelves/shelves.js` + the template's `scripts/shelves.js` (when client-side rendering + `use_client_shelves`).
 3. Add a "Shelves" nav link to the template's header or footer pointing to `shelvesurl`, with `#shelf-count` badge.
 4. Add shelf toggle buttons to book cards and book detail pages, conditional on `use_client_shelves`. Handle `it.page == "shelves"` to render `#shelf-page-content`.
@@ -254,7 +268,6 @@ To add shelves to a new template, follow the pattern used by bootstrap2 and boot
 
 Possible improvements for future versions:
 - Download all books in shelf as a .zip file (using existing ZipperHandler / ZipStream infrastructure)
-- Export/import shelf data as JSON
 - Sort books within shelves
 - Search/filter within shelf view
 - Shelf sharing via URL encoding

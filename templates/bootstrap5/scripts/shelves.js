@@ -7,6 +7,8 @@
  * This file only defines template-specific styling:
  * - updateBookButtons() - active-state CSS classes
  * - renderShelfContent() - Bootstrap 5 markup with bootstrap-icons
+ * - ensureImportModal() - creates the import modal on demand (after AJAX navigation)
+ * - showImportDialog() - import modal override (replace / new / merge choice)
  */
 $(document).ready(function() {
     if (typeof ShelfManager !== 'undefined') {
@@ -68,7 +70,12 @@ $(document).ready(function() {
             }
 
             html += '<button type="button" class="btn btn-info btn-sm" id="shelf-rename-btn" title="' + getI18n('shelfRenameTitle', 'Rename') + '">' +
-                    '<i class="bi bi-pencil pe-1"></i>' + getI18n('shelfRenameTitle', 'Rename') + '</button>' +
+                    '<i class="bi bi-pencil pe-1"></i>' + getI18n('shelfRenameTitle', 'Rename') + '</button> ' +
+                    '<button type="button" class="btn btn-success btn-sm" id="shelf-export-btn" title="' + getI18n('shelfExportTitle', 'Export') + '">' +
+                    '<i class="bi bi-download pe-1"></i>' + getI18n('shelfExportTitle', 'Export') + '</button> ' +
+                    '<button type="button" class="btn btn-info btn-sm" id="shelf-import-btn" title="' + getI18n('shelfImportTitle', 'Import') + '">' +
+                    '<i class="bi bi-upload pe-1"></i>' + getI18n('shelfImportTitle', 'Import') + '</button> ' +
+                    '<input type="file" id="shelf-import-file" style="display:none;" accept=".json">' +
                     '</div>' +
                     '</div>';
 
@@ -109,6 +116,67 @@ $(document).ready(function() {
             }
 
             return html;
+        };
+
+        // Override showImportDialog with modal version
+        function ensureImportModal() {
+            if ($('#shelf-import-modal').length > 0) {
+                return;
+            }
+            var modalHtml = '<div class="modal fade" id="shelf-import-modal" tabindex="-1" aria-hidden="true">' +
+                '<div class="modal-dialog">' +
+                '<div class="modal-content">' +
+                '<div class="modal-header">' +
+                '<h5 class="modal-title">' + getI18n('shelfImportTitle', 'Import') + '</h5>' +
+                '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
+                '</div>' +
+                '<div class="modal-body">' +
+                '<p>' + getI18n('shelfImportChoose', 'Choose import option:') + '</p>' +
+                '<div class="form-check">' +
+                '<input class="form-check-input" type="radio" name="shelf-import-mode" value="replace" checked>' +
+                '<label class="form-check-label">' + getI18n('shelfImportReplace', 'Replace current active shelf') + '</label>' +
+                '</div>' +
+                '<div class="form-check">' +
+                '<input class="form-check-input" type="radio" name="shelf-import-mode" value="new">' +
+                '<label class="form-check-label">' + getI18n('shelfImportNew', 'Create new shelf "Imported"') + '</label>' +
+                '</div>' +
+                '<div class="form-check">' +
+                '<input class="form-check-input" type="radio" name="shelf-import-mode" value="merge">' +
+                '<label class="form-check-label">' + getI18n('shelfImportMerge', 'Merge into current active shelf') + '</label>' +
+                '</div>' +
+                '</div>' +
+                '<div class="modal-footer">' +
+                '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">' + getI18n('shelfImportCancel', 'Cancel') + '</button>' +
+                '<button type="button" class="btn btn-primary" id="shelf-import-confirm">' + getI18n('shelfImportConfirm', 'Import') + '</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+            if (document.body) {
+                var tempDiv = document.createElement('div');
+                tempDiv.innerHTML = modalHtml;
+                document.body.appendChild(tempDiv.firstChild);
+            }
+        }
+        ShelfManager.showImportDialog = function(jsonString, callback) {
+            ensureImportModal();
+            var modalEl = document.getElementById('shelf-import-modal');
+            if (!modalEl) {
+                callback('replace');
+                return;
+            }
+            var modal = $(modalEl);
+            var confirmBtn = $('#shelf-import-confirm');
+            var radios = modal.find('input[name="shelf-import-mode"]');
+            radios.prop('checked', false);
+            radios.filter('[value="replace"]').prop('checked', true);
+            confirmBtn.off('click').on('click', function() {
+                var mode = radios.filter(':checked').val() || 'replace';
+                // Bootstrap 5: vanilla API, no jQuery .modal()
+                bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+                callback(mode);
+            });
+            bootstrap.Modal.getOrCreateInstance(modalEl).show();
         };
     }
 });
