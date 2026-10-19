@@ -23,3 +23,5 @@ rector.php
 .vscode/
 .sonarcloud.properties
 .sonarlint/
+tools/*.csv
+tools/*.md

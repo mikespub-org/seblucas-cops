@@ -80,7 +80,7 @@ $(document).ready(function() {
                     '</div>';
 
             // Book list
-            html += '<h5 class="mt-2">' + getI18n('shelfBooksInTitle', 'Books in') + ' "' + ShelfManager.escapeHtml(activeShelf) + '"' +
+            html += '<h5 class="mt-2">' + str_format(getI18n('shelfBooksInTitle', 'Books in "{0}"'), ShelfManager.escapeHtml(activeShelf)) +
                     ' <span class="badge text-bg-secondary">' + books.length + '</span></h5>';
 
             if (books.length === 0) {

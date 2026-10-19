@@ -500,7 +500,7 @@ var ShelfManager = (function() {
         if (deleteBtn) {
             deleteBtn.addEventListener('click', function() {
                 var activeName = getActiveShelfName();
-                if (confirm(getI18n('shelfDeleteConfirm', 'Delete shelf "') + activeName + '"?')) {
+                if (confirm(str_format(getI18n('shelfDeleteConfirm', 'Delete shelf "{0}"?'), activeName))) {
                     if (deleteShelf(activeName)) {
                         refreshShelfPage();
                         updateUI();
