@@ -206,10 +206,23 @@ class Filter
         // this only works if books is part of the query
         $idlist = $this->request->get(BookList::URL_PARAM_LIST, null);
         if (!empty($idlist) && $this->parentTable == 'books') {
-            // URL format: ...&idlist[]=3&idlist[]=7 or ...&idlist=3,7 (csv)
-            // Nested form idlist[<db>]=<csv>: only apply the group that
-            // belongs to this filter's database context
-            if (is_array($idlist)) {
+            $flat = false;
+            // flat '17,19' / [17,19]: default database
+            if (!is_array($idlist)) {
+                $idlist = explode(',', (string) $idlist);
+                $flat = true;
+            } elseif (array_is_list($idlist)) {
+                // distinguish between idlist[]=19&idlist[]=17 (flat) and idlist[0]=19&idlist[1]=17 (grouped)
+                $query = $this->request->query() ?? '';
+                if (str_contains($query, 'idlist[]=')) {
+                    $flat = true;
+                }
+            }
+            if ($flat) {
+                $idlist = array_map('intval', $idlist);
+            } else {
+                // Nested form idlist[<db>]=<csv>: only apply the group that
+                // belongs to this filter's database context
                 $idlist = BookList::parseIdListGroups($idlist);
                 $dbId = (int) $this->getDatabaseId();
                 $default = array_key_exists('', $idlist) ? $idlist[''] : [];
@@ -221,9 +234,6 @@ class Filter
                     $idlist = [];
                 }
                 $idlist = !empty($idlist) ? array_map('intval', $idlist) : [];
-            } else {
-                $idlist = explode(',', (string) $idlist);
-                $idlist = array_map('intval', $idlist);
             }
             $this->addBookIdListFilter($idlist);
         }

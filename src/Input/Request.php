@@ -141,6 +141,15 @@ class Request
     }
 
     /**
+     * Summary of query
+     * @return ?string
+     */
+    public function query()
+    {
+        return $this->server('QUERY_STRING') ?? parse_url($this->uri() ?? '', PHP_URL_QUERY);
+    }
+
+    /**
      * Validate request path
      */
     public function validatePath(): void

@@ -350,6 +350,8 @@ class BookListTest extends TestCase
     {
         $request = new Request();
         $request->set('idlist', [19, 17]);
+        // distinguish between idlist[]=19&idlist[]=17 (flat) and idlist[0]=19&idlist[1]=17 (grouped)
+        $request->serverParams['QUERY_STRING'] = 'idlist[]=19&idlist[]=17';
         $booklist = new BookList($request);
 
         [$entryArray, $totalNumber] = $booklist->getAllBooks();

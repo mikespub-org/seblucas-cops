@@ -452,35 +452,13 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
 
     /**
      * Normalize idlist param into per-database groups of book ids
-     * Supports flat '17,19' or [17,19] (default database) and nested
-     * idlist[db]=csv groups as used by client-side shelves ({db, id} pairs)
-     * @param string|array<mixed> $idlist
+     * Supports nested idlist[db]=csv groups as used by client-side
+     * shelves ({db, id} pairs)
+     * @param array<mixed> $idlist
      * @return array<int, array<int>>
      */
     public static function parseIdListGroups($idlist)
     {
-        if (!is_array($idlist)) {
-            $idlist = explode(',', (string) $idlist);
-        }
-        // flat list: sequential keys and no nested values
-        $isList = array_is_list($idlist);
-        if ($isList) {
-            $nested = false;
-            foreach ($idlist as $value) {
-                if (is_array($value)) {
-                    $nested = true;
-                    break;
-                }
-                if (is_string($value) && str_contains($value, ',')) {
-                    $nested = true;
-                    break;
-                }
-            }
-            // list-style idlist[]=3 or values inside a group
-            if (!$nested) {
-                return [0 => self::normalizeIds($idlist)];
-            }
-        }
         $groups = [];
         foreach ($idlist as $dbKey => $value) {
             if (empty($dbKey)) {
@@ -515,6 +493,7 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
     {
         $ids = [];
         foreach ($values as $value) {
+            // not really used here, but doesn't hurt to have
             if (is_array($value)) {
                 foreach (self::normalizeIds($value) as $id) {
                     $ids[] = $id;
