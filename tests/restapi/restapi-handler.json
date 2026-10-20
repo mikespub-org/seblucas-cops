@@ -574,6 +574,12 @@
                         "_resource": "Folder"
                     }
                 ],
+                "restapi-shelf": [
+                    "/restapi/shelf",
+                    {
+                        "_resource": "Shelf"
+                    }
+                ],
                 "restapi-path": [
                     "/restapi/{path:.*}"
                 ]

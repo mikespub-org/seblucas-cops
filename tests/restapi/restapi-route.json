@@ -1343,6 +1343,21 @@
             ]
         },
         {
+            "name": "restapi-shelf",
+            "route": [
+                "/restapi/shelf",
+                {
+                    "_resource": "Shelf",
+                    "_handler": "SebLucas\\Cops\\Handlers\\RestApiHandler",
+                    "_route": "restapi-shelf"
+                },
+                [
+                    "GET"
+                ],
+                []
+            ]
+        },
+        {
             "name": "restapi-path",
             "route": [
                 "/restapi/{path:.*}",

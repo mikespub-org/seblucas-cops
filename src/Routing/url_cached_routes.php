@@ -63,6 +63,7 @@ $static = [
   '/restapi/annotations' => 'restapi-annotations',
   '/restapi/user/details' => 'restapi-user-details',
   '/restapi/user' => 'restapi-user',
+  '/restapi/shelf' => 'restapi-shelf',
   '/check' => 'check',
   '/opds/search' => 'opds-search',
   '/opds' => 'opds',
@@ -1135,6 +1136,18 @@ $routes = [
       '_resource' => 'Folder',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
       '_route' => 'restapi-folders',
+    ],
+    [
+      'GET',
+    ],
+    [],
+  ],
+  'restapi-shelf' => [
+    '/restapi/shelf',
+    [
+      '_resource' => 'Shelf',
+      '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
+      '_route' => 'restapi-shelf',
     ],
     [
       'GET',

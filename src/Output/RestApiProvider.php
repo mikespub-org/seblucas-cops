@@ -27,6 +27,7 @@ use SebLucas\Cops\Handlers\RestApiHandler;
 use SebLucas\Cops\Input\HasContextInterface;
 use SebLucas\Cops\Input\HasContextTrait;
 use SebLucas\Cops\Input\Request;
+use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Routing\UriGenerator;
 use Exception;
@@ -63,6 +64,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         "/metadata" => 'getMetadata',
         "/user" => 'getUser',
         "/folders" => 'getFolders',
+        "/shelf" => 'getShelf',
     ];
 
     public bool $isExtra = false;
@@ -934,6 +936,40 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             $result = array_replace($result, (array) $user);
         }
         return $result;
+    }
+
+    /**
+     * Summary of getShelf
+     * @param Request $request
+     * @return array<string, mixed>
+     */
+    public function getShelf($request)
+    {
+        $entries = [];
+        $page = PageId::getPage('books', $request);
+        /** @var EntryBook $entry */
+        foreach ($page->entryArray as $entry) {
+            if (!$entry instanceof EntryBook) {
+                continue;
+            }
+            $entry->book->setHandler(HtmlHandler::class);
+            $data = [
+                'db' => $entry->book->getDatabaseId(),
+                'id' => $entry->book->id,
+                'title' => $entry->title,
+                'author' => $entry->book->getAuthorsName(),
+                'thumbnail' => $entry->getThumbnail(),
+                'detailurl' => $entry->book->getUri(),
+                // ...
+            ];
+            $entries[] = $data;
+        }
+        $name = $request->get('name', "Shared");
+        return [
+            "title" => "Shelf",
+            "shelf" => $name,
+            "entries" => $entries,
+        ];
     }
 
     /**

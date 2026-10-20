@@ -213,6 +213,35 @@ class RestApiTest extends TestCase
         Config::set('api_key', null);
     }
 
+    public function testGetShelf(): void
+    {
+        $request = Request::build(['idlist' => '17,19'], self::$handler);
+        $expected = "Shelf";
+        $test = self::$apiProvider->getShelf($request);
+        $this->assertEquals($expected, $test["title"]);
+        $expected = "Shared";
+        $this->assertEquals($expected, $test["shelf"]);
+        $expected = [
+            [
+                'db' => null,
+                'id' => 17,
+                'title' => 'Alice\'s Adventures in Wonderland',
+                'author' => 'Lewis Carroll',
+                'thumbnail' => 'vendor/bin/index.php/thumbs/0/17/html.jpg',
+                'detailurl' => 'vendor/bin/index.php/books/17/Lewis_Carroll/Alice_s_Adventures_in_Wonderland',
+            ],
+            [
+                'db' => null,
+                'id' => 19,
+                'title' => '孙子兵法',
+                'author' => '孙武',
+                'thumbnail' => 'vendor/bin/index.php/thumbs/0/19/html.jpg',
+                'detailurl' => 'vendor/bin/index.php/books/19/sun_wu/sun_zi_bing_fa',
+            ],
+        ];
+        $this->assertEquals($expected, $test["entries"]);
+    }
+
     public function testGetOpenApi(): void
     {
         $request = Request::build([], self::$handler);
