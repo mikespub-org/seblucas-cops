@@ -36,6 +36,16 @@ class PageShelves extends Page
     }
 
     /**
+     * Summary of containsBook
+     * @return bool
+     */
+    public function containsBook()
+    {
+        // add download and sortoptions in JsonRenderer::getJson()
+        return true;
+    }
+
+    /**
      * Map of JS-only camelCase shelf* keys (used via getI18n() in shelves.js)
      * to their dot-notation translation keys - see tools/i18n-inventory.csv
      * @return array<string, string>

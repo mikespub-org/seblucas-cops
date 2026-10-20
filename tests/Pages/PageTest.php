@@ -1439,7 +1439,7 @@ class PageTest extends TestCase
 
         $this->assertEquals("Shelves", $currentPage->title);
         $this->assertCount(0, $currentPage->entryArray);
-        $this->assertFalse($currentPage->containsBook());
+        $this->assertTrue($currentPage->containsBook());
     }
 
     public function testPageCustomize(): void

@@ -211,12 +211,18 @@ def main():
     md.append("|---|---|---|---|---|---|---|---|---|---|")
     for r in shelves_rows:
         md.append(f"| {md_cell(r['camelKey'], True)} | {md_cell(r['dotKey'] or '?', True)} | {md_cell(r['in_c'])} | {md_cell(r['twigged'] or 0)} | {md_cell(r['twigged5'] or 0)} | {md_cell(r['bootstrap2'] or 0)} | {md_cell(r['bootstrap5'] or 0)} | {md_cell(r['default'] or 0)} | {md_cell(r['js_hits'])} | {md_cell(r['page_scope'])} |")
-    md.append("\n## 5. Server-only dot keys (selection)\n")
+    json_rows = [r for r in all_rows if r["camelKey"] in camel2dot]
+    md.append("\n## 5. JsonRenderer `c.i18n` keys (reference)\n")
+    md.append("| camelKey | dotKey | in_c | twigged | twigged5 | bootstrap2 | bootstrap5 | default | js_hits | page_scope |")
+    md.append("|---|---|---|---|---|---|---|---|---|---|")
+    for r in json_rows:
+        md.append(f"| {md_cell(r['camelKey'], True)} | {md_cell(r['dotKey'] or '?', True)} | {md_cell(r['in_c'])} | {md_cell(r['twigged'] or 0)} | {md_cell(r['twigged5'] or 0)} | {md_cell(r['bootstrap2'] or 0)} | {md_cell(r['bootstrap5'] or 0)} | {md_cell(r['default'] or 0)} | {md_cell(r['js_hits'])} | {md_cell(r['page_scope'])} |")
+    md.append("\n## 6. Server-only dot keys (selection)\n")
     md.append(f"{len(server_only)} `localize()` dots have no `c.i18n` alias (baked server-side). Examples:")
     for d in server_only[:40]:
         pages = sorted({h for _, _, h in srv_usage[d] if h})
         md.append(f"- `{d}` ({len(srv_usage[d])}x — pages: {', '.join(pages) or 'shared/renderer'})")
-    md.append("\n## 6. Regenerate\n")
+    md.append("\n## 7. Regenerate\n")
     md.append("```sh\npython3 tools/i18n-inventory.py\n```")
     # per-file detail: which term in which file (answers "which page(s) for each template set")
     with open(OUT_DETAIL, "w", newline="", encoding="utf-8") as fh:

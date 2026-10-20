@@ -16,9 +16,16 @@
     "sorted": "sort",
     "sortedBy": "sort",
     "sortedDir": "asc",
-    "containsBook": 0,
+    "containsBook": 1,
     "filterurl": false,
-    "sortoptions": [],
+    "sorturl": "vendor/bin/index.php/restapi/shelves?sort={0}",
+    "sortoptions": {
+        "title": "Titles",
+        "author": "Authors",
+        "pubdate": "Published",
+        "rating": "Ratings",
+        "timestamp": "Recent additions"
+    },
     "filters": false,
     "abouturl": "vendor/bin/index.php/restapi/about",
     "customizeurl": "vendor/bin/index.php/restapi/customize",
