@@ -341,6 +341,59 @@ var ShelfManager = (function() {
         (window.URL || window.webkitURL).revokeObjectURL(url);
     }
 
+    // Build a zip download URL for all books in the active shelf.
+    // Groups books by normalized database id and uses nested idlist params
+    // so the ZipperHandler can serve multi-database shelves.
+    // Returns null when the shelf is empty.
+    function getShelfZipUrl(format) {
+        var books = getBooks();
+        if (!books || books.length < 1) {
+            return null;
+        }
+        // group book ids by normalized database id
+        var groups = {};
+        for (var i = 0; i < books.length; i++) {
+            var db = normalizeDb(books[i].db);
+            if (!groups[db]) {
+                groups[db] = [];
+            }
+            groups[db].push(books[i].id);
+        }
+        // build query string: idlist[0]=17,19&idlist[1]=1 ...
+        var queryParts = [];
+        var dbKeys = Object.keys(groups);
+        for (var k = 0; k < dbKeys.length; k++) {
+            var dbKey = dbKeys[k];
+            var index = dbKey === '' ? 0 : parseInt(dbKey, 10);
+            if (isNaN(index)) {
+                index = k;
+            }
+            queryParts.push('idlist[' + index + ']=' + encodeURIComponent(groups[dbKey].join(',')));
+        }
+        var shelfName = getActiveShelfName();
+        queryParts.push('source=' + encodeURIComponent(shelfName.replace(/[^\w -]/g, '')));
+        var baseUrl = typeof currentData !== 'undefined' && currentData.baseurl
+            ? currentData.baseurl
+            : '.';
+        return baseUrl + '/zipper/books/' + encodeURIComponent(String(format)) + '.zip?' + queryParts.join('&');
+    }
+
+    // Download all books in the active shelf as a .zip file in the given format.
+    // Uses existing ZipperHandler / ZipStream infrastructure.
+    function downloadShelf(format) {
+        if (typeof currentData === 'undefined' || !currentData.download) {
+            showStatusMessage(getI18n('shelfDownloadDisabled', 'Downloads are disabled.'), 'error');
+            return;
+        }
+        var url = getShelfZipUrl(format);
+        if (!url) {
+            showStatusMessage(getI18n('shelfDownloadEmpty', 'No books in shelf to download.'), 'error');
+            return;
+        }
+        window.location.href = url;
+        showStatusMessage(getI18n('shelfDownloadStarted', 'Download started.'), 'success');
+    }
+
     // Show a status message on the page (replaces alert())
     function showStatusMessage(message, type) {
         var statusDiv = document.getElementById('shelf-status-message');
@@ -586,6 +639,16 @@ var ShelfManager = (function() {
             });
         }
 
+
+        var downloadButtons = document.querySelectorAll('.shelf-download-zip-btn');
+        for (var k = 0; k < downloadButtons.length; k++) {
+            (function(fmt) {
+                downloadButtons[k].addEventListener('click', function() {
+                    downloadShelf(fmt);
+                });
+            })(downloadButtons[k].getAttribute('data-format'));
+        }
+
         var removeButtons = document.querySelectorAll('.shelf-remove-btn');
         for (var j = 0; j < removeButtons.length; j++) {
             (function(book) {
@@ -662,6 +725,8 @@ var ShelfManager = (function() {
         exportData: exportData,
         importData: importData,
         downloadExport: downloadExport,
+        downloadShelf: downloadShelf,
+        getShelfZipUrl: getShelfZipUrl,
         showImportDialog: showImportDialog,
         showStatusMessage: showStatusMessage,
         escapeHtml: escapeHtml,

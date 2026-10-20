@@ -84,6 +84,9 @@ function setup(options) {
             if (id === 'shelf-page-content') {
                 return fakePageContent;
             }
+            if (id === 'shelf-status-message') {
+                return { style: {}, textContent: '', hideTimer: null, parentNode: null };
+            }
             return null;
         },
         querySelectorAll: function () {
@@ -115,6 +118,9 @@ function setup(options) {
         localStorage: storage,
         document: documentStub,
         $: jQueryStub,
+        window: { location: { href: '' } },
+        setTimeout: setTimeout,
+        clearTimeout: clearTimeout,
         console: console,
         JSON: JSON,
         Object: Object,
@@ -125,6 +131,16 @@ function setup(options) {
     sandbox.getI18n = function (key, fallback) {
         return fallback;
     };
+
+    // simple str_format like util.js: replaces {0}, {1}, etc.
+    sandbox.str_format = function (fmt) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        return fmt.replace(/{(\d+)}/g, function(match, index) {
+            return typeof args[index] !== 'undefined' ? args[index] : match;
+        });
+    };
+
+    sandbox.currentData = { baseurl: '', download: true };
 
     // evaluate scripts in the sandbox context
     var vm = require('vm');
@@ -485,6 +501,76 @@ var fixtureShelves = {
     env = setup();
     env.storage.setItem('cops_shelves', JSON.stringify({ shelves: { A: [], B: [{ db: '', id: '1' }] }, activeShelf: 'Deleted' }));
     checkEquals('missing activeShelf falls back to first shelf', 'A', env.ShelfManager.getActiveShelfName());
+})();
+
+// ---------------------------------------------------------------------------
+// 7. Download ZIP
+// ---------------------------------------------------------------------------
+
+(function testDownloadZip() {
+    var singleDbShelves = {
+        activeShelf: 'Favorites',
+        shelves: {
+            'Favorites': [
+                { db: '', id: '17', title: 'Book 1', author: 'Author 1', thumbnailurl: '', detailurl: '/b/17' },
+                { db: '', id: '19', title: 'Book 2', author: 'Author 2', thumbnailurl: '', detailurl: '/b/19' }
+            ]
+        }
+    };
+    var env = setup({ initialShelves: singleDbShelves });
+
+    var url = env.ShelfManager.getShelfZipUrl('any');
+    check('single-db zip url has idlist', url.indexOf('idlist[') > -1);
+    check('single-db zip url has book ids', url.indexOf('17%2C19') > -1 || url.indexOf('19%2C17') > -1);
+    check('single-db zip url has format', url.indexOf('.zip') > -1);
+    check('single-db zip url is not null', url !== null);
+
+    // multi-database shelf -> nested idlist
+    var multiDbShelves = {
+        activeShelf: 'Favorites',
+        shelves: {
+            'Favorites': [
+                { db: '', id: '17', title: 'Book 1', author: 'Author 1', thumbnailurl: '', detailurl: '/b/17' },
+                { db: '1', id: '19', title: 'Book 2', author: 'Author 2', thumbnailurl: '', detailurl: '/b/19' }
+            ]
+        }
+    };
+    var env2 = setup({ initialShelves: multiDbShelves });
+    env2.currentData = { baseurl: '', download: true };
+    var url2 = env2.ShelfManager.getShelfZipUrl('epub');
+    check('multi-db zip url has idlist[0]', url2.indexOf('idlist[0]=') > -1);
+    check('multi-db zip url has idlist[1]', url2.indexOf('idlist[1]=') > -1);
+    check('multi-db zip url has format epub', url2.indexOf('epub.zip') > -1);
+
+    // empty shelf -> null
+    var emptyShelves = {
+        activeShelf: 'Favorites',
+        shelves: { 'Favorites': [] }
+    };
+    var env3 = setup({ initialShelves: emptyShelves });
+    checkEquals('empty shelf zip url is null', null, env3.ShelfManager.getShelfZipUrl('any'));
+
+    // downloadShelf with download disabled -> status message
+    var env4 = setup({ initialShelves: singleDbShelves });
+    env4.currentData = { baseurl: '', download: false };
+    env4.window.location.href = '';
+    env4.ShelfManager.downloadShelf('any');
+    check('download disabled does not navigate', env4.window.location.href === '');
+
+    // downloadShelf with empty shelf -> status message, no navigation
+    var env5 = setup({ initialShelves: emptyShelves });
+    env5.currentData = { baseurl: '', download: true };
+    env5.window.location.href = '';
+    env5.ShelfManager.downloadShelf('any');
+    check('empty shelf does not navigate', env5.window.location.href === '');
+
+    // downloadShelf navigates to zip url
+    var env6 = setup({ initialShelves: singleDbShelves });
+    env6.currentData = { baseurl: '', download: true };
+    env6.window.location.href = '';
+    env6.ShelfManager.downloadShelf('any');
+    check('download navigates to zip url', env6.window.location.href.indexOf('zipper/books/any.zip') > -1);
+    check('download navigates with idlist', env6.window.location.href.indexOf('idlist[') > -1);
 })();
 
 // ---------------------------------------------------------------------------

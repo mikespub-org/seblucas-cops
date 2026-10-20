@@ -56,10 +56,14 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
   - View all books in current shelf with thumbnails
   - Remove books from shelf
   - Create/rename/delete shelves
-- **Export / Import**: 
+- **Export / Import**:
   - Export the active shelf to a JSON file (`cops_shelves_export.json`)
   - Import from a JSON file via a modal dialog with three options: replace the active shelf, create a new "Imported" shelf, or merge into the active shelf (no duplicates)
   - Success/error feedback shown as an on-page status message (no browser alerts)
+- **Download ZIP**:
+  - Download all books in the active shelf as a .zip file, one button per available format
+  - Uses existing ZipperHandler / ZipStream infrastructure
+  - Supports multi-database shelves via nested idlist parameters
 
 ## Storage Format
 
@@ -101,6 +105,7 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
 7. **Remove book**: Click "Remove" button next to a book on the shelves page
 8. **Export shelf**: Click "Export" button on the shelves page to download the active shelf as a JSON file
 9. **Import shelf**: Click "Import" button on the shelves page, pick a `.json` file, then choose Replace / New / Merge in the modal dialog
+10. **Download ZIP**: Click one of the format buttons (epub, mobi, any, ...) on the shelves page to download all books in the active shelf as a .zip file
 
 ## Technical Details
 
@@ -267,7 +272,6 @@ To add shelves to a new template, follow the pattern used by bootstrap2 and boot
 ## Future Enhancements
 
 Possible improvements for future versions:
-- Download all books in shelf as a .zip file (using existing ZipperHandler / ZipStream infrastructure)
 - Sort books within shelves
 - Search/filter within shelf view
 - Shelf sharing via URL encoding
