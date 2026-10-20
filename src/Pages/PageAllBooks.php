@@ -37,45 +37,16 @@ class PageAllBooks extends Page
     public function getEntries()
     {
         $booklist = new BookList($this->request, $this->getDbContext());
-        $idlist = $this->request->get('idlist');
+        [$idlist, $flat] = $this->request->getIdList('idlist');
         if (!empty($idlist)) {
-            $this->parentTitle = $this->request->get('source', '', '/^[\w\s-]+$/');
-            $flat = false;
-            // flat '17,19' / [17,19]: default database
-            if (!is_array($idlist)) {
-                $idlist = explode(',', (string) $idlist);
-                $flat = true;
-            } elseif (array_is_list($idlist)) {
-                // distinguish between idlist[]=19&idlist[]=17 (flat) and idlist[0]=19&idlist[1]=17 (grouped)
-                $query = $this->request->query() ?? '';
-                if (str_contains($query, 'idlist[]=')) {
-                    $flat = true;
-                }
-            }
+            $this->parentTitle = $this->request->get('source', '', '/^[\w -]+$/');
             if ($flat) {
-                $ids = array_map('intval', $idlist);
-                [$this->entryArray, $this->totalNumber] = $booklist->getBooksByIdList($ids);
-                if ($this->totalNumber < 0) {
-                    $this->totalNumber = count($this->entryArray);
-                }
-                $this->sorted = $booklist->orderBy ?? "id";
-                return;
+                // flat '17,19' / [17,19]: default database
+                $this->getEntriesForFlatIdList($idlist, $booklist);
+            } else {
+                // nested idlist[<db>]=<csv>: each group handled via per-database BookList instance
+                $this->getEntriesForNestedIdList($idlist);
             }
-            // nested idlist[<db>]=<csv>: each group handled via per-database BookList instance
-            $groups = BookList::parseIdListGroups($idlist);
-            $entryArray = [];
-            $totalNumber = 0;
-            foreach ($groups as $dbId => $ids) {
-                $list = new BookList($this->request, new DatabaseContext((int) $dbId, $this->getConfig()));
-                try {
-                    [$entries, $total] = $list->getBooksByIdList(array_map('intval', $ids));
-                    $entryArray = array_merge($entryArray, $entries);
-                    $totalNumber += ($total > -1) ? $total : count($entries);
-                } catch (DatabaseException) {
-                    continue;
-                }
-            }
-            [$this->entryArray, $this->totalNumber] = [$entryArray, $totalNumber];
             $this->sorted = $booklist->orderBy ?? "id";
             return;
         }
@@ -89,5 +60,45 @@ class PageAllBooks extends Page
             [$this->entryArray, $this->totalNumber] = $booklist->getAllBooks($this->n);
             $this->sorted = $booklist->orderBy ?? Book::SQL_SORT;
         }
+    }
+
+    /**
+     * Summary of getEntriesForFlatIdList
+     * @param array<mixed> $idlist
+     * @param BookList $booklist
+     * @return void
+     */
+    public function getEntriesForFlatIdList($idlist, $booklist)
+    {
+        // flat '17,19' / [17,19]: default database
+        $ids = array_map('intval', $idlist);
+        [$this->entryArray, $this->totalNumber] = $booklist->getBooksByIdList($ids);
+        if ($this->totalNumber < 0) {
+            $this->totalNumber = count($this->entryArray);
+        }
+    }
+
+    /**
+     * Summary of getEntriesForNestedIdList
+     * @param array<mixed> $idlist
+     * @return void
+     */
+    public function getEntriesForNestedIdList($idlist)
+    {
+        // nested idlist[<db>]=<csv>: each group handled via per-database BookList instance
+        $groups = BookList::parseIdListGroups($idlist);
+        $entryArray = [];
+        $totalNumber = 0;
+        foreach ($groups as $dbId => $ids) {
+            $list = new BookList($this->request, new DatabaseContext((int) $dbId, $this->getConfig()));
+            try {
+                [$entries, $total] = $list->getBooksByIdList(array_map('intval', $ids));
+                $entryArray = array_merge($entryArray, $entries);
+                $totalNumber += ($total > -1) ? $total : count($entries);
+            } catch (DatabaseException) {
+                continue;
+            }
+        }
+        [$this->entryArray, $this->totalNumber] = [$entryArray, $totalNumber];
     }
 }

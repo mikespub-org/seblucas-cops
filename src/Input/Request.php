@@ -415,6 +415,34 @@ class Request
     }
 
     /**
+     * Summary of getIdList
+     * @param string $name
+     * @return array{0: array<mixed>|null, 1: bool}
+     */
+    public function getIdList($name = 'idlist')
+    {
+        $idlist = $this->get($name);
+        if (empty($idlist)) {
+            return [null, true];
+        }
+        $flat = false;
+        // flat '17,19' / [17,19]: default database
+        if (!is_array($idlist)) {
+            $idlist = explode(',', (string) $idlist);
+            $flat = true;
+        } elseif (array_is_list($idlist) && !array_any($idlist, fn($id) => str_contains($id, ','))) {  // PHP 8.4+
+            // distinguish between idlist[]=19&idlist[]=17 (flat) and idlist[0]=19&idlist[1]=17 (grouped)
+            $query = $this->query() ?? '';
+            if (str_contains($query, 'idlist[]=')) {
+                $flat = true;
+            }
+        } else {
+            // nested idlist[<db>]=<csv>: each group handled via per-database BookList instance
+        }
+        return [$idlist, $flat];
+    }
+
+    /**
      * Summary of database
      * @return ?int
      */
