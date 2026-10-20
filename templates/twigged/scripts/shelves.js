@@ -46,6 +46,15 @@ $(document).ready(function() {
             var books = data.shelves[activeShelf] || [];
             var shelfNames = Object.keys(data.shelves);
 
+            var downloadButtonsHtml = '';
+            if (typeof currentData !== 'undefined' && currentData.download) {
+                for (var d = 0; d < currentData.download.length; d++) {
+                    var fmt = currentData.download[d].format;
+                    downloadButtonsHtml += '<button type="button" class="btn btn-primary btn-sm shelf-download-zip-btn" data-format="' + fmt + '" id="shelf-download-zip-' + fmt + '" title="' + getI18n('shelfDownloadZipTitle', 'Download ZIP') + '">' +
+                        '<span class="glyphicon glyphicon-download"></span> ' + fmt + '</button> ';
+                }
+            }
+
             var html = '<div class="panel panel-default">' +
                        '<div class="panel-body">' +
                        '<div class="btn-group">' +
@@ -76,6 +85,7 @@ $(document).ready(function() {
                     '<button type="button" class="btn btn-info btn-sm" id="shelf-import-btn" title="' + getI18n('shelfImportTitle', 'Import') + '">' +
                     '<span class="glyphicon glyphicon-upload"></span> ' + getI18n('shelfImportTitle', 'Import') + '</button> ' +
                     '<input type="file" id="shelf-import-file" style="display:none;" accept=".json">' +
+                    downloadButtonsHtml +
                     '</div>' +
                     '</div>';
 
