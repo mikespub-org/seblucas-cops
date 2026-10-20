@@ -45,4 +45,49 @@ class PageShelvesTest extends TestCase
             $this->assertNotEmpty($value, "empty value for {$camelKey}");
         }
     }
+
+    public function testSortedDefault(): void
+    {
+        $request = new Request();
+        /** @var PageShelves $page */
+        $page = PageId::getPage(PageId::SHELVES, $request);
+
+        $this->assertEquals('sort', $page->sorted);
+    }
+
+    public function testSortedFromRequest(): void
+    {
+        // browsers decode '+' to space, so the server sees 'title desc'
+        $request = new Request();
+        $request->set('sort', 'title desc');
+        /** @var PageShelves $page */
+        $page = PageId::getPage(PageId::SHELVES, $request);
+
+        $this->assertEquals('title desc', $page->sorted);
+    }
+
+    public function testSortedFromRequestInvalid(): void
+    {
+        $request = new Request();
+        $request->set('sort', 'title;drop');
+        /** @var PageShelves $page */
+        $page = PageId::getPage(PageId::SHELVES, $request);
+
+        // fails the getSorted() pattern -> default
+        $this->assertEquals('sort', $page->sorted);
+    }
+
+    public function testGetSortOptionsOnlyClientSortable(): void
+    {
+        $request = new Request();
+        /** @var PageShelves $page */
+        $page = PageId::getPage(PageId::SHELVES, $request);
+
+        $options = $page->getSortOptions();
+        $this->assertArrayHasKey('title', $options);
+        $this->assertArrayHasKey('author', $options);
+        $this->assertArrayHasKey('timestamp', $options);
+        $this->assertArrayNotHasKey('pubdate', $options);
+        $this->assertArrayNotHasKey('rating', $options);
+    }
 }

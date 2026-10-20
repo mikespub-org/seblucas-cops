@@ -12,7 +12,7 @@
       {{??}}
         <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
       {{?}}
-      {{? it.download }}
+      {{? it.download && it.entriesCount > 1 }}
         {{~it.download:link:idx}}
         <a class="navbar-brand" href="{{=link.url}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=link.format}}">
           <span class="glyphicon glyphicon-download"></span>
@@ -57,7 +57,7 @@
       </div>
     </form>     
     <div class="collapse navbar-collapse">
-      {{? it.containsBook != 0}}
+      {{? it.containsBook != 0 && it.page != "shelves"}}
       <!-- show sort options -->
       <ul class="nav navbar-nav">
         {{? it.sortoptions.title }}
@@ -86,7 +86,7 @@
         </a></li>
         {{?}}
       </ul>
-      {{?? it.sortoptions }}
+      {{?? it.sortoptions && it.page != "shelves" }}
       <!-- show sort options for navlist -->
       <ul class="nav navbar-nav">
         {{? it.sortoptions.name }}

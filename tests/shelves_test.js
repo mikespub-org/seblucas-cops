@@ -574,6 +574,244 @@ var fixtureShelves = {
 })();
 
 // ---------------------------------------------------------------------------
+// 8. Sorting
+// ---------------------------------------------------------------------------
+
+(function testSorting() {
+    var shelves = {
+        activeShelf: 'Favorites',
+        shelves: {
+            'Favorites': [
+                { id: '1', db: '', title: 'Zebra Tales', author: 'Smith' },
+                { id: '2', db: '', title: 'apple pie', author: 'Adams' },
+                { id: '3', db: '', title: 'Mango', author: 'Smith' },
+                { id: '4', db: '', title: 'Banana', author: null }
+            ]
+        }
+    };
+    var env = setup({ initialShelves: shelves });
+    var books = shelves.shelves.Favorites;
+
+    // default sort key keeps insertion order
+    checkEquals('default sort key', 'added+asc', env.ShelfManager.getSortKey());
+
+    // parseSortKey validation
+    var parsed = env.ShelfManager.parseSortKey('title+desc');
+    checkEquals('parse valid name', 'title', parsed.name);
+    checkEquals('parse valid dir', 'desc', parsed.dir);
+    parsed = env.ShelfManager.parseSortKey('bogus+sideways');
+    checkEquals('unknown name falls back to added', 'added', parsed.name);
+    checkEquals('unknown dir falls back to asc', 'asc', parsed.dir);
+    parsed = env.ShelfManager.parseSortKey('author');
+    checkEquals('missing dir defaults to asc', 'asc', parsed.dir);
+
+    // title asc / desc
+    var byTitle = env.ShelfManager.sortBooks(books, 'title+asc');
+    checkEquals('title asc first', 'apple pie', byTitle[0].title);
+    checkEquals('title asc last', 'Zebra Tales', byTitle[3].title);
+    var byTitleDesc = env.ShelfManager.sortBooks(books, 'title+desc');
+    checkEquals('title desc first', 'Zebra Tales', byTitleDesc[0].title);
+    check('sortBooks returns new array', byTitle !== books);
+
+    // author asc: null author first, then Adams, equal authors tie-break on title
+    var byAuthor = env.ShelfManager.sortBooks(books, 'author+asc');
+    checkEquals('author asc null first', '4', byAuthor[0].id);
+    checkEquals('author asc adams second', '2', byAuthor[1].id);
+    checkEquals('author asc smith tie-break 1', '3', byAuthor[2].id);
+    checkEquals('author asc smith tie-break 2', '1', byAuthor[3].id);
+
+    // added = insertion order, desc reverses it
+    var byAdded = env.ShelfManager.sortBooks(books, 'added+asc');
+    checkEquals('added asc keeps order', '1', byAdded[0].id);
+    checkEquals('added asc keeps order 2', '4', byAdded[3].id);
+    var byAddedDesc = env.ShelfManager.sortBooks(books, 'added+desc');
+    checkEquals('added desc reverses', '4', byAddedDesc[0].id);
+
+    // setSortKey persists and resets to first page
+    env.ShelfManager.setPage(3);
+    env.ShelfManager.setSortKey('title+asc');
+    checkEquals('sort key persisted', 'title+asc', JSON.parse(env.localStorage.getItem('cops_shelves')).sortKey);
+    checkEquals('page reset on sort change', 1, env.ShelfManager.getPagedBooks().page);
+})();
+
+// ---------------------------------------------------------------------------
+// 9. Pagination
+// ---------------------------------------------------------------------------
+
+(function testPaginationConfig() {
+    var env = setup({});
+
+    checkEquals('no c.config means no page size', 0, env.ShelfManager.getPageSize());
+
+    env.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: '10' } } };
+    checkEquals('string config parsed', 10, env.ShelfManager.getPageSize());
+
+    env.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: 25 } } };
+    checkEquals('numeric config kept', 25, env.ShelfManager.getPageSize());
+
+    env.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: -1 } } };
+    checkEquals('-1 means no pagination', 0, env.ShelfManager.getPageSize());
+
+    env.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: 0 } } };
+    checkEquals('0 means no pagination', 0, env.ShelfManager.getPageSize());
+
+    env.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: 'junk' } } };
+    checkEquals('invalid config means no pagination', 0, env.ShelfManager.getPageSize());
+
+    checkEquals('page count for empty shelf', 1, env.ShelfManager.getPageCount(0, 10));
+    checkEquals('page count exact fit', 2, env.ShelfManager.getPageCount(20, 10));
+    checkEquals('page count with remainder', 3, env.ShelfManager.getPageCount(21, 10));
+    checkEquals('page count without page size', 1, env.ShelfManager.getPageCount(100, 0));
+})();
+
+(function testPagedBooks() {
+    var many = [];
+    for (var i = 1; i <= 25; i++) {
+        many.push({ id: String(i), db: '', title: 'Book ' + i, author: 'Author ' + i });
+    }
+    var env = setup({
+        initialShelves: { activeShelf: 'A', shelves: { 'A': many, 'B': [] } }
+    });
+    env.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: 10 } } };
+
+    var p1 = env.ShelfManager.getPagedBooks();
+    checkEquals('page count for 25 books', 3, p1.maxPage);
+    checkEquals('total is shelf size', 25, p1.total);
+    checkEquals('page 1 size', 10, p1.books.length);
+    checkEquals('page 1 first id', '1', p1.books[0].id);
+
+    env.ShelfManager.setPage(3);
+    var p3 = env.ShelfManager.getPagedBooks();
+    checkEquals('page 3 size', 5, p3.books.length);
+    checkEquals('page 3 first id', '21', p3.books[0].id);
+
+    // clamping
+    env.ShelfManager.setPage(99);
+    checkEquals('page clamped to maxPage', 3, env.ShelfManager.getPagedBooks().page);
+    env.ShelfManager.setPage(-5);
+    checkEquals('page clamped to 1', 1, env.ShelfManager.getPagedBooks().page);
+
+    // shelf switch resets page
+    env.ShelfManager.setPage(2);
+    env.ShelfManager.setActiveShelf('B');
+    checkEquals('shelf switch resets page', 1, env.ShelfManager.getPagedBooks().page);
+
+    // no page size -> everything on a single page (switch back to shelf A first)
+    env.ShelfManager.setActiveShelf('A');
+    env.currentData = { baseurl: '', download: true };
+    var all = env.ShelfManager.getPagedBooks();
+    checkEquals('no page size returns all books', 25, all.books.length);
+    checkEquals('no page size maxPage', 1, all.maxPage);
+})();
+
+(function testSortAndPagerRendering() {
+    var many = [];
+    for (var i = 1; i <= 25; i++) {
+        many.push({ id: String(i), db: '', title: 'Book ' + i, author: 'Author ' + i });
+    }
+    var env = setup({
+        initialShelves: { activeShelf: 'Favorites', shelves: { 'Favorites': many } }
+    });
+    env.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: 10 } } };
+
+    env.ShelfManager.renderShelfPage();
+    var html = env.pageContent.innerHTML;
+
+    check('sortlinks rendered', html.indexOf('id="shelf-sortlinks"') > -1);
+    check('title sort link', html.indexOf('data-sort="title"') > -1);
+    check('author sort link', html.indexOf('data-sort="author"') > -1);
+    check('added sort link', html.indexOf('data-sort="added"') > -1);
+    check('added active by default', html.indexOf('<li class="active"><a href="javascript:void(0);" data-sort="added"') > -1);
+    check('default direction in tooltip', html.indexOf('title="Added (Asc)"') > -1);
+    check('pager rendered', html.indexOf('id="shelf-pager"') > -1);
+    check('pager shows 1 / 3', html.indexOf(' 1 / 3 ') > -1);
+    check('prev disabled on first page', html.indexOf('<li class="disabled"><a href="javascript:void(0);" data-page="prev"') > -1);
+    check('first link hidden on 3 pages', html.indexOf('data-page="first"') === -1);
+    check('heading badge shows total', html.indexOf('<span class="badge pull-right">25</span>') > -1);
+
+    // change sort -> active state and direction tooltip move
+    env.ShelfManager.setSortKey('title+desc');
+    env.ShelfManager.renderShelfPage();
+    var sortedHtml = env.pageContent.innerHTML;
+    check('title becomes active', sortedHtml.indexOf('<li class="active"><a href="javascript:void(0);" data-sort="title"') > -1);
+    check('desc direction in tooltip', sortedHtml.indexOf('title="Title (Desc)"') > -1);
+
+    // last page: 5 books, next disabled
+    env.ShelfManager.setPage(3);
+    env.ShelfManager.renderShelfPage();
+    var lastHtml = env.pageContent.innerHTML;
+    var removeCount = lastHtml.split('shelf-remove-btn').length - 1;
+    checkEquals('last page renders remaining books', 5, removeCount);
+    check('next disabled on last page', lastHtml.indexOf('<li class="disabled"><a href="javascript:void(0);" data-page="next"') > -1);
+
+    // without page size: no pager, sortlinks still present, all books shown
+    var env2 = setup({
+        initialShelves: { activeShelf: 'Favorites', shelves: { 'Favorites': many } }
+    });
+    env2.currentData = { baseurl: '', download: true };
+    env2.ShelfManager.renderShelfPage();
+    var noPagerHtml = env2.pageContent.innerHTML;
+    check('no pager without page size', noPagerHtml.indexOf('id="shelf-pager"') === -1);
+    check('sortlinks without page size', noPagerHtml.indexOf('id="shelf-sortlinks"') > -1);
+    checkEquals('all books on one page', 25, noPagerHtml.split('shelf-remove-btn').length - 1);
+
+    // empty shelf: empty message, no pager
+    var env3 = setup({
+        initialShelves: { activeShelf: 'Favorites', shelves: { 'Favorites': [] } }
+    });
+    env3.currentData = { baseurl: '', download: true, c: { config: { max_item_per_page: 10 } } };
+    env3.ShelfManager.renderShelfPage();
+    var emptyHtml = env3.pageContent.innerHTML;
+    check('empty message shown', emptyHtml.indexOf('This shelf is empty') > -1);
+    check('no pager on empty shelf', emptyHtml.indexOf('id="shelf-pager"') === -1);
+})();
+
+(function testUrlSortAdoption() {
+    var shelves = {
+        activeShelf: 'Favorites',
+        shelves: {
+            'Favorites': [
+                { id: '1', db: '', title: 'Zebra Tales', author: 'Smith' },
+                { id: '2', db: '', title: 'apple pie', author: 'Adams' }
+            ]
+        }
+    };
+    var env = setup({ initialShelves: shelves });
+
+    // bare shelves visit: sortedBy="sort" echoed, ignored -> default
+    env.currentData = { baseurl: '', download: true, sortedBy: 'sort', sortedDir: 'asc' };
+    checkEquals('url sort key null for default', null, env.ShelfManager.getUrlSortKey());
+    checkEquals('falls back to persisted default', 'added+asc', env.ShelfManager.getSortKey());
+    checkEquals('nothing persisted on ignore', undefined, JSON.parse(env.localStorage.getItem('cops_shelves')).sortKey);
+
+    // direct link ?sort=title+desc: adopted once, persisted, page reset
+    env.ShelfManager.setPage(5);
+    env.currentData = { baseurl: '', download: true, sortedBy: 'title', sortedDir: 'desc' };
+    checkEquals('url sort key mapped', 'title+desc', env.ShelfManager.getUrlSortKey());
+    checkEquals('direct link adopted', 'title+desc', env.ShelfManager.getSortKey());
+    var adopted = JSON.parse(env.localStorage.getItem('cops_shelves')).sortKey;
+    checkEquals('adopted sort persisted', 'title+desc', adopted);
+    checkEquals('page reset on adoption', 1, env.ShelfManager.getPagedBooks().page);
+    var first = env.ShelfManager.getSortedBooks();
+    checkEquals('sorted by title desc', '2', first[1].id);
+
+    // same URL on re-render: in-content state rules (adopted only once)
+    env.ShelfManager.setSortKey('author+asc');
+    checkEquals('click wins after adoption', 'author+asc', env.ShelfManager.getSortKey());
+
+    // timestamp maps to added
+    var env2 = setup({ initialShelves: shelves });
+    env2.currentData = { baseurl: '', download: true, sortedBy: 'timestamp', sortedDir: 'desc' };
+    checkEquals('timestamp maps to added', 'added+desc', env2.ShelfManager.getSortKey());
+
+    // unsupported key (pubdate/rating) ignored
+    var env3 = setup({ initialShelves: shelves });
+    env3.currentData = { baseurl: '', download: true, sortedBy: 'rating', sortedDir: 'desc' };
+    checkEquals('unsupported key returns null', null, env3.ShelfManager.getUrlSortKey());
+    checkEquals('unsupported key ignored', 'added+asc', env3.ShelfManager.getSortKey());
+})();
+
+// ---------------------------------------------------------------------------
 
 console.log('');
 console.log(count + ' checks, ' + failures + ' failure(s)');

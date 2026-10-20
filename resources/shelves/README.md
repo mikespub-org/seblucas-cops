@@ -64,12 +64,22 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
   - Download all books in the active shelf as a .zip file, one button per available format
   - Uses existing ZipperHandler / ZipStream infrastructure
   - Supports multi-database shelves via nested idlist parameters
+- **Sorting**:
+  - Sort the shelf page by title, author, or date added (insertion order), ascending or descending
+  - Sort controls mirror the sort links used on normal book list pages (icons + labels + active state per template)
+  - Sort choice is persisted in localStorage (`sortKey`); default is insertion order (`added+asc`)
+- **Pagination**:
+  - Client-side pagination using the site page size (`c.config.max_item_per_page`, available from the initial `complete=1` load)
+  - Pager markup mirrors each template's normal page pager (twigged/bootstrap2 `ul.pager` with first/prev/next/last when `maxPage > 3`; bootstrap5 `ul.pagination` with prev/count/next)
+  - Page resets to 1 on shelf switch, sort change and import; the current page is clamped when books are removed
+  - No pager when the shelf fits on one page or when `max_item_per_page` is `0`/`-1` (no pagination)
 
 ## Storage Format
 
 ```javascript
 {
   "activeShelf": "Favorites",
+  "sortKey": "title+asc",
   "shelves": {
     "Favorites": [
       {
@@ -90,6 +100,8 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
 
 **localStorage key**: `cops_shelves`
 
+**Sort key** (optional field): `sortKey` holds the shelf page sort preference as `"<name>+<dir>"` where name is one of `title`, `author`, `added` and dir is `asc` or `desc` (e.g. `"title+asc"`). Missing or invalid values fall back to `added+asc` (insertion order). The field is ignored by import validation and is not part of the export file.
+
 **Export file format**: same structure as the storage format above, but contains only the active shelf (e.g. `{ "activeShelf": "To Read", "shelves": { "To Read": [...] } }`).
 
 **Book identity**: A book is uniquely identified by its `(databaseId, book id)` pair, normalized to a `"db:id"` key. The `db` values `undefined`, `null`, `''` and `0` are all considered equivalent (empty key), so the default/single database always matches regardless of how the id was rendered. Books from other databases (`db: "1"`, `"2"`, ...) keep distinct identities even if they share the same book id.
@@ -106,6 +118,8 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
 8. **Export shelf**: Click "Export" button on the shelves page to download the active shelf as a JSON file
 9. **Import shelf**: Click "Import" button on the shelves page, pick a `.json` file, then choose Replace / New / Merge in the modal dialog
 10. **Download ZIP**: Click one of the format buttons (epub, mobi, any, ...) on the shelves page to download all books in the active shelf as a .zip file
+11. **Sort shelf**: Click a sort link (Title / Author / Added) above the book list; click again to toggle ascending/descending
+12. **Turn pages**: Use First / Previous / Next / Last in the pager below the book list (when the shelf has more books than `max_item_per_page`)
 
 ## Technical Details
 
@@ -139,6 +153,16 @@ If localStorage is unavailable, the feature gracefully degrades (buttons do noth
 3. **Dedicated shelves page**: Renders into `#shelf-page-content` container (no modal); the import dialog is a separate modal created on demand by `ensureImportModal()`
 4. **Import mode dialog**: `ShelfManager.showImportDialog()` — core provides a `prompt()`-based default; each template overrides it with a Bootstrap modal (replace / new / merge)
 5. **Status messages**: `ShelfManager.showStatusMessage()` shows import/export feedback in a `#shelf-status-message` banner at the top of the shelf page (auto-hides after 5s)
+
+### Sorting and Pagination
+
+- **Sort pipeline**: `getSortedBooks()` = active shelf books → `sortBooks(books, key, dir)`. Comparators are ES5 (`localeCompare`), null-safe, and stable via an insertion-index tie-break (author ties break on title; `added` keeps storage order). Storage order is never mutated — sorting returns a new array.
+- **Sort state**: persisted as optional `sortKey` (`"title+asc"` style) in localStorage; read by `getSortKey()`, written by `setSortKey()` (which also resets the page). Invalid names/dirs are normalized by `parseSortKey()`.
+- **Direct links**: a `?sort=title+asc` URL parameter is echoed back by the server as `currentData.sortedBy`/`sortedDir` (`PageShelves` sets `$this->sorted` from the request and only advertises `title`/`author`/`timestamp` in `getSortOptions()`, mapping timestamp to insertion order). `getSortKey()` adopts a fresh URL sort once (persists it, resets the page), then in-content sort clicks rule until the URL sort changes. Bare shelf visits echo `sortedBy="sort"` and are ignored - no navigation needed for interactive sorting.
+- **Page size**: `getPageSize()` reads `currentData.c.config.max_item_per_page` (set in the JSON from the initial `complete=1` load and kept across AJAX navigations). Missing, invalid or `<= 0` values mean no pagination (same semantics as `Page::isPaginated()` server-side).
+- **Page view**: `getPagedBooks()` = sort → slice, returning `{ books, page, maxPage, pageSize, total }`; the page number is clamped to `[1, maxPage]` on every call (handles book removal shrinking the shelf). Page state (`shelfPage`) is module-scoped and ephemeral — reset by `setActiveShelf()`, `setSortKey()` and `importData()`.
+- **Render split**: templates render the toolbar (shelf switcher, buttons, `#shelf-sortlinks`) and the book grid from `paged.books` instead of the raw shelf array; heading/switcher badges show `paged.total` (whole shelf), the pager shows `page / maxPage`.
+- **Events** are bound in the shared `bindPageEvents()` after each render: `#shelf-sortlinks a[data-sort]` (clicking the active key toggles dir; a new key starts at `asc` and resets the page) and `#shelf-pager a[data-page]` (`first|prev|next|last`; clicks on `disabled` list items and no-op targets are ignored, then `refreshShelfPage()` + `scrollIntoView()`).
 
 ### File Structure
 
@@ -181,6 +205,7 @@ The shared `resources/shelves/shelves.js` provides the core library with:
 - Export/import (`exportData`, `importData` with replace/new/merge modes, `downloadExport`, `handleImportResult`)
 - Book identity via `getBookKey(book)` (`"db:id"` with falsy db normalized to `''`)
 - Shared UI logic: `handleToggle`, `renderShelfPage`, `refreshShelfPage`, `bindPageEvents`, `openShelvesPage`
+- Sorting (`getSortKey`, `setSortKey`, `parseSortKey`, `sortBooks`, `getSortedBooks`) and pagination (`getPageSize`, `getPageCount`, `getPagedBooks`, `setPage`)
 - Default import dialog `showImportDialog()` (prompt-based, overridable per template) and `showStatusMessage()` for on-page feedback
 - Event delegation that calls the template-specific `updateBookButtons()`
 
@@ -191,7 +216,7 @@ Each template's `templates/<template>/scripts/shelves.js` defines only the styli
 
 ## Functional Test
 
-A standalone Node.js functional test is available at **`tests/shelves_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, export/import (active-shelf export, replace/new/merge import, validation), dedicated page rendering (including XSS escaping), and error handling - without requiring a browser, webserver or PHP.
+A standalone Node.js functional test is available at **`tests/shelves_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, export/import (active-shelf export, replace/new/merge import, validation), dedicated page rendering (including XSS escaping), error handling, sorting (comparators, sort key validation/persistence, page reset) and pagination (page size config, page slicing/clamping, sort link and pager rendering) - without requiring a browser, webserver or PHP.
 
 ```bash
 node tests/shelves_test.js
@@ -272,8 +297,8 @@ To add shelves to a new template, follow the pattern used by bootstrap2 and boot
 ## Future Enhancements
 
 Possible improvements for future versions:
-- Sort books within shelves
 - Search/filter within shelf view
+- Sort by series (requires storing series metadata in localStorage shelf entries first)
 - Shelf sharing via URL encoding
 - Sync with Calibre reading lists
 - Add/remove books to/from multiple shelves at once

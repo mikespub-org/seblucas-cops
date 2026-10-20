@@ -47,7 +47,7 @@
   <nav class="navbar bg-light py-1 ps-2" data-bs-theme="dark" id="controls-menu">
       <ul id="2-bar" class="nav nav-pills" style="font-size: 0.8rem;">
         <li class="nav-item fw-bolder p-1 ps-2">{{=it.fullTitle}}</li>
-        {{? it.containsBook != 0 }}
+        {{? it.containsBook != 0 && it.page != "shelves" }}
         <li class="nav-item p-1 border-start border-secondary-subtle">{{=it.c.i18n.sortByTitle}}:</li>
         {{? it.sortoptions.title }}
           <li class="nav-item sm">

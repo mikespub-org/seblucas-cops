@@ -43,7 +43,10 @@ $(document).ready(function() {
         ShelfManager.renderShelfContent = function() {
             var data = ShelfManager.load();
             var activeShelf = data.activeShelf;
-            var books = data.shelves[activeShelf] || [];
+            var paged = ShelfManager.getPagedBooks();
+            var books = paged.books;
+            var total = paged.total;
+            var sort = ShelfManager.parseSortKey(ShelfManager.getSortKey());
             var shelfNames = Object.keys(data.shelves);
 
             var downloadButtonsHtml = '';
@@ -59,7 +62,7 @@ $(document).ready(function() {
                        '<div class="panel-body">' +
                        '<div class="btn-group">' +
                        '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">' +
-                       ShelfManager.escapeHtml(activeShelf) + ' <span class="badge pull-right">' + books.length + '</span> <span class="caret"></span></button>' +
+                       ShelfManager.escapeHtml(activeShelf) + ' <span class="badge pull-right">' + total + '</span> <span class="caret"></span></button>' +
                        '<ul class="dropdown-menu" id="shelf-switcher">';
 
             for (var i = 0; i < shelfNames.length; i++) {
@@ -85,15 +88,40 @@ $(document).ready(function() {
                     '<button type="button" class="btn btn-info btn-sm" id="shelf-import-btn" title="' + getI18n('shelfImportTitle', 'Import') + '">' +
                     '<span class="glyphicon glyphicon-upload"></span> ' + getI18n('shelfImportTitle', 'Import') + '</button> ' +
                     '<input type="file" id="shelf-import-file" style="display:none;" accept=".json">' +
-                    downloadButtonsHtml +
+                    downloadButtonsHtml;
+
+            // Sort links (client-side counterpart of the navbar sortlinks in booklist.html)
+            var sortItems = [
+                { key: 'title', icon: 'glyphicon-font', sortIcon: 'glyphicon-sort-by-alphabet', label: getI18n('titleTitle', 'Title') },
+                { key: 'author', icon: 'glyphicon-user', sortIcon: 'glyphicon-sort-by-alphabet', label: getI18n('authorTitle', 'Author') },
+                { key: 'added', icon: 'glyphicon-time', sortIcon: 'glyphicon-sort-by-order-alt', label: getI18n('addedDateTitle', 'Added') }
+            ];
+            var sortLinksHtml = '<ul id="shelf-sortlinks" class="nav nav-pills" style="margin-top: 10px;">';
+            for (var s = 0; s < sortItems.length; s++) {
+                var sortItem = sortItems[s];
+                var sortActive = sort.name === sortItem.key;
+                var sortDirLabel = '';
+                if (sortActive) {
+                    sortDirLabel = sort.dir === 'asc' ? getI18n('sortorderAsc', 'Asc') : getI18n('sortorderDesc', 'Desc');
+                }
+                var sortTip = sortItem.label + (sortDirLabel ? ' (' + sortDirLabel + ')' : '');
+                sortLinksHtml += '<li' + (sortActive ? ' class="active"' : '') + '>' +
+                        '<a href="javascript:void(0);" data-sort="' + sortItem.key + '" title="' + ShelfManager.escapeHtml(sortTip) + '">' +
+                        '<span class="glyphicon ' + sortItem.icon + '"></span>' +
+                        '<span class="glyphicon ' + sortItem.sortIcon + '"></span>' +
+                        '</a></li>';
+            }
+            sortLinksHtml += '</ul>';
+
+            html += sortLinksHtml +
                     '</div>' +
                     '</div>';
 
             // Book list
             html += '<h4>' + str_format(getI18n('shelfBooksInTitle', 'Books in "{0}"'), ShelfManager.escapeHtml(activeShelf)) +
-                    ' <span class="badge pull-right">' + books.length + '</span></h4>';
+                    ' <span class="badge pull-right">' + total + '</span></h4>';
 
-            if (books.length === 0) {
+            if (total === 0) {
                 html += '<p class="text-muted">' + getI18n('shelfEmptyTitle', 'This shelf is empty. Browse books and add them using the bookmark button.') + '</p>';
             } else {
                 html += '<div class="row d-flex" id="shelf-book-list">';
@@ -123,6 +151,21 @@ $(document).ready(function() {
                             '</div>';
                 }
                 html += '</div>';
+            }
+
+            // Pager (same structure as mainlist.html, client-side)
+            if (paged.maxPage > 1) {
+                html += '<ul id="shelf-pager" class="pager">';
+                if (paged.maxPage > 3) {
+                    html += '<li class="' + (paged.page <= 1 ? 'disabled' : '') + '"><a href="javascript:void(0);" data-page="first" title="' + getI18n('firstAlt', 'First') + '"><span class="glyphicon glyphicon-step-backward"></span>' + getI18n('firstAlt', 'First') + '</a></li>';
+                }
+                html += '<li class="' + (paged.page <= 1 ? 'disabled' : '') + '"><a href="javascript:void(0);" data-page="prev" title="' + getI18n('previousAlt', 'Previous') + '"><span class="glyphicon glyphicon-chevron-left"></span>' + getI18n('previousAlt', 'Previous') + '</a></li>';
+                html += '<li> ' + paged.page + ' / ' + paged.maxPage + ' </li>';
+                html += '<li class="' + (paged.page >= paged.maxPage ? 'disabled' : '') + '"><a href="javascript:void(0);" data-page="next" title="' + getI18n('nextAlt', 'Next') + '">' + getI18n('nextAlt', 'Next') + '<span class="glyphicon glyphicon-chevron-right"></span></a></li>';
+                if (paged.maxPage > 3) {
+                    html += '<li class="' + (paged.page >= paged.maxPage ? 'disabled' : '') + '"><a href="javascript:void(0);" data-page="last" title="' + getI18n('lastAlt', 'Last') + '">' + getI18n('lastAlt', 'Last') + '<span class="glyphicon glyphicon-step-forward"></span></a></li>';
+                }
+                html += '</ul>';
             }
 
             return html;

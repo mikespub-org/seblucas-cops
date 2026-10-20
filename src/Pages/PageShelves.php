@@ -23,6 +23,22 @@ class PageShelves extends Page
         $this->getEntries();
         $this->idPage = PageId::ALL_SHELVES_ID;
         $this->title = $this->localize("shelves.title");
+        // Echo the requested sort back (sorted/sortedBy/sortedDir in the JSON)
+        // so direct shelf links (?sort=title+asc) work: the client shelves page
+        // reads them and sorts its localStorage books accordingly
+        $this->sorted = $this->request->getSorted("sort");
+    }
+
+    /**
+     * Only keys that can be sorted client-side from localStorage shelf entries.
+     * title/author map 1:1, timestamp maps to insertion order ("added").
+     * @return array<string, string>
+     */
+    public function getSortOptions()
+    {
+        $options = parent::getSortOptions();
+        $supported = ['title', 'author', 'timestamp'];
+        return array_intersect_key($options, array_flip($supported));
     }
 
     /**

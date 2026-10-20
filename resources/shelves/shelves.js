@@ -5,6 +5,13 @@
 var ShelfManager = (function() {
     var STORAGE_KEY = 'cops_shelves';
     
+    // Ephemeral shelf page number (1-based) for pagination - not persisted
+    var shelfPage = 1;
+    // Default sort: insertion order ("date added"), ascending
+    var DEFAULT_SORT_KEY = 'added+asc';
+    // Last URL-echoed sort consumed from currentData (to detect fresh direct links)
+    var lastUrlSortKey = null;
+    
     var defaults = {
         activeShelf: 'Favorites',
         shelves: {
@@ -62,6 +69,7 @@ var ShelfManager = (function() {
         var data = load();
         if (data.shelves[name]) {
             data.activeShelf = name;
+            shelfPage = 1;
             save(data);
             return true;
         }
@@ -239,6 +247,188 @@ var ShelfManager = (function() {
         return true;
     }
 
+    // ---------------------------------------------------------------------------
+    // Sort (persisted per user, applied client-side on the shelf page)
+    // ---------------------------------------------------------------------------
+
+    // Sort key echoed by the server for direct links (?sort=title+asc):
+    // JsonRenderer::getJson() outputs sortedBy/sortedDir, PageShelves sets
+    // $this->sorted from the request. Only client-sortable keys count -
+    // anything else (incl. the "sort" default) returns null = ignore.
+    // timestamp maps to insertion order ("added").
+    function getUrlSortKey() {
+        try {
+            if (typeof currentData !== 'undefined' && currentData.sortedBy) {
+                var dir = currentData.sortedDir === 'desc' ? 'desc' : 'asc';
+                if (currentData.sortedBy === 'title') {
+                    return 'title+' + dir;
+                }
+                if (currentData.sortedBy === 'author') {
+                    return 'author+' + dir;
+                }
+                if (currentData.sortedBy === 'timestamp') {
+                    return 'added+' + dir;
+                }
+            }
+        } catch (e) {
+            // fall through to persisted sort
+        }
+        return null;
+    }
+
+    // Get the persisted sort key, e.g. "title+asc", "author+desc", "added+asc"
+    function getSortKey() {
+        var urlKey = getUrlSortKey();
+        if (urlKey && urlKey !== lastUrlSortKey) {
+            // fresh direct link: adopt it once (persist + reset page),
+            // then in-content sort clicks rule until the URL sort changes
+            lastUrlSortKey = urlKey;
+            var data = load();
+            data.sortKey = urlKey;
+            shelfPage = 1;
+            save(data);
+            return urlKey;
+        }
+        var stored = load();
+        if (stored.sortKey && typeof stored.sortKey === 'string') {
+            return stored.sortKey;
+        }
+        return DEFAULT_SORT_KEY;
+    }
+
+    // Persist the sort key and reset to the first page
+    function setSortKey(key) {
+        var data = load();
+        data.sortKey = key;
+        shelfPage = 1;
+        save(data);
+    }
+
+    // Split a sort key into { name, dir } with validation - unknown names fall
+    // back to "added" (insertion order), unknown dirs to "asc"
+    function parseSortKey(key) {
+        var name = key;
+        var dir = 'asc';
+        if (key && key.indexOf('+') > -1) {
+            var parts = key.split('+');
+            name = parts[0];
+            dir = parts[1] === 'desc' ? 'desc' : 'asc';
+        }
+        if (name !== 'title' && name !== 'author' && name !== 'added') {
+            name = 'added';
+        }
+        return { name: name, dir: dir };
+    }
+
+    // Null-safe string comparison (ES5 localeCompare)
+    function compareStrings(a, b) {
+        var sa = (a === undefined || a === null) ? '' : String(a);
+        var sb = (b === undefined || b === null) ? '' : String(b);
+        return sa.localeCompare(sb);
+    }
+
+    // Return a sorted copy of a book array (original storage order untouched).
+    // Keys: "title", "author" (title as tie-break), "added" (insertion order).
+    // Ties are broken by insertion index so the sort is stable across engines.
+    function sortBooks(books, sortKey) {
+        var parsed = parseSortKey(sortKey);
+        var items = [];
+        var i;
+        for (i = 0; i < books.length; i++) {
+            items.push({ book: books[i], index: i });
+        }
+        items.sort(function (x, y) {
+            var r = 0;
+            if (parsed.name === 'title') {
+                r = compareStrings(x.book.title, y.book.title);
+            } else if (parsed.name === 'author') {
+                r = compareStrings(x.book.author, y.book.author);
+                if (r === 0) {
+                    r = compareStrings(x.book.title, y.book.title);
+                }
+            } else {
+                r = x.index - y.index;
+            }
+            if (r === 0) {
+                r = x.index - y.index;
+            }
+            return parsed.dir === 'desc' ? -r : r;
+        });
+        var out = [];
+        for (i = 0; i < items.length; i++) {
+            out.push(items[i].book);
+        }
+        return out;
+    }
+
+    // Sorted books of the active shelf
+    function getSortedBooks() {
+        return sortBooks(getBooks(), getSortKey());
+    }
+
+    // ---------------------------------------------------------------------------
+    // Pagination (client-side, page size from c.config.max_item_per_page)
+    // ---------------------------------------------------------------------------
+
+    // Page size from currentData.c.config.max_item_per_page (available from the
+    // complete=1 initial load and kept across AJAX navigations).
+    // Returns 0 when missing, invalid or <= 0 (same as "no pagination" server-side).
+    function getPageSize() {
+        try {
+            if (typeof currentData !== 'undefined' && currentData.c &&
+                currentData.c.config && currentData.c.config.max_item_per_page !== undefined) {
+                var size = parseInt(currentData.c.config.max_item_per_page, 10);
+                if (!isNaN(size) && size > 0) {
+                    return size;
+                }
+            }
+        } catch (e) {
+            // fall through to no pagination
+        }
+        return 0;
+    }
+
+    // Number of pages for a total of "total" books (always >= 1)
+    function getPageCount(total, pageSize) {
+        if (pageSize <= 0) {
+            return 1;
+        }
+        return Math.max(1, Math.ceil(total / pageSize));
+    }
+
+    // Sorted + paginated view of the active shelf.
+    // Returns { books, page, maxPage, pageSize, total } - the books array only
+    // holds the current page when a page size is configured.
+    function getPagedBooks() {
+        var all = getSortedBooks();
+        var total = all.length;
+        var pageSize = getPageSize();
+        var maxPage = getPageCount(total, pageSize);
+        if (shelfPage > maxPage) {
+            shelfPage = maxPage;
+        }
+        if (shelfPage < 1) {
+            shelfPage = 1;
+        }
+        var books = all;
+        if (pageSize > 0) {
+            var start = (shelfPage - 1) * pageSize;
+            books = all.slice(start, start + pageSize);
+        }
+        return {
+            books: books,
+            page: shelfPage,
+            maxPage: maxPage,
+            pageSize: pageSize,
+            total: total
+        };
+    }
+
+    // Set the current page (clamped on the next getPagedBooks() call)
+    function setPage(page) {
+        shelfPage = page;
+    }
+
     // Export only the active shelf as a JSON string
     function exportData() {
         var data = load();
@@ -307,6 +497,7 @@ var ShelfManager = (function() {
                 data.shelves[currentActive] = books;
             }
 
+            shelfPage = 1;
             save(data);
             return true;
         } catch (e) {
@@ -663,6 +854,65 @@ var ShelfManager = (function() {
                 id: removeButtons[j].getAttribute('data-book-id')
             });
         }
+
+        // Sort links (shared: #shelf-sortlinks a[data-sort] with the key name)
+        var sortLinks = document.querySelectorAll('#shelf-sortlinks a[data-sort]');
+        for (var s = 0; s < sortLinks.length; s++) {
+            (function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var key = link.getAttribute('data-sort');
+                    var current = parseSortKey(getSortKey());
+                    var dir = 'asc';
+                    if (current.name === key) {
+                        dir = current.dir === 'asc' ? 'desc' : 'asc';
+                    }
+                    setSortKey(key + '+' + dir);
+                    refreshShelfPage();
+                });
+            })(sortLinks[s]);
+        }
+
+        // Pager links (shared: #shelf-pager a[data-page] = first|prev|next|last)
+        var pageLinks = document.querySelectorAll('#shelf-pager a[data-page]');
+        for (var p = 0; p < pageLinks.length; p++) {
+            (function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var li = link.parentNode;
+                    if (li && (' ' + li.className + ' ').indexOf(' disabled ') > -1) {
+                        return;
+                    }
+                    var info = getPagedBooks();
+                    var target = info.page;
+                    var action = link.getAttribute('data-page');
+                    if (action === 'first') {
+                        target = 1;
+                    } else if (action === 'prev') {
+                        target = info.page - 1;
+                    } else if (action === 'next') {
+                        target = info.page + 1;
+                    } else if (action === 'last') {
+                        target = info.maxPage;
+                    }
+                    if (target < 1) {
+                        target = 1;
+                    }
+                    if (target > info.maxPage) {
+                        target = info.maxPage;
+                    }
+                    if (target === info.page) {
+                        return;
+                    }
+                    setPage(target);
+                    refreshShelfPage();
+                    var content = document.getElementById('shelf-page-content');
+                    if (content && typeof content.scrollIntoView === 'function') {
+                        content.scrollIntoView();
+                    }
+                });
+            })(pageLinks[p]);
+        }
     }
     
     // Navigate to the dedicated shelves page (shared across all templates)
@@ -722,6 +972,16 @@ var ShelfManager = (function() {
         createShelf: createShelf,
         deleteShelf: deleteShelf,
         renameShelf: renameShelf,
+        getSortKey: getSortKey,
+        setSortKey: setSortKey,
+        parseSortKey: parseSortKey,
+        getUrlSortKey: getUrlSortKey,
+        sortBooks: sortBooks,
+        getSortedBooks: getSortedBooks,
+        getPageSize: getPageSize,
+        getPageCount: getPageCount,
+        getPagedBooks: getPagedBooks,
+        setPage: setPage,
         exportData: exportData,
         importData: importData,
         downloadExport: downloadExport,

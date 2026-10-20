@@ -22,8 +22,6 @@
     "sortoptions": {
         "title": "Titles",
         "author": "Authors",
-        "pubdate": "Published",
-        "rating": "Ratings",
         "timestamp": "Recent additions"
     },
     "filters": false,
