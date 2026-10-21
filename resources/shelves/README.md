@@ -64,6 +64,12 @@ This implementation adds client-side virtual shelves using `localStorage`, avail
   - Download all books in the active shelf as a .zip file, one button per available format
   - Uses existing ZipperHandler / ZipStream infrastructure
   - Supports multi-database shelves via nested idlist parameters
+- **Share Shelf (QR code)**:
+  - Share button on the shelf page builds a URL encoding the active shelf's book ids (grouped by database) plus the shelf name, with `share=1`
+  - The URL is rendered as a QR code (via `showQRCode`) so another device can scan it
+  - Opening the shared URL on a target device triggers `handleSharedShelf()`, which fetches `/restapi/shelf` and imports the books as a new shelf (named after the source, or `Shared`), avoiding duplicate shelf names
+  - URLs longer than 2000 characters are rejected with a status message (shelf too large for QR sharing)
+  - Requires the target device to reach the same COPS instance
 - **Sorting**:
   - Sort the shelf page by title, author, or date added (insertion order), ascending or descending
   - Sort controls mirror the sort links used on normal book list pages (icons + labels + active state per template)
@@ -216,7 +222,20 @@ Each template's `templates/<template>/scripts/shelves.js` defines only the styli
 
 ## Functional Test
 
-A standalone Node.js functional test is available at **`tests/shelves_test.js`**. It covers book identity (db normalization), localStorage persistence, multi-database shelves, shelf management, export/import (active-shelf export, replace/new/merge import, validation), dedicated page rendering (including XSS escaping), error handling, sorting (comparators, sort key validation/persistence, page reset) and pagination (page size config, page slicing/clamping, sort link and pager rendering) - without requiring a browser, webserver or PHP.
+A standalone Node.js functional test is available at **`tests/shelves_test.js`** — no browser, webserver or PHP required.
+
+It covers:
+
+- Book identity and db normalization
+- localStorage persistence
+- Multi-database shelves
+- Shelf management (create, rename, delete, switch)
+- Export/import (active-shelf export; replace/new/merge import; validation)
+- Dedicated page rendering (including XSS escaping)
+- Error handling
+- Sorting (comparators, sort key validation/persistence, page reset)
+- Pagination (page size config, page slicing/clamping, sort link and pager rendering)
+- Share URL generation (single/multi-database, empty shelf, name encoding)
 
 ```bash
 node tests/shelves_test.js
@@ -266,7 +285,7 @@ For doT templates (bootstrap2, bootstrap5):
 
 - **Per-browser storage**: Shelves are stored per browser, not synced across devices
 - **No server persistence**: Clearing browser data will delete shelves
-- **No sharing**: Cannot share shelf lists with other users
+- **Sharing limits**: Share URLs are limited to ~2000 characters; very large shelves cannot be shared via QR code, and sharing requires network access to the same COPS instance
 - **Stale metadata**: Book titles/authors may become outdated if library changes (links still work)
 
 ## Adding shelves to another template
@@ -299,6 +318,5 @@ To add shelves to a new template, follow the pattern used by bootstrap2 and boot
 Possible improvements for future versions:
 - Search/filter within shelf view
 - Sort by series (requires storing series metadata in localStorage shelf entries first)
-- Shelf sharing via URL encoding
 - Sync with Calibre reading lists
 - Add/remove books to/from multiple shelves at once

@@ -812,6 +812,53 @@ var fixtureShelves = {
 })();
 
 // ---------------------------------------------------------------------------
+// 8. Shelf sharing URL
+// ---------------------------------------------------------------------------
+
+(function testShelfShareUrl() {
+    var singleDbShelves = {
+        activeShelf: 'Favorites',
+        shelves: {
+            'Favorites': [
+                { db: '', id: '17', title: 'Book 1', author: 'Author 1', thumbnailurl: '', detailurl: '/b/17' },
+                { db: '', id: '19', title: 'Book 2', author: 'Author 2', thumbnailurl: '', detailurl: '/b/19' }
+            ]
+        }
+    };
+    var env = setup({ initialShelves: singleDbShelves });
+    env.currentData = { baseurl: '/cops', shelvesurl: '/cops/shelves', download: true };
+
+    var url = env.ShelfManager.getShelfShareUrl();
+    check('share url not null', url !== null);
+    check('share url has idlist', url.indexOf('idlist[') > -1);
+    check('share url has book ids', url.indexOf('17%2C19') > -1 || url.indexOf('19%2C17') > -1);
+    check('share url has name', url.indexOf('name=') > -1);
+    check('share url has share=1', url.indexOf('share=1') > -1);
+    check('share url uses shelvesurl base', url.indexOf('/cops/shelves?') > -1);
+
+    // multi-database shelf -> nested idlist
+    var multiDbShelves = {
+        activeShelf: 'Favorites',
+        shelves: {
+            'Favorites': [
+                { db: '', id: '17', title: 'Book 1', author: 'Author 1', thumbnailurl: '', detailurl: '/b/17' },
+                { db: '1', id: '19', title: 'Book 2', author: 'Author 2', thumbnailurl: '', detailurl: '/b/19' }
+            ]
+        }
+    };
+    var env2 = setup({ initialShelves: multiDbShelves });
+    env2.currentData = { baseurl: '/cops', shelvesurl: '/cops/shelves', download: true };
+    var url2 = env2.ShelfManager.getShelfShareUrl();
+    check('multi-db share url has idlist[0]', url2.indexOf('idlist[0]=') > -1);
+    check('multi-db share url has idlist[1]', url2.indexOf('idlist[1]=') > -1);
+
+    // empty shelf -> null
+    var emptyShelves = { activeShelf: 'Favorites', shelves: { 'Favorites': [] } };
+    var env3 = setup({ initialShelves: emptyShelves });
+    checkEquals('empty shelf share url is null', null, env3.ShelfManager.getShelfShareUrl());
+})();
+
+// ---------------------------------------------------------------------------
 
 console.log('');
 console.log(count + ' checks, ' + failures + ' failure(s)');

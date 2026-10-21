@@ -569,6 +569,54 @@ var ShelfManager = (function() {
         return baseUrl + '/zipper/books/' + encodeURIComponent(String(format)) + '.zip?' + queryParts.join('&');
     }
 
+    // Build a share URL for the active shelf that a target device can scan.
+    // Mirrors getShelfZipUrl() but points at the shelves page (idlist + name)
+    // so the target can fetch /restapi/shelf and import the books.
+    // Returns null when the shelf is empty.
+    function getShelfShareUrl() {
+        var books = getBooks();
+        if (!books || books.length < 1) {
+            return null;
+        }
+        var groups = {};
+        for (var i = 0; i < books.length; i++) {
+            var db = normalizeDb(books[i].db);
+            if (!groups[db]) {
+                groups[db] = [];
+            }
+            groups[db].push(books[i].id);
+        }
+        var queryParts = [];
+        var dbKeys = Object.keys(groups);
+        for (var k = 0; k < dbKeys.length; k++) {
+            var dbKey = dbKeys[k];
+            var index = dbKey === '' ? 0 : parseInt(dbKey, 10);
+            if (isNaN(index)) {
+                index = k;
+            }
+            queryParts.push('idlist[' + index + ']=' + encodeURIComponent(groups[dbKey].join(',')));
+        }
+        var shelfName = getActiveShelfName();
+        var safeName = String(shelfName).replace(/[^\w -]/g, '');
+        queryParts.push('name=' + encodeURIComponent(safeName));
+        queryParts.push('share=1');
+        var baseUrl = (typeof currentData !== 'undefined' && currentData.shelvesurl)
+            ? currentData.shelvesurl
+            : ((typeof currentData !== 'undefined' && currentData.baseurl) ? currentData.baseurl : '.');
+        var url = baseUrl + '?' + queryParts.join('&');
+
+        // Resolve to an absolute URL when running in a browser so the QR code
+        // can be scanned by another device (showQRCode only renders absolute URLs).
+        try {
+            if (typeof window !== 'undefined' && window.location && typeof window.location.href === 'string' &&
+                window.location.href.indexOf('://') !== -1) {
+                url = new URL(url, window.location.href).href;
+            }
+        } catch (e) { }
+        return url;
+    }
+
+
     // Download all books in the active shelf as a .zip file in the given format.
     // Uses existing ZipperHandler / ZipStream infrastructure.
     function downloadShelf(format) {
@@ -777,6 +825,26 @@ var ShelfManager = (function() {
                 downloadExport();
             });
         }
+        var shareBtn = document.getElementById('shelf-share-btn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', function() {
+                var url = getShelfShareUrl();
+                if (!url) {
+                    showStatusMessage(getI18n('shelfDownloadEmpty', 'No books in shelf to download.'), 'error');
+                    return;
+                }
+                if (url.length > 2000) {
+                    showStatusMessage(getI18n('shelfShareTooLarge', 'Shelf too large for QR code sharing (URL exceeds 2000 characters).'), 'error');
+                    return;
+                }
+                var qrContainer = document.getElementById('shelf-share-qr');
+                if (qrContainer && typeof showQRCode === 'function') {
+                    showQRCode('shelf-share-qr', url);
+                }
+            });
+        }
+
+
 
         var importBtn = document.getElementById('shelf-import-btn');
         if (importBtn) {
@@ -915,6 +983,116 @@ var ShelfManager = (function() {
         }
     }
     
+    // Detect whether the current page URL carries a shared shelf (idlist + share=1).
+    function isSharedShelfUrl() {
+        if (typeof window === 'undefined' || !window.location || !window.location.search) return false;
+        var params = parseQueryString(window.location.search);
+        return !!(params && params.idlist && (params.share === '1' || params.share === 1));
+    }
+
+    function parseQueryString(qs) {
+        var out = {};
+        if (!qs) return out;
+        var s = qs.charAt(0) === '?' ? qs.substring(1) : qs;
+        if (!s) return out;
+        var parts = s.split('&');
+        for (var i = 0; i < parts.length; i++) {
+            var kv = parts[i].split('=');
+            var key = decodeURIComponent(kv[0] || '');
+            var val = kv.length > 1 ? decodeURIComponent(kv.slice(1).join('=')) : '';
+            if (!key) continue;
+            if (key.indexOf('idlist') === 0) {
+                out.idlist = out.idlist || {};
+                var m = key.match(/^idlist\[(.*)\]$/);
+                if (m) {
+                    out.idlist[m[1]] = val;
+                } else {
+                    out.idlist[''] = val;
+                }
+            } else {
+                out[key] = val;
+            }
+        }
+        return out;
+    }
+
+    var shareHandled = false;
+    function handleSharedShelf() {
+        if (shareHandled) return;
+        if (typeof currentData === 'undefined' || !currentData.baseurl) return;
+        if (!isSharedShelfUrl()) return;
+        shareHandled = true;
+
+        var fetchUrl = currentData.baseurl + '/restapi/shelf' + window.location.search;
+
+        var onSuccess = function (resp) {
+            processSharedShelfResponse(resp);
+        };
+        var onError = function () {
+            showStatusMessage(getI18n('shelfImportError', 'Invalid shelf data file.'), 'error');
+            shareHandled = false;
+        };
+
+        if (typeof $ !== 'undefined' && typeof $.getJSON === 'function') {
+            $.getJSON(fetchUrl, onSuccess).fail(onError);
+        } else if (typeof fetch === 'function') {
+            fetch(fetchUrl).then(function (r) { return r.json(); }).then(onSuccess).catch(onError);
+        } else {
+            shareHandled = false;
+        }
+    }
+
+    function processSharedShelfResponse(resp) {
+        if (!resp || !resp.entries || !Array.isArray(resp.entries)) {
+            showStatusMessage(getI18n('shelfImportError', 'Invalid shelf data file.'), 'error');
+            shareHandled = false;
+            return;
+        }
+        var books = [];
+        for (var i = 0; i < resp.entries.length; i++) {
+            var e = resp.entries[i];
+            if (!e || e.id === undefined || e.id === null) continue;
+            books.push({
+                id: String(e.id),
+                db: (e.db === undefined || e.db === null) ? '' : e.db,
+                title: e.title || '',
+                author: e.author || '',
+                thumbnailurl: e.thumbnail || '',
+                detailurl: e.detailurl || ''
+            });
+        }
+        if (books.length < 1) {
+            showStatusMessage(getI18n('shelfDownloadEmpty', 'No books in shelf to download.'), 'error');
+            cleanShareUrl();
+            return;
+        }
+        var requestedName = (resp.shelf && String(resp.shelf).trim()) ? String(resp.shelf).trim() : 'Shared';
+        var data = load();
+        if (!data.shelves) data.shelves = {};
+        var name = requestedName;
+        var counter = 2;
+        while (data.shelves[name]) {
+            name = requestedName + ' ' + counter;
+            counter++;
+        }
+        data.shelves[name] = books;
+        data.activeShelf = name;
+        shelfPage = 1;
+        save(data);
+        if (typeof refreshShelfPage === 'function') refreshShelfPage();
+        if (typeof updateUI === 'function') updateUI();
+        showStatusMessage(getI18n('shelfImportSuccess', 'Shelf imported successfully.'), 'success');
+        cleanShareUrl();
+    }
+
+    function cleanShareUrl() {
+        try {
+            if (typeof window !== 'undefined' && window.history && typeof window.history.replaceState === 'function' && typeof currentData !== 'undefined' && currentData.shelvesurl) {
+                window.history.replaceState({}, document.title, currentData.shelvesurl);
+            }
+        } catch (e) { }
+    }
+
     // Navigate to the dedicated shelves page (shared across all templates)
     function openShelvesPage() {
         if (typeof navigateTo === 'function' && typeof currentData !== 'undefined' && currentData.shelvesurl) {
@@ -987,6 +1165,8 @@ var ShelfManager = (function() {
         downloadExport: downloadExport,
         downloadShelf: downloadShelf,
         getShelfZipUrl: getShelfZipUrl,
+        getShelfShareUrl: getShelfShareUrl,
+        handleSharedShelf: handleSharedShelf,
         showImportDialog: showImportDialog,
         showStatusMessage: showStatusMessage,
         escapeHtml: escapeHtml,

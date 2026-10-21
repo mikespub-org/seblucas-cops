@@ -87,8 +87,11 @@ $(document).ready(function() {
                     '<span class="glyphicon glyphicon-download"></span> ' + getI18n('shelfExportTitle', 'Export') + '</button> ' +
                     '<button type="button" class="btn btn-info btn-sm" id="shelf-import-btn" title="' + getI18n('shelfImportTitle', 'Import') + '">' +
                     '<span class="glyphicon glyphicon-upload"></span> ' + getI18n('shelfImportTitle', 'Import') + '</button> ' +
+                    '<button type="button" class="btn btn-warning btn-sm" id="shelf-share-btn" title="' + getI18n('shelfShareTitle', 'Share shelf') + '">' +
+                    '<span class="glyphicon glyphicon-qrcode"></span> ' + getI18n('shelfShareTitle', 'Share') + '</button> ' +
                     '<input type="file" id="shelf-import-file" style="display:none;" accept=".json">' +
-                    downloadButtonsHtml;
+                    downloadButtonsHtml +
+                    '<div id="shelf-share-qr"></div>';
 
             // Sort links (client-side counterpart of the navbar sortlinks in booklist.html)
             var sortItems = [

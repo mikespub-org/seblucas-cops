@@ -13,6 +13,9 @@ function postRefresh()
         if (typeof ShelfManager.renderShelfPage === 'function') {
             ShelfManager.renderShelfPage();
         }
+        if (typeof ShelfManager.handleSharedShelf === 'function') {
+            ShelfManager.handleSharedShelf();
+        }
     }
 
     var gallery = document.getElementById('image-gallery');
@@ -86,6 +89,9 @@ function initiateTwig(url, theme, templates, version) {
             ShelfManager.updateUI();
             if (typeof ShelfManager.renderShelfPage === 'function') {
                 ShelfManager.renderShelfPage();
+            }
+            if (typeof ShelfManager.handleSharedShelf === 'function') {
+                ShelfManager.handleSharedShelf();
             }
         }
     }).fail(function (error) {

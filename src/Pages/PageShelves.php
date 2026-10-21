@@ -99,6 +99,8 @@ class PageShelves extends Page
             'shelfRenameError' => 'shelf.renameError',
             'shelfRenamePrompt' => 'shelf.renamePrompt',
             'shelfRenameTitle' => 'shelf.renameTitle',
+            'shelfShareTitle' => 'shelf.shareTitle',
+            'shelfShareTooLarge' => 'shelf.shareTooLarge',
             'shelfUnknownAuthor' => 'shelf.unknownAuthor',
             'shelvesTitle' => 'shelves.title',
         ];

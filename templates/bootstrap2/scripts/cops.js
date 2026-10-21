@@ -13,6 +13,9 @@ function postRefresh()
         if (typeof ShelfManager.renderShelfPage === 'function') {
             ShelfManager.renderShelfPage();
         }
+        if (typeof ShelfManager.handleSharedShelf === 'function') {
+            ShelfManager.handleSharedShelf();
+        }
     }
 }
 

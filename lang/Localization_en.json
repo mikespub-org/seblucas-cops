@@ -178,6 +178,8 @@
     "shelf.renameError": "Shelf name already exists or could not be renamed.",
     "shelf.renamePrompt": "Enter new shelf name:",
     "shelf.renameTitle": "Rename",
+    "shelf.shareTitle": "Share shelf",
+    "shelf.shareTooLarge": "Shelf too large for QR code sharing (URL exceeds 2000 characters).",
     "shelf.unknownAuthor": "Unknown",
     "shelves.title": "Shelves",
     "sort.alternate": "Sort",

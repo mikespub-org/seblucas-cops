@@ -87,8 +87,11 @@ $(document).ready(function() {
                     '<i class="bi bi-download pe-1"></i>' + getI18n('shelfExportTitle', 'Export') + '</button> ' +
                     '<button type="button" class="btn btn-info btn-sm" id="shelf-import-btn" title="' + getI18n('shelfImportTitle', 'Import') + '">' +
                     '<i class="bi bi-upload pe-1"></i>' + getI18n('shelfImportTitle', 'Import') + '</button> ' +
+                    '<button type="button" class="btn btn-warning btn-sm" id="shelf-share-btn" title="' + getI18n('shelfShareTitle', 'Share shelf') + '">' +
+                    '<i class="bi bi-qr-code pe-1"></i>' + getI18n('shelfShareTitle', 'Share') + '</button> ' +
                     '<input type="file" id="shelf-import-file" style="display:none;" accept=".json">' +
-                    downloadButtonsHtml;
+                    downloadButtonsHtml +
+                    '<div id="shelf-share-qr"></div>';
 
             // Sort links (client-side counterpart of the sort pills in header.html)
             var sortItems = [
