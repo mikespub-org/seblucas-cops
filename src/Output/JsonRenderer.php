@@ -453,6 +453,7 @@ class JsonRenderer extends BaseRenderer
                 "shelvesTitle" => $this->localize("shelves.title"),
                 "shelfAddTitle" => $this->localize("shelf.addTitle"),
                 "shelfRemoveTitle" => $this->localize("shelf.removeTitle"),
+                "randomTitle" => $this->localize("random.title"),
             ],
             "url" => [
                 // route urls do not accept non-numeric id or db to find match here + url does not include author or title
