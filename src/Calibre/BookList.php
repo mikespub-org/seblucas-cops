@@ -525,9 +525,18 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         }
         // @todo this is already covered in Filter::addBookIdListFilter()
         $query = self::SQL_BOOKS_BY_ID_LIST;
-        $query = str_replace('books.id = ? ', 'books.id IN (' . str_repeat('?,', count($idlist) - 1) . '?) ', $query);
-        // no page limit here
-        [$entryArray, $totalNumber] = $this->getEntryArray($query, $idlist, -1);
+        if (count($idlist) > 10) {
+            // use books_list_filter() for large idlist
+            $query = str_replace('books.id = ? ', 'books_list_filter(books.id) ', $query);
+            $this->getDbContext()->setBookIdList($idlist);
+            // no page limit here
+            [$entryArray, $totalNumber] = $this->getEntryArray($query, [], -1);
+            $this->getDbContext()->setBookIdList(null);
+        } else {
+            $query = str_replace('books.id = ? ', 'books.id IN (' . str_repeat('?,', count($idlist) - 1) . '?) ', $query);
+            // no page limit here
+            [$entryArray, $totalNumber] = $this->getEntryArray($query, $idlist, -1);
+        }
         $sorted = $this->orderBy ?? "id";
         if ($sorted == "id") {
             // sort entryArray by order in idlist

@@ -29,6 +29,8 @@ class DatabaseConnection
     protected ?Sqlite $db = null;
     protected bool $functions = false;
     protected ?bool $notesDb = null;
+    /** @var ?array<int> */
+    protected ?array $bookIdList = null;
 
     public function __construct(string $dbFileName, ?RequestConfig $config = null, ?int $database = null)
     {
@@ -87,7 +89,6 @@ class DatabaseConnection
         if (!in_array('series', $this->config('calibre_categories_using_hierarchy', []))) {
             $db->createFunction('title_sort', fn($s) => Normalizer::getTitleSort($s), 1);
         }
-        $db->createFunction('books_list_filter', fn($s) => 1, 1);
         $db->createAggregate('concat', function ($context, $string) {
             $context ??= [];
             $context[] = $string;
@@ -131,6 +132,9 @@ class DatabaseConnection
             // no-op
             $db->createFunction('strip_html', fn($s) => $s, 1);
         }
+
+        // see Calibre tag_browser_filtered_* views
+        $db->createFunction('books_list_filter', fn($s) => $this->booksListFilter($s), 1);
 
         $sql = 'SELECT sqlite_version() as version;';
         $stmt = $db->prepare($sql);
@@ -247,6 +251,28 @@ class DatabaseConnection
         $result->execute($params);
         $totalResult = (int) $result->fetchColumn();
         return $totalResult;
+    }
+
+    /**
+     * Summary of setBookIdList
+     * @param ?array<int> $idlist
+     */
+    public function setBookIdList(?array $idlist = null): void
+    {
+        $this->bookIdList = $idlist;
+    }
+
+    /**
+     * Summary of booksListFilter
+     * @param mixed $id
+     * @return int
+     */
+    public function booksListFilter($id)
+    {
+        if (is_null($this->bookIdList)) {
+            return 1;
+        }
+        return (int) in_array((int) $id, $this->bookIdList);
     }
 
     /**

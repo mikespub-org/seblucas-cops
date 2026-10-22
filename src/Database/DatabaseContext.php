@@ -319,6 +319,15 @@ class DatabaseContext
     }
 
     /**
+     * Summary of setBookIdList
+     * @param ?array<int> $idlist
+     */
+    public function setBookIdList(?array $idlist = null): void
+    {
+        $this->getConnection()->setBookIdList($idlist);
+    }
+
+    /**
      * Summary of getDbSchema
      * @param ?string $type get table or view entries
      * @return array<mixed>

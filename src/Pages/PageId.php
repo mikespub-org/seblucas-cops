@@ -63,6 +63,8 @@ class PageId
     public const ALL_ANNOTATIONS = "annotations";
     public const ANNOTATIONS_BOOK = "annotations_book";
     public const ANNOTATION_DETAIL = "annotation";
+    public const ALL_SHELVES = "shelves";
+    public const SHELF_DETAIL = "shelf";
     public const REST_API = "restapi";
     public const FILTER = "filter";
     public const ERROR = "error";

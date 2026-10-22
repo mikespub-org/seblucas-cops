@@ -42,6 +42,7 @@ class Filter
         BookList::URL_PARAM_FIRST => BookList::class,
         BookList::URL_PARAM_YEAR => BookList::class,
         BookList::URL_PARAM_LIST => BookList::class,
+        BookShelf::URL_PARAM => BookShelf::class,
         VirtualLibrary::URL_PARAM => VirtualLibrary::class,
     ];
     public const SEARCH_FIELDS = [
@@ -203,9 +204,24 @@ class Filter
             $this->addPubYearFilter($year);
         }
 
-        // this only works if books is part of the query
-        [$idlist, $flat] = $this->request->getIdList(BookList::URL_PARAM_LIST);
-        if (!empty($idlist) && $this->parentTable == 'books') {
+        $shelfId = $this->request->get(BookShelf::URL_PARAM, null, '/^[0-9a-f]+$/');
+        if (!empty($shelfId)) {
+            // @todo get idlist for shelfId
+            $idlist = BookShelf::getIdListForShelf($shelfId);
+            // Nested form idlist[<db>]=<csv>: only apply the group that
+            // belongs to this filter's database context
+            $dbId = (int) $this->getDatabaseId();
+            if (array_key_exists($dbId, $idlist)) {
+                $idlist = $idlist[$dbId];
+            } else {
+                $idlist = null;
+            }
+            $flat = true;
+        } else {
+            [$idlist, $flat] = $this->request->getIdList(BookList::URL_PARAM_LIST);
+        }
+        // this only works if books or books_*_link are part of the query
+        if (!empty($idlist) && !empty($this->parentTable)) {
             if ($flat) {
                 $idlist = array_map('intval', $idlist);
             } else {
@@ -224,9 +240,13 @@ class Filter
                 }
                 $idlist = !empty($idlist) ? array_map('intval', $idlist) : [];
             }
-            $this->addBookIdListFilter($idlist);
+            if ($this->parentTable == "books") {
+                $this->addBookIdListFilter($idlist);
+            } else {
+                // use idlist filter for other entities as well?
+                $this->addBookIdListFilter($idlist, $this->parentTable, "book");
+            }
         }
-        // @todo use idlist filter for other entities as well?
 
         // URL format: ...&c[2]=3&c[3]=other to filter on column 2 = 3 and column 3 = other
         $customIdArray = $this->request->get(CustomColumn::URL_PARAM, null);
@@ -505,14 +525,17 @@ class Filter
     /**
      * Summary of addBookIdListFilter
      * @param array<int> $idlist
+     * @param string $linkTable
+     * @param string $linkColumn
      * @return void
      */
-    public function addBookIdListFilter($idlist)
+    public function addBookIdListFilter($idlist, $linkTable = "books", $linkColumn = "id")
     {
         if (count($idlist) < 1) {
             return;
         }
-        $filter = 'books.id IN (' . str_repeat('?,', count($idlist) - 1) . '?)';
+        // @todo use books_list_filter for large idlist - see BookList::getBooksByIdList()
+        $filter = "{$linkTable}.{$linkColumn} IN (" . str_repeat('?,', count($idlist) - 1) . '?)';
         //$this->addFilter($filter, $idlist);
         $this->queryString .= ' and (' . $filter . ')';
         $this->params = array_merge($this->params, $idlist);
@@ -659,7 +682,8 @@ class Filter
             if (!isset($paramValue)) {
                 continue;
             }
-            if ($paramName == BookList::URL_PARAM_LIST) {
+            // @todo do we want to filter by book shelf etc. here?
+            if ($paramName == BookList::URL_PARAM_LIST || $paramName == BookShelf::URL_PARAM) {
                 // @todo (booklist) this is not used to generate filter entries
                 //$entryArray = array_merge($entryArray, $booklist->getBooksByIdList($paramValue)),
                 continue;
