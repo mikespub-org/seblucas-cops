@@ -182,6 +182,16 @@ class Request
         $this->postParams = $_POST;
         $this->cookieParams = $_COOKIE;
         $this->fileParams = $_FILES;
+        // Note: do not use this in combination with $this->content() - see GraphQLExecutor::runQuery()
+        if (in_array($this->method(), ['PUT', 'DELETE', 'PATCH', 'QUERY'])) {
+            [$post, $files] = request_parse_body();  // PHP 8.4+
+            if (!empty($post)) {
+                $this->postParams = array_merge($this->postParams, $post);
+            }
+            if (!empty($files)) {
+                $this->fileParams = array_merge($this->fileParams, $files);
+            }
+        }
         if (!empty($this->queryParams)) {
             foreach ($this->queryParams as $name => $value) {
                 // remove ajax timestamp for jQuery cache = false
@@ -423,7 +433,14 @@ class Request
     {
         $idlist = $this->get($name);
         if (empty($idlist)) {
-            return [null, true];
+            if ($this->method() == 'QUERY') {
+                $idlist = $this->post($name);
+                if (empty($idlist)) {
+                    return [null, true];
+                }
+            } else {
+                return [null, true];
+            }
         }
         $flat = false;
         // flat '17,19' / [17,19]: default database

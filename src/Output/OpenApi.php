@@ -175,6 +175,10 @@ class OpenApi
         }
         foreach ($methods as $method) {
             $method = strtolower($method);
+            // @todo support QUERY method with OpenAPI 3.2.0
+            if ($method == 'query') {
+                continue;
+            }
             $operationId = $method . '_' . $name;
             $operation = $this->getOperation($queryString, $operationId, $handler);
             if (!empty($params)) {

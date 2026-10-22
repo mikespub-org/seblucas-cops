@@ -578,7 +578,11 @@
                     "/restapi/shelf",
                     {
                         "_resource": "BookShelf"
-                    }
+                    },
+                    [
+                        "GET",
+                        "QUERY"
+                    ]
                 ],
                 "restapi-path": [
                     "/restapi/{path:.*}"

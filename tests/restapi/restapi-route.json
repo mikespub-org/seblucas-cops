@@ -1352,7 +1352,8 @@
                     "_route": "restapi-shelf"
                 },
                 [
-                    "GET"
+                    "GET",
+                    "QUERY"
                 ],
                 []
             ]
