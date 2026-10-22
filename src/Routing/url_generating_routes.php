@@ -96,7 +96,7 @@ return [
     'restapi-user-details' => [[], ['_resource' => 'User', 'details' => true, '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler', '_route' => 'restapi-user-details'], [], [['text', '/restapi/user/details']], [], [], []],
     'restapi-user' => [[], ['_resource' => 'User', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler', '_route' => 'restapi-user'], [], [['text', '/restapi/user']], [], [], []],
     'restapi-folders' => [['path'], ['_resource' => 'Folder', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler', '_route' => 'restapi-folders'], ['path' => '.*'], [['variable', '/', '.*', 'path'], ['text', '/restapi/folders']], [], [], []],
-    'restapi-shelf' => [[], ['_resource' => 'Shelf', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler', '_route' => 'restapi-shelf'], [], [['text', '/restapi/shelf']], [], [], []],
+    'restapi-shelf' => [[], ['_resource' => 'BookShelf', '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler', '_route' => 'restapi-shelf'], [], [['text', '/restapi/shelf']], [], [], []],
     'restapi-path' => [['path'], ['_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler', '_route' => 'restapi-path'], ['path' => '.*'], [['variable', '/', '.*', 'path'], ['text', '/restapi']], [], [], []],
     'check-more' => [['more'], ['_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler', '_route' => 'check-more'], ['more' => '.*'], [['variable', '/', '.*', 'more'], ['text', '/check']], [], [], []],
     'check' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\CheckHandler', '_route' => 'check'], [], [['text', '/check']], [], [], []],

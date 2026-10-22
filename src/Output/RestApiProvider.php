@@ -64,7 +64,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         "/metadata" => 'getMetadata',
         "/user" => 'getUser',
         "/folders" => 'getFolders',
-        "/shelf" => 'getShelf',
+        "/shelf" => 'getBookShelf',
     ];
 
     public bool $isExtra = false;
@@ -939,11 +939,11 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
     }
 
     /**
-     * Summary of getShelf
+     * Summary of getBookShelf
      * @param Request $request
      * @return array<string, mixed>
      */
-    public function getShelf($request)
+    public function getBookShelf($request)
     {
         $entries = [];
         $page = PageId::getPage('books', $request);
@@ -966,7 +966,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
         }
         $name = $request->get('name', "Shared");
         return [
-            "title" => "Shelf",
+            "title" => "BookShelf",
             "shelf" => $name,
             "entries" => $entries,
         ];

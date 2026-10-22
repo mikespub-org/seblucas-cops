@@ -13,6 +13,12 @@ parameters:
 			path: src/Calibre/Annotation.php
 
 		-
+			message: '#^PHPDoc type string\|null of property SebLucas\\Cops\\Calibre\\BookShelf\:\:\$id is not covariant with PHPDoc type int\|null of overridden property SebLucas\\Cops\\Calibre\\Base\:\:\$id\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Calibre/BookShelf.php
+
+		-
 			message: '#^PHPDoc tag @var with type SebLucas\\Cops\\Calibre\\Category is not subtype of native type static\(SebLucas\\Cops\\Calibre\\Category\)\.$#'
 			identifier: varTag.nativeType
 			count: 1

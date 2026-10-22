@@ -31,5 +31,6 @@ clover.xml
 coverage/
 *.cache
 cache/*.php
+data/
 rector.php
 templates/twigged5/

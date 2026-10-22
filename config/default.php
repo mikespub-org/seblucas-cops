@@ -282,6 +282,21 @@ $config['cops_use_fancyapps'] = '1';
 $config['cops_use_client_shelves'] = '0';
 
 /*
+ * Enable server-side virtual shelves (favorites) in supported templates (TODO)
+ * ''        : No (disabled)
+ * 'session' : Yes, per browser session
+ * 'user'    : Yes, per user (with authentication)
+ * 'shared'  : Yes, shared for all
+ */
+$config['cops_use_server_shelves'] = '';
+
+/**
+ * The directory containing the server-side shelves data - must be writable by COPS
+ * BEWARE : it has to end with a /
+ */
+$config['cops_shelves_directory'] = dirname(__DIR__) . '/data/shelves/';
+
+/*
  * Update Epub metadata before download
  * 1 : Yes (enable)
  * 0 : No

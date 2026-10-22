@@ -59,6 +59,7 @@
                 <exclude name="phpunit*" />
                 <exclude name="rector*" />
                 <exclude name="cache/**.php" />
+                <exclude name="data/**" />
                 <exclude name="vendor/bin/**" />
                 <exclude name="vendor/maennchen/zipstream-php/.github/**" />
                 <exclude name="vendor/maennchen/zipstream-php/.phive/**" />

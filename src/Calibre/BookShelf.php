@@ -24,6 +24,8 @@ class BookShelf extends Base
     public const ROUTE_DETAIL = "page-shelf";
     public const URL_PARAM = "shelf";
 
+    /** @var ?string */
+    public $id;
     /** @var ?array<int, array<int>> */
     public $bookIdList = null;
 

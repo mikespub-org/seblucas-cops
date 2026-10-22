@@ -234,6 +234,19 @@ $tooltips['cops_use_client_shelves'] = <<<'EOT'
     0 : No
     EOT;
 
+$tooltips['cops_use_server_shelves'] = <<<'EOT'
+    Enable server-side virtual shelves (favorites) in supported templates (TODO)
+    ''        : No (disabled)
+    'session' : Yes, per browser session
+    'user'    : Yes, per user (with authentication)
+    'shared'  : Yes, shared for all
+    EOT;
+
+$tooltips['cops_shelves_directory'] = <<<'EOT'
+    The directory containing the server-side shelves data - must be writable by COPS
+    BEWARE : it has to end with a /
+    EOT;
+
 $tooltips['cops_update_epub-metadata'] = <<<'EOT'
     Update Epub metadata before download
     1 : Yes (enable)

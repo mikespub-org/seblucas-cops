@@ -213,11 +213,11 @@ class RestApiTest extends TestCase
         Config::set('api_key', null);
     }
 
-    public function testGetShelf(): void
+    public function testGetBookShelf(): void
     {
         $request = Request::build(['idlist' => '17,19'], self::$handler);
-        $expected = "Shelf";
-        $test = self::$apiProvider->getShelf($request);
+        $expected = "BookShelf";
+        $test = self::$apiProvider->getBookShelf($request);
         $this->assertEquals($expected, $test["title"]);
         $expected = "Shared";
         $this->assertEquals($expected, $test["shelf"]);

@@ -1145,7 +1145,7 @@ $routes = [
   'restapi-shelf' => [
     '/restapi/shelf',
     [
-      '_resource' => 'Shelf',
+      '_resource' => 'BookShelf',
       '_handler' => 'SebLucas\\Cops\\Handlers\\RestApiHandler',
       '_route' => 'restapi-shelf',
     ],

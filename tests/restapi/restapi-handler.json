@@ -577,7 +577,7 @@
                 "restapi-shelf": [
                     "/restapi/shelf",
                     {
-                        "_resource": "Shelf"
+                        "_resource": "BookShelf"
                     }
                 ],
                 "restapi-path": [
