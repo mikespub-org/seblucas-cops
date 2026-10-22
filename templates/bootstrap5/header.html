@@ -10,6 +10,11 @@
           <li class="nav-item">
             <a class="nav-link{{? it.page == "recent" }} active{{?}}" href="{{=it.baseurl}}?page=recent"{{? it.page == "recent" }} aria-current="page"{{?}}>{{=it.c.i18n.recentTitle}}</a>
           </li>
+          {{? !it.c.config.ignored_categories.random && it.c.config.random_books > 0 }}
+          <li class="nav-item">
+            <a class="nav-link{{? it.page == "random" }} active{{?}}" href="{{=it.baseurl}}?page=random"{{? it.page == "random" }} aria-current="page"{{?}}>{{=it.c.i18n.randomTitle}}</a>
+          </li>
+          {{?}}
           {{? !it.c.config.ignored_categories.author }}
           <li class="nav-item">
             <a class="nav-link{{? it.page == "authors" }} active{{?}}" href="{{=it.baseurl}}?page=authors"{{? it.page == "authors" }} aria-current="page"{{?}}>{{=it.c.i18n.authorsTitle}}</a>
