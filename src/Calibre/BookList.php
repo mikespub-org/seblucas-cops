@@ -153,7 +153,12 @@ class BookList
         $filter = new Filter($this->request, [], "books", $this->getDbContext());
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return $this->getDbContext()->countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params);
+        try {
+            $filter->prepare();
+            return $this->getDbContext()->countFilter(self::SQL_BOOKS_ALL, 'count(*)', $filterString, $params);
+        } finally {
+            $filter->clean();
+        }
     }
 
     /**
@@ -403,11 +408,16 @@ class BookList
             $this->orderBy = 'groupid';
         }
         $sortBy = $this->getOrderBy();
-        $result = $this->getDbContext()->queryFilter('select {0}
+        try {
+            $filter->prepare();
+            $result = $this->getDbContext()->queryFilter('select {0}
 from books
 where 1=1 {1}
 group by groupid
 order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterString, $params, -1, null);
+        } finally {
+            $filter->clean();
+        }
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
@@ -606,7 +616,12 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
         $params = $filter->getQueryParams();
         // Get book columns (same as getEntryArray)
         $columns = Book::getBookColumns($this->getConfig());
-        [$totalNumber, $result] = $this->getDbContext()->queryTotal($query, $columns, $filterString, $params, -1, -1);
+        try {
+            $filter->prepare();
+            [$totalNumber, $result] = $this->getDbContext()->queryTotal($query, $columns, $filterString, $params, -1, -1);
+        } finally {
+            $filter->clean();
+        }
         /** @phpstan-ignore-next-line */
         if (self::BATCH_QUERY) {
             // We cannot use batchQuery here as it relies on bookList state
@@ -650,9 +665,12 @@ order by ' . $sortBy, $groupField . ' as groupid, count(*) as count', $filterStr
             }
         }
 
-        /** @var integer $totalNumber */
-        /** @var \PDOStatement $result */
-        [$totalNumber, $result] = $this->getDbContext()->queryTotal($query, Book::getBookColumns($this->getConfig()), $filterString, $params, $n, $this->numberPerPage);
+        try {
+            $filter->prepare();
+            [$totalNumber, $result] = $this->getDbContext()->queryTotal($query, Book::getBookColumns($this->getConfig()), $filterString, $params, $n, $this->numberPerPage);
+        } finally {
+            $filter->clean();
+        }
 
         /** @phpstan-ignore-next-line */
         if (self::BATCH_QUERY) {

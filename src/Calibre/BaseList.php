@@ -272,7 +272,12 @@ class BaseList
         $filterString = $filter->getFilterString();
         // [1]
         $params = $filter->getQueryParams();
-        return $this->getDbContext()->countFilter($query, $columns, $filterString, $params);
+        try {
+            $filter->prepare();
+            return $this->getDbContext()->countFilter($query, $columns, $filterString, $params);
+        } finally {
+            $filter->clean();
+        }
     }
 
     /**
@@ -349,7 +354,12 @@ class BaseList
             $filter = new Filter($this->request, $params, $this->getLinkTable(), $this->getDbContext());
             $filterString = $filter->getFilterString();
             $params = $filter->getQueryParams();
-            return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n, $urlParams);
+            try {
+                $filter->prepare();
+                return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n, $urlParams);
+            } finally {
+                $filter->clean();
+            }
         }
         return $this->getEntryArrayWithBookNumber($query, $columns, "", $params, $n, $urlParams);
     }
@@ -390,7 +400,12 @@ class BaseList
         $query .= ' order by ' . $sortBy;
         // $groupField as groupid, count(distinct authors.id) as count
         $columns = $groupField . ' as groupid, count(distinct ' . $this->getTable() . '.id) as count';
-        $result = $this->getDbContext()->queryFilter($query, $columns, $filterString, $params, -1, null);
+        try {
+            $filter->prepare();
+            $result = $this->getDbContext()->queryFilter($query, $columns, $filterString, $params, -1, null);
+        } finally {
+            $filter->clean();
+        }
 
         // authorword, publisherword, seriesword, tagword
         $countword = $this->getLinkColumn() . 'word';
@@ -432,7 +447,12 @@ class BaseList
         $filter = new Filter($this->request, [$letter . "%"], $this->getLinkTable(), $this->getDbContext());
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        try {
+            $filter->prepare();
+            return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        } finally {
+            $filter->clean();
+        }
     }
 
     /**
@@ -578,7 +598,12 @@ class BaseList
         $columns = $this->getCountColumns();
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        try {
+            $filter->prepare();
+            return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        } finally {
+            $filter->clean();
+        }
     }
 
     /**
@@ -599,7 +624,12 @@ class BaseList
         $columns = $this->getCountColumns();
         $filterString = $filter->getFilterString();
         $params = $filter->getQueryParams();
-        return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        try {
+            $filter->prepare();
+            return $this->getEntryArrayWithBookNumber($query, $columns, $filterString, $params, $n);
+        } finally {
+            $filter->clean();
+        }
     }
 
     /**

@@ -444,6 +444,7 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             }
             $filterParams[$paramName] = $paramValue;
         }
+        $filter = null;
         if (!empty($filterParams)) {
             $req = Request::build($filterParams);
             $filter = new Filter($req, [], 'books', $dbContext);
@@ -487,27 +488,32 @@ class RestApiProvider extends BaseRenderer implements HasContextInterface
             }
         }
 
-        $filteredQuery = "SELECT COUNT(*) FROM {$name}" . $where;
-        $filtered = $dbContext->query($filteredQuery, $bindings)->fetchColumn();
+        try {
+            $filter?->prepare();
+            $filteredQuery = "SELECT COUNT(*) FROM {$name}" . $where;
+            $filtered = $dbContext->query($filteredQuery, $bindings)->fetchColumn();
 
-        $links = [
-            'authors' => 'books_authors_link.author',
-            //'languages' => 'books_languages_link.lang_code',
-            'publishers' => 'books_publishers_link.publisher',
-            'ratings' => 'books_ratings_link.rating',
-            'series' => 'books_series_link.series',
-            'tags' => 'books_tags_link.tag',
-        ];
-        if (array_key_exists($name, $links)) {
-            [$linkTable, $linkField] = explode('.', $links[$name]);
-            $query = "SELECT {$name}.*, COUNT(book) as books FROM {$name} LEFT JOIN {$linkTable} on {$linkTable}.{$linkField} = {$name}.id " . $where . " GROUP BY {$name}.id " . $order . " LIMIT ?, ?";
-        } else {
-            $query = "SELECT * FROM {$name}" . $where . $order . " LIMIT ?, ?";
+            $links = [
+                'authors' => 'books_authors_link.author',
+                //'languages' => 'books_languages_link.lang_code',
+                'publishers' => 'books_publishers_link.publisher',
+                'ratings' => 'books_ratings_link.rating',
+                'series' => 'books_series_link.series',
+                'tags' => 'books_tags_link.tag',
+            ];
+            if (array_key_exists($name, $links)) {
+                [$linkTable, $linkField] = explode('.', $links[$name]);
+                $query = "SELECT {$name}.*, COUNT(book) as books FROM {$name} LEFT JOIN {$linkTable} on {$linkTable}.{$linkField} = {$name}.id " . $where . " GROUP BY {$name}.id " . $order . " LIMIT ?, ?";
+            } else {
+                $query = "SELECT * FROM {$name}" . $where . $order . " LIMIT ?, ?";
+            }
+            $bindings[] = $start;
+            $bindings[] = $length;
+
+            $entries = $dbContext->query($query, $bindings)->fetchAll(\PDO::FETCH_ASSOC);
+        } finally {
+            $filter?->clean();
         }
-        $bindings[] = $start;
-        $bindings[] = $length;
-
-        $entries = $dbContext->query($query, $bindings)->fetchAll(\PDO::FETCH_ASSOC);
 
         return [
             'draw' => (int) $request->post('draw'),

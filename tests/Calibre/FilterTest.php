@@ -608,4 +608,79 @@ class FilterTest extends TestCase
         $expected = " and (exists (select null from books_tags_link where books.id not in (select book from books_tags_link)))";
         $this->assertEquals($expected, $filter->getFilterString());
     }
+
+    public function testAddBookIdListFilterSmallIdlist(): void
+    {
+        $filter = new Filter(new Request());
+        $filter->addBookIdListFilter([1, 2, 3]);
+
+        // small idlist uses IN (?, ?, ?) with bound params
+        $expected = " and (books.id IN (?,?,?))";
+        $this->assertEquals($expected, $filter->getFilterString());
+        $this->assertEquals([1, 2, 3], $filter->getQueryParams());
+
+        // no bookIdList is set for small idlists
+        $this->assertNull($filter->getBookIdList());
+    }
+
+    public function testAddBookIdListFilterLargeIdlist(): void
+    {
+        $filter = new Filter(new Request());
+        $idlist = range(1, 15);  // 15 ids > 10 threshold
+        $filter->addBookIdListFilter($idlist);
+
+        // large idlist uses books_list_filter() SQLite function
+        $expected = " and (books_list_filter(books.id))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        // no bound params for the idlist itself
+        $this->assertEquals([], $filter->getQueryParams());
+
+        // bookIdList is stored for prepare()/clean()
+        $this->assertEquals($idlist, $filter->getBookIdList());
+    }
+
+    public function testAddBookIdListFilterEmptyIdlist(): void
+    {
+        $filter = new Filter(new Request());
+        $filter->addBookIdListFilter([]);
+
+        $this->assertEquals("", $filter->getFilterString());
+        $this->assertEquals([], $filter->getQueryParams());
+        $this->assertNull($filter->getBookIdList());
+    }
+
+    public function testFilterPrepareAndCleanBookIdList(): void
+    {
+        $dbContext = new DatabaseContext(1);
+        $filter = new Filter(new Request(), [], "books", $dbContext);
+        $idlist = range(1, 15);
+        $filter->addBookIdListFilter($idlist);
+
+        // before prepare, connection bookIdList is null
+        $this->assertNull($dbContext->getConnection()->getBookIdList());
+
+        // prepare sets bookIdList on the connection
+        $filter->prepare();
+        $this->assertEquals($idlist, $dbContext->getConnection()->getBookIdList());
+
+        // clean resets it to null
+        $filter->clean();
+        $this->assertNull($dbContext->getConnection()->getBookIdList());
+    }
+
+    public function testFilterWithIdlistInRequest(): void
+    {
+        // idlist with 11 values (> 10 threshold)
+        $request = Request::build(['idlist' => '1,2,3,4,5,6,7,8,9,10,11']);
+        $filter = new Filter($request);
+
+        $expected = " and (books_list_filter(books.id))";
+        $this->assertEquals($expected, $filter->getFilterString());
+
+        // no bound params for the idlist values
+        $this->assertEquals([], $filter->getQueryParams());
+
+        $this->assertEquals([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], $filter->getBookIdList());
+    }
 }

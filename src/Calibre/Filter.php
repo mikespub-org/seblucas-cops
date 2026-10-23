@@ -60,6 +60,8 @@ class Filter
     protected $params = [];
     protected string $parentTable = "books";
     protected string $queryString = "";
+    /** @var ?array<int> */
+    protected $bookIdList = null;
 
     /**
      * Summary of __construct
@@ -534,11 +536,49 @@ class Filter
         if (count($idlist) < 1) {
             return;
         }
-        // @todo use books_list_filter for large idlist - see BookList::getBooksByIdList()
-        $filter = "{$linkTable}.{$linkColumn} IN (" . str_repeat('?,', count($idlist) - 1) . '?)';
-        //$this->addFilter($filter, $idlist);
+        if (count($idlist) > 10) {
+            // use books_list_filter() for large idlist - see BookList::getBooksByIdList()
+            $this->bookIdList = $idlist;
+            $filter = "books_list_filter({$linkTable}.{$linkColumn})";
+        } else {
+            $filter = "{$linkTable}.{$linkColumn} IN (" . str_repeat('?,', count($idlist) - 1) . '?)';
+            $this->params = array_merge($this->params, $idlist);
+        }
         $this->queryString .= ' and (' . $filter . ')';
-        $this->params = array_merge($this->params, $idlist);
+    }
+
+    /**
+     * Summary of prepare
+     * Set bookIdList on the database connection before executing a query that uses books_list_filter()
+     * @return void
+     */
+    public function prepare(): void
+    {
+        if ($this->bookIdList !== null) {
+            $this->getDbContext()->setBookIdList($this->bookIdList);
+        }
+    }
+
+    /**
+     * Summary of clean
+     * Reset bookIdList on the database connection after the query has executed
+     * only if this filter actually set it
+     * @return void
+     */
+    public function clean(): void
+    {
+        if ($this->bookIdList !== null) {
+            $this->getDbContext()->setBookIdList(null);
+        }
+    }
+
+    /**
+     * Summary of getBookIdList
+     * @return ?array<int>
+     */
+    public function getBookIdList(): ?array
+    {
+        return $this->bookIdList;
     }
 
     /**

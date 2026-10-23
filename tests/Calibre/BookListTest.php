@@ -367,6 +367,27 @@ class BookListTest extends TestCase
         $this->assertEquals(2, $totalNumber);
     }
 
+    public function testGetBooksByIdListLargeIdlist(): void
+    {
+        $booklist = new BookList(self::$request);
+
+        // 13 book ids (> 10 threshold to trigger books_list_filter)
+        $idlist = [2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15];
+
+        [$entryArray, $totalNumber] = $booklist->getBooksByIdList($idlist);
+
+        $this->assertCount(13, $entryArray);
+        $this->assertEquals(-1, $totalNumber);
+
+        // Verify all requested ids are returned
+        $returnedIds = [];
+        foreach ($entryArray as $entry) {
+            $returnedIds[] = $entry->book->id;
+        }
+        sort($returnedIds);
+        $this->assertEquals($idlist, $returnedIds);
+    }
+
     public function tearDown(): void
     {
         Database::clearDb();

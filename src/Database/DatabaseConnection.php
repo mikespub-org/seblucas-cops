@@ -263,6 +263,15 @@ class DatabaseConnection
     }
 
     /**
+     * Summary of getBookIdList
+     * @return ?array<int>
+     */
+    public function getBookIdList(): ?array
+    {
+        return $this->bookIdList;
+    }
+
+    /**
      * Summary of booksListFilter
      * @param mixed $id
      * @return int
