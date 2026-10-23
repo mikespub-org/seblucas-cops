@@ -51,7 +51,12 @@ class TwigTemplate extends BaseRenderer
     public function getTwigEnvironment($templateDir = 'templates/twigged')
     {
         $loader = new \Twig\Loader\FilesystemLoader($templateDir);
-        $twig = new \Twig\Environment($loader);
+        $options = [];
+        $cacheDir = $this->config('twig_cache_directory');
+        if (!empty($cacheDir)) {
+            $options['cache'] = $cacheDir;
+        }
+        $twig = new \Twig\Environment($loader, $options);
         // add Twig functions for COPS templates
         $function = new \Twig\TwigFunction(
             'str_format',

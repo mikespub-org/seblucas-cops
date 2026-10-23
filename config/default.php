@@ -670,6 +670,14 @@ $config['cops_style'] = 'default';
  */
 $config['cops_twig_templates'] = ['twigged', 'twigged5', 'admin', 'markdown'];
 
+/**
+ * The directory containing cached compiled Twig templates - must be writable by COPS
+ * "" : don't cache compiled Twig templates for server-side rendering
+ * "/tmp/cache/" (example) : will cache compiled templates in /tmp/cache/
+ * BEWARE : it has to end with a /
+ */
+$config['cops_twig_cache_directory'] = '';
+
 /*
  * Which URL prefix to use in templates for js & css assets (without trailing /)
  */
