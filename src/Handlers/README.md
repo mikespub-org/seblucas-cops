@@ -10,6 +10,7 @@ Handlers are the final step in the request processing chain after `Middleware`. 
 -   **File Handlers** (`FetchHandler`, `ReadHandler`, `ZipFsHandler`): These handlers manage the delivery of book files, either for direct download, for use in the online e-readers, or for filesystem-like access to zipped book contents.
 -   **API Handlers** (`RestApiHandler`, `GraphqlHandler`): These provide machine-readable interfaces for external tools.
 -   **Admin Handlers** (`AdminHandler`, `TableHandler`): These provide access to administrative functions and direct database table viewing/editing.
+-   **Other Handlers** (`MailHandler`, `CheckHandler`, `CalibreHandler`, `CalResHandler`): These handlers are responsible for specialized features like sending mail, checking config or handling Calibre links.
 
 ## Architecture Fit
 

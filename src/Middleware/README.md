@@ -9,11 +9,23 @@ The `Framework` contains the dispatch logic that processes the `Request` through
 
 ## Components
 
+### BaseMiddleware
+Abstract base class that all concrete middleware extends. Defines the `process($request, $handler)` contract.
+
 ### AuthMiddleware
-Handles user authentication (basic auth or session). It can return an error response on failure.
+Handles user authentication via HTTP Basic Auth or session-based form auth. It can return an error response on failure.
 
 ### AdminMiddleware
 Protects administrative handlers by verifying that the authenticated user has admin privileges.
+
+### ConnectMiddleware
+Initializes session-based connection tracking when fetch protection is enabled.
+
+### ProtectMiddleware
+Blocks fetch operations when fetch protection is enabled unless the user has connected via web or feed first.
+
+### TestMiddleware
+Test middleware used for development. Sets request data and appends content to the response after handling.
 
 ## Architecture Fit
 
