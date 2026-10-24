@@ -1862,6 +1862,21 @@
                 ],
                 []
             ]
+        },
+        {
+            "name": "shelves-action",
+            "route": [
+                "/shelves/{action}",
+                {
+                    "_handler": "SebLucas\\Cops\\Handlers\\ShelvesHandler",
+                    "_route": "shelves-action"
+                },
+                [
+                    "GET",
+                    "POST"
+                ],
+                []
+            ]
         }
     ]
 }

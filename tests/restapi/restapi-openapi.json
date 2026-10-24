@@ -3868,6 +3868,62 @@
                     }
                 ]
             }
+        },
+        "/shelves/{action}": {
+            "get": {
+                "summary": "Route to shelves handler with action={action} - with api key",
+                "operationId": "get_shelves-action",
+                "tags": [
+                    "shelves"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of shelves handler with action={action}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Route to shelves handler with action={action} - with api key",
+                "operationId": "post_shelves-action",
+                "tags": [
+                    "shelves"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Result of shelves handler with action={action}"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "action",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
         }
     }
 }

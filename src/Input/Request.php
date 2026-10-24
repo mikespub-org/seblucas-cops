@@ -295,14 +295,20 @@ class Request
     }
 
     /**
-     * Summary of post
-     * @param string $name
+     * Summary of post - value can be empty or null here
+     * @param string $key
      * @param mixed $default
+     * @param ?string $pattern
      * @return mixed
      */
-    public function post($name, $default = null)
+    public function post($key, $default = null, $pattern = null)
     {
-        return $this->postParams[$name] ?? $default;
+        if (!empty($this->postParams) && array_key_exists($key, $this->postParams)) {
+            if (!isset($pattern) || preg_match($pattern, (string) $this->postParams[$key])) {
+                return $this->postParams[$key];
+            }
+        }
+        return $default;
     }
 
     /**

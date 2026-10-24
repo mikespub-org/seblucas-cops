@@ -806,6 +806,19 @@
                     "/admin"
                 ]
             }
+        },
+        {
+            "handler": "shelves",
+            "routes": {
+                "shelves-action": [
+                    "/shelves/{action}",
+                    [],
+                    [
+                        "GET",
+                        "POST"
+                    ]
+                ]
+            }
         }
     ]
 }

@@ -10,9 +10,18 @@
 
 namespace SebLucas\Cops\Pages;
 
+use SebLucas\Cops\Calibre\BookList;
+use SebLucas\Cops\Calibre\BookShelf;
+use SebLucas\Cops\Database\DatabaseContext;
+use SebLucas\Cops\Database\DatabaseException;
+use SebLucas\Cops\Model\EntryBook;
+
 class PageShelves extends Page
 {
     protected string $template = 'shelves.html';
+
+    public ?BookShelf $shelf = null;
+    public ?string $currentShelf = null;
 
     /**
      * Summary of initializeContent
@@ -20,13 +29,40 @@ class PageShelves extends Page
      */
     public function initializeContent()
     {
+        // Echo the requested sort back (sorted/sortedBy/sortedDir in the JSON)
+        // so direct shelf links (?sort=title+asc) work
+        $this->sorted = $this->request->getSorted("sort");
+
         $this->getEntries();
         $this->idPage = PageId::ALL_SHELVES_ID;
         $this->title = $this->localize("shelves.title");
-        // Echo the requested sort back (sorted/sortedBy/sortedDir in the JSON)
-        // so direct shelf links (?sort=title+asc) work: the client shelves page
-        // reads them and sorts its localStorage books accordingly
-        $this->sorted = $this->request->getSorted("sort");
+    }
+
+    /**
+     * Check if server shelves feature is enabled
+     */
+    public function isServerShelvesEnabled(): bool
+    {
+        return BookShelf::isServerShelvesEnabled($this->getConfig());
+    }
+
+    /**
+     * Get or initialize BookShelf domain model
+     */
+    public function getShelfModel(): BookShelf
+    {
+        if ($this->shelf === null) {
+            $this->shelf = new BookShelf($this->request, $this->getDbContext());
+        }
+        return $this->shelf;
+    }
+
+    /**
+     * Set BookShelf model (useful for testing)
+     */
+    public function setShelfModel(BookShelf $shelf): void
+    {
+        $this->shelf = $shelf;
     }
 
     /**
@@ -47,8 +83,121 @@ class PageShelves extends Page
      */
     public function getEntries()
     {
-        // Client-side shelves are stored in localStorage; server returns an empty list
-        $this->entryArray = [];
+        if (!$this->isServerShelvesEnabled()) {
+            // Client-side shelves are stored in localStorage; server returns an empty list
+            $this->entryArray = [];
+            return;
+        }
+
+        $shelf = $this->getShelfModel();
+        $shelf->load();
+
+        $requestedShelf = $this->request->get(BookShelf::URL_PARAM);
+        if (!empty($requestedShelf)) {
+            $resolved = $shelf->resolveShelfName($requestedShelf);
+            if ($resolved) {
+                $this->currentShelf = $resolved;
+            }
+        }
+        if (empty($this->currentShelf)) {
+            $this->currentShelf = $shelf->getActiveShelfName();
+        }
+
+        $groupedIds = $shelf->getIdListGrouped($this->currentShelf);
+        if (empty($groupedIds)) {
+            $this->entryArray = [];
+            $this->totalNumber = 0;
+            return;
+        }
+
+        $shelfBooks = $shelf->getBooksInShelf($this->currentShelf);
+        $orderMap = [];
+        foreach ($shelfBooks as $idx => $b) {
+            $key = BookShelf::getBookKey($b);
+            $orderMap[$key] = $idx;
+        }
+
+        $allEntries = [];
+        foreach ($groupedIds as $dbId => $ids) {
+            $dbContext = new DatabaseContext((int) $dbId, $this->getConfig());
+            $booklist = new BookList($this->request, $dbContext);
+            try {
+                [$entries, ] = $booklist->getBooksByIdList(array_map('intval', $ids));
+                foreach ($entries as $entry) {
+                    $allEntries[] = $entry;
+                }
+            } catch (DatabaseException) {
+                continue;
+            }
+        }
+
+        $this->sortEntries($allEntries, $orderMap);
+        $this->totalNumber = count($allEntries);
+
+        $numberPerPage = $this->getNumberPerPage();
+        if ($numberPerPage > 0 && $this->totalNumber > $numberPerPage) {
+            $start = max(0, ($this->n - 1) * $numberPerPage);
+            $this->entryArray = array_slice($allEntries, $start, $numberPerPage);
+        } else {
+            $this->entryArray = $allEntries;
+        }
+    }
+
+    /**
+     * Sort loaded entries according to $this->sorted preference
+     * @param array<EntryBook> $entries
+     * @param array<string, int> $orderMap
+     */
+    protected function sortEntries(array &$entries, array $orderMap): void
+    {
+        $sort = strtolower(trim($this->sorted ?? 'sort'));
+        $descending = str_ends_with($sort, 'desc');
+
+        if (str_starts_with($sort, 'title')) {
+            usort($entries, fn($a, $b) => $this->compareTitles($a, $b, $descending));
+        } elseif (str_starts_with($sort, 'author')) {
+            usort($entries, fn($a, $b) => $this->compareAuthors($a, $b, $descending));
+        } else {
+            usort($entries, fn($a, $b) => $this->compareShelfOrder($a, $b, $orderMap, $descending));
+        }
+    }
+
+    private function compareTitles(EntryBook $first, EntryBook $second, bool $descending): int
+    {
+        $comparison = strcasecmp($first->title ?? '', $second->title ?? '');
+        return $descending ? -$comparison : $comparison;
+    }
+
+    private function compareAuthors(EntryBook $first, EntryBook $second, bool $descending): int
+    {
+        $authorFirst = $first->book->getAuthorsName() ?: '';
+        $authorSecond = $second->book->getAuthorsName() ?: '';
+        $comparison = strcasecmp($authorFirst, $authorSecond);
+        if ($comparison === 0) {
+            $comparison = strcasecmp($first->title ?? '', $second->title ?? '');
+        }
+        return $descending ? -$comparison : $comparison;
+    }
+
+    /** @param array<string, int> $orderMap */
+    private function compareShelfOrder(EntryBook $first, EntryBook $second, array $orderMap, bool $descending): int
+    {
+        $firstKey = BookShelf::getBookKey(['id' => $first->book->id, 'db' => $first->book->getDatabaseId()]);
+        $secondKey = BookShelf::getBookKey(['id' => $second->book->id, 'db' => $second->book->getDatabaseId()]);
+        $comparison = ($orderMap[$firstKey] ?? 0) <=> ($orderMap[$secondKey] ?? 0);
+        return $descending ? -$comparison : $comparison;
+    }
+
+    /**
+     * Get list of all shelves and their counts
+     * @return array<string, int>
+     */
+    public function getShelvesList(): array
+    {
+        if (!$this->isServerShelvesEnabled()) {
+            return [];
+        }
+        return $this->getShelfModel()->getShelves();
     }
 
     /**

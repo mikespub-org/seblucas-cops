@@ -36,7 +36,7 @@ class JsonHandler extends PageHandler
     public function handle($request)
     {
         $page = $request->get('page');
-        if (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER])) {
+        if (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER, PageId::SHELVES])) {
             $session = $this->getContext()->getSession();
             $session->start();
             $request->setSession($session);

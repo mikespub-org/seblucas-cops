@@ -66,7 +66,7 @@ class HtmlHandler extends PageHandler
 
         // set session connected in ConnectMiddleware
 
-        if (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER])) {
+        if (in_array($page, [PageId::CUSTOMIZE, PageId::FILTER, PageId::SHELVES])) {
             // @todo avoid double work with ConnectMiddleware
             $session = $this->getContext()->getSession();
             $session->start();

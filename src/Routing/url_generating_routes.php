@@ -132,4 +132,5 @@ return [
     'admin-checkbooks' => [[], ['action' => 'checkbooks', '_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-checkbooks'], [], [['text', '/admin/checkbooks']], [], [], []],
     'admin-action' => [['action'], ['_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin-action'], ['action' => '.*'], [['variable', '/', '.*', 'action'], ['text', '/admin']], [], [], []],
     'admin' => [[], ['_handler' => 'SebLucas\\Cops\\Handlers\\AdminHandler', '_route' => 'admin'], [], [['text', '/admin']], [], [], []],
+    'shelves-action' => [['action'], ['_handler' => 'SebLucas\\Cops\\Handlers\\ShelvesHandler', '_route' => 'shelves-action'], [], [['variable', '/', '[^/]++', 'action'], ['text', '/shelves']], [], [], []],
 ];

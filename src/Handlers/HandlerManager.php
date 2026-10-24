@@ -32,6 +32,7 @@ class HandlerManager
         "error" => ErrorHandler::class,
         "phpunit" => TestHandler::class,
         "admin" => AdminHandler::class,
+        "shelves" => ShelvesHandler::class,
         // ... other default handlers
     ];
     /** @var array<string, class-string<BaseHandler>> */

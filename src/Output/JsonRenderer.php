@@ -28,6 +28,7 @@ use SebLucas\Cops\Model\EntryBook;
 use SebLucas\Cops\Pages\PageId;
 use SebLucas\Cops\Pages\Page;
 use SebLucas\Cops\Pages\PageAbout;
+use SebLucas\Cops\Pages\PageShelves;
 
 class JsonRenderer extends BaseRenderer
 {
@@ -869,6 +870,12 @@ class JsonRenderer extends BaseRenderer
         if ($this->page == PageId::ABOUT) {
             /** @var PageAbout $currentPage */
             $out ["fullhtml"] = $currentPage->getContent();
+        } elseif ($this->page == PageId::SHELVES && $currentPage instanceof PageShelves) {
+            if ($currentPage->isServerShelvesEnabled()) {
+                $out["activeShelf"] = $currentPage->currentShelf;
+                $out["shelves"] = $currentPage->getShelvesList();
+                $out["use_server_shelves"] = $currentPage->isServerShelvesEnabled();
+            }
         }
 
         $out ["homeurl"] = $this->getHomeUrl($out["baseurl"]);

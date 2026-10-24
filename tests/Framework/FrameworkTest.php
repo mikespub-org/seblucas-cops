@@ -33,7 +33,7 @@ class FrameworkTest extends TestCase
         $handlerManager = $framework->getHandlerManager();
 
         $this->assertInstanceOf(HandlerManager::class, $handlerManager);
-        $expected = 20;
+        $expected = 21;
         $this->assertCount($expected, $handlerManager->getHandlers());
     }
 

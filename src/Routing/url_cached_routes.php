@@ -23,6 +23,7 @@ $handlers = [
   'error' => 'SebLucas\\Cops\\Handlers\\ErrorHandler',
   'phpunit' => 'SebLucas\\Cops\\Handlers\\TestHandler',
   'admin' => 'SebLucas\\Cops\\Handlers\\AdminHandler',
+  'shelves' => 'SebLucas\\Cops\\Handlers\\ShelvesHandler',
 ];
 
 $static = [
@@ -1552,6 +1553,18 @@ $routes = [
     ],
     [
       'GET',
+    ],
+    [],
+  ],
+  'shelves-action' => [
+    '/shelves/{action}',
+    [
+      '_handler' => 'SebLucas\\Cops\\Handlers\\ShelvesHandler',
+      '_route' => 'shelves-action',
+    ],
+    [
+      'GET',
+      'POST',
     ],
     [],
   ],
