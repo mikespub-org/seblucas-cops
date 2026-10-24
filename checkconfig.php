@@ -191,6 +191,18 @@ if (extension_loaded('zlib')) {
             </h4>
         </article>
         <article class="frontpage">
+            <h2>Check if session is properly installed and loaded (optional)</h2>
+            <h4>
+            <?php
+if (extension_loaded('session')) {
+    echo 'OK';
+} else {
+    echo 'You will not be able to use sessions, unless you install the php-session extension and make sure it\'s enabled';
+}
+?>
+            </h4>
+        </article>
+        <article class="frontpage">
             <h2>Check if the base URL looks OK</h2>
             <h4>
             <?php

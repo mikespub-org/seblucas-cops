@@ -200,6 +200,11 @@ class CheckHandler extends BaseHandler
         } else {
             $extensions['zlib'] = 'Please make sure zlib is enabled';
         }
+        if (extension_loaded('session')) {
+            $extensions['session'] = 'OK';
+        } else {
+            $extensions['session'] = 'You will not be able to use sessions, unless you install the php-session extension and make sure it\'s enabled';
+        }
         return $extensions;
     }
 
